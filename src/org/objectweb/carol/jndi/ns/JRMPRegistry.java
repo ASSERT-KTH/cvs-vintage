@@ -26,10 +26,11 @@
  */
 package org.objectweb.carol.jndi.ns;
 
-import java.rmi.registry.Registry;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 

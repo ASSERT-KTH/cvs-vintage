@@ -26,11 +26,12 @@
  */
 package org.objectweb.carol.jndi.ns;
 
-import java.rmi.registry.Registry;
 import java.rmi.RemoteException;
-import org.objectweb.jeremie.libs.services.registry.LocateRegistry;
-import org.objectweb.jeremie.libs.binding.moa.UnicastRemoteObject;
+import java.rmi.registry.Registry;
+
 import org.objectweb.carol.util.configuration.TraceCarol;
+import org.objectweb.jeremie.libs.binding.moa.UnicastRemoteObject;
+import org.objectweb.jeremie.libs.services.registry.LocateRegistry;
 
 /*
  * Class <code>JeremieRegistry</code>

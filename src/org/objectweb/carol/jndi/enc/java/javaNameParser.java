@@ -23,16 +23,17 @@
  * Contributor(s): ______________________________________.
  *
  * --------------------------------------------------------------------------
- * $Id: javaNameParser.java,v 1.1 2003/03/17 11:13:11 riviereg Exp $
+ * $Id: javaNameParser.java,v 1.2 2003/04/10 15:38:40 riviereg Exp $
  * --------------------------------------------------------------------------
  */
 
 package org.objectweb.carol.jndi.enc.java;
 
 import java.util.Properties;
-import javax.naming.NameParser;
-import javax.naming.Name;
+
 import javax.naming.CompoundName;
+import javax.naming.Name;
+import javax.naming.NameParser;
 import javax.naming.NamingException;
 
 /**

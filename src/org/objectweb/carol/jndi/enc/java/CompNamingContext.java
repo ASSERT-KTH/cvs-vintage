@@ -23,7 +23,7 @@
  * Contributor(s): ______________________________________.
  *
  * --------------------------------------------------------------------------
- * $Id: CompNamingContext.java,v 1.1 2003/03/17 11:13:11 riviereg Exp $
+ * $Id: CompNamingContext.java,v 1.2 2003/04/10 15:38:40 riviereg Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -51,9 +51,7 @@ import javax.naming.OperationNotSupportedException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 
-//TODO: import org.objectweb.jonas.common.Log;
-//TODO: import org.objectweb.util.monolog.api.Logger;
-//TODO: import org.objectweb.util.monolog.api.BasicLevel;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Implementation of Context interface for EJB Environment.
@@ -66,7 +64,6 @@ import javax.naming.Reference;
 public class CompNamingContext implements Context
 {
 
-   // TODO:     static private Logger logger = null;
    private Hashtable myEnv = null;
    private Hashtable bindings = new Hashtable();
    static private NameParser myParser = new javaNameParser();
@@ -83,7 +80,6 @@ public class CompNamingContext implements Context
          myEnv = (Hashtable) (env.clone());
       }
       compId = id;
-      // TODO:         logger = Log.getLogger(Log.JONAS_NAMING_PREFIX);
    }
 
    /**
@@ -93,7 +89,6 @@ public class CompNamingContext implements Context
    {
       myEnv = new Hashtable();
       compId = id;
-      // TODO:         logger = Log.getLogger(Log.JONAS_NAMING_PREFIX);
    }
 
    // ------------------------------------------------------------------
@@ -123,13 +118,13 @@ public class CompNamingContext implements Context
     */
    public Object lookup(String name) throws NamingException
    {
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
-
+      TraceCarol.debugJndiCarol( "entering for "+name);
+	
       Name n = new CompositeName(name);
       if (n.size() < 1)
       {
          // Empty name means this context
-         // TODO: logger.log(BasicLevel.DEBUG, "empty name");
+         TraceCarol.debugJndiCarol( "empty name");
          return this;
       }
 
@@ -139,7 +134,7 @@ public class CompNamingContext implements Context
          Object ret = bindings.get(name);
          if (ret == null)
          {
-            //TODO: logger.log(BasicLevel.DEBUG, " "+name+" not found.");
+            TraceCarol.debugJndiCarol( " "+name+" not found.");
             throw new NameNotFoundException(name);
          }
          if (ret instanceof LinkRef)
@@ -149,27 +144,6 @@ public class CompNamingContext implements Context
             // The name hidden in linkref is in the initial context.
 
             InitialContext ictx;
-            //    TODO: MHALAS: I don't know if this matter. I think we can just return InitialContext
-            /*      
-            		// if we are using David, the linkref contains an info that tells if we must
-            		// search in CosNaming or in RmiRegistry
-            		if (Env.isDavid()) {
-            		    StringRefAddr ra = (StringRefAddr)((Reference)ret).get("TargetNaming");
-            		    if (ra == null) // never happens
-            			// lookup in RmiRegistry
-            			ictx = NamingManager.getInstance().getInitialContext();
-            		    else {
-            			if ((String)ra.getContent() == "CosNaming")
-            			    // lookup in CosNaming
-            			    ictx = NamingManager.getInstance().getCorbaInitialContext();
-            			else
-            			    // lookup in RmiRegistry
-            			    ictx = NamingManager.getInstance().getInitialContext();
-            		    }
-            		}
-            		else
-            		    ictx = NamingManager.getInstance().getInitialContext();
-            */
             ictx = new InitialContext();
 
             RefAddr ra = ((Reference) ret).get(0);
@@ -217,12 +191,12 @@ public class CompNamingContext implements Context
    public void bind(String name, Object obj) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       Name n = new CompositeName(name);
       if (n.size() < 1)
       {
-         // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext bind empty name ?");
+         TraceCarol.error("CompNamingContext bind empty name ?");
          throw new InvalidNameException("CompNamingContext cannot bind empty name");
       }
 
@@ -231,7 +205,7 @@ public class CompNamingContext implements Context
          // leaf in the env tree
          if (bindings.get(name) != null)
          {
-            // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext: trying to overbind");
+            TraceCarol.error("CompNamingContext: trying to overbind");
             throw new NameAlreadyBoundException("CompNamingContext: Use rebind to bind over a name");
          }
          bindings.put(name, obj);
@@ -286,12 +260,12 @@ public class CompNamingContext implements Context
    public void rebind(String name, Object obj) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       Name n = new CompositeName(name);
       if (n.size() < 1)
       {
-         // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext rebind empty name ?");
+         TraceCarol.error("CompNamingContext rebind empty name ?");
          throw new InvalidNameException("CompNamingContext cannot rebind empty name");
       }
 
@@ -341,12 +315,12 @@ public class CompNamingContext implements Context
    public void unbind(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       Name n = new CompositeName(name);
       if (n.size() < 1)
       {
-         // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext unbind empty name ?");
+         TraceCarol.error("CompNamingContext unbind empty name ?");
          throw new InvalidNameException("CompNamingContext cannot unbind empty name");
       }
 
@@ -355,7 +329,7 @@ public class CompNamingContext implements Context
          // leaf in the env tree
          if (bindings.get(name) == null)
          {
-            // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext nothing to unbind");
+            TraceCarol.error("CompNamingContext nothing to unbind");
             throw new NameNotFoundException(name);
          }
          bindings.remove(name);
@@ -397,7 +371,7 @@ public class CompNamingContext implements Context
    public void rename(String oldName, String newName) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.ERROR,"CompNamingContext rename "+oldName+" in "+newName);
+      TraceCarol.error("CompNamingContext rename "+oldName+" in "+newName);
 
       Object obj = lookup(oldName);
       rebind(newName, obj);
@@ -434,7 +408,7 @@ public class CompNamingContext implements Context
    public NamingEnumeration list(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       if (name.length() == 0)
       {
@@ -448,7 +422,7 @@ public class CompNamingContext implements Context
       }
       else
       {
-         // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext: can only list a Context");
+         TraceCarol.error("CompNamingContext: can only list a Context");
          throw new NotContextException(name);
       }
    }
@@ -488,7 +462,7 @@ public class CompNamingContext implements Context
    public NamingEnumeration listBindings(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       if (name.length() == 0)
       {
@@ -502,7 +476,7 @@ public class CompNamingContext implements Context
       }
       else
       {
-         // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext: can only list a Context");
+         TraceCarol.error("CompNamingContext: can only list a Context");
          throw new NotContextException(name);
       }
    }
@@ -528,7 +502,7 @@ public class CompNamingContext implements Context
    public void destroySubcontext(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.ERROR,"CompNamingContext try to destroySubcontext "+name);
+      TraceCarol.error("CompNamingContext try to destroySubcontext "+name);
 
       throw new OperationNotSupportedException("CompNamingContext: destroySubcontext");
    }
@@ -568,12 +542,12 @@ public class CompNamingContext implements Context
    public Context createSubcontext(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       Name n = new CompositeName(name);
       if (n.size() < 1)
       {
-         // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext createSubcontext with empty name ?");
+         TraceCarol.error("CompNamingContext createSubcontext with empty name ?");
          throw new InvalidNameException("CompNamingContext cannot create empty Subcontext");
       }
 
@@ -636,10 +610,10 @@ public class CompNamingContext implements Context
    public Object lookupLink(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+name);
+      TraceCarol.debugJndiCarol("entering for "+name);
 
       // To be done. For now: just return the object
-      // TODO: logger.log(BasicLevel.ERROR,"CompNamingContext lookupLink not implemented yet!");
+      TraceCarol.error("CompNamingContext lookupLink not implemented yet!");
       return lookup(name);
    }
 
@@ -683,7 +657,7 @@ public class CompNamingContext implements Context
    public Name composeName(Name name, Name prefix) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.ERROR,"CompNamingContext composeName not implemented!");
+      TraceCarol.error("CompNamingContext composeName not implemented!");
       throw new OperationNotSupportedException("CompNamingContext composeName");
    }
 
@@ -699,7 +673,7 @@ public class CompNamingContext implements Context
    public String composeName(String name, String prefix) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.ERROR,"CompNamingContext composeName "+name+" "+prefix);
+      TraceCarol.error("CompNamingContext composeName "+name+" "+prefix);
 
       throw new OperationNotSupportedException("CompNamingContext composeName");
    }
@@ -720,7 +694,7 @@ public class CompNamingContext implements Context
       throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+propName);
+      TraceCarol.debugJndiCarol("entering for "+propName);
 
       if (myEnv == null)
       {
@@ -741,7 +715,7 @@ public class CompNamingContext implements Context
    public Object removeFromEnvironment(String propName) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering for "+propName);
+      TraceCarol.debugJndiCarol("entering for "+propName);
 
       if (myEnv == null)
       {
@@ -759,7 +733,7 @@ public class CompNamingContext implements Context
    public Hashtable getEnvironment() throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "entering");
+      TraceCarol.debugJndiCarol("entering");
 
       if (myEnv == null)
       {

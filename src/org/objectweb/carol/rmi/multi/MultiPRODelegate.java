@@ -28,18 +28,16 @@
 package org.objectweb.carol.rmi.multi;
 
 //java import
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.NoSuchObjectException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
-//javax import
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
-//carol import 
-import org.objectweb.carol.util.multi.ProtocolCurrent;
 import org.objectweb.carol.util.configuration.TraceCarol;
+import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /*
  * Class <code>MultiPRODelegate</code> This is a proxy for multi orb portable remote object delegate 

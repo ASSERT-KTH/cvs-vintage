@@ -28,8 +28,8 @@
 package org.objectweb.carol.util.configuration;
 
 //java import
-import java.util.Properties;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 

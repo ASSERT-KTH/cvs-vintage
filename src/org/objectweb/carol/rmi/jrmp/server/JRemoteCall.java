@@ -33,13 +33,11 @@ import java.rmi.RemoteException;
 import java.rmi.UnmarshalException;
 import java.rmi.server.ObjID;
 
-//sun import
-import sun.rmi.transport.Connection;
-import sun.rmi.transport.StreamRemoteCall;
-
-//carol import 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
+
+import sun.rmi.transport.Connection;
+import sun.rmi.transport.StreamRemoteCall;
 
 /**
  * Class <code>JRemoteCall</code> is the CAROL JRMP Remote call with context propagation

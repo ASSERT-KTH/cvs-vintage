@@ -27,17 +27,8 @@
  */
 package org.objectweb.carol.util.perfs;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.dgc.VMID;
+
 import sun.rmi.server.MarshalOutputStream;
 
 /**

@@ -28,16 +28,9 @@
 package org.objectweb.carol.rmi.jrmp.server;
 
 //sun import
-import sun.rmi.server.UnicastRef;
-import sun.rmi.transport.Connection;
-import sun.rmi.transport.LiveRef;
-import sun.rmi.transport.StreamRemoteCall;
-
-//java import 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.net.InetAddress;
 import java.rmi.MarshalException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -47,13 +40,16 @@ import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.UID;
 
-
-// carol import
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
-import org.objectweb.carol.rmi.jrmp.interceptor.RemoteKey;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
+import org.objectweb.carol.rmi.jrmp.interceptor.RemoteKey;
+
+import sun.rmi.server.UnicastRef;
+import sun.rmi.transport.Connection;
+import sun.rmi.transport.LiveRef;
+import sun.rmi.transport.StreamRemoteCall;
 
 /**
  * Class <code>JUnicastRef</code> is the CAROL JRMP UnicastRef with context propagation

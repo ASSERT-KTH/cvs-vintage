@@ -29,11 +29,6 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 
 import java.rmi.server.UID;
 import java.util.Arrays;
-import java.net.InetAddress;
-import java.io.Externalizable;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.IOException;
 
 /**
  * Class <code>RemoteKey</code> is the CAROL JRMP Remote Key Value

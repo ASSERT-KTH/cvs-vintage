@@ -28,7 +28,6 @@ package org.objectweb.carol.jndi.iiop;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-// javax import
 import javax.naming.Reference;
 /**
  * Interface <code>IIOPRemoteReference</code> is the CAROL remote interface for reference ressources 

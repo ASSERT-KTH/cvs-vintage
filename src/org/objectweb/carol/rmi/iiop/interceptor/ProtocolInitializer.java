@@ -29,7 +29,6 @@ package org.objectweb.carol.rmi.iiop.interceptor;
 
 // omg import 
 import org.objectweb.carol.util.configuration.TraceCarol;
-
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ORBInitInfo;
 import org.omg.PortableInterceptor.ORBInitializer;

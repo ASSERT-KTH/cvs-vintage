@@ -27,10 +27,9 @@
  */
 package org.objectweb.carol.util.bootstrap;
 
-import java.util.Hashtable;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Hashtable;
 
 /**
  * Interface <code>RemoteProcessesManager</code>Provide a Process Manager

@@ -29,7 +29,6 @@ package org.objectweb.carol.jndi.iiop;
 // java import
 import java.rmi.RemoteException;
 
-// javax import 
 import javax.naming.Reference;
 
 /*

@@ -29,8 +29,8 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 
 
 
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Class <code>JRMPClientRequestInfoImpl</code> is the CAROL JRMP Client Request info (JClientRequestInfo) Implementation

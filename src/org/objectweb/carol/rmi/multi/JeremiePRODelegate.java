@@ -29,11 +29,10 @@ package org.objectweb.carol.rmi.multi;
 
 //java import
 import java.lang.reflect.Method;
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.NoSuchObjectException;
 
-//javax import
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 

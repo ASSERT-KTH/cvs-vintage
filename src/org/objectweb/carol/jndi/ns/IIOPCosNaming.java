@@ -26,9 +26,10 @@
  */
 package org.objectweb.carol.jndi.ns;
 
-import javax.naming.InitialContext;
-import java.util.Properties;
 import java.io.InputStream;
+import java.util.Properties;
+
+import javax.naming.InitialContext;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 /*

@@ -28,13 +28,8 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 //java import 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.rmi.server.UID;
 import java.net.InetAddress;
-
-import org.objectweb.carol.util.configuration.TraceCarol;
+import java.rmi.server.UID;
 
 /**
  * Class <code>JInterceptorHelper</code> is the CAROL JRMP Interceptor Helper 

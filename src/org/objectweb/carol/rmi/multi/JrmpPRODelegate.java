@@ -31,20 +31,13 @@ package org.objectweb.carol.rmi.multi;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
-import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
-import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
+import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
-import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>JrmpPRODelegate</code>  for the mapping between Rmi jrmp UnicastRemoteObject and PortableRemoteObject

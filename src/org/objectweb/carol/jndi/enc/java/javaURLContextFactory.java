@@ -20,19 +20,19 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: javaURLContextFactory.java,v 1.1 2003/03/17 11:13:11 riviereg Exp $
+ * $Id: javaURLContextFactory.java,v 1.2 2003/04/10 15:38:40 riviereg Exp $
  * --------------------------------------------------------------------------
  */
 
 package org.objectweb.carol.jndi.enc.java;
 
 import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.spi.ObjectFactory;
-//TODO: import org.objectweb.jonas.common.Log;
-//TODO: import org.objectweb.util.monolog.api.Logger;
-//TODO: import org.objectweb.util.monolog.api.BasicLevel;
+
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Context factory for javaURLContext objects.
@@ -44,8 +44,6 @@ import javax.naming.spi.ObjectFactory;
  * Philippe Coq Monolog
  */
 public class javaURLContextFactory implements ObjectFactory {
-
-// TODO: static private Logger logger = null;
 
     /**
      * Returns an instance of javaURLContext for a java URL.
@@ -60,8 +58,7 @@ public class javaURLContextFactory implements ObjectFactory {
      */
     public Object getObjectInstance(Object url, Name name, Context ctx, Hashtable env) throws Exception {
 
-// TODO: logger = Log.getLogger(Log.JONAS_NAMING_PREFIX);
-// TODO: logger.log(BasicLevel.DEBUG, "url=" + url);
+TraceCarol.debugJndiCarol( "url=" + url);
 
 	if (url == null) {
 	    // All naming operations with "java:..." comes here
@@ -71,11 +68,11 @@ public class javaURLContextFactory implements ObjectFactory {
 	}
 	if (url instanceof String) {
 	    // Don't know what to do here 
-// TODO: logger.log(BasicLevel.WARN, "javaURLContextFactory.getObjectInstance("+url+")");
+TraceCarol.debugJndiCarol( "javaURLContextFactory.getObjectInstance("+url+")");
 	    return null;
 	} else if (url instanceof String[]) {
 	    // Don't know what to do here 
-// TODO: logger.log(BasicLevel.WARN, "javaURLContextFactory.getObjectInstance(String[])");
+TraceCarol.debugJndiCarol( "javaURLContextFactory.getObjectInstance(String[])");
 	    return null;
 	} else {
 	    // invalid argument

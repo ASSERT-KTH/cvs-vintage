@@ -27,9 +27,9 @@
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.objectweb.carol.util.configuration.TraceCarol;

@@ -29,7 +29,6 @@ package org.objectweb.carol.rmi.iiop.interceptor;
 
 //java import 
 import org.objectweb.carol.util.multi.ProtocolCurrent;
-
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;

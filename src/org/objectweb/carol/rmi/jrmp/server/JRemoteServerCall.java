@@ -34,7 +34,6 @@ import java.io.ObjectOutput;
 import java.io.StreamCorruptedException;
 import java.rmi.server.RemoteCall;
 
-//carol import 
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 

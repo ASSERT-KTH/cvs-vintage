@@ -20,13 +20,14 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: javaURLContext.java,v 1.1 2003/03/17 11:13:11 riviereg Exp $
+ * $Id: javaURLContext.java,v 1.2 2003/04/10 15:38:40 riviereg Exp $
  * --------------------------------------------------------------------------
  */
 
 package org.objectweb.carol.jndi.enc.java;
 
 import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
@@ -37,10 +38,7 @@ import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 import javax.naming.spi.ResolveResult;
 
-//TODO: import org.objectweb.jonas.common.Log;
-
-//TODO: import org.objectweb.util.monolog.api.Logger;
-//TODO: import org.objectweb.util.monolog.api.BasicLevel;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Context implementation for the "java:comp" namespace.
@@ -55,7 +53,6 @@ import javax.naming.spi.ResolveResult;
 public class javaURLContext implements Context
 {
 
-   // TODO:     static private Logger logger = Log.getLogger(Log.JONAS_NAMING_PREFIX);
    static private final String URL_PREFIX = "java:comp/";
    static private final String ENV_PREFIX = "env";
 
@@ -105,7 +102,7 @@ public class javaURLContext implements Context
       // We suppose that all names must be prefixed as this
       if (!name.startsWith(URL_PREFIX))
       {
-         // TODO: logger.log(BasicLevel.ERROR, "relative name!" + name);
+         TraceCarol.error( "relative name!" + name);
          throw new NameNotFoundException("Invalid name:" + name);
       }
 
@@ -153,7 +150,7 @@ public class javaURLContext implements Context
       // Check context is not null to avoid nullPointerException
       if (context == null)
       {
-         // TODO: logger.log(BasicLevel.ERROR, "No context for this component");
+         TraceCarol.error( "No context for this component");
          throw new NameNotFoundException("No context for this component");
       }
 
@@ -189,7 +186,7 @@ public class javaURLContext implements Context
    public Object lookup(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Name empty: returns a new instance of this context.
       if (name.equals(""))
@@ -242,7 +239,7 @@ public class javaURLContext implements Context
    public void bind(String name, Object obj) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Retrieve the correct context for this name
       ResolveResult r = findContextFor(name);
@@ -293,7 +290,7 @@ public class javaURLContext implements Context
    public void rebind(String name, Object obj) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Retrieve the correct context for this name
       ResolveResult r = findContextFor(name);
@@ -343,7 +340,7 @@ public class javaURLContext implements Context
    public void unbind(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Retrieve the correct context for this name
       ResolveResult r = findContextFor(name);
@@ -383,7 +380,7 @@ public class javaURLContext implements Context
    public void rename(String oldName, String newName) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "old name="+oldName+", new name="+newName);
+      TraceCarol.debugJndiCarol( "old name="+oldName+", new name="+newName);
 
       throw new OperationNotSupportedException("Rename not supported in java:comp");
    }
@@ -427,7 +424,7 @@ public class javaURLContext implements Context
    public NamingEnumeration list(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Retrieve the correct context to resolve the reminding name
       ResolveResult r = findContextFor(name);
@@ -477,7 +474,7 @@ public class javaURLContext implements Context
    public NamingEnumeration listBindings(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Retrieve the correct context to resolve the reminding name
       ResolveResult r = findContextFor(name);
@@ -542,7 +539,7 @@ public class javaURLContext implements Context
    public void destroySubcontext(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       throw new OperationNotSupportedException("destroySubcontext not supported in java:comp");
    }
@@ -589,7 +586,7 @@ public class javaURLContext implements Context
    public Context createSubcontext(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       throw new OperationNotSupportedException("createSubcontext not supported in java:comp");
    }
@@ -628,7 +625,7 @@ public class javaURLContext implements Context
    public Object lookupLink(String name) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name);
+      TraceCarol.debugJndiCarol( "name="+name);
 
       // Name empty: returns a new instance of this context.
       if (name.equals(""))
@@ -715,7 +712,7 @@ public class javaURLContext implements Context
    public String composeName(String name, String prefix) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "name="+name+" prefix= "+prefix);
+      TraceCarol.debugJndiCarol( "name="+name+" prefix= "+prefix);
 
       throw new OperationNotSupportedException("composeName not supported in java:comp");
    }
@@ -740,7 +737,7 @@ public class javaURLContext implements Context
       throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "property name= "+propName);
+      TraceCarol.debugJndiCarol( "property name= "+propName);
 
       if (myEnv == null)
       {
@@ -766,7 +763,7 @@ public class javaURLContext implements Context
    public Object removeFromEnvironment(String propName) throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "property name="+propName);
+      TraceCarol.debugJndiCarol( "property name="+propName);
 
       if (myEnv == null)
       {
@@ -793,7 +790,7 @@ public class javaURLContext implements Context
    public Hashtable getEnvironment() throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "");
+      TraceCarol.debugJndiCarol( "");
 
       if (myEnv == null)
       {
@@ -830,7 +827,7 @@ public class javaURLContext implements Context
    public String getNameInNamespace() throws NamingException
    {
 
-      // TODO:   logger.log(BasicLevel.DEBUG, "");
+      TraceCarol.debugJndiCarol( "");
       throw new OperationNotSupportedException("getNameInNamespace not implemented in java:comp");
    }
 
@@ -844,9 +841,9 @@ public class javaURLContext implements Context
    public Context getComponentContext()
    {
       ClassLoader cl = Thread.currentThread().getContextClassLoader();
-      // TODO:   logger.log(BasicLevel.DEBUG, "class loader="+cl);
+      TraceCarol.debugJndiCarol( "class loader="+cl);
 
-      // TODO: MHALAS: This is copied straight from Jonas NamingManager. I am not sure
+      //TODO: MHALAS: This is copied straight from Jonas NamingManager. I am not sure
       // why are we using getParent and not the context itself.
       Context ctx = null;
       if ((cl != null) && (cl.getParent() != null))
@@ -870,7 +867,7 @@ public class javaURLContext implements Context
             }
             catch (NamingException e)
             {
-               // TODO: logger.log(BasicLevel.ERROR, "bad name");
+               TraceCarol.error( "bad name");
             }
          }
       }
@@ -888,7 +885,7 @@ public class javaURLContext implements Context
          }
          catch (NamingException e)
          {
-            // TODO: logger.log(BasicLevel.ERROR, "bad name");
+            TraceCarol.error( "bad name");
          }
       }
       else
@@ -896,11 +893,11 @@ public class javaURLContext implements Context
          /*
          try
          {
-            // TODO: logger.log(BasicLevel.DEBUG, "name="+ctx.getNameInNamespace());
+            TraceCarol.debugJndiCarol( "name="+ctx.getNameInNamespace());
          }
          catch (NamingException e)
          {
-            // TODO: logger.log(BasicLevel.ERROR, "bad name");
+            TraceCarol.error( "bad name");
          }
          */
       }

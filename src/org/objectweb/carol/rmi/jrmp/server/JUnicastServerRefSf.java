@@ -28,17 +28,15 @@
 package org.objectweb.carol.rmi.jrmp.server;
 
 //sun import 
-import sun.rmi.transport.LiveRef;
-
-//java import 
 import java.io.ObjectOutput;
-import java.rmi.server.RemoteRef;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
+import java.rmi.server.RemoteRef;
 
-//carol import
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
+
+import sun.rmi.transport.LiveRef;
 
 /**
  * Class <code>JUnicastServerRefSf</code> implements the remote reference layer server-side

@@ -41,7 +41,6 @@ import java.rmi.server.ServerRef;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 
-//sun import
 import sun.rmi.transport.ObjectTable;
 
 /**

@@ -30,7 +30,6 @@ package org.objectweb.carol.util.multi;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-//javax import
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;

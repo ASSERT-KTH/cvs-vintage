@@ -30,7 +30,6 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 //java import
 import java.io.IOException;
 
-//carol import 
 import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /**

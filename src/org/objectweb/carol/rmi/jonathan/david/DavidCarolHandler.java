@@ -32,7 +32,6 @@ import org.objectweb.carol.util.multi.ProtocolCurrent;
 import org.objectweb.david.apis.services.handler.Service;
 import org.objectweb.jonathan.apis.kernel.Context;
 import org.objectweb.jonathan.apis.kernel.JonathanException;
-
 import org.omg.IOP.ServiceContext;
 
 

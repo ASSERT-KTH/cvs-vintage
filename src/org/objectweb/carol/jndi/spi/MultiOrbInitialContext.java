@@ -28,20 +28,17 @@
 package org.objectweb.carol.jndi.spi;
 
 //java import
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
-//javax import
 import javax.naming.Context;
-import javax.naming.NamingException;
 import javax.naming.Name;
-import javax.naming.NamingEnumeration;
-import javax.naming.Context;
 import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
-//carol import
-import org.objectweb.carol.util.multi.ProtocolCurrent;
 import org.objectweb.carol.util.configuration.TraceCarol;
+import org.objectweb.carol.util.multi.ProtocolCurrent;
 /*
  * Class <code>MultiOrbInitialContext</code> is the CAROL JNDI SPI Context for multi Context management.
  * this class use the protocol current for management of multi protocol 

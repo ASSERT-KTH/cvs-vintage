@@ -29,18 +29,17 @@ package org.objectweb.carol.util.configuration;
 
 //java import 
 import java.io.InputStream;
-import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.TreeMap;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
 
-// carol import 
-import org.objectweb.carol.jndi.ns.NameServiceManager;
 import org.objectweb.carol.jndi.ns.NameServiceException;
+import org.objectweb.carol.jndi.ns.NameServiceManager;
 
 /*
  * Interface <code>CarolConfiguration</code> for Carol environment

@@ -28,15 +28,13 @@
 package org.objectweb.carol.rmi.jrmp.server;
 
 // sun import 
-import sun.rmi.transport.LiveRef;
-
-// java import 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-//carol import
-import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor; 
+import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
+
+import sun.rmi.transport.LiveRef;
 
 /** 
  * Class <code>JUnicastRefSf</code> is the CAROL JRMP UnicastRef with context propagation

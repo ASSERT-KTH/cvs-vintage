@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-
 import org.objectweb.carol.util.configuration.TraceCarol;
 /**
  * Class <code>JClientInterceptorHelper</code> is the CAROL JRMP Client Interceptor Helper 
