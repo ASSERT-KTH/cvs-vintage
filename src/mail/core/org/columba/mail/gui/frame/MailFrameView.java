@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JViewport;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -111,12 +112,12 @@ public class MailFrameView extends AbstractFrameView {
 
 		ViewItem viewItem = getFrameController().getViewItem();
 
-		
 		//if (viewItem.getBoolean("toolbars", "filter", true) == true)
 		tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
 		JScrollPane tableScrollPane = new JScrollPane(table);
-		
+		tableScrollPane.getViewport().setScrollMode(
+			JViewport.BACKINGSTORE_SCROLL_MODE);
 
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
@@ -129,7 +130,8 @@ public class MailFrameView extends AbstractFrameView {
 
 		// same as menu
 
-		if (frameController.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL) == true)
+		if (frameController.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL)
+			== true)
 			toolbarPane.add(folderInfoPanel);
 
 		int count = MailConfig.getAccountList().count();
@@ -154,40 +156,40 @@ public class MailFrameView extends AbstractFrameView {
 	/*
 	public void hideToolbar(boolean b) {
 		toolbarPane.remove(toolbar);
-
+	
 		validate();
 		repaint();
-
+	
 	}
-
+	
 	public void hideFolderInfo(boolean b) {
-
+	
 		toolbarPane.remove(folderInfoPanel);
 		validate();
 		repaint();
-
+	
 	}
-
+	
 	public void showFolderInfo(boolean b) {
-
+	
 		if (b) {
 			toolbarPane.removeAll();
 			toolbarPane.add(toolbar);
 			toolbarPane.add(folderInfoPanel);
-
+	
 			validate();
 			repaint();
 		} else {
-
+	
 			toolbarPane.add(folderInfoPanel);
-
+	
 			validate();
 			repaint();
 		}
-
+	
 	}
 	*/
-	
+
 	public void showFilterToolbar() {
 		tablePanel.add(filterToolbar, BorderLayout.NORTH);
 		tablePanel.validate();
@@ -218,7 +220,10 @@ public class MailFrameView extends AbstractFrameView {
 	 */
 	protected Menu createMenu(AbstractFrameController controller) {
 		Menu menu =
-			new MailMenu("org/columba/core/action/menu.xml", "org/columba/mail/action/menu.xml", controller);
+			new MailMenu(
+				"org/columba/core/action/menu.xml",
+				"org/columba/mail/action/menu.xml",
+				controller);
 
 		return menu;
 	}
@@ -274,9 +279,9 @@ public class MailFrameView extends AbstractFrameView {
 
 			frameController.enableToolbar(FOLDERINFOPANEL, true);
 		}
-		
+
 		validate();
-				repaint();
+		repaint();
 	}
 
 	public boolean isFolderInfoPanelVisible() {
