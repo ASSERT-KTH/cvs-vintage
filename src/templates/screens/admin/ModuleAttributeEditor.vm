@@ -7,7 +7,7 @@ $page.setTitle("Attribute Editor")
 </p>
 <form action="$link.setPage("admin,ModuleAttributeEditor.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-    <input type="hidden" name="nextTemplate" 
+    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
             value="admin,ModuleAttributeEditor.vm">
 
   <table width="65%" border="1">

@@ -12,10 +12,10 @@ Welcome to Scarab, a Bug Tracking and Issue Reporting Tool
 
 <form action="$link.setPage("Login.vm")" method="POST" name="login">
     <input type="hidden" name="action" value="Login">
-    #if ($data.Parameters.nextTemplate)
-    <input type="hidden" name="nextTemplate" value="$data.Parameters.nextTemplate">
+    #if ($nextTemplate && $nextTemplate.length() > 0)
+    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate">
     #else
-    <input type="hidden" name="nextTemplate" value="Links.vm">    
+    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">    
     #end
 
 <p>
