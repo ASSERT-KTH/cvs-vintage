@@ -10,6 +10,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
 import org.apache.tools.ant.*;
+import org.apache.tomcat.util.test.*;
 
 /**
  * This tag will run a GTest-based test suite.
@@ -85,14 +86,25 @@ public class GTestTag extends TagSupport {
     
     // -------------------- Implementation methods --------------------
     
-    private void runTest( String base) {
+    private void runTest( String base) throws IOException {
+	PrintWriter out=pageContext.getResponse().getWriter();
 	try {
+	    System.out.println("RUN TEST " + base + " " + testFileName + " "
+			       + target );
 	    File testFile=new File( base + testFileName);
+
+
+	    // old task
+	    org.apache.tomcat.task.GTest.setDefaultWriter( out );
+	    org.apache.tomcat.task.GTest.setHtmlMode( true );
+	    // new one
+	    GTest.setDefaultWriter(out);
+	    GTest.setDefaultOutput("html");
 	    
 	    Project project=new Project();
 	    
 	    AntServletLogger log=new AntServletLogger();
-	    log.setWriter( pageContext.getResponse().getWriter());
+	    log.setWriter( out );
 	    project.addBuildListener( log );
 	    
 	    project.init();
@@ -109,7 +121,12 @@ public class GTestTag extends TagSupport {
 	    project.executeTargets( targets );
 	    
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    ex.printStackTrace(out);
+	    if( ex instanceof BuildException ) {
+		Throwable ex1=((BuildException)ex).getException();
+		System.out.println("Root cause: " );
+		ex1.printStackTrace(out);
+	    }
 	}
     }
 }

@@ -1,13 +1,14 @@
 package tadm;
 import java.util.Vector;
 import java.util.Enumeration;
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import javax.servlet.http.*;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.log.*;
 
 /**
  * A context administration class. Contexts can be
@@ -22,6 +23,7 @@ public class TomcatAdmin extends TagSupport {
     String docBaseParam;
     String action;
     String host;
+    String value;
     PageContext pageContext;
     
     public TomcatAdmin() {}
@@ -54,6 +56,8 @@ public class TomcatAdmin extends TagSupport {
 	    }
 	    if("removeContext".equals( action ) )
 		removeContext( cm , ctx);
+	    if("setLogger".equals( action ) )
+		setLogFile(  ctx, value );
 	    if("addContext".equals( action ) )
 		addContext( cm, host, ctxPath, docBase );
 	} catch (Exception ex ) {
@@ -112,11 +116,32 @@ public class TomcatAdmin extends TagSupport {
 	this.docBase=docBase;
     }
 
+    public void setValue( String s ) {
+	this.value=s;
+    }
+    
     private void removeContext( ContextManager cm, Context ctx)
 	throws TomcatException
     {
 	System.out.println("Removing " + ctx );
 	cm.removeContext( ctx );
+    }
+
+    private void setLogFile( Context ctx, String dest )
+	throws TomcatException
+    {
+	try {
+	    QueueLogger logger=new QueueLogger();
+	    System.out.println("Setting logger " + dest );
+	    logger.setName( "temp.log");
+	    logger.setPath( dest );
+	    logger.open();
+	    //	Logger.putLogger( logger );
+	    ctx.setLogger( logger );
+	    ctx.setServletLogger( logger );
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	}
     }
 
     private void addContext( ContextManager cm, String host, String path,

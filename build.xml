@@ -296,39 +296,47 @@
     <!-- Examples -->
     <mkdir dir="${tomcat.build}/webapps/examples"/>
     <copy todir="${tomcat.build}/webapps/examples">
-            <fileset dir="src/examples"/>
-        </copy>
+      <fileset dir="src/examples"/>
+    </copy>
     <javac srcdir="src/examples/WEB-INF/classes" 
-        optimize="${optimize}" destdir="${tomcat.build}/webapps/examples/WEB-INF/classes" 
-        classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-    <javac srcdir="src/examples/jsp/plugin/applet" optimize="${optimize}" destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/examples/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <javac srcdir="src/examples/jsp/plugin/applet" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
 
-    <!-- Tomcat profiling webapp - not ready for check in yet
-    <mkdir dir="${tomcat.build}/webapps/prof"/>
-    <copydir src="src/prof" dest="${tomcat.build}/webapps/prof"/>
-    <javac srcdir="src/prof/WEB-INF/src"
-      optimize="${optimize}"
-      destdir="${tomcat.build}/webapps/prof/WEB-INF/classes"
-      classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-     -->
       <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
     <copy todir="${tomcat.build}/webapps/ROOT">
-            <fileset dir="src/webpages"/>
-        </copy>
+      <fileset dir="src/webpages"/>
+    </copy>
     <copy todir="${tomcat.build}/webapps/ROOT/doc">
-            <fileset dir="src/doc"/>
-        </copy>
-    <javac srcdir="src/webpages/WEB-INF/classes" optimize="${optimize}" destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes" classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-
+      <fileset dir="src/doc"/>
+    </copy>
+    <javac srcdir="src/webpages/WEB-INF/classes" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+      
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
     <copy todir="${tomcat.build}/webapps/admin">
-            <fileset dir="src/admin"/>
-        </copy>
-    <javac srcdir="src/admin/WEB-INF/classes" optimize="${optimize}" destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-
+      <fileset dir="src/admin"/>
+    </copy>
+    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar" 
+	  file="${ant.home}/lib/ant.jar"/>
+    <!-- temp - the old GTest -->
+    <javac srcdir="src/tests/share/gtest" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <javac srcdir="src/admin/WEB-INF/classes" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+      
   </target>
 
   <!-- ==================== Build the internal test app =================== -->

@@ -56,26 +56,29 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util.task;
+package org.apache.tomcat.task;
 
 import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
 
 
 /** Test a web application. Will send a http request and
     verify the response code, compare the response with a golden
     file or find strings.
 */
-public class GTest extends Task {
+public class GTest {
     String prefix="http://localhost:8080/test";
     String host="localhost";
     int port=8080;
     int debug=0;
 
+    static PrintWriter defaultWriter=new PrintWriter(System.out);
+    static boolean htmlMode=false;
+
+    PrintWriter out=defaultWriter;
+    
     String description="No description";
 
     String request;
@@ -193,8 +196,26 @@ public class GTest extends Task {
     }
 
     // -------------------- Execute the request --------------------
+    public static void setDefaultWriter( PrintWriter pw ) {
+	defaultWriter=pw;
+    }
 
-    public void execute() throws BuildException {
+    public static void setHtmlMode( boolean h ) {
+	htmlMode=h;
+    }
+    
+    public void log( String s ) {
+	if( htmlMode) {
+	    out.println(s);
+	    out.println("<br>");
+	}  else {
+	    out.println( s );
+	}
+	
+	
+    }
+    
+    public void execute() {
 	
 	try {
 	    dispatch(request, null);
