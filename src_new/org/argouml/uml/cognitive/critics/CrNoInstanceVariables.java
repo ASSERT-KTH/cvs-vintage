@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.23 2004/11/14 08:14:37 linus Exp $
+// $Id: CrNoInstanceVariables.java,v 1.24 2004/11/16 19:01:33 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -135,7 +135,7 @@ public class CrNoInstanceVariables extends CrUML {
 
     /**
      * @see org.argouml.cognitive.critics.Critic#initWizard(
-     *         org.argouml.kernel.Wizard)
+     *         org.argouml.cognitive.ui.Wizard)
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddInstanceVariable) {
