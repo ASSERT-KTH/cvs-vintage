@@ -1,9 +1,9 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 
 package org.jboss.system;
 
@@ -36,33 +36,33 @@ import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
 
 /**
- * This is the main Service Controller. A controller can deploy a service to a
- * jboss.system It installs by delegating, it configures by delegating
- *
- * @see org.jboss.system.Service
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.22 $ <p>
- *
- * <b>Revisions:</b> <p>
- *
- * <b>20010830 marcf</b>
- * <ol>
- *   <li>Initial version checked in
- * </ol>
- * <b>20010908 david jencks</b>
- * <ol>
- *   <li>fixed tabs to spaces and log4j logging. Made it report the number
- *       of successes on init etc.  Modified to support remove and work with
- *       .sar dependency management and recursive sar deployment.
- * </ol>
- * <b>2001210 marcf</b>
- * <ol>
- *   <li>Rewrite
- * </ol>
- */
+* This is the main Service Controller. A controller can deploy a service to a
+* jboss.system It installs by delegating, it configures by delegating
+*
+* @see org.jboss.system.Service
+* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+* @version $Revision: 1.23 $ <p>
+*
+* <b>Revisions:</b> <p>
+*
+* <b>20010830 marcf</b>
+* <ol>
+*   <li>Initial version checked in
+* </ol>
+* <b>20010908 david jencks</b>
+* <ol>
+*   <li>fixed tabs to spaces and log4j logging. Made it report the number
+*       of successes on init etc.  Modified to support remove and work with
+*       .sar dependency management and recursive sar deployment.
+* </ol>
+* <b>2001210 marcf</b>
+* <ol>
+*   <li>Rewrite
+* </ol>
+*/
 public class ServiceController
-    implements ServiceControllerMBean, MBeanRegistration
+implements ServiceControllerMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
    
@@ -93,10 +93,10 @@ public class ServiceController
    public String getName() { return "Service Controller"; }
    
    /**
-    * Gets the Deployed attribute of the ServiceController object
-    *
-    * @return The Deployed value
-    */
+   * Gets the Deployed attribute of the ServiceController object
+   *
+   * @return The Deployed value
+   */
    public ObjectName[] getDeployed()
    {
       ObjectName[] deployed = new ObjectName[installedServices.size()];
@@ -112,40 +112,40 @@ public class ServiceController
    }
    
    /**
-    * Gets the Configuration attribute of the ServiceController object
-    *
-    * @param objectNames Description of Parameter
-    * @return The Configuration value
-    * @exception Exception Description of Exception
-    */
+   * Gets the Configuration attribute of the ServiceController object
+   *
+   * @param objectNames Description of Parameter
+   * @return The Configuration value
+   * @exception Exception Description of Exception
+   */
    public String getConfiguration(ObjectName[] objectNames) throws Exception
    {
       return configurator.getConfiguration(objectNames);
    }
    
    /**
-    * Deploy the beans
-    *
-    * Deploy means "instanciate and configure" so the MBean is created in the MBeanServer
-    * You must call "create" and "start" separately on the MBean to affect the service lifecycle
-    * deploy doesn't bother with service lifecycle only MBean instanciation/registration/configuration
-    *  
-    * @param mbeanElement Description of Parameter
-    * @return Description of the Returned Value
-    * @throws Exception ???
-    */
+   * Deploy the beans
+   *
+   * Deploy means "instanciate and configure" so the MBean is created in the MBeanServer
+   * You must call "create" and "start" separately on the MBean to affect the service lifecycle
+   * deploy doesn't bother with service lifecycle only MBean instanciation/registration/configuration
+   *  
+   * @param mbeanElement Description of Parameter
+   * @return Description of the Returned Value
+   * @throws Exception ???
+   */
    public synchronized ObjectName install(Element mbeanElement)
-       throws Exception
+   throws Exception
    {
       boolean debug = log.isDebugEnabled();
-
+      
       // Create a Service Context for the service, or get one if it exists
       ServiceContext ctx = getServiceContext(parseObjectName(mbeanElement));
-
+      
       // MARCF FIXME THINK ABOUT REMOVe IF ACTIVE HERE
       //at least make a new version!
       //remove(objectName);
-
+      
       // It is not there so really create the component now, this registers the component in the mbeanserver
       try
       {
@@ -178,27 +178,27 @@ public class ServiceController
             throw (Exception)e;
          if (e instanceof Error)
             throw (Error)e;
-
+         
          throw new Error("unexpected throwable: " + e);
       }
-
+      
       // We got this far
       ctx.state = ServiceContext.INSTALLED;
-
+      
       try {
          // Configure the MBean
          synchronized (this)
          {
             // The return is a list of MBeans this MBean "depends" on
             List mbeans = configurator.configure(mbeanElement);
-
+            
             // Link the dependency me.idependOn(them) and them.dependsOnMe(me)
             Iterator iterator = mbeans.iterator();
             while (iterator.hasNext()) {
-
+               
                // We work from the service context, if it doesn't exist yet, we have a wrapper (OK)
                ServiceContext service = getServiceContext((ObjectName) iterator.next());
-
+               
                if (debug)
                   log.debug("recording that " + ctx.objectName + " depends on " + service.objectName);
                // ctx depends on service
@@ -228,15 +228,15 @@ public class ServiceController
    }
    
    /**
-    * #Description of the Method
-    *
-    * @param serviceName Description of Parameter
-    * @exception Exception Description of Exception
-    */
+   * #Description of the Method
+   *
+   * @param serviceName Description of Parameter
+   * @exception Exception Description of Exception
+   */
    public synchronized void create(ObjectName serviceName) throws Exception
    {  
       ServiceContext ctx = (ServiceContext) getServiceContext(serviceName);
-       
+      
       // Get the fancy service proxy (for the lifecycle API)
       ctx.proxy = getServiceProxy(ctx.objectName, null);
       
@@ -257,7 +257,7 @@ public class ServiceController
          
          // A dependent is not created or running
          if (!(state == ServiceContext.CREATED || state == ServiceContext.RUNNING)) {
-                   
+            
             log.info("waiting in create "+serviceName.toString() +" waiting on "+sc.objectName);
             ctx.state=oldState;
             return;
@@ -266,10 +266,10 @@ public class ServiceController
       
       // Call create on the service Proxy  
       try { 
-          ctx.proxy.create(); 
+         ctx.proxy.create(); 
       }   
       catch (Exception e){ 
-          ctx.state = ServiceContext.FAILED; throw e;
+         ctx.state = ServiceContext.FAILED; throw e;
       }
       
       // Those that depend on me are waiting for my creation, recursively create them
@@ -282,11 +282,11 @@ public class ServiceController
    }
    
    /**
-    * #Description of the Method
-    *
-    * @param serviceName Description of Parameter
-    * @exception Exception Description of Exception
-    */
+   * #Description of the Method
+   *
+   * @param serviceName Description of Parameter
+   * @exception Exception Description of Exception
+   */
    public synchronized void start(ObjectName serviceName) throws Exception
    {   
       ServiceContext ctx = (ServiceContext) getServiceContext(serviceName);
@@ -321,18 +321,18 @@ public class ServiceController
       
       // Call create on the service Proxy  
       try {
-          ctx.proxy.start(); 
+         ctx.proxy.start(); 
       }   
       catch (Exception e){
-          ctx.state = ServiceContext.FAILED;
-          throw e;
+         ctx.state = ServiceContext.FAILED;
+         throw e;
       }
       
       // JSR 77
       ctx.state = ServiceContext.RUNNING;
       
       if (!installedServices.contains(ctx)) installedServices.add(ctx);
-      
+         
       // Those that depend on me are waiting for my creation, recursively create them
       Iterator iterator2 = ctx.dependsOnMe.iterator();
       while (iterator2.hasNext()) 
@@ -343,15 +343,15 @@ public class ServiceController
    }
    
    /**
-    * #Description of the Method
-    *
-    * @param serviceName Description of Parameter
-    * @exception Exception Description of Exception
-    */
+   * #Description of the Method
+   *
+   * @param serviceName Description of Parameter
+   * @exception Exception Description of Exception
+   */
    public void stop(ObjectName serviceName) throws Exception
    {
       boolean debug = log.isDebugEnabled();
-
+      
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
       if (debug)
          log.debug("stopping service: " + serviceName);
@@ -359,10 +359,10 @@ public class ServiceController
       {
          // If we are already stopped (can happen in dependencies) just return
          if (ctx.state == ServiceContext.STOPPED) return;
-
+            
          // JSR 77 and to avoid circular dependencies
          ctx.state = ServiceContext.STOPPED;
-
+         
          if (debug)
             log.debug("service context has " + ctx.dependsOnMe.size() + " depending services");
          Iterator iterator = ctx.dependsOnMe.iterator();
@@ -374,24 +374,24 @@ public class ServiceController
                log.debug("stopping dependent service " + other);
             stop(other);
          }
-
+         
          // Call create on the service Proxy
          try { ctx.proxy.stop(); }
-
+            
          catch (Exception e){ ctx.state = ServiceContext.FAILED; throw e;}
       }
    }   
    
    /**
-    * #Description of the Method
-    *
-    * @param serviceName Description of Parameter
-    * @exception Exception Description of Exception
-    */
+   * #Description of the Method
+   *
+   * @param serviceName Description of Parameter
+   * @exception Exception Description of Exception
+   */
    public void destroy(ObjectName serviceName) throws Exception
    {
       boolean debug = log.isDebugEnabled();
-        
+      
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
       if (debug)
          log.debug("destroying service: " + serviceName);
@@ -416,40 +416,40 @@ public class ServiceController
          
          // Call create on the service Proxy  
          try {
-             ctx.proxy.destroy();
+            ctx.proxy.destroy();
          }   
          catch (Exception e){
-             ctx.state = ServiceContext.FAILED;
-             throw e;
+            ctx.state = ServiceContext.FAILED;
+            throw e;
          }
       }
    }   
    
    /**
-    * #Description of the Method
-    *
-    * @param mbeanElement Description of Parameter
-    * @exception Exception Description of Exception
-    */
+   * #Description of the Method
+   *
+   * @param mbeanElement Description of Parameter
+   * @exception Exception Description of Exception
+   */
    public void remove(Element mbeanElement) throws Exception
    {  
       remove(parseObjectName(mbeanElement));
    }
    
    /**
-    * This MBean is going buh bye
-    *
-    * @param objectName Description of Parameter
-    * @exception Exception Description of Exception
-    */
+   * This MBean is going buh bye
+   *
+   * @param objectName Description of Parameter
+   * @exception Exception Description of Exception
+   */
    public void remove(ObjectName objectName) throws Exception
-   {   
+   {
       boolean debug = log.isDebugEnabled();
-
+      
       ServiceContext ctx = getServiceContext(objectName);
       if (debug)
          log.debug("removing service: " + objectName);
-
+      
       // Notify those that think I depend on them
       Iterator iterator = ctx.iDependOn.iterator();
       while (iterator.hasNext())
@@ -480,15 +480,15 @@ public class ServiceController
    // MBeanRegistration implementation ----------------------------------------
    
    /**
-    * #Description of the Method
-    *
-    * @param server Description of Parameter
-    * @param name Description of Parameter
-    * @return Description of the Returned Value
-    * @exception Exception Description of Exception
-    */
+   * #Description of the Method
+   *
+   * @param server Description of Parameter
+   * @param name Description of Parameter
+   * @return Description of the Returned Value
+   * @exception Exception Description of Exception
+   */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws Exception
+   throws Exception
    {
       this.server = server;
       
@@ -508,7 +508,7 @@ public class ServiceController
    }
    
    public void preDeregister()
-      throws Exception
+   throws Exception
    {
    }
    
@@ -519,12 +519,12 @@ public class ServiceController
    // Service implementation ----------------------------------------
    
    /**
-    * This is the only one we should have of these lifecycle methods!
-    */
+   * This is the only one we should have of these lifecycle methods!
+   */
    public synchronized void shutdown()
    {
       log.info("Stopping " + nameToServiceMap.size() + " services");
-         
+      
       List servicesCopy = new ArrayList(installedServices);
       
       int serviceCounter = 0;
@@ -549,20 +549,20 @@ public class ServiceController
    }
    
    /**
-    * Get the Service interface through which the mbean given by objectName
-    * will be managed.
-    *
-    * @param objectName
-    * @param info
-    * @param serviceFactory
-    * @return The ServiceInstance value
-    * 
-    * @throws ClassNotFoundException
-    * @throws InstantiationException
-    * @throws IllegalAccessException
-    */
+   * Get the Service interface through which the mbean given by objectName
+   * will be managed.
+   *
+   * @param objectName
+   * @param info
+   * @param serviceFactory
+   * @return The ServiceInstance value
+   * 
+   * @throws ClassNotFoundException
+   * @throws InstantiationException
+   * @throws IllegalAccessException
+   */
    private Service getServiceProxy(ObjectName objectName, String serviceFactory)
-      throws ClassNotFoundException, InstantiationException, IllegalAccessException, JMException//, InstanceNotFoundException, IntrospectionException
+   throws ClassNotFoundException, InstantiationException, IllegalAccessException, JMException//, InstanceNotFoundException, IntrospectionException
    {
       Service service = null;
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -585,17 +585,17 @@ public class ServiceController
    }
    
    /**
-    * Parse an object name from the given element attribute 'name'.
-    *
-    * @param element   Element to parse name from.
-    * @return          Object name.
-    * 
-    * @throws ConfigurationException   Missing attribute 'name' (thrown if 
-    *                                  'name' is null or "").
-    * @throws MalformedObjectNameException
-    */
+   * Parse an object name from the given element attribute 'name'.
+   *
+   * @param element   Element to parse name from.
+   * @return          Object name.
+   * 
+   * @throws ConfigurationException   Missing attribute 'name' (thrown if 
+   *                                  'name' is null or "").
+   * @throws MalformedObjectNameException
+   */
    private ObjectName parseObjectName(final Element element)
-      throws ConfigurationException, MalformedObjectNameException
+   throws ConfigurationException, MalformedObjectNameException
    {
       String name = element.getAttribute("name");
       if (name == null || name.trim().equals(""))
@@ -607,11 +607,11 @@ public class ServiceController
    }
    
    /**
-    * Go through the myriad of nested JMX exception to pull out the true
-    * exception if possible and log it.
-    * 
-    * @param e The exception to be logged.
-    */
+   * Go through the myriad of nested JMX exception to pull out the true
+   * exception if possible and log it.
+   * 
+   * @param e The exception to be logged.
+   */
    private void logException(String message, Throwable e)
    {
       if (e instanceof RuntimeErrorException)
@@ -656,33 +656,33 @@ public class ServiceController
    }
    
    /**
-    * A mapping from the Service interface method names to the corresponding
-    * index into the ServiceProxy.hasOp array.
-    */
+   * A mapping from the Service interface method names to the corresponding
+   * index into the ServiceProxy.hasOp array.
+   */
    private static HashMap serviceOpMap = new HashMap();
    
    /**
-    * An implementation of InvocationHandler used to proxy of the Service
-    * interface for mbeans. It determines which of the start/stop
-    * methods of the Service interface an mbean implements by inspecting its
-    * MBeanOperationInfo values. Each Service interface method that has a
-    * matching operation is forwarded to the mbean by invoking the method
-    * through the MBeanServer object.
-    */
+   * An implementation of InvocationHandler used to proxy of the Service
+   * interface for mbeans. It determines which of the start/stop
+   * methods of the Service interface an mbean implements by inspecting its
+   * MBeanOperationInfo values. Each Service interface method that has a
+   * matching operation is forwarded to the mbean by invoking the method
+   * through the MBeanServer object.
+   */
    public class ServiceProxy
-      implements InvocationHandler
+   implements InvocationHandler
    {
       private boolean[] hasOp = { false, false, false, false };
       private ObjectName objectName;
       
       /**
-       * Go through the opInfo array and for each operation that matches on of
-       * the Service interface methods set the corresponding hasOp array value
-       * to true.
-       * 
-       * @param objectName
-       * @param opInfo
-       */
+      * Go through the opInfo array and for each operation that matches on of
+      * the Service interface methods set the corresponding hasOp array value
+      * to true.
+      * 
+      * @param objectName
+      * @param opInfo
+      */
       public ServiceProxy(ObjectName objectName, MBeanOperationInfo[] opInfo)
       {
          this.objectName = objectName;
@@ -721,18 +721,18 @@ public class ServiceController
       }
       
       /**
-       * Map the method name to a Service interface method index and if the
-       * corresponding hasOp array element is true, dispatch the method to the
-       * mbean we are proxying.
-       *
-       * @param proxy
-       * @param method
-       * @param args
-       * @return             Always null.
-       * @throws Throwable
-       */
+      * Map the method name to a Service interface method index and if the
+      * corresponding hasOp array element is true, dispatch the method to the
+      * mbean we are proxying.
+      *
+      * @param proxy
+      * @param method
+      * @param args
+      * @return             Always null.
+      * @throws Throwable
+      */
       public Object invoke(Object proxy, Method method, Object[] args)
-         throws Throwable
+      throws Throwable
       {
          String name = method.getName();
          Integer opID = (Integer)serviceOpMap.get(name);
@@ -763,8 +763,8 @@ public class ServiceController
    }
    
    /**
-    * Initialize the service operation map.
-    */
+   * Initialize the service operation map.
+   */
    static
    {
       serviceOpMap.put("create", new Integer(0));
