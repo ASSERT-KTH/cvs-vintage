@@ -25,7 +25,7 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.2 2000/09/21 05:48:49 carnold Exp $
+// $Id: PropPanelComponent.java,v 1.3 2000/10/02 13:47:00 toby Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -47,25 +47,30 @@ public class PropPanelComponent extends PropPanel {
     addCaption(new JLabel("Name:"),0,0,0);
     addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
 
-    addCaption(new JLabel("Extends:"),1,0,0);
+    
+    addCaption(new JLabel("Stereotype:"),1,0,0);
+    JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
+    addField(stereotypeBox,1,0,0);
+    
+    addCaption(new JLabel("Extends:"),2,0,0);
 
     JList extendsList = new UMLList(new UMLGeneralizationListModel(this,"generalization",true),true);
     extendsList.setBackground(getBackground());
     extendsList.setForeground(Color.blue);
-    addField(extendsList,1,0,0);
+    addField(extendsList,2,0,0);
     
-    addCaption(new JLabel("Modifiers:"),2,0,0);
+    addCaption(new JLabel("Modifiers:"),3,0,0);
     JPanel modifiersPanel = new JPanel(new GridLayout(0,3));
     modifiersPanel.add(new UMLCheckBox("abstract",this,new UMLReflectionBooleanProperty("isAbstract",mclass,"isAbstract","setAbstract")));
     modifiersPanel.add(new UMLCheckBox("final",this,new UMLReflectionBooleanProperty("isLeaf",mclass,"isLeaf","setLeaf")));
     modifiersPanel.add(new UMLCheckBox("root",this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
-    addField(modifiersPanel,2,0,0);
+    addField(modifiersPanel,3,0,0);
 
-    addCaption(new JLabel("Namespace:"),3,0,1);
+    addCaption(new JLabel("Namespace:"),4,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
-    addField(namespaceList,3,0,0);
+    addField(namespaceList,4,0,0);
     
     addCaption(new JLabel("Derived:"),0,1,1);
     JList derivedList = new UMLList(new UMLSpecializationListModel(this,null,true),true);
