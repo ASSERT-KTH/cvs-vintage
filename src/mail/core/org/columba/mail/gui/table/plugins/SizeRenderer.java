@@ -17,35 +17,23 @@ package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 import java.awt.Font;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.swing.JTable;
-import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import org.columba.mail.gui.table.model.MessageNode;
 
-public class HeaderTableDateRenderer extends DefaultLabelRenderer {
+public class SizeRenderer extends DefaultLabelRenderer {
 
-	static SimpleDateFormat dfWeek =
-		new SimpleDateFormat("EEE HH:mm", Locale.getDefault());
-	static DateFormat dfCommon =
-		DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-
-	static final long OneDay = 24 * 60 * 60 * 1000;
-	static TimeZone localTimeZone = TimeZone.getDefault();
-
-	private JTree tree;
-
+	
 	private Font plainFont, boldFont;
 
-	public HeaderTableDateRenderer(JTree tree, boolean isBordered) {
-		super(tree);
-		this.tree = tree;
+	public SizeRenderer() {
+		super();
+		
+
+		setHorizontalAlignment(SwingConstants.RIGHT);
 
 		//setOpaque(true); //MUST do this for background to show up.
 
@@ -64,15 +52,6 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 		plainFont = UIManager.getFont("Tree.font");
 	}
 
-	public static int getLocalDaysDiff(long t) {
-
-		return (int)
-			((System.currentTimeMillis()
-				+ localTimeZone.getRawOffset()
-				- ((t + localTimeZone.getRawOffset()) / OneDay) * OneDay)
-				/ OneDay);
-	}
-
 	public Component getTableCellRendererComponent(
 		JTable table,
 		Object value,
@@ -88,28 +67,7 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-			/*
-		if (!(value instanceof Date)) {
-			setText("");
-			return this;
-		}
-
-		if (value instanceof String)
-			return this;
-		*/
-		
-		Date date = (Date) ((MessageNode)value).getHeader().get("columba.date");
-
-		if (date == null)
-			return this;
-
-		int diff = getLocalDaysDiff(date.getTime());
-
-		//if ( today
-		if ((diff >= 0) && (diff < 7))
-			setText(dfWeek.format(date));
-		else
-			setText(dfCommon.format(date));
+		setText( ((MessageNode)value).getHeader().get("columba.size")  + "KB");
 
 		return super.getTableCellRendererComponent(
 		table,
@@ -118,6 +76,5 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 		hasFocus,
 		row,
 		column);
-
 	}
 }

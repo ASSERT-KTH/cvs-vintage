@@ -19,7 +19,6 @@ import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
-import javax.swing.JTree;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -33,10 +32,8 @@ public class PriorityRenderer extends DefaultLabelRenderer {
 	private ImageIcon image4 =
 		ImageLoader.getSmallImageIcon("priority-low.png");
 
-	public PriorityRenderer(JTree tree, boolean isBordered) {
-		super(tree);
-
-		//setOpaque(true); //MUST do this for background to show up.
+	public PriorityRenderer() {
+		super();
 
 	}
 
@@ -61,8 +58,9 @@ public class PriorityRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		Integer priority = (Integer) ((MessageNode)value).getHeader().get("columba.priority");
-		
+		Integer priority =
+			(Integer) ((MessageNode) value).getHeader().get("columba.priority");
+
 		Integer in = priority;
 		if (in == null)
 			return this;

@@ -27,27 +27,24 @@ import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.treetable.TreeTable;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.gui.table.plugins.BasicHeaderRenderer;
+import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
-import org.columba.mail.gui.table.plugins.BooleanRenderer;
-import org.columba.mail.gui.table.plugins.CommonHeaderRenderer;
-import org.columba.mail.gui.table.plugins.FlaggedRenderer;
-import org.columba.mail.gui.table.plugins.HeaderTableCommonRenderer;
-import org.columba.mail.gui.table.plugins.HeaderTableDateRenderer;
-import org.columba.mail.gui.table.plugins.HeaderTableSizeRenderer;
-import org.columba.mail.gui.table.plugins.PriorityRenderer;
-import org.columba.mail.gui.table.plugins.StatusRenderer;
+import org.columba.mail.gui.table.plugins.DefaultLabelRenderer;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.mail.plugin.TableRendererPluginHandler;
 
 /**
  * This widget is a mix between a JTable and a JTree
  * ( we need the JTree for the Threaded viewing of mailing lists )
  *
  * @version 0.9.1
- * @author Frederik
+ * @author fdietz
  */
 public class TableView extends TreeTable {
 
@@ -62,8 +59,6 @@ public class TableView extends TreeTable {
 
 	private List tableModelPlugins;
 
-	
-
 	protected HeaderList headerList;
 
 	public TableView(HeaderTableModel headerTableModel) {
@@ -73,18 +68,14 @@ public class TableView extends TreeTable {
 
 		setModel(headerTableModel);
 
-		
-
 		//setSelectionModel(new HeaderTableSelectionModel());
-		
 
 		//setUI(new ColumbaBasicTableUI());
-
 
 		getTree().setCellRenderer(new SubjectTreeRenderer());
 
 		try {
-			initRenderer(false);
+			initRenderer();
 			//headerTableModel.update();
 
 		} catch (Exception ex) {
@@ -93,8 +84,6 @@ public class TableView extends TreeTable {
 
 		adjustColumn();
 	}
-
-	
 
 	public void enableThreadedView(boolean b) {
 		if (b) {
@@ -122,8 +111,7 @@ public class TableView extends TreeTable {
 			TableColumn tc = null;
 			try {
 				tc = getColumn("Subject");
-				tc.setCellRenderer(
-					new HeaderTableCommonRenderer(getTree(), "Subject"));
+				tc.setCellRenderer(new BasicRenderer("Subject"));
 
 			} catch (Exception ex) {
 				System.out.println(
@@ -182,12 +170,28 @@ public class TableView extends TreeTable {
 		}
 	}
 
-	protected void initRenderer(boolean b) throws Exception {
+	/**
+	 * initialize all renderers for the columns
+	 * 
+	 * @param b
+	 * @throws Exception
+	 */
+	protected void initRenderer() throws Exception {
 		TableItem tableItem =
 			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
 
-		//.clone();
-		//v.removeEnabledItem();
+		TableRendererPluginHandler handler = null;
+		try {
+			handler =
+				(
+					TableRendererPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.mail.tablerenderer");
+
+		} catch (PluginHandlerNotFoundException ex) {
+			ex.printStackTrace();
+		}
 
 		for (int i = 0; i < tableItem.count(); i++) {
 			HeaderItem v = tableItem.getHeaderItem(i);
@@ -200,137 +204,66 @@ public class TableView extends TreeTable {
 			int size = v.getInteger("size");
 			int position = v.getInteger("position");
 
-			if (name.equalsIgnoreCase("size")) {
-				registerRenderer(
-					"Size",
-					new HeaderTableSizeRenderer(getTree()),
-					/*
-					new CommonHeaderRenderer(
-						name,
-						MailResourceLoader.getString("header", "size"),
-						getTableModelSorter()),
-					*/
-					new CommonHeaderRenderer(),
-					size,
-					false,
-					position);
-			} else if (name.equalsIgnoreCase("Status")) {
+			DefaultLabelRenderer r = null;
+
+			if (handler.exists(name))
+				r = (DefaultLabelRenderer) handler.getPlugin(name, null);
+
+			if (r == null) {
+				// no specific renderer found
+				// -> use default one
+
+				r = new BasicRenderer(name);
 
 				registerRenderer(
-					"Status",
-					new StatusRenderer(getTree()),
-					
-					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon("mail-new.png")),
-					23,
-					true,
-					position);
-					
-			} else if (name.equalsIgnoreCase("Flagged")) {
-				registerRenderer(
-					"Flagged",
-					new FlaggedRenderer(getTree()),
-					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon(
-							"mark-as-important-16.png")),
-					23,
-					true,
-					position);
-			} else if (name.equalsIgnoreCase("Attachment")) {
-				registerRenderer(
-					"Attachment",
-					new BooleanRenderer(
-						getTree(),
-						true,
-						ImageLoader.getSmallImageIcon("attachment.png"),
-						"columba.attachment"),
-					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon("attachment.png")
-						),
-					23,
-					true,
-					position);
-			} else if (name.equalsIgnoreCase("Date")) {
-				registerRenderer(
-					"Date",
-					new HeaderTableDateRenderer(getTree(), true),
-					/*
-					new DateHeaderRenderer(
-						name,
-						MailResourceLoader.getString("header", "date"),
-						getTableModelSorter()),
-						*/
-						new CommonHeaderRenderer(),
+					name,
+					r,
+					new BasicHeaderRenderer(),
 					size,
 					false,
 					position);
 
-			} else if (name.equalsIgnoreCase("Priority")) {
-				registerRenderer(
-					"Priority",
-					new PriorityRenderer(getTree(), true),
-					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon("priority-high.png")),
-					23,
-					true,
-					position);
-
-			} else if (name.equalsIgnoreCase("Subject")) {
-
-				registerRenderer(
-					"Subject",
-					new HeaderTableCommonRenderer(getTree(), "Subject"),
-					/*
-					new CommonHeaderRenderer(
-						name,
-						MailResourceLoader.getString("header", "subject"),
-						getTableModelSorter()),
-						*/
-				new CommonHeaderRenderer(),
-					size,
-					false,
-					position);
-					
 			} else {
-				String str =
-					MailResourceLoader.getString("header", name.toLowerCase());
 
-				if (str.equals("FIX ME!")) {
+				String image = handler.getAttribute(name, "icon");
+				String fixed = handler.getAttribute(name, "size");
+				boolean lockSize = false;
+				if (fixed != null) {
+
+					if (fixed.equals("fixed")) {
+						size = 23;
+						lockSize = true;
+					}
+				}
+
+				if (lockSize == true) {
+
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree(), name),
-						/*
-						new CommonHeaderRenderer(
-							name,
-							name,
-							getTableModelSorter()),
-							*/
-					new CommonHeaderRenderer(),
+						r,
+						new BooleanHeaderRenderer(
+							ImageLoader.getSmallImageIcon(image)),
 						size,
-						false,
+						lockSize,
 						position);
 				} else {
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree(), name),
-						/*
-						new CommonHeaderRenderer(
-							name,
-							str,
-							getTableModelSorter()),
-							*/
-					new CommonHeaderRenderer(),
+						r,
+						new BasicHeaderRenderer(),
 						size,
-						false,
+						lockSize,
 						position);
 				}
 			}
+			
 		}
+
 	}
 
 	public void registerRenderer(
 		String name,
-		TableCellRenderer cell,
+		DefaultLabelRenderer cell,
 		TableCellRenderer header,
 		int size,
 		boolean lockSize,
@@ -372,38 +305,6 @@ public class TableView extends TreeTable {
 		}
 	}
 
-	public void registerRenderer(
-		String name,
-		TableCellRenderer cell,
-		TableCellRenderer header,
-		int size,
-		boolean lockSize) {
-		TableColumn tc = null;
-
-		try {
-			tc = getColumn(name);
-		} catch (Exception ex) {
-			System.out.println(
-				"headerTable->registerRenderer: " + ex.getMessage());
-		}
-
-		if (tc == null)
-			return;
-
-		if (cell != null)
-			tc.setCellRenderer(cell);
-
-		if (header != null)
-			tc.setHeaderRenderer(header);
-
-		if (lockSize) {
-			tc.setMaxWidth(size);
-			tc.setMinWidth(size);
-		} else
-			tc.setPreferredWidth(size);
-
-	}
-
 	
 
 	public MessageNode getSelectedNode() {
@@ -415,16 +316,7 @@ public class TableView extends TreeTable {
 
 	}
 
-	/*
-	public int getSelectedRowCount()
-	{
-	    int[] rows = table.getSelectedRows();
 	
-		if ( rows == null ) return 0;
-		
-	    return rows.length;
-	}
-	*/
 	public MessageNode[] getSelectedNodes() {
 		int[] rows = null;
 		MessageNode[] nodes = null;

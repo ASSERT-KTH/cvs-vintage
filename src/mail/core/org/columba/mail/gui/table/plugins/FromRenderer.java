@@ -16,26 +16,35 @@
 package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
+import java.awt.Font;
 
-import javax.swing.ImageIcon;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
 
-public class FlaggedRenderer extends DefaultLabelRenderer {
+public class FromRenderer extends DefaultLabelRenderer {
 
-	boolean bool;
-	ImageIcon image1;
+	private Font plainFont, boldFont;
 
-	public FlaggedRenderer() {
+	public FromRenderer() {
 		super();
 
-		setHorizontalAlignment(SwingConstants.CENTER);
+		
 
-		image1 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
+		plainFont = UIManager.getFont("Tree.font");
+	}
+
+	public void updateUI() {
+		super.updateUI();
+
+		boldFont = UIManager.getFont("Tree.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
+
+		plainFont = UIManager.getFont("Tree.font");
 	}
 
 	public Component getTableCellRendererComponent(
@@ -46,30 +55,19 @@ public class FlaggedRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		super.getTableCellRendererComponent(
+		if (value == null) {
+			setText("");
+			return this;
+		}
+
+		setText( (String) ((MessageNode) value).getHeader().get("columba.from"));
+
+		return super.getTableCellRendererComponent(
 			table,
 			value,
 			isSelected,
 			hasFocus,
 			row,
 			column);
-
-		if (value == null) {
-			setIcon(null);
-			return this;
-		}
-
-		boolean flagged = ((MessageNode)value).getHeader().getFlags().getFlagged();
-		
-		
-		
-		if (flagged) {
-			setIcon(image1);
-		} else {
-			setIcon(null);
-
-		}
-
-		return this;
 	}
 }

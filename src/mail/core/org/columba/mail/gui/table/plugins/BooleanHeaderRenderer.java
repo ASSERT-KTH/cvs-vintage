@@ -34,11 +34,6 @@ public class BooleanHeaderRenderer extends DefaultTableCellRenderer {
 
 		setHorizontalAlignment(SwingConstants.LEFT);
 
-		/*
-		setOpaque(true); //MUST do this for background to show up.
-		
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-		*/
 
 	}
 
@@ -50,21 +45,6 @@ public class BooleanHeaderRenderer extends DefaultTableCellRenderer {
 		int row,
 		int column) {
 
-		/*
-		if (icon == null) {
-		
-			if (tableModelSorter.getSortingColumn().equals(this.str)) {
-				if (tableModelSorter.getSortingOrder() == true)
-					setIcon(new AscendingIcon());
-				else
-					setIcon(new DescendingIcon());
-			} else {
-				setIcon(null);
-			}
-		} else {
-			setIcon(icon);
-		}
-		*/
 		
 		if (table != null) {
 			JTableHeader header = table.getTableHeader();
@@ -74,7 +54,7 @@ public class BooleanHeaderRenderer extends DefaultTableCellRenderer {
 				setFont(header.getFont());
 			}
 		}
-		//setText((value == null) ? "" : value.toString());
+		
 		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 
 		setIcon(icon);

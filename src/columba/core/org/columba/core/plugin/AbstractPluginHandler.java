@@ -233,6 +233,45 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	}
 
 	/**
+	 * 
+	 * return value of xml attribute of specific plugin
+	 * 
+	 * 
+	 * @param name			name of plugin
+	 * @param attribute		key of xml attribute
+	 * @return				value of xml attribute
+	 */
+	public String getAttribute(String name, String attribute) {
+		int count = parentNode.count();
+
+		for (int i = 0; i < count; i++) {
+
+			XmlElement action = parentNode.getElement(i);
+
+			String s = action.getAttribute("name");
+			// return if attribute was not found
+			if ( s == null ) return null;
+			
+			if (s.indexOf('$') != -1) {
+				// this is an external plugin
+				// -> extract the correct id
+				s = s.substring(0, s.indexOf('$'));
+
+			}
+
+			if (name.equals(s)) {
+
+				String value = action.getAttribute(attribute);
+
+				return value;
+			}
+
+		}
+
+		return null;
+	}
+
+	/**
 	 * @return
 	 */
 	public String[] getPluginIdList() {
@@ -258,7 +297,13 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
 		for (int i = 0; i < list.length; i++) {
 			String plugin = list[i];
-			String searchId = plugin.substring(0, plugin.indexOf("$"));
+			int index = plugin.indexOf("$");
+			String searchId;
+			if ( index != -1 )
+				searchId = plugin.substring(0, plugin.indexOf("$"));
+			else
+				searchId = plugin;
+				
 			ColumbaLogger.log.debug(" - plugin id=" + plugin);
 			ColumbaLogger.log.debug(" - search id=" + searchId);
 			if (searchId.equals(id))

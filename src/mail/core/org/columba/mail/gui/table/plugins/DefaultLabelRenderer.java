@@ -20,14 +20,13 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
+import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.HeaderInterface;
 
@@ -40,7 +39,7 @@ import org.columba.mail.message.HeaderInterface;
  * and gives us a central place for optimization
  * 
  */
-public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
+public class DefaultLabelRenderer extends JLabel implements TableCellRenderer, PluginInterface {
 
 	private Border unselectedBorder = null;
 	private Border selectedBorder = null;
@@ -50,61 +49,14 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 
 	private Font plainFont, boldFont, underlinedFont;
 
-	private JTree tree;
-
 	private boolean isBordered = true;
 
 	/**
 	 * Constructor for DefaultLabelRenderer.
-	 * @param arg0
-	 * @param arg1
-	 * @param arg2
 	 */
-	public DefaultLabelRenderer(String arg0, Icon arg1, int arg2) {
-		super(arg0, arg1, arg2);
-	}
-
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 * @param arg0
-	 * @param arg1
-	 */
-	public DefaultLabelRenderer(String arg0, int arg1) {
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 * @param arg0
-	 */
-	public DefaultLabelRenderer(String arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 * @param arg0
-	 * @param arg1
-	 */
-	public DefaultLabelRenderer(Icon arg0, int arg1) {
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 * @param arg0
-	 */
-	public DefaultLabelRenderer(Icon arg0) {
-		super(arg0);
-	}
-
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 */
-	public DefaultLabelRenderer(JTree tree) {
+	public DefaultLabelRenderer() {
 		super();
 
-		this.tree = tree;
 		boldFont = UIManager.getFont("Tree.font");
 		boldFont = boldFont.deriveFont(Font.BOLD);
 

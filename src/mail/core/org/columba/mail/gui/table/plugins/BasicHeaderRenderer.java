@@ -23,21 +23,14 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
-public class CommonHeaderRenderer extends DefaultTableCellRenderer {
+public class BasicHeaderRenderer extends DefaultTableCellRenderer {
 
-	public CommonHeaderRenderer() {
+	public BasicHeaderRenderer() {
 		super();
 
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setHorizontalTextPosition(SwingConstants.LEFT);
-		/*
-		//setIconTextGap( 5 );
-		setOpaque(true); //MUST do this for background to show up.
 		
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-		
-		//setMargin( new Insets(0,0,0,0) );
-		*/
 
 	}
 
@@ -49,24 +42,7 @@ public class CommonHeaderRenderer extends DefaultTableCellRenderer {
 		int row,
 		int column) {
 
-		//setBorder( new CTableBorder(true) );
-		//super.setFont( new Font("Helvetica", Font.PLAIN, 9) );
-
-		/*
-		setText(this.name);
 		
-		if (tableModelSorter.getSortingColumn().equals(this.str)) {
-		
-			if (tableModelSorter.getSortingOrder() == true)
-				setIcon(new AscendingIcon());
-			else
-				setIcon(new DescendingIcon());
-		
-		} else {
-		
-			setIcon(null);
-		}
-		*/
 		if (table != null) {
 			JTableHeader header = table.getTableHeader();
 			if (header != null) {

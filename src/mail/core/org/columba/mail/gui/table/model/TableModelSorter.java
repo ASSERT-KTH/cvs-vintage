@@ -16,9 +16,16 @@
 
 package org.columba.mail.gui.table.model;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.table.TableColumnModel;
+
 import org.columba.core.config.TableItem;
 import org.columba.core.config.WindowItem;
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.table.TableView;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -58,6 +65,22 @@ public class TableModelSorter extends BasicTableModelSorter {
 
 		tableItem.set("ascending", ascending);
 		tableItem.set("selected", sortingColumn);
+	}
+
+	public void loadConfig(TableView view) {
+		String column = getSortingColumn();
+		int columnNumber = getSortInt();
+		ImageIcon icon = null;
+		if (getSortingOrder() == true)
+			icon = new AscendingIcon();
+		else
+			icon = new DescendingIcon();
+
+		TableColumnModel columnModel = view.getColumnModel();
+		JLabel renderer =
+			(JLabel) columnModel.getColumn(columnNumber).getHeaderRenderer();
+
+		renderer.setIcon(icon);
 	}
 
 	public void setWindowItem(WindowItem item) {
@@ -165,7 +188,7 @@ public class TableModelSorter extends BasicTableModelSorter {
 	public void set(HeaderList headerList) {
 
 		super.set(headerList);
-		
+
 		update();
 	}
 

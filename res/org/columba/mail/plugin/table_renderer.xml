@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rendererlist>
+ <renderer name="Status" size="fixed" icon="mail-new.png" class="org.columba.mail.gui.table.plugins.StatusRenderer" />
+ <renderer name="Attachment" size="fixed" icon="attachment.png" class="org.columba.mail.gui.table.plugins.AttachmentRenderer" />
+ <renderer name="Size" class="org.columba.mail.gui.table.plugins.SizeRenderer" />
+ <renderer name="Date" class="org.columba.mail.gui.table.plugins.DateRenderer" />
+ <renderer name="Flagged" size="fixed" icon="mark-as-important-16.png" class="org.columba.mail.gui.table.plugins.FlaggedRenderer" />
+ <renderer name="Priority" size="fixed" icon="priority-high.png" class="org.columba.mail.gui.table.plugins.PriorityRenderer" />
+ <renderer name="From" class="org.columba.mail.gui.table.plugins.FromRenderer" />
+</rendererlist>
+

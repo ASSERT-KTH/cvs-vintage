@@ -17,25 +17,24 @@ package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
-import javax.swing.JTree;
+import javax.swing.SwingConstants;
 
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
 
-public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
+public class AttachmentRenderer extends DefaultLabelRenderer {
 
-	private JTree tree;
-	private String key;
+	boolean bool;
+	ImageIcon image1;
 
-	public HeaderTableCommonRenderer(JTree tree, String key) {
-		super(tree);
-		this.tree = tree;
-		this.key = key;
+	public AttachmentRenderer() {
+		super();
 
-	}
+		setHorizontalAlignment(SwingConstants.CENTER);
 
-	public void updateUI() {
-		super.updateUI();
+		image1 = ImageLoader.getSmallImageIcon("attachment.png");
 
 	}
 
@@ -47,28 +46,32 @@ public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		if (value == null) {
-			setText("");
-			return this;
-		}
-
-		String str = null;
-		try {
-			str = (String) ((MessageNode)value).getHeader().get(key);
-		} catch (ClassCastException ex) {
-			System.out.println("headertablecommonrenderer: " + ex.getMessage());
-			str = new String();
-		}
-
-		setText(str);
-		//return this;
-		return super.getTableCellRendererComponent(
+		super.getTableCellRendererComponent(
 			table,
 			value,
 			isSelected,
 			hasFocus,
 			row,
 			column);
-	}
 
+		if (value == null) {
+			setIcon(null);
+			return this;
+		}
+
+		boolean hasAttachment =
+			 ((Boolean)
+				((MessageNode) value)
+					.getHeader()
+					.get("columba.attachment")).booleanValue();
+
+		if (hasAttachment) {
+			setIcon(image1);
+		} else {
+			setIcon(null);
+
+		}
+
+		return this;
+	}
 }

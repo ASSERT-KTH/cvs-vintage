@@ -17,29 +17,19 @@ package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
 import javax.swing.JTable;
-import javax.swing.JTree;
-import javax.swing.SwingConstants;
 
 import org.columba.mail.gui.table.model.MessageNode;
 
-public class BooleanRenderer extends DefaultLabelRenderer {
+public class BasicRenderer extends DefaultLabelRenderer {
 
-	boolean bool;
-	//String str;
-	ImageIcon image;
-	String key;
-	
-	public BooleanRenderer(JTree tree, boolean bool, ImageIcon image, String key) {
-		super(tree);
-	
-		this.bool = bool;
-		//this.str = str;
-		this.image = image;
+	private String key;
+
+	public BasicRenderer(String key) {
+		super();
+
 		this.key = key;
-		setHorizontalAlignment(SwingConstants.CENTER);
-		//setOpaque(true); //MUST do this for background to show up.
+
 	}
 
 	public Component getTableCellRendererComponent(
@@ -50,45 +40,28 @@ public class BooleanRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		super.getTableCellRendererComponent(
+		if (value == null) {
+			setText("");
+			return this;
+		}
+
+		String str = null;
+		try {
+			str = (String) ((MessageNode) value).getHeader().get(key);
+		} catch (ClassCastException ex) {
+			System.out.println("headertablecommonrenderer: " + ex.getMessage());
+			str = new String();
+		}
+
+		setText(str);
+
+		return super.getTableCellRendererComponent(
 			table,
 			value,
 			isSelected,
 			hasFocus,
 			row,
 			column);
-
-		if (value == null) {
-			setIcon(null);
-			return this;
-		}
-
-		if (value instanceof String)
-			return this;
-
-		
-		if (bool == true) {
-			Boolean b = (Boolean) ( (MessageNode)value).getHeader().get(key);
-			if (b == null)
-				return this;
-
-			if (b.equals(Boolean.TRUE)) {
-				setIcon(image);
-			} else {
-				setIcon(null);
-			}
-		} else {
-			Boolean b = (Boolean) value;
-			if (b == null)
-				return this;
-
-			if (b.equals(Boolean.FALSE)) {
-				setIcon(image);
-			} else {
-				setIcon(null);
-			}
-		}
-		
-		return this;
 	}
+
 }

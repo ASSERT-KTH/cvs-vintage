@@ -19,7 +19,6 @@ import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
@@ -36,8 +35,8 @@ public class StatusRenderer extends DefaultLabelRenderer {
 	ImageIcon image5;
 	ImageIcon image6;
 
-	public StatusRenderer(JTree tree) {
-		super(tree);
+	public StatusRenderer() {
+		super();
 
 		setHorizontalAlignment(SwingConstants.CENTER);
 		//setOpaque(true);

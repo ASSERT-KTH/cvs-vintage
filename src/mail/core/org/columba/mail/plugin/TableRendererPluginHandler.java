@@ -23,16 +23,16 @@ import org.columba.core.plugin.AbstractPluginHandler;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ImportPluginHandler extends AbstractPluginHandler {
+public class TableRendererPluginHandler extends AbstractPluginHandler {
 
 	/**
 	 * @param id
 	 * @param config
 	 */
-	public ImportPluginHandler() {
-		super("org.columba.mail.import", "org/columba/mail/plugin/import.xml");
+	public TableRendererPluginHandler() {
+		super("org.columba.mail.tablerenderer", "org/columba/mail/plugin/table_renderer.xml");
 
-		parentNode = getConfig().getRoot().getElement("importlist");
+		parentNode = getConfig().getRoot().getElement("rendererlist");
 	}
 
 }
