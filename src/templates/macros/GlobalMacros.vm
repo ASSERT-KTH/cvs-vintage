@@ -314,6 +314,9 @@
 <h3>$title</h3>
 #end
 
+#macro (pagetitle)
+<h2>$page.Title</h2>
+#end
 
 #macro (selected $boolean)
 #if ($boolean) selected="selected"#end
@@ -335,7 +338,7 @@
 
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString())
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString()))
   <a href="$prevLink">&laquo;</a> previous |
  #end
  $pageNum of $scarabR.NbrPages

@@ -5,6 +5,8 @@
 #set ($userAttrs = $module.getUserAttributes($issueType)) 
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
 
+#pagetitle()
+
 #if ($userAttrs.isEmpty())
  <p><strong class="alert">
   There are no active user attributes to which to assign users.
