@@ -625,4 +625,27 @@ public class BaseInterceptor
     public int registerHooks(Hooks h, ContextManager cm, Context ctx) {
 	return DECLINED;
     }
+
+    // -------------------- Notes --------------------
+
+    private Object notes[]=new Object[ContextManager.MAX_NOTES];
+    
+    public final void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public final Object getNote( int pos ) {
+	return notes[pos];
+    }
+
+    public Object getNote( String name ) throws TomcatException {
+	int id=cm.getNoteId( ContextManager.MODULE_NOTE, name );
+	return getNote( id );
+    }
+
+    public void setNote( String name, Object value ) throws TomcatException {
+	int id=cm.getNoteId( ContextManager.MODULE_NOTE, name );
+	setNote( id, value );
+    }
+
 }
