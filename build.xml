@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.177 2004/10/25 08:44:42 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.178 2004/10/26 15:23:25 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -271,6 +271,8 @@
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
         <include name="org/jboss/ejb/plugins/keygenerator/hilo/HiLoKeyGeneratorFactory.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
+        <include name="org/jboss/ejb/plugins/cmp/jdbc/metadata/DataSourceMetaData.java"/>
+        <include name="org/jboss/ejb/plugins/cmp/jdbc/metadata/MetaDataLibrary.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/TableCache.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/PartitionedTableCache.java"/>
         <include name="org/jboss/ejb/plugins/inflow/JBossMessageEndpointFactory.java"/>
