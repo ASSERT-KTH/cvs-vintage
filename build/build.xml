@@ -240,6 +240,7 @@
         <filter token="LOG_LEVEL_STRATUM" value="${scarab.log.level.stratum}"/>
         <filter token="LOG_FILE_STRATUM" value="${scarab.log.file.stratum}"/>
         <filter token="LOG_APPEND_STRATUM" value="${scarab.log.append.stratum}"/>
+        <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
