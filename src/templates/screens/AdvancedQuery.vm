@@ -1,10 +1,8 @@
 <div class="app" id="advancedquery">
 <h2>Advanced Query (2.2.0)</h2>
 
-<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
-
-<form action="$link.setPage("AdvancedQuery.vm")" method="get">
+<form action="$link.setPage("AdvancedQuery.vm")" method="post">
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="advanced" />
@@ -13,7 +11,7 @@
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
     <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-    <input type="submit" name="eventSubmit_doSavequery" value="Save this Query" />
+    <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this Query" />
 </p>
 
 <h3>Search the Scarab Knowledge Base</h3>
@@ -23,7 +21,7 @@
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
     <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-    <input type="submit" name="eventSubmit_doSave" value="Save this Query" />
+    <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this Query" />
 </p>
    
   
