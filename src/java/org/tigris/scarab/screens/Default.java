@@ -75,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.57 2002/06/19 03:44:25 jmcnally Exp $
+ * @version $Id: Default.java,v 1.58 2002/07/03 17:45:02 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -202,18 +202,6 @@ public class Default extends TemplateSecureScreen
 
         setTarget(data, Turbine.getConfiguration()
                 .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
-    }
-
-    private static void setTargetSelectIssueType(RunData data)
-    {
-        getTemplateContext(data)
-            .put( ScarabConstants.NEXT_TEMPLATE,
-                          data.getParameters()
-                          .getString(ScarabConstants.NEXT_TEMPLATE) );
-
-        setTarget(data, Turbine.getConfiguration()
-                .getString("scarab.CurrentArtifactTypeTemplate", 
-                           "SelectArtifactType.vm"));        
     }
 
     private static void setTargetLogin(RunData data)
