@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.9 2000/01/10 22:35:31 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/01/10 22:35:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.10 2000/01/14 20:28:57 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/01/14 20:28:57 $
  *
  * ====================================================================
  *
@@ -120,20 +120,10 @@ public class HttpServer {
      */
 
     ContextManager contextM;
-    
-    public static final int MAX_CONNECTORS=10; // XXX realocate if more 
-
-    /**
-     * The set of server connectors attached to this server.
-     */
-    // XXX This should *really* be a collection class like a Vector
-
-    ServerConnector connector[]=new ServerConnector[MAX_CONNECTORS];
 
     /**
      * The current number of server connectors attached to this server.
      */
-
     int connector_count=0;
     
     // set to connector before start
@@ -251,8 +241,17 @@ public class HttpServer {
      * @param con The new server connector
      */
 
-    public synchronized void addConnector( ServerConnector con ) {
-	this.connector[connector_count]=con;
+    public synchronized void addConnector( ServerConnector connector ) {
+	connector.setAttribute(SERVER, this);
+	connector.setContextManager( contextM );
+	    
+	connector.setAttribute(VHOST_PORT, new Integer( getPort() ));
+	connector.setAttribute(VHOST_ADDRESS, address);	
+	connector.setAttribute(SOCKET_FACTORY, factory);
+	connector.setAttribute( VHOST_NAME, getHostName() );
+
+	contextM.addServerConnector( connector );
+
 	connector_count++;
     }
 
@@ -267,26 +266,6 @@ public class HttpServer {
     }
 
 
-    /**
-     * Gets the <code>i</code>th server connector attached to this server.
-     *
-     * @param i Zero-relative index of the server connector to retrieve
-     */
-    // XXX enun
-
-    public ServerConnector getConnector(int i) {
-	return connector[i];
-    }
-
-
-    /**
-     * Gets the number of server connectors attached to this server.
-     */
-
-    public int getConnectorCount() {
-	return connector_count;
-    }
-    
 
     /**
      * Gets the port that the server is listening to requests on.
@@ -384,34 +363,11 @@ public class HttpServer {
      * Starts the server.
      */
     public void start() throws HttpServerException {
-	Context defaultContext=contextM.getContext("");
-
-	if (defaultContext == null ||
-	    defaultContext.getDocumentBase() == null) {
-	    String msg = sm.getString("server.defaultContext.npe");
-
-	    throw new HttpServerException(msg);
-	}
-
-	Enumeration enum = contextM.getContextNames();
-
-	while (enum.hasMoreElements()) {
-            Context context =
-                contextM.getContext((String)enum.nextElement());
-
-            context.init();
-	}
-
-	// find and init a connector
-	initConnector();
-
-	for( int i=0; i<connector_count; i++ ) {
-	    try {
-		// XXX check for null
-		connector[i].start();
-	    } catch(Exception ex ) {
-		throw new HttpServerException( ex );
-	    }
+	try {
+	    contextM.start();
+	} catch(Exception ex) {
+	    ex.printStackTrace();
+	    throw new HttpServerException(ex);
 	}
     }
 
@@ -421,26 +377,10 @@ public class HttpServer {
      */
   
     public void stop() throws HttpServerException{
-	System.out.println("Shutting down Http Server");
-
-	for (int i=0; i<connector_count; i++) {
-	    try {
-		connector[i].stop();
-	    } catch(Exception ex) {
-		throw new HttpServerException( ex );
-	    }
-	}
-
-	Enumeration enum = contextM.getContextNames();
-
-	while (enum.hasMoreElements()) {
-	    Context context =
-	        contextM.getContext((String)enum.nextElement());
-
-	    System.out.println("Taking down context: " +
-	        context.getPath());
-
-	    context.shutdown();
+	try {
+	    contextM.stop();
+	} catch(Exception ex) {
+	    throw new HttpServerException(ex);
 	}
     }
 
@@ -452,15 +392,6 @@ public class HttpServer {
 	    // Use props and CONNECTOR_PROP to load configuration info
 	    // default is HttpServerConnector
 	    addConnector(  new HttpAdapter() );
-	}
-	for( int i=0; i<connector_count; i++ ) {
-	    connector[i].setAttribute(SERVER, this);
-	    connector[i].setContextManager( contextM );
-	    
-	    connector[i].setAttribute(VHOST_PORT, new Integer( getPort() ));
-	    connector[i].setAttribute(VHOST_ADDRESS, address);	
-	    connector[i].setAttribute(SOCKET_FACTORY, factory);
-	    connector[i].setAttribute( VHOST_NAME, getHostName() );
 	}
     }
 }

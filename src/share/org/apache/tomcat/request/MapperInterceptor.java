@@ -134,18 +134,27 @@ public class MapperInterceptor  implements  RequestInterceptor {
 
         wrapper = getPathMatch(context, path, req);
 
+	if(wrapper!=null)
+	    if(debug>0) log("path match " + path );
+	
 	// try a prefix match
 
 	if (wrapper == null) {
 	    wrapper = getPrefixMatch(context, path, req);
 	}
 
+	if(wrapper!=null)
+	    if(debug>0) log("prefix match " + path );
+	
 	// try an extension match
 
 	if (wrapper == null) {
 	    wrapper = getExtensionMatch(context, path, req);
 	}
 
+	if(wrapper!=null)
+	    if(debug>0) log("exteinsion match " + path );
+	
 	// lookup real servlet if what we're actually
 	// dealing with a jsp file
 

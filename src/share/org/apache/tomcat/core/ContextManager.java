@@ -146,7 +146,7 @@ public class ContextManager {
 	}
 	
 	// check for default context 
-	Context defaultContext=getContext("/");
+	Context defaultContext=getContext("");
 	if (defaultContext == null ||
 	    defaultContext.getDocumentBase() == null) {
 	    // XXX find a better exception 
@@ -208,7 +208,7 @@ public class ContextManager {
 	// it will replace existing context - it's better than 
 	// IllegalStateException.
 	String path=ctx.getPath();
-	// Log	System.out.println(this + " adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase());
+	if(debug>0) log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase());
 	contexts.put( path, ctx );
     }
     
