@@ -64,7 +64,7 @@ public class BaseTurbineTestCase extends TestCase {
 	private static boolean initialized = false;
 
 	public BaseTurbineTestCase() {
-		System.setProperty("applicationRoot", "./target/scarab");
+		System.setProperty("applicationRoot", "./target/test-classes");
 	}
 
 	public BaseTurbineTestCase(String name) throws Exception {

@@ -56,23 +56,19 @@ import org.tigris.scarab.da.AttributeAccessTest;
 import org.tigris.scarab.om.ActivitySetTest;
 import org.tigris.scarab.om.ActivityTest;
 import org.tigris.scarab.om.AttachmentTest;
-import org.tigris.scarab.om.AttributeGroupTest;
 import org.tigris.scarab.om.AttributeTest;
-import org.tigris.scarab.om.AttributeValueTest;
 import org.tigris.scarab.om.IssueTest;
 import org.tigris.scarab.om.IssueTypeTest;
 import org.tigris.scarab.om.QueryTest;
 import org.tigris.scarab.om.RModuleAttributeTest;
 import org.tigris.scarab.om.RModuleIssueTypeTest;
 import org.tigris.scarab.om.RModuleOptionTest;
-import org.tigris.scarab.om.ScarabModuleTest;
 import org.tigris.scarab.om.ScarabUserTest;
 import org.tigris.scarab.services.email.VelocityEmailServiceTest;
 import org.tigris.scarab.util.EmailLinkTest;
 import org.tigris.scarab.util.ScarabUtilTest;
 import org.tigris.scarab.util.SubsetIteratorTest;
 import org.tigris.scarab.util.SubsetIteratorWithSizeTest;
-import org.tigris.scarab.util.word.IssueSearchFactoryTest;
 import org.tigris.scarab.util.word.IssueSearchTest;
 import org.tigris.scarab.util.xmlissues.ImportIssuesTest;
 
@@ -101,16 +97,16 @@ public class AllScarabTests extends BaseScarabOMTestCase {
 		suite.addTestSuite(ActivityTest.class);
 		suite.addTestSuite(ActivitySetTest.class);
 		suite.addTestSuite(AttachmentTest.class);
-		suite.addTestSuite(AttributeTest.class);
+        	suite.addTestSuite(AttributeTest.class);
 		// suite.addTestSuite(AttributeGroupTest.class);
-		suite.addTestSuite(AttributeValueTest.class);
+		//suite.addTestSuite(AttributeValueTest.class);
 		suite.addTestSuite(IssueTest.class);
 		suite.addTestSuite(IssueTypeTest.class);
 		suite.addTestSuite(QueryTest.class);
-		//suite.addTestSuite(RModuleAttributeTest.class);
+		suite.addTestSuite(RModuleAttributeTest.class);
 		suite.addTestSuite(RModuleIssueTypeTest.class);
 		suite.addTestSuite(RModuleOptionTest.class);
-		suite.addTestSuite(ScarabModuleTest.class);
+		//suite.addTestSuite(ScarabModuleTest.class);
 		suite.addTestSuite(ScarabUserTest.class);
 		
 		// org.tigris.scarab.services.email tests 
@@ -123,7 +119,7 @@ public class AllScarabTests extends BaseScarabOMTestCase {
 		suite.addTestSuite(SubsetIteratorWithSizeTest.class);
 		
 		// org.tigris.scarab.util.word
-		suite.addTestSuite(IssueSearchFactoryTest.class);
+		//suite.addTestSuite(IssueSearchFactoryTest.class);
 		suite.addTestSuite(IssueSearchTest.class);
 		
 		// org.tigris.scarab.util.xmlissues

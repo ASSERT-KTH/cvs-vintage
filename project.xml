@@ -409,7 +409,7 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
-    </dependency>
+    </dependency>    
     <dependency>
       <groupId>jdbc</groupId>
       <artifactId>jdbc</artifactId>
@@ -492,6 +492,36 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
+    
+  <!-- Avalon Container and Components -->
+   <dependency>
+      <groupId>fulcrum</groupId>
+      <artifactId>fulcrum-yaafi</artifactId>
+      <version>20041025.103241</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>    
+   <dependency>
+      <groupId>avalon-framework</groupId>
+      <artifactId>avalon-framework-api</artifactId>
+      <version>4.2.0</version>
+      <url>http://avalon.apache.org/framework/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>
+
+   <dependency>
+      <groupId>avalon-framework</groupId>
+      <artifactId>avalon-framework-impl</artifactId>
+      <version>4.2.0</version>
+      <url>http://avalon.apache.org/framework/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>         
     
   <!-- Begin Database Dependencies -->
   <!-- MySQL -->
@@ -602,7 +632,7 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/*Test.java</include>
+        <include>**/AllScarabTests.java</include>
       </includes>
     </unitTest>
     <resources>      
@@ -626,7 +656,7 @@
     <report>maven-junit-report-plugin</report>
     <!--report>maven-tasklist-plugin</report-->
   
-    <report>maven-jcoverage-plugin</report>
+    <!--report>maven-jcoverage-plugin</report-->
     <report>maven-simian-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-tasks-plugin</report>

@@ -46,6 +46,7 @@ package org.tigris.scarab;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -60,25 +61,29 @@ import org.tigris.scarab.test.BaseScarabOMTestCase;
  * Test to understand better how security works..
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: SecurityTest.java,v 1.4 2004/04/07 20:12:22 dep4b Exp $
+ * @version $Id: SecurityTest.java,v 1.5 2004/10/25 12:55:24 dep4b Exp $
  */
 public class SecurityTest extends BaseScarabOMTestCase
 {
-    public void OFFtestCreateAssignDeleteUser() throws Exception
+    public void testCreateAssignDeleteUser() throws Exception
     {
+        String username = "test" + new Date().getTime();
         ScarabModule sm = (ScarabModule)getModule();
         User user = ScarabUserManager.getInstance();//ScarabUserManager.getInstance(sm.getOwnerId());
         user.setEmail("test@test.com");
         user.setConfirmed("CONFIRMED");
         user.setFirstName("test");
         user.setLastName("test");
-        user.setUserName("test");
+        user.setUserName(username);
         TurbineSecurity.addUser(user,"test");
-        user = TurbineSecurity.getAuthenticatedUser("test","test");
+        user = TurbineSecurity.getAuthenticatedUser(username,"test");
         assertNotNull(user);
         Role role = TurbineSecurity.getRole("Project Owner");
         
-        
+        assertNotNull(role);
+        assertNotNull(user);
+        assertNotNull(sm);
+        /*
         TurbineSecurity.grant(user,sm,role);
         List users =sm.getUsers("test","","","",this.getDefaultIssueType());
         assertEquals(1,users.size());
@@ -92,6 +97,7 @@ public class SecurityTest extends BaseScarabOMTestCase
         catch(UnknownEntityException uee){
             
         }
+        */
         
        
         

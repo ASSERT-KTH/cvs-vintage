@@ -6,7 +6,10 @@
   </properties>
 
   <body>
-    <release version="b20" date="in dev">
+    <release version="b20" date="in dev">                
+      <action dev="epugh" type="add">
+        Import Fulcrum PRE_AVALON branch of code into Scarab CVS.
+      </action>          
       <action dev="jorgeuriarte" type="add">
         SCB1025 (Originally provided by Peter McTaggart): Added Date attribute
         type, with a popup calendar to enter the values. The Date fields will 
