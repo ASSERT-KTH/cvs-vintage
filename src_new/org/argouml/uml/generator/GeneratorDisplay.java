@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.19 2002/07/31 15:54:42 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.20 2002/08/12 14:14:28 thierrylach Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -36,6 +36,7 @@
 
 package org.argouml.uml.generator;
 import org.argouml.application.api.*;
+import org.argouml.application.ArgoVersion;
 
 //import java.util.*;
 import java.io.*;
@@ -731,7 +732,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
         return "Uml 1.3 Notation Generator";
     }
     public String getModuleAuthor() { return "ArgoUML Core"; }
-    public String getModuleVersion() { return "0.9.4"; }
+    public String getModuleVersion() { return ArgoVersion.VERSION; }
     public String getModuleKey() { return "module.language.uml.generator"; }
 
 } /* end class GeneratorDisplay */
