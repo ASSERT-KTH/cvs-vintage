@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.34 2002/04/26 23:34:52 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.35 2002/04/30 19:49:24 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -211,13 +211,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     {
     }
 
-    public void doDone( RunData data, TemplateContext context )
-        throws Exception
-    {
-        doSave(data, context);
-        doCancel(data, context);
-    }
-
     public void doGonext( RunData data, TemplateContext context )
         throws Exception
     {
@@ -228,9 +221,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
                                      TemplateContext context )
         throws Exception
     {
-        data.getParameters().remove(ScarabConstants.CANCEL_TEMPLATE);
-        data.getParameters().add(ScarabConstants.CANCEL_TEMPLATE, 
-                                 data.getTarget());
         setTarget(data, getOtherTemplate(data));            
     }
 
@@ -251,106 +241,11 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public void doCancel( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
-
-        if (cancelTargets.size() < 2)
-        {
-            if (cancelTargets.size() == 1)
-            {
-                cancelTargets.pop();
-            }
-            data.setTarget("Index.vm");
-            return;
-        }
-
-        // Remove current and next page from cancel stack.
-        String currentPage = (String)cancelTargets.pop();
-        String cancelPage = (String)cancelTargets.pop();
- 
-        // if this is not the first time they hit this page,
-        // Cancel back to first time.
-        if (cancelTargets.contains(cancelPage))
-        {
-            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
-            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
-            {
-               cancelTargets.pop();
-            }
-            cancelPage = (String)cancelTargets.pop();
-        }
-
-        // Remove current page mapping from context map
-        HashMap contextMap = (HashMap)user.getTemp("contextMap");
-        if (contextMap.containsKey(currentPage))
-        {
-            contextMap.remove(currentPage);
-        }
-
-        if (contextMap.containsKey(cancelPage))
-        {
-            restoreContext(data, contextMap, cancelPage);
-        }
-        user.setTemp("cancelTargets", cancelTargets);
-        user.setTemp("contextMap", contextMap);
-        data.setTarget(cancelPage);
+        setTarget(data, getCancelTemplate(data));            
     }
 
-    /*
-     * Cancels back to given page.
-     */
-    public void cancelBackTo( RunData data, TemplateContext context,
-                              String cancelPage )
-        throws Exception
+    protected Category log()
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
-        if (cancelTargets.contains(cancelPage))
-        {
-            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
-            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
-            {
-               cancelTargets.pop();
-            }
-            cancelPage = (String)cancelTargets.pop();
-        }
-
-        // Remove current page mapping from context map
-        HashMap contextMap = (HashMap)user.getTemp("contextMap");
-        if (contextMap.containsKey(cancelPage))
-        {
-            contextMap.remove(cancelPage);
-        }
-
-        if (contextMap.containsKey(cancelPage))
-        {
-            restoreContext(data, contextMap, cancelPage);
-        }
-        user.setTemp("cancelTargets", cancelTargets);
-        user.setTemp("contextMap", contextMap);
-        data.setTarget(cancelPage);
-    }
-
-    /**
-     * Puts parameters into the context
-     * That the cancel-to page needs.
-     */
-    private void restoreContext( RunData data, HashMap contextMap,
-                                 String cancelPage)
-        throws Exception
-    {
-        HashMap params = (HashMap)contextMap.get(cancelPage);
-        ParameterParser pp = data.getParameters();
-        Iterator iter = params.keySet().iterator();
-        while (iter.hasNext())
-        { 
-            String key = (String)iter.next();
-            pp.remove(key);
-            String[] ids = (String[])params.get(key);
-            for (int i = 0; i< ids.length; i++)
-            {
-                pp.add(key, ids[i]);
-            }
-        }
+        return log;
     }
 }

@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
  // Turbine Stuff
+import org.apache.log4j.Category;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
@@ -68,10 +69,20 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.22 2002/04/26 23:34:52 jmcnally Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.23 2002/04/30 19:49:24 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
+    private static final Category log = 
+        Category.getInstance("org.tigris.scarab");
+
+    protected static final String ERROR_MESSAGE = 
+        "More information was required to submit your request. Please " +
+        "scroll down to see error messages."; 
+
+    protected static final String NO_PERMISSION_MESSAGE = 
+         "You do not have permission to perform this action.";
+
     /**
      * Helper method to retrieve the IntakeTool from the Context
      */
@@ -86,8 +97,8 @@ public abstract class ScarabTemplateAction extends TemplateAction
      */
     public ScarabRequestTool getScarabRequestTool(TemplateContext context)
     {
-        return (ScarabRequestTool) getTool(context, 
-                ScarabConstants.SCARAB_REQUEST_TOOL);
+        return (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
     }
 
     /**
@@ -97,17 +108,17 @@ public abstract class ScarabTemplateAction extends TemplateAction
     public String getCurrentTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.TEMPLATE, null);
+                   .getString(ScarabConstants.TEMPLATE, null);
     }
 
     /**
-     * Returns the current template that is being executed, otherwise
+     * Returns the current template that is being executed, otherwisse
      * it returns defaultValue.
      */
     public String getCurrentTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.TEMPLATE, defaultValue);
     }
 
     /**
@@ -116,7 +127,7 @@ public abstract class ScarabTemplateAction extends TemplateAction
     public String getNextTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.NEXT_TEMPLATE, null);
+                   .getString(ScarabConstants.NEXT_TEMPLATE, null);
     }
 
     /**
@@ -125,7 +136,7 @@ public abstract class ScarabTemplateAction extends TemplateAction
     public String getNextTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.NEXT_TEMPLATE, defaultValue);
     }
 
     /**
@@ -143,16 +154,37 @@ public abstract class ScarabTemplateAction extends TemplateAction
     public String getCancelTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.CANCEL_TEMPLATE, null);
+                   .getString(ScarabConstants.CANCEL_TEMPLATE, null);
     }
 
     /**
-     * Returns the cancelTemplate to be executed. Otherwise returns defaultValue.
+     * Returns the cancelTemplate to be executed. 
+     * Otherwise returns defaultValue.
      */
     public String getCancelTemplate(RunData data, String defaultValue)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.CANCEL_TEMPLATE, defaultValue);
+                   .getString(ScarabConstants.CANCEL_TEMPLATE, 
+                              defaultValue);
+    }
+
+    /**
+     * Returns the backTemplate to be executed. Otherwise returns null.
+     */
+    public String getBackTemplate(RunData data)
+    {
+        return data.getParameters()
+                   .getString(ScarabConstants.BACK_TEMPLATE, null);
+    }
+
+    /**
+     * Returns the backTemplate to be executed. 
+     * Otherwise returns defaultValue.
+     */
+    public String getBackTemplate(RunData data, String defaultValue)
+    {
+        return data.getParameters()
+                   .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
     }
 
     /**
@@ -162,38 +194,12 @@ public abstract class ScarabTemplateAction extends TemplateAction
     public String getOtherTemplate(RunData data)
     {
         return data.getParameters()
-                            .getString(ScarabConstants.OTHER_TEMPLATE);
+                   .getString(ScarabConstants.OTHER_TEMPLATE);
     }
-
-    /**
-     * Returns the backTemplate to be executed. Otherwise returns null.
-     */
-    public String getBackTemplate(RunData data)
-    {
-        return data.getParameters()
-                            .getString(ScarabConstants.BACK_TEMPLATE, null);
-    }
-
-    /**
-     * Returns the backTemplate to be executed. Otherwise returns defaultValue.
-     */
-    public String getBackTemplate(RunData data, String defaultValue)
-    {
-        return data.getParameters()
-                            .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
-    }
-
 
     public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
-    }
-
-    public void doDone( RunData data, TemplateContext context )
-        throws Exception
-    {
-        doSave(data, context);
-        doCancel(data, context);
     }
 
     public void doGonext( RunData data, TemplateContext context )
@@ -202,7 +208,8 @@ public abstract class ScarabTemplateAction extends TemplateAction
         setTarget(data, getNextTemplate(data));            
     }
 
-    public void doGotoothertemplate( RunData data, TemplateContext context )
+    public void doGotoothertemplate( RunData data, 
+                                     TemplateContext context )
         throws Exception
     {
         setTarget(data, getOtherTemplate(data));            
@@ -213,7 +220,7 @@ public abstract class ScarabTemplateAction extends TemplateAction
     {
         setTarget(data, getCurrentTemplate(data));            
     }
-        
+
     public void doReset( RunData data, TemplateContext context )
         throws Exception
     {
@@ -221,75 +228,15 @@ public abstract class ScarabTemplateAction extends TemplateAction
         intake.removeAll();
         setTarget(data, getCurrentTemplate(data));            
     }
-
+        
     public void doCancel( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
-
-        if (cancelTargets.size() < 2)
-        {
-            if (cancelTargets.size() == 1)
-            {
-                cancelTargets.pop();
-            }
-            data.setTarget("Index.vm");
-            return;
-        }
-
-        // Remove current and next page from cancel stack.
-        String currentPage = (String)cancelTargets.pop();
-        String cancelPage = (String)cancelTargets.pop();
- 
-        // if this is not the first time they hit this page,
-        // Cancel back to first time.
-        if (cancelTargets.contains(cancelPage))
-        {
-            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
-            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
-            {
-               cancelTargets.pop();
-            }
-            cancelPage = (String)cancelTargets.pop();
-        }
-
-        // Remove current page mapping from context map
-        HashMap contextMap = (HashMap)user.getTemp("contextMap");
-        if (contextMap.containsKey(currentPage))
-        {
-            contextMap.remove(currentPage);
-        }
-
-        if (contextMap.containsKey(cancelPage))
-        {
-            restoreContext(data, contextMap, cancelPage);
-        }
-        user.setTemp("cancelTargets", cancelTargets);
-        user.setTemp("contextMap", contextMap);
-        data.setTarget(cancelPage);
+        setTarget(data, getCancelTemplate(data));            
     }
 
-    /**
-     * Puts parameters into the context
-     * That the cancel-to page needs.
-     */
-    private void restoreContext( RunData data, HashMap contextMap,
-                                 String cancelPage)
-        throws Exception
+    protected Category log()
     {
-        HashMap params = (HashMap)contextMap.get(cancelPage);
-        ParameterParser pp = data.getParameters();
-        Iterator iter = params.keySet().iterator();
-        while (iter.hasNext())
-        { 
-            String key = (String)iter.next();
-            pp.remove(key);
-            String[] ids = (String[])params.get(key);
-            for (int i = 0; i< ids.length; i++)
-            {
-                pp.add(key, ids[i]);
-            }
-        }
+        return log;
     }
 }
