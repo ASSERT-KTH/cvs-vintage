@@ -59,6 +59,13 @@
        #booleanCheckbox ($itGroup.Isdefault)
     </td>
     </tr>
+    <tr>
+    <th>$l10n.Deleted</th>
+    <td>
+       #fieldErrorMsg($itGroup.Deleted "")  
+       #booleanCheckbox ($itGroup.Deleted)
+    </td>
+    </tr>
   </table>
 </div>
 

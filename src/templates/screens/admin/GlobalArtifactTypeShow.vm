@@ -45,14 +45,16 @@
 <th width="70">$l10n.Select</th>
 <th>#sort ("name" "Type")</th>
 <th>#sort ("desc" "Description")</th>
+<th>$l10n.Deleted</th>
 </tr>
 #foreach ($issueType in $allIssueTypes)
-   #set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
-<td>#booleanCheckbox ($group.Deleted)</td>
+<td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
 <td>$issueType.Description</td>
+    #set ($group = $intake.IssueType.mapTo($issueType))
+<td>$group.Deleted</td>
 </tr>
 #end
 </table>
@@ -61,8 +63,7 @@
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #if (!$allIssueTypes.isEmpty())
-<!-- not implemented yet <input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160; -->
-<input type="submit" value="$l10n.DeleteUndeleteSelected" name="eventSubmit_doDelete" />
+<input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160;
 #end
 </div>
 
