@@ -1,4 +1,4 @@
-/* $Id: MxInterceptor.java,v 1.1 2002/06/07 06:43:02 costin Exp $
+/* $Id: MxInterceptor.java,v 1.2 2002/07/30 17:27:25 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -63,7 +63,6 @@ import org.apache.tomcat.util.io.FileUtil;
 import java.io.*;
 import java.util.*;
 
-import javax.management.*;
 import org.apache.tomcat.util.mx.*;
 
 /**
@@ -71,8 +70,6 @@ import org.apache.tomcat.util.mx.*;
  * @author Costin Manolache
  */
 public class MxInterceptor  extends BaseInterceptor { 
-
-    MBeanServer mserver=DynamicMBeanProxy.getMBeanServer();
 
     // -------------------- Tomcat callbacks --------------------
 
