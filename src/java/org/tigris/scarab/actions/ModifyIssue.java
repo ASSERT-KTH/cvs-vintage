@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.166 2003/05/29 20:22:03 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.167 2003/06/04 14:07:55 irk_tpt Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -806,7 +806,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         IntakeTool intake = getIntakeTool(context);
-        Group group = intake.get("Depend", IntakeTool.DEFAULT_KEY);
+	Group group = intake.get("Depend","newDep"+issue.getQueryKey(),false);
         String reasonForChange = group.get("Description").toString();
 
         boolean depAdded = doAdddependency(issue, intake, group, scarabR,

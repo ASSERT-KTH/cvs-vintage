@@ -106,7 +106,7 @@ $l10n.depend_nonblockingReverse this issue
 #end
 
 #if ($canEdit)
-#set ($newDependGroup = $intake.Depend.Default)
+#set ($newDependGroup = $intake.Depend.setKey("newDep$currentIssue.QueryKey"))
 #indexedRows($counter)
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
 <td>&nbsp;</td>
