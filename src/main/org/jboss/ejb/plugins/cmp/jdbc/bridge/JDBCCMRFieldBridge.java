@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *		One for each role that entity has. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
 	// ------ Invocation messages ------
@@ -263,6 +263,10 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 	 */
 	public JDBCStoreManager getJDBCStoreManager() {
 		return manager;
+	}
+	
+	public JDBCEntityBridge getEntity() {
+		return entity;
 	}
 	
 	/**
