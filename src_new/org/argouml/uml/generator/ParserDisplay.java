@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.109 2004/04/19 19:43:48 mvw Exp $
+// $Id: ParserDisplay.java,v 1.110 2004/04/21 17:56:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.109 2004/04/19 19:43:48 mvw Exp $
+// $Id: ParserDisplay.java,v 1.110 2004/04/21 17:56:50 mvw Exp $
 
 
 
@@ -57,7 +57,6 @@ import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
-import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ProfileJava;
 import org.argouml.util.MyTokenizer;
@@ -2034,7 +2033,7 @@ public class ParserDisplay extends Parser {
         boolean foundExit = false;
         boolean foundDo = false;
         
-	Collection trans = new ArrayList();
+	Collection transitionList = new ArrayList();
 	java.util.StringTokenizer lines =
 	    new java.util.StringTokenizer(s, "\n\r");
 	while (lines.hasMoreTokens()) {
@@ -2051,20 +2050,14 @@ public class ParserDisplay extends Parser {
             } else {
 		Object t = UmlFactory.getFactory()
 		    .getStateMachines().createTransition();
+		//TODO: Why does buildInternalTransition() not work?
 		if (t == null) continue;
-		
-		/*TODO: The following gives problems with the 
-		 * setInternalTransitions statement below. 
-		 * However, we should set the statemachine 
-		 * attribute for the transition, isn't it?
-		 */
-		ModelFacade.setStateMachine(t, StateMachinesHelper.getHelper().getStateMachine(st));
-	
+
 		ModelFacade.setTarget(t, st);
 		ModelFacade.setSource(t, st);
 		parseTransition(t, line);
 		LOG.debug("just parsed:" + GeneratorDisplay.Generate(t));
-		trans.add(t);
+		transitionList.add(t);
 	    }
 	}
 
@@ -2080,8 +2073,8 @@ public class ParserDisplay extends Parser {
 	for (int i = 0; i < oldinternals.size(); i++)
 	    UmlFactory.getFactory()
                 .delete(/*(MTransition)*/ oldinternals.elementAt(i));
-	internals.addAll(trans);
-	ModelFacade.setInternalTransitions(st, trans);
+	internals.addAll(transitionList);
+	ModelFacade.setInternalTransitions(st, transitionList);
     }
 
     /** Parse a line of the form: "entry /action" and create an action.
