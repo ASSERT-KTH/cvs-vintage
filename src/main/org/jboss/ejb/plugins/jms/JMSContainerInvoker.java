@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.66 $</tt>
+ * @version <tt>$Revision: 1.67 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JMSContainerInvoker
@@ -817,8 +817,13 @@ public class JMSContainerInvoker
          //
          // start a thread up to handle recovering the connection. so we can
          // attach to the jms resources once they become available
-               exListener.onException(e);
+         exListener.onException(e);
          return;
+      }
+      finally
+      {
+         // Clear any security context established by the jms connection
+         SecurityActions.clear();
       }
 
       if (dlqHandler != null)
