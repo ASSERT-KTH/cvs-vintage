@@ -17,13 +17,7 @@ import org.jboss.security.SimplePrincipal;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -37,7 +31,7 @@ import java.util.Set;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -385,26 +379,43 @@ public abstract class BeanMetaData
       excludedMethods.add(method);
    }
 
-   public byte getMethodTransactionType(String methodName, Class[] params,
-                                        InvocationType iface)
+   public byte getMethodTransactionType(String methodName, Class[] params, InvocationType iface)
    {
       // default value
       byte result = TX_UNKNOWN;
 
+      MethodMetaData bestMatch = null;
       Iterator iterator = getTransactionMethods();
       while (iterator.hasNext())
       {
          MethodMetaData m = (MethodMetaData) iterator.next();
-         if (m.patternMatches(methodName, params, iface))
-         {
-            result = m.getTransactionType();
-            // if it is an exact match, break, if it is the wildcard
-            // continue to look for a finer match
-            if (m.getMethodName().equals("*") == false)
+         if (m.patternMatches(methodName, params, iface)) {
+
+            // this is the first match
+            if (bestMatch == null)
             {
-               break;
+               bestMatch = m;
+            }
+            else
+            {
+               // this is a better match because the name is more precise
+               if (bestMatch.getMethodName().equals("*"))
+               {
+                  bestMatch = m;
+               }
+               // this is a better match because now we have parameters, we cant get any better
+               if (m.getMethodParams().length > 0)
+               {
+                  bestMatch = m;
+                  break;
+               }
             }
          }
+      }
+
+      if (bestMatch != null)
+      {
+         result = bestMatch.getTransactionType();
       }
 
       return result;
