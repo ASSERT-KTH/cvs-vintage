@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.17 2000/02/08 18:50:46 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/02/08 18:50:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.18 2000/02/09 21:43:53 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/02/09 21:43:53 $
  *
  * ====================================================================
  *
@@ -121,6 +121,7 @@ public class ServletWrapper {
     public void setContext( Context context) {
         this.context = context;
 	config.setContext( context );
+	isReloadable=context.getReloadable();
     }
 
     protected Context getContext() {
@@ -220,8 +221,15 @@ public class ServletWrapper {
 	    if (servletClassName == null) 
 		throw new IllegalStateException(sm.getString("wrapper.load.noclassname"));
 
-	    servletClass = context.getLoader().loadServlet(this,
-							   servletClassName);
+	    ServletLoader loader=context.getServletLoader();
+	    if( loader==null) {
+		// XXX old code
+		servletClass = context.getLoader().loadServlet(this,
+							       servletClassName);
+	    } else {
+		servletClass=loader.loadClass( servletClassName);
+	    }
+		
 	}
 	
 	servlet = (Servlet)servletClass.newInstance();
@@ -269,8 +277,42 @@ public class ServletWrapper {
 	throws IOException
     {
 	if( path != null ) handleJspRequest( request, response );
-        synchronized (this) {
-	    if (servlet == null) {
+
+	Context context = getContext();
+
+	// Reloading
+	// XXX ugly - should find a better way to deal with invoker
+	// The problem is that we are just clearing up invoker, not
+	// the class loaded by invoker.
+
+	// That will be reolved after we reset the context - and many
+	// other conflicts.
+	if( isReloadable && ! "invoker".equals( getServletName())) {
+	    ServletLoader loader=context.getServletLoader();
+	    if( loader!=null) {
+		// XXX no need to check after we remove the old loader
+		if( loader.shouldReload() ) {
+		    loader.reload();
+		    servlet=null;
+		    servletClass=null;
+// 		    String path=context.getPath();
+// 		    String docBase=context.getDocBase();
+// 		    // XXX all other properties need to be saved or something else
+// 		    ContextManager cm=context.getContextManager();
+// 		    cm.removeContext(path);
+// 		    Context ctx=new Context();
+// 		    ctx.setPath( path );
+// 		    ctx.setDocBase( docBase );
+// 		    cm.addContext( ctx );
+// 		    context=ctx;
+//		    // XXX shut down context, remove sessions, etc
+		}
+	    }
+	}
+	
+	
+	if (servlet == null) {
+	    synchronized (this) {
 		try {
 		    loadServlet();
 		} catch (ClassNotFoundException e) {
@@ -291,9 +333,8 @@ public class ServletWrapper {
 		// logic for un-loading
 		serviceCount++;
 	    }
-	    
-	    Context context = getContext();
 
+	    
 	    handleInvocation( context, servlet, request, response );
 
 	} catch (ServletException e) {

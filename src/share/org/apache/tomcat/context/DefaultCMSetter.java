@@ -145,11 +145,78 @@ public class DefaultCMSetter extends BaseContextInterceptor {
 
 	// XXX Loader properties - need to be set on loader!!
 	if(ctx.getLoader() == null) {
-	    ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl(ctx));
-	    // ctx.setLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
+	    // ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl(ctx));
+	    ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
+	    initURLs( ctx );
 	}
 
+	
+
 	return 0;
+    }
+
+    private void initURLs(Context context) {
+	ServletLoader loader=context.getServletLoader();
+	if( loader==null) return;
+	
+	String base = context.getDocBase();
+
+        // The classes directory...
+        for(Enumeration e = context.getClassPaths();
+            e.hasMoreElements(); ) {
+            String cpath = (String) e.nextElement();
+	    File dir = new File(base + "/" + cpath + "/");
+	    loader.addRepository( dir );
+        }
+
+        for(Enumeration e = context.getLibPaths();
+            e.hasMoreElements(); ) {
+            String libpath = (String) e.nextElement();
+            File f =  new File(base + "/" + libpath + "/");
+            Vector jars = new Vector();
+            getJars(jars, f);
+            
+            for(int i=0; i < jars.size(); ++i) {
+		String jarfile = (String) jars.elementAt(i);
+		loader.addRepository( new File( base + "/" + libpath + "/" +jarfile ));
+	    }
+	}
+    }
+
+
+    private void getJars(Vector v, File f) {
+        FilenameFilter jarfilter = new FilenameFilter() {
+		public boolean accept(File dir, String fname) {
+		    if(fname.endsWith(".jar"))
+			return true;
+		    
+		    return false;
+		}
+	    };
+        FilenameFilter dirfilter = new FilenameFilter() {
+		public boolean accept(File dir, String fname) {
+		    File f1 = new File(dir, fname);
+		    if(f1.isDirectory())
+			return true;
+		    
+		    return false;
+		}
+	    };
+        
+        if(f.exists() && f.isDirectory() && f.isAbsolute()) {
+            String[] jarlist = f.list(jarfilter);
+
+            for(int i=0; (jarlist != null) && (i < jarlist.length); ++i) {
+                v.addElement(jarlist[i]);
+            }
+
+            String[] dirlist = f.list(dirfilter);
+
+            for(int i=0; (dirlist != null) && (i < dirlist.length); ++i) {
+                File dir = new File(f, dirlist[i]);
+                getJars(v, dir);
+            }
+        }
     }
 
     // -------------------- implementation

@@ -114,7 +114,8 @@ public class Context {
     private String engineHeader = null;
     private URL servletBase = null;
     private boolean isInvokerEnabled = false;
-
+    boolean reloadable=true; // XXX change default to false after testing
+    
     // for serving WARs directly 
     private File warDir = null;
     private boolean isWARExpanded = false;
@@ -124,7 +125,9 @@ public class Context {
     private String classPath = ""; // classpath used by the classloader.
     private Vector classPaths = new Vector();
     private Vector libPaths = new Vector();
+    // XXX deprecated
     private ServletClassLoader servletLoader;
+    private ServletLoader servletL;
 
     // Interceptors
     private Vector initInterceptors = new Vector();
@@ -204,6 +207,17 @@ public class Context {
     }
 
     // -------------------- Tomcat specific properties
+
+    public void setReloadable( boolean b ) {
+	reloadable=b;
+    }
+
+    /** Should we reload servlets ?
+     */
+    public boolean getReloadable() {
+	return reloadable;
+    }
+    
     public String getEngineHeader() {
 	return engineHeader;
     }
@@ -509,6 +523,7 @@ public class Context {
     
     public void shutdown() {
 	// shut down container
+	initialized=false;
 	Enumeration enum = servlets.keys();
 
 	while (enum.hasMoreElements()) {
@@ -932,10 +947,22 @@ public class Context {
 
     // -------------------- Class Loading --------------------
 
+    public void setServletLoader(ServletLoader loader ) {
+	this.servletL=loader;
+    }
+    
+    public ServletLoader getServletLoader() {
+	return servletL;
+    }
+
+    /** @deprecated
+     */
     public void setLoader(ServletClassLoader loader ) {
 	this.servletLoader=loader;
     }
-    
+
+    /** @deprecated
+     */
     public ServletClassLoader getLoader() {
 	return servletLoader;
     }

@@ -172,7 +172,6 @@ public class InvokerServlet extends HttpServlet {
         }
 
         // try the easy one -- lookup by name
-
         ServletWrapper wrapper = context.getServletByName(servletName);
 	//	System.out.println("Invoker: getServletByName " + servletName + "=" + wrapper);
 
@@ -192,6 +191,8 @@ public class InvokerServlet extends HttpServlet {
 	    // support
         }
 
+	// 	System.out.println("CL: " + context.getServletLoader().getClassLoader() +
+	// 			   " wrapper: " + wrapper);
 	
 
 	// Can't be null - loadServlet creates a new wrapper .
