@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.41 2004/06/30 10:10:36 d00mst Exp $
+// $Id: UmlFactory.java,v 1.42 2004/07/18 07:42:00 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -397,6 +397,8 @@ public class UmlFactory extends AbstractUmlModelFactory {
             new ObjectCreateInfo(MObject.class, factory, "createObject"));
         elements.put(Uml.PACKAGE,
             new ObjectCreateInfo(MPackage.class, factory, "createPackage"));
+	elements.put(Uml.PARTITION,
+	    new ObjectCreateInfo(MPartition.class, factory, "createPartition"));
         elements.put(Uml.STATE,
             new ObjectCreateInfo(MState.class, factory, "createState"));
         elements.put(Uml.COMPOSITE_STATE,
