@@ -57,7 +57,7 @@
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Author:      Ignacio J. Ortega <nacho@apache.org>                       *
- * Version:     $Revision: 1.5 $                                           *
+ * Version:     $Revision: 1.6 $                                           *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -650,6 +650,10 @@ static int initialize_extension(void)
     if(read_registry_init_data()) {
         jk_map_t *map;
 
+        if(!jk_open_file_logger(&logger, log_file, log_level)) {
+            logger = NULL;
+        }
+
 		/* Logging the initialization type: registry or properties file in virtual dir
 		*/
 		if (using_ini_file) {
@@ -663,9 +667,6 @@ static int initialize_extension(void)
 		jk_log(logger, JK_LOG_DEBUG, "Using worker file %s.\n", worker_file);
 		jk_log(logger, JK_LOG_DEBUG, "Using worker mount file %s.\n", worker_mount_file);
 
-        if(!jk_open_file_logger(&logger, log_file, log_level)) {
-            logger = NULL;
-        }
         
         if(map_alloc(&map)) {
             if(map_read_properties(map, worker_mount_file)) {
