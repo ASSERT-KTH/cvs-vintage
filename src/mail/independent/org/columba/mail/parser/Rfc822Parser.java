@@ -26,36 +26,7 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
-public class Rfc822Parser extends AbstractParser {
-
-	// Definition of Constants
-
-	private static final int RETURN_PATH = 0;
-	private static final int RECEIVED = 1;
-	private static final int FROM = 2;
-	private static final int SENDER = 3;
-	private static final int REPLY_TO = 4;
-	private static final int RESENT_FROM = 5;
-	private static final int RESENT_SENDER = 6;
-	private static final int RESENT_REPLY_TO = 7;
-	private static final int DATE = 8;
-	private static final int RESENT_DATE = 9;
-	private static final int TO = 10;
-	private static final int RESENT_TO = 11;
-	private static final int CC = 12;
-	private static final int RESENT_CC = 13;
-	private static final int BCC = 14;
-	private static final int RESENT_BCC = 15;
-	private static final int MESSAGE_ID = 16;
-	private static final int RESENT_MESSAGE_ID = 17;
-	private static final int IN_REPLY_TO = 18;
-	private static final int REFERENCES = 19;
-	private static final int KEYWORDS = 20;
-	private static final int SUBJECT = 21;
-	private static final int COMMENTS = 22;
-	private static final int ENCRYPTED = 23;
-	private static final int Mime_VERSION = 24;
-	private static final int X_ADDITIONAL = 25;
+public class Rfc822Parser {
 
 	// Global Variables
 	private String[] input;
@@ -71,38 +42,22 @@ public class Rfc822Parser extends AbstractParser {
 
 	}
 
-	// the boolean parseHeader argument:
-	// if true the header gets parsed, otherwise not
-	//
-	// action can be 0 or 1:
-	// 0 means: just parse bodystructure and headers
-	// 1 means: if encrypted or signed use pgp to read message
-	public Message parse(
-		String input,
-		boolean parseHeader,
-		ColumbaHeader header,
-		int action) {
-
-		//System.out.println("------------------------------Parsing RFC822");
+	public Message parse(String input, ColumbaHeader header) {
 
 		Message output = new Message();
 		MimePartTree mimeParts;
-		this.input = divideMessage(input);
+		this.input = MessageParserUtils.divideMessage(input);
 
 		decoder = new EncodedWordDecoder();
 
-		if (parseHeader) {
-			ColumbaHeader tempHeader = parseHeaderString(this.input[0]);
-			//System.out.println( tempHeader.get( "mime-version" ));
-			tempHeader.copyColumbaKeys(header);
-			output.setHeader(tempHeader);
-		} else {
-			output.setHeader(header);
-		}
+		ColumbaHeader tempHeader = parseHeaderString(this.input[0]);
+
+		tempHeader.copyColumbaKeys(header);
+		output.setHeader(tempHeader);
 
 		String mimeValue = (String) output.getHeader().get("MIME-Version");
-		if ( mimeValue == null )
-		mimeValue = (String) output.getHeader().get("Mime-Version");
+		if (mimeValue == null)
+			mimeValue = (String) output.getHeader().get("Mime-Version");
 
 		if (mimeValue != null) {
 			mime = true;
@@ -116,9 +71,7 @@ public class Rfc822Parser extends AbstractParser {
 		}
 
 		if (mime) {
-			MimeParser mimeParser = new MimeParser(header, action);
-
-			//System.out.println("------------------------------Parsing MIME");
+			MimeParser mimeParser = new MimeParser(header);
 
 			mimeParts = new MimePartTree(mimeParser.parse(input));
 		} else {
@@ -139,18 +92,15 @@ public class Rfc822Parser extends AbstractParser {
 		if (message == null) {
 			System.out.print("Message is null");
 		}
-		String[] divided = divideMessage(message);
+		String[] divided = MessageParserUtils.divideMessage(message);
 		return parseHeaderString(divided[0]);
 	}
 
-	private ColumbaHeader parseHeaderString(String input) //, ColumbaHeader output )
-	{
+	private ColumbaHeader parseHeaderString(String input) {
 		String header;
 		ColumbaHeader output = new ColumbaHeader();
 		String line;
 		StringBuffer received;
-
-		//        if ( output == null ) output = new ColumbaHeader();
 
 		// Check if Parameter is separated Header or whole Message
 		if (decoder == null)
@@ -164,9 +114,6 @@ public class Rfc822Parser extends AbstractParser {
 			if (line.indexOf(':') != -1) {
 
 				String key = line.substring(0, line.indexOf(':'));
-
-				// TODO fix toLowerCase problems
-				//key = key.toLowerCase();
 
 				output.set(
 					key,

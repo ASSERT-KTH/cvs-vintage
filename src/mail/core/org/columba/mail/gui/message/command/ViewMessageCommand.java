@@ -120,7 +120,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// construct new Message from decrypted string
 		AbstractMessage message =
-			new Rfc822Parser().parse(decryptedBodyPart, true, null, 0);
+			new Rfc822Parser().parse(decryptedBodyPart, null);
 
 		mimePartTree = message.getMimePartTree();
 

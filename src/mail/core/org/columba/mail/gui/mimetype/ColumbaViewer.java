@@ -22,8 +22,8 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.mimetype.MimeRouter;
 import org.columba.mail.message.MimeHeader;
-import org.columba.mail.parser.MimeRouter;
 
 public class ColumbaViewer extends AbstractViewer {
 

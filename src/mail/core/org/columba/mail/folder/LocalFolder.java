@@ -263,7 +263,7 @@ public abstract class LocalFolder extends Folder {
 		//ColumbaHeader h = getMessageHeader(uid, worker);
 
 		AbstractMessage message =
-			new Rfc822Parser().parse(source, true, null, 0);
+			new Rfc822Parser().parse(source, null);
 		message.setUID(uid);
 		message.setSource(source);
 		//message.setHeader(h);

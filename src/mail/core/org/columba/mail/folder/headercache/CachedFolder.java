@@ -209,7 +209,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 		// generate message object from source
 		AbstractMessage message =
-			new Rfc822Parser().parse(source, true, header, 0);
+			new Rfc822Parser().parse(source, header);
 
 		// set message uid
 		message.setUID(uid);

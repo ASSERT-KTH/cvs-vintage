@@ -69,7 +69,7 @@ public class OutboxFolder extends CachedMHFolder {
 		String source = getMessageSource(uid, worker);
 
 		AbstractMessage message =
-			new Rfc822Parser().parse(source, true, null, 0);
+			new Rfc822Parser().parse(source, null);
 		message.setUID(uid);
 
 		SendableHeader header = (SendableHeader) getHeaderList(worker).get(uid);

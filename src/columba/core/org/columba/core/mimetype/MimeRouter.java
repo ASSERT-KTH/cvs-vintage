@@ -14,10 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.parser;
-
-import java.lang.reflect.Array;
-import java.util.Hashtable;
+package org.columba.core.mimetype;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.OptionsXmlConfig;
@@ -26,25 +23,29 @@ import org.columba.mail.message.MimeHeader;
 
 public class MimeRouter {
 
+	/*
 	private static final String parserPath =
 		"org.columba.mail.parser.mimetypeparsers.";
-
+	
 	private static final String[] parsers =
 		{ "MimeMultipartParser", "MimeMessageParser", };
+	*/
 
-	private Hashtable parserTable;
+	//private Hashtable parserTable;
 
-	private MimeTypeParser standardParser;
+	//private MimeTypeParser standardParser;
 	private OptionsXmlConfig config;
 
 	static private MimeRouter myInstance;
 
 	private MimeRouter() {
 		this.config = Config.getOptionsConfig();
-		standardParser = new MimeStandardParser();
+		//standardParser = new MimeStandardParser();
 
+		/*
 		parserTable = new Hashtable();
 		loadAllParser();
+		*/
 	}
 
 	/**
@@ -66,32 +67,31 @@ public class MimeRouter {
 	 * MimeHeader to get parser for
 	 * @return MimeTypeParser
 	 */
+	/*
 	public MimeTypeParser getTypeParser(MimeHeader input) {
 		// If no ContentType specified return StandardParser
 		if (input.contentType == null)
 			return standardParser;
-
+	
 		MimeTypeParser parser;
-
+	
 		// First try to find parser for "type/subtype"
-
-		parser =
-			(MimeTypeParser) parserTable.get(
-				input.contentType + "/" + input.contentSubtype);
-		if (parser != null) {
+	
+		if ( input.contentType.equals("multipart") )
+		{
+		
+			parser = new MimeMultipartParser();
 			return parser;
 		}
-
-		// Next try to find parser for "type"
-
-		parser = (MimeTypeParser) parserTable.get(input.contentType);
-		if (parser != null) {
-			return parser;
-		}
-
+		
+		
+		
+		
+			
 		// Nothing found -> return StandardParser
 		return standardParser;
 	}
+	*/
 
 	public String getViewer(MimeHeader input) {
 		String output;
@@ -153,7 +153,7 @@ public class MimeRouter {
 			type = new XmlElement("type");
 			type.addAttribute("name", contentType);
 			type.addAttribute("viewer", value);
-			mimetype.addElement(type);			
+			mimetype.addElement(type);
 		}
 		// Set to default viewer for this type if none is present
 		else if (type.getAttribute("viewer") == null) {
@@ -180,22 +180,23 @@ public class MimeRouter {
 
 	}
 
+	/*
 	private void loadAllParser() {
 		Class actClass;
 		ClassLoader loader = ClassLoader.getSystemClassLoader();
-
+	
 		try {
 			for (int i = 0; i < Array.getLength(parsers); i++) {
 				actClass = loader.loadClass(parserPath + parsers[i]);
-
+	
 				if (actClass
 					.getSuperclass()
 					.getName()
 					.equals("org.columba.mail.parser.MimeTypeParser")) {
-
+	
 					MimeTypeParser parser =
 						(MimeTypeParser) actClass.newInstance();
-
+	
 					parserTable.put(parser.getRegisterString(), parser);
 				}
 			}
@@ -203,5 +204,5 @@ public class MimeRouter {
 			e.printStackTrace();
 		}
 	}
-
+	*/
 }

@@ -19,12 +19,9 @@ package org.columba.mail.parser;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 
-public class MimeStandardParser extends MimeTypeParser
+public class MimeStandardParser 
 {
-	public String getRegisterString() {
-		return null;	
-	}
-	
+
     public synchronized MimePart parse(MimeHeader header, String input)
     {
        	return new MimePart( header, input);

@@ -14,20 +14,16 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.parser.mimetypeparsers;
+package org.columba.mail.parser;
 
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
-import org.columba.mail.parser.MimeParser;
-import org.columba.mail.parser.MimeTypeParser;
 
-public class MimeMultipartParser extends MimeTypeParser
+public class MimeMultipartParser
 {
-	public String getRegisterString() {
-		return "multipart";	
-	}
+
     
-    public synchronized MimePart parse(MimeHeader header, String input)
+    public MimePart parse(MimeHeader header, String input)
     {
         MimeParser mimeParser = new MimeParser();
         int startPos, endPos;

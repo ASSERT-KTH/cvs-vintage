@@ -517,9 +517,7 @@ public class MessageBuilder {
 		Message parsedMessage =
 			new Rfc822Parser().parse(
 				message.getSource(),
-				true,
-				(ColumbaHeader) message.getHeader(),
-				0);
+				(ColumbaHeader) message.getHeader());
 
 		int count = parsedMessage.getMimePartTree().count();
 		Decoder decoder;

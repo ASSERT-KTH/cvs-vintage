@@ -366,7 +366,7 @@ public class LuceneSearchEngine
 		if (message.getMimePartTree() == null) {
 			String source = message.getSource();
 
-			message = rfcParser.parse(source, true, header, 0);
+			message = rfcParser.parse(source, header);
 			message.setSource(source);
 		}
 
@@ -533,7 +533,7 @@ public class LuceneSearchEngine
 				String source = ds.loadMessage(uid );
 
 				AbstractMessage message =
-					rfcParser.parse(source, true, (ColumbaHeader) hl.getHeader(uid), 0);
+					rfcParser.parse(source, (ColumbaHeader) hl.getHeader(uid));
 				message.setSource(source);
 				
 				Document doc = getDocument(message);
