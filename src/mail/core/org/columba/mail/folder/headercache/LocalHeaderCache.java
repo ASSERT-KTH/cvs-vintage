@@ -169,23 +169,16 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 			if ((getObservable() != null) && (i % 100 == 0))
 				getObservable().setCurrent(i);
-
-			//ColumbaHeader h = message.getHeader();
+			
 			ColumbaHeader h = createHeaderInstance();
-
-			/*
-			 * // read current number of message ois.readInt();
-			 */
 
 			loadHeader(h);
 
-			//System.out.println("message=" + h.get("subject"));
-
 			headerList.add(h, (Integer) h.get("columba.uid"));
 
-			if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+			if ( h.getFlags().getRecent())
 				folder.getMessageFolderInfo().incRecent();
-			if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+			if ( h.getFlags().getSeen() == false)
 				folder.getMessageFolderInfo().incUnseen();
 			folder.getMessageFolderInfo().incExists();
 

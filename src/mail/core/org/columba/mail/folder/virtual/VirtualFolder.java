@@ -366,9 +366,9 @@ public class VirtualFolder extends Folder {
 			new VirtualHeader((ColumbaHeader) header, f, uid);
 		virtualHeader.set("columba.uid", newUid);
 
-		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
+		if (header.getFlags().getSeen() == false)
 			getMessageFolderInfo().incUnseen();
-		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
+		if (header.getFlags().getRecent())
 			getMessageFolderInfo().incRecent();
 
 		getMessageFolderInfo().incExists();
@@ -388,16 +388,7 @@ public class VirtualFolder extends Folder {
 			if (!exists(uid))
 				continue;
 
-			ColumbaHeader h = getMessageHeader(uid);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-
-			//ColumbaLogger.log.debug("expunged=" + expunged);
-
-			if (expunged.equals(Boolean.TRUE)) {
-				// move message to trash
-
-				//ColumbaLogger.log.info("moving message with UID " + uid + "
-				// to trash");
+			if (getFlags(uid).getExpunged()) {
 
 				// remove message
 				removeMessage(uid);
@@ -435,9 +426,9 @@ public class VirtualFolder extends Folder {
 	public void removeMessage(Object uid) throws Exception {
 		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
 
-		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
+		if (header.getFlags().getSeen() == false)
 			getMessageFolderInfo().decUnseen();
-		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
+		if (header.getFlags().getRecent())
 			getMessageFolderInfo().decRecent();
 
 		headerList.remove(uid);

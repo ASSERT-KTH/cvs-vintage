@@ -389,16 +389,14 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
-	 */
+/*
 	public Flags getFlags(Object uid) throws Exception {
 		// get message with UID
 		ColumbaMessage message = getMessage(uid);
 
 		return message.getFlags();
 	}
-
+*/
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.String[])
 	 */

@@ -173,7 +173,8 @@ public class FetchNewMessagesCommand extends Command {
 		message.getHeader().set(
 			"columba.size",
 			new Integer(Math.round(size / 1024)));
-		message.getHeader().set("columba.flags.seen", Boolean.FALSE);
+		message.getHeader().getFlags().setSeen(false);
+		
 
 		//get inbox-folder from pop3-server preferences
 		Folder inboxFolder = server.getFolder();

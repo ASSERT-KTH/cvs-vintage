@@ -99,11 +99,11 @@ public abstract class CachedFolder extends LocalFolder {
 		strippedHeader.set("columba.uid", newUid);
 
 		// increment recent count of messages if appropriate
-		if (strippedHeader.get("columba.flags.recent").equals(Boolean.TRUE))
+		if (strippedHeader.getFlags().getRecent())
 			getMessageFolderInfo().incRecent();
 
 		// increment unseen count of messages if appropriate
-		if (strippedHeader.get("columba.flags.seen").equals(Boolean.FALSE))
+		if (strippedHeader.getFlags().getSeen())
 			getMessageFolderInfo().incUnseen();
 
 		// add header to header-cache list
@@ -143,10 +143,7 @@ public abstract class CachedFolder extends LocalFolder {
 				continue;
 			}
 
-			Boolean expunged =
-				(Boolean) getAttribute(uid, "columba.flags.expunged");
-
-			if (expunged.equals(Boolean.TRUE)) {
+			if (getFlags(uid).getExpunged()) {
 				// move message to trash if marked as expunged
 
 				ColumbaLogger.log.debug("removing uid=" + uid);
@@ -318,59 +315,62 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	protected void markMessage(Object uid, int variant) throws Exception {
 		ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
+		Flags flags = getFlags(uid);
 
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 				{
-					if (getAttribute(uid, "columba.flags.recent")
-						.equals(Boolean.TRUE))
+					if (flags.getRecent())
 						getMessageFolderInfo().decRecent();
 
-					if (getAttribute(uid, "columba.flags.seen")
-						.equals(Boolean.FALSE))
+					if (flags.getSeen())
 						getMessageFolderInfo().decUnseen();
 
-					setAttribute(uid, "columba.flags.seen", Boolean.TRUE);
-					setAttribute(uid, "columba.flags.recent", Boolean.FALSE);
+					flags.setSeen(true);
+					flags.setRecent(false);
+
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_UNREAD :
 				{
-					setAttribute(uid, "columba.flags.seen", Boolean.FALSE);
+					flags.setSeen(false);
+
 					getMessageFolderInfo().incUnseen();
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_FLAGGED :
 				{
-					setAttribute(uid, "columba.flags.flagged", Boolean.TRUE);
+					flags.setFlagged(true);
+
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_UNFLAGGED :
 				{
-					setAttribute(uid, "columba.flags.flagged", Boolean.FALSE);
+					flags.setFlagged(false);
+
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
 				{
-					if (getAttribute(uid, "columba.flags.seen")
-						.equals(Boolean.FALSE))
+					if (flags.getSeen())
 						getMessageFolderInfo().decUnseen();
 
-					setAttribute(uid, "columba.flags.seen", Boolean.TRUE);
-					setAttribute(uid, "columba.flags.recent", Boolean.FALSE);
-
-					h.set("columba.flags.expunged", Boolean.TRUE);
+					flags.setSeen(true);
+					flags.setRecent(false);
+					flags.setExpunged(true);
+					
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
 				{
-
-					setAttribute(uid, "columba.flags.expunged", Boolean.FALSE);
+					flags.setExpunged(false);
+					
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_ANSWERED :
 				{
-					setAttribute(uid, "columba.flags.answered", Boolean.TRUE);
+					flags.setAnswered(true);
+					
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_SPAM :
@@ -407,9 +407,10 @@ public abstract class CachedFolder extends LocalFolder {
 	public void removeMessage(Object uid) throws Exception {
 
 		// update message folder info
-		if (getAttribute(uid, "columba.flags.seen").equals(Boolean.FALSE))
+		Flags flags = getFlags(uid);
+		if ( flags.getSeen() )
 			getMessageFolderInfo().decUnseen();
-		if (getAttribute(uid, "columba.flags.recent").equals(Boolean.TRUE))
+		if ( flags.getRecent() )
 			getMessageFolderInfo().decRecent();
 
 		// remove message from headercache
@@ -487,12 +488,14 @@ public abstract class CachedFolder extends LocalFolder {
 		// set UID for new message
 		strippedHeader.getAttributes().put("columba.uid", newUid);
 
+		Flags flags = strippedHeader.getFlags();
+		
 		// increment recent count of messages if appropriate
-		if (strippedHeader.getAttributes().get("columba.flags.recent").equals(Boolean.TRUE))
+		if (flags.getRecent())
 			getMessageFolderInfo().incRecent();
 
 		// increment unseen count of messages if appropriate
-		if (strippedHeader.getAttributes().get("columba.flags.seen").equals(Boolean.FALSE))
+		if (flags.getSeen())
 			getMessageFolderInfo().incUnseen();
 
 		// add header to header-cache list
@@ -578,6 +581,13 @@ public abstract class CachedFolder extends LocalFolder {
 			return super.getHeaderFields(uid, keys);
 		else
 			return result;
+	}
+
+	public Flags getFlags(Object uid) throws Exception {
+		if (getHeaderList().containsKey(uid))
+			return getHeaderList().get(uid).getFlags();
+		else
+			return null;
 	}
 
 }

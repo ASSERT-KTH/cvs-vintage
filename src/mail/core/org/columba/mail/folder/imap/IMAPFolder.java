@@ -525,69 +525,74 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	protected void markMessage(Object uid, int variant) throws Exception {
 		ColumbaHeader h = (ColumbaHeader) cache.getHeaderList().get(uid);
+		Flags flags = getFlags(uid);
 
-		if (h != null) {
-			switch (variant) {
-				case MarkMessageCommand.MARK_AS_READ :
-					{
-						if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-							getMessageFolderInfo().decRecent();
-						if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-							getMessageFolderInfo().decUnseen();
+		switch (variant) {
+			case MarkMessageCommand.MARK_AS_READ :
+				{
+					if (flags.getRecent())
+						getMessageFolderInfo().decRecent();
 
-						h.set("columba.flags.seen", Boolean.TRUE);
-						h.set("columba.flags.recent", Boolean.FALSE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_UNREAD :
-					{
-						h.set("columba.flags.seen", Boolean.FALSE);
-						getMessageFolderInfo().incUnseen();
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_FLAGGED :
-					{
-						h.set("columba.flags.flagged", Boolean.TRUE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_UNFLAGGED :
-					{
-						h.set("columba.flags.flagged", Boolean.FALSE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_EXPUNGED :
-					{
-						if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-							getMessageFolderInfo().decUnseen();
+					if (flags.getSeen())
+						getMessageFolderInfo().decUnseen();
 
-						h.set("columba.flags.seen", Boolean.TRUE);
-						h.set("columba.flags.recent", Boolean.FALSE);
+					flags.setSeen(true);
+					flags.setRecent(false);
 
-						h.set("columba.flags.expunged", Boolean.TRUE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_UNEXPUNGED :
-					{
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_UNREAD :
+				{
+					flags.setSeen(false);
 
-						h.set("columba.flags.expunged", Boolean.FALSE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_ANSWERED :
-					{
-						h.set("columba.flags.answered", Boolean.TRUE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_SPAM :
-					{
-						h.set("columba.spam", Boolean.TRUE);
-						break;
-					}
-				case MarkMessageCommand.MARK_AS_NOTSPAM :
-					{
-						h.set("columba.spam", Boolean.FALSE);
-						break;
-					}
-			}
+					getMessageFolderInfo().incUnseen();
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_FLAGGED :
+				{
+					flags.setFlagged(true);
+
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_UNFLAGGED :
+				{
+					flags.setFlagged(false);
+
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_EXPUNGED :
+				{
+					if (flags.getSeen())
+						getMessageFolderInfo().decUnseen();
+
+					flags.setSeen(true);
+					flags.setRecent(false);
+					flags.setExpunged(true);
+
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
+				{
+					flags.setExpunged(false);
+
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_ANSWERED :
+				{
+					flags.setAnswered(true);
+
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_SPAM :
+				{
+					setAttribute(uid, "columba.spam", Boolean.TRUE);
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_NOTSPAM :
+				{
+					setAttribute(uid, "columba.spam", Boolean.FALSE);
+					break;
+				}
 		}
 	}
 
@@ -647,11 +652,7 @@ public class IMAPFolder extends RemoteFolder {
 
 				ColumbaHeader h = (ColumbaHeader) headerList.get(uid);
 
-				Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-
-				ColumbaLogger.log.debug("expunged=" + expunged);
-
-				if (expunged.equals(Boolean.TRUE)) {
+				if (getFlags(uid).getExpunged()) {
 					// move message to trash
 
 					ColumbaLogger.log.debug(
