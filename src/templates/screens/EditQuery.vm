@@ -117,7 +117,7 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-  <input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160; 
+  <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
   <input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
  </tr>
 </table>
