@@ -216,14 +216,26 @@
 
 	    Note: CoyoteConnector supports the same attributes as
 	          Http10Connector
-	 -->
+  	    -->
+	 
         <!--
         <CoyoteConnector2   port="8081" 
-			   secure="false"
-			   maxThreads="100"
-			   maxSpareThreads="50"
-			   minSpareThreads="10" />
-	-->
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" redirectPort="8443" acceptCount="100"
+               debug="0" connectionTimeout="20000" 
+               disableUploadTimeout="true" />
+	    -->
+
+	    <!-- Note : To disable connection timeouts, set connectionTimeout value
+	     to -1 -->
+		
+		<!-- Note : To use gzip compression you could set the following properties :
+		
+				   compression="on" 
+				   compressionMinSize="2048" 
+				   noCompressionUserAgents="gozilla, traviata" 
+				   compressableMimeType="text/html,text/xml"
+		-->
 
         <!--
              JNI connector. It assumes the library is located in 
