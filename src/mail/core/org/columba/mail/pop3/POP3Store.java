@@ -32,6 +32,7 @@ import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.PopItem;
