@@ -51,6 +51,8 @@ public class HtmlParser {
             Pattern.CASE_INSENSITIVE);
     private static final Pattern stripTagsPattern = Pattern.compile("\\<(.|\\n)*?\\>",
             Pattern.CASE_INSENSITIVE);
+    private static final Pattern commentsRemovalPattern = Pattern.compile("\\<!--(.|\n|\r)*?--\\>",
+    		Pattern.CASE_INSENSITIVE);
     private static String emailStr = "([\\w.\\-]*\\@([\\w\\-]+\\.*)+\\.[a-zA-Z0-9]{2,})";
     private static final Pattern emailPattern = Pattern.compile(emailStr);
     private static final Pattern emailPatternInclLink = Pattern.compile(
@@ -803,7 +805,7 @@ public class HtmlParser {
      * between (and not including) body start and end tags.
      *
      * @param        html        The html document to extract the body from
-     * @param        The body of the html document
+     * @return       The body of the html document
      *
      * @author        Karl Peder Olesen (karlpeder)
      */
@@ -827,5 +829,18 @@ public class HtmlParser {
 
         // return body
         return html.substring(tagStartClose, tagEnd);
+    }
+    
+    /**
+     * Parses a html documents and removes all html comments found.
+     * 
+     * @param	html	The html document
+     * @return	Html document without comments
+     * 
+     * @author	Karl Peder Olesen (karlpeder)
+     */
+    public static String removeComments(String html) {
+    	// remove comments
+    	return commentsRemovalPattern.matcher(html).replaceAll("");
     }
 }

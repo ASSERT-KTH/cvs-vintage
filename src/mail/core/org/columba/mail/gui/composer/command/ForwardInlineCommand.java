@@ -30,6 +30,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
@@ -94,6 +95,14 @@ public class ForwardInlineCommand extends ForwardCommand {
             Integer[] address = bodyPart.getAddress();
 
             String quotedBodyText = createQuotedBody(folder, uids, address);
+
+            /*
+             * *20040210, karlpeder* Remove html comments - they are not
+             * displayed properly in the composer
+             */ 
+            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+            	quotedBodyText = HtmlParser.removeComments(quotedBodyText);
+            }
 
             model.setBodyText(quotedBodyText);
         }

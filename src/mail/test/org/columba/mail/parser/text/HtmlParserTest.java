@@ -46,4 +46,32 @@ public class HtmlParserTest extends TestCase {
         assertTrue(result.equals(
                 "This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A>. is net!"));
     }
+    
+    public void testRemoveComments1() {
+    	String input = "<html><body><p><!- this is a text without comments -></p></body></html>";
+    	String result = HtmlParser.removeComments(input);
+    	assertTrue(result.equals(
+    			"<html><body><p><!- this is a text without comments -></p></body></html>"));
+    }
+
+    public void testRemoveComments2() {
+    	String input = "<html><body><p><!-- this is a comment -->And some text</p></body></html>";
+    	String result = HtmlParser.removeComments(input);
+    	assertTrue(result.equals(
+    			"<html><body><p>And some text</p></body></html>"));
+    }
+
+    public void testRemoveComments3() {
+    	String input = "<html><body><p><!-- this is a comment \n" +
+				"\t\twhich is spread over \n" +
+				"   multiple lines-->And some text</p> \n\n" +
+				"<h1>A header </h><!-- a little comment --><p>" +
+				"<i>The end</i></p></body></html>";
+    	String result = HtmlParser.removeComments(input);
+    	assertTrue(result.equals(
+    			"<html><body><p>And some text</p> \n\n" +
+					"<h1>A header </h><p>" +
+					"<i>The end</i></p></body></html>"));
+    }
+    
 }

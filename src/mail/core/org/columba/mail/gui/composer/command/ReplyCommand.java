@@ -26,12 +26,14 @@ import java.nio.charset.Charset;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -125,6 +127,17 @@ public class ReplyCommand extends FolderCommand {
 
             String quotedBodyText = createQuotedBody(folder, uids, address);
 
+            /*
+             * *20040210, karlpeder* Remove html comments - they are not
+             * displayed properly in the composer
+             */ 
+            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+            	quotedBodyText = HtmlParser.removeComments(quotedBodyText);
+            }
+            	
+            // debug output
+            ColumbaLogger.log.info("Quoted body text:\n" + quotedBodyText);
+            
             model.setBodyText(quotedBodyText);
         }
     }
