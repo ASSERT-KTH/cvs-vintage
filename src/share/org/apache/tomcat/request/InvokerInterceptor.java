@@ -107,8 +107,8 @@ public class InvokerInterceptor extends BaseInterceptor {
 	String servletPath=req.getServletPath();
 	
 	// Now we need to fix path info and servlet path
-	if( pathInfo == null ||
-	    ! pathInfo.startsWith( prefix ))
+	if( servletPath == null ||
+	    ! servletPath.startsWith( prefix ))
 	    return 0;
 
 	Context ctx=req.getContext();
@@ -123,12 +123,12 @@ public class InvokerInterceptor extends BaseInterceptor {
 	    log( "Original ServletPath=" +servletPath +
 		 " PathInfo=" + pathInfo);
 
-	int secondSlash=pathInfo.indexOf("/", prefixLen );
+	int secondSlash=servletPath.indexOf("/", prefixLen );
 	if ( secondSlash > -1) {
-	    servletName = pathInfo.substring(prefixLen, secondSlash );
-	    newPathInfo = pathInfo.substring( secondSlash );
+	    servletName = servletPath.substring(prefixLen, secondSlash );
+	    newPathInfo = servletPath.substring( secondSlash );
 	} else {
-	    servletName = pathInfo.substring( prefixLen );
+	    servletName = servletPath.substring( prefixLen );
 	}
 	
 	String newServletPath = prefix + servletName;
