@@ -549,7 +549,7 @@ public class BodyContentImpl extends BodyContent {
      * @returns the value of this BodyJspWriter as a Reader
      */
     public Reader getReader() {
-        return new CharArrayReader (cb, 0, nextChar-1);
+        return new CharArrayReader (cb, 0, nextChar);
     }
 
     /**
@@ -560,7 +560,7 @@ public class BodyContentImpl extends BodyContent {
      * @returns the value of the BodyJspWriter as a String
      */
     public String getString() {
-        return new String(cb, 0, nextChar-1);
+        return new String(cb, 0, nextChar);
     }
 	
     /**
@@ -572,7 +572,7 @@ public class BodyContentImpl extends BodyContent {
      * this body evaluation
      */
     public void writeOut(Writer out) throws IOException {
-        out.write(cb, 0, nextChar-1);
+        out.write(cb, 0, nextChar);
 	//Flush not called as the writer passed could be a BodyContent and
 	//it doesn't allow to flush.
     }
