@@ -1,8 +1,62 @@
-<title>Test Heiarchy Base Page</title>
-<body bgcolor="#FF0000">
-<p><font face="Arial, Helvetica, sans-serif"><b><font color="#33FF00">This is 
-  the home page of the test hierarchy. It doesn't do too much good to look at 
-  it directly... Instead, why don't you run the tests to find out what you might 
-  want to know.</font></b></font></p>
-<p><b><font face="Arial, Helvetica, sans-serif" color="#33FF00">Oh, by the way, 
-  merry christmas.. :)</font></b></p>
+<title>Sanity Test Base Page</title>
+
+<body>
+
+This is the home page of the self test hierarchy. 
+
+<h2>Running the tests from the web</h2>
+
+You first need to enable the /admin application. You'll need that for other 
+purposes as well. 
+
+<p>Edit TOMCAT_HOME/conf/server.xml  and replace:
+
+<br>
+ &lt;Context path="/admin" 
+          docBase="webapps/admin" 
+          debug="0" 
+          reloadable="true" 
+          <b>trusted="false"</b> &gt;
+<br>
+
+With:
+
+<br>
+ &lt; Context path="/admin" 
+          docBase="webapps/admin" 
+          debug="0" 
+          reloadable="true" 
+          <b>trusted="false"</b> &gt; 
+<p>
+
+You'll also need to edit TOMCAT_HOME/conf/users/admin-users.xml and 
+change the password ( very important for security reasons ).
+
+<p>
+
+After that you can just go to 
+<a href="/admin/test/test.jsp" >/admin/test/test.jsp</a> and you'll see
+the test results. 
+
+<p>You can run only subsets of the tests:
+<ul>
+<li>soon, I need to finish test.jsp first to see what param I'll use :-)
+</ul>
+
+<h2>Autmated ( script based ) run</h2>
+
+There are 2 ways to run the sanity checks in a nightly or automated way.
+
+<p>
+The easiest is to use a bit of "sed" magic to make /admin "trusted", then
+start the server and use "wget" or "htget" or any equivalent program 
+( I'll include a java one soon ) to get the /admin/test/test.jsp page.
+
+<p>
+The alternate solution is to run the scripts provided in 
+TOMCAT_HOME/webapps/test/WEB-INF/scripts ( instructions will be added soon
+if anyone asks )
+
+
+
+</p>

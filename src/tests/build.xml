@@ -37,37 +37,38 @@
 
   <!-- ==================== Build the internal test app ================== -->
   <target name="sanity-test" >
-    <mkdir dir="${tomcat.dist}/lib/test"/>
-    <mkdir dir="${tomcat.dist}/lib/test/Golden"/>
-    <copy todir="${tomcat.dist}/lib/test/Golden">
+    <mkdir dir="${tomcat.build}/webapps/test"/>
+    <!-- the golden files will be part of the webapp - no 
+         need to have a separate directory or polute lib -->
+
+    <mkdir dir="${tomcat.build}/webapps/test/Golden"/>
+    <copy todir="${tomcat.build}/webapps/test/Golden">
             <fileset dir="src/tests/share/tests/jsp/Golden"/>
     </copy>
 
-      <!-- Test application -->
-    <mkdir dir="${tomcat.build}/webapps/test"/>
     <copy 
 	  todir="${tomcat.build}/webapps/test">
             <fileset dir="src/tests/webpages"/>
     </copy>
+
     <javac 
 	   srcdir="src/tests/webpages/WEB-INF/classes" 
 	   optimize="${optimize}" 
 	   destdir="${tomcat.build}/webapps/test/WEB-INF/classes" 
 	   classpath="${tomcat.build}/classes;${servlet22.jar}" />
+
+    <!-- build the test driver -->
     <javac 
 	   srcdir="src/tests/share/gtest" 
 	   optimize="${optimize}" 
 	   destdir="${tomcat.build}/webapps/test/WEB-INF/classes" 
 	   classpath="${tomcat.build}/classes" />
-    <copy 
-	  todir="${tomcat.dist}/webapps/test">
-            <fileset dir="${tomcat.build}/webapps/test"/>
-    </copy>
+  </target>
 
+  <target name="test.war" depends="sanity-test" >
     <jar 
 	 jarfile="${tomcat.dist}/webapps/test.war" 
-	 basedir="${tomcat.dist}/webapps/test" includes="**"/> 
-    <delete dir="${tomcat.dist}/webapps/test"/>
+	 basedir="${tomcat.build}/webapps/test" includes="**"/> 
   </target>
 
   <!-- ==================== Admin & agreagate ==================== -->

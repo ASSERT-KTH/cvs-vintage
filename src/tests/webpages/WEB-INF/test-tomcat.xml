@@ -1,5 +1,6 @@
 <project name="TestRun" default="main">
-   <!-- To test tomcat standalone, type:
+   <!-- 
+        To test tomcat standalone, type:
           bin/tomcat.sh ant -f conf/test-tomcat.xml client
         or for Windows systems, type:
           bin\tomcat.bat ant -f conf/test-tomcat.xml client
