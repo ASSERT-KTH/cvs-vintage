@@ -47,7 +47,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * site. See the {@link VFS} class for implementation details.
  *
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.12 2003/10/09 00:00:32 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.13 2003/10/15 01:08:52 spestov Exp $
  */
 public class VFSManager
 {
@@ -65,6 +65,12 @@ public class VFSManager
 	{
 		int count = jEdit.getIntegerProperty("ioThreadCount",4);
 		ioThreadPool = new WorkThreadPool("jEdit I/O",count);
+		JARClassLoader classLoader = new JARClassLoader();
+		for(int i = 0; i < ioThreadPool.getThreadCount(); i++)
+		{
+			ioThreadPool.getThread(i).setContextClassLoader(
+				classLoader);
+		}
 	} //}}}
 
 	//{{{ start() method

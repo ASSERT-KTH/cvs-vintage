@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.29 2003/10/10 23:46:24 spestov Exp $
+ * @version $Id: Java14.java,v 1.30 2003/10/15 01:08:52 spestov Exp $
  */
 public class Java14
 {
@@ -282,7 +282,7 @@ public class Java14
 						Buffer _buffer = jEdit.openFile(null,
 							file.getPath());
 						if(_buffer != null)
-							buffer = buffer;
+							buffer = _buffer;
 					}
 
 					if(buffer != null)
