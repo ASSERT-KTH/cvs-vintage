@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.16 2004/04/26 19:46:56 thn Exp $
+// $Id: NotationProvider.java,v 1.17 2004/07/05 22:49:10 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.16 2004/04/26 19:46:56 thn Exp $
+// $Id: NotationProvider.java,v 1.17 2004/07/05 22:49:10 bobtarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -52,7 +52,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 import ru.novosoft.uml.model_management.MPackage;
 
-/*
+/**
  * @deprecated by Thomas Neustupny as of 0.15.6. Replaced by the NSUML free
  *             version NotationProvider2.
  */
