@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.207 2002/11/04 23:41:28 elicia Exp $
+ * @version $Id: Issue.java,v 1.208 2002/11/05 23:59:41 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2503,33 +2503,24 @@ public class Issue
      */
     public ActivitySet assignUser(ActivitySet activitySet, 
                                   ScarabUser assignee, ScarabUser assigner,
-                                  Attribute attribute, String reason)
+                                  Attribute attribute, Attachment attachment)
         throws Exception
     {                
         UserAttribute attVal = new UserAttribute();
-        Attachment attachment = null;
 
         // Save activitySet if it has not been already
         if (activitySet.getActivitySetId() == null)
         { 
             activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, 
+                             attachment);
             activitySet.save();
             attVal.startActivitySet(activitySet);
-            // Save attachment, to hold reason for assignment
-            if (reason != null && reason.length() > 0)
-            {
-                attachment = new Attachment();
-                attachment.setTextFields(assignee, this,
-                                         Attachment.MODIFICATION__PK);
-                attachment.setName("comment");
-                attachment.setData(reason);
-                attachment.save();
-            }
         }
 
-        String actionString = getAssignUserChangeString(assignee, assigner, attribute);
         // Save activity record
+        String actionString = getAssignUserChangeString(assignee, assigner, 
+                                                        attribute);
         ActivityManager
             .createUserActivity(this, attribute, activitySet,
                                 actionString, attachment,
@@ -2579,17 +2570,10 @@ public class Issue
                                                 ScarabUser assigner, 
                                                 AttributeValue oldAttVal,
                                                 Attribute newAttr,
-                                                String reason)
+                                                Attachment attachment)
         throws Exception
     {
-        // Create attachments and email notification text
-        // For assigned user, and for other associated users
-        Attachment attachment = null;
         Attribute oldAttr = oldAttVal.getAttribute();
-        String actionString = getUserAttributeChangeString(assignee,
-                                                     assigner,
-                                                     oldAttr,
-                                                     newAttr);
 
         // Save activitySet if it has not been already
         if (activitySet.getActivitySetId() == null)
@@ -2598,19 +2582,11 @@ public class Issue
                 .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
             activitySet.save();
             oldAttVal.startActivitySet(activitySet);
-            if (reason != null && reason.length() > 0)
-            {
-                // Save attachment if reason has been provided
-                attachment = new Attachment();
-                attachment.setName("comment");
-                attachment.setData(reason);
-                attachment.setTextFields(assigner, this, 
-                                         Attachment.MODIFICATION__PK);
-                attachment.save();
-            }
         }
 
         // Save activity record
+        String actionString = getUserAttributeChangeString(assignee, assigner,
+                                                           oldAttr, newAttr);
         ActivityManager
             .createUserActivity(this, newAttr, activitySet,
                                 actionString, attachment,
@@ -2659,40 +2635,28 @@ public class Issue
      */
     public ActivitySet deleteUser(ActivitySet activitySet, ScarabUser assignee, 
                                   ScarabUser assigner,
-                                  AttributeValue attVal, String reason)
+                                  AttributeValue attVal, Attachment attachment)
         throws Exception
     {
-        // Create attachments and email notification text
-        // For assigned user, and for other associated users
-        Attachment attachment = null;
         Attribute attr = attVal.getAttribute();
 
-        // Save activitySet record
+        // Save activitySet record if it has not been already
         if (activitySet.getActivitySetId() == null)
         { 
             activitySet = ActivitySetManager
                 .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
             activitySet.save();
             attVal.startActivitySet(activitySet);
-
-            if (reason != null && reason.length() > 0)
-            {
-                attachment = new Attachment();
-                attachment.setData(reason);
-                attachment.setName("comment");
-                attachment.setTextFields(assigner, this,
-                                         Attachment.MODIFICATION__PK);
-                attachment.save();
-            }
         }
 
-        String actionString = getUserDeleteString(assigner, assignee, attr);
         // Save activity record
+        String actionString = getUserDeleteString(assigner, assignee, attr);
         ActivityManager
             .createUserActivity(attVal.getIssue(), attVal.getAttribute(), activitySet,
                                 actionString, attachment,
                                 assignee.getUserId(), null);
 
+        // Save assignee value
         attVal.setDeleted(true);
         attVal.save();
 

@@ -73,6 +73,7 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -84,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.70 2002/11/05 21:01:19 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.71 2002/11/05 23:59:40 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -249,6 +250,7 @@ public class AssignIssue extends BaseModifyIssue
         String actionString = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
+        Attachment attachment = null;
         ActivitySet activitySet = new ActivitySet();
 
         for (int i=0; i < issues.size(); i++)
@@ -259,6 +261,17 @@ public class AssignIssue extends BaseModifyIssue
             List userList = (List)userMap.get(issue.getIssueId());
             List oldAssignees = issue.getUserAttributeValues();
            
+            // save attachment with user-provided reason
+            if (reason != null && reason.length() > 0)
+            {
+                attachment = new Attachment();
+                attachment.setData(reason);
+                attachment.setName("comment");
+                attachment.setTextFields(assigner, issue,
+                                         Attachment.MODIFICATION__PK);
+                attachment.save();
+            }
+
             // loops through users in temporary working list
             for (int j=0; j<userList.size();j++)
             {
@@ -283,7 +296,7 @@ public class AssignIssue extends BaseModifyIssue
                             activitySet = issue.changeUserAttributeValue(
                                                   activitySet,
                                                   assignee, assigner, 
-                                                  oldAttVal, newAttr, reason);
+                                                  oldAttVal, newAttr, attachment);
                             actionString = issue.getUserAttributeChangeString(
                                                   assignee, assigner,
                                                   oldAttr,
@@ -301,7 +314,7 @@ public class AssignIssue extends BaseModifyIssue
                 if (!alreadyAssigned)
                 {
                     activitySet = issue.assignUser(activitySet, assignee, assigner,  
-                                                   newAttr, reason);
+                                                   newAttr, attachment);
                     
                     // Notification email
                     actionString = issue.getAssignUserChangeString(assigner, 
@@ -333,7 +346,7 @@ public class AssignIssue extends BaseModifyIssue
                     ScarabUser assignee = scarabR.getUser(oldAttVal.getUserId());
                     // delete the user
                     activitySet = issue.deleteUser(activitySet, assignee, 
-                                                   assigner, oldAttVal, reason);
+                                                   assigner, oldAttVal, attachment);
                     actionString = issue.getUserDeleteString(assigner, assignee, 
                                                              oldAttr);
                     if (!notify(context, issue, assignee, 
