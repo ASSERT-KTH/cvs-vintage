@@ -70,6 +70,30 @@
         <!-- Check permissions using a simple xml file  -->
         <RequestInterceptor className="org.apache.tomcat.request.SimpleRealm" debug="0" />
 
+		<!-- UnComment one of the following and comment out the above to get a JDBC realm -->
+
+		<!--
+		     <RequestInterceptor className="org.apache.tomcat.request.JDBCRealm" debug="99" 
+		        driverName="sun.jdbc.odbc.JdbcOdbcDriver" 
+		        connectionURL="jdbc:odbc:TOMCAT" 
+		        userTable="users" userNameCol="user_name" userCredCol="user_pass" 
+		        userRoleTable="user_roles" roleNameCol="role_name"/>
+
+        
+             <RequestInterceptor className="org.apache.tomcat.request.JDBCRealm" debug="99"
+                driverName="oracle.jdbc.driver.OracleDriver"
+                connectionURL="jdbc:oracle:thin:@ntserver:1521:ORCL?user=scott;password=tiger"
+                userTable="users" userNameCol="user_name" userCredCol="user_pass"
+                userRoleTable="user_roles" roleNameCol="role_name" />
+        
+             <RequestInterceptor className="org.apache.tomcat.request.JDBCRealm" debug="99"
+                driverName="sun.jdbc.odbc.JdbcOdbcDriver"
+                connectionURL="jdbc:odbc:TOMCAT"
+                userTable="users" userNameCol="user_name" userCredCol="user_pass"
+                userRoleTable="user_roles" roleNameCol="role_name" />
+
+        -->
+
         <Connector className="org.apache.tomcat.service.PoolTcpConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
             <Parameter name="port" value="8080"/>
