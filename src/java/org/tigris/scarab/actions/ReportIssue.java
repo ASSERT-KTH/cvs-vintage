@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.114 2002/02/14 22:27:08 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.115 2002/02/21 21:47:54 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -255,7 +255,8 @@ public class ReportIssue extends RequireLoginFirstAction
      * issue's attribute values.
      * @exception Exception pass thru
      */
-    private boolean setAttributeValues(Issue issue, IntakeTool intake, TemplateContext context)
+    private boolean setAttributeValues(Issue issue, IntakeTool intake, 
+                                       TemplateContext context)
         throws Exception
     {
         boolean success = false;
@@ -339,31 +340,6 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             if (issue.containsMinimumAttributeValues())
             {
-                // Save transaction record
-                Transaction transaction = new Transaction();
-                transaction
-                    .create(TransactionTypePeer.CREATE_ISSUE__PK, user, null);
-                
-                // enter the values into the transaction
-                SequencedHashtable avMap = 
-                    issue.getModuleAttributeValuesMap(); 
-                Iterator i = avMap.iterator();
-                while (i.hasNext()) 
-                {
-                    AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                    try
-                    {
-                        aval.startTransaction(transaction);
-                    }
-                    catch (ScarabException se)
-                    {
-                        data.setMessage("Fatal Error: " + se.getMessage() 
-                                            + " Please start over.");
-                        //setTarget(data, "entry,Wizard1.vm");
-                        return;
-                    }
-                }
-        
                 // we need to see that the default text was filled out 
                 // if necessary.  We can
                 // only do this after setting the attributes above.
@@ -381,6 +357,31 @@ public class ReportIssue extends RequireLoginFirstAction
                 // Been provided, proceed.
                 if (commentField.isValid() || saveIssue)
                 {                
+                    // Save transaction record
+                    Transaction transaction = new Transaction();
+                    transaction
+                        .create(TransactionTypePeer.CREATE_ISSUE__PK, 
+                                user, null);
+                    
+                    // enter the values into the transaction
+                    SequencedHashtable avMap = 
+                        issue.getModuleAttributeValuesMap(); 
+                    Iterator i = avMap.iterator();
+                    while (i.hasNext()) 
+                    {
+                        AttributeValue aval = (AttributeValue)avMap.get(i.next());
+                        try
+                        {
+                            aval.startTransaction(transaction);
+                        }
+                        catch (ScarabException se)
+                        {
+                            data.setMessage("Fatal Error: " + se.getMessage() 
+                                             + " Please start over.");    
+                        return;
+                        }
+                    }
+        
                     issue.save();                
             
                     // save the comment
@@ -392,7 +393,6 @@ public class ReportIssue extends RequireLoginFirstAction
                         issue.addComment(comment, (ScarabUser)data.getUser());     
                     }
                     
-
                     // set the template to the user selected value
                     String template = data.getParameters()
                         .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
@@ -419,8 +419,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     subj.append(summary);
                 
                     if (!transaction.sendEmail(new ContextAdapter(context), issue, 
-                                          subj.toString(),
-                                          "email/NewIssueNotification.vm"))
+                                     subj.toString(), "email/NewIssueNotification.vm"))
                     {
                         data.setMessage("Your issue was saved, but could not send "
                                     + "notification email due to a sendmail error.");
@@ -428,9 +427,8 @@ public class ReportIssue extends RequireLoginFirstAction
                     cleanup(data, context);
                     data.getParameters().add("id", issue.getUniqueId().toString());
                     data.setMessage("Issue " + issue.getUniqueId() +
-                                    " added to module " +
-                                    getScarabRequestTool(context)
-                                    .getCurrentModule().getRealName());
+                         " added to module " + getScarabRequestTool(context)
+                          .getCurrentModule().getRealName());
                 }
                 else
                 {
