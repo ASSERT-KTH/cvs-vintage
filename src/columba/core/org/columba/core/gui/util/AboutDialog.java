@@ -239,8 +239,6 @@ public class AboutDialog implements ActionListener {
 			maxMemoryKBLabel = new JLabel();
 			fillerPanel = new JPanel();
 
-			maxMemoryTextField.setValue(new Integer((int) (Runtime.getRuntime().maxMemory() / 1000)));
-
 			setLayout(new java.awt.BorderLayout());
 
 			setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
@@ -272,7 +270,7 @@ public class AboutDialog implements ActionListener {
 			gridBagConstraints.anchor = GridBagConstraints.WEST;
 			centerPanel.add(currentMemoryLabel, gridBagConstraints);
 
-			currentMemoryTextField.setColumns(4);
+			currentMemoryTextField.setColumns(5);
 			currentMemoryTextField.setEditable(false);
 			gridBagConstraints = new GridBagConstraints();
 			gridBagConstraints.insets = new Insets(0, 4, 0, 4);
@@ -292,7 +290,7 @@ public class AboutDialog implements ActionListener {
 			gridBagConstraints.anchor = GridBagConstraints.WEST;
 			centerPanel.add(totalMemoryLabel, gridBagConstraints);
 
-			totalMemoryTextField.setColumns(4);
+			totalMemoryTextField.setColumns(5);
 			totalMemoryTextField.setEditable(false);
 			gridBagConstraints = new GridBagConstraints();
 			gridBagConstraints.gridx = 4;
@@ -316,8 +314,9 @@ public class AboutDialog implements ActionListener {
 			gridBagConstraints.anchor = GridBagConstraints.WEST;
 			centerPanel.add(maxMemoryLabel, gridBagConstraints);
 
-			maxMemoryTextField.setColumns(4);
+			maxMemoryTextField.setColumns(5);
 			maxMemoryTextField.setEditable(false);
+			maxMemoryTextField.setValue(new Integer((int) (Runtime.getRuntime().maxMemory() / 1000)));
 			gridBagConstraints = new GridBagConstraints();
 			gridBagConstraints.gridx = 1;
 			gridBagConstraints.gridy = 1;
