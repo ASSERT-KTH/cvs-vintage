@@ -95,9 +95,12 @@ import java.util.*;
      <li><b>jkLog</b> - path to log file to be used by nsapi_redirect.</li>
      <li><b>jkDebug</b> - Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to emerg.</li>
-     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
-                           specified, defaults to "ajp13" if an Ajp13Interceptor
-                           is in use, otherwise it defaults to "ajp12".</li>
+     <li><b>jkWorker</b> The desired worker.  Must be set to one of the workers
+                         defined in the workers.properties file. "ajp12", "ajp13"
+                         or "inprocess" are the workers found in the default
+                         workers.properties file. If not specified, defaults
+                         to "ajp13" if an Ajp13Interceptor is in use, otherwise
+                         it defaults to "ajp12".</li>
      <li><b>forwardAll</b> - If true, forward all requests to Tomcat. This helps
                              insure that all the behavior configured in the web.xml
                              file functions correctly.  If false, let Netscape serve
@@ -124,7 +127,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.5 $
+	@version $Revision: 1.6 $
  */
 public class NSConfig  extends BaseJkConfig { 
 
@@ -270,7 +273,7 @@ public class NSConfig  extends BaseJkConfig {
             objfile.println("#######################################################");		    
             objfile.println("<Object name=servlet>");
             objfile.println("ObjectType fn=force-type type=text/html");
-            objfile.println("Service fn=\"jk_service\" worker=\""+ jkProto + "\" path=\"/*\"");
+            objfile.println("Service fn=\"jk_service\" worker=\""+ jkWorker + "\" path=\"/*\"");
             objfile.println("</Object>");
             objfile.println();
 
