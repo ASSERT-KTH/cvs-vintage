@@ -1,4 +1,4 @@
-// $Id: SettingsTabHelper.java,v 1.5 2003/06/30 19:23:17 linus Exp $
+// $Id: SettingsTabHelper.java,v 1.6 2003/09/16 20:11:33 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,8 @@
 
 package org.argouml.application.helpers;
 import org.argouml.application.api.*;
-import org.argouml.ui.*;
-import org.argouml.kernel.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
 import javax.swing.*;
 import java.util.*;
-import org.tigris.gef.util.*;
 
 /** Helper object for Settings Tabs
  *
