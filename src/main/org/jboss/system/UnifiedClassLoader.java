@@ -20,7 +20,7 @@ import java.io.InputStream;
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
  * @author <a href="scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -37,7 +37,7 @@ public class UnifiedClassLoader
    implements UnifiedClassLoaderMBean
 {
    /** One URL per classLoader in our case */   
-   private URL url = null;
+   private URL url;
    
    /** An SCL can also be loading on behalf of an MBean */
    //private ObjectName mbean = null; not used
@@ -147,16 +147,6 @@ public class UnifiedClassLoader
    public int hashCode() 
    {
       return url.hashCode();
-   }
-
-   /**
-    * This is overriden to return null to avoid excessive and most likely
-    * useless RMI annotated codebases. Unfortunately this appears to be the
-    * only wat to do this at the moment(JDK1.3.1).
-    */
-   public URL[] getURLs()
-   {
-      return null;
    }
 
    /**
