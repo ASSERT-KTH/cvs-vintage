@@ -22,13 +22,16 @@ import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
+import javax.jms.MessageListener;
+import javax.jms.Message;
+
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
 
+import org.jboss.util.NullArgumentException;
+
 /**
- * MessageDrivenContainer, based on the StatelessSessionContainer.
- *
- * @see StatelessSessionContainer
+ * The container for <em>MessageDriven</em> beans.
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
@@ -36,7 +39,7 @@ import org.jboss.ejb.EnterpriseContext;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class MessageDrivenContainer
    extends Container
@@ -62,13 +65,13 @@ public class MessageDrivenContainer
       return localProxyFactory;
    }
 
-   public void setInstancePool(InstancePool ip)
+   public void setInstancePool(final InstancePool instancePool)
    {
-      if (ip == null)
-         throw new IllegalArgumentException("Null pool");
+      if (instancePool == null)
+         throw new NullArgumentException("instancePool");
 
-      this.instancePool = ip;
-      ip.setContainer(this);
+      this.instancePool = instancePool;
+      this.instancePool.setContainer(this);
    }
 
    public InstancePool getInstancePool()
@@ -138,7 +141,11 @@ public class MessageDrivenContainer
          super.create();
 
          // Map the bean methods
-         setupBeanMapping();
+         Map map = new HashMap();
+         Method m = MessageListener.class.getMethod("onMessage", new Class[] { Message.class });
+         map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
+         log.debug("Mapped " + m.getName() + " " + m.hashCode() + " to " + map.get(m));
+         beanMapping = map;
 
          // Initialize pool
          instancePool.create();
@@ -160,10 +167,6 @@ public class MessageDrivenContainer
          }
 
       }
-      catch (Exception e)
-      {
-         throw e;
-      }
       finally
       {
          // Reset classloader
@@ -171,8 +174,7 @@ public class MessageDrivenContainer
       }
    }
 
-   public void start()
-      throws Exception
+   public void start() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -190,6 +192,7 @@ public class MessageDrivenContainer
             EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
             ci.start();
          }
+         
          // Start the instance pool
          instancePool.start();
 
@@ -345,41 +348,6 @@ public class MessageDrivenContainer
       throw new Error("getHomeHandleHome not valid for MessageDriven beans");
    }
 
-   protected void setupBeanMapping()
-      throws NoSuchMethodException
-   {
-      Map map = new HashMap();
-
-      //
-      // Here we should have a way of looking up wich message class
-      // the MessageDriven bean implements, by doing this we might
-      // be able to use other MOM systems, aka XmlBlaser. TODO!
-      //
-
-      String msgInterface = "javax.jms.MessageListener";
-      String msgMethod = "onMessage";
-      String msgArgument = "javax.jms.Message";
-
-      // Get the method
-      Class msgInterfaceClass = null;
-      Class argumentClass = null;
-
-      try {
-         msgInterfaceClass = Class.forName(msgInterface);
-         argumentClass = Class.forName(msgArgument);
-      } catch (ClassNotFoundException ex) {
-         // Hackish
-         throw new NoSuchMethodException("Could not get the classes for message interface" +
-                                         msgInterface + ": " + ex);
-      }
-
-      Method m = msgInterfaceClass.getMethod(msgMethod, new Class[] {argumentClass});
-      // Implemented by bean
-      map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
-      log.debug("Mapped "+m.getName()+" "+m.hashCode()+"to "+map.get(m));
-      beanMapping = map;
-   }
-
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
@@ -404,7 +372,7 @@ public class MessageDrivenContainer
       {
          throw new Error("invokeHome not valid for MessageDriven beans");
       }
-
+      
       /**
        * FIXME Design problem, who will do the acknowledging for
        * beans with bean managed transaction?? Probably best done in the
@@ -413,45 +381,45 @@ public class MessageDrivenContainer
       public Object invoke(Invocation mi)
          throws Exception
       {
+         EnterpriseContext ctx = (EnterpriseContext)mi.getEnterpriseContext();
+         
          // wire the transaction on the context,
          // this is how the instance remember the tx
-         if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null) {
-            ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
+         if (ctx.getTransaction() == null) {
+            ctx.setTransaction(mi.getTransaction());
          }
 
          // Get method and instance to invoke upon
          Method m = (Method)beanMapping.get(mi.getMethod());
 
-
          // we have a method that needs to be done by a bean instance
-         {
-            // Invoke and handle exceptions
-            try {
-               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(),
-                               mi.getArguments());
-            }
-            catch (IllegalAccessException e) {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            }
-            catch (InvocationTargetException e) {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException) {
-                  throw (EJBException)ex;
-               }
-               else if (ex instanceof RuntimeException) {
-                  // Transform runtime exception into what a
-                  // bean *should* have thrown
-                  throw new EJBException((Exception)ex);
-               }
-               else if (ex instanceof Exception) {
-                  throw (Exception)ex;
+         try {
+            return m.invoke(ctx.getInstance(), mi.getArguments());
+         }
+         catch (IllegalAccessException e) {
+            // Throw this as a bean exception...(?)
+            throw new EJBException(e);
+         }
+         catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            
+            if (t instanceof RuntimeException) {
+               if (t instanceof EJBException) {
+                  throw (EJBException)t;
                }
                else {
-                  // TODO: this could break if a Throwable
-                  // (not an Error) is thrown.
-                  throw (Error)ex;
+                  // Transform runtime exception into what a bean *should* have thrown
+                  throw new EJBException((RuntimeException)t);
                }
+            }
+            else if (t instanceof Exception) {
+               throw (Exception)t;
+            }
+            else if (t instanceof Error) {
+               throw (Error)t;
+            }
+            else {
+               throw new org.jboss.util.NestedError("Unexpected Throwable", t);
             }
          }
       }

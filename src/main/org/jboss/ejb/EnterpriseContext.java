@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb;
 
 import java.rmi.RemoteException;
@@ -47,7 +48,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  *
  * Revisions:
  * 2001/06/29: marcf
