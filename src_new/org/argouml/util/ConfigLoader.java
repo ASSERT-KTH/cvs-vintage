@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.19 2004/10/04 20:06:03 mvw Exp $
+// $Id: ConfigLoader.java,v 1.20 2004/10/06 16:37:23 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,7 @@ public class ConfigLoader {
      */
     public static void loadTabs(Vector tabs, String panelName, 
             Orientation orientation) {
+        
         String position = null;
         if (panelName.equals("north") || panelName.equals("south")  
 	    || panelName.equals("west") || panelName.equals("east") 
@@ -81,6 +82,7 @@ public class ConfigLoader {
             position = panelName;
             panelName = "detail";
         }
+        
         InputStream is = null;
 	LineNumberReader lnr = null;
 	String configFile = System.getProperty("argo.config");
@@ -169,12 +171,12 @@ public class ConfigLoader {
      */
     public static Class parseConfigLine(String line, String panelName,
 					int lineNum, String configFile) {
-	if (line.startsWith("tabpath")) {
+	if (line.startsWith("tabpath:")) {
 	    String newPath = stripBeforeColon(line).trim();
 	    if (newPath.length() > 0) tabPath = newPath;
 	    return null;
 	}
-	else if (line.startsWith(panelName)) {
+	else if (line.startsWith(panelName + ":")) {
 	    String tabNames = stripBeforeColon(line).trim();
 	    StringTokenizer tabAlternatives = 
 	        new StringTokenizer(tabNames, "|");
