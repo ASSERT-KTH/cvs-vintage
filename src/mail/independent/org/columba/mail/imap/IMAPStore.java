@@ -60,8 +60,6 @@ public class IMAPStore {
 	private MimePartTree aktMimePartTree;
 	private String aktMessageUid;
 
-	private Mutex lock;
-
 	public IMAPStore(ImapItem item, IMAPRootFolder root) {
 
 		this.item = item;
@@ -72,8 +70,6 @@ public class IMAPStore {
 		state = 0;
 
 		delimiter = "/";
-
-		lock = new Mutex();
 
 	}
 
@@ -115,7 +111,6 @@ public class IMAPStore {
 		isSelected(worker, path);
 
 		try {
-			lock.getMutex();
 
 			IMAPResponse[] responses = imap.fetchUIDList("1:*");
 
@@ -128,7 +123,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -137,7 +132,6 @@ public class IMAPStore {
 	public boolean expunge(WorkerStatusController worker) throws Exception {
 		Object[] expungedUids = null;
 		try {
-			lock.getMutex();
 
 			IMAPResponse[] responses = imap.expunge();
 
@@ -149,7 +143,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return true;
@@ -168,7 +162,6 @@ public class IMAPStore {
 		isSelected(worker, path);
 
 		try {
-			lock.getMutex();
 
 			IMAPResponse[] responses = imap.fetchFlagsList("1:*");
 
@@ -180,7 +173,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return result;
@@ -299,7 +292,7 @@ public class IMAPStore {
 		String buffer = new String();
 
 		try {
-			lock.getMutex();
+
 			IMAPResponse[] responses =
 				getProtocol().fetchHeaderList((String) uid);
 
@@ -316,7 +309,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -332,7 +325,7 @@ public class IMAPStore {
 		isLogin(worker);
 
 		try {
-			lock.getMutex();
+
 			IMAPResponse[] responses = getProtocol().lsub(reference, pattern);
 			//System.out.println("response-count="+responses.length);
 
@@ -367,7 +360,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -415,7 +408,7 @@ public class IMAPStore {
 		// we need to ensure that this folder is closed
 
 		try {
-			lock.getMutex();
+
 			getProtocol().delete(mailboxName);
 
 		} catch (BadCommandException ex) {
@@ -426,7 +419,7 @@ public class IMAPStore {
 
 			return false;
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return true;
@@ -438,7 +431,7 @@ public class IMAPStore {
 		// we need to ensure that this folder is closed
 
 		try {
-			lock.getMutex();
+
 			getProtocol().rename(oldMailboxName, newMailboxName);
 
 		} catch (BadCommandException ex) {
@@ -449,7 +442,7 @@ public class IMAPStore {
 
 			return false;
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return true;
@@ -457,7 +450,7 @@ public class IMAPStore {
 
 	public boolean subscribeFolder(String mailboxName) throws Exception {
 		try {
-			lock.getMutex();
+
 			getProtocol().subscribe(mailboxName);
 
 		} catch (BadCommandException ex) {
@@ -468,7 +461,7 @@ public class IMAPStore {
 
 			return false;
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return true;
@@ -476,7 +469,7 @@ public class IMAPStore {
 
 	public boolean unsubscribeFolder(String mailboxName) throws Exception {
 		try {
-			lock.getMutex();
+
 			getProtocol().unsubscribe(mailboxName);
 
 		} catch (BadCommandException ex) {
@@ -487,7 +480,7 @@ public class IMAPStore {
 
 			return false;
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return true;
@@ -500,15 +493,14 @@ public class IMAPStore {
 		throws Exception {
 
 		//System.out.println("fetchheaderList");
-		
-		
-		worker.setProgressBarMaximum( list.size() );
-		
+
+		worker.setProgressBarMaximum(list.size());
+
 		for (int i = 0; i < list.size(); i++) {
 			worker.setProgressBarValue(i);
-			
+
 			//System.out.println("trying to fetch header number=" + i);
-			
+
 			ColumbaHeader header = fetchHeader(list.get(i), worker);
 			if (header != null) {
 				header.set("columba.uid", list.get(i));
@@ -533,7 +525,7 @@ public class IMAPStore {
 	public MimePartTree getMimePartTree(Object uid) throws Exception {
 
 		try {
-			lock.getMutex();
+
 			IMAPResponse[] responses =
 				getProtocol().fetchMimePartTree((String) uid);
 
@@ -550,7 +542,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -571,7 +563,7 @@ public class IMAPStore {
 		MimePart part = aktMimePartTree.getFromAddress(address);
 
 		try {
-			lock.getMutex();
+
 			IMAPResponse[] responses =
 				getProtocol().fetchMimePart((String) uid, part.getAddress());
 
@@ -585,7 +577,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -597,7 +589,7 @@ public class IMAPStore {
 		String buffer = new String();
 
 		try {
-			lock.getMutex();
+
 			IMAPResponse[] responses =
 				getProtocol().fetchMessageSource((String) uid);
 
@@ -611,7 +603,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -629,7 +621,6 @@ public class IMAPStore {
 			String flagsString = FlagsParser.parseVariant(variant);
 			ColumbaLogger.log.debug("flags=" + flagsString);
 
-			lock.getMutex();
 			IMAPResponse[] responses =
 				getProtocol().storeFlags(set.getString(), flagsString, true);
 
@@ -639,7 +630,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 	}
@@ -708,7 +699,7 @@ public class IMAPStore {
 		}
 
 		try {
-			lock.getMutex();
+
 			if (portNumber != -1)
 				openport = getProtocol().openPort(item.getHost(), portNumber);
 			else
@@ -719,7 +710,7 @@ public class IMAPStore {
 
 			e.printStackTrace();
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		if (openport == true) {
@@ -753,7 +744,6 @@ public class IMAPStore {
 					//String user = dialog.getUser();
 					boolean save = dialog.getSave();
 
-					lock.getMutex();
 					getProtocol().login(item.getUser(), password);
 
 					answer = true;
@@ -785,7 +775,6 @@ public class IMAPStore {
 		} else {
 			answer = false;
 		}
-		lock.releaseMutex();
 
 		System.out.println("login successful");
 	}
@@ -827,7 +816,6 @@ public class IMAPStore {
 		System.out.println("path=" + path);
 
 		try {
-			lock.getMutex();
 
 			getProtocol().select(path);
 		} catch (BadCommandException ex) {
@@ -836,7 +824,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return true;
@@ -867,8 +855,6 @@ public class IMAPStore {
 
 			MessageSet set = new MessageSet(uids);
 
-			lock.getMutex();
-
 			IMAPResponse[] responses =
 				imap.search(set.getString() + " " + searchString);
 
@@ -883,7 +869,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -904,8 +890,6 @@ public class IMAPStore {
 
 			//MessageSet set = new MessageSet(uids);
 
-			lock.getMutex();
-
 			IMAPResponse[] responses = imap.search("ALL " + searchString);
 
 			result = SearchResultParser.parse(responses);
@@ -919,7 +903,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			lock.releaseMutex();
+
 		}
 
 		return null;
@@ -934,7 +918,6 @@ public class IMAPStore {
 		String messageSet = new MessageSet(v.toArray()).getString();
 
 		try {
-			//lock.getMutex();
 
 			IMAPResponse[] responses = imap.fetchUIDList(messageSet);
 
@@ -947,7 +930,7 @@ public class IMAPStore {
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 		} finally {
-			//lock.releaseMutex();
+
 		}
 
 		return result;
