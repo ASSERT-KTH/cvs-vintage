@@ -170,7 +170,11 @@ public class Ajp13
         "LOCK",
         "UNLOCK",
         "ACL",
-        "REPORT"
+        "REPORT",
+        "VERSION-CONTROL",
+        "CHECKIN",
+        "CHECKOUT",
+        "UNCHECKOUT"
     };
     
     // Translates integer codes to request header names

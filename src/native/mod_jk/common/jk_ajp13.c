@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.6 $                                           *
+ * Version:     $Revision: 1.7 $                                           *
  ***************************************************************************/
 
 
@@ -83,7 +83,7 @@
 /*
  * Request methods, coded as numbers instead of strings.
  * The list of methods was taken from Section 5.1.1 of RFC 2616,
- * RFC 2518, and the ACL IETF draft.
+ * RFC 2518, the ACL IETF draft, and the DeltaV IESG Proposed Standard.
  *          Method        = "OPTIONS"
  *                        | "GET"    
  *                        | "HEAD"   
@@ -100,6 +100,10 @@
  *                        | "UNLOCK"
  *                        | "ACL"
  *                        | "REPORT"
+ *                        | "VERSION-CONTROL"
+ *                        | "CHECKIN"
+ *                        | "CHECKOUT"
+ *                        | "UNCHECKOUT"
  * 
  */
 #define SC_M_OPTIONS            (unsigned char)1
@@ -118,6 +122,10 @@
 #define SC_M_UNLOCK             (unsigned char)14
 #define SC_M_ACL		(unsigned char)15
 #define SC_M_REPORT             (unsigned char)16
+#define SC_M_VERSION_CONTROL    (unsigned char)17
+#define SC_M_CHECKIN            (unsigned char)18
+#define SC_M_CHECKOUT           (unsigned char)19
+#define SC_M_UNCHECKOUT         (unsigned char)20
 
 
 /*
@@ -247,6 +255,14 @@ int sc_for_req_method(const char *method,
 	*sc = SC_M_ACL;
     } else if(0 == strcmp(method, "REPORT")) {
 	*sc = SC_M_REPORT;
+    } else if(0 == strcmp(method, "VERSION-CONTROL")) {
+        *sc = SC_M_VERSION_CONTROL;
+    } else if(0 == strcmp(method, "CHECKIN")) {
+        *sc = SC_M_CHECKIN;
+    } else if(0 == strcmp(method, "CHECKOUT")) {
+        *sc = SC_M_CHECKOUT;
+    } else if(0 == strcmp(method, "UNCHECKOUT")) {
+        *sc = SC_M_UNCHECKOUT;
     } else {
         rc = JK_FALSE;
     }
