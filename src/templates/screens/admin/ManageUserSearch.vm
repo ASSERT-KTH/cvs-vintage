@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.27 2002/10/22 04:07:39 jmcnally Exp $
+@version $Id: ManageUserSearch.vm,v 1.28 2003/05/23 18:53:52 dlr Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -72,8 +72,6 @@ Order by: <select name="orderByField">
 
 <p>
 $l10n.ResultsPerPage 
-<input type="radio" name="resultsPerPage" value="5" #if ($resultsPerPage == 5)) checked="checked" #end /> 5 &#160;
-<input type="radio" name="resultsPerPage" value="10" #if ($resultsPerPage == 10) checked="checked" #end /> 10 &#160;
 <input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage == 25) checked="checked" #end /> 25 &#160;
 <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage == 50) checked="checked" #end /> 50 &#160;
 <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage == 75) checked="checked" #end /> 75 &#160;
