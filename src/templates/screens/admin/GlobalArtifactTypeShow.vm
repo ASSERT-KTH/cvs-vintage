@@ -54,7 +54,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th></th>
-<th>#sort ("name" "Issue type")</th>
+<th>#sort ("name" "Type")</th>
 <th>#sort ("desc" "Description")</th>
 </tr>
 #foreach ($issueType in $allIssueTypes)
