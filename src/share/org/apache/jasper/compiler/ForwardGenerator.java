@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ForwardGenerator.java,v 1.3 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/11 21:41:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ForwardGenerator.java,v 1.4 2001/08/26 01:49:02 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/08/26 01:49:02 $
  *
  * ====================================================================
  * 
@@ -111,10 +111,11 @@ public class ForwardGenerator
 		    sep = "?";
 		    initial = false;
 		} else sep = "&";
-		
+
+		// Bug 1705 - need "("
 		if (value.length == 1 && JspUtil.isExpression(value[0]))
 		    writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
-				   key + "=\" + " + JspUtil.getExpr(value[0]) + ";");
+				   key + "=\" + (" + JspUtil.getExpr(value[0]) + ");");
 		else {
 		    if (value.length == 1)
 			writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
@@ -126,7 +127,7 @@ public class ForwardGenerator
 					       key + "=\" + \"" + value[i] + "\";");
 			    else
 				writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
-					       key + "=\" +" + JspUtil.getExpr(value[i])+ ";");
+					       key + "=\" + (" + JspUtil.getExpr(value[i])+ ");");
 			    if (sep.equals("?")) sep = "&";			    
 			}
 		    }

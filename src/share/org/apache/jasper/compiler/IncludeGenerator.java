@@ -128,7 +128,7 @@ public class IncludeGenerator
 		
 		if (value.length == 1 && JspUtil.isExpression(value[0])) {
 		    writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
-				   key + "=\" + " + JspUtil.getExpr(value[0]) + ";");
+				   key + "=\" + (" + JspUtil.getExpr(value[0]) + ");");
 		} else {
 		    if (value.length == 1) {
 			writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
@@ -140,7 +140,7 @@ public class IncludeGenerator
 					       key + "=\" + \"" + value[i] + "\";");
 			    else
 				writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
-					       key + "=\" +" + JspUtil.getExpr(value[i])+ ";");
+					       key + "=\" + (" + JspUtil.getExpr(value[i])+ " );");
 			    if (sep.equals("?")) sep = "&";
 			    
 			}
