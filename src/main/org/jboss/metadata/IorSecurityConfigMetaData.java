@@ -15,7 +15,7 @@ import org.jboss.deployment.DeploymentException;
  * Describes the security configuration information for the IOR.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class IorSecurityConfigMetaData
    implements Serializable
@@ -238,42 +238,6 @@ public class IorSecurityConfigMetaData
                " but got " + value);
          }
 
-         value = MetaData.getUniqueChildContent(element, "detect-misordering");
-         if( DETECT_MISORDERING_NONE.equalsIgnoreCase(value) )
-         {
-            this.detectMisordering = DETECT_MISORDERING_NONE;
-         }
-         else if( DETECT_MISORDERING_REQUIRED.equalsIgnoreCase(value) )
-         {
-            this.detectMisordering = DETECT_MISORDERING_REQUIRED;
-         }
-         else if( DETECT_MISORDERING_SUPPORTED.equalsIgnoreCase(value) )
-         {
-            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
-         }
-         else
-         {
-            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
-         }
-
-         value = MetaData.getUniqueChildContent(element, "detect-replay");
-         if( DETECT_REPLAY_NONE.equalsIgnoreCase(value) )
-         {
-            this.detectReplay = DETECT_REPLAY_NONE;
-         }
-         else if( DETECT_REPLAY_REQUIRED.equalsIgnoreCase(value) )
-         {
-            this.detectReplay = DETECT_REPLAY_REQUIRED;
-         }
-         else if( DETECT_REPLAY_SUPPORTED.equalsIgnoreCase(value) )
-         {
-            this.detectReplay = DETECT_REPLAY_SUPPORTED;
-         }
-         else
-         {
-            this.detectReplay = DETECT_REPLAY_SUPPORTED;
-         }
-
          value = MetaData.getUniqueChildContent(element, "establish-trust-in-target");
          if(ESTABLISH_TRUST_IN_TARGET_NONE.equalsIgnoreCase(value))
          {
@@ -308,6 +272,42 @@ public class IorSecurityConfigMetaData
             throw new DeploymentException("Allowed values for establish-trust-in-client are " +
                ESTABLISH_TRUST_IN_CLIENT_NONE + ", " + ESTABLISH_TRUST_IN_CLIENT_SUPPORTED + " and " +
                ESTABLISH_TRUST_IN_CLIENT_REQUIRED + " but got " + value);
+         }
+
+         value = MetaData.getOptionalChildContent(element, "detect-misordering");
+         if( DETECT_MISORDERING_NONE.equalsIgnoreCase(value) )
+         {
+            this.detectMisordering = DETECT_MISORDERING_NONE;
+         }
+         else if( DETECT_MISORDERING_REQUIRED.equalsIgnoreCase(value) )
+         {
+            this.detectMisordering = DETECT_MISORDERING_REQUIRED;
+         }
+         else if( DETECT_MISORDERING_SUPPORTED.equalsIgnoreCase(value) )
+         {
+            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
+         }
+         else
+         {
+            this.detectMisordering = DETECT_MISORDERING_SUPPORTED;
+         }
+
+         value = MetaData.getOptionalChildContent(element, "detect-replay");
+         if( DETECT_REPLAY_NONE.equalsIgnoreCase(value) )
+         {
+            this.detectReplay = DETECT_REPLAY_NONE;
+         }
+         else if( DETECT_REPLAY_REQUIRED.equalsIgnoreCase(value) )
+         {
+            this.detectReplay = DETECT_REPLAY_REQUIRED;
+         }
+         else if( DETECT_REPLAY_SUPPORTED.equalsIgnoreCase(value) )
+         {
+            this.detectReplay = DETECT_REPLAY_SUPPORTED;
+         }
+         else
+         {
+            this.detectReplay = DETECT_REPLAY_SUPPORTED;
          }
       }
 
