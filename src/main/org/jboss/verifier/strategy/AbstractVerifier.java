@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.21 2001/10/05 18:22:00 starksm Exp $
+ * $Id: AbstractVerifier.java,v 1.22 2001/10/29 13:24:32 negaton Exp $
  */
 
 // standard imports
@@ -62,7 +62,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -991,9 +991,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          * If class is a non-static inner class then its containing class must
          * also be a conforming RMI/IDL value type.
          *
-         * Spec 2.8.4 (3)
+         * Spec 28.2.4 (3)
          */
-        if (type.getDeclaringClass() != null && isStatic(type))
+        if (type.getDeclaringClass() != null && !isStatic(type))
             if (!isRMIIDLValueType(type.getDeclaringClass()))
                 return false;
 
