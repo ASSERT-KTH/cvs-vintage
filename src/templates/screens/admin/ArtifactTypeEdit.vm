@@ -1,8 +1,15 @@
 $page.setTitle("Attribute Editor")
 
+<div class="app" id="div2-1-4-0">
+<h2>Customize/create artifact type</h2>
+
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+
+#if (!$issueTypeId)
+<p class="alert">Artifact type not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
+#else
 #set ($groups = $issueType.getAttributeGroups($module))
 #set ($rmit= $module.getRModuleIssueType($issueType))
 #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
@@ -31,9 +38,6 @@ $page.setTitle("Attribute Editor")
 </div>
 #end
 
-<div class="app" id="div2-1-4-0">
-
-<h2>Customize/create artifact type</h2>
 
 <form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
@@ -140,3 +144,4 @@ a seperate page).
 $intake.declareGroups()
 </form>
 </div>
+#end

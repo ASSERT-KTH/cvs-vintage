@@ -1,7 +1,19 @@
-#set ($groupId = $data.Parameters.getString("groupId"))
+#set ($groupId = $data.Parameters.getString("groupid"))
 #set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
-$page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($issueTypeId).Name'")
+
+#if ($issueTypeId)
+  $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($issueTypeId).Name'")
+#else
+  $page.setTitle("Add/Edit attribute group to Issue Type")
+#end
+
+<div class="app" id="div2-1-4-0">
+<h2>$page.Title</h2>
+
+#if (!$groupId)
+<p class="alert">Group not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
+#else
 
 <form method="get" action="$link.setPage("admin,AttributeGroup.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
@@ -31,8 +43,6 @@ $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($i
 </div>
 #end
 
-<div class="app" id="div2-1-4-0">
-<h2>$page.Title</h2>
 
 
 #AttributeGroupBar("")
@@ -104,3 +114,4 @@ $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($i
 
 $intake.declareGroups()
 </form>
+#end

@@ -1,12 +1,16 @@
 $page.setTitle("Module Attribute/options editor")
 
+<div class="app" id="div3-0-2-0">
+<h2>$page.Title</h2>
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
 
+#if (!$attType)
+<p class="alert">Attribute not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
+#else
+#set ($groups = $issueType.getAttributeGroups($module))
 
-<div class="app" id="div3-0-2-0">
-<h2>$page.Title</h2>
 
 <p>
 On this screen, one can modify a module's Attribute information.
@@ -106,3 +110,4 @@ On this screen, one can modify a module's Attribute information.
 $intake.declareGroups()
 </form>
 </div>
+#end
