@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -370,8 +370,10 @@ public class EARDeployer
     */
    protected boolean isDeployable(String name, URL url)
    {
-      return super.isDeployable(name, url) || name.endsWith("-ds.xml") ||
-         name.endsWith("-service.xml");
+      return super.isDeployable(name, url) ||
+         name.endsWith("-ds.xml") ||
+         name.endsWith("-service.xml") ||
+         name.endsWith(".har");
    }
 
    /** Override the default behavior of looking into the archive for deployables
