@@ -18,5 +18,7 @@
 	<classpathentry kind="lib" path="/thirdparty/oswego-concurrent/lib/concurrent.jar"/>
 	<classpathentry kind="lib" path="/thirdparty/gnu-getopt/lib/getopt.jar"/>
 	<classpathentry kind="lib" path="/thirdparty/apache-axis/lib/wsdl4j.jar"/>
+	<classpathentry kind="lib" path="/thirdparty/apache-axis/lib/axis.jar"/>
+	<classpathentry kind="lib" path="/thirdparty/apache-commons/lib/commons-logging.jar"/>
 	<classpathentry kind="output" path="output/eclipse-classes"/>
 </classpath>
