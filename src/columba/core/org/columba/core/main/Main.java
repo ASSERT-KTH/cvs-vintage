@@ -44,7 +44,6 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
-import org.columba.core.util.TempFileStore;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.main.MailMain;
