@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.122 2002/10/15 20:01:53 patriot1burke Exp $ -->
+<!-- $Id: build.xml,v 1.123 2002/11/08 19:48:54 igorfie Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -364,6 +364,7 @@
       <fileset dir="${build.classes}">
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
+        <include name="org/jboss/invocation/**"/>
       </fileset>
     </jar>
 
