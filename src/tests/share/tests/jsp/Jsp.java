@@ -1,6 +1,6 @@
 
 /*
- * $Id: Jsp.java,v 1.2 1999/11/04 01:39:42 costin Exp $
+ * $Id: Jsp.java,v 1.3 1999/11/04 18:43:42 costin Exp $
  */
 
 /**
@@ -97,7 +97,7 @@ public class Jsp extends TestableBase {
         boolean testCondition = Boolean.valueOf(magnitude).booleanValue(); 
         boolean responseStatus = dispatch(testId, testCondition);
 
-        return (testCondition) ? responseStatus : ! responseStatus;
+        return testCondition == responseStatus;
     }
 
     private boolean dispatch(String testId, boolean testCondition) {
@@ -107,10 +107,12 @@ public class Jsp extends TestableBase {
 
         if (ready()) {
             try {
-                writeRequest(testId);
+		String request = props.getProperty("test." + testId + ".request");
+		System.out.println("Testing " + request );
+		writeRequest(testId, request);
                 if (this.debug) 
                     System.out.println("<--BEG---");
-                responseStatus = getResponse(testId, testCondition);
+                responseStatus = getResponse(testId, testCondition, request);
                 if (this.debug)
                     System.out.println("---END-->");
 
@@ -164,9 +166,8 @@ public class Jsp extends TestableBase {
         }
     }
 
-    private void writeRequest(String testId)
+    private void writeRequest(String testId, String request)
     throws IOException {
-        String request = props.getProperty("test." + testId + ".request");
         if (this.debug) 
             System.out.println(testId + ". " + request);
         if (request == null) {
@@ -178,7 +179,7 @@ public class Jsp extends TestableBase {
     
     }
 
-    private boolean getResponse(String testId, boolean testCondition)
+    private boolean getResponse(String testId, boolean testCondition, String request)
     throws IOException {
         String line = null;
 
@@ -200,8 +201,18 @@ public class Jsp extends TestableBase {
         //System.out.println("REveived: " + result + ".");
 
         // Compare the results and set the status
-        return compare(result.toString(), expResult.toString(), 
+
+        boolean cmp=compare(result.toString(), expResult.toString(), 
             testCondition) && returnCode;
+	if(  cmp != testCondition ) {
+	    System.out.println("Error in : " + testId);
+	    System.out.println("Expected: ");
+	    System.out.println(expResult);
+	    System.out.println();
+	    System.out.println("Got:");
+	    System.out.println(result);
+	}
+	return cmp;
     }
 
     private boolean checkReturnCode(String testId) {
@@ -247,23 +258,29 @@ public class Jsp extends TestableBase {
         }
     }
 
-    private StringBuffer getServerBody() {
+    StringBuffer readBody( BufferedReader rd ) {
         StringBuffer result = new StringBuffer("");
         String line;
         try {
-            while ((line = br.readLine()) != null) {
+            while ((line = rd.readLine()) != null) {
                 if (this.debug)
                     System.out.println("\t" + line);
                 // Tokenize the line
-                StringTokenizer tok = new StringTokenizer(line);
-                while (tok.hasMoreTokens()) {
-                    String token = tok.nextToken();
-                    result.append("  " + token);
-                };
+		// XXX Do we need to tokenize? Space is significant!
+//                 StringTokenizer tok = new StringTokenizer(line);
+//                 while (tok.hasMoreTokens()) {
+//                     String token = tok.nextToken();
+//                     result.append("  " + token);
+//                 };
+		result.append(line).append("\n");
             }
         } catch (IOException ioe) {
         }
         return result;
+    }
+    
+    private StringBuffer getServerBody() {
+	return readBody( br );
     }
 
     // Parse a file into a String.
@@ -283,15 +300,7 @@ public class Jsp extends TestableBase {
             return expResult;
         }
         if (bin != null) {
-            String line = null;
-
-            while ((line = bin.readLine()) != null ) {
-                StringTokenizer tok = new StringTokenizer(line);
-                while (tok.hasMoreTokens()) {
-                    String token = tok.nextToken();
-                    expResult.append("  " + token);
-                }
-            }
+	    return readBody( bin );
         }
         //System.out.println("expResult: " + expResult);
         return expResult;
