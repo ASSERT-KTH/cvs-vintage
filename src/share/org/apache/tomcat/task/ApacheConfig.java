@@ -143,6 +143,37 @@ public class ApacheConfig  { // implements XXX
         mod_jk.println("JkLogLevel error");
 	    mod_jk.println();
 
+        mod_jk.println("###################################################################");
+        mod_jk.println("#                     SSL configuration                           #");
+        mod_jk.println("# ");                
+        mod_jk.println("# By default mod_jk is configured to collect SSL information from");
+        mod_jk.println("# the apache environment and send it to the Tomcat workers. The");
+        mod_jk.println("# problem is that there are many SSL solutions for Apache and as");
+        mod_jk.println("# a result the environment variable names may change.");
+        mod_jk.println("#");        
+        mod_jk.println("# The following (commented out) JK related SSL configureation");        
+        mod_jk.println("# can be used to customize mod_jk's SSL behaviour.");        
+        mod_jk.println("# ");        
+        mod_jk.println("# Should mod_jk send SSL information to Tomact (default is On)");        
+        mod_jk.println("# JkExtractSSL Off");        
+        mod_jk.println("# ");        
+        mod_jk.println("# What is the indicator for SSL (default is HTTPS)");        
+        mod_jk.println("# JkHTTPSIndicator HTTPS");        
+        mod_jk.println("# ");        
+        mod_jk.println("# What is the indicator for SSL session (default is SSL_SESSION_ID)");        
+        mod_jk.println("# JkSESSIONIndicator SSL_SESSION_ID");        
+        mod_jk.println("# ");        
+        mod_jk.println("# What is the indicator for client SSL cipher suit (default is SSL_CIPHER)");        
+        mod_jk.println("# JkCIPHERIndicator SSL_CIPHER");
+        mod_jk.println("# ");        
+        mod_jk.println("# What is the indicator for the client SSL certificated (default is SSL_CLIENT_CERT)");        
+        mod_jk.println("# JkCERTSIndicator SSL_CLIENT_CERT");
+        mod_jk.println("# ");        
+        mod_jk.println("#                                                                 #");        
+        mod_jk.println("###################################################################");
+        mod_jk.println();
+
+
         mod_jk.println("#");        
         mod_jk.println("# Root context mounts for Tomcat");
         mod_jk.println("#");        

@@ -109,9 +109,11 @@ typedef struct {
     jk_map_t *uri_to_context;
     jk_uri_worker_map_t *uw_map;
 
+    int  ssl_enable;
     char *https_indicator;
     char *certs_indicator;
     char *cipher_indicator;
+    char *sesion_indicator;
 
     server_rec *s;
 } jk_server_conf_t;
@@ -347,19 +349,40 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->ssl_cipher   = NULL;
     s->ssl_session  = NULL;
 
-#ifdef ADD_SSL_INFO    
-    ap_add_common_vars(r);
-#endif
 
-    ssl_temp = (char *)ap_table_get(r->subprocess_env, conf->https_indicator);
-    if(ssl_temp && !strcasecmp(ssl_temp, "on")) {
-        s->is_ssl       = JK_TRUE;
-        s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, conf->certs_indicator);
-        if(s->ssl_cert) {
-	        s->ssl_cert_len = strlen(s->ssl_cert);
+    /*
+    {
+        array_header *t = ap_table_elts(r->subprocess_env);        
+        if(t && t->nelts) {
+            int i;
+            table_entry *elts = (table_entry *)t->elts;
+            for(i = 0 ; i < t->nelts ; i++) {
+                fprintf(stderr, 
+                        "subprocess_env[%d].[%s]=[%s]\n", 
+                        i, elts[i].key, elts[i].val);
+                fflush(stderr);
+                fprintf(stdout, 
+                        "subprocess_env[%d].[%s]=[%s]\n", 
+                        i, elts[i].key, elts[i].val);
+                fflush(stdout);
+            }
         }
-        s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, conf->cipher_indicator);
-        s->ssl_session  = NULL;
+    }
+    */
+
+    if(conf->ssl_enable) {
+        ap_add_common_vars(r);
+
+        ssl_temp = (char *)ap_table_get(r->subprocess_env, conf->https_indicator);
+        if(ssl_temp && !strcasecmp(ssl_temp, "on")) {
+            s->is_ssl       = JK_TRUE;
+            s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, conf->certs_indicator);
+            if(s->ssl_cert) {
+    	        s->ssl_cert_len = strlen(s->ssl_cert);
+            }
+            s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, conf->cipher_indicator);
+            s->ssl_session  = (char *)ap_table_get(r->subprocess_env, conf->sesion_indicator);
+        }
     }
 
     s->headers_names    = NULL;
@@ -450,6 +473,20 @@ static const char *jk_set_log_file(cmd_parms *cmd,
     return NULL;
 }
 
+static const char *jk_set_enable_ssl(cmd_parms *cmd, 
+                                     void *dummy, 
+                                     int flag) 
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+    
+    /* Set up our value */
+    conf->ssl_enable = flag ? JK_TRUE : JK_FALSE;
+
+    return NULL;
+}
+
 static const char *jk_set_https_indicator(cmd_parms *cmd, 
                                           void *dummy, 
                                           char *indicator)
@@ -488,6 +525,20 @@ static const char *jk_set_cipher_indicator(cmd_parms *cmd,
 
     return NULL;
 }
+
+static const char *jk_set_sesion_indicator(cmd_parms *cmd, 
+                                           void *dummy, 
+                                           char *indicator)
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    conf->sesion_indicator = indicator;
+
+    return NULL;
+}
+
 
 static const char *jk_set_log_level(cmd_parms *cmd, 
                                     void *dummy, 
@@ -543,6 +594,7 @@ static const command_rec jk_cmds[] =
      * HTTPS - indication for SSL 
      * CERTS - Base64-Der-encoded client certificates.
      * CIPHER - A string specifing the ciphers suite in use.
+     * SESSION - A string specifing the current SSL session.
      */
     {"JkHTTPSIndicator", jk_set_https_indicator, NULL, RSRC_CONF, TAKE1,
      "Name of the Apache environment that contains SSL indication"},
@@ -550,6 +602,10 @@ static const command_rec jk_cmds[] =
      "Name of the Apache environment that contains SSL client certificates"},
     {"JkCIPHERIndicator", jk_set_cipher_indicator, NULL, RSRC_CONF, TAKE1,
      "Name of the Apache environment that contains SSL client cipher"},
+    {"JkSESSIONIndicator", jk_set_sesion_indicator, NULL, RSRC_CONF, TAKE1,
+     "Name of the Apache environment that contains SSL session"},
+    {"JkExtractSSL", jk_set_enable_ssl, NULL, RSRC_CONF, FLAG,
+     "Turns on SSL processing and information gathering by mod_jk"},     
     {NULL}
 };
 
@@ -618,9 +674,33 @@ static void *create_jk_config(ap_pool *p, server_rec *s)
     c->log         = NULL;
     c->mountcopy   = JK_FALSE;
 
+    /*
+     * By default we will try to gather SSL info. 
+     * Disable this functionality through JkExtractSSL
+     */
+    c->ssl_enable  = JK_TRUE;
+    /*
+     * The defaults ssl indicators match those in mod_ssl (seems 
+     * to be in more use).
+     */
     c->https_indicator  = "HTTPS";
     c->certs_indicator  = "SSL_CLIENT_CERT";
+    
+    /*
+     * The following (comented out) environment variables match apache_ssl! 
+     * If you are using apache_sslapache_ssl uncomment them (or use the 
+     * configuration directives to set them.
+     *
     c->cipher_indicator = "HTTPS_CIPHER";
+    c->sesion_indicator = NULL;
+     */
+
+    /*
+     * The following environment variables match mod_ssl! If you
+     * are using another module (say apache_ssl) comment them out.
+     */
+    c->cipher_indicator = "SSL_CIPHER";
+    c->sesion_indicator = "SSL_SESSION_ID";
 
     if(!map_alloc(&(c->uri_to_context))) {
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, p, "Memory error");
@@ -638,7 +718,15 @@ static void *merge_jk_config(ap_pool *p,
 {
     jk_server_conf_t *base = (jk_server_conf_t *) basev;
     jk_server_conf_t *overrides = (jk_server_conf_t *)overridesv;
- 
+
+    if(base->ssl_enable) {
+        overrides->ssl_enable       = base->ssl_enable;
+        overrides->https_indicator  = base->https_indicator;
+        overrides->certs_indicator  = base->certs_indicator;
+        overrides->cipher_indicator = base->cipher_indicator;
+        overrides->sesion_indicator = base->sesion_indicator;
+    }
+    
     if(overrides->mountcopy) {
         int sz = map_size(base->uri_to_context);
         int i;
@@ -650,20 +738,31 @@ static void *merge_jk_config(ap_pool *p,
                             name,
                             ap_pstrdup(p, map_get_string(base->uri_to_context, name, NULL)),
                             &old)) {
-                    jk_error_exit(APLOG_MARK, APLOG_EMERG, overrides->s, p, "Memory error");
+                    jk_error_exit(APLOG_MARK, 
+                                  APLOG_EMERG, 
+                                  overrides->s, 
+                                  p, 
+                                  "Memory error");
                 }
             }
         }
     }
+
     if(overrides->log_file && overrides->log_level >= 0) {
-        if(!jk_open_file_logger(&(overrides->log), overrides->log_file, overrides->log_level)) {
+        if(!jk_open_file_logger(&(overrides->log), 
+                                overrides->log_file, 
+                                overrides->log_level)) {
             overrides->log = NULL;
         }
     }
     if(!uri_worker_map_alloc(&(overrides->uw_map), 
                              overrides->uri_to_context, 
                              overrides->log)) {
-        jk_error_exit(APLOG_MARK, APLOG_EMERG, overrides->s,  p, "Memory error");
+        jk_error_exit(APLOG_MARK, 
+                      APLOG_EMERG, 
+                      overrides->s,  
+                      p, 
+                      "Memory error");
     }
     
     return overrides;
@@ -679,7 +778,9 @@ static void jk_init(server_rec *s, ap_pool *p)
     fprintf(stdout, "jk_post_config %s\n", env ? env : "NULL"); fflush(stdout);
         
     if(conf->log_file && conf->log_level >= 0) {
-        if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
+        if(!jk_open_file_logger(&(conf->log), 
+                                conf->log_file, 
+                                conf->log_level)) {
             conf->log = NULL;
         } else {
             main_log = conf->log;
@@ -687,7 +788,11 @@ static void jk_init(server_rec *s, ap_pool *p)
     }
     
     if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
-        jk_error_exit(APLOG_MARK, APLOG_EMERG, s, p, "Memory error");
+        jk_error_exit(APLOG_MARK, 
+                      APLOG_EMERG, 
+                      s, 
+                      p, 
+                      "Memory error");
     }
 
     if(map_alloc(&init_map)) {
@@ -703,7 +808,11 @@ static void jk_init(server_rec *s, ap_pool *p)
         }
     }
 
-    jk_error_exit(APLOG_MARK, APLOG_EMERG, s, p, "Error while opening the workers");
+    jk_error_exit(APLOG_MARK, 
+                  APLOG_EMERG, 
+                  s, 
+                  p, 
+                  "Error while opening the workers");
 }
 
 static int jk_translate(request_rec *r)
@@ -718,7 +827,7 @@ static int jk_translate(request_rec *r)
                                              conf->log ? conf->log : main_log);
 
             if(worker) {
-                r->handler = ap_pstrdup(r->pool,JK_HANDLER);
+                r->handler = ap_pstrdup(r->pool, JK_HANDLER);
                 ap_table_setn(r->notes, JK_WORKER_ID, worker);
                 return OK;
             }

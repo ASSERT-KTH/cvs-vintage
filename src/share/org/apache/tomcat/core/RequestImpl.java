@@ -316,7 +316,7 @@ public class RequestImpl  implements Request {
 
     public boolean isSecure() {
 	// The adapter is responsible for providing this information 
-        return getProtocol().equalsIgnoreCase("HTTPS");
+        return getScheme().equalsIgnoreCase("HTTPS");
     }
     
     public void setUserPrincipal( Principal p ) {
