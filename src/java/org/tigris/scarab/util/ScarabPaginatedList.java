@@ -51,7 +51,7 @@ import java.util.List;
 /*
  *
  * @author <a href="mailto:tenersen@collab.net">Todd Enersen</a>
- * @version $Id: ScarabPaginatedList.java,v 1.2 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: ScarabPaginatedList.java,v 1.3 2003/04/16 19:16:52 elicia Exp $
  */
 public class ScarabPaginatedList
 {
@@ -151,7 +151,7 @@ public class ScarabPaginatedList
     public int getNextPageNumber()
     {
         int r = getPageNumber() + 1; 
-        if (r >= getNumberOfPages())
+        if (r > getNumberOfPages())
         {
             r = 0;
         }
