@@ -142,11 +142,12 @@
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
-      <version>20040130.152659</version>
+      <version>20040328.175011</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
+      <url>http://jakarta.apache.org/commons/configuration/</url>
     </dependency>
     <dependency>
       <groupId>commons-digester</groupId>
@@ -286,7 +287,7 @@
     <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum</artifactId>
-      <version>20040201.163302</version>
+      <version>20040328.191814</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -385,7 +386,7 @@
     <dependency>
       <groupId>stratum</groupId>
       <artifactId>stratum</artifactId>
-      <version>1.0-b3</version>
+      <version>1.0-b5-dev</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -421,7 +422,7 @@
     <dependency>
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
-      <version>20040218.143613</version>
+      <version>20040328.193346</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -508,7 +509,7 @@
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>20040212-140922</version>
+      <version>1.7.1</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
