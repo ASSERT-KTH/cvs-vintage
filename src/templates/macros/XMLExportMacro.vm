@@ -13,25 +13,25 @@
 
 #macro (xmlExport $fids)
 #xmlScarabHeader()
-#set ($currentModuleId = -1)
+#set ($currentModuleId = "false")
 #foreach ($fid in $fids)
   #set ($issue = $scarabR.getIssue("${fid.Prefix}${fid.Count}"))
   #if ($issue)
     #set ($module = $scarabR.getModule("${issue.ModuleId}"))
-    #if ($currentModuleId == -1)
+    #if ($currentModuleId == "false")
       #xmlModuleHeader($module)
-      #set ($currentModuleId = $module.ModuleId)
+      #set ($currentModuleId = "true")
     #else
-      #if ($currentModuleId != $module.ModuleId)
+      #if ($currentModuleId != "true")
         #xmlModuleFooter()
         #xmlModuleHeader($module)
-        #set ($currentModuleId = $module.ModuleId)
+        #set ($currentModuleId = "false")
       #end
     #end
     #xmlIssue($issue)
   #end
 #end
-#if ($currentModuleId != -1)
+#if ($currentModuleId != "false")
     #xmlModuleFooter()
 #end
 #xmlScarabFooter()
@@ -115,9 +115,8 @@
         <activity>
           <attribute>
             <name>$activity.Attribute.Name</name>
-            <value>$activity.NewValue</value>
+            <value>$!activity.NewValue</value>
             #if ($activity.OldValue)
-
             <old-value>$activity.OldValue</old-value>
             #end
 
