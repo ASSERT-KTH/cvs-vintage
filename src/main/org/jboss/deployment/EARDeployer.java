@@ -8,12 +8,8 @@
 package org.jboss.deployment;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -21,22 +17,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipInputStream;
-import javax.management.InstanceNotFoundException;
-import javax.management.JMException;
-import javax.management.MalformedObjectNameException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.ObjectInstance;
-import javax.management.ObjectName;
-import javax.management.RuntimeErrorException;
-import javax.management.RuntimeMBeanException;
 
-import org.jboss.logging.Logger;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.file.JarUtils;
+import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -46,7 +31,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -79,7 +64,10 @@ public class EARDeployer
          if( in == null )
             throw new DeploymentException("No META-INF/application.xml found");
 
-         XmlFileLoader xfl = new XmlFileLoader();
+         /* Don't require validation of application.xml since an ear may
+         just contain a jboss sar specified in the jboss-app.xml descriptor.
+         */
+         XmlFileLoader xfl = new XmlFileLoader(false);
          Element root = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
          J2eeApplicationMetaData metaData = new J2eeApplicationMetaData(root);
          di.metaData = metaData;
@@ -89,23 +77,16 @@ public class EARDeployer
          in = di.localCl.getResourceAsStream("META-INF/jboss-app.xml");
          if( in != null )
          {
-            Element jbossApp = xfl.getDocument(in, "META-INF/jboss-app.xml").getDocumentElement();
+            org.w3c.dom.Document jbossXmlDoc = xfl.getDocument(in, "META-INF/jboss-app.xml");
+            Element jbossApp = jbossXmlDoc.getDocumentElement();
+            org.dom4j.Document jbossXmlDom4jDoc = XmlFileLoader.convertDoc(jbossXmlDoc);
             in.close();
             // Import module/service archives to metadata
             metaData.importXml(jbossApp, true);
             // Check for a loader-repository for scoping
-            Element loader = MetaData.getOptionalChild(jbossApp, "loader-repository");
-            String repositoryName = MetaData.getOptionalChildContent(jbossApp, "loader-repository");
-            if( repositoryName != null )
-            {
-               // Check for an implementation class
-               String repositoryClassName = loader.getAttribute("loaderRepositoryClass");
-               if( repositoryClassName.length() == 0 )
-                  repositoryClassName = null;
-               di.repositoryClassName = repositoryClassName;
-               // Get the required object name of the repository
-               di.repositoryName = new ObjectName(repositoryName);
-            }
+            org.dom4j.Element jbossDom4jApp = jbossXmlDom4jDoc.getRootElement();
+            org.dom4j.Element loader = jbossDom4jApp.element("loader-repository"); 
+            initLoaderRepository(di, loader);
          }
 
          // resolve the watch
@@ -228,39 +209,26 @@ public class EARDeployer
     *
     * @param di a <code>DeploymentInfo</code> value
     * @exception DeploymentException if an error occurs
-    *
-    * @todo THIS IS A BUG! Only undeploy if we are the last package in
-    * the loader repository.
     */
    public void destroy(DeploymentInfo di) throws DeploymentException
    {
       log.info("Undeploying J2EE application, destroy step: " + di.url);
-      // Remove any deployment specific repository
-      if( di.repositoryName.equals(DeploymentInfo.DEFAULT_LOADER_REPOSITORY) == false )
-      {
-         log.debug("Destroying ear loader repository:"+di.repositoryName);
-         try
-         {
-            this.server.unregisterMBean(di.repositoryName);
-         }
-         catch(Exception e)
-         {
-            log.warn("Failed to unregister ear loader repository", e);
-         }
-      }
-
+      super.destroy(di);
    }
    
-   
-   // ServiceMBeanSupport overrides ---------------------------------
-
-   /** 
-    * @todo make this.name an attribute rather than appending 
+   /** Build the ear scoped repository
+    *
+    * @param di the deployment info passed to deploy
+    * @param loader the jboss-app/loader-repository element
+    * @throws Exception
     */
-   protected ObjectName getObjectName(final MBeanServer server,
-                                      final ObjectName name)
-      throws MalformedObjectNameException
+   protected void initLoaderRepository(DeploymentInfo di, org.dom4j.Element loader)
+      throws Exception
    {
-      return name == null ? OBJECT_NAME: name;
+      if( loader == null )
+         return;
+
+      LoaderRepositoryFactory.LoaderRepositoryConfig config = LoaderRepositoryFactory.parseRepositoryConfig(loader);
+      di.setRepositoryInfo(config);
    }
 }
