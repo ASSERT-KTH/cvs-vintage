@@ -28,6 +28,7 @@ import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.gui.action.ShowHelpAction;
 import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.SelfClosingPopupMenu;
 import org.columba.core.main.Main;
 import org.columba.core.shutdown.ShutdownManager;
 import org.jdesktop.jdic.tray.SystemTray;
@@ -135,7 +136,7 @@ public class ColumbaTrayIcon {
 
 	private JPopupMenu getPopupMenu() {
 		if (menu == null) {
-			menu = new JPopupMenu();
+			menu = new SelfClosingPopupMenu();
 			menu.add(new CMenuItem(new OpenNewMailWindowAction(null)));
 			menu.add(new CMenuItem(new OpenNewAddressbookWindowAction(null)));
 			menu.addSeparator();
