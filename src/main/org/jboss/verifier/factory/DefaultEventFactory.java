@@ -19,31 +19,24 @@ package org.jboss.verifier.factory;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: DefaultEventFactory.java,v 1.6 2002/06/04 15:18:10 lqd Exp $
+ * $Id: DefaultEventFactory.java,v 1.7 2003/03/31 23:40:48 ejort Exp $
  */
 
 // standard imports
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Enumeration;
 
-import java.io.InputStream;
-import java.io.IOException;
-
-// non-standard class dependencies
 import org.jboss.verifier.Section;
-
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationEventGenerator;
 
 /**
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since   JDK 1.3
  */
 public class DefaultEventFactory

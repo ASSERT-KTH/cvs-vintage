@@ -19,26 +19,20 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.30 2002/06/04 15:18:10 lqd Exp $
+ * $Id: EJBVerifier11.java,v 1.31 2003/03/31 23:40:47 ejort Exp $
  */
 
 
 // standard imports
-import java.util.Iterator;
-import java.util.Arrays;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Iterator;
 
-// non-standard class dependencies
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.SessionMetaData;
 import org.jboss.verifier.Section;
 import org.jboss.verifier.factory.DefaultEventFactory;
-
-import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.SessionMetaData;
-import org.jboss.metadata.EntityMetaData;
 
 
 /**
@@ -55,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11

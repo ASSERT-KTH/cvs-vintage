@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationContext.java,v 1.7 2002/03/05 18:44:24 ejort Exp $
+ * $Id: VerificationContext.java,v 1.8 2003/03/31 23:40:46 ejort Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
@@ -28,14 +28,9 @@ package org.jboss.verifier.strategy;
 // standard imports
 import java.net.URL;
 
-
-// non-standard class dependencies
 import org.gjt.lindfors.pattern.StrategyContext;
-
-import org.jboss.verifier.event.VerificationEventGenerator;
-import org.jboss.verifier.factory.VerificationEventFactory;
-
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.verifier.event.VerificationEventGenerator;
 
 
 /**
@@ -47,7 +42,7 @@ import org.jboss.metadata.ApplicationMetaData;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author  Juha Lindfors
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since   JDK 1.3
  */
 public interface VerificationContext extends StrategyContext,

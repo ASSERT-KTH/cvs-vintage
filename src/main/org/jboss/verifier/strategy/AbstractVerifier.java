@@ -17,37 +17,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.38 2003/03/29 11:44:28 ejort Exp $
+ * $Id: AbstractVerifier.java,v 1.39 2003/03/31 23:40:46 ejort Exp $
  */
 package org.jboss.verifier.strategy;
 
 // standard imports
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.Arrays;
-
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-// non-standard class dependencies
-import org.jboss.metadata.ApplicationMetaData;
+import org.gjt.lindfors.pattern.StrategyContext;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
-import org.jboss.metadata.SessionMetaData;
-
-import org.jboss.verifier.factory.VerificationEventFactory;
-import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.Section;
-
-import org.gjt.lindfors.pattern.StrategyContext;
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.factory.VerificationEventFactory;
 
 
 /**
@@ -83,7 +76,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -868,7 +861,6 @@ public abstract class AbstractVerifier
       {
          rteClass = classloader.loadClass( "java.lang.RuntimeException" );
          errorClass = classloader.loadClass( "java.lang.Error" );
-         iteClass = classloader.loadClass( "java.lang.reflect.InvocationTargetException" );
       }
       catch( ClassNotFoundException cnfe )
       {
@@ -878,8 +870,7 @@ public abstract class AbstractVerifier
       for( int i = 0; i < a.length; ++i )
       {
          if( rteClass.isAssignableFrom(a[i])
-            || errorClass.isAssignableFrom(a[i])
-            || iteClass.isAssignableFrom(a[i]) )
+            || errorClass.isAssignableFrom(a[i]))
          {
             // Skip over subclasses of java.lang.RuntimeException,
             // java.lang.Error and InvocationTargetException
