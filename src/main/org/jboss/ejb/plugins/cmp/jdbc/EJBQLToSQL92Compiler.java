@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -150,30 +150,6 @@ public final class EJBQLToSQL92Compiler
       }
    }
 
-   private void reset()
-   {
-      returnType = null;
-      parameterTypes = null;
-      readAhead = null;
-      inputParameters.clear();
-      selectObject = null;
-      selectManager = null;
-      typeFactory = null;
-      typeMapping = null;
-      aliasManager = null;
-      forceDistinct = false;
-      limitParam = 0;
-      limitValue = 0;
-      offsetParam = 0;
-      offsetValue = 0;
-      leftJoinCMRList.clear();
-      onFindCMRJoin = null;
-      countCompositePk = false;
-      leftJoinPaths.clear();
-      innerJoinPaths.clear();
-      identifierToTable.clear();
-   }
-
    public String getSQL()
    {
       return sql;
@@ -247,67 +223,35 @@ public final class EJBQLToSQL92Compiler
       );
    }
 
-   private void setTypeFactory(JDBCTypeFactory typeFactory)
-   {
-      this.typeFactory = typeFactory;
-      this.typeMapping = typeFactory.getTypeMapping();
-      aliasManager = new AliasManager(
-         typeMapping.getAliasHeaderPrefix(),
-         typeMapping.getAliasHeaderSuffix(),
-         typeMapping.getAliasMaxLength()
-      );
-   }
-
-   private Class getParameterType(int index)
-   {
-      int zeroBasedIndex = index - 1;
-      Class[] params = parameterTypes;
-      if(zeroBasedIndex < params.length)
-      {
-         return params[zeroBasedIndex];
-      }
-      return null;
-   }
-
-   // verify that parameter is the same type as the entity
-   private void verifyParameterEntityType(int number, JDBCEntityBridge entity)
-   {
-      Class parameterType = getParameterType(number);
-      Class remoteClass = entity.getMetaData().getRemoteClass();
-      Class localClass = entity.getMetaData().getLocalClass();
-      if((localClass == null || !localClass.isAssignableFrom(parameterType)) &&
-         (remoteClass == null || !remoteClass.isAssignableFrom(parameterType)))
-      {
-         throw new IllegalStateException(
-            "Only like types can be compared: from entity=" +
-            entity.getEntityName() + " to parameter type=" + parameterType
-         );
-      }
-   }
-
    public Object visit(ASTEJBQL node, Object data)
    {
-      Node select = node.jjtGetChild(0);
-      Node from = node.jjtGetChild(1);
+      Node selectNode = node.jjtGetChild(0);
+      Node fromNode = node.jjtGetChild(1);
 
-      // compile select
+      // compile selectNode
       StringBuffer selectClause = new StringBuffer(50);
-      select.jjtAccept(this, selectClause);
+      selectNode.jjtAccept(this, selectClause);
 
-      final int childrenTotal = node.jjtGetNumChildren();
-
-      // compile where
       StringBuffer whereClause = null;
-      if(childrenTotal > 2)
+      StringBuffer orderByClause = null;
+      for(int i = 2; i < node.jjtGetNumChildren(); ++i)
       {
-         whereClause = new StringBuffer(20);
-         Node where = node.jjtGetChild(2);
-         where.jjtAccept(this, whereClause);
+         Node childNode = node.jjtGetChild(i);
+         if(childNode instanceof ASTWhere)
+         {
+            whereClause = new StringBuffer(20);
+            childNode.jjtAccept(this, whereClause);
+         }
+         else if(childNode instanceof ASTOrderBy)
+         {
+            orderByClause = new StringBuffer();
+            childNode.jjtAccept(this, orderByClause);
+         }
       }
 
-      // compile from
+      // compile fromNode
       StringBuffer fromClause = new StringBuffer(30);
-      from.jjtAccept(this, fromClause);
+      fromNode.jjtAccept(this, fromClause);
 
       // left-join
       for(Iterator iter = identifierToTable.entrySet().iterator(); iter.hasNext();)
@@ -330,9 +274,20 @@ public final class EJBQLToSQL92Compiler
       StringBuffer sql = (StringBuffer) data;
       sql.append(selectClause)
          .append(fromClause);
+
       if(whereClause != null && whereClause.length() > 0)
       {
          sql.append(SQLUtil.WHERE).append(whereClause);
+      }
+
+      if(orderByClause != null && orderByClause.length() > 0)
+      {
+         sql.append(SQLUtil.ORDERBY).append(orderByClause);
+      }
+
+      if(countCompositePk)
+      {
+         sql.insert(0, "SELECT COUNT(*) FROM (").append(") t_count");
       }
 
       return data;
@@ -340,26 +295,78 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTOrderBy node, Object data)
    {
-      log.debug("ASTOrderBy>");
+      StringBuffer buf = (StringBuffer)data;
+      node.jjtGetChild(0).jjtAccept(this, data);
+      for(int i = 1; i < node.jjtGetNumChildren(); i++)
+      {
+         buf.append(SQLUtil.COMMA);
+         node.jjtGetChild(i).jjtAccept(this, data);
+      }
       return data;
    }
 
    public Object visit(ASTOrderByPath node, Object data)
    {
-      log.debug("ASTOrderByPath>");
+      StringBuffer buf = (StringBuffer)data;
+      node.jjtGetChild(0).jjtAccept(this, data);
+      if(node.ascending)
+      {
+         buf.append(SQLUtil.ASC);
+      }
+      else
+      {
+         buf.append(SQLUtil.DESC);
+      }
       return data;
    }
 
    public Object visit(ASTLimitOffset node, Object data)
    {
-      log.debug("ASTLimitOffset>");
+      int child = 0;
+      if(node.hasOffset)
+      {
+         Node offsetNode = node.jjtGetChild(child++);
+         if(offsetNode instanceof ASTParameter)
+         {
+            ASTParameter param = (ASTParameter)offsetNode;
+            Class parameterType = getParameterType(param.number);
+            if(int.class != parameterType && Integer.class != parameterType)
+            {
+               throw new IllegalStateException("OFFSET parameter must be an int");
+            }
+            offsetParam = param.number;
+         }
+         else
+         {
+            ASTExactNumericLiteral param = (ASTExactNumericLiteral)offsetNode;
+            offsetValue = (int)param.value;
+         }
+      }
+
+      if(node.hasLimit)
+      {
+         Node limitNode = node.jjtGetChild(child);
+         if(limitNode instanceof ASTParameter)
+         {
+            ASTParameter param = (ASTParameter)limitNode;
+            Class parameterType = getParameterType(param.number);
+            if(int.class != parameterType && Integer.class != parameterType)
+            {
+               throw new IllegalStateException("LIMIT parameter must be an int");
+            }
+            limitParam = param.number;
+         }
+         else
+         {
+            ASTExactNumericLiteral param = (ASTExactNumericLiteral)limitNode;
+            limitValue = (int)param.value;
+         }
+      }
       return data;
    }
 
    public Object visit(ASTSelect select, Object data)
    {
-      log.debug("ASTSelect> started");
-
       StringBuffer sql = (StringBuffer) data;
 
       sql.append(SQLUtil.SELECT);
@@ -369,9 +376,10 @@ public final class EJBQLToSQL92Compiler
       }
 
       final Node child0 = select.jjtGetChild(0);
+      final ASTPath path;
       if(child0 instanceof ASTPath)
       {
-         ASTPath path = (ASTPath) child0;
+         path = (ASTPath) child0;
 
          if(path.isCMPField())
          {
@@ -396,10 +404,37 @@ public final class EJBQLToSQL92Compiler
       }
       else
       {
-         throw new IllegalStateException("Aggregate functions are not yet supported.");
+         // the function should take a path expresion as a parameter
+         path = getPathFromChildren(child0);
+
+         if(path == null)
+            throw new IllegalStateException("The function in SELECT clause does not contain a path expression.");
+
+         if(path.isCMPField())
+         {
+            JDBCCMPFieldBridge selectField = (JDBCCMPFieldBridge)path.getCMPField();
+            selectManager = selectField.getManager();
+            setTypeFactory(selectManager.getJDBCTypeFactory());
+         }
+         else if(path.isCMRField())
+         {
+            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
+            selectManager = cmrField.getEntity().getManager();
+            setTypeFactory(selectManager.getJDBCTypeFactory());
+            addLeftJoinPath(path);
+         }
+         else
+         {
+            final JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity();
+            selectManager = entity.getManager();
+            setTypeFactory(selectManager.getJDBCTypeFactory());
+            addLeftJoinPath(path);
+         }
+
+         selectObject = child0;
+         child0.jjtAccept(this, data);
       }
 
-      log.debug("ASTSelect> finished");
       return data;
    }
 
@@ -423,12 +458,10 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTWhereConditionalTerm node, Object data)
    {
-      log.debug("Where term> started node");
       for(int i = 0; i < node.jjtGetNumChildren(); ++i)
       {
          node.jjtGetChild(i).jjtAccept(this, data);
       }
-      log.debug("Where term> finished");
       return data;
    }
 
@@ -862,31 +895,93 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTAvg node, Object data)
    {
-      log.debug("ASTAvg>");
+      node.setResultType(returnType);
+      StringBuffer buf = (StringBuffer)data;
+      Object[] args = new Object[]{
+         node.distinct,
+         node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
+      };
+      JDBCTypeMappingMetaData.AVG_FUNC.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTMax node, Object data)
    {
-      log.debug("ASTMax>");
+      node.setResultType(returnType);
+      StringBuffer buf = (StringBuffer)data;
+      Object[] args = new Object[]{
+         node.distinct,
+         node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
+      };
+      JDBCTypeMappingMetaData.MAX_FUNC.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTMin node, Object data)
    {
-      log.debug("ASTMin>");
+      node.setResultType(returnType);
+      StringBuffer buf = (StringBuffer)data;
+      Object[] args = new Object[]{
+         node.distinct,
+         node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
+      };
+      JDBCTypeMappingMetaData.MIN_FUNC.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTSum node, Object data)
    {
-      log.debug("ASTSum>");
+      node.setResultType(returnType);
+      StringBuffer buf = (StringBuffer)data;
+      Object[] args = new Object[]{
+         node.distinct,
+         node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
+      };
+      JDBCTypeMappingMetaData.SUM_FUNC.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTCount node, Object data)
    {
-      log.debug("ASTCount>");
+      StringBuffer buf = (StringBuffer)data;
+      node.setResultType(returnType);
+
+      Object args[];
+      final ASTPath cntPath = (ASTPath)node.jjtGetChild(0);
+      if(cntPath.isCMPField())
+      {
+         args = new Object[]{node.distinct, node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString()};
+      }
+      else
+      {
+         JDBCEntityBridge entity = (JDBCEntityBridge)cntPath.getEntity();
+         final JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         if(pkFields.length > 1)
+         {
+            countCompositePk = true;
+            forceDistinct = node.distinct.length() > 0;
+
+            addLeftJoinPath(cntPath);
+
+            String alias = aliasManager.getAlias(cntPath.getPath());
+            SQLUtil.getColumnNamesClause(
+               entity.getPrimaryKeyFields(),
+               alias,
+               buf
+            );
+
+            return buf;
+         }
+         else
+         {
+            final String alias = aliasManager.getAlias(cntPath.getPath());
+            StringBuffer keyColumn = new StringBuffer(20);
+            SQLUtil.getColumnNamesClause(pkFields[0], alias, keyColumn);
+            args = new Object[]{node.distinct, keyColumn.toString()};
+         }
+      }
+
+      JDBCTypeMappingMetaData.COUNT_FUNC.getFunctionSql(args, buf);
       return data;
    }
 
@@ -930,8 +1025,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTIdentifier node, Object data)
    {
-      log.debug("ASTIdentifier>");
-      return data;
+      throw new UnsupportedOperationException("Must not visit ASTIdentifier noe.");
    }
 
    public Object visit(ASTParameter node, Object data)
@@ -1002,8 +1096,6 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTFrom from, Object data)
    {
-      log.debug("ASTFrom> started.");
-
       StringBuffer sql = (StringBuffer) data;
       sql.append(SQLUtil.FROM);
 
@@ -1013,7 +1105,6 @@ public final class EJBQLToSQL92Compiler
          from.jjtGetChild(i).jjtAccept(this, data);
       }
 
-      log.debug("ASTFrom> finished.");
       return data;
    }
 
@@ -1228,8 +1319,6 @@ public final class EJBQLToSQL92Compiler
             leftJoinPaths.put(alias, paths);
          }
          paths.add(path);
-
-         log.debug("added left-join path: " + path.getPath() + ", " + identifier + "=" + alias);
       }
    }
 
@@ -1246,8 +1335,6 @@ public final class EJBQLToSQL92Compiler
             innerJoinPaths.put(alias, paths);
          }
          paths.add(path);
-
-         log.debug("added inner-join path: " + path.getPath() + ", " + identifier + "=" + alias);
       }
    }
 
@@ -1259,5 +1346,92 @@ public final class EJBQLToSQL92Compiler
          args[i] = node.jjtGetChild(i).jjtAccept(this, new StringBuffer()).toString();
       }
       return args;
+   }
+
+   /**
+    * Recursively searches for ASTPath among children.
+    *
+    * @param selectFunction a node implements SelectFunction
+    * @return ASTPath child or null if there was no child of type ASTPath
+    */
+   private ASTPath getPathFromChildren(Node selectFunction)
+   {
+      for(int childInd = 0; childInd < selectFunction.jjtGetNumChildren(); ++childInd)
+      {
+         Node child = selectFunction.jjtGetChild(childInd);
+         if(child instanceof ASTPath)
+         {
+            return (ASTPath)child;
+         }
+         else if(child instanceof SelectFunction)
+         {
+            Node path = getPathFromChildren(child);
+            if(path != null)
+               return (ASTPath)path;
+         }
+      }
+      return null;
+   }
+
+   private void setTypeFactory(JDBCTypeFactory typeFactory)
+   {
+      this.typeFactory = typeFactory;
+      this.typeMapping = typeFactory.getTypeMapping();
+      aliasManager = new AliasManager(
+         typeMapping.getAliasHeaderPrefix(),
+         typeMapping.getAliasHeaderSuffix(),
+         typeMapping.getAliasMaxLength()
+      );
+   }
+
+   private Class getParameterType(int index)
+   {
+      int zeroBasedIndex = index - 1;
+      Class[] params = parameterTypes;
+      if(zeroBasedIndex < params.length)
+      {
+         return params[zeroBasedIndex];
+      }
+      return null;
+   }
+
+   // verify that parameter is the same type as the entity
+   private void verifyParameterEntityType(int number, JDBCEntityBridge entity)
+   {
+      Class parameterType = getParameterType(number);
+      Class remoteClass = entity.getMetaData().getRemoteClass();
+      Class localClass = entity.getMetaData().getLocalClass();
+      if((localClass == null || !localClass.isAssignableFrom(parameterType)) &&
+         (remoteClass == null || !remoteClass.isAssignableFrom(parameterType)))
+      {
+         throw new IllegalStateException(
+            "Only like types can be compared: from entity=" +
+            entity.getEntityName() + " to parameter type=" + parameterType
+         );
+      }
+   }
+
+   private void reset()
+   {
+      returnType = null;
+      parameterTypes = null;
+      readAhead = null;
+      inputParameters.clear();
+      selectObject = null;
+      selectManager = null;
+      typeFactory = null;
+      typeMapping = null;
+      aliasManager = null;
+      forceDistinct = false;
+      limitParam = 0;
+      limitValue = 0;
+      offsetParam = 0;
+      offsetValue = 0;
+      leftJoinCMRList.clear();
+      onFindCMRJoin = null;
+      countCompositePk = false;
+      leftJoinPaths.clear();
+      innerJoinPaths.clear();
+      identifierToTable.clear();
    }
 }
