@@ -1,4 +1,4 @@
-// $Id: UUIDManager.java,v 1.2 2005/01/05 15:39:17 bobtarling Exp $
+// $Id: UUIDManager.java,v 1.3 2005/01/05 16:23:23 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,10 +60,13 @@ public class UUIDManager {
         try {
             address = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            // We can ignore this as the application should
-            // have checked for availability at startup.
-            // For tests we would expect unix developers
-            // to be correctly configured.
+            // The application should have checked for availability at
+            // startup.
+            // For tests we would expect unix developers to be correctly
+            // configured.
+            // Replace with an assert when we are JRE1.4+
+            throw new IllegalStateException(
+                    "UnknownHostException caught - set up your /etc/hosts");
         }
     }
     
