@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.38 2005/01/11 13:03:43 bobtarling Exp $
+// $Id: TargetManager.java,v 1.39 2005/01/14 02:24:47 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -614,7 +614,7 @@ public final class TargetManager {
 		        .targetAdded(targetEvent);
 		}
 	    } catch (RuntimeException e) {
-		LOG.warn("While calling targetAdded for "
+		LOG.error("While calling targetAdded for "
 			  + targetEvent
 			  + " in "
 			  + listeners[i + 1]
