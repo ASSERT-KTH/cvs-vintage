@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 3.2 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.6 2004/06/15 01:26:28 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.7 2004/06/16 11:44:29 loubyansky Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -373,7 +373,7 @@ jnp-context?)>
 <!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value?, read-only? ,
  configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , service-ref*, security-identity? ,
  resource-ref* , resource-env-ref* , method-attributes? , clustered? , cluster-config?,
- cache-invalidation? , cache-invalidation-config?, depends*)>
+ cache-invalidation? , cache-invalidation-config?, depends*, ior-security-config?)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -386,7 +386,8 @@ jnp-context?)>
 -->
 <!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value?, configuration-name?,
  invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , service-ref*, security-identity? ,
- resource-ref* , resource-env-ref* , clustered? , cluster-config?, method-attributes?, depends*)>
+ resource-ref* , resource-env-ref* , clustered? , cluster-config?, method-attributes?, depends*,
+ ior-security-config?)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -400,7 +401,8 @@ jnp-context?)>
 <!ELEMENT message-driven (ejb-name , destination-jndi-name ,
  mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? , resource-adapter-name? ,
  configuration-name? , invoker-bindings?,
- security-proxy? , ejb-ref* ,  ejb-local-ref*, service-ref*, security-identity? , resource-ref* , resource-env-ref*, depends*)>
+ security-proxy? , ejb-ref* ,  ejb-local-ref*, service-ref*, security-identity?, resource-ref*,
+ resource-env-ref*, depends*, ior-security-config?)>
 
 <!--
   The ejb-name element gives the name of the bean, it must correspond to
@@ -1313,3 +1315,76 @@ default is Long.MAX_VALUE or essentially enternity.
   This element is used to specify the refresh rate of commit option d
 -->
 <!ELEMENT optiond-refresh-rate (#PCDATA)>
+
+<!--
+ior-security-config element describes the security configuration information for the IOR.
+-->  
+<!ELEMENT ior-security-config ( transport-config? , as-context?, sas-context?  )> 
+
+<!--
+transport-config is the root element for security between the end points
+-->
+<!ELEMENT transport-config ( integrity, confidentiality, establish-trust-in-target, establish-trust-in-client )> 
+
+<!--
+integrity element indicates if the server (target) supports integrity protected messages. 
+The valid values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT integrity ( #PCDATA)>
+
+<!--
+confidentiality element indicates if the server (target) supports privacy protected 
+messages. The values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT confidentiality ( #PCDATA)>
+
+<!--
+establish-trust-in-target element indicates if the target is capable of authenticating to a client. 
+The values are NONE or SUPPORTED.
+-->  
+<!ELEMENT establish-trust-in-target ( #PCDATA)>
+
+<!--
+establish-trust-in-client element indicates if the target is capable of authenticating a client. The
+values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT establish-trust-in-client ( #PCDATA)>
+
+<!--
+as-context (CSIv2 authentication service) is the element describing the authentication 
+mechanism that will be used to authenticate the client. If specified it will be the 
+username-password mechanism.
+-->  
+<!ELEMENT as-context ( auth-method, realm, required )> 
+
+<!--
+required element specifies if the authentication method specified is required
+to be used for client authentication. If so the EstablishTrustInClient bit
+will be set in the target_requires field of the AS_Context. The element value
+is either true or false. 
+-->  
+<!ELEMENT required ( #PCDATA )> 
+
+<!--
+auth-method element describes the authentication method. The only supported value
+is USERNAME_PASSWORD
+-->  
+<!ELEMENT auth-method ( #PCDATA )> 
+
+<!--
+realm element describes the realm in which the user is authenticated. Must be 
+a valid realm that is registered in server configuration.
+-->  
+<!ELEMENT realm ( #PCDATA )> 
+
+<!--
+sas-context (related to CSIv2 security attribute service) element describes 
+the sas-context fields.
+-->  
+<!ELEMENT sas-context ( caller-propagation )> 
+
+<!--
+caller-propagation element indicates if the target will accept propagated caller identities
+The values are NONE or SUPPORTED.
+-->  
+<!ELEMENT caller-propagation ( #PCDATA) >
