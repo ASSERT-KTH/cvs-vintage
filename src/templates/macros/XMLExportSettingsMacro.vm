@@ -6,7 +6,7 @@
 <scarab>
 #set ($allAttributes = $scarabG.AllAttributes)
 #foreach ($attribute in $allAttributes)
-  <attribute>
+  <global-attribute>
     <name>$attribute.Name</name>
     <type>$attribute.AttributeType.Name</type>
     <description>$attribute.Description</description>
@@ -14,27 +14,27 @@
     #set ($allPCAO = $attribute.ParentChildAttributeOptions)
     #foreach ($pcao in $allPCAO)
     #set ($attributeOption = $pcao.ParentOption)
-    <attribute-option>
+    <global-attribute-option>
       <name>$attributeOption.Name</name>
       <deleted>$attributeOption.Deleted</deleted>
       <child-option>$pcao.ChildOption.Name</child-option>
       <weight>$pcao.Weight</weight>
       <preferred-order>$pcao.PreferredOrder</preferred-order>
-    </attribute-option>
+    </global-attribute-option>
     #end
-  </attribute>
+  </global-attribute>
 #end
 
 #set ($allIssueTypes = $scarabG.AllIssueTypes)
 #foreach ($issueType in $allIssueTypes)
-  <issue-type>
+  <global-issue-type>
     <name>$issueType.Name</name>
     <description>$issueType.Description</description>
     #if ($issueType.ParentId && ! $issueType.ParentId.toString().equals("0"))
     <parent>$scarabR.getIssueType($issueType.ParentId).Name</parent>
     #end
     <template>$issueType.TemplateIssueType.Name</template>
-  </issue-type>
+  </global-issue-type>
 #end
 
   #set ($module = $scarabR.CurrentModule)
@@ -76,7 +76,7 @@
 
       #set ($allModuleAttributeGroups = $module.getAttributeGroups($issueType))
       #foreach ($moduleAttributeGroup in $allModuleAttributeGroups)
-      <attribute-group>
+      <module-attribute-group>
         <name>$moduleAttributeGroup.Name</name>
         <description>$moduleAttributeGroup.Description</description>
         <active>$moduleAttributeGroup.Active</active>
@@ -84,9 +84,9 @@
         <preferred-order>$moduleAttributeGroup.Order</preferred-order>
         #foreach ($attribute in $moduleAttributeGroup.Attributes)
         #set ($rAAG = $moduleAttributeGroup.getRAttributeAttributeGroup($attribute))
-        <attribute>
+        <module-attribute>
           <name>$attribute.Name</name>
-          <group-preferred-order>$rAAG.Order</group-preferred-order>
+          <attribute-group-preferred-order>$rAAG.Order</attribute-group-preferred-order>
           ## FROM SCARAB_R_MODULE_ATTRIBUTE
           #set ($rma = $module.getRModuleAttribute($attribute, $issueType))
           <display-name>$rma.DisplayValue</display-name>
@@ -97,17 +97,17 @@
           <default-text-flag>$rma.DefaultTextFlag</default-text-flag>
 
           #foreach ($mo in $module.getRModuleOptions($attribute, $issueType))
-          <attribute-option>
+          <module-attribute-option>
             <display>$mo.DisplayValue</display>
             <active>$mo.Active</active>
             <preferred-order>$mo.Order</preferred-order>
             <weight>$mo.Weight</weight>
-          </attribute-option>
+          </module-attribute-option>
           #end
           
-        </attribute>
+        </module-attribute>
         #end
-      </attribute-group>
+      </module-attribute-group>
       #end
     </module-issue-type>
     #end
