@@ -41,7 +41,7 @@ public class MimeTypeViewer
     public Process open( MimeHeader header, File tempFile )
     {
         DefaultViewer viewer;
-	if ( isWin32Platform() ) {
+	if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
@@ -52,7 +52,7 @@ public class MimeTypeViewer
     public Process openURL( URL url )
     {
         DefaultViewer viewer;
-	if ( isWin32Platform() ) {
+	if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
@@ -63,7 +63,7 @@ public class MimeTypeViewer
     public Process openWithURL( URL url )
     {
         DefaultViewer viewer;
-	if ( isWin32Platform() ) {
+	if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
