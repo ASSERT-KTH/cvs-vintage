@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.7 2004/10/19 21:01:58 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.8 2004/10/22 18:30:17 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,20 +275,19 @@ public class PerspectiveConfigurator extends ArgoDialog {
         configPanel.add(rulesScroll);
         
         // add action listeners:
-        newPerspectiveButton
-        .addActionListener(new NewPerspectiveListener());
-        removePerspectiveButton
-        .addActionListener(new RemovePerspectiveListener());
+        newPerspectiveButton.addActionListener(new NewPerspectiveListener());
+        removePerspectiveButton.addActionListener(
+                new RemovePerspectiveListener());
         dupPersButton.addActionListener(new DuplicatePerspectiveListener());
         addRuleButton.addActionListener(new RuleListener());
         removeRuleButton.addActionListener(new RuleListener());
-        perspectiveList
-        .addListSelectionListener(new PerspectiveListSelectionListener());
-        perspectiveRulesList
-        .addListSelectionListener(new RulesListSelectionListener());
+        perspectiveList.addListSelectionListener(
+                new PerspectiveListSelectionListener());
+        perspectiveRulesList.addListSelectionListener(
+                new RulesListSelectionListener());
         perspectiveRulesList.addMouseListener(new RuleListMouseListener());
-        ruleLibraryList
-        .addListSelectionListener(new LibraryListSelectionListener());
+        ruleLibraryList.addListSelectionListener(
+                new LibraryListSelectionListener());
         ruleLibraryList.addMouseListener(new RuleListMouseListener());
         
         removePerspectiveButton.setEnabled(false);
