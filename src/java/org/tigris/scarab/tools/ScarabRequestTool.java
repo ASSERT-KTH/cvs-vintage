@@ -2934,7 +2934,7 @@ e.printStackTrace();
     public void setConfirmMessage(Localizable localizable) 
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
-        this.confirmMessage = localizable.getMessage(l10n);
+        this.confirmMessage = new SimpleSkipFiltering(localizable.getMessage(l10n));
     }
 
     /**
@@ -2963,7 +2963,7 @@ e.printStackTrace();
     public void setInfoMessage(Localizable localizable) 
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
-        this.infoMessage = localizable.getMessage(l10n);
+        this.infoMessage = new SimpleSkipFiltering(localizable.getMessage(l10n));
     }
 
     /**
@@ -2992,7 +2992,7 @@ e.printStackTrace();
     public void setAlertMessage(Localizable localizable) 
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
-        this.alertMessage = localizable.getMessage(l10n);
+        this.alertMessage = new SimpleSkipFiltering(localizable.getMessage(l10n));
     }
 
     public IssueListIterator getIssueListIterator(IteratorWithSize iterator, 

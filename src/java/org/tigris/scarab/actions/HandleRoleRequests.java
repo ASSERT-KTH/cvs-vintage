@@ -66,10 +66,12 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.SimpleSkipFiltering;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
@@ -94,6 +96,10 @@ public class HandleRoleRequests extends RequireLoginFirstAction
         List groups = scarabA.getNonMemberGroups(user);
 
         Iterator gi = groups.iterator();
+
+        String autoApproveRoleSet=null;
+        String waitApproveRoleSet=null;
+        
         while (gi.hasNext()) 
         {
             ScarabModule module = ((ScarabModule)gi.next());
@@ -106,8 +112,8 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                 {
                     TurbineSecurity.grant(user, module, 
                         TurbineSecurity.getRole(role));
-                    getScarabRequestTool(context).setConfirmMessage(
-                            L10NKeySet.RoleRequestGranted);    
+
+                    autoApproveRoleSet = addToRoleSet(autoApproveRoleSet,module, role);
                 }
                 else 
                 {
@@ -126,11 +132,49 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                     pend.setUserId(user.getUserId());
                     pend.setRoleName(role);
                     pend.save();
-                    scarabR.setInfoMessage(L10NKeySet.RoleRequestAwaiting);
+                    
+                    waitApproveRoleSet = addToRoleSet(waitApproveRoleSet,module, role);
                 }                
             }
         }
+
+        if (autoApproveRoleSet != null)
+        {
+            SimpleSkipFiltering htmlSet = new SimpleSkipFiltering(autoApproveRoleSet+"<br>");
+            Localizable msg = new L10NMessage(L10NKeySet.RoleRequestGranted, htmlSet);
+            scarabR.setConfirmMessage(msg);                    
+        }
+
+        if (waitApproveRoleSet != null)
+        {
+            SimpleSkipFiltering htmlSet = new SimpleSkipFiltering(waitApproveRoleSet+"<br>");
+            Localizable msg = new L10NMessage(L10NKeySet.RoleRequestAwaiting, htmlSet);
+            scarabR.setInfoMessage(msg);                    
+        }
+
         setTarget(data, nextTemplate);
+    }
+
+    /**
+     * Add a role to the String representation of the list of
+     * roles (used later for display purposes).
+     * @param autoApproveRoleSet
+     * @param role
+     * @return
+     */
+    private String addToRoleSet(String roleSet, ScarabModule module, String role)
+    {
+        String result;
+        if(roleSet==null)
+        {
+            result = "<br> ";
+        }
+        else
+        {
+            result = roleSet + "<br> ";
+        }
+        result += module.getName()+":"+role;
+        return result;
     }
 
     /**
