@@ -3,7 +3,7 @@
 
 <div class="app" id="div2-4-1-step4">
 
-<h2>Define report</h2>
+<h2>$page.Title</h2>
 
 #wizardLinks("reports,Step3_1a.vm" $reportParameters $link)
 #subWizardLinks("reports,Step3_1a.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")

@@ -1,7 +1,7 @@
 #set ($report = $scarabR.Report)
 
 <div class="app" id="div2-4-1-step3">
-<h2>Define report</h2>
+<h2>$page.Title</h2>
 
 #wizardLinks("reports,Step2b.vm" $reportParameters $link)
 #subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Select PFA(s)" "reports,Step2.vm" "2b: PFA display options" "reports,Step2b.vm")
@@ -20,15 +20,8 @@ column.</p>
 <input type="hidden" name="action" value="GenerateReport"/>
 
 <div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-    <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
-    &#160;
-    <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="Delete group" />
-  </td>
- </tr>
-</table>
+  <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />&#160;
+  <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="Delete group" />
 </div>
 
 #set ($reportOptionGroupsSize = $report.OptionGroups.size())
@@ -73,15 +66,8 @@ column.</p>
 </table>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-    <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
-    &#160;
-    <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="Delete group" />
-  </td>
- </tr>
-</table>
+  <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />&#160;
+  <input type="submit" name="eventSubmit_doStep2bdeletegroup" value="Delete group" />
 </div>
 
 #if ($report.OptionGroups && $report.OptionGroups.size() > 0)

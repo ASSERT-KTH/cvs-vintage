@@ -1,5 +1,3 @@
-$page.setTitle("Save Report")
-
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
 #set ($module = $scarabR.CurrentModule)
