@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.209 2002/11/06 21:00:27 elicia Exp $
+ * @version $Id: Issue.java,v 1.210 2002/11/07 21:38:42 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2524,7 +2524,7 @@ public class Issue
         ActivityManager
             .createUserActivity(this, attribute, activitySet,
                                 actionString, new Attachment(),
-                                assignee.getUserId(), null);
+                                null, assignee.getUserId());
 
         // Save user attribute values
         attVal.setIssue(this);
@@ -2590,7 +2590,7 @@ public class Issue
         ActivityManager
             .createUserActivity(this, newAttr, activitySet,
                                 actionString, new Attachment(),
-                                assignee.getUserId(), null);
+                                null, assignee.getUserId());
 
         // Save assignee value
         oldAttVal.setAttributeId(newAttr.getAttributeId());
