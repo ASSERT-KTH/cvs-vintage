@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.75 2002/06/18 02:44:52 spestov Exp $
+ * @version $Id: jEdit.java,v 1.76 2002/06/18 02:59:49 spestov Exp $
  */
 public class jEdit
 {
@@ -865,6 +865,10 @@ public class jEdit
 		//defaults.put("TextField.font",font);
 		defaults.put("TextArea.font",font);
 		defaults.put("TextPane.font",font);
+
+		// Enable/Disable tooltips
+		ToolTipManager.sharedInstance().setEnabled(
+			jEdit.getBooleanProperty("showTooltips"));
 
 		initProxy();
 
