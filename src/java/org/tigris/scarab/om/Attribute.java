@@ -65,6 +65,9 @@ import org.apache.fulcrum.cache.CachedObject;
 import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.TurbineServices;
 
+// Scarab classes
+import org.tigris.scarab.services.user.UserManager;
+
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
 
@@ -77,7 +80,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.39 2002/02/17 19:10:14 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.40 2002/02/23 01:23:36 elicia Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -224,6 +227,25 @@ public class Attribute
     public void setCreatedBy (NumberKey key)
     {
         super.setCreatedBy(new Integer(key.toString()).intValue());
+    }
+
+    /**
+     * Helper method that takes a NumberKey
+     */
+    public String getCreatedUserName () throws Exception
+    {
+        String userId = Integer.toString(getCreatedBy());
+        String userName = null;
+        if (userId.equals("0"))
+        {
+            userName = "Default";
+        }
+        else
+        {
+            ScarabUser su = UserManager.getInstance(new NumberKey(userId));
+            userName = su.getFirstName() + su.getLastName();
+        }
+        return userName;
     }
 
     /**
