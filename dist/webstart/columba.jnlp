@@ -44,5 +44,8 @@
    <extension name="jniwrapper" href="jniwrapper.jnlp"/>
    
  </resources>
+ <resources os="Windows">
+    <nativelib href="lib/jniwraplib.jar"/>
+  </resources>
  <application-desc main-class="org.columba.core.main.Main"/>
 </jnlp>

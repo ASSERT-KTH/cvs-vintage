@@ -10,9 +10,6 @@
   <security>
       <all-permissions/>
   </security>
-  <resources os="Windows">
-    <nativelib href="lib/jniwraplib.jar"/>
-  </resources>
   <resources>
     <jar href="lib/jniwrap-2.4.jar"/>
     <jar href="lib/winpack.jar"/>
