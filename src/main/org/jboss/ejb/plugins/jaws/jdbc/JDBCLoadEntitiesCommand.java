@@ -41,7 +41,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCLoadEntitiesCommand
    extends JDBCLoadEntityCommand
@@ -84,7 +84,6 @@ public class JDBCLoadEntitiesCommand
    protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
       FinderResults keys = (FinderResults)((Object[])argOrArgs)[0];
-      Map instances = keys.getEntityMap();
       while (rs.next())
       {
          Object key = createKey(rs);

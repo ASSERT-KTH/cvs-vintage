@@ -46,7 +46,8 @@ import org.jboss.util.Sync;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.20 $
+*   @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
+*   @version $Revision: 1.21 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -299,44 +300,19 @@ implements EntityPersistenceManager {
        return ((EntityCache) con.getInstanceCache()).createCacheKey(id);
     }
 
+    /** find multiple entities */
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
         throws Exception 
     {
        // The store will find the id and return a collection of PrimaryKeys
        FinderResults ids = store.findEntities(finderMethod, args, ctx);
-
-       AbstractInstanceCache cache = (AbstractInstanceCache)con.getInstanceCache();
-       Map contextMap = new HashMap();
-       ArrayList keyList = new ArrayList();
-       Iterator idEnum = ids.iterator();
-       while(idEnum.hasNext()) {
-          Object key = idEnum.next();
-          Object cacheKey = ((EntityCache)cache).createCacheKey(key);
-          keyList.add(cacheKey);
-                   
-          Sync mutex = (Sync)cache.getLock(cacheKey);
-          try
-          {
-             mutex.acquire();
-
-             // Get context
-             ctx = (EntityEnterpriseContext)cache.get(cacheKey);
-             // if ctx has a transaction, we skip it - either it's our Tx
-             //    or we plain don't want to block here.
-             if (ctx.getTransaction() == null) {
-                contextMap.put(key, ctx);
-             } 
-          } catch (InterruptedException ignored) {
-          } finally {
-             mutex.release();
-          }
-       }
-       
-       ids.setEntityMap(contextMap);
        
        store.loadEntities(ids);
 
-       return keyList;
+       // Note: for now we just return the keys - RabbitHole should return the
+       //   finderResults so that the invoker layer can extend this back 
+       //   giving the client an OO 'cursor'
+       return ids.getAllKeys();
     }
 
     /*

@@ -22,8 +22,6 @@ public class FinderResults implements Collection {
    
    private Object[] queryArgs;
    
-   private Map entities;
-   
    /** Constructor taking the collection of keys to hold and the query data. 
     */
    public FinderResults(Collection keys, Object queryData, Object finder, Object[] args) {
@@ -46,12 +44,6 @@ public class FinderResults implements Collection {
    }
    public Object[] getQueryArgs() {
       return queryArgs;
-   }
-   public Map getEntityMap() {
-      return entities;
-   }
-   public void setEntityMap(Map entities) {
-      this.entities = entities;
    }
    
    public int size() {
