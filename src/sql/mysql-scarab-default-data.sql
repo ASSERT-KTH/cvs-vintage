@@ -69,10 +69,8 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
         values(10, 'Tracking', 10, 'Tracking');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Brief (one-line) Description */
         values(11, 'Summary', 1, 'Summary');
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* A relevant pointer */
-        values(13, 'Url', 1, 'Url');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Functional Area */
-        values(14, 'Functional Area', 5, 'Functional Area');
+        values(12, 'Functional Area', 5, 'Functional Area');
 
 update SCARAB_ATTRIBUTE set CREATED_BY='1';
 
@@ -255,11 +253,11 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERI
         values(74, 10, 'any', 3); /* send notification on any change */
 
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /* Functional Area */
-        values(88, 14, 'UI', 1);
+        values(88, 12, 'UI', 1);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(89, 14, 'Setup', 2);
+        values(89, 12, 'Setup', 2);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(90, 14, 'Help', 3);
+        values(90, 12, 'Help', 3);
 
 /*
  * Option relationships
@@ -359,8 +357,7 @@ INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,8,'Vote',1,0,600,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,9,'Severity',1,0,700,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,10,'Tracking',0,0,800,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,11,'Summary',1,1,1,1,0);
-INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,13,'Url',1,0,900,0,0);
-INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,14,'Functional Area',1,0,1000,0,0);
+INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,12,'Functional Area',1,0,1000,0,0);
 
 /*
  * populate the root module with all options.
