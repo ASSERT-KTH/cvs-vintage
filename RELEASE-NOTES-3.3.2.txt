@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.13 2002/10/14 05:57:25 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.14 2002/10/31 06:41:37 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -57,6 +57,11 @@ Bug No.  Description
 
 	 Fix problems with URL normalization when the URL attempts to access
 	 a file above the ROOT.
+
+	 Prevent session sharing when switching from HTTPS to HTTP.  This
+	 removes a way to hijack sensitive sessions.  The old behavior can
+	 be restored by setting the secureCookie="false" attribute on the
+	 SessionId element in server.xml.
 
 Jasper:
 
