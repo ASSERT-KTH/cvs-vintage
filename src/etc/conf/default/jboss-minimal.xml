@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-minimal.xml,v 1.5 2002/09/20 22:52:59 starksm Exp $ -->
+<!-- $Id: jboss-minimal.xml,v 1.6 2003/02/24 08:01:29 ejort Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -86,7 +86,7 @@
        archive.
      -->
     <attribute name="URLs">
-       ./deploy
+       deploy/
     </attribute>
   </mbean>
 
