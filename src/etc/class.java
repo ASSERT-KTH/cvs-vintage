@@ -7,11 +7,11 @@
 package x;
 
 /**
- *	<description>
+ *   <description> 
  *
- *	@see <related>
- *	@author <firstname> <lastname> (<email>)
- *	@version $Revision: 1.2 $
+ *   @see <related>
+ *   @author <firstname> <lastname> (<email>)
+ *   @version $Revision: 1.3 $
  */
 public class X
    extends Y
