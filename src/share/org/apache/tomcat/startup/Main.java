@@ -81,10 +81,14 @@ import org.apache.tomcat.util.IntrospectionUtils;
  * include a single jar file in the classpath.
  *
  * @author Costin Manolache
+ * @author Ignacio J. Ortega
+ *
  */
 public class Main {
     String installDir;
     String libBase;
+    String serverBase;
+    String commonBase;
     String homeDir;
     static final String DEFAULT_CONFIG="conf/server.xml";
     boolean doStop=false;
@@ -109,20 +113,19 @@ public class Main {
 	System.out.println("TomcatStartup: " + s );
     }
 
-    // -------------------- Guess tomcat.home --------------------
-
-    
     // -------------------- Utils --------------------
     
-    public void setLibDir( String base ) {
+    public String checkDir( String base ) {
+        String r=null;
         try {
 	    File f = new File(base);
-	    this.libBase = f.getCanonicalPath();
-	    if( ! libBase.endsWith("/") ) libBase+="/";
+	    r = f.getCanonicalPath();
+	    if( ! r.endsWith("/") ) r+="/";
         } catch (IOException ioe) {
 	    ioe.printStackTrace();
-	    libBase=base;
+            r=base;
         }
+        return r;
     }
 
     URL getURL( String base, String file ) {
@@ -141,71 +144,64 @@ public class Main {
         }
     }
 
-    public String getLibDir() {
+    public String getServerDir() {
 	if( libBase!=null ) return libBase;
 
-	String pkg=IntrospectionUtils.guessHome("tomcat.home", "tomcat.jar");
-	System.out.println("Guessed home=" + pkg);
-	if( pkg!=null ) setLibDir( pkg + "/lib");
-	else setLibDir("./lib");
+	if( homeDir!=null ) libBase=checkDir( homeDir + "/lib");
+	else libBase=checkDir("./lib");
 	return libBase;
     }
+    public String getSharedDir() {
+	if( serverBase!=null ) return serverBase;
 
-    
+	if( homeDir!=null ) serverBase=checkDir( homeDir + "/lib/shared");
+	else serverBase=checkDir("./lib/shared");
+	return serverBase;
+    }
+    public String getCommonDir() {
+	if( commonBase!=null ) return commonBase;
+
+	if( homeDir!=null ) commonBase=checkDir( homeDir + "/lib/common");
+	else commonBase=checkDir("./lib/common");
+	return commonBase;
+    }
+
+
     void execute( String args[] ) throws Exception {
 
-	try {
-	    Vector urlV=new Vector();
-            String cpComp[]=getJarFiles(getLibDir());
-	    int jarCount=cpComp.length;
-            urlV.addElement( getURL(  getLibDir() ,"../classes/" ));
-	    for( int i=0; i< jarCount ; i++ ) {
-		urlV.addElement( getURL(  getLibDir() , cpComp[i] ));
-	    }
+        try {
+            homeDir=IntrospectionUtils.guessHome("tomcat.home", "tomcat.jar");
+            System.out.println("Guessed home=" + homeDir);
 
-	    // add CLASSPATH
-	    String cpath=System.getProperty( "tomcat.cp");
-	    if( cpath!=null ) {
-		System.out.println("Extra CLASSPATH: " + cpath);
-		String pathSep=System.getProperty( "path.separator");
-		StringTokenizer st=new StringTokenizer( cpath, pathSep );
-		while( st.hasMoreTokens() ) {
-		    String path=st.nextToken();
-		    urlV.addElement( getURL( path, "" ));
-		}
-	    }
-
-	    // Add tools.jar if JDK1.2
-	    String java_home=System.getProperty( "java.home" );
-	    urlV.addElement( new URL( "file", null , java_home +
-				       "/../lib/tools.jar"));
-	    
-	    URL urls[]=new URL[ urlV.size() ];
-	    System.out.println("CLASSPATH: " );
-	    for( int i=0; i<urlV.size(); i++ ) {
-		urls[i]=(URL)urlV.elementAt( i );
-		System.out.print(":" + urls[i] );
-	    }
-	    System.out.println();
-	    System.out.println();
-	    
 	    ClassLoader parentL=this.getClass().getClassLoader();
-	    System.out.println("ParentL " + parentL );
+	    //System.out.println("ParentL " + parentL );
+            // the server classloader loads from classes dir too and from tools.jar
+            Vector urlV=new Vector();
+            urlV.addElement( getURL(  getServerDir() ,"../classes/" ));
+            urlV.addAll(getClassPathA(getServerDir()));
+	    urlV.addElement( new URL( "file", null , System.getProperty( "java.home" ) +"/../lib/tools.jar"));
+            URL[] serverClassPath=getURLs(urlV);
+            // ClassLoader for webapps it uses a shared dir as repository, distinct from lib
+            URL[] sharedClassPath=getURLs(getClassPathA(getSharedDir()));
+            URL[] commonClassPath=getURLs(getClassPathA(getCommonDir()));
+            ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
+	    ClassLoader sharedCl= IntrospectionUtils.getURLClassLoader(sharedClassPath , commonCl );
+            ClassLoader serverCl= IntrospectionUtils.getURLClassLoader(serverClassPath , commonCl );
+	    if( commonCl==null ) {
+		commonCl=new SimpleClassLoader(commonClassPath, parentL);
+		sharedCl=new SimpleClassLoader(sharedClassPath, commonCl);
+		serverCl=new SimpleClassLoader(serverClassPath, commonCl);
+            }
 
-	    ClassLoader cl=null;
-	    cl= IntrospectionUtils.getURLClassLoader( urls, parentL );
-	    if( cl==null )
-		cl=new SimpleClassLoader(urls, parentL);
-
-	    
-	    Class cls=cl.loadClass("org.apache.tomcat.startup.Tomcat");
+            System.out.println("commonCl:"+commonCl);
+            System.out.println("sharedCl:"+sharedCl);
+            System.out.println("serverCl:"+serverCl);
+	    Class cls=serverCl.loadClass("org.apache.tomcat.startup.Tomcat");
 	    Object proxy=cls.newInstance();
-	    
-	    processArgs( proxy, args );
-	    // 	    IntrospectionUtils.setAttribute( proxy,
-	    // 		     "parentClassLoader", parentL );
-	    //	    setAttribute( proxy, "serverClassPath", urls );
-	    IntrospectionUtils.execute(  proxy, "execute" );
+
+            IntrospectionUtils.setAttribute( proxy,"args", args );
+            IntrospectionUtils.setAttribute( proxy,"parentClassLoader", sharedCl );
+            IntrospectionUtils.execute(  proxy, "executeWithAttributes" );
 	    return;
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
@@ -218,16 +214,16 @@ public class Main {
        String name;
        String aliases[];
        int args;
-       
+
        boolean task;
        }
     */
+/*
     String args0[]= { "help", "stop", "g", "generateConfigs" };
     String args1[]= { "f", "config", "h", "home" };
 
-    /** Read command line arguments and set properties in proxy,
+     Read command line arguments and set properties in proxy,
 	using ant-like patterns
-    */
     void processArgs(Object proxy, String args[] )
 	throws Exception
     {
@@ -254,20 +250,61 @@ public class Main {
 	    }
 	}
     }
-
+*/
     public String[] getJarFiles(String ld) {
 	File dir = new File(ld);
-	String[] names = dir.list( new FilenameFilter(){
+        String[] names=null;
+        if (dir.isDirectory()){
+            names = dir.list( new FilenameFilter(){
             public boolean accept(File d, String name) {
-                if (name.endsWith(".jar"))
-                {
+                if (name.endsWith(".jar")){
                     return true;
                 }
                 return false;
             }
-        });
+            });
+        }
+
 	return names;
     }
+
+    Vector getClassPathA(String p0) throws Exception {
+        Vector urlV=new Vector();
+        try{
+            String cpComp[]=getJarFiles(p0);
+            if (cpComp != null){
+                int jarCount=cpComp.length;
+                for( int i=0; i< jarCount ; i++ ) {
+                    urlV.addElement( getURL(  p0 , cpComp[i] ));
+                }
+            }
+	    // add CLASSPATH
+	    String cpath=System.getProperty( "tomcat.cp");
+	    if( cpath!=null ) {
+		System.out.println("Extra CLASSPATH: " + cpath);
+		String pathSep=System.getProperty( "path.separator");
+		StringTokenizer st=new StringTokenizer( cpath, pathSep );
+		while( st.hasMoreTokens() ) {
+		    String path=st.nextToken();
+		    urlV.addElement( getURL( path, "" ));
+		}
+	    }
+
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return urlV;
+    }
+
+    private URL[] getURLs(Vector v){
+        URL[] urls=new URL[ v.size() ];
+	for( int i=0; i<v.size(); i++ ) {
+            urls[i]=(URL)v.elementAt( i );
+        }
+        return urls;
+    }
+
 
 
 }

@@ -78,6 +78,8 @@
 	  file="${ant.home}/lib/parser.jar"/>
     <copy tofile="${tomcat.build}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/parser.jar" file="${jaxp}/parser.jar"/>
+    <copy tofile="${tomcat.build}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/crimson.jar" file="${jaxp}/crimson.jar"/>
     
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
@@ -401,6 +403,33 @@
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
   
+  <target name="dist-new" depends="dist">
+    <mkdir dir="${tomcat.dist}/lib/shared"/>
+    <mkdir dir="${tomcat.dist}/lib/common"/>
+    <copy file ="${tomcat.dist}/lib/servlet.jar"
+        todir="${tomcat.dist}/lib/common" />
+    <copy file ="${tomcat.dist}/lib/jasper.jar"
+        todir="${tomcat.dist}/lib/shared" />
+    <copy file ="${tomcat.dist}/lib/tomcat_util.jar"
+        todir="${tomcat.dist}/lib/shared" />
+  </target>
+
+  <target name="new" depends="main">
+    <mkdir dir="${tomcat.build}/lib/shared"/>
+    <mkdir dir="${tomcat.build}/lib/common"/>
+    <copy file ="${tomcat.build}/lib/servlet.jar"
+        todir="${tomcat.build}/lib/common" />
+    <copy file ="${tomcat.build}/lib/jasper.jar"
+        todir="${tomcat.build}/lib/shared" />
+    <copy file ="${tomcat.build}/lib/tomcat_util.jar"
+        todir="${tomcat.build}/lib/shared" />
+<!--
+    <delete>
+        <fileset dir="${tomcat.build}/classes"/>
+    </delete>
+-->
+  </target>
+
 
   <!-- ==================== Admin & agreagate ==================== -->
    
@@ -417,6 +446,7 @@
     <delete dir="${tomcat.build}"/>
     <delete dir="${tomcat.dist}"/>
   </target>
+
   
   <target name="all" depends="clean,dist"/>
   <target name="main" depends="tomcat,webapps,sanity-test"/>

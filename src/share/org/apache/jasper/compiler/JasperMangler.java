@@ -214,7 +214,7 @@ public class JasperMangler implements Mangler{
 	    pkgDir=JavaGeneratorTool.manglePackage(pkgDir);
 	    pkgDir=pkgDir.replace('.', '_');
 	    pkgDir=fixInvalidChars( pkgDir );
-	    classDir=workDir + "/" + pkgDir;
+	    classDir=workDir + File.separator + pkgDir;
 	} else {
 	    classDir=workDir;
 	}
@@ -250,7 +250,7 @@ public class JasperMangler implements Mangler{
 
     private void updateVersionPaths() {
 	// version dependent stuff
-	String baseName=classDir + "/" + JavaGeneratorTool.
+	String baseName=classDir + File.separator + JavaGeneratorTool.
 	    getVersionedName( baseClassN, version);
 	
 	javaFileName= baseName + ".java";

@@ -112,6 +112,13 @@ public class Jdk11Compat {
 	return null;
     }
 
+    public URL[] getURLs(ClassLoader cl){
+        return ((SimpleClassLoader)cl).getURLs();
+    }
+    public URL[] getParentURLs(ClassLoader cl){
+        SimpleClassLoader scl=(SimpleClassLoader)cl;
+        return ((SimpleClassLoader)cl.getParent()).getURLs();
+    }
     // Other methods, as needed
         
 

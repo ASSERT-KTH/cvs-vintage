@@ -104,6 +104,14 @@ public class Jdk12Support extends Jdk11Compat {
 	return Thread.currentThread().getContextClassLoader();
     }
 
+    public URL[] getURLs(ClassLoader cl){
+        return ((URLClassLoader)cl).getURLs();
+    }
+    public URL[] getParentURLs(ClassLoader cl){
+        URLClassLoader scl=(URLClassLoader)cl;
+        return ((URLClassLoader)cl.getParent()).getURLs();
+    }
+
     // -------------------- Support -------------------- 
     static class PrivilegedProxy implements PrivilegedExceptionAction
     {

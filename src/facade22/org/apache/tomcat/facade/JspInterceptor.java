@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 package org.apache.tomcat.facade;
 
 import javax.servlet.*;
@@ -67,6 +67,7 @@ import java.net.*;
 import org.apache.tomcat.util.log.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.depend.*;
+import org.apache.tomcat.util.compat.*;
 
 import org.apache.jasper.*;
 import org.apache.jasper.Constants;
@@ -594,6 +595,7 @@ final class JasperLiaison {
         javac.setEncoding(javaEncoding);
 	String cp=System.getProperty("java.class.path")+ sep + 
 	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
+//        System.out.println("classpath:"+cp);
         javac.setClasspath( cp );
 	if( debug>5) log.log( "ClassPath " + cp);
 	
@@ -652,16 +654,29 @@ final class JasperLiaison {
     }
 
     private String computeClassPath(Context ctx) {
-	URL classP[]=ctx.getClassPath();
 	String separator = System.getProperty("path.separator", ":");
+	URL classP[]=ctx.getClassPath();
         String cpath = "";
-        for(int i=0; i< classP.length; i++ ) {
-            URL cp = classP[i];
+        cpath+=extractClassPath(classP);
+        Jdk11Compat jdkProxy=Jdk11Compat.getJdkCompat();
+        URL serverCP[];
+        URL commonCP[];
+        serverCP=jdkProxy.getParentURLs(this.getClass().getClassLoader());
+        commonCP=jdkProxy.getURLs(this.getClass().getClassLoader());
+        cpath+=separator+extractClassPath(serverCP);
+        cpath+=separator+extractClassPath(commonCP);
+	return cpath;
+    }
+    String extractClassPath(URL urls[]){
+	String separator = System.getProperty("path.separator", ":");
+        String cpath="";
+        for(int i=0; i< urls.length; i++ ) {
+            URL cp = urls[i];
             File f = new File( cp.getFile());
             if (cpath.length()>0) cpath += separator;
             cpath += f;
         }
-	return cpath;
+        return cpath;
     }
 
     private JspCompilationContext createCompilationContext( Request req,
@@ -672,13 +687,14 @@ final class JasperLiaison {
 	ctxt.setServletClassName( mangler.getClassName());
 	ctxt.setJspFile( req.servletPath().toString());
 	ctxt.setClassPath( computeClassPath( req.getContext()) );
+//        System.out.println("computeClasspath:"+ctxt.getClassPath());
 	ctxt.setServletContext( req.getContext().getFacade());
 	ctxt.setOptions( opt );
 	ctxt.setClassLoader( req.getContext().getClassLoader());
 	ctxt.setOutputDir(req.getContext().getWorkDir().getAbsolutePath());
 	return ctxt;
     }
-    
+
     // Add an "expire check" to the generated servlet.
     private Dependency setDependency( Context ctx, JasperMangler mangler,
 				      ServletHandler handler )
@@ -710,6 +726,6 @@ final class JasperLiaison {
 	info.setDependency( dep );
 	return dep;
     }
-	
+
 
 }

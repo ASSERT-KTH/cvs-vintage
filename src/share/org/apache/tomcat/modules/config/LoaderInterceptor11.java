@@ -156,7 +156,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	}
 
 	ClassLoader parent=null;
-	if( useAL )
+	if( useAL && !context.isTrusted() )
 	    parent=cm.getParentLoader();
 	else if( useNoParent )
 	    parent=null;
