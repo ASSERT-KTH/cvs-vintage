@@ -27,7 +27,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.28 1999/04/20 01:51:39 jrobbins Exp $
+// $Id: FigEdge.java,v 1.29 1999/04/21 02:44:01 jrobbins Exp $
 
 package uci.gef;
 
@@ -323,6 +323,10 @@ implements PropertyChangeListener, Highlightable {
     _fig.setPoints(h, x, y);
     calcBounds();
   }
+
+  public Point getFirstPoint() { return _fig.getFirstPoint(); }
+  public Point getLastPoint() { return _fig.getLastPoint(); }
+
   public Point getPoints(int i) { return _fig.getPoints(i); }
   public int getNumPoints() { return _fig.getNumPoints(); }
   public void setNumPoints(int npoints) {

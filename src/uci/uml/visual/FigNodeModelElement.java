@@ -26,7 +26,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.16 1999/04/20 01:53:01 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.17 1999/04/21 02:44:22 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -116,8 +116,8 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
   public FigText getNameFig() { return _name; }
 
-  public Vector getPopUpActions() {
-    Vector popUpActions = super.getPopUpActions();
+  public Vector getPopUpActions(MouseEvent me) {
+    Vector popUpActions = super.getPopUpActions(me);
     popUpActions.addElement(Actions.Properties);
     return popUpActions;
   }

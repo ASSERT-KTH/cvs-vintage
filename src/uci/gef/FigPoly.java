@@ -26,7 +26,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.17 1999/03/11 01:11:44 jrobbins Exp $
+// $Id: FigPoly.java,v 1.18 1999/04/21 02:44:03 jrobbins Exp $
 
 package uci.gef;
 
@@ -354,6 +354,7 @@ public class FigPoly extends Fig {
   }
 
   public Point getFirstPoint() { return getPoints(0); }
+  public Point getLastPoint() { return getPoints(_npoints - 1); }
 
   /** When the user drags the handles, move individual points */
   public void setPoints(Handle h, int mX, int mY) {

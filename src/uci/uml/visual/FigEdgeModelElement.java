@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.17 1999/04/20 01:52:58 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.18 1999/04/21 02:44:20 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -119,10 +119,19 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     if (getOwner() != null) return getOwner().toString();
     return toString();
   }
-  public Vector getPopUpActions() {
-    Vector popUpActions = super.getPopUpActions();
+  public Vector getPopUpActions(MouseEvent me) {
+    Vector popUpActions = super.getPopUpActions(me);
     popUpActions.addElement(Actions.Properties);
     return popUpActions;
+  }
+
+  // distance formula: (x-h)^2 + (y-k)^2 = distance^2
+  public int getSquaredDistance(Point p1, Point p2) {
+    int xSquared = p2.x - p1.x;
+    xSquared *= xSquared;
+    int ySquared = p2.y - p1.y;
+    ySquared *= ySquared;
+    return xSquared + ySquared;
   }
 
   public void paintClarifiers(Graphics g) {
