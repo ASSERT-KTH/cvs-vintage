@@ -1,4 +1,4 @@
-//$Id: FigJunctionState.java,v 1.2 2004/06/26 10:25:54 mvw Exp $
+//$Id: FigJunctionState.java,v 1.3 2004/06/28 16:54:39 mvw Exp $
 //Copyright (c) 2004 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -33,9 +33,6 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
-
-import org.argouml.uml.diagram.ui.SelectionMoveClarifiers;
-import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
 
@@ -105,10 +102,6 @@ public class FigJunctionState extends FigStateVertex {
 
     /** Initial states are fixed size. */
     public boolean isResizable() { return false; }
-
-    public Selection makeSelection() {
-	return new SelectionMoveClarifiers(this);
-    }
 
     public void setLineColor(Color col) {
         _head.setLineColor(col);
