@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.3 2000/07/19 21:27:43 juha Exp $
+ * $Id: BeanVerifier.java,v 1.4 2000/08/12 00:42:12 salborini Exp $
  */
 
  
@@ -42,14 +42,10 @@ import org.jboss.verifier.event.VerificationEventGeneratorSupport;
 import org.jboss.verifier.factory.VerificationEventFactory;
 import org.jboss.verifier.factory.DefaultEventFactory;
 
-import com.dreambean.ejx.ejb.EnterpriseBeans;
-import com.dreambean.ejx.xml.ProjectX;
-import com.dreambean.ejx.xml.XMLManager;
-
-import org.jboss.ejb.deployment.jBossFileManager;
-import org.jboss.ejb.deployment.jBossFileManagerFactory;
-import org.jboss.ejb.deployment.jBossEjbJar;
-
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.SessionMetaData;
 
 
 /**
@@ -64,12 +60,12 @@ import org.jboss.ejb.deployment.jBossEjbJar;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {
 
-    private jBossEjbJar ejbJar = null;
+    private ApplicationMetaData ejbMetaData = null;
     private URL  ejbURL = null;
                                       
     private VerificationStrategy verifier = null;
@@ -103,21 +99,25 @@ public class BeanVerifier implements VerificationContext {
      *
      * @param   url     URL to the bean jar file
      */
-    public void verify(URL url) {
+    public void verify(URL url, ApplicationMetaData metaData) {
         
         ejbURL = url;
-        ejbJar = loadBeanJar(url);
+        ejbMetaData = metaData;
          
         setVerifier(VERSION_1_1);
         
         
-        EnterpriseBeans beans = ejbJar.getEnterpriseBeans();
+        Iterator beans = ejbMetaData.getEnterpriseBeans();
         
-        Iterator entities     = beans.getEntities();
-        Iterator sessions     = beans.getSessions();
-        
-        verifier.checkEntities(entities);
-        verifier.checkSessions(sessions);        
+        while (beans.hasNext()) {
+			BeanMetaData bean = (BeanMetaData)beans.next();
+			if (bean.isEntity()) {
+				verifier.checkEntity((EntityMetaData)bean);
+			} else {
+				verifier.checkSession((SessionMetaData)bean);
+			}
+		}
+		
     }
 
 
@@ -149,8 +149,8 @@ public class BeanVerifier implements VerificationContext {
    *
    **************************************************************************
    */
-    public jBossEjbJar getEJBJar() {
-        return ejbJar;
+    public ApplicationMetaData getApplicationMetaData() {
+        return ejbMetaData;
     }
     
     public URL getJarLocation() {
@@ -189,37 +189,6 @@ public class BeanVerifier implements VerificationContext {
      */
     protected VerificationStrategy getVerifier() {
         return verifier;
-    }
-    
-    
-    
-    /**
-     * Loads the bean jar file.
-     *
-     * @param   file    ejb jar
-     */
-    private jBossEjbJar loadBeanJar(URL file) {
-        
-        jBossFileManagerFactory factory = new jBossFileManagerFactory();
-        BeanContextServicesSupport ctx  = new BeanContextServicesSupport();
-        jBossFileManager fm             = (jBossFileManager)factory.createFileManager();
-        
-        ProjectX  xml  =  new ProjectX();
-
-        ctx.addService(XMLManager.class, xml);
-        ctx.add(fm);
-        
-        
-        try {
-            return fm.load(file);
-        }
-        catch (Exception e) {
-
-            // [TODO] a generic exception is no good
-            
-            throw new IllegalArgumentException(e.toString());
-            //return null;
-        }
     }
     
     

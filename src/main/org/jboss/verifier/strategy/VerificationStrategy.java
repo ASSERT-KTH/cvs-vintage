@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationStrategy.java,v 1.3 2000/06/03 17:49:32 juha Exp $
+ * $Id: VerificationStrategy.java,v 1.4 2000/08/12 00:42:13 salborini Exp $
  */
 
 
@@ -29,6 +29,10 @@ import java.util.Iterator;
 
 // non-standard class dependencies
 import org.gjt.lindfors.pattern.Strategy;
+
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.SessionMetaData;
 
 
 /**
@@ -40,25 +44,25 @@ import org.gjt.lindfors.pattern.Strategy;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
 public interface VerificationStrategy extends Strategy {
 
     /*
-     * Does the entity checks
+     * Does the entity check
      */
-    abstract void checkEntities(Iterator entities);
+    abstract void checkEntity(EntityMetaData entity);
     
     /*
-     * Checks the sessions
+     * Checks the session
      */
-    abstract void checkSessions(Iterator sessions);
+    abstract void checkSession(SessionMetaData session);
     
     /*
      * Checks the message driven beans (EJB 2.0 only).
      */
-    abstract void checkMessageDriven(Iterator sessions);
+    abstract void checkMessageDriven(BeanMetaData session);
     
 }
 

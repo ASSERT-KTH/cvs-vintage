@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.gjt.org
- * $Id: VerificationContext.java,v 1.2 2000/07/19 21:27:45 juha Exp $
+ * $Id: VerificationContext.java,v 1.3 2000/08/12 00:42:13 salborini Exp $
  *
  * You can reach the author by sending email to jpl@gjt.org or
  * directly to jplindfo@helsinki.fi.
@@ -36,7 +36,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
 import org.jboss.verifier.event.VerificationEventGenerator;
 import org.jboss.verifier.factory.VerificationEventFactory;
 
-import org.jboss.ejb.deployment.jBossEjbJar;
+import org.jboss.metadata.ApplicationMetaData;
 
 
 /**
@@ -48,7 +48,7 @@ import org.jboss.ejb.deployment.jBossEjbJar;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public interface VerificationContext extends StrategyContext,
@@ -71,7 +71,7 @@ public interface VerificationContext extends StrategyContext,
     /*
      * Returns the loaded and parsed ejb jar file
      */
-    abstract jBossEjbJar getEJBJar();  
+    abstract ApplicationMetaData getApplicationMetaData();  
     
     /*
      * Returns the location of the ejb jar file

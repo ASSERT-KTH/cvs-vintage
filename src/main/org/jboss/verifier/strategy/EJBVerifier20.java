@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.5 2000/07/19 21:27:45 juha Exp $
+ * $Id: EJBVerifier20.java,v 1.6 2000/08/12 00:42:13 salborini Exp $
  */
 
 
@@ -36,8 +36,9 @@ import org.gjt.lindfors.pattern.StrategyContext;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.factory.VerificationEventFactory;
 
-import com.dreambean.ejx.ejb.Session;
-import com.dreambean.ejx.ejb.Entity;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.SessionMetaData;
+import org.jboss.metadata.EntityMetaData;
 
 
 
@@ -50,7 +51,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -78,33 +79,17 @@ public class EJBVerifier20 extends AbstractVerifier {
         return context;
     }
 
-    public void checkSessions(Iterator beans) {
-
-        while (beans.hasNext()) { 
-            try {
-                //checkSession((Session)beans.next());
-            }
-            catch (ClassCastException e) {
-                System.err.println(e);
-                // THROW INTERNAL ERROR   
-            }
-        }
+    public void checkSession(SessionMetaData session) {
+            
+            // NOT IMPLEMENTED YET
     }            
 
-    public void checkEntities(Iterator beans) {
-        
-        while (beans.hasNext()) {
-            try {
-                //checkEntity((Entity)beans.next());
-            }
-            catch (ClassCastException e) {
-                System.err.println(e);
-                // THROW INTERNAL ERROR
-            }
-        }
+    public void checkEntity(EntityMetaData entity) {
+            
+            // NOT IMPLEMENTED YET
     }        
         
-    public void checkMessageDriven(Iterator beans) {
+    public void checkMessageDriven(BeanMetaData bean) {
             
             // NOT IMPLEMENTED YET
     }

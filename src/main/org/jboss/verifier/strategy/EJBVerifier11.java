@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.11 2000/07/25 17:36:12 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.12 2000/08/12 00:42:13 salborini Exp $
  */
 
 
@@ -41,8 +41,10 @@ import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.factory.VerificationEventFactory;
 import org.jboss.verifier.factory.DefaultEventFactory;
 
-import com.dreambean.ejx.ejb.Session;
-import com.dreambean.ejx.ejb.Entity;
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.SessionMetaData;
+import org.jboss.metadata.EntityMetaData;
 
 
 /**
@@ -56,7 +58,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -85,8 +87,17 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
 
+/*
+ ***********************************************************************
+ *
+ *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
+ *
+ ***********************************************************************
+ */
 
-    public void checkSession(Session session) {
+
+
+    public void checkSession(SessionMetaData session) {
 
         boolean sessionDescriptorVerified = true; //  false;
 
@@ -116,7 +127,7 @@ public class EJBVerifier11 extends AbstractVerifier {
     }
 
 
-    public void checkEntity(Entity entity) {
+    public void checkEntity(EntityMetaData entity) {
         boolean pkVerified = false;
 
         // will put this back later
@@ -125,48 +136,11 @@ public class EJBVerifier11 extends AbstractVerifier {
         // NO IMPLEMENTATION
     }
 
-
-
-
-/*
- ***********************************************************************
- *
- *    IMPLEMENTS VERIFICATION STRATEGY INTERFACE
- *
- ***********************************************************************
- */
-
     public StrategyContext getContext() {
         return context;
     }
 
-    public void checkSessions(Iterator beans) {
-
-        while (beans.hasNext()) {
-            try {
-                checkSession((Session)beans.next());
-            }
-            catch (ClassCastException e) {
-                System.err.println(e);
-                // THROW INTERNAL ERROR
-            }
-        }
-    }
-
-    public void checkEntities(Iterator beans) {
-
-        while (beans.hasNext()) {
-            try {
-                checkEntity((Entity)beans.next());
-            }
-            catch (ClassCastException e) {
-                System.err.println(e);
-                // THROW INTERNAL ERROR
-            }
-        }
-    }
-
-    public void checkMessageDriven(Iterator beans) {
+    public void checkMessageDriven(BeanMetaData beans) {
 
             // EMPTY IMPLEMENTATION, EJB 2.0 ONLY
     }
@@ -180,7 +154,7 @@ public class EJBVerifier11 extends AbstractVerifier {
  *****************************************************************************
  */
 
-    private boolean verifySessionHome(Session session) {
+    private boolean verifySessionHome(SessionMetaData session) {
 
         /*
          * Indicates whether we issued warnings or not during verification.
@@ -204,7 +178,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.8
              */
-             if (isStateless(session)) {
+             if (session.isStateless()) {
                  
                  if (!hasDefaultCreateMethod(home)) {
                     fireSpecViolationEvent(new Section("6.8.a"));
@@ -309,7 +283,7 @@ public class EJBVerifier11 extends AbstractVerifier {
 
     
     
-    private boolean verifySessionRemote(Session session) {
+    private boolean verifySessionRemote(SessionMetaData session) {
 
         /*
          * Indicates whether we issued warnings or not during verification.
@@ -434,7 +408,7 @@ public class EJBVerifier11 extends AbstractVerifier {
 
     
     
-    private boolean verifySessionBean(Session session) {
+    private boolean verifySessionBean(SessionMetaData session) {
 
         /*
          * Indicates whether we issued warnings or not during verification.
@@ -475,13 +449,13 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (hasSessionSynchronizationInterface(bean)) {
 
-                if (!isStateful(session)) {
+                if (session.isStateless()) {
                     fireSpecViolationEvent(new Section("6.5.3.a"));
 
                     status = false;
                 }
 
-                if (!isContainerManagedTx(session)) {
+                if (session.isBeanManagedTx()) {
                     fireSpecViolationEvent(new Section("6.5.3.b"));
 
                     status = false;
@@ -508,7 +482,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.6.1 (table 2)
              */
-            if (hasSessionSynchronizationInterface(bean) && isBeanManagedTx(session)) {
+            if (hasSessionSynchronizationInterface(bean) && session.isBeanManagedTx()) {
 
                 fireSpecViolationEvent(new Section("6.6.1"));
 
@@ -709,26 +683,6 @@ public class EJBVerifier11 extends AbstractVerifier {
                     return true;
         } catch(Exception e) {
         }
-        return false;
-    }
-
-
-
-
-    private boolean isBeanManagedTx(Session session) {
-
-        if (BEAN_MANAGED_TX.equals(session.getTransactionType()))
-            return true;
-
-        return false;
-    }
-
-
-    private boolean isContainerManagedTx(Session session) {
-
-        if (CONTAINER_MANAGED_TX.equals(session.getTransactionType()))
-            return true;
-
         return false;
     }
 

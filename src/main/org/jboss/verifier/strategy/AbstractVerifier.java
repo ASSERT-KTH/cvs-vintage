@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.7 2000/08/07 14:27:02 mulder Exp $
+ * $Id: AbstractVerifier.java,v 1.8 2000/08/12 00:42:13 salborini Exp $
  */
 
 // standard imports
@@ -32,9 +32,12 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Arrays;
 
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.SessionMetaData;
 
 // non-standard class dependencies
-import com.dreambean.ejx.ejb.Session;
 
 
 /**
@@ -46,7 +49,7 @@ import com.dreambean.ejx.ejb.Session;
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -91,23 +94,17 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     /*
      * checks if the session type is 'Stateful'
      */
-    public boolean isStateful(Session session) {
+    public boolean isStateful(SessionMetaData session) {
 
-        if (STATEFUL_SESSION.equals(session.getSessionType()))
-            return true;
-
-        return false;
+        return session.isStateful();
     }
 
     /*
      * checks if the session type is 'Stateless'
      */
-    public boolean isStateless(Session session) {
+    public boolean isStateless(SessionMetaData session) {
 
-        if (STATELESS_SESSION.equals(session.getSessionType()))
-            return true;
-
-        return false;
+        return session.isStateless();
     }
 
     /*
@@ -379,7 +376,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return false;
     }
 
-    public boolean hasRemoteReturnType(Session session, Method m) {
+    public boolean hasRemoteReturnType(BeanMetaData session, Method m) {
 
         if (m.getReturnType().getName().equals(session.getRemote()))
             return true;
