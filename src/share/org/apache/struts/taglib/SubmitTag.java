@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/share/org/apache/struts/taglib/Attic/SubmitTag.java,v 1.1 2000/05/31 22:28:11 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/31 22:28:11 $
+ * $Header: /tmp/cvs-vintage/struts/src/share/org/apache/struts/taglib/Attic/SubmitTag.java,v 1.2 2000/06/15 01:27:36 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/06/15 01:27:36 $
  *
  * ====================================================================
  *
@@ -68,7 +68,6 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts.util.BeanUtils;
 import org.apache.struts.util.MessageResources;
 
@@ -77,10 +76,10 @@ import org.apache.struts.util.MessageResources;
  * Tag for input fields of type "submit".
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/05/31 22:28:11 $
+ * @version $Revision: 1.2 $ $Date: 2000/06/15 01:27:36 $
  */
 
-public final class SubmitTag extends BodyTagSupport {
+public final class SubmitTag extends BaseHandlerTag {
 
 
     // ----------------------------------------------------- Instance Variables
@@ -190,7 +189,10 @@ public final class SubmitTag extends BodyTagSupport {
 	results.append(name);
 	results.append("\" value=\"");
 	results.append(label);
-	results.append("\">");
+	results.append("\"");
+	results.append(prepareEventHandlers());
+	results.append(prepareStyles());
+	results.append(">");
 
 	// Render this element to our writer
 	JspWriter writer = pageContext.getOut();

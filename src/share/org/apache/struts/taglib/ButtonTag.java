@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/share/org/apache/struts/taglib/Attic/BaseFieldTag.java,v 1.2 2000/06/15 01:27:32 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2000/06/15 01:27:32 $
+ * $Header: /tmp/cvs-vintage/struts/src/share/org/apache/struts/taglib/Attic/ButtonTag.java,v 1.1 2000/06/15 01:27:34 craigmcc Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/06/15 01:27:34 $
  *
  * ====================================================================
  *
@@ -64,107 +64,123 @@ package org.apache.struts.taglib;
 
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.JspWriter;
 import org.apache.struts.util.BeanUtils;
-import org.apache.struts.util.MessageResources;
 
 
 /**
- * Convenience base class for the various input tags for text fields.
+ * Renders an HTML BUTTON tag within the Struts framework.
  *
- * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2000/06/15 01:27:32 $
+ * @author Don Clasen
+ * @version $Revision: 1.1 $ $Date: 2000/06/15 01:27:34 $
  */
 
-public abstract class BaseFieldTag extends BaseInputTag {
+public final class ButtonTag extends BaseHandlerTag {
 
 
     // ----------------------------------------------------- Instance Variables
 
+    /**
+     * The name of the generated button.
+     */
+    private String name = null;
+
 
     /**
-     * The type of input field represented by this tag (text, password, or
-     * hidden).
+     * The value of the button label.
      */
-    protected String type = null;
+    private String value = null;
 
+
+    // ------------------------------------------------------------- Properties
+
+
+    /**
+     * Return the component name.
+     */
+    public String getName() {
+        return (name);
+    }
+
+    /**
+     * Set the component name.
+     * @param name The component name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    /**
+     * Return the label value.
+     */
+    public String getValue() {
+        return (value);
+    }
+
+
+    /**
+     * Set the label value.
+     * @param value The label value
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
 
     // --------------------------------------------------------- Public Methods
 
-
     /**
-     * Generate the required input tag.
-     *
+     * Process the start of this tag.
      * @exception JspException if a JSP exception has occurred
      */
     public int doStartTag() throws JspException {
-
-	// Create an appropriate "input" element based on our parameters
-	StringBuffer results = new StringBuffer("<input type=\"");
-	results.append(type);
-	results.append("\" name=\"");
-	results.append(name);
-	results.append("\"");
-	if (maxlength >= 0) {
-	    results.append(" maxlength=\"");
-	    results.append(maxlength);
-	    results.append("\"");
-	}
-	if (cols >= 0) {
-	    results.append(" size=\"");
-	    results.append(cols);
-	    results.append("\"");
-	}
-	results.append(" value=\"");
-	if (value != null) {
-	    results.append(BeanUtils.filter(value));
-	} else {
-	    Object bean = pageContext.findAttribute(Constants.BEAN_KEY);
-	    if (bean == null)
-		throw new JspException
-		    (messages.getMessage("baseFieldTag.missing", name));
-	    String methodName = "get" + BeanUtils.capitalize(name);
-	    Class paramTypes[] = new Class[0];
-	    Method method = null;
-	    Object value = null;
-	    try {
-		method = bean.getClass().getMethod(methodName, paramTypes);
-		value = method.invoke(bean, new Object[0]);
-		if (value == null)
-		    value = "";
-		results.append(value);
-	    } catch (NoSuchMethodException e) {
-		throw new JspException
-		    (messages.getMessage("baseFieldTag.method", methodName));
-	    } catch (Exception e) {
-		throw new JspException
-		    (messages.getMessage("baseFieldTag.result",
-					 methodName, e.toString()));
-	    }
-	}
-	results.append("\"");
-	results.append(prepareEventHandlers());
-	results.append(prepareStyles());
-	results.append(">");
-
-	// Print this field to our output writer
-	JspWriter writer = pageContext.getOut();
-	try {
-	    writer.print(results.toString());
-	} catch (IOException e) {
-	    throw new JspException
-		(messages.getMessage("baseFieldTag.io", e.toString()));
-	}
-
-	// Continue processing this page
-	return (EVAL_BODY_TAG);
-
+        // Do nothing until doEndTag() is called
+        return (EVAL_BODY_TAG);
     }
 
+    /**
+     * Process the end of this tag.
+     * @exception JspException if a JSP exception has occurred
+     */
+    public int doEndTag() throws JspException {
+
+    // Acquire the label value we will be generating
+    String label = value;
+    if ((label == null) && (bodyContent != null))
+        label = bodyContent.getString().trim();
+    if ((label == null) || (label.trim().length() < 1))
+        label = "Click";
+
+    // Generate an HTML element
+    StringBuffer results = new StringBuffer();
+    results.append("<input type=\"button\"");
+    if (name != null) {
+        results.append(" name=\"");
+        results.append(name);
+        results.append("\"");
+    }
+    results.append(" value=\"");
+    results.append(label);
+    results.append("\"");
+    results.append(prepareEventHandlers());
+    results.append(prepareStyles());
+    results.append(">");
+
+    // Render this element to our writer
+    JspWriter writer = pageContext.getOut();
+    try {
+        writer.print(results.toString());
+    }
+    catch (IOException e) {
+        throw new JspException
+        (messages.getMessage("baseFieldTag.io", e.toString()));
+    }
+
+    return (EVAL_PAGE);
+
+    }
 
 
 }
