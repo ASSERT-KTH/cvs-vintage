@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 public abstract class Terminal extends Parser {
 	private boolean discardTokens = false;
+	private boolean debug = false;
 
 	public Terminal() {
 	}
@@ -16,6 +17,16 @@ public abstract class Terminal extends Parser {
 		this.discardTokens = discardTokens;
 	}
 	
+	public Terminal discard() {
+		discardTokens = true;
+		return this;
+	}
+	
+	public Terminal debug() {
+		debug = true;
+		return this;
+	}
+
 	public AssemblySet match(AssemblySet inSet) {
 		AssemblySet out = new AssemblySet();
 		for(Iterator i = inSet.iterator(); i.hasNext(); ) {
@@ -44,9 +55,11 @@ public abstract class Terminal extends Parser {
 				out.push(token);
 			}
 			// return the new assembly
+			if(debug)System.out.println("Terminal "+this+" matched. newAssembly="+out);
 			return out;
 		}
 		// no match return null
+		if(debug)System.out.println("Terminal "+this+" DID NOT match assembly="+assembly);
 		return null;
 	}
 	

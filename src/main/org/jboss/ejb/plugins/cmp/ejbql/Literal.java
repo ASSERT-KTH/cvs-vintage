@@ -16,4 +16,8 @@ public class Literal extends Terminal {
 		}
 		return false;
 	}
+	
+	public String toString() {
+		return "[Literal: literal="+literal+"]";
+	}
 }

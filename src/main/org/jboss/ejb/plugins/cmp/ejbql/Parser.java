@@ -11,10 +11,17 @@ public abstract class Parser {
 	public abstract AssemblySet match(AssemblySet in);
 	
 	public AssemblySet matchAndAssemble(AssemblySet in) {
-		AssemblySet out = match(in);
-		if(assembler != null) {
-			for(Iterator i = out.iterator(); i.hasNext(); ) {
-				assembler.workOn((Assembly)i.next());
+		AssemblySet matchedSet = match(in);
+		if(assembler == null) {
+			return matchedSet;
+		}
+		
+		AssemblySet out = new AssemblySet();
+		for(Iterator i = matchedSet.iterator(); i.hasNext(); ) {
+			Assembly a = (Assembly)i.next();
+			assembler.workOn(a);
+			if(a.isValid()) {
+				out.add(a);
 			}
 		}
 		return out;
@@ -35,7 +42,31 @@ public abstract class Parser {
 		return best;
 	}
 	
-	public void setAssembler(Assembler a) {
+	public Assembly soleMatch(Assembly in) {
+		AssemblySet set = new AssemblySet();
+		set.add(in);
+		set = matchAndAssemble(set);
+		
+		AssemblySet completeMatches = new AssemblySet();
+		for(Iterator i = set.iterator(); i.hasNext(); ) {
+			Assembly a = (Assembly) i.next();
+
+			// is this a complete match, can't get better then that
+			if(!a.hasNextToken()) {
+				completeMatches.add(a);
+			}
+		}
+
+		if(completeMatches.size()==0) {
+			return best(set);
+		}
+		if(completeMatches.size() > 1) {
+			throw new IllegalStateException("Multiple assemblies matched: "+set.size());
+		}
+		return (Assembly)completeMatches.iterator().next();;
+	}
+	
+	public void setAssembler(Assembler assembler) {
 		this.assembler = assembler;
 	}
 	

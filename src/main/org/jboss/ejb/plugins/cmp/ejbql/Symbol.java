@@ -13,4 +13,8 @@ public class Symbol extends Terminal {
 	protected boolean isValidToken(Token token) {
 		return symbol.equals(token);
 	}
+	
+	public String toString() {
+		return "[Symbol: symbol="+symbol+"]";
+	}
 }

@@ -8,4 +8,8 @@ public class StringLiteral extends Terminal {
 	protected boolean isValidToken(Token token) {
 		return token instanceof StringToken;
 	}
+	
+	public String toString() {
+		return "[StringLiteral]";
+	}
 }

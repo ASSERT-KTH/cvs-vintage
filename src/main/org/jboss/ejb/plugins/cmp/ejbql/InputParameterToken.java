@@ -7,6 +7,10 @@ public final class InputParameterToken implements Token {
 		this.num = num;
 	}
 	
+	public int getNumber() {
+		return num;
+	}
+	
 	public int hashCode() {
 		return 37 * 17 + num;
 	}

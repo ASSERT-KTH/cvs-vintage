@@ -49,7 +49,6 @@ public class NumberState implements TokenizerState {
 		readSuffix(in, out);
 		
 		String number = out.toString().toLowerCase();
-		System.out.println("number is ["+number+"]");
 		if(isExactNumeric(number)) {
 			return createExactNumericToken(number);
 		} else {
@@ -65,7 +64,6 @@ public class NumberState implements TokenizerState {
 
 			// is it a hex number
 			int second = peekChar(in);	
-			System.out.println("HEX? " + (char)first + (char)second);
 			if(first == '0' && (second == 'x' || second == 'X')) {
 				// read the x off the stream and write it out
 				out.write(in.read());
@@ -89,8 +87,6 @@ public class NumberState implements TokenizerState {
 			
 			// get all the decimal digits
 			readNumber(in, out, 10);
-			
-			System.out.println("Read fractional part numebr is ["+out.toString()+"]");
 		}
 	}
 	
@@ -175,7 +171,6 @@ public class NumberState implements TokenizerState {
             // chop off the suffix
             number = number.substring(0, number.length() - 1);
         }
-        System.out.println("decode exact number [" + number + "]");
         if (number.startsWith("0X") || number.startsWith("0x")) {  // hex
             // handle literals from 0x8000000000000000L to 0xffffffffffffffffL:
             // remove sign bit, parse as positive, then calculate the negative value with the sign bit

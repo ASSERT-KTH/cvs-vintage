@@ -4,11 +4,12 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Assembly implements DeepCloneable {
+public class Assembly {
 	private DeepCloneable target;
 	private List stack = new ArrayList();
 	private List tokens = new ArrayList();
 	private int tokenIndex;
+	private boolean valid = true;
 
 	public Assembly(Assembly a) {
 		if(a.target != null) {
@@ -17,6 +18,7 @@ public class Assembly implements DeepCloneable {
 		stack = new ArrayList(a.stack);
 		tokens = new ArrayList(a.tokens);
 		tokenIndex = a.tokenIndex;
+		valid = a.valid;
 	}
 		
 	public Assembly(String string) {
@@ -34,7 +36,18 @@ public class Assembly implements DeepCloneable {
 		tokenIndex = 0;
 	}
 	
+	public boolean isValid() {
+		return valid;
+	}
+	
+	public void setInvalid() {
+		valid = false;
+	}
+	
 	public void push(Object object) {
+		if(object == null) {
+			throw new IllegalArgumentException("object is null");
+		}
 		stack.add(object);
 	}
 
@@ -89,9 +102,5 @@ public class Assembly implements DeepCloneable {
 			buf.append("^");
 		}
 		return buf.toString();
-	}
-	
-	public Object deepClone() {
-		return new Assembly(this);
 	}
 }
