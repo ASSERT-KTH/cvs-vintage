@@ -81,6 +81,42 @@ import java.lang.reflect.*;
  *
  *  All file paths _should_ be absolute. If not, you should set "home" and
  *  make sure you include the "PathSetter" module before anything else.
+ *
+ * <b>Example1</b>
+ * <pre>
+    // Assume EmbededTomcat and all common jars are in CLASSPATH
+    EmbededTomcat tomcat=new EmbededTomcat();
+    tomcat.setInstallDir( installDir );
+
+    // tomcat.setDebug( debug );
+    // tomcat.setAutoDeploy( false ); // no webapps/ is used
+    // tomcat.setEstart(true ); // server.xml will not be used 
+
+    tomcat.initClassLoaders();
+
+    if( explicitModules ) {
+      // For each module you want to add ( you must include a minimal set )
+      int mid=tomcat.addModule( "org.apache.tomcat.modules.xxxx" );
+      tomcat.setModuleProperty( mid, "property", "value" );
+    } else {
+      // Nothing - server.xml will be used if setEstart(false) ( default )
+      //           the default set will be used if setEstart(true)
+    }
+
+    // If you don't add one explicitely, the defaults are used ( HTTP/8080,
+    //  Ajp12/8007 for shutdown )
+    // tomcat.addEndpoint( port, null, null );
+    // You can add other connectors using addModule()
+
+    // tomcat.addApplicationAdapter( myModule );
+
+    // If you also want "webapps/" ( if you don addContext this is automatic )
+    // tomcat.addAutoDeploy(); 
+    // tomcat.addContext( path, docBase, null);
+    
+    tomcat.execute();
+    
+   </pre>
  * 
  * @author Costin Manolache
  */
@@ -112,18 +148,22 @@ public class EmbededTomcat {
     boolean nostart=false;
     
     public EmbededTomcat() {
-	//	setDebug( 10 );
     }
 
     // -------------------- 
-    
+
+    /** Access to the ContextManager.
+     */
     public ContextManager getContextManager() {
 	return contextM;
     }
     
     // -------------------- Properties - set before start
 
-    /** Debug for EmbededTomcat. 
+    /**
+     *  Debug for EmbededTomcat, enable debugging on tomcat
+     *  and the LogEvents module.
+     *  "-debug debug" on the command line
      */
     public void setDebug( int debug ) {
 	this.dL=debug;
@@ -131,45 +171,85 @@ public class EmbededTomcat {
 	debug( "Debugging enabled ");
     }
 
+
+    boolean noClassLoaders=false;
+    
+    public void setNoClassloaders( boolean b ) {
+        noClassLoaders=b;
+    }
+    
+    /** Set the home dir for tomcat, where webapps/ will be located.
+     *  "-home dir" on the command line.
+     */
     public void setHome( String s ) {
 	home=s;
     }
 
+    /** Set install dir for tomcat, where libs will be located.
+     *  "-install dir" on the command line.
+     */
     public void setInstall(String install) {
 	this.installDir=install;
-	contextM.setInstallDir( install );
+ 	contextM.setInstallDir( install );
 	if( dL > 0 ) debug( "setInstall " + install);
     }
 
+    /** Set location of the server.xml file, to be used by ServerXml reader.
+     * 	Not used if EStart() is used.
+     *  "-config foo" on the command line.
+     */
     public void setConfig( String s ) {
 	attributes.put("config", s);
     }
 
-    /** Tomcat will run in a sandboxed environment, under SecurityManager
+    /** Tomcat will run in a sandboxed environment, under SecurityManager.
+     *  "-sandbox" on the command line
      */
     public void setSandbox(boolean b) {
 	attributes.put("sandbox", "true");
     }
 
+    /** Generate Jk configuration, without running tomcat. 
+     *  Equivalent with "-jkconf" on the command line.
+     */
     public void setJkconf(boolean b ) {
 	attributes.put("jkconf", "true");
 	nostart=true;
     }
     
-    // First param
+    /** Dummy, "-start" on the command line.
+     */
     public void setStart(boolean b) {
 	// nothing, default mode
     }
 
+    /** Use 'embeded' configuration to start tomcat. 
+     *
+     *  If Estart is false ( the default ), we'll load server.xml and all
+     * the modules inside.
+     *
+     * If it is set to true, we'll load the a hard-coded set of modules.
+     *
+     * If you add explicitely your own set of module it will be used
+     * instead of the defaults. Modules need to be added before 
+     * adding the first connector or initContextManager is called.
+     *
+     * Equivalent with "-estart" on the command line.
+     */
     public void setEstart(boolean b) {
 	debug( "Using default embedded config ");
 	serverXml=false;
     }
 
+    /** Dummy, "-run" on the command line.
+     */
     public void setRun(boolean b) {
 	setStart(true);
     }
 
+    /** Don't run, just display the help message.
+	"-help" on the command line.
+     */
     public void setHelp(boolean b) {
 	help=b;
     }
@@ -201,7 +281,7 @@ public class EmbededTomcat {
 	    attributes.put( name, v );
     }
     
-    // Ant compatibility
+    // Ant compatibility ( TODO )
     public void addProperty(Property prop) {
     }
     
@@ -223,6 +303,16 @@ public class EmbededTomcat {
 
     Vector modules=new Vector();
 
+    /** Add a module explicitely. You can use server.xml, a pre-defined
+     *	set of modules, or your own set.
+     *
+     * Must be called before adding the first endpoint or context and
+     * before initContextManger.
+     *
+     * If you add a module you must also call addDefaultModules (before
+     * or after your modules ) - or you can add all the required modules
+     * manually.
+     */
     public int addModule( BaseInterceptor ri )
 	throws TomcatException
     {
@@ -235,8 +325,9 @@ public class EmbededTomcat {
     }
     
     /** Add a custom module. It'll return the module id, that can be
-	used to set properties
-    */
+     *  used to set properties
+     *  @see addModule( BaseInterceptor ri )
+     */
     public int addModule( String className )
 	throws TomcatException
     {
@@ -246,6 +337,8 @@ public class EmbededTomcat {
 	return addModule( bi );
     }
 
+    /** Find a module from the set added with  addModule() or addDefaultModules()
+     */
     public int findModule( String className, int startPos )
     {
 	for( int i=startPos; i<modules.size(); i++ ) {
@@ -256,6 +349,12 @@ public class EmbededTomcat {
 	return -1;
     }
 
+    /** Configure a module property. Since modules can be added from
+     *  child classloaders this is the best way to configure them.
+     *  If the module is in the same class loader you can also set
+     *  the property explicitely, but for more flexibility it's better
+     *  to use this method.
+     */
     public void setModuleProperty( int id, String name, String value )
 	throws TomcatException
     {
@@ -267,7 +366,10 @@ public class EmbededTomcat {
 
     // -------------------- Module helpers --------------------
 
-    /** Init tomcat using server.xml-style configuration
+    /** Init tomcat using server.xml-style configuration. Called
+     *  automatically if no module was explicitely added and Estart is
+     *  true ( default ). The automatic call happens before addContext,
+     *  addEndpoint or execute()
      */
     public void addServerXmlModules() throws TomcatException {
 	String conf=(String)attributes.get( "config" );
@@ -282,12 +384,12 @@ public class EmbededTomcat {
     }
 
     /** Add all the default modules, needed for a fully functional container.
-     *  This does not need any XML parser or server.xml. Use this method or
-     *  addServerXmlModules().
+     *  You must setEtomcat( true ) if you don't want  server.xml to be used.
      */ 
     public void addDefaultModules()
 	throws TomcatException
     {
+	//this is a bug in 3.3.0, we shoud disable it automcatically 
 	if( serverXml ) {
 	    addServerXmlModules();
 	    return;
@@ -303,8 +405,11 @@ public class EmbededTomcat {
     }
 
     /** Add modules needed for auto-deploy function. 
-     * By default you need to explicitely add ( using addContext() ) any
-     * 	webapp. Use this with addDefaultModules(). 
+     *  By default you need to explicitely add ( using addContext() ) any
+     * 	webapp. Use this with addDefaultModules().
+     *
+     *  Will be called automcatically if no context was added, you must
+     *  call it if you want both autodeploy and manually-added contexts.
      */
     public void addAutoDeploy()
 	throws TomcatException
@@ -320,7 +425,10 @@ public class EmbededTomcat {
 
     protected boolean initialized=false;
     
-    /** Add and init a context. Must be called after all modules are added.
+    /** Add and init a context. Must be called after all modules and endpoints
+     *  are added.
+     *
+     *  This will initialize the context manager.
      */
     public Context addContext(  String ctxPath, URL docRoot, String hosts[] )
 	throws TomcatException
@@ -393,7 +501,11 @@ public class EmbededTomcat {
     }
 
     // -------------------- Startup/shutdown methods --------------------
-    
+
+    /** Initialize the context manager. Called automatically before the
+     *  first addContext or on execute(). You can call it explicitely
+     *  if you want to 'tweak' the cm before execute.
+     */
     public void initContextManager()
 	throws TomcatException 
     {
@@ -456,6 +568,9 @@ public class EmbededTomcat {
 	initialized=true;
     }
 
+    /** Start the context manager. Will do nothing if -jkConfig or -help
+     *  ( or the equivalent setters ) are used.
+     */
     public void start() throws TomcatException {
 	if( nostart ) {
 	    debug("Tomcat will not start  - configuration only mode ");
@@ -486,7 +601,9 @@ public class EmbededTomcat {
 
     // -------------------- Helpers and shortcuts --------------------
     
-    /** Add a HTTP listener.
+    /** Add a HTTP listener. Must be called after all 'core' modules
+     *  are called. If no endpoint is added explicitely the defaults will
+     *  be added.
      */
     public int addEndpoint( int port, InetAddress addr , String hostname)
 	throws TomcatException
@@ -542,6 +659,9 @@ public class EmbededTomcat {
 	return mid;
     }
 
+    /** Add the default HTTP/8080, Ajp12-stop/8007, if no explicit addEndpoint
+     *  was called
+     */
     public void addDefaultConnectors()
 	throws TomcatException
     {
@@ -579,7 +699,7 @@ public class EmbededTomcat {
 	    long time2=System.currentTimeMillis();
 	    debug("Init time "  + (time2-time1));
 	}
-	
+
 	// Start
 	start();
     }
@@ -716,7 +836,22 @@ public class EmbededTomcat {
     public void initClassLoaders()
 	throws IOException, MalformedURLException
     {
-	if( dL > 0 ) debug( "Init class loaders ");
+	if( dL > 0 ) debug( "Init class loaders " + noClassLoaders );
+        if( noClassLoaders ) {
+            commonCL=this.getClass().getClassLoader();
+            if( commonCL == null ) {
+                commonCL=new java.net.URLClassLoader( new URL[] {}, null );
+            }
+            parentCL=commonCL;
+            containerCL=commonCL;
+            modulesCL=commonCL;
+            if( dL> 0 ) debug( "All class loaders " + commonCL );
+            contextM.setParentLoader(parentCL);
+            contextM.setCommonLoader(modulesCL);
+            contextM.setContainerLoader(containerCL);
+            contextM.setAppsLoader(appsCL);
+            return;
+        }
 	if( parentCL==null ) {
 	    if( dL > 0 ) debug( "Default parent loader: null");
 	}
@@ -894,7 +1029,7 @@ public class EmbededTomcat {
 	"org.apache.tomcat.modules.config.WorkDirSetup",
 	"org.apache.tomcat.modules.generators.Jdk12Interceptor",
 	"org.apache.tomcat.modules.generators.InvokerInterceptor",
-	"org.apache.tomcat.facade.JspInterceptor",
+        //XXX GCC-HACK	"org.apache.tomcat.facade.JspInterceptor",
 	"org.apache.tomcat.modules.generators.StaticInterceptor",
 
 	"org.apache.tomcat.modules.mappers.ReloadInterceptor",
@@ -944,9 +1079,12 @@ public class EmbededTomcat {
 
     // -------------------- Override --------------------
 
+    /** Hook - will be called after all modules are configured,
+     *  before they are added to the ContextManager.
+     */ 
     protected void beforeAddInterceptors() throws TomcatException {
-// 	int mid=findModule( "org.apache.tomcat.modules.config.LoaderInterceptor11" ,0);
-// 	setModuleProperty( mid, "debug", "10" );
+	//int mid=findModule( "org.apache.tomcat.modules.config.LoaderInterceptor11" ,0);
+	//setModuleProperty( mid, "debug", "10" );
     }
 }
 
