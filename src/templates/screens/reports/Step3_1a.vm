@@ -33,6 +33,7 @@
         #option($option)
       #end
     </select>
+    #fieldErrorMsg($intakeReport.Axis1Category "")
   </td>
 </tr>
 <tr>
@@ -45,6 +46,7 @@
         #option($option)
       #end
     </select>
+    #fieldErrorMsg($intakeReport.Axis2Category "")
   </td>
 </tr>
 </table>

@@ -24,6 +24,7 @@
                 multiple="multiple" size="15">
                 #attributeOptionOptionList($options $report.Axis1Keys)
    </select>
+    #fieldErrorMsg($intakeReport.Axis1Keys "")
 #else
     No category was chosen, did you hack the url,
     or is this an application error?

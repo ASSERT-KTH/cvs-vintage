@@ -23,6 +23,7 @@
        #option($option)
      #end
    </select>
+    #fieldErrorMsg($intakeReport.Axis1Category "")
 </td>
 </tr>
 <tr>
