@@ -70,7 +70,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.19 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: MITList.java,v 1.20 2003/03/24 22:04:18 dlr Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -228,6 +228,7 @@ public  class MITList
         throws Exception
     {
         MITList sublist = new MITList();
+        sublist.setScarabUser(getScarabUser());
         List items = getExpandedMITListItems();
         Module[] validModules = user.getModules(permissions);
 
