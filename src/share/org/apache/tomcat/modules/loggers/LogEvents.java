@@ -108,7 +108,7 @@ public class LogEvents extends BaseInterceptor {
 
     public int authenticate(Request request, Response response) {
 	log( "authenticate " + request);
-	return 0;
+	return DECLINED;
     }
 
     public int authorize(Request request, Response response,
@@ -117,7 +117,7 @@ public class LogEvents extends BaseInterceptor {
 	StringBuffer sb=new StringBuffer();
 	appendSA( sb, reqRoles, " ");
 	log( "authorize " + request + " " + sb.toString() );
-	return 0;
+	return DECLINED;
     }
 
     public int beforeBody( Request request, Response response ) {
