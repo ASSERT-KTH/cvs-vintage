@@ -451,9 +451,12 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public boolean isRequestedSessionIdValid() {
-	// so here we just assume that if we have a session it's,
-	// all good, else not.
-	return null != request.getSession(false);
+        boolean isvalid = false;
+        ServerSession session = (ServerSession)request.getSession(false);
+        if(session != null && session.getId().equals(getRequestedSessionId()))
+            isvalid = true;
+
+        return isvalid;
     }
 
     /** Adapter - Request uses getSessionIdSource
