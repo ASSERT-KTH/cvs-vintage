@@ -3,38 +3,6 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
-<div class="functnbar$val">
-<table cellpadding="4" cellspacing="0" border="1">
-#if ($availAttributes.size() == 0)
-<tr>
-<td class="firstchild" nowrap="nowrap">
-<div>General functions</div>
-#if ($canEditDomain)
-<input type="submit" value="Create new" name="eventSubmit_doGotogothertemplate"/>
- &#160;
-#end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-</tr>
-#else
-<tr>
-<td class="firstchild">
-<div>Select items to</div>
-<input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />
-</td>
-<td nowrap="nowrap">
-<div>General functions</div>
-#if ($canEditDomain)
-<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate"/>
- &#160;
-#end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-</tr>
-#end
-</table>
-</div>
-
 <div class="app" id="AttributeOptionSelect">
 
 <h2>$page.Title</h2>
@@ -58,6 +26,40 @@ associated with this attribute in this module.</strong></p>
 #else
 
 <h3>Global attributes</h3>
+
+<div class="functnbar$val">
+<table cellpadding="4" cellspacing="0" border="1">
+#if ($availAttributes.size() == 0)
+<tr>
+<td class="firstchild" nowrap="nowrap">
+<div>General functions</div>
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotogothertemplate"/>
+ &#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+</tr>
+#else
+<tr>
+#if ($availOptions.size() > 0)
+<td class="firstchild">
+<div>Select items to</div>
+<input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />
+</td>
+#end
+<td nowrap="nowrap">
+<div>General functions</div>
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate"/>
+ &#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+</tr>
+#end
+</table>
+</div>
 
 <table border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -93,10 +95,12 @@ associated with this attribute in this module.</strong></p>
 </tr>
 #else
 <tr>
+#if ($availOptions.size() > 0)
 <td class="firstchild">
 <div>Select items to</div>
 <input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />
 </td>
+#end
 <td nowrap="nowrap">
 <div>General functions</div>
 #if ($canEditDomain)
