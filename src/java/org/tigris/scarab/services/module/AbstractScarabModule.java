@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.13 2002/01/17 00:26:22 maartenc Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.14 2002/01/17 03:14:03 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -564,10 +564,13 @@ public abstract class AbstractScarabModule
     {
         List rModuleOptions = getRModuleOptions(attribute, issueType, false);
         List moduleOptions = new ArrayList();
-        for ( int i=0; i<rModuleOptions.size(); i++ )
+        if (rModuleOptions != null)
         {
-            moduleOptions.add(
-               ((RModuleOption) rModuleOptions.get(i)).getAttributeOption());
+            for ( int i=0; i<rModuleOptions.size(); i++ )
+            {
+                moduleOptions.add(
+                   ((RModuleOption) rModuleOptions.get(i)).getAttributeOption());
+            }
         }
 
         List allOptions = attribute.getAttributeOptions(true);
@@ -912,6 +915,7 @@ public abstract class AbstractScarabModule
     private List getAllRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception
     {
+        List rModOpts = null;
         List options = attribute.getAttributeOptions(true);
         NumberKey[] optIds = null;
         if (options == null)
@@ -927,24 +931,26 @@ public abstract class AbstractScarabModule
             optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
         }
 
-        Criteria crit = new Criteria();
-        crit.add(RModuleOptionPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-        crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
-        crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
-        crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
-        crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+        if (optIds.length > 0)
+        { 
+            Criteria crit = new Criteria();
+            crit.add(RModuleOptionPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+            crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
+            crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
+            crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+            crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
 
-        List rModOpts = null;
-        AbstractScarabModule module = this;
-        AbstractScarabModule prevModule = null;
-        do
-        {
-            rModOpts = module.getRModuleOptions(crit);
-            prevModule = module;
-            module = (AbstractScarabModule)prevModule.getParent();
+            AbstractScarabModule module = this;
+            AbstractScarabModule prevModule = null;
+            do
+            {
+                rModOpts = module.getRModuleOptions(crit);
+                prevModule = module;
+                module = (AbstractScarabModule)prevModule.getParent();
+            }
+            while ( rModOpts.size() == 0 &&
+                   !ROOT_ID.equals(prevModule.getPrimaryKey()));
         }
-        while ( rModOpts.size() == 0 &&
-               !ROOT_ID.equals(prevModule.getPrimaryKey()));
         return rModOpts;
     }
 
