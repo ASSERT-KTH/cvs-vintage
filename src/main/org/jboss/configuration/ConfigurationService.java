@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -205,7 +205,36 @@ public class ConfigurationService
         // Return configuration
         return out.toString();
    }
+   
+   public void saveConfiguration()
+      throws Exception
+   {
+      // Get XML
+      String xml = save;
+      
+      // Get JCML file
+      URL confFile = Thread.currentThread().getContextClassLoader().getResource("jboss.jcml");
+      
+      // Store to JCML file
+      PrintWriter out = new PrintWriter(new FileOutputStream(confFile.getFile()));
+      out.print(xml);
+      out.close();
+   }
 
+    public void loadConfiguration()
+       throws Exception
+    {
+       // Load from XML
+       InputStream conf = mlet.getResourceAsStream("jboss.jcml");
+       byte[] arr = new byte[conf.available()];
+       conf.read(arr);
+       conf.close();
+       String cfg = new String(arr);
+       
+       // Load settings
+       load(cfg);
+    }
+    
     // Protected -----------------------------------------------------
     private boolean isAttributeWriteable(String className, String attribute, String type) {
         Class arg = null;

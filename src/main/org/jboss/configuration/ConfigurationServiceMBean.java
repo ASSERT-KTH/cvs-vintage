@@ -12,7 +12,7 @@ package org.jboss.configuration;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface ConfigurationServiceMBean
 {
@@ -25,4 +25,10 @@ public interface ConfigurationServiceMBean
 		
 	public String save()
 		throws Exception;
+      
+   public void loadConfiguration()
+      throws Exception;
+      
+   public void storeConfiguration()
+      throws Exception;
 }
