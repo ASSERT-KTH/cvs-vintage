@@ -48,7 +48,7 @@ package org.tigris.scarab.security;
 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -56,7 +56,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SecurityFactory.java,v 1.1 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: SecurityFactory.java,v 1.2 2001/09/13 22:37:04 jon Exp $
  */
 public class SecurityFactory
 {

@@ -743,6 +743,7 @@ try{
     }
 
     public Intake getConditionalIntake(String parameter)
+        throws Exception
     {
         Intake intake = null;
         String param = data.getParameters().getString(parameter);

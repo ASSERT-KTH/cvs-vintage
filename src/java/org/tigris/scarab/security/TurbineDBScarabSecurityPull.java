@@ -51,7 +51,7 @@ import java.util.ArrayList;
 
 // Turbine
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 import org.apache.turbine.TurbineException;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.torque.om.Persistent;
@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurityPull.java,v 1.8 2001/09/06 20:57:42 elicia Exp $
+ * @version $Id: TurbineDBScarabSecurityPull.java,v 1.9 2001/09/13 22:37:04 jon Exp $
 */
 public class TurbineDBScarabSecurityPull 
     extends DefaultScarabSecurityPull

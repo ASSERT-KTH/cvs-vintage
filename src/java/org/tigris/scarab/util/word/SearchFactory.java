@@ -47,17 +47,17 @@ package org.tigris.scarab.util.word;
  */ 
 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 /**
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.6 2001/08/10 23:54:20 jmcnally Exp $
+ * @version $Id: SearchFactory.java,v 1.7 2001/09/13 22:37:04 jon Exp $
  */
 public class SearchFactory
 {
-    private static final Class searchIndex;
+    private static Class searchIndex;
 
     static
     {

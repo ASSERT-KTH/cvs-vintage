@@ -51,7 +51,7 @@ import java.util.Comparator;
 
 // Turbine classes
 import org.apache.torque.om.Persistent;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 import org.tigris.scarab.om.BaseRModuleOption;
 

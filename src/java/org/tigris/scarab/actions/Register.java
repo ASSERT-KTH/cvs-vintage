@@ -50,7 +50,7 @@ package org.tigris.scarab.actions;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 import org.apache.fulcrum.security.TurbineSecurity;
 
 // Scarab Stuff
@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.11 2001/08/31 01:29:55 jmcnally Exp $
+    @version $Id: Register.java,v 1.12 2001/09/13 22:37:03 jon Exp $
 */
 public class Register extends TemplateAction
 {

@@ -60,7 +60,7 @@ import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.util.ScarabException;

@@ -53,7 +53,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 import org.apache.fulcrum.template.TemplateEmail;
 
@@ -69,7 +69,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.20 2001/08/12 23:32:20 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.21 2001/09/13 22:37:03 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {

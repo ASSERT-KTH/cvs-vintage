@@ -49,7 +49,7 @@ import java.util.Vector;
 import java.util.Hashtable;
 
 import org.apache.torque.om.ObjectKey;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributeOption;
@@ -60,7 +60,7 @@ import org.tigris.scarab.om.RModuleOption;
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.13 $ $Date: 2001/09/13 17:35:17 $
+ * @version $Revision: 1.14 $ $Date: 2001/09/13 22:37:03 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {

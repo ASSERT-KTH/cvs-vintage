@@ -55,7 +55,7 @@ import org.apache.fulcrum.security.util.DataBackendException;
 import org.apache.fulcrum.security.util.EntityExistsException;
 import org.apache.fulcrum.security.util.UnknownEntityException;
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.torque.om.Persistent;
@@ -69,7 +69,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.7 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.8 2001/09/13 22:37:04 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {

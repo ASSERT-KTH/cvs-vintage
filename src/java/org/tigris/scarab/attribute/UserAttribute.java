@@ -49,7 +49,7 @@ package org.tigris.scarab.attribute;
 // JDK Stuff
 import java.util.List;
 
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
@@ -60,7 +60,7 @@ import org.tigris.scarab.services.user.UserManager;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.12 $ $Date: 2001/09/13 17:35:17 $
+ * @version $Revision: 1.13 $ $Date: 2001/09/13 22:37:03 $
  */
 public class UserAttribute extends AttributeValue
 {

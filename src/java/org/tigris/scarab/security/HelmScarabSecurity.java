@@ -48,7 +48,7 @@ package org.tigris.scarab.security;
 
 
 // Turbine
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 // Helm
 /*
@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.8 2001/08/13 20:38:18 jmcnally Exp $
+ * @version $Id: HelmScarabSecurity.java,v 1.9 2001/09/13 22:37:04 jon Exp $
 */
 public class HelmScarabSecurity 
     extends DefaultScarabSecurity

@@ -51,7 +51,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
 // import org.apache.turbine.om.peer.BasePeer;
-// import org.apache.turbine.util.Log;
+// import org.apache.turbine.Log;
 // import org.apache.turbine.util.db.pool.DBConnection;
 import org.tigris.scarab.om.Attribute;
 

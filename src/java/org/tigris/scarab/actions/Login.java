@@ -51,7 +51,7 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.util.Log;
+import org.apache.turbine.Log;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.turbine.services.pull.ApplicationTool;
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.22 2001/08/28 00:51:54 jon Exp $
+    @version $Id: Login.java,v 1.23 2001/09/13 22:37:03 jon Exp $
 */
 public class Login extends TemplateAction
 {
