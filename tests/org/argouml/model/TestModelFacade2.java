@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.3 2004/07/20 21:54:49 d00mst Exp $
+// $Id: TestModelFacade2.java,v 1.4 2004/11/06 17:25:51 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,19 +25,24 @@
 package org.argouml.model;
 
 import java.util.Collection;
+
 import junit.framework.TestCase;
+
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.model.uml.UmlFactory;
+
 import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
 import ru.novosoft.uml.behavior.activity_graphs.MPartition;
 
 /**
- * Tests some of the methods in ModelFacade.<p>
+ * Tests some specific methods in ModelFacade.<p>
  *
- * This is a complement to the tests in TestModelFacade and TestModelFacade3
- * that makes a lot more general tests.<p>
+ * This is a complement to the tests in {@link TestModelFacade} and 
+ * {@link TestModelFacade3} that makes a lot more general tests.<p>
  *
- * As opposed to the tests in TestModelFacade and TestModelFacade3 these
- * tests are maintained more or less manually.
+ * As opposed to the tests in {@link TestModelFacade} and 
+ * {@link TestModelFacade3} that are run on a whole set of objects,
+ * these tests are maintained manually.
  * 
  * @author Linus Tolke
  */
@@ -48,8 +53,7 @@ public class TestModelFacade2 extends TestCase {
      *
      * @param arg0 name of test case
      */
-    public TestModelFacade2(String arg0)
-    {
+    public TestModelFacade2(String arg0) {
 	super(arg0);
     }
 
@@ -60,10 +64,29 @@ public class TestModelFacade2 extends TestCase {
 	try {
 	    ModelFacade.isAsynchronous(new Object());
 	    assertTrue("Error was not thrown", false);
-	}
-	catch (IllegalArgumentException e) {
+	} catch (IllegalArgumentException e) {
+	    // We expected an error to be thrown.
 	}
     }
+    
+    /**
+     * Test that the correct error is thrown for a setName with illegal name.
+     */
+    public void testSetName() {
+        Object ob = CoreFactory.getFactory().buildClass("initial");
+        ModelFacade.setName(ob, "correct");
+	try {
+	    ModelFacade.setName(ob, new String(new char[] {
+	        'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', ':',
+	        Character.MAX_VALUE,
+	    }));
+	    assertTrue("Error was not thrown", false);
+	} catch (IllegalArgumentException e) {
+	    // We expected an error to be thrown.
+	}
+    }
+    
+   
 
     /**
      * Test for setModelElementContainer.
