@@ -47,7 +47,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -428,6 +428,27 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
 
    /**
+    * Is this field readonly?
+    */
+   public boolean isReadOnly() {
+      return getRelationMetaData().isReadOnly();
+   }
+
+   /**
+    * Had the read time expired?
+    */
+   public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
+      if(isReadOnly()) {
+         long readInterval = System.currentTimeMillis() - 
+               getFieldState(ctx).getLastRead(); 
+         return readInterval > getRelationMetaData().getReadTimeOut();
+      }
+      
+      // if we are read/write then we are always timed out
+      return true;
+   }
+
+   /**
     * Gets the value of the cmr field for the instance associated with 
     * the context.
     */
@@ -458,6 +479,10 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * the context.
     */
    public void setValue(EntityEnterpriseContext myCtx, Object newValue) {
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " + getFieldName());
+      }
+
       if(isCollectionValued() && newValue == null) {
          throw new IllegalArgumentException("null cannot be assigned to a " +
                "collection-valued cmr-field [EJB 2.0 Spec. 10.3.8].");
@@ -504,6 +529,10 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    public void createRelationLinks(
          EntityEnterpriseContext myCtx, Object relatedId) {      
 
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " + getFieldName());
+      }
+
       // If my multiplicity is one, then we need to free the new related context
       // from its old relationship.
       if(metadata.isMultiplicityOne()) {
@@ -547,6 +576,10 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          EntityEnterpriseContext myCtx,
          Object relatedId,
          boolean updateValueCollection) {
+
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " + getFieldName());
+      }
 
       removeRelation(myCtx, relatedId, updateValueCollection);      
       relatedCMRField.invokeRemoveRelation(
@@ -655,6 +688,10 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * any foreign key fields.
     */
    public void addRelation(EntityEnterpriseContext myCtx, Object fk) {
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " + getFieldName());
+      }
+
       if(!entity.isCreated(myCtx)) {
          throw new IllegalStateException("A CMR field cannot be set or added " +
                "to a relationship in ejbCreate; this should be done in the " +
@@ -701,6 +738,10 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          Object fk,
          boolean updateValueCollection) {
 
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " + getFieldName());
+      }
+
       load(myCtx);
       
       // remove from current related set
@@ -719,7 +760,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     */
    private void load(EntityEnterpriseContext myCtx) {
       FieldState fieldState = getFieldState(myCtx);
-      if(fieldState != null) {
+      if(fieldState.getValue() != null) {
          return;
       }
       
@@ -791,12 +832,14 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * resets the persistence context of the foreign key fields
     */
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {
-      setFieldState(ctx, null);
+      if(isReadTimedOut(ctx)) {
+         setFieldState(ctx, null);
       
-      if(hasForeignKey()) {
-         JDBCCMPFieldBridge[] foreignKeyFields = getForeignKeyFields();
-         for(int i=0; i<foreignKeyFields.length; i++) {
-            foreignKeyFields[i].resetPersistenceContext(ctx);
+         if(hasForeignKey()) {
+            JDBCCMPFieldBridge[] foreignKeyFields = getForeignKeyFields();
+            for(int i=0; i<foreignKeyFields.length; i++) {
+               foreignKeyFields[i].resetPersistenceContext(ctx);
+            }
          }
       }
    }
@@ -806,7 +849,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     */
    private FieldState getFieldState(EntityEnterpriseContext ctx) {
       JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
-      return (FieldState)jdbcCtx.get(this);
+      FieldState fieldState = (FieldState)jdbcCtx.get(this);
+      if(fieldState == null) {
+         fieldState = new FieldState(ctx);
+         jdbcCtx.put(this, fieldState);
+      }
+      return fieldState;
    }
 
    /**
@@ -831,9 +879,13 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
 
    private class FieldState {
-      EntityEnterpriseContext ctx;
+      private EntityEnterpriseContext ctx;
       private Set[] setHandle = new Set[1];
       private Set relationSet;
+      private long lastRead = System.currentTimeMillis();
+      public FieldState(EntityEnterpriseContext ctx) {
+         this.ctx = ctx;
+      }
       public FieldState(EntityEnterpriseContext ctx, Set value) {
          this.ctx = ctx;
          setHandle[0] = value;
@@ -847,6 +899,9 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
                   JDBCCMRFieldBridge.this, ctx, setHandle);
          }
          return relationSet;
+      }
+      public long getLastRead() {
+         return lastRead;
       }
       public void invalidateRelationSet() {
          // make a new set handle with the existing value
