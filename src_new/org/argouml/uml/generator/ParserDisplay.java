@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.132 2004/11/11 09:40:09 mvw Exp $
+// $Id: ParserDisplay.java,v 1.133 2004/11/27 08:47:39 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2112,15 +2112,16 @@ public class ParserDisplay extends Parser {
                 }
             } else {
                 // case 2
+                Object expr = ModelFacade.getExpression(g);
+                String language = "";
                 
                 /* TODO: This does not work! Why not? (MVW)
-                 Object expr = ModelFacade.getExpression(g);
                  ModelFacade.setBody(expr,guard);
                  ModelFacade.setExpression(g,expr); */
                 
                 //hence a less elegant workaround that works:
-                String language = ModelFacade.getLanguage(
-                        ModelFacade.getExpression(g));
+                if (expr != null)
+                    language = ModelFacade.getLanguage(expr);
                 ModelFacade.setExpression(g, UmlFactory.getFactory()
                         .getDataTypes().createBooleanExpression(
                                 language, guard));
