@@ -1,4 +1,4 @@
-$Id: TODO,v 1.5 2000/01/06 21:04:27 akv Exp $
+$Id: TODO,v 1.6 2000/03/24 01:09:31 akv Exp $
 
 This is the living To-Do list for Tomcat 3.1
 
@@ -16,16 +16,6 @@ This is the living To-Do list for Tomcat 3.1
 
     * Improve error reporting. Avoid raw stack traces where possible. 
 
-    * The JSP engine generates coordinate information into the servlet
-      to provide a mapping from the generated code to the source JSP
-      file. This is useful for debuggers. This is broken for
-      HTML. Need to fix it. 
-     
-    * Implement command line compilation of JSP to servlets. Make this
-      an Ant task, if possible. 
-
-    * Plug in support for other Java compilers in the JSP engine. 
-
     * Implement and ensure 100% compliance with the Servlet and JSP
       specs as they evolve.
 
@@ -37,8 +27,6 @@ This is the living To-Do list for Tomcat 3.1
       up in the code too. (The earlier the better... its already too
       late :) 
   
-    * Implement logging (steal code from JServ, where possible).
-
   * Integration with Apache
 
     * Merge mod_jserv into tomcat cvs, work is underway to split it into
@@ -66,5 +54,3 @@ This is the living To-Do list for Tomcat 3.1
   * Release builds
 
     * Fix Solaris PKG, Linux RPMs.
-
-    * Add HOW-TO-RELEASE document. 

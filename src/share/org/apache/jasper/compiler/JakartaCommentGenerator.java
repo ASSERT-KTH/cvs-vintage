@@ -92,8 +92,10 @@ public class JakartaCommentGenerator implements CommentGenerator {
      * @param stop End position of the block
      * @exception JasperException 
      */
-    public void generateStartComment(Generator generator, ServletWriter out, Mark start, Mark stop) throws JasperException {
-        //System.err.println(generator.getClass().getName());
+    public void generateStartComment(Generator generator, ServletWriter out, 
+                                     Mark start, Mark stop) 
+        throws JasperException 
+    {
 	String html = "";
         if (generator instanceof CharDataGenerator) {
 	   html = "// HTML ";

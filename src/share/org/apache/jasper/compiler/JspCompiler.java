@@ -76,7 +76,7 @@ import org.apache.jasper.JasperException;
  */
 public class JspCompiler extends Compiler implements Mangler {
     
-    String pkgName, className, javaFileName, classFileName;
+    String pkgName, javaFileName, classFileName;
 
     File jsp;
     String outputDir;
@@ -103,6 +103,18 @@ public class JspCompiler extends Compiler implements Mangler {
     }
     
     public final String getClassName() {
+        // CFD gives you the whole class name
+        // This method returns just the class name sans the package
+        String cn = cfd.getClassName();
+        int lastDot = cn.lastIndexOf('.');
+        String className;
+
+        if (lastDot != -1) 
+            className = cn.substring(lastDot+1,
+                                     cn.length());
+        else // no package name case
+            className = cn;
+
         return className;
     }
 
@@ -282,31 +294,13 @@ public class JspCompiler extends Compiler implements Mangler {
         File classFile = new File(classFileName);
         
         if (!classFile.exists()) {
-            className = getInitialClassName();
-            cfd = new ClassFileData(true, classFileName, className);
+            cfd = new ClassFileData(true, classFileName, getInitialClassName());
             outDated = true;
         } else  {
             outDated = classFile.lastModified() < jspReal.lastModified();
-	    if (outDated) {
-		cfd = new ClassFileData(outDated, classFileName, className);
+            cfd = new ClassFileData(outDated, classFileName, null);
+	    if (outDated)
                 cfd.incrementNumber();
-                
-	    } else {
-		cfd = new ClassFileData(outDated, classFileName, null);
-	    }
-            try {
-                String classNameFromFile = 
-                    ClassName.getClassName(classFileName);
-                String cn = cfd.getClassName();
-                int lastDot = cn.lastIndexOf('.');
-                if (lastDot != -1)
-                    className = cn.substring(lastDot+1,
-                                             classNameFromFile.length());
-                else
-                    className = cn;
-            } catch (JasperException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 }

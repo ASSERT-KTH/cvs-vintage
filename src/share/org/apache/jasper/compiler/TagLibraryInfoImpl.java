@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.13 2000/03/04 06:29:11 shemnon Exp $
- * $Revision: 1.13 $
- * $Date: 2000/03/04 06:29:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.14 2000/03/24 01:09:32 akv Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/03/24 01:09:32 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -138,7 +138,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	// resolveRelativeUri and/or getResourceAsStream don't seem to properly
 	// handle relative paths when dealing when home and getDocBase are set
 	// the following is a workaround until these problems are resolved.
-	private InputStream getResourceAsStream(String uri) 
+    private InputStream getResourceAsStream(String uri) 
 		throws FileNotFoundException 
     {
 		if (uri.indexOf(":") > 0) {
