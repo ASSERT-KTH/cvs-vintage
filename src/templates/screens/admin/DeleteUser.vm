@@ -1,0 +1,57 @@
+$page.setTitle("User Administration")
+#set ($subHeaderTitle = "Confirm Delete User")
+
+#set ($state = $data.Parameters.getString("state"))
+#if (!$state)
+  #set ($state = "showdeleteuser")
+#end
+
+<div id="deleteuser" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>$subHeaderTitle</h3>
+
+<form name="EditUserForm" action="$link.setPage("admin,EditUser.vm")" method="post">
+  <input type="hidden" name="action" value="admin.user.EditUser" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,EditUser.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
+  <input type="hidden" name="state" value="$nextState">
+  <input type="hidden" name="username" value="$data.Parameters.getString("username")">
+
+#set ($user = $scarabG.getUserByUsername($data.Parameters.getString("username")))
+#set ($firstNameData = $user.FirstName)
+#set ($lastNameData = $user.LastName)
+#set ($emailData = $user.Email)
+#set ($passwordData = "")
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>First name</th>
+ <td>$firstNameData</td>
+</tr>
+<tr>
+ <th>Last name</th>
+ <td>$lastNameData</td>
+</tr>
+<tr>
+ <th>Email address</th>
+ <td>$emailData</td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+ <input type="submit" name="eventSubmit_doDeleteuser" value="Confirm Delete" />
+  </td>
+ </tr>
+</table>
+</div>
+
+</form>
+</div>

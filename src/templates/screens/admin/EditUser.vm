@@ -1,0 +1,122 @@
+$page.setTitle("User Administration")
+
+#set ($state = $data.Parameters.getString("state"))
+#if (!$state)
+  #set ($state = "showadduser")
+#end
+
+#* set up variables and such based on the state *#
+#if ($state.equals("showadduser"))
+  #set ($subHeaderTitle = "Add New User")
+  #set ($submitButtonText = "Add New User")
+  #set ($cancelTemplate = "admin,AdminIndex.vm")
+  #set ($nextState = "execadduser")
+  #set ($formUsernameData = "")
+#elseif ($state.equals("showedituser"))
+  #set ($subHeaderTitle = "Edit User")
+  #set ($submitButtonText = "Save Changes")
+  #set ($cancelTemplate = "admin,ManageUserSearch.vm")
+  #set ($nextState = "execedituser")
+  #set ($formUsernameData = $data.Parameters.getString("username"))
+#end
+
+
+<div id="edituser" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>$subHeaderTitle</h3>
+
+<form name="EditUserForm" action="$link.setPage("admin,EditUser.vm")" method="post">
+  <input type="hidden" name="action" value="admin.EditUser" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,EditUser.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+  <input type="hidden" name="state" value="$nextState">
+  <input type="hidden" name="lastAction" value="">
+  <input type="hidden" name="username" value="$formUsernameData">
+
+#set ($lastAction = $data.Parameters.getString("lastAction"))
+
+#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
+#if ((!$user.FirstName) && ($state == "showedituser"))
+  #set ($user2 = $scarabG.getUserByUsername($data.Parameters.getString("username")))
+  #set ($regGroup = $intake.Register.Default)
+  #set ($firstNameData = $user2.FirstName)
+  #set ($lastNameData = $user2.LastName)
+  #set ($emailData = $user2.Email)
+  #set ($passwordData = "")
+#elseif ($user.FirstName)
+  #set ($regGroup = $intake.Register.mapTo($user))
+#else
+  #if (($lastAction) && ($lastAction =="addeduser"))
+    #set ($regGroup = $intake.Register.Default)
+    #set ($firstNameData = "")
+    #set ($lastNameData = "")
+    #set ($emailData = "")
+    #set ($passwordData = "")
+  #else
+    #set ($regGroup = $intake.Register.Default)
+    #set ($firstNameData = $regGroup.FirstName)
+    #set ($lastNameData = $regGroup.LastName)
+    #set ($emailData = $regGroup.Email)
+    #set ($passwordData = $regGroup.Password)
+  #end
+#end
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>* First name</th>
+ <td>
+  <input name="$regGroup.FirstName.Key" value="$firstNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.FirstName "")
+ </td>
+</tr>
+<tr>
+ <th> *Last name</th>
+ <td>
+  <input name="$regGroup.LastName.Key" value="$lastNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.LastName "")
+ </td>
+</tr>
+<tr>
+ <th> *Email address</th>
+ <td>
+  <input name="$regGroup.Email.Key" value="$emailData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.Email "")
+ </td>
+</tr>
+<tr>
+ <th>
+ #if ($state != "showedituser")*#end
+ Password
+ </th>
+ <td>
+  #if ($state != "showedituser")
+  <input name="$regGroup.Password.Key" value="$passwordData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.Password "")
+  #else
+  <input name="editpassword" value="$passwordData" type="text" size="25" />
+  #end
+ </td>
+</tr>
+</table>
+</div>
+
+<p>* Required field</p>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+ <input type="submit" name="eventSubmit_doEdituser" value="$submitButtonText" />
+  </td>
+ </tr>
+</table>
+</div>
+
+$intake.declareGroups()
+
+</form>
+</div>

@@ -1,9 +1,10 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.1 2001/11/17 00:21:52 jon Exp $
+@version $Id: AdminIndex.vm,v 1.2 2001/11/21 23:28:08 jon Exp $
 *#
 
+$page.setBgColor($ui.bgcolor)
 $page.setTitle("Scarab Administration")
 
 <div id="adminIndex" class="app">
@@ -16,10 +17,13 @@ This is the new administrative piece of Scarab (to replace Flux).
 
 <h3>User Administration</h3>
 
-<p>
-  <a href="$link.setPage("admin,ManageUserSearch.vm")">User Management</a><br>
-</p>
-
-<!--  <a href="$link.setPage("admin,user,EditUser.vm").addQueryData("state","showadduser")">Add New User</a><br> -->
+<ul>
+<li>
+  <a href="$link.setPage("admin,ManageUserSearch.vm")">User Management</a>
+</li>
+<li>
+  <a href="$link.setPage("admin,EditUser.vm").addQueryData("state","showadduser")">Add New User</a>
+</li>
+</ul>
 
 </div>

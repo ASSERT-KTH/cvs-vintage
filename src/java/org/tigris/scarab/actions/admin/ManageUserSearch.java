@@ -1,33 +1,33 @@
-package org.tigris.scarab.tools;
+package org.tigris.scarab.actions.admin;
 
 /* ================================================================
  * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
  * software developed by Collab.Net <http://www.Collab.Net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
- * 
+ *
  * 4. The hosted project names must not be used to endorse or promote
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
- * 
- * 5. Products derived from this software may not use the "Tigris" or 
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
+ *
+ * 5. Products derived from this software may not use the "Tigris" or
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without
  * prior written permission of Collab.Net.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -41,70 +41,77 @@ package org.tigris.scarab.tools;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
+
+// JDK classes
 import java.util.List;
+import java.util.ArrayList;
 
-import org.apache.turbine.services.pull.ApplicationTool;
+// Turbine Stuff
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+import org.apache.turbine.Log;
+import org.apache.turbine.Turbine;
+import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.entity.User;
+import org.apache.torque.util.Criteria;
+import org.apache.turbine.ParameterParser;
+
+// Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.apache.velocity.app.FieldMethodizer;
+import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
+import org.tigris.scarab.tools.ScarabRequestTool;
+
 
 /**
- * This scope is an object that is made available as a global
- * object within the system.
- * This object must be thread safe as multiple
- * requests may access it at the same time. The object is made
- * available in the context as: $scarabG
- * <p>
- * The design goals of the Scarab*API is to enable a <a
- * href="http://jakarta.apache.org/turbine/pullmodel.html">pull based
- * methodology</a> to be implemented.
+ * This class is responsible for dealing with the Register
+ * Action.
  *
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.5 2001/11/21 23:28:08 jon Exp $
+ * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+ * @version $Id: ManageUserSearch.java,v 1.1 2001/11/21 23:28:08 jon Exp $
  */
-public interface ScarabGlobalScope extends ApplicationTool
+public class ManageUserSearch extends ScarabTemplateAction
 {
     /**
-     * holds the Scarab constants. it will be available to the template system
-     * as $scarabG.Constant.CONSTANT_NAME.
+     * This manages clicking the Register button which will end up sending
+     * the user to the RegisterConfirm screen.
      */
-    public FieldMethodizer getConstant();
+    public void doEdituser( RunData data, TemplateContext context )
+	throws Exception
+	
+    {
+	data.getParameters().setString("state","showedituser");
+	setTarget(data, "admin,EditUser.vm");
+    }
+    public void doEditroles( RunData data, TemplateContext context )
+	throws Exception
+	
+    {
+	
+	System.out.println("doEditRoles()");
+	setTarget(data, "admin,EditUserRoles.vm");
+	
+    }
+    public void doDeleteuser( RunData data, TemplateContext context )
+	throws Exception
+	
+    {
+	setTarget(data, "admin,DeleteUser.vm");
+    }
+    /**
+     calls doCancel()
+     */
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    {
+	System.out.println("doPerform();");
+    }
     
-    /**
-     * This is used to get the format for a date
-     * right now, it returns "M/d/yy". In the future, we 
-     * can write code to return the correct date based on
-     * Localization needs.
-     */
-    public String getDateFormat();
-    
-    /**
-     * Gets a List of all of the Attribute objects.
-     */
-    public List getAllAttributes() 
-        throws Exception;
-    
-    /**
-     * Gets a List of users based on the specified search criteria.
-     */
-    public List getSearchUsers(String searchField, String searchCriteria)
-        throws Exception;
-    
-    /**
-     * Gets a List of users based on the specified search criteria and
-     * orders the list on the specified field.
-     */
-    public List getSearchUsers(String searchField, String searchCriteria, 
-                               String orderByField, String ascOrDesc)
-        throws Exception;
-    /**
-     * Get a user based on the given username.
-     */
-    public ScarabUser getUserByUsername(String username)
-        throws Exception;
-        
 }

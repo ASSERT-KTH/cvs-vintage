@@ -48,9 +48,11 @@ package org.tigris.scarab.tools;
 
 import java.util.List;
 import java.util.ArrayList;
- 
+
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.security.util.UnknownEntityException;
+import org.apache.fulcrum.security.util.DataBackendException;
 
 import org.apache.velocity.app.FieldMethodizer;
 
@@ -61,7 +63,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 
 import org.apache.torque.util.Criteria;
- 
+
 /**
  * This scope is an object that is made available as a global
  * object within the system.
@@ -74,7 +76,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.8 2001/11/17 00:21:52 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.9 2001/11/21 23:28:08 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -82,36 +84,36 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * holds the Scarab constants
      */
     private FieldMethodizer constant = null;
-
+    
     /**
      * holds the Scarab security permission constants
      */
     private FieldMethodizer security = null;
-
+    
     /**
      * Used for formatting dates in the format: M/d/yy
      */
     private static final String MDYY_DATE = "M/d/yy";
-
+    
     public void init(Object data)
     {
     }
-
+    
     public void refresh()
     {
     }
-
+    
     /**
      * Constructor does initialization stuff
      */    
     public ScarabGlobalTool()
     {
         constant = new FieldMethodizer(
-            "org.tigris.scarab.util.ScarabConstants");
+                                       "org.tigris.scarab.util.ScarabConstants");
         security = new FieldMethodizer(
-            "org.tigris.scarab.services.security.ScarabSecurity");
+                                       "org.tigris.scarab.services.security.ScarabSecurity");
     }
-
+    
     /**
      * holds the Scarab constants. it will be available to the template system
      * as $scarabG.Constant.CONSTANT_NAME.
@@ -120,7 +122,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return constant;
     }
-
+    
     /**
      * holds the Scarab permission constants.  It will be available to 
      * the template system as $scarabG..PERMISSION_NAME.
@@ -140,7 +142,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return MDYY_DATE;
     }
-
+    
     /**
      * Gets a List of all of the Attribute objects.
      */
@@ -149,7 +151,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return AttributePeer.getAllAttributes();
     }
-
+    
     /**
      * gets a list of all Issue Types 
      */
@@ -158,7 +160,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return IssueTypePeer.getAllIssueTypes(true);
     }
-
+    
     /** 
      * Returns a List of users based on the given search criteria. This method
      * is an overloaded function which returns an unsorted list of users.
@@ -189,15 +191,15 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
      */
     public List getSearchUsers(String searchField, String searchCriteria, 
-                            String orderByField, String ascOrDesc)
+                               String orderByField, String ascOrDesc)
         throws Exception
     {
         ArrayList userSearchList = new ArrayList();
         String lSearchField = "";
         String lOrderByField = "";
-                
+        
         Criteria criteria = new Criteria();
-                
+        
         // add the input from the user
         if (searchCriteria != null && searchCriteria.length() > 0)
         {
@@ -217,13 +219,13 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             {
                 lSearchField = ScarabUser.EMAIL;
             }
-
+            
             // FIXME: Probably shouldn't be using ScarabUserPeerImpl here
             // What should we do to get the right table name?
             lSearchField = ScarabUserImplPeer.getTableName() + '.' + lSearchField;
-
+            
             criteria = criteria.add(lSearchField,
-                (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
+                                        (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
         }
         
         // sort the results
@@ -267,4 +269,30 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         }
         return (userSearchList);
     }
+
+    
+    /** Returns a User object retrieved by specifying the username.
+     *
+     * @param username the username of the user to retrieve
+     * @returns the specified user, if found, or null otherwise
+     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     */
+    public ScarabUser getUserByUsername(String username) throws Exception
+    {
+        ScarabUser user = null;
+        
+        try
+        {
+            user = (ScarabUser)TurbineSecurity.getUser(username);
+        }
+        catch (UnknownEntityException uee)
+        {        
+        }
+        catch (DataBackendException dbe)
+        {          
+        }
+        
+        return (user);
+    }
+    
 }

@@ -1,13 +1,14 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.1 2001/11/17 00:21:52 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.2 2001/11/21 23:28:08 jon Exp $
 *#
 
 $page.setTitle("User Search")
 
 #set ($formSearchCriteria = "")
 #set ($user = $data.User)
+#set ($searchCommand = $data.Parameters.getString("searchCommand"))
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 #set ($formSearchCriteria = $data.Parameters.getString("searchCriteria"))
@@ -20,6 +21,7 @@ $page.setTitle("User Search")
 #if ($pageNum == 0)
   #set ($pageNum = 1)
 #end
+
 
 <div id="adminIndex" class="app">
 
@@ -45,8 +47,6 @@ Enter search criteria.
 </select>
 <input type="text" name="searchCriteria" value="$formSearchCriteria">
 </td>
-</tr>
-<tr>
 <td>
 Order by: <select name="orderbyField">
  <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected #end>First Name
@@ -76,14 +76,22 @@ Max results per page:
  </tr>
 </table>
 </div>
+</form>
 
-#set ($userList = $scarabG.getSearchUsers($data.Parameters.searchField,$data.Parameters.searchCriteria,$data.Parameters.orderbyField,$data.Parameters.ascOrDesc))
+
+#if ($searchCommand.equals("search"))
 
 <h3>Search results</h3>
 
+ #set ($userList = $scarabG.getSearchUsers($data.Parameters.searchField,$data.Parameters.searchCriteria,$data.Parameters.orderbyField,$data.Parameters.ascOrDesc))
+
  #if ($userList.size() == 0)
-<p class="warn">There are no users matching the specified criteria.</p>
+<p class="warn">There are no users matching the specified crieteria.</p>
  #else
+
+<form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
+ <input type="hidden" name="action" value="admin.ManageUserSearch">
+ <input type="hidden" name="state" value="">
 
 <table cellspacing="0" cellpadding="2" width="100%">
  <tr>
@@ -98,43 +106,49 @@ Max results per page:
  #set ($paginated = "true")
  #set ($userList = $scarabR.getPaginatedList($userList, $pageNum, $resultsPerPage))
  #set ($totalPages = $scarabR.NbrPages)
+ #set ($searchField = $data.Parameters.getString("searchField"))
+ #set ($searchCriteria = $data.Parameters.getString("searchCriteria"))
+ #set ($orderbyField = $data.Parameters.getString("orderByField"))
+ #set ($ascOrDesc = $data.Parameters.getString("ascOrDesc"))
 #end
 
 ## PAGINATION
 #if ($paginated)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($prevLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
   <a href="$prevLink">&laquo;</a> previous |
  #end
 
  $pageNum of $totalPages
 
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($nextLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
   | next <a href="$nextLink">&raquo;</a>
  #end
  </p>
 #end
 
- #foreach ($user in $userList)
+#foreach ($user in $userList)
   #indexedRows ($velocityCount)
    <td width="10"><input type="radio" name="username" value="$!user.UserName"></td>
    <td>$!user.UserName</td>
    <td>$!user.FirstName $!user.LastName</td>
    <td><a href=mailto:$!user.Email>$!user.Email</a>
  </tr>
- #end
+#end
 
 </table>
 
-#if ($userCount > 0)
+#if ($userList.size() > 0)
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
- <input type="submit" name="eventSubmit_doEdituser" value="Edit User" />&#160;
- <input type="submit" name="eventSubmit_doEditroles" value="Edit Roles" />&#160;
+ <input type="submit" name="eventSubmit_doEdituser" value="Edit User" />
+ <!--
+ <input type="submit" name="eventSubmit_doEditroles" value="Edit Roles" />
+ -->
  <input type="submit" name="eventSubmit_doDeleteuser" value="Delete" />
   </td>
  </tr>
@@ -143,4 +157,5 @@ Max results per page:
 #end
 
 #end
-</form>
+
+#end
