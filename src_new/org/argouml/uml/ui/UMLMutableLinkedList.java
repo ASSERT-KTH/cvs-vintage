@@ -1,4 +1,4 @@
-// $Id: UMLMutableLinkedList.java,v 1.15 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLMutableLinkedList.java,v 1.16 2004/12/07 16:22:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,8 +68,7 @@ public class UMLMutableLinkedList extends UMLLinkedList
 
     private AbstractActionNewModelElement newAction = null;
 
-    private AbstractActionRemoveElement deleteAction = 
-        ActionRemoveModelElement.SINGLETON;
+    private AbstractActionRemoveElement deleteAction = null;
 
     private class PopupMenu extends JPopupMenu {
         public PopupMenu() {
