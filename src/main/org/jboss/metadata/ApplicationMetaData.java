@@ -27,7 +27,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -64,13 +64,23 @@ public class ApplicationMetaData
 
    private boolean enforceEjbRestrictions;
 
-   public ApplicationMetaData(URL u)
-   {
-      url = u;
-   }
+   /** The ClassLoader to load additional resources */
+   private ClassLoader resourceCl;
 
    public ApplicationMetaData()
    {
+   }
+
+   /** Get the ClassLoader to load additional resources */
+   public ClassLoader getResourceCl()
+   {
+      return resourceCl;
+   }
+
+   /** Set the ClassLoader to load additional resources */
+   public void setResourceClassLoader(ClassLoader resourceCl)
+   {
+      this.resourceCl = resourceCl;
    }
 
    public URL getUrl()

@@ -8,6 +8,7 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.Util;
+import org.jboss.webservice.ServiceRefBuilder;
 import org.w3c.dom.Element;
 
 import javax.naming.Context;
@@ -26,7 +27,7 @@ import java.util.Iterator;
  * client jars 
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -237,6 +238,10 @@ public class ClientDeployer extends SubDeployerSupport
          }
       }
 
+      // Bind service references
+      Iterator serviceRefs = metaData.getServiceReferences().values().iterator();
+      ServiceRefBuilder.setupEnvironment(envCtx, serviceRefs, di);
+      
       // Bind resource references
       HashMap resRefs = metaData.getResourceReferences();
       enum = resRefs.values().iterator();

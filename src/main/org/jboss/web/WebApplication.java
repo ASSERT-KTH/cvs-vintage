@@ -16,7 +16,7 @@ import org.jboss.deployment.DeploymentInfo;
  @see AbstractWebContainer
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.10 $
+ @version $Revision: 1.11 $
  */
 public class WebApplication
 {
@@ -40,7 +40,7 @@ public class WebApplication
    }
 
    /** Create a WebApplication instance with with given web-app metadata.
-    @param metaData, the web-app metadata containing the web.xml and
+    @param metaData the web-app metadata containing the web.xml and
     jboss-web.xml descriptor metadata.
     */
    public WebApplication(WebMetaData metaData)
@@ -50,9 +50,9 @@ public class WebApplication
 
    /** Create a WebApplication instance with with given name,
     url and class loader.
-    @param name, name of this application
-    @param url, url where this application was deployed from
-    @param classLoader, Class loader of this application
+    @param name name of this application
+    @param url url where this application was deployed from
+    @param classLoader Class loader of this application
     */
    public WebApplication(String name, URL url, ClassLoader classLoader)
    {
@@ -70,7 +70,7 @@ public class WebApplication
    }
 
    /** Set the class loader of this WebApplication.
-    * @param classLoader, The ClassLoader instance for the web application
+    * @param classLoader The ClassLoader instance for the web application
     */
    public void setClassLoader(ClassLoader classLoader)
    {
@@ -89,7 +89,7 @@ public class WebApplication
    }
 
    /** Set the name of this WebApplication.
-    * @param String name of the web application
+    * @param name of the web application
     */
    public void setName(String name)
    {
@@ -106,7 +106,7 @@ public class WebApplication
    }
 
    /** Set the URL from which this WebApplication was deployed
-    * @param url, URL where this application was deployed from
+    * @param url URL where this application was deployed from
     */
    public void setURL(URL url)
    {

@@ -32,7 +32,7 @@ import java.net.URL;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class XmlFileLoader
 {
@@ -141,6 +141,7 @@ public class XmlFileLoader
 
       // create the metadata
       metaData = new ApplicationMetaData();
+      metaData.setResourceClassLoader(classLoader);
 
       Document ejbjarDocument = getDocumentFromURL(ejbjarUrl);
       

@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -89,6 +89,8 @@ public abstract class BeanMetaData
    private HashMap resourceReferences = new HashMap();
    /** The resource-env-ref element(s) info */
    private HashMap resourceEnvReferences = new HashMap();
+   /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
+   private HashMap serviceReferences = new HashMap();
    /** The method attributes */
    private ArrayList methodAttributes = new ArrayList();
    private HashMap cachedMethodAttributes = new HashMap();
@@ -127,11 +129,9 @@ public abstract class BeanMetaData
    // Constructors --------------------------------------------------
    public BeanMetaData(ApplicationMetaData app, char beanType)
    {
-      application = app;
+      this.application = app;
       this.beanType = beanType;
    }
-
-   // Public --------------------------------------------------------
 
    public boolean isSession()
    {
@@ -262,6 +262,14 @@ public abstract class BeanMetaData
    public Iterator getResourceEnvReferences()
    {
       return resourceEnvReferences.values().iterator();
+   }
+
+   /**
+    * @return HashMap<ServiceRefMetaData>
+    */
+   public HashMap getServiceReferences()
+   {
+      return serviceReferences;
    }
 
    public String getJndiName()
@@ -685,6 +693,16 @@ public abstract class BeanMetaData
          refMetaData.importEjbJarXml(resourceRef);
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData(application.getResourceCl());
+         refMetaData.importClientXml(serviceRef);
+         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
+      }
    }
 
    public void importJbossXml(Element element) throws DeploymentException
@@ -750,6 +768,21 @@ public abstract class BeanMetaData
                     + " found in jboss.xml but not in ejb-jar.xml");
          }
          refMetaData.importJbossXml(resourceRef);
+      }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
+         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
+         if (refMetaData == null)
+         {
+            throw new DeploymentException("service-ref " + serviceRefName
+               + " found in jboss.xml but not in ejb-jar.xml");
+         }
+         refMetaData.importJBossXml(serviceRef);
       }
 
       // set the external ejb-references (optional)

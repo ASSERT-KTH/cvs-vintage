@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.6 2004/04/21 13:30:43 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.7 2004/04/27 15:55:40 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -19,13 +19,10 @@ import java.util.Iterator;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ClientMetaData
 {
-   /** The ClassLoader to load additional resources */
-   private ClassLoader localCl;
-
    /** The application-client/display-name */
    private String displayName;
    /** The location for the server side client context ENC bindings */
@@ -43,11 +40,13 @@ public class ClientMetaData
    /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
    private HashMap serviceReferences = new HashMap();
 
-   /** Set the ClassLoader to load additional resources
-    */
-   public void setResourceClassLoader(ClassLoader localCl)
+   /** The ClassLoader to load additional resources */
+   private ClassLoader resourceCl;
+
+   /** Set the ClassLoader to load additional resources */
+   public void setResourceClassLoader(ClassLoader resourceCl)
    {
-      this.localCl = localCl;
+      this.resourceCl = resourceCl;
    }
 
    /** The application-client/display-name
@@ -181,7 +180,7 @@ public class ClientMetaData
       while (iterator.hasNext())
       {
          Element serviceRef = (Element) iterator.next();
-         ServiceRefMetaData refMetaData = new ServiceRefMetaData(localCl);
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
          refMetaData.importClientXml(serviceRef);
          serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
       }
@@ -253,8 +252,7 @@ public class ClientMetaData
             throw new DeploymentException("service-ref " + serviceRefName
                + " found in jboss-client.xml but not in application-client.xml");
          }
-         refMetaData.importJbossClientXml(serviceRef);
+         refMetaData.importJBossXml(serviceRef);
       }
    }
-
 }

@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.3 2004/04/22 09:22:12 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.4 2004/04/27 15:55:40 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
@@ -28,7 +28,7 @@ import java.net.MalformedURLException;
 /** The metdata data from service-ref in application-client.xml descriptor
  * 
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ServiceRefMetaData
 {
@@ -203,7 +203,7 @@ public class ServiceRefMetaData
       }
    }
 
-   public void importJbossClientXml(Element element) throws DeploymentException
+   public void importJBossXml(Element element) throws DeploymentException
    {
       String wsdlOverrideOption = MetaData.getOptionalChildContent(element, "wsdl-override");
       try

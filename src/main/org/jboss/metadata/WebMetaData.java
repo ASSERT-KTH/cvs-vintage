@@ -32,7 +32,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class WebMetaData extends MetaData
 {
@@ -42,6 +42,8 @@ public class WebMetaData extends MetaData
    private HashMap resourceReferences = new HashMap();
    /** The web.xml resource-env-refs */
    private HashMap resourceEnvReferences = new HashMap();
+   /** The web.xml service-refs */
+   private HashMap serviceReferences = new HashMap();
    /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
    /** The security-roles */
@@ -86,8 +88,13 @@ public class WebMetaData extends MetaData
 
    private int replicationType = REPLICATION_TYPE_SYNC;
 
-   public WebMetaData()
+   /** The ClassLoader to load additional resources */
+   private ClassLoader resourceCl;
+
+   /** Set the ClassLoader to load additional resources */
+   public void setResourceClassLoader(ClassLoader resourceCl)
    {
+      this.resourceCl = resourceCl;
    }
 
    /** Return an iterator of the env-entry mappings.
@@ -125,6 +132,14 @@ public class WebMetaData extends MetaData
    public Iterator getResourceEnvReferences()
    {
       return resourceEnvReferences.values().iterator();
+   }
+
+   /** Return an iterator of the service-ref mappings.
+    * @return Iterator of ServiceRefMetaData objects
+    */
+   public Iterator getServiceReferences()
+   {
+      return serviceReferences.values().iterator();
    }
 
    /** This the the jboss-web.xml descriptor context-root and it
@@ -290,6 +305,16 @@ public class WebMetaData extends MetaData
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
 
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(webApp, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
+         refMetaData.importClientXml(serviceRef);
+         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
+      }
+
       // Parse the web-app/env-entry elements
       iterator = getChildrenByTagName(webApp, "env-entry");
       while( iterator.hasNext() )
@@ -384,6 +409,21 @@ public class WebMetaData extends MetaData
                + " found in jboss-web.xml but not in web.xml");
          }
          refMetaData.importJbossXml(resourceRef);
+      }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(jbossWeb, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
+         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
+         if (refMetaData == null)
+         {
+            throw new DeploymentException("service-ref " + serviceRefName
+               + " found in jboss-web.xml but not in web.xml");
+         }
+         refMetaData.importJBossXml(serviceRef);
       }
 
       // set the security roles (optional)
