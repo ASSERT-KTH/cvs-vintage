@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.86 2002/04/13 02:39:32 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.87 2002/04/18 22:29:31 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -263,6 +263,29 @@ public class ModifyIssue extends RequireLoginFirstAction
         throws Exception
    {
         submitAttachment (data, context, "url");
+   } 
+
+    /**
+    *  Modifies attachments of type "url".
+    */
+   public void doSaveurl (RunData data, TemplateContext context) 
+        throws Exception
+   {
+        String id = data.getParameters().getString("id");
+        Issue issue = Issue.getIssueById(id);
+        List urls = issue.getAttachments();
+        for (int i = 0; i<urls.size(); i++)
+        {
+            Attachment attachment = (Attachment)urls.get(i);
+            if (attachment.getTypeId().equals(Attachment.URL__PK)
+                && !attachment.getDeleted())
+            {
+                IntakeTool intake = getIntakeTool(context);
+                Group group = intake.get("Attachment", attachment.getQueryKey(), false);
+                group.setProperties(attachment);
+                attachment.save();
+            }
+        }
    } 
 
     /**
@@ -529,9 +552,6 @@ public class ModifyIssue extends RequireLoginFirstAction
                                 issue, user, null, context, data);
             } 
         }
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, template);            
     }
     
    /**
@@ -569,9 +589,6 @@ public class ModifyIssue extends RequireLoginFirstAction
                                 null, context, data);
             } 
         }
-        String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, template);            
     }
 
     private void registerActivity(String description, String message,
