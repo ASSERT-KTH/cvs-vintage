@@ -1,6 +1,6 @@
 /**
  * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2004 Bull S.A.
+ * Copyright (C) 2004,2005 Bull S.A.
  * Contact: jonas-team@objectweb.org
  *
  * This library is free software; you can redistribute it and/or
@@ -18,9 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  *
- * Initial developer: Florent BENOIT
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContextWrapperFactory.java,v 1.1 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: JacORBIIOPContextWrapperFactory.java,v 1.2 2005/02/08 09:45:57 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -31,26 +30,24 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
-
 /**
-* Class <code> JacORBIIOPContextWrapperFactory </code> is the CAROL
-* JNDI Context factory for JacORB.
-* This context factory build the iiop context for reference wrapping to/from a remote object
-* @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
-* @author Florent BENOIT
-* @see javax.naming.spi.InitialContextFactory
-*/
+ * Class <code> JacORBIIOPContextWrapperFactory </code> is the CAROL JNDI
+ * Context factory for JacORB. This context factory build the iiop context for
+ * reference wrapping to/from a remote object
+ * @author Florent BENOIT
+ * @see javax.naming.spi.InitialContextFactory
+ */
 public class JacORBIIOPContextWrapperFactory implements InitialContextFactory {
 
-       /**
-        * Get/Build the IIOP Wrapper InitialContext
-        * @param env the inital IIOP environement
-        * @return a <code>Context</code> coresponding to the inital IIOP
-        *         environement with IIOP Serializable ressource wrapping
-        * @throws NamingException if a naming exception is encountered
-        */
-       public Context getInitialContext(Hashtable env) throws NamingException {
-           return JacORBIIOPContext.getSingleInstance(env);
-       }
+    /**
+     * Get/Build the IIOP Wrapper InitialContext
+     * @param env the inital IIOP environement
+     * @return a <code>Context</code> coresponding to the inital IIOP
+     *         environement with IIOP Serializable ressource wrapping
+     * @throws NamingException if a naming exception is encountered
+     */
+    public Context getInitialContext(Hashtable env) throws NamingException {
+        return JacORBIIOPContext.getSingleInstance(env);
+    }
 
-   }
+}

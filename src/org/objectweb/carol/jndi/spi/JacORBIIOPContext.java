@@ -1,6 +1,6 @@
 /**
  * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2004 Bull S.A.
+ * Copyright (C) 2004,2005 Bull S.A.
  * Contact: jonas-team@objectweb.org
  *
  * This library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.2 2004/12/15 15:18:18 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.3 2005/02/08 09:45:57 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -54,14 +54,14 @@ import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.TraceCarol;
 import org.objectweb.carol.util.csiv2.SasComponent;
 import org.objectweb.carol.util.csiv2.SasPolicy;
 
 import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
- * @author Guillaume Riviere
- * @author Florent Benoit (make it working for JacORB IIOP)
+ * @author Florent Benoit
  */
 public class JacORBIIOPContext implements Context {
 
@@ -80,13 +80,17 @@ public class JacORBIIOPContext implements Context {
      * the IIOP Wrapper JNDI context
      * @see #IIOPContext
      */
-
     private static HashMap hashMap = new HashMap();
+
+    /**
+     * Number of POA policies
+     */
+    private static final int POA_POLICIES_NUMBER = 3;
 
     /**
      * Root POA used by Carol
      */
-    public static POA rootPOA = null;
+    private static POA rootPOA = null;
 
     /**
      * Unique instance of the ORB running in the JVM
@@ -103,7 +107,6 @@ public class JacORBIIOPContext implements Context {
      */
     private SasComponent sasComponent = null;
 
-
     /**
      * Constructs an IIOP Wrapper context for JacORB
      * @param iiopCtx the inital IIOP context
@@ -112,6 +115,13 @@ public class JacORBIIOPContext implements Context {
     private JacORBIIOPContext(Context iiopCtx, SasComponent sasComponent) {
         iiopContext = iiopCtx;
         this.sasComponent = sasComponent;
+    }
+
+    /**
+     * @return the rootPOA.
+     */
+    public static POA getRootPOA() {
+        return rootPOA;
     }
 
     /**
@@ -131,7 +141,8 @@ public class JacORBIIOPContext implements Context {
             orb = JacORBCosNaming.getOrb();
             if (rootPOA == null) {
                 try {
-                    rootPOA = org.omg.PortableServer.POAHelper.narrow(JacORBCosNaming.getOrb().resolve_initial_references("RootPOA"));
+                    rootPOA = org.omg.PortableServer.POAHelper.narrow(JacORBCosNaming.getOrb()
+                            .resolve_initial_references("RootPOA"));
                     rootPOA.the_POAManager().activate();
                 } catch (Exception e) {
                     throw new NamingException("Cannot get a single instance" + e.getMessage());
@@ -187,7 +198,7 @@ public class JacORBIIOPContext implements Context {
      */
     private Object unwrapObject(Object o, Name name) throws NamingException {
         try {
-            //TODO: Is it a remote reference object ?
+            // Is it a remote reference object ?
             ObjectImpl objImpl = (ObjectImpl) PortableRemoteObject.narrow(o, ObjectImpl.class);
             String[] ids = objImpl._ids();
             // first item
@@ -201,7 +212,8 @@ public class JacORBIIOPContext implements Context {
                 return objFact.getObjectInstance(objRef, name, this, iiopContext.getEnvironment());
             } else if (itf.indexOf("RMI:org.objectweb.carol.jndi.wrapping.JNDIRemoteResource:") != -1) {
                 // Cast
-                JNDIRemoteResource jndiRemoteResource = (JNDIRemoteResource) PortableRemoteObject.narrow(o, JNDIRemoteResource.class);
+                JNDIRemoteResource jndiRemoteResource = (JNDIRemoteResource) PortableRemoteObject.narrow(o,
+                        JNDIRemoteResource.class);
                 return jndiRemoteResource.getResource();
             } else {
                 return o;
@@ -243,9 +255,6 @@ public class JacORBIIOPContext implements Context {
         }
     }
 
-    // Context methods
-    // The Javadoc is deferred to the Context interface.
-
     /**
      * Retrieves the named object.
      * @param name the name of the object to look up
@@ -256,14 +265,36 @@ public class JacORBIIOPContext implements Context {
         return unwrapObject(iiopContext.lookup(name), name);
     }
 
+    /**
+     * Retrieves the named object.
+     * @param name the name of the object to look up
+     * @return the object bound to <tt>name</tt>
+     * @throws NamingException if a naming exception is encountered
+     */
     public Object lookup(String name) throws NamingException {
         try {
             return lookup(new CompositeName(name));
         } catch (Exception e) {
-            throw new NamingException("Cannot lookup object : '" +  e.getMessage() + "'");
+            // Seems that message with JacORB is null many times
+            // So to avoid 'null' as message, use toString() method.
+            // Also, print the stacktrace with traces enabled.
+            String msg = e.getMessage();
+            if (msg == null) {
+                msg = e.toString();
+            }
+            if (TraceCarol.isDebugJndiCarol()) {
+                e.printStackTrace();
+            }
+            throw new NamingException("Cannot lookup object : '" + msg + "'");
         }
     }
 
+    /**
+     * Binds a name to an object.
+     * @param name the name to bind; may not be empty
+     * @param obj the object to bind; possibly null
+     * @throws NamingException if a naming exception is encountered
+     */
     public void bind(Name name, Object obj) throws NamingException {
         Remote r = wrapObject(obj);
         try {
@@ -278,10 +309,24 @@ public class JacORBIIOPContext implements Context {
 
     }
 
+    /**
+     * Binds a name to an object.
+     * @param name the name to bind; may not be empty
+     * @param obj the object to bind; possibly null
+     * @throws NamingException if a naming exception is encountered
+     */
     public void bind(String name, Object obj) throws NamingException {
         bind(new CompositeName(name), obj);
     }
 
+    /**
+     * Binds a name to an object, overwriting any existing binding. All
+     * intermediate contexts and the target context (that named by all but
+     * terminal atomic component of the name) must already exist.
+     * @param name the name to bind; may not be empty
+     * @param obj the object to bind; possibly null
+     * @throws NamingException if a naming exception is encountered
+     */
     public void rebind(Name name, Object obj) throws NamingException {
         Remote r = wrapObject(obj);
         try {
@@ -295,10 +340,23 @@ public class JacORBIIOPContext implements Context {
         }
     }
 
+    /**
+     * Binds a name to an object, overwriting any existing binding.
+     * @param name the name to bind; may not be empty
+     * @param obj the object to bind; possibly null
+     * @throws NamingException if a naming exception is encountered
+     */
     public void rebind(String name, Object obj) throws NamingException {
         rebind(new CompositeName(name), obj);
     }
 
+    /**
+     * Unbinds the named object. Removes the terminal atomic name in
+     * <code>name</code> from the target context--that named by all but the
+     * terminal atomic part of <code>name</code>.
+     * @param name the name to unbind; may not be empty
+     * @throws NamingException if a naming exception is encountered
+     */
     public void unbind(Name name) throws NamingException {
         try {
             iiopContext.unbind(name);
@@ -307,90 +365,250 @@ public class JacORBIIOPContext implements Context {
         }
     }
 
+    /**
+     * Unbinds the named object.
+     * @param name the name to unbind; may not be empty
+     * @throws NamingException if a naming exception is encountered
+     */
     public void unbind(String name) throws NamingException {
         unbind(new CompositeName(name));
     }
 
+    /**
+     * Binds a new name to the object bound to an old name, and unbinds the old
+     * name. Both names are relative to this context. Any attributes associated
+     * with the old name become associated with the new name.
+     * @param oldName the name of the existing binding; may not be empty
+     * @param newName the name of the new binding; may not be empty
+     * @throws NamingException if a naming exception is encountered
+     */
     public void rename(Name oldName, Name newName) throws NamingException {
         iiopContext.rename(oldName, newName);
     }
 
-    public void rename(String name, String newName) throws NamingException {
-        rename(new CompositeName(name), new CompositeName(newName));
+    /**
+     * Binds a new name to the object bound to an old name, and unbinds the old
+     * name.
+     * @param oldName the name of the existing binding; may not be empty
+     * @param newName the name of the new binding; may not be empty
+     * @throws NamingException if a naming exception is encountered
+     */
+    public void rename(String oldName, String newName) throws NamingException {
+        rename(new CompositeName(oldName), new CompositeName(newName));
     }
 
+    /**
+     * Enumerates the names bound in the named context, along with the class
+     * names of objects bound to them. The contents of any subcontexts are not
+     * included.
+     * @param name the name of the context to list
+     * @return an enumeration of the names and class names of the bindings in
+     *         this context. Each element of the enumeration is of type
+     *         <tt>NameClassPair</tt>.
+     * @throws NamingException if a naming exception is encountered
+     */
     public NamingEnumeration list(Name name) throws NamingException {
         return iiopContext.list(name);
     }
 
+    /**
+     * Enumerates the names bound in the named context, along with the class
+     * names of objects bound to them.
+     * @param name the name of the context to list
+     * @return an enumeration of the names and class names of the bindings in
+     *         this context. Each element of the enumeration is of type
+     *         <tt>NameClassPair</tt>.
+     * @throws NamingException if a naming exception is encountered
+     */
     public NamingEnumeration list(String name) throws NamingException {
         return list(new CompositeName(name));
     }
 
+    /**
+     * Enumerates the names bound in the named context, along with the objects
+     * bound to them. The contents of any subcontexts are not included.
+     * @param name the name of the context to list
+     * @return an enumeration of the bindings in this context. Each element of
+     *         the enumeration is of type <tt>Binding</tt>.
+     * @throws NamingException if a naming exception is encountered
+     */
     public NamingEnumeration listBindings(Name name) throws NamingException {
         return iiopContext.listBindings(name);
     }
 
+    /**
+     * Enumerates the names bound in the named context, along with the objects
+     * bound to them.
+     * @param name the name of the context to list
+     * @return an enumeration of the bindings in this context. Each element of
+     *         the enumeration is of type <tt>Binding</tt>.
+     * @throws NamingException if a naming exception is encountered
+     */
     public NamingEnumeration listBindings(String name) throws NamingException {
         return listBindings(new CompositeName(name));
     }
 
+    /**
+     * Destroys the named context and removes it from the namespace. Any
+     * attributes associated with the name are also removed. Intermediate
+     * contexts are not destroyed.
+     * @param name the name of the context to be destroyed; may not be empty
+     * @throws NamingException if a naming exception is encountered
+     */
     public void destroySubcontext(Name name) throws NamingException {
         iiopContext.destroySubcontext(name);
     }
 
+    /**
+     * Destroys the named context and removes it from the namespace.
+     * @param name the name of the context to be destroyed; may not be empty
+     * @throws NamingException if a naming exception is encountered
+     */
     public void destroySubcontext(String name) throws NamingException {
         destroySubcontext(new CompositeName(name));
     }
 
+    /**
+     * Creates and binds a new context.
+     * @param name the name of the context to create; may not be empty
+     * @return the newly created context
+     * @throws NamingException if a naming exception is encountered
+     */
     public Context createSubcontext(Name name) throws NamingException {
         return iiopContext.createSubcontext(name);
     }
 
+    /**
+     * Creates and binds a new context.
+     * @param name the name of the context to create; may not be empty
+     * @return the newly created context
+     * @throws NamingException if a naming exception is encountered
+     */
     public Context createSubcontext(String name) throws NamingException {
         return createSubcontext(new CompositeName(name));
     }
 
+    /**
+     * Retrieves the named object, following links except for the terminal
+     * atomic component of the name.
+     * @param name the name of the object to look up
+     * @return the object bound to <tt>name</tt>, not following the terminal
+     *         link (if any).
+     * @throws NamingException if a naming exception is encountered
+     */
     public Object lookupLink(Name name) throws NamingException {
         return iiopContext.lookupLink(name);
     }
 
+    /**
+     * Retrieves the named object, following links except for the terminal
+     * atomic component of the name.
+     * @param name the name of the object to look up
+     * @return the object bound to <tt>name</tt>, not following the terminal
+     *         link (if any)
+     * @throws NamingException if a naming exception is encountered
+     */
     public Object lookupLink(String name) throws NamingException {
         return lookupLink(new CompositeName(name));
     }
 
+    /**
+     * Retrieves the parser associated with the named context.
+     * @param name the name of the context from which to get the parser
+     * @return a name parser that can parse compound names into their atomic
+     *         components
+     * @throws NamingException if a naming exception is encountered
+     */
     public NameParser getNameParser(Name name) throws NamingException {
         return iiopContext.getNameParser(name);
     }
 
+    /**
+     * Retrieves the parser associated with the named context.
+     * @param name the name of the context from which to get the parser
+     * @return a name parser that can parse compound names into their atomic
+     *         components
+     * @throws NamingException if a naming exception is encountered
+     */
     public NameParser getNameParser(String name) throws NamingException {
         return getNameParser(new CompositeName(name));
     }
 
+    /**
+     * Composes the name of this context with a name relative to this context.
+     * @param name a name relative to this context
+     * @param prefix the name of this context relative to one of its ancestors
+     * @return the composition of <code>prefix</code> and <code>name</code>
+     * @throws NamingException if a naming exception is encountered
+     */
     public String composeName(String name, String prefix) throws NamingException {
         return name;
     }
 
+    /**
+     * Composes the name of this context with a name relative to this context.
+     * @param name a name relative to this context
+     * @param prefix the name of this context relative to one of its ancestors
+     * @return the composition of <code>prefix</code> and <code>name</code>
+     * @throws NamingException if a naming exception is encountered
+     */
     public Name composeName(Name name, Name prefix) throws NamingException {
         return (Name) name.clone();
     }
 
+    /**
+     * Adds a new environment property to the environment of this context. If
+     * the property already exists, its value is overwritten. See class
+     * description for more details on environment properties.
+     * @param propName the name of the environment property to add; may not be
+     *        null
+     * @param propVal the value of the property to add; may not be null
+     * @return the previous value of the property, or null if the property was
+     *         not in the environment before
+     * @throws NamingException if a naming exception is encountered
+     */
     public Object addToEnvironment(String propName, Object propVal) throws NamingException {
         return iiopContext.addToEnvironment(propName, propVal);
     }
 
+    /**
+     * Removes an environment property from the environment of this context. See
+     * class description for more details on environment properties.
+     * @param propName the name of the environment property to remove; may not
+     *        be null
+     * @return the previous value of the property, or null if the property was
+     *         not in the environment
+     * @throws NamingException if a naming exception is encountered
+     */
     public Object removeFromEnvironment(String propName) throws NamingException {
         return iiopContext.removeFromEnvironment(propName);
     }
 
+    /**
+     * Retrieves the environment in effect for this context. See class
+     * description for more details on environment properties.
+     * @return the environment of this context; never null
+     * @throws NamingException if a naming exception is encountered
+     */
     public Hashtable getEnvironment() throws NamingException {
         return iiopContext.getEnvironment();
     }
 
+    /**
+     * Closes this context. This method releases this context's resources
+     * immediately, instead of waiting for them to be released automatically by
+     * the garbage collector.
+     * @throws NamingException if a naming exception is encountered
+     */
     public void close() throws NamingException {
         // do nothing for the moment
     }
 
+    /**
+     * Retrieves the full name of this context within its own namespace.
+     * @return this context's name in its own namespace; never null
+     * @throws NamingException if a naming exception is encountered
+     */
     public String getNameInNamespace() throws NamingException {
         return iiopContext.getNameInNamespace();
     }
@@ -402,7 +620,12 @@ public class JacORBIIOPContext implements Context {
         return orb;
     }
 
-
+    /**
+     * Rebind an object by using a secure POA (csiv2)
+     * @param name name of the object
+     * @param r remote object to bind
+     * @throws Exception if the object cannot be bound
+     */
     private void rebindWithSpecificPoa(Name name, Remote r) throws Exception {
         POA securedPOA = createSecurePOA(name.toString());
         org.omg.PortableServer.Servant servant = (org.omg.PortableServer.Servant) Util.getTie(r);
@@ -410,6 +633,12 @@ public class JacORBIIOPContext implements Context {
         iiopContext.rebind(name, securedPOA.servant_to_reference(servant));
     }
 
+    /**
+     * Bind an object by using a secure POA (csiv2)
+     * @param name name of the object
+     * @param r remote object to bind
+     * @throws Exception if the object cannot be bound
+     */
     private void bindWithSpecificPoa(Name name, Remote r) throws Exception {
         POA securedPOA = createSecurePOA(name.toString());
         org.omg.PortableServer.Servant servant = (org.omg.PortableServer.Servant) Util.getTie(r);
@@ -423,20 +652,18 @@ public class JacORBIIOPContext implements Context {
      * @return a POA
      * @throws Exception if the POA cannot be created
      */
-   private POA createSecurePOA(String nameId) throws Exception {
+    private POA createSecurePOA(String nameId) throws Exception {
 
-       //TODO : Detect if a POA with this name already exists and avoid to create it.
-       // use random for now
+        //TODO : Detect if a POA with this name already exists and avoid to
+        // create it.
+        // use random for now
 
-       // Create policies
-       org.omg.CORBA.Policy[] policies = new org.omg.CORBA.Policy[3];
-       policies[0] = rootPOA.create_id_assignment_policy(IdAssignmentPolicyValue.USER_ID);
-       policies[1] = rootPOA.create_lifespan_policy(LifespanPolicyValue.TRANSIENT);
-       policies[2] = new SasPolicy(sasComponent);
-       return rootPOA.create_POA(nameId + Math.random(), rootPOA.the_POAManager(), policies);
-   }
-
-
-
+        // Create policies
+        org.omg.CORBA.Policy[] policies = new org.omg.CORBA.Policy[POA_POLICIES_NUMBER];
+        policies[0] = rootPOA.create_id_assignment_policy(IdAssignmentPolicyValue.USER_ID);
+        policies[1] = rootPOA.create_lifespan_policy(LifespanPolicyValue.TRANSIENT);
+        policies[2] = new SasPolicy(sasComponent);
+        return rootPOA.create_POA(nameId + Math.random(), rootPOA.the_POAManager(), policies);
+    }
 
 }
