@@ -33,7 +33,6 @@ $page.setTitle("Attribute Editor")
     #set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
 
     <tr>
-      <input type="hidden" name="$intakeOption.CID" value="$intakeOption.OID">
 
       <td width="25%">
         <div align="center">
@@ -71,7 +70,6 @@ $page.setTitle("Attribute Editor")
     #set ( $intakeOption = $intake.AttributeOption.mapTo($newOption) )
 
     <tr>
-      <input type="hidden" name="$intakeOption.CID" value="$intakeOption.OID">
 
       <td width="25%">
         <div align="center">
@@ -123,4 +121,6 @@ $page.setTitle("Attribute Editor")
   </table> 
 
     <input type="submit" name="eventSubmit_doAlldone" value="All Done">
+    
+$intake.declareGroups()
 </form>
