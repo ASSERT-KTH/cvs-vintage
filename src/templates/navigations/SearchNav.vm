@@ -16,6 +16,31 @@
     &#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 </form>
 </td>
+
+#set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
+#if ($issueTypes && $issueTypes.size() > 0)
+<td>
+<form action="$link.setPage("Index.vm").setAction("SelectIssueType")" 
+    method="get">
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
+    value="$data.User.HomePage" />
+ <select name="$scarabG.Constant.NEW_ISSUE_TYPE" tabindex="3" 
+    onChange="this.form.submit();">
+
+  #foreach($issueType in $issueTypes)
+    #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+    <option#if ($issueType.QueryKey == $scarabR.CurrentIssueType.QueryKey) selected="selected"#end value="$issueType.QueryKey">$rmit.DisplayName</option>
+  #end
+ </select>
+## give actionEvent as hidden field so user does not have to click Go,
+## if javascript is enabled. show button only if script disabled.
+  <input type="hidden" value="foo" name="eventSubmit_doSelect" />
+  <noscript><input type="submit" value="Go" name="eventSubmit_doSelect" 
+      tabindex="4" /></noscript>
+</form>
+</td>
+#end
+
 <td>
 <form action="$link.setPage("Index.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
@@ -91,3 +116,4 @@
  </table>
 </div>
 #end
+

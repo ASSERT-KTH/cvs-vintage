@@ -9,20 +9,15 @@
 
 #if ($module)
 
-## ARTIFACT TYPES
-#set ($issueTypes = $module.getIssueTypes(true))
-#if ($issueTypes && $issueTypes.size() > 0)
-  ## once cross module searching is implemented we may want to change this,
-  ## but for now there is no reason to show any of these links, if the
-  ## module does not allow issues (such as the global module)
-  #if ($scarabR.CurrentModule.allowsIssues())
-    <div class="focus"><strong>
-    $link.setPage("SelectArtifactType.vm").setLabel("Select issue type")
-    </strong>
-    $renderer.render("navigations", "ArtifactTypes.vm")
-    </div>
-  #end
-#end
+<div id="projecttools" class="focus">
+  <div class="label">
+  <strong><a href="$link.setPage($data.User.HomePage)" 
+       class="selfref">Issue tracking</a></strong>
+  </div>
+  <div class="body">
+    $renderer.render("navigations", "CommonLinks.vm")
+ </div>
+</div>
 
 ## AMINISTRATION
   $renderer.render("navigations", "Administration.vm")

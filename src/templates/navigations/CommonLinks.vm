@@ -1,0 +1,19 @@
+<div>$link.setPage("SelectArtifactType.vm").setLabel("Select issue type")</div>
+
+#if ($scarabR.CurrentIssueType)
+  #set ($issueType = $scarabR.CurrentIssueType)
+  #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+  #if ($rmit.Dedupe)
+    #set ($wizardScreen = "entry,Wizard1.vm")
+  #else
+    #set ($wizardScreen = "entry,Wizard3.vm")
+  #end 
+
+  #if ($scarabR.CurrentModule.allowsNewIssues())
+    <div>$link.setPage("$wizardScreen").setLabel("Enter new")</div>
+  #end
+  <div>$link.setPage("QueryList.vm").setLabel("Queries")</div>
+  <div>$link.setPage("TemplateList.vm").setLabel("Issue templates")</div>
+  <div>$link.setPage("reports,ReportList.vm").setLabel("Reports")</div>
+
+#end
