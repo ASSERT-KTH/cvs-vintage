@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.3 2002/11/01 01:50:18 jon Exp $
+$Id: recording-issues.txt,v 1.4 2002/11/13 01:19:45 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -323,14 +323,14 @@ Comments:
 
 Dedupe notes (wizard2 note entry):
 
-    Create:
+    Create (uses Issue.addNote() method):
     
-        One ActivitySet
+        One ActivitySet (if there are multiple issues, then one activity set for all issues)
             TYPE_ID = 2 (ActivitySetTypePeer.EDIT_ISSUE__PK)
             AttachmentId = null
             User = user who created the note
         
-        Activity 1
+        Activity N  (if there are multiple issues, then one activiy for each issue)
             IssueId = SCB1 (100)
             AttributeId = 0
             TransactionId = ActivitySetId
