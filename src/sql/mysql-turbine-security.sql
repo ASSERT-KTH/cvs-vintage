@@ -17,7 +17,7 @@ INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (2, 'Developer');
 INSERT INTO TURBINE_USER 
     (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE) 
     VALUES
-    (0, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'turbine', 'turbine', 'CONFIRMED');
+    (0, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'turbine', 'turbine', 'CONFIRMED');
 
 # Assign the user 'turbine' a system-wide role 'turbine_root'
 # this must be done after the Module have been defined so the
