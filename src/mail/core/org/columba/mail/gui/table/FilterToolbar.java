@@ -34,11 +34,10 @@ import javax.swing.JToggleButton;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ToolbarToggleButton;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class FilterToolbar extends JPanel implements ActionListener {
 	public JToggleButton newButton;
@@ -81,7 +80,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 		//addSeparator();
 		newButton =
-			new ToolbarToggleButton(ImageLoader.getSmallImageIcon("mail-new.png"));
+			new ToolbarToggleButton(
+				ImageLoader.getSmallImageIcon("mail-new.png"));
 		newButton.setToolTipText(
 			MailResourceLoader.getString(
 				"menu",
@@ -113,7 +113,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		//addSeparator();
 
 		answeredButton =
-			new ToolbarToggleButton(ImageLoader.getSmallImageIcon("reply_small.png"));
+			new ToolbarToggleButton(
+				ImageLoader.getSmallImageIcon("reply_small.png"));
 		answeredButton.addActionListener(this);
 		answeredButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -159,7 +160,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(expungedButton);
 
 		attachmentButton =
-			new ToolbarToggleButton(ImageLoader.getSmallImageIcon("attachment.png"));
+			new ToolbarToggleButton(
+				ImageLoader.getSmallImageIcon("attachment.png"));
 		attachmentButton.setToolTipText(
 			MailResourceLoader.getString(
 				"menu",
@@ -320,32 +322,18 @@ public class FilterToolbar extends JPanel implements ActionListener {
 				tableController.getView().getTableModelFilteredView();
 
 			if (action.equals("ADVANCED")) {
-				// FIXME
 
 				Folder searchFolder =
 					(Folder) MainInterface.treeModel.getFolder(106);
-				FolderCommandReference[] r =
-					(FolderCommandReference[]) tableController
-						.getTableSelectionManager()
-						.getSelection();
 
-				//Folder folder = MainInterface.tableController.getFolder();
-				Folder folder = (Folder) r[0].getFolder();
+				Folder folder =
+					(Folder) tableController
+						.getMailFrameController()
+						.getTableSelection()[0]
+						.getFolder();
 
 				if (folder == null)
 					return;
-
-				/*
-				frameController.treeViewer.getFolderTree().setSelected( folder );
-				
-				FolderItem item = folder.getFolderItem();
-				
-				if ( !(item.isMessageFolder()) )
-				{
-					folder = MainInterface.treeViewer.getFolderTree().getFolder(101);
-				
-				}
-				*/
 
 				org.columba.mail.gui.config.search.SearchFrame frame =
 					new org.columba.mail.gui.config.search.SearchFrame(
