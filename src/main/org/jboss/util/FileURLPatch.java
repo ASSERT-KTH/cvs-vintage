@@ -24,19 +24,19 @@ import java.net.URLConnection;
  * all file based URLs when externalized with have spaces replaced with pluses.
  *      
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 
-	public static final String OBJECT_NAME= ":service=FileURLPatch";
+   public static final String OBJECT_NAME= ":service=FileURLPatch";
    Category log= Category.getInstance(FileURLPatch.class);
    private CustomURLStreamHandlerFactory customURLStreamHandlerFactory= new CustomURLStreamHandlerFactory();
    private boolean enabled= false;
    private FileHandler fileHander= new FileHandler();
 
-   //
-   // This class is used to hook into the URL protocol parsing sysytem
-   //
+   /** 
+    * This class is used to hook into the URL protocol parsing sysytem
+    */
    private class CustomURLStreamHandlerFactory implements URLStreamHandlerFactory {
 	  public URLStreamHandler createURLStreamHandler(String protocol) {
 		 if (protocol.equals("file"))
@@ -45,13 +45,15 @@ public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 	  }
    }
 
-   //
-   // This class will override how the file handler is implemented.
-   //
+   /** 
+    * This class will override how the file handler is implemented.
+	*/
    private class FileHandler extends sun.net.www.protocol.file.Handler {
 
-	  // When we externalize the URL we want to make all the spaces in the file name
-	  // a '+' character
+	  /**
+	   * When we externalize the URL we want to make all the spaces in the file name
+	   * a '+' character
+	   */
 	  protected String toExternalForm(URL u) {
 		 if (enabled) {
 			String s= super.toExternalForm(u);
@@ -60,8 +62,10 @@ public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 		 return super.toExternalForm(u);
 	  }
 
-	  // When we load a URL in we want to convert all the '+' characters in the file name
-	  // into spaces.
+	  /**
+	   * When we load a URL in we want to convert all the '+' characters in the file name
+	   * into spaces.
+	   */
 	  protected void parseURL(URL u, String spec, int start, int limit) {
 		 super.parseURL(u, spec, start, limit);
 		 if (enabled) {
@@ -70,6 +74,9 @@ public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 	  }
    }
 
+   /**
+    * This patch can be enabled and disabled at runtime by calling this method.
+	*/ 
    public void setEnabled(boolean enable) {
 	  this.enabled= enable;
 	  if (enabled)

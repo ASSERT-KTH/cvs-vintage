@@ -9,16 +9,11 @@ package org.jboss.util;
 import java.lang.Object;
 
 /**
- *   <description> 
- *      
+ *   Used to show the managment interface of the FileURLPatch object.
  *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface FileURLPatchMBean {
-
-
-
 	public void setEnabled(boolean enable);
 }
