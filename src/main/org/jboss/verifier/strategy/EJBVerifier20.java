@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.18 2002/04/23 02:50:29 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.19 2002/05/01 03:33:25 jwalters Exp $
  */
 
 
@@ -48,7 +48,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -1292,11 +1292,6 @@ public class EJBVerifier20 extends AbstractVerifier {
                         fireSpecViolationEvent(entity, method, new Section("12.2.9.m"));
                         status = false;
                     }
-
-					if (!hasRemoteReturnType(entity, method)) {
-                        fireSpecViolationEvent(entity, method, new Section("12.2.9.n"));
-                        status = false;
-                    }
                 }
             }
         }
@@ -1470,7 +1465,7 @@ public class EJBVerifier20 extends AbstractVerifier {
                     }
 
                     if (!throwsFinderException(method)) {
-                        fireSpecViolationEvent(entity, method, new Section("12.2.11.m"));
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.k"));
                         status = false;
                     }
 
@@ -1501,16 +1496,6 @@ public class EJBVerifier20 extends AbstractVerifier {
 
                     if (!hasMatchingEJBHome(bean, method)) {
                         fireSpecViolationEvent(entity, method, new Section("12.2.11.m"));
-                        status = false;
-                    }
-
-                    /**
-                     * Only check for remote return type if the bean actually has a
-                     * remote interface.
-                     */
-                    if (entity.getRemote() != null &&
-                        hasRemoteReturnType(entity, method)) {
-                        fireSpecViolationEvent(entity, method, new Section("12.2.11.n"));
                         status = false;
                     }
 				}
@@ -2792,6 +2777,11 @@ public class EJBVerifier20 extends AbstractVerifier {
                 if ( (isFinal(ejbRemove)) ||
                      (isStatic(ejbRemove)) ) {
                     fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.c"));
+                    status = false;
+                }
+
+                if (!hasVoidReturnType(ejbRemove)) {
+                    fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.d"));
                     status = false;
                 }
 
