@@ -27,6 +27,14 @@
 
 <module name="Http10Interceptor" javaClass="org.apache.tomcat.modules.server.Http10Interceptor"/>
 
+<module name="Http10Connector" javaClass="org.apache.tomcat.modules.server.Http10Interceptor"/>
+
+<module name="JniConnector" javaClass="org.apache.tomcat.modules.server.JNIConnectionHandler"/>
+
+<module name="Ajp12Connector" javaClass="org.apache.tomcat.modules.server.Ajp12Interceptor"/>
+
+<module name="Ajp13Connector" javaClass="org.apache.tomcat.modules.server.Ajp13Interceptor"/>
+
 <module name="NSConfig" javaClass="org.apache.tomcat.modules.config.NSConfig"/>
 
 <module name="IISConfig" javaClass="org.apache.tomcat.modules.config.IISConfig"/>
