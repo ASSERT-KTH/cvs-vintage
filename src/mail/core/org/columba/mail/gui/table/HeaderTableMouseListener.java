@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.gui.table.util.MessageNode;
 
 /**
  * Title:
@@ -45,30 +45,17 @@ public class HeaderTableMouseListener extends MouseAdapter {
 	}
 
 	protected void processPopup(MouseEvent event) {
-		MessageNode[] nodes = headerTableViewer.getView().getSelectedNodes();
 
-		//headerTableViewer.getActionListener().changeMessageActions();
+		int selectedRows = headerTableViewer.getView().getSelectedRowCount();
 
-		if (nodes.length == 0) {
+		if (selectedRows <= 1) {
 			// select node
 
 			int row =
-				headerTableViewer.getView().getTree().getRowForLocation(
-					event.getX(),
-					event.getY());
-			//headerTableViewer.getView().setRowSelectionInterval(row, row);
-			headerTableViewer.getView().getTree().setSelectionRow(row);
+				headerTableViewer.getView().rowAtPoint(
+					new Point(event.getX(), event.getY()));
+			headerTableViewer.getView().setRowSelectionInterval(row, row);
 
-		} else if (nodes.length == 1) {
-			// select node
-			headerTableViewer.getView().clearSelection();
-
-			int row =
-				headerTableViewer.getView().getTree().getRowForLocation(
-					event.getX(),
-					event.getY());
-			//headerTableViewer.getView().setRowSelectionInterval(row, row);
-			headerTableViewer.getView().getTree().setSelectionRow(row);
 		}
 
 		headerTableViewer.getPopupMenu().show(
@@ -84,7 +71,6 @@ public class HeaderTableMouseListener extends MouseAdapter {
 
 		}
 
-		
 	}
 
 	public void mouseReleased(MouseEvent event) {
@@ -93,24 +79,25 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			processPopup(event);
 
 		}
-		
-		
+
 	}
 
 	public void mouseClicked(MouseEvent event) {
-		//headerTableViewer.getActionListener().changeMessageActions();		
-		//headerTableViewer.showMessage();
+
 		if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
 			viewMessageAction.actionPerformed(null);
 		}
-		
-		if ( event.getClickCount() == 2 ) processDoubleClick();
+
+		if (event.getClickCount() == 2)
+			processDoubleClick();
 
 	}
 
 	protected void processDoubleClick() {
 		// open message in new message-frame
 
-		new OpenMessageWithMessageFrameAction(headerTableViewer.getMailFrameController()).actionPerformed(null);
+		new OpenMessageWithMessageFrameAction(
+			headerTableViewer.getMailFrameController()).actionPerformed(
+			null);
 	}
 }

@@ -21,10 +21,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JPopupMenu;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.table.TableColumn;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.config.HeaderItem;
@@ -54,9 +53,7 @@ import org.columba.mail.message.HeaderList;
  * @author Frederik
  */
 
-public class TableController implements TreeSelectionListener {
-
-	//private HeaderTableMenu menu;
+public class TableController {
 
 	private TableView headerTable;
 	private HeaderTableModel headerTableModel;
@@ -108,13 +105,8 @@ public class TableController implements TreeSelectionListener {
 
 		this.mailFrameController = mailFrameController;
 
-		//setLayout(new BorderLayout());
-
 		headerTableItem =
 			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
-
-		//.clone();
-		//headerTableItem.removeEnabledItem();
 
 		headerTableModel = new HeaderTableModel(headerTableItem);
 
@@ -123,34 +115,18 @@ public class TableController implements TreeSelectionListener {
 
 		tableSelectionManager = new TableSelectionManager();
 
-		// FIXME
-		//mailFrameController.getSelectionManager().addSelectionHandler( new TableSelectionHandler(view));
-
-		//tableSelectionManager.addFolderSelectionListener(this);
-
 		tableChangedListenerList = new Vector();
 
 		actionListener = new HeaderTableActionListener(this);
 
-		//menu = new HeaderTableMenu(this);
-
-		//headerTableDnd = new HeaderTableDnd(view);
-
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
-
-		/*
-		headerTableFocusListener = new HeaderTableFocusListener();
-		view.addFocusListener(headerTableFocusListener);
-		*/
 
 		headerItemActionListener =
 			new HeaderItemActionListener(this, headerTableItem);
 		filterActionListener = new FilterActionListener(this);
 
 		markAsReadTimer = new MarkAsReadTimer(this);
-
-		//view.addTreeSelectionListener(this);
 
 		getHeaderTableModel().getTableModelSorter().setSortingColumn(
 			headerTableItem.get("selected"));
@@ -215,61 +191,6 @@ public class TableController implements TreeSelectionListener {
 	 * set the render for each column
 	 */
 
-	/**
-	 * return a Dialog wich is used by the copy/move message operation
-	 * to get the destination folder
-	 */
-
-	/*
-	public org.columba.modules.mail.gui.tree.util.SelectFolderDialog getSelectFolderDialog()
-	{
-		return MainInterface.treeViewer.getSelectFolderDialog();
-	}
-	*/
-	/**
-	 * show the filter toolbar
-	 */
-
-	/*
-	public void showToolbar()
-	{
-		add(filterToolbar, BorderLayout.NORTH);
-		TableModelFilteredView model = getTableModelFilteredView();
-		try
-		{
-			model.setDataFiltering(true);
-		}
-		catch ( Exception ex )
-		{
-		}
-	
-		getHeaderTableModel().update();
-	
-		validate();
-		repaint();
-	}
-	*/
-	/**
-	 * hide the filter toolbar
-	 */
-
-	/*
-	public void hideToolbar()
-	{
-		remove(filterToolbar);
-		TableModelFilteredView model = getTableModelFilteredView();
-		try
-		{
-			model.setDataFiltering(false);
-		}
-		catch ( Exception ex )
-		{
-		}
-	
-		validate();
-		repaint();
-	}
-	*/
 	/**
 	 * return the ActionListener
 	 *
@@ -346,25 +267,6 @@ public class TableController implements TreeSelectionListener {
 	}
 
 	/**
-	 * return an array of all selected message uids
-	 */
-	/*
-	public Object[] getUids()
-	{
-		MessageNode[] nodes = getHeaderTable().getSelectedNodes();
-	
-		Object[] uids = new Object[nodes.length];
-	
-		for (int i = 0; i < nodes.length; i++)
-		{
-			uids[i] = nodes[i].getUid();
-		}
-	
-		return uids;
-	
-	}
-	*/
-	/**
 	 * return HeaderTable widget which does all the dirty work
 	 */
 	public TableView getHeaderTable() {
@@ -378,14 +280,6 @@ public class TableController implements TreeSelectionListener {
 		return headerTableModel;
 
 	}
-
-	/*
-	public void backupSelection()
-	{
-		if ( messageNodes != null )
-			getHeaderTable().setSelection( messageNodes );
-	}
-	*/
 
 	public void clearMessageNodeList() {
 		messageNodes = null;
@@ -422,69 +316,6 @@ public class TableController implements TreeSelectionListener {
 		view.getTree().setSelectionPaths(paths);
 
 		getTableSelectionManager().fireMessageSelectionEvent(null, uids);
-	}
-
-	public void valueChanged(TreeSelectionEvent e) {
-		DefaultMutableTreeNode node =
-			(DefaultMutableTreeNode) view
-				.getTree()
-				.getLastSelectedPathComponent();
-
-		if (node == null)
-			return;
-
-		MessageNode[] nodes = getView().getSelectedNodes();
-		if (nodes == null) {
-			return;
-		}
-
-		//getActionListener().changeMessageActions();
-
-		if (nodes.length == 0)
-			return;
-
-		newUidList = MessageNode.toUidArray(nodes);
-
-		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
-
-	}
-
-	/**
-	 * show the message in the messageviewer
-	 */
-
-	public void showMessage() {
-		/*
-		
-		FolderCommandReference[] reference =
-			(FolderCommandReference[]) 
-				getTableSelectionManager()
-				.getSelection();
-		
-		FolderTreeNode treeNode = reference[0].getFolder();
-		Object[] uids = reference[0].getUids();
-		
-		// this is no message-viewing action,
-		// but a selection of multiple messages
-		if (uids.length > 1)
-			return;
-		
-		
-		
-			getMailFrameController()
-			.attachmentController
-			.getAttachmentSelectionManager()
-			.setFolder(treeNode);
-		
-			getMailFrameController()
-			.attachmentController
-			.getAttachmentSelectionManager()
-			.setUids(uids);
-		
-		
-		MainInterface.processor.addOp(
-			new ViewMessageCommand(mailFrameController, reference));
-			*/
 	}
 
 	public void createPopupMenu() {
@@ -611,6 +442,7 @@ public class TableController implements TreeSelectionListener {
 		 */
 	public void showHeaderList(Folder folder, HeaderList headerList)
 		throws Exception {
+
 		getHeaderTableModel().setHeaderList(headerList);
 
 		boolean enableThreadedView =
@@ -628,22 +460,40 @@ public class TableController implements TreeSelectionListener {
 
 		tableChanged(ev);
 
-		
 		boolean ascending = isAscending();
 		int row = getView().getTree().getRowCount();
 
 		getView().clearSelection();
+
+		JViewport viewport =
+			((JScrollPane) getView().getParent().getParent()).getViewport();
+
 		//getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
-		
-		getView().getParent().validate();
-		
+
+		getView().revalidate();
+
+		viewport.validate();
+
+		System.out.println("table: " + getView().getRowCount());
+		System.out.println("height: " + getView().getHeight());
+
+		System.out.println("tree: " + getView().getTree().getRowCount());
+		System.out.println("height: " + getView().getTree().getHeight());
+		System.out.println(
+			"row*rowheight: "
+				+ (getView().getRowCount() * getView().getRowHeight()));
+
+		Rectangle rect =
+			new Rectangle(
+				getView().getSize().width,
+				getView().getSize().height,
+				5,
+				40);
 		if (!ascending)
 			getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
 		else
-			getView().scrollRectToVisible(getView().getCellRect(row-1, 0, false));
-			
-			
-		
+			getView().scrollRectToVisible(rect);
+		//getView().getCellRect(row - 1, 0, false));
 
 	}
 }
