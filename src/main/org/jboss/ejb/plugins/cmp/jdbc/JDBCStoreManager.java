@@ -59,7 +59,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -112,7 +112,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
    /** A Transaction manager so that we can link preloaded data to a transaction */
    private TransactionManager tm;
-
+   private TransactionLocal txDataMap;
    /**
     * Gets the container for this entity.
     * @return the container for this entity; null if container has not been set
@@ -246,21 +246,18 @@ public class JDBCStoreManager implements EntityPersistenceStore
             return null;
          }
 
-         // get the map between the tx and the txDataMap
-         TransactionLocal txMap = (TransactionLocal) getApplicationData(TX_DATA_KEY);
-
          // get the txDataMap from the txMap
-         Map txDataMap = (Map) txMap.get(tx);
+         Map txMap = (Map) txDataMap.get(tx);
 
          // do we have an existing map
          int status = tx.getStatus();
-         if (txDataMap == null && (status == Status.STATUS_ACTIVE || status == Status.STATUS_PREPARING))
+         if (txMap == null && (status == Status.STATUS_ACTIVE || status == Status.STATUS_PREPARING))
          {
             // create and add the new map
-            txDataMap = new HashMap();
-            txMap.set(tx, txDataMap);
+            txMap = new HashMap();
+            txDataMap.set(tx, txMap);
          }
-         return txDataMap;
+         return txMap;
       }
       catch (EJBException e)
       {
@@ -336,15 +333,15 @@ public class JDBCStoreManager implements EntityPersistenceStore
       Map moduleData = ejbModule.getModuleDataMap();
       synchronized (moduleData)
       {
-         TransactionLocal txDataMap = (TransactionLocal) moduleData.get(TX_DATA_KEY);
+         txDataMap = (TransactionLocal) moduleData.get(TX_DATA_KEY);
          if (txDataMap == null)
          {
             txDataMap = new TransactionLocal();
             moduleData.put(TX_DATA_KEY, txDataMap);
          }
+
       }
    }
-
    /**
     * Does almost nothing because other services such
     * as JDBC data sources may not have been started.
