@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.179 2003/06/10 22:10:42 spestov Exp $
+ * @version $Id: jEdit.java,v 1.180 2003/06/11 02:00:46 spestov Exp $
  */
 public class jEdit
 {
@@ -3419,10 +3419,12 @@ loop:		for(int i = 0; i < list.length; i++)
 				OperatingSystem.isDOSDerived()
 				|| OperatingSystem.isMacOS();
 			String path = buffer.getPath();
-			if((VFSManager.getVFSForPath(path).getCapabilities()
+
+			String symlinkPath = buffer.getSymlinkPath();
+			if((VFSManager.getVFSForPath(symlinkPath).getCapabilities()
 				& VFS.CASE_INSENSITIVE_CAP) != 0)
 			{
-				path = path.toLowerCase();
+				symlinkPath = symlinkPath.toLowerCase();
 			}
 
 			// if only one, clean, 'untitled' buffer is open, we
@@ -3440,13 +3442,13 @@ loop:		for(int i = 0; i < list.length; i++)
 
 				bufferHash.clear();
 
-				bufferHash.put(path,buffer);
+				bufferHash.put(symlinkPath,buffer);
 				return;
 			}
 
 			bufferCount++;
 
-			bufferHash.put(path,buffer);
+			bufferHash.put(symlinkPath,buffer);
 
 			if(buffersFirst == null)
 			{
