@@ -127,6 +127,9 @@ public class CopyMessageCommand extends FolderCommand {
 			// update progress bar
 			worker.setProgressBarValue(i);
 		}
+		
+		// we are done - clear the progress bar
+		worker.resetProgressBar();
 
 	}
 
@@ -183,6 +186,10 @@ public class CopyMessageCommand extends FolderCommand {
 				defaultCopy(srcFolder, destFolder, uids, worker);
 			}
 		}
+		
+		// We are done - clear the status message
+		worker.clearDisplayText();
+
 	}
 
 }

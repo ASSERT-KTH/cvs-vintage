@@ -74,6 +74,15 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 			worker.setProgressBarMaximum(i);
 
 	}
+	/** 
+	 * Convenience method for setting current to zero.
+	 * Must have the same effect as calling setCurrent(0)
+	 * 
+ 	 * @see org.columba.core.command.StatusObservable#resetCurrent()
+	 */
+	public void resetCurrent() {
+		setCurrent(0);
+	}
 
 	/**
 	 * set message of statusbar
@@ -130,7 +139,7 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	 * @see org.columba.core.command.StatusObservable#clearMessage()
 	 */
 	public void clearMessage() {
-		worker.setDisplayText("");
+		if ( worker != null) worker.setDisplayText("");
 	}
 
 }

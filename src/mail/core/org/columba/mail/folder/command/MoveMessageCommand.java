@@ -142,6 +142,8 @@ public class MoveMessageCommand extends CopyMessageCommand {
 			// expunge folder
 			srcFolder.expungeFolder();
 
+			// We are done - clear the status message
+			worker.clearDisplayText();
 		}
 
 	}

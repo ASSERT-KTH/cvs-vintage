@@ -62,6 +62,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 					"message",
 					"load_headers"));
 			getObservable().setMax(capacity);
+			getObservable().resetCurrent();
 		}
 
 		for (int i = 1; i <= capacity; i++) {
@@ -77,6 +78,13 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
 		// close stream
 		closeInputStream();
+
+		// we are done
+		if (getObservable() != null) {
+			getObservable().clearMessage();
+			getObservable().resetCurrent();
+		}
+		
 	}
 
 	public void save() throws Exception {

@@ -378,7 +378,13 @@ public abstract class AbstractSearchEngine {
 			getObservable().setMessage(
 				MailResourceLoader.getString("statusbar", "message", "search"));
 
-		return searchMessages(filter, null);
+		//return searchMessages(filter, null);
+		Object[] result = searchMessages(filter, null);
+		if (getObservable() != null) {
+			// clear status bar message now we are done
+			getObservable().clearMessage();
+		}
+		return result;
 	}
 
 	public abstract void sync() throws Exception;

@@ -35,6 +35,12 @@ public interface StatusObservable {
 	public void setCurrent(int i);
 	public void setMax(int i);
 	
+	/** 
+	 * Convenience method for setting current to zero.
+	 * Must have the same effect as calling setCurrent(0)
+	 */
+	public void resetCurrent();
+	
 	public boolean isCancelled();
 	public void cancel( boolean b );
 	

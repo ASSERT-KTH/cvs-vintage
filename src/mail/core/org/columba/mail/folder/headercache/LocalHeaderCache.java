@@ -29,6 +29,7 @@ import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.MessageFolderInfo;
@@ -110,14 +111,16 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		//System.out.println("Number of Messages : " + capacity);
 
-		if (getObservable() != null)
+		if (getObservable() != null) {
 			getObservable().setMessage(
-				folder.getName() + ": Loading headers from cache...");
-
-		if (getObservable() != null)
+				folder.getName() +
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"load_headers")); 
 			getObservable().setMax(capacity);
-
-		getObservable().setCurrent(0);
+			getObservable().resetCurrent(); // setCurrent(0)
+		}
 
 		int nextUid = -1;
 
@@ -157,11 +160,15 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		nextUid++;
 		ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
 		((LocalFolder) folder).setNextMessageUid(nextUid);
-		//worker.setDisplayText(null);
-
-		getObservable().setCurrent(capacity);
 
 		closeInputStream();
+
+		// we are done
+		if (getObservable() != null) {
+			getObservable().clearMessage();
+			getObservable().resetCurrent();
+		}
+		//getObservable().setCurrent(capacity);
 
 	}
 
@@ -292,6 +299,13 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 				((Integer) uids[uids.length - 1]).intValue() + 1);
 
 		}
+		
+		// we are done
+		if (getObservable() != null) {
+			getObservable().clearMessage();
+			getObservable().resetCurrent();
+		}
+		
 	}
 
 	/*

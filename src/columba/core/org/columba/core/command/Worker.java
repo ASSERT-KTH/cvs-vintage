@@ -164,6 +164,14 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		e.setNewValue(new Integer(progressBarValue));
 		fireWorkerStatusChanged(e);
 	}
+
+	/**
+	 * Convenience method for setting the progress bar value
+	 * to zero, i.e. to clear the progress bar.
+	 */
+	public void resetProgressBar() {
+		setProgressBarValue(0);
+	}
 	
 	public int getProgessBarMaximum() {
 		return progressBarMax;
@@ -186,6 +194,14 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 		e.setNewValue(displayText);
 		fireWorkerStatusChanged(e);
+	}
+	
+	/**
+	 * Convenience method for setting the display text to an empty
+	 * string, i.e. to clear the display text.
+	 */
+	public void clearDisplayText() {
+		setDisplayText("");
 	}
 
 	public void addWorkerStatusChangeListener(WorkerStatusChangeListener l) {
