@@ -395,11 +395,11 @@ public class JspC implements Options { //, JspCompilationContext {
                 servletout.write("</servlet-class>\n\t</servlet>\n");
             }
             if (mappingout != null) {
-                mappingout.write("\n\t<servlet-mapping>\n\t\t<url-pattern>");
-                mappingout.write(file);
-                mappingout.write("</url-pattern>\n\t\t<servlet-name>");
+                mappingout.write("\n\t<servlet-mapping>\n\t\t<servlet-name>");
                 mappingout.write(thisServletName);
-                mappingout.write("</servlet-name>\n\t</servlet-mapping>\n");
+                mappingout.write("</servlet-name>\n\t\t<url-pattern>");
+                mappingout.write(file);
+                mappingout.write("</url-pattern>\n\t</servlet-mapping>\n");
             }
             return true;
         } catch (JasperException je) {
