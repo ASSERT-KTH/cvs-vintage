@@ -80,7 +80,7 @@ public class StatusPanel extends JPanel implements SecurityStatusListener {
         case SecurityInformationController.DECRYPTION_SUCCESS:
             {
                 decryptionLabel.setIcon(ImageLoader
-                        .getImageIcon("pgp-signature-ok.png"));
+                        .getImageIcon("pgp-signature-ok-24.png"));
                 decryptionLabel.setToolTipText(MailResourceLoader.getString(
                         "menu", "mainframe", "security_decrypt_success"));
 
@@ -90,7 +90,7 @@ public class StatusPanel extends JPanel implements SecurityStatusListener {
         case SecurityInformationController.DECRYPTION_FAILURE:
             {
                 decryptionLabel.setIcon(ImageLoader
-                        .getImageIcon("pgp-signature-bad.png"));
+                        .getImageIcon("pgp-signature-bad-24.png"));
                 decryptionLabel.setToolTipText(MailResourceLoader.getString(
                         "menu", "mainframe", "security_encrypt_fail"));
 
@@ -100,7 +100,7 @@ public class StatusPanel extends JPanel implements SecurityStatusListener {
         case SecurityInformationController.VERIFICATION_SUCCESS:
             {
                 decryptionLabel.setIcon(ImageLoader
-                        .getImageIcon("pgp-signature-ok.png"));
+                        .getImageIcon("pgp-signature-ok-24.png"));
                 decryptionLabel.setToolTipText(MailResourceLoader.getString(
                         "menu", "mainframe", "security_verify_success"));
 
@@ -110,7 +110,7 @@ public class StatusPanel extends JPanel implements SecurityStatusListener {
         case SecurityInformationController.VERIFICATION_FAILURE:
             {
                 decryptionLabel.setIcon(ImageLoader
-                        .getImageIcon("pgp-signature-bad.png"));
+                        .getImageIcon("pgp-signature-bad-24.png"));
                 decryptionLabel.setToolTipText(MailResourceLoader.getString(
                         "menu", "mainframe", "security_verify_fail"));
 
@@ -120,7 +120,7 @@ public class StatusPanel extends JPanel implements SecurityStatusListener {
         case SecurityInformationController.NO_KEY:
             {
                 decryptionLabel.setIcon(ImageLoader
-                        .getImageIcon("pgp-signature-nokey.png"));
+                        .getImageIcon("pgp-signature-nokey-24.png"));
                 decryptionLabel.setToolTipText(MailResourceLoader.getString(
                         "menu", "mainframe", "security_verify_nokey"));
 
