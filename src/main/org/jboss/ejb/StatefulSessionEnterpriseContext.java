@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 
@@ -20,7 +21,8 @@ import javax.ejb.SessionContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.7 $
+ *      @author Daniel OConnor (docodan@mvcsoft.com)
+ *	@version $Revision: 1.8 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -30,6 +32,7 @@ public class StatefulSessionEnterpriseContext
     
    // Attributes ----------------------------------------------------
    private EJBObject ejbObject;
+   private EJBLocalObject ejbLocalObject;
 	
    private SessionContext ctx;
     
@@ -71,6 +74,8 @@ public class StatefulSessionEnterpriseContext
    
    public void setEJBObject(EJBObject eo) { ejbObject = eo; }
    public EJBObject getEJBObject() { return ejbObject; }
+   public void setEJBLocalObject(EJBLocalObject eo) { ejbLocalObject = eo; }
+   public EJBLocalObject getEJBLocalObject() { return ejbLocalObject; }
 	
 	public SessionContext getSessionContext()
 	{

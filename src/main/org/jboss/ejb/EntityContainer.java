@@ -37,7 +37,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.38 $
+*   @version $Revision: 1.39 $
 */
 public class EntityContainer
 extends Container
@@ -89,6 +89,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
    {
       return containerInvoker;
    }
+   
+    public LocalContainerInvoker getLocalContainerInvoker()
+    {
+       return localContainerInvoker;
+    }     
 
    public void setInstancePool(InstancePool ip)
    {

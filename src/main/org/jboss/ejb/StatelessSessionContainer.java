@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.19 $
+*   @version $Revision: 1.20 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -80,6 +80,11 @@ public class StatelessSessionContainer
     { 
         return containerInvoker; 
     }
+    
+    public LocalContainerInvoker getLocalContainerInvoker()
+    {
+       return localContainerInvoker;
+    }      
     
     public void setInstancePool(InstancePool ip) 
     { 

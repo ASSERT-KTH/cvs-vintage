@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 *    extends StatelessSessionContainer
 */
 public class MessageDrivenContainer
@@ -68,6 +68,11 @@ extends Container
     { 
         return containerInvoker; 
     }
+    
+    public LocalContainerInvoker getLocalContainerInvoker()
+    {
+       return localContainerInvoker;
+    }  
     
     public void setInstancePool(InstancePool ip) 
     { 
