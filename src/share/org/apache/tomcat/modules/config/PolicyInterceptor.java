@@ -174,12 +174,23 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	// Add default write "-" FilePermission for docBase 
 	fp = new FilePermission(base + File.separator + "-", "write");
 	p.add(fp);
+
+        // Add read permission for the directory itself, needed to use
+        // exists() on the directory
+        fp = new FilePermission(base,"read");
+        p.add(fp);
+
 	fp = new FilePermission(context.getWorkDir() + File.separator + "-",
 				"read");
 	p.add(fp);
 	fp = new FilePermission(context.getWorkDir() + File.separator + "-",
 				"write");
 	p.add(fp);
+
+        // Add read permission for the work directory itself, needed to use
+        // exists() on the directory
+        fp = new FilePermission(context.getWorkDir().toString(),"read");
+        p.add(fp);
 
 	// Read on the common and apps dir
 	fp = new FilePermission(cm.getInstallDir() + File.separator +
