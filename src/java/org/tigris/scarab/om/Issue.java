@@ -93,7 +93,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.158 2002/06/18 00:10:32 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.159 2002/06/18 00:12:08 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1735,7 +1735,6 @@ public class Issue
         newIssue.save();
         List matchingAttributes = getMatchingAttributeValuesList(newModule);
         List orphanAttributes = getOrphanAttributeValuesList(newModule);
-        List userAttributes = getUserAttributeValues();
         Attribute zeroAttribute = AttributeManager
             .getInstance(new NumberKey("0"));
 
