@@ -184,22 +184,24 @@ final class HttpSessionFacade implements HttpSession {
     public void setAttribute(String name, Object value) {
         checkValid();
         Object oldValue;
-        //      ServerSessionManager ssm=(ServerSessionManager)
-        //          realSession.getManager();
-        // Original code - it's up to session manager to decide
-        // what it can handle.
-        //      if (ssm.isDistributable() &&
-        //        !(value instanceof Serializable))
-        //          throw new IllegalArgumentException
-        //              (sm.getString("standardSession.setAttribute.iae"));
-        oldValue=realSession.getAttribute( name) ;
-        if (oldValue!=null) {
-            removeAttribute(name);
-        }
-        if (value instanceof HttpSessionBindingListener)
-           ((HttpSessionBindingListener) value).valueBound
-                (new HttpSessionBindingEvent( this, name));
-        realSession.setAttribute( name, value );
+        if (value instanceof HttpSessionBindingListener) {
+	    synchronized( this ) {
+		oldValue=realSession.getAttribute( name) ;
+		if (oldValue!=null) {
+		    removeAttribute(name);
+		}
+		((HttpSessionBindingListener) value).valueBound
+		    (new HttpSessionBindingEvent( this, name));
+		realSession.setAttribute( name, value );
+	    }
+	} else {
+	    oldValue=realSession.getAttribute( name) ;
+	    if (oldValue!=null) {
+		removeAttribute(name);
+	    }
+	    // no sync overhead
+	    realSession.setAttribute( name, value );
+	}
 
     }
 
@@ -264,10 +266,18 @@ final class HttpSessionFacade implements HttpSession {
     public void removeAttribute(String name) {
 	checkValid();
 	Object object=realSession.getAttribute( name );
-	realSession.removeAttribute(name);
 	if (object instanceof HttpSessionBindingListener) {
-	    ((HttpSessionBindingListener) object).valueUnbound
-		(new HttpSessionBindingEvent( this, name));
+	    synchronized( this ) {
+		// double check ( probably not needed since setAttribute calls
+		// remove if it detects a value
+		object=realSession.getAttribute( name );
+		realSession.removeAttribute(name);
+		((HttpSessionBindingListener) object).valueUnbound
+		    (new HttpSessionBindingEvent( this, name));
+	    }
+	} else {
+	    // Regular object, no sync overhead
+	    realSession.removeAttribute(name);
 	}
 
     }

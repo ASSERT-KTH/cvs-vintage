@@ -503,19 +503,27 @@ public final class MessageBytes implements Cloneable, Serializable {
     
     /**
      *  @deprecated The buffer are general purpose, caching for headers should
-     *  be done in headers
+     *  be done in headers. The second parameter allows us to pass a date format
+     * instance to avoid synchronization problems.
      */
-    public void setTime(long t) {
+    public void setTime(long t, DateFormat df) {
 	// XXX replace it with a byte[] tool
 	recycle();
 	if( dateValue==null)
 	    dateValue=new Date(t);
 	else
 	    dateValue.setTime(t);
-	strValue=DateTool.format1123(dateValue);
+	if( df==null )
+	    strValue=DateTool.format1123(dateValue);
+	else
+	    strValue=DateTool.format1123(dateValue,df);
 	hasStrValue=true;
 	hasDateValue=true;
 	type=T_STR;   
+    }
+
+    public void setTime(long t) {
+	setTime( t, null );
     }
 
     /** Set the buffer to the representation of an int

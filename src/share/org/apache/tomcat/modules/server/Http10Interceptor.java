@@ -63,9 +63,10 @@ package org.apache.tomcat.modules.server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.text.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.buf.*;
 import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.net.ServerSocketFactory;
@@ -127,8 +128,8 @@ public class Http10Interceptor extends PoolTcpConnector
 	Object thData[]=new Object[3];
 	HttpRequest reqA=new HttpRequest();
 	HttpResponse resA=new HttpResponse();
-    if (reportedname != null)
-        resA.setReported(reportedname);
+	if (reportedname != null)
+	    resA.setReported(reportedname);
 	cm.initRequest( reqA, resA );
 	thData[0]=reqA;
 	thData[1]=resA;
@@ -333,11 +334,19 @@ class HttpRequest extends Request {
 class HttpResponse extends  Response {
     Http10 http;
     String reportedname;
+    DateFormat dateFormat;
     
     public HttpResponse() {
         super();
     }
 
+    public void init() {
+	super.init();
+	dateFormat=new SimpleDateFormat(DateTool.RFC1123_PATTERN,
+					Locale.US);
+	dateFormat.setTimeZone(DateTool.GMT_ZONE);
+    }
+    
     public void setSocket( Socket s ) {
 	http=((HttpRequest)request).http;
     }
@@ -358,25 +367,26 @@ class HttpResponse extends  Response {
 
 	http.sendStatus( status, HttpMessages.getMessage( status ));
 
-    // Check if a Date is to be added
-    MessageBytes dateH=getMimeHeaders().getValue("Date");
-    if( dateH == null ) {
-    // no date header set by user
-        getMimeHeaders().setValue(  "Date" ).setTime( System.currentTimeMillis());
-    }
+	// Check if a Date is to be added
+	MessageBytes dateH=getMimeHeaders().getValue("Date");
+	if( dateH == null ) {
+	    // no date header set by user
+	    MessageBytes dateHeader=getMimeHeaders().setValue(  "Date" );
+	    dateHeader.setTime( System.currentTimeMillis(), dateFormat);
+	}
 
-    // return server name (or the reported one)
-    if (reportedname == null) {
-        Context ctx = request.getContext();
-        String server = ctx != null ? ctx.getEngineHeader() : 
+	// return server name (or the reported one)
+	if (reportedname == null) {
+	    Context ctx = request.getContext();
+	    String server = ctx != null ? ctx.getEngineHeader() : 
                 ContextManager.TOMCAT_NAME + "/" + ContextManager.TOMCAT_VERSION;    
-        getMimeHeaders().setValue(  "Server" ).setString(server);
-    } else {
-        if (reportedname.length() != 0)
-            getMimeHeaders().setValue(  "Server" ).setString(reportedname);
-    }
-
-    http.sendHeaders( getMimeHeaders() );
+	    getMimeHeaders().setValue(  "Server" ).setString(server);
+	} else {
+	    if (reportedname.length() != 0)
+		getMimeHeaders().setValue(  "Server" ).setString(reportedname);
+	}
+	
+	http.sendHeaders( getMimeHeaders() );
     }
 
     public void doWrite( byte buffer[], int pos, int count)

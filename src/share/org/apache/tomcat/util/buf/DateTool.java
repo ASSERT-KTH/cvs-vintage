@@ -84,7 +84,7 @@ public class DateTool {
 
     /** GMT timezone - all HTTP dates are on GMT
      */
-    private final static TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    public final static TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
 
     /** format for RFC 1123 date string -- "Sun, 06 Nov 1994 08:49:37 GMT"
      */
@@ -146,6 +146,15 @@ public class DateTool {
         if ((rfc1123DS != null) && (dt == rfc1123Sec))
             return rfc1123DS;
         rfc1123DS  = rfc1123Format.format( d );
+        rfc1123Sec = dt;
+        return rfc1123DS;
+    } 
+
+    public static String format1123( Date d,DateFormat df ) {
+        long dt = d.getTime() % 1000;
+        if ((rfc1123DS != null) && (dt == rfc1123Sec))
+            return rfc1123DS;
+        rfc1123DS  = df.format( d );
         rfc1123Sec = dt;
         return rfc1123DS;
     } 
