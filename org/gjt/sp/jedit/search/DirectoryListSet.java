@@ -24,8 +24,10 @@ package org.gjt.sp.jedit.search;
 
 //{{{ Imports
 import gnu.regexp.RE;
+import java.awt.Component;
 import java.io.*;
 import java.util.Vector;
+import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -33,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recursive directory search.
  * @author Slava Pestov
- * @version $Id: DirectoryListSet.java,v 1.2 2001/12/02 11:40:51 spestov Exp $
+ * @version $Id: DirectoryListSet.java,v 1.3 2002/05/28 01:50:19 spestov Exp $
  */
 public class DirectoryListSet extends BufferListSet
 {
@@ -72,9 +74,23 @@ public class DirectoryListSet extends BufferListSet
 	} //}}}
 
 	//{{{ _getFiles() method
-	protected String[] _getFiles()
+	protected String[] _getFiles(Component comp)
 	{
-		return MiscUtilities.listDirectory(directory,glob,recurse);
+		VFS vfs = VFSManager.getVFSForPath(directory);
+		Object session = vfs.createVFSSession(directory,comp);
+		if(session == null)
+			return null;
+
+		try
+		{
+			return vfs._listDirectory(session,directory,glob,recurse,comp);
+		}
+		catch(IOException io)
+		{
+			VFSManager.error(comp,directory,"ioerror",new String[]
+				{ io.toString() });
+			return null;
+		}
 	} //}}}
 
 	//{{{ Private members

@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.jEdit;
  * favorite and clicking 'delete' in the browser just deletes the
  * favorite, and not the directory itself.
  * @author Slava Pestov
- * @version $Id: FavoritesVFS.java,v 1.5 2002/01/16 09:21:51 spestov Exp $
+ * @version $Id: FavoritesVFS.java,v 1.6 2002/05/28 01:50:19 spestov Exp $
  */
 public class FavoritesVFS extends VFS
 {
@@ -57,8 +57,8 @@ public class FavoritesVFS extends VFS
 	public int getCapabilities()
 	{
 		// BROWSE_CAP not set because we don't want the VFS browser
-		// to create the default 'favorites' button on the tool bar
-		return /* BROWSE_CAP | */ DELETE_CAP;
+		// to create an item for this VFS in its 'Plugins' menu
+		return DELETE_CAP | LOW_LATENCY_CAP;
 	} //}}}
 
 	//{{{ getParentOfPath() method

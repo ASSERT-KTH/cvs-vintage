@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.4 2002/04/03 02:07:18 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.5 2002/05/28 01:50:19 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -62,8 +62,8 @@ public class FileRootsVFS extends VFS
 	public int getCapabilities()
 	{
 		// BROWSE_CAP not set because we don't want the VFS browser
-		// to create the default 'favorites' item in the 'More' menu
-		return 0 /* BROWSE_CAP | */;
+		// to create an item for this VFS in its 'Plugins' menu
+		return LOW_LATENCY_CAP;
 	} //}}}
 
 	//{{{ getParentOfPath() method

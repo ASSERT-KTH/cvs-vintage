@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2001 Slava Pestov
+ * Copyright (C) 1999, 2001, 2002 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,17 +23,14 @@
 package org.gjt.sp.jedit.search;
 
 //{{{ Imports
-import javax.swing.SwingUtilities;
-import java.util.Vector;
-import org.gjt.sp.jedit.io.VFSManager;
-import org.gjt.sp.jedit.*;
-import org.gjt.sp.util.Log;
+import java.awt.Component;
+import org.gjt.sp.jedit.View;
 //}}}
 
 /**
  * A file set for searching a user-specified list of buffers.
  * @author Slava Pestov
- * @version $Id: BufferListSet.java,v 1.2 2001/12/02 11:40:51 spestov Exp $
+ * @version $Id: BufferListSet.java,v 1.3 2002/05/28 01:50:19 spestov Exp $
  */
 public abstract class BufferListSet implements SearchFileSet
 {
@@ -41,7 +38,7 @@ public abstract class BufferListSet implements SearchFileSet
 	public String getFirstFile(View view)
 	{
 		if(files == null)
-			files = _getFiles();
+			files = _getFiles(view);
 
 		if(files == null || files.length == 0)
 			return null;
@@ -53,7 +50,7 @@ public abstract class BufferListSet implements SearchFileSet
 	public String getNextFile(View view, String file)
 	{
 		if(files == null)
-			files = _getFiles();
+			files = _getFiles(view);
 
 		if(files == null || files.length == 0)
 			return null;
@@ -87,7 +84,7 @@ public abstract class BufferListSet implements SearchFileSet
 	public String[] getFiles(View view)
 	{
 		if(files == null)
-			files = _getFiles();
+			files = _getFiles(view);
 
 		if(files == null || files.length == 0)
 			return null;
@@ -96,10 +93,10 @@ public abstract class BufferListSet implements SearchFileSet
 	} //}}}
 
 	//{{{ getFileCount() method
-	public int getFileCount()
+	public int getFileCount(View view)
 	{
 		if(files == null)
-			files = _getFiles();
+			files = _getFiles(view);
 
 		if(files == null)
 			return 0;
@@ -114,7 +111,7 @@ public abstract class BufferListSet implements SearchFileSet
 		return null;
 	} //}}}
 
-	protected abstract String[] _getFiles();
+	protected abstract String[] _getFiles(Component comp);
 
 	private String[] files;
 }

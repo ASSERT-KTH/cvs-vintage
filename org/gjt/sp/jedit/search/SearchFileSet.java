@@ -24,7 +24,7 @@ import org.gjt.sp.jedit.*;
 /**
  * An abstract interface for matching files.
  * @author Slava Pestov
- * @version $Id: SearchFileSet.java,v 1.2 2001/12/02 11:40:51 spestov Exp $
+ * @version $Id: SearchFileSet.java,v 1.3 2002/05/28 01:50:19 spestov Exp $
  */
 public interface SearchFileSet
 {
@@ -50,7 +50,7 @@ public interface SearchFileSet
 	/**
 	 * Returns the number of files in this file set.
 	 */
-	int getFileCount();
+	int getFileCount(View view);
 
 	/**
 	 * Returns the BeanShell code that will recreate this file set.
