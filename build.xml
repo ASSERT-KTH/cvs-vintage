@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.152 2004/02/14 21:59:06 reverbel Exp $ -->
+<!-- $Id: build.xml,v 1.153 2004/02/24 21:01:32 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -458,6 +458,8 @@
         <include name="org/jboss/ejb/plugins/cmp/jdbc/Mapper.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
+        <include name="org/jboss/naming/LinkRefPair.class"/>
+        <include name="org/jboss/naming/LinkRefPairObjectFactory.class"/>
         <include name="org/jboss/naming/*NamingContextFactory*.class"/>
         <include name="org/jboss/naming/client/**"/>
         <include name="org/jboss/naming/interceptors/*"/>
