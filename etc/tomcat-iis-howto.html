@@ -58,8 +58,8 @@ The redirector related file is <tt>isapi_redirect.dll</tt>.</p>
 <ol>
   <li>isapi_redirect.dll - The IIS server plugin, either obtain a pre-built
   DLL or build it yourself (see the build section).</li>
-  <li>worker.properties - A file that describes the host(s) and port(s) used
-  by the workers (Tomcat processes). A sample <tt>worker.properties</tt> can
+  <li>workers.properties - A file that describes the host(s) and port(s) used
+  by the workers (Tomcat processes). A sample <tt>workers.properties</tt> can
   be found in the CVS under <tt>jakarta-tomcat/etc</tt>. </li>
   <li>uriworkermap.properties - A file that maps URL-Path patterns to
   workers. A sample <tt>uriworkermap.properties</tt> can be found in the CVS
@@ -93,7 +93,7 @@ files are in d:\tomcat\conf.</p>
     your log level (can be <tt>debug</tt>, <tt>inform</tt>, <tt>error</tt>
 	or <tt>emerg</tt>). </li>
   <li>Add a string value with the name <tt>worker_file</tt> and a value of
-    <tt>D:\tomcat\conf\worker.properties</tt> (you can copy this file
+    <tt>D:\tomcat\conf\workers.properties</tt> (you can copy this file
 	from the CVS)</li>
   <li>Add a string value with the name <tt>worker_mount_file</tt>and a value of
     <tt>D:\tomcat\conf\uriworkermap.properties</tt> (you can copy this file
@@ -225,7 +225,7 @@ rejecting any request that contains WEB-INF in its URL-Path.</p>
 example to spread the load among different machines). To achieve such goal you will need
 to define several workers and assign each context with its own worker.</p>
 
-<p>Defining workers is done in <tt>worker.properties</tt>, this file includes
+<p>Defining workers is done in <tt>workers.properties</tt>, this file includes
 two types of entries:
 
 <ol>
@@ -251,6 +251,6 @@ served by ajp12second.</p>
 <h2>Feedback</h2>
 
 <p>Please send feedback, bug report or any additional information to
-<tt>tomcat-dev@jakarta.apache.org</tt></p>
+<tt>tomcat-user@jakarta.apache.org</tt></p>
 </body>
 </html>
