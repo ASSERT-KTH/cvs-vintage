@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.plugin;
 
 import java.io.File;
@@ -46,16 +47,11 @@ public abstract class AbstractPluginHandler {
 	 */
 	public AbstractPluginHandler(String id, String config) {
 		super();
-
 		this.id = id;
-
 		transformationTable = new Hashtable();
-
 		if (config != null)
 			pluginListConfig = new PluginListConfig(config);
-
 		ColumbaLogger.log.debug("initialising plugin-handler: "+id);
-
 	}
 
 	/**
@@ -79,7 +75,6 @@ public abstract class AbstractPluginHandler {
 		throws Exception {
 
 		return new DefaultClassLoader().instanciate(className, args);
-
 	}
 
 	public Object getPlugin(String name, String className, Object[] args)
@@ -88,26 +83,21 @@ public abstract class AbstractPluginHandler {
 		try {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
-          int dollarLoc = name.indexOf('$');
-          String pluginId = (dollarLoc > 0 ? name.substring(0, dollarLoc)
+                int dollarLoc = name.indexOf('$');
+                String pluginId = (dollarLoc > 0 ? name.substring(0, dollarLoc)
                              : name);
 
-          String type = pluginManager.getPluginType(pluginId);
+                String type = pluginManager.getPluginType(pluginId);
+                File pluginDir = pluginManager.getPluginDir(pluginId);
 
-          File pluginDir = pluginManager.getPluginDir(pluginId);
-
-          return PluginLoader.loadExternalPlugin(className,
+                return PluginLoader.loadExternalPlugin(className,
                                                  type,
                                                  pluginDir,
                                                  args);
 		} catch ( InvocationTargetException ex ) {
-			// TODO fix jdk1.3 compatibility issues with getCause()
-			ex.getCause().printStackTrace();
-
-
+			ex.getTargetException().printStackTrace();
 			throw ex;
 		}
-
 	}
 
 	public abstract void addExtension(String id, XmlElement extension);
