@@ -405,7 +405,7 @@ public class MailMenu extends JMenuBar {
 					"menu",
 					"mainframe",
 					"menu_view_next"));
-		//subMenu.setIcon(ImageLoader.getSmallImageIcon("next-message.png"));
+		subMenu.setIcon(ImageLoader.getSmallImageIcon("stock_right-16.png"));
 		subMenu.setMnemonic(KeyEvent.VK_N);
 
 		menuItem =
@@ -453,7 +453,7 @@ public class MailMenu extends JMenuBar {
 					"menu",
 					"mainframe",
 					"menu_view_prev"));
-		//subMenu.setIcon(ImageLoader.getSmallImageIcon("prev-message.png"));
+		subMenu.setIcon(ImageLoader.getSmallImageIcon("stock_left-16.png"));
 		subMenu.setMnemonic(KeyEvent.VK_P);
 
 		menuItem =
@@ -815,7 +815,7 @@ public class MailMenu extends JMenuBar {
 		add(utilitiesMenu);
 
 		subMenu =
-			new JMenu(
+			new CMenu(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -848,7 +848,7 @@ public class MailMenu extends JMenuBar {
 		utilitiesMenu.add(subMenu);
 
 		subMenu =
-			new JMenu(
+			new CMenu(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",

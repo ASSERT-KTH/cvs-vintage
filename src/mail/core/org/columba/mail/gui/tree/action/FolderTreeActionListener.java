@@ -170,7 +170,7 @@ public class FolderTreeActionListener implements ActionListener {
 				null,
 				null,
 				'P',
-				null);
+				KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
 		expungeAction.addActionListener(this);
 		expungeAction.setEnabled(true);
 
@@ -237,7 +237,7 @@ public class FolderTreeActionListener implements ActionListener {
 				ImageLoader.getSmallImageIcon("apply-filters-16.png"),
 				null,
 				'F',
-				null);
+				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
 		applyFilterAction.addActionListener(this);
 		applyFilterAction.setEnabled(true);
 
@@ -325,7 +325,7 @@ public class FolderTreeActionListener implements ActionListener {
 				ImageLoader.getSmallImageIcon("remotehost.png"),
 				ImageLoader.getImageIcon("remotehost.png"),
 				'0',
-				null);
+		KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
 
 		subscribeAction.addActionListener(this);
 		subscribeAction.setEnabled(true);

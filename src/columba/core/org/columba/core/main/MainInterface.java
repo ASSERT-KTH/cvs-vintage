@@ -30,15 +30,9 @@ import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
 
 public class MainInterface {
-	/**
-	 * 
-	 * uncomment this line for release versions
-	 * - date is only used for development snapshots
-	 * 
-	 */
-	//public static String version = "0.11.0";
-	public static String version = new Date().toString();
-	
+
+	public static String version = "0.11.0 cvs";
+
 	public static Boolean DEBUG = Boolean.FALSE;
 
 	public static Config config;

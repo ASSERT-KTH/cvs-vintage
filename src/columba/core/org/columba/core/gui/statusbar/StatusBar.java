@@ -18,6 +18,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,6 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -362,7 +364,7 @@ public class StatusBar
 				ImageLoader.getSmallImageIcon("stock_stop-16.png"),
 				ImageLoader.getImageIcon("stock_stop.png"),
 				'0',
-				null,
+				KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL,0),
 				false);
 
 		cancelAction.setEnabled(false);

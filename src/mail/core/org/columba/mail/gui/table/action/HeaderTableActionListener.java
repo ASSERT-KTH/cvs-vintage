@@ -486,7 +486,7 @@ public class HeaderTableActionListener implements ActionListener {
 				null,
 				null,
 				'0',
-				null);
+		KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 
 		filterSubjectAction =
 			new BasicAction(
@@ -594,7 +594,7 @@ public class HeaderTableActionListener implements ActionListener {
 				null,
 				null,
 				'0',
-				null);
+				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 		openMessageWithComposerAction =
 			new BasicAction(
 				MailResourceLoader.getString(
