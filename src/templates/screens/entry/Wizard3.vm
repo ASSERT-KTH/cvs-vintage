@@ -24,6 +24,8 @@ $page.setTitle("Enter issue")
   </table>
 </div>
 
+## Only show templates if user has not come through the wizard.
+#if (!$data.Parameters.getString("oldscreen"))
 <form method="get" action="$action">
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
 #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
@@ -50,6 +52,7 @@ $page.setTitle("Enter issue")
  </div>
 #end
 </form>
+#end
 
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
