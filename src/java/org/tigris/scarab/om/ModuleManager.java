@@ -64,7 +64,7 @@ import org.apache.turbine.util.template.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.2 2000/12/20 03:35:14 jon Exp $
+    @version $Id: ModuleManager.java,v 1.3 2001/01/03 06:58:33 jmcnally Exp $
 */
 public class ModuleManager
 {
@@ -84,8 +84,8 @@ public class ModuleManager
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.addJoin (ScarabModulePeer.MODULE_ID, ScarabRModuleVisitorPeer.MODULE_ID);
-        crit.add (ScarabRModuleVisitorPeer.VISITOR_ID, visitorid);
+        crit.addJoin (ScarabModulePeer.MODULE_ID, ScarabRModuleUserPeer.MODULE_ID);
+        crit.add (ScarabRModuleUserPeer.USER_ID, visitorid);
         return ScarabModulePeer.doSelect(crit);
     }
     /**
@@ -124,7 +124,8 @@ public class ModuleManager
     public static SelectorBox getProjectsBox(RunData data, int size)
         throws Exception
     {
-        int visitorid = ((TurbineUser)data.getUser()).getIdAsInt();
+        int visitorid = ((org.apache.turbine.om.security.TurbineUser)
+                         data.getUser()).getIdAsInt();
         if (visitorid <= 0)
             return null;
         
@@ -199,8 +200,10 @@ public class ModuleManager
             if (project_qacontact == null )
                 throw new Exception ("Could not find a registered user for the project qa contact!");
 
-            sm.setOwnerId( ((TurbineUser)project_owner).getIdAsInt() );
-            sm.setQaContactId( ((TurbineUser)project_qacontact).getIdAsInt() );
+            sm.setOwnerId( ((org.apache.turbine.om.security.TurbineUser)
+                            project_owner).getIdAsInt() );
+            sm.setQaContactId( ((org.apache.turbine.om.security.TurbineUser)
+                                project_qacontact).getIdAsInt() );
         }
         return sm;
     }
@@ -249,8 +252,10 @@ public class ModuleManager
 
         // you are related to a new project
         Criteria crit = new Criteria();
-        crit.add (ScarabRModuleVisitorPeer.MODULE_ID, module.getIdAsLong());
-        crit.add (ScarabRModuleVisitorPeer.VISITOR_ID, ((TurbineUser)data.getUser()).getIdAsLong());
-        ScarabRModuleVisitorPeer.doInsert(crit);
+        crit.add (ScarabRModuleUserPeer.MODULE_ID, module.getIdAsLong());
+        crit.add (ScarabRModuleUserPeer.USER_ID, 
+                  ((org.apache.turbine.om.security.TurbineUser)
+                   data.getUser()).getIdAsLong());
+        ScarabRModuleUserPeer.doInsert(crit);
     }
 }
