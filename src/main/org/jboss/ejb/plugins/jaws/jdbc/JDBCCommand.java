@@ -57,7 +57,11 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.33 $
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
+ * @version $Revision: 1.34 $ 
+ * 
+ * Revision:
+ * 20010621 danch: add getter for name
  */
 public abstract class JDBCCommand
 {
@@ -125,6 +129,11 @@ public abstract class JDBCCommand
       this.debug = factory.getDebug();
    }
 
+   /** return the name of this command */
+   public String getName() {
+      return name;
+   }
+   
    // Protected -----------------------------------------------------
 
    /**

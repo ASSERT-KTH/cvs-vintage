@@ -39,12 +39,19 @@ import org.jboss.util.FinderResults;
  * @see <related>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
+ * 
+ * Revision:
+ * 20010621 danch: abstracted the finders further so that this class can be 
+ *    used against the findAll and FindBy types of finders as well as the 
+ *    defined finders.
  */
 public class JDBCPreloadFinderCommand
    extends JDBCFinderCommand
 {
-   protected JDBCDefinedFinderCommand defined;
+   /** The finder we delegate to for setParameters and to get our SQL */
+   protected JDBCFinderCommand finderDelegate;
+   /** The load command we delegate to for our column list */
    protected JDBCLoadEntityCommand loadCommand;
 
    // Constructors --------------------------------------------------
@@ -58,28 +65,39 @@ public class JDBCPreloadFinderCommand
    {
       super(factory, "PreloadFinder " + f.getName());
       loadCommand = new JDBCLoadEntityCommand(factory);
-      defined = new JDBCDefinedFinderCommand(factory, f);
+      finderDelegate = new JDBCDefinedFinderCommand(factory, f);
+      buildSQL();
+   }
+   public JDBCPreloadFinderCommand(JDBCCommandFactory factory, JDBCFinderCommand finder) {
+      super(factory, "PreloadFinder "+finder.getName());
+      loadCommand = new JDBCLoadEntityCommand(factory);
+      finderDelegate = finder;
+      buildSQL();
+   }
+
+   public String getWhereClause() {
+      return finderDelegate.getWhereClause();
+   }
+   public String getFromClause() {
+      return finderDelegate.getFromClause();
+   }
+   public String getOrderByClause() {
+      return finderDelegate.getOrderByClause();
+   }
+
+   /** Helper method called by the constructors */
+   protected void buildSQL() {
       String sql = loadCommand.createSelectClause() + " "
-         + defined.getFromClause() + " "
-         + defined.getWhereClause() + " "
-         + defined.getOrderByClause();
+         + finderDelegate.getFromClause() + " "
+         + finderDelegate.getWhereClause() + " "
+         + finderDelegate.getOrderByClause();
       if (jawsEntity.hasSelectForUpdate())
       {
          sql += " FOR UPDATE";
       }
       setSQL(sql);
    }
-
-   public String getWhereClause() {
-      return defined.getWhereClause();
-   }
-   public String getFromClause() {
-      return defined.getFromClause();
-   }
-   public String getOrderByClause() {
-      return defined.getOrderByClause();
-   }
-
+   
    protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
       Collection result = new ArrayList();
@@ -162,6 +180,8 @@ public class JDBCPreloadFinderCommand
    protected void setParameters(PreparedStatement stmt, Object argOrArgs)
       throws Exception
    {
+      finderDelegate.setParameters(stmt, argOrArgs);
+/*      
       Object[] args = (Object[])argOrArgs;
 
       TypeMappingMetaData typeMapping = jawsEntity.getJawsApplication().getTypeMapping();
@@ -171,5 +191,6 @@ public class JDBCPreloadFinderCommand
          int jdbcType = typeMapping.getJdbcTypeForJavaType(arg.getClass());
          setParameter(stmt,i+1,jdbcType,arg);
       }
+*/
    }
 }

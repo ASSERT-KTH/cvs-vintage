@@ -69,11 +69,13 @@ import org.jboss.util.TimerQueue;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * Revision:
  * 20010621 Bill Burke: createDefinedFinderCommand creates different objects
- * based on the read-head flag of the FinderMetaData.
+ *    based on the read-head flag of the FinderMetaData.
+ * 20010621 danch: extended Bill's change to work on other finder types; 
+ *    removed stale todos. 
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -95,12 +97,10 @@ public class JDBCCommandFactory implements JPMCommandFactory
    
    /** a map of data preloaded within some transaction for some entity. This map
     *  is keyed by Transaction and the data are hashmaps with key = entityKey and
-    *  data = Object[] containing the entity data. 
-    *  @todo use weak references to ease memory. */
+    *  data = Object[] containing the entity data.  */
    private Map preloadedData = new HashMap();
    /** A map of data preloaded without a transaction context. key=entityKey, 
     *  data = Object[] containing entity data
-    *  @todo use weak references to ease memory. 
     */
    private Map nonTransactionalPreloadData = new HashMap();
    
@@ -125,7 +125,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
    {
       this.container = container;
       this.log = log;
-	  
+     
       this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
       
       String ejbName = container.getBeanMetaData().getEjbName();
@@ -144,10 +144,10 @@ public class JDBCCommandFactory implements JPMCommandFactory
       if (metadata == null) {
          throw new DeploymentException("No metadata found for bean " + ejbName);
       }
-            
+      
       tm = (TransactionManager) container.getTransactionManager();
       
-      softRefHandler.schedule(new PreloadRefQueueHandlerTask(), 50);
+      softRefHandler.schedule(new PreloadRefQueueHandlerTask());
    }
    
    // Public --------------------------------------------------------
@@ -195,7 +195,14 @@ public class JDBCCommandFactory implements JPMCommandFactory
    
    public JPMFindEntitiesCommand createFindAllCommand(FinderMetaData f)
    {
-      return new JDBCFindAllCommand(this, f);
+      if (f.hasReadAhead())
+      {
+         return new JDBCPreloadFinderCommand(this, new JDBCFindAllCommand(this, f));
+      }
+      else 
+      {
+         return new JDBCFindAllCommand(this, f);
+      }
    }
    
    public JPMFindEntitiesCommand createDefinedFinderCommand(FinderMetaData f)
@@ -213,7 +220,14 @@ public class JDBCCommandFactory implements JPMCommandFactory
    public JPMFindEntitiesCommand createFindByCommand(Method finderMethod, FinderMetaData f)
       throws IllegalArgumentException
    {
-      return new JDBCFindByCommand(this, finderMethod, f);
+      if (f.hasReadAhead())
+      {
+         return new JDBCPreloadFinderCommand(this, new JDBCFindByCommand(this, finderMethod, f));
+      }
+      else 
+      {
+         return new JDBCFindByCommand(this, finderMethod, f);
+      }
    }
    
    // JPMCommandFactory implementation ------------------------------
@@ -402,11 +416,14 @@ if (result == null)
     *  Reference.clear() 
    */
    private class PreloadRefQueueHandlerTask extends TimerTask {
-   	public void execute() throws Exception {
+      PreloadRefQueueHandlerTask() {
+         super(50);
+      }
+      
+      public void execute() throws Exception {
          PreloadData preloadData = (PreloadData)preloadRefQueue.poll();
          int handled = 0;
          while (preloadData != null && handled < 10) {
-            log.debug("PRELOAD: clearing "+preloadData.getKey());
             if (preloadData.getTransaction() != null) {
                Map entitiesInTransaction = null;
                // Do we really need this to be syncrhonized? What is the effect of 
@@ -433,6 +450,7 @@ if (result == null)
          }
       }
    }
+   
    /** Inner class used in the preload Data hashmaps so that we can wrap a 
     *  SoftReference around the data and still have enough information to remove
     *  the reference from the appropriate hashMap.
