@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.82 2002/08/10 21:56:12 spestov Exp $
+ * @version $Id: jEdit.java,v 1.83 2002/08/19 15:04:17 spestov Exp $
  */
 public class jEdit
 {
@@ -2445,8 +2445,9 @@ public class jEdit
 				int line = xe.getLine();
 				String message = xe.getMessage();
 
-				Object[] args = { fileName, new Integer(line), message };
-				GUIUtilities.error(null,"xmode-parse",args);
+				Object[] args = { fileName, new Integer(line), null,
+					message };
+				GUIUtilities.error(null,"xmode-error",args);
 			}
 
 			// give it an empty token marker to avoid problems
