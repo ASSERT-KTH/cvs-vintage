@@ -128,7 +128,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.6 2002/03/14 18:17:08 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.7 2002/03/15 04:45:54 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -265,7 +265,7 @@ public abstract class AbstractScarabModule
                 sb.append(me.getRealName());
                 firstTime = false;
             }
-            boolean isRoot = getModuleId().toString().equals(ROOT_ID);
+            boolean isRoot = getModuleId().equals(ROOT_ID) ? true : false;            
             // Make sure we have parents and if we are root, 
             // don't show ourselves again.
             if (parents.size() >= 1 && !isRoot)
