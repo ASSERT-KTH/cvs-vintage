@@ -26,7 +26,7 @@ $module.Deleted
 
 </table>
 #else
-<p class="alert">$l10n.NoModulesToEdit</a>
+<p><em>$l10n.NoModulesToEdit</em></p>
 #end
 
 #if ($data.User.getEditableModules().size() > 0)
@@ -36,7 +36,7 @@ $module.Deleted
 </div>
 </form>
 #else
-<p class="alert">$l10n.NoModuleEditPermission</p>
+<p><em>$l10n.NoModuleEditPermission</em></p>
 #end
 
 </div>

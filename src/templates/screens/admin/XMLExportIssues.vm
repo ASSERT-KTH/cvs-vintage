@@ -45,7 +45,7 @@ $l10n.SpecifyACommaSepparatedList
   <input type="submit" name="eventSubmit_doXmlissues" value="$l10n.Export" />
 </div>
 
-<script>
+<script type="text/javascript">
 <!--
 document.xmlexportissues.exportissues.focus();
 // -->

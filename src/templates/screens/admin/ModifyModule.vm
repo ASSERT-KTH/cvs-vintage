@@ -37,8 +37,7 @@
 
 #if ($userModules.size() == 0)
 
-<p class="alert">$l10n.NoModuleEditPermission
-</p>
+<p><em>$l10n.NoModuleEditPermission</em></p>
 
 #else
 
@@ -59,7 +58,7 @@
 
 #set ($moduleGroup = $intake.Module.mapTo($editModule))
 #if (!$moduleGroup.get("Id").isValid())
-<p class="alert">$moduleGroup.get("Id").Message</p>
+<p><em>$moduleGroup.get("Id").Message</em></p>
 #end
 
 <div class="axial">

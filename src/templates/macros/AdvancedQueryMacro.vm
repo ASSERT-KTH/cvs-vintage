@@ -262,10 +262,10 @@ from:&#160;<input type="text" size="20"
         #fieldErrorMsg($searchGroup.StateChangeFromDate "")
         #fieldErrorMsg($searchGroup.StateChangeToDate "")
         <input type="text" size=20 name="$searchGroup.StateChangeFromDate.Key"
-            value="$searchGroup.StateChangeFromDate">&#160;
+            value="$searchGroup.StateChangeFromDate" />&#160;
         to
         <input type="text" size=20 name="$searchGroup.StateChangeToDate.Key"
-            value="$searchGroup.StateChangeToDate">
+            value="$searchGroup.StateChangeToDate" />
         <p><small>$l10n.DateEg</small></p>
     </td>
  </tr>

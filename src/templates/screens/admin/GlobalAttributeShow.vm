@@ -19,7 +19,7 @@
 #if ($searchString && $searchString.length() > 0)
    #set ($attributes = $scarabR.AttributeSearchResults) 
    #if ( $attributes.isEmpty())
-      <p class="alert">$l10n.NoAttributesMatch</p>
+      <p class="infomark"><em>$l10n.NoAttributesMatch</em></p>
       #set ($attributes = $allAttributes)
    #end
 #end
@@ -73,7 +73,7 @@ $l10n.GlobalAttributes
 </div>
 
 #if ($attributes.isEmpty())
-<p class="alert">$l10n.ClickCreateNew</p>
+<p><em>$l10n.ClickCreateNew</em></p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>

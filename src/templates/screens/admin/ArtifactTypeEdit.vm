@@ -6,9 +6,9 @@
 <div class="app" id="div2-1-4-0">
 
 #if (!$issueTypeId && $issueTypeId.length() == 0)
-<p class="alert">$l10n.IssueTypeNotFound
+<p class="infomark"><em>$l10n.IssueTypeNotFound
 $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
-</p>
+</em></p>
 #else
 #set ($groups = $module.getAttributeGroups($issueType, false))
 
@@ -109,7 +109,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <h3>$l10n.AttributeGroups</h3>
 #set ($maxNum = $groups.size()+1)
 #if ($groups.isEmpty())
-    <p class="alert">$l10n.NoAttributeGroups</p>
+    <p><em>$l10n.NoAttributeGroups</em></p>
     <div class="functnbar3">
     <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />
     </div>
@@ -155,12 +155,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     #if ($issueTypeLock)
       $group.Order
     #else
-      #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
+      #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)
     #end
+   </td></tr>
 #end
 
-</td>
-</tr>
 </table>
 
 
@@ -178,7 +177,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <h3>$l10n.UserAttributes</h3>
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
 #if ($userAttrs.isEmpty())
-  <p class="alert">$l10n.NoUserAttributesForType</p>
+  <p><em>$l10n.NoUserAttributesForType</em></p>
 #if (!$issueTypeLock)
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />

@@ -35,7 +35,7 @@
 
 #if ($magSize == 0)
 <h3>$title</h3>
-<p class="alert">$l10n.NoAttributesDefinedForIssueType</p>
+<p><em>$l10n.NoAttributesDefinedForIssueType</em></p>
 #end
 
 #set ($allTemplates = $scarabR.IssueTemplates)

@@ -6,12 +6,12 @@
 <div class="app" id="div2-1-4-0">
 
 #if (!$groupId)
-<p class="alert">$l10n.GroupNotFound
-<a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a>.</p>
+<p class="infomark"><em>$l10n.GroupNotFound
+<a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a>.</em></p>
 #else
 
 <form method="post" action="$link.setPage("admin,GlobalAttributeGroupEdit.vm")">
-<input type="hidden" name="action" value="admin.AttributeGroupEdit">
+<input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeSelect.vm" />
 <input type="hidden" name="groupId" value="$groupId" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
@@ -94,7 +94,7 @@
 </table>
 <p><small>$l10n.DefaultText </small></p>
 #else
-  <p class="alert">$l10n.ClickAddButton</p>
+  <p><em>$l10n.ClickAddButton</em></p>
 #end
 
 <div class="functnbar3">

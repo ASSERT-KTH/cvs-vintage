@@ -2,7 +2,7 @@
    
 <form name="ConfigureForm" action="$link.setPage("admin,GlobalEmailSettings.vm")" 
     method="post">
-<input type="hidden" name="action" value="admin.GlobalEmailSettings">
+<input type="hidden" name="action" value="admin.GlobalEmailSettings" />
                            
 <h3>$l10n.EmailConfiguration</h3>
 <div class="axial">

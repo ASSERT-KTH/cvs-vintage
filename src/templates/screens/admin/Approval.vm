@@ -6,7 +6,7 @@
 
  <h3>$l10n.OpenSubmissions</h3>
 
-  <p class="alert">$l10n.NoItemsToApprove</p>
+ <p><em>$l10n.NoItemsToApprove</em></p>
 
 #else
 

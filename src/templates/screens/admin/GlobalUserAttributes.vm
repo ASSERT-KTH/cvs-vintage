@@ -47,7 +47,7 @@
 <h3>$l10n.GlobalUserAttributes</h3>
 
 #if ($userAttrs.isEmpty())
-<p class="alert">$l10n.CreateNewUserAttribute</p>
+<p><em>$l10n.CreateNewUserAttribute</em></p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>

@@ -6,12 +6,12 @@
 <div class="app" id="div2-1-4-0">
 
 #if (!$groupId)
-<p class="alert">$l10n.GroupNotFound 
-<a href="$link.setPage("admin,ManageArtifactTypes.vm")">$l10n.Here</a>.</p>
+<p class="infomark"><em>$l10n.GroupNotFound 
+<a href="$link.setPage("admin,ManageArtifactTypes.vm")">$l10n.Here</a>.</em></p>
 #else
 
 <form method="post" action="$link.setPage("admin,AttributeGroupEdit.vm")">
-<input type="hidden" name="action" value="admin.AttributeGroupEdit">
+<input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeSelect.vm" />
 <input type="hidden" name="groupId" value="$groupId" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
@@ -118,13 +118,11 @@
 </td>
  <td>#if ($locked) $raag.Order #else #numericSelect( "$raagGroup.Order.Key" 1 $group.Attributes.size() $raagGroup.Order.Value 1 ) #end</td>
  </tr>
- </td>
- </tr>
 #end
 </table>
 <p><small>$l10n.DefaultText </small></p>
 #else
-  <p class="alert">$l10n.ClickAddButton</p>
+  <p><em>$l10n.ClickAddButton</em></p>
 #end
 
 #if (!$issueType.Locked)

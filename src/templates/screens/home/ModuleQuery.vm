@@ -88,7 +88,7 @@
 </div>
 
 #else
-<p class="alert">$l10n.NoIssueTypesInModule</p>
+<p><em>$l10n.NoIssueTypesInModule</em></p>
 #end
 
 </form>

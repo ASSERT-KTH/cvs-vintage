@@ -148,27 +148,19 @@
 #end
 
 #macro (alert $text)
-   <div class="warningmessage">
-   <p>$text<p>
-   </div>
+   <p class="warningmark"><strong>$text</strong><p>
 #end
 
 #macro (confirm $text)
-   <div class="donemessage">
-   <p>$text<p>
-   </div>
+   <p class="donemark"><em>$text</em><p>
 #end
 
 #macro (info $text)
-   <div class="infomessage">
-   <p>$text<p>
-   </div>
+   <p class="infomark">$text</em></p>
 #end
 
 #macro (alert $text)
-   <div class="warningmessage">
-   <p><strong>Alert!</strong> $text<p>
-   </div>
+   <p class="warningmark"><strong>Alert! $text</strong></p>
 #end
 
 #macro (fieldErrorMsg $field $br)

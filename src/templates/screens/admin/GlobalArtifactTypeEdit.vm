@@ -110,7 +110,7 @@
   #numericSelect($agGroup.Order.Key 1 $maxNum $group.Order 1)</td> </tr>
 #end
 #else
-<p class="alert">$l10n.NoAttributeGroups</p>
+<p><em>$l10n.NoAttributeGroups</em></p>
 #end
 </table>
 
@@ -126,7 +126,7 @@
 <h3>$l10n.UserAttributes</h3>
 #set ($userAttrs = $issueType.getUserAttributes(false))
 #if ($userAttrs.isEmpty())
-  <p class="alert">$l10n.NoUserAttributesForType</p>
+  <p><em>$l10n.NoUserAttributesForType</em></p>
 
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;

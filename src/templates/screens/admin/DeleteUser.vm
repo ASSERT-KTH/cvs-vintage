@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteUser.vm,v 1.8 2002/11/04 15:19:21 thierrylach Exp $
+@version $Id: DeleteUser.vm,v 1.9 2003/04/15 23:39:44 beril Exp $
 *#
 
 #set ($state = $data.Parameters.getString("state"))
@@ -18,8 +18,8 @@
   <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageUserSearch.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
-  <input type="hidden" name="state" value="$nextState">
-  <input type="hidden" name="username" value="$username">
+  <input type="hidden" name="state" value="$nextState" />
+  <input type="hidden" name="username" value="$username" />
 
 #set ($user = $securityAdmin.getUserByUsername($username))
 #set ($loginNameData = $user.UserName)

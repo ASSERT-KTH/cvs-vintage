@@ -16,8 +16,8 @@
 <div class="app" id="div3-0-2-0">
 
 #if (!$attType)
-<p class="alert">$l10n.AttributeNotFound
-$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
+<p class="infomark"><em>$l10n.AttributeNotFound
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</em></p>
 #else
 
 <form action="$link.setPage("admin,IssueTypeAttributeEdit.vm")" method="post">
@@ -89,7 +89,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 #foreach ($rio in $rios)
     #set ($rioGroup = $intake.RIssueTypeOption.mapTo($rio))
     #indexedRows($velocityCount)
-     <td><input type="checkbox" name="delete_$rio.OptionId"></td>
+     <td><input type="checkbox" name="delete_$rio.OptionId" /></td>
      <td>$rio.AttributeOption.Name</td>
      <td>
        #set ($comma = "")

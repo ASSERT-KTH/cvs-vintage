@@ -40,7 +40,7 @@
 
 #if ($attributes.size() == 0)
 
-<p class="alert">$l10n.NoGlobalAttributes</p>
+<p><em>$l10n.NoGlobalAttributes</em></p>
 
 #else
 

@@ -15,8 +15,8 @@
   <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AddUser.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
-  <input type="hidden" name="state" value="execadduser">
-  <input type="hidden" name="lastAction" value="">
+  <input type="hidden" name="state" value="execadduser" />
+  <input type="hidden" name="lastAction" value="" />
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
 

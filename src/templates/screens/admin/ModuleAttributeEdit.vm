@@ -17,8 +17,8 @@
 <div class="app" id="div3-0-2-0">
 
 #if (!$attType)
-<p class="alert">$l10n.AttributeNotFound
-$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
+<p class="infomark"><em>$l10n.AttributeNotFound
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</em></p>
 #else
 
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="post">
@@ -40,6 +40,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
  <tr>
   <th>$l10n.InputType</th>
   <td>$attType.Name</td>
+ </tr>
  <tr>
   <th>$l10n.Name</th>
   <td>$attribute.Name</td>
@@ -92,7 +93,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
     #set ($rio = $issueType.getRIssueTypeOption($rmo.AttributeOption))
     #set ($locked = ($issueType.Locked) || ($ria.Locked) || ($rio && $rio.Locked))
     #indexedRows($velocityCount)
-    #if (!$issueType.Locked && !$ria.Locked) <td><input type="checkbox" name="delete_$rmo.OptionId" #if ($locked) disabled="disabled"#end ></td>#end
+    #if (!$issueType.Locked && !$ria.Locked) <td><input type="checkbox" name="delete_$rmo.OptionId" #if ($locked) disabled="disabled"#end /></td>#end
      <td>
        #set ($comma = "")
        #set ($parents = $rmo.AttributeOption.Parents)

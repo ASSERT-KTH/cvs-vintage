@@ -29,7 +29,7 @@
 
 #if ($availOptions.size() == 0)
 
-<p class="alert">$l10n.NoGlobalAttributeOptions</p>
+<p><em>$l10n.NoGlobalAttributeOptions</em></p>
 
 #else
 
