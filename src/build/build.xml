@@ -54,14 +54,10 @@
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
     <property name="build.deployer.classes.dir" value="${build.dir}/deployer/classes/"/>
 
-    <taskdef name="xmlbean" classname="com.dreambean.xmlbeans.ant.XMLBeans"
-     classpath="${lib.dir}/xmlbeans.jar" />
-
 
     <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded.
-	The xml.jar is only here to support the ejx editor app.
      -->
-    <property name="bootstrap.jars"             value="crimson.jar,jaxp.jar,jaas.jar,jboss-jdbc_ext.jar,jboss-jaas.jar,xml.jar"/>
+    <property name="bootstrap.jars"             value="crimson.jar,jaxp.jar,jaas.jar,jboss-jdbc_ext.jar,jboss-jaas.jar"/>
 
   <!-- Build classpath -->
   <path id="classpath">
@@ -188,28 +184,9 @@
   </target>
 
   <!-- =================================================================== -->
-  <!-- Create the EJX plugin BeanInfo classes                              -->
-  <!-- =================================================================== -->
-  <target name="xmlbeans" depends="compile">
-    <xmlbean destdir="${build.classes.dir}"
-             srcdir="${etc.dir}/beaninfo"
-             includes="**"
-    />
-    <javac srcdir="${build.classes.dir}"
-           destdir="${build.classes.dir}"
-           debug="on"
-           deprecation="off"
-           optimize="off"
-           includes="**/*BeanInfo.java"
-    >
-            <classpath refid="classpath"/>
-    </javac>
-  </target>
-
-  <!-- =================================================================== -->
   <!-- Creates the jar archives                                            -->
   <!-- =================================================================== -->
-  <target name="jar" depends="xmlbeans,compileTest">
+  <target name="jar" depends="compileTest">
     <copy todir="${build.classes.dir}">
         <fileset dir="${src.resources}"/>
     </copy>
@@ -295,27 +272,11 @@
     </jar>	 
   </target>
 
-  <!-- =================================================================== -->
-  <!-- Create the EJX plugin                                               -->
-  <!-- =================================================================== -->
-  <target name="ejx" depends="xmlbeans">
-    <jar jarfile="${build.lib.dir}/ext/ejxjboss.jar"
-         basedir="${build.classes.dir}"
-         manifest="${etc.dir}/ejxjboss.mf"
-         includes="org/jboss/ejb/deployment/**"
-    />
-
-    <jar jarfile="${build.lib.dir}/ext/ejxjaws.jar"
-         basedir="${build.classes.dir}"
-         manifest="${etc.dir}/ejxjaws.mf"
-         includes="org/jboss/ejb/plugins/jaws/deployment/**"
-    />
-  </target>
 
   <!-- =================================================================== -->
   <!-- Creates the binary structure                                        -->
   <!-- =================================================================== -->
-  <target name="main" depends="jar,ejx">
+  <target name="main" depends="jar">
      <mkdir dir="${dist.dir}"/>
      <mkdir dir="${dist.dir}/bin"/>
      <mkdir dir="${dist.dir}/lib/ext"/>
