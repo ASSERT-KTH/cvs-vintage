@@ -1,4 +1,4 @@
-// $Id: UMLExtendListModel.java,v 1.9 2003/09/14 18:10:43 bobtarling Exp $
+// $Id: UMLExtendListModel.java,v 1.10 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -454,7 +454,7 @@ public class UMLExtendListModel extends UMLBinaryRelationListModel  {
     /**
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#build(MModelElement, MModelElement)
      */
-    protected void build(MModelElement from, MModelElement to) {
+    protected void build(Object/*MModelElement*/ from, Object/*MModelElement*/ to) {
         if (org.argouml.model.ModelFacade.isAUseCase(from) && org.argouml.model.ModelFacade.isAUseCase(to)) {
             UseCasesFactory.getFactory().buildExtend(/*(MUseCase)*/ to, /*(MUseCase)*/ from);
         } else
@@ -466,8 +466,8 @@ public class UMLExtendListModel extends UMLBinaryRelationListModel  {
      */
     protected void connect(
 			   MutableGraphModel gm,
-			   MModelElement from,
-			   MModelElement to) {
+			   Object/*MModelElement*/ from,
+			   Object/*MModelElement*/ to) {
 	gm.connect(from, to, MExtend.class);
     }
 

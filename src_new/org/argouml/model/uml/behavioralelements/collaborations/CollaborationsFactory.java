@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.20 2003/09/14 18:10:45 bobtarling Exp $
+// $Id: CollaborationsFactory.java,v 1.21 2003/09/18 23:35:15 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,7 +136,8 @@ public class CollaborationsFactory extends AbstractUmlModelFactory {
     /**
      * Builds a default collaboration not attached to a classifier
      */
-    public MCollaboration buildCollaboration(MNamespace namespace) {
+    public MCollaboration buildCollaboration(Object/*MNamespace*/ ns) {
+        MNamespace namespace = (MNamespace)ns;
     	MCollaboration modelelement = createCollaboration();
     	modelelement.setNamespace(namespace);
     	modelelement.setName("newCollaboration");
@@ -307,7 +308,9 @@ public class CollaborationsFactory extends AbstractUmlModelFactory {
      * added to the first interaction inside the collaboration. If
      * there is no interaction yet, one is build.
      */
-    public MMessage buildMessage(MCollaboration collab, MAssociationRole role) {
+    public MMessage buildMessage(Object acollab, Object arole) {
+        MCollaboration collab = (MCollaboration)acollab;
+        MAssociationRole role = (MAssociationRole)arole;
     	MInteraction inter = null;
     	if (collab.getInteractions().size() == 0) {
 	    inter = buildInteraction(collab);

@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.29 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: Generator.java,v 1.30 2003/09/18 23:35:14 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,8 +174,7 @@ public abstract class Generator
 
     public abstract String generateExtensionPoint(MExtensionPoint op);
     public abstract String generateOperation(MOperation op, boolean documented);
-    public abstract String generateAttribute(
-        MAttribute attr,
+    public abstract String generateAttribute(MAttribute attr,
         boolean documented);
     public abstract String generateParameter(MParameter param);
     public abstract String generatePackage(MPackage p);

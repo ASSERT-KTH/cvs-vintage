@@ -1,4 +1,4 @@
-// $Id: UMLReflectionListModel.java,v 1.16 2003/09/04 20:11:43 thierrylach Exp $
+// $Id: UMLReflectionListModel.java,v 1.17 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,7 +137,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
      *  @return corresponding model element
      */
     protected MModelElement getModelElementAt(int index) {
-        MModelElement element = null;
+        Object/*MModelElement*/ element = null;
         if (_getMethod != null) {
             try {
                 Object collection = _getMethod.invoke(getContainer(), _noArgs);
@@ -164,7 +164,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
                 cat.error(e.toString() + " in UMLReflectionListModel.getElementAt()", e);
             }
         }
-        return element;
+        return (MModelElement)element;
     }
 
 
@@ -297,5 +297,4 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
     }
 
 }
-
 

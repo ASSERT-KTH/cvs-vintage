@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.6 2003/06/30 21:59:34 linus Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.6 2003/06/30 21:59:34 linus Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -43,7 +43,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 public abstract class AbstractActionAddModelElement extends UMLChangeAction {
 
-    private MModelElement _target;
+    private Object/*MModelElement*/ _target;
     private boolean _multiSelect = true;
     private boolean _exclusive = true;
     
@@ -57,7 +57,7 @@ public abstract class AbstractActionAddModelElement extends UMLChangeAction {
      * @return MModelElement
      */
     public MModelElement getTarget() {
-        return _target;
+        return (MModelElement)_target;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.24 2003/09/08 00:36:42 bobtarling Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace namespace = (MNamespace) handle;
+        Object/*MNamespace*/ namespace = (MNamespace) handle;
         Object target = TargetManager.getInstance().getTarget();
         Object collaboration = null;
         if (ModelFacade.isAOperation(target)) {
@@ -105,7 +105,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         return CollaborationsHelper.getHelper().isAddingCollaborationAllowed(
             ns);
     }

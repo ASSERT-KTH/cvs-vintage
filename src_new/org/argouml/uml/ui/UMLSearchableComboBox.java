@@ -1,6 +1,4 @@
-
-
-// $Id: UMLSearchableComboBox.java,v 1.5 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLSearchableComboBox.java,v 1.6 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLSearchableComboBox.java,v 1.5 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLSearchableComboBox.java,v 1.6 2003/09/18 23:35:13 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.ComboBoxModel;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -94,8 +93,8 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
                     }
                 }
                 if (org.argouml.model.ModelFacade.isAModelElement(element)) {
-                    MModelElement elem = (MModelElement) element;
-                    String name = elem.getName();
+                    Object/*MModelElement*/ elem = (MModelElement) element;
+                    String name = ModelFacade.getName(elem);
                     if (name != null && name.startsWith(text)) {
                         return element;
                     }

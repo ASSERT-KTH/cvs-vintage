@@ -1,6 +1,4 @@
-
-
-// $Id: ActionDeploymentDiagram.java,v 1.15 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.16 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +66,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 					       "The argument " + handle
 					       + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         return new UMLDeploymentDiagram(ns);
     }
 
@@ -86,7 +84,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 					       "The argument " + handle
 					       + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         // may only occur as child of the model or in a package
         return (
 		ns == ProjectManager.getManager().getCurrentProject().getModel()

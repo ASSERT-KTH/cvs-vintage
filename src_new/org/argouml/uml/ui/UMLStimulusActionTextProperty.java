@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextProperty.java,v 1.5 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLStimulusActionTextProperty.java,v 1.6 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class UMLStimulusActionTextProperty  {
     
     
     public void setProperty(UMLUserInterfaceContainer container, String newValue) {
-	MStimulus  stimulus = (MStimulus) container.getTarget();
+	Object/*MStimulus*/  stimulus = (MStimulus) container.getTarget();
 	if (stimulus != null) {
 
 	    String oldValue = getProperty(container);
@@ -58,8 +58,8 @@ public class UMLStimulusActionTextProperty  {
 		    Object action = ModelFacade.getDispatchAction(stimulus);
 		    ModelFacade.setName(action, newValue);
 		    // to rupdate the diagram set the stimulus name again
-		    String dummyStr =  new String(stimulus.getName());
-		    stimulus.setName( dummyStr);
+		    String dummyStr =  new String(ModelFacade.getName(stimulus));
+		    ModelFacade.setName(stimulus, dummyStr);
 		    
 		 
 		    
@@ -70,7 +70,7 @@ public class UMLStimulusActionTextProperty  {
     
     public String getProperty(UMLUserInterfaceContainer container) {
         String value = null;       
-	MStimulus stimulus = (MStimulus) container.getTarget();
+	Object/*MStimulus*/ stimulus = (MStimulus) container.getTarget();
 	if (stimulus != null) {
 	    Object action = ModelFacade.getDispatchAction(stimulus);
 	    if (action != null) value = ModelFacade.getName(action);
@@ -88,5 +88,4 @@ public class UMLStimulusActionTextProperty  {
     void targetChanged() {
     }
 }
-
 

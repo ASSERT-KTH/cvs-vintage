@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.71 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.72 2003/09/18 23:35:15 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -686,14 +686,14 @@ public class CoreHelper {
      * @param clazz
      * @return Collection
      */
-    public Collection getExtendingElements(MGeneralizableElement clazz) {
+    public Collection getExtendingElements(Object/*MGeneralizableElement*/ clazz) {
         if (clazz == null)
             return new ArrayList();
-        Iterator it = clazz.getSpecializations().iterator();
+        Iterator it = ModelFacade.getSpecializations(clazz).iterator();
         List list = new ArrayList();
         while (it.hasNext()) {
-            MGeneralization gen = (MGeneralization) it.next();
-            MGeneralizableElement client = gen.getChild();
+            Object/*MGeneralization*/ gen = it.next();
+            Object/*MGeneralizableElement*/ client = ModelFacade.getChild(gen);
             if (client != null) {
                 list.add(client);
             }

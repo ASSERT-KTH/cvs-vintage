@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.53 2003/09/14 15:04:26 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.54 2003/09/18 23:35:14 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.53 2003/09/14 15:04:26 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.54 2003/09/18 23:35:14 bobtarling Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -67,6 +67,7 @@ import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MMultiplicityRange;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 import ru.novosoft.uml.model_management.MPackage;
 
@@ -156,9 +157,13 @@ public class GeneratorDisplay extends Generator {
      * @see org.argouml.application.api.NotationProvider#generateOperation(MOperation, boolean)
      */
     public String generateOperation(MOperation op, boolean documented) {
-        String stereoStr = generateStereotype(op.getStereotype());
-        String visStr = generateVisibility(op.getVisibility());
-        String nameStr = generateName(op.getName());
+        Object stereo = null;
+        if (ModelFacade.getStereotypes(op).size() > 0) {
+            stereo = ModelFacade.getStereotypes(op).iterator().next();
+        }
+        String stereoStr = generateStereotype((MStereotype)stereo);
+        String visStr = generateVisibility((MVisibilityKind)ModelFacade.getVisibility(op));
+        String nameStr = generateName(ModelFacade.getName(op));
 
         // the parameters
         StringBuffer parameterListBuffer = new StringBuffer();
@@ -473,8 +478,8 @@ public class GeneratorDisplay extends Generator {
     }
 
     private String generateMessageNumber(
-        MMessage m,
-        MMessage pre,
+        Object/*MMessage*/ m,
+        Object/*MMessage*/ pre,
         int position) {
         Collection c;
         Iterator it;
@@ -490,7 +495,7 @@ public class GeneratorDisplay extends Generator {
             mname = generateMessageNumber((MMessage)act);
 
         if (pre != null) {
-            c = pre.getMessages3();
+            c = ModelFacade.getMessages3(pre);
             submax = c.size();
             it = c.iterator();
             while (it.hasNext() && it.next() != m)
@@ -638,10 +643,10 @@ public class GeneratorDisplay extends Generator {
         return predecessors + number + " : " + action;
     }
 
-    public String generateAssociationFrom(MAssociation a, MAssociationEnd ae) {
+    public String generateAssociationFrom(Object/*MAssociation*/ a, MAssociationEnd ae) {
         // TODO: does not handle n-ary associations
         String s = "";
-        Collection connections = a.getConnections();
+        Collection connections = ModelFacade.getConnections(a);
         Iterator connEnum = connections.iterator();
         while (connEnum.hasNext()) {
             Object ae2 = /*(MAssociationEnd)*/ connEnum.next();

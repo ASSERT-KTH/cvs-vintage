@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.20 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: ActionSequenceDiagram.java,v 1.21 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class ActionSequenceDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         Object collaboration = null;
         Object target = TargetManager.getInstance().getModelTarget();
         if (ModelFacade.isAOperation(target)) {
@@ -111,7 +111,7 @@ public class ActionSequenceDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         return (
             org.argouml.model.ModelFacade.isACollaboration(ns)
                 || org.argouml.model.ModelFacade.isAClassifier(ns)

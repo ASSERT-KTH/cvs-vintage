@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.8 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLExpressionBodyField.java,v 1.9 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.*;
 
 import org.apache.log4j.Logger;
 import java.lang.reflect.*;
+import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.*;
 
 /**
@@ -77,13 +78,13 @@ public class UMLExpressionBodyField extends JTextArea implements DocumentListene
     
     private void update() {
         String oldText = getText();
-        String newText = _model.getBody();
+        Object newText = ModelFacade.getBody(_model);
 	cat.debug("UMLExpressionBodyField: update: " + oldText + " " + newText);
 
 	if (oldText == null || newText == null || !oldText.equals(newText)) {
             if (oldText != newText) {
 		cat.debug("setNewText!!");
-                setText(newText);
+                setText((String)newText);
             }
         }
     }

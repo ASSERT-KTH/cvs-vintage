@@ -1,4 +1,4 @@
-// $Id: AbstractActionNewModelElement.java,v 1.6 2003/06/29 23:50:02 linus Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.6 2003/06/29 23:50:02 linus Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.application.api.Argo;
@@ -34,7 +34,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 public abstract class AbstractActionNewModelElement extends UMLChangeAction {
 
-    private MModelElement _target;
+    private Object/*MModelElement*/ _target;
     
     protected AbstractActionNewModelElement() {
         super(Argo.localize("CoreMenu", "action.new"), true, NO_ICON);
@@ -44,7 +44,7 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
      * Returns the target.
      * @return MModelElement
      */
-    public MModelElement getTarget() {
+    public Object/*MModelElement*/ getTarget() {
         return _target;
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionUseCaseDiagram.java,v 1.13 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionUseCaseDiagram.java,v 1.14 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class ActionUseCaseDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         return new UMLUseCaseDiagram(ns);
     }
 

@@ -1,6 +1,4 @@
-
-
-// $Id: ActionStateDiagram.java,v 1.22 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: ActionStateDiagram.java,v 1.23 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +30,6 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelpe
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
@@ -81,14 +77,14 @@ public class ActionStateDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         Object target = TargetManager.getInstance().getModelTarget();
         // TODO: get rid of the parameter ns
-        MStateMachine machine =
+        Object/*MStateMachine*/ machine =
             StateMachinesFactory.getFactory().buildStateMachine(
                 (MModelElement) target);
         UMLStateDiagram d =
-            new UMLStateDiagram(machine.getNamespace(), machine);
+            new UMLStateDiagram(ModelFacade.getNamespace(machine), machine);
         return d;
     }
 
@@ -102,7 +98,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        MNamespace ns = (MNamespace) handle;
+        Object/*MNamespace*/ ns = (MNamespace) handle;
         if (org.argouml.model.ModelFacade.isAClassifier(ns))
             return true;
         return false;

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxNavigator.java,v 1.7 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLComboBoxNavigator.java,v 1.8 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,8 +35,6 @@ import javax.swing.JPanel;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.ui.targetmanager.TargetManager;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  *   This class implements a panel that adds a navigation button
@@ -79,7 +77,7 @@ public class UMLComboBoxNavigator extends JPanel implements ActionListener {
         if (item instanceof UMLComboBoxEntry) {
             UMLComboBoxEntry entry = (UMLComboBoxEntry) item;
             if (!entry.isPhantom()) {
-                MModelElement target = entry.getElement(null);
+                Object/*MModelElement*/ target = entry.getElement(null);
                 if (target != null) {
                     _button.setEnabled(true);
                 } else
@@ -102,7 +100,7 @@ public class UMLComboBoxNavigator extends JPanel implements ActionListener {
             if (item instanceof UMLComboBoxEntry) {
                 UMLComboBoxEntry entry = (UMLComboBoxEntry) item;
                 if (!entry.isPhantom()) {
-                    MModelElement target = entry.getElement(null);
+                    Object/*MModelElement*/ target = entry.getElement(null);
                     if (target != null) {
                         TargetManager.getInstance().setTarget(target);
                     }
@@ -115,7 +113,7 @@ public class UMLComboBoxNavigator extends JPanel implements ActionListener {
             if (item instanceof UMLComboBoxEntry) {
                 UMLComboBoxEntry entry = (UMLComboBoxEntry) item;
                 if (!entry.isPhantom()) {
-                    MModelElement target = entry.getElement(null);
+                    Object/*MModelElement*/ target = entry.getElement(null);
                     if (target != null) {
                         _button.setEnabled(true);
                     } else

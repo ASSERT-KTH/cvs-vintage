@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.4 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: ActionMultiplicity.java,v 1.5 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.model.ModelFacade;
 
 public class ActionMultiplicity extends UMLAction {
     String str = "";
-    MMultiplicity mult = null;
+    Object/*MMultiplicity*/ mult = null;
 
 
     ////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ public class ActionMultiplicity extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    protected ActionMultiplicity(MMultiplicity m, String s) {
+    protected ActionMultiplicity(Object/*MMultiplicity*/ m, String s) {
 	//super(m.getLower() + ".." + m.getUpper(), NO_ICON);
 	super(m.toString(), NO_ICON);
 	str = s;

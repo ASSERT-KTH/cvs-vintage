@@ -1,4 +1,4 @@
-// $Id: UMLStimulusListModel.java,v 1.4 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLStimulusListModel.java,v 1.5 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 import ru.novosoft.uml.behavior.common_behavior.MObject;
 import java.util.*;
 import java.awt.*;
+import org.argouml.model.ModelFacade;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
@@ -50,7 +51,7 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
     }
     
     public void open(int index) {
-        MModelElement stimulus = getModelElementAt(index);
+        Object/*MModelElement*/ stimulus = getModelElementAt(index);
         if (stimulus != null) {
             navigateTo(stimulus);
         }
@@ -67,21 +68,21 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
     }
 
     protected MModelElement getModelElementAt(int index) {
-        MModelElement elem = null;
+        Object/*MModelElement*/ elem = null;
         Collection stimuli = getStimuli();
         if (stimuli != null) {
             elem = elementAtUtil(stimuli, index, MStimulus.class);
         }
-        return elem;
+        return (MModelElement)elem;
     }
 
     private Collection getStimuli() {
-	MObject obj = (MObject) getTarget();
+	Object/*MObject*/ obj = (MObject) getTarget();
 	Collection stimuli = null;
         if (stimulusType.equals("sent") ) {
-	    stimuli = obj.getStimuli3();
+	    stimuli = ModelFacade.getStimuli3(obj);
 	} else if (stimulusType.equals("received") ) {
-	    stimuli = obj.getStimuli2();
+	    stimuli = ModelFacade.getStimuli2(obj);
   	}
 	return stimuli;
 		   
@@ -98,7 +99,6 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
     }
 
 }
-
 
 
 

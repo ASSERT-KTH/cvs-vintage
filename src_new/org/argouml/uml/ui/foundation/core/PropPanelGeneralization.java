@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.34 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.35 2003/09/18 23:35:14 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
         }
     }
 
-    private boolean isAcceptible(MGeneralizableElement fixed,
+    private boolean isAcceptible(Object/*MGeneralizableElement*/ fixed,
 				 MModelElement candidate) {
         boolean isCompatible = true;
         Class[] keys = {

@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.17 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: ActionAddMessage.java,v 1.18 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,6 @@ import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigNode;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.collaborations.MMessage;
-
 /** Action to add a message.
  *  @stereotype singleton
  */
@@ -68,7 +65,7 @@ public class ActionAddMessage extends UMLChangeAction {
     	if (!(ModelFacade.isAAssociationRole(target))
 	    && ModelFacade.isACollaboration(ModelFacade.getNamespace(target)))
 	    return;
-    	MAssociationRole ar = (MAssociationRole) target;
+    	Object/*MAssociationRole*/ ar = (MAssociationRole) target;
         this.addMessage(ar);
         super.actionPerformed(ae);
     }
@@ -79,12 +76,12 @@ public class ActionAddMessage extends UMLChangeAction {
      * diagram </p>
      * @param ar the associationRole to which the new message must be added
      **/
-    public MMessage addMessage(MAssociationRole ar) {
-        MCollaboration collab = (MCollaboration) ar.getNamespace();
-        MMessage msg =
+    public Object/*MMessage*/ addMessage(Object/*MAssociationRole*/ ar) {
+        Object/*MCollaboration*/ collab = ModelFacade.getNamespace(ar);
+        Object/*MMessage*/ msg =
 	    UmlFactory.getFactory().getCollaborations().buildMessage(collab, ar);
         String nextStr =
-	    "" + ModelFacade.getMessages((collab.getInteractions().toArray())[0]).size();	
+	    "" + ModelFacade.getMessages((ModelFacade.getInteractions(collab).toArray())[0]).size();	
         Editor e = Globals.curEditor();
         GraphModel gm = e.getGraphModel();
         Layer lay = e.getLayerManager().getActiveLayer();

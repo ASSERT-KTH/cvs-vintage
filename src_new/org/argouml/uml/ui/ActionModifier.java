@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.6 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.6 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.7 2003/09/18 23:35:13 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -171,7 +171,8 @@ public class ActionModifier extends UMLAction {
      * @param     trueValue      The enumerated value representing true
      * @param     falseValue     The enumerated value representing false
      */
-    public ActionModifier(String name, String propertyName,
+    public ActionModifier(String name,
+                          String propertyName,
 			  String getMethod,
 			  String setMethod,
 			  MInterface minterface,
@@ -309,7 +310,7 @@ public class ActionModifier extends UMLAction {
      */
 
     public ActionModifier(String name, String propertyName, String getMethod,
-                          String setMethod, MUseCase museCase, Class enumClass,
+                          String setMethod, Object/*MUseCase*/ museCase, Class enumClass,
                           Object trueValue, Object falseValue) {
         super(name, NO_ICON);
         this.object = museCase;

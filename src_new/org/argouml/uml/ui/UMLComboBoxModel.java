@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLComboBoxModel.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLComboBoxModel.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
 
 package org.argouml.uml.ui;
 
@@ -458,12 +458,12 @@ public class UMLComboBoxModel extends AbstractListModel implements
      *                   the same "short" (i.e. formatted) name.
      */
 
-    public void collectElements(MNamespace ns, Profile profile,
+    public void collectElements(Object/*MNamespace*/ ns, Profile profile,
                                 boolean isPhantom) {
 
         // Give up if there are no elements in the supplied namespace
 
-        Collection collection = ns.getOwnedElements();
+        Collection collection = ModelFacade.getOwnedElements(ns);
 
         if (collection == null) {
             return;
@@ -475,7 +475,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         Iterator iter = collection.iterator();
 
         while (iter.hasNext()) {
-            MModelElement element = (MModelElement) iter.next();
+            Object/*MModelElement*/ element = (MModelElement) iter.next();
 
             // If its passed by the filter, make a new combo box entry, and if
             // appropriate add to the set.
@@ -533,7 +533,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
      *                 the drop down list, <code>false</code> otherwise.
      */
 
-    private boolean isAcceptible(MModelElement element) {
+    private boolean isAcceptible(Object/*MModelElement*/ element) {
 
         boolean isAcceptible = false;
 
@@ -591,8 +591,8 @@ public class UMLComboBoxModel extends AbstractListModel implements
         // Make sure we have a model as well. PJS comments that this needs more
         // work - it should never happen.
 
-        MModelElement element = (MModelElement) target;
-        MModel        model   = element.getModel();
+        Object/*MModelElement*/ element = target;
+        Object/*MModel*/        model   = ModelFacade.getModel(element);
 
         if (model == null) {
         	// extra attempt
@@ -635,7 +635,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         // Add elements from the model associated with the profile if allowed.
 
         if (_addElementsFromProfileModel) {
-            MModel profileModel = profile.getProfileModel();
+            Object/*MModel*/ profileModel = profile.getProfileModel();
 
             if (profileModel != null) {
                 collectElements(profileModel, profile, true);

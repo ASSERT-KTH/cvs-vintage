@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.70 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: PropPanel.java,v 1.71 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.70 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: PropPanel.java,v 1.71 2003/09/18 23:35:13 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -108,7 +108,7 @@ abstract public class PropPanel
     ////////////////////////////////////////////////////////////////
     // instance vars
     private Object _target;
-    private MModelElement _modelElement;
+    private Object/*MModelElement*/ _modelElement;
     private static Profile _profile;
 
     private ResourceBundle _bundle = null;
@@ -387,7 +387,7 @@ abstract public class PropPanel
     }
 
     public final MModelElement getModelElement() {
-        return _modelElement;
+        return (MModelElement)_modelElement;
     }
 
     public void refresh() {

@@ -1,4 +1,4 @@
-// $Id: UMLTextField.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLTextField.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLTextField.java,v 1.25 2003/09/18 23:35:13 bobtarling Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -49,7 +49,6 @@ import org.argouml.ui.ProjectBrowser;
 import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.MClassifier;
 /**
  *  This class handles the updating of text as it is typed into the text field on one
  *  of the many property panels. By catching the MElementEvent dispatched from NSUML it
@@ -104,7 +103,7 @@ public class UMLTextField
     }
 
     Object _target;
-    MClassifier _classifier;
+    Object/*MClassifier*/ _classifier;
     /** Creates new BooleanChangeListener */
     public UMLTextField(
         UMLUserInterfaceContainer container,

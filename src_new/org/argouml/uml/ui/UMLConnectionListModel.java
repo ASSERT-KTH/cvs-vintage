@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.14 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: UMLConnectionListModel.java,v 1.15 2003/09/18 23:35:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,8 +66,8 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
     /**
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#build(MModelElement, MModelElement)
      */
-    protected void build(MModelElement from, MModelElement to) {
-	CoreFactory.getFactory().buildAssociation((MClassifier) from, (MClassifier) to);
+    protected void build(Object/*MModelElement*/ from, Object/*MModelElement*/ to) {
+	CoreFactory.getFactory().buildAssociation(from,to);
     }
 
     /**
@@ -75,8 +75,8 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
      */
     protected void connect(
 			   MutableGraphModel gm,
-			   MModelElement from,
-			   MModelElement to) {
+			   Object/*MModelElement*/ from,
+			   Object/*MModelElement*/ to) {
 	gm.connect(from, to, MAssociation.class);
     }
 
@@ -110,7 +110,6 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
     }
 
 }
-
 
 
 
