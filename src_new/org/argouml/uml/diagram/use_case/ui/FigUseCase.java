@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.12 2003/02/02 14:14:45 kataka Exp $
+// $Id: FigUseCase.java,v 1.13 2003/02/06 07:19:38 mkl Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -346,8 +346,9 @@ public class FigUseCase extends FigNodeModelElement {
         figClone._bigPort = (FigMyCircle) allFigs.elementAt(0);
         figClone._cover = (FigMyCircle) allFigs.elementAt(1);
         figClone._name = (FigText) allFigs.elementAt(2);
-        figClone._epSep = (FigLine) allFigs.elementAt(3);
-        figClone._epVec = (FigGroup) allFigs.elementAt(4);
+        figClone._stereo = (FigText) allFigs.elementAt(3);
+        figClone._epSep = (FigLine) allFigs.elementAt(4);
+        figClone._epVec = (FigGroup) allFigs.elementAt(5);
 
         return figClone;
     }
