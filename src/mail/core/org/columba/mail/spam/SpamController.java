@@ -69,6 +69,11 @@ public class SpamController {
      * file to store the token database
      */
     private File file;
+    
+    /**
+     * dirty flag for database changes
+     */
+    private boolean hasChanged;
 
     /**
      * private constructor
@@ -78,6 +83,8 @@ public class SpamController {
         db = new DBWrapper(new FrequencyDBImpl());
 
         filter = new SpamFilterImpl(db);
+        
+        hasChanged = false;
 
     }
 
@@ -134,6 +141,9 @@ public class SpamController {
 
             // close stream
             inputStream.close();
+            
+            // set dirty flag
+            hasChanged = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,6 +182,9 @@ public class SpamController {
             
             // close stream
             inputStream.close();
+            
+            // set dirty flag
+            hasChanged = true;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -227,7 +240,9 @@ public class SpamController {
      */
     public void save() {
         try {
-            FrequencyIO.save(db, file);
+        	// only save if changes exist
+        	if ( hasChanged)
+        		FrequencyIO.save(db, file);
         } catch (Exception e) {
             NotifyDialog d = new NotifyDialog();
             d.showDialog(e);
