@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.23 2002/04/02 02:32:18 spestov Exp $
+ * @version $Id: Gutter.java,v 1.24 2002/05/14 10:52:03 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -289,26 +289,6 @@ public class Gutter extends JComponent implements SwingConstants
 					baseline + y);
 			} //}}}
 		}
-	} //}}}
-
-	//{{{ addCustomHighlight() method
-	/**
-	 * @deprecated Write a <code>TextAreaExtension</code> instead.
-	 */
-	public void addCustomHighlight(TextAreaHighlight highlight)
-	{
-		Log.log(Log.WARNING,this,"Old highlighter API not supported: "
-			+ highlight);
-	} //}}}
-
-	//{{{ removeCustomHighlight() method
-	/**
-	 * @deprecated Write a <code>TextAreaExtension</code> instead.
-	 */
-	public void removeCustomHighlight(TextAreaHighlight highlight)
-	{
-		Log.log(Log.WARNING,this,"Old highlighter API not supported: "
-			+ highlight);
 	} //}}}
 
 	//{{{ addExtension() method

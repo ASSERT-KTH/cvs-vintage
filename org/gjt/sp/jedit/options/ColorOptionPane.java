@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Color option pane.
  * @author Slava Pestov
- * @version $Id: ColorOptionPane.java,v 1.6 2001/11/23 09:08:49 spestov Exp $
+ * @version $Id: ColorOptionPane.java,v 1.7 2002/05/14 10:52:02 spestov Exp $
  */
 public class ColorOptionPane extends AbstractOptionPane
 {
@@ -135,8 +135,6 @@ class ColorTableModel extends AbstractTableModel
 		addColorChoice("options.color.caretColor","view.caretColor");
 		addColorChoice("options.color.selectionColor",
 			"view.selectionColor");
-		addColorChoice("options.color.foldedLineColor",
-			"view.foldedLineColor");
 		addColorChoice("options.color.lineHighlightColor",
 			"view.lineHighlightColor");
 		addColorChoice("options.color.bracketHighlightColor",
@@ -163,6 +161,10 @@ class ColorTableModel extends AbstractTableModel
 			"view.gutter.focusBorderColor");
 		addColorChoice("options.color.gutterNoFocusBorderColor",
 			"view.gutter.noFocusBorderColor");
+		addColorChoice("options.color.memoryForegroundColor",
+			"view.status.memory.foreground");
+		addColorChoice("options.color.memoryBackgroundColor",
+			"view.status.memory.background");
 		MiscUtilities.quicksort(colorChoices,new MiscUtilities.StringCompare());
 	} //}}}
 

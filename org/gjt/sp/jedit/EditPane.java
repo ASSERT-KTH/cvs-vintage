@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.23 2002/05/14 09:40:40 spestov Exp $
+ * @version $Id: EditPane.java,v 1.24 2002/05/14 10:52:02 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -356,8 +356,6 @@ public class EditPane extends JPanel implements EBComponent
 			jEdit.getColorProperty("view.fgColor"));
 		painter.setBlockCaretEnabled(jEdit.getBooleanProperty(
 			"view.blockCaret"));
-		painter.setFoldedLineColor(
-			jEdit.getColorProperty("view.foldedLineColor"));
 		painter.setLineHighlightEnabled(jEdit.getBooleanProperty(
 			"view.lineHighlight"));
 		painter.setLineHighlightColor(
@@ -370,6 +368,10 @@ public class EditPane extends JPanel implements EBComponent
 			jEdit.getProperty("view.font"),
 			jEdit.getIntegerProperty("view.fontsize",12)));
 
+		painter.setFoldLineStyle(GUIUtilities.parseStyle(
+			jEdit.getProperty("view.style.foldLine"),
+			jEdit.getProperty("view.font"),
+			jEdit.getIntegerProperty("view.fontsize",12)));
 		Gutter gutter = textArea.getGutter();
 		gutter.setExpanded(jEdit.getBooleanProperty(
 			"view.gutter.lineNumbers"));

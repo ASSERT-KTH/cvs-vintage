@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.33 2002/04/04 05:53:05 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.34 2002/05/14 10:52:02 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -76,9 +76,10 @@ public class BrowserView extends JPanel
 		parentScroller.setMinimumSize(new Dimension(0,0));
 		JScrollPane treeScroller = new JScrollPane(tree);
 		treeScroller.setMinimumSize(new Dimension(0,0));
-		splitPane = new JSplitPane( 
+		splitPane = new JSplitPane(
 			splitHorizontally ? JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT,
 			parentScroller,treeScroller);
+		splitPane.setOneTouchExpandable(true);
 
 		SwingUtilities.invokeLater(new Runnable()
 		{
