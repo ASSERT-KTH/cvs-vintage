@@ -35,7 +35,7 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 <input type="hidden" name="tab" value="$tab" />
 
-<div class="functnbar2">
+<div class="functnbar">
 #if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule)))
     <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
 #end
