@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.94 2002/06/06 09:15:52 spestov Exp $
+ * @version $Id: Buffer.java,v 1.95 2002/06/15 07:28:49 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1597,19 +1597,6 @@ public class Buffer implements EBComponent
 		setProperty(name,new Integer(value));
 	} //}}}
 
-	//{{{ getKeywordMapAtOffset() method
-	/**
-	 * Returns the syntax highlighting keyword map in effect at the
-	 * specified offset. Used by the <b>Complete Word</b> command to
-	 * complete keywords.
-	 * @param offset The offset
-	 * @since jEdit 4.0pre3
-	 */
-	public KeywordMap getKeywordMapAtOffset(int offset)
-	{
-		return getRuleSetAtOffset(offset).getKeywords();
-	} //}}}
-
 	//{{{ getRuleSetAtOffset() method
 	/**
 	 * Returns the syntax highlighting ruleset at the specified offset.
@@ -1626,6 +1613,19 @@ public class Buffer implements EBComponent
 		markTokens(line,tokens);
 		Token token = TextUtilities.getTokenAtOffset(tokens.getTokens(),offset);
 		return token.rules;
+	} //}}}
+
+	//{{{ getKeywordMapAtOffset() method
+	/**
+	 * Returns the syntax highlighting keyword map in effect at the
+	 * specified offset. Used by the <b>Complete Word</b> command to
+	 * complete keywords.
+	 * @param offset The offset
+	 * @since jEdit 4.0pre3
+	 */
+	public KeywordMap getKeywordMapAtOffset(int offset)
+	{
+		return getRuleSetAtOffset(offset).getKeywords();
 	} //}}}
 
 	//{{{ getContextSensitiveProperty() method
