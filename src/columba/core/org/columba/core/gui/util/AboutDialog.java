@@ -37,11 +37,12 @@ import javax.swing.*;
 public class AboutDialog extends JDialog implements ActionListener {
     public static final String CMD_CLOSE = "CLOSE";
     private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
+    protected static AboutDialog instance;
 
-    public AboutDialog() {
+    protected AboutDialog() {
         super((JFrame)null, GlobalResourceLoader.getString(
                     RESOURCE_BUNDLE_PATH, "about", "title") +
-                MainInterface.version, !MainInterface.DEBUG);
+                MainInterface.version);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFocusable(false);
@@ -177,8 +178,15 @@ public class AboutDialog extends JDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (CMD_CLOSE.equals(e.getActionCommand())) {
-            dispose();
+            setVisible(false);
         }
+    }
+    
+    public synchronized static AboutDialog getInstance() {
+        if (instance == null) {
+            instance = new AboutDialog();
+        }
+        return instance;
     }
 
     protected static class MemoryPanel extends JPanel {

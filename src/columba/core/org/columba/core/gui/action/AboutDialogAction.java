@@ -42,7 +42,8 @@ public class AboutDialogAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        AboutDialog dialog = new AboutDialog();
+        AboutDialog dialog = AboutDialog.getInstance();
         dialog.setVisible(true);
+        dialog.toFront();
     }
 }
