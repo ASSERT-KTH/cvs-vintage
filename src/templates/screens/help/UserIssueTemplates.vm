@@ -32,7 +32,7 @@
   <p>$l10n.UITP4S1 <em>$l10n.TemplateList</em> $l10n.UITP4S2 <strong> $l10n.TemplateList</strong> $l10n.UITP4S3</p>
   <h3><strong><a name="creating" id="creating">$l10n.CreatingTemplates</a></strong></h3>
   <ol>
-    <li>$l10n.FromThe <em>$l10n.TemplateList</em> $l10n.ScreenClickThe <strong>$l10n.CreateNew</strong> $l10n.button.</li>
+    <li>$l10n.FromThe <em>$l10n.TemplateList</em> $l10n.ScreenClickThe <strong>$l10n.CreateNew</strong> $l10n.Button.</li>
     <li>$l10n.UITP6 </li>
     <li>$l10n.UITP7</li>
     <li>$l10n.UITP8<strong> $l10n.EnterNew</strong> 
