@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.20 2003/05/05 09:32:05 kataka Exp $
+// $Id: UmlModelEventPump.java,v 1.21 2003/05/05 10:57:40 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1117,8 +1117,7 @@ class EventTreeDefinition {
                 nameMap.put(UmlModelEventPump.REMOVE, new int[] { 0 });
                 _definition.put(sourceClass, nameMap);
             }
-        }
-        System.out.println();
+        }       
     }
 
     /**

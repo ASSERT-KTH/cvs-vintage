@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.62 2003/05/02 20:51:18 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.63 2003/05/05 10:57:40 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -587,8 +587,7 @@ public abstract class FigNodeModelElement
         //     MModelElement me = (MModelElement) getOwner();
         //     if (me == null) return;
         //     try { me.setName(new Name(_name.getText())); }
-        //     catch (PropertyVetoException pve) { }
-        System.out.println();
+        //     catch (PropertyVetoException pve) { }  
     }
 
     ////////////////////////////////////////////////////////////////
