@@ -40,8 +40,11 @@ public class FolderCommandAdapter {
 	
 	public FolderCommandReference getUpdateReferences()
 	{
-		// TODO: fix commandadapter -> update-reference
+		
+		// shouldn't this be <=2 ?
+		// -> this fixes the VirtualFolder doesn't update bug for me
 		if ( c.length<=2 ) return null;
+		//if ( c.length==2 ) return null;
 		
 		return c[ c.length-1 ];
 	}

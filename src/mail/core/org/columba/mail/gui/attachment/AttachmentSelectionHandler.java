@@ -31,14 +31,14 @@ public class AttachmentSelectionHandler
 	private Object messageUid;
 	private AttachmentView view;
 	private Integer[] address;
-	
+
 	private boolean useLocalSelection;
 
 	public AttachmentSelectionHandler(AttachmentView view) {
 		super("mail.attachment");
 		this.view = view;
 		view.addIconPanelSelectionListener(this);
-		
+
 		useLocalSelection = false;
 	}
 
@@ -70,6 +70,8 @@ public class AttachmentSelectionHandler
 	 * @see org.columba.mail.gui.attachment.util.IconPanelSelectionListener#selectionChanged(int[])
 	 */
 	public void selectionChanged(int[] newselection) {
+		useLocalSelection = false;
+
 		if (newselection.length > 0) {
 			address = view.getSelectedMimePart().getAddress();
 		} else {
@@ -80,11 +82,9 @@ public class AttachmentSelectionHandler
 			new AttachmentSelectionChangedEvent(folder, messageUid, address));
 	}
 
-	
-	public void setLocalReference(FolderCommandReference[] r )
-	{
+	public void setLocalReference(FolderCommandReference[] r) {
 		// set selection
-		setMessage( (Folder) r[0].getFolder(), r[0].getUids() [0]);
+		setMessage((Folder) r[0].getFolder(), r[0].getUids()[0]);
 		useLocalSelection = true;
 	}
 
