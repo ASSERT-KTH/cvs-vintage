@@ -29,7 +29,7 @@
         <transaction>
           <id>$transaction.TransactionId</id>
           <type>$transaction.TransactionType.Name</type>
-          <committed-by>$scarabR.getUser($transaction.CreatedBy).UserName</committed-by>
+          <created-by>$scarabR.getUser($transaction.CreatedBy).UserName</created-by>
           <created-date>
             <format>$sdf.toPattern()</format>
             <timestamp>$sdf.format($transaction.CreatedDate)</timestamp>
@@ -67,22 +67,63 @@
               #end
 
               <description>$activity.Description</description>
+
+              #set ($attachment = $activity.Attachment)
+              #attachment ($attachment)
+
             </activity>
           #end
 
           </activities>
           #set ($attachment = $transaction.Attachment)
-          ## this is a hack because we are in a loop and transaction.Attachment returns
-          ## null if there is no attachment...so the set statement fails
-          #if ($attachment && $attachment.Class.Name != "java.lang.String")
+          #attachment ($attachment)
+
+        </transaction>
+      #end
+
+      </transactions>
+
+      #set ($dependA = $issue.DependsRelatedByObserverId)
+      #set ($dependB = $issue.DependsRelatedByObservedId)
+      #if (!$dependA.isEmpty() || !$dependB.isEmpty())
+      <dependencies>
+      #foreach ($depend in $dependA)
+
+        <dependency>
+          <type>$depend.DependType.Name</type>
+          <parent>$depend.IssueRelatedByObservedId.FederatedId</parent>
+        </dependency>
+      #end
+      #foreach ($depend in $dependB)
+
+        <dependency>
+          <type>$depend.DependType.Name</type>
+          <child>$depend.IssueRelatedByObserverId.FederatedId</child>
+        </dependency>
+      #end
+
+      </dependencies>
+      #end
+
+    </issue>
+  #end
+
+  </issues>
+#end
+
+</scarab-issues>
+#end
+
+#macro (attachment $attachment)
+  #if ($attachment && $attachment.Class.Name != "java.lang.String")
 
           <attachment>
             <name>$attachment.Name</name>
             <type>$attachment.AttachmentType.Name</type>
-            #set ($filePath = $attachment.RelativePath)
+            #set ($filePath = $attachment.FileName)
             #if ($filePath && $filePath.length() > 0)
 
-            <path>$filePath</path>
+            <filename>$filePath</filename>
             #set ($filePath = "")
           #else
           #set ($fileData = $attachment.DataAsString)
@@ -109,36 +150,6 @@
             #end
 
           </attachment>
-            #set ($attachment = "")
-          #end
-
-        </transaction>
-      #end
-
-      </transactions>
-
-      <dependencies>
-      #foreach ($depend in $issue.DependsRelatedByObserverId)
-
-        <dependency>
-          <type>$depend.DependType.Name</type>
-          <parent>$depend.IssueRelatedByObservedId.FederatedId</parent>
-        </dependency>
-      #end
-      #foreach ($depend in $issue.DependsRelatedByObservedId)
-
-        <dependency>
-          <type>$depend.DependType.Name</type>
-          <child>$depend.IssueRelatedByObserverId.FederatedId</child>
-        </dependency>
-      #end
-
-      </dependencies>
-    </issue>
   #end
-
-  </issues>
-#end
-
-</scarab-issues>
+  #set ($attachment = "")
 #end
