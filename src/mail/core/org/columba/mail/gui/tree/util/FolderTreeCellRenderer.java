@@ -87,23 +87,23 @@ public class FolderTreeCellRenderer
 		boolean leaf,
 		int row,
 		boolean hasFocusVar) {
+			
+		/* RIYAD: Even though we don't do anything with this value, what it
+		 * is doing is setting up the selection colors and such as implemented
+		 * per the default cell rendered.  
+		 */
+		super.getTreeCellRendererComponent(
+			tree,
+			value,
+			isSelected,
+			expanded,
+			leaf,
+			row,
+			hasFocusVar);
 
 		// setting default Values
 		setFont(plainFont);
 		setToolTipText("");
-
-		/* RIYAD: Waffel pointed out that this is a noop call, the return is
-		 * never used. Most likely this was the default behavior with the first
-		 * impl and it was never removed because no one knew what it did.
-		 */
-//		super.getTreeCellRendererComponent(
-//			tree,
-//			value,
-//			isSelected,
-//			expanded,
-//			leaf,
-//			row,
-//			hasFocusVar);
 
 		FolderTreeNode treeNode = (FolderTreeNode) value;
 
