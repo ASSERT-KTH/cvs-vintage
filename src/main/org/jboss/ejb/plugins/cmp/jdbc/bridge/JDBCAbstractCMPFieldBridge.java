@@ -41,7 +41,15 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20021023 Steve Coy:</b>
+ * <ul>
+ * <li>Changed {@link #loadArgumentResults} so that it passes the jdbc type to
+ *     {@link org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil.getResult}.
+ * </ul>
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    private final JDBCStoreManager manager;
@@ -356,9 +364,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          
          // update the value from the result set
          Class[] javaTypes = getJDBCType().getJavaTypes();
+         int[] jdbcTypes = getJDBCType().getJDBCTypes();
          for(int i=0; i<javaTypes.length; i++) {
             Object columnValue = 
-                  JDBCUtil.getResult(log, rs, parameterIndex++, javaTypes[i]);
+                  JDBCUtil.getResult(log, rs, parameterIndex++, jdbcTypes[i], javaTypes[i]);
             argumentRef[0] = 
                   getJDBCType().setColumnValue(i, argumentRef[0], columnValue);
          }
