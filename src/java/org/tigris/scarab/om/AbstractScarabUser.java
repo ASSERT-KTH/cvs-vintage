@@ -73,7 +73,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.56 2002/10/26 17:12:35 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.57 2002/11/05 19:45:40 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -127,6 +127,11 @@ public abstract class AbstractScarabUser
     private Map mostRecentQueryMITMap;
 
     /** 
+     * Map to store the most recent query entered by the user
+     */
+    private Map associatedUsersMap;
+
+    /** 
      * Code for user's preference on which screen to return to
      * After entering an issue
      */
@@ -167,6 +172,7 @@ public abstract class AbstractScarabUser
         mitListMap = new HashMap();
         mostRecentQueryMap = new HashMap();
         mostRecentQueryMITMap = new HashMap();
+        associatedUsersMap = new HashMap();
         initThreadLocals();
     }
 
@@ -1287,6 +1293,67 @@ public abstract class AbstractScarabUser
             mostRecentQueryMap.put(key, queryString);
             mostRecentQueryMITMap.put(key, getCurrentMITList(key));
         }
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getAssociatedUsersMap()
+     */
+    public HashMap getAssociatedUsersMap()
+        throws Exception
+    {
+        return getAssociatedUsersMap(getGenThreadKey());
+    }
+    private HashMap getAssociatedUsersMap(Object key)
+        throws Exception
+    {
+        return (HashMap)associatedUsersMap.get(key);
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setAssociatedUsersMap(HashMap)
+     */
+    public void setAssociatedUsersMap(HashMap associatedUsers)
+        throws Exception
+    {
+        if (associatedUsers != null) 
+        {
+            setAssociatedUsersMap(getGenThreadKey(), associatedUsers);            
+        }
+        else if (getThreadKey() != null)
+        {
+            setAssociatedUsersMap(getThreadKey(), associatedUsers);
+        }
+    }
+    private void setAssociatedUsersMap(Object key, HashMap associatedUsers)
+        throws Exception
+    {
+        try
+        {
+            if (associatedUsers.size() >= MAX_INDEPENDENT_WINDOWS) 
+            {
+                // make sure lists are not being accumulated, set a 
+                // reasonable limit of MAX_INDEPENDENT_WINDOWS open lists
+                int intKey = Integer.parseInt(String.valueOf(key));
+                int count = 0;
+                for (int i=intKey-1; i>=0; i--) 
+                {
+                    String testKey = String.valueOf(i);
+                    if (getAssociatedUsersMap(testKey) != null) 
+                    {
+                        if (++count >= MAX_INDEPENDENT_WINDOWS) 
+                        {
+                            associatedUsers.remove(testKey);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.get().error("Nonfatal error clearing old queries.  "
+                            + "This could be a memory leak.", e);
+        }
+        associatedUsersMap.put(key, associatedUsers);
     }
 
     /**

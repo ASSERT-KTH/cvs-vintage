@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 import java.util.List;
+import java.util.HashMap;
 import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
@@ -61,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.77 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.78 2002/11/05 19:45:40 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -389,6 +390,20 @@ public interface ScarabUser extends User
      */
     public void setThreadKey(Integer key);
 
+    /**
+     * Get the working list of associated users
+     * For the AssignIssue screen
+     */
+    public HashMap getAssociatedUsersMap()
+        throws Exception;
+
+    /**
+     * Set the working list of associated users
+     * For the AssignIssue screen
+     */
+    public void setAssociatedUsersMap(HashMap associatedUsers)
+        throws Exception;
+    
     /**
      * The current module which represents the module
      * selected by the user within a request.

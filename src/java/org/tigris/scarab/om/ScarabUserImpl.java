@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
@@ -82,7 +83,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.86 2002/11/01 00:59:21 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.87 2002/11/05 19:45:40 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -908,6 +909,18 @@ public class ScarabUserImpl
         return internalUser.hasMostRecentQuery();
     }
 
+    public HashMap getAssociatedUsersMap()
+        throws Exception
+    {
+        return internalUser.getAssociatedUsersMap();
+    }
+
+    public void setAssociatedUsersMap(HashMap associatedUsers)
+        throws Exception
+    {
+        internalUser.setAssociatedUsersMap(associatedUsers);
+    }
+    
     /**
      * @see ScarabUser#getThreadKey()
      */

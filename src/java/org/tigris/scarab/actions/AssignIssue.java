@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.68 2002/11/04 23:41:28 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.69 2002/11/05 19:45:40 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -107,8 +107,7 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        //List tempList = getWorkingList(data);
-        HashMap userMap = scarabR.getAssociatedUsers();
+        HashMap userMap = user.getAssociatedUsersMap();
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
         for (int i =0; i<keys.length; i++)
@@ -144,7 +143,7 @@ public class AssignIssue extends BaseModifyIssue
                     }
                     userList.add(item);
                     userMap.put(issueId, userList);
-                    scarabR.setAssociatedUsers(userMap);
+                    user.setAssociatedUsersMap(userMap);
                 }
             }
         }
@@ -158,7 +157,7 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        HashMap userMap = scarabR.getAssociatedUsers();
+        HashMap userMap = user.getAssociatedUsersMap();
         List userList = (List)userMap.get(issueId);
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
@@ -185,20 +184,20 @@ public class AssignIssue extends BaseModifyIssue
                 item.add(su);
                 userList.remove(item);
                 userMap.put(issueId, userList);
-                scarabR.setAssociatedUsers(userMap);
+                user.setAssociatedUsersMap(userMap);
             }
         }
     }
 
     /**
-     * Removes users from temporary working list.
+     * Changes the user attribute a user is associated with.
      */
     private void update(RunData data, TemplateContext context, NumberKey issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        HashMap userMap = scarabR.getAssociatedUsers();
+        HashMap userMap = user.getAssociatedUsersMap();
         List userList = (List)userMap.get(issueId);
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
@@ -228,12 +227,13 @@ public class AssignIssue extends BaseModifyIssue
 
                 String newKey = "asso_user_{" + userId + "}_issue_{" + issueId + "}";
                 String newAttrId = params.get(newKey);
-                Attribute newAttribute = AttributeManager.getInstance(new NumberKey(newAttrId));
+                Attribute newAttribute = AttributeManager
+                     .getInstance(new NumberKey(newAttrId));
                 newItem.add(newAttribute);
                 newItem.add(su);
                 userList.add(newItem);
                 userMap.put(issueId, userList);
-                scarabR.setAssociatedUsers(userMap);
+                user.setAssociatedUsersMap(userMap);
             }
         }
     }
@@ -242,9 +242,10 @@ public class AssignIssue extends BaseModifyIssue
                                        ScarabRequestTool scarabR)
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = scarabR.getIssues();
-        HashMap userMap = scarabR.getAssociatedUsers();
+        HashMap userMap = user.getAssociatedUsersMap();
         String actionString = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
@@ -303,7 +304,8 @@ public class AssignIssue extends BaseModifyIssue
                                                    newAttr, reason);
                     
                     // Notification email
-                    actionString = issue.getAssignUserChangeString(assigner, assignee, newAttr);
+                    actionString = issue.getAssignUserChangeString(assigner, 
+                                                                   assignee, newAttr);
                     if (!notify(context, issue, assignee, assigner, actionString))
                     {
                          scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
@@ -332,7 +334,8 @@ public class AssignIssue extends BaseModifyIssue
                     // delete the user
                     activitySet = issue.deleteUser(activitySet, assignee, 
                                                    assigner, oldAttVal, reason);
-                    actionString = issue.getUserDeleteString(assigner, assignee, oldAttr);
+                    actionString = issue.getUserDeleteString(assigner, assignee, 
+                                                             oldAttr);
                     if (!notify(context, issue, assignee, 
                                 assigner, actionString))
                     {

@@ -2104,16 +2104,10 @@ try{
         return hasPermission;
     }
 
-    public HashMap getAssociatedUsers() throws Exception
-    {
-        return (HashMap)data.getUser().getTemp("assoUsers");
-    }
-    
-    public void setAssociatedUsers(HashMap users) 
-    {
-        data.getUser().setTemp("assoUsers", users);
-    }
-
+    /* The map of associated users used on AssignIssue
+     * When we first go to the screen, reset the map
+     * To the currently assigned users for each issue
+     */
     public void resetAssociatedUsers() throws Exception
     {
         HashMap assoUsers = new HashMap();
@@ -2123,7 +2117,7 @@ try{
             Issue issue = (Issue)issueList.get(i);
             assoUsers.put(issue.getIssueId(), issue.getAssociatedUsers());
         }
-        data.getUser().setTemp("assoUsers", assoUsers);
+        ((ScarabUser)data.getUser()).setAssociatedUsersMap(assoUsers);
     }
 
     /**
