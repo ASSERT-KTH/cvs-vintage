@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.46 2002/12/24 17:35:23 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.47 2002/12/26 01:30:41 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -361,8 +361,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 	//{{{ updateCaretStatus() method
 	public void updateCaretStatus()
 	{
-		if(!isShowing())
-			return;
+		//if(!isShowing())
+		//	return;
 
 		if (showCaretStatus)
 		{
@@ -438,8 +438,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 	//{{{ updateBufferStatus() method
 	public void updateBufferStatus()
 	{
-		if(!isShowing())
-			return;
+		//if(!isShowing())
+		//	return;
 
 		Buffer buffer = view.getBuffer();
 
@@ -494,8 +494,8 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 	//{{{ updateMiscStatus() method
 	public void updateMiscStatus()
 	{
-		if(!isShowing())
-			return;
+		//if(!isShowing())
+		//	return;
 
 		JEditTextArea textArea = view.getTextArea();
 

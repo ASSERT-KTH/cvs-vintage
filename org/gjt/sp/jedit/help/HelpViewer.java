@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.5 2002/12/24 17:35:23 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.6 2002/12/26 01:30:41 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -176,8 +176,8 @@ public class HelpViewer extends JFrame implements EBComponent
 	 */
 	public void gotoURL(String url, boolean addToHistory)
 	{
-		title.setText(jEdit.getProperty("helpviewer.loading"));
-
+		// the TOC pane looks up user's guide URLs relative to the
+		// doc directory...
 		String shortURL;
 		if(MiscUtilities.isURL(url))
 		{
@@ -189,7 +189,7 @@ public class HelpViewer extends JFrame implements EBComponent
 			}
 			else
 			{
-				shortURL = null;
+				shortURL = url;
 			}
 		}
 		else
@@ -211,6 +211,14 @@ public class HelpViewer extends JFrame implements EBComponent
 		try
 		{
 			_url = new URL(url);
+
+			if(!_url.equals(viewer.getPage()))
+				title.setText(jEdit.getProperty("helpviewer.loading"));
+			else
+			{
+				/* don't show loading msg because we won't
+				   receive a propertyChanged */
+			}
 
 			viewer.setPage(_url);
 			if(addToHistory)
