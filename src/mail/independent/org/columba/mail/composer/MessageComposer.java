@@ -155,6 +155,12 @@ public class MessageComposer {
 		return false;
 	}
 
+	/**
+	 * gives the signature for this Mail back. This signature is NOT a pgp-signature but a real mail-signature.
+	 * @param item The item wich holds the signature-file
+	 * @return The signature for the mail as a String. The Signature is character encoded with the caracter set from the 
+	 * model
+	 */
 	protected String getSignature(IdentityItem item) {
 
 		File file = new File(item.get("signature_file"));
@@ -218,20 +224,6 @@ public class MessageComposer {
 	
 		}
 	*/
-	/** Gives a signature as String back for the given PGPItem and the message-body. The Messagebody in this case
-	 * is signed. The signature is biuld over the whole messagebody without convertion. The Messagebody must be in
-	 * a form that can be signed how it is described in RFC3156
-	 * @param pgpItem The PGPItem has all Information about the pgp-program-path, the identity and the passphrase
-	 * @param body the body to be signed. The body must have a format that can be signed how it is described in RFC3156
-	 * @return The Sign-String. This String should be append to the mail as a new Mimepart.
-	 * TODO I don't know if we must convert the singed-String-characters to the current-model characters. But i think this
-	 * schould be done by gpg?
-	 */
-	protected String getSignature(PGPItem pgpItem, String body) {
-		// new PGPController
-		PGPController pgpContr = PGPController.getInstance();
-		return pgpContr.sign(body, pgpItem);
-	}
 
 	private MimePart composeTextMimePart() {
 		MimePart bodyPart = new MimePart();
@@ -244,13 +236,11 @@ public class MessageComposer {
 		String body = model.getBodyText();
 
 		AccountItem item = model.getAccountItem();
-		PGPItem pgpItem = item.getPGPItem();
 		IdentityItem identity = item.getIdentityItem();
 		boolean appendSignature = identity.getBoolean("attach_signature");
 
 		if (appendSignature == true) {
-			//String signature = getSignature(identity);
-			String signature = getSignature(pgpItem, body);
+			String signature = getSignature(identity);
 
 			if (signature != null) {
 				body = body + "\n\n" + signature;
