@@ -241,7 +241,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.java"/>
 				<include name="plugins/**/*.xml"/>
-				<exclude name="plugins/**/*.jar"/>
+				<!--<exclude name="plugins/**/*.jar"/>-->
 				<exclude name="columba.jar"/>
 				<exclude name="classes/**"/>
 			</zipfileset>
@@ -272,7 +272,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.java"/>
 				<include name="plugins/**/*.xml"/>
-				<exclude name="plugins/**/*.jar"/>
+				<!--<exclude name="plugins/**/*.jar"/>-->
 				<exclude name="columba.jar"/>
 				<exclude name="classes/**"/>
 			</zipfileset>
