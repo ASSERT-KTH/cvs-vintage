@@ -7,16 +7,7 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
-## we set $password because we don't want the mapped users password to
-## show up in the form! Doh!
-#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
-#if ($user.FirstName)
-  #set ($regGroup = $intake.Register.mapTo($user))
-  #set ($password = "")
-#else
-  #set ($regGroup = $intake.Register.Default)
-  #set ($password = $regGroup.Password)
-#end
+#set ($regGroup = $intake.Register.Default)
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
@@ -55,10 +46,8 @@
 <tr>
  <th> * $l10n.Password</th>
  <td>
-  <input name="$regGroup.Password.Key" type="password" value="$password" size="25" tabindex="5" />
-  #if ($password.Message)
-  #fieldErrorMsg($password "")
-  #end
+  <input name="$regGroup.Password.Key" type="password" value="$regGroup.Password" size="25" tabindex="5" />
+  #fieldErrorMsg($regGroup.Password "")
  </td>
 </tr>
 <tr>

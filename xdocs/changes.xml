@@ -6,7 +6,10 @@
   </properties>
 
   <body>
-    <release version="b20" date="in dev">  
+    <release version="b20" date="in dev">
+      <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB1245">
+        user's entered data in registration form will be cleaned out in some cases
+      </action>            
       <action dev="epugh" type="update" due-to="Dimitry Mardiyan" issue-id="SCB1369">
         QUICKSTART.txt had incorrect path in instructions on building scarab.
       </action>           

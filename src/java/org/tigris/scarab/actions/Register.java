@@ -82,7 +82,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.45 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: Register.java,v 1.46 2004/11/04 16:05:47 dep4b Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -234,12 +234,6 @@ public class Register extends ScarabTemplateAction
             // used on the nextTemplate
             data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, su);
             setTarget(data, nextTemplate);
-        }
-        else
-        {
-            // if the intake information is invalid, then null out the user
-            // that is stored in the session just to be careful
-            data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, null);
         }
     }
 
