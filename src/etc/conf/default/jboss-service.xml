@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.100 2004/02/23 19:50:07 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.101 2004/02/25 04:22:07 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -161,6 +161,25 @@
    		xmbean-dd="resource:xmdesc/JNDIView-xmbean.xml">
    </mbean>
 
+
+  <!-- ==================================================================== -->
+  <!-- J2EE Timer Service Source                                            -->
+  <!-- ==================================================================== -->
+
+   <!--
+    | ATTENTION: Do only replace or adjust this MBean when you have a suitable
+    |            Timer Source in place extending AbstractTimerSource. The
+    |            Schedule Manager is necessary for the SchedulerTimerSource.
+    -->
+   <mbean code="org.jboss.varia.scheduler.ScheduleManager"
+          name="jboss:service=EJBTimerManager">
+      <attribute name="StartAtStartup">true</attribute>
+   </mbean>
+   <mbean code="org.jboss.ejb.timer.SchedulerTimerSource"
+          name="jboss:service=EJBTimerService">
+      <attribute name="ScheduleManagerName">jboss:service=EJBTimerManager</attribute>
+      <depends>jboss:service=EJBTimerManager</depends>
+   </mbean>
 
    <!-- ==================================================================== -->
    <!-- Security                                                             -->
