@@ -66,7 +66,7 @@ implements ActionListener, ListSelectionListener {
     
     public ProfileChooserDialog() throws HeadlessException {
         super((JFrame)null, GlobalResourceLoader.getString(RESOURCE_PATH,
-            "profiles", "title"), true);
+            "profiles", "chooser.title"), true);
         
         initComponents();
         
