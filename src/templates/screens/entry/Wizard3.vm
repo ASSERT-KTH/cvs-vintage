@@ -85,7 +85,11 @@ $page.setTitle("Enter Issue")
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
           #userSelectBox ($attVal "")
     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #if ($templateId)
           #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
+        #else
+          #attrValueLeafSelect ($attVal $field "")
+        #end
     #else
 
 #set ($currentValue = "")
