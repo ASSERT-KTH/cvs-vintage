@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.162 2003/11/23 23:14:43 linus Exp $
+// $Id: ModelFacade.java,v 1.163 2003/11/23 23:39:00 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4487,20 +4487,20 @@ public class ModelFacade {
 
     /**
      * Sets the guard of a transition.
-     * @param handle
-     * @param guard
+     * @param handle to the transition
+     * @param guard to be set
      */
     public static void setGuard(Object handle, Object guard) {
         if (handle instanceof MTransition
             && (guard == null || guard instanceof MGuard)) {
-            ((MTransition)handle).setGuard((MGuard)guard);
+            ((MTransition) handle).setGuard((MGuard) guard);
             return;
         }
         throw new IllegalArgumentException(
             "Object "
-                + guard.toString()
-                + " cannot be owned by "
-                + handle.toString());
+	    + getClassNull(guard)
+	    + " cannot be owned by "
+	    + getClassNull(handle));
     }
 
     public static void setTransition(Object handle, Object trans) {
