@@ -137,8 +137,21 @@ public class ForwardInlineCommand extends ForwardCommand {
 				continue;
 
 			// add attachment
-			InputStream stream = folder.getMimePartBodyStream(uids[0], address);
-			model.addMimePart(new InputStreamMimePart(mp.getHeader(), stream));
+			InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
+        	int encoding = mp.getHeader().getContentTransferEncoding();
+
+            switch (encoding) {
+                case MimeHeader.QUOTED_PRINTABLE:
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                    break;
+
+                case MimeHeader.BASE64:
+                    bodyStream = new Base64DecoderInputStream(bodyStream);
+                    break;
+                default:
+            }
+
+            model.addMimePart(new InputStreamMimePart(mp.getHeader(), bodyStream));
 		}
 
 	}
