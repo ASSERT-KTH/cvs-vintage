@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.11 2004/07/10 03:32:21 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.12 2004/07/18 00:26:18 ejort Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -256,7 +256,7 @@ the ejb container configurations.
 <!-- The proxy-factory-config defines the client-interceptors stack
 and other configuration options to use for the various EJB proxies.
 -->
-<!ELEMENT proxy-factory-config (client-interceptors? , web-class-loader? ,
+<!ELEMENT proxy-factory-config (client-interceptors?, endpoint-interceptors? , web-class-loader? ,
 JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
 KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? , 
 jnp-context?)>
@@ -1058,6 +1058,15 @@ The client-interceptors defines the home and bean client side interceptor chain
 <!ELEMENT client-interceptors (home , bean, list-entity?)>
 
 <!--
+The endpoint-interceptors element gives the chain of interceptors
+(instances of org.jboss.proxy.Interceptor) that are associated with the
+message endpoint.
+
+  Used in: proxy-factory-config for message inflow
+-->
+<!ELEMENT endpoint-interceptors (interceptor+)>
+
+<!--
 The home element gives the chain of interceptors
 (instances of org.jboss.proxy.Interceptor) that are associated with the home
 proxy and operate in the client VM. The declared order of the interceptor
@@ -1091,7 +1100,7 @@ elements corresponds to the order of the interceptor chain.
   The interceptor element specifies an instance of org.jboss.ejb.Interceptor
   that is to be added to the container interceptor stack.
 
-  Used in: home, bean, list-entity
+  Used in: home, bean, list-entity, endpoint-interceptors
 -->
 <!ELEMENT interceptor (#PCDATA)>
 
