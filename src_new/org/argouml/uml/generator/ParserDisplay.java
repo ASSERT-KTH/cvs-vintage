@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.59 2003/05/05 10:57:40 kataka Exp $
+// $Id: ParserDisplay.java,v 1.60 2003/06/19 21:19:54 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.59 2003/05/05 10:57:40 kataka Exp $
+// $Id: ParserDisplay.java,v 1.60 2003/06/19 21:19:54 kataka Exp $
 
 
 
@@ -3203,7 +3203,7 @@ predfor:
      sti.setName(name);
   }
 
-  public MAction parseAction(String s) {
+  public Object parseAction(String s) {
 	  MCallAction a = UmlFactory.getFactory().getCommonBehavior().createCallAction();
 
 	  a.setScript(UmlFactory.getFactory().getDataTypes().createActionExpression("Java",s));

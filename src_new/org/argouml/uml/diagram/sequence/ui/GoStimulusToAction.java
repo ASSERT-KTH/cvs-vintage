@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStimulusToAction.java,v 1.2 2003/04/15 00:17:26 alexb Exp $
+// $Id: GoStimulusToAction.java,v 1.3 2003/06/19 21:19:54 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -29,9 +29,9 @@ import java.util.Collection;
 import java.util.Vector;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 
 public class GoStimulusToAction extends AbstractGoRule {
@@ -40,7 +40,7 @@ public class GoStimulusToAction extends AbstractGoRule {
         if (!(parent instanceof MStimulus))
             return null;
         MStimulus ms = (MStimulus) parent;
-        MAction action = ms.getDispatchAction();
+        Object action = ModelFacade.getDispatchAction(ms);
         Vector vector = new Vector();
         vector.addElement(action);
         return vector;

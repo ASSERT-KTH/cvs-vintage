@@ -24,7 +24,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.5 2003/05/30 14:53:02 kataka Exp $
+// $Id: NotationProvider.java,v 1.6 2003/06/19 21:19:52 kataka Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -36,7 +36,6 @@ package org.argouml.application.api;
 //import org.argouml.language.*;
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
-import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
@@ -73,7 +72,7 @@ public interface NotationProvider {
   public String generateState(MState m);
   public String generateStateBody(MState stt);
   public String generateTransition(MTransition m);
-  public String generateAction(MAction m);
+  public String generateAction(Object m);
   public String generateGuard(MGuard m);
   public String generateMessage(MMessage m);
   public String generateClassifierRef(MClassifier m);

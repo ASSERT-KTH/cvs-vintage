@@ -25,11 +25,12 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.14 2003/04/01 14:09:56 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.15 2003/06/19 21:19:54 kataka Exp $
 
 package org.argouml.uml.diagram.sequence;
 
 import org.apache.log4j.Category;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
 
@@ -238,7 +239,7 @@ implements VetoableChangeListener {
                 Mode mode = (Mode)modeManager.top();
                 Hashtable args = mode.getArgs();
                 if ( args != null ) {
-                    MAction action=null;
+                    Object action=null;
                     // get "action"-Class taken from global mode
                     Class actionClass = (Class) args.get("action");
                     if (actionClass != null) {
@@ -256,12 +257,12 @@ implements VetoableChangeListener {
 
                         if (action != null)  {
                             // determine action type of arguments in mode
-                            action.setName("new action");
+                            ModelFacade.setName(action, "new action");
 
-                            if (action instanceof MSendAction || action instanceof MReturnAction) {
-                                action.setAsynchronous(true);
+                            if (ModelFacade.isASendAction(action) || ModelFacade.isAReturnAction(action)) {
+                                ModelFacade.setAsynchronous(action, true);
                             } else {
-                                action.setAsynchronous(false);
+                                ModelFacade.setAsynchronous(action, false);
                             }
                             // create stimulus
                             MStimulus stimulus = UmlFactory.getFactory().getCommonBehavior().createStimulus();
@@ -276,12 +277,12 @@ implements VetoableChangeListener {
                             stimulus.setSender((MObject)fromPort);
                             stimulus.setReceiver((MObject)toPort);
                             // set action type
-                            stimulus.setDispatchAction(action);
+                            ModelFacade.setDispatchAction(stimulus, action);
                             // add stimulus to link
                             ml.addStimulus(stimulus);
                             // add new modelelements: stimulus and action to namesapce
-                            _Sequence.addOwnedElement(stimulus);
-                            _Sequence.addOwnedElement(action);
+                            ModelFacade.addOwnedElement(_Sequence, stimulus);
+                            ModelFacade.addOwnedElement(_Sequence, action);                            
                         }
                     }
                 }

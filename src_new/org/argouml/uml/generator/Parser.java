@@ -24,7 +24,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.8 2003/06/01 13:34:42 kataka Exp $
+// $Id: Parser.java,v 1.9 2003/06/19 21:19:54 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -64,7 +64,7 @@ public abstract class Parser {
   public abstract ru.novosoft.uml.foundation.data_types.MMultiplicity parseMultiplicity(String s);
   public abstract MState parseState(String s);
   public abstract MTransition parseTransition(MTransition trans, String s);
-  public abstract MAction parseAction(String s);
+  public abstract Object parseAction(String s);
   public abstract MGuard parseGuard(String s);
   public abstract MEvent parseEvent(String s);
 
