@@ -16,7 +16,6 @@
     <property name="final.name" value="${project}-${version}"/>
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
             
-    <property name="src.dir" value="${basedir}/../src"/>
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
@@ -26,11 +25,7 @@
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.resources.dir" value="${src.dir}/resources"/>
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
-
-    <property name="lib.dir" value="${basedir}/../lib"/>
-
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
-    <property name="tomcat.cvs.dir" value="../../jakarta-tomcat-4.0"/>
 
     <property name="build.webapps" value="${build.dir}/webapps"/>
     <property name="build.project" value="${build.webapps}/${project}"/>
@@ -121,7 +116,10 @@
         </copy>
 
         <!-- things to go into the web-inf directory -->
-        <filter token="ABSOLUTE_PATH" value="absolute:${src.dir}"/>
+        <echo>
+        file://${src.dir}
+        </echo>
+        <filter token="ABSOLUTE_PATH" value="file://${src.dir}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
@@ -189,14 +187,6 @@
                 <include name="torque*.jar"/>
             </fileset>
         </copy>
-        
-<!-- Not needed?
-        <copy todir="${build.src.scarab}/torque/lib">
-            <fileset dir="${lib.dir}">
-                <include name="mm.mysql-*.jar"/>
-            </fileset>
-        </copy>
--->
     </target>
 
     <!-- ================================================================== -->
@@ -388,7 +378,9 @@
         <exec executable="ant" dir="${turbine.dir}">
             <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${turbine.dir}"/>
+        <exec executable="ant" dir="${turbine.dir}">
+            <arg line="install-jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -401,6 +393,9 @@
         <exec executable="ant" dir="${torque.dir}">
             <arg line="dist-lite"/>
         </exec>
+        <exec executable="ant" dir="${torque.dir}">
+            <arg line="install-jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -410,7 +405,9 @@
         <exec executable="ant" dir="${fulcrum.dir}">
             <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${fulcrum.dir}"/>
+        <exec executable="ant" dir="${fulcrum.dir}">
+            <arg line="install-jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -421,8 +418,26 @@
             <arg line="clean"/>
         </exec>
         <exec executable="ant" dir="${flux.dir}">
-            <arg line="jar"/>
+            <arg line="install-jar"/>
         </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Collections easily                    -->
+    <!-- There is a dependency on stuff in here in fulcrum                  -->
+    <!-- ================================================================== -->
+    <target name="build-commons-collections">
+        <exec executable="ant" dir="${commons-collections.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-collections.dir}">
+            <arg line="dist"/>
+        </exec>
+        <copy todir="${lib.repo}">
+            <fileset dir="${commons-collections.dir}">
+                <include name="**/commons-collections*.jar"/>
+            </fileset>
+        </copy>
     </target>
 
     <!-- ================================================================== -->
@@ -433,7 +448,9 @@
         <exec executable="ant" dir="${commons-sandbox-util.dir}">
             <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${commons-sandbox-util.dir}"/>
+        <exec executable="ant" dir="${commons-sandbox-util.dir}">
+            <arg line="install-jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -443,7 +460,9 @@
         <exec executable="ant" dir="${commons-sandbox-email.dir}">
             <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${commons-sandbox-email.dir}"/>
+        <exec executable="ant" dir="${commons-sandbox-email.dir}">
+            <arg line="install-jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -511,6 +530,22 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Collections easily                  -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-collections" depends="build-commons-collections">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-collections*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-collections.dir}/dist">
+                <include name="**/commons-collections*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our version of Commons-Sandbox-Util easily                 -->
     <!-- ================================================================== -->
     <target name="upgrade-commons-sandbox-util" depends="build-commons-sandbox-util">
@@ -544,23 +579,32 @@
 
     <!-- ================================================================== -->
     <!-- Upgrade our dependencies easily                                    -->
+    <!-- These are in dependency order for themselves                       -->
     <!-- ================================================================== -->
     <target name="upgrade-jakarta" 
-            depends="upgrade-fulcrum,upgrade-torque,upgrade-turbine,
-                     upgrade-flux,
+            depends="upgrade-commons-collections,
                      upgrade-commons-sandbox-util,
-                     upgrade-commons-sandbox-email">
+                     upgrade-commons-sandbox-email,
+                     upgrade-torque,upgrade-fulcrum,
+                     upgrade-turbine,upgrade-flux
+                     ">
     </target>
 
     <!-- ================================================================== -->
     <!-- Upgrade our cvs dependencies easily                                -->
     <!-- ================================================================== -->
     <target name="upgrade-jakarta-cvs">
+        <echo>${fulcrum.dir}</echo>
         <cvs dest="${fulcrum.dir}" command="update"/>
+        <echo>${torque.dir}</echo>
         <cvs dest="${torque.dir}" command="update"/>
+        <echo>${turbine.dir}</echo>
         <cvs dest="${turbine.dir}" command="update"/>
+        <echo>${flux.dir}</echo>
         <cvs dest="${flux.dir}" command="update"/>
+        <echo>${commons-sandbox-util.dir}</echo>
         <cvs dest="${commons-sandbox-util.dir}" command="update"/>
+        <echo>${commons-sandbox-email.dir}</echo>
         <cvs dest="${commons-sandbox-email.dir}" command="update"/>
     </target>
 
