@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.12 2002/08/21 09:27:09 kataka Exp $
+// $Id: PropPanelActor.java,v 1.13 2002/09/08 20:44:29 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -38,12 +38,14 @@
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.application.api.*;
+import org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -199,5 +201,15 @@ public class PropPanelActor extends PropPanelClassifier {
             baseClass.equals("Namespace");
     }
 
+
+	/**
+	 * @see org.argouml.uml.ui.foundation.core.PropPanelClassifier#getGeneralizationChoices()
+	 */
+	protected Vector getGeneralizationChoices() {
+		Vector choices = new Vector();
+		choices.addAll(UseCasesHelper.getHelper().getAllActors());
+		return choices;
+	}
+	
 
 } /* end class PropActor */

@@ -24,7 +24,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.8 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelClassifierRole.java,v 1.9 2002/09/08 20:44:29 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -37,6 +37,7 @@ import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.behavior.collaborations.*;
 
 import org.argouml.application.api.*;
+import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
 
@@ -109,6 +110,15 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
                 baseClass.equals("GeneralizableElement") ||
                 baseClass.equals("Classifier"));
     }
+    
+    /**
+	 * @see org.argouml.uml.ui.foundation.core.PropPanelClassifier#getGeneralizationChoices()
+	 */
+	protected Vector getGeneralizationChoices() {
+		Vector choices = new Vector();
+		choices.addAll(CollaborationsHelper.getHelper().getAllClassifierRoles());
+		return choices;
+	}
 
 
 } /* end class PropPanelClassifierRole */

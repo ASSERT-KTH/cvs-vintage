@@ -25,7 +25,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.11 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelNode.java,v 1.12 2002/09/08 20:44:29 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -43,6 +43,7 @@ import javax.swing.*;
 import ru.novosoft.uml.foundation.core.*;
 
 import org.argouml.application.api.*;
+import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.ui.*;
 
 public class PropPanelNode extends PropPanelClassifier {
@@ -112,6 +113,15 @@ public class PropPanelNode extends PropPanelClassifier {
                 baseClass.equals("Namespace")
                 );
     }
+    
+    /**
+	 * @see org.argouml.uml.ui.foundation.core.PropPanelClassifier#getGeneralizationChoices()
+	 */
+	protected Vector getGeneralizationChoices() {
+		Vector choices = new Vector();
+		choices.addAll(CoreHelper.getHelper().getAllNodes());
+		return choices;
+	}
 
 
 
