@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.31 2001/10/05 19:01:04 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.32 2001/10/08 04:00:25 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -224,14 +224,14 @@ public class ScarabModule
 
     /**
      * Creates a new Issue.
-     * FIXME: nothing is done with the ScarabUser object, so
-     * it should probably be removed or something should be done
-     * with it.
      */
-    public Issue getNewIssue(ScarabUser user)
+    public Issue getNewIssue()
         throws Exception
     {
-        return Issue.getInstance(this);
+        Issue issue = Issue.getInstance();
+        issue.setModuleCast( this );
+        issue.setDeleted(false);
+        return issue;
     }
 
     /**

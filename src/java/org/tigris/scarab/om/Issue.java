@@ -94,13 +94,10 @@ public class Issue
     /**
      * Gets an issue associated to a ModuleEntity
      */
-    public static Issue getInstance(ModuleEntity me)
+    public static Issue getInstance()
         throws Exception
     {
-        Issue issue = new Issue();
-        issue.setModuleCast( me );
-        issue.setDeleted(false);
-        return issue;
+        return new Issue();
     }
 
     /**
