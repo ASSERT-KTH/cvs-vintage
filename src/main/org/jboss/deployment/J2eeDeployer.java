@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-*   @version $Revision: 1.35 $
+*   @version $Revision: 1.36 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -124,7 +124,7 @@ implements J2eeDeployerMBean
    {
       name = name.equals("") ? "" : " "+name;
       this.name = name;
-      this.log = Log.createLog(getName());
+      this.log = Log.createLog(this.getClass().getName() + "#" + getName());
    }
    
    public String getDeployerName()
@@ -507,22 +507,22 @@ implements J2eeDeployerMBean
        }
        catch (MBeanException e) {
            log.error("Starting "+moduleName+" failed!");
-           e.getTargetException().printStackTrace();
+           log.exception(e.getTargetException());
            throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
        }
        catch (RuntimeErrorException e) {
            log.error("Starting "+moduleName+" failed!");
-           e.getTargetError().printStackTrace();
+           log.exception(e.getTargetError());
            throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetError().getMessage(), e.getTargetError());
        }
        catch (RuntimeMBeanException e) {
            log.error("Starting "+moduleName+" failed!");
-           e.getTargetException().printStackTrace();
+           log.exception(e.getTargetException());
            throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
        }
        catch (JMException e) {
            log.error("Starting failed!");
-           e.printStackTrace();
+           log.exception(e);
            throw new J2eeDeploymentException("Fatal error while interacting with deployer MBeans... " + e.getMessage());
        }
        finally {
