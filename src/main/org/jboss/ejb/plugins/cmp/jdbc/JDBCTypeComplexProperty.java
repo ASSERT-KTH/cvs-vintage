@@ -10,7 +10,7 @@ import javax.ejb.EJBException;
 import java.lang.reflect.Method;
 
 /**
- * JDBCTypeComplexProperty contins the mapping between a single Java Bean
+ * Immutable class which contins the mapping between a single Java Bean
  * (not an EJB) property and a column. This class has a flattened view of
  * the Java Bean property, which may be several properties deep in the 
  * base Java Bean. The details of how a property is mapped to a column 
@@ -21,64 +21,69 @@ import java.lang.reflect.Method;
  * the Java Bean.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCTypeComplexProperty {
-   private String propertyName;
-   private String columnName;   
-   private Class javaType;   
-   private int jdbcType;   
-   private String sqlType;
+   private final String propertyName;
+   private final String columnName;   
+   private final Class javaType;   
+   private final int jdbcType;   
+   private final String sqlType;
    
-   private Method[] getters;
-   private Method[] setters;
+   private final Method[] getters;
+   private final Method[] setters;
+
+   public JDBCTypeComplexProperty(
+         String propertyName,
+         String columnName,
+         Class javaType,
+         int jdbcType,
+         String sqlType,
+         Method[] getters,
+         Method[] setters) {
+
+      this.propertyName = propertyName;
+      this.columnName = columnName;
+      this.javaType = javaType;
+      this.jdbcType = jdbcType;
+      this.sqlType = sqlType;
+      this.getters = getters;
+      this.setters = setters;
+   }
+
+   public JDBCTypeComplexProperty(
+         JDBCTypeComplexProperty defaultProperty,
+         String columnName,
+         int jdbcType,
+         String sqlType) {
+
+      this.propertyName = defaultProperty.propertyName;
+      this.columnName = columnName;
+      this.javaType = defaultProperty.javaType;
+      this.jdbcType = jdbcType;
+      this.sqlType = sqlType;
+      this.getters = defaultProperty.getters;
+      this.setters = defaultProperty.setters;
+   }
 
    public String getPropertyName() {
       return propertyName;
-   }
-   
-   public void setPropertyName(String propertyName) {
-      this.propertyName = propertyName;
    }
    
    public String getColumnName() {
       return columnName;
    }
    
-   public void setColumnName(String columnName) {
-      this.columnName = columnName;
-   }
-   
    public Class getJavaType() {
       return javaType;
-   }
-   
-   public void setJavaType(Class javaType) {
-      this.javaType = javaType;
    }
    
    public int getJDBCType() {
       return jdbcType;
    }
    
-   public void setJDBCType(int jdbcType) {
-      this.jdbcType = jdbcType;
-   }
-   
    public String getSQLType() {
       return sqlType;
-   }
-   
-   public void setSQLType(String sqlType) {
-      this.sqlType = sqlType;
-   }
-   
-   public void setGetters(Method[] getters) {
-      this.getters = getters;
-   }
-   
-   public void setSetters(Method[] setters) {
-      this.setters = setters;
    }
    
    public Object getColumnValue(Object value) throws Exception {
@@ -93,7 +98,10 @@ public class JDBCTypeComplexProperty {
       return value;
    }
 
-   public Object setColumnValue(Object value, Object columnValue) throws Exception {
+   public Object setColumnValue(
+         Object value,
+         Object columnValue) throws Exception {
+
       // Used for invocation of get and set
       Object[] noArgs = new Object[0];
       Object[] singleArg = new Object[1];
@@ -104,7 +112,6 @@ public class JDBCTypeComplexProperty {
       // get the second to last object in the chain
       for(int i=0; i<getters.length-1; i++) {
          // get the next object in chain
-         //Logger.debug("Calling " + getters[i].getName() + " on " + value.getClass().getName());
          Object next = getters[i].invoke(value, noArgs);
          
          // the next object is null creat it
@@ -115,7 +122,6 @@ public class JDBCTypeComplexProperty {
             // and set it into the current value
             singleArg[0] = next;
             
-            //Logger.debug("Calling " + setters[i].getName() + " on " + value.getClass().getName());
             setters[i].invoke(value, singleArg);
          }
          
@@ -125,7 +131,6 @@ public class JDBCTypeComplexProperty {
       
       // value is now the object on which we need to set the column value
       singleArg[0] = columnValue;
-      //Logger.debug("Calling " + setters[setters.length-1].getName() + " on " + value.getClass().getName());
       setters[setters.length-1].invoke(value, singleArg);
       
       // return the first object in call chain
