@@ -356,6 +356,8 @@ public class JspParseEventListener extends BaseJspListener {
 	/* Do stuff here for finally actions... */
         //writer.println("out.close();");
 
+	// Use flush buffer ( which just empty JspWriterImpl buffer )
+	// instead of commiting the response.
 	writer.println("if (out instanceof org.apache.jasper.runtime.JspWriterImpl) { ");
         writer.println("    ((org.apache.jasper.runtime.JspWriterImpl)out).flushBuffer();");
 	writer.println("}");
