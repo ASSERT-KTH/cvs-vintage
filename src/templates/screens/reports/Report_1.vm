@@ -5,21 +5,6 @@
 <form method="get" action="$link.setPage("reports,Step1.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
 
-#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
-#if ($reports.size() > 0)
-<h3>Saved reports</h3>
-<select name="report_id">
-    <option value="">Select...</option>
-    #foreach ($report in $reports)
-        #set ($isSelected = $data.Parameters.getString("report_id") && $report.ReportId.equals($data.Parameters.getString("report_id"))) 
-        <option value="$report.ReportId"
-            #selected($isSelected)>$report.Name</option>
-    #end
-</select>
-<input type="submit" value="Run" name="eventSubmit_doRunstoredreport"/>
-<input type="submit" value="Edit" name="eventSubmit_doEditstoredreport"/>
-#end
-
 <h2>$page.Title</h2>
 
 <h3>
