@@ -29,9 +29,11 @@ package org.objectweb.carol.util.multi;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 import org.objectweb.carol.util.configuration.CarolConfiguration;
@@ -82,17 +84,17 @@ public class ProtocolCurrent {
 
 	    threadCtx = new InheritableThreadLocal(); 
 	    prodHashtable = new Hashtable();
-	    icHashtable = new Hashtable();
-	    //get rmi configuration  hashtable 	    
-	    Hashtable allRMIConfiguration = CarolConfiguration.getAllRMIConfiguration();	    
-	    int nbProtocol = allRMIConfiguration.size();
-	    for (Enumeration e = allRMIConfiguration.elements() ; e.hasMoreElements() ;) {
+		icHashtable = new Hashtable();
+		//get rmi configuration  hashtable 	    
+		Hashtable allRMIConfiguration = CarolConfiguration.getAllRMIConfiguration();	    
+		int nbProtocol = allRMIConfiguration.size();
+		for (Enumeration e = allRMIConfiguration.elements() ; e.hasMoreElements() ;) {
 		RMIConfiguration currentConf = (RMIConfiguration)e.nextElement();
 		String rmiName = currentConf.getName();
 		// get the PRO 
 		prodHashtable.put(rmiName, (PortableRemoteObjectDelegate)Class.forName(currentConf.getPro()).newInstance());
-		icHashtable.put(rmiName,  new InitialContext(currentConf.getJndiProperties()));
-	    }
+		icHashtable.put(rmiName,  currentConf.getJndiProperties());
+		}
 	    defaultRMI = CarolConfiguration.getDefaultProtocol().getName();
 	    // set the default protocol
 	    threadCtx.set(defaultRMI) ;
@@ -150,8 +152,14 @@ public class ProtocolCurrent {
     * Get the Context Hashtable
     * @return Hashtable the hashtable of Context 
     */
-    public Hashtable getContextHashtable() {
-	return icHashtable;
+    public Hashtable getNewContextHashtable() throws NamingException {
+    	// build a new hashtable of context
+    	Hashtable result = new Hashtable();
+		for (Enumeration e = icHashtable.keys() ; e.hasMoreElements() ;) {
+			String k= (String)e.nextElement();
+			result.put(k,new InitialContext((Properties)icHashtable.get(k)));
+		}
+	return result;
     }    
 
     /**
@@ -170,11 +178,11 @@ public class ProtocolCurrent {
      * Get current protocol Initial Context
      * @return InitialContext the initial Context
      */
-    public Context getCurrentInitialContext() {
+    public Context getCurrentInitialContext() throws NamingException {
 	if (threadCtx.get() == null) {
-	    return (Context)icHashtable.get(defaultRMI); 
+	    return new InitialContext((Properties)icHashtable.get(defaultRMI)); 
 	} else {
-	    return (Context)icHashtable.get((String)threadCtx.get());
+	    return new InitialContext((Properties)icHashtable.get((String)threadCtx.get()));
 	}
     }
 
