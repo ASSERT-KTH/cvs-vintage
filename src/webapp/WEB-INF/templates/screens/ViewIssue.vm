@@ -104,7 +104,13 @@ $renderer.render("viewIssue", "ViewIssueBody.vm")
  $intake.declareGroups()
  </form>
 
-<div align="right"><small><a href="$link.getIssueIdAbsoluteLink($currentIssue)">$l10n.SessionInfoLink $currentIssue.UniqueId</a></small></div>
+<div align="right">
+&nbsp;&nbsp;
+	<a href="$link.setPage('RSSDataExport.vm')/feedType/IssueFeed/issueId/$currentIssue.UniqueId/type/rss_2.0"><img align="middle" src="$staticLink.setPath('/images/icon_rss.gif')" width="36" height="14" border="0"/></a>	
+&nbsp;&nbsp;
+	<a href="$link.setPage('RSSDataExport.vm')/feedType/IssueFeed/issueId/$currentIssue.UniqueId/type/atom_0.3"><img align="middle" src="$staticLink.setPath('/images/icon_atom.gif')" width="45" height="14" border="0"/></a>
+&nbsp;&nbsp;
+<small><a href="$link.getIssueIdAbsoluteLink($currentIssue)">$l10n.SessionInfoLink $currentIssue.UniqueId</a></small></div>
 
 ## block to handle invalid issue id or user did not have proper permissions
 #elseif ($currentIssue)

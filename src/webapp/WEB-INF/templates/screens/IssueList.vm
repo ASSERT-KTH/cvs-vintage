@@ -32,9 +32,9 @@
 #end
 #if ($scarabR.Query.QueryId)
 &nbsp;&nbsp;
-	<a href="http://localhost:8080/scarab/feeds/queryId/$scarabR.Query.QueryId/userId/$user.UserId/type/rss_2.0"><img align="middle" src="$staticLink.setPath('/images/icon_rss.gif')" width="36" height="14" border="0"/></a>
+	<a href="$link.setPage('RSSDataExport.vm')/feedType/QueryFeed/queryId/$scarabR.Query.QueryId/userId/$user.UserId/type/rss_2.0"><img align="middle" src="$staticLink.setPath('/images/icon_rss.gif')" width="36" height="14" border="0"/></a>	
 &nbsp;&nbsp;
-	<a href="http://localhost:8080/scarab/feeds/queryId/$scarabR.Query.QueryId/userId/$user.UserId/type/atom_0.3"><img align="middle" src="$staticLink.setPath('/images/icon_atom.gif')" width="45" height="14" border="0"/></a>
+	<a href="$link.setPage('RSSDataExport.vm')/feedType/QueryFeed/queryId/$scarabR.Query.QueryId/userId/$user.UserId/type/atom_0.3"><img align="middle" src="$staticLink.setPath('/images/icon_atom.gif')" width="45" height="14" border="0"/></a>
 #end
 </div>
 #end
