@@ -116,7 +116,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.49 2003/08/05 00:56:18 elicia Exp $
+ * @version $Id: ScarabIssues.java,v 1.50 2003/08/13 15:44:57 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -158,8 +158,11 @@ public class ScarabIssues implements java.io.Serializable
      */
     private static boolean inValidationMode = true;
 
-    private Object parseContext = null;
-    private Collection importErrors = null;
+    /**
+     * A record of any errors encountered during the import.  Set by
+     * ImportIssues after an instance is created during XML parsing.
+     */
+    ImportErrors importErrors;
 
     /**
      * The users referenced by the XML file.
@@ -180,7 +183,8 @@ public class ScarabIssues implements java.io.Serializable
     
     public ScarabIssues()
     {
-        this.allowFileAttachments = Boolean.TRUE.equals(allowFileAttachmentsTL.get());
+        this.allowFileAttachments =
+            Boolean.TRUE.equals(allowFileAttachmentsTL.get());
         issues = new ArrayList();
         if (nullAttribute == null)
         {
@@ -196,13 +200,15 @@ public class ScarabIssues implements java.io.Serializable
     }
 
     /**
-     * Instances of this class will have the allowFileAttachments flag set to this value
-     * upon instantiation.
-     * Current file attachment handling code has a security bug that can allow a user
-     * to see any file on the host that is readable by scarab.  It is not easy to exploit
-     * this hole, and there are cases where we want to use the functionality and can be
-     * sure the hole is not being exploited.  So adding a flag to allow file attachments
-     * under certain circumstances.
+     * Instances of this class will have their {@link
+     * #allowFileAttachments} flag set to this value upon
+     * instantiation.  Current file attachment handling code has a
+     * security bug that can allow a user to see any file on the host
+     * that is readable by scarab.  It is not easy to exploit this
+     * hole, and there are cases where we want to use the
+     * functionality and can be sure the hole is not being exploited.
+     * So adding a flag to allow file attachments under certain
+     * circumstances.
      */
     public static void allowFileAttachments(boolean b)
     {
@@ -217,19 +223,6 @@ public class ScarabIssues implements java.io.Serializable
     public static boolean isInValidationMode()
     {
         return inValidationMode;
-    }
-    
-    /**
-     * Returns any errors which occurred during import.
-     * 
-     * Has funny name.  If we named it 'getImportErrors', because its public,
-     * betwixt errors trying to find the corresponding 'setImportErrors'.
-     *
-     * @return Import errors, if any.
-     */
-    public List doGetImportErrors()
-    {
-        return (List) importErrors;
     }
 
     public void setImportType(String value)
@@ -301,7 +294,7 @@ public class ScarabIssues implements java.io.Serializable
                         ScarabConstants.DEFAULT_BUNDLE_NAME,
                         getLocale(),
                         "CouldNotLocateUsername", userStr);
-                    addImportError(error);
+                    importErrors.add(error);
                 }
             }
         }
@@ -338,7 +331,7 @@ public class ScarabIssues implements java.io.Serializable
                         ScarabConstants.DEFAULT_BUNDLE_NAME,
                         getLocale(),
                         "CouldNotLocateParentDepend", parent);
-                    addImportError(error);
+                    importErrors.add(error);
                 }
                 try
                 {
@@ -354,7 +347,7 @@ public class ScarabIssues implements java.io.Serializable
                         ScarabConstants.DEFAULT_BUNDLE_NAME,
                         getLocale(),
                         "CouldNotLocateChildDepend", child);
-                    addImportError(error);
+                    importErrors.add(error);
                 }
             }
         }
@@ -383,7 +376,7 @@ public class ScarabIssues implements java.io.Serializable
 
             if (getImportTypeCode() == UPDATE_SAME_DB)
             {
-                System.out.println("Not implemented yet.");
+                LOG.error("update-same-db import type not yet implemented");
             }
             else
             {
@@ -457,7 +450,7 @@ public class ScarabIssues implements java.io.Serializable
         {
             if (inValidationMode)
             {
-                parseContext = module.getCode() + issue.getId();
+                importErrors.setParseContext(module.getCode() + issue.getId());
                 doIssueValidateEvent(getModule(), getIssue());
             }
             else
@@ -472,7 +465,7 @@ public class ScarabIssues implements java.io.Serializable
         }
         finally
         {
-            parseContext = null;
+            importErrors.setParseContext(null);
         }
     }
 
@@ -511,7 +504,7 @@ public class ScarabIssues implements java.io.Serializable
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 getLocale(),
                 "CouldNotFindModule", args);
-            addImportError(error);
+            importErrors.add(error);
         }
 
         // Check for the existance of the issue type.
@@ -530,7 +523,7 @@ public class ScarabIssues implements java.io.Serializable
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 getLocale(),
                 "CouldNotFindIssueType", issue.getArtifactType());
-            addImportError(error);
+            importErrors.add(error);
         }
         if (!moduleOM.getRModuleIssueType(issueTypeOM).getActive())
         {
@@ -538,7 +531,7 @@ public class ScarabIssues implements java.io.Serializable
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 getLocale(),
                 "IssueTypeInactive", issue.getArtifactType());
-            addImportError(error);
+            importErrors.add(error);
         }
         List moduleAttributeList = null;
         if (moduleOM != null)
@@ -579,7 +572,7 @@ public class ScarabIssues implements java.io.Serializable
                     ScarabConstants.DEFAULT_BUNDLE_NAME,
                     getLocale(),
                     "CouldNotFindActivitySetType", activitySet.getType());
-                addImportError(error);
+                importErrors.add(error);
             }
 
             // Validate the activity set's date.
@@ -632,7 +625,7 @@ public class ScarabIssues implements java.io.Serializable
                     (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                      "CouldNotFindFileAttachment",
                      activityAttachment.getFilename());
-                addImportError(error);
+                importErrors.add(error);
             }
 
             validateDate(activityAttachment.getCreatedDate(), true);
@@ -661,7 +654,7 @@ public class ScarabIssues implements java.io.Serializable
             String error = Localization.format
                 (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                  "CouldNotFindGlobalAttribute", activityAttribute);
-            addImportError(error);
+            importErrors.add(error);
         }
 
         if (attributeOM != null)
@@ -693,7 +686,7 @@ public class ScarabIssues implements java.io.Serializable
                     String error = Localization.format
                         (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                          "CouldNotFindRModuleAttribute", activityAttribute);
-                    addImportError(error);
+                    importErrors.add(error);
                 }
                 else if (activity.getNewOption() != null)
                 {
@@ -716,7 +709,7 @@ public class ScarabIssues implements java.io.Serializable
                         String error = Localization.format
                             (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                              "CouldNotFindAttributeOption", args);
-                        addImportError(error);
+                        importErrors.add(error);
                     }
                     // check for module options
                     try
@@ -738,7 +731,7 @@ public class ScarabIssues implements java.io.Serializable
                              getLocale(),
                              "CouldNotFindModuleAttributeOption",
                              args);
-                        addImportError(error);
+                        importErrors.add(error);
                     }
                 }
                 else if (activity.getOldOption() != null)
@@ -759,7 +752,7 @@ public class ScarabIssues implements java.io.Serializable
                             (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                              "CouldNotFindAttributeOption",
                              activity.getOldOption());
-                        addImportError(error);
+                        importErrors.add(error);
                     }
                     // check for module options
                     try
@@ -779,7 +772,7 @@ public class ScarabIssues implements java.io.Serializable
                         String error = Localization.format
                             (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                              "CouldNotFindModuleAttributeOption", args);
-                        addImportError(error);
+                        importErrors.add(error);
                     }
                 }
             }
@@ -814,7 +807,7 @@ public class ScarabIssues implements java.io.Serializable
             {
                 error += ": " + e.getMessage();
             }
-            addImportError(error);
+            importErrors.add(error);
         }
     }
 
@@ -1398,29 +1391,5 @@ public class ScarabIssues implements java.io.Serializable
     private Locale getLocale()
     {
         return ScarabConstants.DEFAULT_LOCALE;
-    }
-
-    /**
-     * Calling code pushes contextual information onto {@link
-     * #parseContext} to help identify exactly where the error
-     * occurred, empowering users to resolve any data formatting
-     * problems.
-     *
-     * @param error The error, something which will
-     * <code>toString()</code> nicely.
-     */
-    private void addImportError(Object error)
-    {
-        if (importErrors == null)
-        {
-            importErrors = new ArrayList();
-        }
-        if (parseContext != null)
-        {
-            // Format error as an object which toString()'s nicely
-            // using any applicable contextual state.
-            error = '[' + parseContext.toString() + "] " + error;
-        }
-        importErrors.add(error);
     }
 }

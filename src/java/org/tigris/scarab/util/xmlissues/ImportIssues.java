@@ -46,9 +46,9 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */
 
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 
 import java.io.File;
@@ -60,6 +60,7 @@ import java.io.BufferedInputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -67,8 +68,8 @@ import org.xml.sax.SAXParseException;
 
 import org.apache.commons.fileupload.FileItem;
 
-import org.apache.fulcrum.localization.Localization;
 import org.apache.commons.digester.Digester;
+import org.apache.commons.digester.Rule;
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.io.BeanWriter;
@@ -76,6 +77,8 @@ import org.apache.commons.betwixt.strategy.HyphenatedNameMapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.TurbineInitialization;
@@ -95,11 +98,14 @@ import org.tigris.scarab.om.Module;
  * <p>The way the ant task wrapper works is simple: call all the appropriate
  * set methods to define the properties. Then you will need to call the init()
  * and execute methods to start running things. Note: If Turbine is already
- * initialized, there is no need to call the init() method.
+ * initialized, there is no need to call the init() method.</p>
+ *
+ * <p>Instances of this class are not thread-safe.</p>
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.24 2003/07/29 20:42:52 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.25 2003/08/13 15:44:57 dlr Exp $
+ * @since Scarab beta 14
  */
 public class ImportIssues
     implements ErrorHandler
@@ -153,6 +159,12 @@ public class ImportIssues
      */    
     private boolean allowFileAttachments;
 
+    /**
+     * A list of any errors encountered during the import, likely
+     * added during the validation phase.
+     */
+    private ImportErrors importErrors;
+
     public ImportIssues()
     {
         this(false);
@@ -161,6 +173,7 @@ public class ImportIssues
     public ImportIssues(boolean allowFileAttachments) 
     {
         this.allowFileAttachments = allowFileAttachments;
+        this.importErrors = new ImportErrors();
     }
 
     /**
@@ -230,6 +243,10 @@ public class ImportIssues
             getConfigFile());
     }
 
+    /**
+     * Hook method called by <a
+     * href="http://ant.apache.org/">Ant's</a> Task wrapper.
+     */
     public void execute() 
         throws Exception
     {
@@ -247,7 +264,7 @@ public class ImportIssues
      *
      * @exception Exception
      */
-    public List runImport(File importFile)
+    public Collection runImport(File importFile)
         throws Exception
     {
         return runImport(importFile, (Module) null);
@@ -266,7 +283,7 @@ public class ImportIssues
      *
      * @exception Exception
      */
-    public List runImport(File importFile, Module currentModule)
+    public Collection runImport(File importFile, Module currentModule)
         throws Exception
     {
         return runImport(importFile.getAbsolutePath(), importFile,
@@ -289,7 +306,7 @@ public class ImportIssues
      *
      * @exception Exception
      */
-    public List runImport(FileItem importFile)
+    public Collection runImport(FileItem importFile)
         throws Exception
     {
         return runImport(importFile, (Module) null);
@@ -313,7 +330,7 @@ public class ImportIssues
      *
      * @exception Exception
      */
-    public List runImport(FileItem importFile, Module currentModule)
+    public Collection runImport(FileItem importFile, Module currentModule)
         throws Exception
     {
         return runImport(importFile.getName(), importFile, currentModule);
@@ -322,11 +339,10 @@ public class ImportIssues
     /**
      * @param input A <code>File</code> or <code>FileItem</code>.
      */
-    protected List runImport(String filePath, Object input,
-                             Module currentModule)
+    protected Collection runImport(String filePath, Object input,
+                                   Module currentModule)
         throws Exception
     {
-        List importErrors = null;
         String msg = "Importing issues from XML '" + filePath + '\'';
         LOG.debug(msg);
         try
@@ -335,10 +351,9 @@ public class ImportIssues
             WorkflowFactory.setForceUseDefault(true);
             ScarabIssues.allowFileAttachments(allowFileAttachments);
             BeanReader reader = createScarabIssuesBeanReader();
-            importErrors = validate(filePath, inputStreamFor(input),
-                                    reader, currentModule);
+            validate(filePath, inputStreamFor(input), reader, currentModule);
 
-            if (importErrors == null)
+            if (importErrors == null || importErrors.isEmpty())
             {
                 // Reget the input stream.
                 this.si = insert(filePath, inputStreamFor(input), reader);
@@ -364,6 +379,9 @@ public class ImportIssues
      * Necessary because the stream is read twice by
      * <code>runImport()</code>, so the source of the stream must be
      * passed into that method.
+     *
+     * @throws IllegalArgumentException If <code>input</code> is
+     * unrecognized.
      */
     private InputStream inputStreamFor(Object input)
         throws IOException
@@ -390,20 +408,18 @@ public class ImportIssues
      * @param name Filename to output in log message.  May be null.
      * @param is Input stream to read.
      * @param reader ScarabIssues bean reader instance.
-     * @param currentModule If non-null, run check that import is going 
-     * against this module.
+     * @param currentModule If not <code>null</code>, check whether
+     * import is going against this module.
      *
-     * @return <code>null</code> if the XML stream passes validation,
-     * or otherwise the list of errors.
+     * @return Any errors encountered during XML or content
+     * validation.
      *
-     * @exception Exception.
+     * @exception Exception
      */
-    protected List validate(String name, InputStream is, BeanReader reader, 
-            Module currentModule)
+    protected void validate(String name, InputStream is,
+                            BeanReader reader, Module currentModule)
         throws Exception
     {
-        List importErrors = null;
-
         // While parsing the XML, we perform well formed-ness and DTD
         // validation (if present, see Xerces dynamic feature).
         setValidationMode(reader, true);
@@ -414,7 +430,6 @@ public class ImportIssues
         }
         catch (SAXParseException e)
         {
-            importErrors = new ArrayList(1);
             // TODO: L10N this error message from Xerces (somehow),
             // and provide a prefix that describes that a XML parse
             // error was encountered.
@@ -426,59 +441,67 @@ public class ImportIssues
         // If the XML is okay, validate the actual content.
         if (si != null)
         {
-            si.doValidateDependencies();
-            si.doValidateUsers();
-            importErrors = si.doGetImportErrors();
-            if (currentModule != null)
-            {
-                // If currentModule is not null, make sure the XML
-                // module is that of the passed currentModule.  We do
-                // the check here late because we know the xml is good
-                // if we get this far -- that the si.getModule() will
-                // not return null.
-                String xmlCode = si.getModule().getCode();
-                if (xmlCode == null ||
-                    !currentModule.getCode().equals(xmlCode))
-                {
-                    if (importErrors == null)
-                    {
-                        importErrors = new ArrayList(1);
-                    }
+            // ASSUMPTION: Parse errors prevent entry into this block.
+            validateContent(si, currentModule);
 
-                    // FIXME: This is a bogus error message to report
-                    // for an unrecognized code.
-                    Object[] args = { si.getModule().getName(),
-                                      currentModule.getName() };
-                    String error = Localization.format
-                        (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
-                         "XMLModuleNotCurrent", args);
-                    importErrors.add(error);
+            // Log any errors encountered during import.
+            if (importErrors != null)
+            {
+                int nbrErrors = importErrors.size();
+                LOG.error("Found " + nbrErrors + " error" +
+                          (nbrErrors == 1 ? "" : "s") + " importing '" +
+                          name + "':");
+                for (Iterator itr = importErrors.iterator(); itr.hasNext(); )
+                {
+                    LOG.error(itr.next());
                 }
             }
-
-            // Error handling.
-            if (importErrors != null) 
-            {
-                if (importErrors.isEmpty())
-                {
-                    importErrors = null;
-                }
-                else
-                {
-                    int nbrErrors = importErrors.size();
-                    LOG.error("Found " + nbrErrors + " error" +
-                              (nbrErrors == 1 ? "" : "s") + " importing '" +
-                              name + "':");
-                    for (Iterator itr = importErrors.iterator();
-                         itr.hasNext(); )
-                    {
-                        LOG.error(itr.next());
-                    }
-                }
-            }
-
         }
-        return importErrors;
+    }
+
+    /**
+     * Helper method for validate() which invokes validation routines
+     * supplied by <code>ScarabIssues</code> plus (conditionally)
+     * additional module validation.
+     */
+    private void validateContent(ScarabIssues si, Module currentModule)
+        throws Exception
+    {
+        if (currentModule != null)
+        {
+            // Make sure the XML module corresponds to the current
+            // module.  This is later than we'd like to perform this
+            // check, since we've already parsed the XML.  On the
+            // upside, si.getModule() should not return null.
+            XmlModule xmlModule = si.getModule();
+
+            // HELP: Check domain also?
+
+            String xmlModuleName = xmlModule.getName();
+            String curModuleName = currentModule.getRealName();
+            if (!curModuleName.equals(xmlModuleName))
+            {
+                Object[] args = { xmlModuleName, curModuleName };
+                String error = Localization.format
+                    (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                     "XMLAndCurrentModuleMismatch", args);
+                importErrors.add(error);
+            }
+
+            String xmlCode = xmlModule.getCode();
+            if (xmlCode == null ||
+                !currentModule.getCode().equals(xmlCode))
+            {
+                Object[] args = { xmlCode, currentModule.getCode() };
+                String error = Localization.format
+                    (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                     "XMLAndCurrentCodeMismatch", args);
+                importErrors.add(error);
+            }
+        }
+
+        si.doValidateDependencies();
+        si.doValidateUsers();
     }
 
     /**
@@ -615,6 +638,7 @@ public class ImportIssues
                           true);
         reader.setXMLIntrospector(createXMLIntrospector());
         reader.registerBeanClass(ScarabIssues.class);
+        reader.addRule("scarab-issues", new ScarabIssuesSetupRule());
         reader.setErrorHandler(this);
         return reader;
     }
@@ -633,6 +657,18 @@ public class ImportIssues
         introspector.setElementNameMapper(new HyphenatedNameMapper());
 
         return introspector;
+    }
+
+    /**
+     * A rule to perform setup of the a ScarabIssues instance.
+     */
+    class ScarabIssuesSetupRule extends Rule
+    {
+        public void begin(String namespace, String name, Attributes attributes)
+        {
+            ScarabIssues si = (ScarabIssues) getDigester().peek();
+            si.importErrors = importErrors;
+        }
     }
 
     /**
@@ -682,5 +718,7 @@ public class ImportIssues
     {
         // Warnings are non-fatal.  At some point we should report
         // these back to the end user.
+        LOG.debug("Parse Warning at line " + e.getLineNumber() +
+                  " column " + e.getColumnNumber() + ": " + e.getMessage());
     }
 }
