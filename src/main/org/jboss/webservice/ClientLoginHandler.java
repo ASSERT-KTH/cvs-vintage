@@ -5,19 +5,17 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ClientLoginHandler.java,v 1.1 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: ClientLoginHandler.java,v 1.2 2004/04/30 07:41:26 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ClientLoginHandler.java,v 1.1 2004/04/28 14:34:52 tdiesler Exp $
+// $Id: ClientLoginHandler.java,v 1.2 2004/04/30 07:41:26 tdiesler Exp $
 
+import org.apache.axis.AxisFault;
+import org.apache.axis.MessageContext;
+import org.apache.axis.handlers.BasicHandler;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
 
-import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
-import javax.xml.rpc.handler.GenericHandler;
-import javax.xml.rpc.handler.MessageContext;
-import javax.xml.rpc.handler.soap.SOAPMessageContext;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
@@ -33,45 +31,31 @@ import java.security.Principal;
  * @author Thomas.Diesler@jboss.org
  * @since 27-April-2004
  */
-public class ClientLoginHandler extends GenericHandler
+public class ClientLoginHandler extends BasicHandler
 {
    // provide logging
    private static final Logger log = Logger.getLogger(ClientLoginHandler.class);
 
-   // The headers known to this handler
-   private static QName[] headerNames = {
-      new QName(Constants.WS4EE_NAMESPACE_URI, "username"),
-      new QName(Constants.WS4EE_NAMESPACE_URI, "password")
-   };
-
    /**
-    * Gets the header blocks processed by this Handler instance.
+    * Invoke is called to do the actual work of the Handler object.
+    * If there is a fault during the processing of this method it is
+    * invoke's job to catch the exception and undo any partial work
+    * that has been completed.  Once we leave 'invoke' if a fault
+    * is thrown, this classes 'onFault' method will be called.
+    * Invoke should rethrow any exceptions it catches, wrapped in
+    * an AxisFault.
     *
-    * new QName("http://webservice.jboss.com/ws4ee", "username")
-    * new QName("http://webservice.jboss.com/ws4ee", "password")
-    *
-    * @return Array of QNames of header blocks processed by this handler instance.
-    * QName is the qualified name of the outermost element of the Header block.
+    * @param msgContext the <code>MessageContext</code> to process with this <code>Handler</code>.
+    * @throws org.apache.axis.AxisFault if the handler encounters an error
     */
-   public QName[] getHeaders()
-   {
-      return headerNames;
-   }
-
-   /**
-    * Get principal/credential from the SecurityAssociation and add them as SOAP header elements.
-    * @param context the message context
-    * @return true/false
-    */
-   public boolean handleRequest(MessageContext context)
+   public void invoke(MessageContext msgContext) throws AxisFault
    {
       Principal principal = SecurityAssociation.getPrincipal();
       Object credential = SecurityAssociation.getCredential();
 
       try
       {
-         SOAPMessageContext soapCtx = (SOAPMessageContext)context;
-         SOAPMessage soapMessage = soapCtx.getMessage();
+         SOAPMessage soapMessage = msgContext.getMessage();
          SOAPHeader soapHeader = soapMessage.getSOAPPart().getEnvelope().getHeader();
          SOAPFactory soapFactory = SOAPFactory.newInstance();
 
@@ -93,10 +77,8 @@ public class ClientLoginHandler extends GenericHandler
       }
       catch (SOAPException e)
       {
-         log.error ("Cannot handle request: " + e.toString());
-         throw new JAXRPCException(e);
+         log.error("Client login failed: " + e.toString());
+         throw new AxisFault("Client login failed", e);
       }
-
-      return true;
    }
 }
