@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.60 2002/01/11 00:42:47 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.61 2002/01/14 16:08:56 richard Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -448,7 +448,8 @@ public class ModifyIssue extends RequireLoginFirstAction
         String attachmentId;
         ScarabUser user = (ScarabUser)data.getUser();
         String id = data.getParameters().getString("id");
-        Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        //Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        Issue issue = Issue.getIssueById(id);
 
         for (int i =0; i<keys.length; i++)
         {
