@@ -19,7 +19,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.7 1998/06/03 00:27:18 jrobbins Exp $
+// $Id: Designer.java,v 1.8 1998/06/30 23:52:51 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -71,7 +71,7 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
   private Agency _agency;
 
   private Thread _critiquer;
-  private int _critiquingInterval = 3000;
+  private int _critiquingInterval = 8000;
   private boolean _autoCritique = true;
 
   private ChildGenerator _cg = new ChildGenDMElements();
@@ -144,6 +144,7 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
       catch (InterruptedException ignore) {
         System.out.println("InterruptedException!!!");
       }
+      System.gc();
     }
   }
 
