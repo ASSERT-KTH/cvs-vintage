@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Oracle</h2>
-<h4>$Id: oracle.html,v 1.8 2002/08/29 23:37:56 jmcnally Exp $</h4>
+<h4>$Id: oracle.html,v 1.9 2002/08/30 00:01:33 jon Exp $</h4>
 
 <p>
 Scarab has been developed with database independence in mind, however
@@ -46,7 +46,7 @@ scarab.database.username=<br />
 scarab.database.password=<br />
 scarab.database.admin.username=<br />
 scarab.database.admin.password=<br />
-scarab.database.validationQuery=select 1 from dual
+scarab.database.validationQuery=SELECT 1 FROM DUAL
 </p>
 
 <p>
@@ -65,14 +65,6 @@ after changing the default date format:
 <pre>
 SQL>alter session set NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS';
 SQL>@scarab-default-data.sql
-</pre>
-</p>
-
-<p>
-You will need to add the following to your build.properties file to override
-the query which works for mysql:
-<pre>
-torque.dsfactory.scarab.pool.validationQuery=SELECT 1 FROM DUAL
 </pre>
 </p>
 
