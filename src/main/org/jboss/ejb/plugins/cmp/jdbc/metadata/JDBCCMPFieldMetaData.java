@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -220,7 +220,12 @@ public final class JDBCCMPFieldMetaData {
       String readTimeOutStr = MetaData.getOptionalChildContent(
             element, "read-time-out");
       if(readTimeOutStr != null) {
-         readTimeOut = Integer.parseInt(readTimeOutStr);
+         try {
+            readTimeOut = Integer.parseInt(readTimeOutStr);
+         } catch (NumberFormatException e) {
+            throw new DeploymentException("Invalid number format in " +
+                  "read-time-out '" + readTimeOutStr + "': " + e);
+         }
       } else {
          readTimeOut = defaultValues.getReadTimeOut();
       }

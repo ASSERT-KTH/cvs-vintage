@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -173,7 +173,12 @@ public final class JDBCRelationMetaData {
       String readTimeOutString = MetaData.getOptionalChildContent(
             element, "read-time-out");
       if(readTimeOutString != null) {
-         readTimeOut = Integer.parseInt(readTimeOutString);
+         try {
+            readTimeOut = Integer.parseInt(readTimeOutString);
+         } catch (NumberFormatException e) {
+            throw new DeploymentException("Invalid number format in " +
+                  "read-time-out '" + readTimeOutString + "': " + e);
+         }
       } else {
          readTimeOut = defaultValues.getReadTimeOut();
       }      

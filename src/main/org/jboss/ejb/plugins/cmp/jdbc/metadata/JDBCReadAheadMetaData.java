@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCReadAheadMetaData {
 
@@ -120,7 +120,7 @@ public final class JDBCReadAheadMetaData {
          try {
             pageSize = Integer.parseInt(pageSizeStr);
          } catch (NumberFormatException ex) {
-            throw new DeploymentException("Wrong number format of read " +
+            throw new DeploymentException("Invalid number format in read-" +
                   "ahead page-size '" + pageSizeStr + "': " + ex);
          }
          if(pageSize < 0) {

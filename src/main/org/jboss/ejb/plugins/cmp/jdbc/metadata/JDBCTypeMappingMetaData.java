@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public final class JDBCTypeMappingMetaData {
    
@@ -120,8 +120,14 @@ public final class JDBCTypeMappingMetaData {
       aliasHeaderSuffix = 
             MetaData.getUniqueChildContent(element, "alias-header-suffix");
       
-      aliasMaxLength = Integer.parseInt(
-            MetaData.getUniqueChildContent(element, "alias-max-length"));
+      String aliasMaxLengthString = 
+            MetaData.getUniqueChildContent(element, "alias-max-length");
+      try {
+         aliasMaxLength = Integer.parseInt(aliasMaxLengthString);
+      } catch (NumberFormatException e) {
+         throw new DeploymentException("Invalid number format in " +
+               "alias-max-length " + aliasMaxLengthString + "': " + e);
+      }
 
       String subquerySupportedStr = 
             MetaData.getUniqueChildContent(element, "subquery-supported");
