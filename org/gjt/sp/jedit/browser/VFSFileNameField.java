@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.18 2003/12/27 19:44:37 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.19 2004/03/06 21:33:53 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -51,6 +51,10 @@ class VFSFileNameField extends HistoryTextField
 		Dimension dim = getPreferredSize();
 		dim.width = Integer.MAX_VALUE;
 		setMaximumSize(dim);
+
+		ActionMap map = getActionMap();
+		Action backspace = map.get("delete-previous");
+		map.put("delete-previous",new BackspaceAction(backspace));
 	} //}}}
 
 	//{{{ isManagingFocus() method
@@ -170,27 +174,6 @@ class VFSFileNameField extends HistoryTextField
 						setText(path + vfs.getFileSeparator());
 				}
 			}
-			else if(ch == '\b')
-			{
-				if(getSelectionStart() == 0
-					&& getSelectionEnd() == 0)
-				{
-					goToParent();
-
-					return;
-				}
-				else
-				{
-					super.processKeyEvent(evt);
-					String path = getText();
-
-					BrowserView view = browser.getBrowserView();
-					view.selectNone();
-					view.getTable().doTypeSelect(path,
-						browser.getMode() == VFSBrowser
-						.CHOOSE_DIRECTORY_DIALOG);
-				}
-			}
 			else if(ch > 0x20 && ch != 0x7f && ch != 0xff)
 			{
 				super.processKeyEvent(evt);
@@ -273,4 +256,39 @@ class VFSFileNameField extends HistoryTextField
 	} //}}}
 
 	//}}}
+
+	//{{{ BackspaceAction class
+	/**
+	 * In 4.3, I need to change all the keystrokes to use actions.
+	 */
+	class BackspaceAction extends AbstractAction
+	{
+		private Action delegate;
+
+		BackspaceAction(Action delegate)
+		{
+			this.delegate = delegate;
+		}
+
+		public void actionPerformed(ActionEvent evt)
+		{
+			if(getSelectionStart() == 0
+				&& getSelectionEnd() == 0)
+			{
+				goToParent();
+			}
+			else
+			{
+				delegate.actionPerformed(evt);
+
+				String path = getText();
+
+				BrowserView view = browser.getBrowserView();
+				view.selectNone();
+				view.getTable().doTypeSelect(path,
+					browser.getMode() == VFSBrowser
+					.CHOOSE_DIRECTORY_DIALOG);
+			}
+		}
+	} //}}}
 }
