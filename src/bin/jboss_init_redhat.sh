@@ -29,7 +29,7 @@ JBOSS_HOME=${JBOSS_HOME:-"/usr/local/jboss"}
 JAVAPTH=${JAVAPTH:-"/usr/local/jdk/bin"}
 
 #define the classpath for the shutdown class
-JBOSSCP=${JBOSSCP:-"$JBOSS_HOME/bin/shutdown.jar"}
+JBOSSCP=${JBOSSCP:-"$JBOSS_HOME/bin/shutdown.jar:$JBOSS_HOME/lib/jnet.jar"}
 
 #define the script to use to start jboss
 JBOSSSH=${JBOSSSH:-"$JBOSS_HOME/bin/run.sh"}
