@@ -179,9 +179,8 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 				"TableUI",
 				thinPackage + "ThinTableUI",
 				"TreeUI",
-				thinPackage + "ThinTreeUI",
-				"WizardContentPaneUI",
-				thinPackage + "ThinWizardContentPaneUI" };
+				thinPackage + "ThinTreeUI"
+				};
 		table.putDefaults(map);
 
 		// antialiasing==0 -> no antialiasing

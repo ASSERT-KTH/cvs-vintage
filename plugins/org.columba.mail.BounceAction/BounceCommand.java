@@ -1,8 +1,12 @@
+import java.io.InputStream;
+import java.util.StringTokenizer;
+
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageComposer;
@@ -15,21 +19,10 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.smtp.SMTPServer;
-
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.ByteBufferSource;
 import org.columba.ristretto.smtp.SMTPException;
-
-/*
- * Created on 30.04.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-import java.util.StringTokenizer;
-
-import javax.swing.JOptionPane;
 
 
 /**
@@ -55,7 +48,7 @@ public class BounceCommand extends FolderCommand {
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
@@ -71,8 +64,9 @@ public class BounceCommand extends FolderCommand {
         message.setMimePartTree(mimePartTree);
 
         // copy message-source of bounce message
-        String source = folder.getMessageSource(uids[0]);
-        message.setSource(new CharSequenceSource(source));
+        InputStream sourceStream = folder.getMessageSourceStream(uids[0]);
+        // TODO: how do I create a Source from an InputStream?
+        //message.setSource();
 
         // create composer-model
         // this encapsulates the data we need to
