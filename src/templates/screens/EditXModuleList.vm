@@ -31,7 +31,7 @@ Name:
 </p>
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doSavelist" value="Save" />
+ <input type="submit" name="eventSubmit_doSavelist" value="$l10n.Save" />
 </div>
 
 #else

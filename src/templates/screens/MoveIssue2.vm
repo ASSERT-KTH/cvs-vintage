@@ -36,7 +36,7 @@
 
 <div class="functnbar">
   <input type="submit" value="$actionText issue" name="eventSubmit_doSaveissue" />
-  <input type="submit" value="Cancel" name="eventSubmit_doBacktoone" />&#160; 
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />&#160; 
 </div>
 
 #set ($attrValues = $issue.AllAttributeValuesMap)
@@ -154,7 +154,7 @@
 
 <div class="functnbar2">
   <input type="submit" value="$actionText issue" name="eventSubmit_doSaveissue" />
-  <input type="submit" value="Cancel" name="eventSubmit_doBacktoone" />&#160; 
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />&#160; 
 </div>
 
 $intake.declareGroups()

@@ -50,8 +50,8 @@
 
 #if ($searchType.equals("advanced") && !$queryString.equals(""))
 <div class="functnbar">
-<input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />
+<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />
 </div>
 #end
 
@@ -172,7 +172,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
  <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
  <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
- <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
+ <input type="submit" name="eventSubmit_doSearch" value="$l10n.Refresh" />
  </td>
    </tr>
   </table>
@@ -180,14 +180,14 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
 <div class="functnbar3">
 #if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
-   <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
+   <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignselected" />&#160;
 #end
-<input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;
+<input type="submit" value="$l10n.ViewVerbose"  name="eventSubmit_doViewselected" />&#160;
 <small>selected</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
 #if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
-  <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
+  <input type="submit" value="$l10n.Assign" name="eventSubmit_doReassignall" />&#160;
 #end
-<input type="submit" value="View verbose" name="eventSubmit_doViewall" />&#160;
+<input type="submit" value="$l10n.ViewVerbose" name="eventSubmit_doViewall" />&#160;
 <small>all</small>
 </div>
         
@@ -199,8 +199,8 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
 #if ($searchType.equals("advanced") && $queryString)
 <div class="functnbar2">
-<input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />
+<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />
 </div>
 #end
 

@@ -56,8 +56,8 @@ $l10n.EnterConfirmation
 </div>
 
 <div class="functnbar2">
-<input type="submit" name="eventSubmit_doConfirm" value="Confirm" tabindex="3" />&#160;
-<input type="submit" name="eventSubmit_doResendconfirmationcode" value="Resend code" tabindex="4" />&#160;
+<input type="submit" name="eventSubmit_doConfirm" value="$l10n.Confirm" tabindex="3" />&#160;
+<input type="submit" name="eventSubmit_doResendconfirmationcode" value="$l10n.ResendCode" tabindex="4" />&#160;
 </div>
 
 $intake.declareGroups()

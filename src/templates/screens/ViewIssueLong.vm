@@ -20,7 +20,7 @@
   </form>
   #end
 #else
-   <p class="alert">You have not selected any issues to view.</p>
+   <p class="alert">$l10n.NoIssuesSelected</p>
 #end
 
 </div>

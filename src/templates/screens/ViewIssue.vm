@@ -6,8 +6,7 @@
 #if ($currentIssue.Module != $scarabR.CurrentModule)
 
 <p class="alert">
-You are viewing an issue in a different module ($currentIssue.Module.Name) than is currently selected.
-</p>
+$l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 
 #end
 
@@ -45,29 +44,29 @@ You are viewing an issue in a different module ($currentIssue.Module.Name) than 
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
 #if ($tab.equals("1"))
-<th>Attributes</th>
+<th>$l10n.Attributes</th>
 #else
 <td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Attributes</a></td>
 #end
 #if ($tab.equals("2"))
-<th>Personnel</th>
+<th>$l10n.Personnel</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "2").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Personnel</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "2").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.Personnel</a></td>
 #end
 #if ($tab.equals("3"))
-<th>Comments</th>
+<th>$l10n.Comments</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "3").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Comments</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "3").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.Comments</a></td>
 #end
 #if ($tab.equals("4"))
-<th>URLs/Attachments/Dependencies</th>
+<th>$l10n.URLsAttachmentsDependencies</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "4").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">URLs/Attachments/Dependencies</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "4").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.URLsAttachmentsDependencies</a></td>
 #end
 #if ($tab.equals("5"))
 <th>History</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "5").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">History</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "5").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.History</a></td>
 #end
 </tr>
 </table>
@@ -79,18 +78,18 @@ You are viewing an issue in a different module ($currentIssue.Module.Name) than 
  $intake.declareGroups()
  </form>
 
-<div align="right"><small><a href="$link.getIssueIdAbsoluteLink($currentIssue)">Session-info-free link to $currentIssue.UniqueId</a></small></div>
+<div align="right"><small><a href="$link.getIssueIdAbsoluteLink($currentIssue)">$l10n.SessionInfoLink $currentIssue.UniqueId</a></small></div>
 #else
 
-<h3>Issue search results</h3>
+<h3>$l10n.IssueSearchResults</h3>
 
   #if ($currentIssueId && $currentIssueId.length() > 0)
     <p class="alert">
-    The issue id, $currentIssueId, is not valid. Please enter a new issue id.
+    $l10n.IssueIdNotValid $l10n.PleaseEnterNewIssueId 
     </p>
   #else
     <p class="alert">
-    You need to enter an issue id.
+    $l10n.PleaseEnterIssueID
     </p>
   #end
 

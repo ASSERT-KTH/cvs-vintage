@@ -87,7 +87,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Next" name="eventSubmit_doValidate" />
+  <input type="submit" value="$l10n.Next" name="eventSubmit_doValidate" />
 </div>
 
 $intake.declareGroups()

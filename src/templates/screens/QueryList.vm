@@ -88,12 +88,12 @@
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Copy selected" name="eventSubmit_doCopyquery" />
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopyquery" />
   #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
-   &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletequeries" />
+   &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletequeries" />
   #end
-   &#160;<input type="submit" value="Create new query" name="eventSubmit_doNewquery" />
+   &#160;<input type="submit" value="$l10n.CreateNewQuery" name="eventSubmit_doNewquery" />
 </div>
 
 #end

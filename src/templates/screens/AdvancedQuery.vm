@@ -16,7 +16,7 @@
 
 <div class="functnbar2">
 <input type="Submit"  name="eventSubmit_doSearch" value="Submit" />&#160;
-<input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" />
+<input type="submit" value="$l10n.SaveQuery"  name="eventSubmit_doRedirecttosavequery" />
 </div>
 
 $intake.declareGroups()

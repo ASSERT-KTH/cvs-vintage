@@ -9,12 +9,12 @@
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
 #if ($currentTemplate.IssueId)
-  <input type="submit" value="Use template" name="eventSubmit_doUsetemplate" />&#160;
-  <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
+  <input type="submit" value="$l10n.UseTemplate" name="eventSubmit_doUsetemplate" />&#160;
+  <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160; 
 #else
-  <input type="submit" value="Save new" name="eventSubmit_doCreatenew" />&#160;
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doCreatenew" />&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 #end
 
@@ -71,7 +71,7 @@
 
 #if ($currentTemplate.IssueId)
     <div class="functnbar3">
-    <input type="submit" value="Save changes" name="eventSubmit_doEdittemplateinfo" />&#160;
+    <input type="submit" value="$l10n.Save" name="eventSubmit_doEdittemplateinfo" />&#160;
     </div>
 #end
 
@@ -121,7 +121,7 @@
 
 #if ($currentTemplate.IssueId)
   <div class="functnbar3">
-  <input type="submit" value="Save changes" name="eventSubmit_doEditvalues" />&#160;
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doEditvalues" />&#160;
   </div>
 #end
 

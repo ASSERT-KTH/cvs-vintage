@@ -48,7 +48,7 @@
 #end 
   
 <div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
 
 
@@ -137,7 +137,7 @@
    </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doRemove" value="Remove selected from assignee list" />
+ <input type="submit" name="eventSubmit_doRemove" value="$l10n.RemoveSelectedAssignee" />
 </div>
   #end
 
@@ -160,7 +160,7 @@
  </table>
 </div>
 <div class="functnbar2">
- <input type="submit" value="Done" name="eventSubmit_doDone" />
+ <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
 
 ## SORTING
@@ -246,7 +246,7 @@
       <option value="First Name">$l10n.FirstName</option>
       <option value="Last Name">$l10n.LastName</option>
       <option value="Username">$l10n.Username</option>
-     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="Filter" /></td>
+     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
   </tr>
 </table>
 </div>
@@ -297,7 +297,7 @@
    </table>
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
+ <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
 </div>
 
 #if ($paginated)
@@ -311,7 +311,7 @@
          <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
          <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
          <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
-        &#160;<input type="submit" value="Refresh" /></p>
+        &#160;<input type="submit" value="$l10n.Refresh" /></p>
        </td>
      </tr>
   </table>
@@ -321,7 +321,7 @@
 #set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 <div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
 
 $intake.declareGroups()
