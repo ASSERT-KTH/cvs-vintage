@@ -19,6 +19,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
+import org.columba.ristretto.message.Flags;
 
 
 /**
@@ -58,47 +59,29 @@ public class FlagsFilter extends AbstractFilter {
         int condition = FilterCriteria.getCriteria((String) args[0]);
 
         String searchHeaderField = null;
-
+		
+		Flags flags = folder.getFlags(uid);
+		
         if (headerField.equalsIgnoreCase("Answered")) {
-            searchHeaderField = new String("columba.flags.answered");
+            result = flags.get(Flags.ANSWERED);
         } else if (headerField.equalsIgnoreCase("Deleted")) {
-            searchHeaderField = new String("columba.flags.expunged");
+			result = flags.get(Flags.EXPUNGED);
         } else if (headerField.equalsIgnoreCase("Flagged")) {
-            searchHeaderField = new String("columba.flags.flagged");
+			result = flags.get(Flags.FLAGGED);
         } else if (headerField.equalsIgnoreCase("Recent")) {
-            searchHeaderField = new String("columba.flags.recent");
+			result = flags.get(Flags.RECENT);
         } else if (headerField.equalsIgnoreCase("Draft")) {
-            searchHeaderField = new String("columba.flags.draft");
+			result = flags.get(Flags.DRAFT);
         } else if (headerField.equalsIgnoreCase("Seen")) {
-            searchHeaderField = new String("columba.flags.seen");
+			result = flags.get(Flags.SEEN);
         } else if (headerField.equalsIgnoreCase("Spam")) {
-            searchHeaderField = new String("columba.spam");
+            result = ((Boolean)folder.getAttribute(uid, "columba.spam")).booleanValue();
         }
 
-        Boolean flags = (Boolean) folder.getAttribute(uid, searchHeaderField);
-
-        if (flags == null) {
-            return false;
+        if (condition == FilterCriteria.IS) {
+        	return result;
+        } else {
+        	return !result;
         }
-
-        switch (condition) {
-        case FilterCriteria.IS: {
-            if (flags.equals(Boolean.TRUE)) {
-                result = true;
-            }
-
-            break;
-        }
-
-        case FilterCriteria.IS_NOT: {
-            if (flags.equals(Boolean.FALSE)) {
-                result = true;
-            }
-
-            break;
-        }
-        }
-
-        return result;
     }
 }
