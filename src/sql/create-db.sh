@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.3 2002/03/13 19:20:45 dlr Exp $
+# $Id: create-db.sh,v 1.4 2002/03/13 19:24:16 dlr Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -58,7 +58,7 @@ do
 done
 
 ####### Sanity checks
-if [ "$dbtype" != "mysql" -a "$dbtype" != "postgresql" ] ; then
+if [ "${dbtype}" != 'mysql' -a "${dbtype}" != 'postgresql' ] ; then
     echo
     echo "Please specify either 'mysql' or 'postgresql'"
     usage=t
@@ -111,7 +111,7 @@ echo ""
 fi
 
 # If user wants password, then...
-if [ ! -z "$password" -a "${name}" = 'mysql' ] ; then
+if [ ! -z "$password" -a "${dbtype}" = 'mysql' ] ; then
     # Don't want to leave the user blind if he breaks
     # during password entry.
     trap 'stty echo >/dev/null 2>&1' 1 2 3 15
