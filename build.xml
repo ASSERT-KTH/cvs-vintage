@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.88 2002/05/13 06:14:03 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.89 2002/05/13 06:15:55 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -262,6 +262,7 @@
     <property name="build.parsers" value="${module.output}/parsers"/>
     <property name="build.beans" value="${module.output}/beans"/>
     <property name="build.gen-src" value="${module.output}/gen-src"/>
+    <property name="build.gen" value="${module.output}/gen"/>
     <property name="build.resources" value="${module.output}/resources"/>
     <property name="build.reports" value="${module.output}/reports"/>
 
