@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.46 2003/02/20 06:01:10 thn Exp $
+// $Id: Modeller.java,v 1.47 2003/02/20 07:40:40 lepekhine Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -875,6 +875,9 @@ public class Modeller
     private void setVisibility(Object element,
                                short modifiers)
     {
+	if((modifiers & JavaRecognizer.ACC_STATIC) > 0) {
+            ModelFacade.setTaggedValue(element,"src_modifiers", "static");
+	}
 	if((modifiers & JavaRecognizer.ACC_PRIVATE) > 0) {
 	    ModelFacade.setVisibility(element,ModelFacade.ACC_PRIVATE);
 	}
