@@ -38,11 +38,10 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
-   private final EntityBridge entityBridge;
    private final Class beanClass;
    private final Map fieldMap;
    private final Map selectorMap;
@@ -50,22 +49,18 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
    
    /**
     * Creates an invocation handler for the specified entity.
-    * @param entityBridge the bridge that will be called in response to 
-    *    in invocation
-    * @param beanClass the implementation class for the ejb
-    * @throws Exception if a problem occures while setting up the method maps
     */
    public EntityBridgeInvocationHandler(
          EntityContainer container,
-         EntityBridge entityBridge,
+         Map fieldMap,
+         Map selectorMap,
          Class beanClass) throws DeploymentException {
 
       this.container = container;
-      this.entityBridge = entityBridge;
       this.beanClass = beanClass;
 
-      fieldMap = createFieldMap();
-      selectorMap = createSelectorMap();
+      this.fieldMap = fieldMap;
+      this.selectorMap = selectorMap;
    }
    
    public void setContext(EntityEnterpriseContext ctx) {
@@ -137,68 +132,4 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
             "methodName=" + methodName);
    }
    
-   private Map getAbstractAccessors() {
-      Method[] methods = beanClass.getMethods();
-      Map abstractAccessors = new HashMap(methods.length);
-      
-      for(int i=0; i<methods.length; i++) {
-          if(Modifier.isAbstract(methods[i].getModifiers())) {
-            String methodName = methods[i].getName();
-            if(methodName.startsWith("get") || methodName.startsWith("set")) {
-               abstractAccessors.put(methodName, methods[i]);
-            }               
-         }
-      }
-      return abstractAccessors;
-   }
-   
-   private Map createFieldMap() throws DeploymentException {
-
-      Map abstractAccessors = getAbstractAccessors();
-
-      Collection fields = entityBridge.getFields();
-      Map map = new HashMap(fields.size() * 2);
-      for(Iterator iter = fields.iterator(); iter.hasNext();) {
-         FieldBridge field = (FieldBridge)iter.next();
-
-         // get the names
-         String fieldName = field.getFieldName();
-         String fieldBaseName = Character.toUpperCase(fieldName.charAt(0)) +
-            fieldName.substring(1);
-         String getterName = "get" + fieldBaseName;
-         String setterName = "set" + fieldBaseName;
-   
-         // get the accessor methods
-         Method getterMethod = (Method)abstractAccessors.get(getterName);
-         Method setterMethod = (Method)abstractAccessors.get(setterName);
-
-         // getters and setters must come in pairs
-         if(getterMethod != null && setterMethod == null) {
-            throw new DeploymentException("Getter was found but, no setter " +
-                  "was found for field: " + fieldName);
-         } else if(getterMethod == null && setterMethod != null) {
-            throw new DeploymentException("Setter was found but, no getter " +
-                  "was found for field: " + fieldName);
-         } else if(getterMethod != null && setterMethod != null) {
-            // add methods
-            map.put(getterMethod, field);
-            map.put(setterMethod, field);
-
-            // remove the accessors (they have been used)
-            abstractAccessors.remove(getterName);
-            abstractAccessors.remove(setterName);
-         }
-      }
-      return Collections.unmodifiableMap(map);
-   }
-
-   private Map createSelectorMap() {
-      Collection selectors = entityBridge.getSelectors();
-      Map map = new HashMap(selectors.size());
-      for(Iterator iter = selectors.iterator(); iter.hasNext();) {
-         SelectorBridge selector = (SelectorBridge)iter.next();
-         map.put(selector.getMethod(), selector);
-      }
-      return Collections.unmodifiableMap(map);
-   }
 }
