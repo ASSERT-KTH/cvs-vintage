@@ -71,7 +71,7 @@ import javax.servlet.http.*;
  */
 public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     ContextManager cm; 
-    protected Vector methods=new Vector();
+    protected String methods[]=new String[0];
     
     public BaseInterceptor() {
     }
@@ -119,8 +119,8 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 	return 0;
     }
 
-    public Enumeration getMethods()  {
-	return methods.elements();
+    public String []getMethods()  {
+	return methods;
     }
 
     // -------------------- Context notifications --------------------

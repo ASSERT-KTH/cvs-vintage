@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.7 2000/02/16 00:30:29 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/16 00:30:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.8 2000/02/16 05:53:33 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/02/16 05:53:33 $
  *
  * ====================================================================
  *
@@ -67,32 +67,35 @@ import javax.servlet.Servlet;
 import java.util.*;
 
 /**
- * For request processing - before calling service() ( or any LifecycleInterceptors )
+ * Provide a mechanism to customize the request processing.
  *
  * @author costin@dnt.ro
  */
 public interface RequestInterceptor {
     public static final int OK=0;
 
-    /** Will return the methods fow which this interceptor is interested
-     *  in notification.
-     */
-    public Enumeration getMethods();
-    
     /** Will detect the context path for a request.
      *  It need to set: context, contextPath, lookupPath
+     *
+     *  A possible use for this would be a "user-home" interceptor
+     *  that will implement ~costin servlets ( add and map them at run time).
      */
     public int contextMap(Request request);
 
-    /** Handle mapping inside a context
+    
+    /** Handle mappings inside a context.
+     *  You are required to respect the mappings in web.xml.
      */
     public int requestMap(Request request);
 
+    
     /** Will extract the user ID from the request, and check the password.
      *  It will set the user only if the user/password are correct, or user
      *  will be null.
+     *  XXX what should we do if the password is wrong ? 
      */
     public int authenticate(Request request, Response response);
+
 
     /** Will check if the user is authorized, by checking if it is in one
      *  of the roles defined in security constraints.
@@ -106,28 +109,44 @@ public interface RequestInterceptor {
      */
     public int authorize(Request request, Response response);
 
-    /** Called before service method is invoked.
+
+    /** Called before service method is invoked. 
      */
     public int preService(Request request, Response response);
 
+    
     /** Called before the first body write, and before sending
      *  the headers. The interceptor have a chance to change the
      *  output headers.
      */
     public int beforeBody( Request request, Response response);
-        
+
+    
     /** Called before the output buffer is commited
      */
     public int beforeCommit( Request request, Response response);
 
+    
     /** Called after the output stream is closed ( either by servlet
      *  or automatically at end of service )
      */
     public int afterBody( Request request, Response response);
 
-    /** Called after service method ends. Log is a particular case
+    
+    /** Called after service method ends. Log is a particular use
      */
     public int postService(Request request, Response response);
+
+
+    /** Will return the methods fow which this interceptor is interested
+     *  in notification.
+     *  This will be used by ContextManager to call only the interceptors
+     *  that are interested, avoiding empty calls.
+     *  ( not implemented yet )
+     */
+    public String[] getMethods();
+
+    
 
 }
 

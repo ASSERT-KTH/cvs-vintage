@@ -91,8 +91,6 @@ public class SimpleMapper extends  BaseInterceptor  {
 
     
     public SimpleMapper() {
-	methods.addElement("contextMap");
-	methods.addElement("requestMap");	
     }
 
     public void setContextManager( ContextManager cm ) {

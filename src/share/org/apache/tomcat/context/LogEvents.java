@@ -110,10 +110,6 @@ public class LogEvents extends BaseInterceptor {
 	return 0;
     }
 
-    public Enumeration getMethods()  {
-	return methods.elements();
-    }
-
     // -------------------- Context notifications --------------------
     public void contextInit(Context ctx) throws TomcatException {
 	ctx.log( "Context Init ");
