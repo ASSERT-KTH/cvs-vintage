@@ -61,7 +61,7 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.2 2003/03/20 22:05:01 dlr Exp $
+ * @version $Id: IssueSearchTest.java,v 1.3 2003/05/13 16:50:18 jmcnally Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {
@@ -90,6 +90,7 @@ public class IssueSearchTest extends BaseTestCase
         testUserWithAny();
         testUserWithCreatedBy();
         testUserWithAssignedTo();
+        testUserWithAssignedToAndCreatedDate();
         testSingleOptionAndUserWithAny();
     }
 
@@ -161,6 +162,18 @@ public class IssueSearchTest extends BaseTestCase
         List results = search.getQueryResults();
         assertTrue("Should be no results.", (results.size() == 0));
     }
+
+    private void testUserWithAssignedToAndCreatedDate()
+        throws Exception
+    {
+        IssueSearch search = getSearch();
+        search.addUserCriteria(getUser5().getUserId().toString(), 
+            getAssignAttribute().getAttributeId().toString());
+        search.setMinDate("01/01/2000");
+        List results = search.getQueryResults();
+        assertTrue("Should be no results.", (results.size() == 0));
+    }
+
 
     private void testSingleOptionAndUserWithAny()
         throws Exception

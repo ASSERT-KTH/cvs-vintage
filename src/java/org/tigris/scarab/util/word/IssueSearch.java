@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.97 2003/05/06 23:21:54 elicia Exp $
+ * @version $Id: IssueSearch.java,v 1.98 2003/05/13 16:50:18 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -165,8 +165,8 @@ public class IssueSearch
     private static final String ACTIVITYALIAS_TRANSACTION_ID =
         ACTIVITYALIAS + '.' + ACT_TRAN_ID;
     private static final String 
-        ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID =
-        ACTIVITYALIAS_TRANSACTION_ID + '=' + 
+        ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID =
+        IssuePeer.CREATED_TRANS_ID + '=' + 
         ACTIVITYSETALIAS + '.' + ACTSET_TRAN_ID;
 
     private static final String ACT_ISSUE_ID = 
@@ -1497,19 +1497,14 @@ public class IssueSearch
             dateRangeSql = sbdate.toString(); 
         }                
         
-        if (userIdList == null)
+        if (userIdList == null || userIdList.isEmpty())
         {
             if (dateRangeSql != null) 
             {
                 // just dates
-                from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ' ' +
-                    ACTIVITYALIAS + " ON ("
-                    + ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID)
-                    .append(')' + INNER_JOIN + ActivitySetPeer.TABLE_NAME + 
-                    ' ' + ACTIVITYSETALIAS + " ON (" +
-                    ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID
-                    + AND + ACTIVITYSETALIAS + '.' + TYPE_ID + '=' +
-                    ActivitySetTypePeer.CREATE_ISSUE__PK)
+                from.append(INNER_JOIN).append(ActivitySetPeer.TABLE_NAME) 
+                    .append(' ').append(ACTIVITYSETALIAS).append(ON).append(
+                    ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID)
                     .append(AND).append(dateRangeSql)
                     .append(')');
             }
@@ -1521,6 +1516,7 @@ public class IssueSearch
             Map attrUsers = null;
             List attrUserAttrs = null;
             int maxUsers = userIdList.size();
+            // separate users by attribute, Created_by, and Any
             for (int i =0; i<maxUsers; i++)
             {
                 String userId = (String)userIdList.get(i);
@@ -1559,19 +1555,25 @@ public class IssueSearch
                 }
             }
 
-            String fromClause = INNER_JOIN + ActivityPeer.TABLE_NAME + ' ' +
-                ACTIVITYALIAS + " ON ("
-                + ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID;
+            // All users are compared using OR, so use a single alias
+            // for activities related to users.
+            StringBuffer fromClause = new StringBuffer(100);
+            fromClause.append(INNER_JOIN).append(ActivityPeer.TABLE_NAME)
+                .append(' ').append(ACTIVITYALIAS).append(ON)
+                .append(ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID);
 
             StringBuffer attrCrit = null;
             if (anyUsers != null) 
             {
-                attrCrit = new StringBuffer();
+                attrCrit = new StringBuffer(50);
                 attrCrit.append('(');
                 addUserActivityFragment(attrCrit, anyUsers);
                 attrCrit.append(')');
             }
             
+            // Add sql fragment for each attribute.  The sql is similar
+            // to the one used for Any users with the addition of attribute 
+            // criteria
             if (attrUsers != null) 
             {
                 for (Iterator i = attrUsers.entrySet().iterator(); i.hasNext();)
@@ -1606,10 +1608,11 @@ public class IssueSearch
                     whereClause = '(' + attrCrit.toString() + ')';
                 }
 
-                fromClause += ')' + INNER_JOIN + ActivitySetPeer.TABLE_NAME + 
-                    ' ' + ACTIVITYSETALIAS + " ON (" +
-                    ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID;
- 
+                fromClause.append(')').append(INNER_JOIN)
+                    .append(ActivitySetPeer.TABLE_NAME) 
+                    .append(' ').append(ACTIVITYSETALIAS).append(ON).append(
+                    ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID);
+
                 if (anyUsers != null || creatorUsers != null)
                 {
                     List anyAndCreators = new ArrayList(maxUsers);
@@ -1621,12 +1624,10 @@ public class IssueSearch
                     {
                         anyAndCreators.addAll(creatorUsers);
                     }
-                
+
                     // we can add this to the join condition, if created-only
                     // query otherwise it needs to go in the where clause
-                    String createdBySqlFragment = 
-                        ACTIVITYSETALIAS + '.' + TYPE_ID + '=' +
-                        ActivitySetTypePeer.CREATE_ISSUE__PK + AND +
+                    String createdBySqlFragment =  
                         ACTIVITYSETALIAS + '.' + CREATED_BY;
                     if (anyAndCreators.size() == 1) 
                     {
@@ -1642,45 +1643,39 @@ public class IssueSearch
                 
                     if (anyUsers != null || attrUsers != null) 
                     {
-                        fromClause += ')'; 
+                        fromClause.append(')'); 
                         whereClause = '(' + whereClause + OR + 
                             createdBySqlFragment + ')';
                         if (dateRangeSql != null) 
                         {
-//                            System.out.println("Date range: " + dateRangeSql);
                             whereClause += AND + dateRangeSql;
                         }
                     }
                     else 
                     {
-                        fromClause += AND + createdBySqlFragment;
+                        fromClause.append(AND).append(createdBySqlFragment);
                         if (dateRangeSql != null) 
                         {
-                            fromClause += AND + dateRangeSql;
+                            fromClause.append(AND).append(dateRangeSql);
                         }
-                        fromClause += ')'; 
+                        fromClause.append(')'); 
                     }
                 }
                 else // dateRangeSql will not be null
                 {
-                    fromClause += ACTIVITYSETALIAS + '.' + TYPE_ID + '=' +
-                        ActivitySetTypePeer.CREATE_ISSUE__PK
-                        + AND + dateRangeSql + ')'; 
+                    fromClause.append(AND).append(dateRangeSql).append(')'); 
                 }                
             }
-            else
+            else 
             {
-                if (attrCrit == null) 
-                {
-                    fromClause += ')';
-                }
-                else 
-                {
-                    fromClause += AND + '(' + attrCrit + "))";
-                }
+                // we only had single-attribute users and no date criteria.
+                // attrCrit will not be null, because we had to have at
+                // least one user or we'd not be here
+                fromClause.append(AND).append('(').append(attrCrit)
+                    .append("))");
             }
 
-            from.append(fromClause);
+            from.append(fromClause.toString());
             if (whereClause != null) 
             {
                 where.append(AND).append(whereClause);
