@@ -47,7 +47,7 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 public class IMAPRootFolder extends Folder implements ActionListener {
-	
+
 	protected final static ImageIcon imapRootIcon =
 		ImageLoader.getSmallImageIcon("imap-16.png");
 
@@ -76,9 +76,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 			MailConfig.getAccountList().uidGet(
 				folderItem.getInteger("account_uid"));
 
-		store = new IMAPStore(accountItem.getImapItem(), this);
-
-		restartTimer();
+		updateConfiguration();
 
 	}
 
@@ -91,9 +89,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 
 		getFolderItem().set("account_uid", accountItem.getInteger("uid"));
 
-		store = new IMAPStore(accountItem.getImapItem(), this);
-
-		restartTimer();
+		updateConfiguration();
 	}
 
 	public ImageIcon getCollapsedIcon() {
@@ -179,7 +175,8 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 
 		ColumbaLogger.log.debug("creating folder=" + name);
 
-		if (name.indexOf(store.getDelimiter()) != -1 && name.indexOf(store.getDelimiter()) != name.length()-1) {
+		if (name.indexOf(store.getDelimiter()) != -1
+			&& name.indexOf(store.getDelimiter()) != name.length() - 1) {
 
 			// delimiter found
 			//  -> recursively create all necessary folders to create
@@ -192,7 +189,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 			// if folder doesn't exist already
 			if (subFolder == null) {
 				subFolder = new IMAPFolder(subchild, "IMAPFolder");
-				parent.add( subFolder );
+				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
 
 				((IMAPFolder) subFolder).existsOnServer = true;
@@ -201,13 +198,12 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 				// this is the final folder
 				//subFolder = addIMAPChildFolder(parent, info, subchild);
 			} else {
-				if( !((IMAPFolder) subFolder).existsOnServer) {
-				((IMAPFolder) subFolder).existsOnServer = true;
-				subFolder.getFolderItem().set("selectable", "false");
+				if (!((IMAPFolder) subFolder).existsOnServer) {
+					((IMAPFolder) subFolder).existsOnServer = true;
+					subFolder.getFolderItem().set("selectable", "false");
 				}
 			}
-			
-			
+
 			// recursively go on
 			syncFolder(
 				subFolder,
@@ -224,18 +220,18 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 			if (subFolder == null) {
 
 				subFolder = new IMAPFolder(name, "IMAPFolder");
-				parent.add( subFolder );
+				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
 
 				((IMAPFolder) subFolder).existsOnServer = true;
 			} else {
 				((IMAPFolder) subFolder).existsOnServer = true;
 			}
-			
-			if( info.getParameter(ListInfo.NOSELECT) ) {
+
+			if (info.getParameter(ListInfo.NOSELECT)) {
 				subFolder.getFolderItem().set("selectable", "false");
 			} else {
-				subFolder.getFolderItem().set("selectable", "true");				
+				subFolder.getFolderItem().set("selectable", "true");
 			}
 		}
 	}
@@ -308,7 +304,8 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 		return store;
 	}
 
-	public void restartTimer() {
+	public void updateConfiguration() {
+		store = new IMAPStore(accountItem.getImapItem(), this);
 
 		if (accountItem.getImapItem().getBoolean("enable_mailcheck")) {
 			int interval =
@@ -827,20 +824,21 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	public void addSubfolder(FolderTreeNode child) throws Exception {
 		String path = child.getName();
 		boolean result = getStore().createFolder(path);
-		
-		if (result) super.addSubfolder(child);
+
+		if (result)
+			super.addSubfolder(child);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#save()
 	 */
 	public void save() throws Exception {
-		
-		ColumbaLogger.log.debug("Logout from IMAPServer "+ getName());
-		if( ShutdownManager.getMode() == ShutdownManager.SHUTDOWN ) {
+
+		ColumbaLogger.log.debug("Logout from IMAPServer " + getName());
+		if (ShutdownManager.getMode() == ShutdownManager.SHUTDOWN) {
 			getStore().logout();
 		}
-		
+
 	}
 
 }

@@ -277,7 +277,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 				IMAPRootFolder folder =
 					(IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
-				folder.restartTimer();
+				folder.updateConfiguration();
 
 				//folder.setName(accountItem.getName());
 
