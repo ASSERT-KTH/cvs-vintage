@@ -84,7 +84,7 @@ public class AutoSetup extends BaseInterceptor {
      *	We need a mechanism ( or convention ) to configure
      *  virtual hosts too
      */
-    public void engineStart(ContextManager cm) throws TomcatException {
+    public void engineInit(ContextManager cm) throws TomcatException {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
 	if (! webappD.exists() || ! webappD.isDirectory()) {
