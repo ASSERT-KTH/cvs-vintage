@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.76 2002/03/07 17:03:53 neales Exp $ -->
+<!-- $Id: build.xml,v 1.77 2002/03/07 18:29:54 mnf999 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -584,8 +584,10 @@
          manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/proxy/**"/>
-        <include name="org/jboss/invocation/Invoker.class"/>
         <include name="org/jboss/invocation/Invocation.class"/>
+        <include name="org/jboss/invocation/InvocationContext.class"/>
+        <include name="org/jboss/invocation/Invoker.class"/>
+        <include name="org/jboss/invocation/InvokerInterceptor.class"/>
         <include name="org/jboss/invocation/MarshalledInvocation.class"/>
         <include name="org/jboss/invocation/MarshalledValue.class"/>
         <include name="org/jboss/invocation/MarshalledValueInputStream.class"/>
@@ -594,7 +596,6 @@
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
-        <include name="org/jboss/ejb/FastKey.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
         <include name="org/jboss/tm/TransactionPropagationContextFactory.class"/>
