@@ -17,12 +17,16 @@
 package org.columba.mail.composer;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
+import org.columba.core.io.StreamUtils;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -30,6 +34,9 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.BodyTextParser;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -37,6 +44,7 @@ import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeType;
+import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.MessageParser;
 import org.columba.ristretto.parser.ParserException;
@@ -119,7 +127,7 @@ public class MessageBuilder {
 	 * FIXME: we need to i18n this!
 	 **/
 	private static String createReplySubject(ColumbaHeader header) {
-		String subject = (String) header.get("Subject");
+		String subject = (String) header.get("columba.subject");
 
 		// if subject doesn't start already with "Re:" prepend it
 		if (!isAlreadyReply(subject, "re:"))
@@ -309,14 +317,33 @@ public class MessageBuilder {
 	 *                the bodytext of the message we want
 	 * 	              reply/forward.
 	 */
-	private static String createBodyText(ColumbaMessage message) {
+	private static String createBodyText(ColumbaMessage message) throws IOException {
 		CharSequence bodyText = "";
 
-		LocalMimePart bodyPart = (LocalMimePart) message.getBodyPart();
+		StreamableMimePart bodyPart = (StreamableMimePart) message.getBodyPart();
+		String charsetName = bodyPart.getHeader().getContentParameter("charset");
+		String encoding = bodyPart.getHeader().getContentTransferEncoding();
+		
+		InputStream body = bodyPart.getInputStream();
+		if( encoding != null ) {
+			if( encoding.equals("quoted-printable")) {
+				body = new QuotedPrintableDecoderInputStream( body );
+			} else if( encoding.equals("base64")) {
+				body = new Base64DecoderInputStream( body );
+			}
+		}
+		
+		if( charsetName != null ) {
+			Charset charset;
+			try {
+				charset = Charset.forName( charsetName );
+			} catch ( UnsupportedCharsetException e ) {
+				charset = Charset.forName( System.getProperty("file.encoding"));
+			}
+			body = new CharsetDecoderInputStream( body, charset );
+		}
 
-		String charset = bodyPart.getHeader().getContentParameter("charset");
-
-		return bodyPart.getBody().toString();
+		return StreamUtils.readInString(body).toString();
 	}
 
 	/**
@@ -331,7 +358,7 @@ public class MessageBuilder {
 	 * FIXME: we should make this configureable
 	 * 
 	 */
-	private static String createQuotedBodyText(ColumbaMessage message) {
+	private static String createQuotedBodyText(ColumbaMessage message) throws IOException {
 		String bodyText = createBodyText(message);
 
 		/*
@@ -368,7 +395,7 @@ public class MessageBuilder {
 	public void createMessage(
 		ColumbaMessage message,
 		ComposerModel model,
-		int operation) {
+		int operation) throws IOException {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
@@ -448,7 +475,7 @@ public class MessageBuilder {
 	public void createMessageFromTemplate(
 		ColumbaMessage message,
 		ComposerModel model,
-		String templateBody) {
+		String templateBody) throws IOException {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
