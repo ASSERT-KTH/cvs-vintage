@@ -28,7 +28,7 @@ import javax.management.ObjectName;
 
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.security.EJBSecurityManager;
 

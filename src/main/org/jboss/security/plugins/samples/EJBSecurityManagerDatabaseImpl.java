@@ -36,7 +36,7 @@ import javax.sql.DataSource;
 
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.security.EJBSecurityManager;
 

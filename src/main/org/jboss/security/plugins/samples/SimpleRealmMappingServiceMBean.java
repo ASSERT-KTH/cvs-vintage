@@ -8,7 +8,7 @@
 package org.jboss.security.plugins.samples;
 
 public interface SimpleRealmMappingServiceMBean
-	extends org.jboss.util.ServiceMBean
+	extends org.jboss.system.ServiceMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=SimpleRealmMappingFactory";

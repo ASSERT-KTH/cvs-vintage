@@ -27,7 +27,7 @@ import javax.management.ObjectName;
 
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  *   This is a JMX service which manages access to security realms for a bean.
