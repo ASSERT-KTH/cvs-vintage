@@ -8,6 +8,7 @@
 package org.jboss.ejb;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.ejb.EJBLocalHome;
 import javax.management.ObjectName;
@@ -58,6 +60,7 @@ import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.util.loading.DelegatingClassLoader;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
+import org.jboss.invocation.InvocationType;
 
 import org.w3c.dom.Element;
 
@@ -76,7 +79,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -972,6 +975,84 @@ public class EjbModule
          SecurityRoleRefMetaData srrmd = (SecurityRoleRefMetaData) iter.next();
          EJBRoleRefPermission p = new EJBRoleRefPermission(bean.getEjbName(), srrmd.getName());
          pc.addToRole(srrmd.getLink(), p);
+      }
+   }
+
+   /** Create any JACC permissions for the ejb methods that were not explicitly
+    * assigned method-permission or exclude-list mappings.
+    * @param con - the ejb container 
+    * @param bean - the bean metadata
+    * @throws ClassNotFoundException
+    * @throws PolicyContextException
+    */ 
+   void createMissingPermissions(Container con, BeanMetaData bean)
+      throws ClassNotFoundException, PolicyContextException
+   {
+      String contextID = con.getJaccContextID();
+      PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+      PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, false);
+      Class clazz = con.getHomeClass();
+      if( clazz != null )
+      {
+         addMissingMethodPermissions(bean, clazz, InvocationType.HOME, pc);
+      }
+      clazz = con.getLocalHomeClass();
+      if( clazz != null )
+      {
+         addMissingMethodPermissions(bean, clazz, InvocationType.LOCALHOME, pc);
+      }
+      clazz = con.getLocalClass();
+      if( clazz != null )
+      {
+         addMissingMethodPermissions(bean, clazz, InvocationType.LOCAL, pc);
+      }
+      clazz = con.getRemoteClass();
+      if( clazz != null )
+      {
+         addMissingMethodPermissions(bean, clazz, InvocationType.REMOTE, pc);
+      }
+   }
+
+   private void getInterfaces(Class iface, HashSet tmp)
+   {
+      tmp.add(iface);
+      Class[] ifaces = iface.getInterfaces();
+      for(int n = 0; n < ifaces.length; n ++)
+      {
+         Class iface2 = ifaces[n];
+         tmp.add(iface2);
+         getInterfaces(iface2, tmp);
+      }
+   }
+   private void addMissingMethodPermissions(BeanMetaData bean,
+      Class iface, InvocationType type, PolicyConfiguration pc)
+      throws PolicyContextException
+   {
+      boolean exclude = bean.isExcludeMissingMethods();
+      String ejbName = bean.getEjbName();
+      HashSet tmp = new HashSet();
+      getInterfaces(iface, tmp);
+      Class[] ifaces = new Class[tmp.size()];
+      tmp.toArray(ifaces);
+      for(int n = 0; n < ifaces.length; n ++)
+      {
+         Class c =  ifaces[n];
+         Method[] methods = c.getDeclaredMethods();
+         for(int m = 0; m < methods.length; m ++)
+         {
+            String methodName = methods[m].getName();
+            Class[] params = methods[m].getParameterTypes();
+            // See if there is a method-permission
+            if( bean.hasMethodPermission(methodName, params, type) )
+               continue;
+            // Create a permission for the missing method-permission
+            EJBMethodPermission p = new EJBMethodPermission(ejbName,
+               type.toInterfaceString(), methods[m]);
+            if( exclude )
+               pc.addToExcludedPolicy(p);
+            else
+               pc.addToUncheckedPolicy(p);
+         }
       }
    }
 
