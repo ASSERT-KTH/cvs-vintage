@@ -34,7 +34,7 @@ import org.jboss.invocation.Invocation;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -53,14 +53,14 @@ import org.jboss.invocation.Invocation;
 *   </ul>
 */
 public class MarshalledInvocation
-   extends Invocation
-   implements java.io.Externalizable
+extends Invocation
+implements java.io.Externalizable
 {
    // Constants -----------------------------------------------------
    
    /** Serial Version Identifier. */
    static final long serialVersionUID = -718723094688127810L;
-
+   
    // The Transaction Propagation Context for distribution
    Object tpc;
    
@@ -69,7 +69,7 @@ public class MarshalledInvocation
    
    // Static --------------------------------------------------------
    static Map hashMap = new WeakHashMap();
-
+   
    /**
    * Calculate method hashes. This algo is taken from RMI.
    *
@@ -107,7 +107,7 @@ public class MarshalledInvocation
                map.put(method, new Long(hash));
             else 
                map.put(new Long(hash), method);
-               
+         
          }
          catch (Exception e)
          {
@@ -117,7 +117,7 @@ public class MarshalledInvocation
       
       return map;
    }
-
+   
    static String getTypeString(Class cl)
    {
       if (cl == Byte.TYPE)
@@ -155,7 +155,7 @@ public class MarshalledInvocation
          return "L"+cl.getName().replace('.','/')+";";
       }
    }
-
+   
    /*
    * The use of hashCode is not enough to differenciate methods
    * we override the hashCode
@@ -191,6 +191,7 @@ public class MarshalledInvocation
    {
       super(invocation.payload);
       this.as_is_payload = invocation.as_is_payload;
+   }
    
    public MarshalledInvocation(Map payload) 
    {   
@@ -211,7 +212,7 @@ public class MarshalledInvocation
       Principal identity, 
       Object credential)
    {
-       super(id, m, args, tx, identity, credential);
+      super(id, m, args, tx, identity, credential);
    }
    // Public --------------------------------------------------------
    
@@ -247,7 +248,7 @@ public class MarshalledInvocation
    {
       methodMap = methods;
    }
-
+   
    // The transaction propagation context for the Invocation that travels (distributed tx only)
    public void setTransactionPropagationContext(Object tpc)
    {
@@ -257,17 +258,17 @@ public class MarshalledInvocation
    {
       return tpc;
    }
-
+   
    // Invocation overwrite -----------------------------------------
-
+   
    /** A Marshalled invocation has serialized data in the form of
-    MarshalledValue objects. We overwrite the "getValue" to deserialize the
-    data, this assume that the thread context class loader has visibility
-    on the classes.
-    */
+   MarshalledValue objects. We overwrite the "getValue" to deserialize the
+   data, this assume that the thread context class loader has visibility
+   on the classes.
+   */
    public Object getValue(Object key) 
    { 
-
+      
       Object value = super.getValue(key);
       
       // The map may contain serialized values of the fields
@@ -287,10 +288,10 @@ public class MarshalledInvocation
       }
       return value;
    }
-
+   
    // Externalizable implementation ---------------------------------
    public void writeExternal(java.io.ObjectOutput out)
-      throws IOException
+   throws IOException
    {
       
       // FIXME marcf: the "specific" treatment of Transactions should be abstracted.
@@ -303,19 +304,19 @@ public class MarshalledInvocation
       server but not in the generic JMX land. they will travel in the  payload
       as MarshalledValue objects, see the Invocation getter logic
       */
-
+      
       Iterator keys = payload.keySet().iterator();
       while (keys.hasNext())
       {
          Object currentKey = keys.next();
-   
+         
          // This code could be if (object.getClass().getName().startsWith("java")) then don't serialize. 
          // Bench the above for speed.
          
          //Replace the current object with a Marshalled representation
          if (currentKey == METHOD)
             // We write the hash instead of the method
-            sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
+         sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
          else
             sentData.put (currentKey, new MarshalledValue(payload.get(currentKey)));
       }
@@ -326,9 +327,9 @@ public class MarshalledInvocation
       // This map is "safe" as is
       out.writeObject(as_is_payload);
    }
-
+   
    public void readExternal(java.io.ObjectInput in)
-      throws IOException, ClassNotFoundException
+   throws IOException, ClassNotFoundException
    {
       // Read TPC
       tpc = in.readObject();
