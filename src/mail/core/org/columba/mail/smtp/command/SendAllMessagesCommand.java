@@ -115,10 +115,6 @@ public class SendAllMessagesCommand extends FolderCommand {
 				smtpServer = new SMTPServer(accountItem);
 
 				open = smtpServer.openConnection();
-
-				//				show interest on status information
-				((StatusObservableImpl) smtpServer.getObservable())
-						.setWorker(worker);
 			}
 
 			// if success, send message

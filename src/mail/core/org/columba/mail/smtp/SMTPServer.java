@@ -88,8 +88,6 @@ public class SMTPServer {
     
     protected String fromAddress;
 
-    protected Object observer;
-
     private int state;
 
     /**
@@ -445,13 +443,6 @@ public class SMTPServer {
 
         // now send message source
         protocol.data(new ProgressObservedInputStream( message.getSourceStream(), workerStatusController));
-    }
-
-    /**
-     * @return status notification observable
-     */
-    public StatusObservable getObservable() {
-        return (StatusObservable) observer;
     }
 
     public String getName() {
