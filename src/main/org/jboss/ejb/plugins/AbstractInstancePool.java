@@ -27,40 +27,40 @@ import org.jboss.logging.Logger;
 
 
 /**
- *	<description> 
- *      
+ *	<description>
+ *
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
    private Container container;
-   
+
    Stack pool = new Stack();
    int maxSize = 30;
-   
+
    // Static --------------------------------------------------------
-   
+
    // Constructors --------------------------------------------------
-   
+
    // Public --------------------------------------------------------
 
    /**
     *   Set the callback to the container. This is for initialization.
     *   The IM may extract the configuration from the container.
     *
-    * @param   c  
+    * @param   c
     */
    public void setContainer(Container c)
    {
       this.container = c;
    }
-   
+
    public Container getContainer()
    {
       return container;
@@ -70,12 +70,12 @@ public abstract class AbstractInstancePool
       throws Exception
    {
    }
-   
+
    public void start()
       throws Exception
    {
    }
-   
+
    public void stop()
    {
    }
@@ -83,19 +83,19 @@ public abstract class AbstractInstancePool
    public void destroy()
    {
    }
-   
+
    /**
     *   Get an instance without identity.
     *   Can be used by finders,create-methods, and activation
     *
     * @return     Context /w instance
-    * @exception   RemoteException  
+    * @exception   RemoteException
     */
    public synchronized EnterpriseContext get()
       throws Exception
    {
 //DEBUG      Logger.debug("Get instance "+this);
-      
+
       if (!pool.empty())
       {
          return (EnterpriseContext)pool.pop();
@@ -113,7 +113,7 @@ public abstract class AbstractInstancePool
          }
       }
    }
-   
+
    /**
     *   Return an instance after invocation.
     *
@@ -121,18 +121,15 @@ public abstract class AbstractInstancePool
     *   a) Done with finder method
     *   b) Just removed
     *
-    * @param   ctx  
+    * @param   ctx
     */
    public synchronized void free(EnterpriseContext ctx)
    {
       // Pool it
 //DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
-      
+
       ctx.clear();
-      
-      // Free everyone waiting on that ctx
-      synchronized (ctx) {ctx.notifyAll();}
-      
+
       if (pool.size() < maxSize)
       {
          pool.push(ctx);
@@ -141,7 +138,7 @@ public abstract class AbstractInstancePool
          discard(ctx);
       }
    }
-   
+
    public void discard(EnterpriseContext ctx)
    {
       // Throw away
@@ -153,9 +150,9 @@ public abstract class AbstractInstancePool
          // DEBUG Logger.exception(e);
       }
    }
-   
+
    // Z implementation ----------------------------------------------
-   
+
     // XmlLoadable implementation
     public void importXml(Element element) throws DeploymentException {
        String maximumSize = MetaData.getElementContent(MetaData.getUniqueChild(element, "MaximumSize"));
@@ -165,13 +162,13 @@ public abstract class AbstractInstancePool
          throw new DeploymentException("Invalid MaximumSize value for instance pool configuration");
        }
     }
-    
+
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
    protected abstract EnterpriseContext create(Object instance)
       throws Exception;
-    
+
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
