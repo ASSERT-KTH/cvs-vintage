@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.35 2002/09/17 13:46:45 kataka Exp $
+// $Id: FigClass.java,v 1.36 2002/09/26 23:06:39 d00mst Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -1006,13 +1006,24 @@ public class FigClass extends FigNodeModelElement {
 	 * @see org.tigris.gef.presentation.Fig#setOwner(Object)
 	 */
 	public void setOwner(Object own) {
+		MClass cl;
+		cl = (MClass)getOwner();
+		if (cl != null) {
+			Iterator it = cl.getFeatures().iterator();
+			while (it.hasNext()) {
+				MFeature feat = (MFeature)it.next();
+				feat.removeMElementListener(this);
+			}
+		}
 		super.setOwner(own);
-		MClass cl = (MClass)own;
-		Iterator it = cl.getFeatures().iterator();
-		while (it.hasNext()) {
-			MFeature feat = (MFeature)it.next();
-			feat.removeMElementListener(this);
-			feat.addMElementListener(this);
+		cl = (MClass)own;
+		if (cl != null) {
+			Iterator it = cl.getFeatures().iterator();
+			while (it.hasNext()) {
+				MFeature feat = (MFeature)it.next();
+				feat.removeMElementListener(this);
+				feat.addMElementListener(this);
+			}
 		}
 	}
 
