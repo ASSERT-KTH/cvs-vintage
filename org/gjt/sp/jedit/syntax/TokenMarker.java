@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.47 2003/01/31 04:49:31 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.48 2003/03/15 20:29:07 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -390,28 +390,29 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 			{
 				return false;
 			}
+		}
 
-			if((checkRule.action & ParserRule.AT_LINE_START)
-				== ParserRule.AT_LINE_START)
-			{
-				if((((checkRule.action & ParserRule.MARK_PREVIOUS) != 0) ?
-					lastOffset : pos) != line.offset)
-					return false;
-			}
-			else if((checkRule.action & ParserRule.AT_WHITESPACE_END)
-				== ParserRule.AT_WHITESPACE_END)
-			{
-				if((((checkRule.action & ParserRule.MARK_PREVIOUS) != 0) ?
-					lastOffset : pos) != whitespaceEnd)
-					return false;
-			}
-			else if((checkRule.action & ParserRule.AT_WORD_START)
-				== ParserRule.AT_WORD_START)
-			{
-				if((((checkRule.action & ParserRule.MARK_PREVIOUS) != 0) ?
-					lastOffset : pos) != lastOffset)
-					return false;
-			}
+		int offset = ((checkRule.action & ParserRule.MARK_PREVIOUS) != 0) ?
+			lastOffset : pos;
+		int posMatch = (end ? checkRule.endPosMatch : checkRule.startPosMatch);
+
+		if((posMatch & ParserRule.AT_LINE_START)
+			== ParserRule.AT_LINE_START)
+		{
+			if(offset != line.offset)
+				return false;
+		}
+		else if((posMatch & ParserRule.AT_WHITESPACE_END)
+			== ParserRule.AT_WHITESPACE_END)
+		{
+			if(offset != whitespaceEnd)
+				return false;
+		}
+		else if((posMatch & ParserRule.AT_WORD_START)
+			== ParserRule.AT_WORD_START)
+		{
+			if(offset != lastOffset)
+				return false;
 		} //}}}
 
 		int matchedChars = 1;
