@@ -1,4 +1,4 @@
-#set ($user = $scarabR.getUser($issue.ModifiedBy.toString()))
+#set ($user = $issue.ModifiedBy)
 
 Issue '$issue.UniqueId' has just been modified by user '$user.UserName'
 
