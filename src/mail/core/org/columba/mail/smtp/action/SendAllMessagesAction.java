@@ -30,8 +30,19 @@ import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.smtp.command.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
+/**
+ * @author fdietz
+ *
+ * This action is responsible for starting the command
+ * which does the actual work.
+ * It is visually represented with a menuentry and a toolbar.
+ * 
+ */
 public class SendAllMessagesAction extends FrameAction {
 
+	/**
+	 * @param controller
+	 */
 	public SendAllMessagesAction(AbstractFrameController controller) {
 		super(
 			controller,
@@ -51,16 +62,21 @@ public class SendAllMessagesAction extends FrameAction {
 			KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r = new FolderCommandReference[1];
+		
+		// get outbox folder
 		OutboxFolder folder =
 			(OutboxFolder) MainInterface.treeModel.getFolder(103);
 
+		// create reference 
 		r[0] = new FolderCommandReference(folder);
 
+		// start command
 		SendAllMessagesCommand c =
 			new SendAllMessagesCommand(frameController, r);
 

@@ -31,12 +31,17 @@ import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.pop3.protocol.POP3Protocol;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * SMTPServer makes use of <class>SMTPProtocol</class> to add
+ * a higher abstraction layer for sending messages.
+ * 
+ * It takes care of authentication all the details.
+ * 
+ * To send a message just create a <class>SendableMessage</class>
+ * object and use <method>sendMessage</method>.
+ * 
+ * 
  */
 public class SMTPServer {
 
@@ -44,6 +49,7 @@ public class SMTPServer {
 	protected AccountItem accountItem;
 	protected IdentityItem identityItem;
 	protected String fromAddress;
+	
 	/**
 	 * Constructor for SMTPServer.
 	 */
@@ -55,6 +61,12 @@ public class SMTPServer {
 		identityItem = accountItem.getIdentityItem();
 	}
 
+	/**
+	 * Open connection to SMTP server and login if
+	 * needed.
+	 * 
+	 * @return	true if connection was successful, false otherwise
+	 */
 	public boolean openConnection() {
 		String username;
 		String password;
@@ -68,24 +80,26 @@ public class SMTPServer {
 
 		// Init Values
 
+		// user's email address
 		fromAddress = identityItem.get("address");
 
+		// POP3 server host name
 		SmtpItem smtpItem = accountItem.getSmtpItem();
 		String host = smtpItem.get("host");
 
+		// Sent Folder 
 		SpecialFoldersItem specialFoldersItem =
 			accountItem.getSpecialFoldersItem();
 		Integer i = new Integer(specialFoldersItem.get("sent"));
 		int sentFolder = i.intValue();
 
+		
 		String authType = accountItem.getSmtpItem().get("login_method");
 		authenticate = !authType.equals("NONE");
 
 		boolean popbeforesmtp = false;
 		if (authType.equalsIgnoreCase("POP before SMTP"))
 			popbeforesmtp = true;
-
-		//boolean popbeforesmtp = accountItem.getSmtpItem().getPopBeforeSmtp();
 
 		if (popbeforesmtp) {
 			// no esmtp - use POP3-before-SMTP instead
@@ -110,8 +124,7 @@ public class SMTPServer {
 			}
 		}
 
-		// find host
-		//setText("Opening Port to " + host);
+		// initialise protocol layer
 		try {
 			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"), smtpItem.getBoolean("enable_ssl", true));
 
@@ -132,7 +145,6 @@ public class SMTPServer {
 		}
 
 		// Start login procedure
-
 		try {
 
 			smtpMode = smtpProtocol.openPort();
@@ -143,11 +155,7 @@ public class SMTPServer {
 			return false;
 		}
 
-		//if ((smtpMode == SMTPProtocol.ESMTP) & authenticate)
 		if ((authenticate) && (popbeforesmtp == false)) {
-
-			//setText("Authenticating");
-
 			username = accountItem.getSmtpItem().get("user");
 			password = accountItem.getSmtpItem().get("password");
 			method = accountItem.getSmtpItem().get("login_method");
@@ -170,6 +178,7 @@ public class SMTPServer {
 				
 			}
 			
+			// ask password from user
 			if (password.length() == 0) {
 
 				passDialog.showDialog(
@@ -177,23 +186,18 @@ public class SMTPServer {
 					password,
 					accountItem.getSmtpItem().getBoolean("save_password"));
 
-				if (passDialog.success()) {
-
-					//username = passDialog.getUser();
+				if (passDialog.success()) {				
 					password = new String(passDialog.getPassword());
-					//method = passDialog.getLoginMethod();
-
+					
 				} else {
 					return false;
 				}
 			
 			}
 
+			// try to authenticate
 			while (!cont) {
-				/*
-				if (getCancel() == true)
-					break;
-				*/
+				
 				cont = true;
 
 				try {
@@ -209,28 +213,33 @@ public class SMTPServer {
 					if (!passDialog.success())
 						return false;
 					else {
-						//username = passDialog.getUser();
+						
 						password = new String(passDialog.getPassword());
-						//method = passDialog.getLoginMethod();
+						
 					}
 
 				}
 			}
 
+			// authentication was successful
+			// -> save name/password
 			accountItem.getSmtpItem().set("user", username);
 			accountItem.getSmtpItem().set("password", password);
 			accountItem.getSmtpItem().set("save_password", passDialog.getSave());
-			//accountItem.getSmtpItem().setLoginMethod(method);
+			
 
 		}
 
 		return true;
 	}
 
+	/**
+	 * 
+	 * close the connection to the SMTP server
+	 *
+	 */
 	public void closeConnection() {
 		// Close Port
-
-		//setText("Closing Connection to " + host);
 
 		try {
 			smtpProtocol.closePort();
@@ -241,6 +250,18 @@ public class SMTPServer {
 		}
 	}
 
+	/**
+	 * 
+	 * POP-before-SMTP authentication makes use of the POP3
+	 * authentication mechanism, before sending mail.
+	 * 
+	 * Basically you authenticate with the POP3 server, which
+	 * allows you to use the SMTP server for sending mail for
+	 * a specific amount of time.
+	 * 
+	 * 
+	 * @throws Exception
+	 */
 	protected void pop3Authentification() throws Exception {
 		String password = new String("");
 		//String user = "";
@@ -251,8 +272,11 @@ public class SMTPServer {
 		PopItem item = accountItem.getPopItem();
 		PasswordDialog dialog = null;
 
+		// try to login until success or user cancels authentication
 		while (!login && !cancel) {
 			if (item.get("password").length() == 0) {
+				
+				// open password dialog
 				dialog = new PasswordDialog();
 
 				dialog.showDialog(
@@ -266,9 +290,9 @@ public class SMTPServer {
 					// ok pressed
 					name = dialog.getPassword();
 					password = new String(name);
-					//user = dialog.getUser();
+					
 					save = dialog.getSave();
-					//method = dialog.getLoginMethod();
+					
 
 					cancel = false;
 				} else {
@@ -277,24 +301,21 @@ public class SMTPServer {
 				}
 			} else {
 				password = item.get("password");
-				//user = item.getUser();
+				
 				save = item.getBoolean("save_password");
-				//method = item.getLoginMethod();
+				
 			}
 
 			if (!cancel) {
-				//setText(item.getHost() + " : Login...");
-
-				//startTimer();
+				
 				// authenticate
-
 				POP3Protocol pop3Connection = new POP3Protocol();
 				// open socket, query for host
 				pop3Connection.openPort();
 
 				pop3Connection.setLoginMethod(method);
 				login = pop3Connection.login(item.get("user"), password);
-				//stopTimer();
+				
 
 				if (!login) {
 					NotifyDialog d = new NotifyDialog();
@@ -305,8 +326,10 @@ public class SMTPServer {
 			}
 		}
 
+		// logged in successfully 
+		// -> save password in config file
 		if (login) {
-			//item.setUser(user);
+			
 			item.set("save_password", save);
 			item.set("login_method",method);
 
@@ -318,11 +341,25 @@ public class SMTPServer {
 		}
 	}
 
+	/**
+	 * Send a message
+	 * 
+	 * For an complete example of creating a <class>SendableMessage</class>
+	 * object see <class>MessageComposer</class>
+	 *  
+	 * @param message	
+	 * @param workerStatusController
+	 * @throws Exception
+	 */
 	public void sendMessage(SendableMessage message, WorkerStatusController workerStatusController) throws Exception {
+		
+		// send from address and recipient list to SMTP server
+		// ->all addresses have to be normalized
 		smtpProtocol.setupMessage(
 			AddressParser.normalizeAddress(fromAddress),
 			message.getRecipients());
 
+		// now send message source 
 		smtpProtocol.sendMessage(message.getSource(), workerStatusController);
 	}
 }

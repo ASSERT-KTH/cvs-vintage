@@ -37,12 +37,10 @@ import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Send all messages in folder Outbox
+ * 
  */
 public class SendAllMessagesCommand extends FolderCommand {
 
@@ -51,6 +49,8 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 	/**
 	 * Constructor for SendAllMessagesCommand.
+	 * 
+	 * 
 	 * @param frameController
 	 * @param references
 	 */
@@ -67,10 +67,13 @@ public class SendAllMessagesCommand extends FolderCommand {
 	public void execute(Worker worker) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
+		// get Outbox folder from reference
 		outboxFolder = (OutboxFolder) r[0].getFolder();
 
+		// get UID list of messages
 		Object[] uids = outboxFolder.getUids(worker);
 
+		// save every message in a list
 		for (int i = 0; i < uids.length; i++) {
 			if (outboxFolder.exists(uids[i], worker) == true) {
 				SendableMessage message =
@@ -85,18 +88,13 @@ public class SendAllMessagesCommand extends FolderCommand {
 		boolean open = false;
 		SMTPServer smtpServer = null;
 		Folder sentFolder = null;
+		
+		// send all messages 
 		while (sendListManager.hasMoreMessages()) {
 			SendableMessage message = sendListManager.getNextMessage();
 
+			// get account information from message
 			if (message.getAccountUid() != actAccountUid) {
-
-				// doesn't make any sense here
-				/*
-				if (sentList.size() != 0) {
-
-					sentList.clear();
-				}
-				*/
 
 				actAccountUid = message.getAccountUid();
 
@@ -105,16 +103,20 @@ public class SendAllMessagesCommand extends FolderCommand {
 						.getAccountList()
 						.uidGet(actAccountUid);
 
+				// Sent folder
 				sentFolder =
 					(Folder) MainInterface.treeModel.getFolder(
 						Integer.parseInt(
 							accountItem.getSpecialFoldersItem().get("sent")));
+							
+				// open connection to SMTP server
 				smtpServer = new SMTPServer(accountItem);
 
 				open = smtpServer.openConnection();
 
 			}
 
+			// if success, send message
 			if (open) {
 				try {
 					smtpServer.sendMessage(message, worker);
@@ -127,17 +129,29 @@ public class SendAllMessagesCommand extends FolderCommand {
 			}
 		}
 
+		// move all successfully send messages to the Sent folder
 		if (sentList.size() > 0) {
 			moveToSentFolder(sentList, sentFolder);
 			sentList.clear();
 		}
 	}
 
+	/**
+	 * 
+	 * Move all send messages to the Sent folder
+	 * 
+	 * @param v		list of SendableMessage objects
+	 * 
+	 * @param sentFolder	Sent folder
+	 */
 	protected void moveToSentFolder(List v, Folder sentFolder) {
 		FolderCommandReference[] r = new FolderCommandReference[2];
+			// source folder
 			r[0] = new FolderCommandReference(outboxFolder, v.toArray() );
+			// destination folder
 			r[1] = new FolderCommandReference(sentFolder);
 
+			// start move command
 			MoveMessageCommand c = new MoveMessageCommand( r);
 
 			MainInterface.processor.addOp(c);

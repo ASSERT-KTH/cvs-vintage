@@ -33,12 +33,12 @@ import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * This command is started when the user sends the message
+ * after creating it in the composer window.
+ * 
+ * 
  */
 public class SendMessageCommand extends FolderCommand {
 
@@ -58,28 +58,38 @@ public class SendMessageCommand extends FolderCommand {
 		ComposerCommandReference[] r =
 			(ComposerCommandReference[]) getReferences();
 
+		// get composer controller
+		// -> get all the account information from the controller 
 		ComposerController composerController = r[0].getComposerController();
 
 		AccountItem item =
 			((ComposerModel) composerController.getModel()).getAccountItem();
+			
+		// sent folder
 		Folder sentFolder =
 			(Folder) MainInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
+				
+		// get the SendableMessage object
 		SendableMessage message =
 			new MessageComposer(
 				((ComposerModel) composerController.getModel())).compose(
 				worker);
 
+		// open connection
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();
 
 		if (open) {
 
 			try {
+				// send message
 				server.sendMessage(message, worker);
 
+				// close composer frame
 				composerController.close();
 
+				// save message in Sent folder
 				ComposerCommandReference[] ref =
 					new ComposerCommandReference[1];
 				ref[0] =
@@ -92,6 +102,7 @@ public class SendMessageCommand extends FolderCommand {
 
 				MainInterface.processor.addOp(c);
 
+				// close connection to server
 				server.closeConnection();
 			} catch (SMTPException e) {
 				JOptionPane.showMessageDialog(

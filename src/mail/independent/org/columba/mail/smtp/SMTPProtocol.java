@@ -30,6 +30,8 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.ssl.SSLProvider;
@@ -138,6 +140,8 @@ public class SMTPProtocol {
 		this.useSSL = false;
 	}
 
+	
+
 	/**
 	 * @param hostName
 	 */
@@ -157,6 +161,8 @@ public class SMTPProtocol {
 	private void checkAnswer(String answer, String start)
 		throws SMTPException {
 
+		if ( MainInterface.DEBUG ) ColumbaLogger.log.debug("SERVER:"+answer);
+		
 		// throw Exception if command failed
 		if (!answer.startsWith(start)) {
 			throw (new SMTPException(answer));
@@ -171,16 +177,61 @@ public class SMTPProtocol {
 	 * @param parameter	command parameter
 	 * @throws Exception
 	 */
-	private void sendString(String parameter) throws Exception {
+	private void sendString(String command) throws Exception {
 
-		out.writeBytes(parameter + "\r\n");
+		if ( MainInterface.DEBUG ) ColumbaLogger.log.debug("CLIENT:"+command);
+		
+		out.writeBytes(command + "\r\n");
 		out.flush();
 	}
 
+	
 	/**
+	 * 
+	 * Authentication using the "AUTH" extension mechanism.
+	 * 
+	 * Columba supports "AUTH PLAIN" and "AUTH LOGIN". Hopefully
+	 * more to come ;-)
+	 * 
+	 * Possible server responses:
+	 * 
+	 * 432 A password transition is needed:
+	 * This response to the AUTH command indicates that the user needs to
+	 * transition to the selected authentication mechanism.  This typically
+	 * done by authenticating once using the PLAIN authentication mechanism.
+	 * 
+	 * 534 Authentication mechanism is too weak:
+	 * This response to the AUTH command indicates that the selected
+	 * authentication mechanism is weaker than server policy permits fo
+	 * that user.
+	 * 
+	 * 538 Encryption required for requested authentication mechanism:
+	 * This response to the AUTH command indicates that the selected
+	 * authentication mechanism may only be used when the underlying SMTP
+	 * connection is encrypted.
+	 * 
+	 * 454 Temporary authentication failure:
+	 * This response to the AUTH command indicates that the authentication
+	 * failed due to a temporary server failure.
+	 * 
+	 * 530 Authentication required:
+	 * This response may be returned by any command other than AUTH, EHLO,
+	 * HELO, NOOP, RSET, or QUIT.  It indicates that server policy requires
+	 * authentication in order to perform the requested action.
+	 * 
+	 * 501 Invalid base64 data :
+	 * If the server cannot BASE64 decode the argument, it rejects the
+	 * AUTH command with a 501 reply.
+	 * 
+	 * 535 Incorrect authentication data:
+	 * If the client uses an initial-response argument to the AUTH
+	 * command with a mechanism that sends data in the initial
+	 * challenge, the server rejects the AUTH command with a 535 reply.
+	 * 
+	 * 
 	 * @param username
-	 * @param password
-	 * @param loginMethod
+	 * @param password		
+	 * @param loginMethod	can be a String of "PLAIN" or "LOGIN"
 	 * @throws Exception
 	 */
 	public void authenticate(
@@ -329,11 +380,13 @@ public class SMTPProtocol {
 		// value starting with "2" means success
 		checkAnswer(in.readLine(), "2");
 
+		
 		// check if we should use SSL
 		if (useSSL) {
 			// use SSL
 			initSSL();
 		}
+		
 
 		// send initial greeting
 		return helo();
@@ -358,7 +411,7 @@ public class SMTPProtocol {
 	 * 
 	 * S: 250 Requested mail action okay, completed
 	 * E: 500 Syntax error, command unrecognized
-	          [This may include errors such as command line too long]
+			  [This may include errors such as command line too long]
 	 * E: 501 Syntax error in parameters or arguments
 	 * E: 504 Command parameter not implemented
 	 * E: 421 <domain> Service not available, closing transmission channel
@@ -405,6 +458,24 @@ public class SMTPProtocol {
 	/**
 	 * 
 	 * Get list of capabilites from server.
+	 * 
+	 * The HELO command will make the server send its 
+	 * capabilities to the client.
+	 * 
+	 * Generally this is a list of keywords.
+	 * 
+	 * example:
+	 * S: <wait for connection on TCP port 25>
+	 * C: <open connection to server>
+	 * S: 220 dbc.mtview.ca.us SMTP service ready
+	 * C: EHLO ymir.claremont.edu
+	 * S: 250-dbc.mtview.ca.us says hello
+	 * S: 250-EXPN
+	 * S: 250-HELP
+	 * S: 250-8BITMIME
+	 * S: 250-XONE
+	 * S: 250 XVRB
+	 * ...
 	 * 
 	 * 
 	 * @throws Exception
