@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.37 2003/07/30 00:37:57 jmcnally Exp $
+ * @version $Id: AttributeOption.java,v 1.38 2003/08/08 18:35:25 jmcnally Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -231,15 +231,16 @@ public class AttributeOption
         if (module != null && issueType != null)
         {
             // Look for a module-scoped alias.
-            crit = new Criteria(3);
+            crit = new Criteria(4);
+            crit.add(AttributeOptionPeer.ATTRIBUTE_ID, 
+                     attribute.getAttributeId());
+            crit.addJoin(AttributeOptionPeer.OPTION_ID, 
+                         RModuleOptionPeer.OPTION_ID); 
             crit.add(RModuleOptionPeer.MODULE_ID, module.getModuleId());
             crit.add(RModuleOptionPeer.ISSUE_TYPE_ID,
                      issueType.getIssueTypeId());
             crit.add(RModuleOptionPeer.DISPLAY_VALUE, name);
             List rmos = RModuleOptionPeer.doSelect(crit);
-            // HELP: There doesn't seem to be a schema constraint on
-            // the uniqueness of DISPLAY_VALUE for a specific module
-            // alias -- UNIQUE(MODULE_ID, ISSUE_TYPE_ID, NAME).
             if (rmos.size() == 1)
             {
                 RModuleOption rmo = (RModuleOption) rmos.get(0);
