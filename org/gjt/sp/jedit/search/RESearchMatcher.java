@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.14 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.15 2002/06/02 06:07:31 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
@@ -71,6 +71,8 @@ public class RESearchMatcher implements SearchMatcher
 
 		re = new RE(search,(ignoreCase ? RE.REG_ICASE : 0)
 			| RE.REG_MULTILINE,RE_SYNTAX_JEDIT);
+
+		returnValue = new int[2];
 	} //}}}
 
 	//{{{ nextMatch() method
@@ -132,8 +134,9 @@ public class RESearchMatcher implements SearchMatcher
 			}
 		}
 
-		int[] result = { _start, _end };
-		return result;
+		returnValue[0] = _start;
+		returnValue[1] = _end;
+		return returnValue;
 	} //}}}
 
 	//{{{ substitute() method
@@ -171,5 +174,6 @@ public class RESearchMatcher implements SearchMatcher
 	private boolean beanshell;
 	private BshMethod replaceMethod;
 	private NameSpace replaceNS;
+	private int[] returnValue;
 	//}}}
 }
