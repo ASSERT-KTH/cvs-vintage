@@ -269,6 +269,9 @@ class Ajp12 {
 				    }
 				}
 				req.getContextManager().stop();
+				req.getContextManager().log("Exiting" );
+				req.getContextManager().getLog().getLogger().
+				    flush();
 				// same behavior as in past, because it seems
 				// that stopping everything doesn't work -
 				// need to figure

@@ -251,4 +251,9 @@ public class LogSetter extends  BaseInterceptor {
 	}  
 
     }
+
+
+    // XXX Flush the buffers on shutdown !!!!!!
+
+
 }
