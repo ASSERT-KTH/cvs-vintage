@@ -73,6 +73,7 @@ addGetByNameMethod=true
 complexObjectModel=true
 addTimeStamp=false
 addIntakeRetrievable=true
+overloadKeySetters=true
 
 # -------------------------------------------------------------------
 # Generate Manager classes that use JCS for caching.  This is still

@@ -91,6 +91,7 @@ public class IssueManager
         AttachmentManager.addCacheListener(this);
         DependManager.addCacheListener(this);
         ActivityManager.addCacheListener(this);
+        AttributeManager.addCacheListener(this);
     }
 
 
@@ -149,6 +150,10 @@ public class IssueManager
                 getMethodResult().removeAll(obj, Issue.GET_ACTIVITY);
             }
         }
+        else if (om instanceof Attribute) 
+        {
+            getMethodResult().clear();
+        }
     }
 
     public void refreshedObject(Persistent om)
@@ -164,6 +169,7 @@ public class IssueManager
         interestedCacheFields.add(AttachmentPeer.ISSUE_ID);
         interestedCacheFields.add(DependPeer.OBSERVER_ID);
         interestedCacheFields.add(DependPeer.OBSERVED_ID);
+        interestedCacheFields.add(AttributePeer.ATTRIBUTE_ID);
         return interestedCacheFields;
     }
 }

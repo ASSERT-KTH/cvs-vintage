@@ -73,6 +73,7 @@ public class ModuleManager
         RModuleAttributeManager.addCacheListener(this);
         AttributeGroupManager.addCacheListener(this);
         RModuleOptionManager.addCacheListener(this);
+        AttributeManager.addCacheListener(this);
     }
 
     // -------------------------------------------------------------------
@@ -124,6 +125,10 @@ public class ModuleManager
                     AbstractScarabModule.GET_ATTRIBUTE_GROUPS);
             }
         }
+        else if (om instanceof Attribute) 
+        {
+            getMethodResult().clear();
+        }
     }
 
     public void refreshedObject(Persistent om)
@@ -139,6 +144,7 @@ public class ModuleManager
         interestedCacheFields.add(RModuleAttributePeer.MODULE_ID);
         interestedCacheFields.add(RModuleIssueTypePeer.MODULE_ID);
         interestedCacheFields.add(AttributeGroupPeer.MODULE_ID);
+        interestedCacheFields.add(AttributePeer.ATTRIBUTE_ID);
         return interestedCacheFields;
     }
 }
