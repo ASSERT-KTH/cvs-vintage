@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.4 1999/12/14 00:15:36 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/12/14 00:15:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.5 1999/12/21 03:15:20 bergsten Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/12/21 03:15:20 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,7 +59,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.core;
@@ -71,11 +71,12 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.tomcat.util.*;
 /**
- * 
+ *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
+ * @author Hans Bergsten <hans@gefionsoftware.com>
  */
 public class Response {
     protected StringManager sm =
@@ -91,7 +92,7 @@ public class Response {
         System.getProperty("file.encoding",
             Constants.CharacterEncoding.Default);
     protected int contentLength = -1;
-    protected int status = 200; 
+    protected int status = 200;
     private Locale locale = new Locale(Constants.Locale.Default, "");
 
     protected MimeHeaders headers = new MimeHeaders();
@@ -106,7 +107,7 @@ public class Response {
     protected String serverHeader = null;
 
     protected ResponseAdapter resA;
-    
+
     public Response() {
         responseFacade = new HttpServletResponseFacade(this);
 	out=new BufferedServletOutputStream();
@@ -121,7 +122,7 @@ public class Response {
     public ResponseAdapter getResponseAdapter() {
 	return resA;
     }
-    
+
     public HttpServletResponseFacade getFacade() {
 	return responseFacade;
     }
@@ -151,12 +152,12 @@ public class Response {
     public void setOmitHeaders(boolean omitHeaders) {
 	this.omitHeaders = omitHeaders;
     }
-    
+
 //     public void setBufferedServeletOutputStream(
 //         BufferedServletOutputStream out) {
 // 	this.out=out;
 //     }
-    
+
     public void recycle() {
 	userCookies.removeAllElements();
 	systemCookies.removeAllElements();
@@ -175,7 +176,7 @@ public class Response {
 	committed = false;
 	omitHeaders=false;
     }
-    
+
     public void finish() throws IOException {
 	try {
 	    if (usingWriter && (writer != null)) {
@@ -186,14 +187,14 @@ public class Response {
 	    return;  // munch
 	}
     }
- 
+
     public boolean containsHeader(String name) {
 	return headers.containsHeader(name);
     }
 
     // XXX
     // mark whether or not we are being used as a stream our writer
-    
+
     public ServletOutputStream getOutputStream() {
 	started = true;
 
@@ -241,10 +242,10 @@ public class Response {
 	}
 
 	out.setUsingWriter (usingWriter);
-	
+
 	return writer;
     }
-    
+
     public void setDateHeader(String name, long date) {
 	headers.putDateHeader(name, date);
     }
@@ -252,7 +253,7 @@ public class Response {
     public void addDateHeader(String name, long date) {
         headers.addDateHeader(name, date);
     }
-    
+
     public void setHeader(String name, String value) {
 	headers.putHeader(name, value);
     }
@@ -260,7 +261,7 @@ public class Response {
     public void addHeader(String name, String value) {
         headers.addHeader(name, value);
     }
-    
+
     public void setIntHeader(String name, int value) {
 	headers.putIntHeader(name, value);
     }
@@ -268,30 +269,30 @@ public class Response {
     public void addIntHeader(String name, int value) {
         headers.addIntHeader(name, value);
     }
-    
+
     public int getBufferSize() {
 	return out.getBufferSize();
     }
-    
+
     public void setBufferSize(int size) throws IllegalStateException {
 
 	// Force the PrintWriter to flush the data to the OutputStream.
 	if (usingWriter == true) writer.flush();
-	
+
 	if (out.isContentWritten() == true) {
 	    String msg = sm.getString("servletOutputStreamImpl.setbuffer.ise");
-	    throw new IllegalStateException (msg); 
+	    throw new IllegalStateException (msg);
 	}
 	out.setBufferSize(size);
     }
-    
+
     /*
      * Methodname "isCommitted" already taken by Response class.
      */
     public boolean isBufferCommitted() {
 	return out.isCommitted();
     }
-    
+
     public void reset() throws IllegalStateException {
 	// Force the PrintWriter to flush its data to the output
         // stream before resetting the output stream
@@ -304,9 +305,9 @@ public class Response {
 	contentLength = -1;
 	status = 200;
 
-	if (usingWriter == true) 
+	if (usingWriter == true)
 	    writer.flush();
-	
+
 	// Reset the stream
 	out.reset();
 
@@ -315,15 +316,15 @@ public class Response {
         // Clear the headers
         headers.clear();
     }
-    
+
     public void flushBuffer() throws IOException {
 	if (usingWriter == true)
 	    writer.flush();
-	
+
 	out.reallyFlush();
     }
 
-    
+
     /** Set server-specific headers */
     protected void fixHeaders() throws IOException {
 	//	System.out.println( "Fixing headers" );
@@ -335,7 +336,7 @@ public class Response {
 
 	// Generated by Server!!!
 	//headers.putDateHeader("Date",System.currentTimeMillis());
-	if( getServerHeader()!=null) 
+	if( getServerHeader()!=null)
 	    headers.putHeader("Server",getServerHeader());
 	if (contentLanguage != null) {
             headers.putHeader("Content-Language",contentLanguage);
@@ -343,7 +344,7 @@ public class Response {
 
 	// context is null if we are in a error handler before the context is
 	// set ( i.e. 414, wrong request )
-	if( request.getContext() != null) 
+	if( request.getContext() != null)
 	    headers.putHeader("Servlet-Engine", request.getContext().getEngineHeader());
 
 
@@ -356,14 +357,14 @@ public class Response {
         cookieEnum = systemCookies.elements();
         while (cookieEnum.hasMoreElements()) {
             Cookie c  = (Cookie)cookieEnum.nextElement();
-            headers.putHeader( CookieTools.getCookieHeaderName(c),
+            headers.addHeader( CookieTools.getCookieHeaderName(c),
 			       CookieTools.getCookieHeaderValue(c));
 	    if( c.getVersion() == 1 ) {
 		// add a version 0 header too.
 		// XXX what if the user set both headers??
 		Cookie c0 = (Cookie)c.clone();
-		c0.setVersion(0);            
-		headers.putHeader( CookieTools.getCookieHeaderName(c0),
+		c0.setVersion(0);
+		headers.addHeader( CookieTools.getCookieHeaderName(c0),
 				   CookieTools.getCookieHeaderValue(c0));
 	    }
         }
@@ -371,14 +372,14 @@ public class Response {
         cookieEnum = userCookies.elements();
         while (cookieEnum.hasMoreElements()) {
             Cookie c  = (Cookie)cookieEnum.nextElement();
-            headers.putHeader( CookieTools.getCookieHeaderName(c),
+            headers.addHeader( CookieTools.getCookieHeaderName(c),
 			       CookieTools.getCookieHeaderValue(c));
 	    if( c.getVersion() == 1 ) {
 		// add a version 0 header too.
 		// XXX what if the user set both headers??
 		Cookie c0 = (Cookie)c.clone();
-		c0.setVersion(0);            
-		headers.putHeader( CookieTools.getCookieHeaderName(c0),
+		c0.setVersion(0);
+		headers.addHeader( CookieTools.getCookieHeaderName(c0),
 				   CookieTools.getCookieHeaderValue(c0));
 	    }
         }
@@ -399,7 +400,7 @@ public class Response {
 	fixHeaders();
 	resA.addMimeHeaders( headers );
     }
-    
+
     public void addCookie(Cookie cookie) {
 	userCookies.addElement(cookie);
     }
@@ -460,7 +461,7 @@ public class Response {
     public void setContentLength(int contentLength) {
 	this.contentLength = contentLength;
     }
-    
+
     public int getStatus() {
         return status;
     }
@@ -472,12 +473,12 @@ public class Response {
     public void sendError(int sc) throws IOException {
 	sendError(sc, "No detailed message");
     }
-    
+
     public void sendError(int sc, String msg) throws IOException {
 	this.status = sc;
 
 	Context context = request.getContext();
-	
+
 	if (context == null) {
 	    sendPrivateError(sc, msg);
 
@@ -512,24 +513,24 @@ public class Response {
 
 	// XXX
 	// we only should set this if we are the head, not in an include
-	
+
 	close();
     }
 
     private void sendPrivateError(int sc, String msg) throws IOException {
 	setContentType("text/html");
-	
+
 	StringBuffer buf = new StringBuffer();
 	buf.append("<h1>Error: " + sc + "</h1>\r\n");
 	buf.append(msg + "\r\n");
-	
+
 	// XXX
 	// need to figure out if we are in an include better. The subclass
 	// knows whether or not we are in an include!
-	
+
 	sendBodyText(buf.toString());
     }
-    
+
     public void sendRedirect(String location) throws IOException {
 	setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
 	//mimeType = null;
@@ -586,7 +587,7 @@ public class Response {
 	    out.print(s);
 	}
     }
-    
+
     private void close() throws IOException {
 	try {
 	    PrintWriter out = getWriter();
