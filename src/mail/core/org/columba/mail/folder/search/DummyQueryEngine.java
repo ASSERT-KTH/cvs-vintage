@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import org.columba.mail.filter.FilterRule;
@@ -23,7 +24,6 @@ import java.util.List;
 
 /**
  * Default query engine used by {@link DefaultSearchEngine}.
- *
  *
  * @author fdietz
  */
@@ -60,7 +60,7 @@ public class DummyQueryEngine implements QueryEngine {
     /**
  * @see org.columba.mail.folder.search.QueryEngine#messageAdded(org.columba.mail.message.ColumbaMessage)
  */
-    public void messageAdded(ColumbaMessage message) throws Exception {
+    public void messageAdded(Object uid) throws Exception {
     }
 
     /**

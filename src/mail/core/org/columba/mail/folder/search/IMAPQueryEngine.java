@@ -13,14 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.message.ColumbaMessage;
 
 import java.util.List;
-
 
 /**
  * Performes search requests on the IMAP server-side.
@@ -74,7 +73,7 @@ public class IMAPQueryEngine implements QueryEngine {
         return folder.getStore().search(uids, filter, folder.getImapPath());
     }
 
-    public void messageAdded(ColumbaMessage message) throws Exception {
+    public void messageAdded(Object uid) throws Exception {
         // method is not needed by IMAP
     }
 

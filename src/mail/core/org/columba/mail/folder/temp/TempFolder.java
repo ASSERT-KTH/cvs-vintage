@@ -29,8 +29,8 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 
 import org.columba.ristretto.message.*;
-import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SourceInputStream;
+import org.columba.ristretto.message.io.TempSourceFactory;
 import org.columba.ristretto.parser.MessageParser;
 
 import java.io.File;
@@ -135,8 +135,10 @@ public class TempFolder extends Folder {
      * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
      */
     public void removeMessage(Object uid) throws Exception {
+        Flags flags = getFlags(uid);
         headerList.remove(uid);
         messageList.remove(uid);
+        fireMessageRemoved(uid, flags);
     }
 
     /**
@@ -224,10 +226,9 @@ public class TempFolder extends Folder {
 
     public Object addMessage(InputStream in, Attributes attributes)
         throws Exception {
-        // FIXME: Directly pass the InputStream to the MessageParser,
-        // DO NOT READ THE EMAIL INTO A STRING!!!!
-        StringBuffer source = StreamUtils.readInString(in);
-        Message message = MessageParser.parse(new CharSequenceSource(source));
+
+        Message message = MessageParser.parse(
+                TempSourceFactory.createTempSource(in, -1, null));
 
         Object newUid = generateNextUid();
 
@@ -245,6 +246,7 @@ public class TempFolder extends Folder {
 
         messageList.put(newUid, new ColumbaMessage(h, message));
 
+        fireMessageAdded(newUid);
         return newUid;
     }
 

@@ -334,8 +334,8 @@ public class LuceneQueryEngine implements QueryEngine {
     /**
      * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
      */
-    public void messageAdded(ColumbaMessage message) throws Exception {
-        Document messageDoc = getDocument(message);
+    public void messageAdded(Object uid) throws Exception {
+        Document messageDoc = getDocument(uid);
 
         boolean needToRelease = false;
 
@@ -353,8 +353,11 @@ public class LuceneQueryEngine implements QueryEngine {
         }
     }
 
-    private Document getDocument(ColumbaMessage message) {
+    private Document getDocument(Object uid) {
         Document messageDoc = new Document();
+        
+        /* FIXME: Use uid to retrieve message from folder!
+         
         ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
         messageDoc.add(Field.Keyword("uid", message.getUID().toString()));
@@ -387,6 +390,8 @@ public class LuceneQueryEngine implements QueryEngine {
         if (body != null) {
             messageDoc.add(Field.UnStored("body", body.getBody().toString()));
         }
+        
+         */
 
         return messageDoc;
     }

@@ -307,10 +307,12 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         }
     }
 
-    /** {@inheritDoc} */
     public Object addMessage(InputStream in) throws Exception {
-        // increase total count of messages
-        super.addMessage(in);
+        return addMessage(in, null);
+    }
+
+    public Object addMessage(InputStream in, Attributes attributes)
+            throws Exception {
 
         // generate UID for new message
         Object newUid = generateNextMessageUid();
@@ -321,28 +323,17 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         // close stream
         in.close();
 
-        return newUid;
-    }
+        if (attributes != null) {
+            Source source = getDataStorageInstance().getMessageSource(newUid);
 
+            // parse header
+            Header header = HeaderParser.parse(source);
 
-    /**
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
-     */
-    public Object addMessage(InputStream in, Attributes attributes)
-            throws Exception {
+            // save header and attributes
+            getHeaderListStorage().addMessage(newUid, header, attributes);
+        }
 
-        Object newUid = addMessage(in);
-
-        if (newUid == null) { return null; }
-
-        Source source = getDataStorageInstance().getMessageSource(newUid);
-
-        // parse header
-        Header header = HeaderParser.parse(source);
-
-        // save header and attributes
-        getHeaderListStorage().addMessage(newUid, header, attributes);
-
+        fireMessageAdded(newUid);
         return newUid;
     }
 
@@ -473,13 +464,10 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
      * @see org.columba.mail.folder.MailboxInterface#removeMessage(java.lang.Object)
      */
     public void removeMessage(Object uid) throws Exception {
-        super.removeMessage(uid);
-
         // remove message from disk
         getDataStorageInstance().removeMessage(uid);
 
-        // this folder was modified
-        changed = true;
+        fireMessageRemoved(uid, getFlags(uid));
     }
 
     /**

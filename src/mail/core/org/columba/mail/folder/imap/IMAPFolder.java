@@ -26,11 +26,7 @@ import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.HeaderListStorage;
-import org.columba.mail.folder.MailboxInterface;
-import org.columba.mail.folder.RemoteFolder;
-import org.columba.mail.folder.RootFolder;
+import org.columba.mail.folder.*;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.headercache.RemoteHeaderListStorage;
 import org.columba.mail.folder.search.DefaultSearchEngine;
@@ -113,7 +109,6 @@ public class IMAPFolder extends RemoteFolder {
         item.set("property", "accessrights", "user");
         item.set("property", "subfolder", "true");
     }
-
 
     /**
      * @see org.columba.mail.folder.FolderTreeNode#removeFolder()
@@ -388,9 +383,7 @@ public class IMAPFolder extends RemoteFolder {
         for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
             String localUID = (String) e.nextElement();
 
-            //System.out.println("server message uid: "+ serverUID );
             if (uid.equals(localUID)) {
-                //System.out.println("local uid exists remotely");
                 return true;
             }
         }
@@ -403,7 +396,6 @@ public class IMAPFolder extends RemoteFolder {
      *      org.columba.core.command.WorkerStatusController)
      */
     public MimeTree getMimePartTree(Object uid) throws Exception {
-        //System.out.println("------------------->IMAPFolder->getMimePartTree");
         return getStore().getMimePartTree(uid, getImapPath());
     }
 
@@ -412,7 +404,6 @@ public class IMAPFolder extends RemoteFolder {
      *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
      */
     public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
-        //System.out.println("------------------->IMAPFolder->getMimePart");
         return getStore().getMimePart(uid, address, getImapPath());
     }
 
@@ -430,6 +421,9 @@ public class IMAPFolder extends RemoteFolder {
         getStore().copy(((IMAPFolder) destFolder).getImapPath(), uids,
                 getImapPath());
 
+        //FIXME: Use method addMessage(Object) from destination folder
+        //to notify it of message additions -> remove code below
+        
         // update messagefolderinfo of destination-folder
         // -> this is necessary to reflect the changes visually
         for (int i = 0; i < uids.length; i++) {
@@ -641,6 +635,7 @@ public class IMAPFolder extends RemoteFolder {
 
         getStore().append(getImapPath(), stringSource.toString());
 
+        fireMessageAdded(null);
         return null;
     }
 

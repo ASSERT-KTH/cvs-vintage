@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
+import javax.swing.event.EventListenerList;
 import javax.swing.tree.TreeNode;
 
 import org.columba.core.command.StatusObservable;
@@ -117,6 +118,8 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 
     protected HeaderListStorage headerListStorage;
 
+    protected EventListenerList listenerList = new EventListenerList();
+
     /**
      * Standard constructor.
      * 
@@ -153,6 +156,96 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         }
 
         loadMessageFolderInfo();
+    }
+
+    /**
+     * Adds a listener.
+     */
+    public void addFolderListener(FolderListener l) {
+        listenerList.add(FolderListener.class, l);
+    }
+    
+    /**
+     * Removes a previously registered listener.
+     */
+    public void removeFolderListener(FolderListener l) {
+        listenerList.remove(FolderListener.class, l);
+    }
+    
+    /**
+     * Propagates an event to all registered listeners notifying them
+     * of a message addition.
+     */
+    protected void fireMessageAdded(Object uid) {
+        getMessageFolderInfo().incExists();
+        try {
+            Flags flags = getFlags(uid);
+            if (flags.getRecent()) {
+                getMessageFolderInfo().incRecent();
+            }
+            if (flags.getSeen()) {
+                getMessageFolderInfo().incUnseen();
+            }
+        } catch (Exception e) {}
+        setChanged(true);
+        FolderEvent e = new FolderEvent(this, null);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).messageAdded(e);
+            }
+        }
+    }
+    
+    /**
+     * Propagates an event to all registered listeners notifying them
+     * of a message removal.
+     */
+    protected void fireMessageRemoved(Object uid, Flags flags) {
+        try {
+            getHeaderListStorage().removeMessage(uid);
+        } catch (Exception e) {}
+        getMessageFolderInfo().decExists();
+        if (flags.getSeen()) {
+            getMessageFolderInfo().decUnseen();
+        }
+        if (flags.getRecent()) {
+            getMessageFolderInfo().decRecent();
+        }
+        setChanged(true);
+        FolderEvent e = new FolderEvent(this, uid);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).messageRemoved(e);
+            }
+        }
+    }
+    
+    /**
+     * Propagates an event to all registered listeners notifying them
+     * that this folder has been renamed.
+     */
+    protected void fireFolderRenamed(String name) {
+        FolderEvent e = new FolderEvent(this, name);
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == FolderListener.class) {
+                ((FolderListener) listeners[i + 1]).folderRenamed(e);
+            }
+        }
     }
 
     /**
@@ -290,7 +383,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      */
     public boolean renameFolder(String name) throws Exception {
         setName(name);
-
+        fireFolderRenamed(name);
         return true;
     }
 
@@ -298,7 +391,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * save messagefolderinfo to xml-configuration
      *  
      */
-    public void saveMessageFolderInfo() {
+    protected void saveMessageFolderInfo() {
         MessageFolderInfo info = getMessageFolderInfo();
 
         FolderItem item = getFolderItem();
@@ -400,39 +493,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      */
     public boolean isTrashFolder() {
         return false;
-    }
-
-    /** ********************* update of MessageFolderInfo ******************** */
-
-    /**
-     * @see org.columba.mail.folder.MailboxInterface#removeMessage(java.lang.Object)
-     */
-    public void removeMessage(Object uid) throws Exception {
-        //      update message folder info
-        //      decrement total count of message
-        getMessageFolderInfo().decExists();
-
-        // update unseen/recent state
-        Flags flags = getFlags(uid);
-
-        if (flags.getSeen()) {
-            getMessageFolderInfo().decUnseen();
-        }
-
-        if (flags.getRecent()) {
-            getMessageFolderInfo().decRecent();
-        }
-
-        // after updateing MessageFolderInfo -> remove message
-        getHeaderListStorage().removeMessage(uid);
-
-        // notify search-engine
-        getSearchEngine().messageRemoved(uid);
-
-        // set folder changed flag
-        // -> if not, the header cache wouldn't notice that something
-        // -> has changed. And wouldn't save the changes.
-        setChanged(true);
     }
 
     /**
@@ -548,48 +608,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         // -> if not, the header cache wouldn't notice that something
         // -> has changed. And wouldn't save the changes.
         setChanged(true);
-    }
-
-    /**
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
-     */
-    public Object addMessage(InputStream in) throws Exception {
-        // increase total count of messages
-        getMessageFolderInfo().incExists();
-
-        setChanged(true);
-
-        return null;
-    }
-
-    /**
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream,
-     *      org.columba.ristretto.message.Attributes)
-     */
-    public Object addMessage(InputStream in, Attributes attributes)
-            throws Exception {
-
-        // increase total count of messages
-        getMessageFolderInfo().incExists();
-        
-        setChanged(true);
-
-        // FIXME: why can't we access the attributes directly here?
-        //        Do we have to wrap attributes in ColumbaHeader?
-        ColumbaHeader header = new ColumbaHeader();
-        header.setAttributes(attributes);
-
-        // increment recent count of messages if appropriate
-        if (header.getFlags().getRecent()) {
-            getMessageFolderInfo().incRecent();
-        }
-
-        // increment unseen count of messages if appropriate
-        if (header.getFlags().getSeen()) {
-            getMessageFolderInfo().incUnseen();
-        }
-
-        return null;
     }
 
     /** ****************************** AttributeStorage *********************** */

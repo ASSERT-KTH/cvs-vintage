@@ -13,14 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.message.ColumbaMessage;
 
 import java.util.List;
-
 
 /**
  * Custom implementation for performing optimized search requests.
@@ -76,7 +75,7 @@ public interface QueryEngine {
  * @param message                message
  * @throws Exception
  */
-    void messageAdded(ColumbaMessage message) throws Exception;
+    void messageAdded(Object uid) throws Exception;
 
     /**
  * Notify search engine that a message was removed

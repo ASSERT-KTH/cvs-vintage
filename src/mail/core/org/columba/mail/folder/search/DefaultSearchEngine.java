@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import org.columba.core.command.StatusObservable;
@@ -24,18 +25,15 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderEvent;
+import org.columba.mail.folder.FolderListener;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 import javax.swing.JOptionPane;
-
 
 /**
  * Divides search requests and passes them along to the
@@ -71,10 +69,23 @@ public class DefaultSearchEngine {
  */
     public DefaultSearchEngine(Folder folder) {
         this.folder = folder;
-
         filterCache = new Hashtable();
-
         nonDefaultEngine = new DummyQueryEngine();
+        folder.addFolderListener(new FolderListener() {
+            public void messageAdded(FolderEvent e) {
+                try {
+                    getNonDefaultEngine().messageAdded(e.getChanges());
+                } catch (Exception ex) {}
+            }
+            
+            public void messageRemoved(FolderEvent e) {
+                try {
+                    getNonDefaultEngine().messageRemoved(e.getChanges());
+                } catch (Exception ex) {}
+            }
+            
+            public void folderRenamed(FolderEvent e) {}
+        });
     }
 
     public StatusObservable getObservable() {
@@ -340,14 +351,6 @@ worker.setDisplayText(
  */
     public void setNonDefaultEngine(QueryEngine engine) {
         nonDefaultEngine = engine;
-    }
-
-    public void messageAdded(ColumbaMessage message) throws Exception {
-        getNonDefaultEngine().messageAdded(message);
-    }
-
-    public void messageRemoved(Object uid) throws Exception {
-        getNonDefaultEngine().messageRemoved(uid);
     }
 
     public void sync() throws Exception {
