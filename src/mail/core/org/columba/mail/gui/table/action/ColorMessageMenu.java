@@ -17,24 +17,22 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.ColorMessageCommand;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-
+import org.columba.core.action.IMenu;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.ColorMessageCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 /**
  * Creates a menu with a list of colors to select.
  *
@@ -46,7 +44,12 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
     // TODO: add central place, which keeps a list of all possible
     //       colors, and provides a custom color configuration possibility
     public static String[] items = {
-        "Blue", "Gray", "Green", "Red", "Yellow", "Custom"
+		MailResourceLoader.getString("dialog", "color", "blue"),
+		MailResourceLoader.getString("dialog", "color", "gray"),
+		MailResourceLoader.getString("dialog", "color", "green"),
+		MailResourceLoader.getString("dialog", "color", "red"),
+		MailResourceLoader.getString("dialog", "color", "yellow"),
+		MailResourceLoader.getString("dialog", "color", "custom")
     };
     public static Color[] colors = {
         Color.blue, Color.gray, Color.green, Color.red, Color.yellow,
@@ -58,7 +61,8 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
  * @param caption
 */
     public ColorMessageMenu(FrameMediator controller) {
-        super(controller, "Color Message");
+		super(controller, 
+		MailResourceLoader.getString("dialog", "color", "menu_color_message"));
 
         createSubMenu();
 
@@ -67,7 +71,9 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 
     protected void createSubMenu() {
         // TODO: implement custom menuitem renderer
-        JMenuItem item = new JMenuItem("None");
+		JMenuItem item= new JMenuItem(
+			MailResourceLoader.getString("dialog", "color", "none")
+			);
         item.setActionCommand("NONE");
         item.addActionListener(this);
         add(item);
@@ -103,14 +109,15 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
             for (int i = 0; i < items.length; i++) {
                 if (action.equals(items[i])) {
                     result = i;
-
                     break;
                 }
             }
-
+			
+			
             // add color selection to reference
             for (int i = 0; i < r.length; i++) {
                 r[i].setColorValue(colors[result].getRGB());
+              
             }
 
             // pass command to scheduler
