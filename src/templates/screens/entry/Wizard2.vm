@@ -72,7 +72,7 @@ $page.setTitle("Identified as duplicate")
   #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
   #indexedRows($velocityCount)
   #set ($issueGroup = $intake.Issue.Default)
-  <td> $issueGroup.Ids.Key
+  <td>
   #if ($issueList.size() == 1)
     <input type="radio" name="$issueGroup.Ids.Key" value="$issue.IssueId" checked="checked" />
   #else
