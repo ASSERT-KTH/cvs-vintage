@@ -14,7 +14,6 @@
 
 package org.columba.core.plugin;
 
-import java.io.File;
 import java.net.URL;
 
 import org.columba.core.io.DiskIO;
@@ -36,9 +35,7 @@ public class PluginListConfig extends XmlIO {
 	public PluginListConfig(String fileName) {
 		super();
 
-		URL url = DiskIO.getResourceURL(fileName);
-
-		setFile( new File( url.getFile() ) );
+		setURL( DiskIO.getResourceURL(fileName) );
 		
 		load();
 	}

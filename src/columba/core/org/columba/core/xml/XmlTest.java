@@ -14,6 +14,8 @@
 
 package org.columba.core.xml;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.io.IOException;
 
 public class XmlTest {
@@ -21,12 +23,17 @@ public class XmlTest {
 	
 	public static void main(String argv[]) {
 		if (argv.length != 1) {
-			System.err.println("Usage: cmd filename");
+			System.err.println("Usage: cmd url");
 			System.exit(1);
 		}
 
 		XmlIO X = new XmlIO();
-		X.load(argv[0]);
+		try{
+			X.load(new URL(argv[0]));
+		}catch(MalformedURLException mue){
+			System.err.println("No valid url: \""+argv[0]+"\"");
+			System.exit(1);
+		}
 
 		XmlElement.printNode(X.getRoot(), "");
 

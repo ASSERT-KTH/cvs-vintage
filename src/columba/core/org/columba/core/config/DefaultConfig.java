@@ -73,9 +73,7 @@ public class DefaultConfig {
 			
 			String	hstr = "org/columba/" + moduleName + "/config/" + id;
 			URL url = DiskIO.getResourceURL(hstr);
-			
-			File file = new File( url.getFile() );
-			plugin.setFile(file);
+			plugin.setURL(url);
 			Config.registerTemplatePlugin(moduleName, id, plugin);
 		}
 

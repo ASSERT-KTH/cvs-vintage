@@ -27,8 +27,8 @@
 //
 //
 // $Log: XmlIO.java,v $
-// Revision 1.4  2003/01/07 11:21:16  javaprog
-// [bug] reassured compatibility with Java 1.3
+// Revision 1.5  2003/01/07 11:44:03  javaprog
+// [bug] XmlIO must use java.net.URL instead of java.io.File in order to load resources within .jar files
 //
 // Revision 1.3  2003/01/07 11:02:25  javaprog
 // [intern] reduced code size
@@ -49,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -83,7 +84,7 @@ public class XmlIO extends DefaultHandler {
 	// the "characters" SAX event.
 	private CharArrayWriter contents = new CharArrayWriter();
 
-	protected File file = null;
+	protected URL url = null;
 
 	/*
 	// Default constructor
@@ -100,10 +101,10 @@ public class XmlIO extends DefaultHandler {
 	}
 	*/
 
-	public XmlIO(File f) {
+	public XmlIO(URL url) {
 		super();
 
-		this.file = f;
+		this.url = url;
 	}
 
 	// setup and load constructor
@@ -112,25 +113,23 @@ public class XmlIO extends DefaultHandler {
 
 	}
 
-	public void setFile(File file) {
-		this.file = file;
+	public void setURL(URL url) {
+		this.url = url;
 	}
 
 	public boolean load() {
 		//this.file = F;
 
-		return load(file.getPath());
+		return load(url);
 	}
 
 	// Load a file. This is what starts things off.
-	public boolean load(String inputFile) {
+	public boolean load(URL inputURL) {
 		Elements = new Vector();
 		rootElement = new XmlElement("__CULUMBA_XML_TREE_TOP__");
 		currentElement = rootElement;
 
 		try {
-			// Use an instance of ourselves as the SAX event handler
-			DefaultHandler handler = this;
 			// Create the XML reader...
 			//      xr = XMLReaderFactory.createXMLReader();
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -139,14 +138,12 @@ public class XmlIO extends DefaultHandler {
 
 			SAXParser saxParser = factory.newSAXParser();
 
-
-
-			saxParser.parse(inputFile, this);
+			saxParser.parse(inputURL.openStream(), this);
 
 		} catch (javax.xml.parsers.ParserConfigurationException ex) {
 			ColumbaLogger.log.error(
 				"XML config error while attempting to read XML file \n'"
-                +inputFile+"'");
+                +inputURL+"'");
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
@@ -154,14 +151,14 @@ public class XmlIO extends DefaultHandler {
 			// Error
 			ColumbaLogger.log.error(
 				"XML parse error while attempting to read XML file \n'"
-                +inputFile+"'");
+                +inputURL+"'");
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
 		} catch (java.io.IOException ex) {
 			ColumbaLogger.log.error(
-				"File read error while attempting to read XML file \n'"
-                +inputFile+"'");
+				"I/O error while attempting to read XML file \n'"
+                +inputURL+"'");
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
@@ -238,20 +235,16 @@ public class XmlIO extends DefaultHandler {
 
 	public void errorDialog(String Msg) {
 		JOptionPane.showMessageDialog(null, "Error: " + Msg);
-
 	}
 	public void warningDialog(String Msg) {
 		JOptionPane.showMessageDialog(null, "Warning: " + Msg);
-
 	}
 	public void infoDialog(String Msg) {
 		JOptionPane.showMessageDialog(null, "Info: " + Msg);
-
 	}
 
 	public void save() throws Exception {
-
-		write(new FileOutputStream(file));
+		write(new FileOutputStream(url.getPath()));
 	}
 
 	//

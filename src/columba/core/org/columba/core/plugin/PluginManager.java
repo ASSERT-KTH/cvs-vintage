@@ -15,6 +15,7 @@
 package org.columba.core.plugin;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Hashtable;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -56,7 +57,10 @@ public class PluginManager {
 			if (xmlFile == null)
 				continue;
 
-			XmlIO config = new XmlIO(xmlFile);
+			XmlIO config = new XmlIO();
+			try{
+				config.setURL(xmlFile.toURL());
+			}catch(MalformedURLException mue){}
 			config.load();
 
 			XmlElement element = config.getRoot().getElement("/plugin");

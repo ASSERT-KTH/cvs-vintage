@@ -15,6 +15,7 @@
 package org.columba.core.config;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 import org.columba.core.xml.XmlIO;
 
@@ -30,7 +31,9 @@ public class DefaultXmlConfig extends XmlIO{
 		this.file = file;
 		*/
 		
-		super(file);
+		try{	
+			setURL( file.toURL() );
+		}catch(MalformedURLException mue){}
 		
 		//printNode( getRoot(), "");
 	}
