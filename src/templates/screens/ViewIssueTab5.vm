@@ -26,7 +26,11 @@
      #if ($activitySet && $activitySet.Attachment)
        #if ($activitySet.Attachment.Data && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
          $activitySet.Attachment.Data
-       #else $l10n.NotProvided #end
+       #elseif ($activitySet.ActivitySetType.Name.equals("Edit Issue"))
+         $act.NewValue
+       #else
+         $l10n.NotProvided
+       #end
      #elseif ($act.Attachment)
        #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
           $act.Attachment.Data 
