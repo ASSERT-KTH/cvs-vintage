@@ -16,6 +16,9 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -58,6 +61,9 @@ public class ReplyToAllAction extends AbstractColumbaAction
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_message_replytoall"));
 
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R,
+				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+        
         setEnabled(false);
 
         ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);

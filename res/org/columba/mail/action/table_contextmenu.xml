@@ -5,6 +5,7 @@
  	<menuitem action="OpenMessageWithComposer"/>
  	<menuitem action="OpenMessageWithMessageFrame" />
  	<menuitem action="SaveMessageBodyAs" />
+ 	
  	<menuitem action="Print"/>
  	<separator/>
  	<menuitem action="Reply" />
@@ -13,9 +14,12 @@
  	<menuitem action="ReplyAsAttachment"/>
  	<menuitem action="ReplyWithTemplate"/>
 	<menuitem action="Forward" />
-	<menuitem action="ForwardInline" />
-	<menuitem action="ForwardAsAttachment" />
-	<menuitem action="Redirect" />
+	 <menu name="menu_message_forward_as">
+	  <menuitem action="ForwardInline" />
+	  <menuitem action="ForwardAsAttachment" />
+	  <separator/>
+	  <menuitem action="Redirect" />
+	 </menu>
 	<separator />
 	<menuitem action="CopyMessage" />
 	<menuitem action="MoveMessage" />

@@ -16,6 +16,9 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -28,40 +31,47 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Forward Message Inline Action.
- *
+ * 
  * @author fdietz
  */
-public class ForwardInlineAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public ForwardInlineAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_forwardinline"));
+public class ForwardInlineAction extends AbstractColumbaAction implements
+		SelectionListener {
+	public ForwardInlineAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_message_forwardinline"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_message_forwardinline_tooltip").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_message_forwardinline_tooltip").replaceAll(
+				"&", ""));
 
-        setEnabled(false);
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-    }
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_J,
+				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
-        MainInterface.processor.addOp(new ForwardInlineCommand(r));
-    }
+		setEnabled(false);
+		((MailFrameMediator) frameMediator)
+				.registerTableSelectionListener(this);
+	}
 
-    /* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
+		MainInterface.processor.addOp(new ForwardInlineCommand(r));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }

@@ -50,9 +50,11 @@
 	</menu>
 	
 	<menu name="menu_utilities">
+	 <!--
 	 <menuitem action="OpenNewMailWindow"/>
 	 <menuitem action="OpenNewAddressbookWindow"/>
 	 <separator/>
+	 -->
 	 <menuitem action="OpenProfileManagerDialog" />
 	 <menuitem action="PluginManagerDialog" />
 	 <menuitem action="OpenExternalToolsDialog" />
