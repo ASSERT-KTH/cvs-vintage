@@ -24,7 +24,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.6 2003/04/29 19:25:08 kataka Exp $
+// $Id: FigDependency.java,v 1.7 2003/05/12 22:32:54 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -57,6 +57,7 @@ public class FigDependency extends FigEdgeModelElement {
         setDestArrowHead(endArrow);
         setBetweenNearestPoints(true);
         setLayer(ProjectManager.getManager().getCurrentProject().getActiveDiagram().getLayer());
+        getFig().setDashed(true);
     }
 
     public FigDependency(Object edge) {

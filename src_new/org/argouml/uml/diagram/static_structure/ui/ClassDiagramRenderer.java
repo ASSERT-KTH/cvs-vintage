@@ -24,7 +24,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.9 2002/10/23 05:24:22 mkl Exp $
+// $Id: ClassDiagramRenderer.java,v 1.10 2003/05/12 22:32:54 alexb Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -137,7 +137,6 @@ public class ClassDiagramRenderer
                 realFig.setDestPortFig(supFN);
                 realFig.setDestFigNode(supFN);
                 realFig.getFig().setLayer(lay);
-                realFig.getFig().setDashed(true);
                 return realFig;
             }
             else {

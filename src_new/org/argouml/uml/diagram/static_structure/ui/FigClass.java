@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.60 2003/05/12 13:16:28 alexb Exp $
+// $Id: FigClass.java,v 1.61 2003/05/12 22:32:54 alexb Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -63,6 +63,7 @@ import org.argouml.uml.ui.ActionAddAttribute;
 import org.argouml.uml.ui.ActionAddNote;
 import org.argouml.uml.ui.ActionAddOperation;
 import org.argouml.uml.ui.ActionCompartmentDisplay;
+import org.argouml.uml.ui.ActionEdgesDisplay;
 import org.argouml.uml.ui.ActionModifier;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -331,6 +332,9 @@ public class FigClass extends FigNodeModelElement {
             showMenu.add(ActionCompartmentDisplay.HideOperCompartment);
         else
             showMenu.add(ActionCompartmentDisplay.ShowOperCompartment);
+        
+        showMenu.add(ActionEdgesDisplay.ShowEdges);
+        showMenu.add(ActionEdgesDisplay.HideEdges);
 
         popUpActions.insertElementAt(showMenu, popUpActions.size() - 1);
 
