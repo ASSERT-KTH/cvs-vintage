@@ -507,11 +507,7 @@ public class Issue
      */
     public Vector getActivity() throws Exception  
     {
-        Criteria crit = new Criteria()
-            .add(ActivityPeer.ISSUE_ID, getIssueId())
-            .setLimit(10)
-            .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
-        return ActivityPeer.doSelect(crit);
+        return getActivity(false);
     }
 
     /**
@@ -522,9 +518,12 @@ public class Issue
         Criteria crit = new Criteria()
             .add(ActivityPeer.ISSUE_ID, getIssueId())
             .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
+        if (!fullHistory)
+        {
+            crit.setLimit(10);
+        }
         return ActivityPeer.doSelect(crit);
     }
-
 
     /**
      * Returns list of child issues
