@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.25 2005/01/09 00:33:04 spestov Exp $
+ * @version $Id: Registers.java,v 1.26 2005/02/06 20:43:42 spestov Exp $
  */
 public class Registers
 {
@@ -77,7 +77,6 @@ public class Registers
 
 		setRegister(register,selection);
 		HistoryModel.getModel("clipboard").addItem(selection);
-		EditBus.send(new RegisterChanged(null,register));
 	
 	} //}}}
 
@@ -102,7 +101,6 @@ public class Registers
 			HistoryModel.getModel("clipboard").addItem(selection);
 
 			textArea.setSelectedText("");
-			EditBus.send(new RegisterChanged(null,register));
 		}
 		else
 			textArea.getToolkit().beep();
@@ -309,7 +307,6 @@ public class Registers
 		}
 
 		registers[name] = newRegister;
-		EditBus.send(new RegisterChanged(null,name));
 	} //}}}
 
 	//{{{ setRegister() method
@@ -323,7 +320,10 @@ public class Registers
 		touchRegister(name);
 		Register register = getRegister(name);
 		if(register != null)
+		{
 			register.setValue(value);
+			EditBus.send(new RegisterChanged(null,name));
+		}
 		else
 			setRegister(name,new StringRegister(value));
 	} //}}}

@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.24 2005/01/09 00:33:05 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.25 2005/02/06 20:43:43 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -117,6 +117,9 @@ public class KeyEventTranslator
 			break;
 		case KeyEvent.KEY_TYPED:
 			char ch = evt.getKeyChar();
+
+			if(KeyEventWorkaround.isMacControl(evt))
+				ch |= 0x40;
 
 			switch(ch)
 			{
