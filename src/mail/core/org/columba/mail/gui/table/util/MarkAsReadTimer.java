@@ -22,7 +22,9 @@ import javax.swing.Timer;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
@@ -54,20 +56,20 @@ public class MarkAsReadTimer implements ActionListener {
 
 		this.tableController = tableController;
 
-		// FIXME
-		this.maxValue = 2;
-		/*
-		this.maxValue =
-			Config.getOptionsConfig().getIntegerGuiOptions(
-				"markasreaddelay",
-				2);
-		*/
+		XmlElement markasread =
+		MailConfig.get("options").getElement("/options/markasread");
+
+		String delay = markasread.getAttribute("delay", "2");
+		this.maxValue = Integer.parseInt(delay);
+		
 		timer = new Timer(ONE_SECOND * maxValue, this);
 
 	}
 
 	public void setMaxValue(int i) {
 		maxValue = i;
+		
+		timer = new Timer(ONE_SECOND * maxValue, this);
 	}
 
 	public synchronized void stopTimer() {

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
 import org.columba.core.command.Command;
@@ -257,8 +258,16 @@ public class ViewMessageCommand extends FolderCommand {
 		// get RFC822-header
 		header = srcFolder.getMessageHeader(uid, wsc);
 
-		// get attachment structure	
-		mimePartTree = srcFolder.getMimePartTree(uid, wsc);
+		// get attachment structure
+		try
+		{	
+			mimePartTree = srcFolder.getMimePartTree(uid, wsc);
+		}
+		catch ( FileNotFoundException ex)
+		{
+			// message doesn't exist anymore
+			return;
+		}
 
 		// if this message is signed/encrypted we have to use
 		// GnuPG to extract the decrypted bodypart
@@ -274,8 +283,8 @@ public class ViewMessageCommand extends FolderCommand {
 		String contentType = (String) header.get("Content-Type");
 		ColumbaLogger.log.debug("contentType=" + contentType);
 
-		if ((contentType.equals("multipart/encrypted"))
-			|| (contentType.equals("multipart/signature")))
+		if ((contentType != null ) && ((contentType.equals("multipart/encrypted"))
+			|| (contentType.equals("multipart/signature"))))
 			handlePGPMessage(header, wsc);
 
 		if (mimePartTree != null) {

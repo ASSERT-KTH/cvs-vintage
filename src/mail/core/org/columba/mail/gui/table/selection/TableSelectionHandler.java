@@ -30,13 +30,15 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.util.MessageNode;
 
-public class TableSelectionHandler extends SelectionHandler implements TreeSelectionListener {
+public class TableSelectionHandler
+	extends SelectionHandler
+	implements TreeSelectionListener {
 
 	private TableView view;
 	private LinkedList messages;
 	private Folder folder;
 
-	private final static MessageNode[] messageNodeArray = {null}; 
+	private final static MessageNode[] messageNodeArray = { null };
 
 	/**
 	 * @param id
@@ -45,7 +47,7 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 		super("mail.table");
 		this.view = view;
 		view.addTreeSelectionListener(this);
-		
+
 		messages = new LinkedList();
 	}
 
@@ -53,11 +55,10 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
 	public DefaultCommandReference[] getSelection() {
-		FolderCommandReference[] references =
-			new FolderCommandReference[1];
-		
-		references[0] = new FolderCommandReference(folder,getUidArray());
-		
+		FolderCommandReference[] references = new FolderCommandReference[1];
+
+		references[0] = new FolderCommandReference(folder, getUidArray());
+
 		return references;
 	}
 
@@ -68,21 +69,21 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 		FolderCommandReference ref = (FolderCommandReference) selection[0];
 
 		folder = (Folder) ref.getFolder();
-		
+
 		// TODO implement setSelection
 		/*
 		if ( ref != null )
 		{
 		
 		Object[] uids = ref.getUids();
-
+		
 		view.clearSelection();
 		view.requestFocus();
-
+		
 		TreePath path[] = new TreePath[uids.length];
 		}
 		*/
-		
+
 		/*
 		for (int i = 0; i < uids.length; i++) {
 			path[i] =
@@ -91,7 +92,7 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 			view.setAnchorSelectionPath(path[i]);
 			view.expandPath(path[i]);
 		}
-
+		
 		view.setSelectionPaths(path);
 		 */
 
@@ -101,13 +102,17 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
 	 */
 	public void valueChanged(TreeSelectionEvent e) {
+
 		for (int i = 0; i < e.getPaths().length; i++) {
-			if (e.getPaths()[i].getLastPathComponent() instanceof MessageNode) {
-				MessageNode message = (MessageNode) e.getPaths()[i].getLastPathComponent();
+			if (e.getPaths()[i].getLastPathComponent()
+				instanceof MessageNode) {
+				MessageNode message =
+					(MessageNode) e.getPaths()[i].getLastPathComponent();
 				if (e.isAddedPath(i)) {
 					ColumbaLogger.log.debug(
 						"Message added to Selection= " + message.getUid());
 					messages.add(message);
+
 				} else {
 					ColumbaLogger.log.debug(
 						"Message removed from Selection= " + message.getUid());
@@ -115,31 +120,32 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 				}
 			}
 		}
-		
-		fireSelectionChanged( new TableSelectionChangedEvent( folder, getUidArray() ));
+
+		fireSelectionChanged(
+			new TableSelectionChangedEvent(folder, getUidArray()));
 
 		/*
 		DefaultMutableTreeNode node =
 			(DefaultMutableTreeNode) view
 				.getTree()
 				.getLastSelectedPathComponent();
-
+		
 		if (node == null)
 			return;
-
+		
 		MessageNode[] nodes = getView().getSelectedNodes();
 		if (nodes == null) {
 			return;
 		}
-
+		
 		//getActionListener().changeMessageActions();
-
+		
 		if (nodes.length == 0)
 			return;
-
+		
 		newUidList = MessageNode.toUidArray(nodes);
 		
-
+		
 		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
 		*/
 	}
@@ -155,12 +161,12 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 	private Object[] getUidArray() {
 		Object[] result = new Object[messages.size()];
 		ListIterator it = messages.listIterator();
-		
-		int i=0;
-		while( it.hasNext() ) {
-			result[i++] = ((MessageNode)it.next()).getUid();
+
+		int i = 0;
+		while (it.hasNext()) {
+			result[i++] = ((MessageNode) it.next()).getUid();
 		}
-		
+
 		return result;
 	}
 }

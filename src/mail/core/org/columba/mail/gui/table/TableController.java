@@ -147,7 +147,7 @@ public class TableController
 
 		markAsReadTimer = new MarkAsReadTimer(this);
 
-		view.addTreeSelectionListener(this);
+		//view.addTreeSelectionListener(this);
 		
 		getHeaderTableModel().getTableModelSorter().setSortingColumn( headerTableItem.get("selected") );
 		getHeaderTableModel().getTableModelSorter().setSortingOrder( headerTableItem.getBoolean("ascending"));
@@ -542,9 +542,11 @@ public class TableController
 				}
 			case TableChangedEvent.MARK :
 				{
+					
 					getHeaderTableModel().markHeader(
 						event.getUids(),
 						event.getMarkVariant());
+						
 					break;
 				}
 		}
