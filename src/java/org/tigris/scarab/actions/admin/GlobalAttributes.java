@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.12 2002/03/05 02:18:11 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.13 2002/03/06 01:10:36 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -105,6 +105,10 @@ public class GlobalAttributes extends RequireLoginFirstAction
                     {
                         attrGroup.setProperties(attr);
                         attr.save();
+                        if (attr.getDeleted())
+                        {
+                            allAttributes.remove(attr);
+                        }
                         intake.remove(attrGroup);
                     }
                 }
