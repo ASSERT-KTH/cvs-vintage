@@ -22,6 +22,7 @@
             <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
         <field name="Name" key="name" type="String"/> 
+        <field name="Description" key="desc" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
