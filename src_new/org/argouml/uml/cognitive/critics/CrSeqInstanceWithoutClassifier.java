@@ -1,4 +1,5 @@
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +92,7 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
 	    Object obj = figs.elementAt(i);
 	    if (!(obj instanceof FigNodeModelElement)) continue;
 	    FigNodeModelElement fn = (FigNodeModelElement) obj;
-	    if (fn != null && (fn.getOwner() instanceof MInstance)) {
+	    if (fn != null && (org.argouml.model.ModelFacade.isAInstance(fn.getOwner()))) {
 		MInstance minst = (MInstance) fn.getOwner();
 		if (minst != null) {
 		    Collection col = minst.getClassifiers();
@@ -108,4 +109,3 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
     } 
  
 } /* end class CrSeqInstanceWithoutClassifier.java */
-

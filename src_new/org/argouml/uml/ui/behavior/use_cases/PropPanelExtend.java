@@ -1,4 +1,5 @@
-// $Id: PropPanelExtend.java,v 1.21 2003/06/29 23:50:15 linus Exp $
+
+// $Id: PropPanelExtend.java,v 1.22 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,7 +139,7 @@ public class PropPanelExtend extends PropPanelModelElement {
         String condBody = null;
         Object target   = getTarget();
 
-        if (target instanceof MExtend) {
+        if (org.argouml.model.ModelFacade.isAExtend(target)) {
             MBooleanExpression condition = ((MExtend) target).getCondition();
 
             if (condition != null) {
@@ -167,7 +168,7 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         Object target = getTarget();
 
-        if (!(target instanceof MExtend)) {
+        if (!(org.argouml.model.ModelFacade.isAExtend(target))) {
             return;
         }
 
@@ -188,7 +189,7 @@ public class PropPanelExtend extends PropPanelModelElement {
     public void newExtensionPoint() {
         Object target = getTarget();
 
-        if (target instanceof MExtend) {
+        if (org.argouml.model.ModelFacade.isAExtend(target)) {
             MExtend    extend    = (MExtend) target;
             MNamespace ns        = extend.getNamespace();
 

@@ -1,4 +1,5 @@
-// $Id: UMLLinkedList.java,v 1.9 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLLinkedList.java,v 1.10 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +75,7 @@ public class UMLLinkedList extends UMLList2 implements MouseListener {
         if (e.getSource() == this) {
             if (e.getClickCount() >= 2 && SwingUtilities.isLeftMouseButton(e)) {
                 Object o = getSelectedValue();
-                if (o instanceof MModelElement) {                    
+                if (org.argouml.model.ModelFacade.isAModelElement(o)) {                    
                     TargetManager.getInstance().setTarget(o);
                 }
             }

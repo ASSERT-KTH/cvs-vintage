@@ -1,4 +1,6 @@
-// $Id: CrNoOutgoingTransitions.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+
+
+// $Id: CrNoOutgoingTransitions.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: CrNoOutgoingTransitions.java
 // Classes: CrNoOutgoingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOutgoingTransitions.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,15 +50,15 @@ public class CrNoOutgoingTransitions extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MStateVertex)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	MStateVertex sv = (MStateVertex) dm;
-	if (sv instanceof MState) {
+	if (org.argouml.model.ModelFacade.isAState(sv)) {
 	    MStateMachine sm = ((MState) sv).getStateMachine();
 	    if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
 	}
 	Collection outgoing = sv.getOutgoings();
 	boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
-	if (sv instanceof MFinalState) {
+	if (org.argouml.model.ModelFacade.isAFinalState(sv)) {
 	    needsOutgoing = false;
 	}
 	if (needsOutgoing) return PROBLEM_FOUND;
@@ -64,4 +66,3 @@ public class CrNoOutgoingTransitions extends CrUML {
     }
 
 } /* end class CrNoOutgoingTransitions */
-

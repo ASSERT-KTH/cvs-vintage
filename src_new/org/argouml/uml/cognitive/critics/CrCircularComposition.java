@@ -1,4 +1,5 @@
-// $Id: CrCircularComposition.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+
+// $Id: CrCircularComposition.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+// $Id: CrCircularComposition.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -56,7 +57,7 @@ public class CrCircularComposition extends CrUML {
     }
 							  
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MClassifier)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	VectorSet reach =
 	    (new VectorSet(cls)).reachable(GenCompositeClasses.SINGLETON);
@@ -101,4 +102,3 @@ public class CrCircularComposition extends CrUML {
     }
 									      
 } /* end class CrCircularComposition.java */
-

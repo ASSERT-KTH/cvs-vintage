@@ -1,4 +1,5 @@
-// $Id: GoMessageAction.java,v 1.5 2003/06/29 23:52:15 linus Exp $
+
+// $Id: GoMessageAction.java,v 1.6 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +45,7 @@ public class GoMessageAction extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
      */
     public Collection getChildren(Object parent) {
-	if (parent instanceof MMessage) {
+	if (org.argouml.model.ModelFacade.isAMessage(parent)) {
             
 	    Object action = ModelFacade.getAction(parent);
 	    if (action != null) {

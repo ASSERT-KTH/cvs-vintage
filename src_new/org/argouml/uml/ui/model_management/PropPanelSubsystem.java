@@ -1,4 +1,5 @@
-// $Id: PropPanelSubsystem.java,v 1.4 2003/06/30 18:00:38 linus Exp $
+
+// $Id: PropPanelSubsystem.java,v 1.5 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +74,7 @@ public class PropPanelSubsystem extends PropPanelPackage
     
     public void addOperation() {
         Object target = getTarget();
-        if (target instanceof MClassifier) {
+        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
             MOperation newOper =
                 UmlFactory.getFactory().getCore().buildOperation(
                                                                  (MClassifier) target);

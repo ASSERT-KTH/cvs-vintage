@@ -1,4 +1,5 @@
-// $Id: ActionAddInternalTrans.java,v 1.5 2003/06/29 23:50:02 linus Exp $
+
+// $Id: ActionAddInternalTrans.java,v 1.6 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,12 +37,12 @@ class ActionAddInternalTrans extends UMLChangeAction {
 
     public void actionPerformed(ActionEvent ae) {
 	Object target = TargetManager.getInstance().getModelTarget();
-	if (!(target instanceof MState)) return;
+	if (!(org.argouml.model.ModelFacade.isAState(target))) return;
 	MState st = (MState) target;
 	super.actionPerformed(ae);
     }
     public boolean shouldBeEnabled() {
 	Object target = TargetManager.getInstance().getModelTarget();
-	return super.shouldBeEnabled() && target instanceof MState;
+	return super.shouldBeEnabled() && org.argouml.model.ModelFacade.isAState(target);
     }
 } /* end class ActionAddInternalTrans */

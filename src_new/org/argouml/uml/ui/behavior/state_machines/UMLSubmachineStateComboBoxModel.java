@@ -1,4 +1,5 @@
-// $Id: UMLSubmachineStateComboBoxModel.java,v 1.4 2003/06/30 18:00:37 linus Exp $
+
+// $Id: UMLSubmachineStateComboBoxModel.java,v 1.5 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +47,7 @@ public class UMLSubmachineStateComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(Object element) {
-        return (element instanceof MStateMachine && element != StateMachinesHelper.getHelper().getStateMachine(getTarget()));
+        return (org.argouml.model.ModelFacade.isAStateMachine(element) && element != StateMachinesHelper.getHelper().getStateMachine(getTarget()));
     }
 
     /**

@@ -1,4 +1,5 @@
-// $Id: UMLRadioButtonPanel.java,v 1.5 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLRadioButtonPanel.java,v 1.6 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLRadioButtonPanel.java,v 1.5 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.6 2003/08/25 19:15:51 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import java.awt.GridLayout;
@@ -206,14 +207,14 @@ public abstract class UMLRadioButtonPanel
      */
     public void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (_target instanceof MBase) {
+        if (org.argouml.model.ModelFacade.isABase(_target)) {
             UmlModelEventPump.getPump().removeModelEventListener(
 								 this,
 								 (MBase) _target,
 								 _propertySetName);
         }
         _target = target;
-        if (_target instanceof MBase) {
+        if (org.argouml.model.ModelFacade.isABase(_target)) {
             // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
             UmlModelEventPump.getPump().addModelEventListener(
 							      this,

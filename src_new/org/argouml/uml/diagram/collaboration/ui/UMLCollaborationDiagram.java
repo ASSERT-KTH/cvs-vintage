@@ -1,4 +1,6 @@
-// $Id: UMLCollaborationDiagram.java,v 1.28 2003/06/30 18:00:30 linus Exp $
+
+
+// $Id: UMLCollaborationDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.28 2003/06/30 18:00:30 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -148,7 +150,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         int size = figs.size();
         for (int i = 0; i < size; i++) {
             Fig f = (Fig) figs.elementAt(i);
-            if (f.getOwner() instanceof MMessage)
+            if (org.argouml.model.ModelFacade.isAMessage(f.getOwner()))
                 res++;
         }
         return res;
@@ -237,7 +239,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         Layer lay = getLayer();
         while (oeIterator.hasNext()) {
             MModelElement me = (MModelElement) oeIterator.next();
-            if (me instanceof MAssociationRole) {
+            if (org.argouml.model.ModelFacade.isAAssociationRole(me)) {
                 messages = ((MAssociationRole) me).getMessages();
                 msgIterator = messages.iterator();
                 while (msgIterator.hasNext()) {

@@ -1,4 +1,5 @@
-// $Id: FigInitialState.java,v 1.8 2003/06/29 23:52:18 linus Exp $
+
+// $Id: FigInitialState.java,v 1.9 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigInitialState.java
 // Classes: FigInitialState
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.8 2003/06/29 23:52:18 linus Exp $
+// $Id: FigInitialState.java,v 1.9 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -102,8 +103,7 @@ public class FigInitialState extends FigStateVertex {
         if (getOwner() != null) {
             pstate = (MPseudostate) getOwner();
             if (pstate == null) return sel;
-            if (pstate.getContainer().getStateMachine() 
-                instanceof MActivityGraph) {
+            if (org.argouml.model.ModelFacade.isAActivityGraph(pstate.getContainer().getStateMachine())) {
                 sel = new SelectionActionState(this);
                 ((SelectionActionState) sel).setIncomingButtonEnabled(false);
                 Collection outs = ((MStateVertex) getOwner()).getOutgoings();

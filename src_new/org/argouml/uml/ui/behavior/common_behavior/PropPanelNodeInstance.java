@@ -1,4 +1,5 @@
-// $Id: PropPanelNodeInstance.java,v 1.17 2003/06/30 18:00:37 linus Exp $
+
+// $Id: PropPanelNodeInstance.java,v 1.18 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: PropPanelNodeInstance.java
 // Classes: PropPanelNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNodeInstance.java,v 1.17 2003/06/30 18:00:37 linus Exp $
+// $Id: PropPanelNodeInstance.java,v 1.18 2003/08/25 19:15:54 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -70,14 +71,14 @@ public class PropPanelNodeInstance extends PropPanelModelElement {
     }
 
     public boolean isAcceptibleClassifier(MModelElement classifier) {
-        return classifier instanceof MClassifier;
+        return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
 
     public void setClassifier(MClassifier element) {
         Object target = getTarget();
 
-        if (target instanceof MInstance) {
+        if (org.argouml.model.ModelFacade.isAInstance(target)) {
 	    MInstance inst = (MInstance) target;
 
 	    // delete all classifiers
@@ -97,7 +98,7 @@ public class PropPanelNodeInstance extends PropPanelModelElement {
     public MClassifier getClassifier() {
         MClassifier classifier = null;
         Object target = getTarget();
-        if (target instanceof MInstance) {
+        if (org.argouml.model.ModelFacade.isAInstance(target)) {
             // at the moment , we only deal with one classifier
             Collection col = ((MInstance) target).getClassifiers();
             if (col != null) {

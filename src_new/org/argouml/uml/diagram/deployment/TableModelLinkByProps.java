@@ -1,4 +1,5 @@
-// $Id: TableModelLinkByProps.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+
+// $Id: TableModelLinkByProps.java,v 1.5 2003/08/25 19:15:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: TableModelLinkByProps.java
 // Classes: TableModelLinkByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelLinkByProps.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: TableModelLinkByProps.java,v 1.5 2003/08/25 19:15:57 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -59,11 +60,10 @@ public class TableModelLinkByProps extends TableModelComposite {
 	int size = edges.size();
 	for (int i = 0; i < size; i++) {
 	    Object edge = edges.elementAt(i);
-	    if (edge instanceof MLink) res.addElement(edge);
+	    if (org.argouml.model.ModelFacade.isALink(edge)) res.addElement(edge);
 	}
 	return res;
     }
 
     public String toString() { return "Links vs. Properties"; }
 } /* end class TableModelLinkByProps */
-

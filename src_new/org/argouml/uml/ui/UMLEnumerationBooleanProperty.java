@@ -1,4 +1,5 @@
-// $Id: UMLEnumerationBooleanProperty.java,v 1.7 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLEnumerationBooleanProperty.java,v 1.8 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +98,7 @@ public class UMLEnumerationBooleanProperty extends UMLBooleanProperty {
     
     public void setProperty(Object element, boolean newState) throws PropertyVetoException {
     
-    	if (_wellformednessRules != null && element instanceof MBase) {
+    	if (_wellformednessRules != null && org.argouml.model.ModelFacade.isABase(element)) {
 	    Object helper = UmlHelper.getHelper().getHelper(element);  
 	    if (helper != null) {
 		for (int i = 0; i < _wellformednessRules.length; i++) {
@@ -157,5 +158,4 @@ public class UMLEnumerationBooleanProperty extends UMLBooleanProperty {
     }
     
 }
-
 

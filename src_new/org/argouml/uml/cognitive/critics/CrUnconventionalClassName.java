@@ -1,4 +1,5 @@
-// $Id: CrUnconventionalClassName.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrUnconventionalClassName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrUnconventionalClassName.java
 // Classes: CrUnconventionalClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: CrUnconventionalClassName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -52,7 +53,7 @@ public class CrUnconventionalClassName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MClass) && !(dm instanceof MInterface))
+	if (!(org.argouml.model.ModelFacade.isAClass(dm)) && !(org.argouml.model.ModelFacade.isAInterface(dm)))
 	    return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	String myName = cls.getName();
@@ -83,4 +84,3 @@ public class CrUnconventionalClassName extends CrUML {
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrUnconventionalClassName */
-

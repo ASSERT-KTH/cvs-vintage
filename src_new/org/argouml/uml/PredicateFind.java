@@ -1,4 +1,5 @@
-// $Id: PredicateFind.java,v 1.2 2003/06/29 23:52:57 linus Exp $
+
+// $Id: PredicateFind.java,v 1.3 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +64,7 @@ public class PredicateFind implements Predicate {
     }
 
     public boolean predicate(Object o) {
-	if (!(o instanceof MModelElement)) return false;
+	if (!(org.argouml.model.ModelFacade.isAModelElement(o))) return false;
 	MModelElement me = (MModelElement) o;
 	return _type.predicate(me) && _specific.predicate(me) &&
 	    _elementName.predicate(me.getName());

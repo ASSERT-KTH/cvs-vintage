@@ -1,4 +1,6 @@
-// $Id: ActionActivityDiagram.java,v 1.20 2003/06/30 21:59:34 linus Exp $
+
+
+// $Id: ActionActivityDiagram.java,v 1.21 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +60,7 @@ public class ActionActivityDiagram extends ActionStateDiagram {
         Object target = TargetManager.getInstance().getModelTarget();
         MActivityGraph graph =
 	    ActivityGraphsFactory.getFactory().buildActivityGraph((MModelElement) target);
-        if (target instanceof MBehavioralFeature) {
+        if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
             ns = ((MBehavioralFeature) target).getNamespace();
         }
         UMLActivityDiagram d = new UMLActivityDiagram((MNamespace) ns, graph);
@@ -70,7 +72,7 @@ public class ActionActivityDiagram extends ActionStateDiagram {
      */
     public boolean shouldBeEnabled() {
         return super.shouldBeEnabled()
-	    || TargetManager.getInstance().getModelTarget() instanceof MPackage;
+	    || org.argouml.model.ModelFacade.isAPackage(TargetManager.getInstance().getModelTarget());
     }
     /**
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)

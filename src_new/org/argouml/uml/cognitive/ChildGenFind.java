@@ -1,4 +1,5 @@
-// $Id: ChildGenFind.java,v 1.7 2003/06/30 18:00:26 linus Exp $
+
+// $Id: ChildGenFind.java,v 1.8 2003/08/25 19:15:59 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.7 2003/06/30 18:00:26 linus Exp $
+// $Id: ChildGenFind.java,v 1.8 2003/08/25 19:15:59 bobtarling Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -83,7 +84,7 @@ public class ChildGenFind implements ChildGenerator {
 
 	//     // TODO: associationclasses fit both of the next 2 cases
 
-	if (o instanceof MClassifier) {
+	if (org.argouml.model.ModelFacade.isAClassifier(o)) {
 	    MClassifier cls = (MClassifier) o;
 	    //      EnumerationComposite res = new EnumerationComposite();
 	    Vector res = new Vector(cls.getFeatures());
@@ -91,7 +92,7 @@ public class ChildGenFind implements ChildGenerator {
 	    return res.elements();
 	}
 
-	if (o instanceof MAssociation) {
+	if (org.argouml.model.ModelFacade.isAAssociation(o)) {
 	    MAssociation asc = (MAssociation) o;
 	    return new Vector(asc.getConnections()).elements();
 	    //      Vector assocEnds = asc.getConnections();
@@ -131,14 +132,14 @@ public class ChildGenFind implements ChildGenerator {
 	    //d.getGraphModel().getEdges().elements());
 	}
 
-	if (o instanceof MState) {
+	if (org.argouml.model.ModelFacade.isAState(o)) {
 	    MState s = (MState) o;
 	    //Vector interns = s.getInternalTransition();
 	    //if (interns != null) return interns.elements();
 	    return new Vector(s.getInternalTransitions()).elements();
 	}
 
-	if (o instanceof MTransition) {
+	if (org.argouml.model.ModelFacade.isATransition(o)) {
 	    MTransition tr = (MTransition) o;
 	    Vector res = new Vector();
 	    res.add(tr.getTrigger());
@@ -157,4 +158,3 @@ public class ChildGenFind implements ChildGenerator {
 	return new Vector().elements();
     }
 } /* end class ChildGenFind */
-

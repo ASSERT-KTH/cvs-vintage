@@ -1,4 +1,5 @@
-// $Id: FigUseCase.java,v 1.19 2003/08/18 19:17:48 jjones Exp $
+
+// $Id: FigUseCase.java,v 1.20 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.19 2003/08/18 19:17:48 jjones Exp $
+// $Id: FigUseCase.java,v 1.20 2003/08/25 19:15:50 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -1329,7 +1330,7 @@ public class FigUseCase extends FigNodeModelElement {
         super.modelChanged(mee);
         if (mee == null
 	    || mee.getName().equals("extensionPoint")
-	    || mee.getSource() instanceof MExtensionPoint)
+	    || org.argouml.model.ModelFacade.isAExtensionPoint(mee.getSource()))
 	{
             updateExtensionPoint();
             return;

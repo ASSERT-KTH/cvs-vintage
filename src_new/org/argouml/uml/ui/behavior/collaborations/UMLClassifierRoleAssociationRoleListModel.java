@@ -1,4 +1,5 @@
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.6 2003/06/30 21:59:35 linus Exp $
+
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.7 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +74,7 @@ public class UMLClassifierRoleAssociationRoleListModel
      */
     protected Collection getChoices() {
 	Object target = getTarget();
-	if (target instanceof MClassifierRole) {
+	if (org.argouml.model.ModelFacade.isAClassifierRole(target)) {
 	    MClassifierRole role = (MClassifierRole) target;
 	    List list = new ArrayList();
 	    Iterator it = role.getBases().iterator();
@@ -112,7 +113,7 @@ public class UMLClassifierRoleAssociationRoleListModel
      * MModelElement)
      */
     protected void build(MModelElement from, MModelElement to) {
-	if (from != null && to != null && from instanceof MClassifierRole && to instanceof MClassifierRole) { 
+	if (from != null && to != null && org.argouml.model.ModelFacade.isAClassifierRole(from) && org.argouml.model.ModelFacade.isAClassifierRole(to)) { 
 	    CollaborationsFactory.getFactory().buildAssociationRole((MClassifierRole) from, (MClassifierRole) to);
 	}
     }
@@ -123,7 +124,7 @@ public class UMLClassifierRoleAssociationRoleListModel
      * MModelElement)
      */
     protected MModelElement getRelation(MModelElement from, MModelElement to) {
-	if (from != null && to != null && from instanceof MClassifierRole && to instanceof MClassifierRole) { 
+	if (from != null && to != null && org.argouml.model.ModelFacade.isAClassifierRole(from) && org.argouml.model.ModelFacade.isAClassifierRole(to)) { 
 	    return CollaborationsHelper.getHelper().getAssocationRole((MClassifierRole) from, (MClassifierRole) to);
 	} else
 	    throw new IllegalArgumentException("Tried to get relation between some objects of which one was not a classifierrole");

@@ -1,4 +1,5 @@
-// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.5 2003/06/29 23:50:17 linus Exp $
+
+// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.6 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +86,7 @@ public class UMLGeneralizationPowertypeComboBoxModel
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(Object element) {
-        return element instanceof MClassifier;
+        return org.argouml.model.ModelFacade.isAClassifier(element);
     }
 
 }

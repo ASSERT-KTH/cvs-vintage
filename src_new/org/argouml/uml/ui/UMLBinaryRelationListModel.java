@@ -1,4 +1,5 @@
-// $Id: UMLBinaryRelationListModel.java,v 1.9 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLBinaryRelationListModel.java,v 1.10 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +73,7 @@ abstract public class UMLBinaryRelationListModel
      */
     public void add(int index) {
         Object target = getSource();
-        if (target instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
             MModelElement melement = (MModelElement) target;
             Vector choices = new Vector();
             Vector selected = new Vector();
@@ -132,7 +133,7 @@ abstract public class UMLBinaryRelationListModel
      */
     public void delete(int index) {
         Object target = getSource();
-        if (target instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
             MModelElement melement = (MModelElement) target;
             MModelElement othermelement =
                 (MModelElement) getModelElementAt(index);
@@ -264,7 +265,7 @@ abstract public class UMLBinaryRelationListModel
      * @return MModelElement
      */
     protected MModelElement getSource() {
-        if (getTarget() instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(getTarget())) {
             return (MModelElement) getTarget();
         } else
             throw new IllegalStateException("In getSource: target is not a modelelement");

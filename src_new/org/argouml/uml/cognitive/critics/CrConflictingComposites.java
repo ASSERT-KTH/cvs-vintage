@@ -1,4 +1,5 @@
-// $Id: CrConflictingComposites.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrConflictingComposites.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrConflictingComposites.java
 // Classes: CrConflictingComposites
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: CrConflictingComposites.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,7 +54,7 @@ public class CrConflictingComposites extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MClassifier)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	Collection conns = cls.getAssociationEnds();
 	if (conns == null) return NO_PROBLEM;
@@ -84,4 +85,3 @@ public class CrConflictingComposites extends CrUML {
     };
 
 } /* end class CrConflictingComposites.java */
-

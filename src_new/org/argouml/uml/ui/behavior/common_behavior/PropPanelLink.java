@@ -1,4 +1,5 @@
-// $Id: PropPanelLink.java,v 1.23 2003/06/30 18:00:36 linus Exp $
+
+// $Id: PropPanelLink.java,v 1.24 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.23 2003/06/30 18:00:36 linus Exp $
+// $Id: PropPanelLink.java,v 1.24 2003/08/25 19:15:54 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -64,7 +65,7 @@ public class PropPanelLink extends PropPanelModelElement {
 
     public void navigateNamespace() {
         Object target = getTarget();
-        if (target instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
             MModelElement elem = (MModelElement) target;
             MNamespace ns = elem.getNamespace();
             if (ns != null) {
@@ -81,6 +82,5 @@ public class PropPanelLink extends PropPanelModelElement {
 	if (newTarget != null) TargetManager.getInstance().setTarget(newTarget);
     }
 } /* end class PropPanelLink */
-
 
 

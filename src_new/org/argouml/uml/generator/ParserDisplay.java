@@ -1,4 +1,5 @@
-// $Id: ParserDisplay.java,v 1.68 2003/08/21 20:33:36 thn Exp $
+
+// $Id: ParserDisplay.java,v 1.69 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.68 2003/08/21 20:33:36 thn Exp $
+// $Id: ParserDisplay.java,v 1.69 2003/08/25 19:15:58 bobtarling Exp $
 
 
 
@@ -2869,7 +2870,7 @@ public class ParserDisplay extends Parser {
 
 	    // TODO: Should someone choose one, if there are more
 	    // than one?
-	    if (mes.getAction() instanceof MCallAction) {
+	    if (org.argouml.model.ModelFacade.isACallAction(mes.getAction())) {
 		MCallAction a = (MCallAction) mes.getAction();
 		if (ops.size() > 0)
 		    a.setOperation((MOperation) ops.get(0));
@@ -3200,7 +3201,7 @@ public class ParserDisplay extends Parser {
 	    Iterator it2 = oe.iterator();
 	    while (it2.hasNext()) {
 		MModelElement me = (MModelElement) it2.next();
-		if (!(me instanceof MOperation))
+		if (!(org.argouml.model.ModelFacade.isAOperation(me)))
 		    continue;
 
 		MOperation op = (MOperation) me;

@@ -1,4 +1,5 @@
-// $Id: ActionSetElementOwnershipSpecification.java,v 1.3 2003/06/29 23:50:17 linus Exp $
+
+// $Id: ActionSetElementOwnershipSpecification.java,v 1.4 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +58,7 @@ public class ActionSetElementOwnershipSpecification extends UMLChangeAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (target instanceof MModelElement) {
+            if (org.argouml.model.ModelFacade.isAModelElement(target)) {
                 MModelElement m = (MModelElement) target;
                 m.setSpecification(!m.isSpecification());
             }

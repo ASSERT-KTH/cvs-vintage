@@ -1,4 +1,5 @@
-// $Id: GoStateToExit.java,v 1.3 2003/06/29 23:52:18 linus Exp $
+
+// $Id: GoStateToExit.java,v 1.4 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +43,7 @@ public class GoStateToExit extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (parent instanceof MState && ((MState) parent).getExit() != null) {
+        if (org.argouml.model.ModelFacade.isAState(parent) && ((MState) parent).getExit() != null) {
             Vector children = new Vector();
             children.add(((MState) parent).getExit());
             return children;

@@ -1,4 +1,5 @@
-// $Id: PropPanelMessage.java,v 1.34 2003/07/01 06:45:38 linus Exp $
+
+// $Id: PropPanelMessage.java,v 1.35 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.34 2003/07/01 06:45:38 linus Exp $
+// $Id: PropPanelMessage.java,v 1.35 2003/08/25 19:15:54 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -136,7 +137,7 @@ public class PropPanelMessage extends PropPanelModelElement {
     public MCallAction addAction() {
     	MCallAction action = null;
         Object target = getTarget();
-        if (target instanceof MMessage) {
+        if (org.argouml.model.ModelFacade.isAMessage(target)) {
             action =
 		(MCallAction) CommonBehaviorFactory.getFactory().buildAction((MMessage) target);
         }
@@ -144,12 +145,12 @@ public class PropPanelMessage extends PropPanelModelElement {
     }
 
     public boolean isAddActionEnabled() {
-    	return (getTarget() instanceof MMessage) && (((MMessage) getTarget()).getAction() == null);
+    	return (org.argouml.model.ModelFacade.isAMessage(getTarget())) && (((MMessage) getTarget()).getAction() == null);
     }
 
     public void navigateInteraction() {
     	Object target = getTarget();
-        if (target instanceof MMessage) {
+        if (org.argouml.model.ModelFacade.isAMessage(target)) {
             TargetManager.getInstance().setTarget(((MMessage) target).getInteraction());
         }
     }

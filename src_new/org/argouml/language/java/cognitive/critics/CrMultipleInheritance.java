@@ -1,4 +1,5 @@
-// $Id: CrMultipleInheritance.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+
+// $Id: CrMultipleInheritance.java,v 1.4 2003/08/25 19:15:59 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+// $Id: CrMultipleInheritance.java,v 1.4 2003/08/25 19:15:59 bobtarling Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -53,7 +54,7 @@ public class CrMultipleInheritance extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MClassifier)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	Collection gen = cls.getGeneralizations();
 	if (gen != null && gen.size() > 1)
@@ -84,4 +85,3 @@ public class CrMultipleInheritance extends CrUML {
     public Class getWizardClass(ToDoItem item) { return WizCueCards.class; }
 
 } /* end class CrMultipleInheritance.java */
-

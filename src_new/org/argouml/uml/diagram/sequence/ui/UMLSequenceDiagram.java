@@ -1,4 +1,6 @@
-// $Id: UMLSequenceDiagram.java,v 1.20 2003/06/30 18:00:31 linus Exp $
+
+
+// $Id: UMLSequenceDiagram.java,v 1.21 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.20 2003/06/30 18:00:31 linus Exp $
+// $Id: UMLSequenceDiagram.java,v 1.21 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -106,7 +108,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
         int size = figs.size();
         for (int i = 0; i < size; i++) {
             Fig f = (Fig) figs.elementAt(i);
-            if (f.getOwner() instanceof MStimulus)
+            if (org.argouml.model.ModelFacade.isAStimulus(f.getOwner()))
                 res++;
         }
         return res;
@@ -186,7 +188,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
             while (oeIterator.hasNext()) {
                 MModelElement me = (MModelElement) oeIterator.next();
 
-                if (me instanceof MLink) {
+                if (org.argouml.model.ModelFacade.isALink(me)) {
                     stimuli = ((MLink) me).getStimuli();
                     stimuliIterator = stimuli.iterator();
                     while (stimuliIterator.hasNext()) {

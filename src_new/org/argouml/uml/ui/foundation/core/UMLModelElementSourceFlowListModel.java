@@ -1,4 +1,5 @@
-// $Id: UMLModelElementSourceFlowListModel.java,v 1.5 2003/06/29 23:50:17 linus Exp $
+
+// $Id: UMLModelElementSourceFlowListModel.java,v 1.6 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +58,7 @@ public class UMLModelElementSourceFlowListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-        return o instanceof MFlow && ((MModelElement) getTarget()).getSourceFlows().contains(o);
+        return org.argouml.model.ModelFacade.isAFlow(o) && ((MModelElement) getTarget()).getSourceFlows().contains(o);
     }
 
 }

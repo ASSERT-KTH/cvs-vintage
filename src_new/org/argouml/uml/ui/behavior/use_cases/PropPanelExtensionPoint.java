@@ -1,4 +1,5 @@
-// $Id: PropPanelExtensionPoint.java,v 1.21 2003/06/29 23:50:15 linus Exp $
+
+// $Id: PropPanelExtensionPoint.java,v 1.22 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +120,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
 
         // Only works for extension points
 
-        if (!(target instanceof MExtensionPoint)) {
+        if (!(org.argouml.model.ModelFacade.isAExtensionPoint(target))) {
             return;
         }
 

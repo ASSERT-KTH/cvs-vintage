@@ -1,4 +1,6 @@
-// $Id: UMLActivityDiagram.java,v 1.28 2003/06/30 18:00:29 linus Exp $
+
+
+// $Id: UMLActivityDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.28 2003/06/30 18:00:29 linus Exp $
+// $Id: UMLActivityDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -141,11 +143,11 @@ public class UMLActivityDiagram extends UMLDiagram {
     }
 
     public void initialize(Object o) {
-        if (!(o instanceof MActivityGraph))
+        if (!(org.argouml.model.ModelFacade.isAActivityGraph(o)))
             return;
         MActivityGraph sm = (MActivityGraph) o;
         MModelElement context = sm.getContext();
-        if (context != null && context instanceof MNamespace)
+        if (context != null && org.argouml.model.ModelFacade.isANamespace(context))
             setup((MNamespace) context, sm);
         else
             cat.debug("ActivityGraph without context not yet possible :-(");

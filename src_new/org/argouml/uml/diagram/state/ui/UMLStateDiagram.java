@@ -1,4 +1,7 @@
-// $Id: UMLStateDiagram.java,v 1.31 2003/06/30 18:00:33 linus Exp $
+
+
+
+// $Id: UMLStateDiagram.java,v 1.32 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +28,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.31 2003/06/30 18:00:33 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.32 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -128,9 +131,9 @@ public class UMLStateDiagram extends UMLDiagram {
         this();
         if (sm != null && m == null) {
             MModelElement context = sm.getContext();
-            if (context instanceof MClassifier) {
+            if (org.argouml.model.ModelFacade.isAClassifier(context)) {
                 m = (MNamespace) context;
-            } else if (context instanceof MBehavioralFeature) {
+            } else if (org.argouml.model.ModelFacade.isABehavioralFeature(context)) {
                 m = ((MBehavioralFeature) context).getOwner();
             }
         }
@@ -168,13 +171,13 @@ public class UMLStateDiagram extends UMLDiagram {
      * @see org.tigris.gef.base.Diagram#initialize(Object)
      */
     public void initialize(Object o) {
-        if (o instanceof MStateMachine) {
+        if (org.argouml.model.ModelFacade.isAStateMachine(o)) {
             MStateMachine sm = (MStateMachine) o;
             MModelElement context = sm.getContext();
             MNamespace contextNamespace = null;
-            if (context instanceof MClassifier) {
+            if (org.argouml.model.ModelFacade.isAClassifier(context)) {
                 contextNamespace = (MClassifier) context;
-            } else if (context instanceof MBehavioralFeature) {
+            } else if (org.argouml.model.ModelFacade.isABehavioralFeature(context)) {
                 contextNamespace =
                     ((MBehavioralFeature) context).getOwner().getNamespace();
             }

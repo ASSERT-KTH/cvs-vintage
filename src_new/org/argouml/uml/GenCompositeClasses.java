@@ -1,4 +1,5 @@
-// $Id: GenCompositeClasses.java,v 1.5 2003/06/30 21:59:32 linus Exp $
+
+// $Id: GenCompositeClasses.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +45,7 @@ public class GenCompositeClasses implements ChildGenerator {
 
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
-	if (!(o instanceof MClassifier)) return res.elements();
+	if (!(org.argouml.model.ModelFacade.isAClassifier(o))) return res.elements();
 	MClassifier cls = (MClassifier) o;
 	Vector ends = new Vector(cls.getAssociationEnds());
 	if (ends == null) return res.elements();

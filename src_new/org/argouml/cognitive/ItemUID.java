@@ -1,4 +1,5 @@
-// $Id: ItemUID.java,v 1.5 2003/06/30 18:00:16 linus Exp $
+
+// $Id: ItemUID.java,v 1.6 2003/08/25 19:15:59 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,7 +128,7 @@ public class ItemUID
      */
     protected static String readObjectID(Object obj)
     {
-	if (obj instanceof MBase)
+	if (org.argouml.model.ModelFacade.isABase(obj))
 	    return ((MBase) obj).getUUID();
 
 	/*
@@ -202,7 +203,7 @@ public class ItemUID
      */
     protected static String createObjectID(Object obj)
     {
-	if (obj instanceof MBase)
+	if (org.argouml.model.ModelFacade.isABase(obj))
 	    return null;
 	/*
 	// Want to use the "built in" UID of the MXxx instances
@@ -263,4 +264,3 @@ public class ItemUID
 	return mparam[0].toString();
     }
 }
-

@@ -1,4 +1,6 @@
-// $Id: ChildGenRelated.java,v 1.7 2003/06/30 18:00:26 linus Exp $
+
+
+// $Id: ChildGenRelated.java,v 1.8 2003/08/25 19:15:59 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.7 2003/06/30 18:00:26 linus Exp $
+// $Id: ChildGenRelated.java,v 1.8 2003/08/25 19:15:59 bobtarling Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -52,13 +54,13 @@ public class ChildGenRelated implements ChildGenerator {
 		
 	Vector res = new Vector();
 		
-	if (o instanceof MPackage) {
+	if (org.argouml.model.ModelFacade.isAPackage(o)) {
 	    Collection ownedElements = ((MPackage) o).getOwnedElements();
 	    if (ownedElements != null)
 		return null;
 	}
 		
-	if (o instanceof MClassifier) {
+	if (org.argouml.model.ModelFacade.isAClassifier(o)) {
 	    MClassifier cls = (MClassifier) o;
 	    Collection assocEnds = cls.getAssociationEnds();
 	    Iterator assocIterator = assocEnds.iterator();
@@ -72,7 +74,7 @@ public class ChildGenRelated implements ChildGenerator {
 	    return res.elements();
 	}
 		
-	if (o instanceof MAssociation) {
+	if (org.argouml.model.ModelFacade.isAAssociation(o)) {
 	    MAssociation asc = (MAssociation) o;
 	    List assocEnds = asc.getConnections();
 	    Iterator iter = assocEnds.iterator();
@@ -82,7 +84,7 @@ public class ChildGenRelated implements ChildGenerator {
 	    return res.elements();
 	}
 		
-	if (o instanceof MStateMachine) {
+	if (org.argouml.model.ModelFacade.isAStateMachine(o)) {
 	    MStateMachine sm = (MStateMachine) o;
 	    MState top = sm.getTop();
 	    if (top != null)
@@ -92,24 +94,24 @@ public class ChildGenRelated implements ChildGenerator {
 	    return res.elements();
 	}
 		
-	if (o instanceof MStateVertex) {
+	if (org.argouml.model.ModelFacade.isAStateVertex(o)) {
 	    MStateVertex sv = (MStateVertex) o;
 	    res.addAll(sv.getIncomings());
 	    res.addAll(sv.getOutgoings());
 			
-	    if (o instanceof MState) {
+	    if (org.argouml.model.ModelFacade.isAState(o)) {
 		MState s = (MState) o;
 		res.addAll(s.getInternalTransitions());
 	    }
 			
-	    if (o instanceof MCompositeState) {
+	    if (org.argouml.model.ModelFacade.isACompositeState(o)) {
 		MCompositeState cs = (MCompositeState) o;
 		res.addAll(cs.getSubvertices());
 	    }
 	    return res.elements();
 	}
 		
-	if (o instanceof MTransition) {
+	if (org.argouml.model.ModelFacade.isATransition(o)) {
 	    MTransition tr = (MTransition) o;
 	    res.add(tr.getTrigger());
 	    res.add(tr.getGuard());

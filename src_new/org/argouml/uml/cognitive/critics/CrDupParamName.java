@@ -1,4 +1,5 @@
-// $Id: CrDupParamName.java,v 1.8 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrDupParamName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.8 2003/06/30 19:23:18 linus Exp $
+// $Id: CrDupParamName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,7 +55,7 @@ public class CrDupParamName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MBehavioralFeature)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isABehavioralFeature(dm))) return NO_PROBLEM;
 	MBehavioralFeature bf = (MBehavioralFeature) dm;
 	Vector params = new Vector(bf.getParameters());
 	params.remove(UmlHelper.getHelper().getCore()
@@ -74,4 +75,3 @@ public class CrDupParamName extends CrUML {
     }
 
 } /* end class CrDupParamName.java */
-

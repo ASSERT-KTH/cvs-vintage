@@ -1,4 +1,6 @@
-// $Id: PropPanelParameter.java,v 1.28 2003/06/29 23:50:17 linus Exp $
+
+
+// $Id: PropPanelParameter.java,v 1.29 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,7 +120,7 @@ public class PropPanelParameter extends PropPanelModelElement {
     public MClassifier getType() {
         MClassifier type = null;
         Object target = getTarget();
-        if (target instanceof MParameter) {
+        if (org.argouml.model.ModelFacade.isAParameter(target)) {
             type = ((MParameter) target).getType();
         }
         return type;
@@ -126,19 +128,19 @@ public class PropPanelParameter extends PropPanelModelElement {
 
     public void setType(MClassifier type) {
         Object target = getTarget();
-        if (target instanceof MParameter) {
+        if (org.argouml.model.ModelFacade.isAParameter(target)) {
             ((MParameter) target).setType(type);
         }
     }
 
     public boolean isAcceptibleType(MModelElement type) {
-	return type instanceof MClassifier;
+	return org.argouml.model.ModelFacade.isAClassifier(type);
     }
 
     public Object getBehavioralFeature() {
         MBehavioralFeature feature = null;
         Object target = getTarget();
-        if (target instanceof MParameter) {
+        if (org.argouml.model.ModelFacade.isAParameter(target)) {
             feature = ((MParameter) target).getBehavioralFeature();
         }
         return feature;
@@ -146,7 +148,7 @@ public class PropPanelParameter extends PropPanelModelElement {
 
     public void addDataType() {
         Object target = getTarget();
-        if (target instanceof MNamespace) {
+        if (org.argouml.model.ModelFacade.isANamespace(target)) {
             MNamespace ns = (MNamespace) target;
             MModelElement ownedElem = CoreFactory.getFactory().createDataType();
             ns.addOwnedElement(ownedElem);
@@ -166,7 +168,7 @@ public class PropPanelParameter extends PropPanelModelElement {
     public void addParameter() {
         MBehavioralFeature feature = null;
         Object target = getTarget();
-        if (target instanceof MParameter) {
+        if (org.argouml.model.ModelFacade.isAParameter(target)) {
             feature = ((MParameter) target).getBehavioralFeature();
             if (feature != null) {
                 MParameter param = CoreFactory.getFactory().buildParameter((MOperation) feature);
@@ -180,4 +182,3 @@ public class PropPanelParameter extends PropPanelModelElement {
     }
 
 } /* end class PropPanelParameter */
-

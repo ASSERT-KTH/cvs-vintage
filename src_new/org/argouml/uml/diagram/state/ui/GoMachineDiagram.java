@@ -1,4 +1,5 @@
-// $Id: GoMachineDiagram.java,v 1.13 2003/06/30 18:00:33 linus Exp $
+
+// $Id: GoMachineDiagram.java,v 1.14 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +43,7 @@ public class GoMachineDiagram extends AbstractGoRule {
 
     public Collection getChildren(Object parent) {
         
-        if (!(parent instanceof MStateMachine))
+        if (!(org.argouml.model.ModelFacade.isAStateMachine(parent)))
             return null;
         Project p = ProjectManager.getManager().getCurrentProject();
         if (p == null)

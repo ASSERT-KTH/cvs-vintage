@@ -1,4 +1,5 @@
-// $Id: UMLAssociationRoleMessageListModel.java,v 1.7 2003/06/30 21:59:35 linus Exp $
+
+// $Id: UMLAssociationRoleMessageListModel.java,v 1.8 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +54,7 @@ public class UMLAssociationRoleMessageListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-        return o instanceof MMessage &&
+        return org.argouml.model.ModelFacade.isAMessage(o) &&
             ((MAssociationRole) getTarget()).getMessages().contains(o);
     }
 

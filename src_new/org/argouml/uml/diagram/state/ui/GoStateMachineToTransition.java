@@ -1,4 +1,5 @@
-// $Id: GoStateMachineToTransition.java,v 1.4 2003/06/29 23:52:18 linus Exp $
+
+// $Id: GoStateMachineToTransition.java,v 1.5 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +46,7 @@ public class GoStateMachineToTransition extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
      */
     public Collection getChildren(Object parent) {
-	if (parent instanceof MStateMachine) {
+	if (org.argouml.model.ModelFacade.isAStateMachine(parent)) {
 	    return ((MStateMachine) parent).getTransitions();
 	}
 	return null;

@@ -1,4 +1,5 @@
-// $Id: PropPanelInstance.java,v 1.20 2003/06/30 18:00:36 linus Exp $
+
+// $Id: PropPanelInstance.java,v 1.21 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.20 2003/06/30 18:00:36 linus Exp $
+// $Id: PropPanelInstance.java,v 1.21 2003/08/25 19:15:54 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -85,13 +86,13 @@ public class PropPanelInstance extends PropPanelModelElement {
 
 
     public boolean isAcceptibleClassifier(MModelElement classifier) {
-        return classifier instanceof MClassifier;
+        return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
     public MClassifier getClassifier() {
         MClassifier classifier = null;
         Object target = getTarget();
-        if (target instanceof MInstance) {
+        if (org.argouml.model.ModelFacade.isAInstance(target)) {
         //    UML 1.3 apparently has this a 0..n multiplicity
         //    I'll have to figure out what that means
         //            classifier = ((MInstance) target).getClassifier();
@@ -112,7 +113,7 @@ public class PropPanelInstance extends PropPanelModelElement {
     public void setClassifier(MClassifier element) {
         Object target = getTarget();
 
-        if (target instanceof MInstance) {
+        if (org.argouml.model.ModelFacade.isAInstance(target)) {
 	    MInstance inst = (MInstance) target;
 //            ((MInstance) target).setClassifier((MClassifier) element);
 
@@ -130,6 +131,5 @@ public class PropPanelInstance extends PropPanelModelElement {
         }
     }
 } /* end class PropPanelInstance */
-
 
 

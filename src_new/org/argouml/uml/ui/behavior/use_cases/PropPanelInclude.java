@@ -1,4 +1,5 @@
-// $Id: PropPanelInclude.java,v 1.14 2003/06/29 23:50:15 linus Exp $
+
+// $Id: PropPanelInclude.java,v 1.15 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +126,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Note that because of the NSUML bug, we must use getAddition() rather
         // than getBase() to get the base use case.
 
-        if (target instanceof MInclude) {
+        if (org.argouml.model.ModelFacade.isAInclude(target)) {
             base = ((MInclude) target).getAddition();
         }
 
@@ -153,7 +154,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Note that because of the NSUML bug, we must use setAddition() rather
         // than setBase() to set the base use case.
 
-        if (target instanceof MInclude) {
+        if (org.argouml.model.ModelFacade.isAInclude(target)) {
             ((MInclude) target).setAddition((MUseCase) base);
         }
     }
@@ -182,7 +183,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Note that because of the NSUML bug, we must use getBase() rather
         // than getAddition() to get the addition use case.
 
-        if (target instanceof MInclude) {
+        if (org.argouml.model.ModelFacade.isAInclude(target)) {
             addition = ((MInclude) target).getBase();
         }
 
@@ -211,7 +212,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Note that because of the NSUML bug, we must use setBase() rather
         // than setAddition() to set the addition use case.
 
-        if (target instanceof MInclude) {
+        if (org.argouml.model.ModelFacade.isAInclude(target)) {
             ((MInclude) target).setBase((MUseCase) addition);
         }
     }
@@ -234,7 +235,7 @@ public class PropPanelInclude extends PropPanelModelElement {
 
     public boolean isAcceptableUseCase(MModelElement modElem) {
 
-        return modElem instanceof MUseCase;
+        return org.argouml.model.ModelFacade.isAUseCase(modElem);
     }
 
 

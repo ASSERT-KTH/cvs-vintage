@@ -1,4 +1,5 @@
-// $Id: PropPanelPackage.java,v 1.38 2003/06/30 18:00:38 linus Exp $
+
+// $Id: PropPanelPackage.java,v 1.39 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,7 +108,7 @@ public class PropPanelPackage extends PropPanelNamespace  {
     /** add a package to the current package. */
     public void addPackage() {
         Object target = getTarget();
-        if (target instanceof MPackage) {
+        if (org.argouml.model.ModelFacade.isAPackage(target)) {
             MPackage newPackage =  UmlFactory.getFactory().
                 getModelManagement().createPackage();
             MPackage currentPackage = (MPackage) target;

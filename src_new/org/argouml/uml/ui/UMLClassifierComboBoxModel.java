@@ -1,4 +1,5 @@
-// $Id: UMLClassifierComboBoxModel.java,v 1.11 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLClassifierComboBoxModel.java,v 1.12 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: UMLClassifierComboBoxModel.java
 // Classes: UMLClassifierComboBoxModel
 // Original Author: 
-// $Id: UMLClassifierComboBoxModel.java,v 1.11 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.12 2003/08/25 19:15:51 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up and
 // mods made following bug fixing in UMLComboBoxModel. getModel() and
@@ -152,7 +153,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
         String eventName = event.getName();
         if (eventName != null && eventName.equals("classifier")) {
 	    MModel model = ((MModelElement) event.getSource()).getModel();
-	    if (event.getSource() instanceof MInstance ) {
+	    if (org.argouml.model.ModelFacade.isAInstance(event.getSource()) ) {
 		
 		MInstance instance = (MInstance) event.getSource();	    	    
 		Collection col = instance.getClassifiers();	
@@ -172,7 +173,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 
     public void targetChanged() {
         Object target = getContainer().getTarget();	
-        if (target instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
 
             MModelElement element = (MModelElement) target;	 	   
             MModel model = element.getModel();

@@ -1,4 +1,5 @@
-// $Id: GoLinkStimuli.java,v 1.10 2003/06/29 23:52:16 linus Exp $
+
+// $Id: GoLinkStimuli.java,v 1.11 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-// $Id: GoLinkStimuli.java,v 1.10 2003/06/29 23:52:16 linus Exp $
+// $Id: GoLinkStimuli.java,v 1.11 2003/08/25 19:15:54 bobtarling Exp $
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.util.Collection;
@@ -36,7 +37,7 @@ import ru.novosoft.uml.behavior.common_behavior.MLink;
 public class GoLinkStimuli extends AbstractGoRule {
     
     public Collection getChildren(Object parent) {
-	if (!(parent instanceof MLink)) return null;
+	if (!(org.argouml.model.ModelFacade.isALink(parent))) return null;
 	return ((MLink) parent).getStimuli();
     }
 

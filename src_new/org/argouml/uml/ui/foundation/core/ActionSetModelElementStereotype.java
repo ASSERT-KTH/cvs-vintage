@@ -1,4 +1,5 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.5 2003/07/19 09:46:39 d00mst Exp $
+
+// $Id: ActionSetModelElementStereotype.java,v 1.6 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,9 +67,9 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
         MModelElement target = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
-            if (combo.getSelectedItem() instanceof MStereotype) 
+            if (org.argouml.model.ModelFacade.isAStereotype(combo.getSelectedItem())) 
                 newStereo = (MStereotype) combo.getSelectedItem();                                
-            if (combo.getTarget() instanceof MModelElement) {
+            if (org.argouml.model.ModelFacade.isAModelElement(combo.getTarget())) {
                 target = (MModelElement) combo.getTarget();
                 oldStereo = target.getStereotype();
             }

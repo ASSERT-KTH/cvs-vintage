@@ -1,4 +1,5 @@
-// $Id: CrMultipleAgg.java,v 1.7 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrMultipleAgg.java,v 1.8 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.7 2003/06/30 19:23:18 linus Exp $
+// $Id: CrMultipleAgg.java,v 1.8 2003/08/25 19:15:49 bobtarling Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -119,7 +120,7 @@ public class CrMultipleAgg extends CrUML {
 
         // Only for associations
 
-        if (!(dm instanceof MAssociation)) {
+        if (!(org.argouml.model.ModelFacade.isAAssociation(dm))) {
             return NO_PROBLEM;
         }
 
@@ -129,7 +130,7 @@ public class CrMultipleAgg extends CrUML {
 
         MAssociation asc = (MAssociation) dm;
 
-        if (asc instanceof MAssociationRole) {
+        if (org.argouml.model.ModelFacade.isAAssociationRole(asc)) {
             return NO_PROBLEM;
         }
 
@@ -178,4 +179,3 @@ public class CrMultipleAgg extends CrUML {
     }
 
 } /* end class CrMultipleAgg.java */
-

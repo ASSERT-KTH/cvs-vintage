@@ -1,4 +1,6 @@
-// $Id: ActionCollaborationDiagram.java,v 1.21 2003/07/09 15:30:25 bobtarling Exp $
+
+
+// $Id: ActionCollaborationDiagram.java,v 1.22 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,29 +64,29 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         MNamespace ns = (MNamespace) handle;
         Object target = TargetManager.getInstance().getTarget();
         MCollaboration c = null;
-        if (target instanceof MOperation) {
+        if (org.argouml.model.ModelFacade.isAOperation(target)) {
             c =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     ns);
             c.setRepresentedOperation((MOperation) target);
-        } else if (target instanceof MClassifier) {
+        } else if (org.argouml.model.ModelFacade.isAClassifier(target)) {
             c =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     (MClassifier) target);
             c.setRepresentedClassifier((MClassifier) target);
-        } else if (target instanceof MModel) {
+        } else if (org.argouml.model.ModelFacade.isAModel(target)) {
             c =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     (MModel) target);
-        } else if (target instanceof MInteraction) {
+        } else if (org.argouml.model.ModelFacade.isAInteraction(target)) {
             c = ((MInteraction) target).getContext();
         } else if (target instanceof UMLCollaborationDiagram) {
             Object o = ((UMLCollaborationDiagram) target).getOwner();
-            if (o instanceof MCollaboration) {
+            if (org.argouml.model.ModelFacade.isACollaboration(o)) {
                 //preventing backward compat problems
                 c = (MCollaboration) o;
             }
-        } else if (target instanceof MCollaboration) {
+        } else if (org.argouml.model.ModelFacade.isACollaboration(target)) {
             c = (MCollaboration) target;
         } else {
             c =
@@ -119,7 +121,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     public boolean shouldBeEnabled() {
 
         Object target = TargetManager.getInstance().getTarget();
-        if (target instanceof MNamespace)
+        if (org.argouml.model.ModelFacade.isANamespace(target))
             return isValidNamespace((MNamespace) target);
         else
             return false;

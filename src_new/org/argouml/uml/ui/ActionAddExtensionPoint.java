@@ -1,4 +1,5 @@
-// $Id: ActionAddExtensionPoint.java,v 1.6 2003/06/29 23:50:02 linus Exp $
+
+// $Id: ActionAddExtensionPoint.java,v 1.7 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.6 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.7 2003/08/25 19:15:51 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -131,7 +132,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
 
 	Object         target = TargetManager.getInstance().getModelTarget();
 
-	if (!(target instanceof MUseCase)) {
+	if (!(org.argouml.model.ModelFacade.isAUseCase(target))) {
             return;
         }
 
@@ -157,7 +158,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
     public boolean shouldBeEnabled() {
 	Object         target = TargetManager.getInstance().getModelTarget();
 
-	return super.shouldBeEnabled() && (target instanceof MUseCase);
+	return super.shouldBeEnabled() && (org.argouml.model.ModelFacade.isAUseCase(target));
     }
 
 } /* end class ActionAddExtensionPoint */

@@ -1,4 +1,5 @@
-// $Id: ActionSetFlowSource.java,v 1.4 2003/06/29 23:50:17 linus Exp $
+
+// $Id: ActionSetFlowSource.java,v 1.5 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +61,7 @@ public class ActionSetFlowSource extends UMLChangeAction {
         if (e.getSource() instanceof UMLComboBox2) {
             UMLComboBox2 source = (UMLComboBox2) e.getSource();
             Object target = source.getTarget();
-            if (target instanceof MFlow) {
+            if (org.argouml.model.ModelFacade.isAFlow(target)) {
                 MFlow flow = (MFlow) target;
                 MModelElement old = null;
                 if (!flow.getSources().isEmpty()) {

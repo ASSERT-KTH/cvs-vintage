@@ -1,4 +1,5 @@
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.5 2003/06/30 21:59:33 linus Exp $
+
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.6 2003/08/25 19:15:55 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +49,7 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractGoRule {
      */
     public Collection getChildren(Object parent) {
         
-        if (parent instanceof MBehavioralFeature) {
+        if (org.argouml.model.ModelFacade.isABehavioralFeature(parent)) {
             MBehavioralFeature operation = (MBehavioralFeature) parent;
             Collection col = operation.getBehaviors();
             Vector ret = new Vector();

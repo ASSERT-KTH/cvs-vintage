@@ -1,4 +1,5 @@
-// $Id: FigComponent.java,v 1.14 2003/06/30 18:00:30 linus Exp $
+
+// $Id: FigComponent.java,v 1.15 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.14 2003/06/30 18:00:30 linus Exp $
+// $Id: FigComponent.java,v 1.15 2003/08/25 19:15:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -90,7 +91,7 @@ public class FigComponent extends FigNodeModelElement {
     public FigComponent(GraphModel gm, Object node) {
 	this();
 	setOwner(node);
-	if (node instanceof MClassifier
+	if (org.argouml.model.ModelFacade.isAClassifier(node)
 	    && (((MClassifier) node).getName() != null))
 	    _name.setText(((MModelElement) node).getName());
 	//     _name.setText(placeString());
@@ -197,7 +198,7 @@ public class FigComponent extends FigNodeModelElement {
     public void setEnclosingFig(Fig encloser) {
     
 	if (encloser != null
-	    && encloser.getOwner() instanceof MNode
+	    && org.argouml.model.ModelFacade.isANode(encloser.getOwner())
 	    && getOwner() != null)
 	{
 	    MNode node = (MNode) encloser.getOwner();
@@ -326,4 +327,3 @@ public class FigComponent extends FigNodeModelElement {
     static final long serialVersionUID = 1647392857462847651L;
 
 } /* end class FigComponent */
-

@@ -1,4 +1,6 @@
-// $Id: OCLUtil.java,v 1.6 2003/06/30 18:00:21 linus Exp $
+
+
+// $Id: OCLUtil.java,v 1.7 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +46,7 @@ public final class OCLUtil extends Object {
      */
     public static MNamespace getInnerMostEnclosingNamespace (MModelElement me) {
 	while ((me != null) &&
-	       (!(me instanceof MNamespace))) {
+	       (!(org.argouml.model.ModelFacade.isANamespace(me)))) {
 	    me = me.getModelElementContainer();
 	}
 
@@ -59,12 +61,12 @@ public final class OCLUtil extends Object {
      * @return the context string for the model element.
      */
     public static String getContextString (final Object me) {
-	if (me == null || !(me instanceof MModelElement))
+	if (me == null || !(org.argouml.model.ModelFacade.isAModelElement(me)))
 	    return "";
 	MNamespace mnsContext =
 	    getInnerMostEnclosingNamespace ((MModelElement) me);
 
-	if (me instanceof MBehavioralFeature) {
+	if (org.argouml.model.ModelFacade.isABehavioralFeature(me)) {
 	    StringBuffer sbContext =
 		new StringBuffer ("context ")
 		.append (mnsContext.getName())

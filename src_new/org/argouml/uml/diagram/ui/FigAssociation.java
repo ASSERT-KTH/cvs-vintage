@@ -1,4 +1,5 @@
-// $Id: FigAssociation.java,v 1.45 2003/06/30 21:59:33 linus Exp $
+
+// $Id: FigAssociation.java,v 1.46 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -180,7 +181,7 @@ public class FigAssociation extends FigEdgeModelElement {
 	Object oldOwner = getOwner();
 	super.setOwner(own);
 
-	if (own instanceof MAssociation) {
+	if (org.argouml.model.ModelFacade.isAAssociation(own)) {
 	    MAssociation newAsc = (MAssociation) own;
 	    for (int i = 0; i < newAsc.getConnections().size(); i++) {
 		MAssociationEnd end =
@@ -377,8 +378,8 @@ public class FigAssociation extends FigEdgeModelElement {
 	    MAssociationEnd ascStart = (MAssociationEnd) (ascEnds.get(0));
 	    MAssociationEnd ascEnd = (MAssociationEnd) (ascEnds.get(1));
 
-	    if (ascStart.getType() instanceof MClassifier
-		&& ascEnd.getType() instanceof MClassifier)
+	    if (org.argouml.model.ModelFacade.isAClassifier(ascStart.getType())
+		&& org.argouml.model.ModelFacade.isAClassifier(ascEnd.getType()))
 	    {
 		JMenu navMenu = new JMenu("Navigability");
 		navMenu.add(ActionNavigability.newActionNavigability(ascStart,
@@ -430,7 +431,7 @@ public class FigAssociation extends FigEdgeModelElement {
     public void delete() {
         // deleting the elementlisteners to this class too
         Object own = getOwner();
-        if (own instanceof MAssociation) {
+        if (org.argouml.model.ModelFacade.isAAssociation(own)) {
             MAssociation assoc = (MAssociation) own;
             assoc.removeMElementListener(this);
             Iterator it = assoc.getConnections().iterator();

@@ -1,4 +1,5 @@
-// $Id: FigMNodeInstance.java,v 1.10 2003/06/29 23:52:15 linus Exp $
+
+// $Id: FigMNodeInstance.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigMNodeInstance.java
 // Classes: FigMNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNodeInstance.java,v 1.10 2003/06/29 23:52:15 linus Exp $
+// $Id: FigMNodeInstance.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -87,7 +88,7 @@ public class FigMNodeInstance extends FigNodeModelElement {
     public FigMNodeInstance(GraphModel gm, Object node) {
         this();
         setOwner(node);
-        if (node instanceof MClassifier
+        if (org.argouml.model.ModelFacade.isAClassifier(node)
             && (((MClassifier) node).getName() != null))
             _name.setText(((MModelElement) node).getName());
     }

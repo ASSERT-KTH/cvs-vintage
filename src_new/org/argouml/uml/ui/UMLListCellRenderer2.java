@@ -1,4 +1,6 @@
-// $Id: UMLListCellRenderer2.java,v 1.9 2003/06/29 23:50:03 linus Exp $
+
+
+// $Id: UMLListCellRenderer2.java,v 1.10 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +24,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.9 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLListCellRenderer2.java,v 1.10 2003/08/25 19:15:51 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -69,7 +71,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {       
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        if (value instanceof MBase) {
+        if (org.argouml.model.ModelFacade.isABase(value)) {
             String text = makeText((MBase) value);            
             label.setText(text);
             if (_showIcon) {
@@ -98,14 +100,14 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      */
     public String makeText(Object value) {
         String name = null;
-        if (value instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(value)) {
             MModelElement elem = (MModelElement) value;
             name = elem.getName();
             if (name == null || name.equals("")) {
                 name = "(anon " + makeTypeName(elem) + ")";
             }
         } else 
-	    if (value instanceof MMultiplicity) {
+	    if (org.argouml.model.ModelFacade.isAMultiplicity(value)) {
 		name = value.toString();
 	    } else {                    
 		name = makeTypeName(value);
@@ -115,7 +117,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
     }
 
     private String makeTypeName(Object elem) {
-        if (elem instanceof MBase) {
+        if (org.argouml.model.ModelFacade.isABase(elem)) {
             return ((MBase) elem).getUMLClassName();
         }
         return null;

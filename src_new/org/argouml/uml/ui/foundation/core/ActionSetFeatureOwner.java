@@ -1,4 +1,6 @@
-// $Id: ActionSetFeatureOwner.java,v 1.3 2003/06/29 23:50:17 linus Exp $
+
+
+// $Id: ActionSetFeatureOwner.java,v 1.4 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,12 +66,12 @@ public class ActionSetFeatureOwner extends UMLChangeAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object o = box.getTarget();
-            if (o instanceof MFeature) {
+            if (org.argouml.model.ModelFacade.isAFeature(o)) {
                 feature = (MFeature) o;
                 oldClassifier = feature.getOwner();
             }
             o = box.getSelectedItem();
-            if (o instanceof MClassifier) {
+            if (org.argouml.model.ModelFacade.isAClassifier(o)) {
                 newClassifier = (MClassifier) o;
             }
         }

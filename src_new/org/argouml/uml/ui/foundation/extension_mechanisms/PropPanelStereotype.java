@@ -1,4 +1,5 @@
-// $Id: PropPanelStereotype.java,v 1.24 2003/06/30 18:00:38 linus Exp $
+
+// $Id: PropPanelStereotype.java,v 1.25 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +114,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
     public String getBaseClass() {
 	String baseClass = "ModelElement";
 	Object target = getTarget();
-	if (target instanceof MStereotype) {
+	if (org.argouml.model.ModelFacade.isAStereotype(target)) {
 	    baseClass = ((MStereotype) target).getBaseClass();
 	}
 	return baseClass;
@@ -121,7 +122,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
 
     public void setBaseClass(String baseClass) {
 	Object target = getTarget();
-	if (target instanceof MStereotype) {
+	if (org.argouml.model.ModelFacade.isAStereotype(target)) {
 	    ((MStereotype) target).setBaseClass(baseClass);
 	}
     }

@@ -1,4 +1,6 @@
-// $Id: GoNamespaceToDiagram.java,v 1.3 2003/07/24 19:32:49 alexb Exp $
+
+
+// $Id: GoNamespaceToDiagram.java,v 1.4 2003/08/25 19:15:55 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +54,7 @@ public class GoNamespaceToDiagram extends AbstractGoRule {
     }
 
     public Collection getChildren(Object parent) {
-        if (parent instanceof MNamespace) {
+        if (org.argouml.model.ModelFacade.isANamespace(parent)) {
             List returnList = new ArrayList();
             MNamespace ns = (MNamespace) parent;
             Project proj = ProjectManager.getManager().getCurrentProject();
@@ -61,7 +63,7 @@ public class GoNamespaceToDiagram extends AbstractGoRule {
                 UMLDiagram d = (UMLDiagram) it.next();
                 if (d instanceof UMLStateDiagram) {
                     UMLStateDiagram sd = (UMLStateDiagram) d;
-                    if (sd.getStateMachine().getContext() instanceof MBehavioralFeature)
+                    if (org.argouml.model.ModelFacade.isABehavioralFeature(sd.getStateMachine().getContext()))
                     	continue;
                 }
                 // patch for 0.14 stability to disable SD's

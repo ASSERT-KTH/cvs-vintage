@@ -1,4 +1,5 @@
-// $Id: FigModel.java,v 1.4 2003/06/30 18:00:34 linus Exp $
+
+// $Id: FigModel.java,v 1.5 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.4 2003/06/30 18:00:34 linus Exp $
+// $Id: FigModel.java,v 1.5 2003/08/25 19:15:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -76,7 +77,7 @@ public class FigModel extends FigPackage {
         // Don't know if this should rather be done in one of the super
         // classes, since similar code is used in FigClass.java etc.
         // Andreas Rueckert <a_rueckert@gmx.net>
-        if (node instanceof MModel && (((MModel) node).getName() != null))
+        if (org.argouml.model.ModelFacade.isAModel(node) && (((MModel) node).getName() != null))
             _name.setText(((MModelElement) node).getName());
     }
 

@@ -1,4 +1,5 @@
-// $Id: UMLComboBoxModel.java,v 1.20 2003/06/30 18:00:36 linus Exp $
+
+// $Id: UMLComboBoxModel.java,v 1.21 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.20 2003/06/30 18:00:36 linus Exp $
+// $Id: UMLComboBoxModel.java,v 1.21 2003/08/25 19:15:51 bobtarling Exp $
 
 package org.argouml.uml.ui;
 
@@ -515,7 +516,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
 
             // If the element was a namespace, we recurse to find more elements
 
-            if (element instanceof MNamespace) {
+            if (org.argouml.model.ModelFacade.isANamespace(element)) {
                 collectElements((MNamespace) element, profile, isPhantom);
             }
         }
@@ -583,7 +584,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
 
         Object target = _container.getTarget();
 
-        if (!(target instanceof MModelElement)) {
+        if (!(org.argouml.model.ModelFacade.isAModelElement(target))) {
             return;
         }
 
@@ -985,7 +986,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
 
         Object source = event.getSource();
 
-        if ((!(source instanceof MModelElement)) ||
+        if ((!(org.argouml.model.ModelFacade.isAModelElement(source))) ||
              (!(isAcceptible((MModelElement) source)))) {
             return;
         }
@@ -1037,7 +1038,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         Object target = _container.getTarget();
         MModel model  = null;
 
-        if (target instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
             model = ((MModelElement) target).getModel();
         }
 

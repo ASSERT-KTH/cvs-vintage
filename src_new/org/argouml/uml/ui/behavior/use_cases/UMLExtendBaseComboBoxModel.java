@@ -1,4 +1,5 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.9 2003/06/30 18:00:37 linus Exp $
+
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.10 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +77,7 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(Object element) {
-        return element instanceof MUseCase;
+        return org.argouml.model.ModelFacade.isAUseCase(element);
     }
 
 }

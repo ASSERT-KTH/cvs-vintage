@@ -1,4 +1,5 @@
-// $Id: CrMissingOperName.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrMissingOperName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File:CrMissingOperName.java
 // Classes:CrMissingOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingOperName.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: CrMissingOperName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -51,7 +52,7 @@ public class CrMissingOperName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MOperation)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAOperation(dm))) return NO_PROBLEM;
 	MOperation oper = (MOperation) dm;
 	String myName = oper.getName();
 	if (myName == null || myName.equals("")) return PROBLEM_FOUND;
@@ -65,7 +66,7 @@ public class CrMissingOperName extends CrUML {
 	    MModelElement me = (MModelElement) item.getOffenders().elementAt(0);
 	    String ins = "Set the name of this attribute.";
 	    String sug = "AttributeName";
-	    if (me instanceof MOperation) {
+	    if (org.argouml.model.ModelFacade.isAOperation(me)) {
 		MOperation a = (MOperation) me;
 		int count = 1;
 		if (a.getOwner() != null)
@@ -79,4 +80,3 @@ public class CrMissingOperName extends CrUML {
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrMissingOperName */
-

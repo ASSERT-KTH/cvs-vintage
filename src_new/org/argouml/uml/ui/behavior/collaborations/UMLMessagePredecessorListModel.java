@@ -1,4 +1,5 @@
-// $Id: UMLMessagePredecessorListModel.java,v 1.5 2003/06/29 23:50:10 linus Exp $
+
+// $Id: UMLMessagePredecessorListModel.java,v 1.6 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +64,7 @@ public class UMLMessagePredecessorListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase elem) {
-        return elem instanceof MMessage && 
+        return org.argouml.model.ModelFacade.isAMessage(elem) && 
             ((MMessage) elem).getInteraction() == ((MMessage) getTarget()).getInteraction() &&
             ((MMessage) elem).getActivator() == ((MMessage) getTarget()).getActivator();
     }

@@ -1,4 +1,5 @@
-// $Id: GoStateToDoActivity.java,v 1.5 2003/06/30 18:00:33 linus Exp $
+
+// $Id: GoStateToDoActivity.java,v 1.6 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStateToDoActivity.java,v 1.5 2003/06/30 18:00:33 linus Exp $
+// $Id: GoStateToDoActivity.java,v 1.6 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -47,7 +48,7 @@ public class GoStateToDoActivity extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (parent instanceof MState
+        if (org.argouml.model.ModelFacade.isAState(parent)
 	    && ((MState) parent).getDoActivity() != null)
 	{
             Vector children = new Vector();

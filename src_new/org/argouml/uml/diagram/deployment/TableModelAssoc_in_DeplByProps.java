@@ -1,4 +1,5 @@
-// $Id: TableModelAssoc_in_DeplByProps.java,v 1.4 2003/06/30 21:59:32 linus Exp $
+
+// $Id: TableModelAssoc_in_DeplByProps.java,v 1.5 2003/08/25 19:15:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +68,7 @@ public class TableModelAssoc_in_DeplByProps extends TableModelComposite {
 	int size = edges.size();
 	for (int i = 0; i < size; i++) {
 	    Object edge = edges.elementAt(i);
-	    if (edge instanceof MAssociation) res.addElement(edge);
+	    if (org.argouml.model.ModelFacade.isAAssociation(edge)) res.addElement(edge);
 	}
 	return res;
     }
@@ -75,4 +76,3 @@ public class TableModelAssoc_in_DeplByProps extends TableModelComposite {
     public String toString() { return "Associations vs. Properties"; }
 
 } /* end class TableModelAssoc_in_DeplByProps */
-

@@ -1,4 +1,5 @@
-// $Id: UMLReflectionListModel.java,v 1.13 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLReflectionListModel.java,v 1.14 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,14 +148,14 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
                         Iterator iter = ((Collection) collection).iterator();
                         for (int i = 0; iter.hasNext(); i++) {
                             obj = iter.next();
-                            if (i == index && obj instanceof MModelElement) {
+                            if (i == index && org.argouml.model.ModelFacade.isAModelElement(obj)) {
                                 element = (MModelElement) obj;
                                 break;
                             }
                         }
                     }
                     else {
-                        if (index == 0 && collection instanceof MModelElement) {
+                        if (index == 0 && org.argouml.model.ModelFacade.isAModelElement(collection)) {
                             element = (MModelElement) collection;
                         }
                     }
@@ -297,7 +298,6 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
     }
 
 }
-
 
 
 

@@ -1,4 +1,5 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.15 2003/06/30 18:00:35 linus Exp $
+
+// $Id: ModeCreateEdgeAndNode.java,v 1.16 2003/08/25 19:15:55 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.15 2003/06/30 18:00:35 linus Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.16 2003/08/25 19:15:55 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -382,7 +383,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
     // internal methods
 
     public void postProcessEdge() {
-        if (_newEdge instanceof MAssociation) {
+        if (org.argouml.model.ModelFacade.isAAssociation(_newEdge)) {
             java.util.List conn = ((MAssociation) _newEdge).getConnections();
             MAssociationEnd ae0 = (MAssociationEnd) conn.get(0);
             ae0.setAggregation(MAggregationKind.COMPOSITE);

@@ -1,4 +1,5 @@
-// $Id: PropPanelAssociationEnd.java,v 1.34 2003/06/29 23:50:17 linus Exp $
+
+// $Id: PropPanelAssociationEnd.java,v 1.35 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,7 +205,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
      */
     public void navigateUp() {
         Object target = getTarget();
-        if (target instanceof MAssociationEnd) {
+        if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
             MAssociation assoc = ((MAssociationEnd) target).getAssociation();
             if (assoc != null) {
                 TargetManager.getInstance().setTarget(assoc);

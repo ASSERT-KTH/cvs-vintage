@@ -1,4 +1,5 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.4 2003/07/18 18:37:42 d00mst Exp $
+
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.5 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +70,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(Object element) {
-        return element instanceof MClassifier;
+        return org.argouml.model.ModelFacade.isAClassifier(element);
     }
 
     /**

@@ -1,4 +1,5 @@
-// $Id: ActionStateDiagram.java,v 1.20 2003/06/30 21:59:35 linus Exp $
+
+// $Id: ActionStateDiagram.java,v 1.21 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +102,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
                 "The argument " + handle + "is not a namespace.");
         }
         MNamespace ns = (MNamespace) handle;
-        if (ns instanceof MClassifier)
+        if (org.argouml.model.ModelFacade.isAClassifier(ns))
             return true;
         return false;
     }

@@ -1,4 +1,5 @@
-// $Id: WizOperName.java,v 1.7 2003/06/30 18:00:28 linus Exp $
+
+// $Id: WizOperName.java,v 1.8 2003/08/25 19:15:48 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.7 2003/06/30 18:00:28 linus Exp $
+// $Id: WizOperName.java,v 1.8 2003/08/25 19:15:48 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -194,7 +195,7 @@ public class WizOperName extends WizMEName {
                 for (Iterator iter = m.getOwnedElements().iterator();
                      iter.hasNext();) {
                     MModelElement candidate = (MModelElement) iter.next();
-		    if (!(candidate instanceof MStereotype))
+		    if (!(org.argouml.model.ModelFacade.isAStereotype(candidate)))
                         continue;
                     MStereotype ster = (MStereotype) candidate;
                     MNamespace ns = ster.getNamespace();
@@ -270,7 +271,7 @@ public class WizOperName extends WizMEName {
                     ownedElement = (MModelElement) iter.next();
                     targetName = ownedElement.getName();
                     if (targetName != null && phantomName.equals(targetName)) {
-                        if (ownedElement instanceof MPackage) {
+                        if (org.argouml.model.ModelFacade.isAPackage(ownedElement)) {
                             ns = (MPackage) ownedElement;
                             break;
                         }

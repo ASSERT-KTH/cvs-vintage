@@ -1,4 +1,5 @@
-// $Id: GoCollaborationInteraction.java,v 1.10 2003/06/30 18:00:30 linus Exp $
+
+// $Id: GoCollaborationInteraction.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +36,7 @@ public class GoCollaborationInteraction extends AbstractGoRule {
     public String getRuleName() { return "Collaboration->Interaction"; }
 
     public Collection getChildren(Object parent) {
-	if (!(parent instanceof MCollaboration)) return null;
+	if (!(org.argouml.model.ModelFacade.isACollaboration(parent))) return null;
 	return ((MCollaboration) parent).getInteractions();
     }
 

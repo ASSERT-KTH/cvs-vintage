@@ -1,4 +1,5 @@
-// $Id: ActionSetElementOwnershipVisibility.java,v 1.6 2003/06/29 23:50:17 linus Exp $
+
+// $Id: ActionSetElementOwnershipVisibility.java,v 1.7 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.6 2003/06/29 23:50:17 linus Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.7 2003/08/25 19:15:52 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -65,7 +66,7 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JRadioButton) {
             Object target = _group.getTarget();
-            if (target instanceof MModelElement) {
+            if (org.argouml.model.ModelFacade.isAModelElement(target)) {
                 MModelElement m = (MModelElement) target;
                 String command = e.getActionCommand();
                 if (command.equals(PUBLIC_ACTION_COMMAND)) {

@@ -1,4 +1,6 @@
-// $Id: CrTooManyAttr.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+
+
+// $Id: CrTooManyAttr.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: CrTooManyAttr.java
 // Classes: CrTooManyAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAttr.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrTooManyAttr.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -59,7 +61,7 @@ public class CrTooManyAttr extends CrUML {
     ////////////////////////////////////////////////////////////////
     // critiquing API
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MClassifier)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	// TODO: consider inherited attributes?
 	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
@@ -67,7 +69,7 @@ public class CrTooManyAttr extends CrUML {
 	if (str == null) return NO_PROBLEM;
 	int n = 0;
 	for (Iterator iter = str.iterator(); iter.hasNext();) {
-	    if (iter.next() instanceof MStructuralFeature)
+	    if (org.argouml.model.ModelFacade.isAStructuralFeature(iter.next()))
 		n++;
 	};
 	if (n <= threshold) return NO_PROBLEM;
@@ -75,4 +77,3 @@ public class CrTooManyAttr extends CrUML {
     }
 
 } /* end class CrTooManyAttr */
-

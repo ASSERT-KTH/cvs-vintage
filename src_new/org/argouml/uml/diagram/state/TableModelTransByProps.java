@@ -1,4 +1,5 @@
-// $Id: TableModelTransByProps.java,v 1.3 2003/06/29 23:52:17 linus Exp $
+
+// $Id: TableModelTransByProps.java,v 1.4 2003/08/25 19:15:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,11 +59,10 @@ public class TableModelTransByProps extends TableModelComposite {
 	int size = edges.size();
 	for (int i = 0; i < size; i++) {
 	    Object edge = edges.elementAt(i);
-	    if (edge instanceof MTransition) res.addElement(edge);
+	    if (org.argouml.model.ModelFacade.isATransition(edge)) res.addElement(edge);
 	}
 	return res;
     }
 
     public String toString() { return "Transitions vs. Properties"; }
 } /* end class TableModelTransByProps */
-

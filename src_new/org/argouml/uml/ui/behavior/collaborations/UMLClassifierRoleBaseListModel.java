@@ -1,4 +1,5 @@
-// $Id: UMLClassifierRoleBaseListModel.java,v 1.6 2003/06/29 23:50:10 linus Exp $
+
+// $Id: UMLClassifierRoleBaseListModel.java,v 1.7 2003/08/25 19:15:54 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +57,7 @@ public class UMLClassifierRoleBaseListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase elem) {
-        return elem instanceof MClassifier &&
+        return org.argouml.model.ModelFacade.isAClassifier(elem) &&
              ((MClassifierRole) getTarget()).getBases().contains(elem);
     }
 

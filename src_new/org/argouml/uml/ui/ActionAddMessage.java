@@ -1,4 +1,5 @@
-// $Id: ActionAddMessage.java,v 1.14 2003/06/30 21:59:34 linus Exp $
+
+// $Id: ActionAddMessage.java,v 1.15 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,8 +66,8 @@ public class ActionAddMessage extends UMLChangeAction {
     	Object target =  TargetManager.getInstance().getModelTarget();
     
     	
-    	if (!(target instanceof MAssociationRole)
-	    && ((MAssociationRole) target).getNamespace() instanceof MCollaboration)
+    	if (!(org.argouml.model.ModelFacade.isAAssociationRole(target))
+	    && org.argouml.model.ModelFacade.isACollaboration(((MAssociationRole) target).getNamespace()))
 	    return;
     	MAssociationRole ar = (MAssociationRole) target;
         this.addMessage(ar);
@@ -97,7 +98,7 @@ public class ActionAddMessage extends UMLChangeAction {
 
     public boolean shouldBeEnabled() {
 	Object target =  TargetManager.getInstance().getModelTarget();
-	return super.shouldBeEnabled() && target instanceof MAssociationRole;
+	return super.shouldBeEnabled() && org.argouml.model.ModelFacade.isAAssociationRole(target);
     }
     
 }  /* end class ActionAddMessage */

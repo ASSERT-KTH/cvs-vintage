@@ -1,4 +1,6 @@
-// $Id: StateDiagramRenderer.java,v 1.9 2003/06/30 18:00:33 linus Exp $
+
+
+// $Id: StateDiagramRenderer.java,v 1.10 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +27,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.9 2003/06/30 18:00:33 linus Exp $
+// $Id: StateDiagramRenderer.java,v 1.10 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -81,16 +83,16 @@ public class StateDiagramRenderer
         if (ModelFacade.isAActionState(node)) {
             return new FigActionState(gm, node);
         }
-        else if (node instanceof MFinalState) {
+        else if (org.argouml.model.ModelFacade.isAFinalState(node)) {
             return new FigFinalState(gm, node);
         }
-        else if (node instanceof MCompositeState) {
+        else if (org.argouml.model.ModelFacade.isACompositeState(node)) {
             return new FigCompositeState(gm, node);
         }
-        else if (node instanceof MState) {
+        else if (org.argouml.model.ModelFacade.isAState(node)) {
             return new FigSimpleState(gm, node);
         }
-        else if (node instanceof MPseudostate) {
+        else if (org.argouml.model.ModelFacade.isAPseudostate(node)) {
             MPseudostate pState = (MPseudostate) node;
             if (pState.getKind() == null) {
                 return null;
@@ -125,7 +127,7 @@ public class StateDiagramRenderer
     /** Return a Fig that can be used to represent the given edge */
     public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
 	cat.debug("making figedge for " + edge);
-	if (edge instanceof MTransition) {
+	if (org.argouml.model.ModelFacade.isATransition(edge)) {
 	    MTransition tr = (MTransition) edge;
 	    FigTransition trFig = new FigTransition(tr, lay);
 	    return trFig;

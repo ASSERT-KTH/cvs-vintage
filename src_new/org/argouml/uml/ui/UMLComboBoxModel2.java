@@ -1,4 +1,5 @@
-// $Id: UMLComboBoxModel2.java,v 1.29 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLComboBoxModel2.java,v 1.30 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -314,14 +315,14 @@ public abstract class UMLComboBoxModel2
     protected void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (ModelFacade.isABase(target) || ModelFacade.isADiagram(target)) {
-            if (_target instanceof MBase) {
+            if (org.argouml.model.ModelFacade.isABase(_target)) {
                 UmlModelEventPump.getPump().removeModelEventListener(
 								     this,
 								     (MBase) _target,
 								     _propertySetName);
             }
 
-            if (target instanceof MBase) {
+            if (org.argouml.model.ModelFacade.isABase(target)) {
                 _target = target;
                 // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
                 UmlModelEventPump.getPump().addModelEventListener(

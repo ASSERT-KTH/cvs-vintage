@@ -1,4 +1,5 @@
-// $Id: UMLExtensionPointExtendListModel.java,v 1.6 2003/06/29 23:50:15 linus Exp $
+
+// $Id: UMLExtensionPointExtendListModel.java,v 1.7 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +57,7 @@ public class UMLExtensionPointExtendListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-        return o instanceof MExtend && ((MExtensionPoint) getTarget()).getExtends().contains(o);
+        return org.argouml.model.ModelFacade.isAExtend(o) && ((MExtensionPoint) getTarget()).getExtends().contains(o);
     }
 
 }

@@ -1,4 +1,5 @@
-// $Id: UMLChangeDispatch.java,v 1.16 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLChangeDispatch.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.16 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLChangeDispatch.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 
@@ -250,7 +251,7 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
 	    PropPanel propPanel = (PropPanel) _container;
             Object target = propPanel.getTarget();
 
-            if (target instanceof MBase) {
+            if (org.argouml.model.ModelFacade.isABase(target)) {
             	
             	// 2002-07-15
             	// Jaap Branderhorst
@@ -326,4 +327,3 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
         }
     }
 }
-

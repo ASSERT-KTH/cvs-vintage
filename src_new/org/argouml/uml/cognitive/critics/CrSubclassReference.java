@@ -1,4 +1,5 @@
-// $Id: CrSubclassReference.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+
+// $Id: CrSubclassReference.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: CrSubclassReference.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,7 +55,7 @@ public class CrSubclassReference extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MClass)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAClass(dm))) return NO_PROBLEM;
 	MClass cls = (MClass) dm;
 	VectorSet offs = computeOffenders(cls);
 	if (offs != null) return PROBLEM_FOUND;
@@ -114,4 +115,3 @@ public class CrSubclassReference extends CrUML {
     }
 
 } /* end class CrSubclassReference */
-

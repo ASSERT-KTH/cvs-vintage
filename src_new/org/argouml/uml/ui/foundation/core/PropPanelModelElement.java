@@ -1,4 +1,5 @@
-// $Id: PropPanelModelElement.java,v 1.67 2003/08/17 22:17:00 linus Exp $
+
+// $Id: PropPanelModelElement.java,v 1.68 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,7 +191,7 @@ abstract public class PropPanelModelElement extends PropPanel {
 
     public void navigateNamespace() {
         Object target = getTarget();
-        if (target instanceof MModelElement) {
+        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
             MModelElement elem = (MModelElement) target;
             MNamespace ns = elem.getNamespace();
             if (ns != null) {

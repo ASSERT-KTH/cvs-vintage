@@ -1,4 +1,5 @@
-// $Id: UMLMultiplicityComboBox.java,v 1.8 2003/06/29 23:50:03 linus Exp $
+
+// $Id: UMLMultiplicityComboBox.java,v 1.9 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,7 +148,7 @@ public class UMLMultiplicityComboBox
         try {
          
 	    Object obj = _getMethod.invoke(_container.getTarget(), _noArg);
-            if (obj instanceof MMultiplicity) {
+            if (org.argouml.model.ModelFacade.isAMultiplicity(obj)) {
                 MMultiplicity mult = (MMultiplicity) obj;
                 lower = mult.getLower();
                 upper = mult.getUpper();
@@ -308,4 +309,3 @@ public class UMLMultiplicityComboBox
     }
 
 }
-

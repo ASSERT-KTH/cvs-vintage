@@ -1,4 +1,5 @@
-// $Id: CrMultipleRealization.java,v 1.4 2003/06/30 18:00:18 linus Exp $
+
+// $Id: CrMultipleRealization.java,v 1.5 2003/08/25 19:15:59 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.4 2003/06/30 18:00:18 linus Exp $
+// $Id: CrMultipleRealization.java,v 1.5 2003/08/25 19:15:59 bobtarling Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -55,7 +56,7 @@ public class CrMultipleRealization extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MInterface)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAInterface(dm))) return NO_PROBLEM;
 	MInterface inter = (MInterface) dm;
    
 	Collection realize =
@@ -65,4 +66,3 @@ public class CrMultipleRealization extends CrUML {
 	return NO_PROBLEM;
     }
 } /* end class CrMultipleRealization.java */
-

@@ -1,4 +1,5 @@
-// $Id: CrNameConfusion.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+
+// $Id: CrNameConfusion.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: CrNameConfusion.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -59,7 +60,7 @@ public class CrNameConfusion extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MModelElement)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
 	MModelElement me = (MModelElement) dm;
 	VectorSet offs = computeOffenders(me);
 	if (offs.size() > 1) return PROBLEM_FOUND;
@@ -159,4 +160,3 @@ public class CrNameConfusion extends CrUML {
     }
 
 } /* end class CrNameConfusion.java */
-

@@ -1,4 +1,5 @@
-// $Id: ArgoDiagram.java,v 1.17 2003/08/17 22:20:33 bobtarling Exp $
+
+// $Id: ArgoDiagram.java,v 1.18 2003/08/25 19:15:59 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,15 +111,15 @@ public class ArgoDiagram extends Diagram {
      */
     public Fig getContainingFig(Object obj) {
         Fig fig = super.presentationFor(obj);
-        if (fig == null && obj instanceof MModelElement) {
+        if (fig == null && org.argouml.model.ModelFacade.isAModelElement(obj)) {
 	    // maybe we have a modelelement that is part of some other
             // fig
-            if (obj instanceof MOperation || obj instanceof MAttribute) {
+            if (org.argouml.model.ModelFacade.isAOperation(obj) || org.argouml.model.ModelFacade.isAAttribute(obj)) {
                 // get all the classes from the diagram
                 Iterator it = getNodes().iterator();
                 while (it.hasNext()) {
                     Object o = it.next();
-                    if (o instanceof MClassifier) {
+                    if (org.argouml.model.ModelFacade.isAClassifier(o)) {
                         MClassifier cl = (MClassifier) o;
                         if (cl.getFeatures().contains(obj))
 			    return presentationFor(cl);

@@ -1,4 +1,7 @@
-// $Id: UMLInitialValueComboBox.java,v 1.21 2003/06/29 23:50:03 linus Exp $
+
+
+
+// $Id: UMLInitialValueComboBox.java,v 1.22 2003/08/25 19:15:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,12 +93,12 @@ public class UMLInitialValueComboBox extends JComboBox
 
                 String item = (String) getSelectedItem();
                 Object target = _container.getTarget();
-                if (target instanceof MAttribute) {
+                if (org.argouml.model.ModelFacade.isAAttribute(target)) {
                     MExpression itemExpr = UmlFactory.getFactory().getDataTypes().createExpression("Java", item);
                     ((MAttribute) target).setInitialValue(itemExpr);
                     update();
                 }
-                else if (target instanceof MParameter) {
+                else if (org.argouml.model.ModelFacade.isAParameter(target)) {
                     MExpression itemExpr = UmlFactory.getFactory().getDataTypes().createExpression("Java", item);
                     ((MParameter) target).setDefaultValue(itemExpr);
                     update();
@@ -117,7 +120,7 @@ public class UMLInitialValueComboBox extends JComboBox
     public void targetChanged() {
         Object target = _container.getTarget();
 	_isUpdating = true;
-        if (target instanceof MAttribute) {
+        if (org.argouml.model.ModelFacade.isAAttribute(target)) {
             MExpression initExpr = (MExpression) ((MAttribute) target).getInitialValue();
             if (initExpr != null) {
                 String init = initExpr.getBody();
@@ -128,7 +131,7 @@ public class UMLInitialValueComboBox extends JComboBox
                 setSelectedItem(null); // clear residual junk from the combo box.
             }
         } 
-        else if (target instanceof MParameter) {
+        else if (org.argouml.model.ModelFacade.isAParameter(target)) {
             MExpression initExpr = (MExpression) ((MParameter) target).getDefaultValue();
             if (initExpr != null) {
                 String init = initExpr.getBody();
@@ -188,15 +191,15 @@ public class UMLInitialValueComboBox extends JComboBox
  */    
     private void update() {
         Object target = _container.getTarget();
-        if (target instanceof MAttribute) {
+        if (org.argouml.model.ModelFacade.isAAttribute(target)) {
             MClassifier classifier = (MClassifier) ((MAttribute) target).getOwner();
             if (classifier == null) {
                 return;
             }
             classifier.setFeatures(classifier.getFeatures());
         }
-        else if (target instanceof MParameter) {
-            if (target instanceof MCallEvent) {
+        else if (org.argouml.model.ModelFacade.isAParameter(target)) {
+            if (org.argouml.model.ModelFacade.isACallEvent(target)) {
                 return;
             }
             MBehavioralFeature feature = ((MParameter) target).getBehavioralFeature();

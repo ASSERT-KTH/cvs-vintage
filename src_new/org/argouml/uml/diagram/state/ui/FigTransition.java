@@ -1,4 +1,5 @@
-// $Id: FigTransition.java,v 1.17 2003/06/30 18:00:33 linus Exp $
+
+// $Id: FigTransition.java,v 1.18 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.17 2003/06/30 18:00:33 linus Exp $
+// $Id: FigTransition.java,v 1.18 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -68,7 +69,7 @@ public class FigTransition extends FigEdgeModelElement {
   
     public FigTransition(Object edge, Layer lay) {
 	this();
-	if (edge instanceof MTransition) {
+	if (org.argouml.model.ModelFacade.isATransition(edge)) {
 	    MTransition tr = (MTransition) edge;
 	    MStateVertex sourceSV = tr.getSource();
 	    MStateVertex destSV = tr.getTarget();

@@ -1,4 +1,5 @@
-// $Id: FigFinalState.java,v 1.11 2003/06/30 18:00:33 linus Exp $
+
+// $Id: FigFinalState.java,v 1.12 2003/08/25 19:15:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.11 2003/06/30 18:00:33 linus Exp $
+// $Id: FigFinalState.java,v 1.12 2003/08/25 19:15:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -132,8 +133,7 @@ public class FigFinalState extends FigStateVertex {
 	Selection sel = null;
 	if (getOwner() != null) {
 	    pstate = (MFinalState) getOwner();
-	    if (pstate.getContainer().getStateMachine()
-		instanceof MActivityGraph) {
+	    if (org.argouml.model.ModelFacade.isAActivityGraph(pstate.getContainer().getStateMachine())) {
 		sel = new SelectionActionState(this);
 		((SelectionActionState) sel).setOutgoingButtonEnabled(false);
 	    } else {

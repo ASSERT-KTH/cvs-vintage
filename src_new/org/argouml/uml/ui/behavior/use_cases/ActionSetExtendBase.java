@@ -1,4 +1,5 @@
-// $Id: ActionSetExtendBase.java,v 1.7 2003/06/30 18:00:37 linus Exp $
+
+// $Id: ActionSetExtendBase.java,v 1.8 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,10 +66,10 @@ public class ActionSetExtendBase extends UMLChangeAction {
             UMLComboBox2 combo = (UMLComboBox2) source;
             newBase = (MUseCase) combo.getSelectedItem();
             Object o = combo.getTarget();
-            if (o instanceof MExtend) {
+            if (org.argouml.model.ModelFacade.isAExtend(o)) {
                 extend = (MExtend) o;
                 o = combo.getSelectedItem();
-                if (o instanceof MUseCase) {
+                if (org.argouml.model.ModelFacade.isAUseCase(o)) {
                     newBase = (MUseCase) o;
                     oldBase = extend.getBase();
                     if (newBase != oldBase) {

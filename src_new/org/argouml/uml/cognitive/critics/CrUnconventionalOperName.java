@@ -1,4 +1,5 @@
-// $Id: CrUnconventionalOperName.java,v 1.8 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrUnconventionalOperName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.8 2003/06/30 19:23:18 linus Exp $
+// $Id: CrUnconventionalOperName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,7 +55,7 @@ public class CrUnconventionalOperName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof MOperation)) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAOperation(dm))) return NO_PROBLEM;
 	MOperation oper = (MOperation) dm;
 	String myName = oper.getName();
 	if (myName == null || myName.equals("")) return NO_PROBLEM;
@@ -97,7 +98,7 @@ public class CrUnconventionalOperName extends CrUML {
      * possible where we are suggested to make the operation a constructor.
      */
     protected boolean candidateForConstructor(MModelElement me) {
-	if (!(me instanceof MOperation)) return false;
+	if (!(org.argouml.model.ModelFacade.isAOperation(me))) return false;
 	MOperation oper = (MOperation) me;
 	String myName = oper.getName();
 	if (myName == null || myName.equals("")) return false;
@@ -129,4 +130,3 @@ public class CrUnconventionalOperName extends CrUML {
     public Class getWizardClass(ToDoItem item) { return WizOperName.class; }
 
 } /* end class CrUnconventionalOperName */
-

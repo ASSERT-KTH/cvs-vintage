@@ -1,4 +1,5 @@
-// $Id: UMLExtendedUseCasesListModel.java,v 1.4 2003/06/29 23:50:15 linus Exp $
+
+// $Id: UMLExtendedUseCasesListModel.java,v 1.5 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +72,7 @@ public class UMLExtendedUseCasesListModel extends UMLBinaryRelationListModel {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getChoices()
      */
     protected Collection getChoices() {
-        if (getTarget() instanceof MExtensionPoint) {
+        if (org.argouml.model.ModelFacade.isAExtensionPoint(getTarget())) {
             Collection col = ModelManagementHelper.getHelper().getAllModelElementsOfKind(MUseCase.class);
             col.remove(((MExtensionPoint) getTarget()).getUseCase());
             return col;
@@ -83,7 +84,7 @@ public class UMLExtendedUseCasesListModel extends UMLBinaryRelationListModel {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getSelected()
      */
     protected Collection getSelected() {
-        if (getTarget() instanceof MExtensionPoint) {
+        if (org.argouml.model.ModelFacade.isAExtensionPoint(getTarget())) {
             MUseCase base = ((MExtensionPoint) getTarget()).getUseCase();
             return UseCasesHelper.getHelper().getExtendingUseCases(base);
         } else

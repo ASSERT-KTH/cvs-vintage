@@ -1,4 +1,5 @@
-// $Id: CrUselessAbstract.java,v 1.6 2003/06/30 19:23:18 linus Exp $
+
+// $Id: CrUselessAbstract.java,v 1.7 2003/08/25 19:15:48 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.6 2003/06/30 19:23:18 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.7 2003/08/25 19:15:48 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,7 +56,7 @@ public class CrUselessAbstract extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	MClass cls, c;
-	if (!(dm instanceof MClass)) return false;
+	if (!(org.argouml.model.ModelFacade.isAClass(dm))) return false;
 	cls = (MClass) dm;
 	if (!cls.isAbstract())
 	    return false;  // original class was not abstract

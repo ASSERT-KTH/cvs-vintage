@@ -1,4 +1,5 @@
-// $Id: AttributeCodePiece.java,v 1.11 2003/06/30 18:00:18 linus Exp $
+
+// $Id: AttributeCodePiece.java,v 1.12 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AttributeCodePiece.java,v 1.11 2003/06/30 18:00:18 linus Exp $
+// $Id: AttributeCodePiece.java,v 1.12 2003/08/25 19:15:58 bobtarling Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -147,7 +148,7 @@ public class AttributeCodePiece extends NamedCodePiece
 	    // now find the matching feature
 	    for (j = features.iterator(); j.hasNext();) {
 		MFeature mFeature = (MFeature) j.next();
-		if (mFeature instanceof MAttribute
+		if (org.argouml.model.ModelFacade.isAAttribute(mFeature)
 		    && mFeature.getName().equals(name)) {
 		    // feature found, so it's an attribute (and no
 		    // association end)

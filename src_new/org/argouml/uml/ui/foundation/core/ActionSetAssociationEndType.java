@@ -1,4 +1,5 @@
-// $Id: ActionSetAssociationEndType.java,v 1.5 2003/06/29 23:50:17 linus Exp $
+
+// $Id: ActionSetAssociationEndType.java,v 1.6 2003/08/25 19:15:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,12 +65,12 @@ public class ActionSetAssociationEndType extends UMLChangeAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object o = box.getTarget();
-            if (o instanceof MAssociationEnd) {
+            if (org.argouml.model.ModelFacade.isAAssociationEnd(o)) {
                 end = (MAssociationEnd) o;
                 oldClassifier = end.getType();
             }
             o = box.getSelectedItem();
-            if (o instanceof MClassifier) {
+            if (org.argouml.model.ModelFacade.isAClassifier(o)) {
                 newClassifier = (MClassifier) o;
             }
         }

@@ -1,4 +1,6 @@
-// $Id: CrCallWithoutReturn.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+
+
+// $Id: CrCallWithoutReturn.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +29,7 @@
 // File: CrCallWithoutReturn.java
 // Classes: CrCallWithoutReturn
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrCallWithoutReturn.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+// $Id: CrCallWithoutReturn.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -98,8 +100,8 @@ public class CrCallWithoutReturn extends CrUML {
 		    Iterator it = col.iterator();
 		    while (it.hasNext()) {
 			MStimulus ms = (MStimulus) it.next();
-			if (ms.getDispatchAction() instanceof MCallAction
-			    || ms.getDispatchAction() instanceof MSendAction)
+			if (org.argouml.model.ModelFacade.isACallAction(ms.getDispatchAction())
+			    || org.argouml.model.ModelFacade.isASendAction(ms.getDispatchAction()))
 			{
 			    found = true;
 			    Vector edges =
@@ -114,8 +116,7 @@ public class CrCallWithoutReturn extends CrUML {
 				    Iterator it2 = col2.iterator();
 				    while (it2.hasNext()) {
 					MStimulus ms2 = (MStimulus) it2.next();
-					if ((ms2.getDispatchAction()
-					     instanceof MReturnAction)
+					if ((org.argouml.model.ModelFacade.isAReturnAction(ms2.getDispatchAction()))
 					    && (second.getPortNumber(figs)
 						> fsl.getPortNumber(figs))
 					    && (ms.getSender()
@@ -144,4 +145,3 @@ public class CrCallWithoutReturn extends CrUML {
     } 
 
 } /* end class CrCallWithoutReturn.java */
-

@@ -1,4 +1,5 @@
-// $Id: ProjectMemberDiagram.java,v 1.14 2003/06/30 18:00:28 linus Exp $
+
+// $Id: ProjectMemberDiagram.java,v 1.15 2003/08/25 19:15:58 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +81,7 @@ public class ProjectMemberDiagram extends ProjectMember {
         // be able to match them after a save-load cycle.
         if (d instanceof UMLDiagram) {
             UMLDiagram u = (UMLDiagram) d;
-            if (u.getNamespace() instanceof MModelElement) {
+            if (org.argouml.model.ModelFacade.isAModelElement(u.getNamespace())) {
                 MModelElement me = (MModelElement) u.getNamespace();
                 // if (me.getUUID() == null)
                 //   me.setUUID(UUIDManager.SINGLETON.getNewUUID());

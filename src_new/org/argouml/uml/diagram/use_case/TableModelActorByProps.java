@@ -1,4 +1,5 @@
-// $Id: TableModelActorByProps.java,v 1.2 2003/06/29 23:52:20 linus Exp $
+
+// $Id: TableModelActorByProps.java,v 1.3 2003/08/25 19:15:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,11 +54,10 @@ public class TableModelActorByProps extends TableModelComposite {
 	int size = nodes.size();
 	for (int i = 0; i < size; i++) {
 	    Object node = nodes.elementAt(i);
-	    if (node instanceof MActor) res.addElement(node);
+	    if (org.argouml.model.ModelFacade.isAActor(node)) res.addElement(node);
 	}
 	return res;
     }
 
     public String toString() { return "Actors vs. Properties"; }
 } /* end class TableModelActorByProps */
-
