@@ -24,7 +24,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 </table>
 </div>
 
-<P>
+<p>
 <form method="get" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
@@ -60,7 +60,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <input type="hidden" name="templateId" value="$!templateId" />
 
-<P>
+<p>
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module))
     #if ($group.Dedupe)
