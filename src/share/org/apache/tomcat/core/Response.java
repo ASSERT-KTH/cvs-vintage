@@ -109,16 +109,16 @@ public class Response {
 
     // holds request error exception
     // set this just once during request processing
-    Exception errorException=null;
+    protected Exception errorException=null;
     // holds request error URI
-    String errorURI=null;
+    protected String errorURI=null;
 
     // content type set by user, not including encoding
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
     protected String characterEncoding = DEFAULT_CHAR_ENCODING;
     protected int contentLength = -1;
-    private Locale locale = DEFAULT_LOCALE;
+    protected Locale locale = DEFAULT_LOCALE;
 
     // -------------------- Constructor --------------------
     

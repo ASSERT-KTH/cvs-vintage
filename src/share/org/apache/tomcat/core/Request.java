@@ -184,7 +184,7 @@ public class Request {
 
     // auth infor
     protected String authType;
-    boolean notAuthenticated=true;
+    protected boolean notAuthenticated=true;
     protected String remoteUser;
     protected Principal principal;
     // active roles for the current user
@@ -206,19 +206,19 @@ public class Request {
 
     // Handler
     protected Handler handler = null;
-    Container container;
+    protected Container container;
 
     protected Cookies scookies;
 
     // sub-request support 
-    Request top;
-    Request parent;
-    Request child;
+    protected Request top;
+    protected Request parent;
+    protected Request child;
 
     protected UDecoder urlDecoder;
     
     // Error handling support
-    Exception errorException;
+    protected Exception errorException;
 
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
 
@@ -323,7 +323,7 @@ public class Request {
     }
 
     public MessageBytes queryString() {
-	return queryMB;
+	return query();
     }
 
     public MessageBytes servletPath() {
@@ -355,6 +355,7 @@ public class Request {
     public void setServerPort(int serverPort ) {
 	this.serverPort=serverPort;
     }
+    
     public MessageBytes remoteAddr() {
 	return remoteAddrMB;
     }
@@ -438,6 +439,10 @@ public class Request {
     // -------------------- encoding/type --------------------
 
     public String getCharacterEncoding() {
+	return getCharEncoding();
+    }
+
+    public String getCharEncoding() {
         if(charEncoding!=null) return charEncoding;
 
 	Object result=null;
@@ -477,13 +482,15 @@ public class Request {
     public int getContentLength() {
         if( contentLength > -1 ) return contentLength;
 
-	MessageBytes clB=headers.getValue("content-length");
+	MessageBytes clB=getMimeHeaders().getValue("content-length");
         contentLength = (clB==null || clB.isNull() ) ? -1 : clB.getInt();
 	available=contentLength;
 
 	return contentLength;
     }
 
+    /** @deprecated
+     */
     public String getContentType() {
 	contentType();
 	if( contentTypeMB==null ||
@@ -491,16 +498,20 @@ public class Request {
 	return contentTypeMB.toString();
     }
 
+    /** @deprecated
+     */
     public void setContentType( String type ) {
 	contentTypeMB.setString( type );
     }
 
     public MessageBytes contentType() {
 	if( contentTypeMB == null )
-	    contentTypeMB=headers.getValue( "content-type" );
+	    contentTypeMB=getMimeHeaders().getValue( "content-type" );
 	return contentTypeMB;
     }
 
+    /** @deprecated
+     */
     public void setContentType( MessageBytes mb  ) {
 	contentTypeMB=mb;
     }
@@ -831,16 +842,22 @@ public class Request {
     }
 
     // -------------------- Facade for MimeHeaders
+    /** @deprecated
+     */
     public Enumeration getHeaders(String name) {
 	return getMimeHeaders().values(name);
     }
 
+    /** @deprecated
+     */
     public String getHeader(String name) {
-        return headers.getHeader(name);
+        return getMimeHeaders().getHeader(name);
     }
 
+    /** @deprecated
+     */
     public Enumeration getHeaderNames() {
-        return headers.names();
+        return getMimeHeaders().names();
     }
 
     // -------------------- Computed fields --------------------
@@ -929,9 +946,9 @@ public class Request {
 	sb.append( "R( ");
 	if( context!=null) {
 	    sb.append( context.getPath() );
-	    if( ! servletPathMB.isNull() )
-		sb.append( " + " + servletPathMB.toString() + " + " +
-			   pathInfoMB.toString());
+	    if( ! servletPath().isNull() )
+		sb.append( " + " + servletPath().toString() + " + " +
+			   pathInfo().toString());
 	} else {
 	    sb.append(requestURI().toString());
 	}
