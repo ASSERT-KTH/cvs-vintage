@@ -27,11 +27,13 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.TransferHandler;
 import javax.swing.tree.TreePath;
@@ -40,14 +42,15 @@ import javax.swing.tree.TreePath;
  * this class does all the dirty work for the TreeController
  */
 public class TreeView extends JTree {
-    private JTextField textField;
-
     /** The treepath that was selected before the drag and drop began. */
     private TreePath selectedPathBeforeDrag;
     /** The treepath that is under the mouse pointer in a drag and drop action. */
     private TreePath dropTargetPath;
     /** The component is in a drag and drop action */
     private boolean isInDndMode = false;
+    /** A Timer that expands/collapses leafs when the mouse hovers above it.
+     * This is only used during Drag and Drop. */
+    private Timer   dndAutoExpanderTimer;
 
     /**
      * Constructa a tree view
@@ -73,6 +76,9 @@ public class TreeView extends JTree {
         repaint();
 
         setDropTarget(new DropHandler());
+
+        dndAutoExpanderTimer = new Timer(1000, new TreeLeafActionListener(this));
+        dndAutoExpanderTimer.setRepeats(false);
     }
 
     /**
@@ -144,6 +150,28 @@ public class TreeView extends JTree {
     }
 
     /**
+     * Sets up this TreeView for Drag and drop action.
+     * Stores the selected tree leaf before the action begins, this
+     * is used later when the Drag and drop action is completed.
+     */
+    private void setUpDndAction() {     
+        isInDndMode = true;
+        selectedPathBeforeDrag = getSelectionPath();
+    }
+
+    /**
+     * Resets this TreeView after a Drag and drop action has occurred.
+     * Selects the previous selected tree leaf before the DnD action began.
+     */
+    private void resetDndAction() {
+        selectedPathBeforeDrag = null;
+        dropTargetPath = null;
+        dndAutoExpanderTimer.stop();
+        setSelectionPath(selectedPathBeforeDrag);
+        isInDndMode = false;
+    }
+
+    /**
      * Our own drop target implementation.
      * This treeview class uses its own drop target since the common drop target in Swing >1.4
      * does not provide a fine grained support for dragging items onto
@@ -161,41 +189,41 @@ public class TreeView extends JTree {
          */
         public void dragOver(DropTargetDragEvent e) {
 
-            if ((location != null) && (location.equals(e.getLocation()))) {
-                return;
-            }
-            location = e.getLocation();
+            if ((location == null) || (!location.equals(e.getLocation()))) {
+                location = e.getLocation();
 
-            TreePath targetPath = getClosestPathForLocation(location.x, location.y);
-            if ((dropTargetPath != null) && (targetPath == dropTargetPath)) {
-                return;
-            }
-            dropTargetPath = targetPath;
+                TreePath targetPath = getClosestPathForLocation(location.x, location.y);
+                if ((dropTargetPath != null) && (targetPath == dropTargetPath)) {
+                    return;
+                }
+                dropTargetPath = targetPath;
 
-            TreeView.this.getSelectionModel().setSelectionPath(dropTargetPath);
-            DataFlavor[] flavors = e.getCurrentDataFlavors();
+                dndAutoExpanderTimer.restart();
 
-            JComponent c = (JComponent) e.getDropTargetContext().getComponent();
-            TransferHandler importer = c.getTransferHandler();
+                TreeView.this.getSelectionModel().setSelectionPath(dropTargetPath);
+                DataFlavor[] flavors = e.getCurrentDataFlavors();
 
-            if ((importer != null) && importer.canImport(c, flavors)) {
-                canImport = true;
-            } else {
-                canImport = false;
-            }
+                JComponent c = (JComponent) e.getDropTargetContext().getComponent();
+                TransferHandler importer = c.getTransferHandler();
 
-            int dropAction = e.getDropAction();
-            if (canImport) {
-                e.acceptDrag(dropAction);
-            } else {
-                e.rejectDrag();
+                if ((importer != null) && importer.canImport(c, flavors)) {
+                    canImport = true;
+                } else {
+                    canImport = false;
+                }
+
+                int dropAction = e.getDropAction();
+                if (canImport) {
+                    e.acceptDrag(dropAction);
+                } else {
+                    e.rejectDrag();
+                }
             }
         }
 
         /** {@inheritDoc} */
         public void dragEnter(DropTargetDragEvent e) {
-            selectedPathBeforeDrag = TreeView.this.getSelectionPath();
-            isInDndMode = true;
+            setUpDndAction();
 
             DataFlavor[] flavors = e.getCurrentDataFlavors();
 
@@ -219,10 +247,7 @@ public class TreeView extends JTree {
 
         /** {@inheritDoc} */
         public void dragExit(DropTargetEvent e) {
-            TreeView.this.setSelectionPath(selectedPathBeforeDrag);
-            selectedPathBeforeDrag = null;
-            dropTargetPath = null;
-            isInDndMode = false;
+            resetDndAction();
         }
 
         /** {@inheritDoc} */
@@ -244,8 +269,8 @@ public class TreeView extends JTree {
             } else {
                 e.rejectDrop();
             }
-            TreeView.this.setSelectionPath(selectedPathBeforeDrag);
-            isInDndMode = false;
+
+            resetDndAction();
         }
 
         /** {@inheritDoc} */
@@ -257,6 +282,34 @@ public class TreeView extends JTree {
             } else {
                 e.rejectDrag();
             }
+        }
+    }
+
+    /**
+     * An ActionListener that collapses/expands leafs in a tree.
+     * @author redsolo
+     */
+    private class TreeLeafActionListener implements ActionListener {
+        private JTree treeParent;
+
+        /**
+         * Constructs a leaf listener.
+         * @param parent the parent JTree.
+         */
+        public TreeLeafActionListener(JTree parent) {
+            treeParent = parent;
+        }
+
+        /** {@inheritDoc} */
+        public void actionPerformed(ActionEvent e) {
+            // Do nothing if we are hovering over the root node
+            if (dropTargetPath != null) {
+                if (isExpanded(dropTargetPath)) {
+                    collapsePath(dropTargetPath);
+                } else {
+                    expandPath(dropTargetPath);
+                }
+            } 
         }
     }
 }
