@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.1 1999/10/09 00:20:40 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.2 1999/10/15 00:11:56 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 00:11:56 $
  *
  * ====================================================================
  * 
@@ -83,12 +83,8 @@ import org.apache.jasper.Constants;
 import org.apache.jasper.Options;
 
 
-
-
-
-
 /**
- * The JSP engine! 
+ * The JSP engine (a.k.a Jasper)! 
  *
  * @author Anil K. Vijendran
  * @author Harish Prabandham
@@ -123,9 +119,29 @@ public class JspServlet extends HttpServlet {
 	private void loadIfNecessary() 
             throws JasperException, ServletException, FileNotFoundException 
         {
-	    if (loader.loadJSP(jspUri, engine.getClassPath(context),isErrorPage) || 
-	                      (theServlet == null))
-		load();
+            // First try context attribute; if that fails then use the 
+            // classpath init parameter. 
+
+            // Should I try to concatenate them if both are non-null?
+
+            String cp = (String) context.getAttribute(Constants.SERVLET_CLASSPATH);
+
+            String accordingto;
+
+            if (cp == null || cp.equals("")) {
+                accordingto = "according to the init parameter is";
+                cp = options.getClassPath();
+            } else 
+                accordingto = "according to the Servlet Engine is";
+            
+            
+            Constants.message("jsp.message.cp_is", 
+                              new Object[] { accordingto, cp }, 
+                              Constants.MED_VERBOSITY);
+
+	    if (loader.loadJSP(jspUri, cp, isErrorPage) || theServlet == null) {
+                load();
+            }
 	}
 	
 	public void service(HttpServletRequest request, 
