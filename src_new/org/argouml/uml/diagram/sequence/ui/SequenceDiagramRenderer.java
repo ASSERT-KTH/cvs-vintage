@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.15 2005/01/24 23:15:56 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.16 2005/01/26 00:57:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SequenceDiagramRenderer.java,v 1.15 2005/01/24 23:15:56 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.16 2005/01/26 00:57:07 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -78,21 +78,45 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
             Object stimulus = ModelFacade.getStimuli(edge).iterator().next();
             Object action = ModelFacade.getDispatchAction(stimulus);
             if (ModelFacade.isACallAction(action)) {
-        	return new FigCallActionLink(edge);
-            } else
-        	if (ModelFacade.isAReturnAction(action)) {
+                return new FigCallActionLink(edge);
+            } else if (ModelFacade.isAReturnAction(action)) {
         	    return new FigReturnActionLink(edge);
-        	} else
-        	    if (ModelFacade.isADestroyAction(edge)) {
+        	} else if (ModelFacade.isADestroyAction(edge)) {
         		return new FigDestroyActionLink(edge);
-        	    } else
-        		if (ModelFacade.isACreateAction(edge)) {
-        		    return new FigCreateActionLink(edge);
-        		}
+            } else if (ModelFacade.isACreateAction(edge)) {
+                return new FigCreateActionLink(edge);
+            }
         }
         // TODO: Something here.
         LOG.debug("SequenceDiagramRenderer getFigEdgeFor");
         return null;
+    }
+
+    /**
+     * Return a Fig that can be used to represent the given edge.
+     *
+     * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
+     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
+     * java.lang.Object)
+     */
+    public FigEdge getFigEdgeFor(Object edge, Map styleAttributes) {
+        if (edge == null) {
+            throw new IllegalArgumentException("A model edge must be supplied");
+        }
+        if (ModelFacade.isALink(edge)) {
+            Object stimulus = ModelFacade.getStimuli(edge).iterator().next();
+            Object action = ModelFacade.getDispatchAction(stimulus);
+            if (ModelFacade.isACallAction(action)) {
+                return new FigCallActionLink();
+            } else if (ModelFacade.isAReturnAction(action)) {
+                return new FigReturnActionLink();
+            } else if (ModelFacade.isADestroyAction(edge)) {
+                return new FigDestroyActionLink();
+            } else if (ModelFacade.isACreateAction(edge)) {
+                return new FigCreateActionLink();
+            }
+        }
+        throw new IllegalArgumentException("Failed to construct a FigEdge for " + edge);
     }
 
 
