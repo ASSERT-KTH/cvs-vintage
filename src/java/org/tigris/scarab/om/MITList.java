@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.27 2003/06/13 00:15:19 elicia Exp $
+ * @version $Id: MITList.java,v 1.28 2003/06/13 16:22:42 dlr Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -433,7 +433,6 @@ public  class MITList
                         .getRModuleAttribute(attribute, 
                                              getIssueType(compareItem));
             common = modAttr != null && (!activeOnly || modAttr.getActive());
-            //common = modAttr != null ;
         }
         return common;
     }
