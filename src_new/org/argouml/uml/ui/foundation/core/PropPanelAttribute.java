@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.47 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelAttribute.java,v 1.48 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLInitialValueComboBox;
@@ -85,7 +86,8 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
         addButton(new PropPanelButton2(this, new ActionAddAttribute()));
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
     /**

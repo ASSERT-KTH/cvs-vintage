@@ -1,4 +1,4 @@
-// $Id: PropPanelSignalEvent.java,v 1.8 2004/11/24 21:57:05 mvw Exp $
+// $Id: PropPanelSignalEvent.java,v 1.9 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,8 @@ public class PropPanelSignalEvent extends PropPanelEvent {
         new PropPanelButton(this, lookupIcon("Parameter"), 
                 Translator.localize("button.new-parameter"),
                 new ActionNewParameter());
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
 } 

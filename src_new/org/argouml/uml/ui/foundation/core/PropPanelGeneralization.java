@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.45 2004/10/13 05:52:14 linus Exp $
+// $Id: PropPanelGeneralization.java,v 1.46 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -98,7 +99,8 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.30 2004/11/27 21:56:27 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.31 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,8 @@ public class PropPanelGuard extends PropPanelModelElement {
             Translator.localize("button.go-up"), 
             new ActionNavigateTransition());
     
-	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
 } /* end class PropPanelState */

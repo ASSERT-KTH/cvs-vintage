@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.29 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelInclude.java,v 1.30 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
@@ -97,7 +98,8 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Add the toolbar. Just the four basic buttons for now.
 
         addButton(new PropPanelButton2(this, new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.47 2004/11/24 22:02:12 mvw Exp $
+// $Id: PropPanelActor.java,v 1.48 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,8 @@ public class PropPanelActor extends PropPanelClassifier {
         new PropPanelButton(this, lookupIcon("Reception"), 
                 Translator.localize("button.new-reception"), 
                 getActionNewReception());
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
 } /* end class PropActor */

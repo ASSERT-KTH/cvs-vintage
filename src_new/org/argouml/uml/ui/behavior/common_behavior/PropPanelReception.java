@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.26 2004/11/04 17:23:17 bobtarling Exp $
+// $Id: PropPanelReception.java,v 1.27 2004/12/02 19:30:01 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.i18n.Translator;
 import org.tigris.swidgets.GridLayout2;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLTextArea2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
@@ -89,6 +90,7 @@ public class PropPanelReception extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 }

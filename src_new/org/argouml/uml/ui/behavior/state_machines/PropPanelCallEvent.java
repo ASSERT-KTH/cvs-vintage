@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.23 2004/11/24 21:57:04 mvw Exp $
+// $Id: PropPanelCallEvent.java,v 1.24 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,8 @@ public class PropPanelCallEvent extends PropPanelEvent {
         new PropPanelButton(this, lookupIcon("Parameter"), 
                 Translator.localize("button.new-parameter"),
                 new ActionNewParameter());
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
 
         
         // TODO: make the next list into a scrollbox (issue 2288)

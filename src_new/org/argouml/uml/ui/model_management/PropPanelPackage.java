@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.56 2004/11/24 21:57:03 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.57 2004/12/02 19:30:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,8 +131,8 @@ public class PropPanelPackage extends PropPanelNamespace  {
         new PropPanelButton(this, lookupIcon("Package"), 
                 Translator.localize("button.new-package"), 
                 new ActionAddPackage());
-        addButton(new PropPanelButton2(this, 
-            new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
     /** add a package to the current package. */

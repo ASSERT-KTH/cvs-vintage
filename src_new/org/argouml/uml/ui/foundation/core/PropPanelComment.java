@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.15 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelComment.java,v 1.16 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,10 @@ package org.argouml.uml.ui.foundation.core;
 
 import javax.swing.JScrollPane;
 
+import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 import org.argouml.uml.ui.UMLTextArea2;
@@ -62,7 +64,8 @@ public class PropPanelComment extends PropPanelModelElement {
         addField("Text: ", pane);
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
 }

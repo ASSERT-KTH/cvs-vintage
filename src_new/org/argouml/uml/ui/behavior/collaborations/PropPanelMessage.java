@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.52 2004/11/25 19:15:21 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.53 2004/12/02 19:30:01 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,8 +116,8 @@ public class PropPanelMessage extends PropPanelModelElement {
                 Translator.localize("button.new-action"),
                 new ActionToolNewAction());
         
-        addButton(new PropPanelButton2(this, 
-            new ActionRemoveFromModel()));    
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());    
     }
 
     private class ActionToolNewAction extends AbstractActionNewModelElement {

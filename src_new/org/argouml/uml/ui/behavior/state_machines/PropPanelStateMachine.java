@@ -1,4 +1,4 @@
-// $Id: PropPanelStateMachine.java,v 1.21 2004/11/04 17:23:18 bobtarling Exp $
+// $Id: PropPanelStateMachine.java,v 1.22 2004/12/02 19:30:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.i18n.Translator;
 import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
@@ -103,7 +104,8 @@ public class PropPanelStateMachine extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this,
                 new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        new PropPanelButton(this, lookupIcon("Delete"), Translator.localize(
+            "action.delete-from-model"), new ActionRemoveFromModel());
     }
 
 }
