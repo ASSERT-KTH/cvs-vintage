@@ -48,12 +48,10 @@ import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
 
-
 /**
- * Highest Abstraction Layer of the POP3 Protocol. Its responsabilities
- * are the synchornization of already downloaded mails, deletion of mails
- * after x days and parsing of the headers to maintain a headerCache of
- * the downloaded mails.
+ * Highest Abstraction Layer of the POP3 Protocol. Its responsabilities are the
+ * synchornization of already downloaded mails, deletion of mails after x days
+ * and parsing of the headers to maintain a headerCache of the downloaded mails.
  * 
  * @author tstich
  */
@@ -63,160 +61,174 @@ public class POP3Server {
 			.getLogger("org.columba.mail.folder.headercache");
 
 	private static final long DAY_IN_MS = 24 * 60 * 60 * 1000;
-	
-	
-    private AccountItem accountItem;
-    private File file;
-    private boolean alreadyLoaded;
-    private POP3Store store;
-    protected POP3HeaderCache headerCache;
-    private Lock lock;
-    
-    /**
-     * Dirty flag. If set to true, we have to save the headercache changes.
-     * If set to false, nothing changed. Therefore no need to save the headercache.
-     */
-    private boolean cacheChanged;
 
-    public POP3Server(AccountItem accountItem) {
-        this.accountItem = accountItem;
+	private AccountItem accountItem;
 
-        int uid = accountItem.getUid();
+	private File file;
 
-        file = new File(MailInterface.config.getPOP3Directory(),
-                (new Integer(uid)).toString());
+	private boolean alreadyLoaded;
 
-        PopItem item = accountItem.getPopItem();
+	private POP3Store store;
 
-        store = new POP3Store(item);
+	protected POP3HeaderCache headerCache;
 
-        headerCache = new POP3HeaderCache(this);
+	private Lock lock;
 
-        lock = new Lock();
-        
-        setCacheChanged(false);
-    }
+	/**
+	 * Dirty flag. If set to true, we have to save the headercache changes. If
+	 * set to false, nothing changed. Therefore no need to save the headercache.
+	 */
+	private boolean cacheChanged;
 
-    public void save() throws Exception {
-    	// only save headercache if something changed
-    	if ( isCacheChanged() )
-    		headerCache.save();
-    }
+	public POP3Server(AccountItem accountItem) {
+		this.accountItem = accountItem;
 
-    public File getConfigFile() {
-        return file;
-    }
+		int uid = accountItem.getUid();
 
-    public AccountItem getAccountItem() {
-        return accountItem;
-    }
+		file = new File(MailInterface.config.getPOP3Directory(), (new Integer(
+				uid)).toString());
 
-    public MessageFolder getFolder() {
-        SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
-        String inboxStr = foldersItem.get("inbox");
+		PopItem item = accountItem.getPopItem();
 
-        int inboxInt = Integer.parseInt(inboxStr);
+		store = new POP3Store(item);
 
-        MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(inboxInt);
+		headerCache = new POP3HeaderCache(this);
 
-        return f;
-    }
+		lock = new Lock();
 
-    public void logout() throws Exception {
-        getStore().logout();
-    }
+		setCacheChanged(false);
+	}
 
-    public void forceLogout() throws Exception {
-        getStore().logout();
-    }
+	public void save() throws Exception {
+		// only save headercache if something changed
+		if (isCacheChanged())
+			headerCache.save();
+	}
 
-    public List synchronize() throws Exception {
-        // Get the uids from the headercache
-        LinkedList headerUids = new LinkedList();
-        Enumeration keys = headerCache.getHeaderList().keys();
+	public File getConfigFile() {
+		return file;
+	}
 
-        while (keys.hasMoreElements()) {
-            headerUids.add(keys.nextElement());
-        }
+	public AccountItem getAccountItem() {
+		return accountItem;
+	}
 
-        // Get the list of the uids on the server
-        // Important: Use a clone of the List since
-        // we must not change it!
-        List newUids = store.getUIDList();
-        
-        // substract the uids that we already downloaded ->
-        // newUids contains all uids to fetch from the server
-        ListTools.substract(newUids, headerUids);
+	public MessageFolder getFolder() {
+		SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
+		String inboxStr = foldersItem.get("inbox");
 
-        // substract the uids on the server from the downloaded uids ->
-        // headerUids are the uids that have been removed from the server
-        ListTools.substract(headerUids, store.getUIDList());
+		int inboxInt = Integer.parseInt(inboxStr);
 
-        Iterator it = headerUids.iterator();
+		MessageFolder f = (MessageFolder) MailInterface.treeModel
+				.getFolder(inboxInt);
 
-        // update the cache 
-        while (it.hasNext()) {
-            headerCache.getHeaderList().remove(it.next());
-            cacheChanged = true;
-        }
+		return f;
+	}
 
-        // return the uids that are new
-        return newUids;
-    }
+	public void logout() throws Exception {
+		getStore().logout();
+	}
 
-    public void deleteMessage(Object uid) throws IOException, POP3Exception, CommandCancelledException {
-        try {
+	public void forceLogout() throws Exception {
+		getStore().logout();
+	}
+
+	public List synchronize() throws Exception {
+		// Get the uids from the headercache
+		LinkedList headerUids = new LinkedList();
+		Enumeration keys = headerCache.getHeaderList().keys();
+
+		while (keys.hasMoreElements()) {
+			headerUids.add(keys.nextElement());
+		}
+
+		// Get the list of the uids on the server
+		// Important: Use a clone of the List since
+		// we must not change it!
+		List newUids = store.getUIDList();
+
+		// substract the uids that we already downloaded ->
+		// newUids contains all uids to fetch from the server
+		ListTools.substract(newUids, headerUids);
+
+		// substract the uids on the server from the downloaded uids ->
+		// headerUids are the uids that have been removed from the server
+		ListTools.substract(headerUids, store.getUIDList());
+
+		Iterator it = headerUids.iterator();
+
+		// update the cache
+		while (it.hasNext()) {
+			headerCache.getHeaderList().remove(it.next());
+			cacheChanged = true;
+		}
+
+		// return the uids that are new
+		return newUids;
+	}
+
+	public void deleteMessage(Object uid) throws IOException, POP3Exception,
+			CommandCancelledException {
+		try {
 			store.deleteMessage(uid);
-		
-	        headerCache.remove(uid);
-	        
-	        // set dirty flag
-	        setCacheChanged(true);
-        } catch (POP3Exception e) {
-        	if( (e instanceof MessageNotOnServerException ) || (e.getResponse() != null && e.getResponse().isERR()) ) {
-        		// Message already deleted from server
-        		headerCache.remove(uid);
-        		setCacheChanged(true);
-        	} else throw e;
-		} 
-        
-    }
-    
-    public void deleteMessagesOlderThan(Date date) throws IOException, POP3Exception, CommandCancelledException {
-    	LOG.info("Removing message older than " + date);
-    	HeaderList headerList = headerCache.getHeaderList();
-    	Enumeration uids = headerList.keys();
-    	while( uids.hasMoreElements() ) {
-    		Object uid = uids.nextElement();
-    		ColumbaHeader header = headerList.get(uid);
-    		if( ((Date)header.get("columba.date")).before(date) ) {
-    			deleteMessage(uid);
-    			LOG.info("removed "+ uid + " from " + accountItem.getName());
-    		}    		
-    	}    	
-    }
-    
-    public void cleanUpServer() throws IOException, POP3Exception, CommandCancelledException {
+
+			headerCache.remove(uid);
+
+			// set dirty flag
+			setCacheChanged(true);
+		} catch (POP3Exception e) {
+			if ((e instanceof MessageNotOnServerException)
+					|| (e.getResponse() != null && e.getResponse().isERR())) {
+				// Message already deleted from server
+				headerCache.remove(uid);
+				setCacheChanged(true);
+			} else
+				throw e;
+		}
+
+	}
+
+	public void deleteMessagesOlderThan(Date date) throws IOException,
+			POP3Exception, CommandCancelledException {
+		LOG.info("Removing message older than " + date);
+		HeaderList headerList = headerCache.getHeaderList();
+		Enumeration uids = headerList.keys();
+		while (uids.hasMoreElements()) {
+			Object uid = uids.nextElement();
+			ColumbaHeader header = headerList.get(uid);
+			if (((Date) header.get("columba.date")).before(date)) {
+				deleteMessage(uid);
+				LOG.info("removed " + uid + " from " + accountItem.getName());
+			}
+		}
+	}
+
+	public void cleanUpServer() throws IOException, POP3Exception,
+			CommandCancelledException {
 		PopItem item = getAccountItem().getPopItem();
-		
-		if( item.getBoolean("leave_messages_on_server", false) && item.getBoolean("remove_old_from_server", false)) {
-			int days  = item.getInteger("older_than");
+
+		if (item.getBoolean("leave_messages_on_server", false)
+				&& item.getBoolean("remove_old_from_server", false)) {
+			int days = item.getInteger("older_than");
 			long date = new Date().getTime();
 			date -= days * DAY_IN_MS;
-			
+
 			deleteMessagesOlderThan(new Date(date));
 		}
-    }
+	}
 
-    public int getMessageCount() throws Exception {
-        return getStore().getMessageCount();
-    }
+	public int getMessageCount() throws Exception {
+		return getStore().getMessageCount();
+	}
 
-    public ColumbaMessage getMessage(Object uid, WorkerStatusController worker) throws Exception {
-        InputStream messageStream = new ProgressObservedInputStream( getStore().fetchMessage(store.getIndex(uid)), worker, true);
+	public ColumbaMessage getMessage(Object uid, WorkerStatusController worker)
+			throws Exception {
+		InputStream messageStream = new ProgressObservedInputStream(getStore()
+				.fetchMessage(store.getIndex(uid)), worker, true);
 
-		Source source = TempSourceFactory.createTempSource(messageStream, messageStream.available());
-		
+		Source source = TempSourceFactory.createTempSource(messageStream,
+				messageStream.available());
+
 		// pipe through preprocessing filter
 		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 		//	rawString = modifyMessage(rawString);
@@ -228,74 +240,76 @@ public class POP3Server {
 
 		m.setSource(source);
 		h.getAttributes().put("columba.pop3uid", uid);
-		h.getAttributes().put("columba.size",
-				new Integer(source.length() / 1024));
+		// message size should be at least 1 KB
+		int size = Math.max(source.length() / 1024, 1);
+		h.getAttributes().put("columba.size", new Integer(size));
 
 		// set the attachment flag
-        String contentType = (String) header.get("Content-Type");
+		String contentType = (String) header.get("Content-Type");
 
-        h.set("columba.attachment", h.hasAttachments());
-        h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
-        h.getAttributes().put("columba.accountuid",
-            new Integer(accountItem.getInteger("uid")));
+		h.set("columba.attachment", h.hasAttachments());
+		h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
+		h.getAttributes().put("columba.accountuid",
+				new Integer(accountItem.getInteger("uid")));
 
-        
-        headerCache.add(h);
-        
-        // set headercache dirty flag
-        setCacheChanged(true);
+		headerCache.add(h);
 
-        return m;
-    }
+		// set headercache dirty flag
+		setCacheChanged(true);
 
-    public int getMessageSize(Object uid) throws Exception {
-        return store.getSize(store.getIndex(uid));
-    }
+		return m;
+	}
 
-    public String getFolderName() {
-        return accountItem.getName();
-    }
+	public int getMessageSize(Object uid) throws Exception {
+		return store.getSize(store.getIndex(uid));
+	}
 
-    /**
- * Returns the store.
- *
- * @return POP3Store
- */
-    public POP3Store getStore() {
-        return store;
-    }
+	public String getFolderName() {
+		return accountItem.getName();
+	}
 
-    public StatusObservable getObservable() {
-        return store.getObservable();
-    }
+	/**
+	 * Returns the store.
+	 * 
+	 * @return POP3Store
+	 */
+	public POP3Store getStore() {
+		return store;
+	}
 
-    public boolean tryToGetLock(Object locker) {
-        return lock.tryToGetLock(locker);
-    }
+	public StatusObservable getObservable() {
+		return store.getObservable();
+	}
 
-    public void releaseLock(Object locker) {
-        lock.release(locker);
-    }
-    
+	public boolean tryToGetLock(Object locker) {
+		return lock.tryToGetLock(locker);
+	}
+
+	public void releaseLock(Object locker) {
+		lock.release(locker);
+	}
+
 	/**
 	 * @return Returns the hasChanged.
 	 */
 	public boolean isCacheChanged() {
 		return cacheChanged;
 	}
+
 	/**
-	 * @param hasChanged The hasChanged to set.
+	 * @param hasChanged
+	 *            The hasChanged to set.
 	 */
 	private void setCacheChanged(boolean hasChanged) {
 		this.cacheChanged = hasChanged;
 	}
-	
+
 	/**
 	 * Call this method if the underlying configuration changed.
 	 */
 	public void updateConfig() {
-		 PopItem item = accountItem.getPopItem();
+		PopItem item = accountItem.getPopItem();
 
-	     store = new POP3Store(item);
+		store = new POP3Store(item);
 	}
 }
