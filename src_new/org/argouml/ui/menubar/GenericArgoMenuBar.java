@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.36 2003/09/15 06:54:39 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.37 2003/10/08 18:16:27 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: GenericArgoMenuBar.java,v 1.36 2003/09/15 06:54:39 linus Exp $
+//$Id: GenericArgoMenuBar.java,v 1.37 2003/10/08 18:16:27 jjones Exp $
 
 package org.argouml.ui.menubar;
 
@@ -494,12 +494,12 @@ public class GenericArgoMenuBar extends JMenuBar
         //create.add(Actions.CreateMultiple);
         //create.addSeparator();
 
-	// ------------------------------------- Create Diagrams Menu
+	// ------------------------------------- Create Menu
 		
         _createDiagrams =
 	    (JMenu) add(new JMenu(menuLocalize("Create Diagram")));
         setMnemonic(_createDiagrams, "Create Diagram", 'C');
-        _createDiagramToolbar = new ToolBar("Create Diagram Toolbar");
+        _createDiagramToolbar = new ToolBar("Create Toolbar");
         _createDiagramToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         JMenuItem classDiagram = _createDiagrams.add(ActionClassDiagram.SINGLETON);
         setMnemonic(classDiagram, "Class Diagram", 'C');
