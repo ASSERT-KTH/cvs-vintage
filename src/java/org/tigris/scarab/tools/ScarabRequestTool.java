@@ -1318,7 +1318,7 @@ try{
     }
 
     /**
-     * Get a new SearchIssue object. 
+     * Get a new IssueSearch object. 
      *
      * @return a <code>Issue</code> value
      */
