@@ -58,7 +58,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will allow you to set the selected project for a user.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: SetSelectedProject.java,v 1.5 2001/07/17 21:40:27 jon Exp $
+    @version $Id: SetSelectedProject.java,v 1.6 2001/08/24 23:41:32 jon Exp $
 */
 public class SetSelectedProject extends TemplateAction
 {
@@ -67,7 +67,7 @@ public class SetSelectedProject extends TemplateAction
     */
     public void doSelect( RunData data, TemplateContext context ) throws Exception
     {
-        data.getParameters().add (ScarabConstants.CURRENT_PROJECT, 
+        data.getParameters().add (ScarabConstants.CURRENT_MODULE, 
             data.getParameters().getString(ScarabConstants.PROJECT_CHANGE_BOX, "-1"));
     }
     /**
