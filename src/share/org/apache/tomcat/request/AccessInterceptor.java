@@ -329,6 +329,7 @@ class SecurityConstraints {
 }
 
 class BasicAuthHandler extends Handler {
+    int sbNote=0;
     
     BasicAuthHandler() {
 	initialized=true;
@@ -349,22 +350,24 @@ class BasicAuthHandler extends Handler {
 	// and notify the user they are not authorized if BasicAuth fails
         res.setContentType("text/html");        // ISO-8859-1 default  
 
-        StringBuffer buf = new StringBuffer();
+	if( sbNote==0 ) {
+	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
+						     "BasicAuthHandler.buff");
+	}
+
+	// we can recycle it because
+	// we don't call toString();
+	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	if( buf==null ) {
+	    buf = new StringBuffer();
+	    req.setNote( sbNote, buf );
+	}
  
         buf.append("<html><head><title>Not Authorized</title></head>");
         buf.append("<body>Not Authorized</body></html>");
-        String body = buf.toString(); 
+
         res.setContentLength(buf.length());
- 
-        if( res.isUsingStream() ) {
-            ServletOutputStream out = res.getOutputStream(); 
-            out.print(body);
-            out.flush();   
-        } else {
-            PrintWriter out = res.getWriter();
-            out.print(body);
-            out.flush();
-        }
+	res.getBuffer().write( buf );
     }
 }
 

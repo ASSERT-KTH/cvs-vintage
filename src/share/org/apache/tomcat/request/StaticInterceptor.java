@@ -270,24 +270,13 @@ class FileHandler extends Handler  {
 	try {
 	    in = new FileInputStream(file);
 
-	    if( res.isUsingWriter() ) {
-		InputStreamReader r = new InputStreamReader(in);
-		PrintWriter out=res.getWriter();
-		char[] buf = new char[1024];
-		int read = 0;
-		
-		while ((read = r.read(buf)) != -1) {
-		    out.write(buf, 0, read);
-		}
-	    } else {
-		OutputStream out=res.getOutputStream();
-		byte[] buf = new byte[1024];
-		int read = 0;
-		
-		while ((read = in.read(buf)) != -1) {
-		    out.write(buf, 0, read);
-		}
-	    } 
+	    OutputBuffer out=res.getBuffer();
+	    byte[] buf = new byte[1024];
+	    int read = 0;
+	    
+	    while ((read = in.read(buf)) != -1) {
+		out.write(buf, 0, read);
+	    }
 	} catch (FileNotFoundException e) {
 	    // Figure out what we're serving
 	    context.getContextManager().handleStatus( req, res, 404);
@@ -342,6 +331,7 @@ class FileHandler extends Handler  {
 class DirHandler extends Handler  {
     private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
     int realFileNote;
+    int sbNote=0;
     
     DirHandler() {
 	initialized=true;
@@ -385,8 +375,19 @@ class DirHandler extends Handler  {
 		}
 	}
 
-	StringBuffer buf = new StringBuffer();
-	
+		if( sbNote==0 ) {
+	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
+						     "RedirectHandler.buff");
+	}
+
+	// we can recycle it because
+	// we don't call toString();
+	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	if( buf==null ) {
+	    buf = new StringBuffer();
+	    req.setNote( sbNote, buf );
+	}
+
 	if (! inInclude) {
 	    res.setContentType("text/html");
 	    buf.append("<html>\r\n");
@@ -538,13 +539,8 @@ class DirHandler extends Handler  {
 	
 	if (! inInclude)  buf.append("</body></html>\r\n");
 
-	if( res.isUsingWriter() ) {
-	    PrintWriter out=res.getWriter();
-	    out.print(buf);
-	} else {
-	    ServletOutputStream out=res.getOutputStream();
-	    out.print(buf.toString());
-	}
+	res.getBuffer().write(buf);
+	buf.setLength(0);
     }
 
     void displaySize( StringBuffer buf, int filesize ) {

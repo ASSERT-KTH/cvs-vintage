@@ -340,11 +340,6 @@ public interface Request  {
     /** This is the top request ( for a sub-request )
      */
     public Request getTop();
-    // -------------------- Buffers --------------------
-
-    //    public ByteBuffer getInputBuffer();
-
-    //    public void setInputBuffer(ByteBuffer buf);
 
     // -------------------- Notes --------------------
     /** Add a per/request internal attribute.

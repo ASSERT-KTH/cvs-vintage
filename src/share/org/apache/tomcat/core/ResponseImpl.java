@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.37 2000/08/02 02:17:12 costin Exp $
- * $Revision: 1.37 $
- * $Date: 2000/08/02 02:17:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.38 2000/08/11 06:14:07 costin Exp $
+ * $Revision: 1.38 $
+ * $Date: 2000/08/11 06:14:07 $
  *
  * ====================================================================
  *
@@ -209,11 +209,12 @@ public class ResponseImpl implements Response {
     }
 
     public void finish() throws IOException {
-	if (usingWriter && (writer != null)) {
-	    writer.flush();
-	    writer.close();
-	}
-	oBuffer.flush();
+	// 	if (usingWriter && (writer != null)) {
+	// 	    writer.flush();
+	// 	    writer.close();
+	// 	}
+	oBuffer.flushChars();
+	oBuffer.flushBytes();
 
 	// 	if( bBuffer != null) {
 	// 	    bBuffer.flush();
@@ -252,59 +253,61 @@ public class ResponseImpl implements Response {
 	//	if( out!=null ) out.setUsingWriter(true);
     }
 
-    public void setWriter( PrintWriter w ) {
-	this.writer=w;
-    }
+//     public void setWriter( PrintWriter w ) {
+// 	this.writer=w;
+//     }
     
-    public PrintWriter getWriter() throws IOException {
-	// usingWriter
-	if( writer != null )
-	    return writer;
+//     public PrintWriter getWriter() throws IOException {
+// 	// usingWriter
+// 	if( writer != null )
+// 	    return writer;
 
-	sos=getFacade().getOutputStream();
+// 	sos=getFacade().getOutputStream();
 	    
-	writer=getWriter( sos );
+// 	writer=getWriter( sos );
 
-	return writer;
+// 	return writer;
    
-	// 	if( out !=null )
-	// 	    return getWriter( out );
+// 	// 	if( out !=null )
+// 	// 	    return getWriter( out );
 	
-	// it will know what to do. This method is here
-	// just to keep old code happy ( internal error handlers)
-	//if( usingStream ) {
-	//    return getWriter( getFacade().getOutputStream());
-	//}
-	//return getFacade().getWriter();
-    }
+// 	// it will know what to do. This method is here
+// 	// just to keep old code happy ( internal error handlers)
+// 	//if( usingStream ) {
+// 	//    return getWriter( getFacade().getOutputStream());
+// 	//}
+// 	//return getFacade().getWriter();
+//     }
 
-    public PrintWriter getWriter(ServletOutputStream outs) throws IOException {
-	if(writer!=null) return writer;
-	// it already did all the checkings
+//     public PrintWriter getWriter(ServletOutputStream outs) throws IOException {
 	
-	started = true;
-	usingWriter = true;
+// 	if(writer!=null) return writer;
+// 	// it already did all the checkings
 	
-	writer = new ServletWriterFacade( getConverter(outs), this);
-	return writer;
-    }
+// 	started = true;
+// 	usingWriter = true;
+	
+// 	//	writer = new ServletWriterFacade( getConverter(outs), this);
+// 	writer = new ServletWriterFacade( oBuffer, this);
+// 	return writer;
+//     }
 
-    public Writer getConverter( ServletOutputStream outs ) throws IOException {
-	String encoding = getCharacterEncoding();
+//     public Writer getConverter( ServletOutputStream outs ) throws IOException {
+// 	String encoding = getCharacterEncoding();
 
-	if (encoding == null) {
-	    // use default platform encoding - is this correct ? 
-	    return  new OutputStreamWriter(outs);
-        }  else {
-	    try {
-		return  new OutputStreamWriter(outs, encoding);
-	    } catch (java.io.UnsupportedEncodingException ex) {
-		log("Unsuported encoding: " + encoding, Logger.ERROR );
+// 	if (encoding == null) {
+// 	    // use default platform encoding - is this correct ? 
+// 	    return  new OutputStreamWriter(outs);
+//         }  else {
+// 	    try {
+// 		return  new OutputStreamWriter(outs, encoding);
+// 	    } catch (java.io.UnsupportedEncodingException ex) {
+// 		log("Unsuported encoding: " + encoding, Logger.ERROR );
 
-		return new OutputStreamWriter(outs);
-	    }
-	}
-    }
+// 		return new OutputStreamWriter(outs);
+// 	    }
+// 	}
+//     }
 
     public OutputBuffer getBuffer() {
 	return oBuffer;
@@ -347,14 +350,22 @@ public class ResponseImpl implements Response {
 
     public void setHeader(String name, String value) {
 	if( ! notIncluded ) return; // we are in included sub-request
-	if( ! checkSpecialHeader(name, value) ) 
-	    headers.putHeader(name, value);
+	char cc=name.charAt(0);
+	if( cc=='C' || cc=='c' ) {
+	    if( checkSpecialHeader(name, value) )
+		return;
+	}
+	headers.putHeader(name, value);
     }
 
     public void addHeader(String name, String value) {
 	if( ! notIncluded ) return; // we are in included sub-request
-	if( ! checkSpecialHeader(name, value) ) 
-	    headers.addHeader(name, value);
+	char cc=name.charAt(0);
+	if( cc=='C' || cc=='c' ) {
+	    if( checkSpecialHeader(name, value) )
+		return;
+	}
+	headers.addHeader(name, value);
     }
 
     
@@ -471,10 +482,11 @@ public class ResponseImpl implements Response {
 
     public void flushBuffer() throws IOException {
 	//	if( notIncluded) {
-	if (usingWriter == true && writer != null)
-	    writer.flush();
+	// 	if (usingWriter == true && writer != null)
+	// 	    writer.flush();
 
-	oBuffer.flush();
+	oBuffer.flushChars();
+	oBuffer.flushBytes();
 	// 	if( out!=null ) out.reallyFlush();
 	// 	if(bBuffer!=null) bBuffer.flush();
 	    //} 
@@ -634,6 +646,8 @@ public class ResponseImpl implements Response {
 
     static String st_200=null;
     static String st_302=null;
+    static String st_400=null;
+    static String st_404=null;
     
     // utility method - should be in a different class
     public static String getMessage( int status ) {
@@ -647,6 +661,12 @@ public class ResponseImpl implements Response {
 	case 302:
 	    if( st_302==null ) st_302=sm.getString( "sc.302");
 	    return st_302;
+	case 400:
+	    if( st_400==null ) st_400=sm.getString( "sc.400");
+	    return st_400;
+	case 404:
+	    if( st_404==null ) st_404=sm.getString( "sc.404");
+	    return st_404;
 	}
 	return sm.getString("sc."+ status);
     }

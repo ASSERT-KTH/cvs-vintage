@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.13 2000/07/31 02:35:16 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/07/31 02:35:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.14 2000/08/11 06:14:15 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/08/11 06:14:15 $
  *
  * ====================================================================
  *
@@ -134,6 +134,10 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	printHead("HTTP/1.0 ");
 	switch( status ) {
 	case 200: printHead("200");
+	    break;
+	case 400: printHead("400");
+	    break;
+	case 404: printHead("404");
 	    break;
 	    
 	default:

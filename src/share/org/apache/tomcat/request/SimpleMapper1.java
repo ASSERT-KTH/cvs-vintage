@@ -255,7 +255,16 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    throw new RuntimeException("ASSERT: ? in requestURI");
 	
 	try {
-	    String host=req.getServerName();
+	    String host=null;
+
+// 	    MimeHeaders headers=req.getMimeHeaders();
+// 	    MimeHeaderField hostH=headers.find("host");
+	    
+	    host=req.getServerName();
+	    
+// 	    if( hostH==null ) host=req.getLocalHost();
+// 	    if(hostH==null) host="localhost";
+	    
 	    if(debug>0) cm.log("Host = " + host);
 
 	    Container container =(Container)map.getLongestPrefixMatch(  host,

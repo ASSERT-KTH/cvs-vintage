@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.11 2000/07/29 18:44:01 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/07/29 18:44:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.12 2000/08/11 06:14:13 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/08/11 06:14:13 $
  *
  * ====================================================================
  *
@@ -264,11 +264,11 @@ class JNIRequestAdapter extends RequestImpl {
             serverPort  = Integer.parseInt(env[6]);
             authType    = env[7];
             remoteUser  = env[8];
-            scheme      = env[9];
+            schemeMB.setString(env[9]);
             protocol    = env[10];
             // response.setServerHeader(env[11]);
             
-            if(scheme.equalsIgnoreCase("https")) {
+            if(schemeMB.equalsIgnoreCase("https")) {
                 if(null != env[12]) {
 		            attributes.put("javax.servlet.request.X509Certificate",
 	                               env[12]);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.7 2000/07/29 18:44:01 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/07/29 18:44:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.8 2000/08/11 06:14:13 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/08/11 06:14:13 $
  *
  * ====================================================================
  *
@@ -179,7 +179,7 @@ public class Ajp13ConnectorRequest extends RequestImpl
                 break;
 
                 case SC_A_SERVLET_PATH :
-                    log("SC_A_SERVLET_PATH not in use " + msg.getString());
+                    //log("SC_A_SERVLET_PATH not in use " + msg.getString());
                 break;
 
                 case SC_A_REMOTE_USER  :
@@ -261,7 +261,6 @@ public class Ajp13ConnectorRequest extends RequestImpl
         for(int i = off ; i < (len + off) ; i++) {
             int a = doRead();
             if(-1 == a) {
-                log("Y");
                 return i-off;
             }
             b[i] = (byte)a;

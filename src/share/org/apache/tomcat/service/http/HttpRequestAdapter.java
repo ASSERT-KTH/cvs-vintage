@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.21 2000/07/29 18:44:03 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2000/07/29 18:44:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.22 2000/08/11 06:14:15 costin Exp $
+ * $Revision: 1.22 $
+ * $Date: 2000/08/11 06:14:15 $
  *
  * ====================================================================
  *
@@ -344,6 +344,7 @@ public class HttpRequestAdapter extends RequestImpl {
 	return -1;
     }
 
+    
     private void processRequestLine(Response response)
 	throws IOException
     {
@@ -372,34 +373,61 @@ public class HttpRequestAdapter extends RequestImpl {
 	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	    return;
 	}
-	
-	method= new String( buf, startMethod, endMethod - startMethod );
 
+	methodMB.setBytes( buf, startMethod, endMethod - startMethod );
+	method=null;
+	if( Ascii.toLower( buf[startMethod]) == 'g' ) {
+	    if( methodMB.equalsIgnoreCase( "get" ))
+		method="GET";
+	}
+	if( Ascii.toLower( buf[startMethod]) == 'p' ) {
+	    if( methodMB.equalsIgnoreCase( "post" ))
+		method="POST";
+	    if( methodMB.equalsIgnoreCase( "put" ))
+		method="PUT";
+	}
+
+	if( method==null )
+	    method= new String( buf, startMethod, endMethod - startMethod );
+
+	protocol=null;
 	if( endReq < 0 ) {
-	    protocol=null;
 	    endReq=count;
 	} else {
 	    if( endProto < 0 ) endProto = count;
-	    protocol=new String( buf, startProto, endProto-startProto );
+	    protoMB.setBytes( buf, startProto, endProto-startProto);
+	    if( protoMB.equalsIgnoreCase( "http/1.0" ))
+		protocol="HTTP/1.0";
+	    if( protoMB.equalsIgnoreCase( "http/1.1" ))
+		protocol="HTTP/1.1";
+	    
+	    if( protocol==null) 
+		protocol=new String( buf, startProto, endProto-startProto );
 	}
 
 	int qryIdx= findChar( '?', startReq, endReq );
 	if( qryIdx <0 ) {
-	    requestURI = new String( buf, startReq, endReq - startReq );
+	    uriMB.setBytes(buf, startReq, endReq - startReq );
+	    //= new String( buf, startReq, endReq - startReq );
 	} else {
-	    requestURI = new String( buf, startReq, qryIdx - startReq );
-	    queryString = new String( buf, qryIdx+1, endReq - qryIdx -1 );
+	    uriMB.setBytes( buf, startReq, qryIdx - startReq );
+	    queryMB.setBytes( buf, qryIdx+1, endReq - qryIdx -1 );
 	}
 
+	// temp. fix until the rest of the code is changed
+	requestURI=uriMB.toString();
+	queryString=queryMB.toString();
+
 	// Perform URL decoding only if necessary
-	if ((requestURI != null) &&
-	    ((requestURI.indexOf('%') >= 0) || (requestURI.indexOf('+') >= 0))) {
+	if ((uriMB.indexOf('%') >= 0) || (uriMB.indexOf('+') >= 0)) {
 
 	    try {
-		    requestURI = RequestUtil.URLDecode(requestURI);
+		// XXX rewrite URLDecode to avoid allocation
+		requestURI = uriMB.toString();
+		requestURI = RequestUtil.URLDecode(requestURI);
 	    } catch (Exception e) {
-		    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		    return;
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return;
 	    }
 	}
 

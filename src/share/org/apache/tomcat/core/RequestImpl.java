@@ -83,52 +83,63 @@ import javax.servlet.http.*;
  */
 public class RequestImpl  implements Request {
 
+    protected int serverPort;
+    protected String remoteAddr;
+    protected String remoteHost;
+    protected String localHost;
+
+    // Request components represented as MB.
+    // MB are also used for headers - it allows lazy
+    // byte->char conversion so we can add the encoding
+    // that is known only after header parsing. Work in progress.
+    protected MessageBytes schemeMB=new MessageBytes();
+    protected MessageBytes methodMB=new MessageBytes();
+    protected MessageBytes uriMB=new MessageBytes();
+    protected MessageBytes queryMB=new MessageBytes();
+    protected MessageBytes protoMB=new MessageBytes();
+    // uri components
+    protected MessageBytes contextMB=new MessageBytes();
+    protected MessageBytes servletPathMB=new MessageBytes();
+    protected MessageBytes pathInfoMB=new MessageBytes();
+
     // GS, used by the load balancing layer in the Web Servers
     // jvmRoute == the name of the JVM inside the plugin.
     protected String jvmRoute;
 
-    // XXX used by forward to override, need a better
-    // mechanism
-    protected String requestURI;
-    protected String queryString;
-
-   //  RequestAdapterImpl Hints
-    protected String serverName=null;
+    protected Hashtable attributes = new Hashtable();
+    protected MimeHeaders headers;
     protected Vector cookies = new Vector();
 
-    protected String contextPath;
-    protected String lookupPath; // everything after contextPath before ?
-    protected String servletPath;
-    protected String pathInfo;
-    protected String pathTranslated;
-    // Need to distinguish between null pathTranslated and
-    // lazy-computed pathTranlsated
-    protected boolean pathTranslatedIsSet=false;
-
+    // Processed information ( redundant ! )
     protected Hashtable parameters = new Hashtable();
+
+
     protected int contentLength = -1;
     protected String contentType = null;
     protected String charEncoding = null;
+    protected String serverName=null;
+
+    // auth infor
     protected String authType;
     boolean notAuthenticated=true;
     protected String remoteUser;
-
     protected Principal principal;
     // active roles for the current user
     protected String userRoles[];
     protected String reqRoles[];
 
-    // Request
+    // Association with other tomcat comp.
     protected Response response;
-    protected HttpServletRequest requestFacade;
-    protected Context context;
     protected ContextManager contextM;
-    protected Hashtable attributes = new Hashtable();
+    protected Context context;
 
     protected boolean didReadFormData;
     protected boolean didParameters;
     protected boolean didCookies;
     // end "Request" variables
+
+    // @deprecated
+    protected HttpServletRequest requestFacade;
 
     // Session
     // set by interceptors - the session id
@@ -137,42 +148,52 @@ public class RequestImpl  implements Request {
     // cache- avoid calling SessionManager for each getSession()
     protected HttpSession serverSession;
 
-
-    // LookupResult - used by sub-requests and
-    // set by interceptors
-    protected String servletName;
     protected Handler handler = null;
     Container container;
 
-    protected String mappedPath = null;
-
-    protected String scheme;
-    protected String method;
-    protected String protocol;
-    protected MimeHeaders headers;
     protected ServletInputStream in;
 
-    protected int serverPort;
-    protected String remoteAddr;
-    protected String remoteHost;
-    protected String localHost;
-    protected ByteBuffer bBuffer;
-
+    // sub-request support 
     Request top;
     Request parent;
     Request child;
 
+    // ResourceBundle
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
 
+    // @deprecated
+    protected String method;
+    protected String requestURI;
+    protected String queryString;
+    protected String protocol;
+    protected String servletName;
+    
+    protected String mappedPath = null;
+    protected String contextPath;
+    protected String lookupPath; // everything after contextPath before ?
+    protected String servletPath;
+    protected String pathInfo;
+    protected String pathTranslated;
+    // Need to distinguish between null pathTranslated and
+    // lazy-computed pathTranlsated
+    protected boolean pathTranslatedIsSet=false;
+    
     public RequestImpl() {
-	//	log("XXX new ri " );
  	headers = new MimeHeaders();
  	recycle(); // XXX need better placement-super()
     }
 
+    /** Called by mapper interceptors after the context
+	is found or directly by server adapters when
+	this is known in advance
+    */
     public void setContext(Context context) {
 	this.context = context;
+    }
+
+    public Context getContext() {
+	return context;
     }
 
     public void setContextManager( ContextManager cm ) {
@@ -183,8 +204,16 @@ public class RequestImpl  implements Request {
 	return contextM;
     }
 
+    public MessageBytes getSchemeMB() {
+	return schemeMB;
+    }
+
     public String getScheme() {
-        return scheme;
+        return schemeMB.toString();
+    }
+
+    public void setScheme( String scheme ) {
+	schemeMB.setString(scheme);
     }
 
     public String getMethod() {
@@ -294,6 +323,7 @@ public class RequestImpl  implements Request {
 	return contentType;
     }
 
+
     /** All adapters that know the PT needs to call this method,
 	in order to set pathTranslatedIsSet, otherwise tomcat
 	will try to compute it again
@@ -347,7 +377,7 @@ public class RequestImpl  implements Request {
 
     public boolean isSecure() {
 	// The adapter is responsible for providing this information
-        return getScheme().equalsIgnoreCase("HTTPS");
+        return schemeMB.equalsIgnoreCase("HTTPS");
     }
 
     public void setUserPrincipal( Principal p ) {
@@ -414,10 +444,6 @@ public class RequestImpl  implements Request {
 	return requestFacade;
     }
 
-    public Context getContext() {
-	return context;
-    }
-
     public void setResponse(Response response) {
 	this.response = response;
     }
@@ -468,7 +494,7 @@ public class RequestImpl  implements Request {
 	//	context.log("RequestImpl:  created new session!");
 	contextM.doNewSessionRequest( this, response );
 	if ( serverSession == null ) {
-	    log("RequestImpl: no session created!");
+	    //	    context.log("RequestImpl: no session created!");
 	    return null;
 	}
 
@@ -712,7 +738,6 @@ public class RequestImpl  implements Request {
         container=null;
         handler=null;
         jvmRoute = null;
-        scheme = "http";// no need to use Constants
         method = "GET";
         requestURI="/";
         queryString=null;
@@ -730,7 +755,6 @@ public class RequestImpl  implements Request {
         remoteAddr="127.0.0.1";
         remoteHost="localhost";
         localHost="localhost";
-	if( bBuffer != null ) bBuffer.recycle();
         for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
 	parent=null;
@@ -740,6 +764,16 @@ public class RequestImpl  implements Request {
 	userRoles=null;
 	reqRoles=null;
 	in=null;
+
+	uriMB.recycle();
+	contextMB.recycle();
+	pathInfoMB.recycle();
+	servletPathMB.recycle();
+	queryMB.recycle();
+	methodMB.recycle();
+	protoMB.recycle();
+        schemeMB.setString("http");
+
     }
 
     public MimeHeaders getMimeHeaders() {
@@ -753,15 +787,6 @@ public class RequestImpl  implements Request {
     public Enumeration getHeaderNames() {
         return headers.names();
     }
-
-    public ByteBuffer getInputBuffer() {
-	return bBuffer;
-    }
-
-    public void setInputBuffer(ByteBuffer buf) {
-	bBuffer=buf;
-    }
-
 
     public ServletInputStream getInputStream() throws IOException {
 	// will be removed from here
@@ -815,10 +840,6 @@ public class RequestImpl  implements Request {
 	return null;
     }
 
-    public void setScheme( String scheme ) {
-	this.scheme=scheme;
-    }
-
     public void setMethod( String method ) {
 	this.method=method;
     }
@@ -829,10 +850,6 @@ public class RequestImpl  implements Request {
 
     public void setMimeHeaders( MimeHeaders headers ) {
 	this.headers=headers;
-    }
-
-    public void setBody( StringBuffer body ) {
-	// ???
     }
 
     public void setServerPort(int serverPort ) {
@@ -872,18 +889,6 @@ public class RequestImpl  implements Request {
 	return sb.toString();
     }
 
-    public String toStringDebug() {
-	StringBuffer sb=new StringBuffer();
-	sb.append( "Request( " + context ).append("\n");
-	sb.append( "    URI:" + getRequestURI()  ).append("\n");
-	sb.append( "    SP:" + getServletPath() );
-	sb.append( ",PI:" + getPathInfo() );
-	sb.append( ",LP:" + getLookupPath() );
-	sb.append( ",MP:" + getMappedPath() );
-	sb.append( "," + getWrapper() +") ");
-	return sb.toString();
-    }
-
     // -------------------- Accounting --------------------
     // XXX Will be implemented as a note !
     public static final int ACC_PRE_CMAP=0;
@@ -905,7 +910,7 @@ public class RequestImpl  implements Request {
 	return accTable[pos];
     }
 
-    // -------------------- Per-Container "notes"
+    // -------------------- Per-Request "notes"
     Object notes[]=new Object[ContextManager.MAX_NOTES];
 
     public void setNote( int pos, Object value ) {
@@ -916,19 +921,4 @@ public class RequestImpl  implements Request {
 	return notes[pos];
     }
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
-    
-    protected void log(String s) {
-	log(s, null);
-    }
-    protected void log(String s, Throwable t) {
-	if (context != null) {
-	    loghelper.setLogger(context.getLoggerHelper().getLogger());
-	}
-	else if (contextM != null) {
-	    loghelper.setLogger(contextM.getLoggerHelper().getLogger());
-	}
-	loghelper.log(s);
-    }		       
-    
 }

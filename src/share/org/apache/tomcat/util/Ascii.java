@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Ascii.java,v 1.4 2000/05/24 18:57:10 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/24 18:57:10 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -61,7 +57,6 @@
  *
  */ 
 
-
 package org.apache.tomcat.util;
 
 /**
@@ -70,10 +65,7 @@ package org.apache.tomcat.util;
  * @author dac@eng.sun.com
  * @author James Todd [gonzo@eng.sun.com]
  */
-
-public class Ascii {
-    static StringManager sm =
-	StringManager.getManager("org.apache.tomcat.util");
+public final class Ascii {
     /*
      * Character translation tables.
      */
@@ -187,26 +179,20 @@ public class Ascii {
      * @param len the length of the bytes
      * @exception NumberFormatException if the integer format was invalid
      */
-
     public static int parseInt(byte[] b, int off, int len)
 	throws NumberFormatException
     {
         int c;
 
 	if (b == null || len <= 0 || !isDigit(c = b[off++])) {
-            String msg = sm.getString("ascii.parseInit.nfe", b);
-	    throw new NumberFormatException(msg);
+	    throw new NumberFormatException();
 	}
 
 	int n = c - '0';
 
 	while (--len > 0) {
 	    if (!isDigit(c = b[off++])) {
-                StringManager sm =
-                    StringManager.getManager("org.apache.tomcat.util");
-                String msg = sm.getString("ascii.parseInit.nfe", b);
-
-		throw new NumberFormatException(msg);
+		throw new NumberFormatException();
 	    }
 	    n = n * 10 + c - '0';
 	}
@@ -214,31 +200,29 @@ public class Ascii {
 	return n;
     }
 
-    /**
-     * Compares this message string to the specified subarray of bytes.
-     * Case is ignored in the comparison.
-     * @param b the bytes to compare
-     * @param off the start offset of the bytes
-     * @param len the length of the bytes
-     * @return true if the comparison succeeded, false otherwise
-     */
-    public static boolean equalsIgnoreCase(String str, MessageBytes mB ) {
-	byte[] b=mB.getBytes();
-	int off=mB.getOffset();
-	int len=mB.getLength();
-	if (str != null) {
-	    String s = str;
-	    if (len != s.length()) {
-		return false;
-	    }
-	    for (int i = 0; i < len; i++) {
-		if (Ascii.toLower(b[off++]) != Ascii.toLower(s.charAt(i))) {
-		    return false;
-		}
-	    }
-	    return true;
+    public static int parseInt(char[] b, int off, int len)
+	throws NumberFormatException
+    {
+        int c;
+
+	if (b == null || len <= 0 || !isDigit(c = b[off++])) {
+	    throw new NumberFormatException();
 	}
-	return false;
+
+	int n = c - '0';
+
+	while (--len > 0) {
+	    if (!isDigit(c = b[off++])) {
+		throw new NumberFormatException();
+	    }
+	    n = n * 10 + c - '0';
+	}
+
+	return n;
+    }
+
+    public static boolean equalsIgnoreCase(String str, MessageBytes mB ) {
+	return mB.equalsIgnoreCase( str );
     }
 
 

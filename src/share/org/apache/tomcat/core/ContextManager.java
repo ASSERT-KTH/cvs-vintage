@@ -640,7 +640,7 @@ public class ContextManager implements LogAware {
 	    if( status >= 400 ) {
 		if( debug > 0)
 		    log( "Error reading request " + req + " " + status);
-		handleStatus( req, res, status );
+		handleStatus( req, res, status ); 
 		return;
 	    }
 

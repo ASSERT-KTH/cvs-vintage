@@ -80,56 +80,34 @@ import javax.servlet.ServletOutputStream;
 // XXX hack - public will be removed after we add the CharBuffer and we fix the converter
 public final class ServletWriterFacade extends PrintWriter {
     Response resA;
-    RequestImpl req;
-    static final boolean ACCT=false;// a smart compiler will remove all in/out
+    OutputBuffer ob;
     
-    public ServletWriterFacade( Writer w, Response resp ) {
-	super( w );
+    public ServletWriterFacade( OutputBuffer ob, Response resp ) {
+	super( ob );
 	this.resA=resp;
-	req=(RequestImpl)resA.getRequest();
+	this.ob=ob;
     }
 
     // -------------------- Write methods --------------------
 
     public void flush() {
-	if( ACCT ) in();
 	super.flush();
-	if( ACCT ) out();
     }
 
     public void print( String str ) {
-	if( ACCT ) in();
 	super.print( str );
-	if( ACCT ) out(); 
    }
 
     public void println( String str ) {
-	if( ACCT ) in();
 	super.println( str );
-	if( ACCT ) out(); 
    }
 
     public void write( char buf[], int offset, int count ) {
-	if( ACCT ) in();
 	super.write( buf, offset, count );
-	if( ACCT ) out();
     }
 
     public void write( String str ) {
-	if( ACCT ) in();
 	super.write( str );
-	if( ACCT ) out();
-    }
-
-    private void in() {
-	req.setAccount( RequestImpl.ACC_IN_OUT, System.currentTimeMillis() );
-    }
-
-    private void out() {
-	long l=System.currentTimeMillis();
-	long l1=req.getAccount( RequestImpl.ACC_IN_OUT);
-	long l3=req.getAccount( RequestImpl.ACC_OUT_COUNT);
-	req.setAccount( RequestImpl.ACC_OUT_COUNT, l - l1 + l3 );
     }
 
     /** Reuse the object instance, avoid GC

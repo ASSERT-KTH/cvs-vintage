@@ -70,18 +70,10 @@ import org.apache.tomcat.core.Constants;
  * 
  */
 final class ServletOutputStreamFacade extends ServletOutputStream {
-    // Use the strings from core
-    protected StringManager sm = StringManager.
-	getManager("org.apache.tomcat.core");
-
-    // encoding
-    private Writer writer=null;
-    
     protected boolean closed = false;
 
     Response resA;
     OutputBuffer ob;
-    //ByteBuffer bb;
     
     /** Encoding - first time print() is used.
 	IMPORTANT: print() is _bad_, if you want to write Strings and mix
@@ -96,15 +88,12 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     protected ServletOutputStreamFacade( Response resA) {
 	this.resA=resA;
 	ob=resA.getBuffer();
-	// 	bb=resA.getOutputBuffer();
-	// 	bb.addBufferListener( new  BufferResponseAdapter());
     }
 
     // -------------------- Write methods --------------------
     
     public void write(int i) throws IOException {
-	//	bb.write(i);
-	ob.write(i);
+	ob.writeByte(i);
     }
 
     public void write(byte[] b) throws IOException {
@@ -112,7 +101,6 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     }
     
     public void write(byte[] b, int off, int len) throws IOException {
-	//	bb.write( b, off, len );
 	ob.write( b, off, len );
     }
 
@@ -128,37 +116,36 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
 	Please use getWriter() if you want to send strings.
     */
     public void print(String s) throws IOException {
-	if (s==null) s="null";
-	byte b[]=null;
-	if( !gotEnc ) {
-	    enc = resA.getCharacterEncoding();
-	    gotEnc=true;
-	    if ( Constants.DEFAULT_CHAR_ENCODING.equals(enc) )
-		enc=null;
-	}
-	if( enc==null) 
-	    b=s.getBytes();
-	else 
-	    try {
-		b=s.getBytes( enc );
-	    } catch (java.io.UnsupportedEncodingException ex) {
-		b=s.getBytes();
-		enc=null;
-	    } 
+// 	if (s==null) s="null";
+// 	byte b[]=null;
+// 	if( !gotEnc ) {
+// 	    enc = resA.getCharacterEncoding();
+// 	    gotEnc=true;
+// 	    if ( Constants.DEFAULT_CHAR_ENCODING.equals(enc) )
+// 		enc=null;
+// 	}
+// 	if( enc==null) 
+// 	    b=s.getBytes();
+// 	else 
+// 	    try {
+// 		b=s.getBytes( enc );
+// 	    } catch (java.io.UnsupportedEncodingException ex) {
+// 		b=s.getBytes();
+// 		enc=null;
+// 	    } 
 	
-	write( b );
+// 	write( b );
+	ob.write(s);
     } 
 
     /** Will send the buffer to the client.
      */
     public void flush() throws IOException {
-	//	bb.flush(); // send it now !
-	ob.flush();
+	ob.flushBytes();
     }
 
     public void close() throws IOException {
-	//	bb.flush(); // send it now !
-	ob.flush();
+	ob.flushBytes();
 	closed = true;
     }
 
@@ -166,40 +153,9 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
      *  Called from BSOS
      */
     void recycle() {
-	writer=null;
 	closed = false;
 	enc=null;
 	gotEnc=false;
     }
-
-//     // -------------------- ByteBuffer
-//     // Initial experimental support - this will change.
-//     // This is an adapter between ByteBuffer and server adapters implementing
-//     // doWrite
-//     class BufferResponseAdapter implements BufferListener {
-// 	BufferResponseAdapter() {
-// 	}
-
-// 	public void bufferEmpty( BufferEvent ev ) {
-// 	    return;
-// 	}
-    
-// 	public void bufferFull( BufferEvent ev ) {
-// 	    try {
-// 		// Find if this is the first chunk , if so do send head 
-// 		//	    log( "Buffer full event ");
-// 		ByteBuffer bb=(ByteBuffer)ev.getSource();
-// 		Response res=(Response)bb.getParent();
-// 		Request request=res.getRequest();
-// 		request.getContextManager().doWrite( request, res,
-// 						     ev.getByteBuffer(),
-// 						     ev.getOffset(),
-// 						     ev.getLength() );
-// 	    } catch( IOException ex ) {
-// 		ex.printStackTrace();
-// 		// XXX mark exception ?
-// 	    }
-// 	}
-//     }
 }
 

@@ -181,6 +181,12 @@ class AJP12RequestAdapter extends RequestImpl {
     boolean isPing=false;
     boolean doLog;
 
+    // Debug only - use only to debug this component
+    void d( String s ) {
+	System.out.print("Ajp12RequestAdapter: ");
+	System.out.println( s );
+    }
+    
     public int doRead() throws IOException {
 	return ajpin.read();
     }
@@ -233,55 +239,55 @@ class AJP12RequestAdapter extends RequestImpl {
 		    // combination to hang with a 404!!!
 		    // if("ROOT".equals( contextPath ) ) contextPath="";
 		    if("ROOT".equalsIgnoreCase( contextPath ) ) contextPath=null;
-		    if( doLog ) log("AJP: CP=" + contextPath);
+		    if( doLog ) d("AJP: CP=" + contextPath);
 		    
 		    if( contextPath!= null )
 			context=contextM.getContext( contextPath );
-		    if( doLog ) log("AJP: context=" + context );
+		    if( doLog ) d("AJP: context=" + context );
 		    
 		    servletName = readString(ajpin, null);         //Servlet
-		    if( doLog ) log("AJP: servlet=" + servletName );
+		    if( doLog ) d("AJP: servlet=" + servletName );
 		    
 		    serverName = readString(ajpin, null);            //Server hostname
-		    if( doLog ) log("AJP: serverName=" + serverName );
+		    if( doLog ) d("AJP: serverName=" + serverName );
 		    
 		    dummy = readString(ajpin, null);               //Apache document root
 		    
 		    pathInfo = readString(ajpin, null);               //Apache parsed path-info
-		    if( doLog ) log("AJP: PI=" + pathInfo );
+		    if( doLog ) d("AJP: PI=" + pathInfo );
 		    
 		    // XXX Bug in mod_jserv !!!!!
 		    pathTranslated = readString(ajpin, null);               //Apache parsed path-translated
-		    if( doLog ) log("AJP: PT=" + pathTranslated );
+		    if( doLog ) d("AJP: PT=" + pathTranslated );
 		    
 		    queryString = readString(ajpin, null);         //query string
-		    if( doLog ) log("AJP: QS=" + queryString );
+		    if( doLog ) d("AJP: QS=" + queryString );
 		    
 		    remoteAddr = readString(ajpin, "");            //remote address
-		    if( doLog ) log("AJP: RA=" + remoteAddr );
+		    if( doLog ) d("AJP: RA=" + remoteAddr );
 		    
 		    remoteHost = readString(ajpin, "");            //remote host
-		    if( doLog ) log("AJP: RH=" + remoteHost );
+		    if( doLog ) d("AJP: RH=" + remoteHost );
 		    
 		    remoteUser = readString(ajpin, null);                 //remote user
-		    if( doLog ) log("AJP: RU=" + remoteUser);
+		    if( doLog ) d("AJP: RU=" + remoteUser);
 		    
 		    authType = readString(ajpin, null);                 //auth type
-		    if( doLog ) log("AJP: AT=" + authType);
+		    if( doLog ) d("AJP: AT=" + authType);
 		    
 		    dummy = readString(ajpin, null);                 //remote port
 		    
 		    method = readString(ajpin, null);                //request method
-		    if( doLog ) log("AJP: Meth=" + method );
+		    if( doLog ) d("AJP: Meth=" + method );
 		    
 		    requestURI = readString(ajpin, "");             //request uri
-		    if( doLog ) log("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
+		    if( doLog ) d("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 
 		    // XXX don't set lookup path - problems with URL rewriting.
 		    // need to be fixed.
 		    //		if(contextPath!=null && contextPath.length() >0 )
 		    //		    lookupPath=requestURI.substring( contextPath.length() + 1 );
-		    if( doLog ) log("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
+		    if( doLog ) d("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 		    
 		    dummy = readString(ajpin, null);                   //script filename
 		    //		System.out.println("AJP: Script filen=" + dummy);
@@ -290,7 +296,7 @@ class AJP12RequestAdapter extends RequestImpl {
 		    //		System.out.println("AJP: Script name=" + dummy);
 
 		    serverName = readString(ajpin, "");                //server name
-		    if( doLog ) log("AJP: serverName=" + serverName );
+		    if( doLog ) d("AJP: serverName=" + serverName );
 		    try {
 			serverPort = Integer.parseInt(readString(ajpin, "80")); //server port
 		    } catch (Exception any) {
@@ -307,7 +313,7 @@ class AJP12RequestAdapter extends RequestImpl {
 		    if(jvmRoute.length() == 0) {
 			jvmRoute = null;
 		    }
-		    if( doLog ) log("AJP: Server jvmRoute=" + jvmRoute);
+		    if( doLog ) d("AJP: Server jvmRoute=" + jvmRoute);
 
 
                     /**
@@ -370,7 +376,7 @@ class AJP12RequestAdapter extends RequestImpl {
 			    socket.getOutputStream().write(0); // PING reply
 			    sin.close();
 			} catch (IOException ignored) {
-			    log("Exception closing, ignored", ignored);
+			    contextM.log("Exception closing, ignored",  ignored);
 			}
                         isPing = true;
                         return;
@@ -394,7 +400,8 @@ class AJP12RequestAdapter extends RequestImpl {
 				return;
 			    }
 			} catch (Exception ignored) {
-			    log("Ignored exception processing signal " + signal, ignored);
+			    contextM.log("Ignored exception processing signal " +
+			      signal, ignored);
 			}
 		    }
 		    return;
@@ -417,21 +424,21 @@ class AJP12RequestAdapter extends RequestImpl {
 	} catch (IOException ioe) {
 	    throw ioe;
         } catch (Exception e) {
-	    log("Uncaught exception handling request", e);
+	    contextM.log("Uncaught exception handling request", e);
         }
 	
 	// REQUEST_URI includes query string
 	int indexQ=requestURI.indexOf("?");
 	int rLen=requestURI.length();
 	if ( (indexQ >-1) && ( indexQ  < rLen) ) {
-	    if(doLog) log("Orig QS " + queryString );
+	    if(doLog) d("Orig QS " + queryString );
 	    queryString = requestURI.substring(indexQ + 1, requestURI.length());
-	    if(doLog) log("New QS " + queryString );
+	    if(doLog) d("New QS " + queryString );
 	    requestURI = requestURI.substring(0, indexQ);
 	} 
 	
-	if( doLog ) log("Request: " + requestURI );
-	if( doLog ) log ("Query: " + queryString );
+	if( doLog ) d("Request: " + requestURI );
+	if( doLog ) d("Query: " + queryString );
 	// System.out.println("ENV: " + env_vars );
 	// 	System.out.println("HEADERS: " + headers_in );
 	// 	System.out.println("PARAMETERS: " + parameters );

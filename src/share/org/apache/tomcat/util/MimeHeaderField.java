@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.10 2000/06/23 02:16:29 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/06/23 02:16:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.11 2000/08/11 06:14:19 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/08/11 06:14:19 $
  *
  * ====================================================================
  *
@@ -291,7 +291,10 @@ public class MimeHeaderField {
 	case T_CHARS:
 	    return valueC.toInteger();
 	case T_BYTES:
-	    return valueB.toInteger();
+	    if(valueB.getType() == MessageBytes.T_BYTES )
+		return Ascii.parseInt(valueB.getBytes(), valueB.getOffset(),
+				      valueB.getLength());
+	    return  Integer.parseInt(valueB.toString());
 	default:
             String msg = sm.getString("mimeHeaderField.int.nfe");
 
@@ -370,7 +373,7 @@ public class MimeHeaderField {
 	case T_CHARS:
 	    return nameC.equalsIgnoreCase(s);
 	case T_BYTES:
-	    return Ascii.equalsIgnoreCase( s, nameB );
+	    return nameB.equalsIgnoreCase( s );
 	default:
 	    return false;
 	}

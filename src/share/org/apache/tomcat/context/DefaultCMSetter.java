@@ -137,7 +137,8 @@ public class DefaultCMSetter extends BaseInterceptor {
 class NotFoundHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
-
+    int sbNote=0;
+    
     NotFoundHandler() {
 	initialized=true;
 	internal=true;
@@ -156,7 +157,19 @@ class NotFoundHandler extends Handler {
 	    requestURI = req.getRequestURI();
 	}
 
-	StringBuffer buf = new StringBuffer();
+	if( sbNote==0 ) {
+	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
+						     "NotFoundHandler.buff");
+	}
+
+	// we can recycle it because
+	// we don't call toString();
+	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	if( buf==null ) {
+	    buf = new StringBuffer();
+	    req.setNote( sbNote, buf );
+	}
+	
 	buf.append("<head><title>")
 	    .append(sm.getString("defaulterrorpage.notfound404"))
 	    .append("</title></head>\r\n");
@@ -167,25 +180,17 @@ class NotFoundHandler extends Handler {
 	    .append( requestURI );
 	buf.append("</body>\r\n");
 
-	String body = buf.toString();
+	res.setContentLength(buf.length());
 
-	res.setContentLength(body.length());
-
-	if( res.isUsingStream() ) {
-	    ServletOutputStream out = res.getOutputStream();
-	    out.print(body);
-	    out.flush();
-	} else {
-	    PrintWriter out = res.getWriter();
-	    out.print(body);
-	    out.flush();
-	}
+	res.getBuffer().write( buf );
+	buf.setLength(0);
     }
 }
 
 class ExceptionHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
+    int sbNote=0;
 
     ExceptionHandler() {
 	initialized=true;
@@ -208,7 +213,18 @@ class ExceptionHandler extends Handler {
 	res.setContentType("text/html");
 	res.setStatus( 500 );
 	
-	StringBuffer buf = new StringBuffer();
+	if( sbNote==0 ) {
+	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
+						     "ExceptionHandler.buff");
+	}
+
+	// we can recycle it because
+	// we don't call toString();
+	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	if( buf==null ) {
+	    buf = new StringBuffer();
+	    req.setNote( sbNote, buf );
+	}
 	buf.append("<h1>");
 	if( res.isIncluded() ) {
 	    buf.append(sm.getString("defaulterrorpage.includedservlet") ).
@@ -240,19 +256,15 @@ class ExceptionHandler extends Handler {
 	
 	buf.append("\r\n");
 	
-	if( res.isUsingStream() ) {
-	    ServletOutputStream out = res.getOutputStream();
-	    out.print(buf.toString());
-	} else {
-	    PrintWriter out = res.getWriter();
-	    out.print(buf.toString());
-	}
+	res.getBuffer().write( buf );
+	buf.setLength(0);
     }
 }
 
 class StatusHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
+    int sbNote=0;
 
     StatusHandler() {
 	initialized=true;
@@ -272,7 +284,18 @@ class StatusHandler extends Handler {
 	// status is already set
 	int sc=res.getStatus();
 	
-	StringBuffer buf = new StringBuffer();
+	if( sbNote==0 ) {
+	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
+						     "StatusHandler.buff");
+	}
+
+	// we can recycle it because
+	// we don't call toString();
+	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	if( buf==null ) {
+	    buf = new StringBuffer();
+	    req.setNote( sbNote, buf );
+	}
 	buf.append("<h1>");
 	if( res.isIncluded() ) {
 	    buf.append(sm.getString("defaulterrorpage.includedservlet") );
@@ -293,19 +316,16 @@ class StatusHandler extends Handler {
 	    .append(msg)
 	    .append("</b><br>");
 
-	if( res.isUsingStream() ) {
-	    ServletOutputStream out = res.getOutputStream();
-	    out.print(buf.toString());
-	} else {
-	    PrintWriter out = res.getWriter();
-	    out.print(buf.toString());
-	}
+	res.setContentLength(buf.length());
+	res.getBuffer().write( buf );
+	buf.setLength(0);
     }
 }
 	
 class RedirectHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
+    int sbNote=0;
 
     RedirectHandler() {
 	initialized=true;
@@ -329,7 +349,18 @@ class RedirectHandler extends Handler {
 	res.setContentType("text/html");	// ISO-8859-1 default
 	res.setHeader("Location", location);
 
-	StringBuffer buf = new StringBuffer();
+	if( sbNote==0 ) {
+	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
+						     "RedirectHandler.buff");
+	}
+
+	// we can recycle it because
+	// we don't call toString();
+	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	if( buf==null ) {
+	    buf = new StringBuffer();
+	    req.setNote( sbNote, buf );
+	}
 	buf.append("<head><title>").
 	    append(sm.getString("defaulterrorpage.documentmoved")).
 	    append("</title></head>\r\n<body><h1>").
@@ -340,19 +371,10 @@ class RedirectHandler extends Handler {
 	    append(location).
 	    append("\">here</a>.<p>\r\n</body>\r\n");
 
-	String body = buf.toString();
+	res.setContentLength(buf.length());
+	res.getBuffer().write( buf );
+	buf.setLength(0);
 
-	res.setContentLength(body.length());
-
-	if( res.isUsingStream() ) {
-	    ServletOutputStream out = res.getOutputStream();
-	    out.print(body);
-	    out.flush();
-	} else {
-	    PrintWriter out = res.getWriter();
-	    out.print(body);
-	    out.flush();
-	}
     }
 
     // XXX Move it to URLUtil !!!

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.5 2000/05/24 18:57:10 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/24 18:57:10 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -61,61 +57,90 @@
  *
  */ 
 
-
 package org.apache.tomcat.util;
 
-import java.io.OutputStream;
-import java.io.IOException;
-import org.apache.tomcat.core.Constants;
+import java.text.*;
+import java.util.*;
 
 /**
  * This class is used to represent a subarray of bytes in an HTTP message.
  *
  * @author dac@eng.sun.com
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Costin Manolache
  */
-public class MessageBytes {
+public final class MessageBytes implements Cloneable {
+    public static final String DEFAULT_CHAR_ENCODING="8859_1";
+    
+    // primary type ( whatever is set as original value )
+    private int type = T_NULL;
+    
+    public static final int T_NULL = 0;
+    public static final int T_STR  = 1;
+    public static final int T_BYTES = 2;
+    public static final int T_CHARS = 3;
 
-    private StringManager sm =
-        StringManager.getManager("org.apache.tomcat.util");
+    private int hashCode=0;
+    private boolean hasHashCode=false;
 
-    /**
-     * The message bytes.
-     */
-    protected byte[] bytes;
+    private boolean caseSensitive=true;
+    
+    // byte[]
+    private byte[] bytes;
+    private int bytesOff;
+    private int bytesLen;
+    private String enc;
+    private boolean hasByteValue=false;
+    
+    // Caching the result of a conversion
 
-    /**
-     * The start offset of the bytes.
-     */
-    protected int offset;
-
-    /**
-     * The length of the bytes.
-     */
-    protected int length;
-
+    // char[]
+    private char chars[];
+    private int charsOff;
+    private int charsLen;
+    private boolean hasCharValue=false;
+    
+    // String
+    private String strValue;
+    private boolean hasStrValue=false;
+    
     /**
      * Creates a new, uninitialized MessageBytes object.
      */
     public MessageBytes() {
     }
 
-    /**
-     * Creates a new MessageBytes object with the specified bytes.
-     * @param b the bytes
-     * @param off the start offset of the bytes
-     * @param len the length of the bytes
-     */
-    public MessageBytes(byte[] b, int off, int len) {
-	setBytes(b, off, len);
+    public void setCaseSenitive( boolean b ) {
+	caseSensitive=b;
     }
 
+    public MessageBytes getClone() {
+	try {
+	    return (MessageBytes)this.clone();
+	} catch( Exception ex) {
+	    return null;
+	}
+    }
+
+    public void reset() {
+	recycle();
+    }
     /**
      * Resets the message bytes to an uninitialized state.
      */
-    public void reset() {
+    public void recycle() {
 	bytes = null;
+	strValue=null;
+	//	chars=null;
+	caseSensitive=true;
+
+	enc=null;
+	hasByteValue=false;
+	hasStrValue=false;
+	hasCharValue=false;
+	hasHashCode=false;
     }
+
 
     /**
      * Sets the message bytes to the specified subarray of bytes.
@@ -125,10 +150,78 @@ public class MessageBytes {
      */
     public void setBytes(byte[] b, int off, int len) {
 	bytes = b;
-	offset = off;
-	length = len;
+	bytesOff = off;
+	bytesLen = len;
+	type=T_BYTES;
+	hasByteValue=true;
     }
 
+    public void setEncoding( String enc ) {
+	this.enc=enc;
+    }
+    
+    public void setChars( char[] c, int off, int len ) {
+	chars=c;
+	charsOff=off;
+	charsLen=len;
+	type=T_CHARS;
+	hasCharValue=true;
+    }
+
+    public void setString( String s ) {
+	strValue=s;
+	hasStrValue=true;
+	type=T_STR;
+    }
+
+    // -------------------- Conversion and getters --------------------
+    public String toString() {
+	if( hasStrValue ) return strValue;
+	
+	switch (type) {
+	case T_CHARS:
+	    strValue=new String( chars, charsOff, charsLen);
+	    hasStrValue=true;
+	    return strValue;
+	case T_BYTES:
+	    try {
+		if( enc==null )
+		    strValue=toStringUTF8();
+		else
+		    strValue=new String(bytes, bytesOff, bytesLen, enc);
+		hasStrValue=true;
+		return strValue;
+	    } catch (java.io.UnsupportedEncodingException e) {
+		return null;  // can't happen
+	    }
+	default:
+	    return null;
+	}
+    }
+
+    private String toStringUTF8() {
+        if (null == bytes) {
+            return null;
+        }
+	if( chars==null || bytesLen > chars.length ) {
+	    chars=new char[bytesLen];
+	}
+
+	int j=bytesOff;
+	for( int i=0; i< bytesLen; i++ ) {
+	    chars[i]=(char)bytes[j++];
+	}
+	charsLen=bytesLen;
+	charsOff=0;
+	hasCharValue=true;
+	return new String( chars, 0, bytesLen);
+    }
+
+    //----------------------------------------
+    public int getType() {
+	return type;
+    }
+    
     /**
      * Returns the message bytes.
      */
@@ -137,122 +230,30 @@ public class MessageBytes {
     }
 
     /**
-     * Puts the message bytes in buf starting at buf_offset.
-     * @return the number of bytes added to buf.
-     */
-    public int getBytes(byte buf[],
-			int buf_offset) 
-    {
-	if (bytes != null) 
-	    System.arraycopy(bytes, offset, buf, buf_offset, length);
-	return length;
-    }
-
-    /**
      * Returns the start offset of the bytes.
      */
     public int getOffset() {
-	return offset;
+	if(type==T_BYTES)
+	    return bytesOff;
+	if(type==T_CHARS)
+	    return charsOff;
+	return 0;
     }
 
     /**
      * Returns the length of the bytes.
      */
     public int getLength() {
-	return length;
+	if(type==T_BYTES)
+	    return bytesLen;
+	if(type==T_CHARS)
+	    return charsLen;
+	if(type==T_STR)
+	    return strValue.length();
+	return 0;
     }
 
-    /**
-     * Returns true if the message bytes have been set.
-     */
-    public boolean isSet() {
-	return bytes != null;
-    }
-
-    /**
-     * Returns the message bytes parsed as an unsigned integer.
-     * @exception NumberFormatException if the integer format was invalid
-     */
-    public int toInteger() throws NumberFormatException {
-	return Ascii.parseInt(bytes, offset, length);
-    }
-
-    /**
-     * Compares the message bytes to the specified subarray of bytes.
-     * @param b the bytes to compare
-     * @param off the start offset of the bytes
-     * @param len the length of the bytes
-     * @return true if the comparison succeeded, false otherwise
-     */
-    public boolean equals(byte[] b, int off, int len) {
-	byte[] b1 = bytes;
-	if (b1 == null || len != length) {
-	    return false;
-	}
-	int off1 = offset;
-	while (len-- > 0) {
-	    if (b[off++] != b1[off1++]) {
-		return false;
-	    }
-	}
-	return true;
-    }
-
-    /**
-     * Compares the message bytes to the specified subarray of bytes.
-     * Case is ignored in the comparison.
-     * @param b the bytes to compare
-     * @param off the start offset of the bytes
-     * @param len the length of the bytes
-     * @return true if the comparison succeeded, false otherwise
-     */
-    public boolean equalsIgnoreCase(byte[] b, int off, int len) {
-	byte[] b1 = bytes;
-	if (b1 == null || len != length) {
-	    return false;
-	}
-	int off1 = offset;
-	while (len-- > 0) {
-	    if (Ascii.toLower(b[off++]) != Ascii.toLower(b1[off1++])) {
-		return false;
-	    }
-	}
-	return true;
-    }
-
-    /**
-     * Writes the message bytes to the specified output stream.
-     * @param out the output stream
-     * @exception IOException if an I/O error has occurred
-     */
-    public void write(OutputStream out) throws IOException {
-	if (bytes != null) {
-	    out.write(bytes, offset, length);
-	}
-    }
-
-    /**
-     * Returns the length of the message bytes.
-     */
-    public int length() {
-	return bytes != null ? length : 0;
-    }
-
-    // --------------------
-    /**
-     * Returns the message bytes as a String object.
-     */
-    public String toString() {
-        if (null == bytes) {
-            return null;
-        }
-
-        try {
-            return new String(bytes, offset, length, Constants.DEFAULT_CHAR_ENCODING);
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;        // could return something - but why?
-        }
-    }
+    // -------------------- equals --------------------
 
     /**
      * Compares the message bytes to the specified String object.
@@ -260,58 +261,294 @@ public class MessageBytes {
      * @return true if the comparison succeeded, false otherwise
      */
     public boolean equals(String s) {
-	byte[] b = bytes;
-	int len = length;
-	if (b == null || len != s.length()) {
+	if( ! caseSensitive )
+	    return equalsIgnoreCase( s );
+	switch (type) {
+	case T_STR:
+	    return strValue.equals( s );
+	case T_CHARS:
+	    char[] c = chars;
+	    int len = charsLen;
+	    if (c == null || len != s.length()) {
+		return false;
+	    }
+	    int off = charsOff;
+	    for (int i = 0; i < len; i++) {
+		if (c[off++] != s.charAt(i)) {
+		    return false;
+		}
+	    }
+	    return true;
+	case T_BYTES:
+	    byte[] b = bytes;
+	    int blen = bytesLen;
+	    if (b == null || blen != s.length()) {
+		return false;
+	    }
+	    int boff = bytesOff;
+	    for (int i = 0; i < blen; i++) {
+		if (b[boff++] != s.charAt(i)) {
+		    return false;
+		}
+	    }
+	    return true;
+	default:
 	    return false;
 	}
-	int off = offset;
-	for (int i = 0; i < len; i++) {
-	    if (b[off++] != s.charAt(i)) {
+    }
+
+    /**
+     * Compares the message bytes to the specified String object.
+     * @param s the String to compare
+     * @return true if the comparison succeeded, false otherwise
+     */
+    public boolean equalsIgnoreCase(String s) {
+	switch (type) {
+	case T_STR:
+	    return strValue.equalsIgnoreCase( s );
+	case T_CHARS:
+	    char[] c = chars;
+	    int len = charsLen;
+	    if (c == null || len != s.length()) {
+		return false;
+	    }
+	    int off = charsOff;
+	    for (int i = 0; i < len; i++) {
+		if (Ascii.toLower( c[off++] ) != Ascii.toLower( s.charAt(i))) {
+		    return false;
+		}
+	    }
+	    return true;
+	case T_BYTES:
+	    byte[] b = bytes;
+	    int blen = bytesLen;
+	    if (b == null || blen != s.length()) {
+		return false;
+	    }
+	    int boff = bytesOff;
+	    for (int i = 0; i < blen; i++) {
+		if (Ascii.toLower(b[boff++]) != Ascii.toLower(s.charAt(i))) {
+		    return false;
+		}
+	    }
+	    return true;
+	default:
+	    return false;
+	}
+    }
+
+    public boolean equals(MessageBytes mb) {
+	switch (type) {
+	case T_STR:
+	    return mb.equals( strValue );
+	}
+
+	if( mb.type != T_CHARS && mb.type!= T_BYTES ) {
+	    // it's a string or int/date string value
+	    return equals( mb.toString() );
+	}
+
+	if( mb.type == T_CHARS && type==T_CHARS ) {
+	    char b1[]=chars;
+	    char b2[]=mb.chars;
+	    if (b1== null || b2==null || mb.charsLen != charsLen) {
+		return false;
+	    }
+	    int off1 = charsOff;
+	    int off2 = mb.charsOff;
+	    int len=charsLen;
+	    while ( len-- > 0) {
+		if (b1[off1++] != b2[off2++]) {
+		    return false;
+		}
+	    }
+	    return true;
+	}
+	if( mb.type==T_BYTES && type== T_BYTES ) {
+	    byte b1[]=bytes;
+	    byte b2[]=mb.bytes;
+	    if (b1== null || b2==null || mb.bytesLen != bytesLen) {
+		return false;
+	    }
+	    int off1 = bytesOff;
+	    int off2 = mb.bytesOff;
+	    int len=bytesLen;
+	    while ( len-- > 0) {
+		if (b1[off1++] != b2[off2++]) {
+		    return false;
+		}
+	    }
+	    return true;
+	}
+
+	// char/byte or byte/char
+	MessageBytes mbB=this;
+	MessageBytes mbC=mb;
+	
+	if( type == T_CHARS && mb.type==T_BYTES  ) {
+	    mbB=mb;
+	    mbC=this;
+	}
+
+	byte b1[]=mbB.bytes;
+	char b2[]=mbC.chars;
+	if (b1== null || b2==null || mbB.bytesLen != mbC.charsLen) {
+	    return false;
+	}
+	int off1 = mbB.bytesOff;
+	int off2 = mbC.charsOff;
+	int len=mbB.bytesLen;
+	
+	while ( len-- > 0) {
+	    if ( (char)b1[off1++] != b2[off2++]) {
 		return false;
 	    }
 	}
 	return true;
     }
 
+    
     /**
-     * Compares the message bytes to the specified String object. Case is
-     * ignored in the comparison.
-     * @param s the String to compare
-     * @return true if the comparison succeeded, false otherwise
+     * Returns true if the message bytes starts with the specified string.
+     * @param s the string
      */
-    public boolean equalsIgnoreCase(String s) {
-	byte[] b = bytes;
-	int len = length;
-	if (b == null || len != s.length()) {
-	    return false;
-	}
-	int off = offset;
-	for (int i = 0; i < len; i++) {
-	    if (Ascii.toLower(b[off++]) != Ascii.toLower((byte)s.charAt(i))) {
+    public boolean startsWith(String s) {
+	switch (type) {
+	case T_STR:
+	    return strValue.startsWith( s );
+	case T_CHARS:
+	    char[] c = chars;
+	    int len = s.length();
+	    if (c == null || len > charsLen) {
 		return false;
 	    }
+	    int off = charsOff;
+	    for (int i = 0; i < len; i++) {
+		if (c[off++] != s.charAt(i)) {
+		    return false;
+		}
+	    }
+	    return true;
+	case T_BYTES:
+	    byte[] b = bytes;
+	    int blen = s.length();
+	    if (b == null || blen > bytesLen) {
+		return false;
+	    }
+	    int boff = bytesOff;
+	    for (int i = 0; i < blen; i++) {
+		if (b[boff++] != s.charAt(i)) {
+		    return false;
+		}
+	    }
+	    return true;
+	default:
+	    return false;
 	}
-	return true;
+    }
+
+    
+
+    // -------------------- Hash code  --------------------
+    public  int hashCode() {
+	if( hasHashCode ) return hashCode;
+	int code = 0;
+
+	if( caseSensitive ) 
+	    code=hash(); 
+	else
+	    code=hashIgnoreCase();
+	hashCode=code;
+	hasHashCode=true;
+	return code;
+    }
+
+    // normal hash. 
+    private int hash() {
+	int code=0;
+	switch (type) {
+	case T_STR:
+	    for (int i = 0; i < strValue.length(); i++) {
+		code = code * 37 + strValue.charAt( i );
+	    }
+	    return code;
+	case T_CHARS:
+	    for (int i = charsOff; i < charsOff + charsLen; i++) {
+		code = code * 37 + chars[i];
+	    }
+	    return code;
+	case T_BYTES:
+	    return hashBytes( bytes, bytesOff, bytesLen);
+	default:
+	    return 0;
+	}
+    }
+
+    // hash ignoring case
+    private int hashIgnoreCase() {
+	int code=0;
+	switch (type) {
+	case T_STR:
+	    for (int i = 0; i < strValue.length(); i++) {
+		code = code * 37 + Ascii.toLower(strValue.charAt( i ));
+	    }
+	    return code;
+	case T_CHARS:
+	    for (int i = charsOff; i < charsOff + charsLen; i++) {
+		code = code * 37 + Ascii.toLower(chars[i]);
+	    }
+	    return code;
+	case T_BYTES:
+	    return hashBytesIC( bytes, bytesOff, bytesLen );
+	default:
+	    return 0;
+	}
+    }
+
+    private static int hashBytes( byte bytes[], int bytesOff, int bytesLen ) {
+	int max=bytesOff+bytesLen;
+	byte bb[]=bytes;
+	int code=0;
+	for (int i = bytesOff; i < max ; i++) {
+	    code = code * 37 + bb[i];
+	}
+	return code;
+    }
+
+    private static int hashBytesIC( byte bytes[], int bytesOff, int bytesLen ) {
+	int max=bytesOff+bytesLen;
+	byte bb[]=bytes;
+	int code=0;
+	for (int i = bytesOff; i < max ; i++) {
+	    code = code * 37 + Ascii.toLower(bb[i]);
+	}
+	return code;
     }
 
     /**
      * Returns true if the message bytes starts with the specified string.
      * @param s the string
      */
-    public boolean startsWith(String s) {
-	byte[] b = bytes;
-	int len = s.length();
-	if (b == null || len > length) {
-	    return false;
-	}
-	int off = offset;
-	for (int i = 0; i < len; i++) {
-	    if (b[off++] != s.charAt(i)) {
-		return false;
+    public int indexOf(char c) {
+	switch (type) {
+	case T_STR:
+	    return strValue.indexOf( c );
+	case T_CHARS:
+	    for (int i = charsOff; i < charsOff + charsLen; i++) {
+		if( c == chars[i] ) return i;
 	    }
+	    return -1;
+	case T_BYTES:
+	    int max=bytesOff+bytesLen;
+	    byte bb[]=bytes;
+	    for (int i = bytesOff; i < max ; i++) {
+		if( (byte)c == bb[i]) return i;
+	    }
+	    return -1;
+	default:
+	    return -1;
 	}
-	return true;
     }
+
 
 }

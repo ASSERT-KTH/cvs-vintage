@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.3 2000/07/11 03:28:30 alex Exp $
- * $Revision: 1.3 $
- * $Date: 2000/07/11 03:28:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.4 2000/08/11 06:14:18 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/08/11 06:14:18 $
  *
  * ====================================================================
  *
@@ -79,9 +79,6 @@ import org.apache.tomcat.core.Constants;
  * @author Costin Manolache
  */
 public class DateTool {
-
-    private static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.util");
 
     /** US locale - all HTTP dates are in english
      */

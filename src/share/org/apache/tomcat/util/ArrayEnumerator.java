@@ -70,24 +70,32 @@ public class ArrayEnumerator implements Enumeration {
 
     Object array[];
     int pos;
+    int end;
     
     public ArrayEnumerator( Object array[] ) {
 	this.array=array;
 	pos=0;
+	end=array.length;
+    }
+
+    public ArrayEnumerator( Object array[], int start, int end ) {
+	this.array=array;
+	pos=start;
+	this.end=end;
     }
     
     public Object nextElement( ) {
 	synchronized( array ) {
-	    if( pos < array.length )
+	    if( pos < end )
 		return array[ pos ++ ];
 	}
 	throw new NoSuchElementException( "No more elements: " +
-					  pos + " / " + array.length);
+					  pos + " / " + end);
 	
     }
 
     public boolean hasMoreElements() {
-	return pos < array.length;
+	return pos < end;
     }
     
 }

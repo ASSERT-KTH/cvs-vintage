@@ -10,7 +10,7 @@
     <property name="tomcat.build" value="../build/tomcat"/>
     <property name="tomcat.home" value="../dist/tomcat"/>
     <property name="j2ee.home" value="../j2ee/build/unix"/>
-    <property name="optimize" value="true" />
+    <property name="optimize" value="false" />
     <property name="jaxp" value="../jaxp1.0.1" />
   </target>
 

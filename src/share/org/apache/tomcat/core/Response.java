@@ -100,22 +100,22 @@ public interface Response {
      */
     public boolean isStarted() ;
 
-    /** True if getOutputStream was called.
-     *  Used to avoid the ugly try getWriter() catch getOutputStream.
-     */
-    public boolean isUsingStream();
+//     /** True if getOutputStream was called.
+//      *  Used to avoid the ugly try getWriter() catch getOutputStream.
+//      */
+//     public boolean isUsingStream();
 
-    /** The output stream is used.
-     */
-    public void setUsingStream( boolean stream );
+//     /** The output stream is used.
+//      */
+//     public void setUsingStream( boolean stream );
 
-    /** Stream/Writer control
-     */
-    public boolean isUsingWriter();
+//     /** Stream/Writer control
+//      */
+//     public boolean isUsingWriter();
 
-    /** Stream/Writer control
-     */
-    public void setUsingWriter( boolean writer );
+//     /** Stream/Writer control
+//      */
+//     public void setUsingWriter( boolean writer );
 
     
     /** Signal that we're done with a particular request, the
@@ -126,14 +126,14 @@ public interface Response {
     /** Either re-implement getOutputStream or return BufferedServletOutputStream(this)
      *  and implement doWrite();
      */
-    public ServletOutputStream getOutputStream() throws IOException;
+//     public ServletOutputStream getOutputStream() throws IOException;
 
     public void setServletOutputStream(ServletOutputStream s );
-    public void setWriter( PrintWriter w );
+//     public void setWriter( PrintWriter w );
     
     public void doWrite( byte buffer[], int pos, int count) throws IOException;
     
-    public PrintWriter getWriter() throws IOException ;
+//     public PrintWriter getWriter() throws IOException ;
 
     /** True if we are in an included servlet
      */
@@ -211,12 +211,6 @@ public interface Response {
 
     public OutputBuffer getBuffer();
 
-    // @deprecated
-    //    public ByteBuffer getOutputBuffer();
-
-    //    public void  setOutputBuffer(ByteBuffer buf);
-
-    
     // -------------------- Internal methods --------------------
     /** One-to-one with Facade.
      *  You can use HttpResponseFacade.
