@@ -166,13 +166,6 @@
       ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
     </attribute>
 
-    <!-- Principal mapping configuration -->
-    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
-    <attribute name="PrincipalMappingProperties">
-      userName=sa
-      password=
-    </attribute>
-
     <attribute name="ConnectionManagerFactoryName">MinervaSharedLocalCMFactory</attribute>
     <!-- See the documentation for the specific connection manager
          implementation you are using for the properties you can set -->
@@ -193,6 +186,13 @@
       GCMinIdleMillis=1200000
       IdleTimeoutMillis=1800000
       MaxIdleTimeoutPercent=1.0
+    </attribute>
+
+    <!-- Principal mapping configuration -->
+    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
+    <attribute name="PrincipalMappingProperties">
+      userName=sa
+      password=
     </attribute>
   </mbean>
 
@@ -219,12 +219,6 @@
       XADataSourceName=java:/BlackBoxXADS
     </attribute>
 
-    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
-    <attribute name="PrincipalMappingProperties">
-      userName=sa
-      password=
-    </attribute>
-
     <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
     <attribute name="ConnectionManagerProperties">
       # Pool type - uncomment to force, otherwise it is the default
@@ -243,6 +237,12 @@
       GCMinIdleMillis=1200000
       IdleTimeoutMillis=1800000
       MaxIdleTimeoutPercent=1.0
+    </attribute>
+
+    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
+    <attribute name="PrincipalMappingProperties">
+      userName=sa
+      password=
     </attribute>
   </mbean>
   -->
