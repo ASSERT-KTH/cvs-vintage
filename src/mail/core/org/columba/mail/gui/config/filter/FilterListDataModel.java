@@ -20,13 +20,19 @@ import javax.swing.table.AbstractTableModel;
 
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-
+import org.columba.mail.util.MailResourceLoader;
 
 class FilterListDataModel extends AbstractTableModel
 {
 
-    final String[] columnNames = {"Description",
-                                  "Enabled",
+    final String[] columnNames = {MailResourceLoader.getString(
+                                        "dialog",
+                                        "filter",
+                                        "description_tableheader"),
+                                  MailResourceLoader.getString(
+                                        "dialog",
+                                        "filter",
+                                        "enabled_tableheader")
                                   };
 
     private FilterList filterList;
@@ -35,10 +41,7 @@ class FilterListDataModel extends AbstractTableModel
     {
         super();
         this.filterList = list;
-
     }
-
-
 
     public int getColumnCount()
     {
@@ -72,11 +75,9 @@ class FilterListDataModel extends AbstractTableModel
         {
             // enabled/disabled
             boolean enabled = filter.getBoolean("enabled");
-            
-            return new Boolean(enabled);
+            return enabled ? Boolean.TRUE : Boolean.FALSE;
         }
     }
-
 
     public Class getColumnClass(int c)
     {
@@ -86,21 +87,14 @@ class FilterListDataModel extends AbstractTableModel
            return Boolean.class;
     }
 
-
     public boolean isCellEditable(int row, int col)
     {
-        if ( col == 1 )
-           return true;
-        else
-           return false;
+        return col == 1;
     }
-
 
     public void setValueAt(Object value, int row, int col)
     {
         Filter filter = filterList.get(row);
         filter.getEnabled();
     }
-
 }
-
