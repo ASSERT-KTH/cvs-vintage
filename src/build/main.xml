@@ -47,7 +47,7 @@
   </target>
 
    <target name="watchdog" depends="init">
-     <ant dir="${ws.dir}/jakarta-watchdog" antfile="${ws.dir}/jakarta-watchdog/build.xml" target="install.dist" >
+     <ant dir="${ws.dir}/jakarta-watchdog" antfile="${ws.dir}/jakarta-watchdog/build.xml" target="dist" >
         <property name="watchdog.dist" value="${ws.dir}/dist/watchdog" />
         <property name="tomcat.home" value="${ws.dir}/dist/tomcat" />
      </ant>
