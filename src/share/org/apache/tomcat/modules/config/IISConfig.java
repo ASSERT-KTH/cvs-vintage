@@ -78,12 +78,17 @@ public class IISConfig extends BaseInterceptor  {
     public static final String JK_LOG_LOCATION = "/logs/iis_redirect.log";
     public static final String IIS_REG_FILE = "/conf/jk/iis_redirect.reg";    
 
+    Log loghelper = new Log("tc_log", "IISConfig");
+
     public IISConfig() 
     {
     }
 
-    Log loghelper = new Log("tc_log", "IISConfig");
-    
+    public void engineInit(ContextManager cm) throws TomcatException
+    {
+	execute( cm );
+    }
+        
     public void execute(ContextManager cm) throws TomcatException 
     {
 	    try {
