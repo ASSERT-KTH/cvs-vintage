@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.11 2003/11/06 22:54:55 mvw Exp $ -->
+<!-- $Id: cookbook.in,v 1.12 2003/11/15 08:10:39 linus Exp $ -->
 
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
@@ -45,13 +45,13 @@ This version of the cookbook is loosely connected to the version
 </para>
     </abstract>
          <authorgroup>
+             <editor>
+                 <firstname>Linus</firstname>
+                 <surname>Tolke</surname>
+             </editor>
              <author>
                  <firstname>Markus</firstname>
                  <surname>Klink</surname>
-             </author>
-             <author>
-                 <firstname>Linus</firstname>
-                 <surname>Tolke</surname>
              </author>
          </authorgroup>
          <legalnotice>
