@@ -85,8 +85,16 @@
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
   <target name="compile" 
-          depends="check_for_optional_packages, delete_dependants,compileFramework" 
+          depends="check_for_optional_packages, delete_dependants" 
           description="Compiles the source code">
+     <javac srcdir="${src.dir}"
+           destdir="${build.classes}"
+           debug="${javac.debug}"
+           deprecation="${javac.deprecation}"
+           optimize="${javac.optimize}"
+           fork="${javac.fork}">
+      <include name="CH/ifa/draw/framework/**"/>
+    </javac>
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            debug="${javac.debug}"
@@ -103,20 +111,6 @@
         <pathelement path="${jdo.class.path}"/>
         <pathelement path="${batik.class.path}"/>
       </classpath>
-    </javac>
-  </target>
-  <!-- =================================================================== -->
-  <!-- Compiles the interfaces code                                        -->
-  <!-- =================================================================== -->
-  <target name="compileFramework" 
-          description="Compiles the interfaces code">
-     <javac srcdir="${src.dir}"
-           destdir="${build.classes}"
-           debug="${javac.debug}"
-           deprecation="${javac.deprecation}"
-           optimize="${javac.optimize}"
-           fork="${javac.fork}">
-      <include name="CH/ifa/draw/framework/**"/>
     </javac>
   </target>
 
