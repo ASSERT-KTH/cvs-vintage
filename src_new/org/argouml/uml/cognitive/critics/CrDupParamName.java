@@ -26,7 +26,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrDupParamName.java,v 1.2 2000/11/02 06:06:55 carnold Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -66,9 +66,9 @@ public class CrDupParamName extends CrUML {
     while (enum.hasNext()) {
       MParameter p = (MParameter) enum.next();
       String pName = p.getName();
-      if ("".equals(pName)) continue;
+      if (pName == null || "".equals(pName)) continue;
       String nameStr = pName;
-      if (nameStr.length() == 0) continue;
+      if (nameStr == null || nameStr.length() == 0) continue;
       if (namesSeen.contains(nameStr)) return PROBLEM_FOUND;
       namesSeen.addElement(nameStr);
     }

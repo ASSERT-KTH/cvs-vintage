@@ -22,68 +22,46 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import org.argouml.uml.*;
-import javax.swing.*;
+import java.lang.reflect.*;
 import ru.novosoft.uml.*;
-import java.awt.event.*;
-import java.awt.*;
 import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import java.util.*;
 
-/**
- *   This class implements a combo box for stereotypes.
- *   The class polls the model and profile for appropriate
- *   stereotypes for the target object.  A context popup menu
- *   allows for new stereotypes to be created and existing 
- *   stereotypes to be deleted.
- *
- *   @author Curt Arnold
- */
-public class UMLStereotypeComboBox extends JComboBox implements UMLUserInterfaceComponent {
+public class UMLTaggedTextProperty extends UMLTextProperty  {
+    
+    public UMLTaggedTextProperty(String propertyName) {
+        super(propertyName);
+        _propertyName = propertyName;
+    }
+    
 
-    private UMLUserInterfaceContainer _container;
-    private UMLStereotypeComboBoxListModel _model;
-    
-    public UMLStereotypeComboBox(UMLUserInterfaceContainer container) {
-        super();
-        _container = container;
-        _model = new UMLStereotypeComboBoxListModel(container);
-        setModel(_model);
-    }
-
-    public Object getTarget() {
-        return _container.getTarget();
-    }
-        
-    public void targetChanged() {
-        _model.targetChanged();
-    }
-
-                    
-    
-    public void roleAdded(final MElementEvent event) {
-        _model.roleAdded(event);
+    public void setProperty(UMLUserInterfaceContainer container,String newValue) {
+        Object element = container.getTarget();
+        if(element instanceof MModelElement) {
+            ((MModelElement) element).setTaggedValue(_propertyName,newValue);
+        }
     }
     
-    public void recovered(final MElementEvent event) {
-        _model.recovered(event);
+    public String getProperty(UMLUserInterfaceContainer container) {
+        String value = null;
+        Object element = container.getTarget();
+        if(element instanceof MModelElement) {
+            value = ((MModelElement) element).getTaggedValue(_propertyName);
+        }
+        else {
+            value = "";
+        }
+        return value;
     }
     
-    public void roleRemoved(final MElementEvent event) {
-        _model.roleRemoved(event);
+    boolean isAffected(MElementEvent event) {
+        String sourceName = event.getName();
+        if(_propertyName == null || sourceName == null || sourceName.equals(_propertyName))
+            return true;
+        return false;
     }
     
-    public void listRoleItemSet(final MElementEvent event) {
-        _model.listRoleItemSet(event);
-    }
-    
-    public void removed(final MElementEvent event) {
-        _model.removed(event);
-    }
-
-    public void propertySet(final MElementEvent event) {
-        _model.propertySet(event);
+    void targetChanged() {
     }
 }
+
+

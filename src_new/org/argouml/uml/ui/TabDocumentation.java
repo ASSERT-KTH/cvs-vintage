@@ -25,48 +25,42 @@ package org.argouml.uml.ui;
 
 import org.argouml.ui.*;
 import ru.novosoft.uml.foundation.core.*;
+import javax.swing.*;
 
+public class TabDocumentation extends PropPanel {
 
-public class TabDocumentation extends TabText {
-  ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
   // constructor
   public TabDocumentation() {
-    super("Documentation");
-    _text.setLineWrap(true);
-    _text.setWrapStyleWord(true);
+    super("Documentation",2);
+        addCaption(new JLabel("Author:"),0,0,0);
+        addField(new UMLTextField(this,new UMLTaggedTextProperty("author")),0,0,0);
+        
+        addCaption(new JLabel("Version:"),1,0,0);
+        addField(new UMLTextField(this,new UMLTaggedTextProperty("version")),1,0,0);
+        
+        addCaption(new JLabel("Since:"),2,0,0);
+        addField(new UMLTextField(this,new UMLTaggedTextProperty("since")),2,0,0);
+        
+        addCaption(new JLabel("Deprecated:"),3,0,0);
+        addField(new UMLCheckBox("",this,new UMLTaggedBooleanProperty("deprecated")),3,0,0);
+        
+        addCaption(new JLabel("See:"),4,0,1);
+        addField(new UMLTextArea(this,new UMLTaggedTextProperty("see")),4,0,1);
+        
+        addCaption(new JLabel("Documentation:"),0,1,1);
+        UMLTextArea _doc = new UMLTextArea(this,new UMLTaggedTextProperty("documentation"));
+        _doc.setLineWrap(true);
+        _doc.setWrapStyleWord(true);
+        addField(_doc,0,1,1);
+        
+        
   }
 
-  ////////////////////////////////////////////////////////////////
-  // accessors
-    protected String genText() {
-        String doc = null;
-        Object modelObject = _target;
-        if(modelObject instanceof MModelElement) {
-            doc = ((MModelElement) modelObject).getTaggedValue("documentation");
-        }
-        if(doc == null) {
-	    doc = "";		
-        }
-        return doc;
+    public boolean shouldBeEnabled() { 
+        Object target = getTarget();
+        return target instanceof MModelElement; 
     }
 
-    protected void parseText(String s) {
-        Object modelObject = _target;
-        if(modelObject instanceof MModelElement) {
-            MModelElement element = (MModelElement) modelObject;
-            if(s != null && s.length() > 0) {
-                element.setTaggedValue("documentation",s);
-            }
-            else {
-                String prev = element.getTaggedValue("documentation");
-                if(prev != null) {
-                    element.setTaggedValue("documentation",s);
-                }
-            }
-        }
-    }
-
-    public boolean shouldBeEnabled() {
-        return _target instanceof MModelElement;
-    }
+    
 } /* end class TabDocumentation */
