@@ -112,11 +112,15 @@
           #<a href="mailto:$assignedUser.Email">$assignedUser.UserName</a>$comma
         #end
     #end
-        #if ($canEdit)
-          <p><input type="submit" value="edit assignees" name="eventSubmit_doEditassignees" /></p>
-        #end
          </td>
         </tr>
+        #if ($canEdit)
+        <tr>
+          <td colspan="2">
+            <input type="submit" value="edit assignees" name="eventSubmit_doEditassignees" />
+          </td>
+        </tr>
+        #end
        </table>
       </div>
 
@@ -365,9 +369,12 @@
         #fieldErrorMsg($commentGroup.DataAsString "<br>")
            <textarea rows="2" cols="35" class="text" name ="$commentGroup.DataAsString.Key"></textarea>
            <input type="hidden" name="$commentGroup.Name.Key" value="comment">
-           <p><input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"  /></p>
           </td>
          </tr>
+         <tr>
+         <td colspan="2">
+           <input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"/>
+         </td>
     #end
         </table>
        </div>
