@@ -131,7 +131,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.19 2002/04/17 04:31:58 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.20 2002/04/25 01:39:46 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1183,9 +1183,10 @@ public abstract class AbstractScarabModule
         Iterator i = rmas.iterator();
         while ( i.hasNext() )
         {
-            rma = (RModuleAttribute)i.next();
-            if ( rma.getAttribute().equals(attribute) )
+            RModuleAttribute tempRma = (RModuleAttribute)i.next();
+            if ( tempRma.getAttribute().equals(attribute) )
             {
+                rma = tempRma;
                 break;
             }
         }
