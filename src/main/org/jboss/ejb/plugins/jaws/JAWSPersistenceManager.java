@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -1021,8 +1021,6 @@ public class JAWSPersistenceManager
    {
       try
       {
-		 System.out.println("Name"+name);
-		 Exception e = new Exception();
 		
          Integer constant = (Integer)Types.class.getField(name).get(null);
          return constant.intValue();
