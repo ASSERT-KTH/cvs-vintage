@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDynamicQLQueryMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -19,7 +20,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCCommandFactory {
 
@@ -55,7 +56,11 @@ public class JDBCCommandFactory {
 
    public JDBCQueryCommand createDynamicQLQuery(JDBCQueryMetaData q) 
          throws DeploymentException {
-      return new JDBCDynamicQLQuery(manager, q);
+      if (((JDBCDynamicQLQueryMetaData)q).useNewCompiler()) {
+         return new JDBCNewDynamicQLQuery(manager, q);
+      } else {
+         return new JDBCDynamicQLQuery(manager, q);
+      }
    }
 
    public JDBCQueryCommand createJBossQLQuery(JDBCQueryMetaData q) 

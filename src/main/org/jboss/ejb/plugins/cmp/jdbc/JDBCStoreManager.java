@@ -24,8 +24,12 @@ import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+
 import javax.naming.InitialContext;
+
 import javax.naming.NamingException;
+
+
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
@@ -33,22 +37,32 @@ import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
+
 import org.jboss.ejb.BeanLock;
+
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
+
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
+
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCOptimisticLockingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCMetaDataMigrationUtil;
+
 import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
+
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.util.CachePolicy;
 import org.jboss.util.LRUCachePolicy;
+
 import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
 
 /**
@@ -66,7 +80,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -82,6 +96,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
    private JDBCEntityMetaData metaData;
    private JDBCEntityBridge entityBridge;
+   private JDBCMetaDataMigrationUtil.Config config;
 
    private JDBCTypeFactory typeFactory;
    private JDBCQueryManager queryManager;
@@ -165,6 +180,11 @@ public class JDBCStoreManager implements EntityPersistenceStore
       return metaData;
    }
 
+   public JDBCMetaDataMigrationUtil.Config getConfig()
+   {
+      return config;
+   }
+
    public JDBCQueryManager getQueryManager()
    {
       return queryManager;
@@ -180,38 +200,71 @@ public class JDBCStoreManager implements EntityPersistenceStore
       return prefetchCache;
    }
 
-   /**
-    * This method is called whenever field's state is changed.
-    * It delegates the event to the optimistic lock associated with
-    * this container.
-    * see get/setInstanceValue
-    */
-   public void fieldStateEventCallback(EntityEnterpriseContext ctx,
-                                       CMPMessage msg,
-                                       JDBCFieldBridge field,
-                                       Object value)
-   {
-      if(ctx.getId() == null)
-         return;
-      BeanLock lock = container.getLockManager().getLock(ctx.getId());
-      if(lock instanceof JDBCOptimisticLock)
-         ((JDBCOptimisticLock)lock).fieldStateEventCallback(msg, field, value);
-   }
 
    /**
-    * Returns optimistic lock associated with the context or null
-    * if the context is not associated with id
+
+    * This method is called whenever field's state is changed.
+
+    * It delegates the event to the optimistic lock associated with
+
+    * this container.
+
+    * see get/setInstanceValue
+
     */
-   public JDBCOptimisticLock getOptimisticLock(EntityEnterpriseContext ctx)
+
+   public void fieldStateEventCallback(EntityEnterpriseContext ctx,
+
+                                       CMPMessage msg,
+
+                                       JDBCFieldBridge field,
+
+                                       Object value)
+
    {
+
       if(ctx.getId() == null)
+
+         return;
+
+      BeanLock lock = container.getLockManager().getLock(ctx.getId());
+
+      if(lock instanceof JDBCOptimisticLock)
+
+         ((JDBCOptimisticLock)lock).fieldStateEventCallback(msg, field, value);
+
+   }
+
+
+
+   /**
+
+    * Returns optimistic lock associated with the context or null
+
+    * if the context is not associated with id
+
+    */
+
+   public JDBCOptimisticLock getOptimisticLock(EntityEnterpriseContext ctx)
+
+   {
+
+      if(ctx.getId() == null)
+
          return null;
 
+
+
       Object lock = container.getLockManager().getLock(ctx.getId());
+
       if(lock instanceof JDBCOptimisticLock)
+
          return (JDBCOptimisticLock)lock;
+
       return null;
+
    }
+
 
    //
    // Genertic data containers
@@ -375,13 +428,21 @@ public class JDBCStoreManager implements EntityPersistenceStore
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.resolveRelationships();
 
+
             // optimistic lock initialization
+
             if(manager.getEntityBridge().getMetaData().getOptimisticLocking() != null) {
+
                // register manager and locking metadata with optimictic lock
+
                JDBCOptimisticLock.register(
+
                   manager, manager.getEntityBridge().getMetaData().getOptimisticLocking()
+
                );
+
             }
+
          }
 
          //
@@ -391,6 +452,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.startStoreManager();
          }
+
       }
    }
 
@@ -703,6 +765,14 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
          jamd = jfl.load();
          amd.addPluginData("CMP-JDBC", jamd);
+         amd.addPluginData("CMP-JDBC-NEW", JDBCMetaDataMigrationUtil.createSchemata(amd, jamd));
+      }
+
+      // Get GLS configuration
+      config = (JDBCMetaDataMigrationUtil.Config) amd.getPluginData("CMP-JDBC-NEW");
+      if (config == null) {
+         config = JDBCMetaDataMigrationUtil.createSchemata(amd, jamd);
+         amd.addPluginData("CMP-JDBC-NEW", config);
       }
 
       // Get JDBC Bean MetaData

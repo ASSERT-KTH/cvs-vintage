@@ -13,22 +13,41 @@ import org.jboss.persistence.schema.AbstractType;
 
 public class JavaType implements AbstractType
 {
-   private String name;
-   private int family;
+   private final Class clazz;
+   private final AbstractType.Family family;
 
-   public JavaType(Class clazz, int family)
+   public JavaType(Class clazz, AbstractType.Family family)
    {
-      this.name = clazz.getName();
+      this.clazz = clazz;
       this.family = family;
+   }
+
+   public Class getJavaClass()
+   {
+      return clazz;
    }
 
    public String getName()
    {
-      return name;
+      return clazz.getName();
    }
 
-   public int getFamily()
+   public AbstractType.Family getFamily()
    {
       return family;
+   }
+
+   public boolean equals(Object o)
+   {
+      if (o instanceof JavaType) {
+         return clazz.equals(((JavaType)o).clazz);
+      } else {
+         return false;
+      }
+   }
+
+   public int hashCode()
+   {
+      return clazz.hashCode();
    }
 }

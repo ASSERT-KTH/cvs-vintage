@@ -250,47 +250,47 @@ public class EJBQL20Compiler implements ParserVisitor
 
       Expression left = (Expression) ((VisitableNode) node.jjtGetChild(0)).jjtAccept(this, data);
       Expression right = (Expression) ((VisitableNode) node.jjtGetChild(1)).jjtAccept(this, data);
-      int leftFamily = left.getType().getFamily();
-      int rightFamily = right.getType().getFamily();
+      AbstractType.Family leftFamily = left.getType().getFamily();
+      AbstractType.Family rightFamily = right.getType().getFamily();
 
-      switch (leftFamily)
-      {
-         case AbstractType.STRING:
-            if (rightFamily != AbstractType.STRING)
-               throw new CompileException("Type mismatch");
-            if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL)
-               throw new CompileException("Invalid string comparison operator: " + operator);
-            break;
-         case AbstractType.INTEGER:
-         case AbstractType.DOUBLE:
-            if (rightFamily != AbstractType.INTEGER && rightFamily != AbstractType.DOUBLE)
-               throw new CompileException("Type mismatch");
-            break;
-         case AbstractType.BOOLEAN:
-            if (rightFamily != AbstractType.BOOLEAN)
-               throw new CompileException("Type mismatch");
-            if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL)
-               throw new CompileException("Invalid boolean comparison operator: " + operator);
-            break;
-         case AbstractType.DATETIME:
-            if (rightFamily != AbstractType.DATETIME)
-               throw new CompileException("Type mismatch");
-            if (operator != Comparison.EQUAL &&
-                  operator != Comparison.NOTEQUAL &&
-                  operator != Comparison.LESSTHAN &&
-                  operator != Comparison.GREATERTHAN)
-               throw new CompileException("Invalid datetime comparison operator: " + operator);
-            break;
-         case AbstractType.OBJECT:
-            if (left instanceof Path)
-            {
-               Path path = (Path) left;
-               if (path.isCollection())
-                  throw new CompileException("Invalid use of collection path: " + path);
+      if (leftFamily == AbstractType.Family.STRING) {
+         if (rightFamily != AbstractType.Family.STRING) {
+            throw new CompileException("Type mismatch");
+         }
+         if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL) {
+            throw new CompileException("Invalid string comparison operator: " + operator);
+         }
+      } else if (leftFamily == AbstractType.Family.INTEGER || leftFamily == AbstractType.Family.DOUBLE) {
+         if (rightFamily != AbstractType.Family.INTEGER && rightFamily != AbstractType.Family.DOUBLE) {
+            throw new CompileException("Type mismatch");
+         }
+      } else if (leftFamily == AbstractType.Family.BOOLEAN) {
+         if (rightFamily != AbstractType.Family.BOOLEAN) {
+            throw new CompileException("Type mismatch");
+         }
+         if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL) {
+            throw new CompileException("Invalid boolean comparison operator: " + operator);
+         }
+      } else if (leftFamily == AbstractType.Family.DATETIME) {
+         if (rightFamily != AbstractType.Family.DATETIME) {
+            throw new CompileException("Type mismatch");
+         }
+         if (operator != Comparison.EQUAL &&
+               operator != Comparison.NOTEQUAL &&
+               operator != Comparison.LESSTHAN &&
+               operator != Comparison.GREATERTHAN) {
+            throw new CompileException("Invalid datetime comparison operator: " + operator);
+         }
+      } else if (leftFamily == AbstractType.Family.OBJECT) {
+         if (left instanceof Path) {
+            Path path = (Path) left;
+            if (path.isCollection()) {
+               throw new CompileException("Invalid use of collection path: " + path);
             }
-            if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL)
-               throw new CompileException("Invalid entity bean comparison operator: " + operator);
-            break;
+         }
+         if (operator != Comparison.EQUAL && operator != Comparison.NOTEQUAL) {
+            throw new CompileException("Invalid entity bean comparison operator: " + operator);
+         }
       }
       return new Comparison(left, operator, right);
    }
@@ -362,22 +362,22 @@ public class EJBQL20Compiler implements ParserVisitor
       switch (node.token.kind)
       {
          case EJBQL20ParserConstants.INTEGER_LITERAL:
-            type = schema.getBuiltinType(AbstractType.INTEGER);
+            type = schema.getBuiltinType(AbstractType.Family.INTEGER);
             if (image.endsWith("l") || image.endsWith("L"))
                value = Long.decode(image.substring(0, image.length() - 1));
             else
                value = Integer.decode(image);
             break;
          case EJBQL20ParserConstants.FLOATING_POINT_LITERAL:
-            type = schema.getBuiltinType(AbstractType.DOUBLE);
+            type = schema.getBuiltinType(AbstractType.Family.DOUBLE);
             value = Double.valueOf(image);
             break;
          case EJBQL20ParserConstants.STRING_LITERAL:
-            type = schema.getBuiltinType(AbstractType.STRING);
+            type = schema.getBuiltinType(AbstractType.Family.STRING);
             value = unEscape(image);
             break;
          case EJBQL20ParserConstants.BOOLEAN_LITERAL:
-            type = schema.getBuiltinType(AbstractType.BOOLEAN);
+            type = schema.getBuiltinType(AbstractType.Family.BOOLEAN);
             value = "true".equalsIgnoreCase(image) ? Boolean.TRUE : Boolean.FALSE;
             break;
          default:

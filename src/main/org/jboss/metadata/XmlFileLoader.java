@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  *
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * Revisions:
  *
@@ -360,6 +360,7 @@ public class XmlFileLoader
          registerDTD("-//JBoss//DTD JBOSS 3.2//EN","jboss_3_2.dtd");
          registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 3.0//EN", "jbosscmp-jdbc_3_0.dtd");
          registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 3.2//EN", "jbosscmp-jdbc_3_2.dtd");
+         registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN", "jbosscmp-jdbc_4_0.dtd");
          registerDTD("-//JBoss//DTD Web Application 2.2//EN", "jboss-web.dtd");
          registerDTD("-//JBoss//DTD Web Application 2.3//EN", "jboss-web_3_0.dtd");
       }

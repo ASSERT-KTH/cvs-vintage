@@ -30,9 +30,9 @@ public abstract class Entity implements AbstractClass
       return ejbName;
    }
 
-   public int getFamily()
+   public AbstractType.Family getFamily()
    {
-      return AbstractType.OBJECT;
+      return AbstractType.Family.OBJECT;
    }
 
    public AbstractType getIdentityType()

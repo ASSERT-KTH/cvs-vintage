@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -102,10 +102,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          }
 
          // set the parameters
-         for(int i=0; i<parameters.size(); i++) {
-            QueryParameter parameter = (QueryParameter)parameters.get(i);
-            parameter.set(log, ps, i+1, args);
-         }
+         bindParameters(ps, args);
 
          // execute statement
          ResultSet rs = ps.executeQuery();
@@ -175,6 +172,14 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          EJBProxyFactory factory;
          factory = selectContainer.getProxyFactory();
          return factory.getEntityCollection(results);
+      }
+   }
+
+   protected void bindParameters(PreparedStatement ps, Object[] args) throws Exception
+   {
+      for(int i=0; i<parameters.size(); i++) {
+         QueryParameter parameter = (QueryParameter)parameters.get(i);
+         parameter.set(log, ps, i+1, args);
       }
    }
 
