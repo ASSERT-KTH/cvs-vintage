@@ -236,16 +236,20 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    // Process existing parameters, if not already done so
 	    // ( otherwise we'll process some twice )
 	    realRequest.parameters().handleQueryParameters();
-	    // Set the query string - the sum of the old one and new one.
+	    // Set the query string - the sum of the new one and old one.
 	    String oldQS=realRequest.queryString().toString();
-	    String newQS=(oldQS==null ) ? queryString : oldQS + "&" +
-		queryString;
+	    String newQS=(oldQS==null ) ? queryString : queryString + "&" +
+		oldQS;
 	    realRequest.queryString().setString(newQS);
 
 	    // Process the additional parsm. We don't know if the old
 	    // params were processed ( so we need to make sure they are,
 	    // i.e. a known state ).
-	    realRequest.parameters().processParameters( queryString ); 
+	    realRequest.parameters().push();
+	    Parameters child=realRequest.parameters().getCurrentSet();
+
+	    child.processParameters( queryString );
+	    //realRequest.parameters().processParameters( queryString ); 
 	}
 	
 	// run the new request through the context manager

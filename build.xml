@@ -387,11 +387,6 @@
       <include name="org/apache/tomcat/startup/**"/>
       <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/container/tomcat-startup.jar"
-         basedir="${tomcat.build}/classes"
-         manifest="src/build/manifests/manifest.startup">
-      <include name="org/apache/tomcat/startup/**"/>
-    </jar>
 
     <jar jarfile="${tomcat.build}/lib/common/etomcat.jar"
          basedir="${tomcat.build}/classes"
