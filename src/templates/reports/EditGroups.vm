@@ -31,8 +31,7 @@
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="selectgroup" value="$index" /></td>
  <td>Group $velocityCount</td>
- <td><input type="text" value="$!data.Parameters.getString("groupname_$index", $group.Name)"
-          name="groupname_$index" /></td>
+ <td><input type="text" value="$group.Name" name="groupname_$index" /></td>
  </tr>
  #set ($finalCount = $velocityCount + 1)
 #end

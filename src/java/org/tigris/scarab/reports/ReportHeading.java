@@ -51,7 +51,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportHeading.java,v 1.6 2003/03/28 00:00:16 jon Exp $
+ * @version $Id: ReportHeading.java,v 1.7 2003/05/01 18:37:06 elicia Exp $
  */
 public class ReportHeading
     implements java.io.Serializable,
@@ -72,7 +72,7 @@ public class ReportHeading
     public int calculateType()
     {
         int type = 0;
-        if (getReportGroups() != null) 
+        if (getReportGroups() != null && getReportGroups().size() > 0) 
         {
             ReportGroup firstGroup = (ReportGroup)getReportGroups().get(0);
             if (firstGroup.getReportUserAttributes() != null)
