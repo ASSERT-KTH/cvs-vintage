@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactoryImpl.java,v 1.4 2005/01/31 20:54:36 linus Exp $
+// $Id: ModelManagementFactoryImpl.java,v 1.5 2005/02/20 15:47:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,11 @@ public class ModelManagementFactoryImpl
 	implements ModelManagementFactory {
 
     /**
+     * The root model.
+     */
+    MModel rootModel;
+    
+    /**
      * The model implementation.
      */
     private NSUMLModelImplementation nsmodel;
@@ -71,6 +76,23 @@ public class ModelManagementFactoryImpl
 	return modelElement;
     }
 
+    /**
+     * Sets the root model of the project
+     * @param rootModel the new root model.
+     */
+    public void setRootModel(Object rootModel) {
+        this.rootModel = (MModel)rootModel;
+    }
+    
+    /**
+     * Gets the root model of the project
+     * @return the current root model.
+     */
+    public Object getRootModel() {
+        return rootModel;
+    }
+    
+    
     /**
      * Create an empty but initialized instance of a UML ElementImport.
      *

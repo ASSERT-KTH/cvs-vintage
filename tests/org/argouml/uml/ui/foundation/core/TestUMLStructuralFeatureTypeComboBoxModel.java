@@ -1,4 +1,4 @@
-// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.14 2005/01/20 23:20:33 linus Exp $
+// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.15 2005/02/20 15:47:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,12 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        //ProjectManager.getManager().getCurrentProject();
+        Object mmodel =
+            Model.getModelManagementFactory().createModel();
+        Model.getCoreHelper().setName(mmodel, "untitledModel");
+        Model.getModelManagementFactory().setRootModel(mmodel);
+        //
         elem = Model.getCoreFactory().createAttribute();
         model = new UMLStructuralFeatureTypeComboBoxModel();
         model.targetSet(new TargetEvent(this, "set", new Object[0],

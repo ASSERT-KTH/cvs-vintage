@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.10 2005/01/30 20:48:14 linus Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.11 2005/02/20 15:47:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,6 +160,9 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      */
     public Collection getAllModelElementsOfKindWithModel(Object model,
             Object type) {
+        if (model == null) {
+            throw new IllegalArgumentException("A model must be supplied");
+        }
         Class kind = (Class) type;
         Collection ret = getAllModelElementsOfKind(model, kind);
         if (kind.isAssignableFrom(model.getClass())) {

@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.17 2005/01/21 21:18:37 linus Exp $
+// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.18 2005/02/20 15:47:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,10 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        Object mmodel =
+            Model.getModelManagementFactory().createModel();
+        Model.getCoreHelper().setName(mmodel, "untitledModel");
+        Model.getModelManagementFactory().setRootModel(mmodel);
         elem = Model.getUseCasesFactory().createExtend();
         model = new UMLExtendBaseComboBoxModel();
         bases = new Object[10];

@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.53 2005/01/26 22:11:49 linus Exp $
+// $Id: UmlModelEventPump.java,v 1.54 2005/02/20 15:47:14 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -206,8 +204,7 @@ public final class UmlModelEventPump implements MElementListener {
 	    String eventName) {
         // first register the listener for all elements allready in
         // the model modelClass = formatClass(modelClass);
-        Project p = ProjectManager.getManager().getCurrentProject();
-        Object model = p.getRoot();
+        Object model = Model.getModelManagementFactory().getRootModel();
         Collection col =
             Model.getModelManagementHelper()
 	        .getAllModelElementsOfKindWithModel(model, modelClass);
@@ -347,8 +344,7 @@ public final class UmlModelEventPump implements MElementListener {
         // remove all registrations of this listener with all instances of
         // modelClass
         //modelClass = formatClass(modelClass);
-        Project p = ProjectManager.getManager().getCurrentProject();
-        Object model = p.getRoot();
+        Object model = Model.getModelManagementFactory().getRootModel();
         Iterator it =
             Model.getModelManagementHelper()
 	        .getAllModelElementsOfKindWithModel(model, modelClass)

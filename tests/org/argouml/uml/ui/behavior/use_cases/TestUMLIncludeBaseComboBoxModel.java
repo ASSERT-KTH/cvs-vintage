@@ -1,4 +1,4 @@
-// $Id: TestUMLIncludeBaseComboBoxModel.java,v 1.16 2005/01/20 23:20:31 linus Exp $
+// $Id: TestUMLIncludeBaseComboBoxModel.java,v 1.17 2005/02/20 15:47:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,10 @@ public class TestUMLIncludeBaseComboBoxModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        Object mmodel =
+            Model.getModelManagementFactory().createModel();
+        Model.getCoreHelper().setName(mmodel, "untitledModel");
+        Model.getModelManagementFactory().setRootModel(mmodel);
         elem = Model.getUseCasesFactory().createInclude();
         model = new UMLIncludeBaseComboBoxModel();
         model.targetSet(new TargetEvent(this, "set", new Object[0],
