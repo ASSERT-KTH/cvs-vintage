@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCStopCommand
 {
@@ -60,13 +60,13 @@ public final class JDBCStopCommand
       {
          JDBCCMRFieldBridge cmrField = cmrFields[i];
          JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
-         if(relationMetaData.isTableMappingStyle() && relationMetaData.getTableExists())
+         if(relationMetaData.isTableMappingStyle() && !relationMetaData.isTableDropped())
          {
             if(relationMetaData.getRemoveTable())
             {
                dropTable(relationMetaData.getDataSource(), cmrField.getTableName());
             }
-            relationMetaData.setTableExists(false);
+            relationMetaData.setTableDropped();
          }
       }
 

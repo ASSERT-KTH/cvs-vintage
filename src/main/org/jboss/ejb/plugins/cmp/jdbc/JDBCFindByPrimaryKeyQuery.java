@@ -9,11 +9,15 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.deployment.DeploymentException;
 
 import javax.ejb.FinderException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.lang.reflect.Method;
 
 /**
@@ -25,72 +29,87 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
 {
    private JDBCStoreManager manager;
    private boolean rowLocking;
 
-   public JDBCFindByPrimaryKeyQuery(JDBCStoreManager man, JDBCQueryMetaData q)
+   public JDBCFindByPrimaryKeyQuery(JDBCStoreManager manager, JDBCQueryMetaData q)
+      throws DeploymentException
    {
-      super(man, q);
-      this.manager = man;
+      super(manager, q);
+      this.manager = manager;
       rowLocking = manager.getMetaData().hasRowLocking();
 
       JDBCEntityBridge entity = manager.getEntityBridge();
+
+      JDBCTypeMappingMetaData typeMapping = this.manager.getJDBCTypeFactory().getTypeMapping();
+      AliasManager aliasManager = new AliasManager(
+         typeMapping.getAliasHeaderPrefix(),
+         typeMapping.getAliasHeaderSuffix(),
+         typeMapping.getAliasMaxLength()
+      );
+
+      String alias = aliasManager.getAlias(entity.getEntityName());
+
+      StringBuffer select = new StringBuffer(200);
+      SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), alias, select);
+
+      StringBuffer from = new StringBuffer();
+      from.append(entity.getTableName())
+         .append(' ')
+         .append(alias);
 
       // set the preload fields
       JDBCReadAheadMetaData readAhead = q.getReadAhead();
       if(readAhead.isOnFind())
       {
          setEagerLoadGroup(readAhead.getEagerLoadGroup());
+         if(getEagerLoadMask() != null)
+         {
+            SQLUtil.appendColumnNamesClause(entity.getTableFields(), getEagerLoadMask(), alias, select);
+
+            List onFindCMRList = JDBCAbstractQueryCommand.getLeftJoinCMRNodes(
+               entity, entity.getTableName(), readAhead.getLeftJoins());
+
+            if(!onFindCMRList.isEmpty())
+            {
+               setOnFindCMRList(onFindCMRList);
+               JDBCAbstractQueryCommand.leftJoinCMRNodes(alias, onFindCMRList, aliasManager, from);
+               JDBCAbstractQueryCommand.appendLeftJoinCMRColumnNames(onFindCMRList, aliasManager, select);
+            }
+         }
       }
+
+      StringBuffer where = new StringBuffer();
+      SQLUtil.getWhereClause(entity.getPrimaryKeyFields(), alias, where);
 
       // generate the sql
       StringBuffer sql = new StringBuffer(300);
-      sql.append(SQLUtil.SELECT);
-
-      // put pk fields first
-      StringBuffer forUpdate = null;
-      if(getEagerLoadMask() != null)
+      if(rowLocking && readAhead.isOnFind() && getEagerLoadMask() != null)
       {
-         StringBuffer columnNamesClause = new StringBuffer(200);
-         SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), entity.getTableName(), columnNamesClause);
-         SQLUtil.appendColumnNamesClause(entity.getTableFields(), getEagerLoadMask(), entity.getTableName(), columnNamesClause);
-
-         if(rowLocking)
-            forUpdate = new StringBuffer(" FOR UPDATE OF ").append(columnNamesClause);
-
-
-         preloadableCmrs = JDBCAbstractQueryCommand.getPreloadableCmrs(getEagerLoadMask(), manager);
-         deepCmrs = null;
-         if(preloadableCmrs != null && preloadableCmrs.length > 0)
-         {
-            deepCmrs = JDBCAbstractQueryCommand.deepPreloadableCmrs(preloadableCmrs);
-            StringBuffer[] ref = {forUpdate};
-            cmrColumnNames(deepCmrs, columnNamesClause, ref);
-            forUpdate = ref[0];
-         }
-         sql.append(columnNamesClause)
-            .append(SQLUtil.FROM)
-            .append(entity.getTableName());
-
-         if(deepCmrs != null)
-         {
-            generateCmrOuterJoin(deepCmrs, entity.getTableName(), sql);
-         }
+         JDBCFunctionMappingMetaData rowLockingTemplate = typeMapping.getRowLockingTemplate();
+         rowLockingTemplate.getFunctionSql(
+            new Object[]{
+               select,
+               from,
+               where.length() == 0 ? null : where,
+               null // order by
+            },
+            sql
+         );
       }
       else
       {
-         SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), sql)
+         sql.append(SQLUtil.SELECT)
+            .append(select)
             .append(SQLUtil.FROM)
-            .append(entity.getTableName());
+            .append(from)
+            .append(SQLUtil.WHERE)
+            .append(where);
       }
-
-      sql.append(SQLUtil.WHERE);
-      SQLUtil.getWhereClause(entity.getPrimaryKeyFields(), sql);
-      if(forUpdate != null) sql.append(forUpdate);
 
       setSQL(sql.toString());
       setParameterList(QueryParameter.createPrimaryKeyParameters(0, entity));

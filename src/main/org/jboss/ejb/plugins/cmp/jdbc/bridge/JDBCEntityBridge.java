@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -595,7 +595,7 @@ public class JDBCEntityBridge implements EntityBridge
       return cmrFields;
    }
 
-   private JDBCCMRFieldBridge getCMRFieldByName(String name)
+   public JDBCCMRFieldBridge getCMRFieldByName(String name)
    {
       for(int i = 0; i < cmrFields.length; ++i)
       {
@@ -720,6 +720,7 @@ public class JDBCEntityBridge implements EntityBridge
       for(int i = 0; i < cmrFields.length; ++i)
          cmrFields[i].resetPersistenceContext(ctx);
    }
+
 
    public static void destroyPersistenceContext(EntityEnterpriseContext ctx)
    {
@@ -1044,7 +1045,10 @@ public class JDBCEntityBridge implements EntityBridge
    {
       String eagerLoadGroupName = metadata.getEagerLoadGroup();
       if(eagerLoadGroupName == null)
+      {
+         // can be null in case of <eager-load-group/>, meaning empty load group
          eagerLoadGroupMask = defaultLockGroupMask;
+      }
       else
          eagerLoadGroupMask = (boolean[])loadGroupMasks.get(eagerLoadGroupName);
    }

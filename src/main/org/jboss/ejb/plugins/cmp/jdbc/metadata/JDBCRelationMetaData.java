@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCRelationMetaData
 {
@@ -65,8 +65,11 @@ public final class JDBCRelationMetaData
    /** the name of the table to use for this bean */
    private final String tableName;
 
-   /** does the table exist */
-   private boolean tableExists;
+   /** is table created */
+   private boolean tableCreated;
+
+   /** is table dropped */
+   private boolean tableDropped;
 
    /** should we create the table when deployed */
    private final boolean createTable;
@@ -75,11 +78,11 @@ public final class JDBCRelationMetaData
    private final boolean removeTable;
 
    /**
-    * What commands should be issued directly after creation
-    * of a table?
-    */
+	* What commands should be issued directly after creation
+	* of a table?
+	*/
    private final ArrayList tablePostCreateCmd;
-
+   
    /** should we use 'SELECT ... FOR UPDATE' syntax? */
    private final boolean rowLocking;
 
@@ -143,13 +146,10 @@ public final class JDBCRelationMetaData
       left.init(right);
       right.init(left);
 
-      if(mappingStyle == TABLE)
-      {
+      if(mappingStyle == TABLE) {
          tableName = createDefaultTableName();
          tablePostCreateCmd = getDefaultTablePostCreateCmd();
-      }
-      else
-      {
+      } else {
          tableName = null;
          tablePostCreateCmd = null;
       }
@@ -179,26 +179,23 @@ public final class JDBCRelationMetaData
       mappingStyle = loadMappingStyle(element, defaultValues);
 
       // post-table-create commands
-      Element posttc = MetaData.getOptionalChild(element, "post-table-create");
-      if(posttc != null)
-      {
-         Iterator it = MetaData.getChildrenByTagName(posttc, "sql-statement");
-         tablePostCreateCmd = new ArrayList();
-         while(it.hasNext())
-         {
-            Element etmp = (Element) it.next();
-            tablePostCreateCmd.add(MetaData.getElementContent(etmp));
-         }
-
-      }
-      else
-      {
-         tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();
-      }
-
-
-
-
+	  Element posttc = MetaData.getOptionalChild(element,"post-table-create");	  
+	  if (posttc!=null) {		  
+	 	Iterator it = MetaData.getChildrenByTagName(posttc,"sql-statement");
+		tablePostCreateCmd = new ArrayList();
+		while (it.hasNext()) {
+		  Element etmp = (Element)it.next();  	
+		  tablePostCreateCmd.add(MetaData.getElementContent(etmp));
+		}
+   
+	  }
+	  else {
+		 tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();  
+	  }
+	      
+      
+      
+      
       // read-only
       String readOnlyString = MetaData.getOptionalChildContent(
          element, "read-only");
@@ -213,21 +210,15 @@ public final class JDBCRelationMetaData
 
       // read-time-out
       String readTimeOutString = MetaData.getOptionalChildContent(
-         element, "read-time-out");
-      if(readTimeOutString != null)
-      {
-         try
-         {
+            element, "read-time-out");
+      if(readTimeOutString != null) {
+         try {
             readTimeOut = Integer.parseInt(readTimeOutString);
-         }
-         catch(NumberFormatException e)
-         {
+         } catch (NumberFormatException e) {
             throw new DeploymentException("Invalid number format in " +
-               "read-time-out '" + readTimeOutString + "': " + e);
+                  "read-time-out '" + readTimeOutString + "': " + e);
          }
-      }
-      else
-      {
+      } else {
          readTimeOut = defaultValues.getReadTimeOut();
       }
 
@@ -240,22 +231,33 @@ public final class JDBCRelationMetaData
 
       // datasource name
       String dataSourceNameString = MetaData.getOptionalChildContent(
-         mappingElement, "datasource");
-      if(dataSourceNameString != null)
-      {
-         dataSourceName = dataSourceNameString;
-      }
-      else
-      {
+            mappingElement, "datasource");
+      if(dataSourceNameString != null) {
+         if(dataSourceNameString.charAt(0) == '@') {
+            String propName = dataSourceNameString.substring(1);
+            dataSourceName = System.getProperty(propName);
+            if(dataSourceName == null)
+               throw new DeploymentException("System property is not set: " + propName);
+         } else {
+            dataSourceName = dataSourceNameString;
+         }
+      } else {
          dataSourceName = defaultValues.getDataSourceName();
       }
 
       // get the type mapping for this datasource (optional, but always
       // set in standardjbosscmp-jdbc.xml)
       String datasourceMappingString = MetaData.getOptionalChildContent(
-         mappingElement, "datasource-mapping");
-      if(datasourceMappingString != null)
-      {
+            mappingElement, "datasource-mapping");
+      if(datasourceMappingString != null) {
+         if(datasourceMappingString.charAt(0) == '@') {
+            String propName = datasourceMappingString.substring(1);
+            datasourceMappingString = System.getProperty(propName);
+            if(datasourceMappingString == null) {
+               throw new DeploymentException("Property is not set: " + propName);
+            }
+         }
+
          datasourceMapping = jdbcApplication.getTypeMappingByName(
             datasourceMappingString);
 
@@ -392,9 +394,9 @@ public final class JDBCRelationMetaData
          right.getKeyFields().isEmpty())
       {
          throw new DeploymentException("Atleast one role of a foreign-key " +
-            "mapped relationship must have key fields " +
-            "(or <primkey-field> is missing from ejb-jar.xml): " +
-            "ejb-relation-name=" + relationName);
+               "mapped relationship must have key fields " +
+               "(or <primkey-field> is missing from ejb-jar.xml): " +
+               "ejb-relation-name=" + relationName);
       }
 
       // both sides of a table relation must have keys
@@ -452,8 +454,7 @@ public final class JDBCRelationMetaData
    }
 
    private static Element getMappingElement(Element element)
-      throws DeploymentException
-   {
+         throws DeploymentException {
 
       // if defaults check for preferred-relation-mapping
       if("defaults".equals(element.getTagName()))
@@ -480,9 +481,8 @@ public final class JDBCRelationMetaData
    }
 
    private static Element getEJBRelationshipRoleElement(
-      Element element,
-      JDBCRelationshipRoleMetaData defaultRole) throws DeploymentException
-   {
+         Element element,
+         JDBCRelationshipRoleMetaData defaultRole) throws DeploymentException {
 
       String roleName = defaultRole.getRelationshipRoleName();
 
@@ -562,8 +562,7 @@ public final class JDBCRelationMetaData
     * right role of this relation
     */
    public JDBCRelationshipRoleMetaData getOtherRelationshipRole(
-      JDBCRelationshipRoleMetaData role)
-   {
+      JDBCRelationshipRoleMetaData role) {
 
       if(left == role)
       {
@@ -602,8 +601,7 @@ public final class JDBCRelationMetaData
     * Gets the name of the datasource in jndi for this entity
     * @return the name of datasource in jndi
     */
-   private String getDataSourceName()
-   {
+   private String getDataSourceName() {
       return dataSourceName;
    }
 
@@ -626,33 +624,38 @@ public final class JDBCRelationMetaData
    }
 
    /**
-    * Gets the (user-defined) SQL commands that should be
+    * Gets the (user-defined) SQL commands that should be 
     * issued to the db after table creation.
     * @return the SQL command
     */
-   private ArrayList getDefaultTablePostCreateCmd()
-   {
-      return tablePostCreateCmd;
+   private ArrayList getDefaultTablePostCreateCmd() {
+   		return tablePostCreateCmd;
    }
-
-   /**
+   
+   /** 
     * Does the table exist yet? This does not mean that table has been created
     * by the appilcation, or the the database metadata has been checked for the
     * existance of the table, but that at this point the table is assumed to
     * exist.
     * @return true if the table exists
     */
-   public boolean getTableExists()
-   {
-      return tableExists;
+   public boolean isTableCreated() {
+      return tableCreated;
+   }
+
+   public void setTableCreated() {
+      tableCreated = true;
    }
 
    /**
     * Sets table exists flag.
     */
-   public void setTableExists(boolean tableExists)
-   {
-      this.tableExists = tableExists;
+   public void setTableDropped() {
+      this.tableDropped = true;
+   }
+
+   public boolean isTableDropped() {
+      return tableDropped;
    }
 
    /**

@@ -27,7 +27,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class SQLUtil
 {
@@ -104,7 +104,7 @@ public final class SQLUtil
       {
          for(int i = 0; i < rwords.size(); i++)
          {
-            if(((String) rwords.elementAt(i)).equalsIgnoreCase(tableName))
+            if(((String)rwords.elementAt(i)).equalsIgnoreCase(tableName))
             {
                tableName = "X" + tableName;
                break;
@@ -165,7 +165,6 @@ public final class SQLUtil
       if(!rwords.contains(word))
          rwords.add(word);
    }
-
 
    public static String fixConstraintName(String name, DataSource dataSource)
       throws DeploymentException
@@ -291,6 +290,29 @@ public final class SQLUtil
    }
 
    /**
+    * Returns identifier.columnName0
+    *    [, identifier.columnName1
+    *    [, identifier.columnName2 [...]]]
+    */
+   private static StringBuffer getColumnNamesClause(JDBCType type, String identifier, StringBuffer buf)
+   {
+      String[] columnNames = type.getColumnNames();
+      boolean hasIdentifier = identifier.length() > 0;
+      if(hasIdentifier)
+         buf.append(identifier).append(DOT);
+      buf.append(columnNames[0]);
+      int i = 1;
+      while(i < columnNames.length)
+      {
+         buf.append(COMMA);
+         if(hasIdentifier)
+            buf.append(identifier).append(DOT);
+         buf.append(columnNames[i++]);
+      }
+      return buf;
+   }
+
+   /**
     * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
     */
    public static StringBuffer appendColumnNamesClause(JDBCEntityBridge entity, String eagerLoadGroup, StringBuffer sb)
@@ -302,9 +324,9 @@ public final class SQLUtil
     * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
     */
    public static StringBuffer appendColumnNamesClause(JDBCEntityBridge entity,
-                                                   String eagerLoadGroup,
-                                                   String alias,
-                                                   StringBuffer sb)
+                                                      String eagerLoadGroup,
+                                                      String alias,
+                                                      StringBuffer sb)
    {
       return appendColumnNamesClause(entity.getTableFields(), entity.getLoadGroupMask(eagerLoadGroup), alias, sb);
    }
@@ -333,24 +355,20 @@ public final class SQLUtil
    }
 
    /**
-    * Returns identifier.columnName0
-    *    [, identifier.columnName1
-    *    [, identifier.columnName2 [...]]]
+    * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
     */
-   private static StringBuffer getColumnNamesClause(JDBCType type, String identifier, StringBuffer buf)
+   public static StringBuffer appendColumnNamesClause(JDBCCMPFieldBridge[] fields,
+                                                      String identifier,
+                                                      StringBuffer buf)
    {
-      String[] columnNames = type.getColumnNames();
-      boolean hasIdentifier = identifier.length() > 0;
-      if(hasIdentifier)
-         buf.append(identifier).append(DOT);
-      buf.append(columnNames[0]);
-      int i = 1;
-      while(i < columnNames.length)
+      for(int i = 0; i < fields.length; ++i)
       {
-         buf.append(COMMA);
-         if(hasIdentifier)
-            buf.append(identifier).append(DOT);
-         buf.append(columnNames[i++]);
+         JDBCType type = getJDBCType(fields[i]);
+         if(type != null)
+         {
+            buf.append(COMMA);
+            getColumnNamesClause(type, identifier, buf);
+         }
       }
       return buf;
    }
@@ -639,7 +657,7 @@ public final class SQLUtil
                                             StringBuffer buf)
    {
       JDBCEntityBridge parentEntity = cmrField.getEntity();
-      JDBCEntityBridge childEntity = (JDBCEntityBridge) cmrField.getRelatedEntity();
+      JDBCEntityBridge childEntity = (JDBCEntityBridge)cmrField.getRelatedEntity();
 
       JDBCCMPFieldBridge parentField;
       JDBCCMPFieldBridge childField;
@@ -887,16 +905,6 @@ public final class SQLUtil
       return buf;
    }
 
-   private static JDBCType getJDBCType(JDBCFieldBridge field)
-   {
-      JDBCType type = field.getJDBCType();
-      if(type != null && type.getColumnNames().length > 0)
-      {
-         return type;
-      }
-      return null;
-   }
-
    public static boolean tableExists(String tableName, DataSource dataSource)
       throws DeploymentException
    {
@@ -939,13 +947,22 @@ public final class SQLUtil
       {
          // This should not happen. A J2EE compatiable JDBC driver is
          // required fully support metadata.
-         throw new DeploymentException("Error while checking if table aleady " +
-            "exists", e);
+         throw new DeploymentException("Error while checking if table aleady exists", e);
       }
       finally
       {
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(con);
       }
+   }
+
+   private static JDBCType getJDBCType(JDBCFieldBridge field)
+   {
+      JDBCType type = field.getJDBCType();
+      if(type != null && type.getColumnNames().length > 0)
+      {
+         return type;
+      }
+      return null;
    }
 }

@@ -18,17 +18,18 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
 {
+
    public JDBCJBossQLQuery(JDBCStoreManager manager,
                            JDBCQueryMetaData q)
       throws DeploymentException
    {
       super(manager, q);
 
-      JDBCJBossQLQueryMetaData metadata = (JDBCJBossQLQueryMetaData) q;
+      JDBCJBossQLQueryMetaData metadata = (JDBCJBossQLQueryMetaData)q;
       if(getLog().isDebugEnabled())
       {
          getLog().debug("JBossQL: " + metadata.getJBossQL());
@@ -70,12 +71,7 @@ public final class JDBCJBossQLQuery extends JDBCAbstractQueryCommand
          if(readahead.isOnFind())
          {
             setEagerLoadGroup(readahead.getEagerLoadGroup());
-            preloadableCmrs = getPreloadableCmrs(getEagerLoadMask(), selectEntity.getManager());
-            deepCmrs = null;
-            if(preloadableCmrs != null && preloadableCmrs.length > 0)
-            {
-               deepCmrs = JDBCAbstractQueryCommand.deepPreloadableCmrs(preloadableCmrs);
-            }
+            setOnFindCMRList(compiler.getLeftJoinCMRList());
          }
       }
       else if(compiler.isSelectField())

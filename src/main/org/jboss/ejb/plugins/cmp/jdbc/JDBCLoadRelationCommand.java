@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -75,7 +75,7 @@ public final class JDBCLoadRelationCommand
       {
          // create the statement
          if(log.isDebugEnabled())
-            log.debug("Executing SQL: " + sql);
+            log.debug("load relation SQL: " + sql);
 
          // get the connection
          con = cmrField.getDataSource().getConnection();
@@ -197,7 +197,7 @@ public final class JDBCLoadRelationCommand
          }
 
          // success, return the results
-         return (List) resultsMap.get(pk);
+         return (List)resultsMap.get(pk);
       }
       catch(EJBException e)
       {
@@ -220,20 +220,27 @@ public final class JDBCLoadRelationCommand
       JDBCCMPFieldBridge[] myKeyFields = getMyKeyFields(cmrField);
       JDBCCMPFieldBridge[] relatedKeyFields = getRelatedKeyFields(cmrField);
       String relationTable = getRelationTable(cmrField);
-      JDBCEntityBridge relatedJDBCEntity = cmrField.getRelatedJDBCEntity();
-      String relatedTable = relatedJDBCEntity.getTableName();
+      JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+      String relatedTable = relatedEntity.getTableName();
 
       // do we need to join the relation table and the related table
       boolean join = ((preloadMask != null) || cmrField.allFkFieldsMappedToPkFields())
-         && !relationTable.equals(relatedTable);
+         && (relatedKeyFields != relatedEntity.getPrimaryKeyFields());
 
       // aliases for the tables, only required if we are joining the tables
-      String relationTableAlias = "";
-      String relatedTableAlias = "";
+      String relationTableAlias;
+      String relatedTableAlias;
       if(join)
       {
          relationTableAlias = relationTable;
-         relatedTableAlias = relatedTable;
+         relatedTableAlias = (
+            relatedTable.equals(relationTable) ? relationTable + '_' + cmrField.getFieldName() : relatedTable
+         );
+      }
+      else
+      {
+         relationTableAlias = "";
+         relatedTableAlias = "";
       }
 
       JDBCFunctionMappingMetaData selectTemplate = getSelectTemplate(cmrField);
@@ -341,7 +348,8 @@ public final class JDBCLoadRelationCommand
          // relation table
          if(cmrField.getRelationMetaData().hasRowLocking())
          {
-            selectTemplate = cmrField.getRelationMetaData().getTypeMapping().getRowLockingTemplate();
+            selectTemplate =
+               cmrField.getRelationMetaData().getTypeMapping().getRowLockingTemplate();
             if(selectTemplate == null)
             {
                throw new IllegalStateException(
@@ -358,7 +366,8 @@ public final class JDBCLoadRelationCommand
                cmrField.getRelatedJDBCEntity().getMetaData().getTypeMapping().getRowLockingTemplate();
             if(selectTemplate == null)
             {
-               throw new IllegalStateException("row-locking is not allowed for this type of datastore");
+               throw new IllegalStateException(
+                  "row-locking is not allowed for this type of datastore");
             }
          }
       }
@@ -417,7 +426,12 @@ public final class JDBCLoadRelationCommand
       sql.append(SQLUtil.FROM).append(relationTable);
       if(join)
       {
-         sql.append(SQLUtil.COMMA).append(relatedTable);
+         sql.append(' ')
+            .append(relationTableAlias)
+            .append(SQLUtil.COMMA)
+            .append(relatedTable)
+            .append(' ')
+            .append(relatedTableAlias);
       }
 
       //
@@ -431,9 +445,9 @@ public final class JDBCLoadRelationCommand
          sql.append('(');
          SQLUtil.getJoinClause(
             relatedKeyFields,
-            relationTable,
+            relationTableAlias,
             cmrField.getRelatedJDBCEntity().getPrimaryKeyFields(),
-            relatedTable,
+            relatedTableAlias,
             sql)
             .append(')')
             .append(SQLUtil.AND)
@@ -493,7 +507,12 @@ public final class JDBCLoadRelationCommand
       fromClause.append(relationTable);
       if(join)
       {
-         fromClause.append(SQLUtil.COMMA).append(relatedTable);
+         fromClause.append(' ')
+            .append(relationTableAlias)
+            .append(SQLUtil.COMMA)
+            .append(relatedTable)
+            .append(' ')
+            .append(relatedTableAlias);
       }
 
       //
@@ -507,10 +526,13 @@ public final class JDBCLoadRelationCommand
          whereClause.append('(');
          SQLUtil.getJoinClause(
             relatedKeyFields,
-            relationTable,
+            relationTableAlias,
             cmrField.getRelatedJDBCEntity().getPrimaryKeyFields(),
-            relatedTable, whereClause)
-            .append(')').append(SQLUtil.AND).append('(');
+            relatedTableAlias,
+            whereClause)
+            .append(')')
+            .append(SQLUtil.AND)
+            .append('(');
       }
 
       // add the keys
@@ -523,6 +545,7 @@ public final class JDBCLoadRelationCommand
          }
          whereClause.append('(').append(pkWhere).append(')');
       }
+
       if(join)
       {
          whereClause.append(')');
@@ -534,7 +557,8 @@ public final class JDBCLoadRelationCommand
       String[] args = new String[]{
          columnNamesClause.toString(),
          fromClause.toString(),
-         whereClause.toString()
+         whereClause.toString(),
+         null // order by
       };
       return selectTemplate.getFunctionSql(args, new StringBuffer(500)).toString();
    }

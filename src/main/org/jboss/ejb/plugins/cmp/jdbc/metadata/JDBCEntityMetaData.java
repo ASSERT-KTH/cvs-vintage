@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public final class JDBCEntityMetaData
 {
@@ -106,7 +106,8 @@ public final class JDBCEntityMetaData
    private final boolean removeTable;
 
    /**
-    * What command should be issued directly after creation of a table?
+    * What command should be issued directly after creation
+    * of a table?
     */
    private final ArrayList tablePostCreateCmd;
 
@@ -332,7 +333,7 @@ public final class JDBCEntityMetaData
       List nonPkFieldNames = new ArrayList();
       for(Iterator i = entity.getCMPFields(); i.hasNext();)
       {
-         String cmpFieldName = (String) i.next();
+         String cmpFieldName = (String)i.next();
          JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(this, cmpFieldName);
          cmpFields.add(cmpField);
          cmpFieldsByName.put(cmpFieldName, cmpField);
@@ -361,7 +362,7 @@ public final class JDBCEntityMetaData
 
       for(Iterator queriesIterator = entity.getQueries(); queriesIterator.hasNext();)
       {
-         QueryMetaData queryData = (QueryMetaData) queriesIterator.next();
+         QueryMetaData queryData = (QueryMetaData)queriesIterator.next();
          Map newQueries = queryFactory.createJDBCQueryMetaData(queryData);
          // overrides defaults added above
          queries.putAll(newQueries);
@@ -414,7 +415,19 @@ public final class JDBCEntityMetaData
       String dataSourceNameString = MetaData.getOptionalChildContent(element, "datasource");
       if(dataSourceNameString != null)
       {
-         dataSourceName = dataSourceNameString;
+         if(dataSourceNameString.charAt(0) == '@')
+         {
+            String propName = dataSourceNameString.substring(1);
+            dataSourceName = System.getProperty(propName);
+            if(dataSourceName == null)
+            {
+               throw new DeploymentException("Property is not set: " + propName);
+            }
+         }
+         else
+         {
+            dataSourceName = dataSourceNameString;
+         }
       }
       else
       {
@@ -426,6 +439,16 @@ public final class JDBCEntityMetaData
       String datasourceMappingString = MetaData.getOptionalChildContent(element, "datasource-mapping");
       if(datasourceMappingString != null)
       {
+         if(datasourceMappingString.charAt(0) == '@')
+         {
+            String propName = datasourceMappingString.substring(1);
+            datasourceMappingString = System.getProperty(propName);
+            if(datasourceMappingString == null)
+            {
+               throw new DeploymentException("Property is not set: " + propName);
+            }
+         }
+
          datasourceMapping = jdbcApplication.getTypeMappingByName(datasourceMappingString);
          if(datasourceMapping == null)
          {
@@ -480,7 +503,7 @@ public final class JDBCEntityMetaData
          tablePostCreateCmd = new ArrayList();
          while(it.hasNext())
          {
-            Element etmp = (Element) it.next();
+            Element etmp = (Element)it.next();
             tablePostCreateCmd.add(MetaData.getElementContent(etmp));
          }
       }
@@ -593,10 +616,12 @@ public final class JDBCEntityMetaData
       //
 
       // update all existing queries with the new read ahead value
-      for(Iterator cmpFieldIterator = defaultValues.cmpFields.iterator(); cmpFieldIterator.hasNext();)
+      for(Iterator cmpFieldIterator = defaultValues.cmpFields.iterator();
+          cmpFieldIterator.hasNext();)
       {
+
          JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(
-            this, (JDBCCMPFieldMetaData) cmpFieldIterator.next());
+            this, (JDBCCMPFieldMetaData)cmpFieldIterator.next());
          cmpFields.add(cmpField);
          cmpFieldsByName.put(cmpField.getFieldName(), cmpField);
       }
@@ -604,10 +629,10 @@ public final class JDBCEntityMetaData
       // apply new configurations to the cmpfields
       for(Iterator i = MetaData.getChildrenByTagName(element, "cmp-field"); i.hasNext();)
       {
-         Element cmpFieldElement = (Element) i.next();
+         Element cmpFieldElement = (Element)i.next();
          String fieldName = MetaData.getUniqueChildContent(cmpFieldElement, "field-name");
 
-         JDBCCMPFieldMetaData oldCMPField = (JDBCCMPFieldMetaData) cmpFieldsByName.get(fieldName);
+         JDBCCMPFieldMetaData oldCMPField = (JDBCCMPFieldMetaData)cmpFieldsByName.get(fieldName);
          if(oldCMPField == null)
          {
             throw new DeploymentException("CMP field not found : fieldName=" + fieldName);
@@ -634,7 +659,7 @@ public final class JDBCEntityMetaData
             JDBCCMPFieldMetaData oldUpkField = null;
             for(Iterator iter = cmpFields.iterator(); iter.hasNext();)
             {
-               JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) iter.next();
+               JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)iter.next();
                if(cmpField.isUnknownPkField())
                {
                   oldUpkField = cmpField;
@@ -727,7 +752,7 @@ public final class JDBCEntityMetaData
           queriesIterator.hasNext();)
       {
          JDBCQueryMetaData query = queryFactory.createJDBCQueryMetaData(
-            (JDBCQueryMetaData) queriesIterator.next(),
+            (JDBCQueryMetaData)queriesIterator.next(),
             readAhead);
          queries.put(query.getMethod(), query);
       }
@@ -736,7 +761,7 @@ public final class JDBCEntityMetaData
       for(Iterator queriesIterator = MetaData.getChildrenByTagName(element, "query");
           queriesIterator.hasNext();)
       {
-         Element queryElement = (Element) queriesIterator.next();
+         Element queryElement = (Element)queriesIterator.next();
          Map newQueries = queryFactory.createJDBCQueryMetaData(
             queryElement,
             defaultValues.queries,
@@ -810,7 +835,7 @@ public final class JDBCEntityMetaData
       Iterator groups = MetaData.getChildrenByTagName(loadGroupsElement, "load-group");
       while(groups.hasNext())
       {
-         Element groupElement = (Element) groups.next();
+         Element groupElement = (Element)groups.next();
 
          // get the load-group-name
          String loadGroupName = MetaData.getUniqueChildContent(groupElement, "load-group-name");
@@ -830,7 +855,7 @@ public final class JDBCEntityMetaData
          Iterator fields = MetaData.getChildrenByTagName(groupElement, "field-name");
          while(fields.hasNext())
          {
-            String fieldName = MetaData.getElementContent((Element) fields.next());
+            String fieldName = MetaData.getElementContent((Element)fields.next());
 
             // check if the field is a cmp field that it is not a pk memeber
             JDBCCMPFieldMetaData field = getCMPFieldByName(fieldName);
@@ -873,7 +898,7 @@ public final class JDBCEntityMetaData
       Iterator loadGroupNames = MetaData.getChildrenByTagName(lazyLoadGroupsElement, "load-group-name");
       while(loadGroupNames.hasNext())
       {
-         String loadGroupName = MetaData.getElementContent((Element) loadGroupNames.next());
+         String loadGroupName = MetaData.getElementContent((Element)loadGroupNames.next());
          if(!loadGroupName.equals("*") && !loadGroups.containsKey(loadGroupName))
          {
             throw new DeploymentException("Lazy load group not found: " +
@@ -1041,7 +1066,7 @@ public final class JDBCEntityMetaData
     */
    public List getLoadGroup(String name) throws DeploymentException
    {
-      List group = (List) loadGroups.get(name);
+      List group = (List)loadGroups.get(name);
       if(group == null)
       {
          throw new DeploymentException("Unknown load group: name=" + name);
@@ -1072,7 +1097,7 @@ public final class JDBCEntityMetaData
     */
    public JDBCCMPFieldMetaData getCMPFieldByName(String name)
    {
-      return (JDBCCMPFieldMetaData) cmpFieldsByName.get(name);
+      return (JDBCCMPFieldMetaData)cmpFieldsByName.get(name);
    }
 
    /**
@@ -1169,7 +1194,7 @@ public final class JDBCEntityMetaData
     */
    public JDBCQueryMetaData getQueryMetaDataForMethod(Method method)
    {
-      return (JDBCQueryMetaData) queries.get(method);
+      return (JDBCQueryMetaData)queries.get(method);
    }
 
    /**
@@ -1259,7 +1284,7 @@ public final class JDBCEntityMetaData
    {
       if(o instanceof JDBCEntityMetaData)
       {
-         JDBCEntityMetaData entity = (JDBCEntityMetaData) o;
+         JDBCEntityMetaData entity = (JDBCEntityMetaData)o;
          return entityName.equals(entity.entityName) &&
             jdbcApplication.equals(entity.jdbcApplication);
       }

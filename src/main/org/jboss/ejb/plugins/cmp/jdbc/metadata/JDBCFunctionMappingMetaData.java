@@ -60,7 +60,7 @@ public final class JDBCFunctionMappingMetaData
          {
             if(c != '?')
             {
-               chunk.append((char) c);
+               chunk.append((char)c);
             }
             else
             {
@@ -71,15 +71,15 @@ public final class JDBCFunctionMappingMetaData
                StringBuffer number = new StringBuffer();
                for(int digit = reader.read(); digit >= 0; digit = reader.read())
                {
-                  if(Character.isDigit((char) digit))
+                  if(Character.isDigit((char)digit))
                   {
-                     number.append((char) digit);
+                     number.append((char)digit);
                   }
                   else
                   {
                      if(digit >= 0)
                      {
-                        chunk.append((char) digit);
+                        chunk.append((char)digit);
                      }
                      break;
                   }
@@ -116,7 +116,7 @@ public final class JDBCFunctionMappingMetaData
       parameters = new int[parameterList.size()];
       for(int i = 0; i < parameters.length; i++)
       {
-         parameters[i] = ((Integer) parameterList.get(i)).intValue() - 1;
+         parameters[i] = ((Integer)parameterList.get(i)).intValue() - 1;
       }
    }
 
@@ -129,10 +129,22 @@ public final class JDBCFunctionMappingMetaData
    {
       for(int i = 0; i < sqlChunks.length; i++)
       {
-         buf.append(sqlChunks[i]);
          if(i < parameters.length)
          {
-            buf.append(args[parameters[i]]);
+            // the logic is that if there is a parameter
+            // than append its chunck unless the parameter is null
+            // FIXME: I am not sure it's ok for any kind of template.
+            Object arg = args[parameters[i]];
+            if(arg != null)
+            {
+               buf.append(sqlChunks[i]);
+               buf.append(arg);
+            }
+         }
+         else
+         {
+            // this is tail
+            buf.append(sqlChunks[i]);
          }
       }
       return buf;

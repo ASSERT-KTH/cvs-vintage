@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public final class JDBCLoadEntityCommand
 {
@@ -53,9 +53,9 @@ public final class JDBCLoadEntityCommand
 
       // Create the Log
       log = Logger.getLogger(
-         this.getClass().getName() +
-         "." +
-         manager.getMetaData().getName());
+              this.getClass().getName() +
+              "." +
+              manager.getMetaData().getName());
    }
 
    /**
@@ -128,7 +128,7 @@ public final class JDBCLoadEntityCommand
       try
       {
          // create the statement
-         if(log.isDebugEnabled())
+         if (log.isDebugEnabled())
          {
             log.debug("Executing SQL: " + sql);
          }
@@ -138,14 +138,14 @@ public final class JDBCLoadEntityCommand
          ps = con.prepareStatement(sql);
 
          // Set the fetch size of the statement
-         if(manager.getEntityBridge().getFetchSize() > 0)
+         if (manager.getEntityBridge().getFetchSize() > 0)
          {
             ps.setFetchSize(manager.getEntityBridge().getFetchSize());
          }
 
          // set the parameters
          int paramIndex = 1;
-         for(int i = 0; i < loadKeys.size(); i++)
+         for (int i = 0; i < loadKeys.size(); i++)
          {
             paramIndex = entity.setPrimaryKeyParameters(ps, paramIndex, loadKeys.get(i));
          }
@@ -156,7 +156,7 @@ public final class JDBCLoadEntityCommand
          // load results
          boolean mainEntityLoaded = false;
          Object[] ref = new Object[1];
-         while(rs.next())
+         while (rs.next())
          {
             // reset the column index for this row
             int index = 1;
@@ -166,7 +166,7 @@ public final class JDBCLoadEntityCommand
 
             // if we are loading more then one entity, load the pk from the row
             Object pk = null;
-            if(loadKeys.size() > 1)
+            if (loadKeys.size() > 1)
             {
                // load the pk
                index = entity.loadPrimaryKeyResults(rs, index, ref);
@@ -174,7 +174,7 @@ public final class JDBCLoadEntityCommand
             }
 
             // is this the main entity or a preload entity
-            if(loadKeys.size() == 1 || pk.equals(id))
+            if (loadKeys.size() == 1 || pk.equals(id))
             {
                // main entity; load the values into the context
                loadIter.reset();
@@ -209,9 +209,9 @@ public final class JDBCLoadEntityCommand
          loadIter.removeAll();
 
          // did we load the main results
-         if(!mainEntityLoaded)
+         if (!mainEntityLoaded)
          {
-            if(failIfNotFound)
+            if (failIfNotFound)
                throw new NoSuchEntityException("Entity not found: primaryKey=" + ctx.getId());
             else
                return false;
@@ -219,11 +219,11 @@ public final class JDBCLoadEntityCommand
          else
             return true;
       }
-      catch(EJBException e)
+      catch (EJBException e)
       {
          throw e;
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          throw new EJBException("Load failed", e);
       }
@@ -243,21 +243,21 @@ public final class JDBCLoadEntityCommand
       // if we are loading more then one entity we need to add the primry
       // key to the load fields to match up the results with the correct entity.
       JDBCFieldBridge[] primaryKeyFields = entity.getPrimaryKeyFields();
-      if(keyCount > 1)
+      if (keyCount > 1)
       {
          SQLUtil.getColumnNamesClause(primaryKeyFields, sql);
          sql.append(SQLUtil.COMMA);
       }
       SQLUtil.getColumnNamesClause(loadIter, sql);
       sql.append(SQLUtil.FROM)
-         .append(entity.getTableName())
-         .append(SQLUtil.WHERE);
+              .append(entity.getTableName())
+              .append(SQLUtil.WHERE);
 
       //
       // where clause
       String pkWhere = SQLUtil.getWhereClause(primaryKeyFields, new StringBuffer(50)).toString();
       sql.append('(').append(pkWhere).append(')');
-      for(int i = 1; i < keyCount; i++)
+      for (int i = 1; i < keyCount; i++)
       {
          sql.append(SQLUtil.OR).append('(').append(pkWhere).append(')');
       }
@@ -273,7 +273,7 @@ public final class JDBCLoadEntityCommand
       // if we are loading more then one entity we need to add the primry
       // key to the load fields to match up the results with the correct
       // entity.
-      if(keyCount > 1)
+      if (keyCount > 1)
       {
          SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), columnNamesClause);
          columnNamesClause.append(SQLUtil.COMMA);
@@ -288,13 +288,13 @@ public final class JDBCLoadEntityCommand
       //
       // where clause
       String whereClause = SQLUtil.
-         getWhereClause(entity.getPrimaryKeyFields(), new StringBuffer(50)).toString();
-      if(keyCount > 0)
+              getWhereClause(entity.getPrimaryKeyFields(), new StringBuffer(50)).toString();
+      if (keyCount > 0)
       {
          StringBuffer sb = new StringBuffer((whereClause.length() + 6) * keyCount + 4);
-         for(int i = 0; i < keyCount; i++)
+         for (int i = 0; i < keyCount; i++)
          {
-            if(i > 0)
+            if (i > 0)
                sb.append(SQLUtil.OR);
             sb.append('(').append(whereClause).append(')');
          }
@@ -302,18 +302,19 @@ public final class JDBCLoadEntityCommand
       }
 
       JDBCFunctionMappingMetaData rowLocking =
-         manager.getMetaData().getTypeMapping().getRowLockingTemplate();
-      if(rowLocking == null)
+              manager.getMetaData().getTypeMapping().getRowLockingTemplate();
+      if (rowLocking == null)
       {
          throw new IllegalStateException(
-            "row-locking is not allowed for this type of datastore");
+                 "row-locking is not allowed for this type of datastore");
       }
       else
       {
          String[] args = new String[]{
             columnNamesClause.toString(),
             tableName,
-            whereClause
+            whereClause,
+            null // order by
          };
          return rowLocking.getFunctionSql(args, new StringBuffer(300)).toString();
       }

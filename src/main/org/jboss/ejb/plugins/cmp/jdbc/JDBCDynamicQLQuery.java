@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
@@ -35,10 +35,9 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       JDBCStoreManager manager,
       JDBCQueryMetaData q) throws DeploymentException
    {
-
       super(manager, q);
       catalog = manager.getCatalog();
-      metadata = (JDBCDynamicQLQueryMetaData) q;
+      metadata = (JDBCDynamicQLQueryMetaData)q;
    }
 
    public Collection execute(
@@ -47,7 +46,7 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       EntityEnterpriseContext ctx) throws FinderException
    {
 
-      String dynamicQL = (String) args[0];
+      String dynamicQL = (String)args[0];
       if(getLog().isDebugEnabled())
       {
          getLog().debug("DYNAMIC-QL: " + dynamicQL);
@@ -56,7 +55,7 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(catalog);
 
       // get the parameters
-      Object[] parameters = (Object[]) args[1];
+      Object[] parameters = (Object[])args[1];
       // parameter types
       Class[] parameterTypes;
       if(parameters == null)
@@ -112,6 +111,7 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
          if(readahead.isOnFind())
          {
             setEagerLoadGroup(readahead.getEagerLoadGroup());
+            setOnFindCMRList(compiler.getLeftJoinCMRList());
          }
       }
       else if(compiler.isSelectField())

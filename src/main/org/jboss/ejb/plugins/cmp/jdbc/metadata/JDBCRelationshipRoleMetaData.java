@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCRelationshipRoleMetaData
 {
@@ -69,9 +69,6 @@ public final class JDBCRelationshipRoleMetaData
    /** The key fields used by this role by field name. */
    private Map keyFields;
 
-   /** deep read ahead. */
-   private boolean deepReadAhead = false;
-
    public JDBCRelationshipRoleMetaData(JDBCRelationMetaData relationMetaData,
                                        JDBCApplicationMetaData application,
                                        RelationshipRoleMetaData role)
@@ -114,6 +111,7 @@ public final class JDBCRelationshipRoleMetaData
                                        JDBCRelationshipRoleMetaData defaultValues)
       throws DeploymentException
    {
+
       this.relationMetaData = relationMetaData;
       this.entity = application.getBeanByEjbName(defaultValues.getEntity().getName());
 
@@ -141,7 +139,6 @@ public final class JDBCRelationshipRoleMetaData
       if(readAheadElement != null)
       {
          readAhead = new JDBCReadAheadMetaData(readAheadElement, entity.getReadAhead());
-         deepReadAhead = readAhead.isDeepReadAhead();
       }
       else
       {
@@ -252,11 +249,6 @@ public final class JDBCRelationshipRoleMetaData
    public boolean isBatchCascadeDelete()
    {
       return batchCascadeDelete;
-   }
-
-   public boolean isDeepReadAhead()
-   {
-      return deepReadAhead;
    }
 
    /**

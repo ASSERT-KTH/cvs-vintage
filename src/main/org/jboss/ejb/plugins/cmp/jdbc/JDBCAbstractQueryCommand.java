@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Collections;
+import java.util.Iterator;
 import javax.ejb.FinderException;
 
 import org.jboss.deployment.DeploymentException;
@@ -24,12 +26,11 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.ejb.LocalProxyFactory;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCLeftJoinMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.SelectFunction;
 import org.jboss.logging.Logger;
 
@@ -44,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -66,8 +67,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    private int limitParam;
    private int limitValue;
    private List parameters = new ArrayList(0);
-   protected JDBCCMRFieldBridge[] preloadableCmrs = null;
-   protected ArrayList deepCmrs = null;
+   private List onFindCMRList = Collections.EMPTY_LIST;
 
    public JDBCAbstractQueryCommand(JDBCStoreManager manager, JDBCQueryMetaData q)
    {
@@ -105,6 +105,11 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       this.limitParam = limitParam;
    }
 
+   public void setOnFindCMRList(List onFindCMRList)
+   {
+      this.onFindCMRList = onFindCMRList;
+   }
+
    public Collection execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws FinderException
    {
@@ -117,7 +122,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    {
       if(paramNumber == 0)
          return defaultValue;
-      Integer arg = (Integer) params[paramNumber - 1];
+      Integer arg = (Integer)params[paramNumber - 1];
       return arg.intValue();
    }
 
@@ -160,7 +165,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          // set the parameters
          for(int i = 0; i < parameters.size(); i++)
          {
-            QueryParameter parameter = (QueryParameter) parameters.get(i);
+            QueryParameter parameter = (QueryParameter)parameters.get(i);
             parameter.set(log, ps, i + 1, args);
          }
 
@@ -183,10 +188,14 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
             while((limit == 0 || count-- > 0) && rs.next())
             {
                int index = 1;
+
                // get the pk
                index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
                Object pk = ref[0];
-               results.add(ref[0]);
+
+               boolean loaded = results.contains(pk);
+               if(!loaded)
+                  results.add(pk);
 
                // read the preload fields
                if(eagerLoadMask != null)
@@ -201,12 +210,15 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 
                         // read the value and store it in the readahead cache
                         index = field.loadArgumentResults(rs, index, ref);
-                        selectReadAheadCache.addPreloadData(pk, field, ref[0]);
+
+                        if(!loaded)
+                           selectReadAheadCache.addPreloadData(pk, field, ref[0]);
                      }
                   }
-                  if(deepCmrs != null)
+
+                  if(!onFindCMRList.isEmpty())
                   {
-                     index = preloadCmrs(deepCmrs, rs, index);
+                     index = loadOnFindCMRFields(pk, onFindCMRList, rs, index, log);
                   }
                }
             }
@@ -413,125 +425,272 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       }
 
       parameters = params;
+
       return sqlBuf.toString();
    }
 
-   public static int preloadCmrs(ArrayList deepCmrs, ResultSet rs, int index)
-   {
-      for(int i = 0; i < deepCmrs.size(); ++i)
-      {
-         Object[] stuff = (Object[]) deepCmrs.get(i);
-         JDBCCMRFieldBridge cmr = (JDBCCMRFieldBridge) stuff[0];
-         index = cmr.preloadCmr(rs, index);
-      }
-      for(int i = 0; i < deepCmrs.size(); ++i)
-      {
-         Object[] stuff = (Object[]) deepCmrs.get(i);
-         ArrayList children = (ArrayList) stuff[1];
-         if(children == null) continue;
-         index = preloadCmrs(children, rs, index);
-      }
-      return index;
-   }
+   // Static
 
-   public static void generateCmrOuterJoin(ArrayList deepCmrs, String alias, StringBuffer sql)
+   public static List getLeftJoinCMRNodes(JDBCEntityBridge entity, String path, Iterator leftJoinIter)
+      throws DeploymentException
    {
-      for(int i = 0; i < deepCmrs.size(); ++i)
-      {
-         Object[] stuff = (Object[]) deepCmrs.get(i);
-         JDBCCMRFieldBridge cmr = (JDBCCMRFieldBridge) stuff[0];
-         JDBCAbstractQueryCommand.generateCmrOuterJoin(cmr, alias, sql);
-      }
-      for(int i = 0; i < deepCmrs.size(); ++i)
-      {
-         Object[] stuff = (Object[]) deepCmrs.get(i);
-         JDBCCMRFieldBridge cmr = (JDBCCMRFieldBridge) stuff[0];
-         ArrayList children = (ArrayList) stuff[1];
-         if(children == null) continue;
-         generateCmrOuterJoin(children, cmr.getFieldName(), sql);
-      }
-   }
+      List leftJoinCMRNodes;
 
-   public static void cmrColumnNames(ArrayList deepCmrs, StringBuffer columnNamesClause, StringBuffer[] forUpdate)
-   {
-      for(int i = 0; i < deepCmrs.size(); ++i)
+      if(leftJoinIter.hasNext())
       {
-         Object[] stuff = (Object[]) deepCmrs.get(i);
-         JDBCCMRFieldBridge cmr = (JDBCCMRFieldBridge) stuff[0];
-
-         columnNamesClause.append(SQLUtil.COMMA);
-         StringBuffer cmrClause = new StringBuffer(100);
-         SQLUtil.getColumnNamesClause(cmr.getRelatedJDBCEntity().getTableFields(),
-            cmr.getFieldName(), cmrClause);
-         if(cmr.getRelatedJDBCEntity().getMetaData().hasRowLocking())
+         leftJoinCMRNodes = new ArrayList();
+         while(leftJoinIter.hasNext())
          {
-            if(forUpdate[0] == null)
+            JDBCLeftJoinMetaData leftJoin = (JDBCLeftJoinMetaData)leftJoinIter.next();
+            JDBCCMRFieldBridge cmrField = entity.getCMRFieldByName(leftJoin.getCmrField());
+            if(cmrField == null)
             {
-               forUpdate[0] = new StringBuffer(" FOR UPDATE OF ");
+               throw new DeploymentException(
+                  "cmr-field in left-join was not found: cmr-field=" +
+                  leftJoin.getCmrField() + ", entity=" + entity.getEntityName()
+               );
+            }
+
+            List subNodes;
+            JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+            String childPath = path + '.' + cmrField.getFieldName();
+            subNodes = getLeftJoinCMRNodes(relatedEntity, childPath, leftJoin.getLeftJoins());
+
+            boolean[] mask = relatedEntity.getLoadGroupMask(leftJoin.getEagerLoadGroup());
+            LeftJoinCMRNode node = new LeftJoinCMRNode(childPath, cmrField, mask, subNodes);
+            leftJoinCMRNodes.add(node);
+         }
+      }
+      else
+      {
+         leftJoinCMRNodes = Collections.EMPTY_LIST;
+      }
+
+      return leftJoinCMRNodes;
+   }
+
+   public static final void leftJoinCMRNodes(String alias,
+                                             List onFindCMRNodes,
+                                             AliasManager aliasManager,
+                                             StringBuffer sb)
+   {
+      for(int i = 0; i < onFindCMRNodes.size(); ++i)
+      {
+         LeftJoinCMRNode node = (LeftJoinCMRNode)onFindCMRNodes.get(i);
+         JDBCCMRFieldBridge cmrField = node.cmrField;
+         JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+         String relatedAlias = aliasManager.getAlias(node.path);
+
+         JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
+         if(relation.isTableMappingStyle())
+         {
+            String relTableAlias = aliasManager.getRelationTableAlias(node.path);
+            sb.append(" LEFT OUTER JOIN ")
+               .append(cmrField.getTableName())
+               .append(' ')
+               .append(relTableAlias)
+               .append(" ON ");
+            SQLUtil.getRelationTableJoinClause(cmrField, alias, relTableAlias, sb);
+
+            sb.append(" LEFT OUTER JOIN ")
+               .append(relatedEntity.getTableName())
+               .append(' ')
+               .append(relatedAlias)
+               .append(" ON ");
+            SQLUtil.getRelationTableJoinClause(cmrField.getRelatedCMRField(), relatedAlias, relTableAlias, sb);
+         }
+         else
+         {
+            // foreign key mapping style
+            sb.append(" LEFT OUTER JOIN ")
+               .append(relatedEntity.getTableName())
+               .append(' ')
+               .append(relatedAlias)
+               .append(" ON ");
+            SQLUtil.getJoinClause(
+               cmrField,
+               alias,
+               relatedAlias,
+               sb
+            );
+         }
+
+         List subNodes = node.onFindCMRNodes;
+         if(!subNodes.isEmpty())
+         {
+            leftJoinCMRNodes(relatedAlias, subNodes, aliasManager, sb);
+         }
+      }
+   }
+
+   public static final void appendLeftJoinCMRColumnNames(List onFindCMRNodes,
+                                                         AliasManager aliasManager,
+                                                         StringBuffer sb)
+   {
+      for(int i = 0; i < onFindCMRNodes.size(); ++i)
+      {
+         LeftJoinCMRNode node = (LeftJoinCMRNode)onFindCMRNodes.get(i);
+         JDBCCMRFieldBridge cmrField = node.cmrField;
+         JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+         String childAlias = aliasManager.getAlias(node.path);
+
+         // primary key fields
+         SQLUtil.appendColumnNamesClause(
+            relatedEntity.getPrimaryKeyFields(),
+            childAlias,
+            sb
+         );
+
+         // eager load group
+         if(node.eagerLoadMask != null)
+         {
+            SQLUtil.appendColumnNamesClause(
+               relatedEntity.getTableFields(),
+               node.eagerLoadMask,
+               childAlias,
+               sb
+            );
+         }
+
+         List subNodes = node.onFindCMRNodes;
+         if(!subNodes.isEmpty())
+         {
+            appendLeftJoinCMRColumnNames(subNodes, aliasManager, sb);
+         }
+      }
+   }
+
+   private static int loadOnFindCMRFields(Object pk, List onFindCMRNodes, ResultSet rs, int index, Logger log)
+   {
+      Object[] ref = new Object[1];
+      for(int nodeInd = 0; nodeInd < onFindCMRNodes.size(); ++nodeInd)
+      {
+         LeftJoinCMRNode node = (LeftJoinCMRNode)onFindCMRNodes.get(nodeInd);
+         JDBCCMRFieldBridge cmrField = node.cmrField;
+         ReadAheadCache myCache = cmrField.getJDBCStoreManager().getReadAheadCache();
+         JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+         ReadAheadCache relatedCache = cmrField.getRelatedManager().getReadAheadCache();
+
+         // load related id
+         ref[0] = null;
+         index = relatedEntity.loadPrimaryKeyResults(rs, index, ref);
+         Object relatedId = ref[0];
+         boolean cacheRelatedData = relatedId != null;
+
+         if(pk != null)
+         {
+            if(cmrField.getMetaData().getRelatedRole().isMultiplicityOne())
+            {
+               // cacheRelatedData the value
+               myCache.addPreloadData(
+                  pk,
+                  cmrField,
+                  relatedId == null ? Collections.EMPTY_LIST : Collections.singletonList(relatedId)
+               );
             }
             else
             {
-               forUpdate[0].append(", ");
+               Collection cachedValue = myCache.getCachedCMRValue(pk, cmrField);
+               if(cachedValue == null)
+               {
+                  cachedValue = new ArrayList();
+                  myCache.addPreloadData(pk, cmrField, cachedValue);
+               }
+
+               if(relatedId != null)
+               {
+                  if(cachedValue.contains(relatedId))
+                  {
+                     cacheRelatedData = false;
+                  }
+                  else
+                  {
+                     cachedValue.add(relatedId);
+                  }
+               }
             }
-            forUpdate[0].append(cmrClause);
          }
-         columnNamesClause.append(cmrClause);
-      }
-      for(int i = 0; i < deepCmrs.size(); ++i)
-      {
-         Object[] stuff = (Object[]) deepCmrs.get(i);
-         ArrayList children = (ArrayList) stuff[1];
-         if(children == null) continue;
-         cmrColumnNames(children, columnNamesClause, forUpdate);
-      }
-   }
 
-   public static void generateCmrOuterJoin(JDBCCMRFieldBridge cmr, String alias, StringBuffer leftJoin)
-   {
-      JDBCEntityBridge childEntity = cmr.getRelatedJDBCEntity();
-      leftJoin.append(SQLUtil.LEFT_OUTER_JOIN)
-         .append(childEntity.getTableName())
-         .append(' ')
-         .append(cmr.getFieldName())
-         .append(SQLUtil.ON);
-      SQLUtil.getJoinClause(cmr, alias, cmr.getFieldName(), leftJoin);
-   }
-
-   public static ArrayList deepPreloadableCmrs(JDBCCMRFieldBridge[] cmrs)
-   {
-      ArrayList cmrlist = new ArrayList(cmrs.length);
-      for(int i = 0; i < cmrs.length; i++)
-      {
-         JDBCStoreManager cmrManager = cmrs[i].getRelatedManager();
-         boolean[] cmrLoadMask = cmrs[i].getRelatedJDBCEntity().getEagerLoadMask();
-         JDBCCMRFieldBridge[] childCmrs = getPreloadableCmrs(cmrLoadMask, cmrManager);
-         ArrayList children = null;
-         if(childCmrs != null) children = deepPreloadableCmrs(childCmrs);
-         cmrlist.add(new Object[]{cmrs[i], children});
-      }
-      return cmrlist;
-   }
-
-   public static JDBCCMRFieldBridge[] getPreloadableCmrs(boolean[] loadMask, JDBCStoreManager manager)
-   {
-      JDBCEntityBridge entity = manager.getEntityBridge();
-      JDBCCMRFieldBridge[] cmrs = entity.getCMRFields();
-      ArrayList polledCmrs = null;
-      if(cmrs != null)
-      {
-         for(int i = 0; i < cmrs.length; i++)
+         // load eager load group
+         JDBCCMPFieldBridge[] tableFields = relatedEntity.getTableFields();
+         if(node.eagerLoadMask != null)
          {
-            if(!cmrs[i].getMetaData().isDeepReadAhead())
-               continue;
-
-            if(cmrs[i].getMetaData().getRelatedRole().isMultiplicityOne())
+            for(int fieldInd = 0; fieldInd < tableFields.length; ++fieldInd)
             {
-               if(polledCmrs == null) polledCmrs = new ArrayList(cmrs.length);
-               polledCmrs.add(cmrs[i]);
+               if(node.eagerLoadMask[fieldInd])
+               {
+                  JDBCCMPFieldBridge field = tableFields[fieldInd];
+                  ref[0] = null;
+                  index = field.loadArgumentResults(rs, index, ref);
+
+                  if(cacheRelatedData)
+                  {
+                     if(log.isTraceEnabled())
+                     {
+                        log.trace(
+                           "Caching " + relatedEntity.getEntityName() +
+                           '[' + relatedId + "]." +
+                           field.getFieldName() + "=" + ref[0]
+                        );
+                     }
+                     relatedCache.addPreloadData(relatedId, field, ref[0]);
+                  }
+               }
             }
          }
+
+         List subNodes = node.onFindCMRNodes;
+         if(!subNodes.isEmpty())
+         {
+            index = loadOnFindCMRFields(relatedId, subNodes, rs, index, log);
+         }
       }
-      if(polledCmrs == null) return null;
-      return (JDBCCMRFieldBridge[]) polledCmrs.toArray(new JDBCCMRFieldBridge[polledCmrs.size()]);
+
+      return index;
+   }
+
+   public static final class LeftJoinCMRNode
+   {
+      public final String path;
+      public final JDBCCMRFieldBridge cmrField;
+      public final boolean[] eagerLoadMask;
+      public final List onFindCMRNodes;
+
+      public LeftJoinCMRNode(String path, JDBCCMRFieldBridge cmrField, boolean[] eagerLoadMask, List onFindCMRNodes)
+      {
+         this.path = path;
+         this.cmrField = cmrField;
+         this.eagerLoadMask = eagerLoadMask;
+         this.onFindCMRNodes = onFindCMRNodes;
+      }
+
+      public boolean equals(Object o)
+      {
+         boolean result;
+         if(o == this)
+         {
+            result = true;
+         }
+         else if(o instanceof LeftJoinCMRNode)
+         {
+            LeftJoinCMRNode other = (LeftJoinCMRNode)o;
+            result = cmrField == other.cmrField;
+         }
+         else
+         {
+            result = false;
+         }
+         return result;
+      }
+
+      public int hashCode()
+      {
+         return cmrField == null ? Integer.MIN_VALUE : cmrField.hashCode();
+      }
+
+      public String toString()
+      {
+         return '[' + cmrField.getFieldName() + ": " + onFindCMRNodes + ']';
+      }
    }
 }

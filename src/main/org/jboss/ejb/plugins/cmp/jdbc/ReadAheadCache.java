@@ -34,7 +34,7 @@ import java.util.Map;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class ReadAheadCache
 {
@@ -293,6 +293,7 @@ public final class ReadAheadCache
    /**
     * Loads all of the preloaded data for the ctx into it.
     * @param ctx the context that will be loaded
+    * @return true if at least one field was loaded.
     */
    public boolean load(EntityEnterpriseContext ctx)
    {
@@ -413,14 +414,25 @@ public final class ReadAheadCache
 
       // remove all preload data map as all of the data has been loaded
       manager.removeEntityTxData(new PreloadKey(ctx.getId()));
-
       return true;
+   }
+
+   /**
+    * Returns the cached value of a CMR field or null if nothing was cached for this field.
+    * @param pk  primary key.
+    * @param cmrField  the field to get the cached value for.
+    * @return cached value for the <code>cmrField</code> or null if no value cached.
+    */
+   public Collection getCachedCMRValue(Object pk, JDBCCMRFieldBridge cmrField)
+   {
+      Map preloadDataMap = getPreloadDataMap(pk, true);
+      return (Collection)preloadDataMap.get(cmrField);
    }
 
    /**
     * Add preloaded data for an entity within the scope of a transaction
     */
-   public void addPreloadData(Object entityPrimaryKey,
+   public void addPreloadData(Object pk,
                               JDBCFieldBridge field,
                               Object fieldValue)
    {
@@ -440,7 +452,7 @@ public final class ReadAheadCache
       {
          log.trace("Add preload data:" +
             " entity=" + manager.getEntityBridge().getEntityName() +
-            " pk=" + entityPrimaryKey +
+            " pk=" + pk +
             " field=" + field.getFieldName());
       }
 
@@ -451,8 +463,18 @@ public final class ReadAheadCache
       }
 
       // store the preloaded data
-      Map preloadDataMap = getPreloadDataMap(entityPrimaryKey, true);
-      preloadDataMap.put(field, fieldValue);
+      Map preloadDataMap = getPreloadDataMap(pk, true);
+      Object overriden = preloadDataMap.put(field, fieldValue);
+
+      if(log.isTraceEnabled() && overriden != null)
+      {
+         log.trace(
+            "Overriding cached value " + overriden +
+            " with " + (fieldValue == NULL_VALUE ? null : fieldValue) +
+            ". pk=" + pk +
+            ", field=" + field.getFieldName()
+         );
+      }
    }
 
    public void removeCachedData(Object primaryKey)
@@ -542,6 +564,7 @@ public final class ReadAheadCache
       // if we got a dead reference remove it
       if(ref != null)
       {
+         //log.info(manager.getMetaData().getName() + " was GC'd from read ahead");
          manager.removeEntityTxData(preloadKey);
       }
 

@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.72 $
+ * @version $Revision: 1.73 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -1623,28 +1623,9 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       return (Map)relatedPKValuesWaitingForMyPK.get();
    }
 
-   public int preloadCmr(ResultSet rs, int index)
+   public String toString()
    {
-      JDBCEntityBridge cmrEntity = this.getRelatedJDBCEntity();
-      Object[] ref = new Object[1];
-      ReadAheadCache readAheadCache = cmrEntity.getManager().getReadAheadCache();
-      // get the pk
-      int start = index;
-      index = cmrEntity.loadPrimaryKeyResults(rs, index, ref);
-      int tableFieldIndex = index - start;
-      Object pk = ref[0];
-
-      JDBCCMPFieldBridge[] cmrTableFields = cmrEntity.getTableFields();
-      for(int i = tableFieldIndex; i < cmrTableFields.length; i++)
-      {
-         JDBCCMPFieldBridge field = cmrTableFields[i];
-         ref[0] = null;
-
-         // read the value and store it in the readahead cache
-         index = field.loadArgumentResults(rs, index, ref);
-         readAheadCache.addPreloadData(pk, field, ref[0]);
-      }
-      return index;
+      return entity.getEntityName() + '.' + getFieldName();
    }
 
    private final class FieldState

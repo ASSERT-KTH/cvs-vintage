@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class JDBCCommandFactory
 {
@@ -38,6 +38,7 @@ public class JDBCCommandFactory
    }
 
    public JDBCQueryCommand createFindByPrimaryKeyQuery(JDBCQueryMetaData q)
+      throws DeploymentException
    {
       return new JDBCFindByPrimaryKeyQuery(manager, q);
    }

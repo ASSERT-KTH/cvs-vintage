@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
 {
@@ -47,8 +47,8 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
       }
       catch(Throwable t)
       {
-         throw new DeploymentException("Error compiling EJB-QL " +
-            "statement '" + metadata.getEjbQl() + "'", t);
+         t.printStackTrace();
+         throw new DeploymentException("Error compiling EJB-QL statement '" + metadata.getEjbQl() + "'", t);
       }
 
       setSQL(compiler.getSQL());
@@ -66,12 +66,7 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
          if(readahead.isOnFind())
          {
             setEagerLoadGroup(readahead.getEagerLoadGroup());
-            preloadableCmrs = getPreloadableCmrs(getEagerLoadMask(), selectEntity.getManager());
-            deepCmrs = null;
-            if(preloadableCmrs != null && preloadableCmrs.length > 0)
-            {
-               deepCmrs = JDBCAbstractQueryCommand.deepPreloadableCmrs(preloadableCmrs);
-            }
+            setOnFindCMRList(compiler.getLeftJoinCMRList());
          }
       }
       else

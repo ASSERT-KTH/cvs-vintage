@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public final class JDBCStartCommand
 {
@@ -135,7 +135,7 @@ public final class JDBCStartCommand
             DataSource dataSource = relationMetaData.getDataSource();
 
             // create the relation table
-            if(relationMetaData.isTableMappingStyle() && !relationMetaData.getTableExists())
+            if(relationMetaData.isTableMappingStyle() && !relationMetaData.isTableCreated())
             {
                if(relationMetaData.getCreateTable())
                {
@@ -156,6 +156,7 @@ public final class JDBCStartCommand
                      cmrField.getTableName());
                }
 
+               relationMetaData.setTableCreated();
             }
 
             // Only generate indices on foreign key columns if
@@ -166,7 +167,6 @@ public final class JDBCStartCommand
             {
                createCMRIndex(dataSource, cmrField);
             }
-            relationMetaData.setTableExists(true);
 
             // Create my fk constraint
             addForeignKeyConstraint(cmrField);
@@ -201,7 +201,7 @@ public final class JDBCStartCommand
       }
       catch(Exception e)
       {
-         throw new DeploymentException(COULDNT_SUSPEND + "creating table.", e);
+         throw new DeploymentException(COULDNT_SUSPEND +"creating table.", e);
       }
 
       try
@@ -243,7 +243,7 @@ public final class JDBCStartCommand
          }
          catch(Exception e)
          {
-            throw new DeploymentException(COULDNT_REATTACH + "create table");
+            throw new DeploymentException(COULDNT_REATTACH +  "create table");
          }
       }
 
@@ -367,7 +367,7 @@ public final class JDBCStartCommand
             // execute sql
             for(int i = 0; i < sql.size(); i++)
             {
-               currentCmd = (String) sql.get(i);
+               currentCmd = (String)sql.get(i);
                /*
                 * Replace %%t in the sql command with the current table name
                 */
@@ -482,7 +482,7 @@ public final class JDBCStartCommand
             sql.append(entity.getTableName() + " (");
             SQLUtil.getColumnNamesClause(field, sql);
             sql.append(")");
-
+            
             createIndex(dataSource,
                entity.getTableName(),
                entity.getTableName() + IDX_POSTFIX + idxCount,
@@ -520,7 +520,7 @@ public final class JDBCStartCommand
 
       while(it.hasNext())
       {
-         fi = (JDBCCMPFieldMetaData) it.next();
+         fi = (JDBCCMPFieldMetaData)it.next();
          if(left.isIndexed())
          {
             createIndex(dataSource, tableName, fi.getFieldName(), createIndexSQL(fi, tableName));
@@ -532,7 +532,7 @@ public final class JDBCStartCommand
       it = kfr.iterator();
       while(it.hasNext())
       {
-         fi = (JDBCCMPFieldMetaData) it.next();
+         fi = (JDBCCMPFieldMetaData)it.next();
          if(right.isIndexed())
          {
             createIndex(dataSource, tableName, fi.getFieldName(), createIndexSQL(fi, tableName));
@@ -658,7 +658,7 @@ public final class JDBCStartCommand
       JDBCCMPFieldBridge[] referencesFields) throws DeploymentException
    {
       // can only alter tables we created
-      Set createdTables = (Set) manager.getApplicationData(CREATED_TABLES_KEY);
+      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
       if(!createdTables.contains(tableName))
       {
          return;
