@@ -40,7 +40,7 @@ import org.jboss.deployment.J2eeDeployerMBean;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -52,6 +52,9 @@ public class AutoDeployer
 
 	// Callback to the JMX agent
    MBeanServer server;
+
+	// in case more then one J2eeDeployers are available
+	String namedDeployer;
 
 	// JMX name of the ContainerFactory
    ObjectName factoryName;
@@ -68,16 +71,21 @@ public class AutoDeployer
 	// These URL's are being watched
    ArrayList watchedURLs = new ArrayList();
 
-	// The logger for this service
-   Log log = new Log("Auto deploy");
-
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    public AutoDeployer(String urlList)
    {
-		addURLs(urlList);
-	}
+	   this ("", urlList);
+   }
+	
+
+   public AutoDeployer(String _namedDeployer, String urlList)
+   {
+	   namedDeployer = _namedDeployer.equals("") ? "" : " "+_namedDeployer;
+	   log = new Log (getName());
+	   addURLs(urlList);
+   }
 
 	public void addURLs(String urlList)
 	{
@@ -239,6 +247,7 @@ public class AutoDeployer
                // Check old timestamp -- always deploy if first check
                if ((deployment.lastModified == 0) || (deployment.lastModified < lm))
                {
+				   /*
                   // in case of file first check if it is really completely copied
                   // (check file size wait 1 second and compare new with old file size)
                   long size = new File(deployment.watch.getFile()).length ();
@@ -250,6 +259,7 @@ public class AutoDeployer
                      log.log (deployment.url+" is not yet ready for deploy...");
                      continue;
                   }
+				   */
                   
                   log.log("Auto deploy of "+deployment.url);
                   deployment.lastModified = lm;
@@ -278,21 +288,21 @@ public class AutoDeployer
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "Auto deployer";
+      return "Auto deploy"+namedDeployer;
    }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
    	this.server = server;
-      return new ObjectName(OBJECT_NAME);
+      return new ObjectName(OBJECT_NAME+namedDeployer);
    }
 
    protected void initService()
       throws Exception
    {
       // Save JMX name of ContainerFactory
-      factoryName = new ObjectName(J2eeDeployerMBean.OBJECT_NAME);
+      factoryName = new ObjectName(J2eeDeployerMBean.OBJECT_NAME + namedDeployer);
    }
 
    protected void startService()

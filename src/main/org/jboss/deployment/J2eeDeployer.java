@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -67,6 +67,8 @@ implements J2eeDeployerMBean
    // Attributes ----------------------------------------------------
    // my server to lookup for the special deployers
    MBeanServer server;
+
+	String name;
    
    // names of the specials deployers
    ObjectName jarDeployer;
@@ -74,9 +76,6 @@ implements J2eeDeployerMBean
    
    String jarDeployerName;
    String warDeployerName;
-   
-   // The logger for this service
-   Log log = new Log(getName());
    
    
    // Static --------------------------------------------------------
@@ -90,10 +89,19 @@ implements J2eeDeployerMBean
    /** */
    public J2eeDeployer (String _deployDir, String jarDeployerName, String warDeployerName)
    {
+	   this ("", _deployDir, jarDeployerName, warDeployerName);
+   }
+
+   /** */
+   public J2eeDeployer (String _name, String _deployDir, String jarDeployerName, String warDeployerName)
+   {
+	  name = _name.equals("") ? "" : " "+_name;
       DEPLOYMENT_DIR = new File (_deployDir);
       
       this.jarDeployerName = jarDeployerName;
       this.warDeployerName = warDeployerName;
+
+	  this.log = new Log(getName());
    
    }
    
@@ -250,14 +258,14 @@ implements J2eeDeployerMBean
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "J2EE Deployer";
+      return "J2EE Deployer" + this.name;
    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
    throws javax.management.MalformedObjectNameException
    {
       this.server = server;
-      return new ObjectName(OBJECT_NAME);
+      return new ObjectName(OBJECT_NAME+this.name);
    }
    
    /** */
@@ -499,7 +507,10 @@ implements J2eeDeployerMBean
       
       // download libraries we depend on
       Manifest mf = new JarFile (localUrl.getFile ()).getManifest ();
-      addCommonLibs (_d, mf, _source);
+      if (mf != null)
+		  addCommonLibs (_d, mf, _source);
+	  else
+		  log.debug(m.name+" doesnt contain MANIFEST.MF");
 
       // add module to the deployment
       _d.ejbModules.add (m);
@@ -528,10 +539,17 @@ implements J2eeDeployerMBean
       m.localUrls.add (localUrl);
       
       // download libraries we depend on
-      FileInputStream in = new FileInputStream (localUrl.getFile ()+File.separator+"META-INF"+File.separator+"MANIFEST.MF");
-      Manifest mf = new Manifest (in);
-      in.close ();
-      addCommonLibs (_d, mf, _source);
+	  try
+	  {
+		  FileInputStream in = new FileInputStream (localUrl.getFile ()+File.separator+"META-INF"+File.separator+"MANIFEST.MF");
+		  Manifest mf = new Manifest (in);
+		  in.close ();
+		  addCommonLibs (_d, mf, _source);
+	  }
+	  catch (IOException _ioe)
+	  {
+		  log.debug(m.name+" doesnt contain MANIFEST.MF");
+	  }
 
       // add module to the deployment
       _d.webModules.add (m);
@@ -544,7 +562,7 @@ implements J2eeDeployerMBean
    *   @param _base the base url to which the manifest entries are relative
    *   @throws IOExcepiton in case of error while downloading
    */
-   private void addCommonLibs (Deployment _d, Manifest _mf, URL _base) throws IOException
+   private void addCommonLibs (Deployment _d, Manifest _mf, URL _base)
    {
       String cp = _mf.getMainAttributes ().getValue(Attributes.Name.CLASS_PATH);
       
