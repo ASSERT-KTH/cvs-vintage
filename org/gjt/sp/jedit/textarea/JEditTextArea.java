@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.66 2002/01/15 11:01:33 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.67 2002/01/16 09:21:51 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -779,7 +779,7 @@ public class JEditTextArea extends JComponent
 	public Point offsetToXY(int offset)
 	{
 		int line = buffer.getLineOfOffset(offset);
-		offset -= buffer.getLineStartOffset(offset);
+		offset -= buffer.getLineStartOffset(line);
 		Point retVal = new Point();
 		return offsetToXY(line,offset,retVal);
 	} //}}}
@@ -808,8 +808,7 @@ public class JEditTextArea extends JComponent
 
 		FontMetrics fm = painter.getFontMetrics();
 
-		retVal.y = (screenLine * fm.getHeight())
-			- (fm.getLeading() + fm.getDescent());
+		retVal.y = screenLine * fm.getHeight();
 
 		ChunkCache.LineInfo info = chunkCache.getLineInfo(screenLine);
 		if(!info.chunksValid)

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.25 2002/01/15 11:01:33 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.26 2002/01/16 09:21:51 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -1331,7 +1331,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 
 					popup.addSeparator();
 
-					String[] favorites = FavoritesVFS.getFavorites();
+					Object[] favorites = FavoritesVFS.getFavorites();
 					if(favorites.length == 0)
 					{
 						mi = new JMenuItem(
@@ -1347,7 +1347,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 							new MiscUtilities.StringCompare());
 						for(int i = 0; i < favorites.length; i++)
 						{
-							mi = new JMenuItem(favorites[i]);
+							mi = new JMenuItem(favorites[i].toString());
 							mi.setIcon(FileCellRenderer.dirIcon);
 							mi.addActionListener(actionHandler);
 							popup.add(mi);

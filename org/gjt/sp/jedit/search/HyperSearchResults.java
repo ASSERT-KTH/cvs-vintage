@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.7 2001/10/10 10:07:05 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.8 2002/01/16 09:21:51 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
@@ -74,6 +74,7 @@ public class HyperSearchResults extends JPanel implements EBComponent
 		resultTree.setEditable(false);
 
 		resultTree.addTreeSelectionListener(new TreeSelectionHandler());
+		resultTree.addKeyListener(new KeyHandler());
 		resultTree.addMouseListener(new MouseHandler());
 
 		JScrollPane scrollPane = new JScrollPane(resultTree);
@@ -250,6 +251,16 @@ public class HyperSearchResults extends JPanel implements EBComponent
 	} //}}}
 
 	//}}}
+
+	//{{{ KeyHandler class
+	class KeyHandler extends KeyAdapter
+	{
+		public void keyPressed(KeyEvent evt)
+		{
+			if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+				goToSelectedNode();
+		}
+	} //}}}
 
 	//{{{ MouseHandler class
 	class MouseHandler extends MouseAdapter

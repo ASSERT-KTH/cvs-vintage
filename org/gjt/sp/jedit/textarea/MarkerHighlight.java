@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.*;
  * Macros and plugins should not create instances of this class.
  *
  * @author Slava Pestov
- * @version $Id: MarkerHighlight.java,v 1.6 2002/01/12 09:17:41 spestov Exp $
+ * @version $Id: MarkerHighlight.java,v 1.7 2002/01/16 09:21:51 spestov Exp $
  */
 public class MarkerHighlight extends TextAreaExtension
 {
@@ -67,6 +67,9 @@ public class MarkerHighlight extends TextAreaExtension
 		if(textArea.getBuffer().isLoaded() && highlightEnabled)
 		{
 			int start = textArea.xyToOffset(0,y);
+			if(start == -1)
+				return null;
+
 			int end = textArea.getScreenLineEndOffset(
 				textArea.getScreenLineOfOffset(start));
 

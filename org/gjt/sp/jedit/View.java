@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.10 2001/12/26 05:32:34 spestov Exp $
+ * @version $Id: View.java,v 1.11 2002/01/16 09:21:51 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -265,8 +265,9 @@ public class View extends JFrame implements EBComponent
 		switch(evt.getID())
 		{
 		case KeyEvent.KEY_TYPED:
+			// Handled in text area
 			if(keyEventInterceptor != null)
-				keyEventInterceptor.keyTyped(evt);
+				/* keyEventInterceptor.keyTyped(evt) */;
 			else if(inputHandler.isPrefixActive()
 				&& !getTextArea().hasFocus())
 				inputHandler.keyTyped(evt);

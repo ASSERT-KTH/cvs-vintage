@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.7 2001/12/01 05:48:47 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.8 2002/01/16 09:21:51 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -48,6 +48,7 @@ public class JARClassLoader extends ClassLoader
 		zipFile = new ZipFile(path);
 		jar = new EditPlugin.JAR(path,this);
 
+		long start = System.currentTimeMillis();
 		Enumeration entires = zipFile.entries();
 		while(entires.hasMoreElements())
 		{

@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.29 2002/01/12 09:17:41 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.30 2002/01/16 09:21:51 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -628,7 +628,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		for(int i = 0; i < foo.length; i++)
 			foo[i] = ' ';
 		dim.width = (int)(getFont().getStringBounds(foo,0,foo.length,
-			fontRenderContext).getWidth() * 80);
+			fontRenderContext).getWidth());
 		dim.height = fm.getHeight() * 25;
 		return dim;
 	} //}}}

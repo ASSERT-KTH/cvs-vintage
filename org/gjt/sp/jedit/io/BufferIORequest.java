@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.12 2002/01/06 09:32:25 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.13 2002/01/16 09:21:51 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -600,7 +600,10 @@ public class BufferIORequest extends WorkRequest
 				}
 
 				if(twoStageSave)
-					vfs._rename(session,savePath,path,view);
+				{
+					if(!vfs._rename(session,savePath,path,view))
+						throw new IOException(path);
+				}
 
 				// We only save markers to VFS's that support deletion.
 				// Otherwise, we will accumilate stale marks files.
