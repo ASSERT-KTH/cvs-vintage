@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.53 2004/10/07 14:59:58 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.54 2004/10/11 19:28:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,8 +143,7 @@ public abstract class UMLDiagram
     ////////////////////////////////////////////////////////////////
     // instance variables
     private Object namespace;
-    private DiagramInfo diagramName = new DiagramInfo(this);
-
+    
     private JToolBar toolBar;
 
     ////////////////////////////////////////////////////////////////
@@ -243,14 +242,6 @@ public abstract class UMLDiagram
      */
     public Object getOwner() {
         return getNamespace();
-    }
-
-    /**
-     * @see org.tigris.gef.base.Diagram#setName(java.lang.String)
-     */
-    public void setName(String n) throws PropertyVetoException {
-        super.setName(n);
-        diagramName.updateName();
     }
 
     static final long serialVersionUID = -401219134410459387L;
