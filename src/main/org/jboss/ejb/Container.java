@@ -82,7 +82,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.80 $
+* @version $Revision: 1.81 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -185,6 +185,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    /** 
     * The name of the Remote invoker dedicated to this container, 
     * the type is set through deployment
+    * @todo Make invokerType configurable through xml.
     */
    // marcf FIXME: FOR NOW ONLY JRMP (Debugging) but in the future make 
    // configurable from xml
@@ -193,6 +194,10 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    
    // We need the visibility on the MBeanServer for prototyping, it will be removed in the future FIXME marcf
    //protected MBeanServer mbeanServer;
+   /**
+    * Describe variable <code>mbeanServer</code> here.
+    * @todo make mbeanServer protected
+    */
    public MBeanServer mbeanServer;
 
    /**
@@ -493,24 +498,23 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       localContainerInvoker.create();
       if (localHomeInterface != null)
          ejbModule.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
-      // Setup "java:comp/env" namespace
-      setupEnvironment();
    }
    
    /**
     * A default implementation of starting the container service.
     * The container registers it's dynamic MBean interface in the JMX base.
-    * FIXME marcf: give some more thought as to where to start and stop MBean registration.
-    * stop could be a flag in the JMX server that essentially doesn't proxy invocations but the 
-    * MBean would still be registered in the MBeanServer under the right name until undeploy
-    *
+    * 
     * The concrete container classes should override this method to introduce
     * implementation specific start behaviour.
     *
+    * @todo implement the service lifecycle methods in an xmbean interceptor so 
+    * non lifecycle managed ops are blocked when mbean is not started.
     * @throws Exception    An exception that occured during start
     */
    public void start() throws Exception
    {
+      // Setup "java:comp/env" namespace
+      setupEnvironment();
       started = true;
       localContainerInvoker.start();
    }
@@ -597,6 +601,15 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    
    /**
     * Handle a operation invocation.
+    *
+    * @todo fix all the "remove when cl integrated" code", marc.
+    *
+    * @param ignored a <code>String</code> value
+    * @param params an <code>Object[]</code> value
+    * @param signature a <code>String[]</code> value
+    * @return an <code>Object</code> value
+    * @exception MBeanException if an error occurs
+    * @exception ReflectionException if an error occurs
     */
    public Object invoke(String ignored, Object[] params, String[] signature)
       throws MBeanException, ReflectionException

@@ -36,6 +36,7 @@ import org.jboss.proxy.ClientContainer;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
+import org.jboss.naming.Util;
 import org.jboss.system.Registry;
 import org.jboss.ejb.FinderResults;
 import org.jboss.ejb.ListCacheKey;
@@ -54,8 +55,10 @@ import org.jboss.logging.Logger;
 * In particular we declare that we "implement" the container invoker interface when we are
 * just implementing the Proxy generation calls. Separation of concern. 
 *
+* @todo eliminate this class, at least in its present form.
+*
 *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @version $Revision: 1.9 $
+*  @version $Revision: 1.10 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2001/12/30: billb</b>
@@ -119,10 +122,11 @@ public class ProxyFactory
       boolean statelessSession,
       HomeHandle homeHandle)
       */      
-      
-      if (container.getBeanMetaData() instanceof EntityMetaData)
+
+      boolean isSession = !(container.getBeanMetaData() instanceof EntityMetaData);
+      Class pkClass = null;
+      if (!isSession)
       {
-         Class pkClass;
          EntityMetaData metaData = (EntityMetaData)container.getBeanMetaData();
          String pkClassName = metaData.getPrimaryKeyClass();
          try
@@ -140,41 +144,21 @@ public class ProxyFactory
             log.error("Unable to identify Bean's Primary Key class!  Did you specify a primary key class and/or field?  Does that field exist?");
             throw new RuntimeException("Primary Key Problem");
          }
-         ejbMetaData = new EJBMetaDataImpl(
-            ((ContainerInvokerContainer)container).getRemoteClass(),
-            ((ContainerInvokerContainer)container).getHomeClass(),
-            pkClass,
-            false, //Session
-            false, //Stateless
-            new HomeHandleImpl(jndiName));
-      } else
-      {
-         if (((SessionMetaData)container.getBeanMetaData()).isStateless())
-         {
-            ejbMetaData = new EJBMetaDataImpl(
-               ((ContainerInvokerContainer)container).getRemoteClass(),
-               ((ContainerInvokerContainer)container).getHomeClass(),
-               null, //No PK
-               true, //Session
-               true, //Stateless
-               new HomeHandleImpl(jndiName));
-         } else
-         { // we are stateful
-            ejbMetaData = new EJBMetaDataImpl(
-               ((ContainerInvokerContainer)container).getRemoteClass(),
-               ((ContainerInvokerContainer)container).getHomeClass(),
-               null, //No PK
-               true, //Session
-               false,//Stateless
-               new HomeHandleImpl(jndiName));
-         }
       }
+      ejbMetaData = new EJBMetaDataImpl(
+         ((ContainerInvokerContainer)container).getRemoteClass(),
+         ((ContainerInvokerContainer)container).getHomeClass(),
+         pkClass, //null if not entity
+         isSession, //Session
+         isSession && ((SessionMetaData)container.getBeanMetaData()).isStateless(),//Stateless
+         new HomeHandleImpl(jndiName));
       
       if (log.isDebugEnabled())
          log.debug("Proxy Factory for "+jndiName+" initialized");
+      bindProxy();
    }
    
-   protected void initInvokers() throws Exception
+   protected void checkInvokers() throws Exception
    {
       ObjectName oname;
       
@@ -188,12 +172,18 @@ public class ProxyFactory
       if (beanInvoker == null)
          throw new RuntimeException("beanInvoker is null: " + oname);
    }
-   
-   public void start() throws Exception
+   public void start() {}   
+   /**
+    * The <code>start</code> method creates the home proxy and the bean proxy,
+    * and binds them into jndi.
+    *
+    * @exception Exception if an error occurs
+    */
+   public void bindProxy() throws Exception
    {
       try {
          
-         initInvokers();
+         checkInvokers();
          
          // Create a stack from the description (in the future) for now we hardcode it
          InvocationContext context = new InvocationContext();
@@ -265,7 +255,7 @@ public class ProxyFactory
          }
          
          // Bind the home in the JNDI naming space
-         rebind(
+         Util.rebind(
             // The context
             new InitialContext(),
             // Jndi name
@@ -286,6 +276,10 @@ public class ProxyFactory
    
    public void stop()
    {
+   }
+   
+   public void destroy()
+   {
       try
       {
          InitialContext ctx = new InitialContext();
@@ -296,10 +290,6 @@ public class ProxyFactory
       {
          // ignore.
       }
-   }
-   
-   public void destroy()
-   {
    }
    
    // Container invoker implementation -------------------------------------
@@ -472,24 +462,4 @@ public class ProxyFactory
       return list;
    }
    
-   protected void rebind(Context ctx, String name, Object val)
-   throws NamingException
-   {
-      // Bind val to name in ctx, and make sure that all intermediate contexts exist
-      
-      Name n = ctx.getNameParser("").parse(name);
-      while (n.size() > 1)
-      {
-         String ctxName = n.get(0);
-         try
-         {
-            ctx = (Context)ctx.lookup(ctxName);
-         } catch (NameNotFoundException e)
-         {
-            ctx = ctx.createSubcontext(ctxName);
-         }
-         n = n.getSuffix(1);
-      }
-      ctx.rebind(n.get(0), val);
-   }
 }

@@ -67,7 +67,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -133,12 +133,11 @@ public class EjbModule
       this.name = deploymentInfo.url.toString();
    }
    /**
-    * Add a container to this application. This is called by the
-    * EJBDeployer.
+    * Add a container to this application.
     *
     * @param   con  
     */
-   public void addContainer(Container con)
+   private void addContainer(Container con)
    {
       containers.put(con.getBeanMetaData().getEjbName(), con);
       con.setEjbModule(this);
@@ -273,42 +272,58 @@ public class EjbModule
          setModuleName( lModule );
       }
       //Set up the beans in this module.
-      for (Iterator beans = ((ApplicationMetaData) deploymentInfo.metaData).getEnterpriseBeans(); beans.hasNext(); ) 
+      try 
       {
-         BeanMetaData bean = (BeanMetaData) beans.next();
-         
-         log.info( "Deploying " + bean.getEjbName() );
-         try 
+         for (Iterator beans = ((ApplicationMetaData) deploymentInfo.metaData).getEnterpriseBeans(); beans.hasNext(); ) 
          {
-            addContainer( createContainer( bean, deploymentInfo ) );
-         } 
-         catch (Exception e) 
+            BeanMetaData bean = (BeanMetaData) beans.next();
+            
+            log.info( "Deploying " + bean.getEjbName() );
+            //Container con = createContainer(bean, deploymentInfo);
+            //addContainer(con);
+            
+            try 
+            {
+               addContainer( createContainer( bean, deploymentInfo ) );
+            } 
+            catch (Exception e) 
+            {
+               log.error("error adding container to app.", e);
+               throw e;
+            } // end of try-catch
+         }
+         //only one iteration should be necessary, but we won't sweat it.   
+         //2 iterations are needed by cmp...jdbc/bridge/JDBCCMRFieldBridge which 
+         //assumes persistence managers are all set up for every
+         //bean in the relationship!
+         for (Iterator i = containers.values().iterator(); i.hasNext();)
          {
-            log.error("error adding container to app.", e);
-            throw e;
-         } // end of try-catch
+            Container con = (Container)i.next();
+            
+            ObjectName jmxName= con.getJmxName();
+            server.registerMBean(con, jmxName);
+            serviceController.create(jmxName);
+            // Create JSR-77 EJB-Wrapper
+            log.debug( "Application.create(), create JSR-77 EJB-Component" );
+            ObjectName lEJB = EJB.create(
+               server,
+               getModuleName().toString(),
+               con.getBeanMetaData()
+               );
+            if (debug) {
+               log.debug( "Application.start(), EJB: " + lEJB );
+            }
+            if( lEJB != null ) {
+               con.mEJBObjectName = lEJB.toString();
+            }
+         }
       }
-      //only one iteration should be necessary, but we won't sweat it.   
-      for (Iterator i = containers.values().iterator(); i.hasNext();)
+      catch (Exception e)
       {
-         Container con = (Container)i.next();
-         ObjectName jmxName= con.getJmxName();
-         server.registerMBean(con, jmxName);
-         serviceController.create(jmxName);
-         // Create JSR-77 EJB-Wrapper
-         log.debug( "Application.create(), create JSR-77 EJB-Component" );
-         ObjectName lEJB = EJB.create(
-            server,
-            getModuleName().toString(),
-            con.getBeanMetaData()
-         );
-         if (debug) {
-            log.debug( "Application.start(), EJB: " + lEJB );
-         }
-         if( lEJB != null ) {
-            con.mEJBObjectName = lEJB.toString();
-         }
-      }
+         destroyService();
+         throw e;
+      } // end of try-catch
+      
    }
 
    /**
@@ -347,8 +362,7 @@ public class EjbModule
          }
          catch (Exception e)
          {
-            //no log here, but this shouldn't happen.
-            //log.error("unexpected exception stopping Container: " + con.getJmxName(), e);
+            log.error("unexpected exception stopping Container: " + con.getJmxName(), e);
          } // end of try-catch
          
       }
@@ -366,11 +380,18 @@ public class EjbModule
          try 
          {
             serviceController.destroy(con.getJmxName());
+         }
+         catch (Throwable e)
+         {
+            log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
+         } // end of try-catch
+         try 
+         {
             serviceController.remove(con.getJmxName());
          }
-         catch (Exception e)
+         catch (Throwable e)
          {
-            //log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
+            log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
          } // end of try-catch
       }
       log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
@@ -607,7 +628,8 @@ public class EjbModule
    * add the indicated interceptors to the container depending on the container
    * transcation type and metricsEnabled flag.
    *
-   * FIXME marcf: frankly the transaction type stuff makes no sense to me, we have externalized
+   *
+   * @todo marcf: frankly the transaction type stuff makes no sense to me, we have externalized
    * the container stack construction in jbossxml and I don't see why or why there would be a 
    * type missmatch on the transaction
    * 
@@ -712,8 +734,7 @@ public class EjbModule
    /**
    * createCOntainerInvoker DEPRACATED CONTAINER INVOKER DOES NOTHING BUT MANUFACTURE EJBs
    *
-   * Move to EJBFactory, implement with ProxyFactory.   The EJBFactory must be made aware of invocation type
-   *
+   * @todo Leftover code in createContainerInvoker!! Move to EJBFactory, implement with ProxyFactory.   The EJBFactory must be made aware of invocation type
    * FIXME : TEMPORARY 
    */
    private static ContainerInvoker createContainerInvoker( ConfigurationMetaData conf,
@@ -727,8 +748,10 @@ public class EjbModule
       
       // Just a nicety for 2.4 legacy users
       if (invoker.equals("org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker"))
+      {
+         log.warn("you are using deprecated JRMPContainerInvoker. Please change to org.jboss.proxy.ejb.ProxyFactory");
          invoker = "org.jboss.proxy.ejb.ProxyFactory";
-      
+      }
       try
       {
          
@@ -740,8 +763,10 @@ public class EjbModule
       }
       
       if( ci instanceof XmlLoadable )
+      {
          // the container invoker can load its configuration from the jboss.xml element
-      ( (XmlLoadable) ci ).importXml( conf.getContainerInvokerConf() );
+         ( (XmlLoadable) ci ).importXml( conf.getContainerInvokerConf() );
+      }
       
       return ci;
    }
