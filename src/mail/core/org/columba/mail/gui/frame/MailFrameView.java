@@ -15,6 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.ResourceBundle;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JViewport;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
@@ -22,7 +32,6 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.HeaderView;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -31,17 +40,6 @@ import org.columba.mail.gui.message.MessageView;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-
-import java.util.ResourceBundle;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JViewport;
 
 
 /**
@@ -130,6 +128,7 @@ public class MailFrameView extends AbstractFrameView {
         tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
+        tableScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         //tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         tableScrollPane.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
         tableScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);

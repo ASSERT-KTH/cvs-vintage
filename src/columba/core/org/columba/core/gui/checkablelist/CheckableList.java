@@ -13,40 +13,82 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.checkablelist;
+import java.awt.Dimension;
 
-import java.awt.Component;
-import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-
+import org.columba.core.gui.util.DefaultBooleanRenderer;
+import org.columba.core.gui.util.DefaultStringRenderer;
 
 /**
- * JList with an additional JCheckBox beside the JLabel.
- * <p>
  * 
+ *
  * @author fdietz
  */
-public class CheckableList extends JList {
-    public CheckableList() {
-        super();
+public class CheckableList extends JTable {
 
-        setCellRenderer(new CheckListRenderer());
+	//private CheckableItemListTableModel model;
 
-        addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    int index = locationToIndex(e.getPoint());
+	public CheckableList() {
+		super();
 
-                    CheckableItem item = (CheckableItem) getModel()
-                                                             .getElementAt(index);
-                    item.setSelected(!item.isSelected());
+		//		do not show header
+		setTableHeader(null);
 
-                    Rectangle rect = getCellBounds(index, index);
-                    repaint(rect);
-                }
-            });
-    }
+		//		no grid lines
+		setShowGrid(false);
+
+		setIntercellSpacing(new Dimension(0, 0));
+
+		initColumns();
+		
+		// fill with default data
+		
+		CheckableItemListTableModel model= new CheckableItemListTableModel();
+		model.addElement(new CheckableItemImpl("default data 1", true));
+		model.addElement(new CheckableItemImpl("default data 2", false));
+		model.addElement(new CheckableItemImpl("default data 3", true));
+
+		setModel(model);
+		
+		
+		setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		
+	}
+	
+	private void initColumns() {
+		DefaultTableColumnModel model = new DefaultTableColumnModel();
+		TableColumn tc= new TableColumn(0);
+		tc.setIdentifier("Boolean");
+		tc.setCellEditor(new CheckableListEditor());
+		tc.setCellRenderer(new DefaultBooleanRenderer());
+		tc.setMaxWidth(20);
+		model.addColumn(tc);
+		tc= new TableColumn(1);
+		tc.setIdentifier("String");
+		tc.setCellRenderer(new DefaultStringRenderer());
+		model.addColumn(tc);
+		
+		setColumnModel(model);
+		
+		// changing the column model leads to reset of cell spacing property
+		setIntercellSpacing(new Dimension(0, 0));
+	}
+	
+
+	/**
+	 * @see javax.swing.JTable#setModel(javax.swing.table.TableModel)
+	 */
+	public void setModel(TableModel model) {
+		
+		super.setModel(model);
+		
+		initColumns();
+	}
+
 }

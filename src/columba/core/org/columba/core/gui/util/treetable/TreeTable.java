@@ -41,6 +41,7 @@ public class TreeTable extends JTable {
         sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
 
         setIntercellSpacing(new Dimension(0, 0));
+        
     }
 
     public JTree getTree() {

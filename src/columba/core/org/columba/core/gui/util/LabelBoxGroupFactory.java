@@ -13,49 +13,32 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.checkablelist;
+package org.columba.core.gui.util;
 
-import javax.swing.Icon;
+import java.awt.BorderLayout;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
- * Item used by the renderer.
- * <p>
- * Encapsulates the label's string, icon and the selected state.
- * 
+ * Factory provides simple layout helpers.
+ *
  * @author fdietz
  */
-public class CheckableItemImpl implements CheckableItem {
-	private String str;
-	private boolean isSelected;
-	private Icon icon;
+public class LabelBoxGroupFactory {
 
-	public CheckableItemImpl(String str) {
-		this.str= str;
-		isSelected= false;
-	}
+	public static JPanel createPanel(JLabel label, JComponent c) {
+		JPanel panel= new JPanel();
+		panel.setLayout(new BorderLayout());
 
-	public CheckableItemImpl(String str, boolean selected) {
-		this.str= str;
-		isSelected= selected;
-	}
+		JPanel topPanel= new JPanel();
+		topPanel.setLayout(new BorderLayout());
+		topPanel.add(label, BorderLayout.WEST);
 
-	public void setSelected(boolean b) {
-		isSelected= b;
-	}
+		panel.add(topPanel, BorderLayout.NORTH);
+		panel.add(c, BorderLayout.CENTER);
 
-	public boolean isSelected() {
-		return isSelected;
-	}
-
-	public String toString() {
-		return str;
-	}
-
-	public void setIcon(Icon icon) {
-		this.icon= icon;
-	}
-
-	public Icon getIcon() {
-		return icon;
+		return panel;
 	}
 }

@@ -65,7 +65,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 	 */
 	public static String[] getColumns() {
 		String[] userDefined=
-			CachedHeaderfields.getUserDefinedHeaderfieldArray();
+			CachedHeaderfields.getUserDefinedHeaderfields();
 
 		String[] stringList= new String[userDefined.length + COLUMNS.length];
 		int index= 0;
