@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.5 2005/01/20 23:20:36 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.6 2005/01/26 22:11:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -384,7 +384,7 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
      * @param baseClass the baseclass
      */
     public void setBaseClass(Object handle, Object baseClass) {
-        if (ModelFacade.isAStereotype(handle) && baseClass instanceof String) {
+        if (handle instanceof MStereotype && baseClass instanceof String) {
             ((MStereotype) handle).setBaseClass((String) baseClass);
             return;
         }

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.6 2005/01/11 21:03:31 mvw Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.7 2005/01/26 22:11:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.ModelManagementHelper;
 
+import ru.novosoft.uml.MBase;
+import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MModel;
@@ -157,7 +159,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      * @param type is the class kind
      * @return Collection
      */
-    public Collection getAllModelElementsOfKindWithModel(Object model, 
+    public Collection getAllModelElementsOfKindWithModel(Object model,
             Object type) {
         Class kind = (Class) type;
         Collection ret = getAllModelElementsOfKind(model, kind);
@@ -188,7 +190,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
             return getAllModelElementsOfKind(nsa, (String) type);
         }
 
-        if (!ModelFacade.isANamespace(nsa)) {
+        if (!(nsa instanceof MNamespace)) {
             throw new IllegalArgumentException(
                 "given argument " + nsa + " is not a namespace");
         }
@@ -256,7 +258,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
         if (nsa == null || kind == null) {
             return Collections.EMPTY_LIST;
         }
-        if (!ModelFacade.isANamespace(nsa)) {
+        if (!(nsa instanceof MNamespace)) {
             throw new IllegalArgumentException(
                 "given argument " + nsa + " is not a namespace");
         }
@@ -307,7 +309,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
         Iterator ii = features.iterator();
         while (ii.hasNext()) {
             Object f = ii.next();
-            if (ModelFacade.isABehavioralFeature(f)) {
+            if (f instanceof MBehavioralFeature) {
                 behavioralfeatures.add(f);
             }
         }
@@ -371,7 +373,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
     public Vector getPath(Object element) {
         Vector path;
 
-        if (ModelFacade.isAModel(element)) {
+        if (element instanceof MModel) {
             return new Vector();
         }
 
@@ -516,7 +518,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
 
 
     private List getOwnerShipPath(Object elem) {
-        if (ModelFacade.isABase(elem)) {
+        if (elem instanceof MBase) {
             List ownershipPath = new ArrayList();
             Object parent = ModelFacade.getModelElementContainer(elem);
             while (parent != null) {

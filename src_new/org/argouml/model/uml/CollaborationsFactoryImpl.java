@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.9 2005/01/20 23:20:36 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.10 2005/01/26 22:11:50 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -191,7 +191,7 @@ public class CollaborationsFactoryImpl
     public Object buildCollaboration(
         Object namespace,
         Object representedElement) {
-        if (!(ModelFacade.isANamespace(namespace))) {
+        if (!(namespace instanceof MNamespace)) {
             throw new IllegalArgumentException("Argument is not "
 			   + "a namespace or element "
 			   + "that can be represented "
@@ -227,7 +227,7 @@ public class CollaborationsFactoryImpl
      * @return the newly build interaction
      */
     public Object buildInteraction(Object handle) {
-        if (!(ModelFacade.isACollaboration(handle))) {
+        if (!(handle instanceof MCollaboration)) {
             throw new IllegalArgumentException(
                     "Argument is not a collaboration");
         }
@@ -488,10 +488,10 @@ public class CollaborationsFactoryImpl
      * @return the newly build message
      */
     public Object buildMessage(Object acollab, Object arole) {
-	if (ModelFacade.isACollaboration(acollab)) {
+	if (acollab instanceof MCollaboration) {
 	    return buildMessageCollab(acollab, arole);
 	}
-	if (ModelFacade.isAInteraction(acollab)) {
+	if (acollab instanceof MInteraction) {
 	    return buildMessageInteraction((MInteraction) acollab,
 					   (MAssociationRole) arole);
 	}

@@ -1,4 +1,4 @@
-// $Id: UmlHelperImpl.java,v 1.5 2005/01/09 02:02:23 bobtarling Exp $
+// $Id: UmlHelperImpl.java,v 1.6 2005/01/26 22:11:49 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,20 +30,23 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.model.ActivityGraphsHelper;
 import org.argouml.model.CollaborationsHelper;
 import org.argouml.model.CommonBehaviorHelper;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.ExtensionMechanismsHelper;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.ModelManagementHelper;
 import org.argouml.model.StateMachinesHelper;
 import org.argouml.model.UmlHelper;
 import org.argouml.model.UseCasesHelper;
 
 import ru.novosoft.uml.MBase;
+import ru.novosoft.uml.behavior.state_machines.MTransition;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MRelationship;
+import ru.novosoft.uml.model_management.MModel;
 
 
 /**
@@ -81,7 +84,7 @@ class UmlHelperImpl implements UmlHelper {
      * @param model the UML model
      */
     public void addListenersToModel(Object model) {
-        if (!ModelFacade.isAModel(model)) {
+        if (!(model instanceof MModel)) {
             throw new IllegalArgumentException();
         }
 
@@ -94,7 +97,7 @@ class UmlHelperImpl implements UmlHelper {
      * @param mbase the element to add listeners to
      */
     protected void addListenersToMBase(Object mbase) {
-        if (!ModelFacade.isABase(mbase)) {
+        if (!(mbase instanceof MBase)) {
             throw new IllegalArgumentException();
         }
 
@@ -269,20 +272,20 @@ class UmlHelperImpl implements UmlHelper {
         if (relationShip == null) {
             throw new IllegalArgumentException("Argument relationship is null");
         }
-        if (!ModelFacade.isAModelElement(relationShip)) {
+        if (!(relationShip instanceof MModelElement)) {
            throw new IllegalArgumentException("Argument relationship of class "
                    + relationShip.getClass().toString()
                    + " is not a valid relationship");
         }
-        if (ModelFacade.isARelationship(relationShip)) {
+        if (relationShip instanceof MRelationship) {
             // handles all children of relationship including extend and
             // include which are not members of core
             return nsmodel.getCoreHelper().getSource(relationShip);
         }
-        if (ModelFacade.isATransition(relationShip)) {
+        if (relationShip instanceof MTransition) {
             return nsmodel.getStateMachinesHelper().getSource(relationShip);
         }
-        if (ModelFacade.isAAssociationEnd(relationShip)) {
+        if (relationShip instanceof MAssociationEnd) {
             return nsmodel.getCoreHelper().getSource(relationShip);
         }
         return null;
@@ -298,22 +301,22 @@ class UmlHelperImpl implements UmlHelper {
         if (relationShip == null) {
             throw new IllegalArgumentException("Argument relationship is null");
         }
-        if (!ModelFacade.isAModelElement(relationShip)) {
+        if (!(relationShip instanceof MModelElement)) {
            throw new IllegalArgumentException("Argument relationship of class "
                    + relationShip.getClass().toString()
                    + " is not a valid relationship");
         }
-        if (ModelFacade.isARelationship(relationShip)) {
+        if (relationShip instanceof MRelationship) {
             // handles all children of relationship including extend and
             // include which are not members of core
             return nsmodel.getCoreHelper().getDestination(relationShip);
         }
-        if (ModelFacade.isATransition(relationShip)) {
+        if (relationShip instanceof MTransition) {
             return
             	nsmodel.getStateMachinesHelper()
             		.getDestination(relationShip);
         }
-        if (ModelFacade.isAAssociationEnd(relationShip)) {
+        if (relationShip instanceof MAssociationEnd) {
             return nsmodel.getCoreHelper().getDestination(relationShip);
         }
         return null;
