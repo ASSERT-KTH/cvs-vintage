@@ -3,6 +3,7 @@
     xmlns:util="jelly:util" 
     xmlns:ant="jelly:ant" 
     xmlns:i="jelly:interaction" 
+    xmlns:bsh="jelly:beanshell" 
     xmlns:maven="jelly:maven">
     
     
@@ -14,12 +15,16 @@
     <goal name="scarab:database">
         <i:ask question="Please enter the adminstrator username to use:" 
             answer="askAdminstratorUsername" default="administrator"/>
-            
+        <attainGoal name="scarab:int_database"/>
+    </goal>
+        
+    <goal name="scarab:int_database">
         <ant:filterset id="scarab.sql.filter">
             <ant:filter token="ADMIN_USERNAME" 
                 value="${askAdminstratorUsername}" />
             <ant:filter token="SCARAB_MODULE_CODE_LENGTH" 
                 value="${scarab.module.code.length}" />
+    		<ant:replacestring from="integer (1)" to="integer"/>
         </ant:filterset>
         
         <mkdir dir="${torque.schema.dir}"/>
@@ -27,15 +32,20 @@
         
         <ant:copy todir="${maven.build.dir}/sql">
             <ant:fileset dir="${basedir}/src/sql" includes="**/*.*"/>
-            <ant:filterset refid="scarab.sql.filter"/>
+			<ant:filterset refid="scarab.sql.filter"/>
         </ant:copy>
         <attainGoal name="torque:sql"/>
         <attainGoal name="torque:id-table-init-sql"/>
         <attainGoal name="torque:create-db"/>
         
+		<j:set var="database" value="${torque.database}"/>
+        <j:if test="${database == 'hypersonic'}">
+	        <attainGoal name="scarab:fix_hsql_schema"/>
+        </j:if>
+        
         <copy tofile="${maven.build.dir}/sql/scarab-schema-filtered.sql"
-            filtering="yes" file="${maven.build.dir}/sql/scarab-schema.sql">
-            <ant:filterset refid="scarab.sql.filter"/>
+              filtering="yes" file="${maven.build.dir}/sql/scarab-schema.sql">
+			<ant:filterset refid="scarab.sql.filter"/>
         </copy>
         
         <attainGoal name="scarab:load-default-data"/>
@@ -389,7 +399,33 @@
     
     </goal>
     <!-- ===================================================== -->
-    <!-- END R E P O S I T O R Y  -  M A I N T E N A N C E     -->    
+    <!-- END  R E P O S I T O R Y  -  M A I N T E N A N C E    -->    
     <!-- ===================================================== -->
+    
+   <goal name="scarab:fix_hsql_schema">
+       <bsh:script>
+       // fix the illegal column widths from torque-3.1.1 for hsqldb 1.7.2+
+       System.out.println("Fixing hsqldb schema.");
+       try {
+           java.io.BufferedReader rdr = new java.io.BufferedReader(new java.io.FileReader("target/sql/scarab-schema.sql"));
+           java.io.BufferedWriter wrtr = new java.io.BufferedWriter(new java.io.FileWriter("target/sql/scarab-schema-filtered.sql"));
+           
+           while ((str = rdr.readLine()) != null) {
+               String fstr = str.replaceAll("integer \\(\\d+\\)","integer");
+               wrtr.write(fstr);
+               wrtr.newLine();
+           }
+           rdr.close();
+           wrtr.close();
+       } catch (java.io.IOException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       }           
+       </bsh:script>
+       <ant:delete file="target/sql/scarab-schema.sql"/>
+       <ant:copy file="target/sql/scarab-schema-filtered.sql" 
+                 tofile="target/sql/scarab-schema.sql"/>
+       <ant:delete file="target/sql/scarab-schema-filtered.sql"/>
+   </goal>
 
 </project>
