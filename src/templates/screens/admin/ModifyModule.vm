@@ -48,7 +48,7 @@ module that you can edit.
 
 <form action="$link.setPage("admin,ModifyModule.vm")" method="post">
 <input type="hidden" name="action" value="ModifyModule" /> 
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModifyModule.vm" /> 
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageModules.vm" /> 
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageModules.vm" /> 
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ManageModules.vm" /> 
 
@@ -126,7 +126,7 @@ module that you can edit.
    </td>
   </tr>
 #end
-#if ($createNew && $createNew != "true")
+#if ($editModule || $createNew != "true")
   <tr>
     <th>* Deleted</td>
     <td>
