@@ -60,7 +60,7 @@ import org.jboss.tm.TxManager;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.44 $
+* @version $Revision: 1.45 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -104,6 +104,10 @@ import org.jboss.tm.TxManager;
 *   <li> For the record, locking went from cache (early 2.0) -> this interceptor -> new interceptor
 *   <li> new locking is pluggable
 * </ol>
+* <p><b>2001/10/18: billb</b>
+* <ol>
+*   <li>Do not insert bean into cache on an exception
+* </ol>
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -143,37 +147,31 @@ public class EntityInstanceInterceptor
       // Give it the transaction
       ctx.setTransaction(mi.getTransaction());
 		
-      try
-      {
          // Invoke through interceptors
-         return getNext().invokeHome(mi);
-      } 
-      finally
-      {         
-			
-         // Is the context now with an identity? in which case we need to insert
-         if (ctx.getId() != null)
+      Object rtn = getNext().invokeHome(mi);
+      // Is the context now with an identity? in which case we need to insert
+      if (ctx.getId() != null)
+      {
+         
+         BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
+         
+         lock.sync(); // lock all access to BeanLock
+         
+         try 
          {
-				
-            BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
-				
-            lock.sync(); // lock all access to BeanLock
-				
-            try 
-            {
-               // marcf: possible race on creation and usage
-               // insert instance in cache, 
-               container.getInstanceCache().insert(ctx);
-					
-            }
-            finally
-            {
-               lock.releaseSync();
-               container.getLockManager().removeLockRef(ctx.getCacheKey());
-            }
+            // marcf: possible race on creation and usage
+            // insert instance in cache, 
+            container.getInstanceCache().insert(ctx);
+            
          }
-         //Do not send back to pools in any case, let the instance be GC'ed
+         finally
+         {
+            lock.releaseSync();
+            container.getLockManager().removeLockRef(ctx.getCacheKey());
+         }
       }
+      //Do not send back to pools in any case, let the instance be GC'ed
+      return rtn;
    }
 	
    public Object invoke(MethodInvocation mi)

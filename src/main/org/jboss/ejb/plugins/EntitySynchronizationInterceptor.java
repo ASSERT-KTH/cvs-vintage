@@ -56,7 +56,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -101,6 +101,10 @@ import org.jboss.util.Sync;
  * <p><b>2001/10/11: billb</b>
  * <ol>
  *   <li>Do not cache.release a removed entity or removed entity can be put back into cache
+ * </ol>
+ * <p><b>2001/10/18: billb</b>
+ * <ol>
+ *   <li>Do not lock bean on an exception
  * </ol>
  */
 public class EntitySynchronizationInterceptor
@@ -227,35 +231,31 @@ public class EntitySynchronizationInterceptor
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
       Transaction tx = mi.getTransaction();
   
-      try
-      {
-         return getNext().invokeHome(mi);  
-      } finally
-      {
+      Object rtn =  getNext().invokeHome(mi);  
    
-         // An anonymous context was sent in, so if it has an id it is a real instance now
-         if (ctx.getId() != null)
+      // An anonymous context was sent in, so if it has an id it is a real instance now
+      if (ctx.getId() != null)
+      {
+         
+         // Currently synched with underlying storage
+         ctx.setValid(true);
+         
+         if (tx!= null)
          {
-    
-            // Currently synched with underlying storage
-            ctx.setValid(true);
-    
-            if (tx!= null)
+            BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
+            try
             {
-               BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
-               try
-               {
-                  lock.schedule(mi);
-                  register(ctx, tx); // Set tx
-                  lock.releaseMethodLock();
-               }
-               finally
-               {
-                  container.getLockManager().removeLockRef(lock.getId());
-               }
+               lock.schedule(mi);
+               register(ctx, tx); // Set tx
+               lock.releaseMethodLock();
+            }
+            finally
+            {
+               container.getLockManager().removeLockRef(lock.getId());
             }
          }
       }
+      return rtn;
    }
  
    public Object invoke(MethodInvocation mi)
