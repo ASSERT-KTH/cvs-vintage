@@ -39,7 +39,7 @@ security via the SecurityProxy delegation model.
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.13 $
+@version $Revision: 1.14 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -224,7 +224,8 @@ public class SecurityInterceptor extends AbstractInterceptor
         */
         if( methodRoles == null || realmMapping.doesUserHaveRole(principal, methodRoles) == false )
         {
-            Logger.error("Illegal access, principal="+principal+" method="+mi);
+            String method = mi.getMethod().getName();
+            Logger.error("Illegal access, principal="+principal+" method="+method);
             SecurityException e = new SecurityException("Illegal access exception");
             throw new RemoteException("checkSecurityAssociation", e);
         }
