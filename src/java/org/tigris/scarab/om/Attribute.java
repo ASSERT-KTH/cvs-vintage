@@ -61,7 +61,6 @@ public class Attribute
         
         if (firstTime)
         {
-            System.out.println("First time for Attribute: " + attId);
             attribute = AttributePeer.retrieveByPK(attId);
             if ( attribute == null) // is this check needed?
             {

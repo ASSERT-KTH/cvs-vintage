@@ -36,6 +36,12 @@ public abstract class AttributeValue
     {
     }
 
+    public String toString()
+    {
+        try{
+            return getAttribute().getName() + "->" + super.toString();
+        }catch (Exception e) {return "toString() threw Exception";}
+    }
 
     /**
      * Makes sure to set the Value as well, to make display of the
@@ -57,6 +63,19 @@ public abstract class AttributeValue
             }
         }
         super.setOptionId(optionId);
+    }
+
+    public boolean isRequired()
+       throws Exception
+    {
+        boolean b = false;
+        try {
+        RModuleAttribute rma = RModuleAttributePeer
+            .retrieveByPK(getIssue().getModule().getModuleId(), 
+                          getAttribute().getAttributeId() );
+        b = rma.getRequired();
+        }catch (Exception e){e.printStackTrace();}
+        return b;
     }
 
     // need a local reference

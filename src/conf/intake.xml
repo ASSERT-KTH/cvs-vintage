@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
-<!-- <!DOCTYPE input-data SYSTEM
-          "http://jakarta.apache.org/turbine/dtd/constraints.dtd"> -->
+<!DOCTYPE input-data SYSTEM
+          "http://jakarta.apache.org/turbine/dtd/intake.dtd">
 
 <!-- PUBLIC "-//Apache//Apache-Turbine-Intake Application Data//EN" --> 
 
@@ -28,20 +28,21 @@
         <field name="Id" key="id" type="ComboKey" mapToProperty="PrimaryKey">
            <rule mask="([0-9]|:)+">badIdMessage</rule>
         </field>
-        <field name="OptionId" key="optionid" type="NumberKey"
-               mapToObject="om.AttributeValue">
-           <rule mask="[0-9]+">Please select a valid choice</rule>
+        <field name="OptionId" key="optionid" type="NumberKey">
+           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+           <required-message>This module requires that you select an option for this attribute.</required-message>
         </field>
         <field name="UserId" key="visid" type="NumberKey">
            <rule mask="[0-9]+">badIdMessage</rule>
         </field>
         <field name="Value" key="val" type="String">
-            <rule minLength="1">Cannot be empty</rule>
             <rule maxLength="255">Value length cannot be &gt; 255</rule>
+           <required-message>This module requires data for this attribute.</required-message>
         </field>
         <field name="Url" key="url" type="String" mapToProperty="Value">
             <rule maxLength="255">Url length cannot be &gt; 255</rule>
             <rule mask="^$|http.+">Please enter an url starting with "http"</rule>
+           <required-message>This module requires a valid url.</required-message>
         </field>
         <field name="Deleted" key="del" type="boolean" />
 </group>

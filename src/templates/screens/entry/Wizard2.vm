@@ -1,10 +1,14 @@
-#set ( $action = $link.setPage("entry/Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard4.vm") )
+#*
+#set ( $action = $link.setPage("entry/Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard3.vm") )
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 ##set ($issue = $user.ReportingIssue)
 
 
 <FORM METHOD="get" NAME="Report2Form" action="$action">
+*#
+
+
 
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   <TR>
@@ -12,7 +16,7 @@
 
       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
         <TR>
-          <TD COLSPAN="2">POSSIBLE ISSUE MATCHES</TD>
+          <TD  BGCOLOR="#999999" COLSPAN="2">POSSIBLE ISSUE MATCHES</TD>
         </TR>
 
         <TR>
@@ -21,14 +25,22 @@
         </TR>
 
 #set ( $currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
-#foreach ($issue in $issueList)
 
-   ##set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("nextTempate", $link.CurrentView).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue") )
+#foreach ($issue in $issueList)
 
     #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
 
     #if ( $currentIssueId == $issue.UniqueId )
         #set ( $currentIssue = $issue )        
+        #if ( $velocityCount != $issueList.size() )
+            #set ($nextIssueIndex = $velocityCount )
+        #else
+            #set ($nextIssueIndex = 0 )
+        #end
+
+            #set ( $nextIssueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issueList.get($nextIssueIndex).UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
+
+
 
         <TR>
           <TD bgcolor="#CCDDFF">
@@ -56,12 +68,14 @@
 
           </TD>
         </TR>
+
+    #end
+
         <TR>
           <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
                 <SPACER TYPE="block" HEIGHT="1"></TD>
         </TR>			
 
-    #end
 #end
 
       </TABLE>
@@ -88,11 +102,11 @@
           </TD>
         </tr>
 
-#foreach ( $attVal in $currentIssue.ModuleAttributeValuesMap.values() )
+#foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
 
         <tr><td>
 
-    $attVal.Attribute.Name:<br>
+    <b>$attVal.Attribute.Name:</b>
     #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
 
         <a href="mailto:$attVal.Value">$attVal.Value</a>
@@ -168,20 +182,30 @@ $currentIssue.ModifiedDate
 
 
 
+    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
 
 
 <tr><td>
-Does this issue match yours?
+
+Does this issue match yours?<a href="$link.setPage("Links.vm")">Yes</a>(Vote)
+<a href="$nextIssueLink">No</a>(Next issue)
+
+<br>
+<br>
+<a href="$link.addPathInfo($data.Parameters).setPathInfo("nextTempate", "entry,Wizard3.vm").setPage("entry,Wizard3.vm") )">None of these Issues Match Mine</a> (Report issue now)
+<br>
+#*
 <input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
 <input type="submit" name="eventSubmit_doNo" value="No">(Next issue)<br>
 <br>
 <input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine">(New Search)
 <input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)
+*#
 
 </td></tr>
 
 
-#*  Comments are not ready
+#*  Comments are not ready, not really sure they belong here.
 <a href="#Comments">Add Comment</a>
 
 
@@ -230,5 +254,4 @@ Add a comment<br>
 </TABLE>
 </form>
 
-<a href="$link.addPathInfo($data.Parameters).setPathInfo("nextTempate", "entry,Wizard3.vm").setPage("entry,Wizard3.vm") )">Finish Issue</a>
 

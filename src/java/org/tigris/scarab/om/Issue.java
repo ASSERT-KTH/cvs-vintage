@@ -82,6 +82,77 @@ public class Issue
 
 
     /**
+     * AttributeValues in the order that is preferred for this module
+     */
+    public AttributeValue[] getOrderedModuleAttributeValues() throws Exception
+    {
+        
+        Map values = getModuleAttributeValuesMap();
+
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.DELETED, false)
+            .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        Attribute[] attributes = getModule().getAttributes(crit);
+
+        return orderAttributeValues(values, attributes);
+    }
+
+    /**
+     * AttributeValues that are set for this Issue in the order
+     * that is preferred for this module
+     */
+    public AttributeValue[] getOrderedAttributeValues() throws Exception
+    {        
+        Map values = getAttributeValuesMap();
+
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.DELETED, false)
+            .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        Attribute[] attributes = getModule().getAttributes(crit);
+
+        return orderAttributeValues(values, attributes);
+    }
+
+
+    /**
+     * Extract the AttributeValues from the Map according to the 
+     * order in the Attribute[]
+     */
+    private AttributeValue[] orderAttributeValues(Map values, 
+                                                  Attribute[] attributes) 
+        throws Exception
+    {
+        AttributeValue[] orderedValues = new AttributeValue[values.size()];
+        try{
+
+        int i=0;
+        for ( int j=0; j<attributes.length; j++ ) 
+        {
+            AttributeValue av = (AttributeValue) values
+                .remove( attributes[j].getName().toUpperCase() );
+            if ( av != null ) 
+            {
+                orderedValues[i++] = av;                
+            }
+        }
+        Iterator iter = values.values().iterator();
+        while ( iter.hasNext() ) 
+        {
+            orderedValues[i++] = (AttributeValue)iter.next();
+        }
+
+        }catch (Exception e){e.printStackTrace();}
+
+        for ( int j=0; j<orderedValues.length; j++ ) 
+        {
+            
+        }
+        return orderedValues;
+    }
+
+
+
+    /**
      * AttributeValues that are set for this Issue
      */
     public HashMap getAttributeValuesMap() throws Exception
@@ -141,8 +212,6 @@ public class Issue
                     if ( aval.getAttribute().getPrimaryKey().equals(
                          attributes[j].getPrimaryKey() )) 
                     {
-System.out.println(aval.getAttribute().getName() + " was not set. "
-                   + aval.toString() );
                         result = false;
                         break;
                     }                    

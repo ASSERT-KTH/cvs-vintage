@@ -6,52 +6,112 @@
 
 <FORM METHOD="get" NAME="Report3Form" action="$action">
 
-Platform:
-          #attrValueErrorMsg ( $issue "PLATFORM" )
-          #attrValueSelect ($issue "PLATFORM" "")
+<p>Please review the attributes you have set so far and fill out the remaining
+attributes to submit the issue.</p>
 
-<p>
 
-OS:
-          #attrValueErrorMsg ( $issue "OPERATING SYSTEM" )
-          #attrValueSelect ($issue "OPERATING SYSTEM" "")
+#foreach ( $attVal in $issue.OrderedModuleAttributeValues )
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
-<p>
+  #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+  #else
+        #set ( $field = "Value" )  
+  #end
 
-Summary:
-    #attrValueErrorMsg( $issue "SUMMARY"  )<br>
-    #set ( $attrValue = $issue.AllAttributeValuesMap.get("SUMMARY") )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-   <input name= "$attrInput.Value.Key"
-        value="$!attrInput.Value.Value" size="20" type="text">
 
-<p>
+  #if ( $attrInput.get($field).isSet() )
 
-URL:
 
-    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("URL") )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-    #if ( !$attrInput.Url.isValid() )
-        $attrInput.Url.Message<br>
+    #if ( $attVal.isRequired() )
+        $attrInput.get($field).setRequired(true)
+        <b>*</b>
     #end
-   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-   <input name= "$attrInput.Url.Key"
-        value="$!attrInput.Url.Value" size="30" type="text">
+
+
+    $attVal.Attribute.Name:
+
+    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
+          <font color="red">
+            #attrValueErrorMsg ( $attVal $field )
+          </font>
+          <br>
+          #attrValueSelect ($attVal $field "")
+    #else
+
+          <font color="red">
+            #attrValueErrorMsg ( $attVal $field )
+          </font>
+          <br>
+       <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
+
+            <textarea name= "$attrInput.Value.Key" cols="40" 
+               rows="5">$!attrInput.Value.Value</textarea>
+        #else
+
+           <input name= "$attrInput.Value.Key"
+                value="$!attrInput.Value.Value" size="20" type="text">
+
+        #end
+    #end
+<br><br>
+  #end
+#end
+
+<hr><br>Please fill in the following:<br><br>
+
+#foreach ( $attVal in $issue.OrderedModuleAttributeValues )
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+
+  #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+  #else
+        #set ( $field = "Value" )  
+  #end
+
+  #if ( !$attrInput.get($field).isSet() )
+
+    #if ( $attVal.isRequired() )
+        $attrInput.get($field).setRequired(true)
+        <b>*</b>
+    #end
+
+    $attVal.Attribute.Name:
+
+    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
+          <font color="red">
+            #attrValueErrorMsg ( $attVal $field )
+          </font>
+          <br>
+          #attrValueSelect ($attVal $field "")
+    #else
+
+          <font color="red">
+            #attrValueErrorMsg ( $attVal $field )
+          </font>
+          <br>
+       <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
+
+            <textarea name= "$attrInput.Value.Key" cols="40" 
+               rows="5">$!attrInput.Value.Value</textarea>
+        #else
+
+           <input name= "$attrInput.Value.Key"
+                value="$!attrInput.Value.Value" size="20" type="text">
+
+        #end
+    #end
+<br><br>
+  #end
+#end
 
 <p>
-
-Description:
-
-    #attrValueErrorMsg( $issue "DESCRIPTION" )<br>
-    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("DESCRIPTION") )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-   <textarea name= "$attrInput.Value.Key" cols="40" 
-           rows="5">$!attrInput.Value.Value</textarea>
-
-<p>
-
             <input type="submit" 
                 name="eventSubmit_doEnterissue" value="Submit Issue">
 </FORM>

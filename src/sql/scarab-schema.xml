@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.4 2001/04/06 01:35:50 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.5 2001/04/06 23:34:02 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -227,11 +227,17 @@
         Fully qualified name of the java class that represents attribute,
         belonging to the attribute type, in the application.
     -->
-    <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"></column>
+    <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"/>
+    <!--
+        A key which ties into a validation service (intake).
+    -->
+    <column name="VALIDATION_KEY" required="false" type="VARCHAR" size="20"/>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_CLASS">
         <reference local="ATTRIBUTE_CLASS_ID" foreign="ATTRIBUTE_CLASS_ID"/>
     </foreign-key>
 </table>
+
+
 <!--
     Dependency between issues.
     Example: Issue is a duplicate of another issue.
@@ -503,13 +509,13 @@
 -->
 <table name="SCARAB_R_MODULE_ATTRIBUTE" idMethod="none" javaName="RModuleAttribute">
     <!--
-        Attribute.
-    -->
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
         Module.
     -->
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!--
         Flag, which marks that module attribute has been deleted.
     -->

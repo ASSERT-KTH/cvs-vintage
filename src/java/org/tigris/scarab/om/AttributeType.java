@@ -27,6 +27,29 @@ public class AttributeType
     extends BaseAttributeType
     implements Persistent
 {
+    /* This interpretation of attribute type stretches its original 
+       meaning so I will try to avoid it. - jdm
+    protected boolean onePerModule;
+    
+    /**
+     * Get the value of onePerModule.
+     * @return value of onePerModule.
+     * /
+    public boolean isOnePerModule() 
+    {
+        return onePerModule;
+    }
+    
+    /**
+     * Set the value of onePerModule.
+     * @param v  Value to assign to onePerModule.
+     * /
+    public void setOnePerModule(boolean  v) 
+    {
+        this.onePerModule = v;
+    }
+    */
+
 }
 
 

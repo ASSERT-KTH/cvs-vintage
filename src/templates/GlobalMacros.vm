@@ -1,7 +1,6 @@
-#macro ( attrValueSelect $issue $attKey $size )
-    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get($attKey) )
-    #set ( $attr = $attrValue.Attribute )
+#macro ( attrValueSelect $attrValue $optionFieldName $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #set ( $attr = $attrValue.Attribute )
         <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
 
         <select name="$attrInput.OptionId.Key" #if($size.length())size="$size"#end>
@@ -10,11 +9,18 @@
             #end
             #foreach ($option in $attr.AttributeOptions)
               #set ( $selected = "" )
-              #if ( $option.OptionId == $attrInput.OptionId.Value.Value )
+              #if ( $option.OptionId == $attrInput.get($optionFieldName).Value.Value )
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$option.OptionId">
                   $option.DisplayValue</option>
             #end
         </select>
+#end
+
+#macro ( attrValueErrorMsg $attrValue $fieldName )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #if ( !$attrInput.get($fieldName).isValid() )
+        <font color="red">$attrInput.get($fieldName).Message</font>
+    #end
 #end

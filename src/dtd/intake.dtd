@@ -1,6 +1,6 @@
 <!-- 
     Intake XML input constraints DTD 
-    $Id: intake.dtd,v 1.1 2001/04/06 00:36:57 jon Exp $
+    $Id: intake.dtd,v 1.2 2001/04/06 23:34:01 jmcnally Exp $
 -->
 
 <!ELEMENT input-data (group+)>
@@ -15,7 +15,7 @@
   mapToObject CDATA #IMPLIED
 >
 
-<!ELEMENT field (rule*)>
+<!ELEMENT field (rule*,required-message?)>
 <!ATTLIST field 
   key CDATA #REQUIRED
   name CDATA #REQUIRED
@@ -38,5 +38,5 @@
   maxValue CDATA #IMPLIED
   action ( invalidate | force ) "invalidate"
 >
-  
 
+<!ELEMENT required-message (#PCDATA)>

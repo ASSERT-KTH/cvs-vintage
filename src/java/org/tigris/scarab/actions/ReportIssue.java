@@ -58,6 +58,7 @@ import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
+import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 
@@ -73,7 +74,7 @@ import org.tigris.scarab.util.*;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.5 2001/04/04 18:08:24 jon Exp $
+    @version $Id: ReportIssue.java,v 1.6 2001/04/06 23:34:01 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -86,18 +87,19 @@ public class ReportIssue extends VelocityAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
         
+        // Summary is always required (because we are going to search on it.)
+        ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = user.getReportingIssue();
+        AttributeValue aval = (AttributeValue)issue
+            .getModuleAttributeValuesMap().get("SUMMARY");
+        Group group = intake.get("AttributeValue", aval.getQueryKey());
+        Field summary = group.get("Value");
+        summary.setRequired(true);
+
         if ( intake.isAllValid() ) 
         {
             // search for duplicate issues based on summary
-            ScarabUser user = (ScarabUser)data.getUser();
-            Issue issue = user.getReportingIssue();
-
-            AttributeValue aval = (AttributeValue)issue
-                .getModuleAttributeValuesMap().get("SUMMARY");
-            Group group = intake.get("AttributeValue", aval.getQueryKey());
-            String summary = group.get("Value").toString();
-
-            StringTokenizer st = new StringTokenizer(summary, " ");
+            StringTokenizer st = new StringTokenizer(summary.toString(), " ");
             String[] keywords = new String[st.countTokens()];
             int i=0;
             while (st.hasMoreTokens()) 
@@ -140,16 +142,9 @@ public class ReportIssue extends VelocityAction
             while (i.hasNext()) 
             {
                 AttributeValue aval = (AttributeValue)i.next();
-                /*
-                System.out.println("Setting attribute: " +
-                                   aval.getAttribute().getName() + "; key: "
-                                   + aval.getQueryKey() + " using class: " +
-                                   aval.toString() );
-                */
                 Group group = intake.get("AttributeValue", aval.getQueryKey());
                 if ( group != null ) 
                 {
-                    // System.out.println("Set properties");
                     group.setProperties(aval);
                 }                
             }
