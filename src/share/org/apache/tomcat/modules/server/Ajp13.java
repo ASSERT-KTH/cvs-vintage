@@ -632,16 +632,19 @@ public class Ajp13
 	int len = msg.checkIn();
 	
 	// XXX check if enough space - it's assert()-ed !!!
-	// Can we have only one read ( with unblocking, it can read all at once - but maybe more ) ?
-	
-	rd = in.read( b, 4, len );
-	if( rd != len ) {
-	    System.out.println( "Incomplete read, deal with it " + len + " " + rd);
-	    // XXX log
-	    // XXX Return an error code?
+
+ 	int total_read = 0;
+  	while (total_read < len) {
+	    rd = in.read( b, 4 + total_read, len - total_read);
+            if (rd == -1) {
+ 		System.out.println( "Incomplete read, deal with it " + len + " " + rd);
+                break;
+		// XXX log
+		// XXX Return an error code?
+	    }
+     	    total_read += rd;
 	}
-	// msg.dump( "Incoming");
-	return rd;
+	return total_read;
     }
 
     /**
