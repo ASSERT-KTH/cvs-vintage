@@ -227,6 +227,9 @@ public class Issue
         }
     }
 
+    /**
+     * FIXME: Casting to ScarabModule here is probably bad.
+     */
     public void setModuleCast(ModuleEntity me)
         throws Exception
     {
@@ -1069,7 +1072,7 @@ public class Issue
 
     {                
         ScarabSecurity security = SecurityFactory.getInstance();
-        ScarabModule module = getScarabModule();
+        ModuleEntity module = getScarabModule();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
                                    module))
@@ -1097,7 +1100,7 @@ public class Issue
     public void delete( ScarabUser user )
          throws Exception, ScarabException
     {                
-        ScarabModule module = getScarabModule();
+        ModuleEntity module = getScarabModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
@@ -1122,7 +1125,7 @@ public class Issue
     /**
      * Checks if user has permission to enter issue.
      */
-    public boolean hasEnterPermission( ScarabUser user, ScarabModule module)
+    public boolean hasEnterPermission( ScarabUser user, ModuleEntity module)
         throws Exception
     {                
         boolean hasPerm = false;
@@ -1140,7 +1143,7 @@ public class Issue
     /**
      * Checks if user has permission to edit issue.
      */
-    public boolean hasEditPermission( ScarabUser user, ScarabModule module)
+    public boolean hasEditPermission( ScarabUser user, ModuleEntity module)
         throws Exception
     {                
         boolean hasPerm = false;

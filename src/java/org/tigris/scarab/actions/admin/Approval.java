@@ -63,7 +63,7 @@ import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.tools.Email;
@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.6 2001/09/28 01:27:36 elicia Exp $
+    @version $Id: Approval.java,v 1.7 2001/09/30 19:07:44 jon Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -87,7 +87,7 @@ public class Approval extends TemplateAction
         ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         String globalComment = data.getParameters().getString("global_comment");
        
         ParameterParser params = data.getParameters();

@@ -95,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.37 2001/09/30 18:31:38 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.38 2001/09/30 19:07:44 jon Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -127,7 +127,7 @@ public class ModifyIssue extends RequireLoginFirstAction
 
         // Set any other required flags
         Attribute[] requiredAttributes = issue.getScarabModule()
-            .getRequiredAttributes();
+                                              .getRequiredAttributes();
         AttributeValue aval = null;
         Group group = null;
 

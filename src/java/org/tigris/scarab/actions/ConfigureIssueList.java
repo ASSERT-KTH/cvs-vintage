@@ -66,7 +66,6 @@ import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -75,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.10 2001/09/30 18:31:38 jon Exp $
+    @version $Id: ConfigureIssueList.java,v 1.11 2001/09/30 19:07:44 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
