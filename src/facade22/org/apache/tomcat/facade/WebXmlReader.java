@@ -148,7 +148,7 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    // By using dtdURL you brake most parsers ( at least xerces )
 	    xh.registerDTDRes("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
-			      "/org/apache/tomcat/resources/web.dtd");
+			      "org/apache/tomcat/resources/web.dtd");
 
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );
 	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) );
