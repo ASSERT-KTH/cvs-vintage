@@ -67,7 +67,7 @@ $page.setTitle("Confirm Your Email Address")
  </tr>
  <tr>
   <td nowrap class="InputHeader">Email Address:</td>
-  <td width="80%"><input type="text" size="25" name="Email" value="$user.Email"></td>
+  <td width="80%"><input type="text" size="25" name="Email" value="$!user.Email"></td>
  </tr>
  <tr>
   <td height="4" colspan="2"><spacer type="block" height="4"></td>
