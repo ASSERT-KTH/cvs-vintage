@@ -79,7 +79,7 @@ public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
 		}
 
 		if (item.getBoolean("enable_mailcheck")) {
-			int interval = item.getInteger("mailcheck_interval");
+			int interval = item.getInteger("mailcheck_interval", 10);
 
 			timer = new Timer(ONE_SECOND * interval * 60, this);
 			timer.restart();

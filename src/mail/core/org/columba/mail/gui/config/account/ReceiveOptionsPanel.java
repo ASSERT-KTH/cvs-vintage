@@ -395,8 +395,7 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 			autodownloadCheckBox.setSelected(receiveItem
 					.getBoolean("automatically_download_new_messages"));
 
-			String interval = receiveItem.get("mailcheck_interval");
-			intervalCheckingSpinner.setValue(new Integer(interval));
+			intervalCheckingSpinner.setValue(new Integer(receiveItem.getInteger("mailcheck_interval", 10)));
 
 			String soundfile = receiveItem.get("sound_file");
 
