@@ -1,20 +1,28 @@
-<div class="app" id="moveissue">
 $page.setTitle("Copy/move issue")
+
+<div class="app" id="moveissue">
+
 <h2>$page.Title</h2>
-#set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
+
+#set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm").toString())
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($moduleId = $data.Parameters.getString("module_id"))
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
+
 <form method="post" action="$action">
 <input type="hidden" name="id" value="$issueId" />
-<div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+<div class="functnbar">
+ <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Next" name="eventSubmit_doMapattributes" /></td>
+  <td class="firstchild">
+  <input type="submit" value="Next" name="eventSubmit_doMapattributes" />
+  </td>
  </tr>
 </table>
 </div>
+
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
@@ -25,8 +33,8 @@ $page.setTitle("Copy/move issue")
  <tr class="a">
   <td>
    #set ($AttrValues = $issue.AllAttributeValuesMap)
-   #set( $attVal =  $AttrValues.get("SUMMARY"))
-   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+   #set ($attVal =  $AttrValues.get("SUMMARY"))
+   #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
    $attVal.Value
   </td>
   <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
@@ -36,35 +44,43 @@ $page.setTitle("Copy/move issue")
   </td>
  </tr>
 </table>
+
 <h3>Destination module</h3>
 <p>
 <select name="module_id">
  <option>Select Module...</option>
- #foreach( $module in $security.getModules($user, "Issue | Enter") )
-  <option value="$module.ModuleId"
-  #if ($module.ModuleId.equals($moduleId) )
-   selected="selected"
+ #foreach ($module in $security.getModules($user, "Issue | Enter"))
+  #if ($module.ModuleId.equals($moduleId))
+    #set ($selected = 'selected="true"')
+  #else
+    #set ($selected = "")
   #end
-  >$module.Name</option>
+  <option value="$module.ModuleId" $selected>$module.Name</option>
  #end
 </select>
 </p>
+
 <h3>Action</h3>
-<p><input type="radio" name="select_action" value="copy"
-#if ($select_action.equals("copy") )
- checked
-#end /> Copy
-</p>
-<p><input type="radio" name="select_action" value="move"
-#if ($select_action.equals("move") )
- checked
-#end /> Move
-</p>
-<div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
+#set ($checked = "")
+#if ($select_action.equals("copy"))
+  #set ($checked = 'checked="true"')
+#end
+<p><input type="radio" name="select_action" value="copy" $checked /> Copy</p>
+#set ($checked = "")
+#if ($select_action.equals("move"))
+  #set ($checked = 'checked="true"')
+#end
+<p><input type="radio" name="select_action" value="move" $checked /> Move</p>
+
+<div class="functnbar2">
+ <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Next" name="eventSubmit_doMapattributes" /></td>
+  <td class="firstchild">
+  <input type="submit" value="Next" name="eventSubmit_doMapattributes" />
+  </td>
  </tr>
 </table>
 </div>
+
 </form>
 </div>

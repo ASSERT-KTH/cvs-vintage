@@ -1,14 +1,6 @@
-<div class="app" id="moveissue2">
 $page.setTitle("Copy/move issue")
-<h2>$page.Title</h2>
-#set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm"))
-#set ($issueId = $data.Parameters.getString("issue_id"))
-#set ($issue = $scarabR.getIssue($issueId))
-#set ($moduleId = $data.Parameters.getString("module_id"))
-#set ($module = $scarabR.CurrentModule)
-<form method="post" action="$action">
-<input type="hidden" name="id" value="$issueId" />
-<input type="hidden" name="module_id" value="$moduleId" />
+
+#macro (moveOrCopy)
 #if ($select_action.equals("move") )
  #set ($tmp = "Move")
 #else
@@ -17,10 +9,30 @@ $page.setTitle("Copy/move issue")
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Back" name="eventSubmit_doBacktoone" />&nbsp; <input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
+  <td class="firstchild">
+  <input type="submit" value="Back" name="eventSubmit_doBacktoone" />&#160; 
+  <input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" />
+  </td>
  </tr>
 </table>
 </div>
+#end
+
+<div class="app" id="moveissue2">
+<h2>$page.Title</h2>
+
+#set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm").toString())
+#set ($issueId = $data.Parameters.getString("issue_id"))
+#set ($issue = $scarabR.getIssue($issueId))
+#set ($moduleId = $data.Parameters.getString("module_id"))
+#set ($module = $scarabR.CurrentModule)
+
+<form method="post" action="$action">
+<input type="hidden" name="id" value="$issueId" />
+<input type="hidden" name="module_id" value="$moduleId" />
+
+#moveOrCopy()
+
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
@@ -42,22 +54,26 @@ $page.setTitle("Copy/move issue")
   </td>
  </tr>
 </table>
+
 <h3>Destination project</h3>
 <p>
  #set($newModule = $scarabR.getModule($moduleId))
  $newModule.Name
 </p>
+
 <h3>Action</h3>
-<p><input type="radio" name="select_action" value="copy"
-#if ($select_action.equals("copy") )
- checked
-#end /> Copy
-</p>
-<p><input type="radio" name="select_action" value="move"
-#if ($select_action.equals("move") )
- checked="checked"
-#end /> Move
-</p>
+
+#set ($checked = "")
+#if ($select_action.equals("copy"))
+  #set ($checked = 'checked="true"')
+#end
+<p><input type="radio" name="select_action" value="copy" $checked /> Copy</p>
+#set ($checked = "")
+#if ($select_action.equals("move"))
+  #set ($checked = 'checked="true"')
+#end
+<p><input type="radio" name="select_action" value="move" $checked /> Move</p>
+
 <h3>Attribute mapping results</h3>
 <div class="sidebyside">
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
@@ -73,10 +89,10 @@ $page.setTitle("Copy/move issue")
      <th>Attribute name (alias)</th>
      <th>Value (list option/content)</th>
     </tr>
-    #foreach( $attr in $matchingAttributes )
+    #foreach ($attr in $matchingAttributes)
      #indexedRows($velocityCount)
      <td>$attr.Attribute.Name
-      #set( $displayValue = $module.getRModuleAttribute($attr.Attribute).getDisplayValue() )
+      #set ($displayValue = $module.getRModuleAttribute($attr.Attribute).getDisplayValue())
       #if (!$attr.Attribute.Name.equals($displayValue))
        ($displayValue)
       #end
@@ -94,10 +110,10 @@ $page.setTitle("Copy/move issue")
     <th>Attribute name (alias)</th>
     <th>Value (list option/content)</th>
    </tr>
-   #foreach( $attr in $matchingAttributes )
+   #foreach ($attr in $matchingAttributes)
     #indexedRows($velocityCount)
     <td>$attr.Attribute.Name
-     #set( $displayValue = $newModule.getRModuleAttribute($attr.Attribute).getDisplayValue() )
+     #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
@@ -111,6 +127,7 @@ $page.setTitle("Copy/move issue")
  </tr>
 </table>
 </div>
+
 #if (!$orphanAttributes.isEmpty())
  <h3>Attributes that do not exist in destination Module (saved as comment)</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -128,19 +145,8 @@ $page.setTitle("Copy/move issue")
   #end
  </table>
 #end
-#if ($select_action.equals("move") )
-#set ($tmp = "Move")
-#else
-#set ($tmp = "Copy")
-#end
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><input type="submit" value="Back" name="eventSubmit_doBacktoone" />&nbsp; <input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
- </tr>
-</table>
-</div>
+#moveOrCopy()
 
 </form>
 </div>
