@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: IllegalFormatException.java,v 1.1 2003/04/05 21:35:53 kataka Exp $
+// $Id: IllegalFormatException.java,v 1.2 2003/04/06 13:54:43 linus Exp $
 package org.argouml.kernel;
 
 /**
@@ -45,22 +45,4 @@ public class IllegalFormatException extends Exception {
     public IllegalFormatException(String message) {
         super(message);
     }
-
-    /**
-     * Constructor for IllegalFormatException.
-     * @param message
-     * @param cause
-     */
-    public IllegalFormatException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * Constructor for IllegalFormatException.
-     * @param cause
-     */
-    public IllegalFormatException(Throwable cause) {
-        super(cause);
-    }
-
 }
