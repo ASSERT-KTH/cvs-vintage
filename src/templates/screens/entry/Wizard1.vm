@@ -1,4 +1,4 @@
-$page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
+$page.setTitle("Enter new: $scarabR.CurrentIssueType.Name")
 
 <div id="wizard1" class="app">
 
