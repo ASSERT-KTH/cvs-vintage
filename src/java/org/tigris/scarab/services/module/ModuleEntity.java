@@ -62,23 +62,42 @@ import org.apache.turbine.util.db.Criteria;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.1 2001/05/15 02:39:48 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.2 2001/05/21 23:09:13 jon Exp $
  */
 public interface ModuleEntity
 {
-/*    public String getName();
-    public void setName();
-    
+    public String getName();
+    public void setName(String name);
+
+    public String getDescription();
+    public void setDescription(String description);
+
     public String getUrl();
-    public void setUrl();
+    public void setUrl(String url);
+
+    public void setPrimaryKey(String key) throws Exception;
+    public void setPrimaryKey(ObjectKey key) throws Exception;
+
+/** THESE WILL BE DEPRECATED */
+    public NumberKey getQaContactId();
+/** THESE WILL BE DEPRECATED */
+    public void setQaContactId(String v ) throws Exception;
+/** THESE WILL BE DEPRECATED */
+    public void setQaContactId(NumberKey v ) throws Exception;
+
+/** THESE WILL BE DEPRECATED */
+    public NumberKey getOwnerId();
+/** THESE WILL BE DEPRECATED */
+    public void setOwnerId(String v ) throws Exception;
+/** THESE WILL BE DEPRECATED */
+    public void setOwnerId(NumberKey v ) throws Exception;
+
+    public void save() throws Exception;
+
+/*    
     
     public String getAbbreviation();
     public void setAbbreviation();
-    
-    public String getDescription();
-    public void setDescription();
-    
-    public void setPrimaryKey(ObjectKey key);
     
     public void setParentModuleId(NumberKey key);
 

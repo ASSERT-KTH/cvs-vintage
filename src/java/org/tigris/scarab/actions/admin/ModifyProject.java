@@ -57,13 +57,14 @@ import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.*;
 import org.tigris.scarab.om.*;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 
 /**
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.5 2001/05/14 21:43:54 jon Exp $
+    @version $Id: ModifyProject.java,v 1.6 2001/05/21 23:09:11 jon Exp $
 */
 public class ModifyProject extends RequireLoginFirstAction
 {
@@ -75,12 +76,11 @@ public class ModifyProject extends RequireLoginFirstAction
         try
         {
             // get a populated ScarabModule and do validation
-            Module module = ModuleManager.getModule(data, true);
+            ModuleEntity module = ModuleManager.getModule(data, true);
             
             // check to see if we have a duplicate name!
             ModuleManager.checkForDuplicateProject(module);
-            
-            ModulePeer.doUpdate(module);
+            module.save();
             data.setMessage("Modification Successful!");
         }
         catch (Exception e)

@@ -59,6 +59,7 @@ import org.apache.turbine.om.*;
 // Scarab Stuff
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.screens.base.*;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 
 /**
@@ -66,7 +67,7 @@ import org.tigris.scarab.services.module.ModuleManager;
     for the admin,ModifyProject Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.6 2001/05/15 02:39:48 jon Exp $
+    @version $Id: ModifyProject.java,v 1.7 2001/05/21 23:09:12 jon Exp $
 */
 public class ModifyProject extends ScarabContextLoginFirst
 {
@@ -80,7 +81,7 @@ public class ModifyProject extends ScarabContextLoginFirst
         NumberKey cur_project_id = new NumberKey(data.getParameters()
                                                  .getString("curra;ldkfj"));
         // get the currently select project information
-        Module sm = ModuleManager.getProject(cur_project_id);
+        ModuleEntity sm = ModuleManager.getProject(cur_project_id);
         context.put ("project", sm );
         
         // get the owner username and id

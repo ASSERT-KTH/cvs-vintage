@@ -45,14 +45,14 @@ public class Attribute
     static
     {
         allOptionsCriteria = new Criteria();
-        allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
-        allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.OPTION_NAME);
+        allOptionsCriteria.addAscendingOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
+        allOptionsCriteria.addAscendingOrderByColumn(AttributeOptionPeer.OPTION_NAME);
 
         moduleOptionsCriteria = new Criteria();
         moduleOptionsCriteria
-            .addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+            .addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
         moduleOptionsCriteria
-            .addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+            .addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
     }
 
     protected Attribute()

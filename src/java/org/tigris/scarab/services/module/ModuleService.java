@@ -52,7 +52,7 @@ import org.apache.turbine.services.Service;
  * This is the interface that describes a ModuleService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleService.java,v 1.1 2001/05/15 02:39:48 jon Exp $
+ * @version $Id: ModuleService.java,v 1.2 2001/05/21 23:09:13 jon Exp $
  */
 public interface ModuleService extends Service
 {
@@ -63,13 +63,13 @@ public interface ModuleService extends Service
     public static final String MODULE_SERVICE_CLASS_KEY = 
         "scarab.module.class";
    
-    /** "org.tigris.scarab.om.HelmModuleEntity" */
-    public static final String HELM_MODULE_ENTITY_CLASS_DEFAULT = 
+    /** "org.tigris.scarab.om.HelmModule" */
+    public static final String HELM_MODULE_CLASS_DEFAULT = 
         "org.tigris.scarab.om.HelmModuleEntity";
 
-    /** "org.tigris.scarab.om.ScarabModuleEntity" */
-    public static final String SCARAB_MODULE_ENTITY_CLASS_DEFAULT = 
-        "org.tigris.scarab.om.ScarabModuleEntity";
+    /** "org.tigris.scarab.om.ScarabModule" */
+    public static final String SCARAB_MODULE_CLASS_DEFAULT = 
+        "org.tigris.scarab.om.ScarabModule";
 
     /**
      * Get the Class instance

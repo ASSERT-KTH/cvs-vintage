@@ -53,6 +53,7 @@ import org.apache.turbine.services.pull.ApplicationTool;
 
 // Scarab
 import org.tigris.scarab.om.*;
+import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
  * The is an object that is made available on a per request
@@ -67,7 +68,7 @@ import org.tigris.scarab.om.*;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.5 2001/05/09 01:51:35 jmcnally Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.6 2001/05/21 23:09:13 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -107,9 +108,9 @@ public interface ScarabRequestScope extends ApplicationTool
      * Get a specific module by key value.
      *
      * @param key a <code>String</code> value
-     * @return a <code>Module</code> value
+     * @return a <code>ModuleEntity</code> value
      */
-    public Module getModule(String key) throws Exception;
+    public ModuleEntity getModule(String key) throws Exception;
 
     /**
      * Get a specific issue by key value.

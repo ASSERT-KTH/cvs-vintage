@@ -55,7 +55,7 @@ import org.apache.turbine.services.TurbineBaseService;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleServiceImpl.java,v 1.1 2001/05/15 02:39:48 jon Exp $
+ * @version $Id: ModuleServiceImpl.java,v 1.2 2001/05/21 23:09:13 jon Exp $
  */
 public class ModuleServiceImpl extends TurbineBaseService 
                             implements ModuleService
@@ -70,7 +70,7 @@ public class ModuleServiceImpl extends TurbineBaseService
     {
         String moduleEntityClassName = getProperties().getProperty(
             ModuleService.MODULE_SERVICE_CLASS_KEY,
-            ModuleService.SCARAB_MODULE_ENTITY_CLASS_DEFAULT);
+            ModuleService.SCARAB_MODULE_CLASS_DEFAULT);
         try
         {
             moduleEntityClass = Class.forName(moduleEntityClassName);

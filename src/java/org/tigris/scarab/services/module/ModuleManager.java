@@ -62,7 +62,7 @@ import org.apache.turbine.util.db.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.2 2001/05/15 02:39:48 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.3 2001/05/21 23:09:13 jon Exp $
  */
 public abstract class ModuleManager
 {
@@ -93,9 +93,9 @@ public abstract class ModuleManager
         gets a single project
         @return null on error
     */
-    public static Module getProject(ObjectKey project_id) throws Exception
+    public static ModuleEntity getProject(ObjectKey project_id) throws Exception
     {
-        Module project = null;
+        ModuleEntity project = null;
         try
         {
             Criteria criteria = new Criteria();
@@ -103,7 +103,7 @@ public abstract class ModuleManager
             // get the Project object
             Vector projectVec = ModulePeer.doSelect(criteria);
             if (projectVec.size() == 1)
-                project = (Module)projectVec.elementAt(0);
+                project = (ModuleEntity)projectVec.elementAt(0);
         }
         catch (Exception e)
         {
@@ -128,14 +128,14 @@ public abstract class ModuleManager
         it will optionally try to validate the data. if there is an error, it will
         throw an exception.
     */
-    public static Module getModule(RunData data, boolean validate)
+    public static ModuleEntity getModule(RunData data, boolean validate)
         throws Exception
     {
         String project_id = data.getParameters().getString("project_id", null);
         String name = data.getParameters().getString("project_name",null);
         String desc = data.getParameters().getString("project_description",null);
 
-        Module sm = (Module) getInstance();
+        ModuleEntity sm = (ModuleEntity) getInstance();
         sm.setPrimaryKey(project_id);
         sm.setName( StringUtils.makeString( name ));
         sm.setDescription( StringUtils.makeString( desc ));
@@ -167,23 +167,11 @@ public abstract class ModuleManager
         }
         return sm;
     }
-
-    /**
-        returns an empty module
-    public static Module getEmptyModule()
-    {
-        Module sm = new Module();
-        sm.setName("");
-        sm.setDescription("");
-        sm.setUrl("");
-        return sm;
-    }
-    */
     
     /**
         check for a duplicate project name
     */
-    public static void checkForDuplicateProject(Module module)
+    public static void checkForDuplicateProject(ModuleEntity module)
         throws Exception
     {
         Criteria crit = new Criteria();
@@ -194,5 +182,4 @@ public abstract class ModuleManager
             throw new Exception ("Project: " + module.getName() + 
             " already exists. Please choose another name!" );        
     }
-
 }

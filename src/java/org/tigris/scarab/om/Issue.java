@@ -222,7 +222,7 @@ public class Issue
 
         Criteria crit = new Criteria(3)
             .add(RModuleAttributePeer.ACTIVE, true)
-            .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+            .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         Attribute[] attributes = getModule().getAttributes(crit);
 
         return orderAttributeValues(values, attributes);
@@ -239,7 +239,7 @@ public class Issue
 
         Criteria crit = new Criteria(3)
             .add(RModuleAttributePeer.ACTIVE, true)
-            .addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+            .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         Attribute[] attributes = getModule().getAttributes(crit);
 
         return orderAttributeValues(values, attributes);

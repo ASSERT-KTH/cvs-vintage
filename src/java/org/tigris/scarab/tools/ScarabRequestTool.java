@@ -57,6 +57,8 @@ import org.apache.turbine.util.pool.Recyclable;
 
 // Scarab
 import org.tigris.scarab.om.*;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.util.word.IssueSearch;
 
@@ -87,7 +89,7 @@ public class ScarabRequestTool implements ScarabRequestScope,
     /**
      * A Module object for use within the Scarab API.
      */
-    private Module module = null;
+    private ModuleEntity module = null;
 
     /**
      * A AttributeOption object for use within the Scarab API.
@@ -217,9 +219,9 @@ try{
     /**
      * Get an Module object. 
      *
-     * @return a <code>Module</code> value
+     * @return a <code>ModuleEntity</code> value
      */
-    public Module getModule()
+    public ModuleEntity getModule()
      throws Exception
     {
       try{
@@ -227,7 +229,7 @@ try{
                 .get("Module", IntakeTool.DEFAULT_KEY).get("Id").toString();
             if ( modId == null || modId.length() == 0 )
             {
-                module = new Module();
+                module = ModuleManager.getInstance();
             }
             else 
             {
@@ -281,11 +283,11 @@ try{
      * Get a specific module by key value.
      *
      * @param key a <code>String</code> value
-     * @return a <code>Module</code> value
+     * @return a <code>ModuleEntity</code> value
      */
-    public Module getModule(String key) throws Exception
+    public ModuleEntity getModule(String key) throws Exception
     {
-        return ModulePeer.retrieveByPK(new NumberKey(key));
+        return (ModuleEntity) ModulePeer.retrieveByPK(new NumberKey(key));
     }
 
 
@@ -395,8 +397,6 @@ try{
     {
         return disposed;
     }
-
-
 }
 
 

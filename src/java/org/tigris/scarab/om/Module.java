@@ -31,7 +31,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
   * long as it does not already exist in the output directory.
 
   */
-public class Module 
+public abstract class Module 
     extends BaseModule
     implements Persistent, ModuleEntity
 {
@@ -245,8 +245,8 @@ public class Module
         throws Exception
     {
         Criteria crit = new Criteria(0);
-        crit.addOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
-        crit.addOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
 
         List rModAtts = null;
         Module module = this;
@@ -333,8 +333,8 @@ public class Module
         
         Criteria crit = new Criteria(2);
         crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
-        crit.addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
-        crit.addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+        crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+        crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
 
         List rModOpts = null;
         Module module = this;
