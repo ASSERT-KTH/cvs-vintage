@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -197,30 +197,6 @@ public class JMSContainerInvoker
       finally {
          context.close();
       }
-   }
-
-   /**
-    * Create a new connection from the given factory.
-    *
-    * @param factory     An object that implements QueueConnectionFactory,
-    *                    XAQueueConnectionFactory, TopicConnectionFactory or
-    *                    XATopicConnectionFactory.
-    * @param username    The username to use or null for no user.
-    * @param password    The password for the given username or null if no
-    * @return            A new connection from the given factory.
-    * 
-    * @throws JMSException    Failed to create connection.
-    */
-   protected Connection createConnection(final Object factory,
-                                         final String username,
-                                         final String password)
-      throws JMSException
-   {
-      connection = ConnectionFactoryHelper.createConnection
-         (factory, username, password);
-      log.debug("created connection: " + connection);
-      
-      return connection;
    }
 
    /**
@@ -407,8 +383,10 @@ public class JMSContainerInvoker
          // create a topic connection
          Object factory = context.lookup(adapter.getTopicFactoryRef());
          TopicConnection tConnection = 
-            (TopicConnection)createConnection(factory, user, password);
-
+            (TopicConnection)ConnectionFactoryHelper.createTopicConnection
+            (factory, user, password);
+         connection = tConnection;
+         
          // lookup or create the destination topic
          Topic topic =
             (Topic)createDestination(Topic.class,
@@ -457,8 +435,10 @@ public class JMSContainerInvoker
          // create a queue connection
          Object qFactory = context.lookup(adapter.getQueueFactoryRef());
          QueueConnection qConnection =
-            (QueueConnection)createConnection(qFactory, user, password);
-
+            (QueueConnection)ConnectionFactoryHelper.createQueueConnection
+            (qFactory, user, password);
+         connection = qConnection;
+         
          // lookup or create the destination queue
          Queue queue = 
             (Queue)createDestination(Queue.class,

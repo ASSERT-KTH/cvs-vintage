@@ -114,7 +114,7 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JmsManagedConnection
    implements ManagedConnection
@@ -558,53 +558,72 @@ public class JmsManagedConnection
       try {
          JMSProviderAdapter adapter = getProviderAdapter();
          Context context = adapter.getInitialContext();
-
          Object factory;
-         if (info.isTopic()) {
-            factory = context.lookup(adapter.getTopicFactoryRef());
-         }
-         else {
-            factory = context.lookup(adapter.getQueueFactoryRef());
-         }
-         
-         con = ConnectionFactoryHelper.createConnection(factory, user, pwd);
-         logger.log(Level.FINE, "created connection: " + con);
-         
-         // Get sessions
          boolean transacted = true;
          int ack = Session.AUTO_ACKNOWLEDGE;
-	    
-         if (con instanceof XATopicConnection) {
-            xaTopicSession = ((XATopicConnection)con).createXATopicSession();
-            topicSession = xaTopicSession.getTopicSession();
-            xaTransacted = true;
+
+         if (info.isTopic()) {
+            factory = context.lookup(adapter.getTopicFactoryRef());
+            con = ConnectionFactoryHelper.createTopicConnection(factory,
+                                                                user,
+                                                                pwd);
+            logger.log(Level.FINE, "created connection: " + con);
+
+            if (con instanceof XATopicConnection) {
+               xaTopicSession = ((XATopicConnection)con).createXATopicSession();
+               topicSession = xaTopicSession.getTopicSession();
+               xaTransacted = true;
+            }
+            else if (con instanceof TopicConnection) {
+               topicSession =
+                  ((TopicConnection)con).createTopicSession(transacted, ack);
+               logger.log(Level.WARNING,
+                          "Using a non-XA TopicConnection.  " +
+                          "It will not be able to participate in a Global UOW");
+            }
+            else {
+               logger.log(Level.SEVERE,
+                          "Error in getting session for con: " + con);
+                    throw new ResourceException
+                       ("Connection was not reconizable: " + con);
+            }
+
+            logger.log(Level.FINE, "xaTopicSession: " + xaTopicSession);
+            logger.log(Level.FINE, "topicSession: " + topicSession);
          }
-         else if (con instanceof XAQueueConnection) {
-            xaQueueSession =
-               ((XAQueueConnection)con).createXAQueueSession();
-            queueSession = xaQueueSession.getQueueSession();
-            xaTransacted = true;
+         else { // isQueue
+            factory = context.lookup(adapter.getQueueFactoryRef());
+            con = ConnectionFactoryHelper.createQueueConnection(factory,
+                                                                user,
+                                                                pwd);
+            logger.log(Level.FINE, "created connection: " + con);
+
+            if (con instanceof XAQueueConnection) {
+               xaQueueSession =
+                  ((XAQueueConnection)con).createXAQueueSession();
+               queueSession = xaQueueSession.getQueueSession();
+               xaTransacted = true;
+            }
+            else if (con instanceof QueueConnection) {
+               queueSession =
+                  ((QueueConnection)con).createQueueSession(transacted, ack);
+               logger.log(Level.WARNING,
+                          "Using a non-XA QueueConnection.  " +
+                          "It will not be able to participate in a Global UOW");
+            }
+            else {
+               logger.log(Level.SEVERE,
+                          "Error in getting session for con: " + con);
+                    throw new ResourceException
+                       ("Connection was not reconizable: " + con);
+            }
+
+            logger.log(Level.FINE, "xaQueueSession: " + xaQueueSession);
+            logger.log(Level.FINE, "queueSession: " + queueSession);
          }
-         else if (con instanceof TopicConnection) {
-            topicSession =
-               ((TopicConnection)con).createTopicSession(transacted, ack);
-            logger.log(Level.WARNING,
-                       "Using a non-XA TopicConnection.  " +
-                       "It will not be able to participate in a Global UOW");
-         }
-         else if (con instanceof QueueConnection) {
-            queueSession =
-               ((QueueConnection)con).createQueueSession(transacted, ack);
-            logger.log(Level.WARNING,
-                       "Using a non-XA QueueConnection.  " +
-                       "It will not be able to participate in a Global UOW");
-         }
-         else {
-            logger.log(Level.SEVERE,
-                       "Error in getting session for con: " + con);
-            throw new ResourceException
-               ("Connection was not reconizable: " + con);
-         }
+
+         logger.log(Level.FINE, "transacted: " + transacted);
+         logger.log(Level.FINE, "ack mode: " + ack);
       }
       catch (NamingException e) {
          CommException ce = new CommException(e.toString());

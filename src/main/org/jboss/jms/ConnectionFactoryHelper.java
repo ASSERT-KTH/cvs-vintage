@@ -8,8 +8,10 @@ package org.jboss.jms;
 
 import javax.jms.JMSException;
 import javax.jms.Connection;
+import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.XAQueueConnectionFactory;
+import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.XATopicConnectionFactory;
 
@@ -19,7 +21,7 @@ import org.apache.log4j.Category;
  * A helper for creating connections from jms connection factories.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ConnectionFactoryHelper
 {
@@ -28,23 +30,22 @@ public class ConnectionFactoryHelper
       Category.getInstance(ConnectionFactoryHelper.class);
    
    /**
-    * Create a connection from the given factory.  An XA connection will
+    * Create a queue connection from the given factory.  An XA connection will
     * be created if possible.
     *
     * @param factory     An object that implements QueueConnectionFactory,
-    *                    XAQueueConnectionFactory, TopicConnectionFactory or
-    *                    XATopicConnectionFactory.
+    *                    XAQueueConnectionFactory
     * @param username    The username to use or null for no user.
     * @param password    The password for the given username or null if no
     *                    username was specified.
-    * @return            A connection.
+    * @return            A queue connection.
     *                    
     * @throws JMSException                Failed to create connection.
     * @throws IllegalArgumentException    Factory is null or invalid.
     */
-   public static Connection createConnection(final Object factory,
-                                             final String username,
-                                             final String password)
+   public static QueueConnection createQueueConnection(final Object factory,
+                                                       final String username,
+                                                       final String password)
       throws JMSException
    {
       if (factory == null)
@@ -57,7 +58,7 @@ public class ConnectionFactoryHelper
                    String.valueOf(password));
       }
 
-      Connection connection;
+      QueueConnection connection;
       
       if (factory instanceof XAQueueConnectionFactory) {
          XAQueueConnectionFactory qFactory = (XAQueueConnectionFactory)factory;
@@ -79,7 +80,62 @@ public class ConnectionFactoryHelper
          }
          log.debug("created QueueConnection: " + connection);
       }
-      else if (factory instanceof XATopicConnectionFactory) {
+      else {
+         throw new IllegalArgumentException("factory is invalid");
+      }
+      
+      return connection;
+   }
+
+   /**
+    * Create a queue connection from the given factory.  An XA connection will
+    * be created if possible.
+    *
+    * @param factory     An object that implements QueueConnectionFactory,
+    *                    XAQueueConnectionFactory
+    * @return            A queue connection.
+    *                    
+    * @throws JMSException                Failed to create connection.
+    * @throws IllegalArgumentException    Factory is null or invalid.
+    */
+   public static QueueConnection createQueueConnection(final Object factory)
+      throws JMSException
+   {
+      return createQueueConnection(factory, null, null);
+   }
+   
+   /**
+    * Create a topic connection from the given factory.  An XA connection will
+    * be created if possible.
+    *
+    * @param factory     An object that implements TopicConnectionFactory,
+    *                    XATopicConnectionFactory
+    * @param username    The username to use or null for no user.
+    * @param password    The password for the given username or null if no
+    *                    username was specified.
+    * @return            A topic connection.
+    *                    
+    * @throws JMSException                Failed to create connection.
+    * @throws IllegalArgumentException    Factory is null or invalid.
+    */
+   public static TopicConnection createTopicConnection(final Object factory,
+                                                       final String username,
+                                                       final String password)
+      throws JMSException
+   {
+      if (factory == null)
+         throw new IllegalArgumentException("factory is null");
+
+      if (log.isDebugEnabled()) {
+         log.debug("using connection factory: " + factory);
+         log.debug("using username/password: " +
+                   String.valueOf(username) + "/" +
+                   String.valueOf(password));
+      }
+
+      TopicConnection connection;
+      
+      if (factory instanceof XATopicConnectionFactory) {
          XATopicConnectionFactory tFactory = (XATopicConnectionFactory)factory;
          if (username != null) {
             connection = tFactory.createXATopicConnection(username, password);
@@ -107,20 +163,19 @@ public class ConnectionFactoryHelper
    }
 
    /**
-    * Create a connection from the given factory.  An XA connection will
+    * Create a topic connection from the given factory.  An XA connection will
     * be created if possible.
     *
-    * @param factory     An object that implements QueueConnectionFactory,
-    *                    XAQueueConnectionFactory, TopicConnectionFactory or
-    *                    XATopicConnectionFactory.
-    * @return            A connection.
+    * @param factory     An object that implements TopicConnectionFactory,
+    *                    XATopicConnectionFactory
+    * @return            A topic connection.
     *                    
     * @throws JMSException                Failed to create connection.
     * @throws IllegalArgumentException    Factory is null or invalid.
     */
-   public static Connection createConnection(final Object factory)
+   public static TopicConnection createTopicConnection(final Object factory)
       throws JMSException
    {
-      return createConnection(factory, null, null);
-   }   
+      return createTopicConnection(factory, null, null);
+   }
 }
