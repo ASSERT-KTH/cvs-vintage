@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
 
@@ -64,6 +64,11 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
          throws IllegalArgumentException;
 
    /**
+    * Unknown primary key flag
+    */
+   public boolean isUnknownPk();
+   
+   /**
     * Sets the value of this field to the specified value in the 
     * specified primaryKey object.
     * @param primaryKey the primary key object which the value 
@@ -91,5 +96,4 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
     * Loads the data from result set into the primary key object.
     */
    public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException;
-
 }                                         
