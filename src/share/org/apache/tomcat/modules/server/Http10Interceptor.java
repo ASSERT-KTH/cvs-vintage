@@ -100,7 +100,7 @@ public class Http10Interceptor extends PoolTcpConnector
 {
     private int	timeout = 300000;	// 5 minutes as in Apache HTTPD server
     private String reportedname;
-    private int socketCloseDelay = -1;
+    private boolean delaySocketClose = false;
 
     public Http10Interceptor() {
 	super();
@@ -123,8 +123,8 @@ public class Http10Interceptor extends PoolTcpConnector
     reportedname = reportedName;
     }
 
-    public void setSocketCloseDelay(int d) {
-        socketCloseDelay=d;
+    public void setDelaySocketClose(boolean b) {
+        delaySocketClose=b;
     }
 
     public void setProperty( String prop, String value ) {
@@ -208,20 +208,14 @@ public class Http10Interceptor extends PoolTcpConnector
 	    log( "Error reading request, ignored", e, Log.ERROR);
 	} 
 	finally {
-            // When running tests against Tomcat on the same system,
-            // we may need to add a delay before closing the socket
-            // to give the other end of the connection a chance to run
-            if( socketCloseDelay >= 0 ) {
-                if( socketCloseDelay > 0 ) {
-                    // if delay is specified, spin for that amount of time
-                    // Note: using Thread.sleep(n) exacerbates the problem on
-                    // RH Linux 7.1 and maybe others
-                    long target = System.currentTimeMillis() + socketCloseDelay;
-                    while( target <= System.currentTimeMillis())
-                        ;
-                } else {
-                    Thread.yield();
-                }
+            // When running tests against Tomcat on the same
+            // system, we may need to force a thread switch
+            // before closing the socket to give the other
+            // end of the connection a chance to run
+            if( delaySocketClose ) {
+                try {
+                    Thread.sleep(0);
+                } catch (InterruptedException ie) { /* ignore */ }
             }
 
 	    // recycle kernel sockets ASAP
