@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Liquid Look And Feel" description="Liquid Look And Feel" id="org.columba.core.LiquidLookAndFeel" version="1.0" category="Look and Feel" enabled="true">
+  <extension name="org.columba.core.theme">
+    <theme name="Liquid" class="LiquidLookAndFeelPlugin"></theme>
+  </extension>
+  <runtime jar="LiquidLookAndFeel.jar" type="java"></runtime>
+</plugin>

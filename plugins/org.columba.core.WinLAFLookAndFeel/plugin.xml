@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="WinLAF Look And Feel" description="WinLAF Look And Feel" id="org.columba.core.WinLAFLookAndFeel" version="1.0" category="Look and Feel" enabled="true">
+  <extension name="org.columba.core.theme">
+    <theme name="WinLAF" class="WinLAFLookAndFeelPlugin"></theme>
+  </extension>
+  <runtime jar="WinLAFLookAndFeel.jar" type="java"></runtime>
+</plugin>
