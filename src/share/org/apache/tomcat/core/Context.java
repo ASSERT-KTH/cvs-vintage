@@ -149,7 +149,11 @@ public class Context {
     private MimeMap mimeTypes = new MimeMap();
     private int sessionTimeOut = -1;
 
+    // taglibs
     Hashtable tagLibs=new Hashtable();
+    // Env entries
+    Hashtable envEntryTypes=new Hashtable();
+    Hashtable envEntryValues=new Hashtable();
     
     // Maps specified in web.xml ( String->ServletWrapper )
     private Hashtable prefixMappedServlets = new Hashtable();
@@ -559,6 +563,8 @@ public class Context {
 	welcomeFiles.addElement( s );
     }
 
+    /** Add a taglib declaration for this context
+     */
     public void addTaglib( String uri, String location ) {
 	//	System.out.println("Add taglib " + uri + "  " + location );
 	tagLibs.put( uri, location );
@@ -571,6 +577,29 @@ public class Context {
     public Enumeration getTaglibs() {
 	return tagLibs.keys();
     }
+
+    /** Add Env-entry to this context
+     */
+    public void addEnvEntry( String name,String type, String value, String description ) {
+	System.out.println("Add env-entry " + name + "  " + type + " " + value + " " +description );
+	if( name==null || type==null) throw new IllegalArgumentException();
+	envEntryTypes.put( name, type );
+	if( value!=null)
+	    envEntryValues.put( name, value );
+    }
+
+    public String getEnvEntryType(String name) {
+	return (String)envEntryTypes.get(name);
+    }
+
+    public String getEnvEntryValue(String name) {
+	return (String)envEntryValues.get(name);
+    }
+
+    public Enumeration getEnvEntries() {
+	return envEntryTypes.keys();
+    }
+    
     
     public String getInitParameter(String name) {
         return (String)initializationParameters.get(name);
