@@ -79,4 +79,23 @@ public class AttributePeer
         crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
         return doSelect(crit);
     }
+
+    /**
+     *  Gets a List of all of the Attribute objects in the database.
+     */
+    public static List getAttributes(String attributeType)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
+        if (attributeType.equals("user"))
+        {
+            crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, AttributeTypePeer.USER_TYPE_KEY);
+        }
+        else
+        {
+            crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL);
+        }
+        return doSelect(crit);
+    }
 }
