@@ -1,3 +1,6 @@
+set SAVED_CATALINA_HOME=%CATALINA_HOME%
+set CATALINA_HOME=
+
 @echo off
 if "%1"=="-h" goto usage
 if "%1"=="-l" goto usedefaultmem
@@ -22,3 +25,5 @@ goto setmem
     .\bin\catalina.bat run
 
 :done
+    set CATALINA_HOME=%SAVED_CATALINA_HOME%
+    set SAVED_CATALINA_HOME=
