@@ -156,7 +156,9 @@ ul.tasks li {
 	}
 #topmodule {
 	border-top: 1px solid white;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #999; 
+	border-right: 1px solid #999; 
+	margin-top: -12px;
 	}
 .tabs { border-bottom: 1em #999 solid }
 .tabs th {
@@ -168,4 +170,8 @@ ul.tasks li {
 	border-bottom: 1px solid #666;
 	border-right: 1px solid #666;
 	}
+	
+	
+	 
+	 }
 /* Scarab/App - styles end here */

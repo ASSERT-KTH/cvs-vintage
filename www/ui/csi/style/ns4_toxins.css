@@ -169,3 +169,6 @@ ul.tasks li {
 	border-right: 1px solid #666;
 	}
 /* Scarab/App - styles end here */
+
+#topmodule { margin-top: -12px; } /* this is cheating! */
+
