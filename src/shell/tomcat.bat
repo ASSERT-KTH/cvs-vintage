@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.38 2001/08/24 03:16:53 larryi Exp $
+rem $Id: tomcat.bat,v 1.39 2001/08/30 11:42:55 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -102,7 +102,7 @@ if "%1" == "start" goto startServer
 if "%1" == "stop" goto stopServer
 if "%1" == "run" goto runServer
 if "%1" == "env" goto doEnv
-if "%1" == "jspc" goto runJspc
+if "%1" == "jspc" goto doEnv
 if "%1" == "enableAdmin" goto enableAdmin
 if "%1" == "estart" goto estart
 
@@ -164,11 +164,6 @@ rem Stopping the Tomcat Server
 %_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
-:runJspc
-rem Run JSPC in Tomcat's Environment
-%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% jspc %2 %3 %4 %5 %6 %7 %8 %9
-goto cleanup
-
 rem ----- Set CLASSPATH to Tomcat's Runtime Environment ----------------------- 
 
 :doEnv
@@ -195,6 +190,7 @@ for %%i in (%TOMCAT_HOME%\lib\apps\*.*) do call %TOMCAT_HOME%\bin\cpappend.bat %
 echo Setting your CLASSPATH to Tomcat's runtime set of jars.
 rem Note: _LIBJARS already contains a leading semicolon
 set CLASSPATH=%CLASSPATH%%_LIBJARS%
+if "%1" == "jspc" goto runJspc
 goto finish
 
 :staticClasspath
@@ -217,19 +213,17 @@ if exist "%TOMCAT_HOME%\lib\common\jasper-runtime.jar" set CLASSPATH=%CLASSPATH%
 if exist "%TOMCAT_HOME%\lib\common\servlet.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\servlet.jar
 if exist "%TOMCAT_HOME%\lib\common\tomcat_core.jar" set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\common\tomcat_core.jar
 
+if "%1" == "jspc" goto runJspc
 goto finish
+
+:runJspc
+rem Run JSPC in Tomcat's Environment
+%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% jspc %2 %3 %4 %5 %6 %7 %8 %9
 
 
 rem ----- Restore Environment Variables ---------------------------------------
 
 :cleanup
-set _LIBJARS=
-set _SECSTARTJAVA=
-set _STARTJAVA=
-set _RUNJAVA=
-SET _MAIN=
-SET _CONTAINER=
-Set _NULL=
 set CLASSPATH=%_CLASSPATH%
 set _CLASSPATH=
 set TOMCAT_HOME=%_TOMCAT_HOME%
@@ -237,3 +231,10 @@ set _TOMCAT_HOME=
 set TOMCAT_INSTALL=%_TOMCAT_INSTALL%
 set _TOMCAT_INSTALL=
 :finish
+set _LIBJARS=
+set _SECSTARTJAVA=
+set _STARTJAVA=
+set _RUNJAVA=
+set _MAIN=
+set _CONTAINER=
+Set _NULL=
