@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.123 2003/09/08 20:59:15 thierrylach Exp $
+// $Id: ModelFacade.java,v 1.124 2003/09/09 10:46:24 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3172,13 +3172,13 @@ public class ModelFacade {
     }
 
     /**
-     * Returns the suppliers of an abstraction.
-     * @param abstraction
+     * Returns the suppliers of a dependency.
+     * @param dependency
      * @return a collection of the suppliers
      */
     public static Collection getSuppliers(Object handle) {
-        if (handle instanceof MAbstraction) {
-            return ((MAbstraction) handle).getSuppliers();
+        if (handle instanceof MDependency) {
+            return ((MDependency) handle).getSuppliers();
 		}
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
