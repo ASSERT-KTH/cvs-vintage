@@ -65,6 +65,7 @@ public class MessageComposer {
 		if (model.getBccList().size() > 0)
 			header.set("Bcc", ListParser.parse(model.getBccList()));
 
+		// TODO : this is responsible for the strange subject line
 		try {
 			header.set(
 				"Subject",

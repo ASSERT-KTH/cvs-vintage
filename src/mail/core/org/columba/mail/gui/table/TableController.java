@@ -125,7 +125,8 @@ public class TableController
 
 		//menu = new HeaderTableMenu(this);
 
-		menu = new TableMenu( mailFrameController );
+		// TODO
+		//menu = new TableMenu( mailFrameController );
 		
 		headerTableDnd = new HeaderTableDnd(view);
 

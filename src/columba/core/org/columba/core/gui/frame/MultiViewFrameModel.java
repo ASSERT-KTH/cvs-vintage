@@ -17,7 +17,6 @@ package org.columba.core.gui.frame;
 import java.util.Enumeration;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 /**
@@ -31,7 +30,6 @@ import org.columba.core.xml.XmlElement;
 public abstract class MultiViewFrameModel extends DefaultFrameModel {
 
 	protected XmlElement viewList;
-
 
 	public MultiViewFrameModel(XmlElement viewList) {
 		super();
@@ -50,7 +48,6 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 			nextId = Integer.parseInt(id) + 1;
 		}
 	}
-
 
 	protected XmlElement createDefaultConfiguration(String key) {
 		XmlElement child; // = getChild(new Integer(key).toString());
@@ -73,12 +70,14 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 		for (Enumeration e = controllers.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
 			FrameController frame = (FrameController) controllers.get(key);
-			frame.close();
+			frame.saveAndClose();
 		}
 		/*
 		saveAndExit();
 		*/
 	}
+
+	
 
 	/**
 		 * Registers the View
@@ -87,8 +86,9 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 	protected void register(String id, FrameController controller) {
 		controllers.put(id, controller);
 		controller.setItem(getViewItem(id));
-	}
 
+		MainInterface.frameModelManager.register(controller);
+	}
 
 	protected XmlElement getChild(String id) {
 		for (int i = 0; i < viewList.count(); i++) {
@@ -100,14 +100,13 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 		return null;
 	}
 
-
 	protected ViewItem getViewItem(String id) {
 		XmlElement viewElement = getChild(id);
-		if( viewElement == null ) {
+		if (viewElement == null) {
 			viewElement = createDefaultConfiguration(id);
 			viewList.addElement(viewElement);
 		}
-		
+
 		return new ViewItem(viewElement);
 	}
 
@@ -116,8 +115,20 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 			 * @param view
 			 * @return boolean true if there are no more views for the model
 			 */
+
 	protected void unregister(String id) {
+
+		// remove from list
 		FrameController controller = (FrameController) controllers.get(id);
+		controllers.remove(id);
+
+		// remove from configuration
+		XmlElement e = getViewItem(id).getRoot();
+		e.removeFromParent();
+
+		MainInterface.frameModelManager.unregister(controller);
+
+		/*
 		if (controllers.size() == 1) {
 			// last window closed
 			//  close application
@@ -126,22 +137,12 @@ public abstract class MultiViewFrameModel extends DefaultFrameModel {
 			//ensureViewConfigurationExists(id);
 			//saveWindowPosition(id);
 			controllers.remove(id);
-	
-			MainInterface.shutdownManager.shutdown();
-	
-			/*
-			saveAndExit();
-			*/
+		
+			
 		} else {
 			controllers.remove(id);
 		}
+		*/
 	}
-	
-	public OpenNewMailWindowAction getOpenWindowAction()
-	{
-		
-		return null;
-	}
-
 
 }

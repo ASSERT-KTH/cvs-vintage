@@ -23,7 +23,6 @@ import java.util.Enumeration;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
-import org.columba.addressbook.main.AddressbookExitWorker;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -55,7 +54,7 @@ public class ExitWorker extends SwingWorker {
 		*/
 		saveAllFolders();
 
-		// TODO
+		
 		/*
 		AddressbookExitWorker w =
 			new AddressbookExitWorker(MainInterface.addressbookInterface);

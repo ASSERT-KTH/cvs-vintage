@@ -19,6 +19,7 @@ package org.columba.core.gui.frame;
 import java.util.Hashtable;
 
 import org.columba.core.config.ViewItem;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 public abstract class DefaultFrameModel {
@@ -28,19 +29,19 @@ public abstract class DefaultFrameModel {
 	protected int nextId = 0;
 
 	public abstract FrameController createInstance(String id);
-	
+
 	protected XmlElement defaultView;
 
-	public DefaultFrameModel() {		
+	public DefaultFrameModel() {
 		controllers = new Hashtable();
 
-		
 		defaultView = new XmlElement("view");
 		XmlElement window = new XmlElement("window");
 		window.addAttribute("width", "640");
 		window.addAttribute("height", "480");
 		window.addAttribute("maximized", "false");
-		defaultView .addElement(window);
+		defaultView.addElement(window);
+
 	}
 
 	public FrameController openView() {
@@ -50,7 +51,7 @@ public abstract class DefaultFrameModel {
 		FrameController c = createInstance(new Integer(id).toString());
 		c.getView().loadWindowPosition();
 		c.getView().setVisible(true);
-		
+
 		return c;
 	}
 
@@ -61,6 +62,8 @@ public abstract class DefaultFrameModel {
 	protected void register(String id, FrameController controller) {
 		controllers.put(id, controller);
 		controller.setItem(new ViewItem(createDefaultConfiguration(id)));
+		
+		MainInterface.frameModelManager.register(controller);
 	}
 
 	protected XmlElement createDefaultConfiguration(String id) {
@@ -79,6 +82,14 @@ public abstract class DefaultFrameModel {
 		FrameController controller = (FrameController) controllers.get(id);
 		controllers.remove(id);
 		defaultView = controller.getItem().getRoot();
+	}
+
+	public void saveAndUnregister(String id) {
+		//		remove from list
+		FrameController controller = (FrameController) controllers.get(id);
+		controllers.remove(id);
+
+		MainInterface.frameModelManager.unregister(controller);
 	}
 
 }

@@ -6,6 +6,7 @@
  */
 package org.columba.core.gui.menu;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -84,7 +85,14 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 						menu.add(action);
 
 					} catch (Exception e) {
-						ColumbaLogger.log.error(e);
+						
+						if ( e instanceof InvocationTargetException )
+						{
+							((InvocationTargetException)e).getCause().printStackTrace();
+						}
+						
+						ColumbaLogger.log.error(e+": "+next.getAttribute("action"));
+						
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {

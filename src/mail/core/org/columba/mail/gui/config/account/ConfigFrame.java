@@ -385,8 +385,7 @@ public class ConfigFrame
 			if (item.isPopAccount() == true) {
 				MainInterface.popServerCollection.removePopServer(
 					item.getUid());
-				// TODO
-				//MainInterface.frameModel.updatePop3Menu();
+				
 			} else {
 				Folder folder =
 					(Folder) MainInterface.treeModel.getImapFolder(

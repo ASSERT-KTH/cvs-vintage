@@ -33,6 +33,7 @@ import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
+import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
@@ -188,6 +189,8 @@ public class Main {
 				mail.initPlugins();
 
 				frame.advance();
+				
+				MainInterface.frameModelManager = new FrameModelManager();
 				
 				addressbook.initGui();
 				mail.initGui();

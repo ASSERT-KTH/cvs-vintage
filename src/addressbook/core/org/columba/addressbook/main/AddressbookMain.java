@@ -40,7 +40,7 @@ public class AddressbookMain extends DefaultMain {
 	 * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
 	 */
 	public void handleCommandLineParameters(String[] args) {
-		// TODO Auto-generated method stub
+		
 
 	}
 

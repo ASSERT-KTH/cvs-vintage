@@ -21,7 +21,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;

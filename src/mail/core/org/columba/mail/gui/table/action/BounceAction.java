@@ -107,7 +107,7 @@ public class BounceAction extends FrameAction implements SelectionListener {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
+		// TODO implement bounce action (re-use other action and MessageBuilder class)
 		super.actionPerformed(evt);
 	}
 

@@ -22,9 +22,6 @@ import java.net.URL;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
@@ -94,7 +91,7 @@ public class URLController implements ActionListener {
 	}
 
 	public void contact(String address) {
-		// TODO
+		// TODO instead of addressbookInterface use MainInterface.addressbookTreeModel
 		/*
 		SelectAddressbookFolderDialog dialog =
 			MainInterface

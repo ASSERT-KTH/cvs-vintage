@@ -62,7 +62,7 @@ public class SaveMessageAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
+		// TODO implement action
 		super.actionPerformed(evt);
 	}
 	/* (non-Javadoc)

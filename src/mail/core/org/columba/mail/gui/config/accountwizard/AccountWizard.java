@@ -142,8 +142,7 @@ public class AccountWizard
 
 			MainInterface.popServerCollection.add(item);
 
-			// TODO
-			//MainInterface.frameModel.updatePop3Menu();
+			
 
 		} else {
 			ImapItem imap = item.getImapItem();

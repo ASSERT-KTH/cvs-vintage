@@ -19,7 +19,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,14 +26,12 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-import org.columba.core.action.BasicAction;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
@@ -43,7 +40,6 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ToolbarButton;
-import org.columba.mail.util.MailResourceLoader;
 
 public class StatusBar
 	extends JComponent

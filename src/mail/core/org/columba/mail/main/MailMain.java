@@ -42,7 +42,7 @@ public class MailMain extends DefaultMain {
 	 * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
 	 */
 	public void handleCommandLineParameters(String[] args) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -106,7 +106,7 @@ public class MailMain extends DefaultMain {
 				"org/columba/mail/action/action.xml");
 
 		} catch (PluginHandlerNotFoundException ex) {
-
+			ex.printStackTrace();
 		}
 
 		MainInterface.shutdownManager.register(new SaveAllFoldersPlugin());

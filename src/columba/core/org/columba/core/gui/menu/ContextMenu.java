@@ -8,8 +8,7 @@ package org.columba.core.gui.menu;
 
 import javax.swing.JPopupMenu;
 
-import org.columba.core.gui.frame.*;
-import org.columba.core.gui.menu.*;
+import org.columba.core.gui.frame.FrameController;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -30,6 +29,7 @@ public class ContextMenu extends JPopupMenu {
 		menuGenerator = new PopupMenuGenerator(frameController, path);
 		menuGenerator.createPopupMenu(this);
 
+		
 	}
 
 	public void extendMenuFromFile(String path) {

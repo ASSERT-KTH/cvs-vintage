@@ -43,6 +43,12 @@ public class MenuPluginHandler extends AbstractPluginHandler {
 			menu.extendMenu((XmlElement)menuPlugins.get(i));
 		}
 	}
+	
+	public void insertPlugins(ContextMenu menu) {
+			for( int i=0; i<menuPlugins.size(); i++) {
+				menu.extendMenu((XmlElement)menuPlugins.get(i));
+			}
+		}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)

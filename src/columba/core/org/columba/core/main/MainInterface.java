@@ -19,9 +19,9 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.columba.addressbook.gui.frame.AddressbookFrameModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
+import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
@@ -62,6 +62,8 @@ public class MainInterface {
 	public static PluginManager pluginManager;
 	
 	public static ShutdownManager shutdownManager;
+	
+	public static FrameModelManager frameModelManager;
 
 	public MainInterface() {
 	}

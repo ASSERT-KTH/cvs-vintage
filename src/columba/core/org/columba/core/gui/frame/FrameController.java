@@ -82,6 +82,13 @@ public abstract class FrameController {
 		return mouseTooltipHandler;
 	}
 	
+	
+	public void saveAndClose()
+	{
+		view.saveWindowPosition();
+		model.saveAndUnregister(id);
+	}
+	
 	public void close()
 	{
 		ColumbaLogger.log.info("closing FrameController");

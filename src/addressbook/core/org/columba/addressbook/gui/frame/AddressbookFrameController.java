@@ -65,7 +65,7 @@ public class AddressbookFrameController extends FrameController {
 	 * @see org.columba.core.gui.FrameController#initInternActions()
 	 */
 	protected void initInternActions() {
-		// TODO Auto-generated method stub
+		
 
 	}
 

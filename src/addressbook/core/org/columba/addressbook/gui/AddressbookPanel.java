@@ -34,12 +34,10 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.core.gui.util.CTabbedPane;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.composer.ComposerController;
 
 
@@ -165,7 +163,7 @@ public class AddressbookPanel
 
 		panel.add(topPanel, BorderLayout.NORTH);
 
-		// TODO
+		// TODO : addressbookInterface doesn't exist anymore (use AddressbookController instead)
 		/*
 		Folder folder =
 			(Folder) MainInterface.addressbookInterface.treeModel.getFolder(uid);

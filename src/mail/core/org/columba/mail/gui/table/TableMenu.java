@@ -6,10 +6,8 @@
  */
 package org.columba.mail.gui.table;
 
-import javax.swing.JPopupMenu;
-
 import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.menu.PopupMenuGenerator;
+import org.columba.core.gui.menu.ContextMenu;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -18,15 +16,18 @@ import org.columba.core.xml.XmlElement;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class TableMenu extends JPopupMenu {
+public class TableMenu extends ContextMenu {
 
-	protected PopupMenuGenerator menuGenerator;
+	//protected PopupMenuGenerator menuGenerator;
 	protected FrameController frameController;
 
 	/**
 	 * 
 	 */
 	public TableMenu(FrameController frameController) {
+		super(frameController, "org/columba/mail/action/table_contextmenu.xml");
+		
+		/*
 		this.frameController = frameController;
 
 		menuGenerator =
@@ -34,6 +35,8 @@ public class TableMenu extends JPopupMenu {
 				frameController,
 				"org/columba/mail/action/table_contextmenu.xml");
 		menuGenerator.createPopupMenu(this);
+		*/
+		
 	}
 
 	public void extendMenuFromFile(String path) {

@@ -17,6 +17,8 @@ package org.columba.core.loader;
 
 import java.lang.reflect.Constructor;
 
+import org.columba.core.logging.ColumbaLogger;
+
 /**
  * @author freddy
  *
@@ -45,12 +47,10 @@ public class DefaultClassLoader {
 	public Object instanciate(String className, Object[] args)
 		throws Exception {
 
+		ColumbaLogger.log.debug("class="+className);
+		
 		Class actClass = loader.loadClass(className);
-		/*
-		Class[] argClazz = new Class[args.length];
-		for( int i=0; i<args.length;i++) {
-			argClazz[i]=args[i].getClass();
-		}*/
+		
 
 		Constructor constructor = actClass.getConstructors()[0];//argClazz);
 		return constructor.newInstance(args);

@@ -16,7 +16,6 @@
 package org.columba.core.main;
 
 import org.columba.core.util.CmdLineArgumentParser;
-import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.parser.MailUrlParser;
 
 public class CmdLineArgumentHandler {

@@ -101,7 +101,7 @@ public class FolderPluginHandler extends AbstractPluginHandler {
 	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
 	 */
 	public void addExtension(String id, XmlElement extension) {
-		// TODO Auto-generated method stub
+		// TODO adding folders with the plugin-mechanism shouldn't work unless we don't implement this - this is mostly copy/paste from other plugin-handler classes
 
 	}
 

@@ -21,9 +21,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.parser.AddressParser;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.config.AccountItem;
@@ -597,24 +594,25 @@ public class MessageBuilder {
 
 		if (sender != null) {
 			if (sender.length() > 0) {
-				// FIXME
+				// TODO we need a AddressbookController here to get the selected folder
+				
 				/*
 				org.columba.addressbook.folder.Folder selectedFolder =
 					(org.columba.addressbook.folder.Folder) MainInterface.addressbookInterface.treeModel.getFolder(102);
-
+				
 				String address = AddressParser.getAddress(sender);
 				System.out.println("address:" + address);
-
+				
 				if (!selectedFolder.exists(address)) {
 					ContactCard card = new ContactCard();
-
+				
 					String fn = AddressParser.getDisplayname(sender);
 					System.out.println("fn=" + fn);
-
+				
 					card.set("fn", fn);
 					card.set("displayname", fn);
 					card.set("email", "internet", address);
-
+				
 					selectedFolder.add(card);
 				}
 				*/
