@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.9 2002/05/14 17:43:49 jmcnally Exp $
+ * @version $Id: QueryTest.java,v 1.10 2002/09/13 00:00:33 jmcnally Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -141,14 +141,18 @@ public class QueryTest extends BaseTestCase
     {
         System.out.println("\ntestGetExecuteLink()");
         String exLink = query.getExecuteLink("dummy");
-        assertEquals(exLink, "dummy/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search&resultsperpage=25&pagenum=1&searchId=1&searchisp=asc");
+        assertEquals("dummy/template/IssueList.vm" + 
+            "?action=Search&eventSubmit_doSearch=Search&resultsperpage=25" +
+            "&pagenum=1&searchId=1&searchisp=asc&remcurmitl=true", exLink);
     }
 
     private void testGetEditLink() throws Exception
     {
         System.out.println("\ntestGetEditLink()");
         String edLink = query.getEditLink("dummy");
-        assertEquals(edLink, "dummy/template/EditQuery.vm?queryId=" + query.getQueryId() + "&searchId=1&searchisp=asc");
+        assertEquals("dummy/template/EditQuery.vm?queryId=" + 
+                     query.getQueryId() + 
+                     "&searchId=1&searchisp=asc&remcurmitl=true", edLink);
     }
 
     private void testGetAllQueryTypes() throws Exception
