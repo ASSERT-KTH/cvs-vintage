@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='us-ascii'?>
+<!-- DTD for account". -->
+
+
+<!ELEMENT accountlist ( account* )>
+
+<!ELEMENT account ( name, uid, identity, (popserver | imapserver), smtpserver)>
+
+<!ELEMENT identity ( name, organisation, address, replyaddress, signature, attachsignature)>
+
+<!ELEMENT popserver (user, password, host, port, leave, uid, savepassword, exclude)>
+
+<!ELEMENT imapserver (user, password, host, port, savepassword )>
+
+<!ELEMENT smtpserver (user, host, port, esmtp, uid, bccyourself, bccanother, placecopy)>
+
+
+
+<!-- user name for login -->
+<!ELEMENT user (CDATA)>
+
+<!-- port for service -->
+<!ELEMENT port (#PCDATA)>
+
+<!-- name -->
+<!ELEMENT name (#PCDATA)>
+
+<!-- password  -->
+<!ELEMENT password (CDATA)>
+
+<!-- server e.x.: localhost.localdomain -->
+<!ELEMENT host (#PCDATA)>
+
+<!ELEMENT organisation (#PCDATA)>
+
+<!-- email address-->
+<!ELEMENT address (#PCDATA)>
+
+<!-- reply to address-->
+<!ELEMENT replyaddress (#PCDATA)>
+
+<!-- unique id-->
+<!ELEMENT uid (#PCDATA)>
+
+<!-- when sending mail place copy in folder -->
+<!ELEMENT placecopy (CDATA)>
+
+<!-- when sending mail bcc to yourself -->
+<!ELEMENT bccyourself ( true | false )>
+
+<!-- save password in configuration file -->
+<!ELEMENT savepassword ( true | false )>	
+
+<!-- exclude this popserver from the fetch all command -->
+<!ELEMENT exclude ( true | false )>	
+
+<!-- when sending mail bcc to another email address-->
+<!ELEMENT bccanother (#PCDATA)>
+
+<!-- enable ESMTP, for sending messages -->
+<!ELEMENT esmtp ( true | false )>
+
+<!-- leave mail on popserver while fetching -->
+<!ELEMENT leave ( true | false )>
+
+<!-- attach signature to end of message -->
+<!ELEMENT attachsignature ( true | false )>
+
+<!-- the signature -->
+<!ELEMENT signature (CDATA)>
+
+
+

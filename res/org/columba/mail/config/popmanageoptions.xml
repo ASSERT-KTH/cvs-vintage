@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<options>
+ <gui>
+  <headertable> 
+    <headeritem name="Status" position="0" size="23" enabled="true" />
+    <headeritem name="Attachment" position="1" size="23" enabled="true" />
+   	<headeritem name="Flagged" position="2" size="23" enabled="true" />
+   	<headeritem name="Priority" position="3" size="23" enabled="true" />
+   	<headeritem name="Subject" position="4" size="196" enabled="true" />
+   	<headeritem name="From" position="5" size="146" enabled="true" />
+   	<headeritem name="Date" position="6" size="146" enabled="true" />
+  	<headeritem name="Size" position="7" size="97" enabled="true" />
+   	<headeritem name="To" position="8" size="100" enabled="false" />
+   	<headeritem name="Cc" position="9" size="100" enabled="false" />
+   	<headeritem name="Bcc" position="10" size="100" enabled="false" />
+   	<headeritem name="Message-ID" position="11" size="100" enabled="false" />
+   	<headeritem name="In-Reply-To" position="12" size="100" enabled="false" />
+   	<headeritem name="References" position="13" size="100" enabled="false" />
+   	<headeritem name="Content-Type" position="14" size="100" enabled="false" />
+   	<headeritem name="Fetch" position="15" size="100" enabled="true" />
+   	<selected name="Date" />
+   	<ascending type="true" />
+  </headertable>
+  <window x="0" y="0" width="900" height="800" show_filter_toolbar="true" show_toolbar="true" show_folderinfo_toolbar="true" main_splitpane="100" header_splitpane="100" attachment_splitpane="100" /> 
+ </gui>
+</options>
+

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tree>
+ <folder class="org.columba.mail.folder.LocalRootFolder" uid="100" >
+  <property name="Local Folders" accessrights="system" subfolder="true" />
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="101">
+   <property name="Inbox" accessrights="system" subfolder="true" />
+   <filterlist>
+    <filter description="new filter" enabled="true">
+     <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
+	 </rules>
+	 <actionlist>
+	  <action type="Mark as Read" />
+	 </actionlist>
+    </filter>
+   </filterlist>
+   <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="19">
+    <property name="Recent Messages" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />	
+    <filter>
+     <rules condition="match_all">
+	  <criteria type="Flags" criteria="is" pattern="Recent" />
+	 </rules>
+    </filter>
+   </folder>
+   
+   <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="20">
+    <property name="Subject contains Columba" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="Columba" />
+	 </rules>
+	</filter>
+   </folder>
+   
+  </folder> <!-- inbox -->
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="102">
+   <property name="Drafts" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="107">
+   <property name="Templates" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.outbox.OutboxFolder" uid="103">
+   <property name="Outbox" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="104">
+   <property name="Sent" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="105">
+   <property name="Trash" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="106">
+    <property name="Search Result" accessrights="system" subfolder="true" include_subfolders="true" source_uid="101" />
+	<filter>
+	 <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
+	 </rules>
+	</filter>
+  </folder>
+   
+ </folder> <!-- local folders -->
+  
+</tree>
+
+
+
+
+
+
+

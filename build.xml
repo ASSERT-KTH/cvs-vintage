@@ -72,6 +72,10 @@
 
 	<target name="copy-resources">
 		<copy todir="${dest}">
+			<fileset dir="${dest}/res/"> 
+			 <include name="**"/>
+			</fileset>
+			<!--
  			<fileset dir="${dest}/src/core/core/"> 
 			 <include name="**"/>
 			</fileset>
@@ -84,6 +88,7 @@
 			<fileset dir="${dest}/src/addressbook/core/"> 
 			 <include name="**"/>
 			</fileset>
+			-->
 			<!-- need to uncomment this when adding resource files 
 			<fileset dir="${dest}/src/addressbook/independent/"> 
 			 <include name="**"/>
@@ -117,8 +122,10 @@
 			<exclude name="run_source_jdk13.bat"/>
 			<exclude name="run_source_jdk13.sh"/>
 			<exclude name="**/*.zip"/>
+			<exclude name="res/**"/>
+			<exclude name="src/**"/>
 			<manifest>
-				<attribute name="Main-Class" value="org.columba.main.Main"/>
+				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
 				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/jython.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
