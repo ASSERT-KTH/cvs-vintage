@@ -191,7 +191,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	}
 
 	boolean isDefaultHandler = false;
-        if ( statusLoop( ctx, req ) ){
+        if ( statusLoop( ctx, req, code ) ){
             log( "Error loop for " + req + " error code " + code);
             return;
         }
@@ -399,11 +399,12 @@ public final class ErrorHandler extends BaseInterceptor {
 
     /** Handle the case of status handler generating an error
      */
-    private boolean statusLoop( Context ctx, Request req ) {
-        if ( req.getAttribute("javax.servlet.error.status_code") != null ) {
+    private boolean statusLoop( Context ctx, Request req, int newCode ) {
+        Integer lastCode = (Integer)req.getAttribute("javax.servlet.error.status_code");
+        // If status code repeated, assume recursive loop
+        if ( lastCode != null && lastCode.intValue() == newCode) {
             if( ctx.getDebug() > 0 )
-                ctx.log( "Error: nested error inside status servlet " +
-                        req.getAttribute("javax.servlet.error.status_code"));
+                ctx.log( "Error: nested error inside status servlet " + newCode);
             return true;
         }
         return false;
