@@ -207,12 +207,12 @@ public class LoaderInterceptor11 extends BaseInterceptor {
         }
 
 	ClassLoader parent=null;
-	if( useAppsL && !context.isTrusted() ) {
-	    if( debug > 0 ) log( "Using webapp loader " + context.isTrusted());
-	    parent=cm.getAppsLoader();
-	} else if( useNoParent ) {
+	if( useNoParent ) {
 	    if( debug > 0 ) log( "Using no parent loader ");
 	    parent=null;
+	} else if( useAppsL && !context.isTrusted() ) {
+	    if( debug > 0 ) log( "Using webapp loader " + context.isTrusted());
+	    parent=cm.getAppsLoader();
 	} else {
 	    if( debug > 0 ) log( "Using container loader ");
 	    parent=this.getClass().getClassLoader();
