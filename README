@@ -177,11 +177,17 @@ and shut it down likewise:
 Testing the Build
 =================
 
-Tomcat includes a small web application with some quick tests to exercize
-the various parts of the server.  It is built automatically, along with the
-rest of Tomcat, by the steps described above.  To run the tests against the
-"unpacked" build, for example, you first need to set the Admin application
-to "trusted".  This can be accomplished by executing the following:
+Tomcat includes a "test" web application with some quick tests to exercise
+the various parts of the Tomcat container.  This test is not built by
+default.  To add the "test" web application to your "unpackaged" build,
+execute:
+
+	cd $JAKARTA_HOME/jakarta-tomcat
+	./build.sh sanity-test  <-- Unix
+	build sanity-test       <-- Windows
+
+Before you can run the test, you must set the Admin web application to
+"trusted". This can be accomplished by executing the following:
 
 	cd $JAKARTA_HOME/build/tomcat	<-- Unix
 	./bin/tomcat.sh run -enableAdmin
@@ -189,7 +195,7 @@ to "trusted".  This can be accomplished by executing the following:
 	cd %JAKARTA_HOME%\build\tomcat	<-- Windows
 	bin\tomcat run -enableAdmin
 
-After this, start tomcat with: 
+Next, start Tomcat with: 
 
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
@@ -205,12 +211,12 @@ followed the "PASSED Tests". This same procedure will also work with the
 binary distribution which is created in "$JAKARTA_HOME/dist/tomcat".
 
 For security reasons, after you are done with the test, you should either
-restore the Admin application to the default "untrusted" state, or change
-the password for the "admin" user. To restore the Admin application to the
-default "untrusted" state, change trusted="true" to trusted="false" in the
-"apps-admin.xml" file found in Tomcat's "conf" directory. If you want to
-leave the Admin application as "trusted, you should change the password for
-the "admin" user in the "admin-users.xml" file located in Tomcat's
+restore the Admin web application to the default "untrusted" state, or change
+the password for the "admin" user. To restore the Admin web application to
+the default "untrusted" state, change trusted="true" to trusted="false" in
+the "apps-admin.xml" file found in Tomcat's "conf" directory. If you want to
+leave the Admin web application as "trusted, you should change the password
+for the "admin" user in the "admin-users.xml" file located in Tomcat's
 "conf/users" directory.
 
 You can also use the Watchdog compatibility test suite, also available at
