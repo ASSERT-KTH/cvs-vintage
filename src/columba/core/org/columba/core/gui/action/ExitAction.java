@@ -59,7 +59,7 @@ public class ExitAction extends FrameAction {
 		//MainInterface.frameModel.saveAll();
 		//MainInterface.addressbookModel.saveAll();
 		
-		FrameModel.saveAll();
+		FrameModel.saveAndCloseAll();
 		MainInterface.shutdownManager.shutdown();
 	}
 }
