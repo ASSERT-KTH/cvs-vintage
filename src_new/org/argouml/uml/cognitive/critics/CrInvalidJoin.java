@@ -1,4 +1,4 @@
-// $Id: CrInvalidJoin.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrInvalidJoin.java,v 1.7 2004/03/18 10:00:10 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrInvalidJoin.java
 // Classes: CrInvalidJoin
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidJoin.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrInvalidJoin.java,v 1.7 2004/03/18 10:00:10 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -52,7 +52,7 @@ public class CrInvalidJoin extends CrUML {
 	Object k = ModelFacade.getPseudostateKind(dm);
 	if (!ModelFacade.
 	    equalsPseudostateKind(k,
-				  ModelFacade.FORK_PSEUDOSTATEKIND))
+				  ModelFacade.JOIN_PSEUDOSTATEKIND))
 	    return NO_PROBLEM;
 	Collection outgoing = ModelFacade.getOutgoings(dm);
 	Collection incoming = ModelFacade.getIncomings(dm);
