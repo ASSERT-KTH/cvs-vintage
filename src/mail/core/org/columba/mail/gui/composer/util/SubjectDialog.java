@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.util;
 
 import java.awt.BorderLayout;
@@ -33,42 +34,39 @@ import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
- * @version         1.0
- * @author
+ * @author fdietz
  */
 public class SubjectDialog extends JDialog implements ActionListener {
     
     private boolean bool = false;
     private JTextField subjectTextField;
     private String subject;
-    JButton[] buttons = new JButton[1];
+    private JButton okButton;
 
     public SubjectDialog() {
     	super(FrameModel.getInstance().getActiveFrame(), true);
     }
 
     public void showDialog(String subject) {
-    	
         this.subject = subject;
 
+        //TODO: i18n
         JLabel questionLabel = new JLabel("Please enter subject!");
         JLabel subjectLabel = new JLabel("Subject:");
 
-        buttons[0] = new ButtonWithMnemonic(MailResourceLoader.getString(
+        okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "ok"));
-        buttons[0].addActionListener(this);
-        buttons[0].setActionCommand("OK");
-        buttons[0].setDefaultCapable(true);
-        buttons[0].setSelected(true);
+        okButton.addActionListener(this);
+        okButton.setActionCommand("OK");
+        okButton.setSelected(true);
 
         subjectTextField = new JTextField(subject, 30);
         subjectTextField.setCaretPosition(subject.length());
         subjectTextField.selectAll();
         subjectTextField.getDocument().addDocumentListener(new MyDocumentListener());
 
-       
+       //TODO: i18n
         setTitle("Enter Subject...");
 
         //dialog.getContentPane().setLayout( new BoxLayout( dialog.getContentPane(), BoxLayout.Y_AXIS ) );
@@ -122,7 +120,7 @@ centerPanel.add( panel );
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         buttonPanel.setLayout(new GridLayout(1, 2, 10, 0));
-        buttonPanel.add(buttons[0]);
+        buttonPanel.add(okButton);
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
@@ -130,18 +128,9 @@ centerPanel.add( panel );
 
         pack();
 
-        getRootPane().setDefaultButton(buttons[0]);
+        getRootPane().setDefaultButton(okButton);
 
-        /*
-java.awt.Dimension dim = new Dimension(300, 200);
-
-Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-dialog.setLocation(
-        screenSize.width / 2 - dim.width / 2,
-        screenSize.height / 2 - dim.height / 2);
-*/
-       setLocationRelativeTo(null);
+        setLocationRelativeTo(null);
         show();
     }
 
@@ -167,19 +156,15 @@ dialog.setLocation(
 
     class MyDocumentListener implements DocumentListener {
         public void insertUpdate(DocumentEvent e) {
-            if (subjectTextField.getText().length() == 0) {
-                buttons[0].setEnabled(false);
-            } else {
-                buttons[0].setEnabled(true);
-            }
+            updateButton();
         }
 
         public void removeUpdate(DocumentEvent e) {
-            if (subjectTextField.getText().length() == 0) {
-                buttons[0].setEnabled(false);
-            } else {
-                buttons[0].setEnabled(true);
-            }
+            updateButton();
+        }
+        
+        protected void updateButton() {
+            okButton.setEnabled(subjectTextField.getText().length() > 0);
         }
 
         public void changedUpdate(DocumentEvent e) {
