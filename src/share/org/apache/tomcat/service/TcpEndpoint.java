@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.2 1999/10/22 01:47:09 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 01:47:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.3 1999/10/28 16:57:43 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/28 16:57:43 $
  *
  * ====================================================================
  *
@@ -299,7 +299,7 @@ class TcpConnectionThread implements Runnable {
     }
     
     public void run() {
-	handler.processConnection(connection);
+	handler.processConnection(connection, null);
     }
 }
     

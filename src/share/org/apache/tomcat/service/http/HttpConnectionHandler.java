@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.3 1999/10/28 05:15:32 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/28 05:15:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.4 1999/10/28 16:57:51 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/28 16:57:51 $
  *
  * ====================================================================
  *
@@ -92,14 +92,15 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	this.contextM=contextM;
     }
 
-    public void init( ) {
+    public Object[] init( ) {
+	return null;
     }
 
     // XXX
     //    Nothing overriden, right now AJPRequest implment AJP and read everything.
     //    "Shortcuts" to be added here ( Vhost and context set by Apache, etc)
     // XXX handleEndpoint( Endpoint x )
-    public void processConnection(TcpConnection connection) {
+    public void processConnection(TcpConnection connection, Object thData[]) {
 	Socket socket;
 
 	//	System.out.println("New Connection");

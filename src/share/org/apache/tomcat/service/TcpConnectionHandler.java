@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpConnectionHandler.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpConnectionHandler.java,v 1.2 1999/10/28 16:57:42 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 16:57:42 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.tomcat.util.*;
 public interface TcpConnectionHandler {
     public void setAttribute(String name, Object value );
     
-    public void init( );
+    public Object[] init( );
 
-    public void processConnection(TcpConnection connection);    
+    public void processConnection(TcpConnection connection, Object thData[]);    
 }

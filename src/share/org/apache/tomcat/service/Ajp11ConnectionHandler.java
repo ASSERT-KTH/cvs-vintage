@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.4 1999/10/28 05:15:30 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/28 05:15:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.5 1999/10/28 16:57:36 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/28 16:57:36 $
  *
  * ====================================================================
  *
@@ -88,7 +88,8 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
     public Ajp11ConnectionHandler() {
     }
 
-    public void init() {
+    public Object[] init() {
+	return null;
     }
 
     public void setAttribute(String name, Object value ) {
@@ -101,7 +102,7 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 	this.contextM=contextM;
     }
 
-    public void processConnection(TcpConnection connection) {
+    public void processConnection(TcpConnection connection, Object thData[]) {
 	
         try {
 	    Socket socket=connection.getSocket();
