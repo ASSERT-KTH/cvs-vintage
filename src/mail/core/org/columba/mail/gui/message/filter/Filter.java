@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.filter;
 
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 
 
@@ -28,5 +29,5 @@ import org.columba.mail.folder.MessageFolder;
  *
  */
 public interface Filter {
-    void filter(MessageFolder folder, Object uid) throws Exception;   
+    FolderCommandReference[] filter(MessageFolder folder, Object uid) throws Exception;   
 }

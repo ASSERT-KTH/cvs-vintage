@@ -24,7 +24,6 @@ import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.ristretto.io.SourceInputStream;
 
 /**
  * Should be used by every filter, which alters the message contents. This
@@ -44,17 +43,17 @@ public abstract class AbstractFilter implements Filter {
         this.mediator = mediator;
     }
     /**
+     * @return TODO
      * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder, java.lang.Object)
      */
-    public void filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
+    public FolderCommandReference[] filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
 //      map selection to this temporary message
         TempFolder tempFolder = MailInterface.treeModel.getTempFolder();
 
         // add message to temporary folder
-        SourceInputStream messageStream = new SourceInputStream(message.getSource());
-        uid = tempFolder.addMessage(messageStream);
-        messageStream.close();
+        uid = tempFolder.addMessage(message);
 
+        
         // create reference to this message
         FolderCommandReference[] local = new FolderCommandReference[1];
         local[0] = new FolderCommandReference(tempFolder,
@@ -73,6 +72,8 @@ public abstract class AbstractFilter implements Filter {
         AttachmentSelectionHandler h = ((AttachmentSelectionHandler) mediator
                 .getSelectionManager().getHandler("mail.attachment"));
         h.setLocalReference(local);
+        
+        return local;
     }
 
     /**

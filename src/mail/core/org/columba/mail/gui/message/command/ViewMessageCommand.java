@@ -68,7 +68,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-
+		
 		AttachmentSelectionHandler h = ((AttachmentSelectionHandler) frameMediator
 				.getSelectionManager().getHandler("mail.attachment"));
 
@@ -79,7 +79,6 @@ public class ViewMessageCommand extends FolderCommand {
 
 		MessageController messageController = ((MessageViewOwner) frameMediator)
 				.getMessageController();
-
 		// update attachment model
 		messageController.getAttachmentController().setMimePartTree(
 				mimePartTree);
@@ -139,9 +138,14 @@ public class ViewMessageCommand extends FolderCommand {
 				.getMessageController();
 
 		// if necessary decrypt/verify message
-		messageController.getPgpFilter().filter(srcFolder, uid);
+		FolderCommandReference[] newRefs = messageController.getPgpFilter().filter(srcFolder, uid);
 
 		// pass work along to MessageController
+		if( newRefs != null ) {
+			srcFolder = (MessageFolder)newRefs[0].getFolder();
+			uid = newRefs[0].getUids()[0];
+			mimePartTree = srcFolder.getMimePartTree(uid);
+		} 
 		messageController.showMessage(srcFolder, uid);
 	}
 }

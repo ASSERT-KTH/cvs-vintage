@@ -349,6 +349,25 @@ public class TempFolder extends MessageFolder {
     public Object addMessage(InputStream in) throws Exception {
         return addMessage(in, null, null);
     }
+    
+    /**
+     * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage,
+     *      WorkerStatusController)
+     */
+    public Object addMessage(ColumbaMessage message) throws Exception {
+        Object newUid = generateNextUid();
+
+        ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader());
+
+        h.set("columba.uid", newUid);
+
+        headerList.add(h, newUid);
+
+        messageList.put(newUid, message);
+
+        return newUid;
+    }
+    
     /**
      * @see org.columba.mail.folder.Folder#getHeaderListStorage()
      */

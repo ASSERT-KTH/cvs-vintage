@@ -24,6 +24,7 @@ import java.util.List;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
@@ -33,12 +34,15 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.JSCFController;
 import org.columba.mail.pgp.PGPPassChecker;
 import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
-import org.columba.ristretto.parser.MessageParser;
+import org.columba.ristretto.parser.BodyParser;
+import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.ParserException;
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFException;
@@ -101,7 +105,7 @@ public class PGPMessageFilter extends AbstractFilter {
      * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder,
      *      java.lang.Object)
      */
-    public void filter(MessageFolder folder, Object uid) throws Exception {
+    public FolderCommandReference[] filter(MessageFolder folder, Object uid) throws Exception {
 
         mimePartTree = folder.getMimePartTree(uid);
         
@@ -120,12 +124,14 @@ public class PGPMessageFilter extends AbstractFilter {
         // - multipart/signed
         String contentType = (String) header.get("Content-Type");
 
+        FolderCommandReference[] result = null;
+        
         if (firstPartMimeType.getSubtype().equals("signed")) {
-            verify(folder, uid);
+            result = verify(folder, uid);
 
         } else if (firstPartMimeType.getSubtype().equals("encrypted")) {
             LOG.fine("Mimepart type encrypted found");
-            decrypt(folder, uid);
+            result = decrypt(folder, uid);
 
         } else {
             pgpMode = SecurityInformationController.NOOP;
@@ -135,6 +141,7 @@ public class PGPMessageFilter extends AbstractFilter {
         fireSecurityStatusEvent(new SecurityStatusEvent(this, pgpMessage,
                 pgpMode));
 
+        return result;
     }
 
     /**
@@ -147,7 +154,7 @@ public class PGPMessageFilter extends AbstractFilter {
      * @throws Exception
      * @throws IOException
      */
-    private void decrypt(MessageFolder folder, Object uid) throws Exception,
+    private FolderCommandReference[] decrypt(MessageFolder folder, Object uid) throws Exception,
             IOException {
                 
         LOG.fine("start decrypting");
@@ -186,7 +193,7 @@ public class PGPMessageFilter extends AbstractFilter {
                 pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
                 // TODO make i18n!
                 pgpMessage = "wrong passphrase";
-                return;
+                return null;
             }
             LOG.fine("encrypted is != null?: "+(encryptedPart != null));
             JSCFResultSet res = stmt.executeDecrypt(encryptedPart);
@@ -197,7 +204,7 @@ public class PGPMessageFilter extends AbstractFilter {
                 pgpMessage = StreamUtils.readInString(res.getErrorStream())
                         .toString();
                 LOG.fine("error message: "+pgpMessage);
-                return;
+                return null;
             } else {
                 decryptedStream = res.getResultStream();
                 pgpMode = SecurityInformationController.DECRYPTION_SUCCESS;
@@ -213,24 +220,27 @@ public class PGPMessageFilter extends AbstractFilter {
         }
         try {
             // TODO should be removed if we only use Streams!
-            String decryptedBodyPart = StreamUtils
-                    .readInString(decryptedStream).toString();
+            CharSequence decryptedBodyPart = StreamUtils
+                    .readInString(decryptedStream);
             LOG.fine("the decrypted Body part: "+decryptedBodyPart);
             // construct new Message from decrypted string
-            message = new ColumbaMessage(MessageParser
-                    .parse(new CharSequenceSource(decryptedBodyPart)));
-
+            message = new ColumbaMessage( header );
+            
+            Source decryptedSource = new CharSequenceSource(decryptedBodyPart);
+            MimeHeader mimeHeader = new MimeHeader( HeaderParser.parse(decryptedSource) );
+            mimePartTree = new MimeTree( BodyParser
+                    .parseMimePart(mimeHeader, decryptedSource));
+            message.setMimePartTree(mimePartTree);
+            
             InputStream messageSourceStream = folder.getMessageSourceStream(uid);
             message.setSource(new CharSequenceSource(StreamUtils
                     .readInString(messageSourceStream)));
             messageSourceStream.close();
 
-            mimePartTree = message.getMimePartTree();
-
             encryptedMessage = true;
 
             // call AbstractFilter to do the tricky part
-            filter(folder, uid, message);
+            return filter(folder, uid, message);
             //header = (ColumbaHeader) message.getHeaderInterface();
         } catch (ParserException e) {
             e.printStackTrace();
@@ -239,12 +249,14 @@ public class PGPMessageFilter extends AbstractFilter {
             e.printStackTrace();
 
         }
-
+        
+        /*
         controlPart.close();
         encryptedPart.close();
         if (decryptedStream != null) {
             decryptedStream.close();
-        }
+        }*/
+        return null;
     }
 
     /**
@@ -257,7 +269,7 @@ public class PGPMessageFilter extends AbstractFilter {
      * @throws Exception
      * @throws IOException
      */
-    private void verify(MessageFolder folder, Object uid) throws Exception,
+    private FolderCommandReference[] verify(MessageFolder folder, Object uid) throws Exception,
             IOException {
         MimePart signedMultipart = mimePartTree.getRootMimeNode();
 
@@ -304,6 +316,8 @@ public class PGPMessageFilter extends AbstractFilter {
 
         signedPart.close();
         signature.close();
+        
+        return null;
     }
 
 }
