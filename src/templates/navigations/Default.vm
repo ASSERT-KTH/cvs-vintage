@@ -9,3 +9,9 @@ $renderer.render("navigations", $data, "ArtifactTypes.vm")
     <a href="$link.setPage("Login.vm")">Login</a>
 #end
 </strong></div>
+
+<div><strong>
+#if ($scarabR.hasPermission($scarabG.Permission.MODULE_EDIT, $module))
+  <a href="admin,AdminLinks.vm">Admin</a>
+#end
+</strong></div>

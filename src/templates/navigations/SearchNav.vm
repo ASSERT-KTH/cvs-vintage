@@ -29,7 +29,8 @@
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
      <small>
       <a href="$link.setPage("AdvancedQuery.vm")">Advanced</a>&#160;|&#160;
-      <a href="$link.setPage("Search.vm")">Custom</a>
+      <a href="$link.setPage("Search.vm")">Custom</a>&#160;|&#160;
+      <a href="$link.setPage("IssueList.vm")">Issue List</a>
      </small>
 </form>
 
