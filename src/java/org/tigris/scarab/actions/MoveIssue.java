@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.21 2002/01/22 21:08:04 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.22 2002/01/23 22:37:33 maartenc Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -108,8 +108,29 @@ public class MoveIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
-            String nextTemplate = getNextTemplate(data);
-            setTarget(data, nextTemplate);
+            Group moveIssue = intake.get("MoveIssue",
+                              IntakeTool.DEFAULT_KEY, false);
+            String selectAction = moveIssue.get("Action").toString();
+            NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
+                getValue());
+            Issue issue = getScarabRequestTool(context).getIssue();
+            ModuleEntity oldModule = issue.getModule();
+
+            // it's wrong to move an issue to the same module
+            // but it's allowed to copy an issue to the same module ???
+            if (selectAction.equals("move")
+                && (oldModule.getModuleId().equals(newModuleId)))
+            {
+                //setTarget(data, template);
+                data.setMessage("Cannot move an issue to the same destination " +
+                    "module as its source module");
+                return;
+            }
+            else
+            {
+                String nextTemplate = getNextTemplate(data);
+                setTarget(data, nextTemplate);
+            }
         }
     }
 
