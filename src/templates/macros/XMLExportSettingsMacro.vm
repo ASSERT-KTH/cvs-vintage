@@ -13,8 +13,8 @@
       <type>$attribute.AttributeType.Name</type>
       <description>$attribute.Description</description>
       <created-date>
-        <format>$sdf.toPattern()</format>
-        <timestamp>$sdf.format($attribute.CreatedDate)</timestamp>
+        <format>$scarabG.Constant.DATE_FORMAT</format>
+        <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attribute.CreatedDate)</timestamp>
       </created-date>
       #set ($allPCAO = $attribute.ParentChildAttributeOptions)
       #if (!$allPCAO.isEmpty())
