@@ -89,6 +89,8 @@ public class BaseInterceptor
 {
     protected ContextManager cm;
     protected Container ct;
+    // null for "global" interceptors
+    protected Context ctx; 
     protected int debug=0;
 
     //  loghelper will use name of actual impl subclass
@@ -239,15 +241,109 @@ public class BaseInterceptor
 	return 0;
     }
     
-    // -------------------- Context notifications --------------------
+    //-------------------- Engine state hooks --------------------
+
+    /** Hook called when a new interceptor is added. All existing
+     *	modules will be notified of the new added module.
+     *
+     *  This hook will be called before the interceptor is initialized
+     *  ( using engineInit hook )
+     * 
+     *  @param cm  the server
+     *  @param ctx not null if this is a local interceptor
+     *  @param i  the new added interceptor
+     *  @exception TomcatException The module will not be added if any
+     *  module throws an exception.
+     */
+    public void addInterceptor( ContextManager cm, Context ctx,
+				BaseInterceptor i )
+	throws TomcatException
+    {
+    }
+    
+    /** Hook called when interceptors are removed. All existing
+     *	modules will be notified of the module removal.
+     *
+     *  This hook will be called before the interceptor is removed
+     * 
+     *  @param cm  the server
+     *  @param ctx not null if this is a local interceptor
+     *  @param i  the removed interceptor
+     *  @exception TomcatException is logged, but will not have any effect
+     */
+    public void removeInterceptor( ContextManager cm, Context ctx,
+				BaseInterceptor i )
+	throws TomcatException
+    {
+    }
+    
+    /** Initialize the module.
+     *
+     *  @exception TomcatException The module will not be added if any
+     *  exception is thrown by engineInit.
+     */
+    public void engineInit(ContextManager cm)
+	throws TomcatException
+    {
+    }
+
+    /**
+     *  Shut down the module.
+     *
+     *  @exception If any exception is reported, the module will be removed.
+     *   XXX (?)
+     */
+    public void engineShutdown(ContextManager cm)
+	throws TomcatException
+    {
+    }
+
+    public void engineStart( ContextManager cm )
+    	throws TomcatException
+    {
+    }
+
+    public  void engineStop(ContextManager cm )
+	throws TomcatException
+    {
+    }
+
+    // -------------------- Context hooks --------------------
+    
+    /**
+     *  Called when a context is added to a CM. The context is probably not
+     *  initialized yet, only path, docRoot, host, and properties set before
+     *  adding the context ( in server.xml for example ) are available.
+     * 
+     *  At this stage mappers can start creating structures for the
+     *  context ( the actual loading of the context may be delayed in
+     *  future versions of tomcat until the first access ).
+     *
+     *  DefaultCMSetter will also adjust the logger and paths
+     *  based on context manager properties.
+     *
+     *  Any activity that depends on web.xml must be done at
+     *  init time.
+     */
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
+    {
+    }
+
+    /** Called when a context is removed from a CM. A context is removed
+     *  either as a result of admin ( remove or update), to support "clean"
+     *  servlet reloading or at shutdown.
+     */
+    public void removeContext( ContextManager cm, Context ctx )
+	throws TomcatException
+    {
+    }
+
     /** Notify when a context is initialized.
      *  The first interceptor in the chain for contextInit must read web.xml
      *  and set the context. When this method is called you can expect the
      *  context to be filled in with all the informations from web.xml.
      * 
-     *  WebXmlReader needs to be the first interceptor in
-     *  the contextInit chain.
-     *
      *  @exception If the interceptor throws exception the context will 
      *             not be initialized ( state==NEW or ADDED or DISABLED ).
      */
@@ -257,15 +353,24 @@ public class BaseInterceptor
     }
 
     /** Called when a context is stoped, before removeContext.
-     *  You must free all resources.
-     * XXX  - do we need this or removeContext is enough ?? ( will be
-     * removed from 3.1 if nobody asks for it)
+     *  You must free all resources associated with this context.
      */
     public void contextShutdown(Context ctx)
 	throws TomcatException
     {
     }
 
+    /** Reload notification - called whenever a reload is done.
+	This can be used to serialize sessions, log the event,
+	remove any resource that was class-loader dependent.
+     */
+    public void reload( Request req, Context ctx)
+	throws TomcatException
+    {
+    }
+
+    // -------------------- Container ( or Location ) hooks ---------------
+    
     /** Notify that certain properties are defined for a URL pattern.
      *  Properties can be a "handler" that will be called for URLs
      *  matching the pattern or "security constraints" ( or any other
@@ -309,77 +414,22 @@ public class BaseInterceptor
     {
     }
 
-    /** Called when the ContextManger is started
-     *  @exception TomcatException The server will not start if any exception is thrown by
-     *  engineInit
+    /** Notification of a new content handler added to a context
      */
-    public void engineInit(ContextManager cm)
+    public void addHandler( Handler h )
 	throws TomcatException
     {
     }
 
-    /** Called before the ContextManager is stoped.
-     *  You need to stop any threads and remove any resources.
+    /** Notification of a content handler removal
      */
-    public void engineShutdown(ContextManager cm)
+    public void removeHandler( Handler h )
 	throws TomcatException
     {
     }
 
-    /** This notifies that tomcat is started. Adapters shouldn't
-	accept connections before everything is set up internally.
-    */
-    public void engineStart(ContextManager cm )
-	throws TomcatException
-    {
-    }
-
-    /** This notifies that tomcat is stoped. No more requests will
-	be processed.
-    */
-    public void engineStop(ContextManager cm )
-	throws TomcatException
-    {
-    }
-
-    /**
-     *  Called when a context is added to a CM. The context is probably not
-     *  initialized yet, only path, docRoot, host, and properties set before
-     *  adding the context ( in server.xml for example ) are available.
-     * 
-     *  At this stage mappers can start creating structures for the
-     *  context ( the actual loading of the context may be delayed in
-     *  future versions of tomcat until the first access ).
-     *
-     *  DefaultCMSetter will also adjust the logger and paths
-     *  based on context manager properties.
-     *
-     *  Any activity that depends on web.xml must be done at
-     *  init time.
-     */
-    public void addContext( ContextManager cm, Context ctx )
-	throws TomcatException
-    {
-    }
-
-    /** Called when a context is removed from a CM. A context is removed
-     *  either as a result of admin ( remove or update), to support "clean"
-     *  servlet reloading or at shutdown.
-     */
-    public void removeContext( ContextManager cm, Context ctx )
-	throws TomcatException
-    {
-    }
-
-    /** Reload notification - called whenever a reload is done.
-	This can be used to serialize sessions, log the event,
-	remove any resource that was class-loader dependent.
-     */
-    public void reload( Request req, Context ctx)
-	throws TomcatException
-    {
-    }
-
+    // -------------------- Servlet-specific hooks --------------------
+    
     /** Servlet Init  notification
      */
     public void preServletInit( Context ctx, Handler sw )
@@ -427,9 +477,14 @@ public class BaseInterceptor
      */
     public void setContext( Context ctx ) {
 	if( ctx == null ) return;
+	this.ctx=ctx;
 	this.cm=ctx.getContextManager();
 	this.ct=ctx.getContainer();
 	loghelper.setLogger(ctx.getLog().getLogger());
+    }
+
+    public Context getContext() {
+	return ctx;
     }
 
     public final void log( String s ) {
