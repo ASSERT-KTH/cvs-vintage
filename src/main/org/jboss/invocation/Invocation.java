@@ -28,7 +28,7 @@ import javax.transaction.Transaction;
  *    pointers.  But really it is just  a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class Invocation
 {
@@ -106,7 +106,8 @@ public class Invocation
     *    to this object. We introduce typed getters and setters for 
     *    convenience and code readability in the codeba
     */
-   public void setValue(Object key, Object value) {
+   public void setValue(Object key, Object value)
+   {
       setValue(key, value, PayloadKey.PAYLOAD);
    }
    
@@ -144,13 +145,16 @@ public class Invocation
    public Object getValue(Object key) 
    { 
       // find where it is
-      if (payload.containsKey(key)) {
+      if (payload.containsKey(key))
+      {
          return payload.get(key);
       }
-      else if (as_is_payload.containsKey(key)) {
+      else if (as_is_payload.containsKey(key))
+      {
          return as_is_payload.get(key);
       }
-      else if (transient_payload.containsKey(key)) {
+      else if (transient_payload.containsKey(key))
+      {
          return transient_payload.get(key);
       }
       
@@ -169,113 +173,137 @@ public class Invocation
    /**
     * set the transaction.
     */
-   public void setTransaction(Transaction tx) {
+   public void setTransaction(Transaction tx)
+   {
       as_is_payload.put(InvocationKey.TRANSACTION, tx);
    }
    
    /**
     * get the transaction.
     */
-   public Transaction getTransaction() {
+   public Transaction getTransaction()
+   {
       return (Transaction) getValue(InvocationKey.TRANSACTION);
    }
    
    /**
     * Change the security identity of this invocation.
     */
-   public void setPrincipal(Principal principal) {
+   public void setPrincipal(Principal principal)
+   {
       as_is_payload.put(InvocationKey.PRINCIPAL, principal);
    }
    
-   public Principal getPrincipal() {
+   public Principal getPrincipal()
+   {
       return (Principal) getValue(InvocationKey.PRINCIPAL);
    }
    
    /**
     * Change the security credentials of this invocation.
     */
-   public void setCredential(Object credential) {
+   public void setCredential(Object credential)
+   {
       payload.put(InvocationKey.CREDENTIAL, credential);
    }
    
-   public Object getCredential() {
+   public Object getCredential()
+   {
       return getValue(InvocationKey.CREDENTIAL);
    }
    
    /**
     * container for server side association.
     */
-   public void setObjectName(Object objectName) {
+   public void setObjectName(Object objectName)
+   {
       payload.put(InvocationKey.OBJECT_NAME, objectName);
    }
    
-   public Object getObjectName() {
+   public Object getObjectName()
+   {
       return getValue(InvocationKey.OBJECT_NAME);
    }
    
    /**
     * An arbitrary type.
     */
-   public void setType(InvocationType type) {
+   public void setType(InvocationType type)
+   {
       as_is_payload.put(InvocationKey.TYPE, type);
    }
    
-   public InvocationType getType() {
-      return (InvocationType) getValue(InvocationKey.TYPE);
+   public InvocationType getType()
+   {
+      InvocationType type = InvocationType.LOCAL;
+      InvocationType invType = (InvocationType) getValue(InvocationKey.TYPE);
+      if( invType != null )
+         type = invType;
+      return type;
    } 
-   
+
    /**
     * Return the invocation target ID.  Can be used to identify a cached object
     */
-   public void setId(Object id) {
+   public void setId(Object id)
+   {
       payload.put(InvocationKey.CACHE_ID, id);
    }
    
-   public Object getId() {
+   public Object getId()
+   {
       return getValue(InvocationKey.CACHE_ID);
    }
    
    /**
     * set on method Return the invocation method.
     */
-   public void setMethod(Method method) {
+   public void setMethod(Method method)
+   {
       payload.put(InvocationKey.METHOD, method);
    }
    
    /**
     * get on method Return the invocation method.
     */
-   public Method getMethod() {
+   public Method getMethod()
+   {
       return (Method) getValue(InvocationKey.METHOD);
    }
    
    /**
     * A list of arguments for the method.
     */
-   public void setArguments(Object[] arguments) {
+   public void setArguments(Object[] arguments)
+   {
       payload.put(InvocationKey.ARGUMENTS, arguments);
    }
    
-   public Object[] getArguments() {
+   public Object[] getArguments()
+   {
       return (Object[]) getValue(InvocationKey.ARGUMENTS);
    }
    
    /**
     * marcf: SCOTT WARNING! I removed the "setPrincipal" that was called here
     */
-   public void setInvocationContext(InvocationContext ctx) {
+   public void setInvocationContext(InvocationContext ctx)
+   {
       transient_payload.put(InvocationKey.INVOCATION_CONTEXT, ctx);
    }
    
-   public void setEnterpriseContext(Object ctx) {
+   public void setEnterpriseContext(Object ctx)
+   {
       transient_payload.put(InvocationKey.ENTERPRISE_CONTEXT, ctx);
    }
       
-   public Object getEnterpriseContext() {
+   public Object getEnterpriseContext()
+   {
       return (Object) transient_payload.get(InvocationKey.ENTERPRISE_CONTEXT);
    }
 
-   public InvocationContext getInvocationContext() {
+   public InvocationContext getInvocationContext()
+   {
       return (InvocationContext) transient_payload.get(
             InvocationKey.INVOCATION_CONTEXT);
    }
