@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.29 2003/04/29 13:32:19 jhraigniac Exp $
+// $Id: PropPanelUseCase.java,v 1.30 2003/04/29 19:40:55 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -156,7 +156,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
                 MUseCase useCase = UseCasesFactory.getFactory().createUseCase();
 
                 ns.addOwnedElement(useCase);
-                ProjectBrowser.TheInstance.setTarget(useCase);
+                ProjectBrowser.getInstance().setTarget(useCase);
             }
         }
     }
@@ -180,7 +180,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
 
             MExtensionPoint extensionPoint =
                     UseCasesFactory.getFactory().buildExtensionPoint(useCase);
-            ProjectBrowser.TheInstance.setTarget(extensionPoint);
+            ProjectBrowser.getInstance().setTarget(extensionPoint);
             
         }
     }
