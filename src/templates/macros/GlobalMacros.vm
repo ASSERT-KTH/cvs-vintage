@@ -329,28 +329,20 @@
     value="$optionModel.Value">$optionModel.Name</option>
 #end
 
-#macro (paginate $resultsPerPage $pageNum )
-#*
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
-#end
-#if ($pageNum == 0)
-  #set ($pageNum = 1)
-#end
-*#
-
+#macro (paginate $resultsPerPage $pageNum $sortColumn $sortPolarity)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($scarabR.getCurrentTemplate()))
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
   <a href="$prevLink">&laquo;</a> previous |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage($scarabR.getCurrentTemplate()))
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
   | <a href="$nextLink">&raquo;</a> next
  #end
  </p>
 #end
+
 
 #macro (textAreaSmall $key $value)
  <textarea cols="30" rows="2" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
