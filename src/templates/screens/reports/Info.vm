@@ -33,7 +33,7 @@ $data.User.setCurrentMITList($report.getMITList())
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
    <th width="120">$l10n.ReportName</th>
-   <td>$report.Name
+   <td>
    <input type="text" size="30" maxlength="255"
                 name="$intakeReport.Name.Key" value="$intakeReport.Name" />
    </td>
