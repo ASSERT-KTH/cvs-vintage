@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.82 2003/09/21 22:16:32 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.83 2003/09/28 12:13:32 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.82 2003/09/21 22:16:32 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.83 2003/09/28 12:13:32 d00mst Exp $
 
 
 
@@ -369,7 +369,7 @@ public class ParserDisplay extends Parser {
 	String token;
 
 	try {
-	    st = new MyTokenizer(text, "<<,>>,::,.");
+	    st = new MyTokenizer(text, "<<,>>,::");
 	    while (st.hasMoreTokens()) {
 		token = st.nextToken();
 
@@ -386,7 +386,7 @@ public class ParserDisplay extends Parser {
 			    break;
 			stereotype += token;
 		    }
-		} else if ("::".equals(token) || ".".equals(token)) {
+		} else if ("::".equals(token)) {
 		    if (name != null)
 		        name = name.trim();
 
