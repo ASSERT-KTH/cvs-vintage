@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="mailto:joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public final class JDBCStartCommand
 {
@@ -161,6 +161,7 @@ public final class JDBCStartCommand
                   if(oldIndexes == null)
                   {
                      oldIndexes = SQLUtil.getOldIndexes(entity.getQualifiedTableName(), entity.getDataSource());
+                     idxCount = oldIndexes.getIndexNames().size();
                   }
                   if(!hasIndex(oldIndexes, field))
                   {
