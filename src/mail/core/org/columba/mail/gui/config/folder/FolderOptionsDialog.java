@@ -21,11 +21,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -66,7 +64,6 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MailboxInfo;
 import org.frapuccino.checkablelist.CheckableItem;
 import org.frapuccino.checkablelist.CheckableItemListTableModel;
-import org.frapuccino.checkablelist.CheckableList;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -80,7 +77,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class FolderOptionsDialog extends JDialog implements ActionListener,
 		ListSelectionListener {
-	private final static String[] tooltips = { "columns", "sorting", "filter",
+	public final static String[] tooltips = { "columns", "sorting", "filter",
 			"threadedview", "selection" };
 
 	private JPanel generalPanel;
@@ -368,6 +365,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 		 * overwriteOptionsCheckBox.setActionCommand("OVERWRITE");
 		 */
 		checkableList = new CheckableTooltipList();
+		checkableList.setOptionsCellRenderer(new OptionsRenderer());
 		checkableList.getSelectionModel().addListSelectionListener(this);
 
 		CTabbedPane tp = new CTabbedPane();
@@ -477,7 +475,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			if (renameFolder) {
 				if (!oldFolderName.equals(nameTextField.getText())) {
 					// user changed folder name
-					FolderCommandReference r = new FolderCommandReference(folder);
+					FolderCommandReference r = new FolderCommandReference(
+							folder);
 					r.setFolderName(nameTextField.getText());
 					MainInterface.processor.addOp(new RenameFolderCommand(r));
 				}
@@ -648,40 +647,5 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 	 */
 	public MailFrameMediator getMediator() {
 		return mediator;
-	}
-
-	class CheckableTooltipList extends CheckableList {
-		public CheckableTooltipList() {
-			super();
-		}
-
-		public String getToolTipText(MouseEvent event) {
-			int row = rowAtPoint(event.getPoint());
-			int col = columnAtPoint(event.getPoint());
-
-			String s = MailResourceLoader.getString("dialog", "folderoptions",
-					tooltips[row]);
-
-			return s;
-		}
-
-		public Point getToolTipLocation(MouseEvent event) {
-			int row = rowAtPoint(event.getPoint());
-			int col = columnAtPoint(event.getPoint());
-			Object o = getValueAt(row, col);
-
-			if (o == null) {
-				return null;
-			}
-
-			if (o.toString().equals("")) {
-				return null;
-			}
-
-			Point pt = getCellRect(row, col, true).getLocation();
-			pt.translate(-1, -2);
-
-			return pt;
-		}
 	}
 }
