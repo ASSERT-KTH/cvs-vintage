@@ -134,6 +134,72 @@ public class FilterList extends DefaultItem {
 			getRoot().removeElement(f.getRoot());
 		}
 	}
+	
+	/**
+	 * Inserts the filter into the specified index in the list.
+	 * @param filter filter to add.
+	 * @param index the index where to insert the filter. 
+	 */
+	public void insert(Filter filter, int index) {
+		if (filter != null) {
+			getRoot().insertElement(filter.getRoot(), index);
+		}
+	}
+
+	/**
+	 * Moves the specified filter up in the list.
+	 * @param filter the filter to move up.
+	 */
+	public void moveUp( Filter filter ) {
+		move(filter, -1);
+	}
+	
+	/**
+	 * Moves the specified filter down in the list.
+	 * @param filter the filter to move down.
+	 */
+	public void moveDown( Filter filter ) {
+		move(filter, 1);
+	}
+	
+	/**
+	 * Moves the specified filter a number of positions in the list.
+	 * @param filter the filter to move.
+	 * @param nrOfPositions the number of positions to move in the list, can be negative.
+	 */
+	public void move( Filter filter, int nrOfPositions ) {
+		int filterIndex = indexOf(filter);
+		if (filterIndex != -1) {
+			int newFilterIndex = filterIndex + nrOfPositions;
+			getRoot().removeElement(filterIndex);
+			newFilterIndex = ( newFilterIndex < 0 ? 0 : newFilterIndex );
+			if (newFilterIndex > count()) {
+				add( filter );
+			} else {
+				insert(filter, newFilterIndex);
+			}
+		}
+	}
+	
+	/**
+	 * Returns the index in this list of the first occurrence of the specified 
+	 * filter, or -1 if this list does not contain this element.
+	 * @param filter filter to search for.
+	 * @return the index in this list of the first occurrence of the specified filter, 
+	 * or -1 if this list does not contain this element.
+	 */
+	public int indexOf( Filter filter ) {
+		int index = -1;		
+		if (filter != null) {
+			int childCount = getChildCount();			
+			for (int i = 0; (index==-1) && (i<childCount); i++ ) {
+				if (getRoot().getElement(i).equals(filter.getRoot())) {
+					index = i;
+				}
+			}
+		}
+		return index;
+	}
 
 	public int count() {
 
