@@ -1,7 +1,7 @@
 
 <html>
   <head>
-    <!-- $Id: tomcat_ug.html,v 1.6 2000/03/31 22:50:47 shachor Exp $ -->
+    <!-- $Id: tomcat_ug.html,v 1.7 2000/05/02 20:00:35 costin Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href=style.css>
@@ -753,7 +753,7 @@ ApJServMount /examples /root
       <li> Building the module:
     <ul>
       <li> Change directory into jakarta-tomcat/src/native/apache/jserv/</li>
-      <li> Execute the build command <div><tt> apxs -c *.c -o mod_jserv.so </tt></div> 
+      <li> Execute the build command <div><tt> apxs -c -o mod_jserv.so *.c  </tt></div> 
         apxs is part of the Apache distribution and should be located in your
         APACHE_HOME/bin.</li>
     </ul>
