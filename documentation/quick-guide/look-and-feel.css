@@ -1,0 +1,11 @@
+/** $Id: look-and-feel.css,v 1.2 2004/02/06 17:01:27 mvw Exp $
+*******************************************************************************
+
+Style sheet for the documentation
+
+******************************************************************************/
+
+/* Set preferred fonts */
+
+body, table {
+  font-family: lucida,verdana,helvetica,arial,sans-serif }
