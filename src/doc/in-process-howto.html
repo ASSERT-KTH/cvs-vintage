@@ -54,14 +54,14 @@ the web server.</p>
 <p>For in-process operation you will have to use the Netscape/IIS
 redirectors, look at their supported configuration sections.
 
-<p>The in-process adapter was tested using JDK1.1.7b/IBM's JDK 1.1.7/JDK1.2.2.</p>
+<p>The in-process adapter was tested using JDK1.1.7b/IBM's JDK 1.1.7/JDK1.2.2/JDK 
+  1.3.0/JDK 1.3.1</p>
 
 <h2>Installation</h2>
 
-<p>The in-process adapter is not part of the "official" build of Jakarta, You
-can obtain the code and binaries needed for it by accessing
-http://jakarta.apache.org/builds/tomcat/release/v3.1_beta_1/bin/win32/i386/.
-The adapter related file is <tt>jni_connect.dll</tt>.</p>
+<p>The in-process adapter is not part of the "official" build of Jakarta, You 
+  can obtain the code and binaries needed for it by accessing <a href="http://jakarta.apache.org/builds/tomcat/release/v3.3/bin/win32/i386/">http://jakarta.apache.org/builds/tomcat/release/v3.3/bin/win32/i386/</a>. 
+  The adapter related file is <tt>jni_connect.dll</tt>.</p>
 
 <p>The Tomcat JNI adapter requires the following actions:
 
@@ -72,10 +72,8 @@ The adapter related file is <tt>jni_connect.dll</tt>.</p>
   <li>Update <tt>workers.properties</tt> and add the JNI worker - The JNI worker
   needs several configuration items, you will need to add those to the worker
   properties file.</li>
-  <li>Updating server.xml - You need to instruct Tomcat to use the JNI
-  connection handlers. You will also need to provide the home property for
-  your ContextManager (later on the log files and work directories will
-  be created under this home). </li>
+  <li>Updating server.xml - You need to instruct Tomcat to use the JNI connection 
+    handlers.</li>
   <li>Directing context(s) to the in-process Tomcat - You need to instruct
   the redirector to send work to the in-process Tomcat</li>
   <li>Restart your server (so changes will take effect)</li>
@@ -84,94 +82,52 @@ The adapter related file is <tt>jni_connect.dll</tt>.</p>
 
 <h3>Putting jni_connect.dll in the bin directory</h3>
 
-<p> Put jni_connect.dll inside 
-    <tt>&lt;tomcat_home&gt;\bin\i386\</tt>.
-</p>
+<p> Put jni_connect.dll inside <tt>&lt;tomcat_home&gt;\bin\native</tt></p>
 
 <h3>Update worker.properties and add the JNI worker</h3>
-<p> You should provide the JNI worker with several settings, some are
-mandatory and some are an option...
-</p>
+<p> You should provide the JNI worker with several settings, some are mandatory 
+  and some are an option... </p>
 <ol>
   <li>You <b>should</b> define a JNI worker.<br>
-  Set the <tt>worker.list</tt> property to point on a worker named <tt>jni</tt>:
-  <tt>worker.list=jni</tt><br>
-  Announce that the worker named <tt>jni</tt> is of type <tt>jni</tt>:
-  <tt>worker.jni.type=jni</tt>
+    Set the <tt>worker.list</tt> property to point on a worker named <tt>inprocess</tt>: 
+    <tt>worker.list=inprocess</tt><br>
+    Announce that the worker named <tt>jni</tt> is of type <tt>jni</tt>: <tt>worker.inprocess.type=jni</tt> 
   <li>You <b>should</b> set a classpath to be use by the in-process Tomcat.<br>
-  To set the classpath use the <tt>worker.name.class_path</tt> property,
-  for example:<br>
-  <tt>worker.jni.class_path=d:\tomcat\classes</tt><br>
-  <tt>worker.jni.class_path=d:\tomcat\lib\xml.jar</tt><br>
-  <tt>worker.jni.class_path=d:\tomcat\lib\jasper.jar</tt><br>
-  <tt>worker.jni.class_path=d:\tomcat\lib\servlet.jar</tt><br>
-  <tt>worker.jni.class_path=d:\tomcat\lib\webserver.jar</tt><br>
-  <tt>worker.jni.class_path=d:\sdk\jdk1.2.2\lib\tools.jar</tt><br>
-  <b>Note</b>: Do not forget to include the JDK's tools.jar in your classpath.
+    To set the classpath use the <tt>worker.name.class_path</tt> property, for 
+    example:<br>
+    <tt>worker.inprocess.class_path=d:\tomcat\lib\tomcat.jar</tt><br>
+    <b>Note</b>: Do not forget to include the JDK's tools.jar in your classpath. 
   </li>
-  <li>You <b>should</b> provide a full path to the dll implementing the JVM.
-  For JDK1.1.x it is javai.dll, for JDK1.2.x it is jvm.dll. For example:<br>
-  <tt>worker.jni.jvm_lib=d:\sdk\jdk1.2.2\jre\bin\classic\jvm.dll</tt>
+  <li>You <b>should</b> provide a full path to the dll implementing the JVM. For 
+    JDK1.1.x it is javai.dll, for JDK1.2.x and up it is jvm.dll. For example:<br>
+    <tt>worker.inprocess.jvm_lib=d:\sdk\jdk1.2.2\jre\bin\classic\jvm.dll</tt> 
   </li>
-  <li>You <b>should</b> provide command line options for Tomcat; you must provide
-  a -config option to specify your JNI configured server.xml. For example:<br>
-  <tt>worker.jni.cmd_line=-config</tt><br>
-  <tt>worker.jni.cmd_line=d:\tomcat\conf\jni_server.xml</tt>
-  </li>
-  <li>You <b>should</b> specify the tomcat home location as a Java system
-  properties. For example:<br>
-  <tt>worker.jni.sysprops=tomcat.home=d:\tomcat</tt>
-  </li>
+  <li>You <b>should</b> provide command line options for Tomcat; you must provide 
+    a -config option to specify your JNI configured server.xml. For example:<br>
+    <tt>worker.inprocess.cmd_line=start</tt></li>
   <li>You can specify additional Java system properties. For example:<br>
-  <tt>worker.jni.sysprops=java.compiler=NONE</tt>
-  </li>
-  <li>You can specify files to by used by the JVM for stdout and stderr.
-  For example:<br>
-  <tt>worker.jni.stdout=d:\jvm.stdout</tt><br>
-  <tt>worker.jni.stderr=d:\jvm.stderr</tt>
-  </li>
-  <li>You can specify additional PATH, to be use when loading dlls (useful
-  when you are using native code). For example:<br>
-  <tt>worker.jni.ld_path=d:\SQLLIB\bin</tt><br>
-  <tt>worker.jni.ld_path=d:\my\native\code</tt>
-  </li>
+    <tt>worker.inprocess.sysprops=java.compiler=NONE</tt> </li>
+  <li>You can specify files to by used by the JVM for stdout and stderr. For example:<br>
+    <tt>worker.inprocess.stdout=d:\tomcat\logs\inprocess.stdout</tt><br>
+    <tt>worker.inprocess.stderr=d:\tomcat\logs\inprocess.stderr</tt> </li>
+  <li>You can specify additional PATH, to be use when loading dlls (useful when 
+    you are using native code). For example:<br>
+    <tt>worker.inprocess.ld_path=d:\SQLLIB\bin</tt><br>
+    <tt>worker.inprocess.ld_path=d:\my\native\code</tt> </li>
 </ol>
-You can find a sample worker file (<tt>jni_workers.properties</tt>)  under <tt>tomcat/conf</tt>.
-
+You can find a preconfigured worker file (<tt>workers.properties</tt>) under <tt>tomcat/conf/jk</tt>. 
+you should only need to change the variable <tt>workers.tomcat_home</tt> and <tt>workerks.java_home</tt> 
+and modify the <tt>workers.list</tt> line adding the <tt>inprocess</tt> preconfigured 
+worker to activate jni. 
 <h3>Update server.xml</h3>
-<p>
-By default Tomcat reads the file &lt;tomcat_home&gt;\conf\server.xml. This
-file defines among other things the contexts and connectors used by Tomcat.
-In order to work in-process you will have to perform the following actions:
-</p>
-<ol>
-  <li>You should update the connectors list.<br>
-  Remove all the connectors from your server.xml and add the following
-  lines (note that you will need to update the area marked
-  with &lt;tomcat_home&gt;)
-  <pre>
-    &lt;!-- New JNI, you need to compile the new/experimental module --&gt;
-    &lt;Connector className="org.apache.tomcat.service.JNIEndpointConnector"&gt;
-        &lt;Parameter name="native_lib" value="&lt;tomcat_home&gt;\bin\i386\jni_connect.dll"/&gt;
-    &lt;/Connector&gt;
-  </pre>
-  These lines add a JNI connector to Tomcat.
-  <li>You should update the <tt>home</tt> attribute used by the
-  ContextManager so that the ContextManager will know where to place the
-  log, work and webapps directories. For example:
-  <pre>
-    &lt;ContextManager debug="0" workDir="work" home="&lt;tomcat_home&gt;" /&gt;
-    .
-    .
-    .
-    &lt;/ContextManager /&gt;
-  </pre>
-  Again, make sure that you update &lt;tomcat_home&gt; to your real Tomcat
-  root.
-  </li>
-</ol>
-You can find a sample server file (<tt>jni_server.xml</tt>) under <tt>jakarta-tomcat/conf</tt>.
-
+<p> By default Tomcat reads the file <tt>&lt;tomcat_home&gt;\conf\server.xml</tt>. 
+  This file defines among other things the contexts and connectors used by Tomcat. 
+  In order to work in-process you will have to add the following line :</p>
+<p><tt>&lt;JniConnector/&gt;</tt> </p>
+<p>This line adds a JNI connector to Tomcat. </p>
+The default <tt>server.xml</tt> under <tt>jakarta-tomcat/conf</tt> already contains 
+the needed configurations, the JNI Connector will not be active if tomcat is not 
+started by JNI. 
 <h3>Redirect contexts to the JNI workers</h3>
 <p>You will need to select the contexts that you wish to serve using your
 jni worker.</p>
@@ -182,16 +138,15 @@ For example:
 <pre>
     &lt;Object name=servlet&gt;
     ObjectType fn=force-type type=text/plain
-    Service fn="jk_service" worker="jni"
+    Service fn="jk_service" worker="inprocess"
     &lt;/Object&gt;
 </pre>
 <p></p>
 
-<p>On IIS you will have to modify your worker mount file to mount contexts
-to the JNI worker. For example:</p>
+<p>On IIS you will have to modify your <tt>uriworkermap.propeties</tt> file to 
+  mount contexts to the JNI worker. For example:</p>
 
-<tt>/examples/*=jni</tt>
-
+<tt>/examples/*=inprocess</tt> 
 <p>When you are done restart your server. That's all, you should now be able
 to execute Tomcat in-process.</p>
 
