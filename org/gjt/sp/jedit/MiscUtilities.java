@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.49 2003/04/30 05:28:54 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.50 2003/05/05 20:55:05 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -989,8 +989,9 @@ loop:		for(int i = 0; i < str.length(); i++)
 		return buf.toString();
 	} //}}}
 
+	//{{{ formatFileSize() method
 	public static final DecimalFormat KB_FORMAT = new DecimalFormat("#.# KB");
-	public static final DecimalFormat MB_FORMAT = new DecimalFormat("#.# KB");
+	public static final DecimalFormat MB_FORMAT = new DecimalFormat("#.# MB");
 
 	/**
 	 * Formats the given file size into a nice string (123 bytes, 10.6 KB,
