@@ -188,6 +188,9 @@ public abstract class UMLComboBoxModel2
         if (elements != null) {
             removeAllElements();
             addAll(elements);
+            if (_clearable && !elements.contains("")) {
+                addElement("");
+            }
         } else
             throw new IllegalArgumentException("In setElements: may not set " +
                 "elements to null collection");
@@ -313,7 +316,7 @@ public abstract class UMLComboBoxModel2
         }
     }
     
-    public void removeElement(Object o) {
+    public void removeElement(Object o) {       
         int index = _objects.indexOf(o);
         if ( getElementAt( index ) == _selectedObject ) {
             if ( index == 0 ) {
