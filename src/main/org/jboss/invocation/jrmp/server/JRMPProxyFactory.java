@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * is bound to. 
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JRMPProxyFactory extends ServiceMBeanSupport
    implements JRMPProxyFactoryMBean
@@ -232,7 +232,7 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
       this.theProxy = null;
    }
 
-   protected void destroyService()
+   protected void destroyService() throws Exception
    {
       interceptorClasses.clear();
    }
