@@ -66,7 +66,7 @@ public final class AttachmentImageIconLoader {
         }
 
         if (icon == null) {
-            icon = ImageLoader.getImageIcon("text.png");
+            icon = ImageLoader.getUnsafeImageIcon("mime/gnome-text.png");
         }
 
         return icon;
