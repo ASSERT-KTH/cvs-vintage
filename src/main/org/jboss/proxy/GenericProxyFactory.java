@@ -6,19 +6,15 @@
  */
 package org.jboss.proxy;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.management.ObjectName;
 
-import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
-import org.jboss.proxy.Interceptor;
-import org.jboss.proxy.ClientContainer;
+import org.jboss.invocation.Invoker;
 import org.jboss.system.Registry;
 import org.jboss.util.NestedRuntimeException;
 
@@ -28,7 +24,7 @@ import org.jboss.util.NestedRuntimeException;
  *
  * @todo generalize the proxy/invoker factory object
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class GenericProxyFactory
 {
@@ -102,7 +98,23 @@ public class GenericProxyFactory
       if( proxyBindingName != null )
          context.setInvokerProxyBinding(proxyBindingName);
 
-      ClientContainer client = new ClientContainer(context);
+      // If the IClientContainer interceptor was specified, use the ClientContainerEx
+      boolean wantIClientAccess = false;
+      for(int n = 0; wantIClientAccess == false && n < interceptorClasses.size(); n ++)
+      {
+         Class type = (Class) interceptorClasses.get(n);
+         wantIClientAccess = type.isAssignableFrom(IClientContainer.class);
+      }
+      ClientContainer client;
+      if( wantIClientAccess )
+      {
+         client = new ClientContainerEx(context);
+      }
+      else
+      {
+         client = new ClientContainer(context);
+      }
+
       try
       {
          loadInterceptorChain(interceptorClasses, client);
@@ -113,7 +125,6 @@ public class GenericProxyFactory
       }
 
       ArrayList tmp = new ArrayList(Arrays.asList(ifaces));
-      tmp.add(IClientContainer.class);
       Class[] ifaces2 = new Class[tmp.size()];
       tmp.toArray(ifaces2);
       return Proxy.newProxyInstance(
