@@ -19,91 +19,102 @@ import java.util.Comparator;
 
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
-
+import org.columba.mail.folder.virtual.VirtualFolder;
 
 /**
- * A comparator that can be used to sort Folders.
- * Other folder comparators should extend this class and only implement the
- * sorting in the <code>compareFolders()</code> method. This comparator will always
- * put the Inbox folders at the top of the tree.
+ * A comparator that can be used to sort Folders. Other folder comparators
+ * should extend this class and only implement the sorting in the
+ * <code>compareFolders()</code> method. This comparator will always put the
+ * Inbox folders at the top of the tree.
  * <p>
  * The folders are by default sorted by their name. Note that the Inbox folder
  * will always be put at the top.
+ * 
  * @author redsolo
  */
 public class FolderComparator implements Comparator {
 
-    private boolean isAscending = true;
+	private boolean isAscending = true;
 
-    /**
-     * @param ascending if the sorting is ascending or not.
-     */
-    public FolderComparator(boolean ascending) {
-        isAscending = ascending;
-    }
+	/**
+	 * @param ascending
+	 *            if the sorting is ascending or not.
+	 */
+	public FolderComparator(boolean ascending) {
+		isAscending = ascending;
+	}
 
-    /** {@inheritDoc} */
-    public int compare(Object o1, Object o2) {
-        int compValue;
+	/** {@inheritDoc} */
+	public int compare(Object o1, Object o2) {
+		int compValue;
 
-        if ((o1 instanceof AbstractFolder) && (o2 instanceof AbstractFolder)) {
-            // If it isnt a message folder, then it must be a root, and those
-            // should not be sorted.
-            if (!(o1 instanceof AbstractMessageFolder)) {
-                compValue = 0;
-            } else {
-                AbstractMessageFolder folder1 = (AbstractMessageFolder) o1;
-                AbstractMessageFolder folder2 = (AbstractMessageFolder) o2;
+		if ((o1 instanceof AbstractFolder) && (o2 instanceof AbstractFolder)) {
+			// If it isnt a message folder, then it must be a root, and those
+			// should not be sorted.
+			if (!(o1 instanceof AbstractMessageFolder)) {
+				compValue = 0;
+			} else if (o1 instanceof VirtualFolder) {
+				compValue = 1;
+			} else {
+				AbstractMessageFolder folder1 = (AbstractMessageFolder) o1;
+				AbstractMessageFolder folder2 = (AbstractMessageFolder) o2;
 
-                boolean folder1IsInbox = folder1.isInboxFolder();
-                boolean folder2IsInbox = folder2.isInboxFolder();
+				boolean folder1IsInbox = folder1.isInboxFolder();
+				boolean folder2IsInbox = folder2.isInboxFolder();
 
-                if (folder1IsInbox) {
-                    compValue = -1;
-                } else if (folder2IsInbox) {
-                    compValue = 1;
-                } else if (folder2IsInbox && folder1IsInbox) {
-                    compValue = 0;
-                } else {
-                    compValue = compareFolders(folder1, folder2);
-                    if (!isAscending) {
-                        compValue *= -1;
-                    }
-                }
-            }
-        } else {
-            compValue = o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
-            if (!isAscending) {
-                compValue *= -1;
-            }
-        }
-        return compValue;
-    }
+				if (folder1IsInbox) {
+					compValue = -1;
+				} else if (folder2IsInbox) {
+					compValue = 1;
+				} else if (folder2IsInbox && folder1IsInbox) {
+					compValue = 0;
+				} else {
+					compValue = compareFolders(folder1, folder2);
+					if (!isAscending) {
+						compValue *= -1;
+					}
+				}
+			}
+		} else {
+			compValue = o1.toString().toLowerCase().compareTo(
+					o2.toString().toLowerCase());
+			if (!isAscending) {
+				compValue *= -1;
+			}
+		}
+		return compValue;
+	}
 
-    /**
-     * Compares the folders.
-     * Returns a negative integer, zero, or a positive integer as the first argument is
-     * less than, equal to, or greater than the second.
-     * @param folder1 the first folder to be compared.
-     * @param folder2 the second folder to be compared.
-     * @return a negative integer, zero, or a positive integer as the first argument is
-     *      less than, equal to, or greater than the second.
-     */
-    protected int compareFolders(AbstractMessageFolder folder1, AbstractMessageFolder folder2) {
-        return folder1.getName().toLowerCase().compareTo(folder2.getName().toLowerCase());
-    }
+	/**
+	 * Compares the folders. Returns a negative integer, zero, or a positive
+	 * integer as the first argument is less than, equal to, or greater than the
+	 * second.
+	 * 
+	 * @param folder1
+	 *            the first folder to be compared.
+	 * @param folder2
+	 *            the second folder to be compared.
+	 * @return a negative integer, zero, or a positive integer as the first
+	 *         argument is less than, equal to, or greater than the second.
+	 */
+	protected int compareFolders(AbstractMessageFolder folder1,
+			AbstractMessageFolder folder2) {
+		return folder1.getName().toLowerCase().compareTo(
+				folder2.getName().toLowerCase());
+	}
 
-    /**
-     * @return Returns if the comparator should sort ascending or not.
-     */
-    public boolean isAscending() {
-        return isAscending;
-    }
+	/**
+	 * @return Returns if the comparator should sort ascending or not.
+	 */
+	public boolean isAscending() {
+		return isAscending;
+	}
 
-    /**
-     * @param ascending if the comparator should sorted ascending or not.
-     */
-    public void setAscending(boolean ascending) {
-        isAscending = ascending;
-    }
+	/**
+	 * @param ascending
+	 *            if the comparator should sorted ascending or not.
+	 */
+	public void setAscending(boolean ascending) {
+		isAscending = ascending;
+	}
 }

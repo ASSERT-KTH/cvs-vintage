@@ -181,7 +181,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		if (searchFolder.getChildCount() >= 10) {
 			AbstractMessageFolder child = (AbstractMessageFolder) searchFolder
 					.getChildAt(0);
-			child.removeFromParent();
+			child.removeFolder();
 		}
 
 		// create new subfolder
