@@ -23,13 +23,15 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.log4j.Category;
+
 /**
  * A JMS provider adapter for <em>JBossMQ</em>.
  *
  * Created: Fri Dec 22 09:34:04 2000
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.5 $</pre>
+ * @version <pre>$Revision: 1.6 $</pre>
  * @author  <a href="mailto:peter.antman@dn.se">Peter Antman</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -49,6 +51,9 @@ public class JBossMQProvider
 	private static final String SECURITY_MANAGER =
         "java.naming.rmi.security.manager";
 
+    /** Instance logger. */
+    private transient Category log = Category.getInstance(this.getClass());
+    
     /** Flag to enable JNDI security manager. */
 	private String hasJndiSecurityManager = "yes";
 
@@ -57,7 +62,16 @@ public class JBossMQProvider
      */
 	public JBossMQProvider() {
         // empty
+        log.debug("initializing");
 	}
+
+    /** Override of standard de-serialization to re-create logger. */
+    private void readObject(java.io.ObjectInputStream in)
+        throws java.io.IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        this.log = Category.getInstance(this.getClass());
+    }
 
     /**
      * Create a new InitialContext suitable for this JMS provider.
@@ -70,6 +84,7 @@ public class JBossMQProvider
 		Context ctx = null;
 		if (providerURL == null) {
 			// Use default
+            log.debug("no provider url; connecting to local JNDI");
 			ctx = new InitialContext(); // Only for JBoss embedded now
 		} else {
 			// Try another location
@@ -79,8 +94,14 @@ public class JBossMQProvider
 			props.put(Context.PROVIDER_URL, providerURL);
 			props.put(SECURITY_MANAGER, hasJndiSecurityManager);
 			props.put(Context.URL_PKG_PREFIXES, URL_PKG_PREFIXES);
+
+            log.debug("connecting to remote JNDI with props: " + props);
 			ctx = new InitialContext(props);
 		}
+
+        if (log.isDebugEnabled()) {
+            log.debug("created context: " + ctx);
+        }
 		return ctx;
 	}
 }
