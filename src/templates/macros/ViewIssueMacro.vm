@@ -17,8 +17,6 @@
 #set ($currentIssueId = $currentIssue.UniqueId)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
-<h3>Attributes</h3>
-
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))
   #if (!$group.Attributes.isEmpty())
