@@ -30,12 +30,9 @@ package org.objectweb.carol.jndi.iiop;
 import java.util.Hashtable;
 
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.omg.CORBA.ORB;
-
-import com.sun.jndi.cosnaming.CNCtxFactory;
+import javax.naming.spi.InitialContextFactory;
 /*
  * Class <code>IIOPRemoteReferenceContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
  * build the iiop context for reference wrapping to/from a remote object
@@ -44,7 +41,7 @@ import com.sun.jndi.cosnaming.CNCtxFactory;
  * @see javax.naming.spi.InitialContextFactory
  * @version 1.0, 15/07/2002
  */
-public class IIOPReferenceContextWrapperFactory extends CNCtxFactory {
+public class IIOPReferenceContextWrapperFactory implements InitialContextFactory {
 	
     /**
      * Get/Build the IIOP Wrapper InitialContext

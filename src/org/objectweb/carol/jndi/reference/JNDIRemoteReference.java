@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPRemoteReference.java	1.0 02/07/15
+ * @(#)JNDIRemoteReference.java	1.0 02/07/15
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.iiop;
+package org.objectweb.carol.jndi.reference;
 
 // java import
 import java.rmi.Remote;
@@ -30,14 +30,14 @@ import java.rmi.RemoteException;
 
 import javax.naming.Reference;
 /**
- * Interface <code>IIOPRemoteReference</code> is the CAROL remote interface for reference ressources 
+ * Interface <code>JNDIRemoteReference</code> is the CAROL remote interface for reference ressources 
  * wrapping. This wrapping provide simple way to bind/lookup those ressource in the CORBA Name Service 
  * (like a CosNaming)
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public interface IIOPRemoteReference extends Remote {
+public interface JNDIRemoteReference extends Remote {
     
     /**
      * Get the reference ressource object

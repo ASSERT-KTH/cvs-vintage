@@ -42,6 +42,7 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 
+import org.objectweb.carol.jndi.reference.*;
 import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /*
@@ -119,19 +120,19 @@ public class IIOPReferenceContextWrapper implements Context {
      * If this object is a reference return the reference 
      *
      * @param o the object to resolve
-     * @return a <code>Referenceable ((IIOPRemoteReference)o).getReference()</code> if o is a IIOPRemoteReference
+     * @return a <code>Referenceable ((JNDIRemoteReference)o).getReference()</code> if o is a JNDIRemoteReference
      *         and the inititial object o if else
      */
     private Object resolveObject(Object o, Name name) throws NamingException {
 	try {
 	    //TODO: May we can do a narrow ? 
-	    if (o instanceof IIOPRemoteReference) {
+	    if (o instanceof JNDIRemoteReference) {
 		// build of the Referenceable object with is Reference
-		Reference objRef = ((IIOPRemoteReference)o).getReference();
+		Reference objRef = ((JNDIRemoteReference)o).getReference();
 		ObjectFactory objFact = (ObjectFactory)(Class.forName(objRef.getFactoryClassName())).newInstance(); 
 		return objFact.getObjectInstance(objRef,name,this,iiopContext.getEnvironment());
-	    } else if (o instanceof IIOPRemoteResource) {
-		return ((IIOPRemoteResource)o).getResource();
+	    } else if (o instanceof JNDIRemoteResource) {
+		return ((JNDIRemoteResource)o).getResource();
 	    } else {
 		return o;
 	    }
@@ -148,15 +149,15 @@ public class IIOPReferenceContextWrapper implements Context {
      * protable remote object
      *
      * @param o the object to encode
-     * @return  a <code>Remote IIOPRemoteReference Object</code> if o is a ressource
+     * @return  a <code>Remote JNDIRemoteReference Object</code> if o is a ressource
      *          o if else
      */
     private Object encodeObject(Object o, Object name, boolean replace) throws NamingException {
 	try {
 	    if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
-		IIOPReferenceWrapper irw =  new IIOPReferenceWrapper(((Referenceable)o).getReference());
+		JNDIReferenceWrapper irw =  new JNDIReferenceWrapper(((Referenceable)o).getReference());
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-		IIOPReferenceWrapper oldObj = (IIOPReferenceWrapper) wrapperHash.put(name, irw);
+		JNDIReferenceWrapper oldObj = (JNDIReferenceWrapper) wrapperHash.put(name, irw);
 		if (oldObj != null) {
 		    if (replace) {
 			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
@@ -168,9 +169,9 @@ public class IIOPReferenceContextWrapper implements Context {
 		} 
 		return irw;
 	    } else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
-		IIOPReferenceWrapper irw =  new IIOPReferenceWrapper((Reference)o);
+		JNDIReferenceWrapper irw =  new JNDIReferenceWrapper((Reference)o);
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-		IIOPReferenceWrapper oldObj = (IIOPReferenceWrapper) wrapperHash.put(name, irw);
+		JNDIReferenceWrapper oldObj = (JNDIReferenceWrapper) wrapperHash.put(name, irw);
 		if (oldObj != null) {
 		    if (replace) {
 			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
@@ -182,9 +183,9 @@ public class IIOPReferenceContextWrapper implements Context {
 		} 
 		return irw;
 	    } else if ((!(o instanceof Remote)) && (o instanceof Serializable)) {
-		IIOPResourceWrapper irw =  new IIOPResourceWrapper((Serializable) o);
+		JNDIResourceWrapper irw =  new JNDIResourceWrapper((Serializable) o);
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-		IIOPResourceWrapper oldObj = (IIOPResourceWrapper) wrapperHash.put(name, irw);
+		JNDIResourceWrapper oldObj = (JNDIResourceWrapper) wrapperHash.put(name, irw);
 		if (oldObj != null) {
 		    if (replace) {
 			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);

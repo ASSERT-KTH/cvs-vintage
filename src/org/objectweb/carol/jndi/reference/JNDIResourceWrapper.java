@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPRessourceWrapper.java	1.0 02/07/15
+ * @(#)JNDIRessourceWrapper.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -24,44 +24,43 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.iiop;
+package org.objectweb.carol.jndi.reference;
 
 // java import
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-import javax.naming.Reference;
-
 /*
- * Class <code>IIOPReferenceWrapper</code> is the CAROL Remote Reference implementation. This implementation make the 
- * iiop reference wrapping to/from a remote object
+ * Class <code>JNDIResourceWrapper</code> is the CAROL Remote Resource implementation. This implementation make the 
+ * serializable resource wrapping to/from a remote object
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public class IIOPReferenceWrapper implements IIOPRemoteReference {
+public class JNDIResourceWrapper implements JNDIRemoteResource {
     
     /**
-     * <code>Reference</code> reference to wrap
+     * <code>Serializable</code> resource to wrap
      */
-    protected Reference reference;	
+    protected Serializable resource;	
 
 
     /**
      * constructor, export this object
      *
-     * @param reference the <code>Reference</code> reference to wrap
+     * @param resource the <code>Serializable</code> resource to wrap
      */
-    public IIOPReferenceWrapper(Reference reference) throws RemoteException {
+    public JNDIResourceWrapper(Serializable resource) throws RemoteException {
 	super();
-	this.reference = reference;
+	this.resource = resource;
     }
 
     /**
-     * Get the <code>Reference</code> reference 
+     * Get the <code>Serializable</code> resource 
      *
-     * @return the <code>Reference</code> reference
+     * @return the <code>Serializable</code> resource
      */
-    public Reference getReference() throws RemoteException {
-	return reference;
+    public Serializable getResource() throws RemoteException {
+	return resource;
     }
 }

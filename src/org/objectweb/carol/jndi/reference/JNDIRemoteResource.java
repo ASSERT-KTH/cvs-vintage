@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPRemoteResource.java	1.0 02/07/15
+ * @(#)JNDIRemoteResource.java	1.0 02/07/15
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.iiop;
+package org.objectweb.carol.jndi.reference;
 
 // java import
 import java.io.Serializable;
@@ -30,14 +30,14 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Interface <code>IIOPRemoteResource</code> is the CAROL remote interface for serializable ressources 
+ * Interface <code>JNDIRemoteResource</code> is the CAROL remote interface for serializable ressources 
  * wrapping. This wrapping provide simple way to bind/lookup those ressource in the CORBA Name Service 
  * (like a CosNaming)
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public interface IIOPRemoteResource extends Remote {
+public interface JNDIRemoteResource extends Remote {
     
     /**
      * Get the serializable ressource object

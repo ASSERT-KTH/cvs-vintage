@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPContextWrapper.java	1.0 02/07/15
+ * @(#)JNDIRessourceWrapper.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -24,37 +24,44 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.iiop;
+package org.objectweb.carol.jndi.reference;
 
 // java import
-import java.util.Hashtable;
+import java.rmi.RemoteException;
 
-import javax.naming.Context;
-import javax.naming.NamingException;
-
-import com.sun.jndi.cosnaming.CNCtxFactory;
+import javax.naming.Reference;
 
 /*
- * Class <code>IIOPRemoteContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
- * build the iiop context for reference wrapping to/from a remote object
+ * Class <code>JNDIReferenceWrapper</code> is the CAROL Remote Reference implementation. This implementation make the 
+ * iiop reference wrapping to/from a remote object
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @see javax.naming.spi.InitialContextFactory
  * @version 1.0, 15/07/2002
  */
-public class IIOPContextWrapperFactory extends CNCtxFactory {
+public class JNDIReferenceWrapper implements JNDIRemoteReference {
+    
+    /**
+     * <code>Reference</code> reference to wrap
+     */
+    protected Reference reference;	
+
 
     /**
-     * Get/Build the IIOP Wrapper InitialContext
+     * constructor, export this object
      *
-     * @param env the inital IIOP environement
-     * @return a <code>Context</code> coresponding to the inital IIOP environement with 
-     *         IIOP Serializable ressource wrapping
+     * @param reference the <code>Reference</code> reference to wrap
+     */
+    public JNDIReferenceWrapper(Reference reference) throws RemoteException {
+	super();
+	this.reference = reference;
+    }
+
+    /**
+     * Get the <code>Reference</code> reference 
      *
-     * @throws NamingException if a naming exception is encountered
-     */   
-    public Context getInitialContext(Hashtable env) throws NamingException {
-	env.put("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");
-	return new IIOPContextWrapper(super.getInitialContext(env));
+     * @return the <code>Reference</code> reference
+     */
+    public Reference getReference() throws RemoteException {
+	return reference;
     }
 }
