@@ -368,11 +368,12 @@ $l10n.NoAttachments
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      #if ($canEdit)
-         <th>&#160;</th>
+         <th>$l10n.Select</th>
      #end
      <th>$l10n.Name</th>
      <th>$l10n.Description</th>
      <th>$l10n.Type</th>
+     <th>$l10n.CreatedBy</th>
    </tr>
    #foreach ($file in $attachments)
      #indexedRows($velocityCount)
@@ -390,6 +391,8 @@ $l10n.NoAttachments
        </td>
        <td>$file.Name</td>
        <td>$file.MimeType</td>
+       #set ($createdUser = $file.ScarabUserRelatedByCreatedBy)
+       <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
      </tr>
      #end
    #end
