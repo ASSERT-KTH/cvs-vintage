@@ -324,7 +324,7 @@ public class TableView extends TreeTable {
 					position);
 
 			} else if (name.equalsIgnoreCase("Subject")) {
-				/*
+				
 				registerRenderer(
 					"Subject",
 					new HeaderTableCommonRenderer(getTree(), "Subject"),
@@ -335,7 +335,7 @@ public class TableView extends TreeTable {
 					size,
 					false,
 					position);
-				*/
+				
 			} else {
 				String str = new String();
 				try {
