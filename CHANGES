@@ -1,6 +1,8 @@
 - fixed error in printing when no character set is specified
   in message (karlpeder)
 - the correct account is now selected when replying (karlpeder)
+- fixed bug which caused attachments to be dupplicated when 
+  switching between html and plain text in the composer (karlpeder)
 
 
 Columba v1.0 M1.1

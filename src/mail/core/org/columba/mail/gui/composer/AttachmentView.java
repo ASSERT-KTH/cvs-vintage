@@ -32,19 +32,26 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 
 /**
+ * Attachment view. Used in the composer to show a list of
+ * attachments. Is part of a controller-view framework together
+ * with AttachmentController.
+ * 
  * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
  */
 public class AttachmentView extends JList implements ListDataListener {
 
+	/** Reference to the controller controlling this view */
 	private AttachmentController controller;
 
+	/** Underlying data model for the list view */
 	private DefaultListModel listModel;
 
+	/**
+	 * Default constructor. Sets up the view and stores a
+	 * reference to the controller for later use.
+	 * @param controller	Reference to the controller of this view
+	 */
 	public AttachmentView(AttachmentController controller) {
 		super();
 
@@ -58,39 +65,82 @@ public class AttachmentView extends JList implements ListDataListener {
 
 	}
 
+	/**
+	 * Installs the attachment controller as listener
+	 * @param c	Controller of this view
+	 */
 	public void installListener(AttachmentController c) {
 		listModel.addListDataListener(this);
 		addKeyListener(c);
 	}
 
+	/**
+	 * Adds a popup listener
+	 * @param a	Listener to add
+	 */
 	public void addPopupListener(MouseAdapter a) {
 		addMouseListener(a);
 	}
 
+	/**
+	 * Adds an attachment to be displayed in the view
+	 * @param mp	Attachment to add
+	 */
 	public void add(MimePart mp) {
 		listModel.addElement(mp);
 	}
 
+	/**
+	 * Remove attachment from the view by index
+	 * @param index	Index of attachment to remove (zero based)
+	 */
 	public void remove(int index) {
 		listModel.remove(index);
 	}
 
+	/**
+	 * Remove attachment from the view
+	 * @param mp	Attachment to remove
+	 */
 	public void remove(MimePart mp) {
 		listModel.removeElement(mp);
 	}
 
+	/**
+	 * Clears the view, i.e. removes all attachments.
+	 */
+	public void clear() {
+		listModel.clear();
+	}
+		
+	/**
+	 * Gets an attachment from the view by index
+	 * @param index	Index of attachment (zero based)
+	 * @return		The specified attachment
+	 */
 	public MimePart get(int index) {
 		return (MimePart) listModel.get(index);
 	}
 
+	/**
+	 * Gets number of attachments currently displayed in the view
+	 */
 	public int count() {
 		return listModel.size();
 	}
 
+	/**
+	 * Returns the index of an attachment
+	 * @param mp	Attachment to get index of
+	 * @return		Index of attachment in the list
+	 */
 	public int indexOf(MimePart mp) {
 		return listModel.indexOf(mp);
 	}
 
+	/**
+	 * TODO: Add javadoc comment
+	 */
 	public void fixSelection(int x, int y) {
 		int index = locationToIndex(new Point(x, y));
 

@@ -86,8 +86,23 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 		view.installListener(this);
 	}
 
+	/**
+	 * Synchronizes model and view.
+	 * @param b		If true, model data is transferred to the view.
+	 * 				If false, view data is saved in the model.
+	 */
 	public void updateComponents(boolean b) {
 		if (b) {
+			// transfer attachments from model to view
+			
+			/*
+			 * clear existing attachments from the view
+			 * *20031105, karlpeder* Added to avoid dupplicating
+			 * attachments when switching btw. html and plain text.
+			 */
+			view.clear();
+			
+			// add attachments (mimeparts) from model to the view
 			for (int i = 0;
 				i < controller.getModel().getAttachments().size();
 				i++) {
@@ -95,9 +110,14 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 					(StreamableMimePart) controller.getModel().getAttachments().get(i);
 				view.add(p);
 			}
+			
 		} else {
+			// transfer attachments from view to model
+			
+			// clear existing attachments from the model
 			controller.getModel().getAttachments().clear();
 
+			// add attachments (mimeparts) from view to the model
 			for (int i = 0; i < view.count(); i++) {
 				StreamableMimePart mp = (StreamableMimePart) view.get(i);
 				controller.getModel().getAttachments().add(mp);
