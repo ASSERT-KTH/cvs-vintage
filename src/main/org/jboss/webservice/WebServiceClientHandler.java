@@ -6,15 +6,18 @@
  */
 package org.jboss.webservice;
 
-// $Id: WebServiceClientHandler.java,v 1.1 2004/05/05 16:38:37 tdiesler Exp $
+// $Id: WebServiceClientHandler.java,v 1.2 2005/01/27 18:26:21 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
+import org.jboss.logging.Logger;
+import org.jboss.mx.util.MBeanProxy;
+import org.jboss.mx.util.MBeanProxyCreationException;
 import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.mx.util.ObjectNameFactory;
 
-import javax.management.MBeanException;
 import javax.management.MBeanServer;
-import javax.management.ReflectionException;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import java.util.Iterator;
 
@@ -26,6 +29,9 @@ import java.util.Iterator;
  */
 public class WebServiceClientHandler
 {
+   // provide logging
+   private static final Logger log = Logger.getLogger(WebServiceClientHandler.class);
+
    /**
     * This binds a jaxrpc Service into the callers ENC for every service-ref element
     *
@@ -41,24 +47,35 @@ public class WebServiceClientHandler
          return;
 
       MBeanServer server = MBeanServerLocator.locateJBoss();
-      if (server.isRegistered(WebServiceClientDeployer.OBJECT_NAME) == false)
-         throw new DeploymentException("Web service client deployer not registered: " + WebServiceClientDeployer.OBJECT_NAME);
+      ObjectName ws4eeObjectName = ObjectNameFactory.create("jboss.ws4ee:service=ServiceClientDeployer");
+      ObjectName jbosswsObjectName = ObjectNameFactory.create("jboss.ws:service=WebServiceClientDeployer");
 
+      ObjectName objectName = null;
+      WebServiceClientDeployment wsClientDeployment;
       try
       {
-         server.invoke(WebServiceClientDeployer.OBJECT_NAME,
-                 "setupServiceRefEnvironment",
-                 new Object[]{envCtx, serviceRefs, di},
-                 new String[]{Context.class.getName(), Iterator.class.getName(), DeploymentInfo.class.getName()});
+         if (server.isRegistered(ws4eeObjectName))
+         {
+            objectName = ws4eeObjectName;
+            wsClientDeployment = (WebServiceClientDeployment)MBeanProxy.get(WebServiceClientDeployment.class, ws4eeObjectName, server);
+         }
+         else if (server.isRegistered(jbosswsObjectName))
+         {
+            objectName = jbosswsObjectName;
+            wsClientDeployment = (WebServiceClientDeployment)MBeanProxy.get(WebServiceClientDeployment.class, jbosswsObjectName, server);
+         }
+         else
+         {
+            log.warn("No web service client deployer registered");
+            return;
+         }
       }
-      catch (Exception ex)
+      catch (MBeanProxyCreationException e)
       {
-         Exception targetException = ex;
-         if (ex instanceof MBeanException)
-            targetException = ((MBeanException)ex).getTargetException();
-         if (ex instanceof ReflectionException)
-            targetException = ((ReflectionException)ex).getTargetException();
-         throw new DeploymentException("Cannot setup web service client ENC", targetException);
+         throw new DeploymentException("Cannot create proxy to the web service client deployer: " + objectName);
       }
+
+      // Delegate to the web service client deloyer
+      wsClientDeployment.setupServiceRefEnvironment(envCtx, serviceRefs, di);
    }
 }
