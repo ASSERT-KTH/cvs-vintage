@@ -1,4 +1,4 @@
-// $Id: GoClassToNavigableClass.java,v 1.4 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoClassToNavigableClass.java,v 1.5 2004/07/17 16:23:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,9 +49,9 @@ public class GoClassToNavigableClass extends AbstractPerspectiveRule {
         if (ends == null)
             return null;
         
-        Iterator enum = ends.iterator();
-        while (enum.hasNext()) {
-            Object ae = /*(MAssociationEnd)*/ enum.next();
+        Iterator it = ends.iterator();
+        while (it.hasNext()) {
+            Object ae = /*(MAssociationEnd)*/ it.next();
             Object asc = ModelFacade.getAssociation(ae);
             Collection allEnds = ModelFacade.getConnections(asc);
             

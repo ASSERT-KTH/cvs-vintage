@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.100 2004/06/27 02:39:21 d00mst Exp $
+// $Id: Project.java,v 1.101 2004/07/17 16:22:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -676,10 +676,10 @@ public class Project implements java.io.Serializable, TargetListener {
     public void loadMembersOfType(String type) {
         if (type == null)
             return;
-        java.util.Enumeration enum = getMembers().elements();
+        java.util.Enumeration members = getMembers().elements();
         try {
-            while (enum.hasMoreElements()) {
-                ProjectMember pm = (ProjectMember) enum.nextElement();
+            while (members.hasMoreElements()) {
+                ProjectMember pm = (ProjectMember) members.nextElement();
                 if (type.equalsIgnoreCase(pm.getType()))
                     pm.load();
             }

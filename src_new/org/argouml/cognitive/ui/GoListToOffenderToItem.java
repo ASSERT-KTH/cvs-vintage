@@ -1,4 +1,4 @@
-// $Id: GoListToOffenderToItem.java,v 1.8 2003/12/13 12:34:37 mkl Exp $
+// $Id: GoListToOffenderToItem.java,v 1.9 2004/07/17 16:23:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,9 +84,9 @@ public class GoListToOffenderToItem implements TreeModel {
 	if (allOffenders.contains(parent)) {
 	    Vector res = new Vector();
 	    ToDoList list = Designer.TheDesigner.getToDoList();
-	    Enumeration enum = list.elements();
-	    while (enum.hasMoreElements()) {
-		ToDoItem item = (ToDoItem) enum.nextElement();
+	    Enumeration elems = list.elements();
+	    while (elems.hasMoreElements()) {
+		ToDoItem item = (ToDoItem) elems.nextElement();
 		VectorSet offs = new VectorSet();
                 offs.addAllElementsSuchThat(item.getOffenders(),
                     new PredicateNotInTrash());

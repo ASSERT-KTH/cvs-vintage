@@ -1,4 +1,4 @@
-// $Id: DecisionModel.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
+// $Id: DecisionModel.java,v 1.8 2004/07/17 16:20:56 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: DecisionModel.java
 // Classes: DecisionModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DecisionModel.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
+// $Id: DecisionModel.java,v 1.8 2004/07/17 16:20:56 mvw Exp $
 
 package org.argouml.cognitive;
 
@@ -126,9 +126,9 @@ public class DecisionModel extends Observable implements Serializable
      * @return a decision or null if not found.
      */
     protected Decision findDecision(String decName) {
-	Enumeration enum = _decisions.elements();
-	while (enum.hasMoreElements()) {
-	    Decision d = (Decision) enum.nextElement();
+	Enumeration elems = _decisions.elements();
+	while (elems.hasMoreElements()) {
+	    Decision d = (Decision) elems.nextElement();
 	    if (decName.equals(d.getName())) return d;
 	}
 	return null;

@@ -1,4 +1,4 @@
-// $Id: TabResults.java,v 1.15 2004/05/20 11:12:21 linus Exp $
+// $Id: TabResults.java,v 1.16 2004/07/17 16:23:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -269,11 +269,11 @@ public class TabResults
 	    Object sel = _results.elementAt(row);
 	    cat.debug("selected " + sel);
 	    _related.removeAllElements();
-	    java.util.Enumeration enum =
+	    java.util.Enumeration elems =
 		ChildGenRelated.SINGLETON.gen(sel);
-	    if (enum != null) {
-		while (enum.hasMoreElements()) {
-		    _related.addElement(enum.nextElement());
+	    if (elems != null) {
+		while (elems.hasMoreElements()) {
+		    _related.addElement(elems.nextElement());
 		}
 	    }
 	    _relatedModel.setTarget(_related, null);

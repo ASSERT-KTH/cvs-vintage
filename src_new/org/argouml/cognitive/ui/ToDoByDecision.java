@@ -1,4 +1,4 @@
-// $Id: ToDoByDecision.java,v 1.7 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: ToDoByDecision.java,v 1.8 2004/07/17 16:23:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,9 @@ public class ToDoByDecision extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector decs = Designer.TheDesigner.getDecisions();
-	Enumeration enum = decs.elements();
-	while (enum.hasMoreElements()) {
-	    Decision dec = (Decision) enum.nextElement();
+	Enumeration elems = decs.elements();
+	while (elems.hasMoreElements()) {
+	    Decision dec = (Decision) elems.nextElement();
 	    int nMatchingItems = 0;
 	    path[1] = dec;
 	    for (int i = 0; i < nItems; i++) {
@@ -96,9 +96,9 @@ public class ToDoByDecision extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector decs = Designer.TheDesigner.getDecisions();
-	Enumeration enum = decs.elements();
-	while (enum.hasMoreElements()) {
-	    Decision dec = (Decision) enum.nextElement();
+	Enumeration elems = decs.elements();
+	while (elems.hasMoreElements()) {
+	    Decision dec = (Decision) elems.nextElement();
 	    int nMatchingItems = 0;
 	    path[1] = dec;
 	    for (int i = 0; i < nItems; i++) {
@@ -130,9 +130,9 @@ public class ToDoByDecision extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector decs = Designer.TheDesigner.getDecisions();
-	Enumeration enum = decs.elements();
-	while (enum.hasMoreElements()) {
-	    Decision dec = (Decision) enum.nextElement();
+	Enumeration elems = decs.elements();
+	while (elems.hasMoreElements()) {
+	    Decision dec = (Decision) elems.nextElement();
 	    cat.debug("toDoItemRemoved updating decision node!");
 	    boolean anyInDec = false;
 	    for (int i = 0; i < nItems; i++) {

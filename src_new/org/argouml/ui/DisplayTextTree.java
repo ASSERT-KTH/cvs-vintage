@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.41 2004/02/29 12:35:41 linus Exp $
+// $Id: DisplayTextTree.java,v 1.42 2004/07/17 16:23:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -184,9 +184,9 @@ public class DisplayTextTree extends JTree {
 
         _reexpanding = true;
 
-        Enumeration enum = getExpandedPaths().elements();
-        while (enum.hasMoreElements()) {
-            TreePath path = (TreePath) enum.nextElement();
+        Enumeration pathsEnum = getExpandedPaths().elements();
+        while (pathsEnum.hasMoreElements()) {
+            TreePath path = (TreePath) pathsEnum.nextElement();
             expandPath(path);
         }
         _reexpanding = false;

@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.21 2004/03/21 07:13:52 linus Exp $
+// $Id: ToDoList.java,v 1.22 2004/07/17 16:20:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -364,10 +364,10 @@ public class ToDoList extends Observable implements Runnable, Serializable {
             try {
                 rc = new ResolvedCritic((Critic) item.getPoster(),
                                         item.getOffenders(), false);
-                Enumeration enum = _resolvedItems.elements();
+                Enumeration elems = _resolvedItems.elements();
                 //cat.debug("Checking for inhibitors " + rc);
-                while (enum.hasMoreElements()) {
-                    if (enum.nextElement().equals(rc)) {
+                while (elems.hasMoreElements()) {
+                    if (elems.nextElement().equals(rc)) {
                         cat.debug("ToDoItem not added because it was resolved");
                         return;
                     }

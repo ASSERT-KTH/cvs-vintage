@@ -1,4 +1,4 @@
-// $Id: GoalsDialog.java,v 1.6 2003/12/11 20:03:03 jjones Exp $
+// $Id: GoalsDialog.java,v 1.7 2004/07/17 16:23:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,9 +136,9 @@ public class GoalsDialog extends ArgoDialog implements ChangeListener
 
 
 	c.gridy = 1;
-	Enumeration enum = goals.elements();
-	while (enum.hasMoreElements()) {
-	    Goal d = (Goal) enum.nextElement();
+	Enumeration elems = goals.elements();
+	while (elems.hasMoreElements()) {
+	    Goal d = (Goal) elems.nextElement();
 	    JLabel decLabel = new JLabel(d.getName());
 	    JLabel valueLabel = new JLabel("    " + d.getPriority());
 	    JSlider decSlide = new JSlider(SwingConstants.HORIZONTAL,

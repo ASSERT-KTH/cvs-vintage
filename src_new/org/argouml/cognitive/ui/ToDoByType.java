@@ -1,4 +1,4 @@
-// $Id: ToDoByType.java,v 1.7 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: ToDoByType.java,v 1.8 2004/07/17 16:23:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,9 +56,9 @@ public class ToDoByType extends ToDoPerspective
 	Object path[] = new Object[2];
 	path[0] = Designer.TheDesigner.getToDoList();
 
-	Enumeration enum = KnowledgeTypeNode.getTypes().elements();
-	while (enum.hasMoreElements()) {
-	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) enum.nextElement();
+	Enumeration elems = KnowledgeTypeNode.getTypes().elements();
+	while (elems.hasMoreElements()) {
+	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) elems.nextElement();
 	    String kt = ktn.getName();
 	    path[1] = ktn;
 	    int nMatchingItems = 0;
@@ -89,9 +89,9 @@ public class ToDoByType extends ToDoPerspective
 	Object path[] = new Object[2];
 	path[0] = Designer.TheDesigner.getToDoList();
 
-	Enumeration enum = KnowledgeTypeNode.getTypes().elements();
-	while (enum.hasMoreElements()) {
-	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) enum.nextElement();
+	Enumeration elems = KnowledgeTypeNode.getTypes().elements();
+	while (elems.hasMoreElements()) {
+	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) elems.nextElement();
 	    String kt = ktn.getName();
 	    path[1] = ktn;
 	    int nMatchingItems = 0;
@@ -123,9 +123,9 @@ public class ToDoByType extends ToDoPerspective
 	Object path[] = new Object[2];
 	path[0] = Designer.TheDesigner.getToDoList();
 
-	Enumeration enum = KnowledgeTypeNode.getTypes().elements();
-	while (enum.hasMoreElements()) {
-	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) enum.nextElement();
+	Enumeration elems = KnowledgeTypeNode.getTypes().elements();
+	while (elems.hasMoreElements()) {
+	    KnowledgeTypeNode ktn = (KnowledgeTypeNode) elems.nextElement();
 	    boolean anyInKT = false;
 	    String kt = ktn.getName();
 	    for (int i = 0; i < nItems; i++) {

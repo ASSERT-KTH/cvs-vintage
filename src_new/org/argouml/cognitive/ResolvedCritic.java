@@ -1,4 +1,4 @@
-// $Id: ResolvedCritic.java,v 1.7 2004/03/27 09:58:21 d00mst Exp $
+// $Id: ResolvedCritic.java,v 1.8 2004/07/17 16:20:56 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,12 +213,12 @@ public class ResolvedCritic
     protected void importOffenders(VectorSet set, boolean canCreate)
 	throws UnresolvableException
     {
-	Enumeration enum = set.elements();
+	Enumeration elems = set.elements();
 	String fail = null;
 
-	while (enum.hasMoreElements())
+	while (elems.hasMoreElements())
 	{
-	    Object obj = enum.nextElement();
+	    Object obj = elems.nextElement();
 	    String id = ItemUID.getIDOfObject(obj, canCreate);
 	    if (id == null)
 	    {

@@ -1,4 +1,4 @@
-// $Id: ToDoByGoal.java,v 1.7 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: ToDoByGoal.java,v 1.8 2004/07/17 16:23:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,9 +58,9 @@ public class ToDoByGoal extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector goals = Designer.TheDesigner.getGoals();
-	Enumeration enum = goals.elements();
-	while (enum.hasMoreElements()) {
-	    Goal g = (Goal) enum.nextElement();
+	Enumeration elems = goals.elements();
+	while (elems.hasMoreElements()) {
+	    Goal g = (Goal) elems.nextElement();
 	    path[1] = g;
 	    int nMatchingItems = 0;
 	    for (int i = 0; i < nItems; i++) {
@@ -91,9 +91,9 @@ public class ToDoByGoal extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector goals = Designer.TheDesigner.getGoals();
-	Enumeration enum = goals.elements();
-	while (enum.hasMoreElements()) {
-	    Goal g = (Goal) enum.nextElement();
+	Enumeration elems = goals.elements();
+	while (elems.hasMoreElements()) {
+	    Goal g = (Goal) elems.nextElement();
 	    path[1] = g;
 	    int nMatchingItems = 0;
 	    for (int i = 0; i < nItems; i++) {
@@ -125,9 +125,9 @@ public class ToDoByGoal extends ToDoPerspective
 	path[0] = Designer.TheDesigner.getToDoList();
 
 	Vector goals = Designer.TheDesigner.getGoals();
-	Enumeration enum = goals.elements();
-	while (enum.hasMoreElements()) {
-	    Goal g = (Goal) enum.nextElement();
+	Enumeration elems = goals.elements();
+	while (elems.hasMoreElements()) {
+	    Goal g = (Goal) elems.nextElement();
 	    cat.debug("toDoItemRemoved updating decision node!");
 	    boolean anyInGoal = false;
 	    for (int i = 0; i < nItems; i++) {

@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.33 2004/02/29 12:35:39 linus Exp $
+// $Id: Critic.java,v 1.34 2004/07/17 16:21:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.33 2004/02/29 12:35:39 linus Exp $
+// $Id: Critic.java,v 1.34 2004/07/17 16:21:40 mvw Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -508,9 +508,9 @@ public class Critic implements Poster, Serializable {
     public boolean isRelevantToDecisions(Designer dsgr) {
 //	cat.debug(this);
 //        boolean isDebugEnabled = cat.isDebugEnabled();
-	Enumeration enum = getSupportedDecisions().elements();
-	while (enum.hasMoreElements()) {
-	    Decision d = (Decision) enum.nextElement();
+	Enumeration elems = getSupportedDecisions().elements();
+	while (elems.hasMoreElements()) {
+	    Decision d = (Decision) elems.nextElement();
 	    if (d.getPriority() > 0 && d.getPriority() <= getPriority()) {
                 
 //                if(isDebugEnabled) cat.debug(d + " " + d.getPriority());

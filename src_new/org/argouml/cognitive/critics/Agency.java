@@ -1,4 +1,4 @@
-// $Id: Agency.java,v 1.13 2004/03/21 07:13:52 linus Exp $
+// $Id: Agency.java,v 1.14 2004/07/17 16:21:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,9 +144,9 @@ public class Agency extends Observable { //implements java.io.Serialization
             _critics.addElement(cr);
 	} else {
             Vector subs = ((CompoundCritic) cr).getCritics();
-            Enumeration enum = subs.elements();
-            while (enum.hasMoreElements()) {
-                addCritic((Critic) enum.nextElement());
+            Enumeration subCritics = subs.elements();
+            while (subCritics.hasMoreElements()) {
+                addCritic((Critic) subCritics.nextElement());
 	    }
             return;
         }

@@ -1,4 +1,4 @@
-// $Id: GoCollaborationDiagram.java,v 1.5 2004/05/02 13:20:24 mvw Exp $
+// $Id: GoCollaborationDiagram.java,v 1.6 2004/07/17 16:23:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,9 +51,9 @@ public class GoCollaborationDiagram extends AbstractPerspectiveRule {
         Vector diagrams = p.getDiagrams();
         if (diagrams == null)
             return null;
-        java.util.Enumeration enum = diagrams.elements();
-        while (enum.hasMoreElements()) {
-            Object d = enum.nextElement();
+        java.util.Enumeration elems = diagrams.elements();
+        while (elems.hasMoreElements()) {
+            Object d = elems.nextElement();
             if (d instanceof UMLCollaborationDiagram
                 && ((UMLCollaborationDiagram)d).getNamespace() == parent)
                 res.addElement(d);
