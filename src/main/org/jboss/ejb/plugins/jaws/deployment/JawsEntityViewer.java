@@ -17,7 +17,7 @@ import com.dreambean.awt.GenericPropertySheet;
  *      
  *   @see <related>
  *   @author Rickard Oberg (rickard@dreambean.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class JawsEntityViewer
    extends JTabbedPane
@@ -35,7 +35,7 @@ public class JawsEntityViewer
 	public void setObject(Object obj)
 	{
 		// Init UI
-		addTab("Entity", new GenericCustomizer(false, obj));
+		addTab("Entity", new GenericCustomizer(true, obj));
 		
 		try
 		{
