@@ -18,9 +18,10 @@ public class GetTCLAction implements PrivilegedAction
    }
    public Object run()
    {
-      if( t == null )
-         t = Thread.currentThread();
-      ClassLoader loader = t.getContextClassLoader();
+      Thread thread = t;
+      if (thread == null)
+         thread = Thread.currentThread();
+      ClassLoader loader = thread.getContextClassLoader();
       return loader;
    }
 
