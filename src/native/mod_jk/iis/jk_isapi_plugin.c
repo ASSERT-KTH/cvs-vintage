@@ -57,7 +57,7 @@
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Author:      Ignacio J. Ortega <nacho@apache.org>                       *
- * Version:     $Revision: 1.8 $                                           *
+ * Version:     $Revision: 1.9 $                                           *
  ***************************************************************************/
 
 // This define is needed to include wincrypt,h, needed to get client certificates
@@ -95,6 +95,9 @@
 
 #define REGISTRY_LOCATION       ("Software\\Apache Software Foundation\\Jakarta Isapi Redirector\\1.0")
 #define EXTENSION_URI_TAG       ("extension_uri")
+
+#define BAD_REQUEST		-1
+#define BAD_PATH		-2
 
 #define GET_SERVER_VARIABLE_VALUE(name, place) {    \
     (place) = NULL;                                   \
@@ -189,6 +192,108 @@ static int base64_encode_cert(char *encoded,
                               int len);
 
 
+static char x2c(const char *what)
+{
+    register char digit;
+
+    digit = ((what[0] >= 'A') ? ((what[0] & 0xdf) - 'A') + 10 : (what[0] - '0'));
+    digit *= 16;
+    digit += (what[1] >= 'A' ? ((what[1] & 0xdf) - 'A') + 10 : (what[1] - '0'));
+    return (digit);
+}
+
+static int unescape_url(char *url)
+{
+    register int x, y, badesc, badpath;
+
+    badesc = 0;
+    badpath = 0;
+    for (x = 0, y = 0; url[y]; ++x, ++y) {
+        if (url[y] != '%')
+            url[x] = url[y];
+        else {
+            if (!isxdigit(url[y + 1]) || !isxdigit(url[y + 2])) {
+                badesc = 1;
+                url[x] = '%';
+            }
+            else {
+                url[x] = x2c(&url[y + 1]);
+                y += 2;
+                if (url[x] == '/' || url[x] == '\0')
+                    badpath = 1;
+            }
+        }
+    }
+    url[x] = '\0';
+    if (badesc)
+            return BAD_REQUEST;
+    else if (badpath)
+            return BAD_PATH;
+    else
+            return 0;
+}
+
+static void getparents(char *name)
+{
+    int l, w;
+
+    /* Four paseses, as per RFC 1808 */
+    /* a) remove ./ path segments */
+
+    for (l = 0, w = 0; name[l] != '\0';) {
+        if (name[l] == '.' && name[l + 1] == '/' && (l == 0 || name[l - 1] == '/'))
+            l += 2;
+        else
+            name[w++] = name[l++];
+    }
+
+    /* b) remove trailing . path, segment */
+    if (w == 1 && name[0] == '.')
+        w--;
+    else if (w > 1 && name[w - 1] == '.' && name[w - 2] == '/')
+        w--;
+    name[w] = '\0';
+
+    /* c) remove all xx/../ segments. (including leading ../ and /../) */
+    l = 0;
+
+    while (name[l] != '\0') {
+        if (name[l] == '.' && name[l + 1] == '.' && name[l + 2] == '/' &&
+            (l == 0 || name[l - 1] == '/')) {
+            register int m = l + 3, n;
+
+            l = l - 2;
+            if (l >= 0) {
+                while (l >= 0 && name[l] != '/')
+                    l--;
+                l++;
+            }
+            else
+                l = 0;
+            n = l;
+            while ((name[n] = name[m]))
+                (++n, ++m);
+        }
+        else
+            ++l;
+    }
+
+    /* d) remove trailing xx/.. segment. */
+    if (l == 2 && name[0] == '.' && name[1] == '.')
+        name[0] = '\0';
+    else if (l > 2 && name[l - 1] == '.' && name[l - 2] == '.' && name[l - 3] == '/') {
+        l = l - 4;
+        if (l >= 0) {
+            while (l >= 0 && name[l] != '/')
+                l--;
+            l++;
+        }
+        else
+            l = 0;
+        name[l] = '\0';
+    }
+}
+
 static int uri_is_web_inf(char *uri)
 {
     char *c = uri;
@@ -199,9 +304,33 @@ static int uri_is_web_inf(char *uri)
     if(strstr(uri, "web-inf")) {
         return JK_TRUE;
     }
+    if(strstr(uri, "meta-inf")) {
+        return JK_TRUE;
+    }
 
     return JK_FALSE;
 }
+
+static void write_error_response(PHTTP_FILTER_CONTEXT pfc,char *status,char * msg)
+{
+    char crlf[3] = { (char)13, (char)10, '\0' };
+    char ctype[30];
+    DWORD len = strlen(msg);
+
+    sprintf(ctype, 
+            "Content-Type:text/html%s%s", 
+            crlf, 
+            crlf);
+
+    /* reject !!! */
+    pfc->ServerSupportFunction(pfc, 
+                               SF_REQ_SEND_RESPONSE_HEADER,
+                               status,
+                               (DWORD)crlf,
+                               (DWORD)ctype);
+    pfc->WriteClient(pfc, msg, &len, 0);
+}
+
 
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
@@ -439,11 +568,32 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
         }
 
         if(strlen(uri)) {
+            int rc;
             char *worker=0;
             query = strchr(uri, '?');
             if(query) {
                 *query = '\0';
             }
+
+            rc = unescape_url(uri);
+            if (rc == BAD_REQUEST) {
+                jk_log(logger, JK_LOG_ERROR, 
+                       "HttpFilterProc [%s] contains on or more invalid escape sequences.\n", 
+                       uri);
+                write_error_response(pfc,"400 Bad Request",
+                        "<HTML><BODY><H1>Request contains invalid encoding</H1></BODY></HTML>");
+                return SF_STATUS_REQ_FINISHED;
+            }
+            else if(rc == BAD_PATH) {
+                jk_log(logger, JK_LOG_EMERG, 
+                       "HttpFilterProc [%s] contains forbidden escape sequences.\n", 
+                       uri);
+                write_error_response(pfc,"403 Forbidden",
+                        "<HTML><BODY><H1>Access is Forbidden</H1></BODY></HTML>");
+                return SF_STATUS_REQ_FINISHED;
+            }
+            getparents(uri);
+
 			if(p->GetHeader(pfc, "Host:", (LPVOID)Host, (LPDWORD)&szHost)) {
 				strcat(snuri,Host);
 				strcat(snuri,uri);
@@ -491,28 +641,12 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
                    uri);
 
             if(uri_is_web_inf(uri)) {
-                char crlf[3] = { (char)13, (char)10, '\0' };
-                char ctype[30];
-                char *msg = "<HTML><BODY><H1>Access is Forbidden</H1></BODY></HTML>";
-                DWORD len = strlen(msg);
-
                 jk_log(logger, JK_LOG_EMERG, 
-                       "HttpFilterProc [%s] points to the web-inf directory.\nSomebody try to hack into the site!!!\n", 
+                       "HttpFilterProc [%s] points to the web-inf or meta-inf directory.\nSomebody try to hack into the site!!!\n", 
                        uri);
 
-                sprintf(ctype, 
-                        "Content-Type:text/html%s%s", 
-                        crlf, 
-                        crlf);
-
-                /* reject !!! */
-                pfc->ServerSupportFunction(pfc, 
-                                           SF_REQ_SEND_RESPONSE_HEADER,
-                                           "403 Forbidden",
-                                           (DWORD)crlf,
-                                           (DWORD)ctype);
-                pfc->WriteClient(pfc, msg, &len, 0);
-
+                write_error_response(pfc,"403 Forbidden",
+                        "<HTML><BODY><H1>Access is Forbidden</H1></BODY></HTML>");
                 return SF_STATUS_REQ_FINISHED;
             }
         }
@@ -867,6 +1001,9 @@ static int init_ws_service(isapi_private_data_t *private_data,
         s->query_string = private_data->lpEcb->lpszQueryString;
         *worker_name    = JK_AJP12_WORKER_NAME;
         GET_SERVER_VARIABLE_VALUE("URL", s->req_uri);       
+        if (unescape_url(s->req_uri) < 0)
+            return JK_FALSE;
+        getparents(s->req_uri);
     }
     
     GET_SERVER_VARIABLE_VALUE("AUTH_TYPE", s->auth_type);
@@ -1164,3 +1301,4 @@ static int base64_encode_cert(char *encoded,
     *p++ = '\0';
     return p - encoded;
 }
+
