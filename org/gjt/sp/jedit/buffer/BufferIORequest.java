@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.28 2004/08/29 02:58:43 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.29 2004/09/01 21:57:16 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -399,7 +399,7 @@ public class BufferIORequest extends WorkRequest
 							index + 10);
 						encoding = xmlPI.substring(
 							index + 10,endIndex);
-	
+
 						if(MiscUtilities.isSupportedEncoding(encoding))
 						{
 							buffer.setProperty(Buffer.ENCODING,encoding);
@@ -697,7 +697,14 @@ public class BufferIORequest extends WorkRequest
 			boolean twoStageSave = (vfs.getCapabilities() & VFS.RENAME_CAP) != 0
 				&& jEdit.getBooleanProperty("twoStageSave");
 			if(twoStageSave)
+			{
 				savePath = vfs.getTwoStageSaveName(path);
+				if (savePath == null)
+				{
+					twoStageSave = false;
+					savePath = path;
+				}
+			}
 			else
 				savePath = path;
 

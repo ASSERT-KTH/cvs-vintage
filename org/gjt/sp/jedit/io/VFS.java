@@ -91,7 +91,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.39 2003/09/08 01:24:11 spestov Exp $
+ * @author $Id: VFS.java,v 1.40 2004/09/01 21:57:16 spestov Exp $
  */
 public abstract class VFS
 {
@@ -357,6 +357,9 @@ public abstract class VFS
 	 * systems might not support the <code>#</code> character in filenames,
 	 * so this method permits the VFS to override this behavior.
 	 *
+	 * If this method returns <code>null</code>, two stage save will not
+	 * be used for that particular file (introduced in jEdit 4.3pre1).
+	 *
 	 * @param path The path name
 	 * @since jEdit 4.1pre7
 	 */
@@ -545,7 +548,7 @@ public abstract class VFS
 
 	//{{{ _listDirectory() method
 	/**
-	 * Lists the specified directory. 
+	 * Lists the specified directory.
 	 * @param session The session
 	 * @param directory The directory. Note that this must be a full
 	 * URL, including the host name, path name, and so on. The

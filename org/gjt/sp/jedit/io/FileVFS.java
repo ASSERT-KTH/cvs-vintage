@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.47 2004/06/09 16:48:40 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.48 2004/09/01 21:57:16 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -83,6 +83,24 @@ public class FileVFS extends VFS
 	public char getFileSeparator()
 	{
 		return File.separatorChar;
+	} //}}}
+
+	//{{{ getTwoStageSaveName() method
+	/**
+	 * Returns a temporary file name based on the given path.
+	 *
+	 * <p>If the directory where the file would be created cannot be
+	 * written (i.e., no new files can be created in that directory),
+	 * this method returns <code>null</code>.</p>
+	 *
+	 * @param path The path name
+	 */
+	public String getTwoStageSaveName(String path)
+	{
+		File parent = new File(getParentOfPath(path));
+		return (parent.canWrite())
+			? super.getTwoStageSaveName(path)
+			: null;
 	} //}}}
 
 	//{{{ save() method
