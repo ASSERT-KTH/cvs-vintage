@@ -516,14 +516,13 @@ try{
      * @return a <code>Issue</code> value
      */
     public Issue getIssue(String key)
-        throws Exception
     {
         Issue issue = null;
         try
         {
             issue = IssuePeer.retrieveByPK(new NumberKey(key));
         }
-        catch (RuntimeException re)
+        catch (Exception e)
         {
             // was not a primary key, try fid
             Issue.FederatedId fid = new Issue.FederatedId(key);
@@ -533,7 +532,6 @@ try{
             }
             issue = Issue.getIssueById(fid);
         }
-
         return issue;
     }
 
