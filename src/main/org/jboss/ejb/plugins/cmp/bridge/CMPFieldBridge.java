@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public interface CMPFieldBridge {
    /**
@@ -47,14 +47,14 @@ public interface CMPFieldBridge {
    public boolean isReadOnly();
       
    /**
-    * Gets the value of this field for the specified intance context.
+    * Gets the value of this field for the specified instance context.
     * @param ctx the context for which this field's value should be fetched
     * @return the value of this field
     */
    public Object getInstanceValue(EntityEnterpriseContext ctx);
       
    /**
-    * Sets the value of this field for the specified intance context.
+    * Sets the value of this field for the specified instance context.
     * @param ctx the context for which this field's value should be set
     * @param value the new value of this field
     */
