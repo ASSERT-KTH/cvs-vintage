@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.1 2000/01/07 19:14:11 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/07 19:14:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.2 2000/01/30 04:22:46 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/30 04:22:46 $
  *
  * ====================================================================
  *
@@ -73,5 +73,31 @@ import javax.servlet.Servlet;
 public interface RequestInterceptor {
     public static final int OK=0;
     
-    public int handleRequest(Request request);
+    /** Will detect the context path for a request
+     */
+    //    public int contextMap(Request request);
+    // XXX name will change!
+    public int handleRequestContextMap(Request request);
+
+    /** Handle mapping inside a context
+     */
+    //    public int requestMap(Request request);
+
+    /** Security
+     */
+    //    public int authentication(Request request);
+    //    public int authorization(Request request);
+
+    /** This handle knows how to guess the session id
+	from a request ( SSL, cookie, rewriting ).
+	Note that the request need
+    */
+    //    public int sessionId(Request request);
+
+    //    public int preService(Request request);
+    //    public int postService(Request request);
+
+    //    public int log(Request request);
+
+    public int handleRequest( Request request);
 }

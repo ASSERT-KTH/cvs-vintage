@@ -71,44 +71,46 @@ import javax.servlet.http.*;
 
 
 /**
- * Interceptor that sets a number of default properties in context.
+ * Will configure the context using the default web.xml
+ *
+ * This interceptor is used when "serving from WAR" case.
  *
  * @author costin@dnt.ro
  */
-public class WarInterceptor implements ContextInterceptor {
-
-    public WarInterceptor() {
+public class WarWebXmlInterceptor implements ContextInterceptor {
+    private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
+    
+    public WarWebXmlInterceptor() {
     }
 	
     public int handleContextInit(Context ctx) {
-	if (ctx.getDocumentBase().getProtocol().equalsIgnoreCase("war")) {
-	    // 	    System.out.println("CTX: " + ctx.getDocumentBase() + " " +
-	    // 			       ctx.isWARExpanded());
-	    if (ctx.isWARExpanded()) {
-	        File warDir = new File(ctx.getWorkDir(),
-				       Constants.Context.WARExpandDir);
-		ctx.setWARDir( warDir );
-		
-		// the directory where the war was expanded will act
-		// as the new document base
-		// XXX todo		ctx.setDocumentBase( warDir.toString() );
-		
-		if (! warDir.exists()) {
-		    warDir.mkdirs();
+	if (! ctx.getDocumentBase().getProtocol().equalsIgnoreCase("war")) {
+	    return 0;
+	}
+	
+	// process base configuration
+	WebApplicationReader webXmlReader=new WebApplicationReader();
 
-		    try {
-		        WARUtil.expand(warDir, ctx.getDocumentBase());
-		    } catch (MalformedURLException mue) {
-		    } catch (IOException ioe) {
-		    }
-
-		    try {
-                        URL servletBase = URLUtil.resolve(warDir.toString());
-			ctx.setServletBase( servletBase );
-		    } catch (Exception e) {
-		    }
-		}
-	    }
+	try {
+	    // read default web.xml
+	    webXmlReader.processDefaultWebApp( ctx );
+	    
+	    // process webApp configuration
+	    String s = ctx.getDocumentBase().toString();
+	    if (s.endsWith("/")) 
+		s = s.substring(0, s.length() - 1);
+	    
+	    URL webURL = null;
+	    webURL = new URL(s + "!/" + Constants.Context.ConfigFile);
+	    
+	    InputStream is = webURL.openConnection().getInputStream();
+	    
+	    System.out.println("Context(" + ctx.getPath() + "): " + webURL.getFile());
+	    
+	    webXmlReader.processWebApp(ctx, is);
+	} catch (Exception e) {
+	    String msg = sm.getString("context.getConfig.e",
+				      ctx.getPath() + " " + ctx.getDocBase() );
 	}
 	return 0;
     }
@@ -116,4 +118,6 @@ public class WarInterceptor implements ContextInterceptor {
     public int handleContextShutdown(Context ctx) {
 	return OK;
     }
+
+    
 }

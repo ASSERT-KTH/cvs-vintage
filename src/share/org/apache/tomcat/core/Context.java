@@ -180,6 +180,22 @@ public class Context {
 	this.path = path;
     }
 
+    /* NOTE: if docBase is a URL to a remote location, we should download
+       the context and unpack it. It is _very_ inefficient to serve
+       files from a remote location ( at least 2x slower )
+    */
+    
+    /** DocBase points to the web application files.
+     *
+     *  There is no restriction on the syntax and content of DocBase,
+     *  it's up to the various modules to interpret this and use it.
+     *  For example, to server from a war file you can use war: protocol,
+     *  and set up War interceptors.
+     * 
+     *  "Basic" tomcat treats it is a file ( either absolute or relative to
+     *  the CM home ). XXX Make it absolute ??
+     *
+     */
     public void setDocBase( String docB ) {
 	this.docBase=docB;
     }
@@ -325,7 +341,9 @@ public class Context {
 	    // if we can't  return a servlet, so it's more probable
 	    // servlets will check for null than IllegalArgument
 	}
-        return contextM.getContextByPath(path);
+	Request lr=contextM.createRequest( this, path );
+	getContextManager().processRequest(lr);
+        return lr.getContext();
     }
 
     public void log(String msg, Throwable t) {
@@ -525,9 +543,6 @@ public class Context {
 	// XXX who uses servletBase ???
 	URL servletBase = getDocumentBase();
         this.setServletBase(servletBase);
-
-	// expand WAR
-	new WarInterceptor().handleContextInit( this );
 
 	// Read context's web.xml
 	new WebXmlInterceptor().handleContextInit( this );

@@ -397,6 +397,10 @@ public class ContextManager {
 	if(debug>2) log("");
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).handleRequestContextMap( req );
+	}
+
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).handleRequest( req );
 	}
 
@@ -405,15 +409,6 @@ public class ContextManager {
 	if(debug>2) log("");
 	return 0;
     }
-
-    // XXX XXX hack - we need to create a new request !
-    ContextMapperInterceptor contextInterceptor=new ContextMapperInterceptor( this );
-    public Context getContextByPath(String path ) {
-	// XXX XXX XXX need to create a sub-request !!!!
-	//
-	return contextInterceptor.getContextByPath( path );      
-    }
-
 
     // -------------------- Sub-Request mechanism --------------------
 

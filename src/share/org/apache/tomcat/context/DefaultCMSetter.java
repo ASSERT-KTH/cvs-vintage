@@ -100,12 +100,13 @@ public class DefaultCMSetter { //  implements TomcatHandler
 	if( ! riE.hasMoreElements() ) {
 	    // nothing set up by starter, add default ones
 	    if(cm.getDebug()>0) cm.log("Setting default interceptors ");
-	    cm.addRequestInterceptor(new ContextMapperInterceptor( cm ));
-	    cm.addRequestInterceptor(new SessionInterceptor());
-	    //	    addRequestInterceptor(new MapperInterceptor());
 
 	    // Use the simplified mapper - revert if too many bugs and
-	    cm.addRequestInterceptor(new SimpleMapper());
+	    SimpleMapper smap=new SimpleMapper();
+	    smap.setContextManager( cm );
+	    cm.addRequestInterceptor(smap);
+
+	    cm.addRequestInterceptor(new SessionInterceptor());
 	}
 
 	return 0;

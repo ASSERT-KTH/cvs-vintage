@@ -69,47 +69,37 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
+ * Serve a file from a WAR.
  * 
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-public class DefaultServlet extends HttpServlet {
-    private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
-    private static final DateFormat dateFormat = new SimpleDateFormat(datePattern);
-
-    ServletContext contextF;
+public class WarFileServlet extends HttpServlet {
+    private ServletContextFacade facade;
+    private String servletInfo = "DefaultServlet";
     private Context context;
-    String docBase;
-    int debug=1;
+    private MimeMap mimeTypes;
+    private String datePattern = "EEE, dd MMM yyyyy HH:mm z";
+    private DateFormat dateFormat = new SimpleDateFormat(datePattern);
     
     public void init() throws ServletException {
-	contextF = getServletContext();
-	context = ((ServletContextFacade)getServletContext()).getRealContext();
-
-	// doesn't change - set it in init!
-	docBase = context.getDocBase();
-        if (! docBase.endsWith("/")) {
-            docBase += "/";
-        }
-
-	// debug 
-	String dbg=getServletConfig().getInitParameter("debug");
-	if( dbg!=null) debug=1;
+	facade = (ServletContextFacade)getServletContext();
+	context = facade.getRealContext();
+	mimeTypes = context.getMimeMap();
     }
 
     public String getServletInfo() {
-        return "DefaultServlet";
+        return this.servletInfo;
     }
 
     public void doGet(HttpServletRequest request,
-		      HttpServletResponse response)
-	throws ServletException, IOException
-    {
+        HttpServletResponse response)
+    throws ServletException, IOException {
 	String pathInfo = (String)request.getAttribute(
-            "javax.servlet.include.path_info");
+            Constants.Attribute.PathInfo);
 	String requestURI = (String)request.getAttribute(
-            "javax.servlet.include.request_uri");
+	    Constants.Attribute.RequestURI);
 
 	if (pathInfo == null) {
 	    pathInfo = request.getPathInfo();
@@ -119,18 +109,96 @@ public class DefaultServlet extends HttpServlet {
 	    requestURI = request.getRequestURI();
 	}
 
-	// Clean up pathInfo 
-	File file = new File(docBase + pathInfo);
+	// XXX XXX BAD BAD BAD - that means another request,
+	// with the same informations !!!!!!!
+	// It should use getMappedPath instead !!!
+        URL url = getServletContext().getResource(pathInfo);
+
+	// 	System.out.println("Resource: " + url + " PI: " + pathInfo);
+	if (url != null) {
+	    if (url.getProtocol().equals("war") &&
+	        context.isWARExpanded()) {
+		String s = context.getWARDir().toString() + pathInfo;
+
+		url = URLUtil.resolve(s);
+	    }
+
+	    if (url.getProtocol().equalsIgnoreCase("file")) {
+		// serve file
+
+		File f = new File(url.getFile());
+
+                // this takes care of File.getAbsolutePath()
+                // and File.getName() troubles when running on
+                // JDK 1.1.x/Windows
+                //
+                // BUT IT ALSO ALLOWS THE DREADED ".." AND "jsp." BUGS.
+                // SO IT'S OUTTA HERE!
+                //
+		//f = new File(f.getCanonicalPath());
+
+		if (f.exists()) {
+		    processFile(f, url, request, response);
+		} else {
+		    response.sendError(response.SC_NOT_FOUND,
+                        "File Not Found: " + requestURI);
+		}
+	    } else if (url.getProtocol().equalsIgnoreCase("war")) {
+	        // get content from war
+
+	        String documentBase = context.getDocumentBase().toString();
+
+		if (documentBase.endsWith("/")) {
+		    documentBase = documentBase.substring(0,
+		        documentBase.length() - 1);
+		}
+ 
+	        URL mappedURL = new URL(documentBase + "!" + pathInfo);
+
+		serveURL(mappedURL, request, response);
+	    } else {
+		// get content from url
+
+		serveURL(url, request, response);
+	    }
+	} else {
+	    System.out.println("Got null URL: " + url);
+
+	    response.sendError(response.SC_NOT_FOUND,
+                "File Not Found<br>" + requestURI);
+	}
+    }
+
+    private void processFile(File file, URL url,
+        HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+	String requestURI = (String)request.getAttribute(
+	    Constants.Attribute.RequestURI);
+
+	if (requestURI == null) {
+	    requestURI = request.getRequestURI();
+	}
+
 	String absPath = file.getAbsolutePath();
-	
-	if( debug > 0 ) contextF.log( "DefaultServlet: "  + absPath);
+        String docBase = "";
+
+	if (context.getDocumentBase().getProtocol().equalsIgnoreCase("war") &&
+	    context.isWARExpanded()) {
+	    String s = context.getWARDir().getAbsolutePath();
+
+	    docBase = FileUtil.patch(s);
+	} else {
+	    docBase = context.getDocumentBase().getFile();
+	}
 
         // take care of File.getAbsolutePath() troubles on
         // jdk1.1.x/win
-        String patchedPath = FileUtil.patch(absPath);
-	if( debug > 0 && ! absPath.equals(patchedPath)  )
-	    contextF.log( "DefaultServlet: patched path" + patchedPath );
-	absPath=patchedPath;
+
+        absPath = FileUtil.patch(absPath);
+
+        if (! docBase.endsWith("/")) {
+            docBase += "/";
+        }
 
         if (isFileMasked(docBase, absPath)) {
 	    response.sendError(response.SC_NOT_FOUND);
@@ -139,9 +207,9 @@ public class DefaultServlet extends HttpServlet {
 
         if (file.isDirectory()) {
 	    // check for welcome file
+
 	    String welcomeFile = getWelcomeFile(file);
-	    if( debug > 0 ) contextF.log( "DefaultServlet: welcome file: "  + welcomeFile);
-	    
+
 	    if (welcomeFile != null) {
 	        if (requestURI.endsWith("/")) {
 		    String path = requestURI;
@@ -162,7 +230,6 @@ public class DefaultServlet extends HttpServlet {
 		        path = "/" + path;
 		    }
 
-		    if( debug > 0 ) contextF.log( "DefaultServlet: forward: "  + path + " " + welcomeFile);
 		    ServletContext context =
 		        getServletContext().getContext(contextPath);
 		    RequestDispatcher rd = context.getRequestDispatcher(
@@ -181,7 +248,6 @@ public class DefaultServlet extends HttpServlet {
 		    // do a redirect so that all relative
 		    // urls work correctly
 
-		    if( debug > 0 ) contextF.log( "DefaultServlet: redirect: "  + requestURI);
 		    if (! inInclude) {
 			response.sendRedirect(requestURI + "/");
 		    }
@@ -194,9 +260,9 @@ public class DefaultServlet extends HttpServlet {
 	} else {
 	    // serve that file
 	    // check that .jsp/ doesn't slip through on Windows!
-	    if( debug > 0 ) contextF.log( "DefaultServlet: serving file: "  + file);
-	    if (! absPath.endsWith("/") &&
-	        ! absPath.endsWith("\\")) {
+
+	    if (! url.getFile().endsWith("/") &&
+	        ! url.getFile().endsWith("\\")) {
 	        serveFile(file, request, response);
 	    } else {
 	        response.sendError(response.SC_NOT_FOUND,
@@ -227,6 +293,46 @@ public class DefaultServlet extends HttpServlet {
 	return welcomeFile;
     }
 
+    private void serveURL(URL url, HttpServletRequest request,
+        HttpServletResponse response)
+    throws IOException {
+	try {
+	    URLConnection con = url.openConnection();
+	    con.connect();
+
+	    // XXX
+	    // lot of work needed here for when reading from a war
+
+            String contentType = con.getContentType();
+	    int contentLength = con.getContentLength();
+	    String lastModified = Long.toString(con.getLastModified());
+
+	    response.setContentType((contentType != null) ?
+	        contentType : "text/html");
+	    response.setContentLength((contentLength >= 0) ?
+	        contentLength : 0);
+	    response.setHeader("Last-Modified",
+	        (lastModified != null) ? lastModified : "");
+
+	    InputStream in = con.getInputStream();
+
+	    serveStream(in, request, response);
+	    in.close();
+	} catch (IOException e) {
+	    // To do a good error msg, first figure out what we're serving
+
+	    String requestURI = (String)request.getAttribute(
+		Constants.Attribute.RequestURI);
+
+   	    if (requestURI == null) {
+	    	requestURI = request.getRequestURI();
+	    }
+
+	    response.sendError(response.SC_NOT_FOUND,
+                "File Not Found<br>" + requestURI);
+	}
+    }
+    
     private void serveFile(File file, HttpServletRequest request,
         HttpServletResponse response)
     throws IOException {
@@ -272,7 +378,7 @@ public class DefaultServlet extends HttpServlet {
 		}
 	}
 
-	String mimeType = contextF.getMimeType( file.getName() );
+	String mimeType = mimeTypes.getContentTypeFor(file.getName());
 
 	if (mimeType == null) {
 	    mimeType = "text/plain";

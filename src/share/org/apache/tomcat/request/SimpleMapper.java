@@ -65,10 +65,22 @@ import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import java.util.Hashtable;
 
+/** Parse request URI and find ContextPath, ServletPath, PathInfo and QueryString
+ *  Use a simple alghoritm - no optimizations or tricks.
+ *  Also, no special features - no VirtualHost, user directories, etc.
+ *
+ *  For "production" environment you should use either an optimized version
+ *  or a real web server parser.
+ */
 public class SimpleMapper  implements  RequestInterceptor {
     int debug=0;
+    ContextManager cm;
     
     public SimpleMapper() {
+    }
+
+    public void setContextManager( ContextManager cm ) {
+	this.cm=cm;
     }
 
     public void setDebug( int level ) {
@@ -78,7 +90,32 @@ public class SimpleMapper  implements  RequestInterceptor {
     void log( String msg ) {
 	System.out.println("SimpleMapper: " + msg );
     }
-    
+
+    /** First step of request porcessing is finding the Context.
+     *  Advanced mappers will do only one parsing.
+     */
+    public int handleRequestContextMap( Request rrequest ) {
+	// someone else set it up, no need to worry
+	if( rrequest.getContext() != null )
+	    return OK;
+	
+	// resolve the server that we are for
+	String path = rrequest.getRequestURI();
+	
+	Context ctx= this.getContextByPath(path);
+	
+	// final fix on response & request
+	//		rresponse.setServerHeader(server.getServerHeader());
+	
+	String ctxPath = ctx.getPath();
+	String pathInfo =path.substring(ctxPath.length(),
+					    path.length());
+	rrequest.setContext(ctx);
+	rrequest.updatePaths();
+	return OK;
+    }
+
+
     public int handleRequest(Request req) {
 	Context context=req.getContext();
 	String path=req.getLookupPath();
@@ -238,6 +275,50 @@ public class SimpleMapper  implements  RequestInterceptor {
 
 	return  "/" + path;
     }
+
+
+    // XXX XXX XXX need to fix this - it is used by getContext(String path) (costin)
+    
+    /**
+     * Gets the context that is responsible for requests for a
+     * particular path.  If no specifically assigned Context can be
+     * identified, returns the default Context.
+     *
+     * @param path The path for which a Context is requested
+     */
+    Context getContextByPath(String path) {
+	String realPath = path;
+	Context ctx = null;
+
+	// XXX
+	// needs help ... this needs to be optimized out.
+
+        lookup:
+	do {
+	    ctx = cm.getContext(path);
+	    if (ctx == null) {
+	        int i = path.lastIndexOf('/');
+		if (i > -1 && path.length() > 1) {
+		    path = path.substring(0, i);
+		    if (path.length() == 0) {
+		        path = "/";
+		    }
+		} else {
+		    // path too short
+		    break lookup;
+		}
+	    } else {
+	    }
+	} while (ctx == null);
+
+	// no map - root context
+	if (ctx == null) {
+	    ctx = cm.getContext( "" );
+	}
+
+	return ctx;
+    }
+
 
 }
     

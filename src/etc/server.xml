@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<Server adminPort="-1" workDir="work">
+<Server>
     <ContextManager port="8080" hostName="" inet="">
-
-<!--
-   Defaults: 
-            defaultSessionTimeOut="30" 
-            isWARExpanded="true"
-            isWARValidated="false" 
-            isInvokerEnabled="true"
-            isWorkDirPersistent="false"
--->
         <Connector className="org.apache.tomcat.service.http.HttpAdapter">
         </Connector>
 

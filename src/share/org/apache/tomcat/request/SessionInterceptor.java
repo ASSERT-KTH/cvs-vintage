@@ -110,4 +110,9 @@ public class SessionInterceptor implements RequestInterceptor {
 
 	return 0;
     }
+
+    public int handleRequestContextMap( Request rrequest ) {
+	return 0;
+    }
+
 }

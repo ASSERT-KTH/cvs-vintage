@@ -60,10 +60,9 @@ package org.apache.tomcat.deployment;
 
 import org.apache.tomcat.util.XMLParser;
 import org.apache.tomcat.util.XMLTree;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.StringTokenizer;
+import org.apache.tomcat.core.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * I am a class that translates an input steram containting an
@@ -731,4 +730,200 @@ public class WebApplicationReader {
 	return sessionTimeOut.intValue();
     }
 
+    // -------------------- Context setup--------------------
+    public void processDefaultWebApp(Context ctx) throws Exception {
+	Class webApplicationDescriptor = this.getClass();
+	InputStream is =
+	    webApplicationDescriptor.getResourceAsStream("web.xml");
+	processWebApp(ctx, is);
+    }
+
+    public void processWebApp(Context ctx, InputStream is) throws Exception {
+	WebApplicationDescriptor webDescriptor =getDescriptor(is,
+							      new WebDescriptorFactoryImpl(),
+							      ctx.isWARValidated());
+	
+	ctx.setDescription( webDescriptor.getDescription());
+	ctx.setDistributable( webDescriptor.isDistributable());
+	
+	Enumeration contextParameters=webDescriptor.getContextParameters();
+	while (contextParameters.hasMoreElements()) {
+	    ContextParameter contextParameter =
+		(ContextParameter)contextParameters.nextElement();
+	    ctx.setInitParameter(contextParameter.getName(),
+				 contextParameter.getValue());
+	}
+	ctx.setSessionTimeOut( webDescriptor.getSessionTimeout());
+	
+	processServlets(ctx, webDescriptor.getWebComponentDescriptors());
+	processMimeMaps(ctx, webDescriptor.getMimeMappings());
+	processWelcomeFiles(ctx, webDescriptor.getWelcomeFiles());
+	processErrorPages(ctx, webDescriptor.getErrorPageDescriptors());
+    }
+
+    private void processServlets(Context ctx, Enumeration servlets) {
+        // XXX
+        // oh my ... this has suddenly turned rather ugly
+        // perhaps the reader should do this normalization work
+
+        while (servlets.hasMoreElements()) {
+	    WebComponentDescriptor webComponentDescriptor =
+	        (WebComponentDescriptor)servlets.nextElement();
+	    String name = webComponentDescriptor.getCanonicalName();
+	    String description = webComponentDescriptor.getDescription();
+	    String resourceName = null;
+	    boolean removeResource = false;
+
+	    if (webComponentDescriptor instanceof ServletDescriptor) {
+		resourceName =
+		    ((ServletDescriptor)webComponentDescriptor).getClassName();
+
+		if ( ctx.containsServletByName(name)) {
+// 		    String msg = sm.getString("context.dd.dropServlet",
+// 					      name + "(" + resourceName + ")" );
+		    
+// 		    System.out.println(msg);
+		    
+		    removeResource = true;
+		    ctx.removeServletByName(name);
+		}
+
+		ctx.addServlet(name, resourceName, description);
+	    } else if (webComponentDescriptor instanceof JspDescriptor) {
+		resourceName =
+		    ((JspDescriptor)webComponentDescriptor).getJspFileName();
+
+		if (! resourceName.startsWith("/")) {
+		    resourceName = "/" + resourceName;
+		}
+
+		if (ctx.containsJSP(resourceName)) {
+// 		    String msg = sm.getString("context.dd.dropServlet",
+// 					      resourceName);
+
+// 		    System.out.println(msg);
+		    
+		    removeResource = true;
+		    ctx.removeJSP(resourceName);
+		}
+
+		ctx.addJSP(name, resourceName, description);
+	    }
+
+
+	    // XXX ugly, but outside of context - the whole thing will be
+	    // rewriten, so don't worry
+	    
+	    // if the resource was already defined, override with the new definition
+	    // XXX I have very little ideea about what it does !
+	    if (removeResource) {
+
+	        Enumeration levels = ctx.getInitLevels();
+
+		while (levels.hasMoreElements()) {
+		    Integer level = (Integer)levels.nextElement();
+		    Enumeration servletsOnLevel=ctx.getLoadableServlets( level );
+		    
+		    Vector buf = new Vector();
+		    while (servletsOnLevel.hasMoreElements()) {
+		        String servletName = (String)servletsOnLevel.nextElement();
+
+			if (ctx.containsServletByName(servletName)) {
+			    buf.addElement(servletName);
+			}
+		    }
+		    ctx.setLoadableServlets(level, buf);
+		}
+	    }
+	    
+	    int loadOnStartUp = webComponentDescriptor.getLoadOnStartUp();
+
+            if (loadOnStartUp > Integer.MIN_VALUE) {
+	        Integer key = new Integer(loadOnStartUp);
+		ctx.addLoadableServlet( key, name );
+		
+	    }
+
+	    Enumeration enum =
+	        webComponentDescriptor.getInitializationParameters();
+	    Hashtable initializationParameters = new Hashtable();
+
+	    while (enum.hasMoreElements()) {
+	        InitializationParameter initializationParameter =
+		    (InitializationParameter)enum.nextElement();
+
+		initializationParameters.put(
+		    initializationParameter.getName(),
+		    initializationParameter.getValue());
+	    }
+
+	    ctx.setServletInitParams( webComponentDescriptor.getCanonicalName(),
+				 initializationParameters);
+
+	    enum = webComponentDescriptor.getUrlPatterns();
+
+	    while (enum.hasMoreElements()) {
+	        String mapping = (String)enum.nextElement();
+
+		if (! mapping.startsWith("*.") &&
+		    ! mapping.startsWith("/")) {
+		    mapping = "/" + mapping;
+		}
+
+		if (! ctx.containsServlet(mapping) &&
+		    ! ctx.containsJSP(mapping)) {
+		    if (ctx.containsMapping(mapping)) {
+// 		        String msg = sm.getString("context.dd.dropMapping",
+// 			    mapping);
+
+// 			System.out.println(msg);
+
+			ctx.removeMapping(mapping);
+		    }
+
+                    ctx.addMapping(name, mapping);
+		} else {
+// 		    String msg = sm.getString("context.dd.ignoreMapping",
+// 		        mapping);
+
+// 		    System.out.println(msg);
+		}
+	    }
+	}
+    }
+
+    private void processMimeMaps(Context ctx, Enumeration mimeMaps) {
+        while (mimeMaps.hasMoreElements()) {
+	    MimeMapping mimeMapping = (MimeMapping)mimeMaps.nextElement();
+
+	    ctx.addContentType(	mimeMapping.getExtension(),
+				mimeMapping.getMimeType());
+	}
+    }
+
+    private void processWelcomeFiles(Context ctx, Enumeration welcomeFiles ) {
+        if ( welcomeFiles.hasMoreElements()) {
+            ctx.removeWelcomeFiles();
+        }
+
+	while (welcomeFiles.hasMoreElements()) {
+	    ctx.addWelcomeFile((String)welcomeFiles.nextElement());
+	}
+    }
+
+    private void processErrorPages(Context ctx, Enumeration errorPages) {
+        while (errorPages.hasMoreElements()) {
+	    ErrorPageDescriptor errorPageDescriptor =
+	        (ErrorPageDescriptor)errorPages.nextElement();
+	    String key = null;
+
+	    if (errorPageDescriptor.getErrorCode() > -1) {
+	        key = String.valueOf(errorPageDescriptor.getErrorCode());
+	    } else {
+	        key = errorPageDescriptor.getExceptionType();
+	    }
+
+	    ctx.addErrorPage(key, errorPageDescriptor.getLocation());
+	}
+    }
 }
