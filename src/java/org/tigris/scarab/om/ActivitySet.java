@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.12 2003/04/30 01:10:15 jon Exp $
+ * @version $Id: ActivitySet.java,v 1.13 2003/05/21 06:32:12 dlr Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -155,6 +155,9 @@ public class ActivitySet
      *   That is associated with this activitySet.
      *   If no subject and template specified, assume modify issue action.
      *   throws Exception
+     *
+     * @param context Any contextual information for the message.
+     * @param issue The issue 
      */
     public boolean sendEmail(EmailContext context, Issue issue, 
                              Collection toUsers, Collection ccUsers,
