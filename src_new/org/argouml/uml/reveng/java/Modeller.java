@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.68 2003/03/19 23:33:59 alexb Exp $
+// $Id: Modeller.java,v 1.69 2003/04/01 07:46:33 lepekhine Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -414,6 +414,7 @@ public class Modeller
             //UmlHelper.getHelper().getCore().setResident(parseState.getComponent(),mClassifier);
         
             // therefore temporarily use a non-standard hack:
+            if (parseState.getComponent() == null) addComponent();
             Object dep = CoreFactory.getFactory().buildDependency(parseState.getComponent(),mClassifier);
             UmlFactory.getFactory().getExtensionMechanisms().buildStereotype(
                     dep,
