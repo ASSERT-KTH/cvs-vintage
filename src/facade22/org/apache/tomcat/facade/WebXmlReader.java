@@ -204,7 +204,8 @@ public class WebXmlReader extends BaseInterceptor {
 	    // remove it from stack when done
 	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) );
 	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClassName",0));
-	    xh.addRule("web-app/servlet/jsp-file",xh.methodSetter("setPath",0));
+	    xh.addRule("web-app/servlet/jsp-file",
+		       xh.methodSetter("setJspFile",0));
 
 	    xh.addRule("web-app/servlet/security-role-ref", xh.methodSetter("addSecurityMapping", 3) );
 	    xh.addRule("web-app/servlet/security-role-ref/role-name", xh.methodParam(0) );

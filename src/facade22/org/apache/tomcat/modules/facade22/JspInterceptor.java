@@ -74,7 +74,7 @@ import org.apache.jasper.runtime.*;
 import org.apache.jasper.compiler.*;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.ServletHandler;
+import org.apache.tomcat.facade.*;
 
 /**
  * Plug in the JSP engine (a.k.a Jasper)! 
@@ -84,10 +84,11 @@ import org.apache.tomcat.facade.ServletHandler;
  * @author Costin Manolache
  */
 public class JspInterceptor extends BaseInterceptor {
-    int jspInfoNOTE;
     TomcatOptions options=new TomcatOptions();
 
     static final String JIKES="org.apache.jasper.compiler.JikesJavaCompiler";
+
+    // -------------------- Configurable properties --------------------
     
     public void setJavaCompiler( String type ) {
 	// shortcut
@@ -101,40 +102,46 @@ public class JspInterceptor extends BaseInterceptor {
 	}
     }
 
-    public void engineInit(ContextManager cm )
-	throws TomcatException
-    {
-	super.engineInit(cm);
-	jspInfoNOTE=cm.getNoteId( ContextManager.HANDLER_NOTE,
-				  "tomcat.jspInfoNote");
-    }
+    // -------------------- Hooks --------------------
 
-    
+    /**
+     * Jasper-specific initializations, add work dir to classpath,
+     *  make sure we have a dependManager.
+     */
     public void addContext(ContextManager cm, Context ctx)
 	throws TomcatException 
     {
+	// Make sure JspFactory is set ( ? )
 	JspFactory.setDefaultFactory(new JspFactoryImpl());
+
 	try {
 	    URL url=new URL( "file", null,
 			     ctx.getWorkDir().getAbsolutePath() + "/");
 	    ctx.addClassPath( url );
-	    if( debug > 0 ) log( "Added to classpath: " + url );
+	    if( debug > 9 ) log( "Added to classpath: " + url );
 	} catch( MalformedURLException ex ) {
+	}
+
+	DependManager dm=ctx.getDependManager();
+	if( dm==null ) {
+	    dm=new DependManager();
+	    ctx.setDependManager( dm );
 	}
     }
 
     /** Set the HttpJspBase classloader before init,
-	as required by Jasper
-    */
+     *  as required by Jasper
+     */
     public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
 	if( ! (sw instanceof ServletHandler) )
 	    return;
 	try {
+	    // requires that everything is compiled
 	    Servlet theServlet = ((ServletHandler)sw).getServlet();
 	    if (theServlet instanceof HttpJspBase)  {
-		if( debug > 0 )
+		if( debug > 9 )
 		    log( "PreServletInit: HttpJspBase.setParentClassLoader" +
 			 sw );
 		HttpJspBase h = (HttpJspBase) theServlet;
@@ -145,6 +152,8 @@ public class JspInterceptor extends BaseInterceptor {
 	}
     }
 
+    //-------------------- Main hook - compile the jsp file if needed
+    
     /** Detect if the request is for a JSP page and if it is find
 	the associated servlet name and compile if needed.
 
@@ -169,205 +178,231 @@ public class JspInterceptor extends BaseInterceptor {
 	if( wrapper==null )
 	    return 0;
 
-	// That's equivalent with the previous behavior
-	// of tomcat, where a special "jsp" handler was defined.
-
-	// we should change that - but we need a way to map
-	// other extensions, and that is backward compatible
-
-	// the condition is: continue if the request is mapped to
-	// the special "jsp" handler ( as result of *.jsp ) or
-	// to a named handler that has a path ( <servlet> defined with path)
-	if( ! ( "jsp".equals( wrapper.getName()) ||
-		( wrapper instanceof ServletHandler &&
-		  ((ServletHandler)wrapper).getServletInfo().getPath()
-		  != null)
-		)) {
+	// It's not a jsp if it's not "*.jsp" mapped or a servlet
+	if( (! "jsp".equals( wrapper.getName())) &&
+	    (! (wrapper instanceof ServletHandler)) ) {
 	    return 0;
 	}
 
-	Context ctx= req.getContext();
-	DependManager dm=ctx.getDependManager();
-	if( dm==null ) {
-	    dm=new DependManager();
-	    ctx.setDependManager( dm );
+	ServletHandler handler=null;
+	String jspFile=null;
+
+	// if it's an extension mapped file, construct and map a handler
+	if( "jsp".equals( wrapper.getName())) {
+	    jspFile=req.getServletPath();
+	    // extension mapped jsp - define a new handler,
+	    // add the exact mapping to avoid future overhead
+	    handler= mapJspPage( req.getContext(), jspFile );
+	    req.setHandler( handler );
+	} else if( wrapper instanceof ServletHandler) {
+	    // if it's a simple servlet, we don't care about it
+	    handler=(ServletHandler)wrapper;
+	    jspFile=handler.getServletInfo().getJspFile();
+	    if( jspFile==null )
+		return 0; // not a jsp
+	}
+	
+	Dependency dep= handler.getServletInfo().getDependency();
+	if( dep!=null && ! dep.isExpired() ) {
+	    // if the jspfile is older than the class - we're ok
+	    return 0;
 	}
 
-	// If this Wrapper was already used, we have all the info
-	JspInfo jspInfo=(JspInfo)wrapper.getNote( jspInfoNOTE );
-	if( jspInfo == null ) {
-	    if( debug>0) log("Handler never processed " + wrapper );
-	    
-	    jspInfo=new JspInfo(req);
-	    if( "jsp".equals(wrapper.getName())) {
-		wrapper = mapJspPage( ctx, jspInfo );
-	    }
-	    wrapper.setNote( jspInfoNOTE, jspInfo );
-	    dm.addDependency( jspInfo.expireCheck );
-	    ((ServletHandler)wrapper).
-		setServletClassName( jspInfo.fullClassN );
-	    req.setHandler( wrapper );
-	}
-
-	if( debug > 3) 
-	    log( "Check if source is up-to-date " +  jspInfo.jspSource + " " + 
-		 jspInfo.jspSource.lastModified()+" "+ jspInfo.compileTime );
-       
-	if( jspInfo.expireCheck.isExpired() ) {
-	    //XXX old servlet -  destroy(); 
-	    
-	    // jump version number - the file needs to
-	    // be recompiled, and we don't want a reload
-	    if( debug > 0 ) log( "Before sync block  " + jspInfo );
-	    synchronized( jspInfo ) {
-		// if still expired ( we may enter the sync block after
-		// another thread re-compiled )
-		if( jspInfo.expireCheck.isExpired() ) {
-		    // reset the handler error, un-initialize the servlet
-		    wrapper.setErrorException( null );
-		    jspInfo.setCompileException( null );
-		    wrapper.setState( Handler.STATE_ADDED );
-		    
-		    if( debug > 0 ) log( "Compiling " + jspInfo );
-		    // Move to the next class name
-		    jspInfo.nextVersion();
-
-		    compile( req, jspInfo );
-
-		    // Update the class name in wrapper
-		    ((ServletHandler)wrapper).
-			setServletClassName( jspInfo.fullClassN );
-
-		    // set initial exception on the servlet if one is present
-		    if ( jspInfo.isExceptionPresent() ) {
-			wrapper.
-			    setErrorException(jspInfo.getCompileException());
-			wrapper.setState(Handler.STATE_DISABLED);
-			// until the jsp cahnges, when it'll be enabled again
-		    }
-		    jspInfo.expireCheck.setExpired( false );
-
-		}
-	    } 
-	}
-
+	JasperLiaison liasion=new JasperLiaison(getLog(), debug, options);
+	liasion.processJspFile(req, jspFile, handler);
 	return 0;
     }
 
-    private static final String SERVLET_NAME_PREFIX="tomcat_jsp.";
+    // -------------------- Utils --------------------
+    
+    private static final String SERVLET_NAME_PREFIX="TOMCAT/JSP";
     
     /** Add an exact map that will avoid *.jsp mapping and intermediate
      *  steps. It's equivalent with declaring
-     *  <servlet-name>tomcat_jsp.uri</>
-     *  <servlet-mapping><servlet-name>tomcat_jsp.uri</><url-pattern>uri</></>
+     *  <servlet-name>tomcat.jsp.[uri]</>
+     *  <servlet-mapping><servlet-name>tomcat.jsp.[uri]</>
+     *                   <url-pattern>[uri]</></>
      */
-    Handler mapJspPage( Context ctx, JspInfo jspInfo)
+    ServletHandler mapJspPage( Context ctx, String uri)
     {
-	String uri=jspInfo.uri;
 	String servletName= SERVLET_NAME_PREFIX + uri;
 
-	log( "mapJspPage " + ctx + " " + jspInfo + " " + servletName + " " +
-	     uri  );
+	if( debug>0)
+	    log( "mapJspPage " + ctx + " " + " " + servletName + " " +  uri  );
 
+	Handler h=ctx.getServletByName( servletName );
+	if( h!= null ) {
+	    log( "Name already exists " + servletName +
+		 " while mapping " + uri);
+	    return null; // exception ?
+	}
+	
+	ServletHandler wrapper=new ServletHandler();
+	wrapper.setModule( this );
+	wrapper.setContext(ctx);
+	wrapper.setName(servletName);
+	wrapper.getServletInfo().setJspFile( uri );
+	
 	// add the mapping - it's a "invoker" map ( i.e. it
 	// can be removed to keep memory under control.
 	// The memory usage is smaller than JspSerlvet anyway, but
 	// can be further improved.
 	try {
-	    Handler wrapper=ctx.getServletByName( servletName );
-	    
-	    // We may want to replace the class and reset it if changed
-	    
-	    if( wrapper==null ) {
-		wrapper=new ServletHandler();
-		wrapper.setModule( this );
-		((ServletHandler)wrapper).setContext(ctx);
-		wrapper.setName(servletName);
-
-		((ServletHandler)wrapper).getServletInfo().
-		    setPath( uri );
-		ctx.addServlet( wrapper );
-		
-		ctx.addServletMapping( uri ,
-				       servletName );
-		if( debug > 0 )
-		    log( "Added mapping " + uri +
-			 " path=" + servletName );
-	    }
-	    return wrapper;
+	    ctx.addServlet( wrapper );
+	    ctx.addServletMapping( uri ,
+				   servletName );
+	    if( debug > 0 )
+		log( "Added mapping " + uri + " path=" + servletName );
 	} catch( TomcatException ex ) {
 	    log("mapJspPage: ctx=" + ctx +
-		", jspInfo=" + jspInfo +
 		", servletName=" + servletName, ex);
 	    return null;
 	}
+	return wrapper;
     }
 
+}
+
+// -------------------- The main Jasper Liaison --------------------
+
+final class JasperLiaison {
+    Log log;
+    final int debug;
+    Options options;
+    
+    JasperLiaison( Log log, int debug, Options options ) {
+	this.log=log;
+	this.debug=debug;
+	this.options=options;
+    }
+    
+    /** Generate mangled names, check for previous versions,
+     *  generate the .java file, compile it - all the expensive
+     *  operations. This happens only once ( or when the jsp file
+     *  changes ). 
+     */
+    int processJspFile(Request req, String jspFile,
+				ServletHandler handler)
+    {
+	// ---------- Expensive part - compile and load
 	
+	// If dep==null, the handler was never used - we need
+	// to either compile it or find the previous compiled version
+	// If dep.isExpired() we need to recompile.
+
+	if( debug > 10 ) log.log( "Before compile sync  " + jspFile );
+	synchronized( handler ) {
+	    
+	    // double check - maybe another thread did that for us
+	    Dependency dep= handler.getServletInfo().getDependency();
+	    if( dep!=null && ! dep.isExpired() ) {
+		// if the jspfile is older than the class - we're ok
+		return 0;
+	    }
+
+	    Context ctx=req.getContext();
+	    
+	    // Mangle the names - expensive operation, but nothing
+	    // compared with a compilation :-)
+	    JspMangler mangler=
+		new JspMangler(ctx.getWorkDir().getAbsolutePath(),
+			       ctx.getAbsolutePath(),
+			       jspFile );
+
+	    // register the handler as dependend of the jspfile 
+	    if( dep==null ) {
+		dep=setDependency( ctx, mangler, handler );
+		// update the servlet class name
+		handler.setServletClassName( mangler.getServletClassName() );
+
+		// check again - maybe we just found a compiled class from
+		// a previous run
+		if( ! dep.isExpired() )
+		    return 0;
+	    }
+
+	    if( debug > 3) 
+		log.log( "Jsp source changed, recompiling: " + jspFile );
+	    
+	    //XXX old servlet -  destroy(); 
+	    
+	    // jump version number - the file needs to be recompiled
+	    // reset the handler error, un-initialize the servlet
+	    handler.setErrorException( null );
+	    handler.setState( Handler.STATE_ADDED );
+	    
+	    // Move to the next class name
+	    mangler.nextVersion();
+
+	    // record time of attempted translate-and-compile
+	    // if the compilation fails, we'll not try again
+	    // until the jsp file changes
+	    dep.setLastModified( System.currentTimeMillis() );
+
+	    // Update the class name in wrapper
+	    log.log( "Update class Name " + mangler.getServletClassName());
+	    handler.setServletClassName( mangler.getServletClassName() );
+
+	    compile( handler, req, mangler );
+	    
+	    
+	    dep.setExpired( false );
+	    
+	}
+
+	return 0;
+    }
+
     /** Convert the .jsp file to a java file, then compile it to class
      */
-    void compile(Request req, JspInfo jspInfo ) {
-	if( debug > 0 ) log( "Compiling " + jspInfo.realClassPath);
+    void compile(Handler wrapper, Request req, JspMangler mangler ) {
+	if( debug > 0 ) log.log( "Generating " + mangler.getJavaFileName());
 	try {
 	    // make sure we have the directories
-        File dir;
-        if (jspInfo.pkgDir!=null)
-    	    dir=new File( jspInfo.outputDir + "/" + jspInfo.pkgDir);
-        else
-    	    dir=new File( jspInfo.outputDir);
-	    dir.mkdirs();
-	    JspMangler mangler= new JspMangler(jspInfo);
-	    JspEngineContext1 ctxt = new JspEngineContext1(req, mangler);
+	    String javaFileName=mangler.getJavaFileName();
+	    
+	    File javaFile=new File(javaFileName);
+	    
+	    // make sure the directory is created
+	    new File( javaFile.getParent()).mkdirs();
+
+	    JspEngineContext1 ctxt = new JspEngineContext1(log,req, mangler);
 	    ctxt.setOptions( options );
 	    
 	    Compiler compiler=new Compiler(ctxt);
 	    compiler.setMangler( mangler );
-		
 	    // we will compile ourself
 	    compiler.setJavaCompiler( null );
-
-	    // record time of attempted translate-and-compile
-	    jspInfo.touch();
-
-	    synchronized ( jspInfo ) {
+	    
+	    
+	    synchronized ( mangler ) {
 		compiler.compile();
 	    }
 	    if( debug > 0 ) {
 		File f = new File( mangler.getJavaFileName());
-		log( "Created file : " + f +  " " + f.lastModified());
-
+		log.log( "Created file : " + f +  " " + f.lastModified());
+		
 	    }
 	    javac( createJavaCompiler( options ), ctxt, mangler );
 	    
-	    if(debug>0)log( "Compiled to " + jspInfo.realClassPath );
+	    if(debug>0)log.log( "Generated " + mangler.getClassFileName() );
 	} catch( Exception ex ) {
-	    log("compile: req="+req+", jspInfo=" + jspInfo, ex);
-	    jspInfo.setCompileException(ex);
+	    log.log("compile: req="+req, ex);
+	    wrapper.setErrorException(ex);
+	    wrapper.setState(Handler.STATE_DISABLED);
+	    // until the jsp cahnges, when it'll be enabled again
+
 	}
     }
     
     String javaEncoding = "UTF8";           // perhaps debatable?
     static String sep = System.getProperty("path.separator");
 
-    static String getClassPath( Context ctx ) {
-	URL classP[]=ctx.getClassPath();
-	String separator = System.getProperty("path.separator", ":");
-        String cpath = "";
-	
-        for(int i=0; i< classP.length; i++ ) {
-            URL cp = classP[i];
-            File f = new File( cp.getFile());
-            if (cpath.length()>0) cpath += separator;
-            cpath += f;
-        }
-	return cpath;
-    }
-    
     /** Compile a java to class. This should be moved to util, togheter
 	with JavaCompiler - it's a general purpose code, no need to
 	keep it part of jasper
     */
-    public void javac(JavaCompiler javac, JspEngineContext1 ctxt,
+    void javac(JavaCompiler javac, JspCompilationContext ctxt,
 		      Mangler mangler)
 	throws JasperException
     {
@@ -376,14 +411,14 @@ public class JspInterceptor extends BaseInterceptor {
 	String cp=System.getProperty("java.class.path")+ sep + 
 	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
         javac.setClasspath( cp );
-	if( debug>5) log( "ClassPath " + cp);
+	if( debug>5) log.log( "ClassPath " + cp);
 	
 	ByteArrayOutputStream out = new ByteArrayOutputStream (256);
 	javac.setOutputDir(ctxt.getOutputDir());
         javac.setMsgOutput(out);
 
 	String javaFileName = mangler.getJavaFileName();
-	if( debug>0) log( "Compiling java file " + javaFileName);
+	if( debug>0) log.log( "Compiling java file " + javaFileName);
 	/**
          * Execute the compiler
          */
@@ -399,7 +434,7 @@ public class JspInterceptor extends BaseInterceptor {
             throw new JasperException("Unable to compile "
                                       + msg);
         }
-	if( debug > 0 ) log("Compiled ok");
+	if( debug > 0 ) log.log("Compiled ok");
     }
 
     /** tool for customizing javac
@@ -430,294 +465,36 @@ public class JspInterceptor extends BaseInterceptor {
 	return javac;
     }
 
-    // XXX need to implement precompile
-    private void precompile() {
-	//         String qString = request.getQueryString();
-	//          if (qString != null &&
-	// 		 (qString.startsWith(Constants.PRECOMPILE) ||
-	// 		  qString.indexOf("&" + Constants.PRECOMPILE)
-	// 		  != -1))
-	//             precompile = true;
+    private Dependency setDependency( Context ctx, JspMangler mangler,
+				ServletHandler handler )
+    {
+	ServletInfo info=handler.getServletInfo();
+	// create a lastModified checker.
+	if( debug>0) log.log("Registering dependency for " + handler );
+	Dependency dep=new Dependency();
+	dep.setOrigin( new File(mangler.getJspFilePath()) );
+	dep.setTarget( handler );
+	dep.setLocal( true );
+	if( mangler.getVersion() > 0 ) {
+	    // it has a previous version
+	    File f=new File( mangler.getClassFileName() );
+	    dep.setLastModified(f.lastModified());
+	    // update the "expired" variable
+	    dep.checkExpiry();
+	} else {
+	    dep.setLastModified( -1 );
+	    dep.setExpired( true );
+	}
+	ctx.getDependManager().addDependency( dep );
+	info.setDependency( dep );
+	return dep;
     }
+	
 
 }
 
-/** Given a URL, generate pkg, class name, etc.
-    This is an internal ( private ) object, we'll add get/set
-    later ( after we pass the experimental stage) 
- */
-class JspInfo {
-    Request request;
+// -------------------- Jasper support - options --------------------
 
-    String jspPath; // real jsp path - if the request URI is mapped to
-    // a named jsp.
-    String uri; // path from request URI
-
-    int version; // version
-    int debug=9;
-    String pkg;
-    String pkgDir;
-    String baseClassN;
-    String fullClassN; // package.classN
-    String classN; // no package
-    String ext;
-
-    String outputDir;
-    String javaFilePath; // full path to the generated java file
-    String realClassPath; // full path to the compiled java class
-    String mapPath; // In even of server reload, keep last version
-
-    File jspSource; // used to avoid File allocation for lastModified
-    long compileTime;// tstamp of last compile attemp
-
-    Exception compileException; // translation/compile exception 
-    Dependency expireCheck=new Dependency();
-    
-    JspInfo( Request req ) {
-	expireCheck.setLocal( true );
-	init( req );
-    }
-
-    public String toString() {
-	return "JSPInfo: " + jspPath + " " + uri +" " + version;
-    }
-
-    /** Update compile time
-     */
-    public void touch() {
-	compileTime=System.currentTimeMillis();
-    }
-
-    /** A change was detected, move to a new class name
-     */
-    public void nextVersion() {
-	version++;
-	updateVersionedPaths();
-    }
-
-    /** Update all paths that contain version number
-     */
-    void updateVersionedPaths() {
-    if( pkgDir!=null ) {
-        classN = baseClassN + "_" + version;
-        realClassPath = outputDir + "/" + pkgDir + "/" + classN + ".class";
-        javaFilePath = outputDir + "/" + pkgDir + "/" + classN + ".java";
-        fullClassN = pkg  + "." + classN;
-    } else {
-        classN = baseClassN + "_" + version;
-        realClassPath = outputDir + "/" +  classN + ".class";
-        javaFilePath = outputDir + "/" + classN + ".java";
-        fullClassN = classN;
-    }
-
-// 	log("ClassN=" + classN +
-// 			   " realClassPath=" + realClassPath +
-// 			   " javaFilePath=" + javaFilePath +
-// 			   " fullClassN =" + fullClassN);
-	writeVersion();
-	// save to mapFile
-    }
-
-    private static String [] keywords = {
-        "abstract", "boolean", "break", "byte",
-        "case", "catch", "char", "class",
-        "const", "continue", "default", "do",
-        "double", "else", "extends", "final",
-        "finally", "float", "for", "goto",
-        "if", "implements", "import",
-        "instanceof", "int", "interface",
-        "long", "native", "new", "package",
-        "private", "protected", "public",
-        "return", "short", "static", "super",
-        "switch", "synchronized", "this",
-        "throw", "throws", "transient",
-        "try", "void", "volatile", "while"
-    };
-
-    /** Mangle Package names to avoid reserver words **/
-    private String manglePackage(String s){
-	    for (int i = 0; i < keywords.length; i++) {
-            char fs = File.separatorChar;
-            int index = s.indexOf(keywords[i]);
-            if(index == -1 ) continue;
-            while (index != -1) {
-                String tmpathName = s.substring (0,index) + "__";
-                s = tmpathName + s.substring (index);
-                index = s.indexOf(keywords[i],index+3);
-            }
-        }
-        return(s);
-    }
-
-    /** Compute various names used
-     */
-    void init(Request req ) {
-	this.request = req;
-	compileException = null;
-	// 	String includeUri
-	// 	    = (String) req.getAttribute(Constants.INC_SERVLET_PATH);
-	Handler w=req.getHandler();
-	uri=req.getServletPath();
-
-	if("jsp".equals( w.getName()))
-	    jspPath=uri;
-	else
-	    jspPath=((ServletHandler)w).getServletInfo().getPath();
-	Context ctx=req.getContext();
-	outputDir = ctx.getWorkDir().getAbsolutePath();
-	String jspFilePath=FileUtil.safePath( ctx.getAbsolutePath(),
-					      jspPath); 
-	jspSource = new File(jspFilePath);
-	
-	// extension
-	int lastComp=jspPath.lastIndexOf(  "/" );
-	String endUnproc=null;
-	if( lastComp > 0 ) {
-	    // has package
-	    pkgDir=jspPath.substring( 1, lastComp );
-	    endUnproc=jspPath.substring( lastComp+1 );
-	} else {
-	    endUnproc=jspPath.substring( 1 );
-	}
-
-	if( pkgDir!=null ) {
-        pkgDir=manglePackage(pkgDir);
-	    pkgDir=pkgDir.replace('.', '_');
-	    pkg=pkgDir.replace('/', '.');
-	    //	    pkgDir=pkgDir.replace('/', File.separator );
-
-	}
-
-	int extIdx=endUnproc.lastIndexOf( "." );
-
-	if( extIdx>=0 ) {
-	    baseClassN=endUnproc.substring( 0, extIdx );
-	    ext=endUnproc.substring( extIdx );
-	} else {
-	    baseClassN=endUnproc;
-	}
-	// XXX insert "mangle" to make names safer
-	if (pkgDir!=null)
-	    mapPath = outputDir + "/" + pkgDir + "/" + baseClassN + ".ver";
-	else
-	    mapPath = outputDir + "/" + baseClassN + ".ver";
-
-	File mapFile=new File(mapPath);
-	if( mapFile.exists() ) {
-	    // read version from file
-	    readVersion();
-	    updateVersionedPaths();
-	    updateCompileTime();
-	} else {
-	    version=0;
-	    updateVersionedPaths();
-	    compileTime=0;
-	}
-	
-	expireCheck.setOrigin( jspSource );
-	expireCheck.setTarget( this );
-	// if the file has been compiled before, we'll use the
-	// time of the compilation.
-	expireCheck.setLastModified( compileTime );
-	// update isExpired()
-	expireCheck.checkExpiry();
-	
-	if( debug>0  )
-	    log("uri=" + uri +
-		//" outputDir=" + outputDir +
-		" jspSource=" + jspSource +
-		" jspPath=" + jspPath +
-		" pkgDir=" + pkgDir +
-		" baseClassN=" + baseClassN +
-		" ext=" + ext +
-		" mapPath=" + mapPath +
-		" version=" + version);
-
-
-    }
-
-    /** After startup we try to find if the file was precompiled
-	before
-    */
-    void readVersion() {
-	File mapFile=new File(mapPath);
-	version=0;
-	compileTime=0;
-	try {
-	    FileInputStream fis=new FileInputStream( mapFile );
-	    version=(int)fis.read();
-// 	    log("Version=" + version );
-	    fis.close();
-	} catch( Exception ex ) {
-	    log("readVersion() mapPath=" + mapPath, ex);
-	}
-    }
-
-    /** After we compile a page, we save the version in a
-	file with known name, so we can restore the state when we
-	restart. Note that this should move to a general-purpose
-	persist repository ( on my plans for next version of tomcat )
-    */
-    void writeVersion() {
-	File mapFile=new File(mapPath);
-	try {
-	    File dir=new File(mapFile.getParent());
-	    dir.mkdirs();
-	    FileOutputStream fis=new FileOutputStream( mapFile );
-	    fis.write(version);
-// 	    log("WVersion=" + version );
-	    fis.close();
-	} catch( Exception ex ) {
-	    log("writeVersion() mapPath=" + mapPath, ex);
-	}
-    }
-
-    /** After a startup we read the compile time from the class
-	file lastModified. No further access to that file is done.
-	If class file doesn't exist, use java file lastModified if
-	it exists.  We don't need to re-translate if the java file
-	has not expired.
-    */
-    void updateCompileTime() {
-	File f=new File( realClassPath );
-	compileTime=0;
-	if ( ! f.exists() ) return;
-	compileTime=f.lastModified();
-    }
-
-    void setCompileException(Exception ex) {
-	compileException = ex;
-    }
-
-    Exception getCompileException() {
-	return compileException;
-    }
-
-    boolean isExceptionPresent() {
-	return ( compileException != null );
-    }
-
-    void log(String s) {
-	if (request != null && request.getContext() != null) {
-	    request.getContext().log(s);
-	}
-	else {
-	    System.err.println(s);
-	}
-    }
-
-    void log(String s, Exception e) {
-	if (request != null && request.getContext() != null) {
-	    request.getContext().log(s, e);
-	}
-	else {
-	    System.err.println(s);
-	    e.printStackTrace();
-	}
-    }
-}
-
-// XXX add code to set the options
 class TomcatOptions implements Options {
     public boolean keepGenerated = true;
     public boolean largeFile = false;
@@ -785,6 +562,7 @@ class TomcatOptions implements Options {
     
 }
 
+// -------------------- Jasper support - JspCompilationContext -------------
 
 class JspEngineContext1 implements JspCompilationContext {
     JspReader reader;
@@ -803,15 +581,17 @@ class JspEngineContext1 implements JspCompilationContext {
     
     Request req;
     Mangler m;
+    Log log;
     
-    public JspEngineContext1(Request req, Mangler m)
+    public JspEngineContext1(Log log, Request req, Mangler m)
     {
+	this.log=log;
 	this.req=req;
 	this.m=m;
     }
 
     public HttpServletRequest getRequest() {
-	if( debug>0 ) log("JspEngineContext1: getRequest " + req );
+	if( debug>0 ) log.log("getRequest " + req );
         return (HttpServletRequest)req.getFacade();
     }
     
@@ -820,7 +600,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Get the http response we are using now...
      */
     public HttpServletResponse getResponse() {
-	if( debug>0 ) log("JspEngineContext1: getResponse " );
+	if( debug>0 ) log.log("getResponse " );
         return (HttpServletResponse)req.getResponse().getFacade();
     }
 
@@ -828,16 +608,27 @@ class JspEngineContext1 implements JspCompilationContext {
      * The classpath that is passed off to the Java compiler. 
      */
     public String getClassPath() {
-	if( debug>0 ) log("JspEngineContext1: getClassPath " +
-	    JspInterceptor.getClassPath(req.getContext()));
-	return JspInterceptor.getClassPath(req.getContext());
+	Context ctx=req.getContext();
+	URL classP[]=ctx.getClassPath();
+	String separator = System.getProperty("path.separator", ":");
+        String cpath = "";
+	
+        for(int i=0; i< classP.length; i++ ) {
+            URL cp = classP[i];
+            File f = new File( cp.getFile());
+            if (cpath.length()>0) cpath += separator;
+            cpath += f;
+        }
+
+	if( debug>0 ) log.log("getClassPath " + cpath);
+	return cpath;
     }
     
     /**
      * Get the input reader for the JSP text. 
      */
     public JspReader getReader() {
-	if( debug>0 ) log("JspEngineContext1: getReader " + reader );
+	if( debug>0 ) log.log("getReader " + reader );
         return reader;
     }
     
@@ -845,7 +636,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Where is the servlet being generated?
      */
     public ServletWriter getWriter() {
-	if( debug>0 ) log("JspEngineContext1: getWriter " + writer );
+	if( debug>0 ) log.log("getWriter " + writer );
         return writer;
     }
     
@@ -853,7 +644,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Get the ServletContext for the JSP we're processing now. 
      */
     public ServletContext getServletContext() {
-	if( debug>0 ) log("JspEngineContext1: getCtx " +
+	if( debug>0 ) log.log("getCtx " +
 			   req.getContext().getFacade());
         return (ServletContext)req.getContext().getFacade();
     }
@@ -863,12 +654,12 @@ class JspEngineContext1 implements JspCompilationContext {
      * this JSP? I don't think this is used right now -- akv. 
      */
     public ClassLoader getClassLoader() {
-	if( debug>0 ) log("JspEngineContext1: getLoader " + loader );
+	if( debug>0 ) log.log("getLoader " + loader );
         return req.getContext().getClassLoader();
     }
 
     public void addJar( String jar ) throws IOException {
-	if( debug>0 ) log("Add jar " + jar);
+	if( debug>0 ) log.log("Add jar " + jar);
 	//loader.addJar( jar );
     }
 
@@ -877,7 +668,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * errorpage? 
      */
     public boolean isErrorPage() {
-	if( debug>0 ) log("JspEngineContext1: isErrorPage " + isErrPage );
+	if( debug>0 ) log.log("isErrorPage " + isErrPage );
         return isErrPage;
     }
     
@@ -887,7 +678,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * other places it is called outputDir.
      */
     public String getOutputDir() {
-	if( debug>0 ) log("JspEngineContext1: getOutputDir " +
+	if( debug>0 ) log.log("getOutputDir " +
 			   req.getContext().getWorkDir().getAbsolutePath());
         return req.getContext().getWorkDir().getAbsolutePath();
     }
@@ -899,7 +690,7 @@ class JspEngineContext1 implements JspCompilationContext {
     public String getJspFile() {
 	String sP=req.getServletPath();
 	Context ctx=req.getContext();
-	if( debug>0 ) log("JspEngineContext1: getJspFile " +
+	if( debug>0 ) log.log("getJspFile " +
 			   sP);//   ctx.getRealPath( sP ) );
 	//        return ctx.getRealPath( sP );
 	return sP;
@@ -910,7 +701,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * generated class. 
      */
     public String getServletClassName() {
-	if( debug>0 ) log("JspEngineContext1: getServletClassName " +
+	if( debug>0 ) log.log("getServletClassName " +
 			   m.getClassName());
         return m.getClassName();
     }
@@ -919,7 +710,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * The package name into which the servlet class is generated. 
      */
     public String getServletPackageName() {
-	if( debug>0 ) log("JspEngineContext1: getServletPackageName " +
+	if( debug>0 ) log.log("getServletPackageName " +
 			   servletPackageName );
         return servletPackageName;
     }
@@ -929,7 +720,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * class name. 
      */
     public final String getFullClassName() {
-	if( debug>0 ) log("JspEngineContext1: getServletPackageName " +
+	if( debug>0 ) log.log("getServletPackageName " +
 			   servletPackageName + "." + servletClassName);
         if (servletPackageName == null)
             return servletClassName;
@@ -941,7 +732,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * generated. 
      */
     public String getServletJavaFileName() {
-	if( debug>0 ) log("JspEngineContext1: getServletPackageName " +
+	if( debug>0 ) log.log("getServletPackageName " +
 			   servletPackageName + "." + servletClassName);
         return servletJavaFileName;
     }
@@ -1001,19 +792,20 @@ class JspEngineContext1 implements JspCompilationContext {
     }
 
     public Compiler createCompiler() throws JasperException {
-	if( debug>0 ) log("JspEngineContext1: createCompiler ");
+	if( debug>0 ) log.log("createCompiler ");
 	return null;
     }
     
     public String resolveRelativeUri(String uri)
     {
-	if( debug>0 ) log("JspEngineContext1: resolveRelativeUri " + uri);
+	if( debug>0 ) log.log("resolveRelativeUri " +
+				 uri);
 	return null;
     };    
 
     public java.io.InputStream getResourceAsStream(String res)
     {
-	if( debug>0 ) log("JspEngineContext1: getRAS " + res);
+	if( debug>0 ) log.log("getResourceAsStream " + res);
         ServletContext sctx=(ServletContext)req.getContext().getFacade();
 	return sctx.getResourceAsStream(res);
     };
@@ -1024,59 +816,175 @@ class JspEngineContext1 implements JspCompilationContext {
      */
     public String getRealPath(String path)
     {
-	if( debug>0 ) log("GetRP " + path);
+	if( debug>0 ) log.log("GetRP " + path);
 	Context ctx=req.getContext();
 	return FileUtil.safePath( ctx.getAbsolutePath(),
 				  path);
     };
-
-    void log(String s, Exception e) {
-	if (this.req != null && this.req.getContext() != null) {
-	    this.req.getContext().log(s, e);
-	}
-	else {
-	    System.err.println(s);
-	    e.printStackTrace();
-	}
-    }
-
-    void log(String s) {
-	if (req != null && req.getContext() != null) {
-	    req.getContext().log(s);
-	}
-	else {
-	    System.err.println(s);
-	}
-    }
-
 }
 
+// -------------------- Jasper support - mangler --------------------
 
-class JspMangler implements Mangler{
-    JspInfo jspInfo;
+final class JspMangler implements Mangler{
 
-    public JspMangler(JspInfo info)  {
-	this.jspInfo=info;
+    public JspMangler(String workDir, String docBase, String jspFile)
+    {
+	this.jspFile=jspFile;
+	this.workDir=workDir;
+	this.docBase=docBase;
+	init();
     }
 
-    public final String getClassName() {
-        return jspInfo.classN;
+    /** Versioned class name ( without package ).
+     */
+    public String getClassName() {
+	return JavaGeneratorTool.getVersionedName( baseClassN, version );
+    }
+    
+    /**
+     *   Full path to the generated java file ( including version )
+     */
+    public String getJavaFileName() {
+	return javaFileName;
     }
 
-    public final String getJavaFileName() {
-	return jspInfo.javaFilePath;
+    /** The package name ( "." separated ) of the generated
+     *  java file
+     */
+    public String getPackageName() {
+	return pkgDir.replace('/', '.');
     }
 
-    public final String getPackageName() {
-	return jspInfo.pkg;
-	// It's not used, and shouldn't be used by compiler.
-	// ( well, it's used to rename the file after compile
-	// in JspServlet scheme - that must be out of compiler )
+    // -------------------- JspInterceptor fields --------------------
+    
+    /** Returns the jsp file, as declared by <jsp-file> in server.xml
+     *  or the context-relative path that was extension mapped to jsp
+     */
+    public String getJspFile() {
+	return jspFile;
     }
 
+    /** Returns the directory where the class is located, using
+     *  the normal class loader rules.
+     */
+    public String getClassDir() {
+	return classDir;
+    }
+    
+    /** The class name ( package + class + versioning ) of the
+     *  compilation result
+     */
+    public String getServletClassName() {
+	if( pkgDir!=null ) {
+	    return getPackageName()  + "." + getClassName();
+	} else {
+	    return getClassName();
+	}
+    }
+
+    public int getVersion() {
+	return version;
+    }
+
+    /** Full path to the compiled class file ( including version )
+     */
+    public String getClassFileName() {
+	return classFileName;
+    }
+    // In Jasper = not used - it's specific to the class scheme
+    // used by JspServlet
     // Full path to the class file - without version.
-    public final String getClassFileName() {
-	return null; // see getPackageName comment
+    
+
+    public String getBaseClassName() {
+	return baseClassN;
     }
+
+    public String getPackageDir() {
+	return pkgDir;
+    }
+    
+    public String getJspFilePath() {
+	return FileUtil.safePath( docBase, jspFile);
+    }
+
+    /** compute basic names - pkgDir and baseClassN
+     */
+    private void init() {
+	int lastComp=jspFile.lastIndexOf(  "/" );
+
+	if( lastComp > 0 ) {
+	    // has package 
+	    // ignore the first "/" of jspFile
+	    pkgDir=jspFile.substring( 1, lastComp );
+	}
+	
+	// remove "special" words, replace "."
+	if( pkgDir!=null ) {
+	    pkgDir=JavaGeneratorTool.manglePackage(pkgDir);
+	    pkgDir=pkgDir.replace('.', '_');
+	    classDir=workDir + "/" + pkgDir;
+	} else {
+	    classDir=workDir;
+	}
+	
+	int extIdx=jspFile.lastIndexOf( "." );
+
+	if( extIdx<0 ) {
+	    // no "." 
+	    if( lastComp > 0 )
+		baseClassN=jspFile.substring( lastComp+1 );
+	    else
+		baseClassN=jspFile.substring( 1 );
+	} else {
+	    if( lastComp > 0 )
+		baseClassN=jspFile.substring( lastComp+1, extIdx );
+	    else
+		baseClassN=jspFile.substring( 1, extIdx );
+	}
+
+	System.out.println("XXXMangler: " + jspFile + " " + pkgDir + " " + baseClassN);
+
+	// extract version from the .class dir, using the base name
+	version=JavaGeneratorTool.readVersion(classDir,
+					      baseClassN);
+	if( version==-1 ) {
+	    version=0;
+	}
+	updateVersionPaths();
+    }
+
+    private void updateVersionPaths() {
+	// version dependent stuff
+	String baseName=classDir + "/" + JavaGeneratorTool.
+	    getVersionedName( baseClassN, version);
+	
+	javaFileName= baseName + ".java";
+
+	classFileName=baseName +  ".class";
+    }
+    
+    /** Move to a new class name, if a changes has been detected.
+     */
+    void nextVersion() {
+	version++;
+	JavaGeneratorTool.writeVersion( getClassDir(), baseClassN, version);
+	updateVersionPaths();
+    }
+
+    // context-relative jsp path 
+    // extracted from the <jsp-file> or the result of a *.jsp mapping
+    private String jspFile; 
+    // version of the compiled java file
+    private int version;
+    private String workDir;
+    private String docBase;
+    // the "/" separted version
+    private String pkgDir;
+    // class name without package and version
+    private String baseClassN;
+    private String classDir;
+    private String javaFileName;
+    private String classFileName;
 }
 

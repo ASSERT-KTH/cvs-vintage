@@ -132,7 +132,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 			// ServletHandler !
 			if( result instanceof ServletHandler &&
 			    ((ServletHandler)result).getServletInfo().
-			    getPath() != null ) {
+			    getJspFile() != null ) {
 			    loadJsp( ctx, result );
 			} else {
 			    ((ServletHandler)result).init();
@@ -156,7 +156,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	
 	// Ugly code to trick JSPServlet into loading this.
 	ContextManager cm=context.getContextManager();
-	String path=((ServletHandler)result).getServletInfo().getPath();
+	String path=((ServletHandler)result).getServletInfo().getJspFile();
 	Request request = new Request();
 	Response response = new Response();
 	request.recycle();

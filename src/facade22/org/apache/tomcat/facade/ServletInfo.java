@@ -60,6 +60,7 @@ package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.depend.*;
 import org.apache.tomcat.util.collections.*;
 import java.io.*;
 import java.net.*;
@@ -100,7 +101,7 @@ public class ServletInfo {
     Hashtable initArgs=null;
 
     // should be removed from handler
-    private String path = null;
+    private String jspFile = null;
     protected int loadOnStartup=-1;
     protected boolean loadingOnStartup=false;
 
@@ -115,7 +116,7 @@ public class ServletInfo {
     }
 
     public String toString() {
-	return "SW (" + path + " CN=" +
+	return "SW (" + jspFile + " CN=" +
 	    handler.getServletClassName() +  ")";
     }
 
@@ -248,15 +249,25 @@ public class ServletInfo {
 
     // -------------------- Jsp specific code
     
-    public String getPath() {
-        return this.path;
+    public String getJspFile() {
+        return this.jspFile;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setJspFile(String path) {
+        this.jspFile = path;
 	if( handler.getName() == null ) 
-	    handler.setName(path);
+	    handler.setName(jspFile);
 	// the path will serve as servlet name if not set
+    }
+    
+    Dependency dependency;
+    
+    public Dependency getDependency() {
+	return dependency;
+    }
+
+    public void setDependency(Dependency dep ) {
+	dependency=dep;
     }
 
     // -------------------- 

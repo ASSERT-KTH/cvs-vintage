@@ -284,10 +284,7 @@ public class Handler {
 
     protected final void log( String s ) {
 	if ( logger==null ) 
-	    if( contextM!=null )
-		contextM.log(s);
-	    else
-		System.out.println("(cm==null) " + s );
+	    contextM.log(s);
 	else 
 	    logger.log(s);
     }

@@ -107,7 +107,6 @@ public final class ServletHandler extends Handler {
     private ServletInfo sw;
 
     private String servletClassName;
-    private String path;
     protected Class servletClass;
     protected Servlet servlet;
     protected Context context;
@@ -155,8 +154,8 @@ public final class ServletHandler extends Handler {
 	servlet=null; // reset the servlet, if it was set
 	servletClass=null;
 	this.servletClassName=servletClassName;
-	if( debug>0 && sw.getPath()!=null)
-	    log( "setServletClassName for " + sw.getPath() +
+	if( debug>0 && sw.getJspFile()!=null)
+	    log( "setServletClassName for " + sw.getJspFile() +
 		 ": " + servletClassName);
     }
 
@@ -362,7 +361,8 @@ public final class ServletHandler extends Handler {
     protected void preInit() throws Exception
     {
 	if( debug > 0 )
-	    log( "preInit " + servlet + " " + path + " " + servletClassName);
+	    log( "preInit " + servlet + " " + sw.getJspFile() + " " +
+		 servletClassName);
 
 	// Deal with Unavailable errors
 	if( ! checkAvailable() ) {
@@ -432,14 +432,15 @@ public final class ServletHandler extends Handler {
 	throws Exception
     {
 	// <servlet><jsp-file> case
-	if( path!=null ) {
-	    if( path.startsWith("/"))
+	String jspFile=sw.getJspFile();
+	if( jspFile!=null ) {
+	    if( jspFile.startsWith("/"))
 		req.setAttribute( "javax.servlet.include.request_uri",
-				  req.getContext().getPath()  + path );
+				  req.getContext().getPath()  + jspFile );
 	    else
 		req.setAttribute( "javax.servlet.include.request_uri",
-				  req.getContext().getPath()  + "/" + path );
-	    req.setAttribute( "javax.servlet.include.servlet_path", path );
+				  req.getContext().getPath()  + "/" +jspFile );
+	    req.setAttribute( "javax.servlet.include.servlet_path", jspFile );
 	}
 
 

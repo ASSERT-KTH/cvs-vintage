@@ -143,15 +143,17 @@ public final class Servlet22Interceptor
 	if( ct.getHandler() == null ) {
 	    // we have a container with a valid handler name but without
 	    // a Handler. Create a ServletWrapper
-	    ServletInfo sw=new ServletInfo();
-	    sw.setServletName( hN );
-	    sw.setContext( ct.getContext() );
+	    ServletHandler handler=new ServletHandler();
+	    handler.setServletClassName( hN );
+	    handler.setName( hN );
+	    handler.setContext( ct.getContext() );
 	    // *.jsp -> jsp is a legacy default mapping  
-	    if( ! "jsp".equals(hN) ) {
+	    if(debug>0 &&  ! "jsp".equals(hN) ) {
 		log( "Create handler " + hN);
 	    }
-	    ct.setHandler(sw.getHandler());
-	    ct.getContext().addServlet(  sw.getHandler() );
+	    handler.setModule( this );
+	    ct.setHandler(handler);
+	    ct.getContext().addServlet( handler );
 	}
 	    
     }
