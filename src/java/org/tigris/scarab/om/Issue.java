@@ -256,6 +256,14 @@ public class Issue
     }
 
     /**
+     * Whether this issue is an enter issue template.
+     */
+    public boolean isTemplate() throws Exception
+    {
+       return !getIssueType().equals(IssueType.ISSUE__PK);
+    }
+
+    /**
      * Adds a comment to this issue.
      */
     public void addComment(Attachment attachment, ScarabUser user)
