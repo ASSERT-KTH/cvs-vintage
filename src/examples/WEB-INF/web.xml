@@ -14,12 +14,8 @@
         </servlet-class>
 <!--
         <init-param>
-            <param-name>
-                foo
-            </param-name>
-            <param-value>
-                bar
-            </param-value>
+            <param-name>foo</param-name>
+            <param-value>bar</param-value>
         </init-param>
 -->
     </servlet>

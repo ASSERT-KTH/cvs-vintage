@@ -697,7 +697,13 @@ class  MethodSetter extends 	    XmlAction {
 	    }
 	}
 
-	Method m=parent.getClass().getMethod( mName, paramT );
+	Method m=null;
+	try {
+	    m=parent.getClass().getMethod( mName, paramT );
+	} catch( NoSuchMethodException ex ) {
+	    ctx.log("Can't find method " + mName + " in " + parent + " CLASS " + parent.getClass());
+	    return;
+	}
 	m.invoke( parent, realParam );
 
 	if(ctx.getDebug() > 0 ) {
