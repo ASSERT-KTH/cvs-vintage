@@ -1,5 +1,5 @@
-// $Id: GoNamespaceToOwnedElements.java,v 1.4 2003/12/26 17:56:35 alexb Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: GoNamespaceToOwnedElements.java,v 1.5 2004/04/02 23:38:55 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -44,10 +44,12 @@ public class GoNamespaceToOwnedElements extends AbstractPerspectiveRule{
         Iterator it = ownedElements.iterator();
         Collection ret = new ArrayList();
         while (it.hasNext()) {
-        	Object o = it.next();
-        	if (!ModelFacade.isACollaboration(o)) {
-        		ret.add(o);
-        	}
+	    Object o = it.next();
+	    if (ModelFacade.isACollaboration(o))
+		continue;
+	    if (ModelFacade.isAStateMachine(o) && ModelFacade.getContext(o) != parent)
+		continue;
+	    ret.add(o);
         }
         return ret;
     }
