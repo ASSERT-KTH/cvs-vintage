@@ -102,7 +102,7 @@ public class ScarabModulePeer
     {
         Criteria criteria = new Criteria();
         criteria.addSelectColumn(MODULE_ID);
-        String name = ((ModuleEntity)group).getName();
+        String name = ((ModuleEntity)group).getRealName();
         criteria.add(MODULE_NAME, name);
         criteria.add(PARENT_ID, ((ModuleEntity)group).getParentId());
         List results = (List) BasePeer.doSelect(criteria);

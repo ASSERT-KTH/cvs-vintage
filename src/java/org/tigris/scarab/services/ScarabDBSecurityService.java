@@ -49,16 +49,19 @@ package org.tigris.scarab.services;
 
 import java.util.Vector;
 
+import org.apache.turbine.Log;
+
 import org.apache.fulcrum.security.impl.db.DBSecurityService;
+
+import org.apache.fulcrum.security.entity.Group;
+
 import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.util.DataBackendException;
 import org.apache.fulcrum.security.util.EntityExistsException;
 import org.apache.fulcrum.security.util.UnknownEntityException;
-import org.apache.torque.util.Criteria;
-import org.apache.turbine.Log;
 
-import org.apache.fulcrum.security.entity.Group;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -69,7 +72,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.9 2001/09/28 21:55:45 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.10 2001/09/29 01:57:18 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -82,21 +85,6 @@ public class ScarabDBSecurityService extends DBSecurityService
     public GroupSet getGroups( Criteria criteria )
         throws DataBackendException
     {
-        /*
-        // only supporting getting all modules through this method.
-        if ( criteria.size() != 0 ) 
-        {
-            throw new DataBackendException(
-                "Partial selection of groups not implemented");
-        }
-        Criteria dbCriteria = new Criteria();
-        Iterator keys = criteria.keySet().iterator();
-        while(keys.hasNext())
-        {
-            String key = (String)keys.next();
-            dbCriteria.put(GroupPeer.getColumnName(key), criteria.get(key));
-        }
-        */
         Vector groups = new Vector(0);
         try
         {
@@ -109,8 +97,6 @@ public class ScarabDBSecurityService extends DBSecurityService
 
         return new GroupSet(groups);
     }
-
-
 
     /**
      * Stores Group's attributes. The Groups is required to exist in the system.
@@ -137,8 +123,6 @@ public class ScarabDBSecurityService extends DBSecurityService
         throw new UnknownEntityException("Unknown group '" + group + "'");
     }
 
-
-
     /**
      * Retrieves a new Group. It creates
      * a new Group based on the Services Group implementation. It does not
@@ -155,7 +139,6 @@ public class ScarabDBSecurityService extends DBSecurityService
         return (Group) module;
             */
     }
-
 
     /**
      * Creates a new group with specified attributes.
@@ -195,7 +178,6 @@ public class ScarabDBSecurityService extends DBSecurityService
             "' already exists");
     }
 
-
     /**
      * Removes a Group from the system.
      *
@@ -229,7 +211,6 @@ public class ScarabDBSecurityService extends DBSecurityService
         }
         throw new UnknownEntityException("Unknown group '" + group + "'");
     }
-
 
     /**
      * Renames an existing Group.
