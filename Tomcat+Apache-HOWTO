@@ -3,10 +3,10 @@ Tomcat+Apache HOWTO
    Costin Manolache <costin@eng.sun.com>
    Anil Vijendran <akv@eng.sun.com>
 
-$Revision: 1.1 $ $Date: 1999/12/14 01:20:24 $
+$Revision: 1.2 $ $Date: 1999/12/14 01:34:00 $
 
 This document describes how to setup Tomcat to run with Apache. For
-now this document describes how to run Tomcat v2.2 M1 with Apache
+now this document describes how to run Tomcat v1.0 R1 with Apache
 1.3.9. 
 ------------------------------------------------------------------------
 
