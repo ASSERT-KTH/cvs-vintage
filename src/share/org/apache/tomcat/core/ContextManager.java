@@ -65,6 +65,7 @@ import org.apache.tomcat.net.*;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -85,10 +86,8 @@ public class ContextManager {
     /**
      * The string constants for this ContextManager.
      */
-    private StringManager sm =StringManager.getManager("org.apache.tomcat.core");
+    private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
 
-    int debug=0;
-    
     private Vector requestInterceptors = new Vector();
     private Vector contextInterceptors = new Vector();
     
@@ -158,9 +157,8 @@ public class ContextManager {
             Context context = getContext((String)enum.nextElement());
             context.init();
 	}
-	
-	System.out.println("Init time " + ( System.currentTimeMillis() - time ));
 
+	log("Time to initialize: "+ (System.currentTimeMillis()-time), Logger.INFORMATION);
 
 	// After all context are configured, we can generate Apache configs
 	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
@@ -242,7 +240,7 @@ public class ContextManager {
 	// IllegalStateException.
 	String path=ctx.getPath();
 	if( getContext( path ) != null ) {
-	    log("Warning: replacing context for " + path);
+	    log("Warning: replacing context for " + path, Logger.WARNING);
 	    removeContext(path);
 	}
 
@@ -255,7 +253,7 @@ public class ContextManager {
 	}
 
 	
-	if(debug>0) log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase());
+	log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase(), Logger.INFORMATION);
 
 	contexts.put( path, ctx );
     }
@@ -329,7 +327,7 @@ public class ContextManager {
      * @param con The new server connector
      */
     public synchronized void addServerConnector( ServerConnector con ) {
-	if(debug>0) log(" adding connector " + con.getClass().getName());
+	log(" adding connector " + con.getClass().getName(), Logger.INFORMATION);
 	con.setContextManager( this );
 	connectors.addElement( con );
     }
@@ -339,7 +337,7 @@ public class ContextManager {
     }
     
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	if(debug>0) log(" adding request intereptor " + ri.getClass().getName());
+	log(" adding request intereptor " + ri.getClass().getName(), Logger.INFORMATION);
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
 	    contextInterceptors.addElement( ri );
@@ -384,6 +382,12 @@ public class ContextManager {
 	}
 	return cInterceptors;
     }
+
+    public void addLogger(Logger logger) {
+	// Will use this later once I feel more sure what I want to do here.
+	// -akv
+    }
+
 
     // -------------------- Defaults for all contexts --------------------
     /** The root directory of tomcat
@@ -442,7 +446,7 @@ public class ContextManager {
      * WorkDir property - where all temporary files will be created
      */ 
     public void setWorkDir( String wd ) {
-	if( debug>0) log( "set work dir " + wd );
+	log("set work dir " + wd, Logger.INFORMATION);
 	this.workDir=wd;
     }
 
@@ -508,9 +512,7 @@ public class ContextManager {
      */
     int processRequest( Request req ) {
 
-	if(debug>2) log( "ProcessRequest: ");
-	if(debug>2) log( req.toString() );
-	if(debug>2) log("");
+	log("ProcessRequest: "+req.toString(), Logger.DEBUG);
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
@@ -520,9 +522,8 @@ public class ContextManager {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
 	}
 
-	if(debug>2) log("After processing: ");
-	if(debug>2) log( req.toString() );
-	if(debug>2) log("");
+	log("After processing: "+req.toString(), Logger.DEBUG);
+
 	return 0;
     }
 
@@ -569,24 +570,17 @@ public class ContextManager {
 	return lr;
     }
 
-    // -------------------- Utils --------------------
-    // Debug ( to be replaced with the real thing )
-    public void setDebug( String  level ) {
-	setDebug( new Integer( level).intValue());
-    }
+    boolean firstLog = true;
+    Logger cmLog = null;
     
-    public void setDebug( int level ) {
-	log( "Setting debug " + level );
-	debug=level;
-    }
+    public final void log(String msg, int level) {
+	if (firstLog == true) {
+	    cmLog = Logger.getLogger("CTXMGR_LOG");
+	    firstLog = false;
+	}
 
-    public int getDebug( ) {
-	return debug;
+	if (cmLog != null)
+	    cmLog.log(msg, level);
     }
-
-    public void log( String msg ) {
-	System.out.println("CM: " + msg );
-    }
-
     
 }
