@@ -57,7 +57,7 @@
  *
  */
 
-package org.apache.tomcat.modules.aaa;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import java.io.*;
