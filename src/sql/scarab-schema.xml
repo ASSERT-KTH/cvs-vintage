@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.116 2002/11/14 17:28:42 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.117 2002/11/14 18:07:28 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -775,6 +775,22 @@
           I don't know how it might work with a more even distribution. -->
      <index name="IX_AV_OPTION_ISSUE_DEL">
         <index-column name="OPTION_ID"/>
+        <index-column name="ISSUE_ID"/>
+        <index-column name="DELETED"/>
+     </index>
+     <!-- Similar indices to the above for non-option attributes -->
+     <index name="IX_AV_USER_ISSUE_DEL">
+        <index-column name="USER_ID"/>
+        <index-column name="ISSUE_ID"/>
+        <index-column name="DELETED"/>
+     </index>
+     <index name="IX_AV_INT_ISSUE_DEL">
+        <index-column name="NUMERIC_VALUE"/>
+        <index-column name="ISSUE_ID"/>
+        <index-column name="DELETED"/>
+     </index>
+     <index name="IX_AV_VALUE_ISSUE_DEL">
+        <index-column name="VALUE"/>
         <index-column name="ISSUE_ID"/>
         <index-column name="DELETED"/>
      </index>
