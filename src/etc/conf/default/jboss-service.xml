@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.34 2002/03/08 05:30:47 schaefera Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.35 2002/03/09 02:42:11 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -28,13 +28,12 @@
     <attribute name="ScanPeriod">5000</attribute>
 
     <!-- 
-       | URLs are comman seperated and unprefixed argumenst are considered
+       | URLs are comma seperated and unprefixed arguments are considered
        | file URLs and resolve relative to server home unless the given path
        | is absolute.
      -->
     <attribute name="URLs">
-       ./deploy,
-       ../../deploy
+       ./deploy
     </attribute>
   </mbean>
 
@@ -167,7 +166,7 @@
 
   <!-- RMI/JRMP invoker -->
   <mbean code="org.jboss.invocation.jrmp.server.JRMPInvoker" 
-   name="jboss:service=invoker,type=jrmp">
+         name="jboss:service=invoker,type=jrmp">
     <attribute name="RMIObjectPort">4444</attribute>
     <!--
     <attribute name="RMIClientSocketFactory">custom</attribute>
