@@ -408,6 +408,32 @@ public final class MessageBytes implements Cloneable, Serializable {
 	}
     }
 
+    /**
+     * Returns true if the message bytes starts with the specified string.
+     * @param s the string
+     */
+    public boolean startsWithIgnoreCase(String s, int pos) {
+	switch (type) {
+	case T_STR:
+	    if( strValue==null ) return false;
+	    if( strValue.length() < pos + s.length() ) return false;
+	    
+	    for( int i=0; i<s.length(); i++ ) {
+		if( Ascii.toLower( s.charAt( i ) ) !=
+		    Ascii.toLower( strValue.charAt( pos + i ))) {
+		    return false;
+		}
+	    }
+	    return true;
+	case T_CHARS:
+	    return charC.startsWithIgnoreCase( s, pos );
+	case T_BYTES:
+	    return byteC.startsWithIgnoreCase( s, pos );
+	default:
+	    return false;
+	}
+    }
+
     
 
     // -------------------- Hash code  --------------------
@@ -463,6 +489,20 @@ public final class MessageBytes implements Cloneable, Serializable {
 
     public int indexOf(char c) {
 	return indexOf( c, 0);
+    }
+
+    // Inefficient initial implementation. Will be replaced on the next
+    // round of tune-up
+    public int indexOf(String s, int starting) {
+	toString();
+	return strValue.indexOf( s, starting );
+    }
+    
+    public int indexOfIgnoreCase(String s, int starting) {
+	toString();
+	String upper=strValue.toUpperCase();
+	String sU=s.toUpperCase();
+	return upper.indexOf( sU, starting );
     }
     
     /**

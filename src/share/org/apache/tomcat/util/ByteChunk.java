@@ -319,6 +319,27 @@ public final class ByteChunk implements Cloneable, Serializable {
 	return true;
     }
 
+    /**
+     * Returns true if the message bytes starts with the specified string.
+     * @param s the string
+     */
+    public boolean startsWithIgnoreCase(String s, int pos) {
+	byte[] b = bytes;
+	int len = s.length();
+	if (b == null || len+pos > bytesLen) {
+	    return false;
+	}
+	int off = bytesOff+pos;
+	for (int i = 0; i < len; i++) {
+	    if (Ascii.toLower( b[off++] ) != Ascii.toLower( s.charAt(i))) {
+		return false;
+	    }
+	}
+	return true;
+    }
+    
+
+
     // based on ap_unescape_url ( util.c, Apache2.0 )
     public int unescapeURL()
     {

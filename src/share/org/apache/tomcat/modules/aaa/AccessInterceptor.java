@@ -238,20 +238,33 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	Context ctx=req.getContext();
 	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().
 	    getNote( secMapNote );
+
+	// do the check for the "special patterns"
+	MessageBytes reqURIMB=req.requestURI();
+	String ctxPath= ctx.getPath();
+	int ctxPathLen=ctxPath.length();
+	
+	// quick test
+	if( reqURIMB.startsWithIgnoreCase( "/META-INF", ctxPathLen) ) {
+	    return 403;
+	}
+	if( reqURIMB.startsWithIgnoreCase( "/WEB-INF", ctxPathLen) ) {
+	    return 403;
+	}
+
+	// if we don't have any other constraints, return
 	if( ctxSec==null || ctxSec.patterns==0 ) return 0; // fast exit
 
-	MessageBytes reqURIMB=req.requestURI();
 	if (reqURIMB.indexOf('%') >= 0 || reqURIMB.indexOf( '+' ) >= 0) {
 	    log("Shouldn't happen - the request is decoded earlier");
 	    reqURIMB.unescapeURL();
 	}
 	String reqURI = req.requestURI().toString();
-	String ctxPath= ctx.getPath();
-	String path=reqURI.substring( ctxPath.length());
+	String path=reqURI.substring( ctxPathLen);
 	String method=req.method().toString();
 	
 	if( debug > 1 ) log( "checking " + path );
-	
+
 	for( int i=0; i< ctxSec.patterns ; i++ ) {
 	    Container ct=ctxSec.securityPatterns[i];
 	    if( match( ct, path, method ) ) {

@@ -91,9 +91,10 @@ public class GTest  {
     
     String description="No description";
 
-    PrintWriter out=defaultOutput;
-    String outType=defaultOutType;
-    int debug=defaultDebug;
+    PrintWriter out=null;
+    String outType=null;
+    int debug=-1;
+    
     boolean result=false;
     
     public GTest() {
@@ -146,6 +147,14 @@ public class GTest  {
 	return testProperties;
     }
 
+    public static void resetGTest() {
+	GTest.getTestResults().setSize(0);
+	GTest.getTestFailures().setSize(0);
+	GTest.getTestSuccess().setSize(0);
+	GTest.getTestProperties().clear();
+	HttpClient.getHttpClients().clear();
+    }
+    
     // -------------------- GTest behavior --------------------
     public void setWriter( PrintWriter pw ) {
 	out=pw;
@@ -192,6 +201,7 @@ public class GTest  {
     }
 
     public String getComment() {
+	if(comment==null) return "";
 	return comment.getText();
     }
     
@@ -288,8 +298,12 @@ public class GTest  {
     // -------------------- Execute the request --------------------
 
     public void execute() {
-	
 	try {
+	    //	 System.out.println("XXX " + outType + " " + defaultOutType);
+	    if( out==null) out=defaultOutput;
+	    if( outType==null) outType=defaultOutType;
+	    if( debug==-1) debug=defaultDebug;
+
 	    httpClient.execute();
 	    Response resp=httpClient.getResponse();
 
@@ -335,7 +349,7 @@ public class GTest  {
 	    out.println("FAIL " + msg );
 	    out.println("Message: " + matcher.getMessage());
 	}
-
+	out.flush();
     }
 
     private void htmlReport() {
@@ -392,6 +406,7 @@ public class GTest  {
 	    ex.printStackTrace(out);
 	    out.println("</pre><br>");
 	}
+	out.flush();
     }
 
     private void xmlReport() {
@@ -413,7 +428,7 @@ public class GTest  {
 	    ex.printStackTrace(out);
 	    out.println("</pre><br>");
 	}
-
+	out.flush();
     }
 
     

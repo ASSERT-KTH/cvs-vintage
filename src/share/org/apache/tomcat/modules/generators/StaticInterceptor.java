@@ -159,6 +159,16 @@ public class StaticInterceptor extends BaseInterceptor {
 	if( debug > 0 )
 	    log( "DefaultServlet: welcome file: "  + welcomeFile);
 
+	// consistent with Apache
+	if( welcomeFile==null && ! requestURI.endsWith("/") ) {
+	    String redirectURI= requestURI + "/";
+	    req.setAttribute("javax.servlet.error.message",
+			     redirectURI);
+	    if( debug > 0) log( "Redirect " + redirectURI );
+	    req.setHandler( ctx.getServletByName( "tomcat.redirectHandler"));
+	    return 0;
+	}
+	
 	// Doesn't matter if we are or not in include
 	if( welcomeFile == null  ) {
 	    // normal dir, no welcome.
@@ -167,15 +177,6 @@ public class StaticInterceptor extends BaseInterceptor {
 	    return 0;
 	}
 
-	// consistent with Apache
-	if( ! requestURI.endsWith("/") ) {
-	    String redirectURI= requestURI + "/";
-	    req.setAttribute("javax.servlet.error.message",
-			     redirectURI);
-	    if( debug > 0) log( "Redirect " + redirectURI );
-	    return 301;
-	}
-	
 	// Send redirect to the welcome file.
 	// This is consistent with other web servers and avoids
 	// gray areas in the spec - if the welcome file is a jsp,
@@ -188,7 +189,11 @@ public class StaticInterceptor extends BaseInterceptor {
 	req.setAttribute("javax.servlet.error.message",
 			 redirectURI);
 	if( debug > 0) log( "Redirect " + redirectURI );
-	return 301;
+	// allow processing to go on - another mapper may change the
+	// outcome, we are just the default ( preventive for bad ordering,
+	// in correct config Static is the last one anyway ).
+	req.setHandler( ctx.getServletByName( "tomcat.redirectHandler"));
+	return 0;
     }
 
     private static String concatPath( String s1, String s2 ) {
@@ -317,14 +322,14 @@ final class FileHandler extends Handler  {
 	    log("Ends with \\/. " + absPath);
 	    return null;
 	}
-    if (absPath.length() > base.length())
+	if (absPath.length() > base.length())
 	{
 		String relPath=absPath.substring( base.length() + 1);
 		if( debug>0) log( "RelPath = " + relPath );
 
 		String relPathU=relPath.toUpperCase();
 		if ( relPathU.startsWith("WEB-INF") ||
-				relPathU.startsWith("META-INF")) {
+		     relPathU.startsWith("META-INF")) {
 			return null;
 		}
 	}
@@ -386,13 +391,13 @@ final class DirHandler extends Handler  {
 		String relPath=absPath.substring( base.length() + 1);
 		String relPathU=relPath.toUpperCase();
 		if ( relPathU.startsWith("WEB-INF") ||
-				relPathU.startsWith("META-INF")) {
-			context.getContextManager().handleStatus( req, res, 404);
-			return;
+		     relPathU.startsWith("META-INF")) {
+		    context.getContextManager().handleStatus( req, res, 404);
+		    return;
 		}
 	}
 
-		if( sbNote==0 ) {
+	if( sbNote==0 ) {
 	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
 						     "RedirectHandler.buff");
 	}

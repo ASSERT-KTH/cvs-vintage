@@ -244,6 +244,25 @@ public final class CharChunk implements Cloneable, Serializable {
 	return true;
     }
     
+    /**
+     * Returns true if the message bytes starts with the specified string.
+     * @param s the string
+     */
+    public boolean startsWithIgnoreCase(String s, int pos) {
+	char[] c = chars;
+	int len = s.length();
+	if (c == null || len+pos > charsLen) {
+	    return false;
+	}
+	int off = charsOff+pos;
+	for (int i = 0; i < len; i++) {
+	    if (Ascii.toLower( c[off++] ) != Ascii.toLower( s.charAt(i))) {
+		return false;
+	    }
+	}
+	return true;
+    }
+    
 
     // -------------------- Hash code  --------------------
 

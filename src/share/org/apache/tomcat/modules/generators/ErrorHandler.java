@@ -128,6 +128,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	// Default status handlers
 	ctx.addServlet( new RedirectHandler(this));
 	ctx.addErrorPage( "302", "tomcat.redirectHandler");
+	ctx.addErrorPage( "301", "tomcat.redirectHandler");
 	ctx.addServlet( new NotFoundHandler(this, showDebugInfo));
 	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
     }
@@ -173,7 +174,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( cm, ctx, errorPath );
 
-	    // Make sure Jsps will work
+	    // Make sure Jsps will work - needed if the error page is a jsp
 	    req.setAttribute( "javax.servlet.include.request_uri",
 				  ctx.getPath()  + "/" + errorPath );
 	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
@@ -379,13 +380,9 @@ class NotFoundHandler extends Handler {
     {
 	res.setContentType("text/html");	// ISO-8859-1 default
 
-	String requestURI = (String)req.
-	    getAttribute("javax.servlet.include.request_uri");
-
-	if (requestURI == null) {
-	    requestURI = req.requestURI().toString();
-	}
-
+	// "javax.servlet.include.request_uri" is set to this handler
+	String requestURI = req.requestURI().toString();
+	
 	if( sbNote==0 ) {
 	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
 						     "NotFoundHandler.buff");
@@ -668,6 +665,11 @@ class RedirectHandler extends Handler {
 	String location	= (String)
 	    req.getAttribute("javax.servlet.error.message");
 	Context ctx=req.getContext();
+
+	if( res.getStatus() != 301 &&
+	    res.getStatus() != 302 ) {
+	    res.setStatus( 301 );
+	}
 	
 	location = makeAbsolute(req, location);
 

@@ -495,7 +495,7 @@ final class JasperLiaison {
 	    }
 
 	    //	    if( debug > 3) 
-	    log.log( "Compiling: " + jspFile + " to " +
+	    ctx.log( "Compiling: " + jspFile + " to " +
 		     mangler.getServletClassName());
 	    
 	    //XXX old servlet -  destroy(); 

@@ -275,10 +275,10 @@ public class DefaultMatcher {
 	    Enumeration e=expectHeaders.keys();
 	    while( e.hasMoreElements()) {
 		String key=(String)e.nextElement();
-		Header h=(Header)expectHeaders.get(key);
-		String value=h.getValue();
-		h=(Header)headers.get(key);
-		String respValue=h.getValue();
+		Header expH=(Header)expectHeaders.get(key);
+		String value=expH.getValue();
+		Header resH=(Header)headers.get(key);
+		String respValue=(resH==null)? "": resH.getValue();
 		if( respValue==null || respValue.indexOf( value ) <0 ) {
 		    log("ERROR expecting header " + key + ":" +
 			value + " \nGOT: " + respValue+ " HEADERS(" +
