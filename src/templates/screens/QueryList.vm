@@ -62,8 +62,8 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">Select</th>
-  <th>Subscribe</th>
-  <th>Subscribe frequency</th>
+##  <th>Subscribe</th>
+##  <th>Subscribe frequency</th>
   <th>#sort ("name" "Name")
   <th>#sort ("desc" "Description")</th>
   <th>Default</th>
@@ -76,12 +76,12 @@
   #set ($rquGroup = $intake.RQueryUser.mapTo($rqu))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$query.QueryId" /></td>
-  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
-  <td>#fieldErrorMsg ($rquGroup.Frequency "")
-    <select name="$rquGroup.Frequency.Key">
-        #frequencySelectBox ($rqu.SubscriptionFrequency)
-    </select>
-  </td>
+##  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
+##  <td>#fieldErrorMsg ($rquGroup.Frequency "")
+##    <select name="$rquGroup.Frequency.Key">
+##        #frequencySelectBox ($rqu.SubscriptionFrequency)
+##    </select>
+##  </td>
   <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
   <td><input type="radio" name="default" value="$query.QueryId" 
