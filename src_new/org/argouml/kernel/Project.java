@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.154 2005/02/20 18:50:13 bobtarling Exp $
+// $Id: Project.java,v 1.155 2005/02/28 19:51:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -911,7 +911,11 @@ public class Project implements java.io.Serializable, TargetListener {
         }
         // issue 1725: the root is not set, which leads to problems
         // with displaying prop panels
-        setRoot(getModel());
+        Object model = getModel();
+        
+        LOG.info("Setting root model to " + model);
+
+        setRoot(model);
 
         ProjectManager.getManager().setNeedsSave(false);
         // we don't need this HashMap anymore so free up the memory
@@ -1306,7 +1310,6 @@ public class Project implements java.io.Serializable, TargetListener {
         currentNamespace = null;
         cgPrefs = null;
         vetoSupport = null;
-        Model.getModelManagementFactory().setRootModel(null);
         activeDiagram = null;
         defaultModelCache = null;
 
