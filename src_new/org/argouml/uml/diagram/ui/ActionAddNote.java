@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// $Id: ActionAddNote.java,v 1.2 2003/11/05 12:58:38 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,24 +54,6 @@ public class ActionAddNote extends UMLChangeAction {
     // static variables
 
     public static ActionAddNote SINGLETON = new ActionAddNote();
-
-    /**
-     * Enables the action if a fignode is selected.
-     * @see org.argouml.uml.ui.UMLAction#updateEnabled(java.lang.Object)
-     */
-    public void updateEnabled(Object target) {
-        boolean enabled = super.shouldBeEnabled();
-        if (target == null || ProjectManager.getManager().getCurrentProject().getActiveDiagram()
-            == null)
-            enabled = false;
-        if (ModelFacade.isAModelElement(target)
-            && !ModelFacade.isAComment(target)
-            && (ProjectManager.getManager().getCurrentProject()
-		    .getActiveDiagram().presentationFor(target)
-                instanceof FigNode))
-            enabled = true;
-        setEnabled(enabled);
-    }
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -148,10 +130,11 @@ public class ActionAddNote extends UMLChangeAction {
     public boolean shouldBeEnabled() {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Object target = TargetManager.getInstance().getModelTarget();
-        ;
+
         if (ProjectManager.getManager().getCurrentProject().getActiveDiagram()
             == null)
             return false;
+
         return super.shouldBeEnabled()
             && (org.argouml.model.ModelFacade.isAModelElement(target))
             && (!(org.argouml.model.ModelFacade.isAComment(target)))
