@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.99 2003/06/12 20:47:47 dlr Exp $
+ * @version $Id: IssueSearch.java,v 1.100 2003/06/12 21:17:49 dlr Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -2253,7 +2253,10 @@ public class IssueSearch
         {
             if (index < 0 || index >= size())
             {
-                throw new IndexOutOfBoundsException();
+                throw new IndexOutOfBoundsException
+                    ("Attempted to access non-existent QueryResult at index '"
+                     + index + "': Valid range is 0 through '" + (size() - 1)
+                     + '\'');
             }
 
             QueryResult qr = findRecentlyCreated(index);
