@@ -80,15 +80,6 @@ from:&#160;<input type="text" size="20"
 #end
 </div>
 
-
-#*
- <tr>
-  <th width="120">URL</th>
-  <td><input type="text" size="25" value="http://" /></td>
- </tr>
-*#
-
-
 ##PERSONNEL
 <h3>Personnel association search</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
