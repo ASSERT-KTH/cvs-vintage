@@ -63,7 +63,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *	 @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public abstract class Container
 {
@@ -229,8 +229,7 @@ public abstract class Container
       setupEnvironment();
 	  
 		// Initialize pool 
-		// MF FIXME: the instancePool does not belong here, it belongs to statelessC and entityC
-      if (instancePool != null) instancePool.init();
+       instancePool.init();
       
  	   // Initialize the interceptor by calling the chain
       Interceptor in = interceptor;
@@ -246,7 +245,7 @@ public abstract class Container
       throws Exception
    {
 		// Start the instance pool
-      if (instancePool != null) instancePool.start();
+       instancePool.start();
       
 		// Start all interceptors in the chain		
       Interceptor in = interceptor;
@@ -260,7 +259,7 @@ public abstract class Container
    public void stop() 
    {
 		// Stop the instance pool
-      if (instancePool != null) instancePool.stop();
+       instancePool.stop();
       
 		// Stop all interceptors in the chain		
       Interceptor in = interceptor;
@@ -274,7 +273,7 @@ public abstract class Container
    public void destroy() 
    {
 		// Destroy the pool
-      if (instancePool != null) instancePool.destroy();
+       instancePool.destroy();
       
 		// Destroy all the interceptors in the chain		
       Interceptor in = interceptor;
