@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.298 2003/12/23 02:15:05 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.299 2003/12/27 21:22:43 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3567,7 +3567,29 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 		}
 
 		if(selection.size() != 0)
-			setSelectedText(null);
+		{
+			Selection[] selections = getSelection();
+			for(int i = 0; i < selections.length; i++)
+			{
+				Selection s = selections[i];
+				if(s instanceof Selection.Rect)
+				{
+					Selection.Rect r = (Selection.Rect)s;
+					int startColumn = r.getStartColumn(buffer);
+					if(startColumn == r.getEndColumn(buffer))
+					{
+						if(startColumn == 0)
+							getToolkit().beep();
+						else
+							tallCaretBackspace(r);
+					}
+					else
+						setSelectedText(s,null);
+				}
+				else
+					setSelectedText(s,null);
+			}
+		}
 		else
 		{
 			if(caret == 0)
@@ -5902,6 +5924,32 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			return new RectParams(0,0,getLineStartOffset(newLine)
 				+ newOffset);
+		}
+	} //}}}
+
+	//{{{ tallCaretBackspace() method
+	private void tallCaretBackspace(Selection.Rect s)
+	{
+		try
+		{
+			buffer.beginCompoundEdit();
+
+			int startCol = s.getStartColumn(buffer);
+			int startLine = s.startLine;
+			int endLine = s.endLine;
+			for(int i = startLine; i <= endLine; i++)
+			{
+				int offset = buffer.getOffsetOfVirtualColumn(
+					i,startCol,null);
+				if(offset == -1)
+					continue;
+				offset += buffer.getLineStartOffset(i);
+				buffer.remove(offset-1,1);
+			}
+		}
+		finally
+		{
+			buffer.endCompoundEdit();
 		}
 	} //}}}
 
