@@ -39,7 +39,7 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -103,12 +103,9 @@ public class StatefulSessionInstanceInterceptor
    public Object invokeHome(Invocation mi)
       throws Exception
    {
-      // Disabled, because the AbstractTxInterceptorBMT wants to access
-      // the ctx -> ctx.getEJBContext().getUserTransaction()
-      //
       // Invocation on the handle, we don't need a bean instance
-      //if (getEJBObject.equals(mi.getMethod()))
-      //   return getNext().invokeHome(mi);
+      if (getEJBObject.equals(mi.getMethod()))
+         return getNext().invokeHome(mi);
 
       // get a new context from the pool (this is a home method call)
       InstancePool pool = container.getInstancePool();
