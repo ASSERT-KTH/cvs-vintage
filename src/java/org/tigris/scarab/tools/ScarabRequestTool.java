@@ -849,7 +849,7 @@ try{
         {
             currentIssueType = getIssueType(
                 data.getParameters()
-                .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
+                .getString(ScarabConstants.CURRENT_ISSUE_TYPE, "1"));
         }
         return currentIssueType;
     }
