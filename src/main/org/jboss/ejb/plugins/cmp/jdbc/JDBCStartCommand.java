@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="mailto:joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public final class JDBCStartCommand
 {
@@ -911,7 +911,7 @@ public final class JDBCStartCommand
       return sql.toString();
    }
 
-   private void addField(JDBCType type, StringBuffer sqlBuffer)
+   private void addField(JDBCType type, StringBuffer sqlBuffer) throws DeploymentException
    {
       // apply auto-increment template
       if(type.getAutoIncrement()[0])

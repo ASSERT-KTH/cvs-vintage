@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JDBCCommandFactory
 {
@@ -180,7 +180,7 @@ public class JDBCCommandFactory
       return new JDBCRemoveEntityCommand(manager);
    }
 
-   public JDBCLoadEntityCommand createLoadEntityCommand()
+   public JDBCLoadEntityCommand createLoadEntityCommand() throws DeploymentException
    {
       return new JDBCLoadEntityCommand(manager);
    }

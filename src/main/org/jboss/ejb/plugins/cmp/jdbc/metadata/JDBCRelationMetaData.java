@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom </a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp </a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public final class JDBCRelationMetaData
 {
@@ -576,8 +576,14 @@ public final class JDBCRelationMetaData
 	 * 
 	 * @return the jdbc type mapping for this entity
 	 */
-	public JDBCTypeMappingMetaData getTypeMapping()
-	{
+	public JDBCTypeMappingMetaData getTypeMapping() throws DeploymentException
+   {
+      if(datasourceMapping == null)
+      {
+         throw new DeploymentException("type-mapping is not initialized: " + dataSourceName
+            + " was not deployed or type-mapping was not configured.");
+      }
+
 		return datasourceMapping;
 	}
 

@@ -26,13 +26,14 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
+import org.jboss.deployment.DeploymentException;
 
 /**
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -64,15 +65,15 @@ public final class JDBCLoadRelationCommand
       ReadAheadCache.EntityReadAheadInfo info = readAheadCache.getEntityReadAheadInfo(pk);
       List loadKeys = info.getLoadKeys();
 
-      // generate the sql
-      boolean[] preloadMask = getPreloadMask(cmrField);
-      String sql = getSQL(cmrField, preloadMask, loadKeys.size());
-
       Connection con = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
       try
       {
+         // generate the sql
+         boolean[] preloadMask = getPreloadMask(cmrField);
+         String sql = getSQL(cmrField, preloadMask, loadKeys.size());
+
          // create the statement
          if(log.isDebugEnabled())
             log.debug("load relation SQL: " + sql);
@@ -215,7 +216,7 @@ public final class JDBCLoadRelationCommand
       }
    }
 
-   private String getSQL(JDBCCMRFieldBridge cmrField, boolean[] preloadMask, int keyCount)
+   private String getSQL(JDBCCMRFieldBridge cmrField, boolean[] preloadMask, int keyCount) throws DeploymentException
    {
       JDBCCMPFieldBridge[] myKeyFields = getMyKeyFields(cmrField);
       JDBCCMPFieldBridge[] relatedKeyFields = getRelatedKeyFields(cmrField);
@@ -359,7 +360,7 @@ public final class JDBCLoadRelationCommand
       }
    }
 
-   private JDBCFunctionMappingMetaData getSelectTemplate(JDBCCMRFieldBridge cmrField)
+   private JDBCFunctionMappingMetaData getSelectTemplate(JDBCCMRFieldBridge cmrField) throws DeploymentException
    {
 
       JDBCFunctionMappingMetaData selectTemplate = null;

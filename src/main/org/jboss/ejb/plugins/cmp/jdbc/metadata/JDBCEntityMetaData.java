@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 
 import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
+import javax.management.MBeanServer;
 
 /**
  * This immutable class contains information about an entity
@@ -34,7 +35,7 @@ import javax.management.MalformedObjectNameException;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public final class JDBCEntityMetaData
 {
@@ -500,10 +501,10 @@ public final class JDBCEntityMetaData
             );
          }
       }
-      else if(defaultValues.datasourceMappingName != null && defaultValues.getTypeMapping() != null)
+      else if(defaultValues.datasourceMappingName != null && defaultValues.datasourceMapping != null)
       {
          datasourceMappingName = null;
-         datasourceMapping = defaultValues.getTypeMapping();
+         datasourceMapping = defaultValues.datasourceMapping;
       }
       else
       {
@@ -1063,8 +1064,14 @@ public final class JDBCEntityMetaData
     *
     * @return the jdbc type mapping for this entity
     */
-   public JDBCTypeMappingMetaData getTypeMapping()
+   public JDBCTypeMappingMetaData getTypeMapping() throws DeploymentException
    {
+      if(datasourceMapping == null)
+      {
+         throw new DeploymentException("type-mapping is not initialized: " + dataSourceName
+            + " was not deployed or type-mapping was not configured.");
+      }
+
       return datasourceMapping;
    }
 
@@ -1454,7 +1461,7 @@ public final class JDBCEntityMetaData
    public static JDBCTypeMappingMetaData obtainTypeMappingFromLibrary(String dataSourceName)
       throws DeploymentException
    {
-      final JDBCTypeMappingMetaData typeMapping;
+      JDBCTypeMappingMetaData typeMapping = null;
 
       String datasource;
       if(dataSourceName.startsWith("java:"))
@@ -1483,8 +1490,11 @@ public final class JDBCEntityMetaData
 
       try
       {
-         typeMapping = (JDBCTypeMappingMetaData)MBeanServerLocator.locateJBoss().
-            getAttribute(metadataService, "TypeMappingMetaData");
+         final MBeanServer server = MBeanServerLocator.locateJBoss();
+         if(server.isRegistered(metadataService))
+         {
+            typeMapping = (JDBCTypeMappingMetaData)server.getAttribute(metadataService, "TypeMappingMetaData");
+         }
       }
       catch(Exception e)
       {
@@ -1492,6 +1502,7 @@ public final class JDBCEntityMetaData
             e.getMessage(), e);
       }
 
+      /*
       if(typeMapping == null)
       {
          throw new DeploymentException(
@@ -1499,6 +1510,7 @@ public final class JDBCEntityMetaData
             "Check the value of metadata/type-mapping in the -ds.xml file."
          );
       }
+      */
 
       return typeMapping;
    }
