@@ -21,12 +21,10 @@ import org.jboss.aspect.proxy.AspectInitizationException;
 import org.jboss.aspect.proxy.AspectInvocation;
 
 /**
- * @author Hiram
  *
  * This Interceptor associates the AspectInvocation in a ThreadLocal
- * object so that the AspectInvocation can be retreived at a later time
- * by a method that does not have access to the AspectInvocation that has
- * been performed.
+ * object. The current AspectInvocation can then be retrieved by 
+ * any object by calling the <code>getCurrentAspectInvocation()</code>
  * 
  * This interceptor does not require any configuration attributes.
  * 
