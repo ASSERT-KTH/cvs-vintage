@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.50 2002/01/15 16:45:55 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.51 2002/01/20 15:14:10 mnf999 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -509,12 +509,14 @@
      -->
     <jar jarfile="${build.lib}/jboss-boot.jar">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/system/BootstrapLogger*"/>
-        <include name="org/jboss/system/URLClassLoader*"/>
-        <include name="org/jboss/system/MBeanClassLoader*"/>
-        <include name="org/jboss/system/ServiceLibraries*"/>
-        <include name="org/jboss/system/Server*"/>
-        <include name="org/jboss/Version*"/>
+        <include name="org/jboss/system/BootstrapLogger.class"/>
+        <include name="org/jboss/system/UnifiedClassLoader.class"/>
+        <include name="org/jboss/system/UnifiedClassLoaderMBean.class"/>
+        <include name="org/jboss/system/MBeanClassLoader.class"/>
+        <include name="org/jboss/system/MBeanClassLoaderMBean.class"/>
+        <include name="org/jboss/system/ServiceLibraries.class"/>
+        <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
+        <include name="org/jboss/deployment/DeploymentException.class"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="org/jboss/version.properties"/>
@@ -535,10 +537,12 @@
         <include name="org/jboss/system/ConfigurationException.class"/>
         <include name="org/jboss/system/Info*"/>
         <include name="org/jboss/system/ServiceContext.class"/>
-        <include name="org/jboss/deployment/ServiceDeployer.class"/>
-        <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
-        <include name="org/jboss/deployment/ServiceDeployer**.class"/>
-        <include name="org/jboss/deployment/ServiceDeploymentInfo.class"/>
+        <include name="org/jboss/deployment/MainDeployer.class"/>
+        <include name="org/jboss/deployment/MainDeployerMBean.class"/>
+        <include name="org/jboss/deployment/SARDeployer.class"/>
+        <include name="org/jboss/deployment/SARDeployerMBean.class"/>
+        <include name="org/jboss/deployment/SARDeployer**.class"/>
+        <include name="org/jboss/deployment/DeploymentInfo.class"/>
         <include name="org/jboss/deployment/DeployerMBean.class"/>
         <include name="org/jboss/deployment/DeployerMBeanSupport.class"/>
         <include name="org/jboss/deployment/DeployerMBeanSupport**.class"/>
