@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.4 2004/05/29 19:25:02 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.5 2004/06/08 14:09:58 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -16,12 +16,11 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
-import java.io.BufferedReader;
 import java.io.StringReader;
 import java.net.URL;
 
