@@ -22,7 +22,6 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -60,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -201,6 +200,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
       try
       {
          Transaction tx = tm.getTransaction();
+         if(tx == null) {
+            return null;
+         }
          
          // get the map between the tx and the txDataMap
          Map txMap = (Map)getApplicationData(TX_DATA_KEY);
@@ -218,7 +220,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
                
                // We want to be notified when the transaction commits
                ApplicationTxDataSynchronization synch =
-               new ApplicationTxDataSynchronization(tx);
+                     new ApplicationTxDataSynchronization(tx);
                tx.registerSynchronization(synch);
                
                // create and add the new map
@@ -517,9 +519,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
    }
    
    public Object createEntity(
-   Method createMethod,
-   Object[] args,
-   EntityEnterpriseContext ctx) throws CreateException
+         Method createMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws CreateException
    {
       
       Object pk = createEntityCommand.execute(createMethod, args, ctx);
@@ -531,9 +533,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
    }
    
    public Object findEntity(
-   Method finderMethod,
-   Object[] args,
-   EntityEnterpriseContext ctx) throws FinderException
+         Method finderMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws FinderException
    {
       
       return findEntityCommand.execute(finderMethod, args, ctx);
@@ -628,8 +630,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       passivateEntityCommand.execute(ctx);
    }
    
-   public void removeEntity(EntityEnterpriseContext ctx)
-   throws RemoveException
+   public void removeEntity(EntityEnterpriseContext ctx) throws RemoveException
    {
       removeEntityCommand.execute(ctx);
    }
@@ -653,7 +654,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
    }
    
    private JDBCEntityMetaData loadJDBCEntityMetaData()
-   throws DeploymentException
+         throws DeploymentException
    {
       
       ApplicationMetaData amd =
