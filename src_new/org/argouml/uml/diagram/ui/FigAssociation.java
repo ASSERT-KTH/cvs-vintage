@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.62 2004/03/08 07:07:50 linus Exp $
+// $Id: FigAssociation.java,v 1.63 2004/04/22 23:48:10 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,6 +103,7 @@ public class FigAssociation extends FigEdgeModelElement {
         _srcMult.setTextFilled(false);
         _srcMult.setFilled(false);
         _srcMult.setLineWidth(0);
+        _srcMult.setMultiLine(false);
         _srcMult.setJustification(FigText.JUSTIFY_CENTER);
 
         _srcRole = new FigText(10, 10, 90, 20);
@@ -111,6 +112,7 @@ public class FigAssociation extends FigEdgeModelElement {
         _srcRole.setTextFilled(false);
         _srcRole.setFilled(false);
         _srcRole.setLineWidth(0);
+        _srcRole.setMultiLine(false);
         _srcRole.setJustification(FigText.JUSTIFY_CENTER);
 
         _srcOrdering = new FigText(10, 10, 90, 20);
@@ -119,6 +121,7 @@ public class FigAssociation extends FigEdgeModelElement {
         _srcOrdering.setTextFilled(false);
         _srcOrdering.setFilled(false);
         _srcOrdering.setLineWidth(0);
+        _srcOrdering.setMultiLine(false);
         _srcOrdering.setJustification(FigText.JUSTIFY_CENTER);
 
         _srcGroup.addFig(_srcRole);
@@ -132,6 +135,7 @@ public class FigAssociation extends FigEdgeModelElement {
         _destMult.setTextFilled(false);
         _destMult.setFilled(false);
         _destMult.setLineWidth(0);
+        _destMult.setMultiLine(false);
         _destMult.setJustification(FigText.JUSTIFY_CENTER);
 
         _destRole = new FigText(0, 0, 90, 20);
@@ -140,6 +144,7 @@ public class FigAssociation extends FigEdgeModelElement {
         _destRole.setTextFilled(false);
         _destRole.setFilled(false);
         _destRole.setLineWidth(0);
+        _destRole.setMultiLine(false);
         _destRole.setJustification(FigText.JUSTIFY_CENTER);
 
         _destOrdering = new FigText(0, 0, 90, 20);
@@ -148,6 +153,7 @@ public class FigAssociation extends FigEdgeModelElement {
         _destOrdering.setTextFilled(false);
         _destOrdering.setFilled(false);
         _destOrdering.setLineWidth(0);
+        _destOrdering.setMultiLine(false);
         _destOrdering.setJustification(FigText.JUSTIFY_CENTER);
 
         _destGroup.addFig(_destRole);
