@@ -20,8 +20,9 @@ $l10n.SpecifyACommaSepparatedList
 <tr>
  <th>$l10n.Options</th>
  <td>
-<input type="radio" name="downloadtype" value="0" #if (!$data.Parameters.downloadtype || $data.Parameters.downloadtype=="0") checked="checked" #end /> $l10n.ExportAsDownloadable
-<input type="radio" name="downloadtype" value="1" #if ($data.Parameters.downloadtype=="1") checked="checked" #end /> $l10n.ExportToBrowser
+ #set ($dltype = $data.Parameters.getString("downloadtype",""))
+<input type="radio" name="downloadtype" value="0" #if ($dltype=="0") checked="checked" #end /> $l10n.ExportAsDownloadable
+<input type="radio" name="downloadtype" value="1" #if ($dltype=="1") checked="checked" #end /> $l10n.ExportToBrowser
  </td>
 </tr>
 <tr>
