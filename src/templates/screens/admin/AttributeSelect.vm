@@ -1,7 +1,7 @@
 $page.setTitle("Select global attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 #set ($issueType = $scarabR.IssueType)
-#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "non-user"))
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "data"))
 #set ($agGroup = $intake.AttributeGroup.Default)
 
 

@@ -99,7 +99,7 @@ Global attributes</th>
 
 <div class="functnbar3">
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
-<input type="submit" value="Copy selected" />&#160;
+##<input type="submit" value="Copy selected" />&#160;
 <input type="submit" value="Delete selected"  name="eventSubmit_doSave" />&#160;
 <small>attribute(s)</small>&#160;
 </div>
