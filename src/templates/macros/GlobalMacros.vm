@@ -327,15 +327,12 @@
 #end
 
 #macro (textAreaSmall $key $value)
- <textarea cols="30" rows="2" wrap="virtual" name="$key">#if ($value)$value#end
-</textarea>
+ <textarea cols="30" rows="2" wrap="wrap" name="$key">#if ($value)$value#end</textarea>
 #end
-
 #macro (textAreaMedium $key $value)
-  <textarea cols="55" rows="5" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea cols="55" rows="5" wrap="wrap" name="$key">#if ($value)$value#end</textarea>
 #end
 #macro (textAreaLarge $key $value)
- <textarea cols="90" rows="10" wrap="virtual" name="$key">#if ($value)$value#end
-</textarea>
+ <textarea cols="90" rows="10" wrap="wrap" name="$key">#if ($value)$value#end</textarea>
 #end
 
