@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.14 2002/08/08 01:55:24 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.15 2002/08/08 23:56:16 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -103,6 +103,18 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                     RModuleOption rmo = (RModuleOption)rmos.get(i);
                     Group rmoGroup = intake.get("RModuleOption", 
                                      rmo.getQueryKey(), false);
+                    // if option gets set to inactive, delete dependencies
+                    if (rmoGroup != null)
+                    {
+                        String newActive = rmoGroup.get("Active").toString();
+                        String oldActive = String.valueOf(rmo.getActive());
+                        if (newActive.equals("false") && oldActive.equals("true"))
+                        {
+                            WorkflowFactory.getInstance().deleteWorkflowsForOption(
+                                                          rmo.getAttributeOption(),
+                                                          me, issueType);
+                        }
+                    }
                     rmoGroup.setProperties(rmo);
                     rmo.save();
                     ScarabCache.clear();
@@ -158,9 +170,6 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo2.delete(user);
                    rmos.remove(rmo);
-                   WorkflowFactory.getInstance().deleteWorkflowsForOption(
-                                                 rmo2.getAttributeOption(), 
-                                                  module, issueType);
                    data.setMessage(DEFAULT_MSG);  
                }
                catch (Exception e)

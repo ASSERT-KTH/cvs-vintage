@@ -79,12 +79,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.25 2002/06/06 01:53:47 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.26 2002/08/08 23:56:16 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -120,6 +121,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                             .getInstance(new NumberKey(groupId), false);
         List attributes = ag.getAttributes();
         Module module = scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getIssueType();
 
         if ( intake.isAllValid() )
         {
@@ -132,6 +134,15 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                                             ag.getIssueType());
                 Group rmaGroup = intake.get("RModuleAttribute", 
                                  rma.getQueryKey(), false);
+
+                // if attribute gets set to inactive, delete dependencies
+                String newActive = rmaGroup.get("Active").toString();
+                String oldActive = String.valueOf(rma.getActive());
+                if (newActive.equals("false") && oldActive.equals("true"))
+                {
+                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
+                                                  attribute, module, issueType);
+                }
                 rmaGroup.setProperties(rma);
                 String defaultTextKey = data.getParameters()
                     .getString("default_text");

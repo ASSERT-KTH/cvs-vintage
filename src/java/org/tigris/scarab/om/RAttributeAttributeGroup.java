@@ -26,6 +26,9 @@ public  class RAttributeAttributeGroup
     { 
         Module module = getAttributeGroup().getModule();
 
+System.out.println("in raag delete");
+System.out.println("module " + module);
+System.out.println(user.hasPermission(ScarabSecurity.MODULE__EDIT, module));
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             Criteria c = new Criteria()
