@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.189 2003/03/08 19:01:16 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.190 2003/03/09 22:53:12 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1036,7 +1036,8 @@ public class JEditTextArea extends JComponent
 	 */
 	public void invalidateLine(int line)
 	{
-		if(line < physFirstLine || line > physLastLine
+		if(!buffer.isLoaded()
+			|| line < physFirstLine || line > physLastLine
 			|| !foldVisibilityManager.isLineVisible(line))
 			return;
 
@@ -1084,6 +1085,9 @@ public class JEditTextArea extends JComponent
 	 */
 	public void invalidateLineRange(int start, int end)
 	{
+		if(!buffer.isLoaded())
+			return;
+
 		if(end < start)
 		{
 			int tmp = end;
@@ -5640,6 +5644,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ recalculateLastPhysicalLine() method
 	void recalculateLastPhysicalLine()
 	{
+		if(!buffer.isLoaded())
+			return;
+
 		if(softWrap)
 		{
 			chunkCache.updateChunksUpTo(visibleLines);
