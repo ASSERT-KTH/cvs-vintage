@@ -284,5 +284,10 @@ public interface SchedulerMBean
    * @param pStartAtStartup True if Schedule has to be started at startup time
    **/
    public void setStartAtStartup( boolean pStartAtStartup );
+   
+   /**
+   * @return True if this Scheduler is active and will send notifications in the future
+   **/
+   public boolean isActive();
 
 }

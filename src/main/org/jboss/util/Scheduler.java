@@ -73,12 +73,33 @@ import org.jboss.system.ServiceMBeanSupport;
 *     the next available time to start with respect to the settings.
 *     Therefore you can restart JBoss without adjust your Schedule
 *     every time. BUT you will still loose the calls during the Schedule
-*     was donw.</li>
+*     was down.</li>
 * <li>Added parsing capabilities to setInitialStartDate. Now NOW: current time,
 *     and a string in a format the SimpleDataFormat understand in your environment
 *     (US: m/d/yy h:m a) but of course the time in ms since 1/1/1970.</li>
 * <li>Some fixes like the stopping a Schedule even if it already stopped etc.</li>
 * </ul>
+* </p>
+* <p><b>20020118 Andy:</b>
+* <ul>
+* <li>Added the ability to call another MBean instead of an instance of the
+*     given Schedulable class. Use setSchedulableMBean() to specify the JMX
+*     Object Name pointing to the given MBean. Then if the MBean does not
+*     contain the same method as the Schedulable instance you have to specify
+*     the method with setSchedulableMBeanMethod(). There you can use some
+*     constants.</li>
+* </p>
+* <p><b>20020119 Andy:</b>
+* <ul>
+* <li>Added a helper method isActive()</li>
+* <li>Fixed a bug not indicating that no MBean is used when setSchedulableClass()
+*     is called.</li>
+* <li>Fixed a bug therefore that when NOW is set as initial start date a restart
+*     of the Schedule will reset the start date to the current date</li>
+* <li>Fixed a bug because the start date was update during recalculation of the
+*     start date when the original start date is in the past (see above). With this
+*     you could restart the schedule even after all hits were fired when the
+*     schedule was not started immediately after the initial start date was set.</li>
 * </p>
 **/
 public class Scheduler
@@ -136,6 +157,7 @@ public class Scheduler
    private DateFormat mDateFormatter;
    private Date mStartDate;
    private String mStartDateString;
+   private boolean mStartDateIsNow;
    private long mSchedulePeriod;
    private long mInitialRepetitions;
    
@@ -269,28 +291,35 @@ public class Scheduler
 
             mRemainingRepetitions = mInitialRepetitions;
             mActualSchedulePeriod = mSchedulePeriod;
+            Date lStartDate = null;
             // Register the Schedule at the Timer
-            // Check if initial start date is in the past
-            if( mStartDate.getTime() < new Date().getTime() ) {
-               // If then first check if a repetition is in the future
-               long lNow = new Date().getTime() + 100;
-               long lSkipRepeats = ( ( lNow - mStartDate.getTime() ) / mActualSchedulePeriod ) + 1;
-               if( mRemainingRepetitions > 0 ) {
-                  // If not infinit loop
-                  if( lSkipRepeats >= mRemainingRepetitions ) {
-                     // No repetition left -> exit
-                     log.info( "No repetitions left because start date is in the past and could " +
-                        "not be reached by Initial Repetitions * Schedule Period" );
-                     return;
-                  } else {
-                     // Reduce the missed hits
-                     mRemainingRepetitions -= lSkipRepeats;
+            // If start date is NOW then take the current date
+            if( mStartDateIsNow ) {
+               mStartDate = new Date( new Date().getTime() + 1000 );
+               lStartDate = mStartDate;
+            } else {
+               // Check if initial start date is in the past
+               if( mStartDate.getTime() < new Date().getTime() ) {
+                  // If then first check if a repetition is in the future
+                  long lNow = new Date().getTime() + 100;
+                  long lSkipRepeats = ( ( lNow - mStartDate.getTime() ) / mActualSchedulePeriod ) + 1;
+                  log.debug( "Old start date: " + mStartDate + ", now: " + new Date( lNow ) + ", Skip repeats: " + lSkipRepeats );
+                  if( mRemainingRepetitions > 0 ) {
+                     // If not infinit loop
+                     if( lSkipRepeats >= mRemainingRepetitions ) {
+                        // No repetition left -> exit
+                        log.info( "No repetitions left because start date is in the past and could " +
+                           "not be reached by Initial Repetitions * Schedule Period" );
+                        return;
+                     } else {
+                        // Reduce the missed hits
+                        mRemainingRepetitions -= lSkipRepeats;
+                     }
                   }
+                  lStartDate = new Date( mStartDate.getTime() + ( lSkipRepeats * mActualSchedulePeriod ) );
                }
-               mStartDate = new Date( mStartDate.getTime() + ( lSkipRepeats * mActualSchedulePeriod ) );
-               log.debug( "New Start Date is: " + mStartDate );
             }
-            log.debug( "Schedule initial call to: " + mStartDate + ", remaining repetitions: " + mRemainingRepetitions );
+            log.debug( "Schedule initial call to: " + lStartDate + ", remaining repetitions: " + mRemainingRepetitions );
             // Add an initial call
             mActualSchedule = ( (Integer) getServer().invoke(
                mTimer,
@@ -299,7 +328,7 @@ public class Scheduler
                   "Schedule",
                   "Scheduler Notification",
                   null,       // User Object
-                  mStartDate,
+                  lStartDate,
                   new Long( mActualSchedulePeriod ),
                   mRemainingRepetitions < 0 ?
                      new Long( 0 ) :
@@ -420,6 +449,7 @@ public class Scheduler
          );
       }
       mIsRestartPending = true;
+      mUseMBean = false;
    }
 
    public String getSchedulableArguments() {
@@ -629,10 +659,12 @@ public class Scheduler
       } else
       if( mStartDateString.equals( "NOW" ) ) {
          mStartDate = new Date( new Date().getTime() + 1000 );
+         mStartDateIsNow = true;
       } else {
          try {
             long lDate = new Long( pStartDate ).longValue();
             mStartDate = new Date( lDate );
+            mStartDateIsNow = false;
          }
          catch( Exception e ) {
             try {
@@ -640,6 +672,7 @@ public class Scheduler
                   mDateFormatter = new SimpleDateFormat();
                }
                mStartDate = mDateFormatter.parse( mStartDateString );
+               mStartDateIsNow = false;
             }
             catch( Exception e2 ) {
                log.error( "Could not parse given date string: " + mStartDateString, e2 );
@@ -681,7 +714,11 @@ public class Scheduler
    public void setStartAtStartup( boolean pStartAtStartup ) {
       mStartOnStart = pStartAtStartup;
    }
-
+   
+   public boolean isActive() {
+      return isStarted() && mRemainingRepetitions != 0;
+   }
+   
    // -------------------------------------------------------------------------
    // Methods
    // -------------------------------------------------------------------------
@@ -791,7 +828,7 @@ public class Scheduler
             }
          }
          catch( Exception e ) {
-            e.printStackTrace();
+            log.error( "Handling a Scheduler call failed", e );
          }
       }
    }
@@ -842,15 +879,18 @@ public class Scheduler
                   log.debug( "MBean Arguments are: " + java.util.Arrays.asList( lArguments ) );
                   log.debug( "MBean Arguments Types are: " + java.util.Arrays.asList( mSchedulableMBeanArgumentTypes ) );
                   try {
-                  getServer().invoke(
-                     mDelegate,
-                     mSchedulableMBeanMethodName,
-                     lArguments,
-                     mSchedulableMBeanArgumentTypes
-                  );
+                     getServer().invoke(
+                        mDelegate,
+                        mSchedulableMBeanMethodName,
+                        lArguments,
+                        mSchedulableMBeanArgumentTypes
+                     );
                   }
-                  catch( javax.management.RuntimeOperationsException roe ) {
-                     log.error( "Caught ROE in Schedulable MBean Call", roe.getTargetException() );
+                  catch( javax.management.JMRuntimeException jmre ) {
+                     log.error( "Invoke of the Schedulable MBean failed", jmre );
+                  }
+                  catch( javax.management.JMException jme ) {
+                     log.error( "Invoke of the Schedulable MBean failed", jme );
                   }
                   log.debug( "Remaining Repititions: " + getRemainingRepetitions() +
                      ", wait for next call to stop: " + mWaitForNextCallToStop );
@@ -875,7 +915,7 @@ public class Scheduler
             }
          }
          catch( Exception e ) {
-            e.printStackTrace();
+            log.error( "Handling a Scheduler call failed", e );
          }
       }
    }
