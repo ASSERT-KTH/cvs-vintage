@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.57 2002/07/12 17:00:17 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.58 2002/07/12 21:38:16 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -16,29 +16,6 @@
    -->
   <classpath codebase="lib" archives="*"/>
 
-  <!-- Binding service manager for port/host mapping. This is a sample
-    config that demonstrates a JBoss instances with a server name 'jboss1'
-    loading its bindings from an XML file using the ServicesStoreFactory
-    implementation returned by the XMLServicesStoreFactory.
-
-    ServerName: The unique name assigned to a JBoss server instance for
-      lookup purposes. This allows a single ServicesStore to handle mulitiple
-      JBoss servers.
-    StoreURL: The URL string passed to org.jboss.services.binding.ServicesStore
-      during initialization that specifies how to connect to the bindings store.
-    StoreFactory: The org.jboss.services.binding.ServicesStoreFactory interface
-      implementation to create to obtain the ServicesStore instance.
-
-  <mbean code="org.jboss.services.binding.ServiceBindingManager"
-    name="jboss.system:service=ServiceBindingManager">
-    <attribute name="ServerName">jboss1</attribute>
-    <attribute name="StoreURL">file:/etc/jboss-bindings.xml</attribute>
-    <attribute name="StoreFactoryClassName">
-      org.jboss.services.binding.XMLServicesStoreFactory
-    </attribute>
-  </mbean>
--->
-
   <!-- ==================================================================== -->
   <!-- Log4j Initialization                                                 -->
   <!-- ==================================================================== -->
@@ -50,11 +27,42 @@
 
 
   <!-- ==================================================================== -->
+  <!-- Service Binding                                                      -->
+  <!-- ==================================================================== -->
+
+  <!-- 
+     | Binding service manager for port/host mapping. This is a sample
+     | config that demonstrates a JBoss instances with a server name 'jboss1'
+     | loading its bindings from an XML file using the ServicesStoreFactory
+     | implementation returned by the XMLServicesStoreFactory.
+     |
+     | ServerName: The unique name assigned to a JBoss server instance for
+     | lookup purposes. This allows a single ServicesStore to handle mulitiple
+     | JBoss servers.
+     |
+     | StoreURL: The URL string passed to org.jboss.services.binding.ServicesStore
+     | during initialization that specifies how to connect to the bindings store.
+     | StoreFactory: The org.jboss.services.binding.ServicesStoreFactory interface
+     | implementation to create to obtain the ServicesStore instance.
+
+  <mbean code="org.jboss.services.binding.ServiceBindingManager"
+    name="jboss.system:service=ServiceBindingManager">
+    <attribute name="ServerName">jboss1</attribute>
+    <attribute name="StoreURL">file:/etc/jboss-bindings.xml</attribute>
+    <attribute name="StoreFactoryClassName">
+      org.jboss.services.binding.XMLServicesStoreFactory
+    </attribute>
+  </mbean>
+
+  -->
+
+
+  <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.web.WebService"
-	 name="jboss:service=Webserver">
+	 name="jboss:service=WebService">
     <attribute name="Port">8083</attribute>
     <!-- Should resources and non-EJB classes be downloadable -->
     <attribute name="DownloadServerClasses">true</attribute>
@@ -118,6 +126,7 @@
     <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
 
     <depends>jboss:service=TransactionManager</depends>
+    <depends>jboss:service=WebService</depends>
   </mbean>
   
   <!-- EAR deployer, remove if you are not using Web layers -->
