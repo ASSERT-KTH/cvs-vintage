@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.11 2000/07/27 18:43:07 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/07/27 18:43:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.12 2000/08/10 20:44:49 glenn Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/08/10 20:44:49 $
  *
  * ====================================================================
  *
@@ -311,10 +311,17 @@ public class PoolTcpEndpoint extends Logger.Helper  { // implements Endpoint {
 	// exceptions, catch them here and log as above
 
 	catch(Throwable e) {
-    	    String msg = sm.getString("endpoint.err.fatal",
-				      serverSocket, e);
-	    log(msg, e, Logger.ERROR);
-	    stopEndpoint();	// safe to call this from inside thread pool?
+            // If we are running with a SecurityManager, don't shutdown Socket        
+            // on an AccessControlException.
+	    if( e.getClass().getName().equals("java.security.AccessControlException") ) {
+		String msg = "Socket: "+ serverSocket + " AccessControlException: " + e.toString();
+		log(msg, Logger.ERROR);
+	    } else {
+		String msg = sm.getString("endpoint.err.fatal",
+					serverSocket, e);    
+		log(msg, e, Logger.ERROR);
+		stopEndpoint();	// safe to call this from inside thread pool?
+	    }
     	}
 
     	return accepted;
