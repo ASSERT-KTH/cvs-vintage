@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.46 2002/11/30 22:01:15 kataka Exp $
+// $Id: FigClass.java,v 1.47 2002/12/01 12:32:25 kataka Exp $
 
 
 
@@ -970,7 +970,7 @@ public class FigClass extends FigNodeModelElement {
      * @see org.tigris.gef.presentation.Fig#setOwner(Object)
      */
     public void setOwner(Object own) {      
-       if (own != null) {
+       if (own != null) { 
            MClass cl = (MClass)own;
            Iterator it = cl.getFeatures().iterator();
            while (it.hasNext()) {
