@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: jboss-service.xml,v 1.5 2004/03/19 20:39:39 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.6 2004/03/19 21:20:53 starksm Exp $ -->
 <server>
 
    <!-- The JRMP invoker proxy configuration for the InvokerAdaptorService -->
@@ -45,6 +45,21 @@
          <class>org.jboss.jmx.connector.invoker.InvokerAdaptorService</class>
 
          <!-- Attributes -->
+         <attribute access="read-only" getMethod="getName">
+            <description>The class name of the MBean</description>
+            <name>Name</name>
+            <type>java.lang.String</type>
+         </attribute>
+         <attribute access="read-only" getMethod="getState">
+            <description>The status of the MBean</description>
+            <name>State</name>
+            <type>int</type>
+         </attribute>
+         <attribute access="read-only" getMethod="getStateString">
+         <description>The status of the MBean in text form</description>
+            <name>StateString</name>
+            <type>java.lang.String</type>
+         </attribute>
          <attribute access="read-write" getMethod="getExportedInterfaces" setMethod="setExportedInterfaces">
             <description>The interfaces the invoker proxy supports</description>
             <name>ExportedInterfaces</name>
@@ -63,6 +78,16 @@
          <operation>
             <description>The stop lifecycle operation</description>
             <name>stop</name>
+         </operation>
+         <operation>
+            <description>The detyped lifecycle operation (for internal use only)</description>
+            <name>jbossInternalLifecycle</name>
+            <parameter>
+               <description>The lifecycle operation</description>
+               <name>method</name>
+               <type>java.lang.String</type>
+            </parameter>
+            <return-type>void</return-type>
          </operation>
 
          <operation>
