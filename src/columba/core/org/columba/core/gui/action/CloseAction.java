@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * @author frd
@@ -46,15 +47,19 @@ public class CloseAction extends FrameAction {
 		AbstractFrameController frameController) {
 		super(
 			frameController,
-			"Close",
-			"Close Frame",
+			GlobalResourceLoader.getString(
+				null,
+				null,
+				"close"),
+			GlobalResourceLoader.getString(
+				null,
+				null,
+				"close"),
 			"CLOSE",
 			null,null,
 			'C',
 			KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
