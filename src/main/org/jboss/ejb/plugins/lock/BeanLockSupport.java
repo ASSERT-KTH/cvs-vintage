@@ -25,13 +25,7 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.13 $
- *
- * <p><b>Revisions:</b><br>
- *  <p><b>2001/07/29: marcf</b>
- *  <ol>
- *   <li>Initial revision
- * </ol>
+ * @version $Revision: 1.14 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -163,8 +157,10 @@ public abstract class BeanLockSupport
       }
 
       // if this is a non-entrant message to the container let it through
-      if(NonentrantMessage.class.isAssignableFrom( m.getDeclaringClass() )) 
+      Entrancy entrancy = (Entrancy)mi.getValue(Entrancy.ENTRANCY_KEY);
+      if(entrancy == Entrancy.NON_ENTRANT)
       {
+         log.info("NON_ENTRANT invocation");
          return true;
       }
   
