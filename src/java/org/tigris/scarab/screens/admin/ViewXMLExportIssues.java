@@ -55,24 +55,23 @@ import java.text.SimpleDateFormat;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.Module;
 
 // Scarab Stuff
-import org.apache.turbine.modules.Module;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.3 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.4 2002/09/18 00:16:37 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
-    private static final String format = "yyyy-MM-dd HH:mm:ss";
-    
     /**
      * builds up the context for display of variables on the page.
      */
@@ -157,13 +156,13 @@ public class ViewXMLExportIssues extends Default
                 return;
             }
             context.put("issueIdList", issueIdList);
-            context.put("sdf", new SimpleDateFormat(format));
+            context.put("sdf", new SimpleDateFormat(ScarabConstants.DATE_FORMAT));
     
-            context.put ("renderedFromScreen", Boolean.TRUE);
+            context.put("renderedFromScreen", Boolean.TRUE);
             String result = 
                 Module.handleRequest (context, "macros/XMLExportIssuesMacro.vm");
             data.getOut().write(result);
-            context.remove ("renderedFromScreen");
+            context.remove("renderedFromScreen");
     
             // we already sent the response, there is no target to render
             data.setTarget(null);
