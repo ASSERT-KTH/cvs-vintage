@@ -292,8 +292,6 @@ final class FileHandler extends Handler  {
 
 	File file = new File( absPath );
         String headerValue=req.getHeader("If-Modified-Since");
-/**/
-        headerValue = req.getHeader("If-Modified-Since");
         if (headerValue != null) {
 
             Date date = null;
@@ -317,7 +315,6 @@ final class FileHandler extends Handler  {
 
 
         }
-/**/
 	if( debug>0) log( "After paranoic checks = " + absPath);
 
         String mimeType=ctx.getMimeMap().getContentTypeFor(absPath);
