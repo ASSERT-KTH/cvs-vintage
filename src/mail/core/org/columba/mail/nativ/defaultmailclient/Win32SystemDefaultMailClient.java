@@ -23,6 +23,7 @@ public class Win32SystemDefaultMailClient implements SystemDefaultMailClient {
 	 */
 	public boolean isDefaultMailClient() {
 		RegistryKey mailClients = RegistryKey.LOCAL_MACHINE.openSubKey("Software").openSubKey("Clients").openSubKey("Mail", true);
+		if( mailClients == null ) return true;
 		
 		return mailClients.values().get("").equals("Columba");
 	}
