@@ -19,7 +19,7 @@
 // File: ClassNode.java
 // Classes: ClassNode
 // Original Author: ics125b spring 1996
-// $Id: ClassNode.java,v 1.1 1998/03/09 22:20:31 abonner Exp $
+// $Id: ClassNode.java,v 1.2 1998/03/09 22:52:35 abonner Exp $
 
 package uci.uml.visual.demo;
 
@@ -52,7 +52,7 @@ public class ClassNode extends NetNode {
    }
 
   public FigNode makePresentation(Layer lay) {
-    Fig obj1 = new FigRect(-5, -5, 30, 30, Color.black, Color.green);
+    Fig obj1 = new FigRect(0, 0, 100, 70, Color.black, Color.green);
     Vector temp_list = new Vector();
     temp_list.addElement(obj1);
     FigClass fn = new FigClass(this, temp_list);
