@@ -19,19 +19,16 @@ Click on "Availability" to execute report.
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">&nbsp;</th>
-<th><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Report name</th>
+<th>Report name</th>
 <th>Report descr</a></th>
 <th>Availability</a></th>
 <th>Author</a></th>
 </tr>
 
-
-
 #foreach ($report in $reports)
   #set ($group = $intake.Report.mapTo($report))
-$group.Deleted
   #indexedRows($velocityCount)
-<td>#booleanCheckbox($group.Deleted)</td>
+<td><input type="checkbox" name="report_id" value="$report.ReportId">
 <td>$report.Name</a></td>
 <td>$!report.Description</td>
 <td>Personal profile</a></td>
@@ -42,11 +39,17 @@ $group.Deleted
 #end
 
 </table>
+#else
+ <p><strong class="alert">There are no saved reports.
+ Please go to $link.setPage("reports,Step1.vm").setLabel("New report")
+ to create a new saved report.</strong></p>
 #end
 
 <div class="functnbar3">
   <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+#if ($reports.size() >0)
   <input type="submit" value="Delete selected" name="eventSubmit_doDeletestoredreport" />
+#end
 </div> 
 
 ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
@@ -55,5 +58,5 @@ $group.Deleted
    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div> </div>
 
-$intake.declareGroups();
+$intake.declareGroups()
 </form>
