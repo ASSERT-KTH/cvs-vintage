@@ -1,4 +1,4 @@
-// $Id: UMLBooleanProperty.java,v 1.8 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: UMLBooleanProperty.java,v 1.9 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,7 @@ import java.beans.PropertyVetoException;
 import java.lang.reflect.*;
 
 import org.apache.log4j.Logger;
-
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MElementEvent;
 
 /** This abstract base class is used to define derived classes that interact
  * with the UMLRadioButton and UMLCheckBox user interface components.

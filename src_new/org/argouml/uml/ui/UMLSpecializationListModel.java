@@ -1,4 +1,4 @@
-// $Id: UMLSpecializationListModel.java,v 1.12 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLSpecializationListModel.java,v 1.13 2003/09/21 11:07:02 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,6 @@ import java.util.*;
 
 
 import javax.swing.*;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
 
 import org.argouml.ui.*;
 import org.tigris.gef.graph.MutableGraphModel;
@@ -96,7 +93,7 @@ public class UMLSpecializationListModel extends UMLBinaryRelationListModel {
 			   MutableGraphModel gm,
 			   Object/*MModelElement*/ from,
 			   Object/*MModelElement*/ to) {
-	gm.connect(to, from, MGeneralization.class);
+	gm.connect(to, from, (Class)ModelFacade.GENERALIZATION);
     }
 	
 
@@ -112,7 +109,7 @@ public class UMLSpecializationListModel extends UMLBinaryRelationListModel {
      */
     protected Collection getChoices() {
 	if (org.argouml.model.ModelFacade.isAGeneralizableElement(getTarget())) {
-	    Object/*MGeneralizableElement*/ target = (MGeneralizableElement) getTarget();
+	    Object/*MGeneralizableElement*/ target = getTarget();
 	    if (ModelFacade.isLeaf(target)) return new ArrayList();
 	    Collection genElem = ModelManagementHelper.getHelper().getAllModelElementsOfKind(getTarget().getClass());
 	    List list = new ArrayList();
@@ -132,7 +129,7 @@ public class UMLSpecializationListModel extends UMLBinaryRelationListModel {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(MModelElement, MModelElement)
      */
     protected Object getRelation(Object from, Object to) {
-	return CoreHelper.getHelper().getGeneralization((MGeneralizableElement) to, (MGeneralizableElement) from);
+	return CoreHelper.getHelper().getGeneralization(to, from);
     }
 
     /**

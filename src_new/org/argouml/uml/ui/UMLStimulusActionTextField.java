@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextField.java,v 1.3 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLStimulusActionTextField.java,v 1.4 2003/09/21 11:07:02 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.event.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.lang.reflect.*;
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MElementEvent;
 
 /**
  * TODO: this class should be moved to package

@@ -1,4 +1,4 @@
-// $Id: UMLTextProperty.java,v 1.13 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLTextProperty.java,v 1.14 2003/09/21 11:07:02 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +27,9 @@ package org.argouml.uml.ui;
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.*;
-
 import org.argouml.ui.*;
-
 import java.lang.reflect.*;
-
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MElementEvent;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),

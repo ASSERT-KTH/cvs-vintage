@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.15 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLConnectionListModel.java,v 1.16 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,9 +39,7 @@ import org.argouml.ui.*;
 import org.tigris.gef.graph.MutableGraphModel;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.*;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
+import org.argouml.model.ModelFacade;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
@@ -77,7 +75,7 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
 			   MutableGraphModel gm,
 			   Object/*MModelElement*/ from,
 			   Object/*MModelElement*/ to) {
-	gm.connect(from, to, MAssociation.class);
+	gm.connect(from, to, (Class)ModelFacade.ASSOCIATION);
     }
 
     /**
@@ -91,7 +89,7 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getChoices()
      */
     protected Collection getChoices() {
-	return ModelManagementHelper.getHelper().getAllModelElementsOfKind(MClassifier.class);
+	return ModelManagementHelper.getHelper().getAllModelElementsOfKind((Class)ModelFacade.CLASSIFIER);
     }
 
     /**
@@ -99,14 +97,14 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
      */
     protected Object getRelation(Object from, Object to) {
 	// this could get awkward but we assume that there is only one association
-	return ((CoreHelper.getHelper().getAssociations((MClassifier) from, (MClassifier) to)).toArray())[0];
+	return ((CoreHelper.getHelper().getAssociations(from, to)).toArray())[0];
     }
 
     /**
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getSelected()
      */
     protected Collection getSelected() {
-	return CoreHelper.getHelper().getAssociatedClassifiers((MClassifier) getTarget());
+	return CoreHelper.getHelper().getAssociatedClassifiers(getTarget());
     }
 
 }

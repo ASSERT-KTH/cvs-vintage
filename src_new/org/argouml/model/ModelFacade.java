@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.140 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.141 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -246,13 +246,15 @@ public class ModelFacade {
     public static final Object STEREOTYPE         = MStereotype.class;
     public static final Object PARAMETER          = MParameter.class;
     public static final Object GENERALAIZABLE_ELEMENT
-                                        = MGeneralizableElement.class;
-    public static final Object DATATYPE          = MDataType.class;
-    public static final Object STATEMACHINE      = MStateMachine.class;
+                                                  = MGeneralizableElement.class;
+    public static final Object DATATYPE           = MDataType.class;
+    public static final Object STATEMACHINE       = MStateMachine.class;
 
     public static final Object ATTRIBUTE          = MAttribute.class;
     public static final Object OPERATION          = MOperation.class;
 
+    public static final Object MULTIPLICITY       = MMultiplicity.class;
+    
     public static final Object VISIBILITYKIND     = MVisibilityKind.class;
 
     public static final Object MODELELEMENT       = MModelElement.class;

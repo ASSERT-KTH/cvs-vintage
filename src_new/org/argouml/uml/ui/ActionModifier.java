@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.9 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.9 2003/09/21 11:07:03 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -39,14 +39,10 @@ import org.tigris.gef.presentation.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.util.*;
-
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.behavior.use_cases.*;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MInterface;
+import ru.novosoft.uml.model_management.MPackage;
 
 /**
  * <p>A class to perform the action of changing value of the modifiers on a

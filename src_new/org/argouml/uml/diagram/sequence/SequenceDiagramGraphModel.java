@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.22 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.23 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.22 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.23 2003/09/21 11:07:03 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -37,15 +37,6 @@ import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHel
 
 import java.util.*;
 import java.beans.*;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-import ru.novosoft.uml.behavior.collaborations.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-import ru.novosoft.uml.model_management.*;
-
 
 import org.tigris.gef.base.Mode;
 import org.tigris.gef.base.ModeManager;
@@ -205,9 +196,9 @@ public class SequenceDiagramGraphModel extends UMLMutableGraphSupport
 	    Collection ends = ModelFacade.getLinkEnds(node);
 	    Iterator iter = ends.iterator();
 	    while (iter.hasNext()) {
-		MLinkEnd ae = (MLinkEnd) iter.next();
-		if (canAddEdge(ae.getLink()))
-		    addEdge(ae.getLink());
+		Object/*MLinkEnd*/ le = iter.next();
+		if (canAddEdge(ModelFacade.getLink(le)))
+		    addEdge(ModelFacade.getLink(le));
 		return;
 	    }
 	}

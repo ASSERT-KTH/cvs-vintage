@@ -1,5 +1,5 @@
 
-// $Id: UMLEnumerationBooleanProperty.java,v 1.10 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: UMLEnumerationBooleanProperty.java,v 1.11 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,7 @@ import java.lang.reflect.*;
 import org.apache.log4j.Logger;
 import org.argouml.model.uml.AbstractWellformednessRule;
 import org.argouml.model.uml.UmlHelper;
-
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MBase;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),

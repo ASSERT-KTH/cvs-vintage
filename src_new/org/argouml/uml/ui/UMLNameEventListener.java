@@ -1,4 +1,4 @@
-// $Id: UMLNameEventListener.java,v 1.4 2003/06/30 19:23:20 linus Exp $
+// $Id: UMLNameEventListener.java,v 1.5 2003/09/21 11:07:02 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@
 package org.argouml.uml.ui;
 import javax.swing.*;
 import java.awt.*;
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
+import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /**
  *  This class is used to dispatch a NSUML change event (which may occur on a non-UI)

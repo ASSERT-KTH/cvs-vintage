@@ -1,4 +1,4 @@
-// $Id: UMLExpressionModel.java,v 1.8 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLExpressionModel.java,v 1.9 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ import java.lang.reflect.*;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.foundation.data_types.MExpression;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
@@ -101,7 +101,7 @@ public final class UMLExpressionModel  {
             Object target = _container.getTarget();
             if (_getMethod != null && target != null) {
                 try {
-                    _expression = (MExpression) _getMethod.invoke(target, _noArgs);
+                    _expression = _getMethod.invoke(target, _noArgs);
                 }
                 catch (Exception e) {
                     cat.error(e.toString() + " in UMLExpressionModel.getExpression()", e);

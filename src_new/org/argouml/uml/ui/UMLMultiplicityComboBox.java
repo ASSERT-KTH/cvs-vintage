@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBox.java,v 1.11 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLMultiplicityComboBox.java,v 1.12 2003/09/21 11:07:02 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,7 @@ import java.awt.event.*;
 import javax.swing.event.*;
 import javax.swing.*;
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.data_types.*;
+import ru.novosoft.uml.MElementEvent;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
@@ -94,7 +92,7 @@ public class UMLMultiplicityComboBox
 
         Class[] getArgs = {};
         Class[] setArgs = {
-	    MMultiplicity.class 
+	    (Class)ModelFacade.MULTIPLICITY
 	};
 
         try {

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.11 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: UMLComboBoxEntry.java,v 1.12 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,15 +27,11 @@ import org.argouml.uml.*;
 import javax.swing.event.*;
 import javax.swing.*;
 import java.lang.reflect.*;
-import ru.novosoft.uml.*;
 import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
+import ru.novosoft.uml.foundation.core.MNamespace;
 
 public class UMLComboBoxEntry implements Comparable {
     private Object/*MModelElement*/ _element;
@@ -139,7 +135,7 @@ public class UMLComboBoxEntry implements Comparable {
                     targetName = ModelFacade.getName(ownedElement);
                     if (targetName != null && phantomName.equals(targetName)) {
                         if (ModelFacade.isAPackage(ownedElement)) {
-                            ns = (MPackage) ownedElement;
+                            ns = ownedElement;
                             break;
                         }
                     }
@@ -160,7 +156,7 @@ public class UMLComboBoxEntry implements Comparable {
         //    we need to possibly recreate the package structure
         //       in the target model
         if (_isPhantom && targetModel != null) {
-            Object/*MNamespace*/ targetNS = findNamespace(ModelFacade.getNamespace(_element), (MModel)targetModel);
+            Object/*MNamespace*/ targetNS = findNamespace(ModelFacade.getNamespace(_element), targetModel);
             Object/*MModelElement*/ clone = null;
             try {
                 clone = _element.getClass().getConstructor(new Class[] {}).newInstance(new Object[] {});

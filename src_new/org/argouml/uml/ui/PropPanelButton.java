@@ -1,4 +1,4 @@
-// $Id: PropPanelButton.java,v 1.11 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: PropPanelButton.java,v 1.12 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.lang.reflect.*;
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MElementEvent;
 
 /**
  *   This abstract class provides the basic layout and event dispatching

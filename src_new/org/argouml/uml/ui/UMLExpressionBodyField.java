@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.9 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLExpressionBodyField.java,v 1.10 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import javax.swing.*;
 import org.apache.log4j.Logger;
 import java.lang.reflect.*;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MElementEvent;
 
 /**
  * This class depends on {@link org.argouml.uml.ui.UMLExpressionModel}, therefore deprecated.

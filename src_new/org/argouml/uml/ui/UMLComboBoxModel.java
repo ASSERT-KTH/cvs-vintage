@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.26 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.27 2003/09/21 11:07:03 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.26 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.27 2003/09/21 11:07:03 bobtarling Exp $
 
 package org.argouml.uml.ui;
 
@@ -42,13 +42,7 @@ import java.util.*;
 import javax.swing.event.*;
 import javax.swing.*;
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-
+import ru.novosoft.uml.MElementEvent;
 
 /**
  * <p>A model for use with drop down combo boxes. Used to supply the correct
@@ -229,7 +223,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
 
         if (filter != null) {
             Class[] args =  {
-		MModelElement.class 
+                (Class)ModelFacade.CLASS
 	    };
 
             try {
@@ -475,7 +469,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         Iterator iter = collection.iterator();
 
         while (iter.hasNext()) {
-            Object/*MModelElement*/ element = (MModelElement) iter.next();
+            Object/*MModelElement*/ element = iter.next();
 
             // If its passed by the filter, make a new combo box entry, and if
             // appropriate add to the set.
@@ -517,7 +511,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
             // If the element was a namespace, we recurse to find more elements
 
             if (ModelFacade.isANamespace(element)) {
-                collectElements((MNamespace) element, profile, isPhantom);
+                collectElements(element, profile, isPhantom);
             }
         }
     }
@@ -864,7 +858,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         String eventName = event.getName();
 
         if ((eventName != null) && (eventName.equals("ownedElement"))) {
-            updateElement((MModelElement) event.getAddedValue());
+            updateElement(event.getAddedValue());
         }
     }
 
@@ -886,7 +880,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         String eventName = event.getName();
 
         if ((eventName != null) && (eventName.equals("ownedElement"))) {
-            deleteElement((MModelElement) event.getRemovedValue());
+            deleteElement(event.getRemovedValue());
         }
 
     }
@@ -987,7 +981,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         Object source = event.getSource();
 
         if ((!(ModelFacade.isAModelElement(source))) ||
-             (!(isAcceptible((MModelElement) source)))) {
+             (!(isAcceptible(source)))) {
             return;
         }
 
@@ -1003,7 +997,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
 
                 // Found the entry. Change its name and tell Swing
 
-                entry.nameChanged((MModelElement) source);
+                entry.nameChanged(source);
                 fireContentsChanged(this, i, i);
                 break;
             }
