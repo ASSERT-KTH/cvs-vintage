@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  *
  *   Revisions:
  *   
@@ -382,11 +382,7 @@ public class WebServer
         }
         catch (IOException ex)
         {
-            // eat exception (could log error to log file, but
-            // write out to stdout for now).
-            if (log.isDebugEnabled())
-               log.debug("error writing response: " + ex.getMessage());
-            ex.printStackTrace();
+            log.error("error writting response", ex);
         }
         finally 
         {
