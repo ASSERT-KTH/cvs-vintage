@@ -105,7 +105,7 @@ class DataExport extends Default
 
         // look for a configuration toggle for the encoding to which to
         // export.  TODO : make this per request configurable (with a per-
-        // language default) to allow use of scarab ina multilingual 
+        // language default) to allow use of scarab in a multilingual 
         // environment.
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format))
         {
@@ -137,7 +137,7 @@ class DataExport extends Default
     }
 
     /**
-     * This funciton encapsulates the logic of determining which encoding 
+     * This function encapsulates the logic of determining which encoding 
      * to use.  Right now, the encoding isn't per-request, but that should
      * be changed.
      */
@@ -263,7 +263,8 @@ class DataExport extends Default
         }
 
         /**
-         * Must be called when done writing a line.
+         * Must be called when done writing a line -- this prints a newline
+         * and flushes the printer.
          */
         public void println()
         {
