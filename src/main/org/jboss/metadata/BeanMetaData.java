@@ -40,7 +40,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.75 $
+ * @version $Revision: 1.76 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -145,6 +145,8 @@ public abstract class BeanMetaData
    private IorSecurityConfigMetaData iorSecurityConfig;
    /** The jboss port-component binding for a ejb webservice */
    protected EjbPortComponentMetaData portComponent;
+   /** Whether to throw an exception on a rollback if there is no exception */
+   private boolean exceptionRollback = false;
 
    // Static --------------------------------------------------------
 
@@ -463,12 +465,10 @@ public abstract class BeanMetaData
    // This should be cached, since this method is called very often
    public byte getTransactionMethod(Method m, InvocationType iface)
    {
-      if(m == null)
-      {
+      if (m == null)
          return MetaData.TX_SUPPORTS;
-      }
 
-      Byte b = (Byte) methodTx.get(m);
+      Byte b = (Byte)methodTx.get(m);
       if (b != null) return b.byteValue();
 
       byte result = getMethodTransactionType(m.getName(), m.getParameterTypes(), iface);
@@ -702,6 +702,11 @@ public abstract class BeanMetaData
       return iorSecurityConfig;
    }
 
+   public boolean getExceptionRollback()
+   {
+      return exceptionRollback;
+   }
+   
    /** Called to parse the ejb-jar.xml enterprise-beans child ejb elements
     * @param element one of session/entity/message-driven
     * @throws DeploymentException
@@ -858,6 +863,9 @@ public abstract class BeanMetaData
 
       // Get the security proxy
       securityProxy = getElementContent(getOptionalChild(element, "security-proxy"), securityProxy);
+
+      // Throw an exception when marked rollback with no exception thrown
+      exceptionRollback = MetaData.getOptionalChildBooleanContent(element, "exception-on-rollback", false);
 
       // update the resource references (optional)
       Iterator iterator = getChildrenByTagName(element, "resource-ref");

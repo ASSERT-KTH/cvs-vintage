@@ -45,49 +45,29 @@ import java.util.ArrayList;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- *  @version $Revision: 1.45 $
+ *  @version $Revision: 1.46 $
  */
 public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadable
 {
 
-   // Attributes ----------------------------------------------------
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   // Public --------------------------------------------------------
-
-   // Interceptor implementation --------------------------------------
+   // Constants -----------------------------------------------------
 
 
    public static int MAX_RETRIES = 5;
    public static Random random = new Random();
 
+   // Attributes ----------------------------------------------------
+
+   /** 
+    * Whether an exception should be thrown if the transaction is not
+    * active, even though the application doesn't throw an exception
+    */
+   private boolean exceptionRollback = true;
+   
    private TxRetryExceptionHandler[] retryHandlers = null;
 
-   public void importXml(Element ielement)
-   {
-      try
-      {
-         Element element = MetaData.getOptionalChild(ielement, "retry-handlers");
-         if (element == null) return;
-         ArrayList list = new ArrayList();
-         Iterator handlers = MetaData.getChildrenByTagName(element, "handler");
-         while (handlers.hasNext())
-         {
-            Element handler = (Element)handlers.next();
-            String className = MetaData.getElementContent(handler).trim();
-            Class clazz = SecurityActions.getContextClassLoader().loadClass(className);
-            list.add(clazz.newInstance());
-         }
-         retryHandlers = (TxRetryExceptionHandler[])list.toArray(new TxRetryExceptionHandler[list.size()]);
-      }
-      catch (Exception ex)
-      {
-         log.warn("Unable to importXml for the TxInterceptorCMT", ex);
-      }
-   }
+   // Static --------------------------------------------------------
+
 
    /**
     * Detects exception contains is or a ApplicationDeadlockException.
@@ -116,6 +96,46 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
       return null;
    }
    
+   // Constructors --------------------------------------------------
+
+   // Public --------------------------------------------------------
+
+   // XmlLoadable implementation ------------------------------------
+
+   public void importXml(Element ielement)
+   {
+      try
+      {
+         Element element = MetaData.getOptionalChild(ielement, "retry-handlers");
+         if (element == null) return;
+         ArrayList list = new ArrayList();
+         Iterator handlers = MetaData.getChildrenByTagName(element, "handler");
+         while (handlers.hasNext())
+         {
+            Element handler = (Element)handlers.next();
+            String className = MetaData.getElementContent(handler).trim();
+            Class clazz = SecurityActions.getContextClassLoader().loadClass(className);
+            list.add(clazz.newInstance());
+         }
+         retryHandlers = (TxRetryExceptionHandler[])list.toArray(new TxRetryExceptionHandler[list.size()]);
+      }
+      catch (Exception ex)
+      {
+         log.warn("Unable to importXml for the TxInterceptorCMT", ex);
+      }
+   }
+
+   // Interceptor implementation ------------------------------------
+
+   public void create() throws Exception
+   {
+      super.create();
+      BeanMetaData bmd = getContainer().getBeanMetaData();
+      exceptionRollback = bmd.getExceptionRollback();
+      if (exceptionRollback == false)
+         exceptionRollback = bmd.getApplicationMetaData().getExceptionRollback();
+   }
+
    public Object invokeHome(Invocation invocation) throws Exception
    {
       Transaction oldTransaction = invocation.getTransaction();
@@ -287,6 +307,7 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
             case MetaData.TX_REQUIRED:
             {
                int oldTimeout = 0;
+               Transaction theTransaction = oldTransaction;
                if (oldTransaction == null)
                { // No tx running
                   // Create tx
@@ -299,6 +320,7 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
 
                   // Let the method invocation know
                   invocation.setTransaction(newTransaction);
+                  theTransaction = newTransaction;
                }
                else
                {
@@ -310,7 +332,9 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
                // Continue invocation
                try
                {
-                  return invokeNext(invocation, oldTransaction != null);
+                  Object result = invokeNext(invocation, oldTransaction != null);
+                  checkTransactionStatus(theTransaction, type);
+                  return result;
                }
                finally
                {
@@ -336,7 +360,10 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
 
                try
                {
-                  return invokeNext(invocation, oldTransaction != null);
+                  Object result = invokeNext(invocation, oldTransaction != null);
+                  if (oldTransaction != null)
+                     checkTransactionStatus(oldTransaction, type);
+                  return result;
                }
                finally
                {
@@ -359,7 +386,9 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
                // Continue invocation
                try
                {
-                  return invokeNext(invocation, false);
+                  Object result = invokeNext(invocation, false);
+                  checkTransactionStatus(newTransaction, type);
+                  return result;
                }
                finally
                {
@@ -388,8 +417,11 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
                tm.resume(oldTransaction);
                try
                {
-                  return invokeNext(invocation, true);
-               } finally
+                  Object result = invokeNext(invocation, true);
+                  checkTransactionStatus(oldTransaction, type);
+                  return result;
+               }
+               finally
                {
                   tm.suspend();
                }
@@ -523,6 +555,40 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
          }
    }
 
+   /**
+    * The application has not thrown an exception, but...
+    * When exception-on-rollback is true,
+    * check whether the transaction is not active.
+    * If it did not throw an exception anyway.
+    * 
+    * @param tx the transaction
+    * @param type the invocation type
+    * @throws TransactionRolledbackException if transaction is no longer active
+    */
+   protected void checkTransactionStatus(Transaction tx, InvocationType type)
+      throws TransactionRolledbackException
+   {
+      if (exceptionRollback)
+      {
+         if (log.isTraceEnabled())
+            log.trace("No exception from ejb, checking transaction status: " + tx);
+         int status = Status.STATUS_UNKNOWN;
+         try
+         {
+            status = tx.getStatus();
+         }
+         catch (Throwable t)
+         {
+            log.debug("Ignored error trying to retrieve transaction status", t);
+         }
+         if (status != Status.STATUS_ACTIVE)
+         {
+            Exception e = new Exception("Transaction cannot be committed (probably transaction timeout): " + tx);
+            throwJBossException(e, type);
+         }
+      }
+   }
+   
    // Inner classes -------------------------------------------------
 
    // Monitorable implementation ------------------------------------

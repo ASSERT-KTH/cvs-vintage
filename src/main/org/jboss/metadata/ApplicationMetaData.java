@@ -32,7 +32,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
  *
- * @version $Revision: 1.55 $
+ * @version $Revision: 1.56 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -71,6 +71,8 @@ public class ApplicationMetaData
    private boolean enforceEjbRestrictions;
    /** The missing-method-permissions-excluded-mode value */
    private boolean excludeMissingMethods = true;
+   /** Whether to throw an exception on a rollback if there is no exception */
+   private boolean exceptionRollback = false;
 
    /** The ClassLoader to load additional resources */
    private URLClassLoader resourceCl;
@@ -252,6 +254,11 @@ public class ApplicationMetaData
    public MessageDestinationMetaData getMessageDestination(String name)
    {
       return assemblyDescriptor.getMessageDestinationMetaData(name);
+   }
+
+   public boolean getExceptionRollback()
+   {
+      return exceptionRollback;
    }
 
    /**
@@ -675,6 +682,9 @@ public class ApplicationMetaData
       {
          jmxName = getElementContent(jmxNameElement);
       }
+
+      // Throw an exception when marked rollback with no exception thrown
+      exceptionRollback = MetaData.getOptionalChildBooleanContent(element, "exception-on-rollback", false);
 
       // Get the security domain name
       Element securityDomainElement = getOptionalChild(element,
