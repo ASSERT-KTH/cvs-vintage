@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.62 2003/03/16 20:55:42 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.63 2003/03/28 00:15:50 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -302,7 +302,7 @@ public class GUIUtilities
 			{
 				String button = st.nextToken();
 				if(button.equals("-"))
-					toolBar.addSeparator();
+					toolBar.add(Box.createHorizontalStrut(12));
 				else
 				{
 					JButton b = loadToolButton(button);

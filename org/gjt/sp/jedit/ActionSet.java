@@ -91,7 +91,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.9 2003/03/27 04:03:06 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.10 2003/03/28 00:15:49 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -162,7 +162,7 @@ public class ActionSet
 	{
 		actions.remove(name);
 		if(added)
-			jEdit.actionHash.remove(action.getName());
+			jEdit.actionHash.remove(name);
 	} //}}}
 
 	//{{{ removeAllActions() method
@@ -177,7 +177,7 @@ public class ActionSet
 		{
 			jEdit.actionHash.remove(actions[i].getName());
 		}
-		actions.clear();
+		this.actions.clear();
 	} //}}}
 
 	//{{{ getAction() method

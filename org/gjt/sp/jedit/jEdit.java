@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.119 2003/03/27 04:03:08 spestov Exp $
+ * @version $Id: jEdit.java,v 1.120 2003/03/28 00:15:50 spestov Exp $
  */
 public class jEdit
 {
@@ -86,11 +86,16 @@ public class jEdit
 			System.exit(1);
 		}
 
+		settingsDirectory = MiscUtilities.constructPath(
+			System.getProperty("user.home"),".jedit");
+
+		// MacOS users expect the app to keep running after all windows
+		// are closed
+		background = OperatingSystem.isMacOS();
+
 		//{{{ Parse command line
 		boolean endOpts = false;
 		int level = Log.WARNING;
-		settingsDirectory = MiscUtilities.constructPath(
-			System.getProperty("user.home"),".jedit");
 		String portFile = "server";
 		boolean restore = true;
 		boolean gui = true; // open initial view?
@@ -2218,7 +2223,7 @@ public class jEdit
 
 	//{{{ Package-private members
 
-	Hashtable actionHash;
+	static Hashtable actionHash;
 
 	//{{{ updatePosition() method
 	/**
