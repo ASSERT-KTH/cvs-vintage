@@ -99,7 +99,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.8 2002/06/27 04:24:40 jmcnally Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.9 2002/07/13 00:14:53 jmcnally Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
@@ -176,7 +176,7 @@ public class SecurityAdminTool
     
 
     /** 
-     * Gets a list of all Groups in which the user does not have a current
+     * Gets a list of active Groups in which the user does not have a current
      * role and has not already requested a role.
      */
     public List getNonMemberGroups(ScarabUser user) throws Exception
