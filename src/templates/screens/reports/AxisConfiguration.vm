@@ -157,7 +157,6 @@
 $intake.declareGroups()
 </form>
 </div>
-
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))
 <p><pre>$report.ReportDefinition.toXmlString()</pre></p>
 #end

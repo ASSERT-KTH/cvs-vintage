@@ -92,7 +92,7 @@
           #set ($value="$attribute.Name")
     #end
     #if (!$locked) 
-         <input type="text" size="15" name="$rmaGroup.DisplayValue.Key" value="$value">
+         <input type="text" size="15" name="$rmaGroup.DisplayValue.Key" value="$value" />
     #else 
          $value
     #end
@@ -151,3 +151,4 @@
 $intake.declareGroups()
 </form>
 #end
+</div>

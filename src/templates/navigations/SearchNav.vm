@@ -30,7 +30,7 @@
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
     value="$user.HomePage" />
  <select name="$scarabG.Constant.NEW_ISSUE_TYPE" tabindex="3" 
-    onChange="this.form.submit();">
+    onchange="this.form.submit();">
   #foreach($issueType in $issueTypes)
     #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
     <option#if ($issueType.QueryKey == $currentIssueType.QueryKey) selected="selected"#end value="$issueType.QueryKey">$rmit.DisplayName</option>
@@ -50,7 +50,7 @@
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
 <input type="hidden" name="$scarabG.Constant.REMOVE_CURRENT_MITLIST_QKEY" value="true" />
-  <select name="go" tabindex="3" onChange="this.form.submit();">
+  <select name="go" tabindex="3" onchange="this.form.submit();">
     <option value="home,ModuleQuery.vm">$l10n.SelectQuery</option>
     <option value="home,ModuleQuery.vm">&#160;$l10n.NewModuleQuery</option>
     <option value="Search.vm">&#160;$l10n.Custom</option>
@@ -95,7 +95,7 @@
     <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" 
         value="$scarabR.NextEntryTemplate" />
     ##set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-    <select name="templateId" tabindex="5" onChange="this.form.submit();">
+    <select name="templateId" tabindex="5" onchange="this.form.submit();">
          <option value="0">$l10n.SelectTemplate</option>
      #foreach ($template in $allTemplates)
        ##set ($isCreatedBy = $template.Issue.isCreatingUser($user))

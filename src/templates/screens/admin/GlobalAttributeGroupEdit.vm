@@ -118,3 +118,5 @@
 $intake.declareGroups()
 </form>
 #end
+
+</div>

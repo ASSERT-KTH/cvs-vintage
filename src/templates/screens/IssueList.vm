@@ -54,7 +54,7 @@ function submitFormTo(form, name) {
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 <select name="format"
-        onChange="submitFormTo(this.form, 'eventSubmit_doSearch');">
+        onchange="submitFormTo(this.form, 'eventSubmit_doSearch');">
 <option value="" selected="selected">$l10n.ExportResultsTo</option>
 <option value="excel">$l10n.Excel</option>
 <option value="tsv">$l10n.TabSeparatedValues</option>
@@ -258,7 +258,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 <select name="format"
-        onChange="submitFormTo(this.form, 'eventSubmit_doSearch');">
+        onchange="submitFormTo(this.form, 'eventSubmit_doSearch');">
 <option value="" selected="selected">$l10n.ExportResultsTo</option>
 <option value="excel">$l10n.Excel</option>
 <option value="tsv">$l10n.TabSeparatedValues</option>

@@ -58,7 +58,7 @@ $l10n.Click
   <th nowrap="nowrap">$l10n.Select</th>
 ##  <th>$l10n.Subscribe</th>
 ##  <th>$l10n.SubscribeFrequency</th>
-  <th>#sort ("name" "$l10n.Name")
+  <th>#sort ("name" "$l10n.Name")</th>
   <th>#sort ("desc" "$l10n.Description")</th>
   <th>#sort ("avail" "$l10n.Availability")</th>
   <th>#sort ("user" "$l10n.CreatedBy")</th>

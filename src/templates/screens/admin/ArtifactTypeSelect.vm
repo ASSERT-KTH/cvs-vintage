@@ -36,6 +36,7 @@
         
 #foreach($issueType in $issueTypes)
   #indexedRows($velocityCount)
+  <tr>  
   <label for="radio_$issueType.IssueTypeId">
   <td><input type="radio" name="issueTypeId" value="$issueType.IssueTypeId" id="radio_$issueType.IssueTypeId" /></td>
   <td>$issueType.Name</td>

@@ -71,6 +71,7 @@
     </tr>
   #end
   </table>
+ </div>
 #end
 
 <h3>$l10n.GroupRelatedData</h3>
@@ -194,7 +195,7 @@
 
 </form>
 </div>
-
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))
 <p><pre>$report.ReportDefinition.toXmlString()</pre></p>
 #end
+

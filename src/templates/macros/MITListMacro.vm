@@ -22,8 +22,6 @@
     <input type="submit" value="$l10n.EditList" 
         name="eventSubmit_doRedirecttocrossmodulelist" />
     </div>
-#else
-    <br />
 #end
 #end
 

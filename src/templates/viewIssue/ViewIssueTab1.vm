@@ -82,7 +82,7 @@
 <td>$l10n.EnterReason
    #fieldErrorMsg($attCommentGroup.Data "")
    
-   <p>#textAreaMedium("$attCommentGroup.Data.Key" $attCommentGroup.Data.Value)
+   <p>#textAreaMedium("$attCommentGroup.Data.Key" $attCommentGroup.Data.Value)</p>
    <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
 </td>
 </tr>

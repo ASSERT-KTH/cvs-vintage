@@ -568,7 +568,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #set ($headingType = $data.Parameters.getInt("headingtype", 1))
 
 ## USER SEARCH
-<a name="add"><h3>$l10n.Users</h3></a> 
+<h3><a name="add">$l10n.Users</a></h3>
 <div class="axial">
 
 #if (!$userAttrs || $userAttrs.isEmpty())

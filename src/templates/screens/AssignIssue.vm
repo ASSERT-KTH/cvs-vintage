@@ -121,5 +121,5 @@
 $intake.declareGroups()
 
 #end
-</div>
 </form>
+</div>

@@ -275,7 +275,6 @@
   	<input type="submit" name="#" value="Add/Remove Y-axis group">
   </div>
 </form>
-</div>
 
 <div class="functnbar2">
   <input type="submit" value="View updated report output"  
@@ -286,3 +285,4 @@
  #end
 </div>
 
+</div>

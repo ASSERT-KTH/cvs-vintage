@@ -6,6 +6,9 @@
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($currentTemplate ))
 
+
+<div class="app" id="savetemplate">
+
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
@@ -29,11 +32,6 @@
 </div>
 #end
 
-<div class="app" id="savetemplate">
-
-<form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
 
 #if ($templateId)
   <input type="hidden" name="templateId" value="$templateId" />
@@ -139,6 +137,7 @@
 #SaveTemplateBar("2")
 
 $intake.declareGroups()
+#end
+
 </form>
 </div>
-#end
