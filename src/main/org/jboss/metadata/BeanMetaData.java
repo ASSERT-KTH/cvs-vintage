@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -53,7 +53,7 @@ public abstract class BeanMetaData extends MetaData {
 	private String jndiName;
 	protected String configurationName;
 	private ConfigurationMetaData configuration;
-
+    private String securityProxy;
 	
 	// Static --------------------------------------------------------
     
@@ -111,7 +111,9 @@ public abstract class BeanMetaData extends MetaData {
 		}
 		return configuration;
 	}
-	
+
+    public String getSecurityProxy() { return securityProxy; }
+
 	public ApplicationMetaData getApplicationMetaData() { return application; }
 	
 	public abstract String getDefaultConfigurationName();
@@ -240,7 +242,10 @@ public abstract class BeanMetaData extends MetaData {
 		if (configurationName != null && getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null) {
 			throw new DeploymentException("configuration '" + configurationName + "' not found in standardjboss.xml or jboss.xml");
 		}
-		
+
+        // Get the security proxy
+        securityProxy = getElementContent(getOptionalChild(element, "security-proxy"), securityProxy);
+
 		// update the resource references (optional)
 		Iterator iterator = getChildrenByTagName(element, "resource-ref");
 		while (iterator.hasNext()) {

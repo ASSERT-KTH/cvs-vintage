@@ -27,7 +27,7 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -39,8 +39,8 @@ public class ApplicationMetaData extends MetaData {
     private ArrayList securityRoles = new ArrayList();
     private HashMap configurations = new HashMap();
     private HashMap resources = new HashMap();
-	private HashMap plugins = new HashMap();
-
+    private HashMap plugins = new HashMap();
+    private String securityDomain;
     
     // Static --------------------------------------------------------
     
@@ -92,7 +92,12 @@ public class ApplicationMetaData extends MetaData {
 	public Object getPluginData(String pluginName) {
 		return plugins.get(pluginName);
 	}
-	
+
+    public String getSecurityDomain()
+    {
+        return securityDomain;
+    }
+
     public void importEjbJarXml (Element element) throws DeploymentException {
        
        // find the beans		
@@ -243,7 +248,12 @@ public class ApplicationMetaData extends MetaData {
        Iterator iterator;
        
        // all the tags are optional
-       
+
+       // Get the security domain name
+       Element securityDomainElement = getOptionalChild(element, "security-domain");
+       if( securityDomainElement != null )
+        securityDomain = getElementContent(securityDomainElement);
+
        // find the container configurations (we need them first to use them in the beans)
        Element confs = getOptionalChild(element, "container-configurations");
 	   if (confs != null) {
