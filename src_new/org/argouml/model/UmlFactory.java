@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.1 2005/01/02 10:08:16 linus Exp $
+// $Id: UmlFactory.java,v 1.2 2005/01/08 11:34:23 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model;
 
-import ru.novosoft.uml.foundation.data_types.MActionExpression;
 
 /**
  * The interface for the factory for Uml.<p>
@@ -195,7 +194,7 @@ public interface UmlFactory {
      *
      * @return an initialized UML ActionExpression instance.
      */
-    MActionExpression createActionExpression();
+    Object createActionExpression();
 
     /**
      * Create a UML object from the implementation name.
