@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.5 2002/01/16 09:21:51 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.6 2002/08/02 16:19:36 spestov Exp $
  */
 public class Abbrevs
 {
@@ -189,6 +189,15 @@ public class Abbrevs
 			finally
 			{
 				buffer.endCompoundEdit();
+			}
+
+			if(expand.posParamCount != pp.size())
+			{
+				view.getStatus().setMessageAndClear(
+					jEdit.getProperty(
+					"view.status.incomplete-abbrev",
+					new Integer[] { new Integer(expand.posParamCount),
+					new Integer(pp.size()) }));
 			}
 
 			return true;
@@ -497,6 +506,9 @@ public class Abbrevs
 		int caretPosition = -1;
 		int lineCount;
 
+		// number of positional parameters in abbreviation expansion
+		int posParamCount;
+
 		//{{{ Expansion constructor
 		Expansion(String text, int softTabSize, Vector pp)
 		{
@@ -545,16 +557,9 @@ public class Abbrevs
 							i++;
 
 							int pos = ch - '0';
+							posParamCount = Math.max(pos,posParamCount);
 							if(pos < pp.size())
 								buf.append(pp.elementAt(pos));
-							else
-							{
-								// so the user knows
-								// a positional is
-								// expected
-								buf.append('$');
-								buf.append(ch);
-							}
 						}
 						else
 						{
