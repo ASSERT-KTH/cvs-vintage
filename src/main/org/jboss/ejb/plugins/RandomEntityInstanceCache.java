@@ -22,6 +22,7 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.logging.Logger;
+import org.jboss.logging.Log;
 
 /**
 *	<description> 
@@ -29,20 +30,22 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.10 $
+*   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+*	@version $Revision: 1.11 $
 */
 public class RandomEntityInstanceCache
 extends NoPassivationEntityInstanceCache
 {
-
+    
     // Constants -----------------------------------------------------
+    public static final String NAME = "Passivator";
     
     // Attributes ----------------------------------------------------
     boolean running = false; // Passivator thread running?
     
     int minActive = 100; // Always try to passivate if more than this nr are active
     
-    long timeout = 60*1000L; // Passivation sweep sleep time
+    long timeout = 10*1000L; // Passivation sweep sleep time
     
     // Static --------------------------------------------------------
     
@@ -53,7 +56,7 @@ extends NoPassivationEntityInstanceCache
     throws Exception
     {
        running = true;
-       new Thread(new Passivator()).start();
+       new Thread(new Passivator(),NAME).start();
     }
     
     public void stop()
@@ -73,81 +76,69 @@ extends NoPassivationEntityInstanceCache
     class Passivator
     implements Runnable
     {
-       //RandomEntityInstanceCache cache;
-       
-       public void run()
-       {
-         Logger.debug("Passivator started");
-         // Passivation loop
-         while(running)
-         {
-          //            Logger.debug("Clearing cache");
-          // Passivate old. Lock cache first
-          //synchronized(RandomEntityInstanceCache.this)
-          synchronized(cache)
-          {
-              // Do not use cache (many to one entries)
-              int currentActive = cache.size();
-              if (currentActive > minActive)
-              {
-                 InstancePool pool = ((EntityContainer)con).getInstancePool();
-                 
-                 Logger.debug("Too many active instances:"+currentActive);
-                 
-                 // Passivate some instance; they need to be unlocked though
-                 
-                 //KeySet has cacheKeys (currentActive>0)	
-                 Iterator keys = cache.keySet().iterator();
-                 
-                 while(keys.hasNext())
-                 {
-                   
-                   Object key = keys.next();
-                   
-                   //Get the context
-                   EntityEnterpriseContext ctx =  
-                    (EntityEnterpriseContext) cache.get(key);
-                   
-                   
-                   // Make sure we can work on it
-                   Logger.debug("Checking:"+ctx.getId());
-                            
-                   //TODO do the Locking logic
-                            try
-                   {
-                    Logger.debug("Passivating:"+ctx.getId());
+        public void run()
+        {
+            Log.setLog(new Log(NAME));
+            Logger.debug("Passivator started");
+            
+            // Passivation loop
+            while(running)
+            {
+                
+                while(cache.size() > minActive)
+                {
+                    // Passivate some instance; they need to be unlocked though
                     
-                                // Passivate the entry
-                                ((EntityContainer)con).getPersistenceManager().passivateEntity(ctx);
+                    Logger.debug("Too many active instances: "+cache.size());
+                    
+                    Object key = null;
+                    
+                    // when using Collections.synchronizedMap,
+                    // only the iterators need explicit synchronization 
+                    synchronized(cache) {
+                        Iterator iterator = cache.keySet().iterator();
+                        if (iterator.hasNext()) key = iterator.next();
+                    }
+                    
+                    if (key == null) {
+                        // this should not happen so often 
+                        // (ie only if minActive instances have been removed between the while
+                        // and the synchronized(cache) )
+                        break;
+                    }
+                    
+                    //Get the context
+                    EntityEnterpriseContext ctx = (EntityEnterpriseContext) cache.get(key);
+                    
+                    
+                    // Make sure we can work on it
+                    // DEBUG Logger.debug("Checking:"+ctx.getId());
+                    
+                    //TODO do the Locking logic
+                    try {
+                        Logger.debug("Passivating:"+ctx.getId());
                         
-                    // Remove the entry	
-                    cache.remove(key);
+                        // Passivate the entry
+                        ((EntityContainer)con).getPersistenceManager().passivateEntity(ctx);
+                        
+                        // Remove the entry	
+                        cache.remove(key);
                     
-                                //keep the count
-                                currentActive--;
-                   }
-                    
-                   catch (Exception e) { Logger.warning("Could not passivate instance");}
-                 
-                   // Are we done?
-                   if (currentActive == minActive) break;
-                 }
-              
-              }    
-          }	
-          // DEBUG Logger.debug("Passivation done");
-                Logger.debug("Passivation done");
-          
-          // Sleep
-          try
-          {
-              Thread.sleep(timeout);
-          } catch (InterruptedException e)
-          {
-              // Ignore
-          }
-         
-         }
-       }
+                    } catch (Exception e) { Logger.warning("Could not passivate instance");}
+                }    
+                
+                // DEBUG Logger.debug("Passivation done");
+                
+                // Sleep
+                try
+                {
+                    Thread.sleep(timeout);
+                } catch (InterruptedException e)
+                {
+                    // Ignore
+                }
+            
+            }
+        }
     }
 }

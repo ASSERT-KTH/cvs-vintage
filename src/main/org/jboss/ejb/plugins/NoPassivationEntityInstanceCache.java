@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andy Schaefer</a>
-*	@version $Revision: 1.15 $
+*	@version $Revision: 1.16 $
 */
 public class NoPassivationEntityInstanceCache
 implements EntityInstanceCache
@@ -48,6 +48,7 @@ implements EntityInstanceCache
     // Attributes ----------------------------------------------------
     Container con;
     
+    // WARNING: RandomEntityInstanceCache relies on the synchronization.
     Map cache = Collections.synchronizedMap(new HashMap());
     
     // Static --------------------------------------------------------
