@@ -100,7 +100,7 @@
  <table cellpadding="3" cellspacing="2" border="0">
     
  <tr>
-   <th>$l10n.Comment</th>
+   <th>$l10n.Reason</th>
    <td>$l10n.EnterReason   
          <p><textarea rows="4" cols="60" name ="reason">$!reason</textarea></p>
    </td>
