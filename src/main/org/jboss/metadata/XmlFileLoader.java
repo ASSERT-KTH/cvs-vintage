@@ -33,7 +33,7 @@ import java.net.URLClassLoader;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public class XmlFileLoader
 {
@@ -323,17 +323,17 @@ public class XmlFileLoader
       }
       catch (SAXParseException e)
       {
-         log.error(e.getMessage()+":"+e.getColumnNumber()+":"+e.getLineNumber(), e);
-         throw new DeploymentException(e.getMessage(), e);
+         String msg = "Invalid XML: file=" + inPath+"@"+e.getColumnNumber()+":"+e.getLineNumber();
+         log.error(msg, e);
+         throw new DeploymentException(msg, e);
       }
       catch (SAXException e)
       {
-         System.out.println(e.getException());
-         throw new DeploymentException(e.getMessage(), e);
+         throw new DeploymentException("Invalid XML: file=" + inPath, e);
       }
       catch (Exception e)
       {
-         throw new DeploymentException(e.getMessage(), e);
+         throw new DeploymentException("Invalid XML: file=" + inPath, e);
       }
    }
    
