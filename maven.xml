@@ -50,7 +50,7 @@
   </postGoal>
   
 
-  <goal name="scarab:sample" prereqs="scarab:clean, war:webapp" description="Create an out of the box ready distribution">    
+  <goal name="scarab:sample" prereqs="war:webapp" description="Create an out of the box ready distribution">    
     <ant:mkdir dir="target/dist"/>
     <ant:copy todir="target/dist/scarab">
       <ant:fileset dir="target/scarab"
