@@ -18,7 +18,6 @@ package org.columba.core.plugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.columba.core.main.MainInterface;
@@ -47,7 +46,6 @@ public final class PluginFinder {
      * @return        array of plugin folders
      */
     public static File[] searchPlugins() {
-        List v = new Vector();
         File[] programList = null;
         File[] configList = null;
 
@@ -56,22 +54,16 @@ public final class PluginFinder {
         if (programFolder.exists()) {
             programList = programFolder.listFiles();
         } else {
-            LOG.fine("Folder \"plugins\" doesn't exist.");
+            LOG.fine("Folder \"" + programFolder.getPath() + "\" doesn't exist.");
         }
 
         File configFolder = new File(MainInterface.config.getConfigDirectory(),
                 "plugins");
 
-        if (!configFolder.exists()) {
-            configFolder.mkdir();
-        }
-
-        LOG.info("config-folder path=" + configFolder.getPath());
-
         if (configFolder.exists()) {
             configList = configFolder.listFiles();
         } else {
-            LOG.info("Folder \"plugins\" doesn't exist.");
+            LOG.fine("Folder \"" + configFolder.getPath() + "\" doesn't exist.");
         }
 
         if ((programList != null) && (configList != null)) {
@@ -100,13 +92,12 @@ public final class PluginFinder {
      */
     public static File[] filterDirectories(File[] files) {
         List list = new ArrayList();
-        
-        for ( int i=0; i<files.length; i++) {
-            if ( checkDirectory(files[i]) ) list.add(files[i]);
+        for (int i = 0; i < files.length; i++) {
+            if (checkDirectory(files[i])) {
+                list.add(files[i]);
+            }
         }
-        
-        File[] newArray = new File[list.size()];
-        return (File[]) list.toArray(newArray);
+        return (File[]) list.toArray(new File[0]);
     }
     
     
@@ -120,14 +111,11 @@ public final class PluginFinder {
      * @return			true, if directory contains plugin. False, otherwise.
      */
     public static boolean checkDirectory(File file) {
-        boolean result = false;
-        
-        if ( file.isDirectory() ) {
-            
+        if (file.isDirectory()) {
             File plugin = new File(file, "plugin.xml");
-            if ( plugin.exists() ) result = true;
+            return plugin.exists();
         }
         
-        return result;
+        return false;
     }
 }
