@@ -422,7 +422,7 @@ try{
             String attId = getIntakeTool()
                 .get("Attribute", IntakeTool.DEFAULT_KEY)
                 .get("Id").toString();
-            if ( attId == null || attId.length() == 0 )
+         if ( attId == null || attId.length() == 0 )
             {
                 attribute = Attribute.getInstance();
             }
@@ -614,13 +614,29 @@ try{
     }
 
     /**
-     * Get a new AttributeGroup object.
+     * A AttributeGroup object for use within the Scarab API.
      */
     public AttributeGroup getAttributeGroup()
+     throws Exception
     {
-        return new AttributeGroup();
-    }
-
+           AttributeGroup group = null;
+try{
+            String attGroupId = getIntakeTool()
+                .get("AttributeGroup", IntakeTool.DEFAULT_KEY)
+                .get("AttributeGroupId").toString();
+            if ( attGroupId == null || attGroupId.length() == 0 )
+            {
+                group = new AttributeGroup();
+            }
+            else 
+            {
+                group = (AttributeGroup) 
+                    AttributeGroupPeer.retrieveByPK(new NumberKey(attGroupId));
+            }
+}catch(Exception e){e.printStackTrace();}
+        return group;
+ 
+   }
     /**
      * Get a AttributeGroup object.
      */
