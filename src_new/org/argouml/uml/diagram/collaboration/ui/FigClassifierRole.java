@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.7 2002/04/11 10:50:00 jeremybennett Exp $
+// $Id: FigClassifierRole.java,v 1.8 2002/08/26 09:14:27 d00mst Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -38,6 +38,7 @@ import java.awt.*;
 import java.util.*;
 import java.beans.*;
 import java.awt.event.*;
+import java.text.ParseException;
 import javax.swing.*;
 
 import ru.novosoft.uml.foundation.core.*;
@@ -460,7 +461,12 @@ public class FigClassifierRole extends FigNodeModelElement {
 
         if (ft == _name) {
             String s = ft.getText();
-            ParserDisplay.SINGLETON.parseClassifierRole(cls, s);
+	    try {
+		ParserDisplay.SINGLETON.parseClassifierRole(cls, s);
+		ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+	    } catch (ParseException pe) {
+		ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+	    }
         }
     }
 
@@ -510,7 +516,7 @@ public class FigClassifierRole extends FigNodeModelElement {
         // Build the final string and set it as the name text.
 
         if (_readyToEdit) {
-            if( nameStr == "" && baseString == "")
+            if( nameStr.length() == 0 && baseString.length() == 0)
                 _name.setText("");
             else
                 _name.setText("/" + nameStr.trim() + " : " + baseString);
