@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.109 2003/08/21 01:56:10 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.110 2003/09/11 18:32:49 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -1061,5 +1061,23 @@ public class ScarabUserImpl
     public Locale getLocale()
     {
         return internalUser.getLocale();
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#isShowOtherModulesInIssueTypeList()
+     */
+    public boolean isShowOtherModulesInIssueTypeList()
+    {
+        return internalUser.isShowOtherModulesInIssueTypeList();
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setShowOtherModulesInIssueTypeList(boolean)
+     */
+    public void setShowOtherModulesInIssueTypeList(
+        boolean newShowOtherModulesInIssueTypeList)
+    {
+        internalUser.setShowOtherModulesInIssueTypeList(
+            newShowOtherModulesInIssueTypeList);
     }
 }

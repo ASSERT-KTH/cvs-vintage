@@ -1,7 +1,7 @@
   #set ($module = $scarabR.CurrentModule)
   #if ($module.allowsNewIssues())
     <div>$link.setPage("home,EnterNew.vm").setLabel($l10n.EnterNewIssue).addPathInfo("eventSubmit_doStart", "foo").setAction("ReportIssue")</div>
-    #set ($lastEntered = $data.User.lastEnteredIssueTypeOrTemplate())
+    #set ($lastEntered = $scarabR.LastEnteredIssueTypeOrTemplate)
     #if ($lastEntered)
       #if ($lastEntered.isTemplate())
         #set ($value = $lastEntered.IssueId)

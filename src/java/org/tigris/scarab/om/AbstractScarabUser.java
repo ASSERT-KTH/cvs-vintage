@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.91 2003/08/21 01:56:10 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.92 2003/09/11 18:32:49 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -158,6 +158,12 @@ public abstract class AbstractScarabUser
      * The last entered issue type
      */
     private Map enterIssueMap;
+
+    /**
+     * toggle switch for show/hide the cross module section of the 
+     * issue type selection widget.
+     */
+    private boolean showOtherModulesInIssueTypeList;    
 
     private Map activeKeys = new HashMap();
     private transient ThreadLocal threadKey = null;
@@ -1692,5 +1698,24 @@ public abstract class AbstractScarabUser
             }
         }
         return locale;
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#isShowOtherModulesInIssueTypeList()
+     */
+    public boolean isShowOtherModulesInIssueTypeList()
+    {
+        return showOtherModulesInIssueTypeList;
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setShowOtherModulesInIssueTypeList(boolean)
+     */
+    public void setShowOtherModulesInIssueTypeList(
+        boolean newShowOtherModulesInIssueTypeList)
+    {
+        this.showOtherModulesInIssueTypeList = 
+            newShowOtherModulesInIssueTypeList;
     }
 }

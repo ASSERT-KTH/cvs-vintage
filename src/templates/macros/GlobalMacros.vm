@@ -17,7 +17,6 @@
   #if ($size.length() == 0)
    <option value="">$l10n.Choose</option>
   #end
-  #if ($module.getLeafRModuleOptions($attr, $issueType))
   #foreach ($option in $module.getOptionTree($attr, $issueType))
     #set ($selected = false)
     #set ($canMakeTransition = true)
@@ -48,7 +47,6 @@
           $option.DisplayValue</option>
     #end
   #end
-  #end
 </select>
 #end
 
@@ -68,7 +66,7 @@
   #if ($size.length() == 0)
   <option value="">$l10n.Choose</option>
   #end
-  #foreach ($option in $module.getOptionTree($attr, $issue.IssueType.IssueTypeForTemplateType))
+  #foreach ($option in $module.getOptionTree($attr, $issue.IssueType))
     #set ($selected = false)
     #if ($currentValue && $option.OptionId == $currentValue)
          #set ($selected = true)

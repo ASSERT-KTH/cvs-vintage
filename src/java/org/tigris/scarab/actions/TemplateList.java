@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.58 2003/09/09 14:16:39 parun Exp $
+ * @version $Id: TemplateList.java,v 1.59 2003/09/11 18:32:49 jmcnally Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -426,6 +426,7 @@ public class TemplateList extends RequireLoginFirstAction
                 new Long(templateId)).getIssueType();
             setTarget(data, scarabR.getNextEntryTemplate(
                 templateType.getIssueTypeForTemplateType()));
+            ReportIssue.cleanOutStaleIssue(data, context);
         }
     }
     

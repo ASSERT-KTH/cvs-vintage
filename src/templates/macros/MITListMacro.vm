@@ -80,10 +80,17 @@
 #set ($atLeastOneRMIT = $currentRmits && !$currentRmits.isEmpty())
 #set ($atLeastOneSaved = $savedLists && !$savedLists.isEmpty())
 #set ($rowIndex = 1)
-#if ($atLeastOneRMIT || $atLeastOneSaved)
+
 <h3>$l10n.IssueTypesInModuleAndSavedLists</h3>
 <div class="colbar">
-$l10n.CurrentModuleTypesIntro
+
+#set ($showOtherModuleSection = $user.isShowOtherModulesInIssueTypeList())
+#if ($showOtherModuleSection)
+$l10n.CurrentModuleTypesIntroShown
+#else
+$l10n.format('CurrentModuleTypesIntroHidden', $link.setPage($screenTemplate).setAction("DefineXModuleList").addPathInfo("eventSubmit_doToggleOtherModules", "show").toString())
+#end
+
   <p>
   #if ($atLeastOneSaved)
   <select name="list_id" onclick="allit.checked=false" >
@@ -100,6 +107,7 @@ $l10n.CurrentModuleTypesIntro
   </p>
 </div>
 
+#if ($atLeastOneRMIT)
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th>$l10n.Select</th>
@@ -134,7 +142,10 @@ $l10n.CurrentModuleTypesIntro
   </tr>
  #end
 </table>
-
+#else
+$l10n.NoMoreIssueTypes
+#end
+#if ($atLeastOneRMIT || $atLeastOneSaved)
 <div class="functnbar3">
  #if (!$editingList)
   <input type="submit" name="eventSubmit_do$event" value="$buttonName" />
@@ -145,14 +156,18 @@ $l10n.CurrentModuleTypesIntro
 </div>
 #end
 
+#if ($showOtherModuleSection)
 
 <h3>$l10n.OtherModuleIssuesInDomain</h3>
+<div class="colbar">
+$l10n.format('HideThisSection', $link.setPage($screenTemplate).setAction("DefineXModuleList").addPathInfo("eventSubmit_doToggleOtherModules", "hide").toString())
+</div>
 
+## calculations for other module section
 #set ($searchField = $data.Parameters.getString("searchField", ""))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity", "asc"))
 #set ($sortColumn = $data.Parameters.getString("sortColumn", "module"))
-
 #set ($searchableRMITs = $user.getSearchableRMITs($searchField, $searchString, $sortColumn, $sortPolarity, $currentModule))
 #if ($searchableRMITs.isEmpty() && $searchField.length() != 0 && $searchString.length() != 0)
  ## try one more time with no search criteria
@@ -164,6 +179,7 @@ $l10n.CurrentModuleTypesIntro
 
 #if ($searchableRMITs.isEmpty())
     <p><em>$l10n.NoMoreIssueTypes</em></p>
+    #set ($showOtherModuleSection = false)
 #else
 
 #if ($searchField.equals("module"))
@@ -267,6 +283,9 @@ $l10n.CurrentModuleTypesIntro
      value="$l10n.AddSelected" />
 </div>
 #end
+
+#end
+
 #if ($editingList)
 <div class="functnbar2">
   <input type="submit" name="eventSubmit_do$event" value="$buttonName" />

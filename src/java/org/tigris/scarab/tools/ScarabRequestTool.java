@@ -3046,6 +3046,62 @@ e.printStackTrace();
         }
     } 
 
+
+
+   /**
+    * @return an IssueType which may represent a template 
+    */
+    public Object getLastEnteredIssueTypeOrTemplate()
+        throws Exception
+    {
+        Object result = null;
+        IssueType issueType = getCurrentIssueType();
+        ScarabUser user = (ScarabUser)data.getUser();
+        String templateId = data.getParameters().getString("templateId");
+        if (templateId != null && templateId.trim().length() > 0)
+        {
+            Issue template = getIssueTemplate(templateId);
+            issueType = template.getIssueType().getIssueTypeForTemplateType();
+            user.setLastEnteredTemplate(template);
+            result = template;
+        }
+
+        if (result == null && issueType != null) 
+        {
+            result = issueType;
+            user.setLastEnteredIssueType(issueType);
+        }
+        
+        if (result == null) 
+        {
+            result = user.lastEnteredIssueTypeOrTemplate();
+            if (result != null) 
+            {
+                if (result instanceof Issue) 
+                {
+                    issueType = ((Issue)result).getIssueType()
+                        .getIssueTypeForTemplateType();
+                }
+                else 
+                {
+                    issueType = (IssueType)result;
+                }
+            }
+        }
+        
+        // finally if we have a value, check that it is active
+        if (issueType != null) 
+        {
+            RModuleIssueType rmit = 
+                getCurrentModule().getRModuleIssueType(issueType);
+            if (rmit == null || !rmit.getActive()) 
+            {
+                result = null;
+            }
+        }
+        
+        return result;
+    }
     
     // ****************** Recyclable implementation ************************
 

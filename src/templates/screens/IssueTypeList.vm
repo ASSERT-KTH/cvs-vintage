@@ -17,8 +17,9 @@ $user.setHomePage("query")
 
 #createMITList("Finished" $l10n.DefineQuery $user "IssueTypeList.vm" $l10n.SelectSaveXModuleQuery)
 
+## $showOtherModuleSection will be set in the createMITList macro
 #set ($mitList = $user.CurrentMITList)
-#if (!$mitList || $mitList.isEmpty())
+#if ((!$mitList || $mitList.isEmpty()) && $showOtherModuleSection)
  <h3>$l10n.PredefinedLists</h3>
  #set($manager = $scarabG.MITListManager)
  #set($key = "pd_list_id")

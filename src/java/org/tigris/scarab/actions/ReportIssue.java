@@ -96,7 +96,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.179 2003/09/10 00:41:45 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.180 2003/09/11 18:32:49 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -859,6 +859,15 @@ public class ReportIssue extends RequireLoginFirstAction
     }
 
     public void doStart(RunData data, TemplateContext context)
+        throws Exception
+    {
+        cleanOutStaleIssue(data, context);
+    }
+
+    /**
+     * for easy access by TemplateList action
+     */
+    static void cleanOutStaleIssue(RunData data, TemplateContext context)
         throws Exception
     {
         String key = data.getParameters()

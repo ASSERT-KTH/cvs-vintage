@@ -25,7 +25,7 @@
 
     #indexedRows($velocityCount)
     #set ($rmit = $currentModule.getRModuleIssueType($issueType))
-      <td><a href="$link.setPage($scarabR.getNextEntryTemplate($issueType)).addPathInfo($scarabG.Constant.CURRENT_ISSUE_TYPE, $issueType.QueryKey)">$rmit.DisplayName</a></td>
+      <td><a href="$link.setPage($scarabR.getNextEntryTemplate($issueType)).addPathInfo($scarabG.Constant.CURRENT_ISSUE_TYPE, $issueType.QueryKey).addPathInfo("eventSubmit_doStart", "foo").setAction("ReportIssue")">$rmit.DisplayName</a></td>
 <!-- commenting out until functionality is added
       <td><input type="checkbox" /></td>
 -->

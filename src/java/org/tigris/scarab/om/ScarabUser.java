@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.90 2003/08/21 00:10:24 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.91 2003/09/11 18:32:49 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -492,4 +492,22 @@ public interface ScarabUser extends User
      */
     void noticeLocale(Object localeInfo)
         throws Exception;
+
+    /**
+     * Get the ShowOtherModulesInIssueTypeList value.
+     * toggle switch for show/hide the cross module section of the 
+     * issue type selection widget.
+     * @return the ShowOtherModulesInIssueTypeList value.
+     */
+    public boolean isShowOtherModulesInIssueTypeList();
+
+    /**
+     * Set the ShowOtherModulesInIssueTypeList value.
+     * toggle switch for show/hide the cross module section of the 
+     * issue type selection widget.
+     * @param newShowOtherModulesInIssueTypeList The new 
+     * ShowOtherModulesInIssueTypeList value.
+     */
+    public void setShowOtherModulesInIssueTypeList(
+        boolean newShowOtherModulesInIssueTypeList);
 }
