@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.156 2003/11/11 22:01:15 linus Exp $
+// $Id: ModelFacade.java,v 1.157 2003/11/12 10:00:57 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2057,7 +2057,10 @@ public class ModelFacade {
     public static Object getExpression(Object handle) {
         if (handle instanceof MGuard)
             return ((MGuard)handle).getExpression();
-        return null;
+        
+        throw new IllegalArgumentException("Unrecognized object " + 
+					   getClassNull(handle));
+        
     }
 
     /**
@@ -5886,7 +5889,8 @@ public class ModelFacade {
         if (handle instanceof MBase) {
             return ((MBase)handle).getUMLClassName();
         }
-        return null;
+        throw new IllegalArgumentException(
+            "Unrecognized object " + getClassNull(handle));
     }
 
     ////////////////////////////////////////////////////////////////
@@ -5908,7 +5912,7 @@ public class ModelFacade {
             if (handle == null) {
                     return "[null]";
             } else {
-                    return "[" + handle + "/" + getClassNull(handle) + "]";
+                    return "[" +handle + "/" + handle.getClass() + "]";
             }
     }
 }
