@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.94 2004/01/29 02:36:58 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.95 2004/05/14 23:01:31 spestov Exp $
  */
 class ChunkCache
 {
@@ -620,6 +620,10 @@ class ChunkCache
 				{
 					info.chunks = null;
 					info.physicalLine = -1;
+					// fix the bug where the horiz.
+					// scroll bar was not updated
+					// after creating a new file.
+					info.width = 0;
 					continue;
 				}
 
