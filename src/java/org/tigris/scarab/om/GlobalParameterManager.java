@@ -61,7 +61,7 @@ import org.apache.turbine.Turbine;
  * module does not provide alternatives.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameterManager.java,v 1.8 2004/12/13 13:00:54 dabbous Exp $
+ * @version $Id: GlobalParameterManager.java,v 1.9 2005/01/11 08:40:06 dabbous Exp $
  */
 public class GlobalParameterManager
     extends BaseGlobalParameterManager
@@ -250,6 +250,8 @@ public class GlobalParameterManager
             }
             p.setValue(value);
             p.save();
+
+            getMethodResult().put(value, MANAGER_KEY, name, GET_STRING, module);
         }
     }
 
