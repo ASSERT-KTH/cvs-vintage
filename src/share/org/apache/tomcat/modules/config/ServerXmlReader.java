@@ -323,6 +323,8 @@ public class ServerXmlReader extends BaseInterceptor {
 		saveCachedModules(cachedM, modules);
 	    }
 	}
+        else
+            log("Warning: No modules.xml file found!");
     }
 
     void loadCachedModules( File f, Properties mods ) {
