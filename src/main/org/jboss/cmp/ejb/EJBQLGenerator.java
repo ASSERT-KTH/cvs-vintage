@@ -28,6 +28,10 @@ import org.jboss.cmp.query.QueryNode;
 import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
 import org.jboss.cmp.query.SubQuery;
+import org.jboss.cmp.query.Update;
+import org.jboss.cmp.query.Insert;
+import org.jboss.cmp.query.Delete;
+import org.jboss.cmp.query.Assignment;
 
 /**
  * Transformer that produces EJB-QL text of a query against a EJB schema.
@@ -44,6 +48,21 @@ public class EJBQLGenerator implements QueryVisitor
       StringBuffer buf = new StringBuffer(1000);
       query.accept(this, buf);
       return buf.toString();
+   }
+
+   public Object visit(Insert insert, Object param)
+   {
+      throw new UnsupportedOperationException("EJB-QL does not support INSERT");
+   }
+
+   public Object visit(Update update, Object param)
+   {
+      throw new UnsupportedOperationException("EJB-QL does not support UPDATE");
+   }
+
+   public Object visit(Delete delete, Object param)
+   {
+      throw new UnsupportedOperationException("EJB-QL does not support DELETE");
    }
 
    public Object visit(Query query, Object param)
@@ -156,6 +175,11 @@ public class EJBQLGenerator implements QueryVisitor
    }
 
    public Object visit(Parameter queryParam, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(Assignment assignment, Object param)
    {
       throw new UnsupportedOperationException();
    }

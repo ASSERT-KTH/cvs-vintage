@@ -14,9 +14,9 @@ public class Parameter extends Expression
 {
    private int index;
 
-   public Parameter(Query query, int index)
+   public Parameter(CommandNode command, int index)
    {
-      super(query.getParameters()[index]);
+      super(command.getParameters()[index]);
       this.index = index;
    }
 

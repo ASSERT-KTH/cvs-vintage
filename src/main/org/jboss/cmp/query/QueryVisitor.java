@@ -14,6 +14,12 @@ package org.jboss.cmp.query;
  */
 public interface QueryVisitor
 {
+   public Object visit(Insert insert, Object param);
+
+   public Object visit(Update update, Object param);
+
+   public Object visit(Delete delete, Object param);
+
    public Object visit(Query query, Object param);
 
    public Object visit(SubQuery subquery, Object param);
@@ -43,4 +49,6 @@ public interface QueryVisitor
    public Object visit(Literal literal, Object param);
 
    public Object visit(Parameter queryParam, Object param);
+
+   public Object visit(Assignment assignment, Object param);
 }

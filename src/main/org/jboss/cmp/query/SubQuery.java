@@ -9,7 +9,7 @@
 
 package org.jboss.cmp.query;
 
-public class SubQuery extends Query
+public class SubQuery extends BaseQueryNode
 {
    private final Query parent;
 
@@ -21,6 +21,11 @@ public class SubQuery extends Query
    public Query getQuery()
    {
       return parent;
+   }
+
+   public boolean isCorrelated(String alias)
+   {
+      return aliases.keySet().contains(alias) == false;
    }
 
    public NamedRelation getRelation(String alias)

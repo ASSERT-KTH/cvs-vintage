@@ -27,10 +27,9 @@ public class PathUnnester extends QueryCloner
     * @param nested the query to be unnested
     * @return a query containing no multi-step paths
     */
-   public Query unnest(Query nested)
+   public CommandNode unnest(CommandNode nested)
    {
-      Query query = (Query) nested.accept(this, null);
-      return query;
+      return (CommandNode) nested.accept(this, null);
    }
 
    public Object visit(CrossJoin join, Object param)
@@ -56,7 +55,7 @@ public class PathUnnester extends QueryCloner
 
    public Object visit(CollectionRelation relation, Object param)
    {
-      Query newQuery = (Query) param;
+      BaseQueryNode newQuery = (BaseQueryNode) param;
       Path path = relation.getPath();
       NamedRelation left = addJoinsFromPath(newQuery, path);
 
@@ -87,7 +86,7 @@ public class PathUnnester extends QueryCloner
       }
    }
 
-   private NamedRelation addJoinsFromPath(Query query, Path path)
+   private NamedRelation addJoinsFromPath(BaseQueryNode query, Path path)
    {
       NamedRelation left = path.getRoot();
       RangeRelation right;
@@ -114,7 +113,7 @@ public class PathUnnester extends QueryCloner
       return left;
    }
 
-   private Relation addJoin(Query query, NamedRelation left, NamedRelation right, AbstractAssociationEnd end)
+   private Relation addJoin(BaseQueryNode query, NamedRelation left, NamedRelation right, AbstractAssociationEnd end)
    {
       Relation joinTree = query.getRelation();
       if (joinTree == null)

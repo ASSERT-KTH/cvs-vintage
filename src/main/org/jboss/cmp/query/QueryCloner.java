@@ -21,9 +21,42 @@ import org.jboss.cmp.schema.AbstractAttribute;
  */
 public class QueryCloner implements QueryVisitor
 {
-   public Query cloneQuery(Query source)
+   public CommandNode cloneQuery(CommandNode source)
    {
-      return (Query) source.accept(this, null);
+      return (CommandNode) source.accept(this, null);
+   }
+
+   public void visitChildren(QueryNode newNode, QueryNode oldNode, Object param)
+   {
+      for (Iterator i = oldNode.getChildren().iterator(); i.hasNext();)
+      {
+         QueryNode node = (QueryNode) i.next();
+         newNode.addChild((QueryNode) node.accept(this, param));
+      }
+   }
+
+   public Object visit(Insert insert, Object param)
+   {
+      Insert newInsert = new Insert(insert.getRelation(), insert.getParameters());
+      visitChildren(newInsert, insert, param);
+      return newInsert;
+   }
+
+   public Object visit(Update update, Object param)
+   {
+      Update newUpdate = new Update(update.getRelation(), update.getParameters());
+      visitChildren(newUpdate, update, param);
+      if (update.getFilter() != null)
+         newUpdate.setFilter((Condition) update.getFilter().accept(this, param));
+      return newUpdate;
+   }
+
+   public Object visit(Delete delete, Object param)
+   {
+      Delete newDelete = new Delete(delete.getRelation(), delete.getParameters());
+      if (delete.getFilter() != null)
+         newDelete.setFilter((Condition) delete.getFilter().accept(this, param));
+      return newDelete;
    }
 
    public Object visit(Query query, Object param)
@@ -50,11 +83,7 @@ public class QueryCloner implements QueryVisitor
    {
       Projection newProjection = new Projection();
       newProjection.setDistinct(projection.isDistinct());
-      for (Iterator i = projection.getChildren().iterator(); i.hasNext();)
-      {
-         QueryNode node = (QueryNode) i.next();
-         newProjection.addChild((QueryNode) node.accept(this, param));
-      }
+      visitChildren(newProjection, projection, param);
       return newProjection;
    }
 
@@ -78,7 +107,7 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(RangeRelation relation, Object param)
    {
-      Query newQuery = (Query) param;
+      BaseQueryNode newQuery = (BaseQueryNode) param;
       RangeRelation newRelation = new RangeRelation(relation.getAlias(), relation.getType());
       newQuery.addAlias(newRelation);
       return newRelation;
@@ -86,7 +115,7 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(CollectionRelation relation, Object param)
    {
-      Query newQuery = (Query) param;
+      BaseQueryNode newQuery = (BaseQueryNode) param;
       CollectionRelation newRelation = new CollectionRelation(relation.getAlias(), (Path) relation.getPath().accept(this, param));
       newQuery.addAlias(newRelation);
       return newRelation;
@@ -123,13 +152,9 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(ConditionExpression expression, Object param)
    {
-      ConditionExpression expr = new ConditionExpression(expression.getOperator());
-      for (Iterator i = expression.getChildren().iterator(); i.hasNext();)
-      {
-         Condition condition = (Condition) i.next();
-         expr.addChild((QueryNode) condition.accept(this, param));
-      }
-      return expr;
+      ConditionExpression newExpression = new ConditionExpression(expression.getOperator());
+      visitChildren(newExpression, expression, param);
+      return newExpression;
    }
 
    public Object visit(IsNull expression, Object param)
@@ -149,6 +174,11 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(Parameter queryParam, Object param)
    {
-      return new Parameter((Query) param, queryParam.getIndex());
+      return new Parameter((CommandNode) param, queryParam.getIndex());
+   }
+
+   public Object visit(Assignment assignment, Object param)
+   {
+      return new Assignment(assignment.getTarget(), assignment.getExpression());
    }
 }

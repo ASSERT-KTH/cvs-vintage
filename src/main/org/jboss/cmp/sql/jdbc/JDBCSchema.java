@@ -19,18 +19,18 @@ public class JDBCSchema extends SQL92Schema
       new DateTimeDataType("TIMESTAMP"),
       new BinaryDataType("BINARY")
    };
-   private static final Map initialTypeMap;
+   private static final Map defaultTypeMap;
    static {
-      initialTypeMap = new HashMap();
+      defaultTypeMap = new HashMap();
       for (int i=2; i < builtins.length; i++)
       {
-         initialTypeMap.put(builtins[i].getName(), builtins[i]);
+         defaultTypeMap.put(builtins[i].getName(), builtins[i]);
       }
    }
 
    public JDBCSchema()
    {
-      super(initialTypeMap);
+      super(defaultTypeMap);
    }
 
    public AbstractType getBuiltinType(int family)

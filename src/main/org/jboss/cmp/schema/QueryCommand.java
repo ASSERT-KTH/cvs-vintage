@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface QueryCommand
 {
-   public List executeQuery(List params);
+   public List executeQuery(List params) throws PersistenceException;
 }

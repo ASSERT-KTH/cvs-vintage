@@ -51,11 +51,11 @@ public class SchemaMapper extends QueryCloner
     * @return an equivalent query against the target schema
     * @throws UnmappedEntryException if an entry cannot be mapped
     */
-   public Query map(Query query) throws UnmappedEntryException
+   public CommandNode map(CommandNode query) throws UnmappedEntryException
    {
       try
       {
-         return (Query) query.accept(this, null);
+         return (CommandNode) query.accept(this, null);
       }
       catch (InternalNoMapException e)
       {
@@ -63,18 +63,36 @@ public class SchemaMapper extends QueryCloner
       }
    }
 
+   public Object visit(Insert insert, Object param)
+   {
+      AbstractType[] params = mapParamList(insert.getParameters());
+      Insert newInsert = new Insert((RangeRelation)insert.getRelation().accept(this, param), params);
+      visitChildren(newInsert, insert, param);
+      return newInsert;
+   }
+
+   public Object visit(Update update, Object param)
+   {
+      AbstractType[] params = mapParamList(update.getParameters());
+      Update newUpdate = new Update((RangeRelation)update.getRelation().accept(this, param), params);
+      visitChildren(newUpdate, update, param);
+      if (update.getFilter() != null)
+         newUpdate.setFilter((Condition) update.getFilter().accept(this, param));
+      return newUpdate;
+   }
+
+   public Object visit(Delete delete, Object param)
+   {
+      AbstractType[] params = mapParamList(delete.getParameters());
+      Delete newDelete = new Delete((RangeRelation)delete.getRelation().accept(this, param), params);
+      if (delete.getFilter() != null)
+         newDelete.setFilter((Condition) delete.getFilter().accept(this, param));
+      return newDelete;
+   }
+
    public Object visit(Query query, Object param)
    {
-      AbstractType[] oldParams = query.getParameters();
-      AbstractType[] params = null;
-      if (oldParams != null)
-      {
-         params = new AbstractType[oldParams.length];
-         for (int i = 0; i < oldParams.length; i++)
-         {
-            params[i] = (AbstractType) map(oldParams[i]);
-         }
-      }
+      AbstractType[] params = mapParamList(query.getParameters());
       Query newQuery = new Query(params);
       newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
       newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
@@ -125,6 +143,20 @@ public class SchemaMapper extends QueryCloner
       NamedRelation right = (NamedRelation) joinCondition.getRight().accept(this, param);
       AbstractAssociationEnd end = (AbstractAssociationEnd) map(joinCondition.getEnd());
       return new JoinCondition(left, right, end);
+   }
+
+   private AbstractType[] mapParamList(AbstractType[] oldParams)
+   {
+      AbstractType[] params = null;
+      if (oldParams != null)
+      {
+         params = new AbstractType[oldParams.length];
+         for (int i = 0; i < oldParams.length; i++)
+         {
+            params[i] = (AbstractType) map(oldParams[i]);
+         }
+      }
+      return params;
    }
 
    private class InternalNoMapException extends RuntimeException

@@ -11,13 +11,17 @@ package org.jboss.cmp.sql;
 
 import java.util.Iterator;
 
+import org.jboss.cmp.query.Assignment;
 import org.jboss.cmp.query.CollectionRelation;
 import org.jboss.cmp.query.Comparison;
 import org.jboss.cmp.query.Condition;
 import org.jboss.cmp.query.ConditionExpression;
 import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.Delete;
 import org.jboss.cmp.query.Exists;
+import org.jboss.cmp.query.Expression;
 import org.jboss.cmp.query.InnerJoin;
+import org.jboss.cmp.query.Insert;
 import org.jboss.cmp.query.IsNull;
 import org.jboss.cmp.query.JoinCondition;
 import org.jboss.cmp.query.Literal;
@@ -31,12 +35,14 @@ import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
 import org.jboss.cmp.query.Relation;
 import org.jboss.cmp.query.SubQuery;
-import org.jboss.cmp.query.Expression;
-import org.jboss.cmp.schema.AbstractType;
+import org.jboss.cmp.query.Update;
+import org.jboss.cmp.query.BaseQueryNode;
+import org.jboss.cmp.query.CommandNode;
 import org.jboss.cmp.schema.AbstractAttribute;
+import org.jboss.cmp.schema.AbstractType;
 
 /**
- * Transformer that produces (pure) SQL92 text from a Query
+ * Transformer that produces (pure) SQL92 text for a Query or Update
  */
 public class SQL92Generator implements QueryVisitor
 {
@@ -46,14 +52,81 @@ public class SQL92Generator implements QueryVisitor
     * @param query the Query to generate text from
     * @return SQL92 text for the query
     */
-   public String generate(Query query)
+   public String generate(CommandNode query)
    {
       StringBuffer buf = new StringBuffer(1000);
       query.accept(this, buf);
       return buf.toString();
    }
 
-   public Object visit(Query query, Object param)
+   public Object visit(Insert insert, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      buf.append("INSERT INTO ");
+      buf.append(insert.getRelation().getType().getName());
+      buf.append("(");
+      for (Iterator i = insert.getChildren().iterator(); i.hasNext();)
+      {
+         Assignment node = (Assignment) i.next();
+         AbstractAttribute attr = (AbstractAttribute) node.getTarget().getLastStep();
+         buf.append(attr.getName());
+         if (i.hasNext())
+         {
+            buf.append(",");
+         }
+      }
+      buf.append(") VALUES (");
+      for (Iterator i = insert.getChildren().iterator(); i.hasNext();)
+      {
+         Assignment node = (Assignment) i.next();
+         node.getExpression().accept(this, buf);
+         if (i.hasNext())
+         {
+            buf.append(",");
+         }
+      }
+      buf.append(")");
+      return buf;
+   }
+
+   public Object visit(Update update, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      buf.append("UPDATE ");
+      update.getRelation().accept(this, buf);
+      buf.append(" SET ");
+      for (Iterator i = update.getChildren().iterator(); i.hasNext();)
+      {
+         QueryNode node = (QueryNode) i.next();
+         node.accept(this, buf);
+         if (i.hasNext())
+         {
+            buf.append(", ");
+         }
+      }
+
+      if (update.getFilter() != null)
+      {
+         buf.append(" WHERE ");
+         update.getFilter().accept(this, buf);
+      }
+      return buf;
+   }
+
+   public Object visit(Delete delete, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      buf.append("DELETE FROM ");
+      delete.getRelation().accept(this, buf);
+      if (delete.getFilter() != null)
+      {
+         buf.append(" WHERE ");
+         delete.getFilter().accept(this, buf);
+      }
+      return buf;
+   }
+
+   public Object visit(BaseQueryNode query, Object param)
    {
       StringBuffer buf = (StringBuffer) param;
       buf.append("SELECT ");
@@ -68,9 +141,14 @@ public class SQL92Generator implements QueryVisitor
       return buf;
    }
 
+   public Object visit(Query query, Object param)
+   {
+      return this.visit((BaseQueryNode) query, param);
+   }
+
    public Object visit(SubQuery subquery, Object param)
    {
-      return this.visit((Query) subquery, param);
+      return this.visit((BaseQueryNode) subquery, param);
    }
 
    public Object visit(Projection projection, Object param)
@@ -260,6 +338,15 @@ public class SQL92Generator implements QueryVisitor
    {
       StringBuffer buf = (StringBuffer) param;
       buf.append('?');
+      return buf;
+   }
+
+   public Object visit(Assignment assignment, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      assignment.getTarget().accept(this, param);
+      buf.append('=');
+      assignment.getExpression().accept(this, param);
       return buf;
    }
 }

@@ -31,6 +31,12 @@ public class Path extends Expression
       collection = true;
    }
 
+   public Path(NamedRelation root, AbstractAttribute attr)
+   {
+      this(root);
+      this.addStep(attr);
+   }
+
    public NamedRelation getRoot()
    {
       return root;

@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import org.jboss.cmp.query.Expression;
 import org.jboss.cmp.query.Query;
 import org.jboss.cmp.schema.QueryCommand;
+import org.jboss.cmp.schema.PersistenceException;
 import org.jboss.cmp.sql.SQL92Generator;
 import org.jboss.cmp.sql.SQLDataType;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
@@ -45,7 +46,7 @@ public class JDBCQueryCommand implements QueryCommand
       this.resultTypes = resultTypes;
    }
 
-   public List executeQuery(List params)
+   public List executeQuery(List params) throws PersistenceException
    {
       Connection c = null;
       PreparedStatement ps = null;
@@ -76,7 +77,7 @@ public class JDBCQueryCommand implements QueryCommand
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(c);
-         throw new UnsupportedOperationException();
+         throw new PersistenceException(e);
       }
    }
 }
