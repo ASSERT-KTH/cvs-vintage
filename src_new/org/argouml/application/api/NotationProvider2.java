@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.2 2004/04/30 05:48:26 linus Exp $
+// $Id: NotationProvider2.java,v 1.3 2004/05/30 06:11:08 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -210,6 +210,14 @@ public interface NotationProvider2 {
      * @return The String representation of the object.
      */
     public String generateMessage(Object m);
+
+    /**
+     * Generate the String representation for an Event.
+     *
+     * @param m Object to generate representation for.
+     * @return The String representation of the object.
+     */
+    public String generateEvent(Object m);
 
     /**
      * Generate the String representation for a ClassifierRef.

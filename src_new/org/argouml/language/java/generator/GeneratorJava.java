@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.87 2004/04/26 19:46:56 thn Exp $
+// $Id: GeneratorJava.java,v 1.88 2004/05/30 06:11:09 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.87 2004/04/26 19:46:56 thn Exp $
+// $Id: GeneratorJava.java,v 1.88 2004/05/30 06:11:09 mvw Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -1742,6 +1742,17 @@ public class GeneratorJava
         if (m == null)
             return "";
         return generateName(ModelFacade.getName(m)) + "::" + generateAction(ModelFacade.getAction(m));
+    }
+
+    /**
+     * TODO: This is a dummy implementation. 
+     * Please, if you know what this function should do, implement it!
+     * @author MVW
+     */
+    public String generateEvent(Object m) {
+        if (m == null)
+            return "";
+        return generateName(ModelFacade.getName(m));
     }
 
     public String generateAscEndName(Object ae) {

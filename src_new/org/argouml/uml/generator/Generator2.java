@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.2 2004/04/28 08:38:20 linus Exp $
+// $Id: Generator2.java,v 1.3 2004/05/30 06:11:09 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,6 +160,9 @@ public abstract class Generator2
         if (ModelFacade.isAMessage(o)) {
             return generateMessage(o);
 	}
+        if (ModelFacade.isAEvent(o)) {
+            return generateEvent(o);
+        }
         if (ModelFacade.isAVisibilityKind(o)) {
             return generateVisibility(o);
 	}
@@ -249,6 +252,11 @@ public abstract class Generator2
      * @see NotationProvider2#generateMessage(Object)
      */
     public abstract String generateMessage(Object m);
+
+    /**
+     * @see NotationProvider2#generateEvent(Object)
+     */
+    public abstract String generateEvent(Object m);
 
     /**
      * @see NotationProvider2#generateVisibility(Object)
