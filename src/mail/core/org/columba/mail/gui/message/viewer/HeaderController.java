@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.JComponent;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -65,13 +66,35 @@ public class HeaderController implements Viewer {
 		// add headerfields which are about to show up
 		XmlElement headerviewerElement = MailInterface.config.get("options")
 				.getElement("/options/headerviewer");
-		String list = headerviewerElement.getAttribute("headerfields");
+		DefaultItem item = new DefaultItem(headerviewerElement);
+		int style = item.getInteger("style", 0);
 
-		StringTokenizer tok = new StringTokenizer(list, " ");
-		String[] headers = new String[tok.countTokens()];
+		String[] headers = null;
+		switch (style) {
+		case 0:
+			// default
+			headers = new String[] { "Subject", "Date", "From", "To", "Cc",
+					"Bcc", "Reply-To" };
 
-		for (int i = 0; i < headers.length; i++) {
-			headers[i] = tok.nextToken();
+			break;
+		case 1:
+			// custom headers
+			String list = headerviewerElement.getAttribute("headerfields");
+
+			StringTokenizer tok = new StringTokenizer(list, " ");
+			headers = new String[tok.countTokens()];
+
+			for (int i = 0; i < headers.length; i++) {
+				headers[i] = tok.nextToken();
+			}
+			
+			break;
+		case 2:
+			// show all headers
+			// TODO: add show all headers, currently this functionality is missing in 
+			//       in the folder package
+			//
+			break;
 		}
 
 		Header header = folder.getHeaderFields(uid, headers);
