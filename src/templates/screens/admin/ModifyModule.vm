@@ -16,21 +16,12 @@
 
 #macro (ModifyModuleBar $var)
 <div class="functnbar$var">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel" /> 
 #if ($createNew && $createNew.equals("true"))
    <input type="submit" name="eventSubmit_doCreate" value="Create" /> 
 #else
-   <input type="submit" name="eventSubmit_doUpdate" value="Update" /> 
+   <input type="submit" name="eventSubmit_doUpdate" value="Save" /> 
 #end
-  </td>
-  <td>
-   <input type="submit" name="eventSubmit_doGotoothertemplate" value="Back" />
-  </td>
- </tr>
-</table>
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 #end
 

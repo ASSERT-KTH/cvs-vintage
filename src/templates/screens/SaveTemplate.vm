@@ -1,17 +1,18 @@
-$page.setTitle("Issue template")
+$page.setTitle("Save/edit template")
 
 #set ($module = $scarabR.CurrentModule)
 #set ($templateId = $data.Parameters.getString("templateId"))
-#set ($templ= $scarabR.getIssueTemplate())
+#set ($currentTemplate = $scarabR.getIssueTemplate())
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
-#set ($issueGroup = $intake.Issue.mapTo($template))
+#set ($issueGroup = $intake.Issue.mapTo($currentTemplate ))
 
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
-<input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doSubmit" />&#160;
+<input type="submit" value="Use template" name="eventSubmit_doGotoothertemplate" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
-<input type="submit" value="Back" name="eventSubmit_doBack"  />
+<input type="submit" value="Reset" name="eventSubmit_doReset"  />
 </div>
 #end
 
@@ -21,7 +22,8 @@ $page.setTitle("Issue template")
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SaveTemplate.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="entry,Wizard1.vm" />
 
 #if ($templateId)
   <input type="hidden" name="templateId" value="$templateId" />
@@ -29,7 +31,7 @@ $page.setTitle("Issue template")
 
 #SaveTemplateBar("")
 
-<h3>Template Details</h3>
+<h3>Template details</h3>
 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
@@ -41,7 +43,7 @@ $page.setTitle("Issue template")
   </td>
 </tr>
 <tr>
-  <th>Template desc</th>
+  <th>Template descr</th>
   <td>
   <textarea rows="4" cols="40" name="$templateGroup.Description.Key">$!templateGroup.Description</textarea>
   </td>
@@ -50,17 +52,12 @@ $page.setTitle("Issue template")
   <th width="120">Availability</th>
   <td>#templateTypeSelectBox ($templateInfo)</td>
 </tr>
-<tr>
-  <th width="120">Current module</th>
-  <td>$module.Name</td>
-  <input type="hidden" name="$issueGroup.ModuleId.Key" value="$module.ModuleId" />
-</tr>
 #if ($templateId)
 <tr>
   <th>Created by</th>
-  #set ($createdUser = $template.CreatedBy)
+  #set ($createdUser = $currentTemplate.CreatedBy)
   <td>
-  #if ($createduser)
+  #if ($createdUser)
   <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
   #else
   &#160;
@@ -75,7 +72,7 @@ $page.setTitle("Issue template")
 
 <div class="axial">
  <table cellspacing="2" cellpadding="3" border="0">
-#set ($attrValues = $templ.ModuleAttributeValuesMap)
+#set ($attrValues = $currentTemplate.ModuleAttributeValuesMap)
 #set ($group = $intake.AttributeValue.mapTo($attrValue))
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))
@@ -88,9 +85,6 @@ $page.setTitle("Issue template")
   #elseif ($attVal.Attribute.AttributeType.Name == "string")
     #set ($field = "Value")
   #end
-#*
-  #if ( $attVal.isRequired() ) * #end
-*#
   $attVal.RModuleAttribute.DisplayValue
  </th>
  <td>
