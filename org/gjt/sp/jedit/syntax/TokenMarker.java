@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.56 2003/06/05 00:01:49 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.57 2003/06/10 22:10:44 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -408,7 +408,14 @@ unwind:		while(context.parent != null)
 				else if(match.getStartIndex() != 0)
 					throw new InternalError("Can't happen");
 				else
+				{
 					matchedChars = match.getEndIndex();
+					/* workaround for hang if match was
+					 * zero-width. not sure if there is
+					 * a better way to handle this */
+					if(matchedChars == 0)
+						matchedChars = 1;
+				}
 			}
 		} //}}}
 

@@ -91,7 +91,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.36 2003/05/29 02:46:49 spestov Exp $
+ * @author $Id: VFS.java,v 1.37 2003/06/10 22:10:43 spestov Exp $
  */
 public abstract class VFS
 {
@@ -146,6 +146,12 @@ public abstract class VFS
 	 * @since jEdit 4.1pre1
 	 */
 	public static final int LOW_LATENCY_CAP = 1 << 6;
+
+	/**
+	 * Case insensitive file system capability.
+	 * @since jEdit 4.1pre1
+	 */
+	public static final int CASE_INSENSITIVE_CAP = 1 << 7;
 
 	//}}}
 

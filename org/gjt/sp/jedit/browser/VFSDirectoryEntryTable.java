@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.15 2003/06/05 22:20:54 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.16 2003/06/10 22:10:42 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -431,7 +431,7 @@ public class VFSDirectoryEntryTable extends JTable
 				if(attr != null)
 				{
 					widths[j] = Math.max(widths[j],
-						fm.stringWidth(attr));
+						fm.stringWidth(attr) + 2);
 				}
 			}
 		}

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.38 2003/06/04 01:44:17 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.39 2003/06/10 22:10:43 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -86,7 +86,6 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	{
 		SearchDialog dialog = (SearchDialog)viewHash.get(view);
 
-		dialog.load();
 		dialog.setSearchString(searchString,searchIn);
 		GUIUtilities.requestFocus(dialog,dialog.find);
 
@@ -197,8 +196,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	{
 		if(msg instanceof SearchSettingsChanged)
 		{
-			ignoreCase.setSelected(SearchAndReplace.getIgnoreCase());
-			regexp.setSelected(SearchAndReplace.getRegexp());
+			load();
 		}
 	} //}}}
 
@@ -269,6 +267,8 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		jEdit.unsetProperty("search.height");
 		jEdit.unsetProperty("search.d-height");
 		GUIUtilities.loadGeometry(this,"search");
+
+		load();
 
 		EditBus.addToBus(this);
 	} //}}}
