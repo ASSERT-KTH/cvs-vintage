@@ -25,7 +25,7 @@
             #end
          #end
        #else
-         #set ($canMakeTransition = $data.User.canMakeTransition($scarabR.getAttributeOption($values), $option.getAttributeOption(), $scarabR.Issue, $module, $issueType))
+         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $scarabR.Issue))
          #if ($values.equals($option.OptionId))
            #set ($selected=true)
           #end
@@ -228,8 +228,10 @@
 <input type="hidden" name="$booleanField.ValueIfAbsent" value="false" />
 #end
 
-#macro (Radio $field $value)
+#macro (Radio $field $value $default)
 #if ($field.Value.equals($value))
+<input type="radio" name="$field.Key" value="$value" checked="checked" />
+#elseif (!$field.Value && $value.equals($default))
 <input type="radio" name="$field.Key" value="$value" checked="checked" />
 #else
 <input type="radio" name="$field.Key" value="$value" />
