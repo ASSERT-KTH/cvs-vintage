@@ -22,8 +22,8 @@ import java.sql.ResultSet;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
+import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -72,24 +72,24 @@ public abstract class JDBCFinderCommand
    protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
       Collection result = new ArrayList();
-
-      if (metaInfo.hasCompositeKey())
+      
+      if (jawsEntity.hasCompositeKey())
       {
          // Compound key
          try
          {
             while (rs.next())
             {
-               Object pk = metaInfo.getPrimaryKeyClass().newInstance();
+               Object pk = jawsEntity.getPrimaryKeyClass().newInstance();
                int i = 1;   // parameter index
-               Iterator it = metaInfo.getPkFieldInfos();
-
+               Iterator it = jawsEntity.getPkFields();
+               
                while (it.hasNext())
                {
-                  PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-                  Field pkField = pkFieldInfo.getPkField();
-                  pkField.set(pk, getResultObject(rs,
-                                                  i++,
+                  PkFieldMetaData pkFieldMetaData = (PkFieldMetaData)it.next();
+                  Field pkField = pkFieldMetaData.getPkField();
+                  pkField.set(pk, getResultObject(rs, 
+                                                  i++, 
                                                   pkField.getType()));
                }
                result.add(pk);
@@ -101,13 +101,12 @@ public abstract class JDBCFinderCommand
       } else
       {
          // Primitive key
-
-         Iterator it = metaInfo.getPkFieldInfos();
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-
+         Iterator it = jawsEntity.getPkFields();
+         PkFieldMetaData pkFieldMetaData = (PkFieldMetaData)it.next();
+         
          while (rs.next())
          {
-            result.add(getResultObject(rs, 1, pkFieldInfo.getCMPField().getType()));
+            result.add(getResultObject(rs, 1, pkFieldMetaData.getCMPField().getType()));
          }
       }
 

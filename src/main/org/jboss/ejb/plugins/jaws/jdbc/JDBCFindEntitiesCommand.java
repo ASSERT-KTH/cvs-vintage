@@ -20,7 +20,7 @@ import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
-import org.jboss.ejb.plugins.jaws.deployment.Finder;
+import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
 /**
  * Keeps a map from finder name to specific finder command, and
@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -48,10 +48,10 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
       
       // Make commands for the defined finders
       
-      Iterator definedFinders = factory.getMetaInfo().getFinders();
+      Iterator definedFinders = factory.getMetaData().getFinders();
       while(definedFinders.hasNext())
       {
-         Finder f = (Finder)definedFinders.next();
+         FinderMetaData f = (FinderMetaData)definedFinders.next();
          
          if ( !knownFinderCommands.containsKey(f.getName()) )
          {

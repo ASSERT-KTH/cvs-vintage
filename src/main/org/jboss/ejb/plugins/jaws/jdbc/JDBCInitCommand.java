@@ -16,9 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
-import org.jboss.ejb.plugins.jaws.CMPFieldInfo;
-import org.jboss.ejb.plugins.jaws.MetaInfo;
-import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
+import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 
 /**
  * JAWSPersistenceManager JDBCInitCommand
@@ -28,7 +26,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -41,33 +39,18 @@ public class JDBCInitCommand
       super(factory, "Init");
 
       // Create table SQL
-      String sql = "CREATE TABLE " + metaInfo.getTableName() + " (";
-
-      Iterator it = metaInfo.getCMPFieldInfos();
+      String sql = "CREATE TABLE " + jawsEntity.getTableName() + " (";
+      
+      Iterator it = jawsEntity.getCMPFields();
       boolean first = true;
       while (it.hasNext())
       {
-         CMPFieldInfo fieldInfo = (CMPFieldInfo)it.next();
-
-         if (fieldInfo.isEJBReference())
-         {
-            JawsCMPField[] pkFields = fieldInfo.getForeignKeyCMPFields();
-
-            for (int i = 0; i < pkFields.length; i++)
-            {
-               sql += (first ? "" : ",") +
-                      fieldInfo.getColumnName() + "_" +
-                      pkFields[i].getColumnName() + " " +
-                      pkFields[i].getSqlType();
-               first = false;
-            }
-         } else
-         {
-            sql += (first ? "" : ",") +
-                   fieldInfo.getColumnName() + " " +
-                   fieldInfo.getSQLType();
-            first = false;
-         }
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)it.next();
+         
+         sql += (first ? "" : ",") +
+                cmpField.getColumnName() + " " +
+                cmpField.getSQLType();
+         first = false;
       }
 
       sql += ")";
@@ -80,7 +63,7 @@ public class JDBCInitCommand
    public void execute() throws Exception
    {
       // Create table if necessary
-      if (metaInfo.getCreateTable())
+      if (jawsEntity.getCreateTable())
       {
           boolean created = false;
           Connection con = null;
@@ -89,7 +72,7 @@ public class JDBCInitCommand
           try {
               con = getConnection();
               st = con.createStatement();
-              rs = st.executeQuery("SELECT COUNT(*) FROM "+metaInfo.getTableName()+" WHERE 0=1");
+              rs = st.executeQuery("SELECT COUNT(*) FROM "+jawsEntity.getTableName()+" WHERE 0=1");
               if(rs.next())
                 created = true;
               rs.close();
@@ -108,7 +91,7 @@ public class JDBCInitCommand
 
          // Try to create it
          if(created) {
-             System.out.println("Table '"+metaInfo.getTableName()+"' already exists!");
+             System.out.println("Table '"+jawsEntity.getTableName()+"' already exists!");
          } else {
              try
              {
@@ -116,7 +99,7 @@ public class JDBCInitCommand
              } catch (Exception e)
              {
                 log.debug("Could not create table " +
-                          metaInfo.getTableName() + ": " + e.getMessage());
+                          jawsEntity.getTableName() + ": " + e.getMessage());
              }
          }
       }
@@ -127,8 +110,7 @@ public class JDBCInitCommand
    protected Object handleResult(int rowsAffected, Object argOrArgs)
       throws Exception
    {
-      log.debug("Table " + metaInfo.getTableName() + " created");
-
+      log.debug("Table " + jawsEntity.getTableName() + " created");
       return null;
    }
 }

@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
-import org.jboss.ejb.plugins.jaws.MetaInfo;
 
 /**
  * JAWSPersistenceManager JDBCDestroyCommand
@@ -21,7 +20,7 @@ import org.jboss.ejb.plugins.jaws.MetaInfo;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCDestroyCommand
    extends JDBCUpdateCommand
@@ -34,7 +33,7 @@ public class JDBCDestroyCommand
       super(factory, "Destroy");
       
       // Drop table SQL
-      String sql = "DROP TABLE " + metaInfo.getTableName();
+      String sql = "DROP TABLE " + jawsEntity.getTableName();
       setSQL(sql);
    }
    
@@ -42,7 +41,7 @@ public class JDBCDestroyCommand
    
    public void execute()
    {
-      if (metaInfo.getRemoveTable())
+      if (jawsEntity.getRemoveTable())
       {
          // Remove it!
          try
@@ -51,7 +50,7 @@ public class JDBCDestroyCommand
          } catch (Exception e)
          {
             log.debug("Could not drop table " +
-                      metaInfo.getTableName() + ": " + e.getMessage());
+                      jawsEntity.getTableName() + ": " + e.getMessage());
          }
       }
    }
@@ -61,7 +60,7 @@ public class JDBCDestroyCommand
    protected Object handleResult(int rowsAffected, Object argOrArgs) 
       throws Exception
    {
-      log.debug("Table "+metaInfo.getTableName()+" removed");
+      log.debug("Table "+jawsEntity.getTableName()+" removed");
       
       return null;
    }

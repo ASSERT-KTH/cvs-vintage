@@ -15,7 +15,7 @@ package org.jboss.ejb.plugins.jaws.jdbc;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindAllCommand extends JDBCFinderCommand
 {
@@ -25,7 +25,7 @@ public class JDBCFindAllCommand extends JDBCFinderCommand
    {
       super(factory, "FindAll");
       
-      String sql = "SELECT " + getPkColumnList() + " FROM " + metaInfo.getTableName();
+      String sql = "SELECT " + getPkColumnList() + " FROM " + jawsEntity.getTableName();
 
       setSQL(sql);
    }

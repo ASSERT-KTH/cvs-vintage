@@ -33,15 +33,14 @@ import java.sql.Types;
 import java.rmi.RemoteException;
 
 import javax.ejb.EJBObject;
+import javax.ejb.Handle;
 
 import javax.sql.DataSource;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.jaws.CMPFieldInfo;
-import org.jboss.ejb.plugins.jaws.MetaInfo;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
-import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;
-import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
+import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.logging.Log;
 import org.jboss.logging.Logger;
 
@@ -52,7 +51,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public abstract class JDBCCommand
 {
@@ -85,10 +84,11 @@ public abstract class JDBCCommand
             e.printStackTrace();
         }
     }
+
    // Attributes ----------------------------------------------------
 
    protected JDBCCommandFactory factory;
-   protected MetaInfo metaInfo;
+   protected JawsEntityMetaData jawsEntity;
    protected Log log;
    protected String name;    // Command name, used for debug trace
 
@@ -113,7 +113,7 @@ public abstract class JDBCCommand
    protected JDBCCommand(JDBCCommandFactory factory, String name)
    {
       this.factory = factory;
-      this.metaInfo = factory.getMetaInfo();
+      this.jawsEntity = factory.getMetaData();
       this.log = factory.getLog();
       this.name = name;
    }
@@ -281,9 +281,17 @@ public abstract class JDBCCommand
           } else if(jdbcType == Types.TIMESTAMP) {
               if(value.getClass().getName().equals("java.util.Date"))
                   value = new java.sql.Timestamp(((java.util.Date)value).getTime());
-          }
+          }			 
           if (jdbcType == Types.JAVA_OBJECT) {
-              ByteArrayOutputStream baos = new ByteArrayOutputStream();
+              
+			  // ejb-reference: store the handle
+			  if (value instanceof EJBObject) try {
+			  	 value = ((EJBObject)value).getHandle();
+			  } catch (RemoteException e) {
+				 throw new SQLException("Cannot get Handle of EJBObject: "+e);
+			  }
+			  
+			  ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
               try {
                   ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -320,88 +328,27 @@ public abstract class JDBCCommand
                                          Object id)
       throws IllegalAccessException, SQLException
    {
-      Iterator it = metaInfo.getPkFieldInfos();
-
-      if (metaInfo.hasCompositeKey())
+      Iterator it = jawsEntity.getPkFields();
+      
+      if (jawsEntity.hasCompositeKey())
       {
          while (it.hasNext())
          {
-            PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-            int jdbcType = pkFieldInfo.getJDBCType();
-            Object value = getPkFieldValue(id, pkFieldInfo);
+            PkFieldMetaData pkFieldMetaData = (PkFieldMetaData)it.next();
+            int jdbcType = pkFieldMetaData.getJDBCType();
+            Object value = getPkFieldValue(id, pkFieldMetaData);
             setParameter(stmt, parameterIndex++, jdbcType, value);
          }
       } else
       {
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         int jdbcType = pkFieldInfo.getJDBCType();
+         PkFieldMetaData pkFieldMetaData = (PkFieldMetaData)it.next();
+         int jdbcType = pkFieldMetaData.getJDBCType();
          setParameter(stmt, parameterIndex++, jdbcType, id);
       }
 
       return parameterIndex;
    }
 
-   /**
-    * Sets parameter(s) representing a foreign key in this
-    * Command's PreparedStatement.
-    * TODO: (JF) tighten up the typing of the value parameter.
-    *
-    * @param stmt the PreparedStatement whose parameters need to be set.
-    * @param idx the index (1-based) of the first parameter to be set.
-    * @param fieldInfo the CMP meta-info for the field containing the
-    *  entity reference.
-    * @param value the entity (EJBObject) referred to by the reference
-    *  (may be null).
-    * @return the index of the next unset parameter.
-    * @throws SQLException if the access to the referred-to entity's primary
-    *  key fails, or if parameter setting fails.
-    */
-   protected int setForeignKey(PreparedStatement stmt,
-                             int idx,
-                             CMPFieldInfo fieldInfo,
-                             Object value)
-      throws SQLException
-   {
-      JawsCMPField[] pkInfo = fieldInfo.getForeignKeyCMPFields();
-      Object pk = null;
-
-      if (value != null)
-      {
-         try
-         {
-            pk = ((EJBObject)value).getPrimaryKey();
-         } catch (RemoteException e)
-         {
-            throw new SQLException("Could not extract primary key from EJB reference:"+e);
-         }
-      }
-
-      if (!((JawsEntity)pkInfo[0].getBeanContext()).getPrimaryKeyField().equals(""))
-      {
-         // Primitive key
-         int jdbcType = getJawsCMPFieldJDBCType(pkInfo[0]);
-         Object fieldValue = (value == null) ? null : pk;
-         setParameter(stmt, idx, jdbcType, fieldValue);
-         return idx+1;
-      } else
-      {
-         // Compound key
-         Field[] fields = (value == null) ? null : pk.getClass().getFields();
-         try
-         {
-            for (int i = 0; i < pkInfo.length; i++)
-            {
-               int jdbcType = getJawsCMPFieldJDBCType(pkInfo[i]);
-               Object fieldValue = (value == null) ? null : fields[i].get(pk);
-               setParameter(stmt, idx+i, jdbcType, fieldValue);
-            }
-         } catch (IllegalAccessException e)
-         {
-            throw new SQLException("Could not extract fields from primary key:"+e);
-         }
-         return idx+pkInfo.length;
-      }
-   }
 
    /**
     * Used for all retrieval of results from <code>ResultSet</code>s.
@@ -432,6 +379,7 @@ public abstract class JDBCCommand
         result = rs.getObject(idx);
         if(result == null)
             return null;
+
         if(destination.isAssignableFrom(result.getClass()))
             return result;
 // DEBUG        else System.out.println("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
@@ -454,12 +402,18 @@ public abstract class JDBCCommand
             try {
                 WorkaroundInputStream ois = new WorkaroundInputStream(bais);
                 result = ois.readObject();
+				
+				// ejb-reference: get the object back from the handle
+				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
+			
                 if(!destination.isAssignableFrom(result.getClass())) {
                     System.out.println("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
                     result = null;
                 }
 
                 ois.close();
+			} catch (RemoteException e) {
+				throw new SQLException("Unable to load EJBObject back from Handle: " +e);
             } catch (IOException e) {
                 throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"': "+e);
             } catch (ClassNotFoundException e) {
@@ -517,11 +471,11 @@ public abstract class JDBCCommand
    protected final String getPkColumnList()
    {
       StringBuffer sb = new StringBuffer();
-      Iterator it = metaInfo.getPkFieldInfos();
+      Iterator it = jawsEntity.getPkFields();
       while (it.hasNext())
       {
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         sb.append(pkFieldInfo.getColumnName());
+         PkFieldMetaData pkFieldMetaData = (PkFieldMetaData)it.next();
+         sb.append(pkFieldMetaData.getColumnName());
          if (it.hasNext())
          {
             sb.append(",");
@@ -540,11 +494,11 @@ public abstract class JDBCCommand
    protected final String getPkColumnWhereList()
    {
       StringBuffer sb = new StringBuffer();
-      Iterator it = metaInfo.getPkFieldInfos();
+      Iterator it = jawsEntity.getPkFields();
       while (it.hasNext())
       {
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         sb.append(pkFieldInfo.getColumnName());
+         PkFieldMetaData pkFieldMetaData = (PkFieldMetaData)it.next();
+         sb.append(pkFieldMetaData.getColumnName());
          sb.append("=?");
          if (it.hasNext())
          {
@@ -557,16 +511,16 @@ public abstract class JDBCCommand
    // MF: PERF!!!!!!!
    protected Object[] getState(EntityEnterpriseContext ctx)
    {
-      Object[] state = new Object[metaInfo.getNumberOfCMPFields()];
-      Iterator iter = metaInfo.getCMPFieldInfos();
+      Object[] state = new Object[jawsEntity.getNumberOfCMPFields()];
+      Iterator iter = jawsEntity.getCMPFields();
       int i = 0;
       while (iter.hasNext())
       {
-         CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
+         CMPFieldMetaData fieldMetaData = (CMPFieldMetaData)iter.next();
          try
          {
             // JF: Should clone
-            state[i++] = getCMPFieldValue(ctx.getInstance(), fieldInfo);
+            state[i++] = getCMPFieldValue(ctx.getInstance(), fieldMetaData);
          } catch (Exception e)
          {
             return null;
@@ -575,35 +529,34 @@ public abstract class JDBCCommand
 
       return state;
    }
-
-   protected Object getCMPFieldValue(Object instance, CMPFieldInfo fieldInfo)
+   
+   protected Object getCMPFieldValue(Object instance, CMPFieldMetaData fieldMetaData)
       throws IllegalAccessException
    {
-      Field field = fieldInfo.getField();
+      Field field = fieldMetaData.getField();
       return field.get(instance);
    }
 
    protected void setCMPFieldValue(Object instance,
-                                   CMPFieldInfo fieldInfo,
+                                   CMPFieldMetaData fieldMetaData,
                                    Object value)
       throws IllegalAccessException
    {
-      Field field = fieldInfo.getField();
+      Field field = fieldMetaData.getField();
       field.set(instance, value);
    }
-
-   protected Object getPkFieldValue(Object pk, PkFieldInfo pkFieldInfo)
+   
+   protected Object getPkFieldValue(Object pk, PkFieldMetaData pkFieldMetaData)
       throws IllegalAccessException
    {
-      Field field = pkFieldInfo.getPkField();
+      Field field = pkFieldMetaData.getPkField();
       return field.get(pk);
    }
 
    // This is now only used in setForeignKey
-
-   protected int getJawsCMPFieldJDBCType(JawsCMPField fieldInfo)
+   protected int getJawsCMPFieldJDBCType(CMPFieldMetaData fieldMetaData)
    {
-      return getJDBCType(fieldInfo.getJdbcType());
+      return fieldMetaData.getJDBCType();
    }
 
    // Private -------------------------------------------------------
@@ -611,7 +564,7 @@ public abstract class JDBCCommand
    /** Get a database connection */
    protected Connection getConnection() throws SQLException
    {
-      DataSource ds = metaInfo.getDataSource();
+      DataSource ds = jawsEntity.getDataSource();
       if (ds != null)
       {
          return ds.getConnection();

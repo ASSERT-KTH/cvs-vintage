@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 
 import java.sql.PreparedStatement;
 
-import org.jboss.ejb.plugins.jaws.deployment.Finder;
+import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
 /**
  * JAWSPersistenceManager JDBCDefinedFinderCommand
@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -32,7 +32,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
    
    // Constructors --------------------------------------------------
    
-   public JDBCDefinedFinderCommand(JDBCCommandFactory factory, Finder f)
+   public JDBCDefinedFinderCommand(JDBCCommandFactory factory, FinderMetaData f)
    {
       super(factory, f.getName());
       
@@ -62,7 +62,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       // Construct SQL
       String sql = "SELECT " + getPkColumnList() +
          (f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
-         " FROM " + metaInfo.getTableName() + " WHERE " + query;
+         " FROM " + jawsEntity.getTableName() + " WHERE " + query;
       if (!f.getOrder().equals(""))
       {
          sql += " ORDER BY "+f.getOrder();

@@ -13,7 +13,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.plugins.jaws.MetaInfo;
+import org.jboss.ejb.DeploymentException;
+
 import org.jboss.ejb.plugins.jaws.JPMCommandFactory;
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
 import org.jboss.ejb.plugins.jaws.JPMStartCommand;
@@ -28,7 +29,12 @@ import org.jboss.ejb.plugins.jaws.JPMStoreEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMActivateEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMPassivateEntityCommand;
 
-import org.jboss.ejb.plugins.jaws.deployment.Finder;
+import org.jboss.metadata.ApplicationMetaData;
+
+import org.jboss.ejb.plugins.jaws.metadata.JawsXmlFileLoader;
+import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.JawsApplicationMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
 import org.jboss.logging.Log;
 
@@ -36,7 +42,7 @@ import org.jboss.logging.Log;
  * JAWSPersistenceManager JDBCCommandFactory
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -44,7 +50,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
    
    private EntityContainer container;
    private Context javaCtx;
-   private MetaInfo metaInfo;
+   private JawsEntityMetaData metadata;
    private Log log;
    
    // These support singletons (within the scope of this factory)
@@ -58,9 +64,25 @@ public class JDBCCommandFactory implements JPMCommandFactory
       throws Exception
    {
       this.container = container;
-      this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
-      this.metaInfo = new MetaInfo(container);
       this.log = log;
+	  
+      this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
+      
+	  String ejbName = container.getBeanMetaData().getEjbName();
+	  ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+	  JawsApplicationMetaData jamd = (JawsApplicationMetaData)amd.getPluginData("JAWS");
+	  
+	  if (jamd == null) {
+	     // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
+		 JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), log);
+         jamd = jfl.load();
+		 amd.addPluginData("JAWS", jamd);
+	  }
+		  
+	  metadata = jamd.getBeanByEjbName(ejbName);
+	  if (metadata == null) {
+		  throw new DeploymentException("No metadata found for bean " + ejbName);
+	  }
    }
    
    // Public --------------------------------------------------------
@@ -75,9 +97,9 @@ public class JDBCCommandFactory implements JPMCommandFactory
       return javaCtx;
    }
    
-   public MetaInfo getMetaInfo()
+   public JawsEntityMetaData getMetaData()
    {
-      return metaInfo;
+      return metadata;
    }
    
    public Log getLog()
@@ -106,7 +128,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
       return new JDBCFindAllCommand(this);
    }
    
-   public JPMFindEntitiesCommand createDefinedFinderCommand(Finder f)
+   public JPMFindEntitiesCommand createDefinedFinderCommand(FinderMetaData f)
    {
       return new JDBCDefinedFinderCommand(this, f);
    }
@@ -193,4 +215,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
    {
       return new JDBCPassivateEntityCommand(this);
    }
+   
+   
+   // Private -------------------------------------------------------
 }

@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
@@ -28,7 +28,7 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
    public JDBCBeanExistsCommand(JDBCCommandFactory factory)
    {
       super(factory, "Exists");
-      String sql = "SELECT COUNT(*) AS Total FROM " + metaInfo.getTableName() +
+      String sql = "SELECT COUNT(*) AS Total FROM " + jawsEntity.getTableName() +
                    " WHERE " + getPkColumnWhereList();
       setSQL(sql);
    }

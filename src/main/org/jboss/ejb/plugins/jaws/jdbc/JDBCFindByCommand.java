@@ -13,11 +13,9 @@ import java.sql.PreparedStatement;
 
 import java.util.Iterator;
 
-import org.jboss.ejb.plugins.jaws.deployment.Finder;
-import org.jboss.ejb.plugins.jaws.CMPFieldInfo;
-import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
 import org.jboss.logging.Logger;
 
+import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 
 /**
  * JAWSPersistenceManager JDBCFindByCommand
@@ -27,14 +25,14 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
    
    // The meta-info for the field we are finding by
-   private CMPFieldInfo fieldInfo;
+   private CMPFieldMetaData cmpField;
    
    // Constructors --------------------------------------------------
    
@@ -48,20 +46,20 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       
       // Find the meta-info for the field we want to find by
       
-      fieldInfo = null;
-      Iterator iter = metaInfo.getCMPFieldInfos();
+      cmpField = null;
+      Iterator iter = jawsEntity.getCMPFields();
       
-      while (fieldInfo == null && iter.hasNext())
+      while (cmpField == null && iter.hasNext())
       {
-         CMPFieldInfo fi = (CMPFieldInfo)iter.next();
+         CMPFieldMetaData fi = (CMPFieldMetaData)iter.next();
          
          if (cmpFieldName.equals(fi.getName().toLowerCase()))
          {
-            fieldInfo = fi;
+            cmpField = fi;
          }
       }
       
-      if (fieldInfo == null)
+      if (cmpField == null)
       {
          throw new IllegalArgumentException(
             "No finder for this method: " + finderMethod.getName());
@@ -70,20 +68,9 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       // Compute SQL
       
       String sql = "SELECT " + getPkColumnList() +
-                   " FROM "+metaInfo.getTableName()+ " WHERE ";
+                   " FROM "+jawsEntity.getTableName()+ " WHERE ";
       
-      if (fieldInfo.isEJBReference())
-      {
-         JawsCMPField[] cmpFields = fieldInfo.getForeignKeyCMPFields();
-         for (int j = 0; j < cmpFields.length; j++)
-         {
-            sql += (j==0?"":" AND ") + 
-               fieldInfo.getColumnName() + "_" + cmpFields[j].getColumnName() + "=?";
-         }
-      } else
-      {
-         sql += fieldInfo.getColumnName() + "=?";
-      }
+      sql += cmpField.getColumnName() + "=?";
       
       setSQL(sql);
    }
@@ -95,15 +82,9 @@ public class JDBCFindByCommand extends JDBCFinderCommand
    {
       Object[] args = (Object[])argOrArgs;
       
-      if (fieldInfo != null)
+      if (cmpField != null)
       {
-         if (fieldInfo.isEJBReference())
-         {
-            setForeignKey(stmt, 1, fieldInfo, args[0]);
-         } else
-         {
-            setParameter(stmt, 1, fieldInfo.getJDBCType(), args[0]);
-         }
+         setParameter(stmt, 1, cmpField.getJDBCType(), args[0]);
       }
    }
 }

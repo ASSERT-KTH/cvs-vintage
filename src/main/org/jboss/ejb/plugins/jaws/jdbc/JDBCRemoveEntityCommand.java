@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCRemoveEntityCommand
    extends JDBCUpdateCommand
@@ -37,7 +37,7 @@ public class JDBCRemoveEntityCommand
       super(factory, "Remove");
       
       // Remove SQL
-      String sql = "DELETE FROM " + metaInfo.getTableName() +
+      String sql = "DELETE FROM " + jawsEntity.getTableName() +
                    " WHERE "+getPkColumnWhereList();
       setSQL(sql);
    }

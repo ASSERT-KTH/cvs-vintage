@@ -26,10 +26,9 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
 import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
-import org.jboss.ejb.plugins.jaws.CMPFieldInfo;
-import org.jboss.ejb.plugins.jaws.MetaInfo;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
-import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
+
+import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
 /**
  * JAWSPersistenceManager JDBCCreateEntityCommand
@@ -39,7 +38,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCCreateEntityCommand
    extends JDBCUpdateCommand
@@ -59,36 +58,21 @@ public class JDBCCreateEntityCommand
       
       // Insert SQL
       
-      String sql = "INSERT INTO " + metaInfo.getTableName();
+      String sql = "INSERT INTO " + jawsEntity.getTableName();
       String fieldSql = "";
       String valueSql = "";
       
-      Iterator it = metaInfo.getCMPFieldInfos();
+      Iterator it = jawsEntity.getCMPFields();
       boolean first = true;
       
       while (it.hasNext())
       {
-         CMPFieldInfo fieldInfo = (CMPFieldInfo)it.next();
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)it.next();
          
-         if (fieldInfo.isEJBReference())
-         {
-            JawsCMPField[] pkFields = fieldInfo.getForeignKeyCMPFields();
-            
-            for (int i = 0; i < pkFields.length; i++)
-            {
-               fieldSql += (first ? "" : ",") +
-                           fieldInfo.getColumnName() + "_" +
-                           pkFields[i].getColumnName();
-               valueSql += first ? "?" : ",?";
-               first = false;
-            }
-         } else
-         {
-            fieldSql += (first ? "" : ",") +
-                        fieldInfo.getColumnName();
-            valueSql += first ? "?" : ",?";
-            first = false;
-         }
+         fieldSql += (first ? "" : ",") +
+                     cmpField.getColumnName();
+         valueSql += first ? "?" : ",?";
+         first = false;
       }
       
       sql += " ("+fieldSql+") VALUES ("+valueSql+")";
@@ -107,13 +91,13 @@ public class JDBCCreateEntityCommand
       {
          // Extract pk
          Object id = null;
-         Iterator it = metaInfo.getPkFieldInfos();
+         Iterator it = jawsEntity.getPkFields();
          
-         if (metaInfo.hasCompositeKey())
+         if (jawsEntity.hasCompositeKey())
          {
             try
             {
-               id = metaInfo.getPrimaryKeyClass().newInstance();
+               id = jawsEntity.getPrimaryKeyClass().newInstance();
             } catch (InstantiationException e)
             {
                throw new ServerException("Could not create primary key",e);
@@ -121,15 +105,15 @@ public class JDBCCreateEntityCommand
             
             while (it.hasNext())
             {
-               PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-               Field from = pkFieldInfo.getCMPField();
-               Field to = pkFieldInfo.getPkField();
+               PkFieldMetaData pkField = (PkFieldMetaData)it.next();
+               Field from = pkField.getCMPField();
+               Field to = pkField.getPkField();
                to.set(id, from.get(ctx.getInstance()));
             }
          } else
          {
-            PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-            Field from = pkFieldInfo.getCMPField();
+            PkFieldMetaData pkField = (PkFieldMetaData)it.next();
+            Field from = pkField.getCMPField();
             id = from.get(ctx.getInstance());
          }
          
@@ -172,19 +156,13 @@ public class JDBCCreateEntityCommand
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)argOrArgs;
       int idx = 1; // Parameter-index
       
-      Iterator iter = metaInfo.getCMPFieldInfos();
+      Iterator iter = jawsEntity.getCMPFields();
       while (iter.hasNext())
       {
-         CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
-         Object value = getCMPFieldValue(ctx.getInstance(), fieldInfo);
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)iter.next();
+         Object value = getCMPFieldValue(ctx.getInstance(), cmpField);
          
-         if (fieldInfo.isEJBReference())
-         {
-            idx = setForeignKey(stmt, idx, fieldInfo, value);
-         } else
-         {
-            setParameter(stmt, idx++, fieldInfo.getJDBCType(), value);
-         }
+         setParameter(stmt, idx++, cmpField.getJDBCType(), value);
       }
    }
    
@@ -200,7 +178,7 @@ public class JDBCCreateEntityCommand
          new JAWSPersistenceManager.PersistenceContext();
       
       // If read-only, set last read to now
-      if (metaInfo.isReadOnly()) pCtx.lastRead = System.currentTimeMillis();
+      if (jawsEntity.isReadOnly()) pCtx.lastRead = System.currentTimeMillis();
       
       // Save initial state for tuned updates
       pCtx.state = getState(ctx);

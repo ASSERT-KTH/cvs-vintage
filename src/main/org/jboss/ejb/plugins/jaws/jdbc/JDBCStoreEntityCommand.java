@@ -19,9 +19,7 @@ import java.sql.PreparedStatement;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
 import org.jboss.ejb.plugins.jaws.JPMStoreEntityCommand;
-import org.jboss.ejb.plugins.jaws.CMPFieldInfo;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
-import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
+import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 
 /**
  * JAWSPersistenceManager JDBCStoreEntityCommand
@@ -32,7 +30,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
@@ -43,7 +41,7 @@ public class JDBCStoreEntityCommand
    public JDBCStoreEntityCommand(JDBCCommandFactory factory)
    {
       super(factory, "Store");
-      boolean tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = jawsEntity.hasTunedUpdates();
       
       // If we don't have tuned updates, create static SQL
       if (!tuned)
@@ -63,7 +61,7 @@ public class JDBCStoreEntityCommand
    {
       // Check for read-only
       // JF: Shouldn't this throw an exception?
-      if (metaInfo.isReadOnly())
+      if (jawsEntity.isReadOnly())
       {
          return;
       }
@@ -74,7 +72,7 @@ public class JDBCStoreEntityCommand
       boolean dirty = false;
       
       
-      boolean tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = jawsEntity.hasTunedUpdates();
       
       // For tuned updates, need to see which fields have changed
       
@@ -113,7 +111,7 @@ public class JDBCStoreEntityCommand
     */
    protected String getSQL(Object argOrArgs) throws Exception
    {
-      boolean tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = jawsEntity.hasTunedUpdates();
       
       return tuned ? makeSQL(argOrArgs) : super.getSQL(argOrArgs);
    }
@@ -122,24 +120,18 @@ public class JDBCStoreEntityCommand
       throws Exception
    {
       ExecutionState es = (ExecutionState)argOrArgs;
-      boolean tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = jawsEntity.hasTunedUpdates();
       
       int idx = 1;
-      Iterator iter = metaInfo.getCMPFieldInfos();
+      Iterator iter = jawsEntity.getCMPFields();
       int i = 0;
       while (iter.hasNext())
       {
-         CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)iter.next();
          
          if (!tuned || es.dirtyField[i])
          {
-            if (fieldInfo.isEJBReference())
-            {
-               idx = setForeignKey(stmt, idx, fieldInfo, es.currentState[i]);
-            } else
-            {
-               setParameter(stmt, idx++, fieldInfo.getJDBCType(), es.currentState[i]);
-            }
+            setParameter(stmt, idx++, cmpField.getJDBCType(), es.currentState[i]);
          }
          
          i++;
@@ -152,7 +144,7 @@ public class JDBCStoreEntityCommand
       throws Exception
    {
       ExecutionState es = (ExecutionState)argOrArgs;
-      boolean tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = jawsEntity.hasTunedUpdates();
       
       if (tuned)
       {
@@ -178,35 +170,21 @@ public class JDBCStoreEntityCommand
    protected String makeSQL(Object argOrArgs)
    {
       ExecutionState es = (ExecutionState)argOrArgs;  // NB: null if tuned
-      boolean tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = jawsEntity.hasTunedUpdates();
       
-      String sql = "UPDATE "+metaInfo.getTableName()+" SET ";
-      Iterator iter = metaInfo.getCMPFieldInfos();
+      String sql = "UPDATE "+jawsEntity.getTableName()+" SET ";
+      Iterator iter = jawsEntity.getCMPFields();
       int i = 0;
       boolean first = true;
       while (iter.hasNext())
       {
-         CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)iter.next();
          
          if (!tuned || es.dirtyField[i++])
          {
-            if (fieldInfo.isEJBReference())
-            {
-               JawsCMPField[] pkFields = fieldInfo.getForeignKeyCMPFields();
-               
-               for (int j = 0; j < pkFields.length; j++)
-               {
-                  sql += (first?"":",") + 
-                     fieldInfo.getColumnName()+"_"+pkFields[j].getColumnName()+
-                     "=?";
-                  first = false;
-               }
-            } else
-            {
-               sql += (first?"":",") +
-                  fieldInfo.getColumnName() + "=?";
-               first = false;
-            }
+            sql += (first?"":",") +
+               cmpField.getColumnName() + "=?";
+            first = false;
          }
       }
       sql += " WHERE "+getPkColumnWhereList();
