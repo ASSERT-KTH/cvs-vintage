@@ -90,12 +90,21 @@ public class Issue
     implements Persistent
 {
 
-    public String getUniqueId() // throws Exception
+    /**
+     * Gets the UinqueId for this Issue.
+     */
+    public String getUniqueId()
+        throws Exception
     {
+        if (getIdPrefix() == null)
+        {
+            setIdPrefix(getScarabModule().getCode());
+        }
         return getIdPrefix() + getIdCount();
     }
 
     public String getFederatedId()
+        throws Exception
     {
         if ( getIdDomain() != null ) 
         {
@@ -461,8 +470,11 @@ public class Issue
                 for ( int j=assigneeAVs.size()-1; j>=0; j-- ) 
                 {
                     AttributeValue av = (AttributeValue)assigneeAVs.get(j);
-                    if ( av != null && av.getUserId()
-                         .equals( users[i].getUserId() ) )
+                    NumberKey avUserId = av.getUserId();
+                    NumberKey userUserId = users[i].getUserId();
+                    if ( av != null && avUserId != null && 
+                         userUserId != null && 
+                         avUserId.equals( userUserId ) )
                     {
                         users[i] = null;
                         break;
