@@ -1,4 +1,4 @@
-// $Id: java.g,v 1.3 2002/04/11 21:34:42 thn Exp $
+// $Id: java.g,v 1.4 2002/12/21 18:55:35 thn Exp $
 
 header {
 	package org.argouml.language.java.generator;
@@ -63,7 +63,7 @@ header {
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.3 2002/04/11 21:34:42 thn Exp $
+ * $Id: java.g,v 1.4 2002/12/21 18:55:35 thn Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -242,25 +242,9 @@ identifier returns [CompositeCodePiece codePiece=null]
 		)*
 	;
 
-identifierStar returns [CompositeCodePiece codePiece=null]
-	:	t1:IDENT
-	{codePiece = new CompositeCodePiece(new SimpleCodePiece(t1));}
-
-		( t2:DOT
-	{codePiece.add(new SimpleCodePiece(t2));}
-		
-		t3:IDENT 
-	{codePiece.add(new SimpleCodePiece(t3));}
-		
-		)*
-
-		( t4:DOT 
-	{codePiece.add(new SimpleCodePiece(t4));}
-
-		t5:STAR
-	{codePiece.add(new SimpleCodePiece(t5));}
-		
-		)?
+identifierStar
+	:	IDENT ( DOT IDENT )*
+		( DOT STAR )?
 	;
 
 
