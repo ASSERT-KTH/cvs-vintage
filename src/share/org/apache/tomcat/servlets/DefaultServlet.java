@@ -212,7 +212,9 @@ public class DefaultServlet extends HttpServlet {
 	    // check that .jsp/ doesn't slip through on Windows!
 	    if( debug > 0 ) contextF.log( "DefaultServlet: serving file: "  + file);
 	    if (! absPath.endsWith("/") &&
-	        ! absPath.endsWith("\\")) {
+	        ! absPath.endsWith("\\") &&
+		! request.getRequestURI().endsWith("/") &&  // GS
+		! request.getRequestURI().endsWith(".")) {  // GS
 	        serveFile(file, request, response);
 	    } else {
 	        response.sendError(response.SC_NOT_FOUND,
