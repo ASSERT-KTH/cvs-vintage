@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.3 1999/12/08 23:42:51 bergsten Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/08 23:42:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.4 1999/12/21 21:38:03 rubys Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/12/21 21:38:03 $
  *
  * ====================================================================
  * 
@@ -85,7 +85,7 @@ public class JspUtil {
 
     private static final String OPEN_EXPR  = "<%=";
     private static final String CLOSE_EXPR = "%>";
-    private static final String OPEN_EXPR_2	 = "<jsp:expr";
+    private static final String OPEN_EXPR_2	 = "<jsp:expression";
     private static final String CLOSE_EXPR_2 = "/>";
 
     public static char[] removeQuotes(char []chars) {
