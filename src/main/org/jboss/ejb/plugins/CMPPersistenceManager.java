@@ -39,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -399,35 +399,21 @@ public class CMPPersistenceManager
       return store.isModified(ctx);
    }
 
-   public void invokeEjbStore(EntityEnterpriseContext ctx) throws RemoteException
+   public void storeEntity(EntityEnterpriseContext ctx)
+      throws RemoteException
    {
-      // update the db only if the instance is dirty
-      boolean modified = false;
+      AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
       try
       {
-         modified = isModified(ctx);
+         store.storeEntity(ctx);
       }
-      catch(Exception e)
+      finally
       {
-         throwRemoteException(e);
-      }
-
-      if(modified)
-      {
-         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
-         try
-         {
-            store.storeEntity(ctx);
-         }
-         finally
-         {
-            AllowedOperationsAssociation.popInMethodFlag();
-         }
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
-   public void storeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
+   public void invokeEjbStore(EntityEnterpriseContext ctx) throws RemoteException
    {
       AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
 

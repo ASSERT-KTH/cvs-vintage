@@ -52,7 +52,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.122 $
+ * @version $Revision: 1.123 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -737,7 +737,11 @@ public class EntityContainer
    {
       if (ctx.getId() != null)
       {
-         getPersistenceManager().storeEntity(ctx);
+         final EntityPersistenceManager pm = getPersistenceManager();
+         if(pm.isModified(ctx))
+         {
+            pm.storeEntity(ctx);
+         }
       }
    }
 
