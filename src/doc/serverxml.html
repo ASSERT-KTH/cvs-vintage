@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 <head>
-  <!-- $Id: serverxml.html,v 1.7 2001/10/09 17:46:27 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.8 2001/10/19 03:16:13 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
   <title>Server.xml Configuration in Tomcat 3.3</title>
 </head>
@@ -35,8 +36,8 @@ piece of functionality.</p>
 default and most flexible mechanism uses XML files. Each module is described
 by an XML element, with attributes used to set module properties. The main
 configuration file is located in <code>TOMCAT_HOME/conf/server.xml</code>, used to
-configure the server. Additional </code>TOMCAT_HOME/conf/server-<i>name</i>.xml</code> files
-will be read after </code>server.xml</code>, allowing local configurations.</p>
+configure the server. Additional <code>TOMCAT_HOME/conf/server-<i>name</i>.xml</code> files
+will be read after <code>server.xml</code>, allowing local configurations.</p>
 
 
 <h3>Variable substitution</h3>
@@ -44,7 +45,7 @@ will be read after </code>server.xml</code>, allowing local configurations.</p>
 <p>Each attribute value may use the ant-style variable substitution ( ${variable}
 ). The values are stored as ContextManager properties, and defined using
 either &lt;property name=&quot;foo&quot; value=&quot;bar&quot; /&gt;, as attributes in the
-&lt;ContextManager&gt; element, or in the command line using "-foo bar" 
+&lt;ContextManager&gt; element, or in the command line using &quot;-foo bar&quot; 
 syntax, or as system properties.</p>
 
 <h3>Common Parameters</h3>
@@ -129,14 +130,14 @@ some of the childen it supports:</p>
   <tr valign="top">
     <th>Attribute</th>
     <th>Description</th>
-    <td>Default</th>
+    <th>Default</th>
   </tr>
   <tr valign="top">
     <td>install</td>
     <td>Base directory for tomcat installation. It is typically guessed by the 
       startup program, but you can override it here.</td>
     <td>TOMCAT_HOME or one level above the location of the startup script or 
-      tomcat.jar (if "java -jar" is used for startup).</td>
+      tomcat.jar (if &quot;java -jar&quot; is used for startup).</td>
   </tr>
   <tr valign="top">
     <td>workDir</td>
@@ -192,7 +193,6 @@ be grouped as follows:</p>
 	  <li><a href="#LoaderInterceptor11">LoaderInterceptor11</a></li>
 	  <li><a href="#LogSetter">LogSetter</a></li>
 	  <li><a href="#NSConfig">NSConfig</a></li>
-	  <li><a href="#PathSetter">PathSetter</a></li>
 	  <li><a href="#PolicyLoader">PolicyLoader</a></li>
 	  <li><a href="#TrustedLoader">TrustedLoader</a></li>
 	  <li><a href="#WorkDirSetup">WorkDirSetup</a></li>
@@ -215,7 +215,6 @@ be grouped as follows:</p>
   <li>Loggers
     <ul>
 	  <li><a href="#AccessLogInterceptor">AccessLogInterceptor</a></li>
-	  <li><a href="#AccountingInterceptor">AccountingInterceptor</a></li>
 	  <li><a href="#LogEvents">LogEvents</a></li>
 	</ul></li>
   <li>Mappers
@@ -283,11 +282,11 @@ necessary.</p>
 
 <h3><a name="AccessLogInterceptor">AccessLogInterceptor</a></h3>
 
-<p><b>Type:</b> </p>
+<p><b>Type:</b> Loggers</p>
 
 <h4>Description</h4>
 
-<p></p>
+<p>Creates log files in the style of the Apache servers &quot;AccessLog&quot;.</p>
 
 <h4>Attributes</h4>
 
@@ -298,49 +297,91 @@ necessary.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td>logFile</td>
+    <td>Name of the log file.</td>
+    <td>logs/AccessLog</td>
+  </tr>
+  <tr valign="top">
+    <td>format</td>
+    <td>A string describing the logfile format. Possible values are
+      &quot;combined&quot; (Apache httpd combined format, default),
+      &quot;common&quot; (Apache httpd common format) or a format string like
+      <pre>
+        '%h %l %u %t &quot;%r&quot; %>s %b &quot;%{Referer}&quot; &quot;%{User-Agent}&quot;'
+        '%h %l %u %t &quot;%r&quot; %>s %b'
+      </pre>
+      (The above examples are used when &quot;combined&quot; or &quot;common&quot;
+      format is requested.) Possible patterns are:
+      <table>
+        <tr><th valign="top">%%</th>
+          <td>The percent character itself</td>
+        </tr>
+        <tr>
+          <th valign="top">%{var}</th>
+          <td>The value of <code>request.getHeader(&quot;var&quot;)</code> or
+            empty string for null.</td>
+        </tr>
+        <tr>
+          <th valign="top">%b</th>
+          <td>The value of <code>response.getContentLength()</code>.</td>
+        </tr>
+        <tr>
+          <th valign="top">%h</th>
+          <td>The value of <code>request.getRemoteHost()</code>.</td>
+        </tr>
+        <tr>
+          <th valign="top">%l</th>
+          <td>Should be the remote users name, as indicated by an
+            identd lookup. Currently it is always &quot;-&quot;.</td>
+        </tr>
+        <tr>
+          <th valign="top">%r</th>
+          <td>First line of the request submitted by the client, for
+            example
+            <pre>
+              GET /index.html?frame=main HTTP/1.0
+            </pre>
+            The first line is rebuilt from the values of
+            <code>request.getMethod()</code>,
+            <code>request.getRequestURI()</code>,
+            <code>request.getQueryString()</code> and
+            <code>request.getProtocol()</code>. It should probably
+            better be recorded while reading the headers.
+          </td>
+        </tr>
+        <tr>
+          <th valign="top">%s</th>
+          <td>The value of <code>response.getStatus()</code>.</td>
+        </tr>
+        <tr>
+          <th valign="top">%>s</th>
+          <td>The value of <code>response.getStatus()</code>.
+            Should differ between different internal requests, as
+            Apache httpd does, but this is currently not supported.</td>
+        </tr>
+        <tr>
+          <th valign="top">%t</th>
+          <td>The current time and date in the format
+            <pre>
+              [20/Apr/2001:19:45:23 0200]
+            </pre>
+          </td>
+        </tr>
+        <tr>
+          <th valign="top">%u</th>
+          <td>The value of <code>request.getRemoteUser()</code> or
+            &quot;-&quot; for null.</td>.
+        </tr>
+        <tr>
+      </table></td>
+    <td>&quot;combined&quot; format</td>
   </tr>
 </table>
 
 <h4>Example(s)</h4>
 
 <pre>
-
-</pre>
-
-<hr size="5">
-
-<!-- ======================================== -->
-
-<h3><a name="AccountingInterceptor">AccountingInterceptor</a></h3>
-
-<p><b>Type:</b> </p>
-
-<h4>Description</h4>
-
-<p></p>
-
-<h4>Attributes</h4>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr valign="top">
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr valign="top">
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
-
-<h4>Example(s)</h4>
-
-<pre>
-
+&lt;AccessLogInterceptor format=&quot;common&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -353,8 +394,9 @@ necessary.</p>
 
 <h4>Description</h4>
 
-<p>Handle incoming Ajp12 requests.  Ajp12 is a protocol used by the mod_jk
-based web server connectors and the mod_jserv connector.</p>
+<p>Handles incoming Ajp12 requests.  Ajp12 is a protocol used by the mod_jk
+based web server connectors and the mod_jserv connector.  Also, used for
+shutting down Tomcat.</p>
 
 <h4>Attributes</h4>
 
@@ -366,7 +408,7 @@ based web server connectors and the mod_jserv connector.</p>
   </tr>
   <tr valign="top">
     <td>ajpidFile</td>
-    <td>File in which to record Ajp12 connector info and password.</a>.</td>
+    <td>File in which to record Ajp12 connector info and password.</td>
     <td>conf/ajp12.id</td>
   </tr>
   <tr valign="top">
@@ -437,7 +479,7 @@ based web server connectors and the mod_jserv connector.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;Ajp12Interceptor port=&quot;8007&quot; ajpidFile="conf/ajp12_2.id" /&gt;
+&lt;Ajp12Connector port=&quot;8007&quot; ajpidFile=&quot;conf/ajp12_2.id&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -450,7 +492,7 @@ based web server connectors and the mod_jserv connector.</p>
 
 <h4>Description</h4>
 
-<p>Handle incoming Ajp13 requests.  Ajp13 is a protocol used by the mod_jk
+<p>Handles incoming Ajp13 requests.  Ajp13 is a protocol used by the mod_jk
 based web server connectors.</p>
 
 <h4>Attributes</h4>
@@ -464,13 +506,17 @@ based web server connectors.</p>
   <tr valign="top">
     <td>shutDownEnable</td>
     <td>Enable shutdown signal via this connector. Normally shutdown is done
-      through <a href="#Ajp12Interceptor">Ajp12Interceptor</a>.</td>
+      through <a href="#Ajp12Connector">Ajp12Connector</a>.</td>
     <td>false</td>
   </tr>
   <tr valign="top">
     <td>tomcatAuthentication</td>
     <td>Enables Tomcat's authentication, ignoring any authentication from the
-      web server sending the requests.</td>
+      web server sending the requests. This means that the user returned by
+      HttpServletRequest.getRemoteUser() will be the user authenticated locally
+      within Tomcat.  If you are using Tomcat with a web server, such as Apache,
+      and you want to use the user authenticated by the web server, set this
+      attribute <code>false</code>.</td>
     <td>true</td>
   </tr>
   <tr valign="top">
@@ -525,7 +571,7 @@ based web server connectors.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;Ajp13Interceptor port=&quot;8009&quot; tomcatAuthentication=&quot;false&quot; /&gt;
+&lt;Ajp13Connector port=&quot;8009&quot; tomcatAuthentication=&quot;false&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -545,15 +591,15 @@ based web server connectors.</p>
 
 <p><b>Important Note:</b> The configuration files are not written as part of a
 normal startup of Tomcat.  To generate the configuration files on demand,
-append:
+append:</p>
 <pre>    jkconf</pre>
-or
+<p>or</p>
 <pre>    -jkconf</pre>
-to the startup command.  Tomcat will initialize sufficiently to write the
+<p>to the startup command.  Tomcat will initialize sufficiently to write the
 configuration files and then exit. This may be done while Tomcat 3.3 is running.
-To generate the configuration files during normal startup, add:
+To generate the configuration files during normal startup, add:</p>
 <pre>    jkconf=&quot;true&quot;</pre>
-to the <code>&lt;ContextManager ... &gt;</code> element in the
+<p>to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
 <h4>Attributes</h4>
@@ -600,10 +646,11 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   <tr valign="top">
     <td>jkWorker</td>
     <td>The desired worker. Must be set to one of the workers defined in the
-      workers.properties file. "ajp12", "ajp13" or "inprocess" are the workers
-      found in the default workers.properties file.</td>
-    <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
-      defaults to "ajp12".</td>
+      workers.properties file. &quot;ajp12&quot;, &quot;ajp13&quot; or
+      &quot;inprocess&quot; are the workers found in the default
+      workers.properties file.</td>
+    <td>Defaults to &quot;ajp13&quot; if an Ajp13Connector is in use,
+      otherwise it defaults to &quot;ajp12&quot;.</td>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
@@ -647,7 +694,11 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 
 <h4>Description</h4>
 
-<p>Automatically expand WAR files on startup.</p>
+<p>Automatically expands WAR files on startup.</p>
+
+<p><b>Note:</b> If the <code>redeploy</code> attribute is <code>true</code> and
+a <a href="#ReloadInterceptor">ReloadInterceptor</a> is present, then WAR
+files will re-deploy automatically while Tomcat 3.3 is running.</p>
 
 <h4>Attributes</h4>
 
@@ -736,7 +787,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
     <td>flat</td>
     <td>Each dir will be treated as a webapp in the same host. If <code>false</code>,
       each dir will be treated as a host name and its subdirs as
-      webapplication. You can add apps to multiple virtual hosts. </td>
+      web applications. You can add apps to multiple virtual hosts. </td>
     <td>true</td>
   </tr>
 </table>
@@ -894,7 +945,7 @@ unsafe escape sequences.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;DecodeInterceptor useSessionEncoding="true" &gt;
+&lt;DecodeInterceptor useSessionEncoding=&quot;true&quot; &gt;
 </pre>
 
 <hr size="5">
@@ -1070,15 +1121,15 @@ which requests should be passed to Tomcat.</p>
 
 <p><b>Important Note:</b> The configuration files are not written as part of a
 normal startup of Tomcat.  To generate the configuration files on demand,
-append:
+append:</p>
 <pre>    jkconf</pre>
-or
+<p>or</p>
 <pre>    -jkconf</pre>
-to the startup command.  Tomcat will initialize, write the configuration files,
+<p>to the startup command.  Tomcat will initialize, write the configuration files,
 and then shutdown. This may be done while Tomcat 3.3 is running. To generate
-the configuration files during normal startup, add:
+the configuration files during normal startup, add:</p>
 <pre>    jkconf=&quot;true&quot;</pre>
-to the <code>&lt;ContextManager ... &gt;</code> element in the
+<p>to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
 <h4>Attributes</h4>
@@ -1123,10 +1174,11 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   <tr valign="top">
     <td>jkWorker</td>
     <td>The desired worker. Must be set to one of the workers defined in the
-      workers.properties file. "ajp12", "ajp13" or "inprocess" are the workers
-      found in the default workers.properties file.</td>
-    <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
-      defaults to "ajp12".</td>
+      workers.properties file. &quot;ajp12&quot;, &quot;ajp13&quot; or
+      &quot;inprocess&quot; are the workers found in the default
+      workers.properties file.</td>
+    <td>Defaults to &quot;ajp13&quot; if an Ajp13Connector is in use, otherwise it
+      defaults to &quot;ajp12&quot;.</td>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
@@ -1294,11 +1346,12 @@ execution.</p>
 
 <h3><a name="JniConnector">JniConnector</a></h3>
 
-<p><b>Type:</b> </p>
+<p><b>Type:</b> Server</p>
 
 <h4>Description</h4>
 
-<p></p>
+<p>Handles requests processed by Tomcat running in-process. It has no
+effect if Tomcat was not started in-process by the Tomcat connector.</p>
 
 <h4>Attributes</h4>
 
@@ -1309,16 +1362,25 @@ execution.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td>exitIfNoLib</td>
+    <td>Causes Tomcat to exit if the native libary is not successfully loaded.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>nativeLibrary</td>
+    <td>Name of the native library to load.  If the name specified is not
+      absolute, it tries loading the library using the name as is.  If that
+      fails, it will try loading it from <code>TOMCAT_HOME/bin/native</code>.</td>
+    <td>Windows: jni_connect.dll<br>
+      Netware: jni_connect.nlm<br>
+      Unix and all others: jni_connect.so</td>
   </tr>
 </table>
 
 <h4>Example(s)</h4>
 
 <pre>
-
+&lt;JniConnector nativeLibrary=&quot;bin/jni_connect.so&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -1338,15 +1400,15 @@ execution.</p>
 
 <p><b>Important Note:</b> The configuration files are not written as part of a
 normal startup of Tomcat.  To generate the configuration files on demand,
-append:
+append:</p>
 <pre>    jkconf</pre>
-or
+<p>or</p>
 <pre>    -jkconf</pre>
-to the startup command.  Tomcat will initialize sufficiently to write the
+<p>to the startup command.  Tomcat will initialize sufficiently to write the
 configuration files and then exit. This may be done while Tomcat 3.3 is running.
-To generate the configuration files during normal startup, add:
+To generate the configuration files during normal startup, add:</p>
 <pre>    jkconf=&quot;true&quot;</pre>
-to the <code>&lt;ContextManager ... &gt;</code> element in the
+<p>to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
 <h4>Attributes</h4>
@@ -1504,7 +1566,7 @@ as IBM's <code>Jikes</code> Java compiler.</p>
   <tr valign="top">
     <td>jspCompilerPath</td>
     <td>Path to Java compiler executable. Used only with Jikes as the Java
-      compiler. If not specified, jikes.exe must be in the <code>PATH</code>
+      compiler. If not specified, the Jikes executable must be in the <code>PATH</code>
       environment variable.</td>
     <td><i>empty</i></td>
   </tr>
@@ -1514,7 +1576,8 @@ as IBM's <code>Jikes</code> Java compiler.</p>
       typically include extension jars found in the <code>jre/lib/ext</code>
       directory of a Java 2 SDK. By default, the <code>jre/lib/rt.jar</code>
       file is automatically included so it does not need to be present
-      in this setting.</td>
+      in this setting.  Classes from <code>WEB-INF/classes</code> and
+      jars from <code>WEB-INF/lib</code> are also automatically included.</td>
     <td><i>empty</i></td>
   </tr>
   <tr valign="top">
@@ -1556,7 +1619,7 @@ as IBM's <code>Jikes</code> Java compiler.</p>
 
 <pre>
 &lt;JspInterceptor keepGenerated=&quot;false&quot /&gt;
-&lt;JspInterceptor javaCompiler="jikes" /&gt;
+&lt;JspInterceptor javaCompiler=&quot;jikes&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -1747,7 +1810,7 @@ than 5.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;LogSetter name="tc_log" verbosityLevel="DEBUG" /&gt;
+&lt;LogSetter name=&quot;tc_log&quot; verbosityLevel=&quot;DEBUG&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -1771,15 +1834,15 @@ file being used for the disired server.</p>
 
 <p><b>Important Note:</b> The configuration files are not written as part of a
 normal startup of Tomcat.  To generate the configuration files on demand,
-append:
+append:</p>
 <pre>    jkconf</pre>
-or
+<p>or</p>
 <pre>    -jkconf</pre>
-to the startup command.  Tomcat will initialize, write the configuration files,
+<p>to the startup command.  Tomcat will initialize, write the configuration files,
 and then shutdown. This may be done while Tomcat 3.3 is running. To generate
-the configuration files during normal startup, add:
+the configuration files during normal startup, add:</p>
 <pre>    jkconf=&quot;true&quot;</pre>
-to the <code>&lt;ContextManager ... &gt;</code> element in the
+<p>to the <code>&lt;ContextManager ... &gt;</code> element in the
 <code>server.xml</code> file.</p>
 
 <h4>Attributes</h4>
@@ -1831,10 +1894,11 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   <tr valign="top">
     <td>jkWorker</td>
     <td>The desired worker. Must be set to one of the workers defined in the
-      workers.properties file. "ajp12", "ajp13" or "inprocess" are the workers
-      found in the default workers.properties file.</td>
-    <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
-      defaults to "ajp12".</td>
+      workers.properties file. &quot;ajp12&quot;, &quot;ajp13&quot; or
+      &quot;inprocess&quot; are the workers found in the default
+      workers.properties file.</td>
+    <td>Defaults to &quot;ajp13&quot; if an Ajp13Connector is in use, otherwise it
+      defaults to &quot;ajp12&quot;.</td>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
@@ -1858,7 +1922,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 <h4>Example(s)</h4>
 
 <pre>
-&lt;NSConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; objectName="tomcat" /&gt;
+&lt;NSConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; objectName=&quot;tomcat&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -1950,6 +2014,29 @@ preferred method.</p>
 
 <!-- ======================================== -->
 
+<h3><a name="Servlet22Interceptor">Servlet22Interceptor</a></h3>
+
+<p><b>Type:</b> Servlet 2.2 Facade</p>
+
+<h4>Description</h4>
+
+<p>Handles some miscellaneous tasks that help implement behavior related to the
+Servlet 2.2 specification.</p>
+
+<h4>Attributes</h4>
+
+<p>This module has no user settable attributes.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;Servlet22Interceptor /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
 <h3><a name="SessionExpirer">SessionExpirer</a></h3>
 
 <p><b>Type:</b> Session</p>
@@ -1976,7 +2063,7 @@ preferred method.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;SessionExpirer checkInterval="120" /&gt;
+&lt;SessionExpirer checkInterval=&quot;120&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -1989,7 +2076,7 @@ preferred method.</p>
 
 <h4>Description</h4>
 
-<p>Handles associating sessions with requests and responses..</p>
+<p>Handles associating sessions with requests and responses.</p>
 
 <h4>Attributes</h4>
 
@@ -2035,7 +2122,16 @@ preferred method.</p>
 
 <h4>Description</h4>
 
-<p>Creates new session id's when needed for a request.</p>
+<p>Creates new session id's when needed for a request.  If the
+<code>randomFile</code> is not available, the class specified by
+<code>randomClass</code> will be used.  In this case, initialization of
+class occurs on the first request requiring a session.</p>
+
+<p><b>Note:</b> The initialization for the <code>java.security.SecureRandom</code>
+class can take a relatively long time.  For development purposes, you may speed
+this up by specifying <code>java.util.Random</code> as the
+<code>randomClass</code> setting.  This should be done only for development
+since the random sequence generated by java.util.Random is predictable.</p>
 
 <h4>Attributes</h4>
 
@@ -2065,6 +2161,48 @@ preferred method.</p>
 <pre>
 &lt;SessionIdGenerator randomClass=&quot;java.security.SecureRandom&quot;
     randomFile=&quot;/dev/urandom&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleMapper1">SimpleMapper1</a></h3>
+
+<p><b>Type:</b> Mapper</p>
+
+<h4>Description</h4>
+
+<p>Handles the mapping of requests to the appropriate context.</p>
+
+<h4>Attributes</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>mapCache</td>
+    <td>Enables creating a cache map of the full request URI to its
+      associated context. This speeds the mapping operation for subsequent
+      requests.  This feature is considered experimental. </td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>ignoreCase</td>
+    <td>Enables case insensitive operation when mapping a request to a
+      context.</td>
+    <td>false on Unix based systems<br>
+      true on Windows based systems</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SimpleMapper1 /&gt;
 </pre>
 
 <hr size="5">
@@ -2143,7 +2281,7 @@ module.</p>
   <tr valign="top">
     <td>maxActiveSessions</td>
     <td>Maximum number of active sessions allowed. Attempts to create sessions
-      beyond this limit will fail. If set to "-1", then there is no limit to
+      beyond this limit will fail. If set to &quot;-1&quot;, then there is no limit to
       the number of active sessions.</td>
     <td>-1</td>
   </tr>
@@ -2153,71 +2291,6 @@ module.</p>
 
 <pre>
 &lt;SimpleSessionStore maxActiveSessions=&quot;-1&quot; /&gt;
-</pre>
-
-<hr size="5">
-
-<!-- ======================================== -->
-
-<h3><a name="Servlet22Interceptor">Servlet22Interceptor</a></h3>
-
-<p><b>Type:</b> Servlet 2.2 Facade</p>
-
-<h4>Description</h4>
-
-<p>Handles some miscellaneous tasks the help implement behavior related to the
-Servlet 2.2 specification.</p>
-
-<h4>Attributes</h4>
-
-<p>This module has no user settable attributes.</p>
-
-<h4>Example(s)</h4>
-
-<pre>
-&lt;Servlet22Interceptor /&gt;
-</pre>
-
-<hr size="5">
-
-<!-- ======================================== -->
-
-<h3><a name="SimpleMapper1">SimpleMapper1</a></h3>
-
-<p><b>Type:</b> Mapper</p>
-
-<h4>Description</h4>
-
-<p>Handles the mapping of requests to the appropriate context.</p>
-
-<h4>Attributes</h4>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr valign="top">
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr valign="top">
-    <td>mapCache</td>
-    <td>Enables creating a cache map of the full request URI to its
-      associated context. This speeds the mapping operation for subsequent
-      requests.  This feature is considered experimental. </td>
-    <td>false</td>
-  </tr>
-  <tr valign="top">
-    <td>ignoreCase</td>
-    <td>Enables case insensitive operation when mapping a request to a
-      context.</td>
-    <td>false on Unix based systems<br>
-      true on Windows based systems</td>
-  </tr>
-</table>
-
-<h4>Example(s)</h4>
-
-<pre>
-&lt;SimpleMapper1 /&gt;
 </pre>
 
 <hr size="5">
@@ -2395,7 +2468,7 @@ specified in the <code>server.xml</code> file.</p>
 <h4>Example(s)</h4>
 
 <pre>
-&lt;WorkDirSetup cleanWorkDir="false" workDirBase=&quot;work&quot; /&gt;
+&lt;WorkDirSetup cleanWorkDir=&quot;false&quot; workDirBase=&quot;work&quot; /&gt;
 </pre>
 
 <hr size="5">
