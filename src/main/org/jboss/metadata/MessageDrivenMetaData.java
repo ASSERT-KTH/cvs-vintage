@@ -10,6 +10,7 @@
 package org.jboss.metadata;
 
 import java.util.HashMap;
+import javax.jms.Message;
 import javax.jms.Session;
 
 import org.w3c.dom.Element;
@@ -25,7 +26,7 @@ import org.jboss.ejb.plugins.TxSupport;
  *
  * <p>Have to add changes ApplicationMetaData and ConfigurationMetaData.
  *
- * @version <tt>$Revision: 1.25 $</tt>
+ * @version <tt>$Revision: 1.26 $</tt>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
@@ -187,7 +188,7 @@ public class MessageDrivenMetaData
             // be able to use other MOM systems, aka XmlBlaser. TODO!
             // The MessageDrivenContainer needs this too!!
             //
-            Class[] sig = {};
+            Class[] sig = { Message.class };
             if( super.getMethodTransactionType("onMessage", sig, null)
                == TxSupport.REQUIRED )
             {
