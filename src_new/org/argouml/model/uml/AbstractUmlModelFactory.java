@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.23 2004/07/22 20:17:26 linus Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.24 2004/08/08 12:43:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public abstract class AbstractUmlModelFactory {
             EventListenerList[] lists =
                 pump.getClassListenerMap().getListenerList(o.getClass());
             for (int i = 0; i < lists.length; i++) {
-                Object[] listenerList = lists[i]._listenerList;
+                Object[] listenerList = lists[i].getListenerList();
                 for (int j = 0; j < listenerList.length; j += 3) {
                     pump.addModelEventListener(
 					       listenerList[j + 2],

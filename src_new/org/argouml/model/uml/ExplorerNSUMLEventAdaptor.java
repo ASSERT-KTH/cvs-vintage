@@ -1,4 +1,4 @@
-// $Id: ExplorerNSUMLEventAdaptor.java,v 1.5 2004/06/27 10:58:52 d00mst Exp $
+// $Id: ExplorerNSUMLEventAdaptor.java,v 1.6 2004/08/08 12:43:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,9 @@ public class ExplorerNSUMLEventAdaptor
     
     private static ExplorerNSUMLEventAdaptor instance;
     
+    /**
+     * @return the ExplorerNSUMLEventAdaptor
+     */
     public static ExplorerNSUMLEventAdaptor getInstance() {
         if (instance == null) {
             instance = new ExplorerNSUMLEventAdaptor();
@@ -126,6 +129,7 @@ public class ExplorerNSUMLEventAdaptor
             || (e.getNewValue() != null
                 && !e.getNewValue().equals(e.getOldValue()))) {
             //firePropertyChanged("modelElementRemoved", e.getRemovedValue());
+            ;
         }
 
     }
