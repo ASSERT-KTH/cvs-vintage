@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.176 2004/10/17 18:50:37 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.177 2004/10/25 08:44:42 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -75,7 +75,6 @@
     <!-- The combined library classpath -->
     <path id="library.classpath">
       <path refid="sun.servlet.classpath"/>
-      <path refid="apache.axis.classpath"/>
       <path refid="apache.crimson.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="apache.bcel.classpath"/>
