@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.12 2002/05/19 04:32:33 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.13 2002/05/19 05:18:52 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -468,10 +468,11 @@ public class TokenMarker
 			{
 				lastKeyword = pos + pattern.count;
 
-				if ((checkRule.action & WHITESPACE) == WHITESPACE)
+				// XXX: deal with this
+				/* if ((checkRule.action & WHITESPACE) == WHITESPACE)
 				{
 					return false; // break out of inner for loop to check next char
-				}
+				} */
 
 				// mark previous sequence as NULL (plain text)
 				if (lastOffset < pos)

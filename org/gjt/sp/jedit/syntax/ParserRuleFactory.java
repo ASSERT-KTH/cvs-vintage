@@ -22,7 +22,7 @@ package org.gjt.sp.jedit.syntax;
 /**
  * Creates parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleFactory.java,v 1.2 2001/09/08 04:50:46 spestov Exp $
+ * @version $Id: ParserRuleFactory.java,v 1.3 2002/05/19 05:18:52 spestov Exp $
  */
 public class ParserRuleFactory
 {
@@ -169,28 +169,6 @@ public class ParserRuleFactory
 	public static final ParserRule createEscapeRule(String seq)
 	{
 		int ruleAction = TokenMarker.IS_ESCAPE;
-
-		String[] strings = new String[1];
-		strings[0] = seq;
-
-		int[] ruleSeqLengths = new int[1];
-		char[] ruleChars;
-		if (seq != null)
-		{
-			ruleSeqLengths[0] = seq.length();
-			ruleChars = seq.toCharArray();
-		}
-		else
-		{
-			ruleChars = new char[0];
-		}
-
-		return new ParserRule(ruleChars, ruleSeqLengths, ruleAction, Token.NULL);
-	}
-
-	public static final ParserRule createWhitespaceRule(String seq)
-	{
-		int ruleAction = TokenMarker.WHITESPACE;
 
 		String[] strings = new String[1];
 		strings[0] = seq;

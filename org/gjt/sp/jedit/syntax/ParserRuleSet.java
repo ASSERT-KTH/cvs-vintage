@@ -33,7 +33,7 @@ import javax.swing.text.Segment;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.5 2002/05/17 06:41:08 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.6 2002/05/19 05:18:52 spestov Exp $
  */
 public class ParserRuleSet
 {
@@ -44,6 +44,9 @@ public class ParserRuleSet
 		this.mode = mode;
 		ruleMapFirst = new ParserRule[RULE_BUCKET_COUNT];
 		ruleMapLast = new ParserRule[RULE_BUCKET_COUNT];
+
+		addRule(ParserRuleFactory.createSequenceRule(" ",Token.WHITESPACE,false));
+		addRule(ParserRuleFactory.createSequenceRule("\t",Token.WHITESPACE,false));
 	} //}}}
 
 	//{{{ getMode() method

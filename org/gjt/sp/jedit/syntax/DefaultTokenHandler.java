@@ -27,7 +27,7 @@ package org.gjt.sp.jedit.syntax;
  * builds a linked list of tokens.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.1 2002/05/19 04:32:33 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.2 2002/05/19 05:18:52 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -74,6 +74,16 @@ public class DefaultTokenHandler implements TokenHandler
 	{
 		if(length == 0 && id != Token.END)
 			return;
+		else if(id == Token.WHITESPACE)
+		{
+			if(lastToken == null)
+				id = Token.NULL;
+			else
+			{
+				lastToken.length += length;
+				return;
+			}
+		}
 
 		if(firstToken == null)
 		{
