@@ -33,7 +33,6 @@ import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 
 import org.jboss.logging.Logger;
-import org.jboss.management.j2ee.J2EEApplication;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.system.ServiceMBeanSupport;
@@ -47,7 +46,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -210,13 +209,6 @@ public class EARDeployer
          throw new DeploymentException("Error in accessing application metadata: ", e);
       }
  
-      // Create the appropriate JSR-77 instance, this has to be done in init
-      // EAR create is called after sub-component creates that need this MBean
-      ObjectName lApplication = J2EEApplication.create(
-         server,
-         di.shortName,
-         di.localUrl
-      );
       return true;
    }
 
@@ -257,8 +249,6 @@ public class EARDeployer
          }
       }
 
-      // Destroy the appropriate JSR-77 instance
-      J2EEApplication.destroy(server, di.shortName);
    }
    
    
