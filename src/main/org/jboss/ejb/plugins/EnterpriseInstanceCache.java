@@ -35,7 +35,7 @@ import org.jboss.metadata.XmlLoadable;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -106,15 +106,11 @@ public abstract class EnterpriseInstanceCache
 		Object key = getKey(ctx);
 		synchronized (getCacheLock())
 		{
-			// Paranoid check...
-			if (getCache().peek(key) == null)
+			if (getCache().peek(key) != null)
 			{
-				getCache().insert(key, ctx);
+				getCache().remove(key);
 			}
-			else
-			{
-				throw new IllegalStateException("Can't insert bean with id = " + key + ": it is already in the cache.");
-			}
+         getCache().insert(key, ctx);
 		}
 	}
 	/* From InstanceCache interface */
@@ -132,14 +128,9 @@ public abstract class EnterpriseInstanceCache
 		
 		synchronized (getCacheLock())
 		{
-			// Paranoid check...
 			if (getCache().peek(id) != null)
 			{
 				getCache().remove(id);
-			}
-			else
-			{
-				throw new IllegalStateException("Can't remove bean with id = " + id + ": it isn't in the cache.");
 			}
 		}
 		removeLock(id);
