@@ -71,6 +71,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * @see org.tigris.scarab.da.AttributeAccess
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
+ * @since Scarab 0.17
  */
 public class AttributeAccess
 {
@@ -90,6 +91,10 @@ public class AttributeAccess
 
     private Serializable thisKey = AttributeAccess.class;
 
+
+    /**
+     * Constructor used by {@link org.tigris.scarab.da.DAFactory}.
+     */
     public AttributeAccess()
     {
     }
@@ -142,7 +147,7 @@ public class AttributeAccess
                 result = new ArrayList(records.size());
                 for (Iterator i = records.iterator(); i.hasNext();) 
                 {
-                    result.add( ((Record)i.next()).getValue(1).asString());
+                    result.add(((Record) i.next()).getValue(1).asString());
                 }
             }
             catch (Exception e)
@@ -205,6 +210,7 @@ public class AttributeAccess
      * Set of attributeIDs which are active and required within the given 
      * module for the given issue type and whose attribute group's are 
      * also active.
+     *
      * @param moduleID The associated module (must be
      * non-<code>null</code>).
      * @param artifactTypeID The associated artifact type (must be
@@ -221,9 +227,9 @@ public class AttributeAccess
         {        
             Criteria crit = new Criteria(7)
                 .add(RModuleAttributePeer.REQUIRED, true)
-                .add(RModuleAttributePeer.ACTIVE, true);
-            crit.add(RModuleAttributePeer.MODULE_ID, moduleID);
-            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+                .add(RModuleAttributePeer.ACTIVE, true)
+                .add(RModuleAttributePeer.MODULE_ID, moduleID)
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
             addGroupCriteria(crit, moduleID, artifactTypeID);
             attributes = getRMAAttributeIdSet(crit);
             ScarabCache.put(attributes, thisKey, RETRIEVE_REQUIRED_ATTRIBUTES, 
@@ -231,7 +237,7 @@ public class AttributeAccess
         }
         else 
         {
-            attributes = (Set)obj;
+            attributes = (Set) obj;
         }
         return attributes;
     }
@@ -241,6 +247,7 @@ public class AttributeAccess
      * within the given 
      * module for the given issue type and whose attribute group's are 
      * also active.
+     *
      * @param moduleID The associated module (must be
      * non-<code>null</code>).
      * @param artifactTypeID The associated artifact type (must be
@@ -256,16 +263,17 @@ public class AttributeAccess
         if (obj == null) 
         {        
             Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.QUICK_SEARCH, true);
-            crit.add(RModuleAttributePeer.MODULE_ID, moduleID);
-            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+                .add(RModuleAttributePeer.QUICK_SEARCH, true)
+                .add(RModuleAttributePeer.MODULE_ID, moduleID)
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
             attributes = getRMAAttributeIdSet(crit);
-            ScarabCache.put(attributes, thisKey, RETRIEVE_QUICK_SEARCH_ATTRIBUTES, 
+            ScarabCache.put(attributes, thisKey,
+                            RETRIEVE_QUICK_SEARCH_ATTRIBUTES, 
                             moduleID, artifactTypeID);
         }
         else 
         {
-            attributes = (Set)obj;
+            attributes = (Set) obj;
         }
         return attributes;
     }
@@ -278,9 +286,9 @@ public class AttributeAccess
         {
             List records = RModuleAttributePeer.doSelectVillageRecords(crit);
             attributes = new HashSet(records.size());
-            for (Iterator i = records.iterator(); i.hasNext();) 
+            for (Iterator i = records.iterator(); i.hasNext(); )
             {
-                attributes.add(((Record)i.next()).getValue(1).asString());
+                attributes.add(((Record) i.next()).getValue(1).asString());
             }
         }
         catch (Exception e)
@@ -391,6 +399,7 @@ public class AttributeAccess
      * default text attribute within the given 
      * module for the given issue type and whose attribute group is 
      * also active.
+     *
      * @param moduleID The associated module (must be
      * non-<code>null</code>).
      * @param artifactTypeID The associated artifact type (must be
@@ -417,7 +426,7 @@ public class AttributeAccess
         }
         else 
         {
-            result = (String)obj;
+            result = (String) obj;
         }
         
         return result.length() == 0 ? null : result;
@@ -436,7 +445,7 @@ public class AttributeAccess
             }
             else
             {
-                result = ((Record)records.get(0)).getValue(1).asString();
+                result = ((Record) records.get(0)).getValue(1).asString();
             }
         }
         catch (Exception e)
@@ -454,11 +463,12 @@ public class AttributeAccess
      * alphabetical by name within the given 
      * module for the given issue type and whose attribute group is 
      * also active.
+     *
      * @param moduleID The associated module (must be
      * non-<code>null</code>).
      * @param artifactTypeID The associated artifact type (must be
      * non-<code>null</code>).
-     * @return an <code>String</code> attribute ID
+     * @return An <code>String</code> attribute ID.
      */
     public String retrieveFirstActiveTextAttributeID(String moduleID, 
                                                      String artifactTypeID)
@@ -488,10 +498,9 @@ public class AttributeAccess
         }
         else 
         {
-            result = (String)obj;
+            result = (String) obj;
         }
         
         return result.length() == 0 ? null : result;
     }
 }
-
