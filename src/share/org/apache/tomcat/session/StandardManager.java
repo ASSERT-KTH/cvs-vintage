@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.6 2000/05/12 15:26:40 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/12 15:26:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.7 2000/05/15 20:59:08 jon Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/15 20:59:08 $
  *
  * ====================================================================
  *
@@ -104,7 +104,8 @@ import org.apache.tomcat.core.*;
  *
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
- * @version $Revision: 1.6 $ $Date: 2000/05/12 15:26:40 $
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @version $Revision: 1.7 $ $Date: 2000/05/15 20:59:08 $
  */
 public final class StandardManager implements Runnable, SessionManager {
     // ----------------------------------------------------- Instance Variables
@@ -314,6 +315,14 @@ public final class StandardManager implements Runnable, SessionManager {
 	}
     }
 
+	/**
+		This method will return a Hashtable of HttpSession
+		objects.
+	*/
+	public Hashtable getSessions() {
+		return this.sessions;
+	}
+	
     /**
      * Construct and return a new session object, based on the default
      * settings specified by this Manager's properties.  The session
