@@ -1,6 +1,7 @@
 <div class="app" id="div3-0-3-0"">
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
+#set ($lastTemplate = $data.Parameters.getString("lastTemplate", ""))
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
@@ -24,6 +25,9 @@
 #end
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")" />
+#if (!$lastTemplate.equals(""))
+  <input type="hidden" name="lastTemplate" value="$lastTemplate" />
+#end
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;

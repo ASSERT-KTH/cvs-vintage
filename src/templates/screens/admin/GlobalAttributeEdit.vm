@@ -1,5 +1,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
+#set ($lastTemplate = $data.Parameters.getString("lastTemplate", ""))
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
@@ -18,10 +19,15 @@
 On this screen, one can modify system wide Attribute information.
 </p>
 
+$data.Parameters.getString("groupId")
+
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 #if ($createNew.equals("false"))
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
+#end
+#if (!$lastTemplate.equals(""))
+  <input type="hidden" name="lastTemplate" value="$lastTemplate" />
 #end
 
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
