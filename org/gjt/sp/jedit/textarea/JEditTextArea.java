@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.28 2001/11/12 09:28:48 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.29 2001/11/14 09:35:20 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3291,7 +3291,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 				start--;
 			end--;
 		}
-		int x = offsetToX(caretLine,caret - start));
+		int x = offsetToX(caretLine,caret - start);
 		buffer.remove(start,end - start);
 		setCaretPosition(start + xToOffset(caretLine,x));
 	} //}}}
@@ -5222,6 +5222,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		//{{{ doSingleClick() method
 		private void doSingleClick(MouseEvent evt)
 		{
+			if(buffer.insideCompoundEdit())
+				buffer.endCompoundEdit();
+
 			if(evt.isShiftDown())
 			{
 				// XXX: getMarkPosition() deprecated!

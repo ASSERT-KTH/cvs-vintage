@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.12 2001/11/10 10:56:14 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.13 2001/11/14 09:35:20 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -174,6 +174,8 @@ public class GUIUtilities
 			return new OpenWithEncodingMenu();
 		else if(name.equals("recent-files"))
 			return new RecentFilesMenu();
+		else if(name.equals("recent-directories"))
+			return new RecentDirectoriesMenu();
 		else if(name.equals("current-directory"))
 			return new CurrentDirectoryMenu();
 		else if(name.equals("markers"))
@@ -311,7 +313,9 @@ public class GUIUtilities
 	public static EnhancedButton loadToolButton(String name)
 	{
 		EditAction action = jEdit.getAction(name);
-		String label = action.getLabel();
+		String label = (action == null
+			? jEdit.getProperty(name + ".label")
+			: action.getLabel());
 
 		Icon icon;
 		String iconName = jEdit.getProperty(name + ".icon");

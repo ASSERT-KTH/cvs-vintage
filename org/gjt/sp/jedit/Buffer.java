@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.33 2001/11/12 09:28:48 spestov Exp $
+ * @version $Id: Buffer.java,v 1.34 2001/11/14 09:35:20 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -384,6 +384,8 @@ public class Buffer implements EBComponent
 		{
 			public void run()
 			{
+				String newPath = getStringProperty(
+					BufferIORequest.NEW_PATH);
 				Segment seg = (Segment)getProperty(
 					BufferIORequest.LOAD_DATA);
 				IntegerArray endOffsets = (IntegerArray)
@@ -420,6 +422,7 @@ public class Buffer implements EBComponent
 
 				unsetProperty(BufferIORequest.LOAD_DATA);
 				unsetProperty(BufferIORequest.END_OFFSETS);
+				unsetProperty(BufferIORequest.NEW_PATH);
 
 				undoMgr.clear();
 				undoMgr.setLimit(jEdit.getIntegerProperty(
@@ -430,6 +433,9 @@ public class Buffer implements EBComponent
 				// if reloading a file, clear dirty flag
 				if(reload)
 					setDirty(false);
+
+				if(newPath != null && !path.equals(newPath))
+					setPath(newPath);
 
 				// if loadAutosave is false, we loaded an
 				// autosave file, so we set 'dirty' to true

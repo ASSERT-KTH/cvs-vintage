@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.8 2001/10/29 05:11:27 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.9 2001/11/14 09:35:20 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -179,6 +179,22 @@ public class FileVFS extends VFS
 		} //}}}
 
 		return super.insert(view,buffer,path);
+	} //}}}
+
+	//{{{ _canonPath() method
+	/**
+	 * Returns the canonical form if the specified path name. For example,
+	 * <code>~</code> might be expanded to the user's home directory.
+	 * @param session The session
+	 * @param path The path
+	 * @param comp The component that will parent error dialog boxes
+	 * @exception IOException if an I/O error occurred
+	 * @since jEdit 4.0pre2
+	 */
+	public String _canonPath(Object session, String path, Component comp)
+		throws IOException
+	{
+		return MiscUtilities.canonPath(path);
 	} //}}}
 
 	//{{{ _listDirectory() method

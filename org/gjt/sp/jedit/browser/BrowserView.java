@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.3 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.4 2001/11/14 09:35:20 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -48,6 +48,9 @@ public class BrowserView extends JPanel
 		tree.setEditable(false);
 		tree.addTreeExpansionListener(new TreeHandler());
 		tree.putClientProperty("JTree.lineStyle", "Angled");
+		tree.setRowHeight(renderer.getTreeCellRendererComponent(
+			tree,new DefaultMutableTreeNode("foo"),
+			false,false,false,0,false).getSize().height);
 
 		if(browser.isMultipleSelectionEnabled())
 			tree.getSelectionModel().setSelectionMode(

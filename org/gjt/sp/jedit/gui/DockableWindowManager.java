@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.14 2001/11/10 10:56:14 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.15 2001/11/14 09:35:20 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -511,10 +511,7 @@ public class DockableWindowManager extends JPanel
 		if(entry.win == null)
 			entry.open();
 
-		if(entry.win != null)
-			entry.container.show(entry);
-		else
-			; // some kind of exception already shown
+		entry.container.show(entry);
 	} //}}}
 
 	//{{{ addDockableWindow() method
@@ -619,6 +616,22 @@ public class DockableWindowManager extends JPanel
 			return false;
 		else
 			return entry.container.isVisible(entry);
+	} //}}}
+
+	//{{{ isDockableWindowDocked() method
+	/**
+	 * Returns if the specified dockable window is docked into the
+	 * view.
+	 * @param name The dockable's name
+	 * @since jEdit 4.0pre2
+	 */
+	public boolean isDockableWindowDocked(String name)
+	{
+		Entry entry = (Entry)windows.get(name);
+		if(entry == null)
+			return false;
+		else
+			return (entry.position != FLOATING);
 	} //}}}
 
 	//{{{ close() method

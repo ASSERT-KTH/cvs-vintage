@@ -1,5 +1,5 @@
 # Properties file for QuickNotepad plugin
-# $Id: QuickNotepad.props,v 1.6 2001/11/14 06:51:03 spestov Exp $
+# $Id: QuickNotepad.props,v 1.7 2001/11/14 09:35:20 spestov Exp $
 
 # general plugin information
 plugin.QuickNotepadPlugin.name=QuickNotepad
@@ -22,6 +22,9 @@ quicknotepad.menu.label=QuickNotepad
 quicknotepad.menu=quicknotepad-toggle - quicknotepad.choose-file \
 	quicknotepad.save-file quicknotepad.copy-to-buffer
 
+# window title
+quicknotepad.title=QuickNotepad
+
 # plugin toolbar buttons
 quicknotepad.choose-file.icon=Open.gif
 quicknotepad.save-file.icon=Save.gif
@@ -43,7 +46,3 @@ options.quicknotepad.fontsize=14
 
 # Setting not defined but supplied for completeness
 options.quicknotepad.filepath=
-
-
-
-
