@@ -71,7 +71,7 @@ Used in: jaws, entity
  in ejb-jar.xml. -->
 <!ELEMENT ejb-name (#PCDATA)>
 
-<!ELEMENT cmp-field (field-name , column-name)>
+<!ELEMENT cmp-field (field-name , column-name , (jdbc-type , sql-type)?)>
 
 <!ELEMENT field-name (#PCDATA)>
 
