@@ -529,6 +529,7 @@ private void indexClassFile(byte[] contents, char[] documentName) /* throws IOEx
 			extractReferenceFromConstantPool(contents, reader);
 		}
 	} catch (ClassFormatException e) {
+		// ignore
 	}
 }
 /**
@@ -564,5 +565,7 @@ private char[] replace(char toBeReplaced, char newChar, char[] array) {
 /**
  * setFileTypes method comment.
  */
-public void setFileTypes(String[] fileTypes) {}
+public void setFileTypes(String[] fileTypes) {
+	// implements interface method
+}
 }
