@@ -98,7 +98,7 @@ public class SecurityCheck extends  BaseInterceptor {
 		}
 	}
 	
-	if( "FORM".equals( ctx.getAuthMethod() )) {
+	if( "EXPERIMENTAL_FORM".equals( ctx.getAuthMethod() )) {
 	    ServletWrapper jcheck=new ServletWrapper();
 	    jcheck.setContext( ctx );
 	    jcheck.setServletClass( "org.apache.tomcat.servlets.JSecurityCheck" );
@@ -169,7 +169,7 @@ public class SecurityCheck extends  BaseInterceptor {
 	if( "CLIENT-CERT".equals( authMethod ) ) {
 
 	}
-	if( "FORM".equals( authMethod ) ) {
+	if( "EXPERIMENTAL_FORM".equals( authMethod ) ) {
 	    HttpSession session=req.getSession( false );
 	    if( session == null )
 		return 0; // not authenticated

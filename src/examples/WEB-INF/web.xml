@@ -87,10 +87,12 @@
 
     <!-- If you want to experiment with form-based logins, comment
          out the <login-config> element above and replace it with
-         this one.  -->
+         this one.  Note that we are currently using a nonstandard
+         authentication method, because the code to support form
+         based login is incomplete and only lightly tested.  -->
     <!--
     <login-config>
-      <auth-method>FORM</auth-method>
+      <auth-method>EXPERIMENTAL_FORM</auth-method>
       <realm-name>Example Form-Based Authentication Area</realm-name>
       <form-login-config>
         <form-login-page>/jsp/security/login/login.jsp</form-login-page>
