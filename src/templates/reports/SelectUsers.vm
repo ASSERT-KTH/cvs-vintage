@@ -56,7 +56,7 @@
 
 #set ($param = ["headingtype", "1"])
 #set($booldummy = $parameters.add($param))
-#userList($mitList false false $parameters true)
+#userList($mitList false false $parameters false)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />
