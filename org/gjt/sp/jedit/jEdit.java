@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.49 2002/02/16 07:22:25 spestov Exp $
+ * @version $Id: jEdit.java,v 1.50 2002/02/17 02:05:41 spestov Exp $
  */
 public class jEdit
 {
@@ -2901,6 +2901,7 @@ public class jEdit
 		}
 
 		defaults.remove("SplitPane.border");
+		defaults.remove("SplitPaneDivider.border");
 	} //}}}
 
 	//{{{ runStartupScripts() method
