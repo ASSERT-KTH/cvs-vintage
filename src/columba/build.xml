@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE project SYSTEM "../../ant.dtd">
+
+<project name="columba" default="compile">
+	<property name="currsrc" value="${src}"/>
+	
+	<target name="compile">
+		<echo message="compile columba"/>
+		<ant dir="./core" target="compile" inheritall="false">
+			<property name="dest" value="${dest}"/>
+			<property name="ownclasspath" value="${ownclasspath}"/>
+			<property name="src" value="${currsrc}"/>
+		</ant>
+		<ant dir="./test" target="compile" inheritall="false">
+			<property name="dest" value="${dest}"/>
+			<property name="ownclasspath" value="${ownclasspath}"/>
+			<property name="src" value="${currsrc}"/>
+		</ant>
+	</target>
+</project>

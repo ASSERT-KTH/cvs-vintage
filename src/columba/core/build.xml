@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE project SYSTEM "../../../ant.dtd">
+
+<project name="columba" default="compile">
+	<property name="currsrc" value="${src}"/>
+	
+	<target name="compile">
+		<echo message="compile columba core"/>
+		<javac srcdir="${currsrc}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
+	</target>
+</project>

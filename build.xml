@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
 <!DOCTYPE project SYSTEM "./ant.dtd">
 
-<project name="columba" default="build" basedir=".">
-	<property name="src" value="."/>
+<project name="columba" default="build">
+<description>
+This is the whole build file for columba. This build file is seperated into any buildfiles who 
+are dependend on this buildfile.  Build columba and try it.
+Have fun ... your columba-team!
+</description>
+  <property name="basedir" value="${user.dir}"/>
+	<property name="src" value="${basedir}"/>
 	<property name="build" value="build"/>
 	<property name="user.name" value="The Columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.10.0"/>
-	<property name="dest" value="./classes"/>
-	<property name="ownclasspath" value="${classpath}:${src}/lib/log4j.jar:${src}/lib/lucene-1.3-rc1.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.0-beta.jar"/>
+	<property name="dest" value="${basedir}/classes"/>
+	<property name="ownclasspath" value="${dest}:${classpath}:${src}/lib/log4j.jar:${src}/lib/lucene-1.3-rc1.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.0-beta.jar"/>
 
 
 	<!-- definition of the task to check the style of the java-code -->
@@ -19,7 +25,7 @@
 	</taskdef>
 
 	<!-- the task that realy checks the style -->
-	<target name="verify">
+	<target name="verify" description="checks the style of the java-code">
 		<checkstyle lcurlyType="nlow"
 								lcurlyMethod="nlow"
 								lcurlyOther="nlow"
@@ -32,16 +38,16 @@
 		</checkstyle>
 	</target>
 
-	<target name="update">
+	<target name="update" description="updates columba via cvs">
 		<cvs command="update"/>
 	</target>
 
-	<target name="init">
+	<target name="init" description="creates all required output-folders">
 		<echo message="you are running java version ${ant.java.version}"/>
 		<mkdir dir="${dest}"/>
 	</target>
 
-	<target name="document" depends="init">
+	<target name="document" depends="init" description="creates the java-docu for the columba sources">
 		<delete dir="${dest}/docs/api/"/>
 		<mkdir dir="${dest}/docs/api/"/>
 		<javadoc destdir="${dest}/docs/api/" classpath="${ownclasspath}" doctitle="Columba ${version} API Documentation" windowtitle="Columba API Documentation" link="http://java.sun.com/products/jdk/1.3/docs/api">
@@ -57,7 +63,7 @@
 	</target>
 
 	<!-- copy required files for later tasks into the dest directory -->
-	<target name="copy-required">
+	<target name="copy-required" description="copy later required files to the output-folder">
 		<copy todir="${dest}">
 			<fileset dir="${src}">
 				<include name="**/*.xml"/>
@@ -89,14 +95,14 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<target name="validate-xml-resources">
+
+	<target name="validate-xml-resources" description="validates the xml-files for columba">
 		<xmlvalidate failonerror="no" warn="yes">
 			<fileset dir="${src}/res/" includes="**/*.xml"/>
 		</xmlvalidate>
 	</target>
 
-	<target name="copy-resources" depends="validate-xml-resources">
+	<target name="copy-resources" description="copy all ressources to the destination folder">
 		<copy todir="${dest}">
 			<fileset dir="${src}/res/">
 			 <include name="**"/>
@@ -105,13 +111,29 @@
 	</target>
 
 	<!-- compile the classes -->
-	<target name="compile" depends="init, copy-resources">
+	<target name="compile" depends="init, copy-resources, validate-xml-resources"
+	description="compiles columba. Here are the other buildfiles in the subdirectories needed">
 		<echo message="the classes are going to ${dest} "/>
-		<javac srcdir="${src}/src/" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
+		<property name="java-src-dir" value="${src}\src\addressbook\core:${src}\src\addressbook\independent:${src}\src\columba\core:${src}\src\columba\test:${src}\src\mail\core:${src}\src\mail\independent:${src}\src\mail\test"/>
+		<ant dir="${src}/src/addressbook" target="compile" inheritall="false">
+			<property name="dest" value="${dest}"/>
+			<property name="ownclasspath" value="${ownclasspath}"/>
+			<property name="src" value="${java-src-dir}"/>
+		</ant>
+		<ant dir="${src}/src/columba" target="compile">
+			<property name="dest" value="${dest}"/>
+			<property name="ownclasspath" value="${ownclasspath}"/>
+			<property name="src" value="${java-src-dir}"/>
+		</ant>
+		<ant dir="${src}/src/mail" target="compile">
+			<property name="dest" value="${dest}"/>
+			<property name="ownclasspath" value="${ownclasspath}"/>
+			<property name="src" value="${java-src-dir}"/>
+		</ant>
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
-	<target name="jar" depends="compile">
+	<target name="jar" depends="compile" description="creates the columba-jar file">
 		<delete file="columba.jar"/>
 		<echo message="the jar file is going to be columba.jar "/>
 		<jar basedir="${dest}" jarfile="columba.jar">
@@ -141,7 +163,7 @@
 		</jar>
 	</target>
 
-	<target name="run-script" depends="init">
+	<target name="run-script" depends="init" description="creates the run-script for columba">
 		<!-- echo file="${dest}/run.sh" >#!/bin/sh
 echo "starting columba ..."
 echo "from path: `pwd`"
@@ -152,15 +174,15 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	</target>
 
 	<!-- convert line-endings -->
-	<target name="linefeeds-win32">
+	<target name="linefeeds-win32" description="converts the line-endings in the sources to crlf">
 	<fixcrlf srcdir="${dest}"
        eol="crlf"
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.bat, run_source.bat, run_source_jdk13.bat"
   	/>
   	</target>
-  	
+
   	<!-- convert line-endings -->
-	<target name="linefeeds-unix">
+	<target name="linefeeds-unix" description="converts the line-endings in the sources to lf">
 	<fixcrlf srcdir="${dest}"
        eol="lf"
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh, run_source_jdk13.sh"
@@ -169,7 +191,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- create an release zip file for linux and unix flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
-	<target name="zip-bin-unix" depends="jar,run-script, linefeeds-unix">
+	<target name="zip-bin-unix" depends="jar,run-script, linefeeds-unix"
+	description="create an release zip file for linux and unix flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile is going to columba-unix-${version}-bin.zip "/>
 		<zip zipfile="columba-unix-${version}-bin.zip" update="true">
 			<zipfileset dir="." prefix="columba-unix-${version}-bin">
@@ -190,10 +213,11 @@ else echo "cannot find columba.jar in `pwd`"; fi
 			</zipfileset>
 		</zip>
 	</target>
-	
+
 	<!-- create an release zip file for windows flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
-	<target name="zip-bin-win32" depends="jar,run-script, linefeeds-win32">
+	<target name="zip-bin-win32" depends="jar,run-script, linefeeds-win32"
+	description="create an release zip file for windows flavors, contains the jar file and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile are going to columba-win32-${version}-bin.zip "/>
 		<zip zipfile="columba-win32-${version}-bin.zip" update="true">
 			<zipfileset dir="." prefix="columba-win32-${version}-bin">
@@ -207,19 +231,20 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<!--
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.jar"/>
-				<include name="plugins/**/plugin.xml"/>	
+				<include name="plugins/**/plugin.xml"/>
 				-->
 				<exclude name="plugins/**" />
-				<exclude name="classes/**"/>			
+				<exclude name="classes/**"/>
 			</zipfileset>
 			<zipfileset dir="." includes="native/win32/windows_maximize/bin/WindowMaximizer.dll" fullpath="columba-win32-${version}-bin/WindowMaximizer.dll"/>
 			<zipfileset dir="." includes="native/win32/launcher/bin/columba.exe" fullpath="columba-win32-${version}-bin/columba.exe"/>
 		</zip>
 	</target>
-	
+
 	<!-- create an source zip file for linux and unix flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
-	<target name="zip-source-unix" depends="init,run-script,linefeeds-unix">
+	<target name="zip-source-unix" depends="init,run-script,linefeeds-unix"
+	description="create an source zip file for linux and unix flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<zip zipfile="columba-unix-${version}-src.zip" update="true">
 			<zipfileset dir="." prefix="columba-unix-${version}-src">
@@ -235,8 +260,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="README"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
-				<include name="AUTHORS"/>				
-				<include name="run_source.sh"/>				
+				<include name="AUTHORS"/>
+				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.sh"/>
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.java"/>
@@ -247,10 +272,11 @@ else echo "cannot find columba.jar in `pwd`"; fi
 			</zipfileset>
 		</zip>
 	</target>
-	
+
 	<!-- create an source zip file for windows flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
-	<target name="zip-source-win32" depends="init,run-script,linefeeds-win32">
+	<target name="zip-source-win32" depends="init,run-script,linefeeds-win32"
+	description="create an source zip file for windows flavors, contain all sources and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile are going to columba-${version}-src.zip "/>
 		<zip zipfile="columba-win32-${version}-src.zip" update="true">
 			<zipfileset dir="." prefix="columba-win32-${version}-src">
@@ -280,16 +306,18 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	</target>
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
-	<target name="zip" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"/>
+	<target name="zip" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"
+	description="this target creates two zip-files, one for binary release and one for the source stuff"/>
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"/>
+	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"
+	description=" this target creates two zip-files, one for binary release and one for the source stuff"/>
 
 	<!-- signing jar-files for Java WebStart -->
         <!-- all libs and columba.jar need to be signed -->
         <!-- you need to specify the alias and the passwords on the commandline -->
-	<property name="alias" value="TheColumbaProject"/>
+	<property name="alias" value="TheColumbaProject" description="signing jar-files for Java WebStart"/>
         <property name="storepass" value="columba"/>
         <property name="keypass" value="columba"/>
 
@@ -308,27 +336,27 @@ else echo "cannot find columba.jar in `pwd`"; fi
         </target>
 
 	<!-- only for build the class-files -->
-	<target name="build" depends="compile"/>
+	<target name="build" depends="compile" description="only for build the class-files"/>
 
 	<target name="doc" depends="document"/>
 
 	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
-	<target name="run" depends="jar">
+	<target name="run" depends="jar" description="to run the application via ant, this is good for testing and coding in xemacs">
 		<java jar="${dest}/columba.jar" fork="yes">
 			<arg value="--debug"/>
 		</java>
 	</target>
 
 	<!-- to clean up the dest-directory -->
-	<target name="clean">
+	<target name="clean" description="to clean up the dest-directory">
 		<delete dir="${dest}"/>
 	</target>
 
 	<!-- create default package for translators -->
-	<target name="i18n">
+	<target name="i18n" description="create default package for translators">
  	<zip zipfile="default_i18n.zip" basedir="res" update="true">
 		<include name="**/*.properties"/>
 	</zip>
 	</target>
-	
+
 </project>
