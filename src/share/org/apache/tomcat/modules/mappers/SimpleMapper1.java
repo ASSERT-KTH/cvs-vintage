@@ -483,7 +483,7 @@ class PrefixMapper  {
     private static int debug=1;
     // host -> PrefixMapper for virtual hosts
     // hosts are stored in lower case ( the "common" case )
-    SimpleHashtable vhostMaps=new SimpleHashtable();
+    Hashtable vhostMaps=new Hashtable();
     // host -> PrefixMapper for virtual hosts with leading '*'
     // host key has '*' removed
     // Can't use SimpleHashtable, more than a thread will use keys()
@@ -586,7 +586,7 @@ class PrefixMapper  {
 		prefixMappedServlets.put( path, target);
 	} else {
 	    host=host.toLowerCase();
-            SimpleHashtable maps;
+            Hashtable maps;
             if( host.startsWith( "*" ) ) {
                 maps=vhostMapsWC;
                 host=host.substring( 1 );
@@ -625,7 +625,7 @@ class PrefixMapper  {
                 exactMappedServlets.put( path, target);
         } else {
 	    host=host.toLowerCase();
-            SimpleHashtable maps;
+            Hashtable maps;
             if( host.startsWith( "*" ) ) {
                 maps = vhostMapsWC;
                 host=host.substring( 1 );
