@@ -8,10 +8,8 @@
    <p>$data.getMessage()</p>
    #end 
 
-   <form name="RegisterForm" action="$link.setPage("Register.vm")" method="post">
-    <input type="hidden" name="action" value="Register" /> 
-    <input type="hidden" name="nextTemplate" value="RegisterConfirm.vm" /> 
-    <input type="hidden" name="cancelTemplate" value="Login.vm" /> 
+   <form name="RegisterForm" action="$link.setPage("register.vm")" method="post">
+    <input type="hidden" name="action" value="Register" /> <input type="hidden" name="nextTemplate" value="RegisterConfirm.vm" /> <input type="hidden" name="cancelTemplate" value="Login.vm" /> 
 ## Attempt to populate the Scarab API User object on re-display $data.Parameters.setProperties($scarabR.getUser()) 
 
     <div class="axial">
@@ -42,12 +40,11 @@
        <td><input name="password_confirm" type="password" size="25" /></td>
       </tr>
       <tr>
-       <td colspan="2">
-       <input type="submit" name="eventSubmit_doCancel" value="Cancel" /> 
-       <input type="submit" name="eventSubmit_doRegister" value="Register" />
-       </td>
+       <td> </td>
+       <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /> <input type="submit" name="eventSubmit_doRegister" value="Register" /></td>
       </tr>
      </table>
     </div>
    </form>
   </div>
+  

@@ -1,49 +1,41 @@
-$page.setTitle("Welcome to Scarab")
-
-Welcome to Scarab, a Bug Tracking and Issue Reporting Tool
-
-		<ul>
-			<li>New users, 
-                            <a href="$link.setPage("Register.vm")">register here</a>.
-                        </li>
-		</ul>
-
-#if ($data.getMessage())
-    $data.getMessage()
+<div id="login" class="app">
+ $page.setTitle("Welcome to Scarab") 
+ <h2>$page.getTitle()</h2>
+ <p>Welcome to Scarab, a Bug Tracking and Issue Reporting Tool</p>
+ <ul>
+  <li>New users, <a href="$link.setPage(">register here</a>.</li>
+ </ul>
+ #if ($data.getMessage()) 
+ <p>$data.getMessage()</p>
+ #end 
+ <form action="$link.setPage("Login.vm")" method="post" name="login">
+  <input type="hidden" name="action" value="Login" /> 
+#if ($nextTemplate && $nextTemplate.length() > 0)
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
+#else 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" /> 
+#end 
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="1">
+<tr>
+<th>Email Address:</th><td>
+#set ( $login = $intake.Login.Default )
+#if ( !$login.Username.isValid() )
+    $login.Username.Message
 #end
-
-<form action="$link.setPage("Login.vm")" method="POST" name="login">
-    <input type="hidden" name="action" value="Login">
-    #if ($nextTemplate && $nextTemplate.length() > 0)
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate">
-    #else
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">    
-    #end
-
-<p>
-Email Address:
-
-    #set ( $login = $intake.Login.Default )
-
-    #if ( !$login.Username.isValid() )
-        $login.Username.Message<br>
-    #end
-   <input name= "$login.Username.Key"
-        value="$!login.Username.Value" size="25" type="text">
-</p>
-
-<p>
-Password:
-
-    #if ( !$login.Password.isValid() )
-        $login.Password.Message<br>
-    #end
-   <input name= "$login.Password.Key"
-        value="" size="25" type="password"> <!-- onchange="document.login.submit();"> -->
-</p>
-
-<input type="submit" name="eventSubmit_doLogin" value="Login">
-
-$intake.declareGroups()
-
-</form>
+<input name="$login.Username.Key" value="$!login.Username.Value" size="25" type="text" /></td>
+</tr>
+<tr>
+<th>Password: 
+#if ( !$login.Password.isValid() )
+    $login.Password.Message
+#end
+</th><td><input name="$login.Password.Key" value="" size="25" type="password" /> <!-- onchange="document.login.submit();"> --></td>
+</tr>
+<tr>
+<td></td><td><input type="submit" name="eventSubmit_doLogin" value="Login" /> $intake.declareGroups()</td>
+</tr>
+</table>
+</div>
+ </form>
+</div>
