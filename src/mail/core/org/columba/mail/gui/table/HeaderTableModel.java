@@ -55,9 +55,9 @@ public class HeaderTableModel extends AbstractTableModel {
 	private List tableModelPlugins;
 
 	private Tree tree;
-	
+
 	private boolean enableThreadedView;
-	
+
 	public HeaderTableModel(TableItem item) {
 		//super(null);
 		this.item = item;
@@ -144,14 +144,12 @@ public class HeaderTableModel extends AbstractTableModel {
 			}
 		}
 
-
 		fireTableDataChanged();
 		/*
 		if (uids.length >= 100)
 			update();
 		*/
-		
-		
+
 	}
 
 	public DefaultTreeModel getTreeModel() {
@@ -382,32 +380,33 @@ public class HeaderTableModel extends AbstractTableModel {
 
 		return -1;
 	}
-	
-	public void enableThreadedView( boolean b)
-	{
+
+	public void enableThreadedView(boolean b) {
 		enableThreadedView = b;
 	}
 
 	public Class getColumnClass(int column) {
-		
-		if ( enableThreadedView )
-		{
-		
-		String name = getColumnName(column);
-		if (name.equalsIgnoreCase("Subject"))
-			return CustomTreeTableCellRenderer.class;
-		else
+
+		if (enableThreadedView) {
+
+			String name = getColumnName(column);
+			if (name.equalsIgnoreCase("Subject"))
+				return CustomTreeTableCellRenderer.class;
+			else
+				return getValueAt(0, column).getClass();
+		} else
 			return getValueAt(0, column).getClass();
-		}
-		else
-		return getValueAt(0, column).getClass();
 
 		//return null;
 
 	}
 
 	public int getRowCount() {
-		return tree.getRowCount();
+		if (tree != null) {
+			return tree.getRowCount();
+		} else {
+			return 0;
+		}
 	}
 
 	public Object getValueAt(int row, int col) {
