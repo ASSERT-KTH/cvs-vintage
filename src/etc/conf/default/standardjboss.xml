@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.41 2002/04/30 22:31:32 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.42 2002/05/17 02:04:51 reverbel Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -171,9 +171,10 @@
      </invoker-proxy-binding>
      <invoker-proxy-binding>
        <name>iiop</name>
-       <invoker-mbean>default</invoker-mbean>
-       <proxy-factory>org.jboss.ejb.plugins.iiop.server.IIOPContainerInvoker</proxy-factory>
+       <invoker-mbean>jboss:service=invoker,type=iiop</invoker-mbean>
+       <proxy-factory>org.jboss.proxy.ejb.IORFactory</proxy-factory>
        <proxy-factory-config>
+            <poa>per-servant</poa>
 	    <JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
 	    <ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
 	    <MaximumSize>15</MaximumSize>
