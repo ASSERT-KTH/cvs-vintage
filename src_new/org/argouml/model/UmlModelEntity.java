@@ -1,4 +1,4 @@
-// $Id: UmlModelEntity.java,v 1.4 2004/06/02 20:40:26 mvw Exp $
+// $Id: UmlModelEntity.java,v 1.5 2004/06/03 17:10:29 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,6 +64,7 @@ public class UmlModelEntity extends AbstractModelEntity {
     public UmlModelEntity(String string,
                           boolean isCreatable) {
         super(string);
+        _availableInFacade = true;
         _creatable = isCreatable;
     }
 
