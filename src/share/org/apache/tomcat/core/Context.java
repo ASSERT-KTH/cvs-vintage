@@ -585,6 +585,14 @@ public class Context {
 	debug=level;
     }
 
+    public void setDebug( String level ) {
+	try {
+	    setDebug( Integer.parseInt(level) );
+	} catch (Exception e) {
+	    log("Set debug to '" + level + "':", e);
+	}
+    }
+
     public int getDebug( ) {
 	return debug;
     }
