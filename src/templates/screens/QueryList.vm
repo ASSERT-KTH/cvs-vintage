@@ -152,5 +152,6 @@ $page.setTitle("Stored Query List")
 #end
 
 </form>
+#end
 </div>
 
