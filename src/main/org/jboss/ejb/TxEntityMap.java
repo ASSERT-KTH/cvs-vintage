@@ -11,6 +11,7 @@ import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Synchronization;
+
 import org.jboss.tm.TransactionLocal;
 
 /**
@@ -21,7 +22,7 @@ import org.jboss.tm.TransactionLocal;
  * Used in EntitySynchronizationInterceptor.
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * Revisions:
  *
@@ -39,11 +40,11 @@ public class TxEntityMap
    /**
     * associate entity with transaction
     */
-   public void associate(Transaction tx,
-                                      EntityEnterpriseContext entity) throws RollbackException, SystemException
+   public void associate(Transaction tx, EntityEnterpriseContext entity)
+      throws RollbackException, SystemException
    {
-      HashMap entityMap = (HashMap)m_map.get(tx);
-      if (entityMap == null)
+      HashMap entityMap = (HashMap) m_map.get(tx);
+      if(entityMap == null)
       {
          entityMap = new HashMap();
          m_map.set(tx, entityMap);
@@ -52,12 +53,23 @@ public class TxEntityMap
       entityMap.put(entity.getCacheKey(), entity);
    }
 
-   public EntityEnterpriseContext getCtx(Transaction tx,
-                                                      Object key)
+   /**
+    * disassociate entity from transaction
+    */
+   public void disassociate(Transaction tx, EntityEnterpriseContext entity)
    {
-      HashMap entityMap = (HashMap)m_map.get(tx);
-      if (entityMap == null) return null;
-      return (EntityEnterpriseContext)entityMap.get(key);
+      HashMap entityMap = (HashMap) m_map.get(tx);
+      if(entityMap != null)
+      {
+         entityMap.remove(entity.getCacheKey());
+      }
+   }
+
+   public EntityEnterpriseContext getCtx(Transaction tx, Object key)
+   {
+      HashMap entityMap = (HashMap) m_map.get(tx);
+      if(entityMap == null) return null;
+      return (EntityEnterpriseContext) entityMap.get(key);
    }
 
 }

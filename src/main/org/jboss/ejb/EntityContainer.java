@@ -47,7 +47,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.100 $
+ * @version $Revision: 1.101 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -110,7 +110,6 @@ public class EntityContainer
     * a remove, otherwise there may be problems with 'cascade delete'.
     *
     * @param tx the transaction that associated entites will be stored
-    * @throws Exception if an problem occures while storing the entities
     */
    public static void synchronizeEntitiesWithinTransaction(Transaction tx)
    {
@@ -497,17 +496,22 @@ public class EntityContainer
    {
       // synchronize entities with the datastore before the bean is removed
       // this will write queued updates so datastore will be consistent before removal
+      Transaction tx = mi.getTransaction();
       if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
-         synchronizeEntitiesWithinTransaction(mi.getTransaction());
+         synchronizeEntitiesWithinTransaction(tx);
 
       // Get the persistence manager to do the dirty work
-      getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
+      getPersistenceManager().removeEntity(ctx);
+
+      // remove from the txEntityMap
+      txEntityMap.disassociate(tx, ctx);
 
       // We signify "removed" with a null id
       // There is no need to synchronize on the context since all the threads reaching here have
       // gone through the InstanceInterceptor so the instance is locked and we only have one thread
       // the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
-      ((EnterpriseContext) mi.getEnterpriseContext()).setId(null);
+      ctx.setId(null);
       removeCount++;
    }
 
