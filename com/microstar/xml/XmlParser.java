@@ -1,6 +1,6 @@
 // XmlParser.java: the main parser class.
 // NO WARRANTY! See README, and copyright below.
-// $Id: XmlParser.java,v 1.1 2001/09/02 05:39:45 spestov Exp $
+// $Id: XmlParser.java,v 1.2 2003/08/26 03:56:06 spestov Exp $
 
 package com.microstar.xml;
 
@@ -2435,9 +2435,9 @@ public class XmlParser {
       }
 
       if (array instanceof char[]) {
-	newArray = new char[currentSize * 2];
+	newArray = new char[newSize];
       } else if (array instanceof Object[]) {
-	newArray = new Object[currentSize * 2];
+	newArray = new Object[newSize];
       }
 
       System.arraycopy(array, 0, newArray, 0, currentSize);
