@@ -7,39 +7,47 @@
 
 package org.jboss.naming;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
 import java.lang.reflect.Proxy;
+
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
+import javax.naming.Reference;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBDeployerMBean;
 import org.jboss.ejb.EjbModule;
+
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * A simple utlity mbean that allows one to recursively list the default
  * JBoss InitialContext.
  *
- * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
- * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.17 $
+ * @jmx:mbean name="jboss:type=JNDIView"
+ *            extends="org.jboss.system.ServiceMBean"
+ *            
+ * @version <tt>$Revision: 1.18 $</tt>
+ * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @author  Vladimir Blagojevic <vladimir@xisnext.2y.net>
+ * @author  <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  */
 public class JNDIView 
    extends ServiceMBeanSupport 
@@ -50,11 +58,11 @@ public class JNDIView
     */
    public JNDIView() {}
 
-   // Public --------------------------------------------------------
-
    /**
     * List deployed application java:comp namespaces, the java:
     * namespace as well as the global InitialContext JNDI namespace.
+    *
+    * @jmx:managed-operation
     * 
     * @param verbose, if true, list the class of each object in addition to its name
     */
@@ -65,9 +73,9 @@ public class JNDIView
       Context context = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 
-      /* Get all deployed applications so that we can list their
-         java: namespaces which are ClassLoader local
-      */
+      // Get all deployed applications so that we can list their
+      // java: namespaces which are ClassLoader local
+
       try
       {
          ejbModules = server.queryNames(EjbModule.EJB_MODULE_QUERY_NAME, null);
@@ -167,6 +175,8 @@ public class JNDIView
     * List deployed application java:comp namespaces, the java:
     * namespace as well as the global InitialContext JNDI namespace in a
     * XML Format.
+    *
+    * @jmx:managed-operation
     *
     * @param verbose, if true, list the class of each object in addition to its name
     **/
@@ -313,8 +323,7 @@ public class JNDIView
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-      this.server = server;
-      return OBJECT_NAME;
+      return name == null ? OBJECT_NAME : name;
    }
 
    private void list(Context ctx, String indent, StringBuffer buffer, boolean verbose)
@@ -326,6 +335,8 @@ public class JNDIView
          while( ne.hasMore() )
          {
             NameClassPair pair = (NameClassPair) ne.next();
+            log.trace("pair: " + pair);
+            
             String name = pair.getName();
             String className = pair.getClassName();
             boolean recursive = false;
@@ -335,10 +346,13 @@ public class JNDIView
             try
             {
                c = loader.loadClass(className);
+               log.trace("type: " + c);
+               
                if( Context.class.isAssignableFrom(c) )
                   recursive = true;
                if( LinkRef.class.isAssignableFrom(c) )
                   isLinkRef = true;
+               
                isProxy = Proxy.isProxyClass(c);
             }
             catch(ClassNotFoundException cnfe)
@@ -371,20 +385,25 @@ public class JNDIView
             }
 
             buffer.append(indent +  " +- " + name);
-            // Display link targets
+
+            // Display reference targets
             if( isLinkRef )
             {
                // Get the 
                try
                {
-                  LinkRef link = (LinkRef) ctx.lookupLink(name);
+                  log.trace("looking up LinkRef; name=" + name);
+                  Object obj = ctx.lookupLink(name);
+                  log.trace("Object type: " + obj.getClass());
+                  
+                  LinkRef link = (LinkRef)obj;
                   buffer.append("[link -> ");
                   buffer.append(link.getLinkName());
                   buffer.append(']');
                }
-               catch(Throwable e)
+               catch(Throwable t)
                {
-                  e.printStackTrace();
+                  log.error("Invalid LinkRef", t);
                   buffer.append("[invalid]");
                }
             }
@@ -487,9 +506,10 @@ public class JNDIView
                   buffer.append( "</link-ref>" );
                   buffer.append( '\n' );
                }
-               catch(Throwable e)
+               catch(Throwable t)
                {
-                  e.printStackTrace();
+                  log.error("Invalid LinkRef", t);
+                  
                   buffer.append( "<link-ref>" );
                   buffer.append( '\n' );
                   buffer.append( "<name>Invalid</name>" );
