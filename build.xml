@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.39 2005/03/11 14:05:23 benoitf Exp $
+ - $Id: build.xml,v 1.40 2005/03/15 09:57:30 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -130,6 +130,11 @@
           classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
       <classpath refid="carol.classpath" />
     </rmic>
+    <rmic base="${build}/classes"
+          compiler="sun"
+          classname="org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper">
+      <classpath refid="carol.classpath" />
+    </rmic>
 
     <!-- for iiop  -->
     <rmic base="${build}/classes"
@@ -146,6 +151,7 @@
       <compilerarg value="-poa" />
       <classpath refid="carol.classpath" />
     </rmic>
+
     <javac srcdir="${src}"
            destdir="${build}/classes"
            deprecation="${deprecation}"
@@ -170,6 +176,7 @@
       <arg path="${build}/classes" />
       <arg value="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper" />
       <arg value="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper" />
+      <arg value="org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper" />
       <classpath refid="carol.classpath" />
     </java>
 
