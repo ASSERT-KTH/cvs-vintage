@@ -32,10 +32,10 @@ public class CloneInputStreamTest extends TestCase {
 		CloneInputStream clone1 = model.getClone();
 		CloneInputStream clone2 = model.getClone();
 		
-		byte[] result1 = new byte[100];
-		byte[] result2 = new byte[100];
+		byte[] result1 = new byte[20000];
+		byte[] result2 = new byte[20000];
 		
-		for( int i=0; i<100; i++ ) {
+		for( int i=0; i<20000; i++ ) {
 			if( i % 2 == 0 ) {
 				result1[i] = (byte) clone1.read();
 				result2[i] = (byte) clone2.read();
@@ -45,7 +45,7 @@ public class CloneInputStreamTest extends TestCase {
 			}
 		}
 		
-		for( int i=0; i<100; i++ ) {
+		for( int i=0; i<20000; i++ ) {
 			assertTrue( result1[i] == test[i]);
 			assertTrue( result2[i] == test[i]);
 		}		
@@ -64,7 +64,7 @@ public class CloneInputStreamTest extends TestCase {
 			pos++;
 		}
 		
-		assertTrue(pos == 101);
+		assertTrue(pos == 20001);
 	}
 	
 	public void testCloneMulti() throws Exception {
@@ -73,12 +73,12 @@ public class CloneInputStreamTest extends TestCase {
 		CloneInputStream clone1 = model.getClone();
 		CloneInputStream clone2 = model.getClone();
 		
-		byte[] result1 = new byte[100];
-		byte[] result2 = new byte[100];
+		byte[] result1 = new byte[20000];
+		byte[] result2 = new byte[20000];
 		
 		byte[] buffer = new byte[50];
 		
-		for( int i=0; i<2; i++ ) {
+		for( int i=0; i<20000/50; i++ ) {
 			if( i % 2 == 0 ) {
 				clone1.read(result1,i*50,50);
 				clone2.read(result2,i*50,50);
@@ -88,7 +88,7 @@ public class CloneInputStreamTest extends TestCase {
 			}
 		}
 		
-		for( int i=0; i<100; i++ ) {
+		for( int i=0; i<20000; i++ ) {
 			assertTrue( result1[i] == test[i]);
 			assertTrue( result2[i] == test[i]);
 		}		
@@ -109,7 +109,7 @@ public class CloneInputStreamTest extends TestCase {
 			pos += lastRead;
 		}
 		
-		assertTrue(pos == 99);
+		assertTrue(pos == 19999);
 	}
 
 	public void testEOFMulti2() throws Exception {
@@ -127,7 +127,7 @@ public class CloneInputStreamTest extends TestCase {
 			pos += lastRead;
 		}
 		
-		assertTrue(pos == 100);
+		assertTrue(pos == 20000);
 	}
 
 	/* (non-Javadoc)
@@ -137,7 +137,7 @@ public class CloneInputStreamTest extends TestCase {
 		super.setUp();
 
 		Random random = new Random();
-		test = new byte[100];
+		test = new byte[20000];
 		random.nextBytes(test);
 	}
 

@@ -41,10 +41,11 @@ public class CloneStreamMaster {
 	private FileOutputStream tempOut;
 	private static int uid = 0;
 	private byte[] copyBuffer;
-
+	private int openClones;
+	
 	
 	/**
-	 * Constructs a CloneStreamMaster. Note that ehe master must NOT be read from after
+	 * Constructs a CloneStreamMaster. Note that the master must NOT be read from after
 	 * the construction!
 	 * 
 	 * @param master
@@ -86,9 +87,10 @@ public class CloneStreamMaster {
 			// only if tempfile was corrupted
 		}
 		
+		openClones++;
 		return new CloneInputStream(this, nextId++);
 	}
-
+	
 	public int read(int id) throws IOException {
 		if( streampos[id] >= masterpos ) {
 			// read next block in tempfile
@@ -113,7 +115,10 @@ public class CloneStreamMaster {
 	
 	private int bufferNextBlock() throws IOException {
 		int length = master.read(copyBuffer);
-		if (length == -1 ) return 0;
+		if (length == -1 ) {
+			tempOut.close();
+			return 0;
+		}
 		tempOut.write(copyBuffer,0,length);
 		return length;
 	}
@@ -124,4 +129,13 @@ public class CloneStreamMaster {
 	public int available() throws IOException {
 		return master.available();
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	protected void finalize() throws Throwable {
+		super.finalize();
+		// Delete the tempfile immedietly
+		tempFile.delete();
+	}
+
 }
