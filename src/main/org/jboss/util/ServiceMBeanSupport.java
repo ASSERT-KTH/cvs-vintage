@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -37,7 +37,7 @@ public abstract class ServiceMBeanSupport
    
    private int id = 0;
    
-   protected Log log = new Log(getName());
+   protected Log log;
     
    // Static --------------------------------------------------------
 
@@ -57,6 +57,8 @@ public abstract class ServiceMBeanSupport
 	public void init()
 		throws Exception
 	{
+	   log = new Log(getName());
+   
 		log.log("Initializing");
 		log.setLog(log);
 		try
@@ -178,8 +180,11 @@ public abstract class ServiceMBeanSupport
    }
    
    // Protected -----------------------------------------------------
-   protected abstract ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException;
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws javax.management.MalformedObjectNameException
+   {
+      return name;
+   }
    
    protected void initService()
       throws Exception
