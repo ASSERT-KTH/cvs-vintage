@@ -54,7 +54,7 @@ public class MessageComposer {
 
 		// RFC822 - Header
 
-		// TODO : Add EncodedWord-Support to TO,CC,FROM -> like Subject!		
+				
 
 		if (model.getToList().size() > 0)
 			header.set("To", ListParser.parse(model.getToList()));
@@ -65,13 +65,16 @@ public class MessageComposer {
 		if (model.getBccList().size() > 0)
 			header.set("Bcc", ListParser.parse(model.getBccList()));
 
-		// TODO : this is responsible for the strange subject line
+		// TODO : Add EncodedWord-Support to TO,CC,FROM -> like Subject!
+		// FIXME : this is responsible for the strange subject line
+		/*
 		try {
 			header.set(
 				"Subject",
 				encoder.encode(model.getSubject(), model.getCharsetName()));
 		} catch (UnsupportedEncodingException e) {
 		}
+		*/
 
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
