@@ -114,10 +114,11 @@
 
 <p>
 issues per page: 
-<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="25" /> 25 
-<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="50" /> 50 
-<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="75" /> 75 
-<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="100" /> 100
+<input type="hidden" name="pageNum" value="1" /> 
+<input type="radio" name="resultsPerPage" value="2" checked="checked" /> 25 
+<input type="radio" name="resultsPerPage" value="50" /> 50 
+<input type="radio" name="resultsPerPage" value="75" /> 75 
+<input type="radio" name="resultsPerPage" value="100" /> 100
 </p>
        <p><a href="#">edit custom search - not implemented</a></p>
 
