@@ -116,12 +116,11 @@ public class ModuleRule extends Rule
     {
         digester.push(attributes.getValue("id"));
         
-        ScarabModule parentModule = ScarabModule.findModuleById(new NumberKey(attributes.getValue("parent")));
-        if(parentModule == null)
-        {
-            // store it for check if later in file
+        try {
+            ScarabModule parentModule = (ScarabModule)ModuleManager.getInstance(new NumberKey(attributes.getValue("parent")));
+        } catch (Exception e) {
+            // store it for check later in file
             dependTree.addModuleDependency(new NumberKey(attributes.getValue("id")), new NumberKey(attributes.getValue("parent")));
-            
         }
     }
     
