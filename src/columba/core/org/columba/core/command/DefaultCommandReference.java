@@ -20,7 +20,7 @@ public class DefaultCommandReference {
 
 	protected Lock lock;
 
-	public boolean tryToGetLock() {
+	public boolean tryToGetLock(Object locker) {
 		return true;
 	}
 

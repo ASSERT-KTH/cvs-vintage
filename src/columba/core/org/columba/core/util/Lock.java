@@ -25,32 +25,29 @@ package org.columba.core.util;
  */
 public class Lock {
 	private boolean locked;
-	private Object owner;
+	private Object locker;
 	
-	public Lock(Object owner) {
+	public Lock() {
 		locked = false;
-		this.owner = owner;
 	}	
 
-	public synchronized boolean tryToGetLock() {
+	public synchronized boolean tryToGetLock(Object locker) {
+		// Is it already locked from locker ?
+		if( this.locker == locker) return true;
+
+		// Check if locked
 		if( locked ) {
 			return false;
 		} else {
 			locked = true;
+			this.locker = locker;
 			return true;
 		}
 	}
 
 	public void release() {
 		locked = false;
+		locker = null;
 	}
 
-	/**
-	 * Returns the owner.
-	 * @return Folder
-	 */
-	public Object getOwner() {
-		return owner;
-	}
-	
 }

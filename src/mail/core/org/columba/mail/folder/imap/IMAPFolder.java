@@ -66,6 +66,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		cache = new RemoteHeaderCache(this);
 
+		
 		//setChanged(true);
 	}
 
@@ -161,41 +162,33 @@ public class IMAPFolder extends RemoteFolder {
 	public HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception {
 
-		try {
-			((IMAPRootFolder) getRootFolder()).getLock().tryToGetLock();
+		headerList = cache.getHeaderList(worker);
 
-			headerList = cache.getHeaderList(worker);
+		worker.setDisplayText("Fetching UID list...");
 
-			worker.setDisplayText("Fetching UID list...");
+		Vector newList = getStore().fetchUIDList(worker, getImapPath());
 
-			Vector newList = getStore().fetchUIDList(worker, getImapPath());
+		if (newList == null)
+			return new HeaderList();
 
-			if (newList == null)
-				return new HeaderList();
+		Vector result = synchronize(headerList, newList);
 
-			Vector result = synchronize(headerList, newList);
+		worker.setDisplayText("Fetching FLAGS list...");
 
-			worker.setDisplayText("Fetching FLAGS list...");
+		IMAPFlags[] flags = getStore().fetchFlagsList(worker, getImapPath());
 
-			IMAPFlags[] flags =
-				getStore().fetchFlagsList(worker, getImapPath());
+		worker.setDisplayText("Fetching header list ");
 
-			worker.setDisplayText("Fetching header list ");
-
-			// if available -> fetch new headers
-			if (result.size() > 0) {
-				getStore().fetchHeaderList(
-					headerList,
-					result,
-					worker,
-					getImapPath());
-			}
-
-			updateFlags(flags);
-		} finally {
-
-			((IMAPRootFolder) getRootFolder()).releaseLock();
+		// if available -> fetch new headers
+		if (result.size() > 0) {
+			getStore().fetchHeaderList(
+				headerList,
+				result,
+				worker,
+				getImapPath());
 		}
+
+		updateFlags(flags);
 
 		return headerList;
 	}
@@ -526,6 +519,23 @@ public class IMAPFolder extends RemoteFolder {
 		props.addAttribute("subfolder", "true");
 
 		return props;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
+	 */
+	public boolean tryToGetLock(Object locker) {
+		// IMAP Folders have no own lock ,but share the lock from the Root
+		// to ensure that only one operation can be processed simultanous		
+
+		return getRootFolder().tryToGetLock(locker);
+	}
+
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
+	 */
+	public void releaseLock() {
+		getRootFolder().releaseLock();
 	}
 
 }

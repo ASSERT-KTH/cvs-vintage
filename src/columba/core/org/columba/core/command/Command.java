@@ -149,7 +149,7 @@ public abstract class Command {
 		boolean success = true;
 
 		for (int i = 0;(i < size) && success; i++) {
-			success &= references[i].tryToGetLock();
+			success &= references[i].tryToGetLock(this);			
 		}
 
 		if (!success) {

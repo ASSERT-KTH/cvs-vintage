@@ -40,7 +40,7 @@ public abstract class FolderTreeNode
 	public FolderTreeNode(FolderItem node) {
 		super();
 		setNode(node);
-		myLock = new Lock(this);
+		myLock = new Lock();
 	}
 
 	public final static FolderItem getDefaultItem(
@@ -122,8 +122,8 @@ public abstract class FolderTreeNode
 
 	}
 
-	public synchronized boolean tryToGetLock() {
-		return myLock.tryToGetLock();
+	public boolean tryToGetLock(Object locker) {
+		return myLock.tryToGetLock(locker);
 	}
 
 	public void releaseLock() {

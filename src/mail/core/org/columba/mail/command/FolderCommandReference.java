@@ -109,11 +109,11 @@ public class FolderCommandReference extends DefaultCommandReference {
 		}
 	}
 
-	public boolean tryToGetLock() {
+	public boolean tryToGetLock(Object locker) {
 		ColumbaLogger.log.debug("try to get lock on: "+folder.getName() );
 		
 		//Lock result = folder.tryToGetLock();
-		return folder.tryToGetLock();
+		return folder.tryToGetLock(locker);
 		/*
 		if (result != null) {
 			lock = result;

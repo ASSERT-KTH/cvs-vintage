@@ -113,8 +113,8 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 		return node.getInteger("uid");
 	}
 
-	public synchronized boolean tryToGetLock() {
-		return myLock.tryToGetLock();
+	public boolean tryToGetLock() {
+		return myLock.tryToGetLock(null);
 	}
 
 	public void releaseLock() {

@@ -22,7 +22,7 @@ import javax.swing.Timer;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.Lock;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
@@ -40,7 +40,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import org.columba.core.main.MainInterface;
 
 public class IMAPRootFolder extends Folder //implements ActionListener 
 {
@@ -62,8 +61,6 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 
 	private IMAPStore store;
 	
-	private Lock lock;
-
 	public IMAPRootFolder(FolderItem folderItem) {
 		//super(node, folderItem);
 		super(folderItem);
@@ -74,7 +71,6 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 
 		store = new IMAPStore(accountItem.getImapItem(), this);
 		
-		lock = new Lock(this);
 	}
 	
 	
@@ -93,7 +89,6 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 
 		store = new IMAPStore(accountItem.getImapItem(), this);
 
-		lock = new Lock(this);
 	}
 
 	public ImageIcon getCollapsedIcon() {
@@ -178,7 +173,7 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 
 	public void createChildren(WorkerStatusController worker) {
 		try {
-			getLock().tryToGetLock();
+//			getLock().tryToGetLock();
 			
 			ListInfo[] listInfo = getStore().lsub("", "*", worker);
 
@@ -191,11 +186,11 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			getLock().release();
+//			getLock().release();
 		}
 		finally 
 		{
-			getLock().release();
+//			getLock().release();
 		}
 	}
 
@@ -752,14 +747,6 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		WorkerStatusController worker)
 		throws Exception {
 		return null;
-	}
-
-	/**
-	 * Returns the lock.
-	 * @return Lock
-	 */
-	public Lock getLock() {
-		return lock;
 	}
 
 }
