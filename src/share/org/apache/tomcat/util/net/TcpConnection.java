@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnection.java,v 1.3 2002/02/02 03:24:32 billbarker Exp $
- * $Revision: 1.3 $
- * $Date: 2002/02/02 03:24:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnection.java,v 1.4 2002/02/08 03:10:48 billbarker Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/02/08 03:10:48 $
  *
  * ====================================================================
  *
@@ -72,6 +72,10 @@ import java.util.*;
  *
  */
 public class TcpConnection  { // implements Endpoint {
+    /**
+     * Maxium number of times to clear the socket input buffer.
+     */
+    static  int MAX_SHUTDOWN_TRIES=20;
 
     public TcpConnection() {
     }
@@ -81,6 +85,9 @@ public class TcpConnection  { // implements Endpoint {
     PoolTcpEndpoint endpoint;
     Socket socket;
 
+    public static void setMaxShutdownTries(int mst) {
+	MAX_SHUTDOWN_TRIES = mst;
+    }
     public void setEndpoint(PoolTcpEndpoint endpoint) {
 	this.endpoint = endpoint;
     }
@@ -129,12 +136,13 @@ public class TcpConnection  { // implements Endpoint {
 	try {
 	    InputStream is = socket.getInputStream();
 	    int available = is.available ();
+	    int count=0;
 	    
 	    // XXX on JDK 1.3 just socket.shutdownInput () which
 	    // was added just to deal with such issues.
 	    
 	    // skip any unread (bogus) bytes
-	    while (available > 0) {
+	    while (available > 0 && count++ < MAX_SHUTDOWN_TRIES) {
 		is.skip (available);
 		available = is.available();
 	    }
