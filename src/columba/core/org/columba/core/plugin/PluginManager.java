@@ -392,7 +392,9 @@ public class PluginManager {
     public void setEnabled(String id, boolean b) {
         //get directory of plugin
         File folder = getFolder(id);
-
+        // this is an internal plugin -> no way to disable it!
+        if ( folder == null ) return;
+        
         // get plugin.xml of plugin
         File configFile = new File(folder, "plugin.xml");
 
