@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.79 2003/09/14 15:04:26 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.80 2003/09/17 21:22:45 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.79 2003/09/14 15:04:26 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.80 2003/09/17 21:22:45 thierrylach Exp $
 
 
 
@@ -59,7 +59,6 @@ import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsF
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ProfileJava;
-import org.argouml.uml.generator.GeneratorDisplay.MsgPtr;
 import org.argouml.util.MyTokenizer;
 
 import ru.novosoft.uml.behavior.collaborations.MMessage;
