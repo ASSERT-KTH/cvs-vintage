@@ -19,7 +19,7 @@
 #if ($searchString && $searchString.length() > 0)
    #set ($attributes = $scarabR.AttributeSearchResults) 
    #if ( $attributes.isEmpty())
-      <p class="alert">$l10n.NoUsersMatch</p>
+      <p class="alert">$l10n.NoAttributesMatch</p>
       #set ($attributes = $allAttributes)
    #end
 #end
