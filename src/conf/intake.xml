@@ -228,7 +228,9 @@
         <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
-        <field name="Name" key="name" type="String">
+        <!-- this is not Name because Name is the Group Name, 
+             not the Module Name -->
+        <field name="RealName" key="name" type="String">
             <rule name="maxLength" value="255"/>
             <rule name="required" value="true">Name may not be blank</rule>
         </field>
