@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.18 2004/05/27 07:57:46 mkl Exp $
+// $Id: ClassDiagramRenderer.java,v 1.19 2004/06/04 10:42:01 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.18 2004/05/27 07:57:46 mkl Exp $
+// $Id: ClassDiagramRenderer.java,v 1.19 2004/06/04 10:42:01 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -67,6 +67,10 @@ import org.tigris.gef.presentation.FigNode;
 public class ClassDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer {
 
+    /**
+     * @deprecated in 0.15.6 use your own logger if you extend this class
+     * Bob Tarling 4 June 2004
+     */
     protected static Logger cat = 
         Logger.getLogger(ClassDiagramRenderer.class);
 
@@ -86,8 +90,7 @@ public class ClassDiagramRenderer
     public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
         cat.debug("making figedge for " + edge);
         if (ModelFacade.isAAssociation(edge)) {
-            Object asc = /*(MAssociation)*/ edge;
-            FigAssociation ascFig = new FigAssociation(asc, lay);
+            FigAssociation ascFig = new FigAssociation(edge, lay);
             return ascFig;
         }
         if (ModelFacade.isALink(edge)) {
@@ -109,39 +112,32 @@ public class ClassDiagramRenderer
             return lnkFig;
         }
         if (ModelFacade.isAGeneralization(edge)) {
-            Object gen = /*(MGeneralization)*/ edge;
-            FigGeneralization genFig = new FigGeneralization(gen, lay);
+            FigGeneralization genFig = new FigGeneralization(edge, lay);
             return genFig;
         }
         if (ModelFacade.isAPermission(edge)) {
-            Object per = /*(MPermission)*/ edge;
-            FigPermission perFig = new FigPermission(per, lay);
+            FigPermission perFig = new FigPermission(edge, lay);
             return perFig;
         }
         if (ModelFacade.isAUsage(edge)) {
-            Object usage = /*(MUsage)*/ edge;
-            FigUsage usageFig = new FigUsage(usage, lay);
+            FigUsage usageFig = new FigUsage(edge, lay);
             return usageFig;
         }
         if (ModelFacade.isADependency(edge)) {
-            cat.debug("get fig for " + edge);
-            Object dep = /* (MDependency) */edge;
             Object stereotype = null;
 
-            if (ModelFacade.getStereotypes(dep).size() > 0) {
-                stereotype = ModelFacade.getStereotypes(dep).iterator().next();
+            if (ModelFacade.getStereotypes(edge).size() > 0) {
+                stereotype = ModelFacade.getStereotypes(edge).iterator().next();
             }
             cat.debug("stereotype: " + ModelFacade.getName(stereotype));
             if (stereotype != null
                     && ExtensionMechanismsHelper.getHelper().isStereotypeInh(
                             stereotype, "realize", "Abstraction")) {
                 cat.debug("is a realisation");
-                FigRealization realFig = new FigRealization(dep);
+                FigRealization realFig = new FigRealization(edge);
 
-                Object supplier =
-                /* (MModelElement) */((ModelFacade.getSuppliers(dep).toArray())[0]);
-                Object client =
-                /* (MModelElement) */((ModelFacade.getClients(dep).toArray())[0]);
+                Object supplier = ((ModelFacade.getSuppliers(edge).toArray())[0]);
+                Object client = ((ModelFacade.getClients(edge).toArray())[0]);
 
                 FigNode supFN = (FigNode) lay.presentationFor(supplier);
                 FigNode cliFN = (FigNode) lay.presentationFor(client);
@@ -153,7 +149,7 @@ public class ClassDiagramRenderer
                 realFig.getFig().setLayer(lay);
                 return realFig;
             } else {
-                FigDependency depFig = new FigDependency(dep, lay);
+                FigDependency depFig = new FigDependency(edge, lay);
                 return depFig;
             }
         }
