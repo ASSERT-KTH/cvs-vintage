@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: process.xml,v 1.4 2003/08/26 22:10:45 linus Exp $ -->
+<!-- $Id: process.xml,v 1.5 2003/09/26 05:54:55 linus Exp $ -->
 
   <chapter id="processes">
     <title>Processes for the ArgoUML project</title>
@@ -698,7 +698,7 @@ with.
       </orderedlist>
     </sect1>
 
-    <sect1>
+    <sect1 id="issues_subproducts">
       <title>How to relate issues to problems in subproducts</title>
       <indexterm>
         <primary>subproducts</primary>
