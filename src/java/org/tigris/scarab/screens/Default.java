@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.17 2001/09/30 00:14:26 jon Exp $
+    @version $Id: Default.java,v 1.18 2001/09/30 00:37:39 jon Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -106,7 +106,7 @@ public class Default extends TemplateSecureScreen
                     return false;
                 }
                 else if (! data.getUser().hasLoggedIn() &&
-                    security
+                    ! security
                     .hasPermission(perm, scarabR.getCurrentModule()))
                 {
                     data.setMessage("Please log in with an account " +
