@@ -16,37 +16,18 @@
 
 package org.columba.mail.gui.config.search;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.wizard.WizardBottomBorder;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
@@ -68,7 +49,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 	//private JButton removeButton;
 	private JButton selectButton;
 
-	private JButton searchButton, closeButton, helpButton;
+	private JButton searchButton;
 
 	private JCheckBox includeSubfolderButton;
 
@@ -112,12 +93,12 @@ public class SearchFrame extends JDialog implements ActionListener {
 		searchButton.addActionListener(this);
 		searchButton.setActionCommand("SEARCH");
 		buttonPanel.add(searchButton);
-		closeButton =
+		JButton closeButton =
 			new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.addActionListener(this);
 		closeButton.setActionCommand("CLOSE");
 		buttonPanel.add(closeButton);
-		helpButton =
+		JButton helpButton =
 			new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.addActionListener(this);
 		helpButton.setActionCommand("HELP");
@@ -255,15 +236,12 @@ public class SearchFrame extends JDialog implements ActionListener {
 		String title,
 		String description,
 		ImageIcon icon) {
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBackground(Color.white);
 		panel.setPreferredSize(new Dimension(300, 60));
-		panel.setLayout(new BorderLayout());
-		panel.setBorder(new WizardBottomBorder());
-		Border border = panel.getBorder();
-		Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-		panel.setBorder(new CompoundBorder(border, margin));
-		//panel.setBorder(new WizardBottomBorder());
+		panel.setBorder(new CompoundBorder(
+                        new SingleSideEtchedBorder(SwingConstants.BOTTOM),
+                        BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBackground(Color.white);
