@@ -294,51 +294,51 @@ public class JspServlet extends HttpServlet {
     }
 
 
-    final void unknownException(HttpServletResponse response, 
-    						Throwable t) 
-    {
-    	PrintWriter writer = new PrintWriter(System.err, true);
-	if (options.getSendErrorToClient()) {
-	    try {
-	        response.setContentType ("text/html");
-	    	writer = response.getWriter ();
-	    } catch (IOException ioex) {
-	        writer = new PrintWriter(System.err, true);
-	    }
-	}
-        writer.println(Constants.getString("jsp.error.unknownException"));
+//     final void unknownException(HttpServletResponse response, 
+//     						Throwable t) 
+//     {
+//     	PrintWriter writer = new PrintWriter(System.err, true);
+// 	if (options.getSendErrorToClient()) {
+// 	    try {
+// 	        response.setContentType ("text/html");
+// 	    	writer = response.getWriter ();
+// 	    } catch (IOException ioex) {
+// 	        writer = new PrintWriter(System.err, true);
+// 	    }
+// 	}
+//         writer.println(Constants.getString("jsp.error.unknownException"));
 
-        if (options.getSendErrorToClient()) {
-            writer.println("<pre>");
-        }
+//         if (options.getSendErrorToClient()) {
+//             writer.println("<pre>");
+//         }
 
-	if (t instanceof JasperException) {
-            Throwable x = ((JasperException) t).getRootCause();
-	    (x != null ? x : t).printStackTrace (writer);
-	} else {
-	    t.printStackTrace (writer);
-	}
+// 	if (t instanceof JasperException) {
+//             Throwable x = ((JasperException) t).getRootCause();
+// 	    (x != null ? x : t).printStackTrace (writer);
+// 	} else {
+// 	    t.printStackTrace (writer);
+// 	}
 
-        if (options.getSendErrorToClient()) {
-            writer.println("</pre>");
-        }
+//         if (options.getSendErrorToClient()) {
+//             writer.println("</pre>");
+//         }
         
-	if (!options.getSendErrorToClient()) {
-            try {
-	        String message = t.getMessage ();
-		if (message == null)
-		    message = "No detailed message";
-		try {
-		    response.sendError(HttpServletResponse.
-				       SC_INTERNAL_SERVER_ERROR,
-				       message);
-		} catch (IllegalStateException ise) {
-		    Constants.jasperLog.log(message, t, Logger.ERROR);
-		}
-            } catch (IOException ex) {
-            }
-	}
-    }
+// 	if (!options.getSendErrorToClient()) {
+//             try {
+// 	        String message = t.getMessage ();
+// 		if (message == null)
+// 		    message = "No detailed message";
+// 		try {
+// 		    response.sendError(HttpServletResponse.
+// 				       SC_INTERNAL_SERVER_ERROR,
+// 				       message);
+// 		} catch (IllegalStateException ise) {
+// 		    Constants.jasperLog.log(message, t, Logger.ERROR);
+// 		}
+//             } catch (IOException ex) {
+//             }
+// 	}
+//     }
 
     boolean preCompile(HttpServletRequest request) 
         throws ServletException 
@@ -412,11 +412,16 @@ public class JspServlet extends HttpServlet {
 	    throw e;
 	} catch (IOException e) {
 	    throw e;
-	} catch (Exception e) {
+	} catch (Throwable e) {
 	    throw new ServletException(e);
-	} catch (Throwable t) {
-	    unknownException(response, t);
 	}
+
+	// It's better to throw the exception - we don't
+	// know if we can deal with sendError ( buffer may be
+	// commited )
+	// catch (Throwable t) {
+	// 	    unknownException(response, t);
+	// 	}
     }
 
     public void destroy() {

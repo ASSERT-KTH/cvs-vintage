@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.11 2000/06/13 00:32:32 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/06/13 00:32:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.12 2000/06/19 20:13:57 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/06/19 20:13:57 $
  *
  * ====================================================================
  *
@@ -443,8 +443,7 @@ public class PageContextImpl extends PageContext {
 		throw (IOException)e;
 	    if( e instanceof ServletException )
 		throw (ServletException) e;
-
-	    e.printStackTrace();
+	    //	    e.printStackTrace();
 	    throw new ServletException(e);
 	}
 
