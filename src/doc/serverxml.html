@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <!-- $Id: serverxml.html,v 1.3 2001/09/03 02:13:15 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.4 2001/09/18 03:25:57 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="style.css">
@@ -172,7 +172,7 @@ especially in module names and their classes.</p>
 be grouped as follows:</p>
 
 <ul>
-  <li>Access Authentication and Authorization
+  <li>Access, Authentication, and Authorization
     <ul>
 	  <li><a href="#AccessInterceptor">AccessInterceptor</a></li>
 	  <li><a href="#CredentialsInterceptor">CredentialsInterceptor</a></li>
@@ -202,7 +202,7 @@ be grouped as follows:</p>
 	  <li><a href="#Jdk12Interceptor">Jdk12Interceptor</a></li>
 	  <li><a href="#StaticInterceptor">StaticInterceptor</a></li>
 	</ul></li>
-  <li>Facade
+  <li>Servlet 2.2 Facade
     <ul>
 	  <li><a href="#WebXmlReader">WebXmlReader</a></li>
 	  <li><a href="#JspInterceptor">JspInterceptor</a></li>
@@ -239,51 +239,6 @@ be grouped as follows:</p>
 </ul>
 
 <hr size="5">
-
-<!-- ======================================== -->
-
-<h3>PolicyLoader</h3>
-
-<h4 id="Descriptio3">Description</h4>
-
-<p>Run tomcat in a sandbox. The module will be active only if "sandbox"
-property is set on the ContextManager ( as an attribute or via a command line
-option ). This minimizes the number of command line arguments. 
-Note that it is required to define the policy file before starting tomcat
-( in some VMs it works if you set it at runtime, but it's safer to set it
-in the command line ).</p>
-
-<p>Make sure "-Djava.security.policy=$TOMCAT_HOME/lib/tomcat.policy" is
-included in the startup line, or an equivalent policy is present in the 
-embedding system</p>
-
-<h4 id="Parameters3">Parameters</h4>
-
-<table border="1" cellpadding="2" cellspacing="0">
-  <tbody>
-    <tr valign="top">
-      <td><b>Attribute</b></td>
-      <td><b>Description</b></td>
-      <td><p><b>Default</b></p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>securityManagerClass</td>
-      <td>Customize the security manager</td>
-      <td><p>java.lang.SecurityManager</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>sandbox</td>
-      <td>Force the use of a sandbox, regardless of command line</td>
-      <td>false
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<h4>Examples</h4>
-<pre>&lt;PolicyLoader /&gt;</pre>
 
 <!-- ======================================== -->
 
@@ -332,21 +287,62 @@ embedding system</p>
 
 <h3><a name="AccessInterceptor">AccessInterceptor</a></h3>
 
+<p><b>Type:</b> Access, Authentication, and Authorization</p>
+
+<h4>Description</h4>
+
+<p>Determines if security constraints specified in the web.xml apply to
+a request and provides the handling for BASIC and FORM authentication if
+necessary.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>ignoreCase</td>
+    <td>Enables case insensitive operation when matching a request to a
+      security constraint.</td>
+    <td>false on Unix based systems<br>
+      true on Windows based systems</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;AccessInterceptor /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="AccessLogInterceptor">AccessLogInterceptor</a></h3>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="AccountingInterceptor">AccountingInterceptor</a></h3>
 
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="Ajp12Connector">Ajp12Connector</a></h3>
 
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="Ajp13Connector">Ajp13Connector</a></h3>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
@@ -408,7 +404,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   <tr valign="top">
     <td>jkLog</td>
     <td>Path to log file to be used by mod_jk.</td>
-    <td></td>
+    <td>logs/mod_jk.log</td>
   </tr>
   <tr valign="top">
     <td>jkDebug</td>
@@ -475,7 +471,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   </tr>
   <tr valign="top">
     <td>source</td>
-    <td>Directory where .war files are located.</td>
+    <td>Directory where &quot;.war&quot; files are located.</td>
     <td>${tomcat.home}/webapps</td>
   </tr>
   <tr valign="top">
@@ -507,7 +503,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 
 <h4>Description</h4>
 
-<p>Automatically add web applications from a directory.</p>
+<p>Automatically adds web application contexts from a directory.</p>
 
 <h4>Parameters</h4>
 
@@ -574,17 +570,18 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 
 <h4>Description</h4>
 
-<p>This module is responsible for reading the XML files that specify contexts to
+<p>Reads the XML files that define contexts to
 be served by Tomcat.  You specify a single file to read.  However, in addition
 to that file, all other files in the same directory will be read that match the
 pattern &quot;<i>base</i>-*.xml&quot;, where <i>base</i> is the base name (i.e.
-no extension) of the file you specified.  Each file may configure one or more
-context.  Where the context matches a context automatically created by the
+name without extension) of the file you specified.  Each file may configure one or more
+contexts.  Where the context matches a context automatically created by the
 <a href="#AutoWebApp">AutoWebApp</a> module, the configuration file will override
-the defaults context settings.</p>
+the default context settings.</p>
 
 <p>For details on the syntax of the context configuration file, refer to the
-<a href="tomcat-ug.html">Tomcat 3.3 Users Guide</a>.</p>
+<a href="tomcat-ug.html#customizing_contexts">Customizing Contexts</a> section
+of the <a href="tomcat-ug.html">Tomcat 3.3 Users Guide</a>.</p>
 <h4>Parameters</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -613,17 +610,150 @@ the defaults context settings.</p>
 
 <h3><a name="CredentialsInterceptor">CredentialsInterceptor</a></h3>
 
+<p><b>Type:</b> Access, Authentication, and Authorization</p>
+
+<h4>Description</h4>
+
+<p>Extracts the user name and password from a request and makes the information
+available for another module to perform the authentication. It currently
+supports extracting user name and passwords from BASIC and FORM based
+authetication.</p>
+
+<p>This module must appear prior to the &quot;realm&quot; module that performs
+the authentication.</p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;CredentialsInterceptor /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="DecodeInterceptor">DecodeInterceptor</a></h3>
+
+<p><b>Type:</b> Mappers</p>
+
+<h4>Description</h4>
+
+<p>Handles the task of establishing the encoding of a request. It also handles
+optionally normalizing the request and optionally checking the request for
+unsafe escape sequences.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>defaultEncoding</td>
+    <td>Server wide default encoding to use. When set, all requests will
+      default to this encoding if the encoding can't be determined or an
+      appropriate guess isn't available.  If <code>null</code>, a request's
+      internal default of ISO-8859-1 remains in effect.</td>
+    <td>null, which indirectly defaults to ISO-8859-1</td>
+  </tr>
+  <tr valign="top">
+    <td>useSessionEncoding</td>
+    <td>Enables use of the encoding of the response as default for the next
+      request. This parameter if <code>true</code> can affect the value returned
+      by ServletRequest.getCharacterEncoding(). If the encoding hasn't been
+      previously specified, a request attribute corresponding to 
+      charsetAttribute has not been found, and a session is available, then
+      getCharacterEncoding() will return the character encoding of the last
+      response sent for this session.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>charsetAttribute</td>
+    <td>The name of the URL attribute to use for two alternate ways of specifying
+      character encoding. First, you may specify the encoding by including
+      &quot;;<i>charsetAttribute</i>=<i>encoding</i> in the URL. For example,
+      &quot;http://localhost:8080/myapp/index.jsp;charset=UTF-8&quot; would
+      specify the encoding as <code>UTF-8</code>. The special attribute is
+      removed from the URI, so it is not visible to normal request handling.
+      Second, if the encoding has not been previously specified, then
+      handing for ServletRequest.getCharacterEncoding() will check for a
+      request attribute with the charsetAttribute name and return that encoding
+      if found.</td>
+    <td>charset</td>
+  </tr>
+  <tr valign="top">
+    <td>normalize</td>
+    <td>Normalize the request URI to remove occurrences of &quot;//&quot;,
+      &quot;/./&quot;, and &quot;/<i>x</i>/../&quot;. Also remove ending
+      &quot;/.&quot; and &quot;/<i>x</i>/..&quot;</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>safe</td>
+    <td>Enables checking for unsafe encodings. These are %25 ('%'), %2E ('.'),
+      %2F ('/'), and %5C ('\').  If any are found in the URI, the request is
+      considered &quot;unsafe&quot; and a 403 Forbidden error is returned.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;DecodeInterceptor useSessionEncoding="true" &gt;
+</pre>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="ErrorHandler">ErrorHandler</a></h3>
 
+<p><b>Type:</b> Generator</p>
+
+<h4>Description</h4>
+
+<p>Handles response generation when a request encounters an error.  Calls the
+appropriate error handler if specified, or generates the default
+error response if not specified.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>showDebugInfo</td>
+    <td>Enables the inclusion of extra information in the default error output,
+      such as stack traces. This extra information can expose data about
+      the internal operation of Tomcat. It should be disabled in production
+      environments.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;ErrorHandler showDebugInfo=&quot;false&quot; /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="Http10Connector">Http10Connector</a></h3>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
@@ -691,7 +821,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   <tr valign="top">
     <td>jkLog</td>
     <td>Path to log file to be used by <code>isapi_redirect.dll</code>.</td>
-    <td></td>
+    <td>logs/iis_redirect.log</td>
   </tr>
   <tr valign="top">
     <td>jkDebug</td>
@@ -735,69 +865,409 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
 
 <h3><a name="InvokerInterceptor">InvokerInterceptor</a></h3>
 
+<p><b>Type:</b> Generator</p>
+
+<h4>Description</h4>
+
+<p>Provides support for the &quot;/servlet/<i>class name</i>&quot; legacy
+method of invoking servlets.</p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;InvokerInterceptor /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="JDBCRealm">JDBCRealm</a></h3>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="Jdk12Interceptor">Jdk12Interceptor</a></h3>
 
+<p><b>Type:</b> Generator</p>
+
+<h4>Description</h4>
+
+<p>Insures that the proper context classloader is in effect during servlet
+execution.</p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;Jdk12Interceptor /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="JniConnector">JniConnector</a></h3>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="JservConfig">JservConfig</a></h3>
 
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="JspInterceptor">JspInterceptor</a></h3>
+
+<p><b>Type:</b> Servlet 2.2 Facade</p>
+
+<h4>Description</h4>
+
+<p>Handles turning a JSP page into a loaded servlet for execution. Execution
+for the loaded servlet is handled the same as any other servlet. It uses Jasper
+for translating the JSP to a Java file, then performs compilation to a class
+file directly rather than using Jasper for the class compilation.</p>
+
+<p>There is support for using Sun's <code>javac</code> Java compiler as well
+as IBM's <code>Jikes</code> Java compiler.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td><b>JSP Translation Options</b></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>keepGenerated</td>
+    <td>Keep the translated Java file. If <code>false</code>, the Java file
+      is deleted after being compiled to a class file.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>largeFile</td>
+    <td>Writes the HTML text from a JSP to a separate file with a &quot;.dat&quot;
+      extension. This text is read when the JSP servlet initializes.  The makes
+      the class file smaller. If <code>false</code>, &quot;out.print()&quot;
+      statements are generated with the HTML text is embedded as a literal.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>mappedFile</td>
+    <td>Generate &quot;out.print()&quot; for each HTML text line in the JSP
+      file.  If <code>false</code>, the HTML text from multiple lines are
+      concatenated and output in one &quot;out.print()&quot;. This option is
+      ignored if <code>largeFile</code> is <code>true</code>.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>IEClassId</td>
+    <td>The Microsoft Internet Explorer &quot;classid&quot; to be used by
+      the <code>jsp:plugin</code> tag.</td>
+    <td>clsid:8AD9C840-044E-11D1-B3E9-00805F499D93</td>
+  </tr>
+  <tr valign="top">
+    <td>scratchdir</td>
+    <td>Destination directory for the JSP's Java file.</td>
+    <td><i>context's work directory</i></td>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td><b>Options for JSP Java Compilation</b></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>javaCompiler</td>
+    <td>Jasper class for invoking the Java compiler.  For using Sun's
+    <code>javac</code> Java compiler in process, specify
+    <code>org.apache.jasper.compiler.SunJavaCompiler</code>. To use IBM's
+    Jikes Java compiler out of process, specify 
+    <code>org.apache.jasper.compiler.JikesJavaCompiler</code> or
+    just <code>jikes</code> which is a supported shortcut.</td>
+    <td>org.apache.jasper.compiler.SunJavaCompiler</td>
+  </tr>
+  <tr valign="top">
+    <td>classDebugInfo</td>
+    <td>Enables compiling the class file with debugging information.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td><b>Options for Jikes Complier</b></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>jspCompilerPath</td>
+    <td>Path to Java compiler executable. Used only with Jikes as the Java
+      compiler. If not specified, jikes.exe must be in the <code>PATH</code>
+      environment variable.</td>
+    <td><i>empty</i></td>
+  </tr>
+  <tr valign="top">
+    <td>jikesClasspath</td>
+    <td>Extra classpath entries to pass to the Jikes compiler. This would
+      typically include extension jars found in the <code>jre/lib/ext</code>
+      directory of a Java 2 SDK. By default, the <code>jre/lib/rt.jar</code>
+      file is automatically included so it does not need to be present
+      in this setting.</td>
+    <td><i>empty</i></td>
+  </tr>
+  <tr valign="top">
+    <td>&nbsp;</td>
+    <td><b>Options for JSP Runtime</b></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr valign="top">
+    <td>pageContextPoolSize</td>
+    <td>Sets pool size of JSP PageContexts. If zero, disables pooling.</td>
+    <td>100</td>
+  </tr>
+  <tr valign="top">
+    <td></td>
+    <td><b>Options for Jasper JSP servlet</b> - These are not used if
+      <code>useJspServlet</code> is <code>false</code>.</td>
+    <td></td>
+  </tr>
+  <tr valign="top">
+    <td>useJspServlet</td>
+    <td>Enables use of Jaspers JspServlet for translating, compiling, and
+      loading JSP pages. Provided for backward compatibility with earlier
+      Tomcat implementations.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>jspServlet</td>
+    <td>The JSP servlet class.</td>
+    <td>org.apache.jasper.servlet.JspServlet</td>
+  </tr>
+  <tr valign="top">
+    <td>classPath</td>
+    <td>Classpath passed to the Java compiler when compiling to a class file.</td>
+    <td><i>empty</i></td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;JspInterceptor keepGenerated=&quot;false&quot /&gt;
+&lt;JspInterceptor javaCompiler="jikes" /&gt;
+</pre>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
 <h3><a name="LoaderInterceptor11">LoaderInterceptor11</a></h3>
 
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>This module constructs and sets the classloader for each context. It
+supports the Servlet 2.2 spec by including <code>WEB-INF/classes</code>
+and the Jars in <code>WEB-INF/lib</code> in the classloader.  The
+available attributes allow control over the context classloader's parent.
+With the default attributes, &quot;trusted&quot; contexts get the
+<a href="tomcat-ug.html#configuring_classes">Server Classloader</a> as their
+parent and &quot;untrusted&quot; contexts get the
+<a href="tomcat-ug.html#configuring_classes">Apps Classloader</a> as their
+parent.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>useNoParent</td>
+    <td>If <code>true</code>, sets the context classloader's parent to
+      <code>null</code>. If <code>false</code>, then contexts which are
+      &quot;trusted&quot; will get the <a href="tomcat-ug.html#configuring_classes">
+      Server Classloader</a> as the parent. The parent classloader for contexts
+      which are not &quot;trusted&quot; are controlled by the
+      <code>useApplicationLoader</code> attribute.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>useApplicationLoader</td>
+    <td>If <code>true</code>, when <code>useNoParent</code> is <code>false</code>,
+      sets the context classloader's parent to the
+      <a href="tomcat-ug.html#configuring_classes">Apps Classloader</a>. If
+      <code>false</code>, when <code>useNoParent</code> is <code>false</code>,
+      sets the context classloader's parent to the
+      <a href="tomcat-ug.html#configuring_classes">Server Classloader</a>.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;LoaderInterceptor11 /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="LoadOnStartupInterceptor">LoadOnStartupInterceptor</a></h3>
+
+<p><b>Type:</b> Servlet 2.2 Facade</p>
+
+<h4>Description</h4>
+
+<p>Handles pre-loading of servlets specified as &lt;load-on-startup&gt; in a
+Context's web.xml file. </p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;LoadOnStartupInterceptor /&gt;
+</pre>
 
 <!-- ======================================== -->
 
 <h3><a name="LogEvents">LogEvents</a></h3>
 
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>This module enables logging of when module methods are called.  The log
+output goes to the ContextManager's log channel. Event logging is
+automatically enabled if the ContextManager's debug level is set greater
+than 5.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>enabled</td>
+    <td>If <code>true</code>, enables logging of when module methods are called.</td>
+    <td>false</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;LogEvents enabled=&quot;true&quot; /&gt;
+</pre>
+
+<hr size="5">
+
 <!-- ======================================== -->
 
 <h3><a name="LogSetter">LogSetter</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="NSConfig">NSConfig</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="PathSetter">PathSetter</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="PolicyLoader">PolicyLoader</a></h3>
-
 
 <p><b>Type:</b> Configuration</p>
 
 <h4>Description</h4>
 
-<p>Run Tomcat 3.3 in a sandbox. The module will be active only if the "sandbox"
-property is set on the ContextManager (as an attribute or via a command line
-option). This minimizes the number of command line arguments. 
-Note that you must define the policy file before starting Tomcat 3.3
-(in some VMs it works if you set it at runtime, but it's safer to set it
-in the command line).</p>
+<p>Configures a log channel.</p>
 
-<p>Make sure "-Djava.security.policy=$TOMCAT_HOME/lib/tomcat.policy" is
-included in the startup line, or an equivalent policy is present in the 
-embedding system</p>
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>name</td>
+    <td>Name of the log channel.</td>
+    <td>null</td>
+  </tr>
+  <tr valign="top">
+    <td>path</td>
+    <td>Path to the desired log file. You may embed a
+      <code>java.text.SimpleDateFormat</code> string enclosed within '{}'
+      to create a path that encorporates the current date and or time.</td>
+    <td>null, log output goes to stderr</td>
+  </tr>
+  <tr valign="top">
+    <td>verbosityLevel</td>
+    <td>Verbosity level for the log.  Accepted values are: <code>FATAL</code>,
+      <code>ERROR</code>, <code>WARNING</code>, <code>INFORMATION</code>,
+      and <code>DEBUG</code>.</td>
+    <td>INFORMATION</td>
+  </tr>
+  <tr valign="top">
+    <td>timestamps</td>
+    <td>If <code>true</code>, a timestamp is included at the beginning of
+      each line in the log output.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>timestampFormat</td>
+    <td>Format for timestamp, if enabled.</td>
+    <td>yyyy-MM-dd HH:mm:ss</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;LogSetter name="tc_log" verbosityLevel="DEBUG" /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="NSConfig">NSConfig</a></h3>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="PathSetter">PathSetter</a></h3>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="PolicyLoader">PolicyLoader</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Installs a security manager and/or a policy file if Tomcat is started
+with &quot;sandbox&quot; enabled. This module has no effect if you
+specify a &quot;-Djava.security.policy=...&quot; in the startup command
+for the Java VM. Setting the policy on the command line is the
+preferred method.</p>
 
 <h4>Parameters</h4>
 
@@ -820,9 +1290,357 @@ embedding system</p>
   </tr>
   <tr valign="top">
     <td>sandbox</td>
-    <td>Force the use of a sandbox, regardless of command line</td>
+    <td>Force the use of a sandbox, regardless of command line.</td>
     <td>false
     </td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;PolicyLoader securityManagerClass=&quot;java.lang.SecurityManager&quot;
+    policyFile=&quot;conf/tomcat.policy&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="ReloadInterceptor">ReloadInterceptor</a></h3>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SessionExpirer">SessionExpirer</a></h3>
+
+<p><b>Type:</b> Session</p>
+
+<h4>Description</h4>
+
+<p>Handles actual descruction of expired sessions.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>checkInterval</td>
+    <td>How often to check for expired sessions, in seconds.</td>
+    <td>60</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SessionExpirer checkInterval="120" /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SessionId">SessionId</a></h3>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SessionIdGenerator">SessionIdGenerator</a></h3>
+
+<p><b>Type:</b> Session</p>
+
+<h4>Description</h4>
+
+<p>Creates new session id's when needed for a request.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>randomClass</td>
+    <td>Class for creating a random number use in session ID creation when
+      <code>randomFile</code> isn't available.</td>
+    <td>java.security.SecureRandom</td>
+  </tr>
+  <tr valign="top">
+    <td>randomFile</td>
+    <td>A special &quot;device&quot; available on some Unix based operating
+      systems. Used for obtaining a random number used in session ID creation.
+      If available, overrides use of the <code>randomClass</code> setting.</td>
+    <td>/dev/urandom</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SessionIdGenerator randomClass=&quot;java.security.SecureRandom&quot;
+    randomFile=&quot;/dev/urandom&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleRealm">SimpleRealm</a></h3>
+
+<p><b>Type:</b> Access, Authentication, and Authorization</p>
+
+<h4>Description</h4>
+
+<p>Authenticates the user if required for a request. It compares the user
+name and password information provided by the <a href="#CredentialsInterceptor">
+CredentialsInterceptor</a> against data in memory obtained from an XML file.</p>
+
+<p>Since passwords are stored in text form, you should not use this module
+when security is important.  Replace this module with a more secure one, such
+as the <a href="#JDBCRealm">JDBCRealm</a>.</p>
+
+<p>This module must follow the
+<a href="#CredentialsInterceptor">CredentialsInterceptor</a>.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>filename</td>
+    <td>File containing the user names, passwords, and roles.  A leading '/'
+      is optional.</td>
+    <td>/conf/users/tomcat-users.xml</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SimpleRealm filename=&quot;conf/users/users.xml&quot; /&gt;
+</pre>
+
+<p>XML file format:</p>
+<pre>
+&lt;tomcat-users&gt;
+  &lt;user name=&quot;<i>user name</i>&quot; password=&quot;<i>password</i>&quot; roles=&quot;<i>role</i>[,<i>role</i>]&quot; /&gt;
+&lt;/tomcat-users&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleSessionStore">SimpleSessionStore</a></h3>
+
+<p><b>Type:</b> Session</p>
+
+<h4>Description</h4>
+
+<p>Creates, stores, and maintains session objects in a simple in-memory pool.</p>
+
+<p><b>Note:</b> This module must follow the <a href="#SessionId">SessionId</a>
+module.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>maxActiveSessions</td>
+    <td>Maximum number of active sessions allowed. Attempts to create sessions
+      beyond this limit will fail. If set to "-1", then there is no limit to
+      the number of active sessions.</td>
+    <td>-1</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SimpleSessionStore maxActiveSessions=&quot;-1&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="Servlet22Interceptor">Servlet22Interceptor</a></h3>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="SimpleMapper1">SimpleMapper1</a></h3>
+
+<p><b>Type:</b> Mapper</p>
+
+<h4>Description</h4>
+
+<p>Handles the mapping of requests to the appropriate context.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>mapCache</td>
+    <td>Enables creating a cache map of the full request URI to its
+      associated context. This speeds the mapping operation for subsequent
+      requests.  This feature is considered experimental. </td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>ignoreCase</td>
+    <td>Enables case insensitive operation when mapping a request to a
+      context.</td>
+    <td>false on Unix based systems<br>
+      true on Windows based systems</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SimpleMapper1 /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="StaticInterceptor">StaticInterceptor</a></h3>
+
+<p><b>Type:</b> Generator</p>
+
+<h4>Description</h4>
+
+<p>Generates the response for requests that map to static files or 
+directories.  The display of directory listings may be disabled.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>listings</td>
+    <td>Enables the display of directory listings when requested.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;StaticInterceptor listing=&quot;false&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="TagPoolManagerInterceptor">TagPoolManagerInterceptor</a></h3>
+
+<p><b>Type:</b> Servlet 2.2 Facade</p>
+
+<h4>Description</h4>
+
+<p>Handles an enhancement to tag libary support by managing a pool tag objects.
+Tag objects will be created the first time a JSP page runs.  After use the
+tag objects are placed in a pool.  The next time the JSP page runs, the tag
+objects are retrieved from the pool rather than recreated.</p>
+
+<p>If this module is not present, tag objects can't be retrieved from the pool
+and tag objects are created for each use.</p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&tl;TagPoolManagerInterceptor /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="TrustedLoader">TrustedLoader</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Provides special handling for &quot;trusted&quot; contexts which have a
+<code>interceptors.xml</code> file in their <code>WEB-INF</code> directory.
+This file can specify modules to be added to the server as if they were
+specified in the <code>server.xml</code> file.</p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;TrustedLoader /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="WebXmlReader">WebXmlReader</a></h3>
+
+<p><b>Type:</b> Servlet 2.2 Facade</p>
+
+<h4>Description</h4>
+
+<p>Reads the <code>WEB-INF/web.xml</code> file for each context.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>validate</td>
+    <td>Enables validation of the <code>web.xml</code> when read.  After the
+      first validation, a <code>webxmlval.txt</code> file is written to the
+      context's work directory. On subsequent startups of Tomcat, validation
+      is skipped if the <code>webxmlval.txt</code> remains newer than the
+      <code>web.xml</code> file.</td>
+    <td>true</td>
   </tr>
 </table>
 
@@ -836,59 +1654,58 @@ embedding system</p>
 
 <!-- ======================================== -->
 
-<h3><a name="ProfileLoader">ProfileLoader</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="ReloadInterceptor">ReloadInterceptor</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="SessionExpirer">SessionExpirer</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="SessionId">SessionId</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="SessionIdGenerator">SessionIdGenerator</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="SimpleRealm">SimpleRealm</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="SimpleSessionStore">SimpleSessionStore</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="Servlet22Interceptor">Servlet22Interceptor</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="SimpleMapper1">SimpleMapper1</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="StaticInterceptor">StaticInterceptor</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="TagPoolManagerInterceptor">TagPoolManagerInterceptor</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="TrustedLoader">TrustedLoader</a></h3>
-
-<!-- ======================================== -->
-
-<h3><a name="WebXmlReader">WebXmlReader</a></h3>
-
-<!-- ======================================== -->
-
 <h3><a name="WorkDirSetup">WorkDirSetup</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Set the &quot;work&quot; directory for contexts which don't have the
+&quot;work&quot; directory specified explicitly.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>cleanWorkDir</td>
+    <td>Deletes context &quot;work&quot; directories as each context is started and
+      shutdown. It is recommended that you only set this <code>true</code>
+      during development if it serves a purpose.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>useWebInf</td>
+    <td>If <code>true</code>, defaults the &quot;work&quot; directory to
+       <code>WEB-INF/TOMCAT_WORKDIR</code>. If <code>false</code>, defaults
+       the &quot;work&quot; directory to
+       <code><i>workDirBase</i>/<i>host</i>/<i>context path</i></code>,
+       where <code><i>host</i></code> is the context's virtual host name, or
+       &quot;DEFAULT&quot; if a virtual host name isn't set.  If the virtual
+       host name is an IP address, the colons will be replaced with '_'.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>workDirBase</td>
+    <td>The base directory for work directories when <code>useWebInf</code> is
+      <code>false</code>.</td>
+    <td>ContextManager's <code>work</code> setting which defaults to
+      &quot;work&quot;</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+
+</pre>
+
+<hr size="5">
+
 
 </body>
 </html>
