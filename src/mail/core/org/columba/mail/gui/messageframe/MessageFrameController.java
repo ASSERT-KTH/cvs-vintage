@@ -92,39 +92,6 @@ public class MessageFrameController extends AbstractMailFrameController implemen
 				new AttachmentSelectionHandler(attachmentController.getView()));
 	}
 
-	public void selectInbox() {
-		MessageFolder inboxFolder = (MessageFolder) MailInterface.treeModel
-				.getFolder(101);
-
-		try {
-			Object[] uids = inboxFolder.getUids();
-
-			if (uids.length > 0) {
-				Object uid = uids[0];
-
-				Object[] newUids = new Object[1];
-				newUids[0] = uid;
-
-				FolderCommandReference r = new FolderCommandReference(
-						inboxFolder, newUids);
-
-				// set tree and table references
-				treeReference = new FolderCommandReference(inboxFolder);
-
-				tableReference = new FolderCommandReference(inboxFolder,
-						newUids);
-
-				// FIXME
-				/*
-				 * getSelectionManager().getHandler("mail.table").setSelection(r);
-				 */
-				MainInterface.processor.addOp(new ViewMessageCommand(this, r));
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
