@@ -32,6 +32,8 @@ import java.text.MessageFormat;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.protocol.IMAPDisconnectedException;
+import org.columba.ristretto.imap.protocol.IMAPException;
 
 /**
  * Handles all exceptions catched by Worker.construct(). Opens error dialogs.
@@ -52,8 +54,10 @@ public class ExceptionHandler {
             processSocketException((SocketException) e);
         } else if (e instanceof IOException) {
             processIOException((IOException) e);
-        } else {
-
+        } else if ( e instanceof IMAPException ) {
+        	processIMAPExcpetion((IMAPException) e);
+        }
+        else {
             // unknown exception - this is most likely a Columba-specific bug
             e.printStackTrace();
 
@@ -65,6 +69,28 @@ public class ExceptionHandler {
     }
 
     /**
+	 * @param exception
+	 */
+	private void processIMAPExcpetion(IMAPException exception) {
+		String errorMessage = "";
+		String serverResponse = "";
+		
+		if( exception.getResponse() != null ) {
+			serverResponse = ": " + exception.getResponse().getResponseMessage();
+		}
+		
+		if( exception instanceof IMAPDisconnectedException ) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"imap_disconnected_error") + serverResponse;
+		} else {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+			"imap_error") + serverResponse;
+		}
+        
+		showErrorDialog(errorMessage, exception);
+	}
+
+	/**
      * Handle all java.net.SocketException
      * 
      * @param e
