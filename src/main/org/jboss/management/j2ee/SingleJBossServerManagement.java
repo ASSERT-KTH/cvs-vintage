@@ -16,11 +16,13 @@ import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.jboss.logging.Logger;
+
 /**
 * Represents the single JBoss server management domain
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -32,6 +34,9 @@ import javax.management.ObjectName;
 public class SingleJBossServerManagement
    extends J2EEManagement
 {
+   /** Class logger. */
+   private static final Logger log =
+      Logger.getLogger(SingleJBossServerManagement.class);
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -53,9 +58,9 @@ public class SingleJBossServerManagement
       super.postRegister( pRegistrationDone );
       if( pRegistrationDone.booleanValue() ) {
          // Create Server Component
-         System.out.println( "SingleJBossServerManagement.getObjectName(), name: " + getObjectName() );
+         log.debug("getObjectName(), name: " + getObjectName() );
          try {
-            System.out.println( "SingleJBossServerManagement.getObjectName(), create J2EEServer instance" );
+            log.debug("getObjectName(), create J2EEServer instance" );
             // Create single JBoss server
             ObjectName lServer = getServer().createMBean(
                "org.jboss.management.j2ee.J2EEServer",
@@ -105,10 +110,10 @@ public class SingleJBossServerManagement
             ).getObjectName();
          }
          catch( JMException jme ) {
-            jme.printStackTrace();
+            log.error("unexpected exception", jme);
          }
          catch( Exception e ) {
-            e.printStackTrace();
+            log.error("unexpected exception", e);
          }
       }
    }
