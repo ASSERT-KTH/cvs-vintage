@@ -63,7 +63,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  *  This class will allow you to set the selected Issue Type for a user.
  *       
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectIssueType.java,v 1.2 2001/10/22 18:55:35 elicia Exp $
+ *  @version $Id: SelectIssueType.java,v 1.3 2001/11/01 01:09:09 elicia Exp $
  */
 public class SelectIssueType extends ScarabTemplateAction
 {
@@ -87,6 +87,7 @@ public class SelectIssueType extends ScarabTemplateAction
                                retrieveByPK(new NumberKey(newIssueType));
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         scarabR.setCurrentIssueType(issueType);
+        scarabR.setReportingIssue(null);
 
         // set the next template
         String nextTemplate = data.getParameters()
