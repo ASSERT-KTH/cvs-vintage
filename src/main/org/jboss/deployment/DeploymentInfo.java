@@ -48,7 +48,7 @@ import org.jboss.metadata.BeanMetaData;
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version   $Revision: 1.8 $ <p>
+* @version   $Revision: 1.9 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -253,7 +253,7 @@ public class DeploymentInfo
     *for the ejb-name that corresponds to the given ejb-link value.
     *@param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
     *descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
-    *@return The deployment JNDI name of the ejb to which the ejbLink
+    *@return The deployment JNDI name of the ejb home to which the ejbLink
     *refers if it is found, null if no such ejb exists.
     */
    public String findEjbLink(String ejbLink)
@@ -265,9 +265,35 @@ public class DeploymentInfo
       if( top == null )
          return null;
       // Search from the top for a matching ejb
-      return findEjbLink(top, ejbLink);
+      return findEjbLink(top, ejbLink, false);
    }
-   private static String findEjbLink(DeploymentInfo parent, String ejbLink)
+
+   /** A method that walks through the DeploymentInfo hiearchy looking
+    *for the ejb-name that corresponds to the given ejb-link value.
+    *@param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
+    *descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
+    *@return The deployment JNDI name of the ejb local home to which the ejbLink
+    *refers if it is found, null if no such ejb exists.
+    */
+   public String findEjbLocalLink(String ejbLink)
+   {
+      // Walk up to the topmost DeploymentInfo
+      DeploymentInfo top = parent;
+      while( top != null && top.parent != null )
+         top = top.parent;
+      if( top == null )
+         return null;
+      // Search from the top for a matching ejb
+      return findEjbLink(top, ejbLink, true);
+   }
+
+   /** Recursively search the DeploymentInfo looking for ApplicationMetaData
+    *nodes that may contain a BeanMetaData keyed by the ejbLink value.
+    *@param isLocal, a flag indicating if the JNDI name requested is for the
+    *local home vs the remote home.
+    */
+   private static String findEjbLink(DeploymentInfo parent, String ejbLink,
+      boolean isLocal)
    {
       String ejbName = null;
       // Search the parent if it has ApplicationMetaData
@@ -276,14 +302,20 @@ public class DeploymentInfo
          ApplicationMetaData appMD = (ApplicationMetaData) parent.metaData;
          BeanMetaData beanMD = appMD.getBeanByEjbName(ejbLink);
          if( beanMD != null )
-            return beanMD.getJndiName();
+         {
+            if( isLocal == true )
+               ejbName = beanMD.getLocalJndiName();
+            else
+               ejbName = beanMD.getJndiName();
+            return ejbName;
+         }
       }
       // Search each subcontext
       Iterator iter = parent.subDeployments.iterator();
       while( iter.hasNext() && ejbName == null )
       {
          DeploymentInfo child = (DeploymentInfo) iter.next();
-         ejbName = findEjbLink(child, ejbLink);
+         ejbName = findEjbLink(child, ejbLink, isLocal);
       }
       return ejbName;
    }
