@@ -29,7 +29,7 @@ Used in: jaws, entity
  element that carries a separate meaning: This DTD wil not parse! -->
 <!ELEMENT type-mapping (#PCDATA)>
 
-<!ELEMENT default-entity (create-table , remove-table , tuned-updates , read-only , pk-constraint? , select-for-update? , time-out)>
+<!ELEMENT default-entity (create-table , remove-table , tuned-updates , read-only , pk-constraint? , row-locking? , time-out)>
 
 <!ELEMENT create-table (#PCDATA)>
 
@@ -41,7 +41,7 @@ Used in: jaws, entity
 
 <!ELEMENT pk-constraint (#PCDATA)>
 
-<!ELEMENT select-for-update (#PCDATA)>
+<!ELEMENT row-locking (#PCDATA)>
 
 <!ELEMENT time-out (#PCDATA)>
 
@@ -61,12 +61,11 @@ Used in: jaws, entity
  tuned-updates: emit 'update' SQL statements that update only changed fields.
  create-table: On deploy, create the table if it doesn't exist.
  remove-table: On undeploy, drop the table from the database (with _all_ _data_!!! 
- select-for-update: On loading the bean, use the 'select ... for update' syntax,
-      locking the row.
+ row-locking: On loading the bean, row lock it
  pk-constraint: If create-table is on, create it with a primary key.
  time-out: For read-only only, re-load entity after time-out
 -->
-<!ELEMENT entity (ejb-name , datasource? , cmp-field* , finder* , read-ahead? , read-only? , table-name? , tuned-updates? , create-table? , remove-table? , select-for-update? , time-out? , pk-constraint?)>
+<!ELEMENT entity (ejb-name , datasource? , cmp-field* , finder* , read-ahead? , read-only? , table-name? , tuned-updates? , create-table? , remove-table? , row-locking? , time-out? , pk-constraint?)>
 
 <!-- ejb-name within an entity element must contain the ejb-name as specified
  in ejb-jar.xml. -->

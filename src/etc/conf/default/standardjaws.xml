@@ -10,7 +10,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.25 2001/11/27 00:15:30 peter_f Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.26 2001/12/05 05:02:48 patriot1burke Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -23,7 +23,7 @@
       <tuned-updates>true</tuned-updates>
       <read-only>false</read-only>
       <time-out>300</time-out>
-      <select-for-update>false</select-for-update>
+      <row-locking>false</row-locking>
       <read-ahead>false</read-ahead>
    </default-entity>
 
