@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.115 2005/02/28 22:31:41 bobtarling Exp $
+// $Id: Modeller.java,v 1.116 2005/02/28 23:05:47 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1275,16 +1275,29 @@ public class Modeller {
        @return The stereotype.
     */
     private Object getStereotype(String name) {
-	Object mStereotype = Model.getFacade().lookupIn(model, name);
+        LOG.info("Trying to find a stereotype of name " + name);
+        // Is this line really safe wouldn't it just return the first
+        // model element of the same name whether or not it is a stereotype
+        Object stereotype = Model.getFacade().lookupIn(model, name);
 
-	if (mStereotype == null
-	        || !Model.getFacade().isAStereotype(mStereotype)) {
-	    mStereotype =
-		Model.getExtensionMechanismsFactory()
-		    .buildStereotype(name, model);
-	}
-
-	return mStereotype;
+        if (stereotype == null) {
+            LOG.info("Couldn't find so creating it");
+            return
+                Model.getExtensionMechanismsFactory()
+                    .buildStereotype(name, model);
+        }
+        
+        if (!Model.getFacade().isAStereotype(stereotype)) {
+            // and so this piece of code may create an existing stereotype
+            // in error.
+            LOG.info("Found something that isn't a stereotype so creating it");
+            return
+                Model.getExtensionMechanismsFactory()
+                    .buildStereotype(name, model);
+        }
+        
+        LOG.info("Found it");
+        return stereotype;
     }
 
     /**
