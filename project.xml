@@ -425,15 +425,6 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>torque</groupId>
-      <artifactId>torque-gen</artifactId>
-      <version>3.1</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>false</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
       <version>20040328.193346</version>
