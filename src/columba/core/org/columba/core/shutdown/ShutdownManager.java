@@ -90,17 +90,6 @@ public class ShutdownManager {
      * by subclasses. It registers the instance as a system shutdown hook.
      */
     protected ShutdownManager() {
-        //TODO: move this runnable to the config classes after the cleanup
-        register(new Runnable() {
-            public void run() {
-                try {
-                    MainInterface.config.save();
-                } catch (Exception e) {
-                    ColumbaLogger.log.severe(e.getMessage());
-                }
-            }
-        });
-        
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 // stop columba server

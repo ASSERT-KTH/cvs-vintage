@@ -19,6 +19,7 @@ package org.columba.core.config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.OSInfo;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
@@ -84,6 +85,15 @@ public class Config {
         if (!pop3Directory.exists()) {
             pop3Directory.mkdir();
         }
+        ShutdownManager.getShutdownManager().register(new Runnable() {
+            public void run() {
+                try {
+                    save();
+                } catch (Exception e) {
+                    ColumbaLogger.log.severe(e.getMessage());
+                }
+            }
+        });
     }
     
     /**
