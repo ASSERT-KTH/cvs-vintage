@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -77,10 +77,11 @@ public class RelationSet implements Set {
                "relationship collection");
       }
       if(cmrField.getRelatedCMRField().isFkPartOfPk()) {
-         throw new IllegalStateException("A CMR field with a foreign key " +
-            "mapped to a primary key field can only be set in ejbCreate " +
-            "[EJB 2.0 Spec. 10.3.5]. " +
-            "CMR field: " + cmrField.getRelatedCMRField().getFieldName());
+         throw new IllegalStateException(
+            "CMR field " + cmrField.getRelatedCMRField().getFieldName() +
+            " is mapped to a " +
+            "foreign key which is a part for a primary key, and primary key " +
+            "may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
       }
 
       List idList = getIdList();
@@ -135,6 +136,13 @@ public class RelationSet implements Set {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
       }
+      if(cmrField.getRelatedCMRField().isFkPartOfPk()) {
+         throw new IllegalStateException(
+            "CMR field " + cmrField.getRelatedCMRField().getFieldName() +
+            " is mapped to a " +
+            "foreign key which is a part for a primary key, and primary key " +
+            "may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
+      }
 
       if(!relatedLocalInterface.isInstance(o)) {
          throw new IllegalArgumentException("Object must be an instance of " +
@@ -170,6 +178,13 @@ public class RelationSet implements Set {
    }
 
    public void clear() {
+      if(cmrField.getRelatedCMRField().isFkPartOfPk()) {
+         throw new IllegalStateException(
+            "CMR field " + cmrField.getRelatedCMRField().getFieldName() +
+            " is mapped to a " +
+            "foreign key which is a part for a primary key, and primary key " +
+            "may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
+      }
       List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
@@ -187,6 +202,14 @@ public class RelationSet implements Set {
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
+      }
+
+      if(cmrField.getRelatedCMRField().isFkPartOfPk()) {
+         throw new IllegalStateException(
+            "CMR field " + cmrField.getRelatedCMRField().getFieldName() +
+            " is mapped to a " +
+            "foreign key which is a part for a primary key, and primary key " +
+            "may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
       }
 
       if(c == null) {
@@ -299,6 +322,14 @@ public class RelationSet implements Set {
             if(cmrField.isReadOnly()) {
                throw new EJBException("Field is read-only: " + 
                      cmrField.getFieldName());
+            }
+
+            if(cmrField.getRelatedCMRField().isFkPartOfPk()) {
+               throw new IllegalStateException(
+               "CMR field " + cmrField.getRelatedCMRField().getFieldName() +
+               " is mapped to a " +
+               "foreign key which is a part for a primary key, and primary key " +
+               "may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
             }
 
             try {
