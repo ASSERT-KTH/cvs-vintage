@@ -70,15 +70,15 @@ public class MoveFolderCommand extends Command {
         AbstractMessageFolder movedFolder = (AbstractMessageFolder) ((FolderCommandReference) getReference()).getFolder();
 
         // get destination folder
-        destParentFolder = ((FolderCommandReference) getReference()).getFolder();
+        destParentFolder = ((FolderCommandReference) getReference()).getDestinationFolder();
 
         srcParentFolder = (AbstractFolder)movedFolder.getParent();
         srcChildIndicies = new int[] {srcParentFolder.getIndex(movedFolder)};
         srcChildObjects = new Object[] {movedFolder};
 
-        movedFolder.removeFromParent();
-
-        destParentFolder.append(movedFolder);
+        //AbstractFolder.append also automatically removes the folder
+        //from its parent
+        movedFolder.moveTo(destParentFolder);
 
         destChildIndicies = new int[] {destParentFolder.getIndex(movedFolder)};
     }

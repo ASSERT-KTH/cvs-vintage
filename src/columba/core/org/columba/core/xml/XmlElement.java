@@ -245,13 +245,12 @@ public class XmlElement extends Observable implements Cloneable {
  *
  */
     public void removeFromParent() {
-        XmlElement parent = getParent();
-
         if (parent == null) {
             return;
         }
 
         parent.removeElement(this);
+        parent =null;
     }
 
     public void append(XmlElement e) {

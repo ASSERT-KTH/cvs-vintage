@@ -303,7 +303,6 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * FolderListeners.
 	 */
 	public void addSubfolder(AbstractFolder child) throws Exception {
-		add(child);
 		getConfiguration().getRoot().addElement(
 				child.getConfiguration().getRoot());
 		fireFolderAdded(child);
@@ -353,25 +352,15 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	public void append(AbstractFolder child) {
-		LOG.info("Appending child=" + child);
-
-		// remove child from parent
-		child.removeFromParent();
-
+	public void moveTo(AbstractFolder newParent) throws Exception {
 		// do the same for the XmlElement node
-		LOG.info("Appending xmlelement="
-				+ child.getConfiguration().getRoot().getName());
-
-		child.getConfiguration().getRoot().removeFromParent();
-
-		// add child to this node
-		add(child);
-
+		getConfiguration().getRoot().removeFromParent();	
+		
 		// do the same for the XmlElement of child
-		getConfiguration().getRoot().addElement(
-				child.getConfiguration().getRoot());
-		fireFolderAdded(child);
+		newParent.getConfiguration().getRoot().addElement(
+				getConfiguration().getRoot());
+
+		newParent.fireFolderAdded(this);
 	}
 
 	/** ******************* capabilities ************************************* */
@@ -433,4 +422,5 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 
 		return rootFolder;
 	}
+
 }

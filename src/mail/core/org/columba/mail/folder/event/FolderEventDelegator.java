@@ -24,9 +24,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.Timer;
 import javax.swing.event.EventListenerList;
+import javax.swing.tree.TreeNode;
 
 import org.columba.core.util.Mutex;
 import org.columba.mail.folder.AbstractFolder;
@@ -46,6 +48,10 @@ import org.columba.mail.gui.tree.TreeModel;
  * @author tstich
  */
 public class FolderEventDelegator implements ActionListener, FolderListener {
+
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.event");
 
 	private static final int UPDATE_DELAY = 50;
 
@@ -238,14 +244,41 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 	 */
 	private void processTreeEvents() {
 
+		if (folderRemovedList[swap].size() > 0) {
+			AbstractFolder lastFolder = null;
+
+			// Process the events
+			for (int i = 0; i < folderRemovedList[swap].size(); i++) {
+				FolderEvent next = (FolderEvent) folderRemovedList[swap].get(i);
+
+				lastFolder = (AbstractFolder) next.getSource();
+				
+				TreeNode parent = lastFolder.getParent();
+				lastFolder.removeFromParent();
+				TreeModel.getInstance().nodeStructureChanged(parent);
+			}
+		}
+
 		if (folderAddedList[swap].size() > 0) {
 
 			// First sort so that Events from one folder stick together
 			Collections.sort(folderAddedList[swap], FolderEventComparator
 					.getInstance());
 
-			AbstractFolder lastFolder = (AbstractFolder) ((FolderEvent) folderAddedList[swap]
-					.get(0)).getSource();
+			FolderEvent e = (FolderEvent) folderAddedList[swap].get(0);
+			
+			AbstractFolder lastFolder = (AbstractFolder) e.getSource();
+			AbstractFolder child = (AbstractFolder)e.getChanges();
+			
+			// If there is still a parent -> remove it
+			if( child.getParent() != null ) {
+				TreeNode parent = lastFolder.getParent();
+				child.removeFromParent();
+				TreeModel.getInstance().nodeStructureChanged(parent);
+			}
+			
+			// add child to this node
+			lastFolder.add(child);
 
 			TreeModel.getInstance().nodeStructureChanged(lastFolder);
 
@@ -278,19 +311,6 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 					lastFolder = (AbstractFolder) next.getSource();
 					TreeModel.getInstance().nodeChanged(lastFolder);
 				}
-			}
-		}
-
-		if (folderRemovedList[swap].size() > 0) {
-			AbstractFolder lastFolder = null;
-
-			// Process the events
-			for (int i = 0; i < folderRemovedList[swap].size(); i++) {
-				FolderEvent next = (FolderEvent) folderRemovedList[swap].get(i);
-
-				lastFolder = (AbstractFolder) next.getSource();
-				TreeModel.getInstance().removeNodeFromParent(lastFolder);
-
 			}
 		}
 

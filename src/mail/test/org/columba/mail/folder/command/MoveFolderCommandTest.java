@@ -53,11 +53,15 @@ public class MoveFolderCommandTest extends AbstractFolderTst {
 			return;
 		}
 
+		MessageFolder folderToBeMoved = createFolder();
+		rootFolder.moveTo(folderToBeMoved);
 		AbstractMessageFolder folderToBeMoved = createFolder();
-		rootFolder.append(folderToBeMoved);
+		folderToBeMoved.moveTo(rootFolder);
 
+		MessageFolder destinationFolder = createFolder();
+		rootFolder.moveTo(destinationFolder);
 		AbstractMessageFolder destinationFolder = createFolder();
-		rootFolder.append(destinationFolder);
+		folderToBeMoved.moveTo(rootFolder);
 
 		//      create Command reference
 		FolderCommandReference ref = new FolderCommandReference(
