@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.context;
@@ -118,7 +118,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
 
 	// Set default session manager if none set
-	if( ctx.getSessionManager() == null ) 
+	if( ctx.getSessionManager() == null )
 	    ctx.setSessionManager(new org.apache.tomcat.session.StandardSessionManager());
 	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
 
@@ -149,7 +149,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    throw new TomcatException( "Error loading default error servlet ", ex );
 	}
     }
-    
+
     private void initURLs(Context context) {
 	ServletLoader loader=context.getServletLoader();
 	if( loader==null) return;
@@ -158,19 +158,19 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 	String base = context.getDocBase();
 	File dir = new File(base + "/WEB-INF/classes");
-        if (!dir.isAbsolute()) {
-            // evaluate repository path relative to the context's home directory
-            ContextManager cm = context.getContextManager();
-	    dir = new File(cm.getHome(), base + "/WEB-INF/classes");
-        }
+
+        // GS, Fix for the jar@lib directory problem.
+        // Thanks for Kevin Jones for providing the fix.
+        dir = getAbsolute(dir, context);
 	if( dir.exists() ) {
 	    loader.addRepository( dir );
 	}
 
 	File f =  new File(base + "/WEB-INF/lib");
+        f = getAbsolute(f, context);
 	Vector jars = new Vector();
 	getJars(jars, f);
-            
+
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
 	    loader.addRepository( new File( base + "/WEB-INF/lib/" +jarfile ));
@@ -183,7 +183,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 		public boolean accept(File dir, String fname) {
 		    if(fname.endsWith(".jar"))
 			return true;
-		    
+
 		    return false;
 		}
 	    };
@@ -192,11 +192,11 @@ public class DefaultCMSetter extends BaseInterceptor {
 		    File f1 = new File(dir, fname);
 		    if(f1.isDirectory())
 			return true;
-		    
+
 		    return false;
 		}
 	    };
-        
+
         if(f.exists() && f.isDirectory() && f.isAbsolute()) {
             String[] jarlist = f.list(jarfilter);
 
@@ -213,12 +213,21 @@ public class DefaultCMSetter extends BaseInterceptor {
         }
     }
 
+    private File getAbsolute(File f, Context c) {
+        if (!f.isAbsolute()) {
+            // evaluate repository path relative to the context's home directory
+            ContextManager cm = c.getContextManager();
+	    return new File(cm.getHome(), f.getPath());
+        }
+        return f;
+    }
+
     // -------------------- implementation
     /** Encoded ContextManager.getWorkDir() + host + port + path
      */
     private void setWorkDir(Context ctx ) {
 	ContextManager cm=ctx.getContextManager();
-	
+
 	StringBuffer sb=new StringBuffer();
 	sb.append(cm.getWorkDir());
 	sb.append(File.separator);
