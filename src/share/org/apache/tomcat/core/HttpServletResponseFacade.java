@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.6 2000/03/21 01:27:08 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/03/21 01:27:08 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.7 2000/04/05 19:40:20 craigmcc Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/04/05 19:40:20 $
  *
  * ====================================================================
  *
@@ -103,12 +103,15 @@ implements HttpServletResponse {
     }
 
     public String encodeRedirectURL(String location) {
-	// rewrite for the same host
-	// this is really simplistic matching here, any helper functions?
-	if (location.indexOf(response.getRequest().getServerName())!=-1){
-	    location=encodeURL(location);
-	}
-	return location;
+
+	System.out.println("CRM: encodeRedirectURL(" + location + ") --> " +
+			   toAbsolute(location) + " --> " +
+			   isEncodeable(toAbsolute(location)));
+	if (isEncodeable(toAbsolute(location)))
+	    return (toEncoded(location,
+			      response.getRequest().getRequestedSessionId()));
+	else
+	    return (location);
     }
     
     /**
@@ -119,33 +122,15 @@ implements HttpServletResponse {
     }
 
     public String encodeURL(String url) {
-      Request request=response.getRequest();
-      // if I have a session
-      //      System.out.println("XXX " + request.isRequestedSessionIdValid() +" " + request.isRequestedSessionIdFromCookie() +
-      //		 " " + request.getRequestedSessionId();
-      
-      if (request.isRequestedSessionIdValid()){
-	  // if first time or cookie not returned
-	  // XXX need to add support for SSL or other schemas
-	  if (!request.isRequestedSessionIdFromCookie()) {
-	      int qidx=url.indexOf( "?" );
-	      String path=url;
-	      String qry=null;
-	      if( qidx >= 0 ) {
-		  path=url.substring( 0, qidx );
-		  qry=url.substring( qidx+1 );
-	      }
-	      StringBuffer sb=new StringBuffer(path);
-	      sb.append(";jsessionid=").append(request.getRequestedSessionId());
-	      if( qry != null ) 
-		  sb.append("?").append( qry);
-	      //	      System.out.println("RW " + url + " " + sb.toString());
-	      return sb.toString();              
-	  }
-      }
-      return url;
+
+	if (isEncodeable(toAbsolute(url)))
+	    return (toEncoded(url,
+			      response.getRequest().getRequestedSessionId()));
+	else
+	    return (url);
+
     }
-    
+
     /**
      * @deprecated
      */
@@ -185,8 +170,13 @@ implements HttpServletResponse {
             String msg = sm.getString("hsrf.redirect.iae");
             throw new IllegalArgumentException(msg);
 	}
+	System.out.println("CRM: sendRedirect(" + location + ") --> " +
+			   toAbsolute(location));
+	// Even though DefaultErrorServlet will convert this
+	// location to absolute (if required) we should do so
+	// here in case the app has a non-default handler
 	sendError(HttpServletResponse.SC_MOVED_TEMPORARILY,
-		  location);
+		  toAbsolute(location));
     }
     
     public void setContentLength(int len) {
@@ -261,4 +251,179 @@ implements HttpServletResponse {
 	response.setStatus(sc);
     }    
     
+    /**
+     * Return <code>true</code> if the specified URL should be encoded with
+     * a session identifier.  This will be true if all of the following
+     * conditions are met:
+     * <ul>
+     * <li>The request we are responding to asked for a valid session
+     * <li>The requested session ID was not received via a cookie
+     * <li>The specified URL points back to somewhere within the web
+     *     application that is responding to this request
+     * </ul>
+     *
+     * @param location Absolute URL to be validated
+     **/
+    private boolean isEncodeable(String location) {
+
+	// Are we in a valid session that is not using cookies?
+	Request request = response.getRequest();
+	if (!request.isRequestedSessionIdValid())
+	    return (false);
+	if (request.isRequestedSessionIdFromCookie())
+	    return (false);
+
+	// Is this a valid absolute URL?
+	System.out.println("CRM: isEncodeable(" + location + ")");
+	URL url = null;
+	try {
+	    url = new URL(location);
+	} catch (MalformedURLException e) {
+	    return (false);
+	}
+	System.out.println("CRM:    Valid URL --> " + url.toString());
+
+	// Does this URL match down to (and including) the context path?
+	System.out.println("CRM:    Compare " + request.getScheme() +
+			   " to " + url.getProtocol());
+	if (!request.getScheme().equalsIgnoreCase(url.getProtocol()))
+	    return (false);
+	System.out.println("CRM:    Compare " + request.getServerName() +
+			   " to " + url.getHost());
+	if (!request.getServerName().equalsIgnoreCase(url.getHost()))
+	    return (false);
+	System.out.println("CRM:    Compare " + request.getServerPort() +
+			   " to " + url.getPort());
+	if (request.getServerPort() != url.getPort())
+	    return (false);
+	String contextPath = request.getContext().getPath();
+	System.out.println("CRM:    Check context path " + contextPath +
+			   " against " + url.getFile());
+	if ((contextPath != null) && (contextPath.length() > 0)) {
+	    String file = url.getFile();
+	    if ((file == null) || !file.startsWith(contextPath))
+		return (false);
+	}
+
+	// This URL belongs to our web application, so it is encodeable
+	System.out.println("CRM:    This URL is encodeable");
+	return (true);
+
+/*
+	// Is this an absolute URL?
+	if (url == null)
+	    return (false);
+	int colon = url.indexOf("://");
+	if (colon < 0)
+	    return (false);
+
+	// Only HTTP: and HTTPS: URLs are encoded
+	String scheme = url.substring(0, colon).toLowerCase();
+	if (!"http".equals(scheme) && !"https".equals(scheme))
+	    return (false);
+
+	// Match on the host name and port number
+	String rest = url.substring(colon + 3);
+	colon = rest.indexOf(":");
+	int slash = rest.indexOf("/");
+	if (slash < 0) {
+	    slash = rest.length();
+	    rest += "/";
+	}
+	if (colon > slash)
+	    colon = -1;
+	String host = null;
+	int port = 80;
+	if (colon >= 0) {
+	    host = rest.substring(0, colon);
+	    String temp = rest.substring(colon + 1, slash - (colon + 1));
+	    try {
+		port = Integer.parseInt(temp);
+	    } catch (Throwable t) {
+		return (false);		// Invalid port number in absolute URL
+	    }
+	} else
+	    host = rest.substring(0, slash);
+	if (!host.equalsIgnoreCase(request.getServerName()))
+	    return (false);
+	if (port != request.getServerPort())
+	    return (false);
+
+	// Match on the context path of this web application
+	rest = rest.substring(slash);
+	String contextPath = request.getContext().getPath();
+	if ((contextPath == null) || (contextPath.length() == 0))
+	    return (true);
+	if (rest.startsWith(contextPath))
+	    return (true);
+	else
+	    return (false);
+*/
+
+    }
+
+
+    /**
+     * Convert (if necessary) and return the absolute URL that represents the
+     * resource referenced by this possibly relative URL.  If this URL is
+     * already absolute, return it unchanged.
+     *
+     * @param location URL to be (possibly) converted and then returned
+     */
+    private String toAbsolute(String location) {
+
+	if (location == null)
+	    return (location);
+
+	// Construct a new absolute URL if possible (cribbed from
+	// the DefaultErrorPage servlet)
+	URL url = null;
+	try {
+	    url = new URL(location);
+	} catch (MalformedURLException e1) {
+	    Request request = response.getRequest();
+	    String requrl =
+		HttpUtils.getRequestURL(request.getFacade()).toString();
+	    try {
+		url = new URL(new URL(requrl), location);
+	    } catch (MalformedURLException e2) {
+		return (location);	// Give up
+	    }
+	}
+	return (url.toString());
+			     
+    }
+
+
+    /**
+     * Return the specified URL with the specified session identifier
+     * suitably encoded.
+     *
+     * @param url URL to be encoded with the session id
+     * @param sessionId Session id to be included in the encoded URL
+     */
+    private String toEncoded(String url, String sessionId) {
+
+	if ((url == null) || (sessionId == null))
+	    return (url);
+
+	String path = null;
+	String query = null;
+	int question = url.indexOf("?");
+	if (question < 0)
+	    path = url;
+	else {
+	    path = url.substring(0, question);
+	    query = url.substring(question);
+	}
+	StringBuffer sb = new StringBuffer(path);
+	sb.append(";jsessionid=");
+	sb.append(sessionId);
+	if (query != null)
+	    sb.append(query);
+	return (sb.toString());
+
+    }
+
+
 }
