@@ -20,7 +20,6 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
-import org.jboss.management.j2ee.CountStatistic;
 
 /**
  *  Singleton pool for session beans. This lets you have
@@ -28,7 +27,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

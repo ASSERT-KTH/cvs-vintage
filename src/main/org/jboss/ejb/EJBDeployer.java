@@ -32,7 +32,6 @@ import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.deployment.DeploymentException;
 
-import org.jboss.management.j2ee.J2EEDeployedObject;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
@@ -60,7 +59,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.29 $</tt>
+ * @version <tt>$Revision: 1.30 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>

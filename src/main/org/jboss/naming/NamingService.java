@@ -27,7 +27,6 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
 import org.jboss.invocation.Invocation;
-import org.jboss.management.j2ee.JNDIResource;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jnp.interfaces.Naming;
 import org.jnp.server.Main;
@@ -40,7 +39,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -52,9 +51,6 @@ public class NamingService
    private Main naming;
    private Map marshalledInvocationMapping = new HashMap();
 
-   /** Object Name of the JSR-77 representant of this servie **/
-   ObjectName mJNDI;
-   
    public NamingService()
    {
       naming = new Main(this.getClass().getName());
@@ -216,20 +212,10 @@ public class NamingService
    public void postRegister( Boolean pRegistrationDone )
    {
       super.postRegister( pRegistrationDone );
-      if( pRegistrationDone.booleanValue() )
-      {
-         // Create the JSR-77 management representation
-         mJNDI = JNDIResource.create( server, "LocalJNDI", getServiceName() );
-      }
    }
 
    public void postDeregister() 
    {
-      if( mJNDI != null )
-      {
-         // Destroy the JSR-77 management representation
-         JNDIResource.destroy( server, "LocalJNDI" );
-      }
       super.postDeregister();
    }
 

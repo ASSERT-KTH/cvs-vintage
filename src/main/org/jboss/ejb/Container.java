@@ -60,7 +60,6 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.management.j2ee.EJB;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -111,7 +110,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.114 $
+ * @version $Revision: 1.115 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -274,11 +273,6 @@ public abstract class Container extends ServiceMBeanSupport
     * This Container's codebase, a sequence of URLs separated by spaces
     */
    protected String codebase = "";
-
-   /**
-    * ObjectName of the JSR-77 EJB representation
-    */
-   protected String mEJBObjectName;
 
    /**
     * ??? What is this for ???
@@ -736,26 +730,6 @@ public abstract class Container extends ServiceMBeanSupport
     */
    protected void createService() throws Exception
    {
-      // Create JSR-77 EJB-Wrapper
-      log.debug( "Application.create(), create JSR-77 EJB-Component" );
-
-      int lType =
-         metaData.isSession() ?
-         ( ( (SessionMetaData) metaData ).isStateless() ? 2 : 1 ) :
-         ( metaData.isMessageDriven() ? 3 : 0 );
-      ObjectName lEJB = EJB.create(
-         server,
-         getEjbModule().getModuleName() + "",
-         lType,
-         metaData.getJndiName(),
-         jmxName
-         );
-      log.debug( "Application.start(), EJB: " + lEJB );
-      if( lEJB != null ) {
-         mEJBObjectName = lEJB.toString();
-      }
-
-
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
 
@@ -966,11 +940,6 @@ public abstract class Container extends ServiceMBeanSupport
     */
    protected void destroyService() throws Exception
    {
-      // Remove JSR-77 EJB-Wrapper
-      if( mEJBObjectName != null )
-      {
-         EJB.destroy( getServer(), mEJBObjectName );
-      }
       localProxyFactory.destroy();
       ejbModule.removeLocalHome( this );
       this.classLoader = null;

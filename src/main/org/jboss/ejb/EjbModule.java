@@ -40,9 +40,6 @@ import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 
 import org.jboss.logging.Logger;
 
-import org.jboss.management.j2ee.EJB;
-import org.jboss.management.j2ee.EJBModule;
-
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -92,7 +89,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -137,9 +134,6 @@ public class EjbModule
    final String name;
    
    private final DeploymentInfo deploymentInfo;   
-
-   /** Module Object Name (JSR-77) **/
-   private ObjectName moduleName;
 
    private ServiceControllerMBean serviceController;
 
@@ -284,19 +278,6 @@ public class EjbModule
       return deploymentInfo.url;
    }
         
-   public ObjectName getModuleName() 
-   {
-      return moduleName;
-   }
-   
-   public void setModuleName(final ObjectName moduleName) 
-   {
-      if (moduleName == null)
-         throw new NullArgumentException("moduleName");
-      
-      this.moduleName = moduleName;
-   }
-        
    // Service implementation ----------------------------------------
    
    protected void createService() throws Exception 
@@ -314,24 +295,6 @@ public class EjbModule
       boolean debug = log.isDebugEnabled();
       log.debug( "Application.start(), begin" );
   
-      // Create JSR-77 EJB-Module
-      int sepPos = name.lastIndexOf( "/" );
-      String lName = name.substring(sepPos >= 0 ? sepPos + 1 : 0);
-      
-      ObjectName lModule = EJBModule.create(
-            server,
-            ( deploymentInfo.parent == null ? null : deploymentInfo.parent.shortName ),
-            lName,
-            deploymentInfo.localUrl,
-            getServiceName()
-            );
-      log.debug("Created module: " + lModule);
-      
-      if( lModule != null ) 
-      {
-         setModuleName( lModule );
-      }
-      
       //Set up the beans in this module.
       try 
       {
@@ -396,12 +359,6 @@ public class EjbModule
          } // end of try-catch
       }
       
-      log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
-      if (getModuleName() != null) 
-      {  
-         EJBModule.destroy(server, getModuleName().toString() );
-      }
-
       // Keep track of which deployments are ejbModules
       synchronized(ejbModulesByDeploymentInfo)
       {
