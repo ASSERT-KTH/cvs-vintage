@@ -164,7 +164,7 @@ public abstract class Logger extends LogHandler {
             file=new File(logName);
 	    if (!file.exists())
 		new File(file.getParent()).mkdirs();
-	    this.sink = new PrintWriter( new FileWriter(logName));
+	    this.sink = new PrintWriter( new FileWriter(logName), true);
 	} catch (IOException ex) {
 	    System.err.print("Unable to open log file: "+path+"! ");
 	    System.err.println(" Using stderr as the default.");
