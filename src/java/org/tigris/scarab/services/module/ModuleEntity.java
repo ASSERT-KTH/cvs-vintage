@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.17 2001/10/01 03:42:23 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.18 2001/10/01 03:57:28 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -163,9 +163,6 @@ public interface ModuleEntity
     public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
         throws Exception;
 
-
-    public RModuleAttribute getRModuleAttribute(Attribute attribute)
-        throws Exception;
 /*    
     
     public String getAbbreviation();
