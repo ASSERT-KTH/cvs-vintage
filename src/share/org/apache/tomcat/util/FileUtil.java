@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.2 1999/11/12 23:33:03 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/12 23:33:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.3 2000/01/12 06:35:21 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/12 06:35:21 $
  *
  * ====================================================================
  *
@@ -94,9 +94,37 @@ public class FileUtil {
 	return fs;
     }
 
+
+    /** Will concatenate 2 paths, dealing with ..
+     * ( /a/b/c + d = /a/b/d, /a/b/c + ../d = /a/d )
+     * Used in Request.getRD
+     * @return null if error occurs
+     */
+    public static String catPath(String lookupPath, String path) {
+	// Cut off the last slash and everything beyond
+	int index = lookupPath.lastIndexOf("/");
+	lookupPath = lookupPath.substring(0, index);
+	
+	// Deal with .. by chopping dirs off the lookup path
+	while (path.startsWith("../")) { 
+	    if (lookupPath.length() > 0) {
+		index = lookupPath.lastIndexOf("/");
+		lookupPath = lookupPath.substring(0, index);
+	    } 
+	    else {
+		// More ..'s than dirs, return null
+		return null;
+	    }
+	    
+	    index = path.indexOf("../") + 3;
+	    path = path.substring(index);
+	}
+	
+	return lookupPath + "/" + path;
+    }
+    
     public static String patch(String path) {
         String patchPath = path.trim();
-
 
         // Move drive spec to the front of the path
         if (patchPath.length() >= 3 &&

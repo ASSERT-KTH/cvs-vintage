@@ -150,17 +150,7 @@ public class ServletContextFacade implements ServletContext {
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
-	if ( path == null   || 
-	    ! path.startsWith("/")) {
-	    return null; // spec say "return null if we can't return a dispather
-	}
-	//	Request subReq=context.getContextManager().createRequest( path );
-	//        RequestDispatcherImpl requestDispatcher = new RequestDispatcherImpl(subReq);
-
-	RequestDispatcherImpl requestDispatcher = new RequestDispatcherImpl(context);
-	requestDispatcher.setPath( path ) ;
-	
-	return requestDispatcher;
+	return context.getRequestDispatcher( path );
     }
 
     public RequestDispatcher getNamedDispatcher(String name) {

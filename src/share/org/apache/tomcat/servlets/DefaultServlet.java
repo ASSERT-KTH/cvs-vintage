@@ -108,6 +108,9 @@ public class DefaultServlet extends HttpServlet {
 	    requestURI = request.getRequestURI();
 	}
 
+	// XXX XXX BAD BAD BAD - that means another request,
+	// with the same informations !!!!!!!
+	// It should use getMappedPath instead !!!
         URL url = getServletContext().getResource(pathInfo);
 
 	if (url != null) {

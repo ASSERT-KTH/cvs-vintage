@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Constants.java,v 1.3 2000/01/09 03:21:16 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/09 03:21:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Constants.java,v 1.4 2000/01/12 06:35:21 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/12 06:35:21 $
  *
  * ====================================================================
  *
@@ -87,10 +87,6 @@ public class Constants {
             public static final String Resource =
                 "/org/apache/tomcat/deployment/web.dtd";
         }
-    }
-
-    public static class MIME {
-        public static final String WAR = "war";
     }
 
     public static class SESSION {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.17 2000/01/12 00:57:31 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/01/12 00:57:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.18 2000/01/12 06:35:20 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/01/12 06:35:20 $
  *
  * ====================================================================
  *
@@ -92,7 +92,7 @@ public class Request  {
     protected Vector cookies = new Vector();
 
     protected String contextPath;
-    protected String lookupPath;
+    protected String lookupPath; // everything after contextPath before ?
     protected String servletPath;
     protected String pathInfo;
 
@@ -126,7 +126,7 @@ public class Request  {
 
     // LookupResult - used by sub-requests and
     // set by interceptors
-    ServletWrapper wrapper = null;
+    ServletWrapper handler = null;
     String mappedPath = null;
     String resolvedServlet = null;
     String resouceName=null;
@@ -222,27 +222,12 @@ public class Request  {
     }
 
     public String[] getParameterValues(String name) {
-	if(!didParameters) {
-	    String qString=getQueryString();
-	    if(qString!=null) {
-		processFormData(qString);
-	    }
-	}
-	if (!didReadFormData) {
-	    readFormData();
-	}
-
+	handleParameters();
         return (String[])parameters.get(name);
     }
 
     public Enumeration getParameterNames() {
-	if(!didParameters) {
-	    processFormData(getQueryString());
-	}
-	if (!didReadFormData) {
-	    readFormData();
-	}
-
+	handleParameters();
         return parameters.keys();
     }
 
@@ -252,14 +237,8 @@ public class Request  {
      * query string, if any.
      */
     public Hashtable getParametersCopy() {
-       if(!didParameters) {
-           processFormData(getQueryString());
-       }
-       if (!didReadFormData) {
-           readFormData();
-       }
-
-       return (Hashtable) parameters.clone();
+	handleParameters();
+	return (Hashtable) parameters.clone();
     }
 
     public String getAuthType() {
@@ -294,30 +273,15 @@ public class Request  {
     }
     
     String getPathTranslated() {
-        String pathTranslated = null;
-	String pathInfo = getPathInfo();
-
-	if (pathInfo != null) {
-            if (pathInfo.equals("")) {
-                pathInfo = "/";
-            }
-
-    	    try {
-                URL url = 
-		    context.getResource(pathInfo);
-
-                if (url != null &&
-                    url.getProtocol().equals("file")) {
-                    pathTranslated = FileUtil.patch(url.getFile());
-                }
-            } catch (MalformedURLException e) {
-            }
-        }
-	
-	// XXX
-	// resolve this against the context
-
-        return pathTranslated;
+	try {
+	    URL url = context.getResourceURL(this);
+	    
+	    if (url != null &&	url.getProtocol().equals("file")) {
+		return FileUtil.patch(url.getFile());
+	    }
+	} catch (MalformedURLException e) {
+	}
+	return null;
     }
 
 
@@ -344,46 +308,20 @@ public class Request  {
 	    return false;
 	return context.getRequestSecurityProvider().isSecure(context, getFacade());
     }
-    
+
     RequestDispatcher getRequestDispatcher(String path) {
-        if (path == null) {
-	    String msg = sm.getString("hsrf.dispatcher.iae", path);
-	    throw new IllegalArgumentException(msg);
-	}
+        if (path == null)
+	    return null;
 
 	if (! path.startsWith("/")) {
-	    String lookupPath = getLookupPath();
-
-            // Cut off the last slash and everything beyond
-	    int index = lookupPath.lastIndexOf("/");
-	    lookupPath = lookupPath.substring(0, index);
-
-            // Deal with .. by chopping dirs off the lookup path
-	    while (path.startsWith("../")) { 
-		if (lookupPath.length() > 0) {
-		    index = lookupPath.lastIndexOf("/");
-		    lookupPath = lookupPath.substring(0, index);
-		} 
-                else {
-                    // More ..'s than dirs, return null
-                    return null;
-                }
-
-		index = path.indexOf("../") + 3;
-		path = path.substring(index);
-	    }
-
-	    path = lookupPath + "/" + path;
+	    path= FileUtil.catPath( getLookupPath(), path );
+	    if( path==null) return null;
 	}
 
-	RequestDispatcher requestDispatcher =
-	    context.getFacade().getRequestDispatcher(path);
-
-        return requestDispatcher;
+	return context.getRequestDispatcher(path);
     }
 
 
-    
     Principal getUserPrincipal() {
 	if( context.getRequestSecurityProvider() == null )
 	    return null;
@@ -475,7 +413,7 @@ public class Request  {
 	    // XXX need a better test
 	    // XXX need to use adapter for hings
 	    didCookies=true;
-	    processCookies();
+	    RequestUtil.processCookies( this, cookies );
 	}
 
 	Cookie[] cookieArray = new Cookie[cookies.size()];
@@ -564,13 +502,16 @@ public class Request  {
     }
 
     public ServletWrapper getWrapper() {
-	return wrapper;
+	return handler;
     }
     
-    public void setWrapper(ServletWrapper wrapper) {
-	this.wrapper=wrapper;
+    public void setWrapper(ServletWrapper handler) {
+	this.handler=handler;
     }
 
+    /** The file - result of mapping the request ( using aliases and other
+     *  mapping rules. Usefull only for static resources.
+     */
     public String getMappedPath() {
 	return mappedPath;
     }
@@ -729,40 +670,20 @@ public class Request  {
 	return RequestUtil.getReader( this );
     }
 
-
-    private void readFormData() {
-	didReadFormData = true;
-	if(!didParameters) {
-	    processFormData(getQueryString());
+    private void handleParameters() {
+   	if(!didParameters) {
+	    String qString=getQueryString();
+	    if(qString!=null) {
+		didParameters=true;
+		RequestUtil.processFormData( qString, parameters );
+	    }
 	}
-
-	Hashtable postParameters=RequestUtil.readFormData( this );
-	if(postParameters!=null)
-	    parameters = RequestUtil.mergeParameters(parameters, postParameters);
-    }
-
-    public void processCookies() {
-	RequestUtil.processCookies( this, cookies );
-    }
-
-    // XXX
-    // general comment -- we've got one form of this method that takes
-    // a string, another that takes an inputstream -- they don't work
-    // well together. FIX
-
-    public void processFormData(String data) {
-	didParameters=true;
-	RequestUtil.processFormData( data, parameters );
-    }
-
-    public void processFormData(InputStream in, int contentLength) 
-        throws UnsupportedEncodingException
-    {
-        byte[] buf = new byte[contentLength]; // XXX garbage collection!
-	int read = RequestUtil.readData( in, buf, contentLength );
-        // XXX if charset is ever anything other than the default, this must be fixed.
-        String s = new String(buf, 0, read, Constants.CharacterEncoding.Default);
-        processFormData(s);
+	if (!didReadFormData) {
+	    didReadFormData = true;
+	    Hashtable postParameters=RequestUtil.readFormData( this );
+	    if(postParameters!=null)
+		parameters = RequestUtil.mergeParameters(parameters, postParameters);
+	}
     }
 
     // -------------------- End utils

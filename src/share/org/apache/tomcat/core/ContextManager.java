@@ -332,7 +332,7 @@ public class ContextManager {
 	// assert urlPath!=null
 
 	// deal with paths with parameters in it
-	String queryString;
+	String queryString=null;
 	int i = urlPath.indexOf("?");
 	int len=urlPath.length();
 	if (i>-1) {
@@ -345,6 +345,7 @@ public class ContextManager {
 	RequestAdapterImpl reqA=new RequestAdapterImpl();
 	lr.setRequestAdapter( reqA);
 	lr.setLookupPath( urlPath );
+	lr.setQueryString( queryString );
 	lr.setContext( ctx );
 
 	// XXX set query string too 

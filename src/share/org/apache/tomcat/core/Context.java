@@ -67,6 +67,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
+import javax.servlet.*;
 
 //
 // WARNING: Some of the APIs in this class are used by J2EE. 
@@ -229,70 +230,70 @@ public class Context {
 	return this.rsProvider;
     }
 
+    /** Will return an URL that can be used to read the resource pointed by
+     * req, using the context base and the mapped path
+     */
+    public URL getResourceURL(Request req)
+	throws MalformedURLException
+    {
+	String mappedPath = req.getMappedPath();
+	if( mappedPath == null ) {
+	    mappedPath=req.getPathInfo();
+	}
+	
+        URL docBase = getDocumentBase();
+
+	// again, the special case of serving from wars
+	// XXX Need an architecture to deal with other cases, like database-stored files,
+	// etc.
+	if (docBase.getProtocol().equalsIgnoreCase("war")) {
+	    return WARUtil.createURL( this, mappedPath );
+	}
+
+	return new URL(docBase.getProtocol(), docBase.getHost(),
+		       docBase.getPort(), docBase.getFile() + mappedPath);
+    }
+
+    public RequestDispatcher getRequestDispatcher(String path) {
+	if ( path == null   || 
+	     ! path.startsWith("/")) {
+	    return null; // spec say "return null if we can't return a dispather
+	}
+	//	Request subReq=context.getContextManager().createRequest( path );
+	//        RequestDispatcherImpl requestDispatcher = new RequestDispatcherImpl(subReq);
+	
+	RequestDispatcherImpl requestDispatcher = new RequestDispatcherImpl(this);
+	requestDispatcher.setPath( path ) ;
+	
+	return requestDispatcher;
+    }
+
+
+
+    /** Implements getResource() - use a sub-request to let interceptors do the job.
+     */
     public URL getResource(String path)	throws MalformedURLException {
         URL url = null;
 
-        if (path == null) {
-            String msg = sm.getString("scfacade.getresource.npe");
-            throw new NullPointerException(msg);
-        } else if (! path.equals("") &&
-	    ! path.startsWith("/")) {
-	    String msg = sm.getString("scfacade.getresource.iae", path);
-	    throw new IllegalArgumentException(msg);
+	if ("".equals(path)) 
+	    return getDocumentBase();
+	
+	// deal with exceptional cases
+        if (path == null) 
+            throw new MalformedURLException(sm.getString("scfacade.getresource.npe"));
+        else if ( ! path.startsWith("/")) {
+	    throw new MalformedURLException(sm.getString("scfacade.getresource.iae", path));
 	}
 
-	// XXX
-	// this could use a once over - after war perhaps
-        URL docBase = getDocumentBase();
-
+	// Create a Sub-Request, do the request processing stage
+	// that will take care of aliasing and set the paths
 	Request lr=contextM.createRequest( this, path );
-
 	getContextManager().processRequest(lr);
 
-	String mappedPath = path;
-
-	if (lr != null &&
-	    lr.getMappedPath() != null &&
-	    lr.getMappedPath().trim().length() > 0) {
-	    mappedPath = lr.getMappedPath();
-	}
-
-	if (path.equals("")) {
-	    url = docBase;
-	} else if (docBase.getProtocol().equalsIgnoreCase("war")) {
-	    if (isWARExpanded()) {
-		File f = new File(getWARDir().toString());
-		String absPath = f.getAbsolutePath();
-
-		// take care of File.getAbsolutePath() troubles
-		// on jdk1.1.x/win
-
-		absPath = FileUtil.patch(absPath);
-
-                if (! absPath.startsWith("/")) {
-                    absPath = "/" + absPath;
-                }
-
-		url = new URL("file://localhost" + absPath + "/" +
-		    mappedPath);
-	    } else {
-                String documentBase = getDocumentBase().toString();
-
-                if (documentBase.endsWith("/")) {
-                    documentBase = documentBase.substring(0,
-                        documentBase.length() - 1);
-                }
-
-                url = new URL(documentBase + "!" + mappedPath);
-	    }
-	} else {
-            url = new URL(docBase.getProtocol(), docBase.getHost(),
-                docBase.getPort(), docBase.getFile() + mappedPath);
-        }
-
-        return url;
+	return getResourceURL( lr );
     }
 
+    
     Context getContext(String path) {
 	if (! path.startsWith("/")) {
             String msg = sm.getString("sfcacade.context.iae", path);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.4 2000/01/08 15:34:29 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/08 15:34:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.5 2000/01/12 06:35:21 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/12 06:35:21 $
  *
  * ====================================================================
  *
@@ -75,13 +75,16 @@ import java.io.IOException;
  */
 
 public class URLUtil {
+
     public static URL resolve(String s)
-    throws MalformedURLException {
+	throws MalformedURLException
+    {
         return resolve(s, null);
     }
 
     public static URL resolve(String s, URL url)
-    throws MalformedURLException {
+	throws MalformedURLException
+    {
         URL resolve = null;
 
 	// construct a URL via the following heuristics:
@@ -124,8 +127,8 @@ public class URLUtil {
 
         if (! resolve.getProtocol().equalsIgnoreCase("war") &&
             resolve.getFile().toLowerCase().endsWith(
-                "." + Constants.MIME.WAR)) {
-            URL u = new URL(Constants.MIME.WAR + ":" +
+                "." + "war")) {
+            URL u = new URL("war" + ":" +
                 resolve.toString());
 
             resolve = u;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.2 1999/11/01 21:52:52 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/01 21:52:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.3 2000/01/12 06:35:21 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/12 06:35:21 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@
 
 package org.apache.tomcat.util;
 
+import org.apache.tomcat.core.*;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.io.File;
@@ -129,4 +130,43 @@ public class WARUtil {
 
         return s;
     }
+
+    
+    /** Construct a URL from a base and a relative path
+     */
+    public static URL createURL( Context ctx, String mappedPath )
+	throws MalformedURLException
+    {
+	// XXX need rework, we should remove war until we know better
+	// or have an architecture for it
+	URL docBase = ctx.getDocumentBase();
+	URL url=null;
+	if (ctx.isWARExpanded()) {
+	    File f = new File(ctx.getWARDir().toString());
+	    String absPath = f.getAbsolutePath();
+	    
+	    // take care of File.getAbsolutePath() troubles
+	    // on jdk1.1.x/win
+	    
+	    absPath = FileUtil.patch(absPath);
+	    
+	    if (! absPath.startsWith("/")) {
+		absPath = "/" + absPath;
+	    }
+	    
+	    url = new URL("file://localhost" + absPath + "/" +
+			  mappedPath);
+	} else {
+	    String documentBase = docBase.toString();
+	    
+	    if (documentBase.endsWith("/")) {
+		documentBase = documentBase.substring(0,
+						      documentBase.length() - 1);
+	    }
+	    
+	    url = new URL(documentBase + "!" + mappedPath);
+	}
+	return url;
+    }
+    
 }
