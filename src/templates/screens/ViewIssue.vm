@@ -95,8 +95,14 @@ $renderer.render("viewIssue", "ViewIssueBody.vm")
  </form>
 
 <div align="right"><small><a href="$link.getIssueIdAbsoluteLink($currentIssue)">$l10n.SessionInfoLink $currentIssue.UniqueId</a></small></div>
-#else
 
+## block to handle invalid issue id or user did not have proper permissions
+#elseif ($currentIssue)
+<h3>$l10n.IssueSearchResults</h3>
+    <p class="alert">
+    $l10n.NoPermissionToViewIssue
+    </p>
+#else
 <h3>$l10n.IssueSearchResults</h3>
 
   #if ($currentIssueId && $currentIssueId.length() > 0)
