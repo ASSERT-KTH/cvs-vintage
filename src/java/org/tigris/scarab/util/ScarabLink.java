@@ -73,7 +73,7 @@ import org.tigris.scarab.util.SkipFiltering;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.61 2003/04/21 22:29:26 jon Exp $
+ * @version $Id: ScarabLink.java,v 1.62 2003/04/22 01:37:01 jon Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
@@ -139,7 +139,7 @@ public class ScarabLink extends TemplateLink
             {
                 currentModule = user.getCurrentModule();
             }
-        }        
+        }
     }
 
     /**
@@ -180,7 +180,7 @@ public class ScarabLink extends TemplateLink
         }
         catch (Exception e)
         {
-            // ignored
+            Log.get().debug(e);
         }
         if (result == -1)
         {
@@ -207,7 +207,7 @@ public class ScarabLink extends TemplateLink
         }
         catch (Exception e)
         {
-            // ignored
+            Log.get().debug(e);
         }
         if (result == null)
         {
