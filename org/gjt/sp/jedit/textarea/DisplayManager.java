@@ -26,7 +26,11 @@ package org.gjt.sp.jedit.textarea;
 import java.awt.Toolkit;
 import java.util.*;
 import org.gjt.sp.jedit.buffer.*;
-import org.gjt.sp.jedit.*;
+import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.jedit.Debug;
+import org.gjt.sp.jedit.GUIUtilities;
+import org.gjt.sp.jedit.jEdit;
+import org.gjt.sp.jedit.View;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -34,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.113 2005/01/09 00:33:05 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.114 2005/01/15 21:30:30 spestov Exp $
  */
 public class DisplayManager
 {

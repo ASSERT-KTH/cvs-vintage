@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.121 2005/01/15 20:48:27 spestov Exp $
+ * @version $Id: View.java,v 1.122 2005/01/15 21:30:29 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1320,7 +1320,8 @@ public class View extends JFrame implements EBComponent
 		an app has unsaved changes. For details, see
 		http://developer.apple.com/qa/qa2001/qa1146.html */
 		final String WINDOW_MODIFIED = "windowModified";
-		getRootPane().putClientProperty(WINDOW_MODIFIED,unsavedChanges);
+		getRootPane().putClientProperty(WINDOW_MODIFIED,
+			Boolean.valueOf(unsavedChanges));
 	} //}}}
 
 	//}}}

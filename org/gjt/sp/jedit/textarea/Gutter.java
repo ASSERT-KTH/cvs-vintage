@@ -29,7 +29,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
-import org.gjt.sp.jedit.*;
+import org.gjt.sp.jedit.View;
+import org.gjt.sp.jedit.jEdit;
+import org.gjt.sp.jedit.Marker;
+import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.jedit.GUIUtilities;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -46,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.52 2004/09/05 20:14:11 spestov Exp $
+ * @version $Id: Gutter.java,v 1.53 2005/01/15 21:30:30 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {

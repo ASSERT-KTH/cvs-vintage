@@ -39,9 +39,18 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.Segment;
-import org.gjt.sp.jedit.*;
+import org.gjt.sp.jedit.Abbrevs;
+import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.jedit.Debug;
+import org.gjt.sp.jedit.GUIUtilities;
+import org.gjt.sp.jedit.jEdit;
+import org.gjt.sp.jedit.Macros;
+import org.gjt.sp.jedit.Marker;
+import org.gjt.sp.jedit.MiscUtilities;
+import org.gjt.sp.jedit.TextUtilities;
+import org.gjt.sp.jedit.View;
 import org.gjt.sp.jedit.buffer.*;
-import org.gjt.sp.jedit.gui.*;
+import org.gjt.sp.jedit.gui.InputHandler;
 import org.gjt.sp.jedit.syntax.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -56,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.334 2004/12/24 23:47:03 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.335 2005/01/15 21:30:30 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {

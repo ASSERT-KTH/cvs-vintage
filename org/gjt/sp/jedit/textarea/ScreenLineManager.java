@@ -25,14 +25,15 @@ package org.gjt.sp.jedit.textarea;
 //{{{ Imports
 import java.util.*;
 import org.gjt.sp.jedit.buffer.*;
-import org.gjt.sp.jedit.*;
+import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.jedit.Debug;
 import org.gjt.sp.util.Log;
 //}}}
 
 /**
  * @since jEdit 4.3pre1
  * @author Slava Pestov
- * @version $Id: ScreenLineManager.java,v 1.1 2004/09/06 05:50:32 spestov Exp $
+ * @version $Id: ScreenLineManager.java,v 1.2 2005/01/15 21:30:31 spestov Exp $
  */
 class ScreenLineManager
 {
