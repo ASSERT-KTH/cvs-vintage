@@ -141,7 +141,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 	}
 
 	public void releaseLock() {
-		myLock.release();
+		myLock.release(null);
 	}
 
 	/**

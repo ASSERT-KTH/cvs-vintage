@@ -723,9 +723,9 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
-	public void releaseLock() {
+	public void releaseLock(Object locker) {
 		if (getRootFolder() != null)
-			getRootFolder().releaseLock();
+			getRootFolder().releaseLock(locker);
 	}
 	/**
 	 * @param type

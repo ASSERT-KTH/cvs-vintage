@@ -566,13 +566,6 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
-	 */
-	public void releaseLock() {
-		super.releaseLock();
-	}
-
-	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
 	 */
 	public boolean tryToGetLock(Object locker) {

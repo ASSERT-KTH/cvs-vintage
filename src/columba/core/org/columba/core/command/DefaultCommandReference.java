@@ -43,7 +43,7 @@ public class DefaultCommandReference {
 	/**
 	 * Release lock.
 	 */
-	public void releaseLock() {
+	public void releaseLock(Object locker) {
 
 	}
 }

@@ -46,9 +46,11 @@ public class Lock {
 		}
 	}
 
-	public void release() {
-		locked = false;
-		locker = null;
+	public void release(Object locker) {
+		if( this.locker == locker || this.locker == null) {
+			locked = false;
+			locker = null;
+		}
 	}
 
 }

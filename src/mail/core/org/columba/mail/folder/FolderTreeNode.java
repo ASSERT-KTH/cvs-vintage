@@ -147,8 +147,8 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 		return myLock.tryToGetLock(locker);
 	}
 
-	public void releaseLock() {
-		myLock.release();
+	public void releaseLock(Object locker) {
+		myLock.release(locker);
 	}
 
 	/**************************** treenode management *******************************/

@@ -133,10 +133,10 @@ public class FolderCommandReference extends DefaultCommandReference {
 		
 	}
 
-	public void releaseLock() {
+	public void releaseLock(Object locker) {
 		
 		//ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
-		folder.releaseLock();
+		folder.releaseLock(locker);
 	}
 	/**
 	 * Returns the markVariant.

@@ -170,7 +170,7 @@ public abstract class Command {
 
 		for (int i = 0; i < size; i++) {
 			if (references[i] != null)
-				references[i].releaseLock();
+				references[i].releaseLock(this);
 		}
 	}
 
