@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementTargetFlowListModel.java,v 1.6 2004/10/21 19:25:27 mvw Exp $
+// $Id: TestUMLModelElementTargetFlowListModel.java,v 1.7 2004/11/01 19:55:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 import ru.novosoft.uml.MBase;

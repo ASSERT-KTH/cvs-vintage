@@ -1,4 +1,4 @@
-// $Id: UmlHelper.java,v 1.20 2004/08/08 12:43:09 mvw Exp $
+// $Id: UmlHelper.java,v 1.21 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,15 +31,6 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsHelper;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
-import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
-import org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.model.uml.foundation.datatypes.DataTypesHelper;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 

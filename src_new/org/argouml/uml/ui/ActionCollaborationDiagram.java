@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.33 2004/10/06 17:03:24 mvw Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.34 2004/11/01 19:55:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,8 @@
 
 package org.argouml.uml.ui;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CollaborationsHelper;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;

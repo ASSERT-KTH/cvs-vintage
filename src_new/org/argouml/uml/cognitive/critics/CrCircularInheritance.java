@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.15 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrCircularInheritance.java,v 1.16 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.15 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrCircularInheritance.java,v 1.16 2004/11/01 19:55:06 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,7 +38,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CoreHelper;
 import org.argouml.uml.SuperclassGen;
 import org.tigris.gef.util.VectorSet;
 

@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.40 2004/09/28 11:12:20 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.41 2004/11/01 19:56:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CoreHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 

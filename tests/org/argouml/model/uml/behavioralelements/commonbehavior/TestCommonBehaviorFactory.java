@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.6 2004/09/24 20:17:27 mvw Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.7 2004/11/01 19:55:10 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.behavioralelements.commonbehavior;
 
 import junit.framework.*;
 
+import org.argouml.model.uml.CommonBehaviorFactory;
 import org.argouml.util.*;
 
 /**

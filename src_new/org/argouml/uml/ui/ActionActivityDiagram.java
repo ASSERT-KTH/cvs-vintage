@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.33 2004/10/06 17:03:24 mvw Exp $
+// $Id: ActionActivityDiagram.java,v 1.34 2004/11/01 19:55:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.ui;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsFactory;
-import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsHelper;
+import org.argouml.model.uml.ActivityGraphsFactory;
+import org.argouml.model.uml.ActivityGraphsHelper;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;

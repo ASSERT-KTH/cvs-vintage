@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.16 2004/10/04 20:30:04 mvw Exp $
+// $Id: TestCoreFactory.java,v 1.17 2004/11/01 19:55:21 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,9 @@ import java.lang.ref.WeakReference;
 import junit.framework.TestCase;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.uml.ModelManagementFactory;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MAssociation;

@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBox.java,v 1.6 2004/09/22 17:55:57 mvw Exp $
+// $Id: UMLMessageActivatorComboBox.java,v 1.7 2004/11/01 19:55:09 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.awt.event.ActionEvent;
 import org.argouml.model.ModelFacade;
 
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
+import org.argouml.model.uml.CollaborationsHelper;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;

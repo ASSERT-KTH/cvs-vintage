@@ -1,4 +1,4 @@
-// $Id: TestUseCasesFactory.java,v 1.7 2004/10/04 20:30:03 mvw Exp $
+// $Id: TestUseCasesFactory.java,v 1.8 2004/11/01 19:56:11 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.behavioralelements.usecases;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.uml.UseCasesFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.behavior.use_cases.MExtend;

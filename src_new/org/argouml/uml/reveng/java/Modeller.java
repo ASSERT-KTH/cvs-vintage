@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.97 2004/10/23 11:05:48 mvw Exp $
+// $Id: Modeller.java,v 1.98 2004/11/01 19:55:22 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,9 @@ import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.ocl.OCLUtil;
 import org.argouml.uml.reveng.DiagramInterface;
 import org.argouml.uml.reveng.Import;

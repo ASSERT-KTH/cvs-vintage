@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.15 2004/10/21 19:25:28 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.16 2004/11/01 19:56:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1187,7 +1187,7 @@ public class GeneratorCSharp extends Generator2
 
     /**
      * TODO: Once the {@link 
-     * org.argouml.model.uml.foundation.core.CoreHelper#getRealizedInterfaces(
+     * org.argouml.model.uml.CoreHelper#getRealizedInterfaces(
      * ru.novosoft.uml.foundation.core.MClassifier)} can be called without
      * using NSUML interfaces, this class can be NSUML-free.
      * 

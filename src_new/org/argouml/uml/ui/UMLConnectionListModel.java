@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.22 2004/10/23 11:05:44 mvw Exp $
+// $Id: UMLConnectionListModel.java,v 1.23 2004/11/01 19:55:11 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,9 @@ package org.argouml.uml.ui;
 
 import java.util.*;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
+import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.uml.CoreHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.graph.MutableGraphModel;

@@ -1,4 +1,4 @@
-// $Id: ModelTableModel.java,v 1.6 2004/08/27 15:23:07 mvw Exp $
+// $Id: ModelTableModel.java,v 1.7 2004/11/01 19:56:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import ru.novosoft.uml.foundation.core.*;
 
 import org.argouml.kernel.*;
 import org.argouml.uml.generator.Generator2;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 /**

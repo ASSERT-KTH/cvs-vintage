@@ -1,4 +1,4 @@
-// $Id: GUITestCopyHelper.java,v 1.3 2004/02/24 08:28:17 linus Exp $
+// $Id: GUITestCopyHelper.java,v 1.4 2004/11/01 19:55:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,10 +43,6 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 import ru.novosoft.uml.model_management.MModel;
 import ru.novosoft.uml.model_management.MPackage;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model
-    .uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
-import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
 
 /**
  * Testing the CopyHelper.<p>

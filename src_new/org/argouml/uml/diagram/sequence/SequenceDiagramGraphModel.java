@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.34 2004/09/28 11:12:21 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.35 2004/11/01 19:56:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,11 +38,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CollaborationsFactory;
+import org.argouml.model.uml.CollaborationsHelper;
+import org.argouml.model.uml.CommonBehaviorFactory;
+import org.argouml.model.uml.CommonBehaviorHelper;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.sequence.ui.FigLink;
 import org.argouml.uml.diagram.sequence.ui.FigLinkPort;

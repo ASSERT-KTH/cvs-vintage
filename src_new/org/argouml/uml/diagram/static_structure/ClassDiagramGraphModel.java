@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.60 2004/09/28 11:12:21 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.61 2004/11/01 19:56:11 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.60 2004/09/28 11:12:21 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.61 2004/11/01 19:56:11 mvw Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -39,8 +39,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.model.uml.foundation.core.CoreHelper;
 
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;

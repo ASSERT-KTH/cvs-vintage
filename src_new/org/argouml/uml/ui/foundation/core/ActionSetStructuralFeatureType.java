@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureType.java,v 1.10 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetStructuralFeatureType.java,v 1.11 2004/11/01 19:55:14 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
 /**

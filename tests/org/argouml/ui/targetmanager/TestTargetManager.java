@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.12 2004/10/04 20:30:04 mvw Exp $
+// $Id: TestTargetManager.java,v 1.13 2004/11/01 19:55:17 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.List;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.ArgoDiagram;
 
 import org.tigris.gef.presentation.Fig;

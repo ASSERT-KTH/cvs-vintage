@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.4 2004/10/13 05:52:10 linus Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.5 2004/11/01 19:55:17 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddInstanceClassifier.java,v 1.4 2004/10/13 05:52:10 linus Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.5 2004/11/01 19:55:17 mvw Exp $
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import java.util.Vector;
 
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 

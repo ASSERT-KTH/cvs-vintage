@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.11 2004/09/19 19:29:58 mvw Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.12 2004/11/01 19:55:10 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
+import org.argouml.model.uml.CollaborationsHelper;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
 

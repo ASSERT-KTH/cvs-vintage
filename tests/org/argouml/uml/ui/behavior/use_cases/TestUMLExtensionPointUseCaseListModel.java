@@ -1,4 +1,4 @@
-// $Id: TestUMLExtensionPointUseCaseListModel.java,v 1.9 2004/09/26 20:45:35 mvw Exp $
+// $Id: TestUMLExtensionPointUseCaseListModel.java,v 1.10 2004/11/01 19:55:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.behavior.use_cases;
 import junit.framework.TestCase;
 
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
+import org.argouml.model.uml.UseCasesFactory;
 
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;

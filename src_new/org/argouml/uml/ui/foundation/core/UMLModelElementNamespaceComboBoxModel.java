@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.16 2004/09/20 15:28:44 mvw Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.17 2004/11/01 19:55:14 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.UmlModelEventPump;
-import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**

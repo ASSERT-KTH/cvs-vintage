@@ -1,4 +1,4 @@
-// $Id: TestXMIReader.java,v 1.12 2004/09/26 20:45:22 mvw Exp $
+// $Id: TestXMIReader.java,v 1.13 2004/11/01 19:55:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.IllegalFormatException;
 import org.argouml.kernel.XmiFilePersister;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 
 import ru.novosoft.uml.foundation.core.MOperation;
 

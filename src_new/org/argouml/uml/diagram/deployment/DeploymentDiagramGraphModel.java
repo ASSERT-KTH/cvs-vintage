@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.37 2004/09/28 11:12:21 bobtarling Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.38 2004/11/01 19:55:12 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,8 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
+import org.argouml.model.uml.CommonBehaviorHelper;
+import org.argouml.model.uml.CoreHelper;
 import org.apache.log4j.Logger;
 
 /**

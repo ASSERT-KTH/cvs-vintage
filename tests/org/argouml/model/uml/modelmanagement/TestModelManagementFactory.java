@@ -1,4 +1,4 @@
-// $Id: TestModelManagementFactory.java,v 1.9 2004/09/25 08:04:51 mvw Exp $
+// $Id: TestModelManagementFactory.java,v 1.10 2004/11/01 19:56:09 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.modelmanagement;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.uml.ModelManagementFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.16 2004/09/11 07:34:24 mvw Exp $
+// $Id: ParseState.java,v 1.17 2004/11/01 19:55:22 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ package org.argouml.uml.reveng.java;
 import java.util.*;
 
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 
 /**
    The parse state keep control of data during parsing.

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.24 2004/09/07 18:50:05 mvw Exp $
+// $Id: ClassDiagramRenderer.java,v 1.25 2004/11/01 19:55:53 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.24 2004/09/07 18:50:05 mvw Exp $
+// $Id: ClassDiagramRenderer.java,v 1.25 2004/11/01 19:55:53 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -34,8 +34,8 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;

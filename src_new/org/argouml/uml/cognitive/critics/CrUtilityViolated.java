@@ -1,4 +1,4 @@
-// $Id: CrUtilityViolated.java,v 1.11 2004/09/21 19:03:25 mvw Exp $
+// $Id: CrUtilityViolated.java,v 1.12 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CoreHelper;
 
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). This is done by checking that there

@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.8 2004/10/04 20:30:05 mvw Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.9 2004/11/01 19:56:04 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.foundation.extensionmechanisms;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**

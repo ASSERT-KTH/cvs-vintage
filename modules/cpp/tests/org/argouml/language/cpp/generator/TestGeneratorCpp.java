@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.3 2004/11/01 00:57:31 euluis Exp $
+// $Id: TestGeneratorCpp.java,v 1.4 2004/11/01 19:55:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.apache.log4j.Logger;
 
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.ModelFacade;
 
 /**

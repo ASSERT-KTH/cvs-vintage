@@ -1,4 +1,4 @@
-// $Id: TestStylePanel.java,v 1.5 2004/10/21 19:25:27 mvw Exp $
+// $Id: TestStylePanel.java,v 1.6 2004/11/01 19:55:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.ui;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.presentation.FigText;

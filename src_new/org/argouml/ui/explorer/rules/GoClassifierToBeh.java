@@ -1,4 +1,4 @@
-// $Id: GoClassifierToBeh.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoClassifierToBeh.java,v 1.9 2004/11/01 19:55:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CoreHelper;
 
 /**
  * Go rule to navigate from a classifier to the behavioral 

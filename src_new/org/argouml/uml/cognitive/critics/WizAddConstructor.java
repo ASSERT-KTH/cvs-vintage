@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.8 2004/11/01 10:55:23 mkl Exp $
+// $Id: WizAddConstructor.java,v 1.9 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,9 @@ import javax.swing.JPanel;
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.ExtensionMechanismsHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ProfileJava;
 

@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.13 2004/09/24 20:17:24 mvw Exp $
+// $Id: TestItemUID.java,v 1.14 2004/11/01 19:56:09 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.cognitive;
 // Diagrams
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.uml.diagram.activity.ui.FigActionState;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.collaboration.ui.FigClassifierRole;

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.127 2004/10/10 20:09:05 mvw Exp $
+// $Id: ParserDisplay.java,v 1.128 2004/11/01 19:56:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,17 +37,17 @@ import org.argouml.application.api.Notation;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.ActivityGraphsFactory;
+import org.argouml.model.uml.ActivityGraphsHelper;
+import org.argouml.model.uml.CommonBehaviorFactory;
+import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.uml.CoreHelper;
+import org.argouml.model.uml.DataTypesFactory;
+import org.argouml.model.uml.ExtensionMechanismsFactory;
+import org.argouml.model.uml.ExtensionMechanismsHelper;
+import org.argouml.model.uml.ModelManagementHelper;
+import org.argouml.model.uml.StateMachinesFactory;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsFactory;
-import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsHelper;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
-import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFactory;
-import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.model.uml.foundation.datatypes.DataTypesFactory;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ProfileJava;
 import org.argouml.util.MyTokenizer;
 

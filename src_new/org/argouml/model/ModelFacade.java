@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.213 2004/10/12 17:44:26 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.214 2004/11/01 19:56:07 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.argouml.model.uml.CoreHelper;
+import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.Diagram;
 

@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.4 2004/09/03 07:27:10 mvw Exp $
+// $Id: GUITestProjectBrowser.java,v 1.5 2004/11/01 19:55:22 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.ui;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.uml.ModelManagementFactory;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 
 import ru.novosoft.uml.MFactoryImpl;

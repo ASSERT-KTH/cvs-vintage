@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.10 2004/09/25 08:04:51 mvw Exp $
+// $Id: GUITestParserDisplay.java,v 1.11 2004/11/01 19:56:09 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,8 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.ExtensionMechanismsFactory;
+import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.*;

@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesFactory.java,v 1.7 2004/09/25 08:04:51 mvw Exp $
+// $Id: TestStateMachinesFactory.java,v 1.8 2004/11/01 19:55:20 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.behavioralelements.statemachines;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.uml.StateMachinesFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**

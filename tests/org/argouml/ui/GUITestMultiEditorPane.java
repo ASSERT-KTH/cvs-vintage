@@ -1,4 +1,4 @@
-// $Id: GUITestMultiEditorPane.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.5 2004/11/01 19:55:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestMultiEditorPane.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.5 2004/11/01 19:55:22 mvw Exp $
 package org.argouml.ui;
 
 import java.awt.Component;
@@ -31,7 +31,7 @@ import javax.swing.JTabbedPane;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.presentation.FigText;

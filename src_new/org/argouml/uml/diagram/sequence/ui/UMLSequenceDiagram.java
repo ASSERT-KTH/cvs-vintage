@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.36 2004/10/26 18:56:04 mvw Exp $
+// $Id: UMLSequenceDiagram.java,v 1.37 2004/11/01 19:55:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,8 @@ import java.util.Hashtable;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CollaborationsFactory;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;

@@ -1,4 +1,4 @@
-// $Id: ActionAddObject.java,v 1.5 2004/09/09 18:07:17 mvw Exp $
+// $Id: ActionAddObject.java,v 1.6 2004/11/01 19:55:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,7 @@
 package org.argouml.uml.diagram.sequence.ui;
 
 import org.argouml.model.ModelFacade;
-import org
-    .argouml
-    .model
-    .uml
-    .behavioralelements
-    .collaborations
-    .CollaborationsFactory;
+import org.argouml.model.uml.CollaborationsFactory;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;
 import org.tigris.gef.base.Editor;

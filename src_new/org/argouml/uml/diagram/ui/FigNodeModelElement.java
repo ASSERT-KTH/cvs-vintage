@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.124 2004/11/01 16:10:55 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.125 2004/11/01 19:55:21 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,10 +73,10 @@ import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreHelper;
+import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ActionGoToCritique;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ArgoJMenu;

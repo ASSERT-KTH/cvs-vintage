@@ -1,4 +1,4 @@
-// $Id: TestUmlObjectCreation.java,v 1.9 2004/09/24 20:17:24 mvw Exp $
+// $Id: TestUmlObjectCreation.java,v 1.10 2004/11/01 19:56:04 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,17 +29,17 @@ import java.lang.reflect.Proxy;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.uml.CollaborationsFactory;
+import org.argouml.model.uml.CommonBehaviorFactory;
+import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.uml.DataTypesFactory;
+import org.argouml.model.uml.ExtensionMechanismsFactory;
+import org.argouml.model.uml.ModelManagementFactory;
 import org.argouml.model.uml.RefBaseObjectProxy;
+import org.argouml.model.uml.StateMachinesFactory;
 import org.argouml.model.uml.Uml;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
-import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
-import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFactory;
-import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
-import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model.uml.foundation.datatypes.DataTypesFactory;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
-import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
+import org.argouml.model.uml.UseCasesFactory;
 import org.argouml.ui.NavigatorPane;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRoleImpl;

@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.8 2004/09/27 19:49:42 mvw Exp $
+// $Id: CopyHelper.java,v 1.9 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CopyHelper.java,v 1.8 2004/09/27 19:49:42 mvw Exp $
+// $Id: CopyHelper.java,v 1.9 2004/11/01 19:55:06 mvw Exp $
 
 package org.argouml.model.uml;
 
@@ -44,9 +44,6 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotypeImpl;
 import ru.novosoft.uml.model_management.MPackage;
 import ru.novosoft.uml.model_management.MPackageImpl;
 
-import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
-import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
 
 class CopyFunction {
     private final Object object;

@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.16 2004/10/03 08:11:11 mvw Exp $
+// $Id: CmdCreateNode.java,v 1.17 2004/11/01 19:55:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.argouml.model.uml.UmlFactory;
  * no-parameter build method, the create method corresponding to the
  * modelelement is used.
  * 
- * @see org.argouml.model.uml.foundation.core.CoreFactory
+ * @see org.argouml.model.uml.CoreFactory
  * @author jaap.branderhorst@xs4all.nl
  */
 public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {

@@ -1,4 +1,4 @@
-// $Id: CrOppEndConflict.java,v 1.9 2004/09/21 19:03:25 mvw Exp $
+// $Id: CrOppEndConflict.java,v 1.10 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.9 2004/09/21 19:03:25 mvw Exp $
+// $Id: CrOppEndConflict.java,v 1.10 2004/11/01 19:55:06 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import java.util.List;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CoreHelper;
 /** Well-formedness rule [2] for MClassifier. See page 29 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
 //TODO: split into an inherited attr critic and a local

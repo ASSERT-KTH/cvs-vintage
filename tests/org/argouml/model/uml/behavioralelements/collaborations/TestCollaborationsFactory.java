@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.10 2004/09/24 20:17:25 mvw Exp $
+// $Id: TestCollaborationsFactory.java,v 1.11 2004/11/01 19:55:17 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,9 @@ import java.lang.ref.WeakReference;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.uml.CollaborationsFactory;
+import org.argouml.model.uml.ModelManagementFactory;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;

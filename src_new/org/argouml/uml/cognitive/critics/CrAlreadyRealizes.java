@@ -1,4 +1,4 @@
-// $Id: CrAlreadyRealizes.java,v 1.8 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrAlreadyRealizes.java,v 1.9 2004/11/01 19:55:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrAlreadyRealizes.java
 // Classes: CrAlreadyRealizes.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAlreadyRealizes.java,v 1.8 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrAlreadyRealizes.java,v 1.9 2004/11/01 19:55:06 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,7 +38,7 @@ import java.util.Set;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CoreHelper;
 
 /** Critic to detect whether a class implements unneedded realizations through
  *  inheritance.

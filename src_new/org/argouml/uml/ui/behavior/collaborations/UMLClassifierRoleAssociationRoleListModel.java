@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.15 2004/10/13 05:52:23 linus Exp $
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.16 2004/11/01 19:55:09 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,9 @@ import java.util.List;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
-import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
-import org.argouml.model.uml.foundation.core.CoreHelper;
+import org.argouml.model.uml.CollaborationsFactory;
+import org.argouml.model.uml.CollaborationsHelper;
+import org.argouml.model.uml.CoreHelper;
 import org.argouml.uml.ui.UMLConnectionListModel;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
 import org.tigris.gef.graph.MutableGraphModel;
