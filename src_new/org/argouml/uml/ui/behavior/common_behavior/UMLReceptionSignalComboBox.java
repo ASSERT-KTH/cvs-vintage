@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBox.java,v 1.5 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: UMLReceptionSignalComboBox.java,v 1.6 2004/08/02 09:03:33 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class UMLReceptionSignalComboBox extends UMLComboBox2 {
         Object o = getModel().getElementAt(getSelectedIndex());
         Object signal = /*(MSignal)*/ o;
         Object reception = /*(MReception)*/ getTarget();
-        if (signal != ModelFacade.getSignal(signal)) {
+        if (signal != ModelFacade.getSignal(reception)) {
             ModelFacade.setSignal(reception, signal);
         }
     }
