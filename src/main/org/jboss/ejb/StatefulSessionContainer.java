@@ -34,7 +34,7 @@ import org.jboss.invocation.MarshalledInvocation;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  *
  * <p><b>Revisions</b>
  * <p><b>20010704</b>
@@ -353,7 +353,6 @@ public class StatefulSessionContainer
    public Object invokeHome(Invocation mi)
       throws Exception
    {
-      
       return getInterceptor().invokeHome(mi);
    }
    
@@ -514,8 +513,6 @@ public class StatefulSessionContainer
       // Adrian Brock: This should go away when we don't support EJB1x
       boolean isEJB1x = metaData.getApplicationMetaData().isEJB1x();
 
-      boolean infoEnabled = log.isInfoEnabled();
-
       Map map = new HashMap();
       
       if (homeInterface != null)
@@ -527,17 +524,18 @@ public class StatefulSessionContainer
             try
             {
                // Implemented by container
-               if (isEJB1x == false && m[i].getName().startsWith("create"))
-                  map.put(m[i], getClass().getMethod("createHome", new Class[] 
-                        { Invocation.class }));
-               else
-                  map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[]
-                        { Invocation.class }));
+               if (isEJB1x == false && m[i].getName().startsWith("create")) {
+                  map.put(m[i], getClass().getMethod("createHome",
+                                                     new Class[] { Invocation.class }));
+               }
+               else {
+                  map.put(m[i], getClass().getMethod(m[i].getName()+"Home",
+                                                     new Class[] { Invocation.class }));
+               }
             }
             catch (NoSuchMethodException e)
             {
-               if (infoEnabled)
-                  log.info(m[i].getName() + " in bean has not been mapped");
+               log.info(m[i].getName() + " in bean has not been mapped");
             }
          }
       }
@@ -550,17 +548,18 @@ public class StatefulSessionContainer
             try
             {
                // Implemented by container
-               if (isEJB1x == false && m[i].getName().startsWith("create"))
-                  map.put(m[i], getClass().getMethod("createLocalHome", new Class[] 
-                        { Invocation.class }));
-               else
-                  map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", new Class[]
-                     { Invocation.class }));
+               if (isEJB1x == false && m[i].getName().startsWith("create")) {
+                  map.put(m[i], getClass().getMethod("createLocalHome",
+                                                     new Class[] { Invocation.class }));
+               }
+               else {
+                  map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome",
+                                                     new Class[] { Invocation.class }));
+               }
             }
             catch (NoSuchMethodException e)
             {
-               if (infoEnabled)
-                  log.info(m[i].getName() + " in bean has not been mapped");
+               log.info(m[i].getName() + " in bean has not been mapped");
             }
          }
       }
@@ -575,7 +574,7 @@ public class StatefulSessionContainer
          
          //Map it in the home stuff
          map.put(getEJBObjectMethod, getClass().getMethod("getEJBObject",
-               new Class[] {Invocation.class}));
+                                                          new Class[] {Invocation.class}));
       }
       catch (NoSuchMethodException e)
       {
@@ -675,6 +674,7 @@ public class StatefulSessionContainer
       public Object invokeHome(Invocation mi) throws Exception
       {
          boolean trace = log.isTraceEnabled();
+         
          if (trace)
          {
             log.trace("HOMEMETHOD coming in ");

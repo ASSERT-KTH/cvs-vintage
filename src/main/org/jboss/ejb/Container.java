@@ -98,7 +98,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.90 $
+ * @version $Revision: 1.91 $
  * 
  * <p><b>Revisions:</b>
  *
@@ -1169,6 +1169,8 @@ public abstract class Container
    protected abstract class AbstractContainerInterceptor
       implements Interceptor
    {
+      protected final Logger log = Logger.getLogger(this.getClass());
+      
       public void setContainer(Container con) {}
       
       public void setNext(Interceptor interceptor) {}
