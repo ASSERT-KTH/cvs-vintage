@@ -19,7 +19,8 @@ import javax.jms.ServerSessionPool;
  * Created: Fri Dec 22 09:47:41 2000
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
- * @version   $Revision: 1.6 $
+ * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
+ * @version   $Revision: 1.7 $
  */
 public class StdServerSessionPoolFactory
        implements ServerSessionPoolFactory, Serializable
@@ -70,9 +71,9 @@ public class StdServerSessionPoolFactory
     * @throws JMSException
     * @exception javax.jms.JMSException  Description of Exception
     */
-   public javax.jms.ServerSessionPool getServerSessionPool(javax.jms.Connection con, int maxSession, boolean isTransacted, int ack, boolean isContainerManaged, javax.jms.MessageListener listener) throws javax.jms.JMSException
+   public javax.jms.ServerSessionPool getServerSessionPool(javax.jms.Connection con, int maxSession, boolean isTransacted, int ack, boolean useLocalTX, javax.jms.MessageListener listener) throws javax.jms.JMSException
    {
-      ServerSessionPool pool = (ServerSessionPool)new StdServerSessionPool(con, isTransacted, ack, isContainerManaged, listener, maxSession);
+      ServerSessionPool pool = (ServerSessionPool)new StdServerSessionPool(con, isTransacted, ack, useLocalTX, listener, maxSession);
       return pool;
    }
 }

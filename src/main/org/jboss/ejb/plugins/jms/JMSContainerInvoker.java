@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.29 $
+ * @version   $Revision: 1.30 $
  */
 public class JMSContainerInvoker
        implements ContainerInvoker, XmlLoadable
@@ -114,6 +114,10 @@ public class JMSContainerInvoker
     * Description of the Field
     */
    protected boolean isContainerManagedTx;
+   /**
+    * Description of the Field
+    */
+   protected boolean isNotSupportedTx;
    /**
     * Description of the Field
     */
@@ -398,7 +402,11 @@ public class JMSContainerInvoker
       // Is container managed?
       isContainerManagedTx = config.isContainerManagedTx();
       acknowledgeMode = config.getAcknowledgeMode();
-
+      isNotSupportedTx = 
+         config.getMethodTransactionType("onMessage", 
+         new Class[]{Message.class}, 
+         false) == MetaData.TX_NOT_SUPPORTED; 
+                 
       // Get configuration data from jboss.xml
       String destinationJNDI = config.getDestinationJndiName();
       String user = config.getUser();
@@ -453,9 +461,8 @@ public class JMSContainerInvoker
          // set up the server session pool
          pool = createSessionPool(tConnection,
                maxPoolSize,
-               true,
-         // tx
-         acknowledgeMode,
+               true, // tx   
+               acknowledgeMode ,
                new MessageListenerImpl(this));
 
          // To be no-durable or durable
@@ -750,7 +757,7 @@ public class JMSContainerInvoker
 
          // the create the pool
          pool = factory.getServerSessionPool
-               (connection, maxSession, isTransacted, ack, isContainerManagedTx, listener);
+               (connection, maxSession, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
       }
       finally
       {

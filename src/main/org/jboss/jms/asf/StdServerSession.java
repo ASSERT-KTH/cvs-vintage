@@ -30,7 +30,8 @@ import org.jboss.tm.TransactionManagerService;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.8 $
+ * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
+ * @version   $Revision: 1.9 $
  */
 public class StdServerSession
        implements Runnable, ServerSession
@@ -68,7 +69,7 @@ public class StdServerSession
     * this allows us to get around the TX timeout problem when you have
     * extensive message processing.
     */
-   private boolean useXAResouceDirectly;
+   private boolean useLocalTX;
 
    /**
     * Create a <tt>StdServerSession</tt> .
@@ -76,14 +77,14 @@ public class StdServerSession
     * @param pool              The server session pool which we belong to.
     * @param session           Our session resource.
     * @param xaSession         Our XA session resource.
-    * @param containerManaged  Description of Parameter
+    * @param useLocalTX       Will this session be used in a global TX (we can optimize with 1 phase commit)
     * @throws JMSException     Transation manager was not found.
     * @exception JMSException  Description of Exception
     */
    StdServerSession(final StdServerSessionPool pool,
          final Session session,
          final XASession xaSession,
-         final boolean containerManaged)
+         final boolean useLocalTX)
           throws JMSException
    {
       // assert pool != null
@@ -95,15 +96,15 @@ public class StdServerSession
 
       try
       {
-         this.useXAResouceDirectly = !containerManaged && Class.forName("org.jboss.mq.SpySession").isAssignableFrom(session.getClass());
+         this.useLocalTX = useLocalTX && Class.forName("org.jboss.mq.SpySession").isAssignableFrom(session.getClass());
       }
       catch (ClassNotFoundException e)
       {
-         this.useXAResouceDirectly = false;
+         this.useLocalTX = false;
       }
 
-      log.debug("initializing (pool, session, xaSession, useXAResouceDirectly): " +
-            pool + ", " + session + ", " + xaSession + ", " + useXAResouceDirectly);
+      log.debug("initializing (pool, session, xaSession, useLocalTX): " +
+            pool + ", " + session + ", " + xaSession + ", " + useLocalTX);
 
       InitialContext ctx = null;
       try
@@ -167,18 +168,18 @@ public class StdServerSession
    {
       log.debug("running...");
 
-      log.info("running (pool, session, xaSession, useXAResouceDirectly): " +
-            ", " + session + ", " + xaSession + ", " + useXAResouceDirectly);
+      log.info("running (pool, session, xaSession, useLocalTX): " +
+            ", " + session + ", " + xaSession + ", " + useLocalTX);
 
-      // Used if run with useXAResouceDirectly if true
+      // Used if run with useLocalTX if true
       JBossMQTXInterface jbossMQTXInterface = null;
 
-      // Used if run with useXAResouceDirectly if false
+      // Used if run with useLocalTX if false
       Transaction trans = null;
       try
       {
 
-         if (useXAResouceDirectly)
+         if (useLocalTX)
          {
             // Use JBossMQ One Phase Commit to commit the TX
             jbossMQTXInterface = new JBossMQTXInterface(session);
@@ -211,7 +212,7 @@ public class StdServerSession
       {
          log.error("session failed to run; setting rollback only", e);
 
-         if (useXAResouceDirectly)
+         if (useLocalTX)
          {
             // Use JBossMQ One Phase Commit to commit the TX
             jbossMQTXInterface.setRollbackOnly();
@@ -236,7 +237,7 @@ public class StdServerSession
       {
          try
          {
-            if (useXAResouceDirectly)
+            if (useLocalTX)
             {
                // Use JBossMQ One Phase Commit to commit the TX
                jbossMQTXInterface.endTX();

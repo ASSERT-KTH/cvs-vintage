@@ -17,7 +17,8 @@ import javax.jms.ServerSessionPool;
  * Created: Wed Nov 29 15:55:21 2000
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
- * @version   $Revision: 1.3 $
+ * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
+ * @version   $Revision: 1.4 $
  */
 public interface ServerSessionPoolFactory
 {
@@ -43,7 +44,7 @@ public interface ServerSessionPoolFactory
     * @param isTransacted
     * @param ack
     * @param listener
-    * @param isContainerManaged  Description of Parameter
+    * @param useLocalTX  
     * @return                    A new pool.
     * @throws JMSException
     */
@@ -51,7 +52,7 @@ public interface ServerSessionPoolFactory
          int maxSession,
          boolean isTransacted,
          int ack,
-         boolean isContainerManaged,
+         boolean useLocalTX,
          MessageListener listener)
           throws JMSException;
 }

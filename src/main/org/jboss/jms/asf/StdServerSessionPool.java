@@ -36,7 +36,8 @@ import org.apache.log4j.Category;
  * Created: Thu Dec 7 17:02:03 2000
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
- * @version   $Revision: 1.13 $
+ * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
+ * @version   $Revision: 1.14 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -70,7 +71,7 @@ public class StdServerSessionPool
    /**
     * Is the bean container managed?
     */
-   private boolean containerManaged;
+   private boolean useLocalTX;
 
    /**
     * True if this is a transacted session.
@@ -116,13 +117,13 @@ public class StdServerSessionPool
     * @param ack
     * @param listener
     * @param maxSession
-    * @param isContainerManaged  Description of Parameter
+    * @param isuseLocalTX  Description of Parameter
     * @exception JMSException    Description of Exception
     */
    public StdServerSessionPool(final Connection con,
          final boolean transacted,
          final int ack,
-         final boolean isContainerManaged,
+         final boolean useLocalTX,
          final MessageListener listener,
          final int maxSession)
           throws JMSException
@@ -133,7 +134,7 @@ public class StdServerSessionPool
       this.transacted = transacted;
       this.poolSize = maxSession;
       this.sessionPool = new ArrayList(maxSession);
-      this.containerManaged = isContainerManaged;
+      this.useLocalTX = useLocalTX;
 
       // setup the worker pool
       executor = new PooledExecutor(poolSize);
@@ -365,7 +366,7 @@ public class StdServerSessionPool
          ses.setMessageListener(listener);
 
          // create the server session and add it to the pool
-         ServerSession serverSession = new StdServerSession(this, ses, xaSes, containerManaged);
+         ServerSession serverSession = new StdServerSession(this, ses, xaSes, useLocalTX);
          sessionPool.add(serverSession);
          numServerSessions++;
          log.debug("added server session to the pool: " + serverSession);
