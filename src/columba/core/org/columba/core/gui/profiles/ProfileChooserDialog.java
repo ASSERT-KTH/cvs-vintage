@@ -156,14 +156,13 @@ public class ProfileChooserDialog extends JDialog
 		eastPanel.add(editButton);
 
 		/*
-		Component strut2 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut2, c);
-		eastPanel.add(strut2);
+		 * Component strut2 = Box.createRigidArea(new Dimension(30, 5));
+		 * gridBagLayout.setConstraints(strut2, c); eastPanel.add(strut2);
+		 * 
+		 * gridBagLayout.setConstraints(defaultButton, c);
+		 * eastPanel.add(defaultButton);
+		 */
 
-		gridBagLayout.setConstraints(defaultButton, c);
-		eastPanel.add(defaultButton);
-		*/
-		
 		glue = Box.createVerticalGlue();
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0;
@@ -214,13 +213,12 @@ public class ProfileChooserDialog extends JDialog
 		editButton.setEnabled(false);
 
 		/*
-		// TODO: i18n
-		defaultButton = new ButtonWithMnemonic("Set &Default...");
-		defaultButton.setActionCommand("DEFAULT");
-		defaultButton.addActionListener(this);
-		defaultButton.setEnabled(false);
-		*/
-		
+		 * // TODO: i18n defaultButton = new ButtonWithMnemonic("Set
+		 * &Default..."); defaultButton.setActionCommand("DEFAULT");
+		 * defaultButton.addActionListener(this);
+		 * defaultButton.setEnabled(false);
+		 */
+
 		nameLabel = new JLabel("Choose Profile:");
 
 		checkBox = new JCheckBox("Don't ask on next startup.");
@@ -289,15 +287,16 @@ public class ProfileChooserDialog extends JDialog
 
 			String inputValue = JOptionPane.showInputDialog(
 					"Enter Profile Name:", selection);
-			
-			if ( inputValue == null ) return;
-			
+
+			if (inputValue == null)
+				return;
+
 			// rename profile in profiles.xml
 			ProfileManager.getInstance().renameProfile(selection, inputValue);
-			
+
 			// modify listmodel
 			model.setElementAt(inputValue, model.indexOf(selection));
-			
+
 			selection = inputValue;
 		}
 	}
@@ -310,11 +309,18 @@ public class ProfileChooserDialog extends JDialog
 	public void valueChanged(ListSelectionEvent e) {
 		boolean enabled = !list.isSelectionEmpty();
 		addButton.setEnabled(enabled);
-		editButton.setEnabled(enabled);
+
 		okButton.setEnabled(enabled);
 		//defaultButton.setEnabled(enabled);
 
 		selection = (String) list.getSelectedValue();
+
+		// user's can't edit default account
+		if ((selection != null) && (!selection.equals("Default"))) {
+			editButton.setEnabled(true);
+		} else {
+			editButton.setEnabled(false);
+		}
 	}
 
 	/**
