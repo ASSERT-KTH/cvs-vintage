@@ -1,298 +1,339 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
-"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+    "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
+
+
 <html>
+ <head>
+  <title>Scarab</title>
+  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
 
-<head>
-	<title>Data attribute (3.0.2.0)</title>
-	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
-	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
-</head>
+  <style type="text/css">
+  @import url(../csi/style/ns4_toxins.css);
+  </style>
 
-<body>
-<form action="#" method="get">
-
-	<!-- SourceCast -->
-	<div id="banner">
-		<table border="0" cellspacing="12" cellpadding="0" width="100%">
-		<tr>
-		
-		<td>
-		<div align="right" id="loginstatus">
-			<div>
-				Logged in as: <strong class="username">User XX</strong>
-			</div>
-			<div>
-				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
-			</div>
-		</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-
-	<!-- SourceCast -->
-	<div id="modulenav">
-		<table border="0" cellspacing="0" cellpadding="8" width="100%">
-		<tr>
-		
-		<td>
-			<strong><small><a href="#">select module</a>&nbsp;&nbsp;|&nbsp;&nbsp;current module: <a href="#">Module X</a></small></strong>
-			
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- Structural Elements -->
-<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
- <tr valign="top">
-<td id="leftcol" width="20%">
-<!-- Structural Elements -->
-
-
-	
-	<!-- Structural Elements -->
-<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
- <tr valign="top">
-<td id="leftcol" width="20%">
-<!-- Structural Elements -->
-
-
-<div id="navcolumn">
-
-<div><strong><small>Artifact types</small></strong>
-
-			<div><strong><small>Index</small></strong></div>
-			<div><strong><small><a href="#">Defect</a></small></strong></div>
-			<div><small><a href="#">Enhancement</a></small></div>
-			<div><small><a href="#">Feature</a></small></div>
-			<div><small><a href="#">Patch</a></small></div>
-			<div><small><a href="#">Task</a></small></div>
-
-</div>
-
-
-   <div><a href="#"><strong><small>Admin functions</small></strong></a>	
-<div><small><a href="#">Manage artifact types</a></small></div>
-<div><small><strong><a href="#">Customize "enter artifact"</a></strong></small></div>
-<div><small><a href="#">Global attributes</a></small></div>
-</div>
-
-
-	<!-- SourceCast -->
-
-	
-	<!-- SourceCast -->
-	<div id="helptext">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-		<th>How do I...?</th>
-		</tr>
-		<tr>
-		<td>
-			<div> 
-				<a href="#">[Go to help index]</a>
-			</div>
-			<div> 
-				<a href="#">Use this page</a>...
-			</div>
-			<div>
-				<a href="#">Learn about a project</a>...
-			</div>
-			<div>
-				<a href="#">Join a project</a>...
-			</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-<!-- Structural Elements -->
-</td>
-<td width="100%" id="bodycol">
-<!-- Structural Elements -->
-	
-	<!-- Scarab - App -->
-<div id="topmodule">
-  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+ </head>
+<body marginwidth="0" marginheight="0">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
   <tr>
-   <td nowrap="nowrap">
-    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post"><input type="text" name="id" size="15" maxlength="255" /><input type="hidden" name="nextTemplate" value="ViewIssue.vm" />&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<select class="select">
-        <option>Select query</option>
-        <option>---------------</option>
-        <option>Advanced</option>
-        <option>Custom</option>
-        <option>Most recent</option>
-        <option>---------------</option>
-        <option>Saved queries (personal)</option>
-        <option>&nbsp;&nbsp;My issues</option>
-        <option>Saved queries (project)</option>
-        <option>&nbsp;&nbsp;Dev issues</option>
-        <option>&nbsp;&nbsp;QA issues</option>
-        </select>&nbsp;<input type="submit" value="go" /></form></td>
+  <td>
+  <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Index.vm"><img src="../csi/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+      <div>
+    Logged in: <strong class="username">Scarab Administrator</strong>
+   </div>
+      <div>
+        <a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/Login.vm/action/Logout">Logout</a>
+       </div>
+  </div>
+  </td>
   </tr>
   </table>
+ </div>
+
+<div class="modbar">
+  <small><strong>Current Module:
+   <a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/SelectModule.vm">Pacman JVM &gt; Source</a>
+  </strong></small>
 </div>
-	<!-- Scarab - App -->
-	
-	<!-- Scarab - App -->
-	<div class="app" id="div3-0-2-0">
-		<h2>Add / edit attribute (3.0.2.0)</h2>
 
-		<p class="functnbar"><input type="submit" value="submit changes" />&#160;<input type="submit" value="done" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="cancel" /></p>
+<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
+ <tr valign="top">
+  <td id="leftcol" width="20%">
+  <div id="navcolumn">
+<div><strong>
+    <a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/SelectModule.vm">Select Module</a>
+</strong></div>
 
-		<p><a href="#">&laquo;</a>&nbsp;<a href="#">prev</a> | <a href="#">next</a>&nbsp;<a href="#">&raquo;</a></p>
+<div><strong>
+<a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/SelectArtifactType.vm">Issue types</a>
+</strong>
+
+
+          <div><small><strong>Defect</strong></small>
+    <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/entry%2CWizard1.vm">Enter new</a></small></div>
+    <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/QueryList.vm">Saved queries</a></small></div>
+    <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/TemplateList.vm">Template list</a></small></div>
+    <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/reports%2CStep1.vm">New report</a></small></div>
+    </div>
+            <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/entry%2CWizard1.vm/action/SelectIssueType/nexttemplate/entry%2CWizard1.vm/newissuetype/3">Patch</a></small></div>
+            <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/entry%2CWizard1.vm/action/SelectIssueType/nexttemplate/entry%2CWizard1.vm/newissuetype/5">Task</a></small></div>
+            <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/entry%2CWizard1.vm/action/SelectIssueType/nexttemplate/entry%2CWizard1.vm/newissuetype/7">Feature</a></small></div>
+            <div><small><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/entry%2CWizard1.vm/action/SelectIssueType/nexttemplate/entry%2CWizard1.vm/newissuetype/9">Enhancement</a></small></div>
+  
+
+</div>
+
+
+
+<div>
+<strong><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/admin%2CAdminIndex.vm">Admin</a></strong>
+<small>
+
+
+      <div><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/template/admin%2CGlobalArtifactTypeShow.vm/curadminmenu/3">Global Data</a>
+      </div>
+
+
+
+      <div><strong>Modules</strong>
+     <div><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/admin%2CManageArtifactTypes.vm">Manage Issue Types</a></div>
+ <div><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/admin%2CManageModules.vm">Manage Modules</a></div>
+ <div><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/admin%2CApproval.vm">Approve</a></div>
+
+      </div>
+
+
+
+      <div><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/template/admin%2CManageRoles.vm/curadminmenu/2">Roles</a>
+      </div>
+
+
+
+      <div><a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/template/admin%2CManageUserSearch.vm/curadminmenu/1">Users</a>
+      </div>
+
+
+</small>
+</div>
+
+
+  </div>
+
+
+
+ </td>
+ <td width="100%" id="bodycol">
+ <!-- Scarab - App -->
+
+<div id="topmodule">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <div id="navsearch">
+
+<form action="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/IssueList.vm/action/Search" method="post">
+ <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
+    <input type="text" name="id" size="15" maxlength="255" tabindex="1"/>&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" /></form>&nbsp;&nbsp;&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;<form action="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/Index.vm/action/Search" method="post">
+<input type="hidden" name="nextTemplate" value="Index.vm" />
+  <select name="go" tabindex="3">
+    <option value="AdvancedQuery.vm">Select query...</option>
+    <option value="AdvancedQuery.vm">&#160;Advanced</option>
+    <option value="Search.vm">&#160;Custom</option> </select>
+
+  <input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" />
+</form>
+
+    </div>
+   </td>
+  </tr>
+ </table>
+</div>
+
+
+
+
+<div class="app" id="div3-0-2-0">
+<h2>Edit Attribute X (3.0.2.0) (Menu)</h2>
+
+<form action="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/admin%2CModuleAttributeEdit.vm" method="post">
+<input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
+<input type="hidden" name="otherTemplate" value="admin,AttributeOptionSelect.vm" />
+<input type="hidden" name="att_0id" value="6" />
+<input type="hidden" name="attributeid" value="6" />
+<input type="hidden" name="issueTypeId" value="1">
+
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
 		
-		<h3>General info</h3>
+<h3>General info</h3>
 		
 		<div class="axial">
 			<table width="100%" cellpadding="3" cellspacing="2" border="1">
 			<tr>
 			<th width="120">input type</th>		
-			<td class="b"><select>
+			<td><select>
 			<option>
-			select
-			</option>		
-			<option>
-			select multiple
-			</option>		
-			<option>
-			input: radio
+			Menu (pull-down or select box)
 			</option>		
 			<option>
 			input: text
-			</option>		
+			</option>				
+			<option>
+			textarea
+			</option>
 			<option>
 			input: checkbox
 			</option>		
 			<option>
-			textarea
+			input: radio
 			</option>
 			</select></td>
 			</tr>
 			
 			<tr>
 			<th width="120">attribute name</th>		
-			<td class="b"><input type="text" size="53" /></td>
+			<td><input type="text" size="53" /></td>
 			</tr>
 			
 			<tr>
 			<th width="120">attribute description</th>		
-			<td class="b"><textarea rows="4" cols="40"></textarea></td>
+			<td><textarea rows="4" cols="40"></textarea></td>
 			</tr>
 			
 			<tr>
 			<th width="120">creation date</th>		
-			<td class="b">3 may 2001</td>
+			<td>3 may 2001</td>
+			</tr>
+			</table>
+		</div>
+
+<h3>Menu: view / behavior options</h3>
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">Menu type</th>		
+			<td>
+			<select name="#">
+<option value="1" >Pull-down</option>
+<option value="2" >Select multiple</option>
+</select>
+			</td>
+			</tr>
+			
+			<tr>
+			<th width="120">Nesting display style</th>		
+			<td>
+			
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			
+			<td><img src="../csi/images/pc_simple.gif" alt="" width="75" height="60" border="0" /><div><input type="radio" name="x" value="x" checked />&nbsp;<small>Flush</small></div></td>
+			
+			<td><img src="../csi/images/pc_pcpc.gif" alt="" width="75" height="60" border="0" /><div><input type="radio" name="x" value="x" />&nbsp;<small>Nested</small></div></td>
+			
+			<td><img src="../csi/images/pc_thread.gif" alt="" width="181" height="60" border="0" /><div><input type="radio" name="x" value="x" />&nbsp;<small>Threaded (requires javascript)</small></div></td>			
+			</tr>
+			</table>
+		
+
+			</td>
 			</tr>
 			</table>
 		</div>
 		
-		<h3>List options</h3>
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap">&#160;</th>		
-		<th>list option</th>		
-		<th>sequence #</th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>		
-		<td><input type="text" size="25" value="list option x" /></td>		
-		<td><select>
-		<option>1</option>
-		</select></td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>		
-		<td><input type="text" size="25" value="list option y" /></td>		
-		<td><select>
-		<option>2</option>
-		</select></td>
-		</tr>
-		
-		<tr class="a">
-		<td colspan="3">
-			<div class="datatablechild">
-				<table width="100%" border="1" cellspacing="2" cellpadding="3">
-				<tr>
-				<td>-&#160;<input type="checkbox" /></td>		
-				<td><input type="text" size="25" value="list option y.1" />&#160;(child)</td>		
-				<td><select>
-				<option>1</option>
-				</select></td>
-				</tr>
-				
-				<tr>
-				<td>-&#160;<input type="checkbox" /></td>		
-				<td><input type="text" size="25" value="list option y.2" />&#160;(child)</td>		
-				<td><select>
-				<option>2</option>
-				</select></td>
-				</tr>
-				
-				<tr>
-				<td>-&#160;<input type="checkbox" /></td>
-				<td><input type="text" size="25" value="list option y.3" />&#160;(child)</td>
-				<td><select>
-				<option>3</option>
-				</select></td>
-				</tr>
-				
-				<tr>
-				<td>-&#160;<input type="checkbox" /></td>
-				<td><input type="text" size="25" value="list option y.4" />&#160;(child)</td>
-				<td><select>
-				<option>4</option>
-				</select></td>
-				</tr>
-				</table>
-			</div>
-		</td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>		
-		<td><input type="text" size="25" value="list option z" /></td>
-		<td><select>
-		<option>3</option>
-		</select></td>
-		</tr>
-		</table>
-				
-		<p><input type="submit" value="resort" /></p>
-		
-		<p><input type="submit" value="add option" />&#160;<input type="submit" value="add child option" />&#160;<input type="submit" value="delete selected options" /></p>
-		
-		<p class="functnbar2"><input type="submit" value="submit changes" />&#160;<input type="submit" value="done" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="cancel" /></p>	</div>
-	<!-- Scarab - App -->
+<h3>Attribute Options</h3>
 
-<!-- Structural Elements -->
-</td>
+<table width="100%" border="1" cellspacing="2" cellpadding="2">
+<tr>
+ <th>&#160;</th>
+ <th>Parent attribute option</th>
+ <th>Display Name</th>
+ <th>Active</th>
+ <th>Preferred order</th>
+ <th>Weight</th>
 </tr>
-</table>
-<!-- Structural Elements -->
 
-	<!-- SourceCast -->
-	<div id="footer">
-		<p>
-		<a href="#">Domain Home</a> |
-		<a href="#">Help</a> | 
-		<a href="#">Site FAQ</a> |
-		<a href="#">Feedback</a>
-		</p>
-	</div>
-	<!-- SourceCast -->
+
+         <tr class="a">
+      <td><input type="checkbox" name="delete_24"></td>
+     <td>
+<select name="#" size="1">
+<option value="1" >-</option>
+<option value="1" >Root</option>
+</select>
+</td>
+     <td><input type="text" size="25" name="rmo5:1:24name" value="All" /></td>
+     <td>
+        <input type="checkbox" name="rmo5:1:24active" value="true" checked="checked" />
+<input type="hidden" name="rmo5:1:24active_vifa_" value="false" />
+     </td>
+     <td>
+        <select name="rmo5:1:24order" size="1">
+<option value="1" selected="selected" >1</option>
+<option value="2" >2</option>
+<option value="3" >3</option>
+<option value="4" >4</option>
+</select>
+     </td>
+     <td>
+        <select name="rmo5:1:24weight" size="1">
+<option value="1" selected="selected" >1</option>
+<option value="2" >2</option>
+<option value="3" >3</option>
+<option value="4" >4</option>
+</select>
+     </td>
+    </tr>
+         <tr class="b">
+      <td><input type="checkbox" name="delete_24"></td>
+     <td>
+<select name="#" size="1">
+<option value="1" >Root</option>
+</select>
+</td>
+     <td><input type="text" size="25" name="rmo5:1:24name" value="" /></td>
+     <td>&nbsp;</td>
+     <td>
+        <select name="rmo5:1:24order" size="1">
+<option value="2" >2</option>
+<option value="3" >3</option>
+<option value="4" >4</option>
+</select>
+     </td>
+     <td>
+        <select name="rmo5:1:24weight" size="1">
+<option value="2" >2</option>
+<option value="3" >3</option>
+<option value="4" >4</option>
+</select>
+     </td>
+    </tr>
+
+</table>
+
+<div class="functnbar3">
+<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="Copy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;
+<input type="submit" value="Resort" name="eventSubmit_doSave" />
+</div>
+
+<div class="functnbar2">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+</div>
+
+
 
 </form>
+</div>
+
+
+<!-- Structural Elements -->
+ </td>
+ </tr>
+</table>
+<!-- Structural Elements -->
+<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2001-2002 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+    <a href="/scarab/servlet/scarab/curmodule/5/curissuetype/1/curadminmenu/4/template/Login.vm/action/Logout">Logout</a>
+
+</td></tr>
+</table>
+</div>
+
 </body>
 </html>
-
-
-
