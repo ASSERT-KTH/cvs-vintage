@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entactiv.xml,v 1.13 2003/10/05 09:02:42 linus Exp $ -->
+<!-- $Id: ref_entactiv.xml,v 1.14 2003/10/12 09:33:33 linus Exp $ -->
 
 <!--
 
@@ -289,7 +289,6 @@ an exit action and a Do activity are not permitted for action states.
             </imageobject></inlinemediaobject></guiicon> icon. If a
               stereotype has been selected, this will navigate to the
               stereotype property panel (see
-<!-- MVW: Changed reference to 14.4 instead of 16.4. -->
               <xref linkend="s1.ref.stereotype"/>).</para></listitem>
         </varlistentry>
 
