@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE project SYSTEM "../../ant.dtd">
+
 
 <project name="columba" default="compile">
 	<property name="currsrc" value="${src}"/>

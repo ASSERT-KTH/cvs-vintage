@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE project SYSTEM "./ant.dtd">
 
 <project name="columba" default="build">
 <description>
@@ -111,7 +110,7 @@ Have fun ... your Columba Team!
 	</target>
 
 	<!-- compile the classes -->
-	<target name="compile" depends="init, copy-resources, validate-xml-resources"
+	<target name="compile" depends="init, copy-resources"
 	description="compiles columba. Here are the other buildfiles in the subdirectories needed">
 		<echo message="the classes are going to ${dest} "/>
 		<property name="java-src-dir" value="${src}\src\addressbook\core:${src}\src\addressbook\independent:${src}\src\columba\core:${src}\src\columba\test:${src}\src\mail\core:${src}\src\mail\independent:${src}\src\mail\test"/>
