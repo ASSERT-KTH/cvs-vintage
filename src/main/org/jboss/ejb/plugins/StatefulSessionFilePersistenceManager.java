@@ -63,7 +63,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -209,7 +209,11 @@ public class StatefulSessionFilePersistenceManager
       ((StatefulSessionContainer)con).getInstanceCache().insert(ctx);
 
       // Create EJBObject
-      ctx.setEJBObject(con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
+      if (con.getContainerInvoker() != null)
+         ctx.setEJBObject(con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
+      // Create EJBLocalObject
+      if (con.getLocalHomeClass() != null)
+         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getStatefulSessionEJBLocalObject(ctx.getId()));
    }
 
    public void activateSession(StatefulSessionEnterpriseContext ctx)
