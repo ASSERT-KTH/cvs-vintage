@@ -109,8 +109,8 @@ public class Request {
     // -------------------- properties --------------------
 
     protected int serverPort;
-    protected String remoteAddr;
-    protected String remoteHost;
+    //    protected String remoteAddr;
+    //    protected String remoteHost;
     protected String localHost;
 
     protected int state;
@@ -130,6 +130,10 @@ public class Request {
     protected MessageBytes servletPathMB=new MessageBytes();
     protected MessageBytes pathInfoMB=new MessageBytes();
 
+    // remote address/host
+    protected MessageBytes remoteAddrMB=new MessageBytes();
+    protected MessageBytes remoteHostMB=new MessageBytes();
+    
     // GS, used by the load balancing layer in the Web Servers
     // jvmRoute == the name of the JVM inside the plugin.
     protected String jvmRoute;
@@ -139,7 +143,6 @@ public class Request {
 
     // Processed information ( redundant ! )
     protected Parameters params=new Parameters();
-    //    protected Hashtable parametersH = new Hashtable();
     protected boolean didReadFormData=false;
 
     protected int contentLength = -1;
@@ -177,9 +180,6 @@ public class Request {
     Container container;
 
     Cookies scookies;
-    //    ServerCookie scookies[]=new ServerCookie[4];
-    // -1 = cookies not processed yet
-    //    int cookieCount=-1;
 
     // sub-request support 
     Request top;
@@ -301,20 +301,12 @@ public class Request {
 	this.serverPort=serverPort;
     }
 
-    public String getRemoteAddr() {
-        return remoteAddr;
+    public MessageBytes remoteAddr() {
+	return remoteAddrMB;
     }
 
-    public void setRemoteAddr( String remoteAddr ) {
-	this.remoteAddr=remoteAddr;
-    }
-
-    public String getRemoteHost() {
-	return remoteHost;
-    }
-
-    public void setRemoteHost(String remoteHost) {
-	this.remoteHost=remoteHost;
+    public MessageBytes remoteHost() {
+	return remoteHostMB;
     }
 
     public String getLocalHost() {
@@ -873,6 +865,8 @@ public class Request {
 	queryMB.recycle();
 	methodMB.recycle();
 	protoMB.recycle();
+	remoteAddrMB.recycle();
+	remoteHostMB.recycle();
 
 	// XXX Do we need such defaults ?
         schemeMB.setString("http");
@@ -880,7 +874,7 @@ public class Request {
         uriMB.setString("/");
         queryMB.setString("");
         protoMB.setString("HTTP/1.0");
-        remoteAddr="127.0.0.1";
-        remoteHost="localhost";
+        remoteAddrMB.setString("127.0.0.1");
+        remoteHostMB.setString("localhost");
     }
 }
