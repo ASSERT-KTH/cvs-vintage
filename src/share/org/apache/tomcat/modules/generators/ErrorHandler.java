@@ -173,7 +173,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	    errorServlet=getHandlerForPath( cm, ctx, errorPath );
 
 	    String cpath=ctx.getPath();
-	    if( cpath="/")  cpath="";
+	    if( "/".equals(cpath))  cpath="";
 	    
 	    // Make sure Jsps will work - needed if the error page is a jsp
 	    if ( null!=errorPath && errorPath.startsWith("/") ) {
@@ -290,7 +290,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	    errorServlet=getHandlerForPath( cm, ctx, errorPath );
 
 	    String cpath=ctx.getPath();
-	    if( cpath="/")  cpath="";
+	    if( "/".equals( cpath ))  cpath="";
 	    
 	    // Make sure Jsps will work - needed if the error page is a jsp
 	    if ( null!=errorPath && errorPath.startsWith("/") ) {
