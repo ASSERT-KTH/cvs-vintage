@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.17 2001/12/21 19:14:25 keith Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.18 2001/12/31 23:47:07 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -61,6 +61,27 @@ Bug No.  Description
          a mod_jk mapping for "/foo" as well as "/foo/*" to better match
          the servlet spec.
 
+         The default log handler was updated to specify autoFlush=true for
+         the PrintWriter so the output doesn't just go to a buffer.  Since
+         this logger is replaced a new logger set by the LogSetter module,
+         its reduction in efficiency won't affect normal operation.
+
+         ServerXmlReader now logs a warning if the modules.xml file isn't
+         found.
+
+         The internal test script, test-tomcat.xml, has been made more
+         configurable and the Admin app internal test page, test.jsp, has
+         been updated to make use of this.  With appropriate input settings,
+         the tests can be run against Tomcat standalone, Apache, IIS, and
+         Netscape (v4.1) without and failures.
+
+         Japanese resource strings were added and StaticInterceptor and
+         ErrorHandler modules were updated to take advantage of them.  In
+         addition, useAcceptLanguage and useCharset attributes were added
+         to the StaticInterceptor module to allow configuration of how
+         the locale and character set encoding of the directory listings
+         are derived.
+
 
 Server:
 
@@ -113,6 +134,12 @@ Bug No.  Description
 
 	 Do not return a body with 304 responses (forbidden by HTTP/1.x and
 	 confusing to NS < 6.x).
+
+         HttpServletRequestFacade now resets the reader when recycled.
+         Previously, calling getReader() on a recycled facade on which
+         getReader() was called, you would get the old reader rather than
+         a new reader for the current request.
+
 
 Configuration:
 
