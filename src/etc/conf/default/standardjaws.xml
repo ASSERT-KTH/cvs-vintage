@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.21 2001/10/15 18:40:24 starksm Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.22 2001/10/18 17:09:33 starksm Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -17,7 +17,7 @@
    <default-entity>
       <create-table>true</create-table>
       <remove-table>false</remove-table>
-      <tuned-updates>false</tuned-updates>
+      <tuned-updates>true</tuned-updates>
       <read-only>false</read-only>
       <time-out>300</time-out>
       <select-for-update>false</select-for-update>
