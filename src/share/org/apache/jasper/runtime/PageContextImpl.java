@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.3 1999/10/17 22:21:32 mandar Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/17 22:21:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.4 1999/11/13 00:14:14 akv Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/13 00:14:14 $
  *
  * ====================================================================
  * 
@@ -269,7 +269,21 @@ public class PageContextImpl extends PageContext {
     }
 
     public Object findAttribute(String name) {
-        return getAttribute(name, getAttributesScope(name));
+        Object o = attributes.get(name);
+        if (o != null)
+            return o;
+
+        o = request.getAttribute(name);
+        if (o != null)
+            return o;
+
+        if (session != null) {
+            o = session.getAttribute(name);
+            if (o != null)
+                return o;
+        }
+        
+        return context.getAttribute(name);
     }
 
 
