@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Generator.java,v 1.1 1999/10/09 00:20:36 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Generator.java,v 1.2 1999/10/20 11:22:53 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:53 $
  *
  * ====================================================================
  * 
@@ -71,5 +71,5 @@ import org.apache.jasper.JspEngineContext;
 public interface Generator {
     void generate (ServletWriter out, Class phase) throws JasperException;
     boolean generateCoordinates(Class phase);
-    void init(JspEngineContext ctxt);
+    void init(JspEngineContext ctxt) throws JasperException;
 }

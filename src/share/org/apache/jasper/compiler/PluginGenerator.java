@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.1 1999/10/09 00:20:37 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.2 1999/10/20 11:22:54 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:54 $
  *
  * ====================================================================
  * 
@@ -90,7 +90,7 @@ public class PluginGenerator
 	this.fallback = fallback;
     }
 
-    public void init(JspEngineContext ctxt) {
+    public void init(JspEngineContext ctxt) throws JasperException {
         ieClassId = ctxt.getOptions().ieClassId();
     }
     

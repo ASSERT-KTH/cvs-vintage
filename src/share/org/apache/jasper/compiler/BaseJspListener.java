@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.1 1999/10/09 00:20:34 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.2 1999/10/20 11:22:53 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:53 $
  *
  * ====================================================================
  * 
@@ -159,7 +159,7 @@ public class BaseJspListener implements ParseEventListener {
     }
 
     public void handleTagBegin(Mark start, Hashtable attrs, String prefix, 
-			       String shortTagName, TagLibraryInfo tli, 
+			       String shortTagName, TagLibraryInfoImpl tli, 
 			       TagInfo ti)
 	throws JasperException
     {
@@ -168,7 +168,7 @@ public class BaseJspListener implements ParseEventListener {
     
     public void handleTagEnd(Mark start, Mark stop, String prefix, 
 			     String shortTagName, Hashtable attrs, 
-                             TagLibraryInfo tli, TagInfo ti)
+                             TagLibraryInfoImpl tli, TagInfo ti)
 	throws JasperException
     {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.taglib"));

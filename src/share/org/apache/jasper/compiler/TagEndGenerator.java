@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.1 1999/10/09 00:20:38 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.2 1999/10/20 11:22:55 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:55 $
  *
  * ====================================================================
  * 
@@ -67,9 +67,12 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.BodyTag;
+
 
 /**
- * Custom tag support. Needs updating for JSP 1.1 PR 2.
+ * Custom tag support. 
  *
  * @author Anil K. Vijendran
  */
@@ -78,12 +81,12 @@ public class TagEndGenerator
     implements ServiceMethodPhase
 {
     String prefix, shortTagName;
-    TagLibraryInfo tli;
+    TagLibraryInfoImpl tli;
     TagInfo ti;
     Hashtable attrs;
 
     public TagEndGenerator(String prefix, String shortTagName, 
-                           Hashtable attrs, TagLibraryInfo tli, 
+                           Hashtable attrs, TagLibraryInfoImpl tli, 
                            TagInfo ti) 
     {
         this.prefix = prefix;
@@ -96,9 +99,17 @@ public class TagEndGenerator
     public void generate(ServletWriter writer, Class phase) {
 	String thVarName = tagEnd();
         VariableInfo[] vi = ti.getVariableInfo(new TagData(attrs));
+
+        Class tagHandlerClass = tli.getTagCache(shortTagName).getTagHandlerClass();
+        boolean implementsBodyTag = BodyTag.class.isAssignableFrom(tagHandlerClass);
 	
 	writer.popIndent();
-	writer.println("} while ("+thVarName+".doAfterBody() == Tag.EVAL_BODY);");
+
+        if (implementsBodyTag)
+            writer.println("} while ("+thVarName+".doAfterBody() == BodyTag.EVAL_BODY_TAG);");
+        else
+            writer.println("} while (false);");
+        
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
 	writer.popIndent(); // try 
 	writer.println("} finally {");

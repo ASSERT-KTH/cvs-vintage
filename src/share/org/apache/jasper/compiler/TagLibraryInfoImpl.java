@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.1 1999/10/09 00:20:38 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.2 1999/10/20 11:22:55 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:55 $
  *
  * ====================================================================
  * 
@@ -102,7 +102,10 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
     XmlDocument tld;
 
     Hashtable jarEntries;
+    Hashtable tagCaches = new Hashtable();
+    
     JspEngineContext ctxt;
+
     
 
     private final void print(String name, String value, PrintWriter w) {
@@ -447,5 +450,13 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         int nRead;
         while ((nRead = in.read(buf, 0, buf.length)) != -1)
             out.write(buf, 0, nRead);
+    }
+
+    TagCache getTagCache(String shortTagName) {
+        return (TagCache) tagCaches.get(shortTagName);
+    }
+
+    void putTagCache(String shortTagName, TagCache tc) {
+        tagCaches.put(shortTagName, tc);
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.2 1999/10/14 04:07:10 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/14 04:07:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.3 1999/10/20 11:22:54 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/20 11:22:54 $
  *
  * ====================================================================
  * 
@@ -62,55 +62,79 @@ package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.lang.reflect.Method;
 
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.BodyTag;
 
 import org.apache.jasper.JasperException;
+import org.apache.jasper.JspEngineContext;
 import org.apache.jasper.Constants;
 
 import org.apache.jasper.compiler.ServletWriter;
 
 /**
- * Custom tag support. Needs updating for JSP 1.1 PR2
+ * Custom tag support.
  *
  * @author Anil K. Vijendran
  */
 public class TagBeginGenerator 
     extends TagGeneratorBase 
-    implements ServiceMethodPhase, ClassDeclarationPhase
+    implements ServiceMethodPhase
 {
     String prefix;
     String shortTagName;
     Hashtable attrs;
-    TagLibraryInfo tli;
+    TagLibraryInfoImpl tli;
     TagInfo ti;
     TagAttributeInfo[] attributes;
-    String baseVarName, arrVarName, tdVarName, thVarName;
+    String baseVarName, thVarName;
+    TagCache tc;
+    TagData tagData;
 
+    
     public TagBeginGenerator(String prefix, String shortTagName, Hashtable attrs,
-			     TagLibraryInfo tli, TagInfo ti) 
+			     TagLibraryInfoImpl tli, TagInfo ti) 
         throws JasperException
     {
         this.prefix = prefix;
         this.shortTagName = shortTagName;
         this.attrs = attrs;
-	//        this.body = body;
 	this.tli = tli;
 	this.ti = ti;
 	this.attributes = ti.getAttributes();
-	this.baseVarName = getTagDataVarName(prefix, shortTagName);
-	this.arrVarName = "_jspx_tdarr_"+baseVarName;
-	this.tdVarName = "_jspx_td_"+baseVarName;
+	this.baseVarName = getTagVarName(prefix, shortTagName);
 	this.thVarName = "_jspx_th_"+baseVarName;
-        validate();
     }
 
-    void validate() throws JasperException {
+    public void init(JspEngineContext ctxt) throws JasperException {
+        validate();
+        tc = tli.getTagCache(shortTagName);
+        if (tc == null) {
+            tc = new TagCache(shortTagName);
 
+            ClassLoader cl = ctxt.getClassLoader();
+            Class clz = null;
+            try {
+                clz = cl.loadClass(ti.getTagClassName());
+            } catch (Exception ex) {
+                throw new JasperException(Constants.getString("jsp.error.unable.loadclass", 
+                                                              new Object[] { ti.getTagClassName(),
+                                                                             ex.getMessage()
+                                                              }
+                                                              ));
+            }
+            tc.setTagHandlerClass(clz);
+            tli.putTagCache(shortTagName, tc);
+        }
+    }
+    
+    void validate() throws JasperException {
         // First make sure all required attributes are indeed present. 
         for(int i = 0; i < attributes.length; i++)
             if (attributes[i].isRequired() && attrs.get(attributes[i].getName()) == null)
@@ -135,59 +159,52 @@ public class TagBeginGenerator
                                                               }
                                                               ));
         }
+
+        tagData = new TagData(attrs);
+        if (!ti.isValid(tagData))
+            throw new JasperException(Constants.getString("jsp.error.invalid_attributes"));
     }
 
-    public void generateStaticDeclarations(ServletWriter writer) {
-	if (attributes.length != 0) {
-	    writer.println("private static final Object[][] "+arrVarName+"  = {");
-	    writer.pushIndent();
+    private final void generateSetters(ServletWriter writer, String parent) 
+        throws JasperException
+    {
+        writer.println(thVarName+".setPageContext(pageContext);");
+        writer.println(thVarName+".setParent("+parent+");");
+
+        if (attributes.length != 0)
 	    for(int i = 0; i < attributes.length; i++) {
-		String name = writer.quoteString(attributes[i].getName());
-		String value;
-		String attrValue = (String) attrs.get(attributes[i].getName());
-		if (attributes[i].canBeRequestTime())
-		    value = "TagData.REQUEST_TIME_VALUE";
-		value = attrValue != null ? writer.quoteString(attrValue) : "\"null\"";
-		writer.indent(); writer.print("{"+name+", "+value+"}");
-		if (i < attributes.length - 1)
-		    writer.print(",\n");
-		else
-		    writer.println();
-	    }
-	    writer.popIndent();
-	    writer.println("};");
-	    writer.println("private static TagData "+tdVarName+" = new TagData("+arrVarName+");");
-	}
+                String attrValue = (String) attrs.get(attributes[i].getName());
+		if (attributes[i].canBeRequestTime()) {
+                    if (JspUtil.isExpression(attrValue))
+                        attrValue = JspUtil.getExpr(attrValue);
+                    else 
+                        attrValue = writer.quoteString(attrValue);
+                } else
+                    attrValue = writer.quoteString(attrValue);
+                
+                String attrName = attributes[i].getName();
+                Method m = tc.getSetterMethod(attrName);
+                if (m == null)
+                    throw new JasperException(Constants.getString("jsp.error.unable.to_find_method",
+                                                                  new Object[] { attrName }));
+                
+                writer.println(thVarName+"."+m.getName()+"("+attrValue+");");
+            }
     }
-
-    public void generateServiceMethodStatements(ServletWriter writer) {
+    
+    public void generateServiceMethodStatements(ServletWriter writer) 
+        throws JasperException 
+    {
 	String parent = topTag();
 	tagBegin(thVarName);
 
         writer.println("/* ----  "+prefix+":"+shortTagName+" ---- */");
 
-        String qPrefix = writer.quoteString(prefix);
-        String qTagName = writer.quoteString(shortTagName);
-        writer.println("Tag "+thVarName+" = new "+ti.getTagClassName()+"("+qPrefix+", "+
-		       qTagName+");");
+        writer.println(ti.getTagClassName()+" "+thVarName+" = new "+ti.getTagClassName()+"();");
 
-	if (attributes.length != 0)
-	    for(int i = 0; i < attributes.length; i++)
-		if (attributes[i].canBeRequestTime()) {
-		    String attrValue = (String) attrs.get(attributes[i].getName());
-		    if (JspUtil.isExpression(attrValue)) {
-			String attrName = writer.quoteString(attributes[i].getName());
-			writer.println(tdVarName+".setAttribute("+attrName+", "
-				       +JspUtil.getExpr(attrValue)+");");
-		    }
-		}
-
-        if (attributes.length == 0)
-            writer.println(thVarName+".initialize("+parent+", null, pageContext);");
-        else
-            writer.println(thVarName+".initialize("+parent+", "+tdVarName+", pageContext);");
-
-        VariableInfo[] vi = ti.getVariableInfo(new TagData(attrs));
+        generateSetters(writer, parent);
+        
+        VariableInfo[] vi = ti.getVariableInfo(tagData);
 
         // Just declare AT_BEGIN here... 
         declareVariables(writer, vi, true, false, VariableInfo.AT_BEGIN);
@@ -197,35 +214,63 @@ public class TagBeginGenerator
 
         String evalVar = "_jspx_eval_"+baseVarName;
 
-        writer.println("boolean "+evalVar+" = "
-                       +thVarName+".doStartTag() == Tag.EVAL_BODY;");
-
+        writer.println("int "+evalVar+" = "
+                       +thVarName+".doStartTag();");
+        
+        boolean implementsBodyTag = BodyTag.class.isAssignableFrom(tc.getTagHandlerClass());
+        
         // Need to update AT_BEGIN variables here
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
+        
+        // FIXME: I'm not too sure if this is the right approach. I don't like 
+        //        throwing English language strings into the generated servlet. 
+        //        Perhaps, I'll just define an inner classes as necessary for these 
+        //        types of exceptions? -akv
 
-        writer.println("if ("+evalVar+" == true) {");
+        if (implementsBodyTag) {
+            writer.println("if ("+evalVar+" == Tag.EVAL_BODY_INCLUDE)");
+            writer.pushIndent();
+            writer.println("throw new JspError(\"Since tag handler "+tc.getTagHandlerClass()+
+                           " implements BodyTag, it can't return Tag.EVAL_BODY_INCLUDE\");");
+            writer.popIndent();
+        } else {
+            writer.println("if ("+evalVar+" == BodyTag.EVAL_BODY_TAG)");
+            writer.pushIndent();
+            writer.println("throw new JspError(\"Since tag handler "+tc.getTagHandlerClass()+
+                           " does not implement BodyTag, it can't return BodyTag.EVAL_BODY_TAG\");");
+            writer.popIndent();
+        }
+
+        writer.println("if ("+evalVar+" != Tag.SKIP_BODY) {");
 	writer.pushIndent();
 
 	writer.println("try {");
 	writer.pushIndent();
 	
+
+        writer.println("if ("+evalVar+" != Tag.EVAL_BODY_INCLUDE) {");
+        writer.pushIndent();
+
 	writer.println("out = pageContext.pushBody();");
-	writer.println(thVarName+".setBodyOut((BodyContent) out);");
+	writer.println(thVarName+".setBodyContent((BodyContent) out);");
+
+        writer.popIndent();
+        writer.println("}");
+        
+        if (implementsBodyTag)
+            writer.println(thVarName+".doInitBody();");
+
 	writer.println("do {");
 	writer.pushIndent();
         // Need to declare and update NESTED variables here
         declareVariables(writer, vi, true, true, VariableInfo.NESTED);
         // Need to update AT_BEGIN variables here
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
-
-	writer.println(thVarName+".doBeforeBody();");
-
     }
 
-    public void generate(ServletWriter writer, Class phase) {
-	if (phase.equals(ClassDeclarationPhase.class))
-	    generateStaticDeclarations(writer);
-	else if (phase.equals(ServiceMethodPhase.class))
-	    generateServiceMethodStatements(writer);
+    public void generate(ServletWriter writer, Class phase) 
+        throws JasperException 
+    {
+        generateServiceMethodStatements(writer);
     }    
 }

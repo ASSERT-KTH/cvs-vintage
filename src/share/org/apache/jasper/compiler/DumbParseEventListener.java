@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DumbParseEventListener.java,v 1.1 1999/10/09 00:20:35 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DumbParseEventListener.java,v 1.2 1999/10/20 11:22:53 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:53 $
  *
  * ====================================================================
  * 
@@ -180,7 +180,7 @@ public class DumbParseEventListener extends BaseJspListener {
     }
 
     public void handleTagBegin(Mark start, Hashtable attrs, String prefix, 
-			       String shortTagName, TagLibraryInfo tli, 
+			       String shortTagName, TagLibraryInfoImpl tli, 
 			       TagInfo ti)
 	throws JasperException
     {
@@ -190,7 +190,7 @@ public class DumbParseEventListener extends BaseJspListener {
     
     public void handleTagEnd(Mark start, Mark stop, String prefix, 
 			     String shortTagName, Hashtable attrs, 
-                             TagLibraryInfo tli, TagInfo ti)
+                             TagLibraryInfoImpl tli, TagInfo ti)
 	throws JasperException
     {
 	System.err.println("\nUser-defined Tag End "+prefix+":"+shortTagName+" --> ");

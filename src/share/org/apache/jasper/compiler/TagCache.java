@@ -1,6 +1,6 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.2 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.2 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagCache.java,v 1.1 1999/10/20 11:22:54 akv Exp $
+ * $Revision: 1.1 $
  * $Date: 1999/10/20 11:22:54 $
  *
  * ====================================================================
@@ -61,62 +61,75 @@
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
-import java.util.Vector;
 
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.lang.reflect.Method;
+
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.beans.IntrospectionException;
 
 import org.apache.jasper.JasperException;
+import org.apache.jasper.Constants;
 
 /**
- * Interface for the JSP code generation backend. At some point should
- * probably try and make this a SAX (XML) listener. 
+ * A simple cache to hold results of one-time evaluation for a custom 
+ * tag. 
  *
- * @author Anil K. Vijendran
+ * @author Anil K. Vijendran (akv@eng.sun.com)
  */
-public interface ParseEventListener {
-    void beginPageProcessing() throws JasperException;
+public class TagCache {
+    String shortTagName;
+    Hashtable methodMaps;
+    BeanInfo tagClassInfo;
+    Class tagHandlerClass;
+    
+    TagCache(String shortTagName) {
+        this.shortTagName = shortTagName;
+        this.methodMaps = new Hashtable();
+    }
 
-    void handleComment(Mark start, Mark stop) throws JasperException;
-    void handleDirective(String directive, 
-			 Mark start, Mark stop, 
-			 Hashtable attrs) throws JasperException;
-    void handleDeclaration(Mark start, Mark stop) throws JasperException;
-    void handleScriptlet(Mark start, Mark stop) throws JasperException;
-    void handleExpression(Mark start, Mark stop) throws JasperException;
-    void handleBean(Mark start, Mark stop, Hashtable attrs) 
-	throws JasperException;
-    void handleBeanEnd (Mark start, Mark stop, Hashtable attrs)
-	throws JasperException;
-    void handleGetProperty(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handleSetProperty(Mark start, Mark stop, Hashtable attrs) throws JasperException;
-    void handlePlugin(Mark start, Mark stop, Hashtable attrs, Hashtable param, 
-    			String fallback) throws JasperException;
-    void handleCharData(char[] chars) throws JasperException;
+    private void addSetterMethod(String attrName, Method m) {
+        methodMaps.put(attrName, m);
+    }
+    
+    Method getSetterMethod(String attrName) {
+        return (Method) methodMaps.get(attrName);
+    }
 
+    void setTagHandlerClass(Class tagHandlerClass) 
+        throws JasperException
+    {
+        try {
+            this.tagClassInfo = Introspector.getBeanInfo(tagHandlerClass);
+            this.tagHandlerClass = tagHandlerClass;
+            PropertyDescriptor[] pd = tagClassInfo.getPropertyDescriptors();
+            for(int i = 0; i < pd.length; i++) {
+                /* FIXME: why is the check for null below needed?? -akv */
+                /* 
+                   FIXME: should probably be checking for things like
+                          pageContext, bodyContent, and parent here -akv
+                */
+                if (pd[i].getWriteMethod() != null)
+                    addSetterMethod(pd[i].getName(), pd[i].getWriteMethod());
+            }
+        } catch (IntrospectionException ex) {
+            throw new JasperException(Constants.getString("jsp.error.unable.to_introspect",
+                                                          new Object[] {
+                                                              tagHandlerClass.getName(),
+                                                              ex.getMessage()
+                                                          }
+                                                          ));
+        }
+    }
 
-    /*
-     * Custom tag support
-     */
-    TagLibraries getTagLibraries();
-
-    /*
-     * start: is either the start position at "<" if content type is JSP or empty, or
-     *        is the start of the body after the "/>" if content type is tag dependent
-     * stop: can be null if the body contained JSP tags... 
-     */
-    void handleTagBegin(Mark start, Hashtable attrs, String prefix, String shortTagName,
-			TagLibraryInfoImpl tli, TagInfo ti) 
-	throws JasperException;
-
-    void handleTagEnd(Mark start, Mark stop, String prefix, String shortTagName,
-		      Hashtable attrs, TagLibraryInfoImpl tli, TagInfo ti)
-	throws JasperException;
-
-    void handleForward(Mark start, Mark stop, Hashtable attrs, Hashtable param)
-	throws JasperException;
-    void handleInclude(Mark start, Mark stop, Hashtable attrs, Hashtable param)
-	throws JasperException;
-
-    void endPageProcessing() throws JasperException;
+    Class getTagHandlerClass() {
+        return tagHandlerClass;
+    }
+    
+    BeanInfo getTagClassInfo() {
+        return tagClassInfo;
+    }
 }
+
+    

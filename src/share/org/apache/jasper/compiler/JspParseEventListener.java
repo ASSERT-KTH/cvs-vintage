@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.2 1999/10/17 22:21:31 mandar Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/17 22:21:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.3 1999/10/20 11:22:54 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/20 11:22:54 $
  *
  * ====================================================================
  * 
@@ -126,7 +126,7 @@ public class JspParseEventListener extends BaseJspListener {
 
     TagLibraries libraries;
 
-    final void addGenerator(Generator gen) {
+    final void addGenerator(Generator gen) throws JasperException {
         gen.init(ctxt);
         generators.addElement(gen);
     }
@@ -313,6 +313,7 @@ public class JspParseEventListener extends BaseJspListener {
 	//writer.println("} catch (Throwable t) {");
 	writer.println("} catch (Exception ex) {");
 	writer.pushIndent();
+        writer.println("ex.printStackTrace();");
         writer.println("if (out.getBufferSize() != 0)");
         writer.pushIndent(); writer.println("out.clear();"); writer.popIndent();
 	writer.println("pageContext.handlePageException(ex);");
@@ -695,7 +696,9 @@ public class JspParseEventListener extends BaseJspListener {
             return generator.generateCoordinates(phase);
         }
 
-        public void init(JspEngineContext ctxt) {
+        public void init(JspEngineContext ctxt) 
+            throws JasperException 
+        {
             generator.init(ctxt);
         }
         
@@ -845,7 +848,7 @@ public class JspParseEventListener extends BaseJspListener {
     }
     
     public void handleTagBegin(Mark start, Hashtable attrs, String prefix, 
-			       String shortTagName, TagLibraryInfo tli, 
+			       String shortTagName, TagLibraryInfoImpl tli, 
 			       TagInfo ti)
 	throws JasperException
     {
@@ -861,7 +864,7 @@ public class JspParseEventListener extends BaseJspListener {
 
     public void handleTagEnd(Mark start, Mark stop, String prefix, 
 			     String shortTagName, Hashtable attrs, 
-                             TagLibraryInfo tli, TagInfo ti)
+                             TagLibraryInfoImpl tli, TagInfo ti)
 	throws JasperException
     {
 	// FIXME: null's

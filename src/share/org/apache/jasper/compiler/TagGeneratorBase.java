@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.1 1999/10/09 00:20:38 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.2 1999/10/20 11:22:55 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/20 11:22:55 $
  *
  * ====================================================================
  * 
@@ -74,7 +74,7 @@ import javax.servlet.jsp.tagext.VariableInfo;
 abstract class TagGeneratorBase extends GeneratorBase {
     static private Stack tagHandlerStack = new Stack();
 
-    static private Hashtable tdVarNumbers = new Hashtable();
+    static private Hashtable tagVarNumbers = new Hashtable();
 
     static protected void tagBegin(String tagHandlerInstanceName) {
 	tagHandlerStack.push(tagHandlerInstanceName);
@@ -90,17 +90,17 @@ abstract class TagGeneratorBase extends GeneratorBase {
 	return (String) tagHandlerStack.peek();
     }
 	    
-    static protected String getTagDataVarName(String prefix, String shortTagName) {
-	synchronized (tdVarNumbers) {
+    static protected String getTagVarName(String prefix, String shortTagName) {
+	synchronized (tagVarNumbers) {
 	    String tag = prefix+":"+shortTagName;
 	    String varName = prefix+"_"+shortTagName+"_";
-	    if (tdVarNumbers.get(tag) != null) {
-		Integer i = (Integer) tdVarNumbers.get(tag);
+	    if (tagVarNumbers.get(tag) != null) {
+		Integer i = (Integer) tagVarNumbers.get(tag);
 		varName = varName + i.intValue();
-		tdVarNumbers.put(tag, new Integer(i.intValue()+1));
+		tagVarNumbers.put(tag, new Integer(i.intValue()+1));
 		return varName;
 	    } else {
-		tdVarNumbers.put(tag, new Integer(1));
+		tagVarNumbers.put(tag, new Integer(1));
 		return varName+"0";
 	    }
 	}
