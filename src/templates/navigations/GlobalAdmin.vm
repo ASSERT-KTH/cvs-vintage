@@ -1,0 +1,2 @@
+ <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Artifact Types")</div>
+ <div>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global Attributes")</div>

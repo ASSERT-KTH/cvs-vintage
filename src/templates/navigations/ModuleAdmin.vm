@@ -1,0 +1,3 @@
+ <div>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("Manage Artifact Types")</div>
+ <div>$link.setPage("admin,ManageModules.vm").setLabel("Manage Modules")</div>
+ <div>$link.setPage("admin,Approval.vm").setLabel("Approve")</div>

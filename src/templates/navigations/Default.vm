@@ -7,10 +7,14 @@
 </strong></div>
 
 ## ARTIFACT TYPES
-$renderer.render("navigations", $data, "ArtifactTypes.vm")
-
+#set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
+#if ($issueTypes && $issueTypes.size() > 0)
 <div><strong>
-#if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
-  $link.setPage("admin,AdminIndex.vm").setLabel("Admin")
+$link.setPage("SelectArtifactType.vm").setLabel("Artifact types")
+</strong>
+$renderer.render("navigations", $data, "ArtifactTypes.vm")
+</div>
 #end
-</strong></div>
+
+## AMINISTRATION
+$renderer.render("navigations", $data, "Administration.vm")

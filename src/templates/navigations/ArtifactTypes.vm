@@ -1,7 +1,6 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 0)
 
-<div><strong>$link.setPage("SelectArtifactType.vm").setLabel("Artifact types")</strong>
 #foreach($issueType in $issueTypes)
   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
   #if ($issueType.equals($scarabR.CurrentIssueType))
@@ -17,6 +16,5 @@
     <div><small>$link.setPage("$scarabR.convertPath($data.Target)").setAction("SelectIssueType").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).addPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$rmit.DisplayText")</small></div>
   #end
 #end
-</div>
 
 #end

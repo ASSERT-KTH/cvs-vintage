@@ -1,0 +1,41 @@
+#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm") || $link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm") || $link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
+
+<div>
+<strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
+<small>
+    #if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
+
+<div>Users
+ <div> <a href="admin,ManageUserSearch.vm">User Management</a> </div>
+ <div> $link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User") </div>
+</div>
+
+    #end
+
+    #if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
+
+<div>Roles
+ <div> <a href="admin,ManageRoles.vm">Role List</a> </div>
+ <div> <a href="admin,AddRole.vm">Add New Role</a> </div>
+</div>
+
+    #end
+
+    #if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
+
+<div>Global Data
+$renderer.render("navigations", $data, "GlobalAdmin.vm")
+</div>
+
+    #end
+
+    #if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
+
+<div>Modules
+$renderer.render("navigations", $data, "ModuleAdmin.vm")
+</div>
+
+    #end
+</small>
+</div>
+#end
