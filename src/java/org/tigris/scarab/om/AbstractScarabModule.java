@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.32 2002/05/13 22:07:23 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.33 2002/05/13 22:53:16 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1017,7 +1017,6 @@ public abstract class AbstractScarabModule
     protected List getRModuleAttributesThisModuleOnly(Criteria crit)
         throws TorqueException
     {
-        System.out.println("Adding deleted flag");
         crit.add(RModuleAttributePeer.MODULE_ID, getModuleId() );
         crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
                      AttributePeer.ATTRIBUTE_ID);
