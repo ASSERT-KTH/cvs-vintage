@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.88 2002/03/21 02:30:48 nreizer Exp $ -->
+<!-- $Id: changes.html,v 1.89 2002/03/21 17:46:48 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,6 +21,13 @@
                     build. (JSS)</li>
                 <li>Removed extra information from the description elements in the Scarab sample XML;
                     changed example path element from absolute to relative. (NRR)</li>
+                <li>Used GET instead of POST for the form which wraps the
+                    query navigation select, also added js to avoid having
+                    to press the Go button.  This better simulates a set of
+                    links. (JDM)</li>
+                <li>Altered use of lucene, so that any text search allowed
+                    by lucene is available.  This includes things like
+                    wildcards, prefix, AND, and OR. (JDM)</li>
             </ul>
         </td>
     </tr>
@@ -91,6 +98,11 @@
                     not possible to assign/edit a parent module which
                     you do not have permission to edit. (JSS)</li>
                 <li>Added Saved Reports screen. (EWD) </li>
+                <li>Added long term caching to business objects related to
+                    viewing an issue.  This cache is available to multiple
+                    threads, so if an issue is viewed by one user and then is
+                    requested by another user, the second view will not incur
+                    any database overhead. (JDM) </li>
             </ul>
         </td>
     </tr>
