@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.65 2003/10/14 04:59:22 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.66 2004/01/31 18:51:38 dep4b Exp $
  */
 public class MoveIssue extends BaseModifyIssue
 {
@@ -281,9 +281,6 @@ public class MoveIssue extends BaseModifyIssue
                .getInstance(newIssueTypeId);
         String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
-        boolean changeModule = !newModuleId.equals(oldModule.getModuleId());
-        boolean changeIssueType = !newIssueTypeId
-            .equals(issue.getIssueType().getIssueTypeId());
 
         // Get selected non-matching attributes to save in comment
         List commentAttrs = new ArrayList();

@@ -92,7 +92,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.147 2003/12/20 13:30:43 pledbrook Exp $
+ * @version $Id: Search.java,v 1.148 2004/01/31 18:51:38 dep4b Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -757,7 +757,6 @@ public class Search extends RequireLoginFirstAction
     public void doGotoeditlist(RunData data, TemplateContext context)
         throws Exception
     {
-        ValueParser params = data.getParameters();
         Map userMap = ((ScarabUser)data.getUser()).getSelectedUsersMap();
         if (userMap == null || userMap.size() == 0)
         {
@@ -794,7 +793,6 @@ public class Search extends RequireLoginFirstAction
         {
             for (int i =0; i<userIds.length; i++)
             {
-                List item = new ArrayList(2);
                 String userId = userIds[i];
                 String[] attrIds = params.getStrings("user_attr_" + userId);
                 if (attrIds != null) 

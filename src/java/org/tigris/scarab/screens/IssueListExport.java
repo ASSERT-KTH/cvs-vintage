@@ -151,7 +151,7 @@ public class IssueListExport extends DataExport
         {
             printer.println();
             QueryResult queryResult = (QueryResult)i.next();
-            writeRow(printer, mitlist, l10n, rmuas, queryResult);
+            writeRow(printer, mitlist, queryResult);
         }
         // print a newline when we're done to complete the last line;
         // this also ensures that the output is flushed
@@ -169,8 +169,7 @@ public class IssueListExport extends DataExport
      *
      * @exception Exception
      */
-    private void writeRow(TSVPrinter printer, MITList mitlist, 
-            ScarabLocalizationTool l10n, List rmuas, QueryResult queryResult)
+    private void writeRow(TSVPrinter printer, MITList mitlist, QueryResult queryResult)
         throws Exception
     {
         if (mitlist != null)

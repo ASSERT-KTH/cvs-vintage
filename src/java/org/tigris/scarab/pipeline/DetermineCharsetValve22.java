@@ -60,13 +60,11 @@ import org.apache.fulcrum.mimetype.TurbineMimeTypes;
  * servlet 2.2 libraries.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve22.java,v 1.1 2003/07/25 16:26:10 thierrylach Exp $
+ * @version $Id: DetermineCharsetValve22.java,v 1.2 2004/01/31 18:51:38 dep4b Exp $
  */
 public class DetermineCharsetValve22 
     extends AbstractValve
 {
-    private static final String KEY = 
-        ResetCacheValve.class.getName() + ".start";
 
     private static final String REQUIRED_CHARSET = Turbine.getConfiguration().
         getString("locale.default.charset");

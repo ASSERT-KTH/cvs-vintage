@@ -86,7 +86,6 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.ActivitySetPeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
@@ -114,7 +113,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.120 2003/11/21 09:55:32 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.121 2004/01/31 18:51:39 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -148,10 +147,7 @@ public class IssueSearch
 
     private static final String CREATED_BY = "CREATED_BY";
     private static final String CREATED_DATE = "CREATED_DATE";
-    private static final String TYPE_ID = "TYPE_ID";
     private static final String ATTRIBUTE_ID = "ATTRIBUTE_ID";
-    private static final String USER_ID = "USER_ID";
-    private static final String DELETED = "DELETED";
     private static final String AND = " AND ";
     private static final String OR = " OR ";
     private static final String INNER_JOIN = " INNER JOIN ";
@@ -167,8 +163,6 @@ public class IssueSearch
     private static final String ACTSET_TRAN_ID = 
         ActivitySetPeer.TRANSACTION_ID.substring(
         ActivitySetPeer.TRANSACTION_ID.indexOf('.')+1);
-    private static final String ACTIVITYALIAS_TRANSACTION_ID =
-        ACTIVITYALIAS + '.' + ACT_TRAN_ID;
     private static final String 
         ISSUEPEER_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID =
         IssuePeer.CREATED_TRANS_ID + '=' + 
@@ -193,28 +187,16 @@ public class IssueSearch
         AttributeValuePeer.ATTRIBUTE_ID.indexOf('.')+1);
     private static final String ACTIVITYALIAS_ATTRIBUTE_ID =
         ACTIVITYALIAS + '.' + ACT_ATTR_ID;
-    private static final String 
-        ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID =
-        ACTIVITYALIAS_ATTRIBUTE_ID + '=' + USERAVALIAS + '.' + AV_ATTR_ID;
+
 
     private static final String USERAVALIAS_ISSUE_ID =
         USERAVALIAS + '.' + AV_ISSUE_ID;
-    private static final String 
-        USERAVALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID =
-        USERAVALIAS_ISSUE_ID + '=' + IssuePeer.ISSUE_ID;
-
-    private static final String 
-        ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID =
-        ACTIVITYALIAS_ISSUE_ID + '=' + USERAVALIAS + '.' + AV_ISSUE_ID;
 
     private static final String ACT_NEW_USER_ID = 
         ActivityPeer.NEW_USER_ID.substring(
         ActivityPeer.NEW_USER_ID.indexOf('.')+1);
     private static final String ACTIVITYALIAS_NEW_USER_ID =
         ACTIVITYALIAS + '.' + ACT_NEW_USER_ID;
-    private static final String 
-        ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID =
-        ACTIVITYALIAS_NEW_USER_ID + '=' + USERAVALIAS + '.' + AV_USER_ID;
 
     private static final String WHERE = " WHERE ";
     private static final String FROM = " FROM ";
@@ -230,11 +212,7 @@ public class IssueSearch
         "sortRMO.PREFERRED_ORDER";
 
 
-
-    private static final int NO_ATTRIBUTE_SORT = -1;
-
     private static final Integer NUMBERKEY_0 = new Integer(0);
-    private static final Integer ALL_TEXT = NUMBERKEY_0;
 
     /**
      * The managed database connection used while iterating over large
@@ -1158,17 +1136,6 @@ public class IssueSearch
         return setAVs;
     }
 
-    private void addMinimumVotes(Criteria crit)
-    {
-        if (minVotes > 0) 
-        {
-            crit.addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-                .add(AttributeValuePeer.ATTRIBUTE_ID, 
-                     AttributePeer.TOTAL_VOTES__PK)
-                .add(AttributeValuePeer.NUMERIC_VALUE, minVotes,
-                     Criteria.GREATER_EQUAL);
-        }
-    }
 
     private void addAnd(StringBuffer sb)
     {
@@ -1606,7 +1573,7 @@ public class IssueSearch
             List anyUsers = null;
             List creatorUsers = null;
             Map attrUsers = null;
-            List attrUserAttrs = null;
+
             int maxUsers = userIdList.size();
             // separate users by attribute, Created_by, and Any
             for (int i =0; i<maxUsers; i++)
@@ -1970,7 +1937,6 @@ public class IssueSearch
         }
         else if (lastQueryResults == null) 
         {
-            List rows = null;
             Set tableAliases = new HashSet();
             StringBuffer from = new StringBuffer();
             StringBuffer where = new StringBuffer();
@@ -2186,7 +2152,6 @@ public class IssueSearch
         {
             int valueListSize = rmuas.size();
             StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
-            StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
 
             int count = 0;
             int maxJoin = MAX_JOIN - 2;

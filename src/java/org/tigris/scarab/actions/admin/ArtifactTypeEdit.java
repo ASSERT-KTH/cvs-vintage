@@ -46,38 +46,35 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.Iterator;
-// Turbine Stuff 
+import java.util.List;
+
+import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.torque.om.NumberKey;
+import org.apache.turbine.ParameterParser;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.ParameterParser;
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
-
-// Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.RModuleAttribute;
-import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupManager;
-import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.workflow.WorkflowFactory;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.60 2003/12/04 19:26:16 mpoeschl Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.61 2004/01/31 18:51:39 dep4b Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -165,11 +162,9 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     public boolean doSavegroups (RunData data, TemplateContext context)
         throws Exception
     {
-        boolean success = true;
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        String msg = DEFAULT_MSG;
 
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
@@ -434,7 +429,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
             return;
         }
-        ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
@@ -528,8 +522,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 if (attribute != null)
                 {
                     // add module-attribute groupings
-                    RModuleAttribute rma = module.addRModuleAttribute(issueType,
-                                                                  attribute);
+                    module.addRModuleAttribute(issueType,attribute);
                 }
                 doCancel(data, context);
             }

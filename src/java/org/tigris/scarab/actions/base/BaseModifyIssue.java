@@ -55,7 +55,6 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 // Scarab Stuff
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.ActivitySet;
@@ -67,7 +66,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.9 2003/07/25 17:33:03 thierrylach Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.10 2004/01/31 18:51:39 dep4b Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {

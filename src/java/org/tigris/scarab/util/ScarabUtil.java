@@ -46,21 +46,19 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.turbine.RunData;
-
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.util.IssueIdParser;
 
 /**
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.10 2003/12/21 21:00:28 pledbrook Exp $
+ * @version $Id: ScarabUtil.java,v 1.11 2004/01/31 18:51:39 dep4b Exp $
  */
 public class ScarabUtil
 {

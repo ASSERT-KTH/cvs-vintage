@@ -71,7 +71,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.14 2003/09/10 00:20:38 elicia Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.15 2004/01/31 18:51:39 dep4b Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -145,7 +145,6 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         IssueType issueType = scarabR.getIssueType();
-            RIssueTypeAttribute ria1 = issueType.getRIssueTypeAttribute(scarabR.getAttribute());
         Attribute attribute = scarabR.getAttribute();
 
         if (issueType.isSystemDefined())

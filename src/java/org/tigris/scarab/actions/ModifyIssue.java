@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.179 2003/10/14 04:59:22 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.180 2004/01/31 18:51:38 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -335,8 +335,7 @@ public class ModifyIssue extends BaseModifyIssue
         // if there is a new URL, add it
         Group newGroup = intake.get("Attachment", "urlKey", false);
         if (newGroup != null)
-        {
-            Field nameField = newGroup.get("Name"); 
+        { 
             Field dataField = newGroup.get("Data");
             String dataFieldString = dataField.toString();
             if (dataFieldString != null && dataFieldString.trim().length() > 0)
@@ -805,8 +804,7 @@ public class ModifyIssue extends BaseModifyIssue
         String reasonForChange = group.get("Description").toString();
 
         boolean depAdded = doAdddependency(issue, intake, group, scarabR,
-                                           context, l10n, user,
-                                           reasonForChange);
+                                           context, l10n, user);
         boolean changesMade = doUpdatedependencies(issue, intake, scarabR, 
                                                    context, l10n, user, 
                                                    reasonForChange, doDelete);
@@ -832,8 +830,7 @@ public class ModifyIssue extends BaseModifyIssue
                                  Group group, ScarabRequestTool scarabR,
                                  TemplateContext context,
                                  ScarabLocalizationTool l10n,
-                                 ScarabUser user,
-                                 String reasonForChange)
+                                 ScarabUser user)
         throws Exception
     {
         // Check that dependency type entered is valid

@@ -48,32 +48,27 @@ package org.tigris.scarab.actions;
 
 import java.util.List;
 
-// Turbine Stuff 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
-
-import org.apache.torque.om.NumberKey; 
-
-// Scarab Stuff
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.torque.om.NumberKey;
+import org.apache.turbine.ParameterParser;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.IntakeTool;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryManager;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.29 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: QueryList.java,v 1.30 2004/01/31 18:51:38 dep4b Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -88,7 +83,6 @@ public class QueryList extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        Module me = scarabR.getCurrentModule();
        
         if (intake.isAllValid())
         {

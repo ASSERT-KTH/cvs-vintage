@@ -114,7 +114,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.58 2003/12/19 21:18:39 dep4b Exp $
+ * @version $Id: ScarabIssues.java,v 1.59 2004/01/31 18:51:39 dep4b Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -367,7 +367,7 @@ public class ScarabIssues implements java.io.Serializable
             Object[] data = (Object[])itr.next();
             ActivitySet activitySetOM = (ActivitySet) data[0];
             XmlActivity activity = (XmlActivity) data[1];
-            Attachment activityAttachmentOM = (Attachment) data[2];
+            
 
             Dependency dependency = activity.getDependency();
             String child = (String)issueXMLMap.get(dependency.getChild());
@@ -891,12 +891,12 @@ public class ScarabIssues implements java.io.Serializable
                     }
                     catch (Exception e)
                     {
-                        activitySetAttachmentOM = createAttachment(issueOM, module, activitySetAttachment);
+                        activitySetAttachmentOM = createAttachment(issueOM, activitySetAttachment);
                     }
                 }
                 else
                 {
-                    activitySetAttachmentOM = createAttachment(issueOM, module, activitySetAttachment);
+                    activitySetAttachmentOM = createAttachment(issueOM, activitySetAttachment);
                     LOG.debug("Created ActivitySet Attachment object");
                 }
             }
@@ -1047,7 +1047,7 @@ public class ScarabIssues implements java.io.Serializable
                     if (previousId == null) 
                     {
                         activityAttachmentOM = createAttachment(
-                            issueOM, module, activityAttachment);
+                            issueOM, activityAttachment);
                         activityAttachmentOM.save();
                         attachmentIdMap.put(previousXmlId, 
                             activityAttachmentOM.getPrimaryKey().toString());
@@ -1107,7 +1107,7 @@ public class ScarabIssues implements java.io.Serializable
                 }
 
                 // create the activityOM
-                activityOM = createActivity(activity, activitySet, module, 
+                activityOM = createActivity(activity, module, 
                                             issueOM, attributeOM, activitySetOM);
 
                 // check to see if this is a new activity or an update activity
@@ -1280,7 +1280,7 @@ public class ScarabIssues implements java.io.Serializable
         return (dependActivitySetId.contains(activitySet.getId()));
     }
 
-    private Activity createActivity(XmlActivity activity, XmlActivitySet activitySet, XmlModule module,
+    private Activity createActivity(XmlActivity activity,  XmlModule module,
                                          Issue issueOM, 
                                          Attribute attributeOM,
                                          ActivitySet activitySetOM)
@@ -1315,7 +1315,7 @@ public class ScarabIssues implements java.io.Serializable
         Attachment newAttachmentOM = null;
         if (activity.getAttachment() != null)
         {
-            newAttachmentOM = createAttachment(issueOM, module, activity.getAttachment());
+            newAttachmentOM = createAttachment(issueOM, activity.getAttachment());
             newAttachmentOM.save();
             activityOM.setAttachment(newAttachmentOM);
         }
@@ -1324,8 +1324,7 @@ public class ScarabIssues implements java.io.Serializable
         return activityOM;
     }
 
-    private Attachment createAttachment(Issue issueOM, XmlModule module,
-                                             XmlAttachment attachment)
+    private Attachment createAttachment(Issue issueOM, XmlAttachment attachment)
         throws Exception
     {
         Attachment attachmentOM = AttachmentManager.getInstance();

@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.7 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.8 2004/01/31 18:51:39 dep4b Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -136,7 +136,6 @@ public class ScarabDBSecurityService extends DBSecurityService
     public synchronized Group addGroup(Group group) 
         throws DataBackendException, EntityExistsException
     {
-        boolean groupExists = false;
         try
         {
             lockExclusive();

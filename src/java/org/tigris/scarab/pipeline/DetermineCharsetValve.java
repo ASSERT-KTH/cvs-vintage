@@ -58,13 +58,11 @@ import org.apache.fulcrum.mimetype.TurbineMimeTypes;
  * This valve determines the charset to use when parsing request parameters.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve.java,v 1.9 2004/01/31 02:04:18 dep4b Exp $
+ * @version $Id: DetermineCharsetValve.java,v 1.10 2004/01/31 18:51:38 dep4b Exp $
  */
 public class DetermineCharsetValve 
     extends AbstractValve
 {
-    private static final String KEY = 
-        ResetCacheValve.class.getName() + ".start";
 
     private static final String REQUIRED_CHARSET = Turbine.getConfiguration().
         getString("locale.default.charset",null);

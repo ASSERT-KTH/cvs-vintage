@@ -89,15 +89,9 @@ public  class ReportBridge
     implements java.io.Serializable,
                org.apache.fulcrum.intake.Retrievable // do we want this?
 {
-    private static final int OPTION_CATEGORY = 0;
-    private static final int USER_CATEGORY = 1;
-    private static final int DATE_CATEGORY = 2;
 
     private ScarabUser generatedBy;
     private Date generatedDate;
-
-    /** used to store query key as part of Retrievable interface */
-    private String queryKey;
 
     private org.tigris.scarab.om.Report torqueReport;
     private ReportDefinition reportDefn;

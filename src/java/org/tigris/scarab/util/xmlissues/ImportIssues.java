@@ -47,47 +47,38 @@ package org.tigris.scarab.util.xmlissues;
  */
 
 import java.beans.BeanDescriptor;
-
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
-import java.io.File;
-import java.io.Writer;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
-
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import org.apache.commons.fileupload.FileItem;
-
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.Rule;
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.io.BeanWriter;
 import org.apache.commons.betwixt.strategy.HyphenatedNameMapper;
 import org.apache.commons.betwixt.strategy.NameMapper;
-
+import org.apache.commons.digester.Digester;
+import org.apache.commons.digester.Rule;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.fulcrum.localization.Localization;
-
-import org.tigris.scarab.workflow.WorkflowFactory;
-import org.tigris.scarab.util.TurbineInitialization;
-import org.tigris.scarab.util.xmlissues.ScarabIssues;
-import org.tigris.scarab.util.ScarabConstants;
-
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.TurbineInitialization;
+import org.tigris.scarab.workflow.WorkflowFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 /**
@@ -106,7 +97,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.29 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: ImportIssues.java,v 1.30 2004/01/31 18:51:39 dep4b Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues

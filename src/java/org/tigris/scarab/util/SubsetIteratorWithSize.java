@@ -46,7 +46,6 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.util.IteratorWithSize;
 
 public class SubsetIteratorWithSize extends SubsetIterator
     implements IteratorWithSize

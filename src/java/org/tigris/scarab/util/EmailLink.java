@@ -50,21 +50,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-
-// Turbine
 import org.apache.fulcrum.pool.InitableRecyclable;
-
-// Scarab
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.SkipFiltering;
+import org.tigris.scarab.om.Module;
 
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.9 2003/12/21 21:00:28 pledbrook Exp $
+ * @version $Id: EmailLink.java,v 1.10 2004/01/31 18:51:39 dep4b Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering

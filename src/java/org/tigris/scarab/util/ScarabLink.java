@@ -48,24 +48,18 @@ package org.tigris.scarab.util;
 
 import java.util.Enumeration;
 
-// Turbine
-import org.apache.turbine.tool.TemplateLink;
-import org.apache.turbine.RunData;
+import org.apache.fulcrum.pool.InitableRecyclable;
+import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.turbine.DynamicURI;
 import org.apache.turbine.ParameterParser;
+import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
-import org.apache.fulcrum.util.parser.ValueParser;
-import org.apache.fulcrum.pool.InitableRecyclable;
-
-// Scarab
-import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.om.Module;
+import org.apache.turbine.tool.TemplateLink;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.SkipFiltering;
-import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
@@ -74,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.69 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: ScarabLink.java,v 1.70 2004/01/31 18:51:39 dep4b Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering

@@ -120,7 +120,6 @@ import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabLink;
@@ -138,7 +137,6 @@ import org.tigris.scarab.util.word.MaxConcurrentSearchException;
 import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.QueryResult;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is used by the Scarab API
@@ -1670,7 +1668,6 @@ e.printStackTrace();
         ScarabLocalizationTool l10n = getLocalizationTool();
         search.setIssueListAttributeColumns(getRModuleUserAttributes());
 
-        List queryResults = new ArrayList();
         boolean searchSuccess = true;
         Intake intake = null;
 
