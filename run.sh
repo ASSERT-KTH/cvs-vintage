@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java $@ -jar columba.jar
+java -jar columba.jar $@

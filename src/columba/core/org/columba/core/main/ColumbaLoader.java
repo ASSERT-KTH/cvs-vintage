@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.columba.core.logging.ColumbaLogger;
+
 /**
  * ideas taken from www.jext.org (author Roman Guy)
  */
@@ -85,6 +87,9 @@ public class ColumbaLoader implements Runnable {
           client.close();
         }
 
+		if ( MainInterface.DEBUG )
+			ColumbaLogger.log.debug("passing to running Columba session:\n"+arguments.toString());
+		
         // do something with the arguments..
         handleArgs(arguments.toString());
 
@@ -107,6 +112,9 @@ public class ColumbaLoader implements Runnable {
   protected void handleArgs(String argumentString) {
     List v = new Vector();
 
+	// remove trailing "columba:"
+	argumentString = argumentString.substring(8,argumentString.length());
+	 
     StringTokenizer st = new StringTokenizer(argumentString, "%");
     while (st.hasMoreTokens()) {
       String tok = (String) st.nextToken();
@@ -114,7 +122,7 @@ public class ColumbaLoader implements Runnable {
     }
 
     String[] args = new String[v.size()];
-    args = (String[])v.toArray();
+    v.toArray( (String[]) args);
 
     new CmdLineArgumentHandler(args);
 

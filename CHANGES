@@ -1,3 +1,17 @@
+Version 0.10.2:
+ - mailurl commandline argument handling fixed
+ - opening composer with commandline argument wasn't updating 
+   the view correctly
+
+Version 0.10.1:
+
+ - xml-configuration saved as UTF-8 stream
+ - attachment viewer wasn't drawing all attachments when window too small
+ - on win32 platform opening attachments wasn't executing in background and blocked Columba
+ - disabled pop-before-smtp (SMTP authentification) when using IMAP
+ - sending/receiving of very small attachments wasn't working correctly
+ - fixed rpm package argument passing
+ 
 Version 0.10.0 ::lola rennt::
 
  - Mail-Component:

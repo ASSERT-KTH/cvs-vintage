@@ -7,6 +7,7 @@ package org.columba.core.main;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
 
 /**
@@ -42,26 +43,35 @@ public class CmdLineArgumentHandler {
         cmdLineParser.setBodyOption((String)mailToParser.get("body="));
       }
     }
-    ColumbaLogger.log.debug("Option Debug: "+cmdLineParser.getComposerOption());
-    ColumbaLogger.log.debug("Option subject: "+cmdLineParser.getSubjectOption());
+    
+    if ( MainInterface.DEBUG )
+    {
+    	ColumbaLogger.log.debug("Option Debug: "+cmdLineParser.getComposerOption());
+    	ColumbaLogger.log.debug("Option subject: "+cmdLineParser.getSubjectOption());
+		ColumbaLogger.log.debug("Option composer: "+cmdLineParser.getComposerOption());
+		ColumbaLogger.log.debug("Option mailurl: "+cmdLineParser.getMailurlOption());
+    }
+    
     if (cmdLineParser.getComposerOption()) {
-      ComposerController controller = new ComposerController();
+      ComposerModel model = new ComposerModel();
       if (cmdLineParser.getRcptOption() != null) {
-        controller.getModel().setTo(cmdLineParser.getRcptOption());
+        model.setTo(cmdLineParser.getRcptOption());
       }
       if (cmdLineParser.getSubjectOption() != null) {
-        controller.getModel().setSubject(cmdLineParser.getSubjectOption());
+		model.setSubject(cmdLineParser.getSubjectOption());
       }
       if (cmdLineParser.getCcOption() != null) {
-        controller.getModel().setHeaderField("Cc", cmdLineParser.getCcOption());
+		model.setHeaderField("Cc", cmdLineParser.getCcOption());
       }
       if (cmdLineParser.getBccOption() != null) {
-        controller.getModel().setHeaderField("Bcc", cmdLineParser.getBccOption());
+		model.setHeaderField("Bcc", cmdLineParser.getBccOption());
       }
       if (cmdLineParser.getBodyOption() != null) {
-        controller.getModel().setBodyText(cmdLineParser.getBodyOption());
+		model.setBodyText(cmdLineParser.getBodyOption());
       }
-      controller.openView();
+      
+      ComposerController c = new ComposerController();
+      c.setComposerModel(model);
     }
   }
 }

@@ -63,6 +63,9 @@ public class Main {
         buf.append("%");
       }
 
+	  if ( MainInterface.DEBUG )
+	  	ColumbaLogger.log.debug("trying to pass arguments to a running Columba session:\n"+buf.toString());
+	  
       writer.write(buf.toString());
       writer.flush();
       writer.close();

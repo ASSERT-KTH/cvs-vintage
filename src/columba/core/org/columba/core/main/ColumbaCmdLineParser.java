@@ -87,6 +87,7 @@ public class ColumbaCmdLineParser {
     checkBody(body, commandLineParser);
     checkComposer(composer, commandLineParser);
     checkSubject(subject, commandLineParser);
+    checkMailurl(mailurl, commandLineParser );
   }
 
   /**
@@ -187,6 +188,20 @@ public class ColumbaCmdLineParser {
       setComposerOption(composerValue.booleanValue());
     }
   }
+  
+  /**
+	* Checks the option --mailurl, if this is true the intern mailurlValue is set 
+	* @see ColumbaCmdLineParser#setMailurlOption(String), else the option is set to null.
+	* You can access this option via @see ColumbaCmdLineParser#getMailurlOption()
+	* @param mailurlOpt Composer Option @see CmdLineParser.Option
+	* @param parser parser which parsed the Option
+	*/
+	private void checkMailurl(CmdLineParser.Option mailurlOpt, CmdLineParser parser) {
+		String mailurlValue = (String) parser.getOptionValue(mailurlOpt);
+	  if (mailurlValue != null) {
+		setMailurlOption(mailurlValue);
+	  }
+	}
 
   /**
    * Checks the option --subject, if this is true the intern subjectValue is set 
@@ -209,10 +224,11 @@ public class ColumbaCmdLineParser {
     System.out.println();
     System.out.println("Mandatory arguments to long options are mandatory for short options too.");
     System.out.println("  -d, --debug\t\tprints debug informations to standard out");
-    System.out.println("  -c, --composer\tdisplays the composer window on startup");
     System.out.println("  -p, --path\t\tsets the path to the config directory");
+	System.out.println("  -c, --composer\tdisplays the composer window on startup");
     System.out.println("  -r, --rcpt\t\tsets the recipient for the composer " +      "(if the composer argument given)");
     System.out.println("  -b, --body\t\tsets the message body for the composer " +      "(if the composer argument given)");
+	System.out.println("  --mailurl\t\topens the composer window with the specified mailurl info");
     System.out.println("  --subject\t\tsets the subject for the composer " +      "(if the composer argument given)");
     System.out.println("  --cc\t\t\tsets the Cc for the composer (if the composer argument given)");
     System.out.println("  --bcc\t\t\tsets the Bcc for the composer " +      "(if the composer argument given)");
