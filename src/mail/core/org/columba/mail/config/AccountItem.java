@@ -194,6 +194,29 @@ public class AccountItem extends DefaultItem
 		
 		return false;		
 	}
+
+	/** {@inheritDoc} */
+	public boolean equals(Object obj) {
+		if (this == obj) return true;	// same object
+		if ((obj == null) || !(obj instanceof AccountItem)) return false;
+
+		/*
+		 * The fields on this object is in fact represented in the xml
+		 * structure found as getRoot(). Therefore super.equals()
+		 * should do the job
+		 */
+		return super.equals(obj);
+	}
+
+	/** {@inheritDoc} */
+	public int hashCode() {
+		/*
+		 * The fields on this object is in fact represented in the xml
+		 * structure found as getRoot(). Therefore super.hashCode()
+		 * should do the job.
+		 */
+		return super.hashCode();
+	}
 	
 }
 
