@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.11 2004/11/01 19:56:09 mvw Exp $
+// $Id: GUITestParserDisplay.java,v 1.12 2004/11/02 18:35:20 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.model.uml.foundation.extensionmechanisms.*;
 
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.foundation.core.MAttribute;
