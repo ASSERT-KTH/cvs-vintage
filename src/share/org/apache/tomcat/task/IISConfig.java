@@ -73,10 +73,10 @@ import java.util.*;
  */
 public class IISConfig  { // implements XXX
 
-    public static final String WORKERS_CONFIG = "/conf/workers.properties";
-    public static final String URL_WORKERS_MAP_CONFIG = "/conf/uriworkermap.properties";
+    public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
+    public static final String URL_WORKERS_MAP_CONFIG = "/conf/jk/uriworkermap.properties";
     public static final String JK_LOG_LOCATION = "/logs/iis_redirect.log";
-    public static final String IIS_REG_FILE = "/conf/iis_redirect.reg";    
+    public static final String IIS_REG_FILE = "/conf/jk/iis_redirect.reg";    
 
     public IISConfig() 
     {

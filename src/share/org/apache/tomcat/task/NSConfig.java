@@ -73,8 +73,8 @@ import java.util.*;
  */
 public class NSConfig  { // implements XXX
 
-    public static final String WORKERS_CONFIG = "/conf/workers.properties";
-    public static final String NS_CONFIG = "/conf/obj.conf";
+    public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
+    public static final String NS_CONFIG = "/conf/jk/obj.conf";
     public static final String JK_LOG_LOCATION = "/logs/netscape_redirect.log";
 
     Logger.Helper loghelper = new Logger.Helper("tc_log", this);

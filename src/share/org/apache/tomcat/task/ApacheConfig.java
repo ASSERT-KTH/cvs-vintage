@@ -76,9 +76,9 @@ import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
  */
 public class ApacheConfig  { // implements XXX
     // XXX maybe conf/
-    public static final String APACHE_CONFIG  = "/conf/tomcat-apache.conf";
-    public static final String MOD_JK_CONFIG  = "/conf/mod_jk.conf";
-    public static final String WORKERS_CONFIG = "/conf/workers.properties";
+    public static final String APACHE_CONFIG  = "/conf/jserv/tomcat-apache.conf";
+    public static final String MOD_JK_CONFIG  = "/conf/jk/mod_jk.conf";
+    public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
     public static final String JK_LOG_LOCATION = "/logs/mod_jk.log";
 
     public ApacheConfig() {
