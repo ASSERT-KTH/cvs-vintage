@@ -1,3 +1,36 @@
+Columba v1.0 RC3
+
+New features:
+- cleanup of message viewer component (fdietz)
+- added show attachments inline viewer for message viewer (fdietz)
+- added plugin-based viewers for various contents types (fdietz)
+- cleanup of table model for message list component (fdietz)
+- new filter toolbar for message list (fdietz)
+- moved concept of folders, filters and filter actions into core (fdietz)
+- improved plugin system exception handling (fdietz)
+- improved interpreter plugin support (fdietz)
+- new Groovy (http://groovy.codehaus.org/) interpreter plugin, allows
+  you to write plugins in the Groovy language (fdietz)
+- added a Groovy language Hello World plugin (fdietz)
+- cleanup of header-cache, performance improvements (fdietz)
+- cleanup of SpamAssassin plugin, added filter action (fdietz)
+
+Fixed bugs:
+- #1097936, textviewer should be initialized empty
+- tablemodel didn't update if null, header-cache default fields were modified
+- #1097017, Java 1.5 compiler warnings
+- #1095621, Font Color (white) is bad
+- #1097751, #1097717, inline attachment viewer "open" action
+- #1097756, online/offline mode doesn't as expected
+- #1093822, table model list doesn't update correctly sometimes
+- #1097822, allow to create vFolder as vFolder child
+- #1097935, double-click open-action in attachment list
+- #1092866, message-list shows thread-parent in italic
+- #1088886, building plugins broken
+- #1097751, inline attachment viewer "open" action
+- #1097935, double-click open-action in attachment list	
+- #1097756, online/offline mode doesn't as expected
+
 Columba v1.0 RC2
 
 New features:
