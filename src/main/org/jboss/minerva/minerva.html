@@ -1,0 +1,241 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<TITLE>JBuilder Project minerva.jpr</TITLE>
+</HEAD>
+<BODY>
+<H1>Minerva Object/Database Pools</H1>
+<HR>
+<P><FONT SIZE=+1>
+<STRONG>Project: </STRONG>Minerva Object Pools<BR>
+<STRONG>Author: </STRONG><A HREF="mailto:ammulder@alumni.princeton.edu">Aaron
+                     Mulder</A><BR>
+<STRONG>Description: </STRONG> Generic object pools, and specifically, JDBC
+ connection pools.<BR>
+<STRONG>Release: </STRONG> 0.95
+<BR><STRONG>Download Minerva JAR:</STRONG>
+   <A HREF="minerva.jar">minerva.jar</A> - not necessary for jBoss
+<BR><STRONG>Download Test Bean:</STRONG>
+   <A HREF="SQLTest.jar">SQLTest.jar</A> - includes jBoss 2.0 XML files
+<BR><STRONG>Download Test Client JAR:</STRONG>
+   <A HREF="SQLClient.jar">SQLClient.jar</A> - put in jboss/dist/client
+   and run with <CODE>java -jar SQLClient.jar</CODE>
+</FONT></P>
+<OL>
+  <LI><A HREF="#drivers">JDBC 1.0 drivers vs. JDBC 2.0 drivers</A></LI>
+  <LI><A HREF="#using">Using the JDBC Connection Pools in jBoss 2.0</A></LI>
+  <LI><A HREF="#client">Using the JDBC Connection Pool test EJB and client in jBoss 2.0</A></LI>
+  <LI><A HREF="#bugs">Outstanding Features/Bugs</A></LI>
+</OL>
+<HR>
+
+<H3><A NAME="drivers">JDBC 1.0 drivers vs. JDBC 2.0 drivers</A></H3>
+<P>The database drivers for JDBC 1.0 cannot participate in two-phase commits,
+  which is generally assumed to be used in a J2EE server.  It is possible for
+  the server to use a one-phase commit protocol, but only if it can establish
+  that it's safe.  JDBC 2.0 drivers may provide the appropriate support - which
+  is part of the optional JDBC 2.0 Standard Extension.</P>
+<P>This package can be used to pool either kind of connection - normal JDBC
+  1.0 or 2.0 one-phase commit connections, or JDBC 2.0 two-phase commit
+  connections.  For normal operation of a J2EE server, you must use the latter.
+  There is a set of wrappers for JDBC 1 drivers to operate in the two-phase
+  commit environment, under certain restrictions.  For example, if you request
+  several connection from the pool within the scope of one Transaction, you
+  will get the same connection every time.  Also, a connection is not returned
+  to the pool until you commit or rollback the transaction.  Finally, these
+  wrappers are not truly two-phase aware, and you will experience heuristic
+  commits or rollbacks (only a problem if one data source attemps to commit
+  while another attempts to rollback, etc.).</P>
+<P>If your driver supports one-phase commit, you would use it in the traditional
+  JDBC way - use the DriverManager to get a Connection.  You supply those
+  parameters to the pool configuration.  For two=phase commit, you must specify
+  the name of a vendor class (or the Minerva wrapper class) that implements
+  javax.sql.XADataSource, so there's no DriverManager interaction, though you
+  still provide certain connection parameters (which may or may not be the same
+  - see your vendor's documentation).  For the Minerva wrapper class, specify
+  the parameters as if you were using DriverManager (which is what the wrapper
+  classes do!).</P>
+
+<HR>
+
+<H3><A NAME="using">Using the JDBC Connection Pools in jBoss 2.0</A></H3>
+<P>There are four things you need to do:</P>
+<OL>
+  <LI>If you are building jBoss from source, the minerva packages are included.
+    If you are using a binary, they are not yet included, so you should include
+    the minerva.jar archive in your jBoss libraries</LI>
+  <LI>Include an MLET entry in your jboss.conf for each pool</LI>
+  <LI>Specify a Resource Manager in your jBoss configuration for each
+    EJB JAR</LI>
+  <LI>Specify a Resource Reference in your EJB configuration for each
+    EJB (two places)</LI>
+</OL>
+
+<H4>Including the JAR</H4>
+<P>If you're using a binary distribution, copy minerva.jar to
+  jboss/lib/ext/minerva.jar.</P>
+
+<H4>Add MLET entries for the MBeans</H4>
+<P>In the future, the MBeans will be included in the jBoss distribution, but
+  for now they live in the Minerva JAR.  Edit your jboss.conf to include a
+  section like the example below.  For a JDBC 2.0 pool (which participates in
+  Transactions), use the parameters in the table below.  The URL, username, password,
+  and Properties are used to connect to your underlying database.  So if you
+  had an Oracle database with JDBC 1.0 drivers that you wanted to pool, you'd
+  specify the Minerva 1.0 wrapper data source, and the Oracle URL and username
+  and password and properties (any you don't need should be included but left
+  blank).</P>
+<TABLE BORDER="1">
+  <TR><TH>Position</TH><TH>Type</TH><TH>Value</TH></TR>
+  <TR><TD>1</TD><TD>java.lang.String</TD><TD>Pool Name</TD></TR>
+  <TR><TD>2</TD><TD>java.lang.String</TD><TD>XADataSource class name (use org.jboss.minerva.xa.XADataSource for the JDBC 1.0 wrapper)</TD></TR>
+  <TR><TD>3</TD><TD>java.lang.String</TD><TD>JDBC Connection URL</TD></TR>
+  <TR><TD>4</TD><TD>java.lang.String</TD><TD>JDBC Connection user name</TD></TR>
+  <TR><TD>5</TD><TD>java.lang.String</TD><TD>JDBC Connection password</TD></TR>
+  <TR><TD>6</TD><TD>java.lang.String</TD><TD>JDBC Connection properties (in the format name=value;name=value;name=value)</TD></TR>
+  <TR><TD>7</TD><TD>java.lang.Integer</TD><TD>Pool minimum size (pool starts at 0, but never shrinks below this)</TD></TR>
+  <TR><TD>8</TD><TD>java.lang.Integer</TD><TD>Pool maximum size (exceptions once it's full)</TD></TR>
+  <TR><TD>9</TD><TD>java.lang.String</TD><TD><I>Optional!</I> Advanced Pool parameters (in the format name=value;name=value;name=value)</TD></TR>
+</TABLE>
+<P>Here are the valid properties for the pool parameters (case sensitive).  You
+  may include any or all of these in whatever order you prefer:</P>
+<TABLE BORDER="1">
+  <TR><TH>Name</TH><TH>Type</TH><TH>Description</TH><TH>Default</TH></TR>
+  <TR><TD>Blocking</TD><TD>boolean</TD><TD>Whether the pool should block if there's no connection available, or return null</TD><TD>false</TD></TR>
+  <TR><TD>GCEnabled</TD><TD>boolean</TD><TD>Whether the pool should attempt to return connections to the pool after a period of inactivity</TD><TD>false</TD></TR>
+  <TR><TD>GCInterval</TD><TD>long</TD><TD>How often (in ms) garbage collection and/or shrinking should run</TD><TD>120000</TD></TR>
+  <TR><TD>GCMinIdleTime</TD><TD>long</TD><TD>How long a connection must be unused (in ms) before being returned to the pool</TD><TD>1200000</TD></TR>
+  <TR><TD>ShrinkingEnabled</TD><TD>boolean</TD><TD>Whether the pool should shrink if some connections haven't been used recently</TD><TD>false</TD></TR>
+  <TR><TD>ShrinkMinIdleTime</TD><TD>long</TD><TD>How long a connection must be unused (in ms) in the pool before its eligible for shrinking</TD><TD>600000</TD></TR>
+  <TR><TD>ShrinkPercent</TD><TD>float (0-1)</TD><TD>How many of the eligible connections will be released</TD><TD>0.33</TD></TR>
+  <TR><TD>TimestampUsed</TD><TD>boolean</TD><TD>Whether to track last used times on SQL events (queries, cursor movements, etc.) (true) or just pool checkin and checkout (false)</TD><TD>false</TD></TR>
+</TABLE>
+
+<P>Here's an example with a JDBC 1.0 Oracle driver using the wrapper classes,
+  and custom configuring the pool paramters:</P>
+<PRE>
+&lt;MLET CODE = "org.jboss.jdbc.XADataSourceLoader" ARCHIVE="jboss.jar,minerva.jar" CODEBASE="../lib/ext/"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="TestOraclePool"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="org.jboss.minerva.xa.XADataSourceImpl"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="jdbc:oracle:thin:@host.domain.com:1521:instance"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="user"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="password"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE=""&gt;
+   &lt;ARG TYPE="java.lang.Integer" VALUE="2"&gt;
+   &lt;ARG TYPE="java.lang.Integer" VALUE="5"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="GCEnabled=true;ShrinkingEnabled=true;GCMinIdleTime=30000;GCInterval=10000;ShrinkMinIdleTime=30000"&gt;
+&lt;/MLET&gt;
+</PRE>
+<P>And here's the same thing (without pool parameters) using the native Oracle
+  XADataSource driver.  Note this is not recommended with the 8.1.6.0.1 release,
+  as the driver does not generate connection error events, so the connections
+  are never returned to the pool if there's a SQLException.  You still need to
+  provide connection parameters for the vendor pool implementation.</P>
+<PRE>
+&lt;MLET CODE = "org.jboss.jdbc.XADataSourceLoader" ARCHIVE="jboss.jar,minerva.jar" CODEBASE="../lib/ext/"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="TestOraclePool"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="oracle.jdbc.xa.client.OracleXADataSource"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="jdbc:oracle:thin:@host.domain.com:1521:instance"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="user"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE="password"&gt;
+   &lt;ARG TYPE="java.lang.String" VALUE=""&gt;
+   &lt;ARG TYPE="java.lang.Integer" VALUE="2"&gt;
+   &lt;ARG TYPE="java.lang.Integer" VALUE="5"&gt;
+&lt;/MLET&gt;
+</PRE>
+
+<H4>Specify Resource Managers</H4>
+<P>The pools you configured are bound in JNDI to  "jdbc.<I>PoolName</I>" for
+JDBC 1.0 pools (not described), or "xa.<I>PoolName</I>" for transactional pools
+(described above).  <I>These names will probably change in the future!</I></P>
+<P>You can add perform all of the following configuration in EJX, but I give
+XML samples for completeness.</p>
+<P>To create a ResourceManager, add an entry to <B>jboss.xml</B> that looks like
+the following (just include the resource-manager if you already have the
+resource-managers section!):</P>
+<PRE>
+     &lt;resource-managers&gt;
+       &lt;resource-manager res-class="org.jboss.ejb.deployment.JDBCResource"&gt;
+         &lt;res-name&gt;MyPooledDB&lt;/res-name&gt;
+         &lt;res-jndi-name&gt;xa.<I>PoolName</I>&lt;/res-jndi-name&gt;
+       &lt;/resource-manager&gt;
+     &lt;/resource-managers&gt;
+</PRE>
+
+<H4>Specify Resource for each Bean</H4>
+<P>Also in <B>jboss.xml</B>, within the beans you would like to access this
+pool, add a resource-ref entry.  The res-ref-name should match the res-name
+specified above, and the resource-name is the name your bean will use to access
+this resource.  Here's the sample (relevant addition in italics):</P>
+<PRE>
+     &lt;enterprise-beans&gt;
+       &lt;session&gt;
+         &lt;ejb-name&gt;SomeBean&lt;/ejb-name&gt;
+         &lt;jndi-name&gt;SomeBean&lt;/jndi-name&gt;
+         &lt;configuration-name&gt;Default Stateless SessionBean&lt;/configuration-name&gt;
+         <I>&lt;resource-ref&gt;
+           &lt;res-ref-name&gt;ResourceResName&lt;/res-ref-name&gt;
+           &lt;resource-name&gt;BeansDBName&lt;/resource-name&gt;
+         &lt;/resource-ref&gt;</I>
+       &lt;/session&gt;
+       &lt;secure&gt;true&lt;/secure&gt;
+     &lt;/enterprise-beans&gt;
+</PRE>
+<P>Finally, within your <B>ejb-jar.xml</B> you need to add a resource reference
+  for each bean that will use the pool:</P>
+<PRE>
+	 &lt;resource-ref&gt;
+	   &lt;description&gt;Database&lt;/description&gt;
+	   &lt;res-ref-name&gt;ResourceResName&lt;/res-ref-name&gt;
+	   &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+	   &lt;res-auth&gt;Container&lt;/res-auth&gt;
+	 &lt;/resource-ref&gt;
+</PRE>
+<P>Currently, the name used in ejb-jar.xml res-ref-name must match the name
+  used in jboss.xml res-ref-name, and the name used in jboss.xml resource-name
+  must match the name used in jboss.xml res-name.  The client sees the latter
+  as the java:comp/env/ JNDI name, so it's easiest to make all 4 names
+  match.  <I>This big was fixed recently, but may not be in the binary build
+  yet - please make all 4 names match for now!</I></P>
+
+<HR>
+
+<H3><A NAME="client">Using the JDBC Connection Pool test EJB and client in jBoss 2.0</A></H3>
+<P>There is a SQLTest.jar and a SQLClient.jar included with this
+package.  To run the tests, add an MLET tag for the test pool to your jboss.conf
+and then put SQLTest.jar in your jBoss deployment directory.  If it deploys
+correctly, add SQLClient.jar, jboss-client.jar, jnp-client.jar, ejb.jar, and
+jndi.properties to your client classpath, and run com.mearaworks.sql.SQLClient.
+Or take the easy route and put SQLClient.jar in you jboss/dist/client directory
+and run it with "java -jar SQLClient.jar".  It will give you a SQL&gt; propmt,
+from which you may execute multi-line SQL queries against the connections in the
+pool.  It is fairly simple-minded - anything that starts with "select" is
+executed as a query, otherwise as an update, and any SQL errors will cause it to
+exit.  But if you can successfully run simple queries, your pool is working!</P>
+<P><I>A note on names:</I> You must either name your pool "TestPool" or update
+the jboss.xml distributed in SQLTest.jar to make the Resource "TestDB" map to
+your pool name for the SQLTest bean.</P>
+
+<HR>
+
+<H3><A NAME="bugs">Outstanding Features/Bugs</A></H3>
+<UL>
+<LI>Last-used updates aren't implemented for prepared statements and callable
+  statements.</LI>
+<LI>Last-used updates aren't passed through by XAClientConnection even if
+  they're activated for the pool.</LI>
+<LI>JDBC 1.0 wrappers for XAConnections don't provide error notification on
+  ResultSet, PreparedStatement, or CallableStatement operations.</LI>
+<LI>JDBC 1.0 wrappers for XAConnections don't return the same connection for
+  every getXAConnection request for a particular transaction (Xid).</LI>
+<LI>MBeans for jBoss have an awfully unintuitive interface</LI>
+<LI>Document JDBC 1 interface and generic Object Pool interface</LI>
+<LI>Exception-handling does not yet follow the spec - on a recognized
+  SQLException, the connection is automatically returned to the pool.  This will
+  likely cause errors with SQLExceptions in the midst of a rollback or commit
+  (since then the connection will be returned twice!)</LI>
+<LI>Connections are not removed from the pool in the case of a failure during
+  commit or rollback (JDBC 1 and JDBC 2 wrappers).</LI>
+</UL>
+</BODY>
+</HTML>

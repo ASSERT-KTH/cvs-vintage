@@ -1,0 +1,16 @@
+<HTML>
+  <HEAD>
+    <TITLE>Minerva Pools: Package org.jboss.minerva.xa</TITLE>
+  </HEAD>
+  <BODY BGCOLOR="WHITE">
+    <P>Transactional wrappers for JDBC drivers that don't implement the JDBC
+      2.0 standard extension.  This allows an "old" JDBC driver to participate
+      in a two-phase commit environment, though with certain limitations.  For
+      example, you cannot use one transaction across multiple connections, and
+      there will be heuristic failures if commits or rollbacks fail under
+      certain circumstances.  This wrapper also allows connections to
+      participate in JTA transactions, so a J2EE server can manage them
+      appropriately.  Highly recommended for use in a J2EE server (as opposed
+      to using the non-conformant connections directly).</P>
+  </BODY>
+</HTML>
