@@ -92,7 +92,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.57 2002/03/24 23:22:55 maartenc Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.58 2002/04/05 01:14:57 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -151,7 +151,7 @@ public class ScarabUserImpl
             {
                 return getPrivateLastName();
             }
-            
+
             protected Vector getRModuleUserAttributes(Criteria crit)
                 throws TorqueException
             {
@@ -200,6 +200,10 @@ public class ScarabUserImpl
     private String getPrivateLastName()
     {
         return getLastName();
+    }
+    public String getName()
+    {
+        return internalUser.getName();
     }
     private Vector getPrivateRModuleUserAttributes(Criteria crit)
         throws TorqueException
