@@ -33,9 +33,12 @@ public class Identity {
     
     public Identity(XmlElement e) throws ParserException {
         this.e = e;
-        address = Address.parse(e.getAttribute("address"));
-        address.setDisplayName(e.getAttribute("name"));
-        String value = e.getAttribute("reply_address");
+        String value = e.getAttribute("address");
+        if (value != null && value.length() > 0) {
+            address = Address.parse(e.getAttribute("address"));
+            address.setDisplayName(e.getAttribute("name"));
+        }
+        value = e.getAttribute("reply_address");
         if (value != null && value.length() > 0) {
             replyToAddress = Address.parse(value);
         }
@@ -57,7 +60,11 @@ public class Identity {
     
     public void setReplyToAddress(Address address) {
         replyToAddress = address;
-        e.addAttribute("reply_address", address.getMailAddress());
+        if (address != null) {
+            e.addAttribute("reply_address", address.getMailAddress());
+        } else {
+            e.getAttributes().remove("reply_address");
+        }
     }
     
     public String getOrganisation() {

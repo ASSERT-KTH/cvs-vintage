@@ -75,7 +75,8 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
             nameTextField.setText(address.getDisplayName());
             addressTextField.setText(address.getMailAddress());
             address = identity.getReplyToAddress();
-            replyaddressTextField.setText(address.getMailAddress());
+            replyaddressTextField.setText(
+                    address == null ? "" : address.getMailAddress());
             organisationTextField.setText(identity.getOrganisation());
             File signature = identity.getSignature();
             selectSignatureButton.setText(
