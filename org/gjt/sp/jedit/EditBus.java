@@ -63,7 +63,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditBus.java,v 1.10 2003/03/31 01:42:32 spestov Exp $
+ * @version $Id: EditBus.java,v 1.11 2003/05/01 02:21:26 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -138,9 +138,11 @@ public class EditBus
 				{
 					long start = System.currentTimeMillis();
 					comp.handleMessage(message);
-					Log.log(Log.DEBUG,EditBus.class,comp + ": " +
-						(System.currentTimeMillis() - start)
-						+ " ms");
+					long time = (System.currentTimeMillis() - start);
+					if(time != 0)
+					{
+						Log.log(Log.DEBUG,EditBus.class,comp + ": " + time + " ms");
+					}
 				}
 				else
 					comps[i].handleMessage(message);

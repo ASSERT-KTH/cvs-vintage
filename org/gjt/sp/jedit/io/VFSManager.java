@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000 Slava Pestov
+ * Copyright (C) 2000, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +42,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * site. See the {@link VFS} class for implementation details.
  *
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.9 2003/04/24 02:29:42 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.10 2003/05/01 02:21:27 spestov Exp $
  */
 public class VFSManager
 {

@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.248 2003/04/30 05:47:11 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.249 2003/05/01 02:21:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3984,7 +3984,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 
 	//{{{ collapseFold() method
 	/**
-	 * Like {@link FoldVisibilityManager#collapseFold(int)}, but
+	 * Like {@link DisplayManager#collapseFold(int)}, but
 	 * also moves the caret to the first line of the fold.
 	 * @since jEdit 4.0pre3
 	 */
@@ -4008,7 +4008,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 
 	//{{{ expandFold() method
 	/**
-	 * Like {@link FoldVisibilityManager#expandFold(int,boolean)}, but
+	 * Like {@link DisplayManager#expandFold(int,boolean)}, but
 	 * also moves the caret to the first sub-fold.
 	 * @since jEdit 4.0pre3
 	 */

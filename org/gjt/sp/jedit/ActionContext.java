@@ -29,12 +29,13 @@ import java.util.*;
  * in jEdit:
  * <ul>
  * <li>{@link org.gjt.sp.jedit.jEdit#getActionContext()} - editor actions
- * <li>{@link org.gjt.sp.jedit.VFSBrowser#getActionContext()} - browser actions
+ * <li>{@link org.gjt.sp.jedit.browser.VFSBrowser#getActionContext()} - browser
+ * actions
  * </ul>
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ActionContext.java,v 1.2 2003/04/30 21:22:34 spestov Exp $
+ * @version $Id: ActionContext.java,v 1.3 2003/05/01 02:21:26 spestov Exp $
  */
 public abstract class ActionContext
 {

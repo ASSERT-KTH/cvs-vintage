@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.31 2003/04/25 06:09:46 spestov Exp $
+ * @version $Id: Macros.java,v 1.32 2003/05/01 02:21:26 spestov Exp $
  */
 public class Macros
 {
@@ -389,6 +389,8 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 			this.path = path;
 
 			jEdit.setTemporaryProperty(getName() + ".label",label);
+			jEdit.setTemporaryProperty(getName() + ".mouse-over",
+				handler.getLabel() + " - " + path);
 		} //}}}
 
 		//{{{ getHandler() method
@@ -397,12 +399,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 			return handler;
 		}
 		//}}}
-
-		//{{{ getMouseOverText() method
-		public String getMouseOverText()
-		{
-			return handler.getLabel() + " - " + path;
-		} //}}}
 
 		//{{{ getPath() method
 		public String getPath()
