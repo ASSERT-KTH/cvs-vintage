@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.25 2004/01/28 07:17:46 linus Exp $
+// $Id: ProjectManager.java,v 1.26 2004/02/10 21:17:11 sz9 Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -411,3 +411,13 @@ public final class ProjectManager {
         oldProject.remove();
     }
 }
+
+
+/**
+ * @deprecated since 0.15.1. TODO: What is this replaced by?
+ */
+class ResetStatsLater implements Runnable {
+	public void run() {
+		Project.resetStats();
+	}
+} /* end class ResetStatsLater */

@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.94 2004/02/03 07:03:42 linus Exp $
+// $Id: Project.java,v 1.95 2004/02/10 21:17:11 sz9 Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1493,12 +1493,3 @@ public class Project implements java.io.Serializable, TargetListener {
         TargetManager.getInstance().removeTargetListener(this);
     }
 } /* end class Project */
-
-/**
- * @deprecated since 0.15.1. TODO: What is this replaced by?
- */
-class ResetStatsLater implements Runnable {
-    public void run() {
-        Project.resetStats();
-    }
-} /* end class ResetStatsLater */
