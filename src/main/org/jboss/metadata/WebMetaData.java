@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class WebMetaData extends MetaData
 {
@@ -310,13 +310,26 @@ public class WebMetaData extends MetaData
    }
 
    /**
-    * 
+    * Access the RunAsIdentity associated with the given servlet
     * @param servletName - the servlet-name from the web.xml
     * @return RunAsIdentity for the servet if one exists, null otherwise
     */ 
    public RunAsIdentity getRunAsIdentity(String servletName)
    {
       RunAsIdentity runAs = (RunAsIdentity) runAsIdentity.get(servletName);
+      if( runAs == null )
+      {
+         // Check for a web.xml run-as only specification
+         synchronized( runAsIdentity )
+         {
+            String roleName = (String) runAsNames.get(servletName);
+            if( roleName != null )
+            {
+               runAs = new RunAsIdentity(roleName, null);
+               runAsIdentity.put(servletName, runAs);
+            }
+         }
+      }
       return runAs;
    }
 
