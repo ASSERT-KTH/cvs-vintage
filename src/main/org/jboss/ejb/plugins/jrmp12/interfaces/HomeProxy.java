@@ -13,11 +13,11 @@ import  org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class HomeProxy
    extends org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy
-   implements org.ejboss.proxy.InvocationHandler
+   implements org.jboss.proxy.InvocationHandler
 {
    public HomeProxy(String name, ContainerRemote container, boolean optimize)
    {

@@ -13,11 +13,11 @@ import  org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class StatefulSessionProxy
    extends org.jboss.ejb.plugins.jrmp.interfaces.StatefulSessionProxy
-   implements org.ejboss.proxy.InvocationHandler
+   implements org.jboss.proxy.InvocationHandler
 {
    public StatefulSessionProxy(String name, ContainerRemote container, Object id, boolean optimize)
    {
