@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.30 2002/05/27 07:53:14 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.31 2002/05/27 09:02:38 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -541,7 +541,10 @@ public class GUIUtilities
 	 * Displays a VFS file selection dialog box.
 	 * @param view The view
 	 * @param path The initial directory to display. May be null
-	 * @param type The dialog type
+	 * @param type The dialog type. One of
+	 * <code>VFSBrowser.OPEN_DIALOG</code>,
+	 * <code>VFSBrowser.SAVE_DIALOG</code>, or
+	 * <code>VFSBrowser.CHOOSE_DIRECTORY_DIALOG</code>.
 	 * @param multipleSelection True if multiple selection should be allowed
 	 * @return The selected file(s)
 	 * @since jEdit 2.6pre2
