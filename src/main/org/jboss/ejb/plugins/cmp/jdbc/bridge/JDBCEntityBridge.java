@@ -54,7 +54,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -365,6 +365,10 @@ public class JDBCEntityBridge implements EntityBridge {
       return metadata.getListCacheMax();
    }
    
+   public int getFetchSize() {
+      return metadata.getFetchSize();
+   }
+
    public Object createPrimaryKeyInstance() {
       if(metadata.getPrimaryKeyFieldName() ==  null) {
          try {

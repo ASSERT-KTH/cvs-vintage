@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -104,6 +104,11 @@ public class JDBCLoadEntityCommand {
             log.debug("Executing SQL: " + sql);
          }
          ps = con.prepareStatement(sql);
+
+         // Set the fetch size of the statement
+         if(manager.getEntityBridge().getFetchSize() > 0) {
+            ps.setFetchSize(manager.getEntityBridge().getFetchSize());
+         }
          
          // set the parameters
          

@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -76,6 +76,11 @@ public class JDBCLoadRelationCommand {
          // create the statement
          log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
+
+         // Set the fetch size of the statement
+         if(manager.getEntityBridge().getFetchSize() > 0) {
+            ps.setFetchSize(manager.getEntityBridge().getFetchSize());
+         }
          
          // get the load fields
          List myKeyFields = getMyKeyFields(cmrField);

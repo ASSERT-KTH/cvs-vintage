@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -178,6 +178,12 @@ public final class JDBCEntityMetaData {
    private final int listCacheMax;
 
    /**
+    * The number of entities to read in one round-trip to the 
+    * underlying data store.
+    */
+   private final int fetchSize;
+
+   /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and 
     * with the data from the entity meta data which is loaded from the
     * ejb-jar.xml file.
@@ -197,6 +203,7 @@ public final class JDBCEntityMetaData {
       entityName = entity.getEjbName();
       abstractSchemaName = entity.getAbstractSchemaName();
       listCacheMax = 1000;
+      fetchSize = 0;
 
       try {
          entityClass = getClassLoader().loadClass(entity.getEjbClass());
@@ -409,7 +416,12 @@ public final class JDBCEntityMetaData {
       String readTimeOutStr =
             MetaData.getOptionalChildContent(element, "read-time-out");
       if(readTimeOutStr != null) {
-         readTimeOut = Integer.parseInt(readTimeOutStr);
+         try {
+            readTimeOut = Integer.parseInt(readTimeOutStr);
+         } catch (NumberFormatException e) {
+            throw new DeploymentException("Invalid number format in " +
+                  "read-time-out '" + readTimeOutStr + "': " + e);
+         }
       } else {
          readTimeOut = defaultValues.getReadTimeOut();
       }
@@ -438,7 +450,7 @@ public final class JDBCEntityMetaData {
          try {
             listCacheMax = Integer.parseInt(listCacheMaxStr);
          } catch (NumberFormatException e) {
-            throw new DeploymentException("Wrong number format of read " +
+            throw new DeploymentException("Invalid number format in read-" +
                   "ahead list-cache-max '" + listCacheMaxStr + "': " + e);
          }
          if(listCacheMax < 0) {
@@ -447,6 +459,24 @@ public final class JDBCEntityMetaData {
          }
       } else {
          listCacheMax = defaultValues.getListCacheMax();
+      }
+
+      // fetch-size
+      String fetchSizeStr = 
+      MetaData.getOptionalChildContent(element, "fetch-size");
+      if(fetchSizeStr != null) {
+         try {
+            fetchSize = Integer.parseInt(fetchSizeStr);
+         } catch (NumberFormatException e) {
+            throw new DeploymentException("Invalid number format in " +
+                  "fetch-size '" + fetchSizeStr + "': " + e);
+         }
+         if(fetchSize < 0) {
+            throw new DeploymentException("Negative value for fetch size " +
+                  "fetch-size '" + fetchSizeStr + "'.");
+         }
+      } else {
+         fetchSize = defaultValues.getFetchSize();
       }
 
       // cmp fields
@@ -859,9 +889,21 @@ public final class JDBCEntityMetaData {
       return rowLocking;
    }
 
+   /**
+    * The maximum number of qurey result lists that will be tracked.
+    */
    public int getListCacheMax() {
       return listCacheMax;
    }
+
+   /**
+    * The number of rows that the database driver should get in a single
+    * trip to the database.
+    */
+   public int getFetchSize() {
+      return fetchSize;
+   }
+
 
    /**
     * Gets the queries defined on this entity

@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -96,6 +96,11 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
             log.debug("Executing SQL: " + sql);
          }  
          ps = con.prepareStatement(sql);
+
+         // Set the fetch size of the statement
+         if(manager.getEntityBridge().getFetchSize() > 0) {
+            ps.setFetchSize(manager.getEntityBridge().getFetchSize());
+         }
 
          // set the parameters
          for(int i=0; i<parameters.size(); i++) {
