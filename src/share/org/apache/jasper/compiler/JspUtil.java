@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.8 2000/01/14 04:34:38 shemnon Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/14 04:34:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.9 2000/03/28 19:16:12 akv Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/03/28 19:16:12 $
  *
  * ====================================================================
  * 
@@ -135,7 +135,7 @@ public class JspUtil {
 	XmlDocumentBuilder builder = new XmlDocumentBuilder();
 	
         com.sun.xml.parser.ValidatingParser 
-            parser = new com.sun.xml.parser.ValidatingParser();
+            parser = new com.sun.xml.parser.ValidatingParser(true);
 
         /***
          * These lines make sure that we have an internal catalog entry for 

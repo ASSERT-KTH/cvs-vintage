@@ -213,7 +213,7 @@ public abstract class Logger {
     public void setPath(String path) {
         if (File.separatorChar == '/')
             this.path = path.replace('\\', '/');
-        else if (File.separatorChar = '\\')
+        else if (File.separatorChar == '\\')
             this.path = path.replace('/', '\\');
     }
 
