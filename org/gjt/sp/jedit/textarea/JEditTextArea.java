@@ -47,7 +47,7 @@ import org.gjt.sp.jedit.syntax.*;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.178 2003/01/31 04:49:31 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.179 2003/01/31 18:28:51 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2121,7 +2121,10 @@ forward_scan:		do
 					int collapseFolds = buffer.getIntegerProperty(
 						"collapseFolds",0);
 					if(collapseFolds != 0)
+					{
 						foldVisibilityManager.expandFolds(collapseFolds);
+						foldVisibilityManager.expandFold(newCaretLine,false);
+					}
 					else
 						foldVisibilityManager.expandAllFolds();
 				}

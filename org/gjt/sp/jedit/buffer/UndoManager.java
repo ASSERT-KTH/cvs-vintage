@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.12 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.13 2003/01/31 18:28:51 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -290,7 +290,7 @@ public class UndoManager
 
 	//{{{ Inner classes
 
-	//{{{ Edit interface
+	//{{{ Edit class
 	abstract class Edit
 	{
 		//{{{ undo() method

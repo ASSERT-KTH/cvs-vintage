@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Convenience methods for evaluating BeanShell code.
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.26 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.27 2003/01/31 18:28:51 spestov Exp $
  */
 public class BeanShell
 {
@@ -582,6 +582,7 @@ public class BeanShell
 		global = new NameSpace("jEdit embedded BeanShell interpreter");
 		global.importPackage("org.gjt.sp.jedit");
 		global.importPackage("org.gjt.sp.jedit.browser");
+		global.importPackage("org.gjt.sp.jedit.buffer");
 		global.importPackage("org.gjt.sp.jedit.gui");
 		global.importPackage("org.gjt.sp.jedit.help");
 		global.importPackage("org.gjt.sp.jedit.io");
