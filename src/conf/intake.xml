@@ -491,6 +491,7 @@
         <field name="Description" key="desc" type="String"> 
             <rule name="maxLength" value="255">Attribute description must be less than 255 characters long</rule>
         </field>
+        <field name="ScopeId" key="scp" type="NumberKey"/>
         <field name="AttributesAndOptionsForGrouping" key="fao" 
                type="String" multiValued="true"/>
         <field name="NewDate" key="date" type="DateString">

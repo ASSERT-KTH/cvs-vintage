@@ -51,8 +51,13 @@ later).</p>
     </select>
    </td>
   </tr>
+  <tr>
+   <th width="120">Availability</th>
+   <td>#reportScopeSelectBox ($intakeReport)</td>
+  </tr>
  </table>
 </div>
+
 
 <div class="functnbar2">
   <input type="submit" value="Continue" name="eventSubmit_doStep1" />

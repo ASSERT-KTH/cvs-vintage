@@ -8,11 +8,11 @@
 
 <h3>Saved reports</h3>
 
+#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
+#if ($reports.size() > 0 )
 <div>
 Click on "Availability" to execute report.
 </div>
-#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
-#if ($reports.size() > 0 )
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">Select</th>
@@ -26,9 +26,19 @@ Click on "Availability" to execute report.
   #set ($group = $intake.Report.mapTo($report))
   #indexedRows($velocityCount)
 <td><input type="checkbox" name="report_id" value="$report.ReportId">
-<td>$link.setPage("reports,Step1.vm").setLabel("$report.Name").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doEditstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")</td>
+
+<td>
+#if ($report.isEditable($data.User))
+$link.setPage("reports,Step1.vm").setLabel("$report.Name").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doEditstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")
+#else
+$report.Name
+#end
+</td>
+
 <td>$!report.Description</td>
-<td>$link.setPage("reports,Step1.vm").setLabel("Personal profile").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doRunstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")</td>
+
+<td>$link.setPage("reports,Step1.vm").setLabel("$report.Scope.Name").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doRunstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")</td>
+
 <td>
  #set ($createdUser = $scarabR.getUser($report.UserId.toString()))
 <a href="mailto:$createdUser.Email">$createdUser.Name</a></td>

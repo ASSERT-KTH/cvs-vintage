@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.33 2002/05/13 22:53:16 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.34 2002/05/14 04:32:05 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -564,8 +564,13 @@ public abstract class AbstractScarabModule
         {        
             Criteria crit = new Criteria()
                 .add(ReportPeer.MODULE_ID, getModuleId())
-                .add(ReportPeer.DELETED, 0)
-                .add(ReportPeer.USER_ID, user.getUserId());
+                .add(ReportPeer.DELETED, 0);
+            Criteria.Criterion cc = crit.getNewCriterion(
+                ReportPeer.SCOPE_ID, Scope.MODULE__PK, Criteria.EQUAL);
+            cc.or(crit.getNewCriterion(
+                ReportPeer.USER_ID, user.getUserId(), Criteria.EQUAL));
+            crit.add(cc);
+            crit.addAscendingOrderByColumn(ReportPeer.SCOPE_ID);      
             reports = ReportPeer.doSelect(crit);
             ScarabCache.put(reports, this, GET_SAVED_REPORTS, user);
         }

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.96 2002/05/09 02:16:14 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.97 2002/05/14 04:32:05 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1350,6 +1350,11 @@
     -->
     <column name="QUERY_STRING" required="true" type="LONGVARCHAR"/>
 
+    <!--
+        Type.
+    -->
+    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"/>
+
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1"/>
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"/>
@@ -1362,6 +1367,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_SCOPE">
+        <reference local="SCOPE_ID" foreign="SCOPE_ID"/>
     </foreign-key>
 </table>
 

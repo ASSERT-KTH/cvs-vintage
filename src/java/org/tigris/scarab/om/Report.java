@@ -93,6 +93,7 @@ import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.util.OptionModel;
 import org.tigris.scarab.util.TableModel;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -169,6 +170,37 @@ public  class Report
         {
             log().error(e);
          }
+    }
+
+    public boolean isEditable(ScarabUser user)
+    {
+        boolean isEditable = false;
+        try
+        {
+            isEditable = isNew()
+                ||
+                ( Scope.PERSONAL__PK.equals(getScopeId()) 
+                  && user.getUserId().equals(getUserId()) )
+                ||
+                (Scope.MODULE__PK.equals(getScopeId()) &&
+                 user.hasPermission(ScarabSecurity.MODULE__EDIT, getModule()));
+        }
+        catch (TorqueException e)
+        {
+            isEditable = true;
+            log().error(e);
+        }
+        return isEditable;
+    }
+
+    public NumberKey getScopeId()
+    {
+        NumberKey id = super.getScopeId();
+        if (id == null) 
+        {
+            id = Scope.PERSONAL__PK;
+        }
+        return id;
     }
 
     public List getReportTypes()
