@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.mail;
 
 import java.io.InputStream;
@@ -20,33 +20,33 @@ import javax.mail.Session;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Authenticator;
 
-import org.jboss.util.ServiceMBeanSupport;						 
-import org.jboss.naming.NonSerializableFactory;						 
+import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.naming.NonSerializableFactory;
 
 /**
  * MBean that gives support for JavaMail. Object of class javax.mail.Session will be bound
  * in JNDI under java:/ namespace with the name provided with method {@link #setJNDIName}.
- *      
+ *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MailService
 	extends ServiceMBeanSupport
 	implements MailServiceMBean
 {
 	// Constants -----------------------------------------------------
-	
+
 	// Attributes ----------------------------------------------------
 	private String m_user;
 	private String m_password;
 	private String m_properties;
 	private String m_jndiName;
 	private String m_bindName;
-	
+
 	// Static --------------------------------------------------------
 
 	// Constructors --------------------------------------------------
-	
+
 	// Public --------------------------------------------------------
 	public String getName()
 	{
@@ -66,14 +66,14 @@ public class MailService
 	{
 		// Setup password authentication
 		final PasswordAuthentication pa = new PasswordAuthentication(getUser(), getPassword());
-		Authenticator a = new Authenticator() 
+		Authenticator a = new Authenticator()
 		{
 			protected PasswordAuthentication getPasswordAuthentication()
 			{
 				return pa;
 			}
 		};
-		
+
 		// Read mail properties from configuration directory
 		String properties = getConfigurationFile();
 		// If MBean does not provide configuration file, default to mail.properties
@@ -82,7 +82,7 @@ public class MailService
 		if (is == null) {throw new java.io.FileNotFoundException("Cannot find file '" + properties + "'");}
 		Properties p = new Properties();
 		p.load(is);
-		
+
 		// Finally create a mail session
 		Session session = Session.getInstance(p, a);
 		bind(session);
@@ -91,7 +91,7 @@ public class MailService
 	public void stopService()
 	{
 		// Unbind from JNDI
-		try 
+		try
 		{
 			unbind();
 		}
@@ -100,7 +100,7 @@ public class MailService
 			log.exception(x);
 		}
 	}
-	
+
 
 	// Private -----------------------------------------------------
 	private void bind(Session session) throws NamingException
@@ -110,7 +110,7 @@ public class MailService
 		if (name == null) {name = "java:/Mail";}
 		else if (!name.startsWith("java:/")) {name = "java:/" + name;}
 		m_bindName = name;
-		
+
 		// Ah ! Session isn't serializable, so we use a helper class
 		NonSerializableFactory.bind(m_bindName, session);
 
@@ -128,16 +128,16 @@ public class MailService
 			}
 			n = n.getSuffix(1);
 		}
-		
+
 		// The helper class NonSerializableFactory uses address type nns, we go on to
 		// use the helper class to bind the javax.mail.Session object in JNDI
-		StringRefAddr addr = new StringRefAddr(NonSerializableFactory.ADDRESS_TYPE, m_bindName);
+		StringRefAddr addr = new StringRefAddr("nns", m_bindName);
 		Reference ref = new Reference(Session.class.getName(), addr, NonSerializableFactory.class.getName(), null);
 		ctx.bind(n.get(0), ref);
-		
+
 		log.log("Mail Service '" + getJNDIName() + "' bound to " + m_bindName);
 	}
-	
+
 	private void unbind() throws NamingException
 	{
 		if (m_bindName != null)
@@ -145,6 +145,6 @@ public class MailService
 			new InitialContext().unbind(m_bindName);
 			NonSerializableFactory.unbind(m_bindName);
 			log.log("Mail service '" + getJNDIName() + "' removed from JNDI");
-		}		
+		}
 	}
 }
