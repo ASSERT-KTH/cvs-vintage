@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -392,7 +392,15 @@ public final class EJBQLToSQL92Compiler
 
          if(path.isCMPField())
          {
-            throw new IllegalStateException("selecting CMP fields is not supported yet.");
+            // set the select object
+            JDBCFieldBridge selectField = (JDBCFieldBridge)path.getCMPField();
+            selectManager = selectField.getManager();
+            selectObject = selectField;
+            setTypeFactory(selectManager.getJDBCTypeFactory());
+
+            addLeftJoinPath(path);
+            String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
+            SQLUtil.getColumnNamesClause(selectField, alias, sql);
          }
          else
          {
