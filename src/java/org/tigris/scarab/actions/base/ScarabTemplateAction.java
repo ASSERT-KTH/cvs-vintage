@@ -59,13 +59,14 @@ import org.apache.turbine.tool.IntakeTool;
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.om.ScarabUser;
 
 /**
  *  This is a helper class that extends TemplateAction to add
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.10 2001/12/31 23:43:02 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.11 2002/01/01 00:32:35 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
