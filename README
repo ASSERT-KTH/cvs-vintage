@@ -60,3 +60,6 @@ workspace builds. Also, you must, MUST run the tests. All tests must
 pass before checking in code. Yes, we just started adding tests, but
 as time goes on, this will be our sanity check.
 
+This is not a MUST for changes to Java code but if you modify .bat or
+sh scripts you MUST make sure that it atleast builds on Solaris, and
+Windows NT.
