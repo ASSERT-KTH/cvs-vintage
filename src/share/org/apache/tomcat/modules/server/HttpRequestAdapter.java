@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Attic/HttpRequestAdapter.java,v 1.1 2000/09/17 06:37:52 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/09/17 06:37:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Attic/HttpRequestAdapter.java,v 1.2 2000/09/24 03:34:31 nacho Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/09/24 03:34:31 $
  *
  * ====================================================================
  *
@@ -428,17 +428,17 @@ public class HttpRequestAdapter extends Request {
 	queryString=queryMB.toString();
 
 	// Perform URL decoding only if necessary
-	if ((uriMB.indexOf('%') >= 0) || (uriMB.indexOf('+') >= 0)) {
+//	if ((uriMB.indexOf('%') >= 0) || (uriMB.indexOf('+') >= 0)) {
 
-	    try {
+//	    try {
 		// XXX rewrite URLDecode to avoid allocation
-		requestURI = uriMB.toString();
-		requestURI = RequestUtil.URLDecode(requestURI);
-	    } catch (Exception e) {
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		return;
-	    }
-	}
+//		requestURI = uriMB.toString();
+//		requestURI = RequestUtil.URLDecode(requestURI);
+//	    } catch (Exception e) {
+//		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//		return;
+//	    }
+//	}
 
 	//	loghelper.log("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
 
