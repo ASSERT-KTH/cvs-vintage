@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cvs.xml,v 1.1 2003/03/23 09:25:27 linus Exp $ -->
+<!-- $Id: cvs.xml,v 1.2 2003/08/13 18:13:46 linus Exp $ -->
 
   <chapter id="cvs">
     <title>How to work with CVS</title>
