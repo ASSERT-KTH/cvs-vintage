@@ -12,6 +12,8 @@
  <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
  <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
  <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
+ 
+ <!-- message menu -->
  <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
  <action name="SaveMessage" class="org.columba.mail.gui.table.action.SaveMessageAction"/>
  <action name="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
@@ -39,4 +41,18 @@
  <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnToAction"/>
  <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
  <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
+ 
+ <!-- tree menu -->
+ <action name="ApplyFilter" class="org.columba.mail.gui.tree.action.ApplyFilterAction"/>
+ <action name="CreateSubFolder" class="org.columba.mail.gui.tree.action.CreateSubFolderAction"/>
+ <action name="CreateVirtualFolder" class="org.columba.mail.gui.tree.action.CreateVirtualFolderAction"/>
+ <action name="EmptyFolder" class="org.columba.mail.gui.tree.action.EmptyFolderAction"/>
+ <action name="ExpungeFolder" class="org.columba.mail.gui.tree.action.ExpungeFolderAction"/>
+ <action name="FilterPreferences" class="org.columba.mail.gui.tree.action.FilterPreferencesAction"/>
+ <action name="RemoveFolder" class="org.columba.mail.gui.tree.action.RemoveFolderAction"/>
+ <action name="RenameFolder" class="org.columba.mail.gui.tree.action.RenameFolderAction"/>
+ <action name="SubscribeFolder" class="org.columba.mail.gui.tree.action.SubscribeFolderAction"/>
+ 
+ 
+ 
 </actionlist>

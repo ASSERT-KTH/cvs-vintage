@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.tree.action;
+package org.columba.mail.gui.tree;
 
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -23,7 +23,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
-import org.columba.mail.gui.tree.TreeController;
 
 public class FolderTreeMouseListener extends MouseAdapter
 {

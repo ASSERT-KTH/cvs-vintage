@@ -29,7 +29,6 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
-import org.columba.mail.gui.tree.action.FolderTreeMouseListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.menu.FolderTreeMenu;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;

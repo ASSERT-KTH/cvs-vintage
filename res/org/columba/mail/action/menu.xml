@@ -26,6 +26,19 @@
 	</menu>
 	
 	<menu name="menu_folder">
+	 <menuitem action="CreateSubFolder"/>
+	 <menuitem action="CreateVirtualFolder"/>
+	 <separator/>
+	 <menuitem action="RenameFolder"/>
+	 <menuitem action="RemoveFolder"/>
+	 <separator/>
+	 <menuitem action="ExpungeFolder"/>
+	 <menuitem action="EmptyFolder"/>
+	 <separator/>
+	 <menuitem action="ApplyFilter"/>
+	 <menuitem action="FilterPreferences"/>
+	 <separator/>
+	 <menuitem action="SubscribeFolder"/>
 	</menu>
 	
 	<menu name="menu_message">
