@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Main.java,v 1.6 2002/05/31 13:02:14 lqd Exp $
+ * $Id: Main.java,v 1.7 2004/04/02 12:29:07 tdiesler Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
@@ -42,7 +42,7 @@ import org.jboss.metadata.XmlFileLoader;
  * <a href="http://www.ejboss.org">JBoss project</a>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since  	JDK 1.3
  */
 public class Main
@@ -76,7 +76,7 @@ public class Main
          xfl.setClassLoader(cl);
          verifier.addVerificationListener(new Listener());
 
-         verifier.verify(url, xfl.load());
+         verifier.verify(url, xfl.load(null));
       }
       catch (Exception e)
       {

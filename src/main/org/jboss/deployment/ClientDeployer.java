@@ -2,6 +2,8 @@ package org.jboss.deployment;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.HashMap;
@@ -25,7 +27,7 @@ import org.w3c.dom.Element;
  * client jars 
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -94,13 +96,24 @@ public class ClientDeployer extends SubDeployerSupport
     */
    public void start(DeploymentInfo di) throws DeploymentException
    {
-      InputStream in = di.localCl.getResourceAsStream("META-INF/application-client.xml");
-      if( in == null )
-         throw new DeploymentException("No META-INF/application-client.xml found");
-
       ClientMetaData metaData = null;
       try
       {
+         InputStream in = null;
+         if (di.alternativeDD == null)
+         {
+            in = di.localCl.getResourceAsStream("META-INF/application-client.xml");
+         }
+         else
+         {
+            String contentsDir = new File(di.url.getPath()).getParent();
+            in = new FileInputStream(contentsDir + "/" + di.alternativeDD);
+         }
+
+         if (in == null)
+            throw new DeploymentException("No META-INF/application-client.xml found");
+
+         metaData = null;
          XmlFileLoader xfl = new XmlFileLoader(true);
          Element appClient = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
          in.close();
@@ -110,7 +123,7 @@ public class ClientDeployer extends SubDeployerSupport
 
          // Look for a jboss-client.xml descriptor
          in = di.localCl.getResourceAsStream("META-INF/jboss-client.xml");
-         if( in != null )
+         if (in != null)
          {
             xfl = new XmlFileLoader(true);
             Element jbossClient = xfl.getDocument(in, "META-INF/jboss-client.xml").getDocumentElement();

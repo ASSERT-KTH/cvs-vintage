@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -177,9 +177,15 @@ public class EARDeployer
                      throw new DeploymentException("Failed to find module file: "+fileName);
                   sub = new DeploymentInfo(nestedURL, di, getServer());
                }
+
                // Set the context-root on web modules
                if( mod.isWeb() )
                   sub.webContext = mod.getWebContext();
+
+               // Set the alternative deployment descriptor if there is one
+               if (mod.alternativeDD != null)
+                  sub.alternativeDD = mod.alternativeDD;
+
                log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
             }
          }

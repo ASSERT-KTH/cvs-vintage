@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public class XmlFileLoader
 {
@@ -78,8 +78,6 @@ public class XmlFileLoader
    
    /**
     * Set the class loader
-    *
-    * @param ClassLoader cl - class loader
     */
    public void setClassLoader(ClassLoader cl)
    {
@@ -116,26 +114,37 @@ public class XmlFileLoader
    }
    
    /**
-    * load()
+    * Creates the ApplicationMetaData.
+    * The configuration files are found in the classLoader when not explicitly given as
+    * the alternativeDD.
     *
-    * This method creates the ApplicationMetaData.
-    * The configuration files are found in the classLoader.
     * The default jboss.xml and jaws.xml files are always read first, then we override
     * the defaults if the user provides them
+    *
+    * @param alternativeDD a URL to the alternative DD given in application.xml
     */
-   public ApplicationMetaData load() throws Exception
+   public ApplicationMetaData load(URL alternativeDD) throws Exception
    {
-      // create the metadata
-      metaData = new ApplicationMetaData();
-      metaData.setClassLoader(classLoader);
-      // Load ejb-jar.xml
-      // we can always find the files in the classloader
-      URL ejbjarUrl = getClassLoader().getResource("META-INF/ejb-jar.xml");
+      URL ejbjarUrl = null;
+      if (alternativeDD != null)
+      {
+         log.debug("Using alternativeDD: " + alternativeDD);
+         ejbjarUrl = alternativeDD;
+      }
+      else
+      {
+         ejbjarUrl = getClassLoader().getResource("META-INF/ejb-jar.xml");
+      }
+
       if (ejbjarUrl == null)
       {
          throw new DeploymentException("no ejb-jar.xml found");
       }
-      
+
+      // create the metadata
+      metaData = new ApplicationMetaData();
+      metaData.setClassLoader(classLoader);
+
       Document ejbjarDocument = getDocumentFromURL(ejbjarUrl);
       
       // the url may be used to report errors
@@ -196,7 +205,7 @@ public class XmlFileLoader
    
    /** Get the xml file from the URL and parse it into a Document object.
     * Calls new XmlFileLoader(validateDTDs).getDocumentFromURL(url);
-    * @param url, the URL from which the xml doc is to be obtained.
+    * @param url the URL from which the xml doc is to be obtained.
     * @return Document
     */
    public static Document getDocument(URL url, boolean validateDTDs) throws DeploymentException
@@ -209,7 +218,7 @@ public class XmlFileLoader
     * Calls getDocument(new InputSource(url.openStream()), url.getPath())
     * with the InputSource.SystemId set to url.toExternalForm().
     *
-    * @param url, the URL from which the xml doc is to be obtained.
+    * @param url the URL from which the xml doc is to be obtained.
     * @return Document
     */
    public Document getDocumentFromURL(URL url) throws DeploymentException
@@ -233,8 +242,8 @@ public class XmlFileLoader
     * value. This allows relative entity references to be resolved against the
     * inPath URI. The is argument will be closed.
     *
-    * @param is, the InputStream containing the xml descriptor to parse
-    * @param inPath, the path information for the xml doc. This is used as the
+    * @param is the InputStream containing the xml descriptor to parse
+    * @param inPath the path information for the xml doc. This is used as the
     * InputSource SystemId URI for resolving relative entity references.
     * @return Document
     */
@@ -272,8 +281,8 @@ public class XmlFileLoader
     * value. This allows relative entity references to be resolved against the
     * inPath URI.
     *
-    * @param is, the InputSource containing the xml descriptor to parse
-    * @param inPath, the path information for the xml doc. This is used for
+    * @param is the InputSource containing the xml descriptor to parse
+    * @param inPath the path information for the xml doc. This is used for
     * only for error reporting.
     * @return Document
     */
