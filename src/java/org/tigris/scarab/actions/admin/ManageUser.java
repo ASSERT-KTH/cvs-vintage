@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.5 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: ManageUser.java,v 1.6 2002/02/04 23:53:54 jon Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -373,7 +373,7 @@ public class ManageUser extends RequireLoginFirstAction
     public void doPerform( RunData data, TemplateContext context )
         throws Exception
     {
-        doCancel(data, context);
+        doSearch(data, context);
     }
 }
 
