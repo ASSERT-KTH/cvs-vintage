@@ -31,7 +31,7 @@ import org.jboss.tm.XidFactoryMBean;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.13 $
+ * @version   $Revision: 1.14 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -225,7 +225,10 @@ public class StdServerSession
             if (xaSession != null)
             {
                XAResource res = xaSession.getXAResource();
-               trans.enlistResource(res);
+               if (!trans.enlistResource(res))
+	       {
+		  throw new JMSException("could not enlist resource");
+	       }
                if( trace )
                   log.trace("XAResource '" + res + "' enlisted.");
             }
