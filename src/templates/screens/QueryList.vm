@@ -77,7 +77,13 @@
       #end
          </td>
 
-         <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+         <td>
+          #if ($security.hasPermission("Item | Delete"))
+            <a href="$query.getEditLink($link.toString())">$query.Name</a>
+          #else
+            $query.Name
+          #end
+         </td>
 
          <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
