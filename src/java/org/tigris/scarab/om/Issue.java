@@ -1623,6 +1623,7 @@ public class Issue
         NumberKey newIssueId;
         Issue newIssue;
         StringBuffer descBuf = null;
+        StringBuffer descBuf2 = null;
         Attachment attachment = new Attachment();
 
         Transaction transaction = new Transaction();
@@ -1632,6 +1633,8 @@ public class Issue
         List matchingAttributes = getMatchingAttributeValuesList(newModule);
         List orphanAttributes = getOrphanAttributeValuesList(newModule);
         List userAttributes = getUserAttributeValues();
+        Attribute zeroAttribute = AttributeManager
+            .getInstance(new NumberKey("0"));
 
         // Save transaction record
         transaction.create(TransactionTypePeer.CREATE_ISSUE__PK,
@@ -1703,9 +1706,11 @@ public class Issue
         // Generate comment
         // If moving issue, delete original
         String comment = null;
+        String comment2 = null;
         if (action.equals("copy"))
         {
             comment = " copied from issue ";
+            comment2 = " copied to issue ";
         }
         else
         {
@@ -1713,15 +1718,19 @@ public class Issue
             // delete original issue
             delete(user);
         }
-        descBuf = new StringBuffer(comment).append(getUniqueId());
-        descBuf.append(" in module ").append(oldModule.getName());
 
         // Save activity record
+        descBuf = new StringBuffer(comment).append(getUniqueId());
+        descBuf.append(" in module ").append(oldModule.getName());
         Activity activity = new Activity();
-        Attribute zeroAttribute = AttributeManager
-            .getInstance(new NumberKey("0"));
         activity.create(newIssue, zeroAttribute, descBuf.toString(),
                         transaction2, oldModule.getName(), newModule.getName());
+        // Save activity record for old issue
+        descBuf2 = new StringBuffer(comment2).append(newIssue.getUniqueId());
+        descBuf2.append(" in module ").append(newModule.getName());
+        Activity activity2 = new Activity();
+        activity2.create(this, zeroAttribute, descBuf2.toString(),
+                        transaction2, newModule.getName(), oldModule.getName());
 
         return newIssue;
     }
