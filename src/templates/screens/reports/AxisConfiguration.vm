@@ -40,6 +40,10 @@
 <form method="post" action="$link.setPage("reports,AxisConfiguration.vm")">
 <input type="hidden" name="action" value="ConfigureReport"/>
 <input type="hidden" name="axis" value="$axisIndex"/>
+<input type="hidden" name="_session_access_counter" 
+    value="$data.User.getTemp("_session_access_counter")" />
+## needed for the back button avoidance code
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="reports,Info.vm" />
 #set ($parameters = [])
 #set ($param = ["axis", "$axisIndex"])
 #set($booldummy = $parameters.add($param))
