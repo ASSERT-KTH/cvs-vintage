@@ -1,4 +1,4 @@
-// $Id: Pluggable.java,v 1.6 2003/06/30 19:23:17 linus Exp $
+// $Id: Pluggable.java,v 1.7 2003/08/28 20:46:11 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,11 +56,6 @@ public interface Pluggable extends ArgoModule {
 
     public static final String PLUGIN_PREFIX = 
 	"org.argouml.application.api.Pluggable";
-    //
-    // TODO:  jdk1.2.2 has problems with the following static
-    //                   declaration.  jdk1.3 seems to be ok.  
-    //
-    // public static final String PLUGIN_PREFIX = Pluggable.class.getName();
 
     /** A function which allows a plug-in to decide if it is available
      *  under a specific context. 
