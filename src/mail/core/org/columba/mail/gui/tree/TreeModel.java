@@ -41,15 +41,12 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class TreeModel extends DefaultTreeModel {
 	protected FolderXmlConfig folderXmlConfig;
-	protected Root rootNode;
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class};
 
 	public TreeModel(FolderXmlConfig folderConfig) {
-		super(null);
+		super(new Root(folderConfig.getRoot().getElement("tree")));
 
-		rootNode = new Root(folderConfig.getRoot().getElement("tree"));
-		setRoot(rootNode);
 		//System.out.println("root-uid=" + rootNode.getUid());
 		this.folderXmlConfig = folderConfig;
 
@@ -60,10 +57,6 @@ public class TreeModel extends DefaultTreeModel {
 
 		//System.out.println("root2=" + getRoot());
 
-	}
-
-	public Object getRoot() {
-		return rootNode;
 	}
 
 	public void createDirectories(

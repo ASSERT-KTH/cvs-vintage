@@ -28,29 +28,18 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 	//private AddressbookTreeNode rootNode;
 
 	protected DefaultXmlConfig folderXmlConfig;
-	protected Root rootNode;
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
 	public AddressbookTreeModel(XmlElement root) {
-		super(null);
-		//rootNode = root;
+		super(new Root(root));
 
-		System.out.println("root="+root.getName());
-		
-		rootNode = new Root(root);
-		setRoot(rootNode);
-		//System.out.println("root-uid=" + rootNode.getUid());
 		//this.folderXmlConfig = xmlConfig;
 
 		//System.out.println("root1=" + getRoot().toString());
 		createDirectories(
 			((AddressbookTreeNode) getRoot()).getNode(),
 			(AddressbookTreeNode) getRoot());
-	}
-
-	public Object getRoot() {
-		return rootNode;
 	}
 
 	public void createDirectories(
