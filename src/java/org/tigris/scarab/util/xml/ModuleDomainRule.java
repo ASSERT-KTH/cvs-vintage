@@ -49,14 +49,14 @@ package org.tigris.scarab.util.xml;
 import org.tigris.scarab.om.Module;
 
 /**
- * Handler for the xpath "scarab/module/name"
+ * Handler for the xpath "scarab/module/domain"
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
-public class ModuleNameRule extends BaseRule
+public class ModuleDomainRule extends BaseRule
 {
-    public ModuleNameRule(ImportBean ib)
+    public ModuleDomainRule(ImportBean ib)
     {
         super(ib);
     }
@@ -70,27 +70,8 @@ public class ModuleNameRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getImportBean().getState() + ") module name body: " + text);
+        log().debug("(" + getImportBean().getState() + ") module domain body: " + text);
         Module module = getImportBean().getModule();
-        module.setRealName(text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    /**
-     * Creates a new module if it doesn't already exist. Updates
-     * existing modules.
-     */
-    protected void doInsertionAtBody(String moduleName)
-        throws Exception
-    {
-    }
-    
-    protected void doValidationAtBody(String moduleName)
-        throws Exception
-    {
-        if (moduleName == null || moduleName.length() == 0)
-        {
-            throw new Exception ("Missing module <name> information.");
-        }
+        module.setDomain(text);
     }
 }

@@ -71,36 +71,25 @@ public class RoleRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        super.doInsertionOrValidationAtBody(text);
-    }
-
-    protected void doValidationAtBody(String value)
-        throws Exception
-    {
-        if (value != null && 
+        if (text != null && 
             !UserRule.isUserInUserList(getImportBean()) && 
-            value.length() > 0)
+            text.length() > 0)
         {
             // try to get the role.
             try
             {
-                Role role = TurbineSecurity.getRole(value);
+                Role role = TurbineSecurity.getRole(text);
             }
             catch (Exception e)
             {
-                throw new Exception ("The role: '" + value + 
+                throw new Exception ("The role: '" + text + 
                     "' , could not be found. Please manually create it " +
                     "before continuing.");
             }
 
-            getImportBean().getRoleList().add(value);
+            getImportBean().getRoleList().add(text);
             log().debug("(" + getImportBean().getState() + 
-                ") found role: " + value);
+                ") found role: " + text);
         }
-    }
-
-    protected void doInsertionAtBody(String value)
-        throws Exception
-    {
     }
 }

@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.12 2002/04/11 02:51:07 jon Exp $
+ * @version $Id: XMLImport.java,v 1.13 2002/04/24 01:12:56 jon Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -293,6 +293,9 @@ public class XMLImport extends MatchingTask
     {
         getDigester().addRule("scarab/module", new ModuleRule(ib));
         getDigester().addRule("scarab/module/name", new ModuleNameRule(ib));
+        getDigester().addRule("scarab/module/owner-id", new ModuleOwnerIdRule(ib));
+        getDigester().addRule("scarab/module/url", new ModuleUrlRule(ib));
+        getDigester().addRule("scarab/module/domain", new ModuleDomainRule(ib));
         getDigester().addRule("scarab/module/description", new ModuleDescriptionRule(ib));
         getDigester().addRule("scarab/module/code", new ModuleCodeRule(ib));
         getDigester().addRule("scarab/module/issue", new IssueRule(ib));

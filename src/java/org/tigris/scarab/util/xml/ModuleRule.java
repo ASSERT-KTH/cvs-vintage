@@ -78,70 +78,52 @@ public class ModuleRule extends BaseRule
     public void begin(Attributes attributes) throws Exception
     {
         log().debug("(" + getImportBean().getState() + ") module begin");
-        super.doInsertionOrValidationAtBegin(attributes);
-    }
-    
-    protected void doInsertionAtBegin(Attributes attributes) throws Exception
-    {
+
         Module module = null;
+        String id = attributes.getValue("id");
+        String parent = attributes.getValue("parent");
+        if (id == null || id.length() == 0)
+        {
+            throw new Exception ("Module id attribute must be defined!");
+        }
+        if (parent == null || parent.length() == 0)
+        {
+            throw new Exception ("Module parent attribute must be defined!");
+        }
         
-        // try to find the module
-        try
-        {
-            module = (Module)ModuleManager
-                .getInstance(new NumberKey(attributes.getValue("id")));
-        }
-        catch (Exception e)
-        {
-            module = (Module)ModuleManager.getInstance();
-        }
-        module.setParentId(new NumberKey(attributes.getValue("parent")));
+        module = (Module)ModuleManager.getInstance();
+        module.setModuleId(new NumberKey(id));
+
         String ownerId = attributes.getValue("owner-id");
         if (ownerId == null || ownerId.length() == 0)
         {
-            ownerId = "0";
+            ownerId = "1";
         }
-        module.setOwnerId(ownerId);
-        getImportBean().setModule(module);
-        log().debug("(" + getImportBean().getState() + 
-            ") digested module: " + module.getName());
-    }
-    
-    protected void doValidationAtBegin(Attributes attributes) throws Exception
-    {
-        Module module = null;
-        try
-        {
-            module = (Module)ModuleManager
-                .getInstance(new NumberKey(attributes.getValue("id")));
-            getImportBean().setModule(module);
-        }
-        catch (Exception e)
-        {
-            throw new Exception ("Validation failed: module id: " + 
-                attributes.getValue("id") + " not found in database.");
-        }
+        module.setOwnerId(new NumberKey(ownerId));
+
         try
         {
             Module parentModule = (Module)ModuleManager
-                .getInstance(new NumberKey(attributes.getValue("parent")));
+                .getInstance(new NumberKey(parent));
+            module.setParentId(new NumberKey(parent));
         }
         catch (Exception e)
         {
             // store it for check later in file
             getImportBean().getDependencyTree().addModuleDependency(
-                new NumberKey(attributes.getValue("id")), 
-                new NumberKey(attributes.getValue("parent")));
+                new NumberKey(id), 
+                new NumberKey(parent));
         }
+
+        getImportBean().setModule(module);
     }
-    
+
     /**
      * This method is called when the end of a matching XML element
      * is encountered.
      */
     public void end() throws Exception
     {
-        super.doInsertionOrValidationAtEnd();
         List userList = getImportBean().getUserList();
         if (userList != null && userList.size() > 0)
         {
@@ -151,21 +133,5 @@ public class ModuleRule extends BaseRule
         }
         log().debug("(" + getImportBean().getState() + ") module end");
         
-    }
-    
-    protected void doInsertionAtEnd()
-    {
-/*
-        Module module = getImportBean().getModule();
-        if (module == null)
-        {
-            throw new Exception ("
-        }
-        .save();
-*/
-    }
-    
-    protected void doValidationAtEnd()
-    {
     }
 }

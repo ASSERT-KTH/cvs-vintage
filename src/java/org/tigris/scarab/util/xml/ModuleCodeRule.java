@@ -46,6 +46,8 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import org.tigris.scarab.util.ScarabException;
+
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 
@@ -53,6 +55,8 @@ import org.apache.torque.om.NumberKey;
 
 /**
  * Handler for the xpath "scarab/module/code"
+ *
+ * This class should always be the last element which is processed.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
@@ -75,15 +79,42 @@ public class ModuleCodeRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") module code body: " + text);
+
+        Module startModule = getImportBean().getModule();
+        Module module = null;
+        startModule.setCode(text);
+        // try to find the module in the database
+        try
+        {
+            module = ModuleManager
+                .getInstance(startModule.getRealName(), startModule.getCode());
+            log().debug("(" + getImportBean().getState() + ") module found!");
+            // NOTE: don't forget to add additional fields here when
+            // more elements are added to the DTD to describe the module.
+            // otherwise, they won't get saved into the database when the
+            // XML file makes changes to the data.
+            module.setDescription(startModule.getDescription());
+            module.setOwnerId(startModule.getOwnerId());
+            module.setUrl(startModule.getUrl());
+            module.setDomain(startModule.getDomain());
+        }
+        catch (Exception e)
+        {
+            // once again, assume a new module on error
+            log().debug("(" + getImportBean().getState() + ") module not found!");
+            module = getImportBean().getModule();
+        }
+        getImportBean().setModule(module);
+
         super.doInsertionOrValidationAtBody(text);
     }
-    
+
     protected void doInsertionAtBody(String moduleCode)
         throws Exception
     {
         Module module = getImportBean().getModule();
-        module.setCode(moduleCode);
         module.save();
+        log().debug("(" + getImportBean().getState() + ") module saved!");
     }
     
     protected void doValidationAtBody(String moduleCode)
@@ -92,7 +123,7 @@ public class ModuleCodeRule extends BaseRule
         Module module = getImportBean().getModule();
         //make sure the existing module has the same code
         String existingModuleCode = module.getCode();
-        if(!existingModuleCode.equals(moduleCode))
+        if(existingModuleCode != null && !existingModuleCode.equals(moduleCode))
         {
             throw new Exception("The existing module with module id: " + 
                                     module.getModuleId() + " has module code: " + 

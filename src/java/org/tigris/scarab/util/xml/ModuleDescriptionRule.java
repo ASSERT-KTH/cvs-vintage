@@ -71,18 +71,14 @@ public class ModuleDescriptionRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getImportBean().getState() + ") module description body: " + text);
+        Module module = getImportBean().getModule();
+        module.setDescription(text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String moduleDescription)
         throws Exception
     {
-        Module module = getImportBean().getModule();
-        if (module == null)
-        {
-            throw new Exception ("Could not find <module>");
-        }
-        module.setDescription(moduleDescription);
     }
     
     protected void doValidationAtBody(String moduleDescription)
