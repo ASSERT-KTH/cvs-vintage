@@ -43,8 +43,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
+import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.Retrievable;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.om.AttributeOptionManager;
 
 public class ReportHeading
     implements java.io.Serializable,
@@ -164,6 +166,113 @@ public class ReportHeading
         }
         return size;
     }
+
+    public boolean singleAttribute()
+    {
+        boolean result = false;
+        Integer firstId = null;
+        if (getReportGroups() != null) 
+        {
+            result = true;
+            for (Iterator i = getReportGroups().iterator(); 
+                 i.hasNext() && result;) 
+            {
+                ReportGroup group = (ReportGroup)i.next();
+                if (group.getReportOptionAttributes() != null) 
+                {
+                    for (Iterator j = group.getReportOptionAttributes()
+                             .iterator(); j.hasNext() && result;)
+                    {
+                        try 
+                        {
+                            Integer id = new Integer(
+                                AttributeOptionManager.getInstance(
+                                new NumberKey(((ReportOptionAttribute)j.next())
+                                              .getOptionId().toString()))
+                                .getAttributeId().toString());
+                            if (firstId == null) 
+                            {
+                                firstId = id;
+                            }
+                            else 
+                            {
+                                result = firstId.equals(id);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.get().warn("Error on attribute id", e);
+                            result = false;
+                        }
+                    }
+                }
+                else if (group.getReportUserAttributes() != null) 
+                {
+                    for (Iterator j = group.getReportUserAttributes()
+                             .iterator(); j.hasNext() && result;)
+                    {
+                        Integer id = ((ReportUserAttribute)j.next())
+                            .getAttributeId();
+                        if (firstId == null) 
+                        {
+                            firstId = id;
+                        }
+                        else 
+                        {
+                            result = firstId.equals(id);
+                        }
+                    }
+                }
+            }
+        }
+        else if (getReportOptionAttributes() != null) 
+        {
+            result = true;
+            for (Iterator j = getReportOptionAttributes().iterator(); 
+                 j.hasNext() && result;)
+            {
+                try 
+                {
+                    Integer id = new Integer(AttributeOptionManager.getInstance(
+                        new NumberKey(((ReportOptionAttribute)j.next())
+                                      .getOptionId().toString()))
+                                             .getAttributeId().toString());
+                    if (firstId == null) 
+                    {
+                        firstId = id;
+                    }
+                    else 
+                    {
+                        result = firstId.equals(id);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.get().warn("Error on attribute id", e);
+                    result = false;
+                }
+            }
+        }
+        else if (getReportUserAttributes() != null) 
+        {
+            result = true;
+            for (Iterator j = getReportUserAttributes().iterator(); 
+                 j.hasNext() && result;)
+            {
+                Integer id = ((ReportUserAttribute)j.next()).getAttributeId();
+                if (firstId == null) 
+                {
+                    firstId = id;
+                }
+                else 
+                {
+                    result = firstId.equals(id);
+                }
+            }
+        }
+        return result;
+    }
+
     
     List reportGroups;
 

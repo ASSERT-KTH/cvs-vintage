@@ -331,6 +331,11 @@ public class ReportDefinition
         {
             attId = ((ReportUserAttribute)obj).getAttributeId();
         }
+        else 
+        {
+            return "";
+        }
+        
     
         String result = null;
         List mits = getModuleIssueTypes();

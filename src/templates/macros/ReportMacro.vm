@@ -37,15 +37,23 @@
 #end
 #end
 
-#macro (reportLabel $model $cellLabel)
+#macro (reportLabel $model $cellLabel $singleAttribute)
   #if ($model.isReportDate($cellLabel))
       $format.getDate('yyyy MMM dd - HH:mm', $cellLabel.dateValue())
   #elseif ($model.isOption($cellLabel))
-      $model.displayAttribute($cellLabel):$model.displayOption($cellLabel)
+      #if ($singleAttribute)
+          $model.displayOption($cellLabel)
+      #else
+          $model.displayAttribute($cellLabel):$model.displayOption($cellLabel)
+      #end
   #elseif ($model.isOptionGroup($cellLabel))
       $cellLabel.Name
   #elseif ($model.isAttributeAndUser($cellLabel))
-      $model.displayAttribute($cellLabel):$model.displayUser($cellLabel)
+      #if ($singleAttribute)
+          $model.displayUser($cellLabel)
+      #else
+          $model.displayAttribute($cellLabel):$model.displayUser($cellLabel)
+      #end
   #elseif ($model.isUser($cellLabel))
       Author:$cellLabel.UserName
   #end
@@ -61,16 +69,26 @@
 #foreach ($columnHeadingLevel in $model.ColumnHeadings)
    #set ($level = $velocityCount - 1)
    #set ($colspan = $model.getColspan($level))
+   #set ($singleAttribute = $columnHeadingLevel.singleAttribute())
  <tr>
-   #foreach ($foo in [1..$model.RowHeadings.size()])
+   #set ($maxBlank = $model.RowHeadings.size() - 1)
+   #if ($maxBlank > 1)
+     #foreach ($foo in [1..$maxBlank])
+       <th>&nbsp;</th>
+     #end
+   #end
+   #if ($singleAttribute)
+     <th>$model.displayAttribute($columnHeadingLevel.get(0))</th>
+   #else
      <th>&nbsp;</th>
    #end
+
    #foreach ($foo in [1..$multiplier])
    #foreach ($indexPlusOne in [1..$columnHeadingLevel.size()])
      #set ($index = $indexPlusOne - 1)
      #set ($columnHeading = $columnHeadingLevel.get($index))
      <th>
-       #reportLabel($model $columnHeading)
+       #reportLabel($model $columnHeading $singleAttribute)
      </th>
      #if ($colspan > 1)
      #foreach ($dummy in [2..$colspan])
@@ -83,21 +101,40 @@
  </tr>
 #end
 
+ <tr>
+  #foreach ($rowHeadingLevel in $model.RowHeadings)
+      <th>&nbsp;</th>
+  #end
+  #foreach ($columnIndex in [0..$maxColumn])
+      <th>&nbsp;</th>
+  #end
+ </tr>
+
+ <tr>
+  #foreach ($curHeading in $model.RowHeadings)
+    #set ($level = $velocityCount - 1)
+    #set ($singleAttribute = $curHeading.singleAttribute())
+    #if ($singleAttribute)
+      <th>$model.displayAttribute($curHeading.get(0))</th>
+    #else
+      <th>&nbsp;</th>
+    #end
+  #end
+
+   #foreach ($columnIndex in [0..$maxColumn])
+       <td>&nbsp;</td>
+   #end
+ </tr>
+
 #foreach ($rowIndex in [0..$maxRow])
  <tr>
-
-  #foreach ($rowHeadingLevel in $model.RowHeadings)
+  #foreach ($curHeading in $model.RowHeadings)
     #set ($level = $velocityCount - 1)
+    #set ($singleAttribute = $curHeading.singleAttribute())
     #set ($rowspan = $model.getRowspan($level))
-    #set ($prevLevel = $level - 1)
-    #set ($prevRowspan = 0)
-    #if ($prevLevel >= 0)
-       #set ($prevRowspan = $model.getRowspan($prevLevel))
-    #end
     #if (($rowIndex % $rowspan) == 0)
-      #set ($curHeading = $model.RowHeadings.get($level))
       #set ($index = ($rowIndex / $rowspan) % $curHeading.size())
-         <th>#reportLabel($model $curHeading.get($index) )</th>
+         <th>#reportLabel($model $curHeading.get($index) $singleAttribute)</th>
     #else
          <th>&nbsp;</th>
     #end

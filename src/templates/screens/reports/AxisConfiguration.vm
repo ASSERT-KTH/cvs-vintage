@@ -9,7 +9,6 @@
 #end
 
 <div class="app" id="div2-4-1-step1">
-<div id="apphead"><h2>$l10n.ReportBuilder</h2></div>
 
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
