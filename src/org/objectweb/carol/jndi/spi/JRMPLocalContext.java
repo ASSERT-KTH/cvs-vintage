@@ -19,38 +19,34 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPLocalContext.java,v 1.8 2005/03/10 10:05:02 benoitf Exp $
+ * $Id: JRMPLocalContext.java,v 1.9 2005/03/15 14:40:30 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
-
-import java.io.Serializable;
-import java.rmi.Remote;
 
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.Reference;
-import javax.naming.Referenceable;
+import javax.naming.spi.ObjectFactory;
 
 import org.objectweb.carol.jndi.registry.RegistryWrapperContext;
-import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
+import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
-import com.sun.jndi.rmi.registry.ReferenceWrapper;
+import com.sun.jndi.rmi.registry.RemoteReference;
 
 /**
  * Use the wrapper on registry object defined by RegistryWrapperContext class.
- * This class has been refactored to split : <ul>
- * <li> - wrapper on registry object</li>
- * <li> - Single instance</li>
- * <li> - Wrapping of Serializable/Referenceable/... objects</li>
+ * This class has been refactored to split :
+ * <ul>
+ * <li>- wrapper on registry object</li>
+ * <li>- Single instance</li>
+ * <li>- Wrapping of Serializable/Referenceable/... objects</li>
  * </ul>
  * @author Florent Benoit
  */
-public class JRMPLocalContext extends AbsContext implements Context {
-
+public class JRMPLocalContext extends JRMPContext implements Context {
 
     /**
      * Constructs an JRMP local Wrapper context
@@ -70,45 +66,19 @@ public class JRMPLocalContext extends AbsContext implements Context {
      * @throws NamingException if the object cannot be unwraped
      */
     protected Object unwrapObject(Object o, Name name) throws NamingException {
-        return super.defaultUnwrapObject(o, name);
-    }
-
-    /**
-     * Wrap an Object : If the object is a reference wrap it into a Reference
-     * Wrapper Object here the good way is to contact the carol configuration to
-     * get the portable remote object
-     * @param o the object to encode
-     * @param name of the object
-     * @param replace if the object need to be replaced
-     * @return a <code>Remote JNDIRemoteReference Object</code> if o is a
-     *         resource o if else
-     * @throws NamingException if object cannot be wrapped
-     */
-    protected Object wrapObject(Object o, Name name, boolean replace) throws NamingException {
         try {
-            if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
-                return new ReferenceWrapper(((Referenceable) o).getReference());
-            } else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
-                return new ReferenceWrapper((Reference) o);
-            } else if ((!(o instanceof Remote)) && (o instanceof Serializable)) {
-                JNDIResourceWrapper irw = new JNDIResourceWrapper((Serializable) o);
-                CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-                JNDIResourceWrapper oldObj = (JNDIResourceWrapper) addToExported(name, irw);
-                if (oldObj != null) {
-                    if (replace) {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
-                    } else {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
-                        addToExported(name, oldObj);
-                        throw new NamingException("Object '" + o + "' with name '" + name + "' is already bind");
-                    }
-                }
-                return irw;
+            if (o instanceof RemoteReference) {
+                // build of the Referenceable object with is Reference
+                Reference objRef = ((RemoteReference) o).getReference();
+                ObjectFactory objFact = (ObjectFactory) (Class.forName(objRef.getFactoryClassName())).newInstance();
+                return objFact.getObjectInstance(objRef, name, this, getEnvironment());
+            } else if (o instanceof JNDIRemoteResource) {
+                return ((JNDIRemoteResource) o).getResource();
             } else {
                 return o;
             }
         } catch (Exception e) {
-            throw NamingExceptionHelper.create("Cannot wrap object '" + o + "' with name '" + name + "' : " + e.getMessage(), e);
+            throw NamingExceptionHelper.create("Cannot unwrap object '" + o + "' with name '" + name + "'.", e);
         }
     }
 
