@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
+ 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
@@ -27,11 +27,11 @@ import org.jboss.logging.Logger;
 
 /**
  * JDBCStopCommand drops the table for this entity if specified in the xml.
- *
+ *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCStopCommand {
 
@@ -39,7 +39,7 @@ public class JDBCStopCommand {
    private JDBCEntityBridge entity;
    private JDBCEntityMetaData entityMetaData;
    private Logger log;
-
+ 
    public JDBCStopCommand(JDBCStoreManager manager) {
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -47,31 +47,22 @@ public class JDBCStopCommand {
 
       // Create the Log
       log = Logger.getLogger(
-            this.getClass().getName() +
-            "." +
+            this.getClass().getName() + 
+            "." + 
             manager.getMetaData().getName());
    }
-
+   
    public void execute() {
-      if(entityMetaData.getRemoveTable()) {
-         log.info("Dropping table for entity " + entity.getEntityName());
-         dropTable(entity.getDataSource(), entity.getTableName());
-      }
-      else
-      {
-         log.info("Did NOT drop table for entity as requested" + entity.getEntityName());
-      }
-
       // drop relation tables
       List cmrFields = entity.getCMRFields();
-      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) {
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
 
          JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
 
          if(relationMetaData.isTableMappingStyle() &&
             relationMetaData.getTableExists()) {
-
+            
             if(relationMetaData.getRemoveTable()) {
                dropTable(
                      relationMetaData.getDataSource(),
@@ -80,8 +71,13 @@ public class JDBCStopCommand {
             relationMetaData.setTableExists(false);
          }
       }
-   }
 
+      if(entityMetaData.getRemoveTable()) {
+         log.debug("Dropping table for entity " + entity.getEntityName());
+         dropTable(entity.getDataSource(), entity.getTableName());
+      }
+   }
+   
    private void dropTable(DataSource dataSource, String tableName) {
       Connection con = null;
       ResultSet rs = null;
@@ -95,7 +91,7 @@ public class JDBCStopCommand {
             return;
          }
       } catch(SQLException e) {
-         log.error("Error getting database metadata for DROP TABLE command. " +
+         log.debug("Error getting database metadata for DROP TABLE command. " +
                " DROP TABLE will not be executed. ", e);
          return;
       } finally {
@@ -120,7 +116,7 @@ public class JDBCStopCommand {
          try {
             con = dataSource.getConnection();
             statement = con.createStatement();
-
+         
             // execute sql
             String sql = "DROP TABLE " + tableName;
             log.debug("Executing SQL: " + sql);
@@ -133,7 +129,7 @@ public class JDBCStopCommand {
          }
 
       } catch(Exception e) {
-         log.error("Could not drop table " + tableName, e);
+         log.debug("Could not drop table " + tableName);
       } finally {
          try {
             // resume the old transaction

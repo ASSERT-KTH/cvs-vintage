@@ -26,7 +26,7 @@ import org.jboss.ejb.ContainerPlugin;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -44,7 +44,7 @@ public interface EntityPersistenceStore
     * Initializes the instance context.
     * 
     * <p>This method is called before createEntity, and should
-    *    reset the value of all cmpFields to 0 or null.
+    *    resetStats the value of all cmpFields to 0 or null.
     *
     * @param ctx
     * 
@@ -62,8 +62,8 @@ public interface EntityPersistenceStore
     * @param args        any create parameters
     * @param instance    the instance being used for this create call
     * @return            The primary key computed by CMP PM or null for BMP
-    * 
-    * @throws Exception  
+    *
+    * @throws Exception
     */
    Object createEntity(Method m,
                        Object[] args,
@@ -71,19 +71,21 @@ public interface EntityPersistenceStore
       throws Exception;
 
    /**
-    * This method is called after the createEntity method.
+    * This method is called after the createEntity.
+    * The persistence manager is responsible for handling the results properly
+    * wrt the persistent store.
     *
-    * @param m           the post-create method in the home interface that was
+    * @param m           the ejbPostCreate method in the bean class that was
     *                    called
-    * @param args        any parameters
+    * @param args        any create parameters
     * @param instance    the instance being used for this create call
     * @return            null
-    * 
+    *
     * @throws Exception
     */
    Object postCreateEntity(Method m,
-                           Object[] args,
-                           EntityEnterpriseContext instance)
+                       Object[] args,
+                       EntityEnterpriseContext instance)
       throws Exception;
 
    /**

@@ -6,16 +6,16 @@ import javax.management.ObjectName;
 
 import org.jboss.mx.loading.UnifiedClassLoader;
 
-/** A simple subclass of URLClassLoader that is used in conjunction with the 
-the WebService mbean to allow dynamic loading of resources and classes from 
-deployed ears, ejb jars and wars. A WebClassLoader is associated with a 
-Container and must have an UnifiedClassLoader as its parent. It overrides the 
-getURLs() method to return a different set of URLs for remote loading than 
-what is used for local loading. 
+/** A simple subclass of URLClassLoader that is used in conjunction with the
+the WebService mbean to allow dynamic loading of resources and classes from
+deployed ears, ejb jars and wars. A WebClassLoader is associated with a
+Container and must have an UnifiedClassLoader as its parent. It overrides the
+getURLs() method to return a different set of URLs for remote loading than
+what is used for local loading.
 <p>
 WebClassLoader has two methods meant to be overriden by subclasses: getKey()
-and getBytes(). The latter is a no-op in this implementation and should be 
-overriden by subclasses with bytecode generation ability, such as the 
+and getBytes(). The latter is a no-op in this implementation and should be
+overriden by subclasses with bytecode generation ability, such as the
 classloader used by the iiop module.
 <p>
 WebClassLoader subclasses must have a constructor with the same signature
@@ -28,7 +28,7 @@ as the WebClassLoader constructor.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
 @author  <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public class WebClassLoader extends URLClassLoader
 {
@@ -36,15 +36,17 @@ public class WebClassLoader extends URLClassLoader
     private ObjectName containerName;
 
     /** The URLs returned by the getURLs() method override */
-    private URL[] webURLs;
+   private URL[] webURLs;
 
-    /** Creates new WebClassLoader. 
-        Subclasses must have a constructor with the same signature. */
-    public WebClassLoader(ObjectName containerName, UnifiedClassLoader parent)
-    {
-        super(new URL[0], parent);
-        this.containerName = containerName;
-    }
+   private String codebaseString;
+
+   /** Creates new WebClassLoader.
+       Subclasses must have a constructor with the same signature. */
+   public WebClassLoader(ObjectName containerName, UnifiedClassLoader parent)
+   {
+      super(new URL[0], parent);
+      this.containerName = containerName;
+   }
 
     /** Gets a string key used as the key into the WebServer's loaderMap. */
     public String getKey()
@@ -64,7 +66,7 @@ public class WebClassLoader extends URLClassLoader
     }
 
     /** Returns the single URL for my parent, an UnifiedClassLoader. */
-    public URL getURL() 
+    public URL getURL()
     {
         return ((UnifiedClassLoader)getParent()).getURL();
     }
@@ -96,14 +98,29 @@ public class WebClassLoader extends URLClassLoader
     public void setWebURLs(URL[] webURLs)
     {
         this.webURLs = webURLs;
+      StringBuffer sb = new StringBuffer();
+      for (int i = 0; i < webURLs.length; i++)
+      {
+         sb.append(webURLs[i].toString());
+         if (i < webURLs.length - 1)
+         {
+            sb.append(" ");
+         }
+      }
+      codebaseString = sb.toString();
     }
 
-    /** Gets the bytecodes for a given class. 
+   public String getCodebaseString()
+   {
+      return codebaseString;
+   }
+
+    /** Gets the bytecodes for a given class.
      *  This implementation always returns null, indicating that it is unable
-     *  to get bytecodes for any class. Should be overridden by subclasses 
-     *  with bytecode generation capability (such as the classloader used by 
+     *  to get bytecodes for any class. Should be overridden by subclasses
+     *  with bytecode generation capability (such as the classloader used by
      *  the iiop module, which generates IIOP stubs on the fly).
-     * 
+     *
      @param cls a <code>Class</code>
      @return a byte array with the bytecodes for class <code>cls</code>, or
      *       null if this classloader is unable to return such byte array.
@@ -112,5 +129,5 @@ public class WebClassLoader extends URLClassLoader
     {
         return null; // this classloader is unable to return bytecodes
     }
-   
+
 }

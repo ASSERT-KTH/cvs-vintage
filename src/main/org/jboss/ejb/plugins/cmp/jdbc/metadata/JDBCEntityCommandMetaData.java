@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  * This immutable class contains information about entity command
  *
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class JDBCEntityCommandMetaData
 {
@@ -51,8 +51,7 @@ public final class JDBCEntityCommandMetaData
       }
 
       String commandClassStr = element.getAttribute( "class" );
-      if( (commandClassStr != null)
-          && (commandClassStr.trim().length() > 0) )
+      if(commandClassStr != null)
       {
          try
          {
@@ -65,8 +64,7 @@ public final class JDBCEntityCommandMetaData
       }
       else
       {
-         throw new DeploymentException( "entity-command '" + commandName +
-            "' not found and no class specified!" );
+         commandClass = null;
       }
 
       // attributes

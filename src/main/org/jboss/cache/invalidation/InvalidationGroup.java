@@ -19,7 +19,7 @@ import java.io.Serializable;
  * In this case, we say that both EJBs work in the same InvalidationGroup.
  * @see InvalidationManagerMBean
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *

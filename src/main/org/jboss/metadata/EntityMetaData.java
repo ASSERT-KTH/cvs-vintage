@@ -12,25 +12,38 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
+import org.jboss.util.Strings;
 
 /**
  * The meta data information specific to entity beans.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.25 $
+ * @author <a href="mailto:criege@riege.com">Christian Riege</a>
+ *
+ * @version $Revision: 1.26 $
+ *
+ * <p><b>Revisions:</b><br>
+ * <p><b>2001/10/16: billb</b>
+ * <ol>
+ *  <li>Added clustering tags
+ * </ol>
  */
-public class EntityMetaData extends BeanMetaData
+public class EntityMetaData
+   extends BeanMetaData
 {
+   // Constants -----------------------------------------------------
    public final static int CMP_VERSION_1 = 1;
    public final static int CMP_VERSION_2 = 2;
    public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING =
-      "entity-remoting-socket-invoker";
+      "entity-rmi-invoker";
    public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING =
-      "clustered-entity-socket-invoker";
+      "clustered-entity-rmi-invoker";
 
+   // Attributes ----------------------------------------------------
    private boolean cmp;
    private String primaryKeyClass;
    private boolean reentrant;
@@ -41,72 +54,53 @@ public class EntityMetaData extends BeanMetaData
    private ArrayList queries = new ArrayList();
    private boolean readOnly = false;
    private boolean doDistCachInvalidations = false;
-   private CacheInvalidationConfigMetaData cacheInvalidConfig = null;
+   private CacheInvalidationConfigMetaData cacheInvalidConfig = null; 
 
+   // Static --------------------------------------------------------
+   private static Logger log = Logger.getLogger( EntityMetaData.class );
+
+   // Constructors --------------------------------------------------
    public EntityMetaData( ApplicationMetaData app )
    {
-      super( app, BeanMetaData.ENTITY_TYPE );
+      super(app, BeanMetaData.ENTITY_TYPE);
    }
 
-   /**
-    * Check whether the Entity Bean is a CMP Entity Bean
-    */
+   // Public --------------------------------------------------------
    public boolean isCMP()
    {
       return cmp;
    }
 
-   /**
-    * Check if CMP Version 1 is in use
-    */
    public boolean isCMP1x()
    {
-      return cmp && (cmpVersion == 1);
+      return cmp && (cmpVersion==1);
    }
 
-   /**
-    * Check if CMP Version 2 is in use
-    */
    public boolean isCMP2x()
    {
-      return cmp && (cmpVersion == 2);
+      return cmp && (cmpVersion==2);
    }
 
-   /**
-    * Check whether the Entity Bean is a BMP Entity Bean
-    */
    public boolean isBMP()
    {
       return !cmp;
    }
 
-   /**
-    * Return the class of the Entity Bean's Primary Key
-    */
    public String getPrimaryKeyClass()
    {
       return primaryKeyClass;
    }
 
-   /**
-    * Check whether the Bean has been flagged as reentrant
-    */
    public boolean isReentrant()
    {
       return reentrant;
    }
 
-   /**
-    * Get the declared Abstract Schema Name
-    */
    public String getAbstractSchemaName()
    {
       return abstractSchemaName;
    }
 
-   /**
-    * Check whether the Entity Bean has been marked as read-only.
-    */
    public boolean isReadOnly()
    {
       return readOnly;
@@ -114,26 +108,18 @@ public class EntityMetaData extends BeanMetaData
 
    /**
     * Gets the container managed fields.
-    *
-    * @return <code>java.util.Iterator</code> over Strings containing
-    *  names of the fields
+    * @returns iterator over Strings containing names of the fields
     */
    public Iterator getCMPFields()
    {
       return cmpFields.iterator();
    }
 
-   /**
-    * Get the field-name of the Primary Key
-    */
    public String getPrimKeyField()
    {
       return primKeyField;
    }
 
-   /**
-    * Get all declared queries for the Bean
-    */
    public Iterator getQueries()
    {
       return queries.iterator();
@@ -141,20 +127,34 @@ public class EntityMetaData extends BeanMetaData
 
    public String getDefaultConfigurationName()
    {
-      if( isCMP() )
+      if (isCMP())
       {
-         if( isClustered() )
+         if(getApplicationMetaData().isEJB2x())
          {
-            return ConfigurationMetaData.CLUSTERED_CMP_13;
+            if (isClustered())
+            {
+               return ConfigurationMetaData.CLUSTERED_CMP_2x_13;
+            }
+            else
+            {
+               return ConfigurationMetaData.CMP_2x_13;
+            }
          }
          else
          {
-            return ConfigurationMetaData.CMP_13;
+            if (isClustered())
+            {
+               return ConfigurationMetaData.CLUSTERED_CMP_1x_13;
+            }
+            else
+            {
+               return ConfigurationMetaData.CMP_1x_13;
+            }
          }
       }
       else
       {
-         if( isClustered() )
+         if (isClustered())
          {
             return ConfigurationMetaData.CLUSTERED_BMP_13;
          }
@@ -164,12 +164,12 @@ public class EntityMetaData extends BeanMetaData
          }
       }
    }
-
+   
    public boolean doDistributedCacheInvalidations ()
    {
       return this.doDistCachInvalidations ;
    }
-
+   
    public CacheInvalidationConfigMetaData getDistributedCacheInvalidationConfig ()
    {
       return this.cacheInvalidConfig ;
@@ -181,8 +181,8 @@ public class EntityMetaData extends BeanMetaData
       super.importEjbJarXml(element);
 
       // set persistence type
-      String persistenceType = getElementContent( getUniqueChild(element,
-         "persistence-type") );
+      String persistenceType = getElementContent(getUniqueChild(element,
+         "persistence-type"));
       if( persistenceType.equals("Bean") )
       {
          cmp = false;
@@ -193,17 +193,17 @@ public class EntityMetaData extends BeanMetaData
       }
       else
       {
-         throw new DeploymentException( "persistence-type must be " +
-            "'Bean' or 'Container'" );
+         throw new DeploymentException( getEjbName() +  ": " +
+            "persistence-type must be 'Bean' or 'Container'!" );
       }
 
       // set primary key class
-      primaryKeyClass = getElementContent( getUniqueChild(element,
+      primaryKeyClass = getElementContent(getUniqueChild(element,
          "prim-key-class"));
 
       // set reentrant
-      reentrant = Boolean.valueOf( getElementContent(getUniqueChild(
-         element, "reentrant")) ).booleanValue();
+      reentrant = Boolean.valueOf(getElementContent(getUniqueChild(element,
+         "reentrant"))).booleanValue();
 
       if( isCMP() )
       {
@@ -211,33 +211,33 @@ public class EntityMetaData extends BeanMetaData
          if( getApplicationMetaData().isEJB2x() )
          {
             String cmpVersionString = getElementContent(
-               getOptionalChild(element, "cmp-version") );
+               getOptionalChild(element, "cmp-version"));
 
-            if(cmpVersionString == null)
+            if( cmpVersionString == null )
             {
                // default for ejb 2.0 apps is cmp 2.x
                cmpVersion = CMP_VERSION_2;
             }
             else
             {
-               if( cmpVersionString.equals("1.x") )
+               if( "1.x".equals(cmpVersionString) )
                {
                   cmpVersion = 1;
                }
-               else if( cmpVersionString.equals("2.x") )
+               else if( "2.x".equals(cmpVersionString) )
                {
                   cmpVersion = 2;
                }
                else
                {
-                  throw new DeploymentException( "cmp-version must " +
-                     "be '1.x' or '2.x', if specified" );
+                  throw new DeploymentException( getEjbName() + ": " +
+                     "cmp-version must be '1.x' or '2.x', if specified" );
                }
             }
          }
          else
          {
-            // default for 1.0 DTDs is version 1
+            // default for 1.0 DTDs is version 2
             cmpVersion = CMP_VERSION_1;
          }
 
@@ -245,13 +245,55 @@ public class EntityMetaData extends BeanMetaData
          abstractSchemaName = getOptionalChildContent(element,
             "abstract-schema-name");
 
+         if( cmpVersion == 2 )
+         {
+            // Enforce several restrictions on abstract-schema-name and
+            // ejb-name Elements, see bug #613360
+
+            String ejbName = getEjbName();
+
+            // ejb-name tests
+            if( !Strings.isValidJavaIdentifier(ejbName) )
+            {
+               throw new DeploymentException( "The ejb-name for a CMP" +
+                  "2.x Entity must be a valid Java Identifier" );
+            }
+
+            if( Strings.isEjbQlIdentifier(ejbName) )
+            {
+               log.warn( ejbName + ": The ejb-name for a CMP 2.x Entity " +
+                  "should not be a reserved EJB-QL keyword" );
+            }
+
+            // Test various things for abstract-schema-name
+            if( abstractSchemaName == null )
+            {
+               throw new DeploymentException( "The abstract-schema-name " +
+                  "must be specified for CMP 2.x Beans" );
+            }
+
+            if( !Strings.isValidJavaIdentifier(abstractSchemaName) )
+            {
+               throw new DeploymentException( "The abstract-schema-name " +
+                  "must be a valid Java Identifier '" + abstractSchemaName +
+                  "'");
+            }
+
+            if( Strings.isEjbQlIdentifier(abstractSchemaName) )
+            {
+               log.warn( ejbName + ": The abstract-schema-name should " +
+                  "not be a reserved EJB-QL Identifier '" +
+                  abstractSchemaName + "'" );
+            }
+         }
+
          // cmp-fields
          Iterator iterator = getChildrenByTagName( element, "cmp-field" );
          while( iterator.hasNext() )
          {
             Element field = (Element)iterator.next();
-            cmpFields.add( getElementContent(getUniqueChild(field,
-               "field-name")) );
+            cmpFields.add(getElementContent(getUniqueChild(field,
+               "field-name")));
          }
 
          // set the primary key field
@@ -259,18 +301,19 @@ public class EntityMetaData extends BeanMetaData
             "primkey-field"));
          if( primKeyField != null && !cmpFields.contains(primKeyField) )
          {
-            throw new DeploymentException( "primkey-field " +
-               primKeyField + " is not a cmp-field!" );
+            // FIXME: include ejb-name
+            throw new DeploymentException( "primkey-field " + primKeyField +
+               " is not a cmp-field");
          }
 
          // queries
-         iterator = getChildrenByTagName( element, "query" );
+         iterator = getChildrenByTagName(element, "query");
          while( iterator.hasNext() )
          {
-            Element queryElement = (Element)iterator.next();
+            Element queryElement = (Element) iterator.next();
 
             QueryMetaData queryMetaData = new QueryMetaData();
-            queryMetaData.importEjbJarXml( queryElement );
+            queryMetaData.importEjbJarXml(queryElement);
 
             queries.add(queryMetaData);
          }
@@ -283,29 +326,26 @@ public class EntityMetaData extends BeanMetaData
       if( isClustered() )
       {
          this.invokerBindings.put(
-            DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING, getJndiName() );
+            DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING, getJndiName());
       }
       else
       {
-         this.invokerBindings.put( DEFAULT_ENTITY_INVOKER_PROXY_BINDING,
-            getJndiName() );
+         this.invokerBindings.put(
+            DEFAULT_ENTITY_INVOKER_PROXY_BINDING, getJndiName());
       }
    }
 
    public void importJbossXml( Element element )
       throws DeploymentException
    {
-      super.importJbossXml( element );
-
+      super.importJbossXml(element);
       // set readonly
-      String readOnlyString = getElementContent(getOptionalChild(element,
-         "read-only") );
-
-      if (readOnlyString != null)
+      String readOnlyString = getElementContent(getOptionalChild(
+         element, "read-only"));
+      if( readOnlyString != null )
       {
          readOnly = Boolean.valueOf(readOnlyString).booleanValue();
       }
-
       // Manage distributed cache-invalidation settings
       //
       String distCacheInvalidations = getElementContent(getOptionalChild( element,
@@ -322,6 +362,17 @@ public class EntityMetaData extends BeanMetaData
          this.cacheInvalidConfig.importJbossXml(cacheInvalidConfigElement);
       }
 
-
+      
    }
+
+   // Package protected ---------------------------------------------
+
+   // Protected -----------------------------------------------------
+
+   // Private -------------------------------------------------------
+
+   // Inner classes -------------------------------------------------
 }
+/*
+vim:ts=3:sw=3:et
+*/

@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
@@ -32,7 +32,7 @@ public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
       if(getLog().isDebugEnabled()) {
          getLog().debug("EJB-QL: " + metadata.getEjbQl());
       }
-      
+
       JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(
             (Catalog)manager.getApplicationData("CATALOG"));
 
@@ -43,11 +43,12 @@ public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
                metadata.getMethod().getParameterTypes(),
                metadata.getReadAhead());
       } catch(Throwable t) {
-         throw new DeploymentException("Error compiling ejbql", t);
+         throw new DeploymentException("Error compiling EJB-QL " +
+            "statement '" + metadata.getEjbQl() + "'", t);
       }
-      
+
       setSQL(compiler.getSQL());
-      
+
       // set select object
       if(compiler.isSelectEntity()) {
          JDBCEntityBridge selectEntity = compiler.getSelectEntity();

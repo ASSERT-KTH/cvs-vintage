@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJBException;
@@ -20,11 +19,10 @@ import javax.ejb.NoSuchEntityException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -41,14 +39,16 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
-public class JDBCLoadEntityCommand {
+public class JDBCLoadEntityCommand
+{
    private final JDBCStoreManager manager;
    private final JDBCEntityBridge entity;
    private final Logger log;
 
-   public JDBCLoadEntityCommand(JDBCStoreManager manager) {
+   public JDBCLoadEntityCommand(JDBCStoreManager manager)
+   {
       this.manager = manager;
       entity = manager.getEntityBridge();
 
@@ -59,40 +59,79 @@ public class JDBCLoadEntityCommand {
             manager.getMetaData().getName());
    }
 
-   public void execute(EntityEnterpriseContext ctx) {
+   /**
+    * Loads entity.
+    * Throws NoSuchEntityException if entity wasn't found.
+    * @param ctx - entity context.
+    */
+   public void execute(EntityEnterpriseContext ctx)
+   {
       execute(null, ctx);
    }
 
-   public void execute(
+   /**
+    * Loads entity.
+    * If failIfNotFound is true and entity wasn't found then NoSuchEntityException is thrown.
+    * Otherwise, if entity wasn't found, returns false.
+    * If entity was loaded successfully return true.
+    * @param ctx - entity context;
+    * @param failIfNotFound - whether to fail if entity wasn't found;
+    * @return true if entity was loaded, false - otherwise.
+    */
+   public boolean execute(EntityEnterpriseContext ctx, boolean failIfNotFound)
+   {
+      return execute(null, ctx, failIfNotFound);
+   }
+
+   /**
+    * Loads entity or required field. If entity not found throws NoSuchEntityException.
+    * @param requiredField - required field or null;
+    * @param ctx - the corresponding context;
+    */
+   public void execute(JDBCCMPFieldBridge requiredField, EntityEnterpriseContext ctx)
+   {
+      execute(requiredField, ctx, true);
+   }
+
+   /**
+    * Loads entity or required field.
+    * If failIfNotFound is set to true, then NoSuchEntityException is thrown if the
+    * entity wasn't found.
+    * If failIfNotFound is false then if the entity wasn't found returns false,
+    * if the entity was loaded successfully, returns true.
+    * @param requiredField - required field;
+    * @param ctx - entity context;
+    * @param failIfNotFound - whether to fail if entity wasn't loaded.
+    * @return true if entity was loaded, false - otherwise.
+    */
+   public boolean execute(
          JDBCCMPFieldBridge requiredField,
-         EntityEnterpriseContext ctx) {
+         EntityEnterpriseContext ctx,
+         boolean failIfNotFound) {
 
       // load the instance primary key fields into the context
       entity.injectPrimaryKeyIntoInstance(ctx, ctx.getId());
 
       // get the read ahead cache
-      PrefetchCache prefetchCache = manager.getPrefetchCache();
+      ReadAheadCache readAheadCache = manager.getReadAheadCache();
 
-      // load any prefetched data into the context context
-      prefetchCache.loadPrefetchData(ctx);
+      // load any preloaded fields into the context
+      readAheadCache.load(ctx);
+
+      // get the finder results associated with this context, if it exists
+      ReadAheadCache.EntityReadAheadInfo info =
+         readAheadCache.getEntityReadAheadInfo(ctx.getId());
 
       // determine the fields to load
-      List loadFields = getLoadFields(
-            requiredField,
-            JDBCContext.getReadAheadMetaData(ctx),
-            ctx);
+      List loadFields = getLoadFields(requiredField, info.getReadAhead(), ctx);
 
       // if no there are not load fields return
       if(loadFields.size() == 0) {
-         return;
+         return true;
       }
 
       // get the keys to load
-      List loadKeys = JDBCContext.getLoadKeys(ctx);
-      if(loadKeys == null)
-      {
-         loadKeys = Collections.singletonList(ctx.getId());
-      }
+      List loadKeys = info.getLoadKeys();
 
       // generate the sql
       String sql = getSQL(loadFields, loadKeys.size());
@@ -148,9 +187,7 @@ public class JDBCLoadEntityCommand {
                // main entity; load the values into the context
                for(Iterator iter = loadFields.iterator(); iter.hasNext();) {
                   JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
-
                   index = field.loadInstanceResults(rs, index, ctx);
-
                   field.setClean(ctx);
                }
                mainEntityLoaded = true;
@@ -166,16 +203,21 @@ public class JDBCLoadEntityCommand {
                   index = field.loadArgumentResults(rs, index, ref);
 
                   // cache the field value
-                  prefetchCache.addPrefetchData(pk, field, ref[0]);
+                  readAheadCache.addPreloadData(pk, field, ref[0]);
                }
             }
          }
 
          // did we load the main results
-         if(!mainEntityLoaded) {
-            throw new NoSuchEntityException("Entity not found: primaryKey=" +
-                  ctx.getId());
+         if(!mainEntityLoaded)
+         {
+            if(failIfNotFound)
+               throw new NoSuchEntityException("Entity not found: primaryKey=" + ctx.getId());
+            else
+               return false;
          }
+         else
+            return true;
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {

@@ -15,7 +15,7 @@ import javax.management.JMException;
  * 
  * @see Monitorable
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface EntityLockMonitorMBean   
    extends org.jboss.system.ServiceMBean

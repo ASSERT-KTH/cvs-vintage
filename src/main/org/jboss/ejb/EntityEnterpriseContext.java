@@ -6,6 +6,8 @@
  */
 package org.jboss.ejb;
 
+import org.jboss.ejb.plugins.lock.NonReentrantLock;
+
 import java.rmi.RemoteException;
 
 import javax.ejb.EJBContext;
@@ -15,7 +17,6 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
-import javax.ejb.TimerService;
 
 
 /**
@@ -27,15 +28,20 @@ import javax.ejb.TimerService;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
    private EJBObject ejbObject;
    private EJBLocalObject ejbLocalObject;
    private EntityContext ctx;
-   private boolean hasTxSynch = false;
-
+	
+   /**
+    * True if this instance has been registered with the TM for transactional
+    * demarcation.
+    */
+   private boolean hasTxSynchronization = false;
+	
    /**
     * True if this instances' state is valid when a bean is called the state
     * is not synchronized with the DB but "valid" as long as the transaction
@@ -44,38 +50,49 @@ public class EntityEnterpriseContext extends EnterpriseContext
    private boolean valid = false;
 	
    /**
+    * Is this context in a readonly invocation.
+    */
+   private boolean readOnly = false;
+
+   /**
     * The persistence manager may attach any metadata it wishes to this
     * context here.
     */
    private Object persistenceCtx;
 	
-   /**
-    * Is this context in the middle of a store opperation?
-    */
-   private boolean inStore = false;
+   /** The cacheKey for this context */
+   private Object key;
 
-   /**
-    * Is the entity in a readonly invocation.
-    */
-   private boolean readOnly = false;
+   private NonReentrantLock methodLock = new NonReentrantLock();
 
-   public EntityEnterpriseContext(Object instance, Container container)
+   public EntityEnterpriseContext(Object instance, Container con)
       throws RemoteException
    {
-      super(instance, container);
+      super(instance, con);
       ctx = new EntityContextImpl();
       ((EntityBean)instance).setEntityContext(ctx);
    }
 	
-   public void clear() 
+   /**
+    * A non-reentrant deadlock detectable lock that is used to protected against
+    * entity bean reentrancy.
+    * @return
+    */
+   public NonReentrantLock getMethodLock()
+   {
+      return methodLock;
+   }
+
+   public void clear()
    {
       super.clear();
       
+      hasTxSynchronization = false;
       valid = false;
-      persistenceCtx = null;
-      inStore = false;
-      ejbObject = null;
       readOnly = false;
+      key = null;
+      persistenceCtx = null;
+      ejbObject = null;
    }
 	
    public void discard() throws RemoteException
@@ -110,6 +127,16 @@ public class EntityEnterpriseContext extends EnterpriseContext
       return ejbLocalObject;
    }
 	
+   public void setCacheKey(Object key)
+   {
+      this.key = key;
+   }
+	
+   public Object getCacheKey()
+   {
+      return key;
+   }
+	
    public void setPersistenceContext(Object ctx)
    {
       this.persistenceCtx = ctx;
@@ -118,6 +145,16 @@ public class EntityEnterpriseContext extends EnterpriseContext
    public Object getPersistenceContext()
    {
       return persistenceCtx;
+   }
+	
+   public void hasTxSynchronization(boolean value)
+   {
+      hasTxSynchronization = value;
+   }
+	
+   public boolean hasTxSynchronization()
+   {
+      return hasTxSynchronization;
    }
 	
    public void setValid(boolean valid)
@@ -129,136 +166,61 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       return valid;
    }
+
+	public void setReadOnly(boolean readOnly)
+   {
+      this.readOnly = readOnly;
+   }
 	
-   public boolean isInStore()
-   {
-      return inStore;
-   }
-
-   public boolean hasTxSynchronization()
-   {
-      return hasTxSynch;
-   }
-
-   public void setTxSynchronization(boolean hasTxSynch)
-   {
-      this.hasTxSynch = hasTxSynch;
-   }
-
-   public void setInStore(final boolean inStore)
-   {
-      this.inStore = inStore;
-   }
-
    public boolean isReadOnly()
    {
       return readOnly;
    }
-
-   public void setReadOnly(final boolean readOnly)
-   {
-      this.readOnly = readOnly;
-   }
-
-
-   /**
-    * Two EntityEnterpriseContexts are the equal if they 
-    * both are from the same container and have the same
-    * id.
-    * @param o the reference object with which to compare
-    * @return true if this object is the same as the object
-    */
-   public boolean equals(Object o)
-   {
-      if(o instanceof EntityEnterpriseContext)
-      {
-         EntityEnterpriseContext ctx = 
-            (EntityEnterpriseContext)o;
-         return (container == ctx.container) &&
-            (id != null && id.equals(ctx.id));
-      }
-      return false;
-   }
-   
-   public int hashCode()
-   {
-      int result = 17;
-      result = 37*result + container.hashCode();
-      if(id == null)
-      {
-         result = 37*result + 987899309;
-      }
-      else
-      {
-         result = 37*result + id.hashCode();
-      }
-      return result;
-   }
-
-   public String toString()
-   {
-      return "[EntityEnterpriseContext :" +
-         " ejb=" + container.getBeanMetaData().getEjbName() + 
-         " id=" + id + "]";
-   }
-
+	
    protected class EntityContextImpl
       extends EJBContextImpl
       implements EntityContext
    {
       public EJBObject getEJBObject()
       {
-         EJBProxyFactory proxyFactory = container.getProxyFactory();
-         if(proxyFactory == null)
+         if(((EntityContainer)con).getRemoteClass() == null)
          {
-            throw new IllegalStateException("No remote interface defined");
+            throw new IllegalStateException( "No remote interface defined." );
          }
 
-         if(id == null)
-         {
-            throw new IllegalStateException("No entity identity associated with context");
-         }
-
-         if(ejbObject == null)
-         {
-            ejbObject = (EJBObject) proxyFactory.getEntityEJBObject(id);
+         if (ejbObject == null)
+         {   
+            // Create a new CacheKey
+            Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);
+            EJBProxyFactory proxyFactory = con.getProxyFactory();
+            if(proxyFactory == null)
+            {
+               String defaultInvokerName = con.getBeanMetaData().
+                  getContainerConfiguration().getDefaultInvokerName();
+               proxyFactory = con.lookupProxyFactory(defaultInvokerName);
+            }
+            ejbObject = (EJBObject)proxyFactory.getEntityEJBObject(cacheKey);
          }
 
          return ejbObject;
       }
-
+		
       public EJBLocalObject getEJBLocalObject()
       {
-         if(container.getLocalHomeClass()==null)
+         if (con.getLocalHomeClass()==null)
+            throw new IllegalStateException( "No local interface for bean." );
+         
+         if (ejbLocalObject == null)
          {
-            throw new IllegalStateException("No local interface for bean");
-         }
-
-         if(id == null)
-         {
-            throw new IllegalStateException("No entity identity associated with context");
-         }
-
-         if(ejbLocalObject == null)
-         {
-            ejbLocalObject = container.getLocalProxyFactory().getEntityEJBLocalObject(id);
+            Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);            
+            ejbLocalObject = ((EntityContainer)con).getLocalProxyFactory().getEntityEJBLocalObject(cacheKey);
          }
          return ejbLocalObject;
       }
-
+		
       public Object getPrimaryKey()
       {
-         if(id == null)
-         {
-            throw new IllegalStateException("No entity identity associated with context");
-         }
-
          return id;
-      }
-
-      public TimerService getTimerService() throws IllegalStateException
-      {
-         return getContainer().getTimerService(id);
       }
    }
 }

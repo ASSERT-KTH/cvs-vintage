@@ -14,7 +14,7 @@ import java.io.Serializable;
  * it can used to invalidate messages on the local IM.
  * @see InvalidationManagerMBean
  * @see InvalidationBridgeListener
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *

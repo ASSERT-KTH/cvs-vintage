@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Log4jSocketServer

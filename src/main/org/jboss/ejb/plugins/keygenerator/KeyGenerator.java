@@ -11,7 +11,7 @@ package org.jboss.ejb.plugins.keygenerator;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface KeyGenerator
 {

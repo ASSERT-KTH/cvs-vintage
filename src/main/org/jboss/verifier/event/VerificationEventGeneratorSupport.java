@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEventGeneratorSupport.java,v 1.5 2003/03/31 23:40:47 ejort Exp $
+ * $Id: VerificationEventGeneratorSupport.java,v 1.6 2003/08/27 04:32:36 patriot1burke Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
@@ -28,7 +28,10 @@ package org.jboss.verifier.event;
 // standard imports
 import java.util.Enumeration;
 
+
+// non-standard class dependencies
 import org.gjt.lindfors.util.EventGeneratorSupport;
+import org.jboss.verifier.strategy.VerificationContext;
 
 
 /**
@@ -40,7 +43,7 @@ import org.gjt.lindfors.util.EventGeneratorSupport;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since  	JDK 1.3
  */
 public class VerificationEventGeneratorSupport extends EventGeneratorSupport {

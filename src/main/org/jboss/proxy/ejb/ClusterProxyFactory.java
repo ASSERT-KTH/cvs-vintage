@@ -14,7 +14,7 @@ package org.jboss.proxy.ejb;
  * @see org.jboss.proxy.ejb.ProxyFactoryHA
  *
  * @author  <a href="mailto:sacha.labourey@jboss.org">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *   
  * <p><b>Revisions:</b>
  *

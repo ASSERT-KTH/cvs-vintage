@@ -10,12 +10,12 @@ import java.io.Serializable;
 import java.io.ObjectStreamException;
 
 /**
- * Type safe enumeration of method object.
- * Used by optmistic lock to lock field and its values dependeding
- * on the strategy used
+ * Type safe enumeration of message objects.
+ * Used by optmistic lock to lock fields and its values dependeding
+ * on the strategy used.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class CMPMessage
    implements Serializable
@@ -76,5 +76,3 @@ public final class CMPMessage
       }
    }
 }
-
-

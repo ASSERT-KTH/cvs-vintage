@@ -24,17 +24,62 @@ import org.jboss.util.NestedRuntimeException;
 /** A generic factory of java.lang.reflect.Proxy that constructs a proxy
  * that is a composite of ClientContainer/Interceptors/Invoker
  *
- * @todo find a way to customize or add more to the InvocationContext.
- *
  * @todo generalize the proxy/invoker factory object
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class GenericProxyFactory
 {
 
    /** Create a composite proxy for the given interfaces, invoker.
     @param id, the cache id for the target object if any
+    @param targetName, the name of the server side service
+    @param invoker, the detached invoker stub to embed in the proxy
+    @param jndiName, the JNDI name the proxy will be bound under if not null
+    @param proxyBindingName, the invoker-proxy-binding name if not null
+    @param interceptorClasses, the Class objects for the interceptors
+    @param loader, the ClassLoader to associate the the Proxy
+    @param ifaces, the Class objects for the interfaces the Proxy implements
+    */
+   public Object createProxy(Object id, ObjectName targetName,
+      Invoker invoker, String jndiName, String proxyBindingName,
+      ArrayList interceptorClasses, ClassLoader loader, Class[] ifaces)
+   {
+      InvocationContext context = new InvocationContext();
+      Integer nameHash = new Integer(targetName.hashCode());
+      context.setObjectName(nameHash);
+      context.setCacheId(id);
+      if( jndiName != null )
+         context.setValue(InvocationKey.JNDI_NAME, jndiName);
+
+      if( invoker == null )
+         throw new RuntimeException("Null invoker given for name: " + targetName);
+      context.setInvoker(invoker);
+      if( proxyBindingName != null )
+         context.setInvokerProxyBinding(proxyBindingName);
+
+      ClientContainer client = new ClientContainer(context);
+      try
+      {
+         loadInterceptorChain(interceptorClasses, client);
+      }
+      catch(Exception e)
+      {
+         throw new NestedRuntimeException("Failed to load interceptor chain", e);
+      }
+
+      return Proxy.newProxyInstance(
+         // Classloaders
+         loader,
+         // Interfaces
+         ifaces,
+         // Client container as invocation handler
+         client);
+   }
+
+   /** Create a composite proxy for the given interfaces, invoker.
+    @param id, the cache id for the target object if any
+    @param targetName, the name of the server side service
     @param invokerName, the name of the server side JMX invoker
     @param jndiName, the JNDI name the proxy will be bound under if not null
     @param proxyBindingName, the invoker-proxy-binding name if not null
@@ -42,13 +87,12 @@ public class GenericProxyFactory
     @param loader, the ClassLoader to associate the the Proxy
     @param ifaces, the Class objects for the interfaces the Proxy implements
     */
-   public Object createProxy(Object id, ObjectName invokerName,
+   public Object createProxy(Object id, ObjectName targetName, ObjectName invokerName,
       String jndiName, String proxyBindingName,
       ArrayList interceptorClasses, ClassLoader loader, Class[] ifaces)
    {
-
       InvocationContext context = new InvocationContext();
-      Integer nameHash = new Integer(invokerName.hashCode());
+      Integer nameHash = new Integer(targetName.hashCode());
       context.setObjectName(nameHash);
       context.setCacheId(id);
       if( jndiName != null )
@@ -60,9 +104,6 @@ public class GenericProxyFactory
       context.setInvoker(invoker);
       if( proxyBindingName != null )
          context.setInvokerProxyBinding(proxyBindingName);
-
-      //for use with txInterceptors you need something like this:
-      //context.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
 
       ClientContainer client = new ClientContainer(context);
       try

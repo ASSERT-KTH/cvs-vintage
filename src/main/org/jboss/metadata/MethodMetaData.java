@@ -14,10 +14,8 @@ import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.InvocationType;
-import org.jboss.ejb.plugins.TxSupport;
 
-/**
- * The combination of the method-permission, container-transaction
+/** The combination of the method-permission, container-transaction
  *
  * <p>
  * The method-permission element specifies that one or more security
@@ -38,15 +36,14 @@ import org.jboss.ejb.plugins.TxSupport;
  * attribute is to be applied to all the specified methods.
  * </p>
  *
- * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.15 $
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ *   @version $Revision: 1.16 $
  */
 public class MethodMetaData extends MetaData
 {
    // Constants -----------------------------------------------------
-   // These method interface contstants are compatible with the
-   // Invocation.XXX values
+   // These method interface contstants are compatible with the Invocation.XXX values
    public static final int ANY_METHOD = -1;
    private static final ArrayList EMPTY_PARAM_LIST = new ArrayList();
 
@@ -64,15 +61,13 @@ public class MethodMetaData extends MetaData
    /** The method-intf element allows a method element to differentiate
     * between the methods with the same name and signature that are multiply
     * defined across the home and component interfaces (e.g., in both an
-    * enterprise bean's remote and local interfaces, or in both an enterprise
-    * bean's home and remote interfaces, etc.)
+    * enterprise bean’s remote and local interfaces, or in both an enter-prise
+    * bean’s home and remote interfaces, etc.)
     * The method-intf element must be one of the following:
-    * <p>
     * <method-intf>Home</method-intf>
     * <method-intf>Remote</method-intf>
     * <method-intf>LocalHome</method-intf>
     * <method-intf>Local</method-intf>
-    * </p>
     */
    private boolean intf = false;
    /** One of: InvocationType
@@ -96,7 +91,7 @@ public class MethodMetaData extends MetaData
    private ArrayList paramList = EMPTY_PARAM_LIST;
    /** The trans-attribute element specifies how the container must manage
     * the transaction boundaries when delegating a method invocation to an
-    * enterprise bean's business method.
+    * enterprise bean’s business method.
     * The value of trans-attribute must be one of the following:
     * <trans-attribute>NotSupported</trans-attribute>
     * <trans-attribute>Supports</trans-attribute>
@@ -105,121 +100,76 @@ public class MethodMetaData extends MetaData
     * <trans-attribute>Mandatory</trans-attribute>
     * <trans-attribute>Never</trans-attribute>
     */
-   private TxSupport transactionType;
-
+   private byte transactionType;
+   
    private Set permissions;
-
+   
    // Static --------------------------------------------------------
-
+   
    // Constructors --------------------------------------------------
    public MethodMetaData()
    {
    }
-
+   
    // Public --------------------------------------------------------
-
+   
    public String getMethodName()
-   {
-      return methodName;
-   }
-
+   { return methodName; }
+   
    public String getEjbName()
-   {
-      return ejbName;
-   }
-
+   { return ejbName; }
+   
    public boolean isHomeMethod()
-   {
-      return methodType == InvocationType.HOME;
-   }
-
+   { return methodType == InvocationType.HOME ; }
    public boolean isRemoteMethod()
-   {
-      return methodType == InvocationType.REMOTE;
-   }
-
+   { return methodType == InvocationType.REMOTE ; }
    public boolean isLocalHomeMethod()
-   {
-      return methodType == InvocationType.LOCALHOME;
-   }
-
+   { return methodType == InvocationType.LOCALHOME ; }
    public boolean isLocalMethod()
-   {
-      return methodType == InvocationType.LOCAL;
-   }
-
+   { return methodType == InvocationType.LOCAL ; }
    public boolean isUnchecked()
-   {
-      return unchecked;
-   }
-
+   { return unchecked; }
    public boolean isExcluded()
-   {
-      return excluded;
-   }
-
+   { return excluded; }
    public boolean isIntfGiven()
-   {
-      return intf;
-   }
-
+   { return intf; }
+   
    public boolean isParamGiven()
-   {
-      return param;
-   }
-
+   { return param; }
+   
    public Iterator getParams()
-   {
-      return paramList.iterator();
-   }
-
-   public TxSupport getTransactionType()
-   {
-      return transactionType;
-   }
-
-   public void setTransactionType(TxSupport type)
+   { return paramList.iterator(); }
+   
+   public byte getTransactionType()
+   { return transactionType; }
+   
+   public void setTransactionType(byte type)
    {
       transactionType = type;
    }
-
+   
    public Set getRoles()
-   {
-      return permissions;
-   }
-
+   { return permissions; }
+   
    public void setRoles(Set perm)
-   {
-      permissions = perm;
-   }
-
+   { permissions = perm; }
    public void setUnchecked()
-   {
-      unchecked = true;
-   }
-
+   { unchecked = true; }
    public void setExcluded()
-   {
-      excluded = true;
-   }
-
-   public boolean patternMatches( String name, Class[] arg,
-      InvocationType iface )
+   { excluded = true; }
+   
+   public boolean patternMatches(String name, Class[] arg, InvocationType iface)
    {
       return patternMatches(name, getClassNames(arg), iface);
    }
-
-   public boolean patternMatches( String name, String[] arg,
-      InvocationType iface)
+   
+   public boolean patternMatches(String name, String[] arg, InvocationType iface)
    {
       // the wildcard matches everything
       if (getMethodName().equals("*"))
       {
          if( methodType != null && methodType != iface )
-         {
             return false;
-         }
-
          return true;
       }
 
@@ -250,12 +200,11 @@ public class MethodMetaData extends MetaData
    /**
     * @param a method element
     */
-   public void importEjbJarXml( Element element )
-      throws DeploymentException
+   public void importEjbJarXml(Element element) throws DeploymentException
    {
       methodName = getElementContent(getUniqueChild(element, "method-name"));
       ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
-
+      
       Element intfElement = getOptionalChild(element, "method-intf");
       if (intfElement != null)
       {
@@ -279,8 +228,7 @@ public class MethodMetaData extends MetaData
          }
          else
          {
-            throw new DeploymentException("method-intf tag should be one " +
-               "of: 'Home', 'Remote', 'LocalHome', 'Local'");
+            throw new DeploymentException("method-intf tag should be one of: 'Home', 'Remote', 'LocalHome', 'Local'");
          }
       }
 
@@ -289,8 +237,7 @@ public class MethodMetaData extends MetaData
       {
          param = true;
          paramList = new ArrayList();
-         Iterator paramsIterator = getChildrenByTagName(paramsElement,
-            "method-param");
+         Iterator paramsIterator = getChildrenByTagName(paramsElement, "method-param");
          while (paramsIterator.hasNext())
          {
             paramList.add(getElementContent((Element)paramsIterator.next()));
@@ -299,14 +246,14 @@ public class MethodMetaData extends MetaData
    }
 
    // Package protected ---------------------------------------------
-
+   
    // Protected -----------------------------------------------------
-
+   
    // Private -------------------------------------------------------
-   private static String[] getClassNames( Class[] source )
+   private static String[] getClassNames(Class[] source)
    {
       String out[] = new String[source.length];
-      for( int i=0; i < out.length; i++ )
+      for(int i=0; i<out.length; i++)
       {
          String brackets = "";
          Class cls = source[i];
@@ -319,27 +266,15 @@ public class MethodMetaData extends MetaData
       }
       return out;
    }
-
-   private boolean sameParams( String[] arg )
+   
+   private boolean sameParams(String[] arg)
    {
-      if( arg.length != paramList.size() )
-      {
-         return false;
-      }
-
-      for( int i=0; i < arg.length; i++ )
-      {
-         if( !arg[i].equals(paramList.get(i)) )
-         {
+      if(arg.length != paramList.size()) return false;
+      for(int i=0; i<arg.length; i++)
+         if (!arg[i].equals(paramList.get(i)))
             return false;
-         }
-      }
-
       return true;
    }
 
    // Inner classes -------------------------------------------------
 }
-/*
-vim:ts=3:sw=3:et
-*/

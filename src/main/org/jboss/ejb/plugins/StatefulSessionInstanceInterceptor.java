@@ -25,7 +25,6 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
 
@@ -38,10 +37,32 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
+ *
+ * <p><b>Revisions:</b>
+ * <p><b>20010704 marcf</b>
+ * <ul>
+ * <li>- Moved to new synchronization
+ * </ul>
+ * <p><b>20010726 billb</b>
+ * <ul>
+ * <li>- externalized bean locking in separate object BeanLock
+ * </ul>
  */
-public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
+public class StatefulSessionInstanceInterceptor
+   extends AbstractInterceptor
 {
+   // Constants ----------------------------------------------------
+   
+   // Attributes ---------------------------------------------------
+   
+   /** Instance logger. */
+   protected Logger log = Logger.getLogger(this.getClass());
+   
+   protected StatefulSessionContainer container;
+   
+   // Static -------------------------------------------------------
+   
    private static Method getEJBHome;
    private static Method getHandle;
    private static Method getPrimaryKey;
@@ -57,7 +78,7 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          getHandle = EJBObject.class.getMethod("getHandle", noArg);
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]
-            {EJBObject.class});
+         {EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
       }
       catch (Exception e)
@@ -66,95 +87,157 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          throw new ExceptionInInitializerError(e);
       }
    }
-
-   public InvocationResponse invoke(Invocation mi) throws Exception
+   
+   // Constructors -------------------------------------------------
+   
+   // Public -------------------------------------------------------
+   
+   public void setContainer(Container container)
    {
-      // FIXME:  There is a lot of duplicate code here
-      if(mi.getType().isHome()) 
+      this.container = (StatefulSessionContainer)container;
+   }
+   
+   public  Container getContainer()
+   {
+      return container;
+   }
+   
+   // Interceptor implementation -----------------------------------
+   
+   public Object invokeHome(Invocation mi)
+      throws Exception
+   {
+      // get a new context from the pool (this is a home method call)
+      InstancePool pool = container.getInstancePool();
+      EnterpriseContext ctx = pool.get();
+
+      // set the context on the Invocation
+      mi.setEnterpriseContext(ctx);
+      
+      // It is a new context for sure so we can lock it
+      ctx.lock();
+      
+      // Set the current security information
+      ctx.setPrincipal(mi.getPrincipal());
+ 
+      try
       {
-         // get a new context from the pool (this is a home method call)
-         EnterpriseContext ctx = getContainer().getInstancePool().get();
-
-         // set the context on the Invocation
-         mi.setEnterpriseContext(ctx);
-
-         // It is a new context for sure so we can lock it
-         ctx.lock();
-
-         // Set the current security information
-         ctx.setPrincipal(mi.getPrincipal());
-
-         try
+         // Invoke through interceptors
+         return getNext().invokeHome(mi);
+      } finally
+      {
+         synchronized (ctx)
          {
-            // Invoke through interceptors
-            return getNext().invoke(mi);
-         } finally
-         {
-            synchronized (ctx)
+            // Release the lock
+            ctx.unlock();
+            
+            // Still free? Not free if create() was called successfully
+            if (ctx.getId() == null)
             {
-               // Release the lock
-               ctx.unlock();
-
-               // Still free? Not free if create() was called successfully
-               if (ctx.getId() == null)
-               {
-                  getContainer().getInstancePool().free(ctx);
-               }
+               container.getInstancePool().free(ctx);
             }
          }
       }
-      else 
+   }
+   
+   protected void register(EnterpriseContext ctx, Transaction tx, BeanLock lock)
+   {
+      // Create a new synchronization
+      InstanceSynchronization synch = new InstanceSynchronization(tx, ctx, lock);
+      
+      try
       {
-         InstanceCache cache = getContainer().getInstanceCache();
-         InstancePool pool = getContainer().getInstancePool();
-         Object methodID = mi.getId();
-         EnterpriseContext ctx = null;
-
-         BeanLock lock = (BeanLock)getContainer().getLockManager().getLock(methodID);
+         // OSH: An extra check to avoid warning.
+         // Can go when we are sure that we no longer get
+         // the JTA violation warning.
+         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+         {
+            
+            return;
+         }
+         
+         // We want to be notified when the transaction commits
+         try
+         {
+            tx.registerSynchronization(synch);
+         }
+         catch (Exception ex)
+         {
+            // synch adds a reference to the lock, so we must release the ref
+            // because afterCompletion will never get called.
+            getContainer().getLockManager().removeLockRef(lock.getId());
+            throw ex;
+         }
+         
+         // EJB 1.1, 6.5.3
+         synch.afterBegin();
+         
+      } catch (RollbackException e)
+      {
+         
+      } catch (Exception e)
+      {
+         
+         throw new EJBException(e);
+         
+      }
+   }
+   
+   public Object invoke(Invocation mi)
+   throws Exception
+   {
+      InstanceCache cache = container.getInstanceCache();
+      InstancePool pool = container.getInstancePool();
+      Object methodID = mi.getId();
+      EnterpriseContext ctx = null;
+      
+      BeanLock lock = (BeanLock)container.getLockManager().getLock(methodID);
+      try
+      {
          lock.sync(); // synchronized(ctx)
          try // lock.sync
          {
             /* The security context must be established before the cache
-               lookup because the SecurityInterceptor is after the instance
-               interceptor and handles of passivated sessions expect that they are
-               restored with the correct security context since the handles
-               not serialize the principal and credential information.
+            lookup because the SecurityInterceptor is after the instance
+            interceptor and handles of passivated sessions expect that they are
+            restored with the correct security context since the handles
+            not serialize the principal and credential information.
              */
             SecurityAssociation.setPrincipal(mi.getPrincipal());
             SecurityAssociation.setCredential(mi.getCredential());
-
+            
             // Get context
             ctx = cache.get(methodID);
             // Associate it with the method invocation
             mi.setEnterpriseContext(ctx);
-
+            
             // BMT beans will lock and replace tx no matter what, CMT do work on transaction
-            if (!((SessionMetaData)getContainer().getBeanMetaData()).isBeanManagedTx())
+            if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx())
             {
-
+               
                // Do we have a running transaction with the context
                if (ctx.getTransaction() != null &&
-                     // And are we trying to enter with another transaction
-                     !ctx.getTransaction().equals(mi.getTransaction()))
+               // And are we trying to enter with another transaction
+               !ctx.getTransaction().equals(mi.getTransaction()))
                {
                   // Calls must be in the same transaction
-                  throw new EJBException("Application Error: tried to enter " +
-                        "Stateful bean with different tx context" +
-                        ", contextTx: " + ctx.getTransaction() +
-                        ", methodTx: " + mi.getTransaction());
+                  StringBuffer msg = new StringBuffer("Application Error: " +
+                     "tried to enter Stateful bean with different tx context");
+                  msg.append(", contextTx: " + ctx.getTransaction());
+                  msg.append(", methodTx: " + mi.getTransaction());
+                  throw new EJBException(msg.toString());
                }
 
-               // If the instance will participate in a new transaction we 
-               // register a sync for it
-               if(ctx.getTransaction() == null && mi.getTransaction() != null)
+               //If the instance will participate in a new transaction we register a sync for it
+               if (ctx.getTransaction() == null && mi.getTransaction() != null)
                {
                   register(ctx, mi.getTransaction(), lock);
                }
             }
-
+            
             if (!ctx.isLocked())
             {
-
+               
                //take it!
                ctx.lock();
             }
@@ -176,10 +259,10 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          {
             lock.releaseSync();
          }
-
+         
          // Set the current security information
          ctx.setPrincipal(mi.getPrincipal());
-
+         
          try
          {
             // Invoke through interceptors
@@ -188,22 +271,25 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          {
             // Discard instance
             cache.remove(methodID);
+            pool.discard(ctx);
             ctx = null;
-
+            
             throw e;
          } catch (RuntimeException e)
          {
             // Discard instance
             cache.remove(methodID);
+            pool.discard(ctx);
             ctx = null;
-
+            
             throw e;
          } catch (Error e)
          {
             // Discard instance
             cache.remove(methodID);
+            pool.discard(ctx);
             ctx = null;
-
+            
             throw e;
          } finally
          {
@@ -213,15 +299,16 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
                lock.sync(); // synchronized(ctx)
                try
                {
-
+                  
                   // release it
                   ctx.unlock();
-
+                  
                   // if removed, remove from cache
                   if (ctx.getId() == null)
                   {
                      // Remove from cache
                      cache.remove(methodID);
+                     pool.free(ctx);
                   }
                }
                finally
@@ -231,55 +318,30 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
             }
          }
       }
-   }
-
-   protected void register(EnterpriseContext ctx, Transaction tx, BeanLock lock)
-   {
-      // Create a new synchronization
-      InstanceSynchronization synch = new InstanceSynchronization(tx, ctx, lock);
-      
-      try
+      finally
       {
-         // OSH: An extra check to avoid warning.
-         // Can go when we are sure that we no longer get
-         // the JTA violation warning.
-         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-         {
-            
-            return;
-         }
-         
-         // We want to be notified when the transaction commits
-         tx.registerSynchronization(synch);
-         // EJB 1.1, 6.5.3
-         synch.afterBegin();
-         
-      } catch (RollbackException e)
-      {
-         
-      } catch (Exception e)
-      {
-         
-         throw new EJBException(e);
-         
+         container.getLockManager().removeLockRef(lock.getId());
       }
    }
-    
+   
    protected boolean isCallAllowed(Invocation mi)
    {
       Method m = mi.getMethod();
       if (m.equals(getEJBHome) ||
-          m.equals(getHandle) ||
-          m.equals(getPrimaryKey) ||
-          m.equals(isIdentical) ||
-          m.equals(remove))
+      m.equals(getHandle) ||
+      m.equals(getPrimaryKey) ||
+      m.equals(isIdentical) ||
+      m.equals(remove))
       {
          return true;
       }
       return false;
    }
    
-   private class InstanceSynchronization implements Synchronization
+   // Inner classes -------------------------------------------------
+   
+   private class InstanceSynchronization
+   implements Synchronization
    {
       /**
        *  The transaction we follow.
@@ -308,6 +370,7 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          this.tx = tx;
          this.ctx = ctx;
          this.lock = lock;
+         this.lock.addRef();
          
          // Let's compute it now, to speed things up we could
          notifySession = (ctx.getInstance() instanceof javax.ejb.SessionSynchronization);
@@ -323,7 +386,7 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
                afterBegin = sync.getMethod("afterBegin", new Class[0]);
                beforeCompletion = sync.getMethod("beforeCompletion", new Class[0]);
                afterCompletion =  sync.getMethod("afterCompletion", new Class[]
-                  {boolean.class});
+               {boolean.class});
             }
             catch (Exception e)
             {
@@ -331,6 +394,8 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
             }
          }
       }
+      
+      // Synchronization implementation -----------------------------
       
       public void afterBegin()
       {
@@ -374,14 +439,7 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          if( log.isTraceEnabled() )
             log.trace("afterCompletion called");
          
-         try
-         {
-            lock.sync();
-         } catch (InterruptedException interrupted)
-         {
-            log.warn("lock.sync interrupted!", interrupted);
-         }
-         
+         lock.sync();
          try
          {
             // finish the transaction association
@@ -399,14 +457,14 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
                   if (status == Status.STATUS_COMMITTED)
                   {
                      afterCompletion.invoke(ctx.getInstance(),
-                                            new Object[]
-                        { Boolean.TRUE });
+                     new Object[]
+                     { Boolean.TRUE });
                   }
                   else
                   {
                      afterCompletion.invoke(ctx.getInstance(),
-                                            new Object[]
-                        { Boolean.FALSE });
+                     new Object[]
+                     { Boolean.FALSE });
                   }
                }
                catch (Exception e)
@@ -418,6 +476,7 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
          finally
          {
             lock.releaseSync();
+            container.getLockManager().removeLockRef(lock.getId());
          }
       }
    }

@@ -56,7 +56,6 @@ import javax.management.MBeanRegistrationException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
-import javax.management.loading.ClassLoaderRepository;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -82,12 +81,9 @@ import org.jboss.util.NestedRuntimeException;
  *
  * @jmx:mbean extends="org.jboss.jmx.connector.RemoteMBeanServer"
  *
- * @todo implement notifications
- * @todo convert to MBeanServerConnection - remove UnsupportedOperation
- * @version <tt>$Revision: 1.10 $</tt>
+ * @version <tt>$Revision: 1.11 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
- * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  */
 public class RMIConnectorImpl
    implements RMIConnectorImplMBean
@@ -422,16 +418,6 @@ public class RMIConnectorImpl
       }
    }
 
-   public String[] getDomains()
-   {
-      try {
-         return mRemoteAdaptor.getDomains();
-      }
-      catch( RemoteException e ) {
-         throw new RuntimeMBeanException(new NestedRuntimeException(e));
-      }
-   }
-
    public void addNotificationListener(ObjectName pName,
                                        ObjectName pListener,
                                        NotificationFilter pFilter,
@@ -529,26 +515,6 @@ public class RMIConnectorImpl
       }
    }
 
-   public void removeNotificationListener(ObjectName pName,
-                                          NotificationListener pListener,
-                                          NotificationFilter filter,
-                                          Object handback)
-      throws InstanceNotFoundException,
-             ListenerNotFoundException
-   {
-      throw new RuntimeException("NYI");
-   }
-
-   public void removeNotificationListener(ObjectName pName,
-                                          ObjectName pListener,
-                                          NotificationFilter filter,
-                                          Object handback)
-      throws InstanceNotFoundException,
-             ListenerNotFoundException
-   {
-      throw new RuntimeException("NYI");
-   }
-
    public MBeanInfo getMBeanInfo(ObjectName pName)
       throws InstanceNotFoundException,
              IntrospectionException,
@@ -591,38 +557,6 @@ public class RMIConnectorImpl
     */
    public ObjectInputStream deserialize(String className, ObjectName loaderName, byte[] data)
       throws InstanceNotFoundException, OperationsException, ReflectionException
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   /**
-    * Always throws {@link java.lang.UnsupportedOperationException}.
-    *
-    * @throws UnsupportedOperationException
-    */
-   public ClassLoader getClassLoaderFor(ObjectName loaderName)
-      throws InstanceNotFoundException
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   /**
-    * Always throws {@link java.lang.UnsupportedOperationException}.
-    *
-    * @throws UnsupportedOperationException
-    */
-   public ClassLoader getClassLoader(ObjectName loaderName)
-      throws InstanceNotFoundException
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   /**
-    * Always throws {@link java.lang.UnsupportedOperationException}.
-    *
-    * @throws UnsupportedOperationException
-    */
-   public ClassLoaderRepository getClassLoaderRepository()
    {
       throw new UnsupportedOperationException();
    }

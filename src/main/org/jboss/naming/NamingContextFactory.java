@@ -20,7 +20,7 @@ import javax.naming.NamingException;
  * @see org.jnp.interfaces.NamingContextFactory
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class NamingContextFactory extends org.jnp.interfaces.NamingContextFactory
 {

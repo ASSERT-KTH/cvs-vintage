@@ -7,6 +7,12 @@
 
 package org.jboss.ejb.plugins;
 
+import org.jboss.cache.invalidation.InvalidationManagerMBean;
+import org.jboss.cache.invalidation.InvalidationGroup;
+import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.system.Registry;
+
 /**
  * Cache implementation that registers with an InvalidationManager when in
  * commit option A or D. Information is found in the EB meta-data (IM name,
@@ -16,127 +22,123 @@ package org.jboss.ejb.plugins;
  * @see org.jboss.cache.invalidation.triggers.EntityBeanCacheBatchInvalidatorInterceptor
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>26 septembre 2002 Sacha Labourey:</b>
- * <ul>
- * <li> First implementation </li>
- * </ul>
+ * @version $Revision: 1.3 $
  */
-
-public class InvalidableEntityInstanceCache 
-   extends org.jboss.ejb.plugins.EntityInstanceCache 
-   implements org.jboss.cache.invalidation.Invalidatable
+public class InvalidableEntityInstanceCache
+      extends org.jboss.ejb.plugins.EntityInstanceCache
+      implements org.jboss.cache.invalidation.Invalidatable
 {
-   
+
    // Constants -----------------------------------------------------
-   
-   // Attributes ----------------------------------------------------      
-   
-   protected org.jboss.cache.invalidation.InvalidationManagerMBean invalMgr = null;
-   protected org.jboss.cache.invalidation.InvalidationGroup ig = null;
-   
+
+   // Attributes ----------------------------------------------------
+
+   protected InvalidationManagerMBean invalMgr = null;
+   protected InvalidationGroup ig = null;
+
    protected boolean isTraceEnabled = false;
-   
+
    // Static --------------------------------------------------------
-   
+
    // Constructors --------------------------------------------------
-   
-   public InvalidableEntityInstanceCache () { super (); }
-   
+
+   public InvalidableEntityInstanceCache()
+   {
+      super();
+   }
+
    // Public --------------------------------------------------------
-   
+
    // Invalidatable implementation ----------------------------------------------
-   
-   public void areInvalid (java.io.Serializable[] keys)
+
+   public void areInvalid(java.io.Serializable[] keys)
    {
       if (this.isTraceEnabled)
-         log.trace ("Invalidating entry in cache. Quantity: " + keys.length);
-      
-      for (int i=0; i<keys.length; i++)
+         log.trace("Invalidating entry in cache. Quantity: " + keys.length);
+
+      for (int i = 0; i < keys.length; i++)
       {
          try
          {
-            doInvalidate (keys[i]);
+            doInvalidate(keys[i]);
          }
-         catch (Exception ignored) {log.debug (ignored);}
+         catch (Exception ignored)
+         {
+            log.debug(ignored);
+         }
       }
    }
-   
-   public void isInvalid (java.io.Serializable key)
+
+   public void isInvalid(java.io.Serializable key)
    {
-     try
+      try
       {
-         doInvalidate (key);
+         doInvalidate(key);
       }
-      catch (Exception ignored) {log.debug (ignored);}
+      catch (Exception ignored)
+      {
+         log.debug(ignored);
+      }
    }
-   
+
    // ServiceMBeanSupport overrides ---------------------------------------------------
-   
-   public void start () throws Exception
+
+   public void start() throws Exception
    {
-      super.start ();
-      
-      log.debug ("Starting InvalidableEntityInstanceCache...");
-      
-      org.jboss.metadata.EntityMetaData emd = ((org.jboss.metadata.EntityMetaData)this.getContainer ().getBeanMetaData ());
-      
-      boolean participateInDistInvalidations = emd.doDistributedCacheInvalidations ();      
-      byte co = emd.getContainerConfiguration ().getCommitOption ();
-      
+      super.start();
+
+      log.debug("Starting InvalidableEntityInstanceCache...");
+
+      EntityMetaData emd = ((EntityMetaData) this.getContainer().getBeanMetaData());
+
+      boolean participateInDistInvalidations = emd.doDistributedCacheInvalidations();
+      byte co = emd.getContainerConfiguration().getCommitOption();
+
       if (participateInDistInvalidations &&
-           (co == org.jboss.metadata.ConfigurationMetaData.A_COMMIT_OPTION || co == org.jboss.metadata.ConfigurationMetaData.D_COMMIT_OPTION) 
-         )
+            (co == ConfigurationMetaData.A_COMMIT_OPTION || co == ConfigurationMetaData.D_COMMIT_OPTION)
+      )
       {
          // we are interested in receiving cache invalidation callbacks
          //
-         String groupName = emd.getDistributedCacheInvalidationConfig ().getInvalidationGroupName ();
-         String imName = emd.getDistributedCacheInvalidationConfig ().getInvalidationManagerName ();
-         
-         this.invalMgr = (org.jboss.cache.invalidation.InvalidationManagerMBean)org.jboss.system.Registry.lookup (imName);
-         
-         this.ig = this.invalMgr.getInvalidationGroup (groupName);
-         
-         this.ig.register (this);
-         
-         this.isTraceEnabled = log.isTraceEnabled ();
+         String groupName = emd.getDistributedCacheInvalidationConfig().getInvalidationGroupName();
+         String imName = emd.getDistributedCacheInvalidationConfig().getInvalidationManagerName();
+
+         this.invalMgr = (InvalidationManagerMBean) Registry.lookup(imName);
+         this.ig = this.invalMgr.getInvalidationGroup(groupName);
+         this.ig.register(this);
+         this.isTraceEnabled = log.isTraceEnabled();
       }
-      
+
    }
-   
-   public void stop ()
-   {      
+
+   public void stop()
+   {
       try
       {
-         this.ig.unregister (this);
+         this.ig.unregister(this);
          this.ig = null;
          this.invalMgr = null;
       }
       catch (Exception e)
       {
-         log.debug (e);
+         log.debug(e);
       }
-      
-      super.stop ();
+
+      super.stop();
    }
-   
+
    // Package protected ---------------------------------------------
-   
+
    // Protected -----------------------------------------------------
-   
-   protected void doInvalidate (java.io.Serializable key)
+
+   protected void doInvalidate(java.io.Serializable key)
    {
-      if (key == null)
-         return;      
-      else
-            remove (key);
+      if (key != null)
+         remove(key);
    }
-   
+
    // Private -------------------------------------------------------
-   
+
    // Inner classes -------------------------------------------------
-   
+
 }

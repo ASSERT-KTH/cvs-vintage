@@ -24,7 +24,7 @@ import org.jboss.invocation.Invocation;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>

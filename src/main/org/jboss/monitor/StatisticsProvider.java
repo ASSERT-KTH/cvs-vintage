@@ -6,34 +6,28 @@
 */
 package org.jboss.monitor;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * Interface defining the methods necessary for a JSR-77 Performance Monitoring
- * data provider.
- *
+ *   
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface StatisticsProvider
 {
 	// Constants ----------------------------------------------------
 	
 	// Public -------------------------------------------------------
-   
    /**
-    * Add its own statistics informations to the
-    * given Data Set. For any chain of components
-    * like the interceptors this method must traverse
-    * the entire chain by calling this method on the
-    * entrance in the chain.
-    *
-    * @param container Data set used to add its statistics informations
-    *                  of type {@link org.jboss.management.j2ee.SampleData
-    *                  org.jboss.management.j2ee.SampleData}.
-    * @param reset If set to true class has to reset the statistical
-    *              informations gathered after the data are added to the container
-    **/
-   public void retrieveStatistics( List container, boolean reset );
-   
+   * @return Map of Statistic Instances where the key is the
+   *         name of the Statistic instance. The valid values are
+   *         either any subclass of Statistic or an array of Statisc
+   *         instances. Returns null if no statistics is provided.
+   **/
+   public Map retrieveStatistic();
+   /**
+   * Resets all the statistic values kept in this monitorable instance
+   **/
+   public void resetStatistic();
+
 }

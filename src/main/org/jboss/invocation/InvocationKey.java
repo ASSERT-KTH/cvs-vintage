@@ -9,134 +9,137 @@ package org.jboss.invocation;
 import java.io.Serializable;
 import java.io.ObjectStreamException;
 
-import java.util.ArrayList;
 
-/**
- * Type safe enumeration used for keys in the Invocation object.
+/** Type safe enumeration used for keys in the Invocation object. This relies
+ * on an integer id as the identity for a key. When you add a new key enum
+ * value you must assign it an ordinal value of the current MAX_KEY_ID+1 and
+ * update the MAX_KEY_ID value.
+ * 
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.8 $
  */
-public final class InvocationKey implements Serializable {
-   // these fields are used for serialization
-   private static int nextOrdinal = 0;
-   private static final ArrayList values = new ArrayList(10);
+public final class InvocationKey implements Serializable
+{
+   /** The serial version ID */
+   private static final long serialVersionUID = -5117370636698417671L;
 
-   /**
-    * Transactional information with the invocation.
+   /** The max ordinal value in use for the InvocationKey enums. When you add a
+    * new key enum value you must assign it an ordinal value of the current
+    * MAX_KEY_ID+1 and update the MAX_KEY_ID value.
     */
-   public static final InvocationKey TRANSACTION =
-         new InvocationKey("TRANSACTION");
+   private static final int MAX_KEY_ID = 15;
 
-   /**
+   /** The array of InvocationKey indexed by ordinal value of the key */
+   private static final InvocationKey[] values = new InvocationKey[MAX_KEY_ID+1];
+
+   /** 
+    * Transactional information with the invocation. 
+    */ 
+   public static final InvocationKey TRANSACTION = 
+         new InvocationKey("TRANSACTION", 0);
+
+   /** 
     * Security principal assocated with this invocation.
     */
-   public static final InvocationKey PRINCIPAL = new InvocationKey("PRINCIPAL");
+   public static final InvocationKey PRINCIPAL =
+      new InvocationKey("PRINCIPAL", 1);
 
-   /**
-    * Security credential assocated with this invocation.
+   /** 
+    * Security credential assocated with this invocation. 
     */
-   public static final InvocationKey CREDENTIAL =
-         new InvocationKey("CREDENTIAL");
+   public static final InvocationKey CREDENTIAL = 
+         new InvocationKey("CREDENTIAL", 2);
 
-   /**
-    * We can keep a reference to an abstract "container" this invocation
-    * is associated with.
+   /** Any authenticated Subject associated with the invocation */
+   public static final InvocationKey SUBJECT = new InvocationKey("SUBJECT", 14);
+
+   /** 
+    * We can keep a reference to an abstract "container" this invocation 
+    * is associated with. 
     */
-   public static final InvocationKey OBJECT_NAME =
-         new InvocationKey("CONTAINER");
+   public static final InvocationKey OBJECT_NAME = 
+         new InvocationKey("CONTAINER", 3);
 
-   /**
-    * The type can be any qualifier for the invocation, anything (used in EJB).
+   /** 
+    * The type can be any qualifier for the invocation, anything (used in EJB). 
     */
-   public static final InvocationKey TYPE = new InvocationKey("TYPE");
+   public static final InvocationKey TYPE = new InvocationKey("TYPE", 4);
 
-   /**
-    * The Cache-ID associates an instance in cache somewhere on the server
-    * with this invocation.
+   /** 
+    * The Cache-ID associates an instance in cache somewhere on the server 
+    * with this invocation. 
     */
-   public static final InvocationKey CACHE_ID = new InvocationKey("CACHE_ID");
+   public static final InvocationKey CACHE_ID = new InvocationKey("CACHE_ID", 5);
 
-   /**
-    * The invocation can be a method invocation, we give the method to call.
+   /** 
+    * The invocation can be a method invocation, we give the method to call. 
     */
-   public static final InvocationKey METHOD = new InvocationKey("METHOD");
+   public static final InvocationKey METHOD = new InvocationKey("METHOD", 6);
 
-   /**
-    * The arguments of the method to call.
+   /** 
+    * The arguments of the method to call. 
     */
-   public static final InvocationKey ARGUMENTS = new InvocationKey("ARGUMENTS");
+   public static final InvocationKey ARGUMENTS =
+      new InvocationKey("ARGUMENTS", 7);
 
-   /**
-    * The callback method that should be invoked on the implementation.
-    */
-   public static final InvocationKey CALLBACK_METHOD =
-         new InvocationKey("CALLBACK_METHOD");
-
-   /**
-    * The arguments of the callback method to call.
-    */
-   public static final InvocationKey CALLBACK_ARGUMENTS =
-         new InvocationKey("CALLBACK_ARGUMENTS");
-
-   /**
+   /** 
     * Invocation context
     */
-   public static final InvocationKey INVOCATION_CONTEXT =
-         new InvocationKey("INVOCATION_CONTEXT");
+   public static final InvocationKey INVOCATION_CONTEXT = 
+         new InvocationKey("INVOCATION_CONTEXT", 8);
 
-   /**
+   /** 
     * Enterprise context
     */
-   public static final InvocationKey ENTERPRISE_CONTEXT =
-         new InvocationKey("ENTERPRISE_CONTEXT");
+   public static final InvocationKey ENTERPRISE_CONTEXT = 
+         new InvocationKey("ENTERPRISE_CONTEXT", 9);
 
-   /**
+   /** 
     * The invoker-proxy binding name
     */
-   public static final InvocationKey INVOKER_PROXY_BINDING =
-         new InvocationKey("INVOKER_PROXY_BINDING");
+   public static final InvocationKey INVOKER_PROXY_BINDING = 
+         new InvocationKey("INVOKER_PROXY_BINDING", 10);
 
-   /**
-    * The invoker
+   /** 
+    * The invoker 
     */
-   public static final InvocationKey INVOKER = new InvocationKey("INVOKER");
+   public static final InvocationKey INVOKER = new InvocationKey("INVOKER", 11);
 
    /**
     * The JNDI name of the EJB.
     */
-   public static final InvocationKey JNDI_NAME = new InvocationKey("JNDI_NAME");
+   public static final InvocationKey JNDI_NAME =
+      new InvocationKey("JNDI_NAME", 12);
 
-   /**
-    * The EJB meta-data for the {@link EJBHome} reference.
+   /** 
+    * The EJB meta-data for the {@link EJBHome} reference. 
     */
-   public final static InvocationKey EJB_METADATA =
-         new InvocationKey("EJB_METADATA");
+   public final static InvocationKey EJB_METADATA = 
+         new InvocationKey("EJB_METADATA", 13);
 
-   public final static InvocationKey XID = new InvocationKey("XID");
-   public final static InvocationKey TX_TIMEOUT = new InvocationKey("TX_TIMEOUT");
-   public final static InvocationKey METHOD_TO_TX_SUPPORT_MAP = new InvocationKey("METHOD_TO_TX_SUPPORT_MAP");
-   public final static InvocationKey LOCATOR = new InvocationKey("LOCATOR");
-   public final static InvocationKey REMOTING_CONTEXT = new InvocationKey("REMOTING_CONTEXT");
+   /** The EJB home proxy bound for use by getEJBHome */
+   public final static InvocationKey EJB_HOME = 
+         new InvocationKey("EJB_HOME", 14);
 
-   public final static InvocationKey MESSAGE_ENDPOINT_CONTEXT = new InvocationKey("MESSAGE_ENDPOINT_CONTEXT");
-
-
+   /** The key enum symbolic value */
    private final transient String name;
-
-   // this is the only value serialized
+   /** The persistent integer representation of the key enum */
    private final int ordinal;
 
-   private InvocationKey(String name) {
+   private InvocationKey(String name, int ordinal)
+   {
       this.name = name;
-      this.ordinal = nextOrdinal++;
-      values.add(this);
+      this.ordinal = ordinal;
+      values[ordinal] = this;
    }
 
-   public String toString() {
+   public String toString()
+   {
       return name;
    }
 
-   Object readResolve() throws ObjectStreamException {
-      return values.get(ordinal);
+   Object readResolve() throws ObjectStreamException
+   {
+      return values[ordinal];
    }
 }
-
-

@@ -7,71 +7,77 @@
 package org.jboss.metadata;
 
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.mx.util.ObjectNameFactory;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-/** The configuration information for invoker-proxy bindingss that may be tied to a EJB container.
+/** The configuration information for invoker-proxy bindingss that may be
+ * tied to a EJB container.
  *   @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- *   @version $Revision: 1.3 $
- *
- *  <p><b>Revisions:</b><br>
- *  <p><b>2002/04/21: billb</b>
- *  <ol>
- *   <li>initial version
- *  </ol>
+ *   @version $Revision: 1.4 $
  */
 public class InvokerProxyBindingMetaData extends MetaData
 {
-
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
+   /** The unique name of the invoker proxy binding */
    private String name;
-   private String invokerName;
-   private String connectorName;
+   /** The detached invoker MBean service associated with the proxy */
+   private String mbean;
+   /** The class name of the org.jboss.ejb.EJBProxyFactory implementation used
+    * to create proxies for this configuration
+    */
    private String proxyFactory;
+   /** An arbitary configuration to pass to the EJBProxyFactory implementation
+    */
    private Element proxyFactoryConfig;
 
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   public InvokerProxyBindingMetaData (String name)
+   public InvokerProxyBindingMetaData(String name)
    {
       this.name = name;
    }
 
    // Public --------------------------------------------------------
 
-   public String getName() { return name; }
+   /** Get the unique name of the invoker proxy binding */
+   public String getName()
+   {
+      return name;
+   }
 
-   public String getInvokerMBean() { return invokerName; }
+   /** Get the detached invoker MBean service name associated with the proxy */
+   public String getInvokerMBean()
+   {
+      return mbean;
+   }
 
-   public String getConnectorMBean() { return connectorName; }
+   /** Get the class name of the org.jboss.ejb.EJBProxyFactory implementation
+    * used to create proxies for this configuration
+    */
+   public String getProxyFactory()
+   {
+      return proxyFactory;
+   }
 
-   public String getProxyFactory() { return proxyFactory; }
+   /** An arbitary configuration to pass to the EJBProxyFactory implementation
+    */
+   public Element getProxyFactoryConfig()
+   {
+      return proxyFactoryConfig;
+   }
 
-   public Element getProxyFactoryConfig() { return proxyFactoryConfig; }
-
+   /** Import the jboss.xml jboss/invoker-proxy-bindings/invoker-proxy-binding
+    * child elements
+    * @param element jboss/invoker-proxy-bindings/invoker-proxy-binding
+    * @throws DeploymentException
+    */
    public void importJbossXml(Element element) throws DeploymentException
    {
-      invokerName = getUniqueChildContent(element, "invoker-mbean");
-      connectorName = getOptionalChildContent(element, "connector-mbean");
+      mbean = getUniqueChildContent(element, "invoker-mbean");
       proxyFactory = getUniqueChildContent(element, "proxy-factory");
       proxyFactoryConfig = getUniqueChild(element, "proxy-factory-config");
    }
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
 }

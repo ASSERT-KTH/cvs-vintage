@@ -23,6 +23,8 @@ import javax.jms.ObjectMessage;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.JMSException;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.Context;
 
 import org.jboss.cache.invalidation.InvalidationManager;
 import org.jboss.cache.invalidation.InvalidationBridgeListener;
@@ -34,11 +36,11 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Based on previous code of Bill Burke based on interceptors
  *
- * @see InvalidationManagerMBean
+ * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author  <a href="mailto:bill@jboss.org">Bill Burke</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *
@@ -81,6 +83,8 @@ public class JMSCacheInvalidationBridge
    protected TopicSubscriber subscriber = null;
    protected TopicPublisher pub = null;
 
+   protected String providerUrl = null;
+
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -119,6 +123,16 @@ public class JMSCacheInvalidationBridge
       this.topicName = topicName;
    }
    
+   public String getProviderUrl ()
+   {
+      return providerUrl;
+   }
+
+   public void setProviderUrl (String providerUrl)
+   {
+      this.providerUrl = providerUrl;
+   }
+
    public boolean isTransacted ()
    {
       return this.transacted;
@@ -255,7 +269,7 @@ public class JMSCacheInvalidationBridge
 
       // deal with JMS next
       //
-      InitialContext iniCtx = new InitialContext();
+      InitialContext iniCtx = getInitialContext ();
       
       Object tmp = iniCtx.lookup(this.connectionFactoryName);
       TopicConnectionFactory tcf = (TopicConnectionFactory) tmp;
@@ -351,6 +365,25 @@ public class JMSCacheInvalidationBridge
          log.warn("failed to do cluster seppuku event: " , ex);
       }
    }
+
+   protected InitialContext getInitialContext() 
+      throws NamingException
+   {
+      if (providerUrl == null) 
+      {
+         return new InitialContext();
+      }
+      else
+      {
+         if (log.isDebugEnabled()) 
+            log.debug("Using Context.PROVIDER_URL: " + providerUrl);
+
+         java.util.Properties props = new java.util.Properties(System.getProperties());
+         props.put(Context.PROVIDER_URL, providerUrl);
+         return new InitialContext(props);
+      }
+    }
+   
 
    // Private -------------------------------------------------------
    

@@ -2,13 +2,13 @@ package org.jboss.ejb.plugins.local;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import org.jboss.invocation.InvocationType;
+import javax.naming.InitialContext;
 
 
 /** The EJBLocal proxy for a stateless session
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.4 $
+ @version $Revision: 1.5 $
  */
 class StatelessSessionProxy extends LocalProxy
    implements InvocationHandler
@@ -68,7 +68,8 @@ class StatelessSessionProxy extends LocalProxy
       }
       else if (m.equals(GET_EJB_HOME))
       {
-         throw new UnsupportedOperationException();
+         InitialContext ctx = new InitialContext();
+         return ctx.lookup(jndiName);
       }
       else if (m.equals(IS_IDENTICAL))
       {
@@ -79,7 +80,7 @@ class StatelessSessionProxy extends LocalProxy
       // If not taken care of, go on and call the container
       else
       {
-         retValue = factory.invoke(jndiName, m, args, InvocationType.LOCAL);
+         retValue = factory.invoke(jndiName, m, args);
       }
 
       return retValue;

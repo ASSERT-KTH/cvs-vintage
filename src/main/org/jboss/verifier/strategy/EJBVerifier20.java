@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.30 2003/04/03 04:42:02 lqd Exp $
+ * $Id: EJBVerifier20.java,v 1.31 2003/08/27 04:32:36 patriot1burke Exp $
  */
 
 
@@ -32,18 +32,22 @@ import java.lang.reflect.Method;
 // non-standard class dependencies
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
+import org.jboss.metadata.QueryMetaData;
+import org.jboss.metadata.SessionMetaData;
+import org.jboss.util.Classes;
 import org.jboss.verifier.Section;
 import org.jboss.verifier.factory.DefaultEventFactory;
 
 /**
  * EJB 2.0 bean verifier.
  *
- * @author  Juha Lindfors   (jplindfo@helsinki.fi)
- * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.30 $
+ * @author Juha Lindfors   (jplindfo@helsinki.fi)
+ * @author Jay Walters     (jwalters@computer.org)
+ * @author <a href="mailto:criege@riege.com">Christian Riege</a>
+ *
+ * @version $Revision: 1.31 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
@@ -91,16 +95,16 @@ public class EJBVerifier20
       {
          // Check remote interfaces
          localOrRemoteExists = true;
-         verified = verified && verifySessionHome( session );
          verified = verified && verifySessionRemote( session );
+         verified = verified && verifySessionHome( session );
       }
 
       if( hasLocalInterfaces(session) )
       {
          // Check local interfaces
          localOrRemoteExists = true;
-         verified = verified && verifySessionLocalHome( session );
          verified = verified && verifySessionLocal( session );
+         verified = verified && verifySessionLocalHome( session );
       }
 
       // The session bean MUST implement either a remote home and
@@ -171,16 +175,16 @@ public class EJBVerifier20
       {
          // Check remote interfaces
          localOrRemoteExists = true;
-         verified = verified && verifyEntityHome( entity );
          verified = verified && verifyEntityRemote( entity );
+         verified = verified && verifyEntityHome( entity );
       }
 
       if( hasLocalInterfaces(entity) )
       {
          // Check local interfaces
          localOrRemoteExists = true;
-         verified = verified && verifyEntityLocalHome( entity );
          verified = verified && verifyEntityLocal( entity );
+         verified = verified && verifyEntityLocalHome( entity );
       }
 
       verified = verified && verifyPrimaryKey( entity );
@@ -232,7 +236,7 @@ public class EJBVerifier20
       catch( ClassNotFoundException cnfe )
       {
          fireSpecViolationEvent( theBean, new Section("22.2.b",
-            "Class not found: " + beanName) );
+            "Class not found on '" + beanName + "': " + cnfe.getMessage()) );
          return false;
       }
    }
@@ -260,7 +264,7 @@ public class EJBVerifier20
       catch( ClassNotFoundException cnfe )
       {
          fireSpecViolationEvent( bean, new Section("22.2.c",
-            "Class not found: " + homeName) );
+            "Class not found on '" + homeName + "': " + cnfe.getMessage()) );
          status = false;
       }
 
@@ -272,7 +276,7 @@ public class EJBVerifier20
       catch( ClassNotFoundException cnfe )
       {
          fireSpecViolationEvent( bean, new Section("22.2.d",
-            "Class not found: " + remoteName) );
+            "Class not found on '" + remoteName + "': " + cnfe.getMessage()) );
          status = false;
       }
 
@@ -302,7 +306,8 @@ public class EJBVerifier20
       catch( ClassNotFoundException cnfe )
       {
          fireSpecViolationEvent( bean, new Section("22.2.e",
-            "Class not found: " + localHomeName) );
+            "Class not found on '" + localHomeName + "': " +
+            cnfe.getMessage()) );
          status = false;
       }
 
@@ -313,7 +318,7 @@ public class EJBVerifier20
       catch( ClassNotFoundException cnfe )
       {
          fireSpecViolationEvent( bean, new Section("22.2.f",
-            "Class not found: " + localName) );
+            "Class not found on '" + localName + "': " + cnfe.getMessage()) );
          status = false;
       }
 
@@ -356,9 +361,12 @@ public class EJBVerifier20
       List selects = new LinkedList();
       Method[] method = c.getMethods();
 
-      for (int i = 0; i < method.length; ++i) {
+      for (int i = 0; i < method.length; ++i)
+      {
          if (isEjbSelectMethod(method[i]))
+         {
             selects.add(method[i]);
+         }
       }
 
       return selects.iterator();
@@ -426,6 +434,74 @@ public class EJBVerifier20
       }
 
       return homes.iterator();
+   }
+
+   /**
+    * Check whether there is a matching &lt;query&gt; Element defined
+    * for the Method m
+    *
+    * @param m Method to check, should be either a Finder or a Select
+    * @param e EntityMetaData
+    *
+    * @return <code>true</code> if a matching &lt;query&gt; Element
+    *         was located.
+    */
+   protected boolean hasMatchingQuery( Method m, EntityMetaData e )
+   {
+      boolean result = false;
+
+      Iterator qIt = e.getQueries();
+      while( qIt.hasNext() )
+      {
+         QueryMetaData qmd = (QueryMetaData)qIt.next();
+
+         // matching names
+         if( !qmd.getMethodName().equals(m.getName()) )
+         {
+            continue;
+         }
+
+         Class[] methodParameter = m.getParameterTypes();
+         Class[] queryParameter = null;
+
+         try
+         {
+            queryParameter = Classes.convertToJavaClasses(
+               qmd.getMethodParams(), classloader );
+         }
+         catch( ClassNotFoundException cnfe )
+         {
+            // FIXME: this should be handled differently, especially
+            //        there shouldn't be a DeploymentException being
+            //        thrown ...
+            continue;
+         }
+
+         // number of parameters has to match
+         if( methodParameter.length != queryParameter.length )
+         {
+            continue;
+         }
+
+         // walk the parameter list and compare for equality
+         boolean parametersMatch = true;
+         for( int i = 0; i < methodParameter.length; i++ )
+         {
+            if( !methodParameter[i].equals(queryParameter[i]) )
+            {
+               parametersMatch = false;
+               break;
+            }
+         }
+
+         if( parametersMatch )
+         {
+            result = true;
+            break;
+         }
+      }
+
+      return result;
    }
 
    /**
@@ -1284,6 +1360,21 @@ public class EJBVerifier20
                      new Section("10.6.10.b"));
                   status = false;
                }
+
+               // For every finder method there must be a matching
+               // <query> element defined in the deployment descriptor
+               // with the exception of findByPrimaryKey
+               //
+               // JBoss Extension: 'findAll' is _also_ ignored.
+               //
+               if( !method.getName().equals("findByPrimaryKey")
+                  && !method.getName().equals("findAll")
+                  && !hasMatchingQuery(method, entity) )
+               {
+                  fireSpecViolationEvent( entity, method,
+                     new Section("10.5.6") );
+                  status = false;
+               }
             } // if( entity.isCMP() )
          }
          else   // Neither Create nor Finder method
@@ -1470,6 +1561,23 @@ public class EJBVerifier20
                {
                   fireSpecViolationEvent( entity, method,
                      new Section("10.6.2.j"));
+                  status = false;
+               }
+
+               // For every finder method there must be a matching
+               // <query> element defined in the deployment descriptor
+               // with the exception of findByPrimaryKey
+               //
+               // JBoss Extension: 'findAll' is _also_ ignored.
+               //
+               // Spec 10.5.6
+               //
+               if( !method.getName().equals("findByPrimaryKey")
+                  && !method.getName().equals("findAll")
+                  && !hasMatchingQuery(method, entity) )
+               {
+                  fireSpecViolationEvent( entity, method,
+                     new Section("10.5.6") );
                   status = false;
                }
             }
@@ -2043,6 +2151,12 @@ public class EJBVerifier20
             fireSpecViolationEvent(entity, ejbSelect, new Section("10.6.7.c"));
             status = false;
          }
+
+         if( !hasMatchingQuery(ejbSelect, entity) )
+         {
+            fireSpecViolationEvent( entity, ejbSelect, new Section("10.5.7") );
+            status = false;
+         }
       }
 
       // A CMP Entity Bean must not define Finder methods.
@@ -2406,40 +2520,6 @@ public class EJBVerifier20
       if( entity.getPrimKeyField() == null ||
          entity.getPrimKeyField().length() == 0 )
       {
-         // Check whether equals() and hashCode() are actually overridden
-         // in the PK class or any of its superclasses
-         if( !definesEquals(cls) )
-         {
-            if( cmp )
-            {
-               fireSpecViolationEvent( entity, new Section("10.6.13.c") );
-            }
-            else
-            {
-               fireSpecViolationEvent(entity, new Section("12.2.12.b"));
-            }
-            log.warn( "EJB '" + entity.getEjbName() + "': The PK Class " +
-               cls.getName() + " or any of its superclasses does not " +
-               "override the equals(Object other) method" );
-            status = false;
-         }
-
-         if( !definesHashCode(cls) )
-         {
-            if( cmp )
-            {
-               fireSpecViolationEvent( entity, new Section("10.6.13.d") );
-            }
-            else
-            {
-               fireSpecViolationEvent(entity, new Section("12.2.12.c"));
-            }
-            log.warn( "EJB '" + entity.getEjbName() + "': The PK Class " +
-               cls.getName() + " or any of its superclasses does not " +
-               "override the hashCode() method" );
-            status = false;
-         }
-
          // This is a check for some interesting implementation of
          // equals() and hashCode().  I am not sure how well it works in
          // the end.

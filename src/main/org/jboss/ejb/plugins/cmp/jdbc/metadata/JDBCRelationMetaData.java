@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
@@ -25,7 +26,8 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
+ * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
+ * @version $Revision: 1.17 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -71,6 +73,12 @@ public final class JDBCRelationMetaData {
    
    /** should we drop the table when deployed */
    private final boolean removeTable;
+   
+   /**
+	* What commands should be issued directly after creation
+	* of a table?
+	*/
+   private final ArrayList tablePostCreateCmd;
    
    /** should we use 'SELECT ... FOR UPDATE' syntax? */
    private final boolean rowLocking;
@@ -132,9 +140,11 @@ public final class JDBCRelationMetaData {
       right.init(left);
 
       if(mappingStyle == TABLE) {
-         tableName = createDefaultTableName();         
+         tableName = createDefaultTableName();
+         tablePostCreateCmd = getDefaultTablePostCreateCmd();
       } else {
          tableName = null;
+         tablePostCreateCmd = null;
       }
    }
 
@@ -159,6 +169,24 @@ public final class JDBCRelationMetaData {
       
       relationName = defaultValues.getRelationName();
       mappingStyle = loadMappingStyle(element, defaultValues);
+      
+      // post-table-create commands
+	  Element posttc = MetaData.getOptionalChild(element,"post-table-create");	  
+	  if (posttc!=null) {		  
+	 	Iterator it = MetaData.getChildrenByTagName(posttc,"sql-statement");
+		tablePostCreateCmd = new ArrayList();
+		while (it.hasNext()) {
+		  Element etmp = (Element)it.next();  	
+		  tablePostCreateCmd.add(MetaData.getElementContent(etmp));
+		}
+   
+	  }
+	  else {
+		 tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();  
+	  }
+	      
+      
+      
       
       // read-only
       String readOnlyString = MetaData.getOptionalChildContent(
@@ -518,6 +546,15 @@ public final class JDBCRelationMetaData {
     */
    public String getDefaultTableName() {
       return tableName;
+   }
+   
+   /**
+    * Gets the (user-defined) SQL commands that should be 
+    * issued to the db after table creation.
+    * @return the SQL command
+    */
+   public ArrayList getDefaultTablePostCreateCmd() {
+   		return tablePostCreateCmd;
    }
    
    /** 

@@ -20,13 +20,22 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
 {
    // Constants -----------------------------------------------------
 
+   // These do not really belong here
+
+   public static final byte TX_NOT_SUPPORTED  = 0;
+   public static final byte TX_REQUIRED       = 1;
+   public static final byte TX_SUPPORTS       = 2;
+   public static final byte TX_REQUIRES_NEW   = 3;
+   public static final byte TX_MANDATORY      = 4;
+   public static final byte TX_NEVER          = 5;
+   public static final byte TX_UNKNOWN        = 6;
 
    // Attributes ----------------------------------------------------
 
@@ -170,6 +179,10 @@ public abstract class MetaData
          else if( children.item(i).getNodeType() == Node.COMMENT_NODE )
          {
             // Ignore comment nodes
+         }
+         else
+         {
+            result += children.item(i).getFirstChild();
          }
       }
       return result.trim();

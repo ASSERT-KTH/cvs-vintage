@@ -31,6 +31,12 @@ public interface JDBCFieldBridge extends FieldBridge {
     * @return true if this field is read only
     */ 
    public boolean isReadOnly();
+   
+   /**
+    * Should an index in the database be generated for this field?
+    * @return true if an index should be generated in the database
+    */
+   public boolean isIndexed();
       
    /**
     * Has current data read timed out?

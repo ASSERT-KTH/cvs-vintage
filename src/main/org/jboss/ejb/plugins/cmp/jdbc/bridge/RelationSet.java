@@ -26,12 +26,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
    private EntityEnterpriseContext ctx;
    private List[] setHandle;
+   private boolean readOnly;
    private Class relatedLocalInterface;
 
    //
@@ -45,18 +46,20 @@ public class RelationSet implements Set {
    public RelationSet(
          JDBCCMRFieldBridge cmrField, 
          EntityEnterpriseContext ctx, 
-         List[] setHandle) {
+         List[] setHandle,
+         boolean readOnly) {
 
       this.cmrField = cmrField;
       this.ctx = ctx;
       this.setHandle = setHandle;
+      this.readOnly = readOnly;
       relatedLocalInterface = cmrField.getRelatedLocalInterface();   
    }
    
    private List getIdList() {
       if(setHandle[0] == null) {
          throw new IllegalStateException("A CMR collection may only be used " +
-               "within the transaction in which it was created");
+               "within the transction in which it was created");
       }
       return setHandle[0];
    }
@@ -76,15 +79,15 @@ public class RelationSet implements Set {
          throw new IllegalArgumentException("Null cannot be added to a CMR " +
                "relationship collection");
       }
-      if(cmrField.getRelatedCMRField().allFkFieldsMappedToPkFields()) {
-         throw new IllegalStateException(
-            "Can't modify relationship: CMR field "
-            + cmrField.getRelatedEntity().getEntityName() + "." + cmrField.getRelatedCMRField().getFieldName()
-            + " has _ALL_ foreign key fields mapped to the primary key columns."
-            + " Primary key may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
-      }
+
+      checkForPKChange();
 
       List idList = getIdList();
+      if(readOnly) 
+      {
+         throw new EJBException("This collection is a read-only snapshot");
+      }
+
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -106,13 +109,15 @@ public class RelationSet implements Set {
       if(idList.contains(id)) {
          return false;
       }
-
       cmrField.createRelationLinks(ctx, id);
       return true;
    }
-   
+
    public boolean addAll(Collection c) {
-      List idList = getIdList();
+      if(readOnly)
+      {
+         throw new EJBException("This collection is a read-only snapshot");
+      }
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -133,17 +138,17 @@ public class RelationSet implements Set {
 
    public boolean remove(Object o) {
       List idList = getIdList();
+      if(readOnly) 
+      {
+         throw new EJBException("This collection is a read-only snapshot");
+      }
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
       }
-      if(cmrField.getRelatedCMRField().allFkFieldsMappedToPkFields()) {
-         throw new IllegalStateException(
-            "Can't modify relationship: CMR field "
-            + cmrField.getRelatedEntity().getEntityName() + "." + cmrField.getRelatedCMRField().getFieldName()
-            + " has _ALL_ foreign key fields mapped to the primary key columns."
-            + " Primary key may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
-      }
+
+      checkForPKChange();
+
       if(!relatedLocalInterface.isInstance(o)) {
          throw new IllegalArgumentException("Object must be an instance of " +
                relatedLocalInterface.getName());
@@ -153,13 +158,15 @@ public class RelationSet implements Set {
       if(!idList.contains(id)) {
          return false;
       }
-
       cmrField.destroyRelationLinks(ctx, id);
       return true;
    }
 
    public boolean removeAll(Collection c) {
-      List idList = getIdList();
+      if(readOnly)
+      {
+         throw new EJBException("This collection is a read-only snapshot");
+      }
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -179,15 +186,13 @@ public class RelationSet implements Set {
    }
 
    public void clear() {
-      if(cmrField.getRelatedCMRField().allFkFieldsMappedToPkFields()) {
-         throw new IllegalStateException(
-            "Can't modify relationship: CMR field "
-            + cmrField.getRelatedEntity().getEntityName() + "." + cmrField.getRelatedCMRField().getFieldName()
-            + " has _ALL_ foreign key fields mapped to the primary key columns."
-            + " Primary key may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
-      }
+      checkForPKChange();
 
       List idList = getIdList();
+      if(readOnly) 
+      {
+         throw new EJBException("This collection is a read-only snapshot");
+      }
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -201,18 +206,16 @@ public class RelationSet implements Set {
 
    public boolean retainAll(Collection c) {
       List idList = getIdList();
+      if(readOnly) 
+      {
+         throw new EJBException("This collection is a read-only snapshot");
+      }
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
       }
 
-      if(cmrField.getRelatedCMRField().allFkFieldsMappedToPkFields()) {
-         throw new IllegalStateException(
-            "Can't modify relationship: CMR field "
-            + cmrField.getRelatedEntity().getEntityName() + "." + cmrField.getRelatedCMRField().getFieldName()
-            + " has _ALL_ foreign key fields mapped to the primary key columns."
-            + " Primary key may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
-      }
+      checkForPKChange();
 
       if(c == null) {
          if(idList.size() == 0) {
@@ -286,9 +289,27 @@ public class RelationSet implements Set {
             idList);
       return c.toArray();
    }
-   
+
+   // Private
+
+   private void checkForPKChange()
+   {
+      /**
+       * Uncomment to disallow attempts to override PK value with equal FK value
+       *
+      if(cmrField.getRelatedCMRField().allFkFieldsMappedToPkFields()) {
+         throw new IllegalStateException(
+            "Can't modify relationship: CMR field "
+            + cmrField.getRelatedEntity().getEntityName() + "." + cmrField.getRelatedCMRField().getFieldName()
+            + " has _ALL_ foreign key fields mapped to the primary key columns."
+            + " Primary key may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
+      }
+       */
+   }
+
+   // Inner
+
    public Iterator iterator() {
-      List idList = getIdList();
 
       return new Iterator() {
          private final Iterator idIterator = getIdList().iterator();
@@ -321,18 +342,16 @@ public class RelationSet implements Set {
          
          public void remove() {
             verifyIteratorIsValid();
+            if(readOnly) 
+            {
+               throw new EJBException("This collection is a read-only snapshot");
+            }
             if(cmrField.isReadOnly()) {
                throw new EJBException("Field is read-only: " + 
                      cmrField.getFieldName());
             }
 
-            if(cmrField.allFkFieldsMappedToPkFields()) {
-               throw new IllegalStateException(
-                  "Can't modify relationship: CMR field "
-                  + cmrField.getRelatedEntity().getEntityName() + "." + cmrField.getRelatedCMRField().getFieldName()
-                  + " has _ALL_ foreign key fields mapped to the primary key columns."
-                  + " Primary key may only be set once in ejbCreate [EJB 2.0 Spec. 10.3.5].");
-            }
+            checkForPKChange();
 
             try {
                idIterator.remove();
@@ -346,7 +365,7 @@ public class RelationSet implements Set {
          private void verifyIteratorIsValid() {
             if(setHandle[0] == null) {
                throw new IllegalStateException("The iterator of a CMR " +
-                     "collection may only be used within the transaction in " +
+                     "collection may only be used within the transction in " +
                      "which it was created");
             }
          }            

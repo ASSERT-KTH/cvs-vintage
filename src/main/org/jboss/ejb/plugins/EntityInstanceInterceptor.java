@@ -1,16 +1,15 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.ejb.plugins;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
 
-import javax.ejb.EJBException;
 import javax.transaction.Transaction;
 
 import org.jboss.ejb.Container;
@@ -22,93 +21,157 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
+
 
 /**
- * The instance interceptors role is to acquire a context representing
- * the target object from the cache.
- *
- * <p>This particular container interceptor implements pessimistic locking
- * on the transaction that is associated with the retrieved instance.  If
- * there is a transaction associated with the target component and it is
- * different from the transaction associated with the Invocation
- * coming in then the policy is to wait for transactional commit.
- *
- * <p>We also implement serialization of calls in here (this is a spec
- * requirement). This is a fine grained notify, notifyAll mechanism. We
- * notify on ctx serialization locks and notifyAll on global transactional
- * locks.
- *
- * <p><b>WARNING: critical code</b>, get approval from senior developers
- * before changing.
- *
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.64 $
- */
-public class EntityInstanceInterceptor extends AbstractInterceptor
+* The instance interceptors role is to acquire a context representing
+* the target object from the cache.
+*
+* <p>This particular container interceptor implements pessimistic locking
+*    on the transaction that is associated with the retrieved instance.  If
+*    there is a transaction associated with the target component and it is
+*    different from the transaction associated with the Invocation
+*    coming in then the policy is to wait for transactional commit. 
+*   
+* <p>We also implement serialization of calls in here (this is a spec
+*    requirement). This is a fine grained notify, notifyAll mechanism. We
+*    notify on ctx serialization locks and notifyAll on global transactional
+*    locks.
+*   
+* <p><b>WARNING: critical code</b>, get approval from senior developers
+*    before changing.
+*    
+* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+* @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+* @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+* @version $Revision: 1.65 $
+*/
+public class EntityInstanceInterceptor
+   extends AbstractInterceptor
 {
-   public InvocationResponse invoke(Invocation invocation) throws Exception
+   // Constants -----------------------------------------------------
+	
+   // Attributes ----------------------------------------------------
+	
+   protected EntityContainer container;
+	
+   // Static --------------------------------------------------------	
+   // Constructors --------------------------------------------------
+	
+	// Public --------------------------------------------------------
+	
+   public void setContainer(Container container)
    {
-      EntityContainer container = (EntityContainer) getContainer();
-      Object id = null;
-      EntityEnterpriseContext ctx = null;
-      boolean trace = log.isTraceEnabled();
+      this.container = (EntityContainer)container;
+   }
+	
+   public Container getContainer()
+   {
+      return container;
+   }
 
-      try
+   // Interceptor implementation --------------------------------------
+
+   public Object invokeHome(Invocation mi)
+      throws Exception
+   {
+      // Get context
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
+
+		// Pass it to the method invocation
+      mi.setEnterpriseContext(ctx);
+
+      // Give it the transaction
+      ctx.setTransaction(mi.getTransaction());
+
+      // Set the current security information
+      ctx.setPrincipal(mi.getPrincipal());
+
+         // Invoke through interceptors
+      Object rtn = getNext().invokeHome(mi);
+      // Is the context now with an identity? in which case we need to insert
+      if (ctx.getId() != null)
       {
-         // Get the context from the pool or cache
-         if (invocation.getType().isHome())
+
+         BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
+
+         lock.sync(); // lock all access to BeanLock
+
+         try
          {
-            if (trace)
-               log.trace("Begin home invoke");
-            ctx = (EntityEnterpriseContext) container.getInstancePool().get();
+            // Check there isn't a context already in the cache
+            // e.g. commit-option B where the entity was
+            // created then removed externally
+            InstanceCache cache = container.getInstanceCache();
+            cache.remove(ctx.getCacheKey());
+
+            // marcf: possible race on creation and usage
+            // insert instance in cache,
+            cache.insert(ctx);
          }
-         else
+         finally
          {
-            id = invocation.getId();
-            if (trace)
-               log.trace("Begin invoke, id=" + id);
-            ctx = (EntityEnterpriseContext) container.getInstanceCache().get(id);
-         }
-
-         if (ctx == null)
-         {
-            throw new EJBException("The instance cache returned a null context");
-         }
-
-         // Pass it to the method invocation
-         invocation.setEnterpriseContext(ctx);
-
-         // Set the current security information
-         ctx.setPrincipal(invocation.getPrincipal());
-
-         // Associate transaction, in the new design the lock already has the
-         // transaction from the previous interceptor.
-         // Don't set the transction if a read-only method.  With a read-only
-         // method, the ctx can be shared between multiple transactions.
-         if (!isReadOnlyInvocation(invocation))
-         {
-            ctx.setTransaction(invocation.getTransaction());
+            lock.releaseSync();
+            container.getLockManager().removeLockRef(ctx.getCacheKey());
          }
       }
-      catch (Throwable t)
+      //Do not send back to pools in any case, let the instance be GC'ed
+      return rtn;
+   }
+
+   public Object invoke(Invocation mi)
+      throws Exception
+   {
+      boolean trace = log.isTraceEnabled();
+
+      // The key
+      Object key = mi.getId();
+
+      // The context
+      EntityEnterpriseContext ctx = null;
+      try
       {
-         clearTxLock(invocation, t, trace);
-         if (t instanceof Exception)
-            throw (Exception) t;
-         else if (t instanceof Error)
-            throw (Error) t;
+         ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
+
+         if( trace ) log.trace("Begin invoke, key="+key);
+
+         // Associate transaction, in the new design the lock already has the transaction from the
+         // previous interceptor
+
+         // Don't set the transction if a read-only method.  With a read-only method, the ctx can be shared
+         // between multiple transactions.
+         if(!container.isReadOnly()) 
+         {
+            Method method = mi.getMethod();
+            if(method == null ||
+               !container.getBeanMetaData().isMethodReadOnly(method.getName()))
+            {
+               ctx.setTransaction(mi.getTransaction());
+            }
+         }
+
+         // Set the current security information
+         ctx.setPrincipal(mi.getPrincipal());
+
+         // Set context on the method invocation
+         mi.setEnterpriseContext(ctx);
+      }
+      catch (Throwable e)
+      {
+         clearLockTx(mi, e, trace);
+         if (e instanceof Exception)
+            throw (Exception) e;
+         else if (e instanceof Error)
+            throw (Error) e;
          else
-            throw new UndeclaredThrowableException(t);
+            throw new InvocationTargetException(e);
       }
 
       Throwable exceptionThrown = null;
+
       try
       {
-         return getNext().invoke(invocation);
+         return getNext().invoke(mi);
       }
       catch (RemoteException e)
       {
@@ -119,133 +182,82 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
       {
          exceptionThrown = e;
          throw e;
-      }
-      catch (Error e)
+      } catch (Error e)
       {
          exceptionThrown = e;
          throw e;
       }
       finally
       {
-         if (invocation.getType().isHome() && exceptionThrown == null)
+         // ctx can be null if cache.get throws an Exception, for
+         // example when activating a bean.
+         if (ctx != null)
          {
-            // when a home invocation comes back with an id we need to insert
-            // into the cache
-            if (ctx.getId() != null)
+				// If an exception has been thrown,
+            if (exceptionThrown != null &&
+                // if tx, the ctx has been registered in an InstanceSynchronization.
+                // that will remove the context, so we shouldn't.
+                // if no synchronization then we need to do it by hand
+                !ctx.hasTxSynchronization())
             {
-               // lock all access to BeanLock while we stick it in the cache
-               BeanLock lock = container.getLockManager().getLock(ctx.getId());
-               lock.sync();
-               try
-               {
-                  // Check there isn't a context already in the cache
-                  // e.g. commit-option B where the entity was
-                  // created then removed externally
-                  InstanceCache cache = container.getInstanceCache();
-                  cache.remove(ctx.getId());
+               // Discard instance
+               // EJB 1.1 spec 12.3.1
+               container.getInstanceCache().remove(key);
 
-                  // marcf: possible race on creation and usage
-                  // insert instance in cache,
-                  cache.insert(ctx);
-               }
-               finally
-               {
-                  // assure to unlock the bean
-                  lock.releaseSync();
-               }
-
-               if (trace)
-               {
-                  log.trace("End home invocation, id=" + ctx.getId() +
-                          ", ctx=" + ctx);
-               }
+               if( trace ) log.trace("Ending invoke, exceptionThrown, ctx="+ctx, exceptionThrown);
             }
-            else
+            else if (ctx.getId() == null)
             {
-               {
-                  log.trace("End home invocation, ctx=" + ctx);
-               }
+               // The key from the Invocation still identifies the right cachekey
+               container.getInstanceCache().remove(key);
+
+               if( trace )	log.trace("Ending invoke, cache removal, ctx="+ctx);
+               // no more pool return
             }
          }
-         // The current code signals that an instance should be deleted by
-         // setting the context id to null.  If it is null, we need to remove
-         // the context from the cache here.
-         else if (ctx.getId() == null)
-         {
-            // The id from the Invocation still identifies the
-            // right cachekey
-            container.getInstanceCache().remove(id);
 
-            if (trace)
-            {
-               log.trace("Ending invoke, cache removal, ctx=" + ctx);
-            }
-            // no more pool return
-         }
-         // The current code signals that an instance should be deleted by
-         // setting the context id to null.  If it is null, we need to remove
-         // the context from the cache here.
-         else if (exceptionThrown != null && !ctx.hasTxSynchronization())
-         {
-            // The id from the Invocation still identifies the
-            // right cachekey
-            container.getInstanceCache().remove(id);
+         if( trace )	log.trace("End invoke, key="+key+", ctx="+ctx);
 
-            if (trace)
-            {
-               log.trace("Ending invoke, cache removal, ctx=" + ctx);
-            }
-            // no more pool return
-         }
-         // All is good.  Just log it.
-         else
-         {
-            if (trace)
-            {
-               log.trace("End invoke, id=" + id + ", ctx=" + ctx);
-            }
-         }
-      }
+      }	// end invoke
    }
 
-   private boolean isReadOnlyInvocation(Invocation invocation)
+    /**
+    * Something went wrong getting the enterprise context.<br>
+    * Clear any transaction associated with the lock, otherwise
+    * the lock interceptor will barf. This should only happen
+    * on the first access to the context if activation fails.
+    */
+   protected void clearLockTx(Invocation mi, Throwable e, boolean trace)
    {
-      EntityContainer container = (EntityContainer) getContainer();
-
-      if (invocation.getType().isHome() || !container.isReadOnly())
+      if (container.isReadOnly() == false) 
       {
-         return false;
-      }
-
-      Method method = invocation.getMethod();
-      return method == null ||
-              !container.getBeanMetaData().isMethodReadOnly(method.getName());
-   }
-
-   private void clearTxLock(Invocation invocation, Throwable t, boolean trace)
-           throws Exception
-   {
-      if (invocation.getType().isHome() == false && isReadOnlyInvocation(invocation) == false)
-      {
-         Object key = invocation.getId();
-         EntityContainer container = (EntityContainer) getContainer();
-         BeanLock lock = container.getLockManager().getLock(key);
-         lock.sync();
-         try
+         Method method = mi.getMethod();
+         if (method == null ||
+            container.getBeanMetaData().isMethodReadOnly(method.getName()) == false)
          {
-            Transaction tx = lock.getTransaction();
-            if (tx != null)
+            Object key = mi.getId();
+            BeanLock lock = container.getLockManager().getLock(key);
+            lock.sync();
+            try
             {
-               if (trace)
-                  log.trace("Clearing bean lock's tx: " + tx + " key: " + key, t);
-
-               lock.wontSynchronize(tx);
+               Transaction tx = lock.getTransaction();
+               if (tx != null)
+               {
+                  if (trace)
+                     log.trace("Clearing bean lock's tx: " + tx + " key: " + key, e);
+  
+                  lock.wontSynchronize(tx);
+               }
             }
-         }
-         finally
-         {
-            lock.releaseSync();
+            finally
+            {
+               lock.releaseSync();
+               container.getLockManager().removeLockRef(lock.getId());
+            }
          }
       }
    }
 }
+
+
+

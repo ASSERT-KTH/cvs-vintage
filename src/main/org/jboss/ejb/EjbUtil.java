@@ -21,12 +21,13 @@ import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 
-/**
- * Static method repository class.
+/** Utility methods for resolving ejb-ref and ejb-local-ref within the
+ * scope of a deployment.
  *
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
+ * @author Scott.Stark@jboss.org
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class EjbUtil
 {
@@ -141,7 +142,7 @@ public final class EjbUtil
       }
       catch( MalformedURLException mue )
       {
-         log.error( "Can't construct URL for: " + ourPath );
+         log.warn( "Can't construct URL for: " + ourPath );
          return null;
       }
 
@@ -157,13 +158,13 @@ public final class EjbUtil
       }
       catch( Exception e )
       {
-         log.error( "Got Exception when looking for DeploymentInfo: " + e );
+         log.warn( "Got Exception when looking for DeploymentInfo: " + e );
          return null;
       }
 
       if( targetInfo == null )
       {
-         log.error( "Can't locate deploymentInfo for target: " + target );
+         log.warn( "Can't locate deploymentInfo for target: " + target );
          return null;
       }
 
@@ -172,6 +173,7 @@ public final class EjbUtil
          log.trace( "Found appropriate DeploymentInfo: " + targetInfo );
       }
 
+      String linkTarget = null;
       if( targetInfo.metaData instanceof ApplicationMetaData )
       {
          ApplicationMetaData appMD = (ApplicationMetaData)targetInfo.metaData;
@@ -179,27 +181,19 @@ public final class EjbUtil
 
          if( beanMD != null )
          {
-            if( isLocal )
-            {
-               return beanMD.getLocalJndiName();
-            }
-            else
-            {
-               return beanMD.getJndiName();
-            }
+            linkTarget = getJndiName(beanMD, isLocal);
          }
-
-         log.error( "No Bean named '" + ejbName + "' found in '" + path +
-            "'!" );
+         else
+         {
+            log.warn("No Bean named '" + ejbName + "' found in '" + path +"'!");
+         }
       }
       else
       {
-         log.error( "DeploymentInfo " + targetInfo + " is not an EJB .jar " +
-            "file!" );
+         log.warn("DeploymentInfo " + targetInfo + " is not an EJB .jar " +"file!");
       }
 
-      return null;
-
+      return linkTarget;
    }
 
    private static String resolveAbsoluteLink( DeploymentInfo di,
@@ -219,18 +213,10 @@ public final class EjbUtil
          BeanMetaData beanMD = appMD.getBeanByEjbName( link );
          if( beanMD != null )
          {
-            if( isLocal )
-            {
-               ejbName = beanMD.getLocalJndiName();
-            }
-            else
-            {
-               ejbName = beanMD.getJndiName();
-            }
-
+            ejbName = getJndiName(beanMD, isLocal);
             if( log.isTraceEnabled() )
             {
-               log.trace( "Found Bean: " + beanMD + ", resolves to: " + ejbName );
+               log.trace("Found Bean: " + beanMD + ", resolves to: " + ejbName);
             }
 
             return ejbName;
@@ -248,6 +234,27 @@ public final class EjbUtil
       return ejbName;
    }
 
+   private static String getJndiName(BeanMetaData beanMD, boolean isLocal)
+   {
+      String jndiName = null;
+      if( isLocal )
+      {
+         // Validate that there is a local home associated with this bean
+         String localHome = beanMD.getLocalHome();
+         if( localHome != null )
+            jndiName = beanMD.getLocalJndiName();
+         else
+         {
+            log.warn("LocalHome jndi name requested for: '"+beanMD.getEjbName()
+               + "' but there is no LocalHome class");
+         }
+      }
+      else
+      {
+         jndiName = beanMD.getJndiName();
+      }
+      return jndiName;
+   }
 }
 /*
 vim:ts=3:sw=3:et

@@ -19,7 +19,7 @@ import javax.naming.NameNotFoundException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
-import org.jboss.util.naming.NonSerializableFactory;
+import org.jboss.naming.NonSerializableFactory;
 
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.system.ServiceMBean"
  * 
  * @created June 22, 2001
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author  Andreas Schaefer (andreas.schaefer@madplanet.com)
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */

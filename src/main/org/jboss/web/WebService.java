@@ -9,22 +9,23 @@
 
 package org.jboss.web;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.net.URL;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.net.ServerSocket;
 
 import java.util.Properties;
 import java.util.Enumeration;
+
+import javax.management.*;
 
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.MissingAttributeException;
 
 import org.jboss.util.ThrowableHandler;
-
-import javax.management.ObjectName;
-import javax.management.MBeanServer;
 
 /**
  * The WebService implementation. It configures a WebServer instance to
@@ -34,7 +35,7 @@ import javax.management.MBeanServer;
  *      extends="org.jboss.system.ServiceMBean"
  *      name="jboss:service=WebService"
  *
- * @version <tt>$Revision: 1.16 $</tt>
+ * @version <tt>$Revision: 1.17 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -181,7 +182,7 @@ public class WebService
     *
     * @jmx:managed-attribute
     * 
-    * @param backlog The queue backlog limit.
+    * @param backlog, the queue backlog limit. 
     */
    public void setBacklog(int backlog)
    {

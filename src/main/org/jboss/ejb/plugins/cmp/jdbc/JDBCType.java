@@ -13,7 +13,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface JDBCType {
    public String[] getColumnNames();   

@@ -19,27 +19,33 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.17 2003/03/31 23:40:48 ejort Exp $
+ * $Id: BeanVerifier.java,v 1.18 2003/08/27 04:32:36 patriot1burke Exp $
  */
 
  
 // standard imports
-import java.net.URL;
 import java.util.Iterator;
+import java.net.URL;
 
-import org.jboss.logging.Logger;
+// non-standard class dependencies
+import org.jboss.verifier.strategy.VerificationContext;
+import org.jboss.verifier.strategy.VerificationStrategy;
+import org.jboss.verifier.strategy.EJBVerifier11;
+import org.jboss.verifier.strategy.EJBVerifier20;
+
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.event.VerificationListener;
+import org.jboss.verifier.event.VerificationEventGeneratorSupport;
+
+import org.jboss.verifier.factory.VerificationEventFactory;
+
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
-import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.SessionMetaData;
-import org.jboss.verifier.event.VerificationEvent;
-import org.jboss.verifier.event.VerificationEventGeneratorSupport;
-import org.jboss.verifier.event.VerificationListener;
-import org.jboss.verifier.strategy.EJBVerifier11;
-import org.jboss.verifier.strategy.EJBVerifier20;
-import org.jboss.verifier.strategy.VerificationContext;
-import org.jboss.verifier.strategy.VerificationStrategy;
+import org.jboss.metadata.MessageDrivenMetaData;
+
+import org.jboss.logging.Logger;
 
 /**
  * Attempts to verify the spec compliance of the beans in a given
@@ -50,7 +56,7 @@ import org.jboss.verifier.strategy.VerificationStrategy;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since   JDK 1.3
  */
 public class BeanVerifier

@@ -8,9 +8,7 @@ package org.jboss.proxy.ejb;
 
 import java.lang.reflect.Method;
 
-import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
@@ -21,22 +19,14 @@ import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
  * An EJB stateless session bean proxy class.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class StatelessSessionInterceptor
    extends GenericEJBInterceptor
 {
-   // Constants -----------------------------------------------------
-   
-   /** Serial Version Identifier. */
-   //   private static final long serialVersionUID = 2327647224051998978L;
-   
-   // Attributes ----------------------------------------------------
-   
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
+   /** Serial Version Identifier. @since 1.4 */
+   private static final long serialVersionUID = -8807189798153718350L;
+
    /**
     * No-argument constructor for externalization.
     */
@@ -55,7 +45,7 @@ public class StatelessSessionInterceptor
     *
     * @throws Throwable    Any exception or error thrown while processing.
     */
-   public InvocationResponse invoke(Invocation invocation)
+   public Object invoke(Invocation invocation)
       throws Throwable
    {
       InvocationContext ctx = invocation.getInvocationContext();  
@@ -64,34 +54,34 @@ public class StatelessSessionInterceptor
       // Implement local methods
       if (m.equals(TO_STRING))
       {
-         return new InvocationResponse(toString(ctx));
+         return toString(ctx);
       }
       else if (m.equals(EQUALS))
       {
          Object[] args = invocation.getArguments();
          String argsString = args[0] != null ? args[0].toString() : "";
          String thisString = toString(ctx);
-         return new InvocationResponse(new Boolean(thisString.equals(argsString)));
+         return new Boolean(thisString.equals(argsString));
       }
       else if (m.equals(HASH_CODE))
       {
          // We base the stateless hash on the hash of the proxy...
          // MF XXX: it could be that we want to return the hash of the name?
-         return new InvocationResponse(new Integer(this.hashCode()));
+         return new Integer(this.hashCode());
       }
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE))
       {
-         return new InvocationResponse(new StatelessHandleImpl(
-               (String)ctx.getValue(InvocationKey.JNDI_NAME)));
+         return new StatelessHandleImpl(
+               (String)ctx.getValue(InvocationKey.JNDI_NAME));
       }
       else if (m.equals(GET_PRIMARY_KEY))
       {  
-         return new InvocationResponse(ctx.getValue(InvocationKey.JNDI_NAME));
+         return ctx.getValue(InvocationKey.JNDI_NAME);
       }
       else if (m.equals(GET_EJB_HOME))
       {
-         return new InvocationResponse(getEJBHome(invocation));
+         return getEJBHome(invocation);
       }
       else if (m.equals(IS_IDENTICAL))
       {
@@ -100,7 +90,7 @@ public class StatelessSessionInterceptor
          Object[] args = invocation.getArguments();
          String argsString = args[0].toString();
          String thisString = toString(ctx);
-         return new InvocationResponse(new Boolean(thisString.equals(argsString)));
+         return new Boolean(thisString.equals(argsString));
       }
       // If not taken care of, go on and call the container
       else

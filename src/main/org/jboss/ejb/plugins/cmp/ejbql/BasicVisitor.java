@@ -13,7 +13,7 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * extensions translate just a few elements of the tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public class BasicVisitor implements JBossQLParserVisitor {
    public Object visit(SimpleNode node, Object data) {
@@ -360,6 +360,15 @@ public class BasicVisitor implements JBossQLParserVisitor {
       return data;
    }
 
+   public Object visit(ASTCount node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+      buf.append("COUNT(");
+      ASTPath path = (ASTPath)node.jjtGetChild(0);
+      path.children[0].jjtAccept(this, data);
+      buf.append(")");
+      return data;
+   }
+
    public Object visit(ASTOrderBy node, Object data) {
       BlockStringBuffer buf = (BlockStringBuffer)data;
 
@@ -430,6 +439,20 @@ public class BasicVisitor implements JBossQLParserVisitor {
    public Object visit(ASTBooleanLiteral node, Object data) {
       BlockStringBuffer buf = (BlockStringBuffer)data;
       buf.append(node.value);
+      return data;
+   }
+
+   public Object visit(ASTLimitOffset node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+      int child = 0;
+      if (node.hasOffset) {
+         buf.append(" OFFSET ");
+         node.jjtGetChild(child++).jjtAccept(this, data);
+      }
+      if (node.hasLimit) {
+         buf.append(" LIMIT ");
+         node.jjtGetChild(child++).jjtAccept(this, data);
+      }
       return data;
    }
 }

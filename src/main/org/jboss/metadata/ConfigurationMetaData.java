@@ -6,119 +6,171 @@
  */
 package org.jboss.metadata;
 
-
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-/**
- * The configuration information for an EJB container.
- * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.38 $
+/** The configuration information for an EJB container.
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ *   @version $Revision: 1.39 $
  */
 public class ConfigurationMetaData extends MetaData
 {
-   public static final String CMP_13 = "Standard CMP EntityBean";
+   // Constants -----------------------------------------------------
+   public static final String CMP_2x_13 = "Standard CMP 2.x EntityBean";
+   public static final String CMP_1x_13 = "Standard CMP EntityBean";
    public static final String BMP_13 = "Standard BMP EntityBean";
    public static final String STATELESS_13 = "Standard Stateless SessionBean";
    public static final String STATEFUL_13 = "Standard Stateful SessionBean";
    public static final String MESSAGE_DRIVEN_13 = "Standard Message Driven Bean";
 
-   public static final String CLUSTERED_CMP_13 = "Clustered CMP EntityBean";
+   public static final String CLUSTERED_CMP_2x_13 = "Clustered CMP 2.x EntityBean";
+   public static final String CLUSTERED_CMP_1x_13 = "Clustered CMP EntityBean";
    public static final String CLUSTERED_BMP_13 = "Clustered BMP EntityBean";
-   public static final String CLUSTERED_STATEFUL_13 = "Clustered Stateful SessionBean"; // we do not support JDK < 1.3
-   public static final String CLUSTERED_STATELESS_13 = "Clustered Stateless SessionBean"; // we do not support JDK < 1.3
+   public static final String CLUSTERED_STATEFUL_13 = "Clustered Stateful SessionBean";
+   public static final String CLUSTERED_STATELESS_13 = "Clustered Stateless SessionBean";
 
    public static final byte A_COMMIT_OPTION = 0;
    public static final byte B_COMMIT_OPTION = 1;
    public static final byte C_COMMIT_OPTION = 2;
    /** D_COMMIT_OPTION is a lazy load option. By default it synchronizes every 30 seconds */
    public static final byte D_COMMIT_OPTION = 3;
-   public static final String[] commitOptionStrings = { "A", "B", "C", "D"};
+   public static final String[] commitOptionStrings = {"A", "B", "C", "D"};
 
    // Attributes ----------------------------------------------------
    private String name;
    private String instancePool;
    private String instanceCache;
    private String persistenceManager;
-   private Element persistenceManagerElement;
-   private String transactionManager;
    private String webClassLoader = "org.jboss.web.WebClassLoader";
-   // This is to provide backward compatibility with 2.4 series jboss.xml
-   // but it should come from standardjboss alone
-   // marcf:FIXME deprecate the "hardcoded string"
-   private Element lockConfig = null;
+   private String lockClass = "org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock";
    private byte commitOption;
    private long optionDRefreshRate = 30000;
    private boolean callLogging;
    private boolean syncOnCommitOnly = false;
-
+   /** if true, INSERT will be issued after ejbPostCreate */
+   private boolean insertAfterEjbPostCreate = false;
+   /** The container level security domain */
    private String securityDomain;
-   private String authenticationModule;
-   private String roleMappingManager;
-
+   /** The container default invoker binding name */
+   private String defaultInvokerName;
+   /** The InstancePool configuration */
    private Element containerPoolConf;
+   /** The InstanceCache configuration */
    private Element containerCacheConf;
+   /** The ejb container interceptor stack configuration */
    private Element containerInterceptorsConf;
+   /** The JMX object names for container level dependencies */
    private Collection depends = new LinkedList();
+   /** The cluster-config element info */
+   private ClusterConfigMetaData clusterConfig = null;
 
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   public ConfigurationMetaData (String name) {
+   public ConfigurationMetaData(String name)
+   {
       this.name = name;
    }
 
    // Public --------------------------------------------------------
 
-   public String getName() { return name; }
-
-   public String getInstancePool() { return instancePool; }
-
-   public String getInstanceCache() { return instanceCache; }
-
-   public Element getPersistenceManagerElement() 
-   { 
-      return persistenceManagerElement; 
+   public String getName()
+   {
+      return name;
    }
-   public String getPersistenceManager() { return persistenceManager; }
 
-   public String getSecurityDomain() { return securityDomain; }
-   public String getAuthenticationModule() { return authenticationModule; }
+   public String getInstancePool()
+   {
+      return instancePool;
+   }
 
-   public String getRoleMappingManager() { return roleMappingManager; }
+   public String getInstanceCache()
+   {
+      return instanceCache;
+   }
 
-   //public String getTransactionManager() { return transactionManager; }
+   public String getPersistenceManager()
+   {
+      return persistenceManager;
+   }
 
-   public String getWebClassLoader() { return webClassLoader; }
+   public String getSecurityDomain()
+   {
+      return securityDomain;
+   }
 
-   public Element getLockConfig() {return lockConfig;}
+   public String getDefaultInvokerName()
+   {
+      return defaultInvokerName;
+   }
 
-   public Element getContainerPoolConf() { return containerPoolConf; }
-   public Element getContainerCacheConf() { return containerCacheConf; }
-   public Element getContainerInterceptorsConf() { return containerInterceptorsConf; }
+   public String getWebClassLoader()
+   {
+      return webClassLoader;
+   }
 
-   public boolean getCallLogging() { return callLogging; }
+   public String getLockClass()
+   {
+      return lockClass;
+   }
 
-   public boolean getSyncOnCommitOnly() { return syncOnCommitOnly; }
+   public Element getContainerPoolConf()
+   {
+      return containerPoolConf;
+   }
 
-   public byte getCommitOption() { return commitOption; }
+   public Element getContainerCacheConf()
+   {
+      return containerCacheConf;
+   }
 
-   public long getOptionDRefreshRate() { return optionDRefreshRate; }
+   public Element getContainerInterceptorsConf()
+   {
+      return containerInterceptorsConf;
+   }
+
+   public boolean getCallLogging()
+   {
+      return callLogging;
+   }
+
+   public boolean getSyncOnCommitOnly()
+   {
+      return syncOnCommitOnly;
+   }
+
+   public boolean isInsertAfterEjbPostCreate()
+   {
+      return insertAfterEjbPostCreate;
+   }
+
+   public byte getCommitOption()
+   {
+      return commitOption;
+   }
+
+   public long getOptionDRefreshRate()
+   {
+      return optionDRefreshRate;
+   }
+
+   public ClusterConfigMetaData getClusterConfigMetaData()
+   {
+      return this.clusterConfig;
+   }
 
    public Collection getDepends()
    {
       return depends;
    }
 
-   public void importJbossXml(Element element) throws DeploymentException {
+   public void importJbossXml(Element element) throws DeploymentException
+   {
 
       // everything is optional to allow jboss.xml to modify part of a configuration
       // defined in standardjboss.xml
@@ -129,6 +181,9 @@ public class ConfigurationMetaData extends MetaData
       // set synchronize on commit only
       syncOnCommitOnly = Boolean.valueOf(getElementContent(getOptionalChild(element, "sync-on-commit-only"), String.valueOf(syncOnCommitOnly))).booleanValue();
 
+      // set insert-after-ejb-post-create
+      insertAfterEjbPostCreate = Boolean.valueOf(getElementContent(getOptionalChild(element, "insert-after-ejb-post-create"), String.valueOf(insertAfterEjbPostCreate))).booleanValue();
+
       // set the instance pool
       instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);
 
@@ -136,52 +191,29 @@ public class ConfigurationMetaData extends MetaData
       instanceCache = getElementContent(getOptionalChild(element, "instance-cache"), instanceCache);
 
       // set the persistence manager
-      persistenceManagerElement = getOptionalChild(element, "persistence-manager", persistenceManagerElement);
       persistenceManager = getElementContent(getOptionalChild(element, "persistence-manager"), persistenceManager);
-
-      // set the transaction manager
-      transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"), transactionManager);
 
       // set the web classloader
       webClassLoader = getElementContent(getOptionalChild(element, "web-class-loader"), webClassLoader);
 
       // set the lock class
-      lockConfig = getOptionalChild(element, "locking-policy");
+      lockClass = getElementContent(getOptionalChild(element, "locking-policy"), lockClass);
 
       // set the security domain
       securityDomain = getElementContent(getOptionalChild(element, "security-domain"), securityDomain);
-      // set the authentication module
-      authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"), authenticationModule);
-      // set the role mapping manager
-      roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"), roleMappingManager);
-      /* If the authenticationModule == roleMappingManager just set the securityDomain
-         as this is the combination of the authentication-module and role-mapping-manager
-         behaviors
-      */
-      if( authenticationModule != null && roleMappingManager != null &&
-          roleMappingManager.equals(authenticationModule) )
-      {
-         securityDomain = authenticationModule;
-         authenticationModule = null;
-         roleMappingManager = null;
-      }
-      // Don't allow only a authentication-module or role-mapping-manager
-      else if( (authenticationModule == null && roleMappingManager != null)
-               || (authenticationModule != null && roleMappingManager == null) )
-      {
-         String msg = "Either a security-domain or both authentication-module "
-            + "and role-mapping-manager must be specified";
-         throw new DeploymentException(msg);
-      }
+
+      // Get the container default invoker name
+      Element invokerName = getOptionalChild(element, "invoker-proxy-binding-name");
+      defaultInvokerName = MetaData.getElementContent(invokerName, defaultInvokerName);
 
       // set the commit option
       String commit = getElementContent(getOptionalChild(element, "commit-option"), commitOptionToString(commitOption));
 
       commitOption = stringToCommitOption(commit);
 
-      //get the refresh rate for option D which is specified in seconds
+      //get the refresh rate for option D
       String refresh = getElementContent(getOptionalChild(element, "optiond-refresh-rate"),
-         Long.toString(optionDRefreshRate / 1000));
+            Long.toString(optionDRefreshRate / 1000));
       optionDRefreshRate = stringToRefreshRate(refresh);
 
       // the classes which can understand the following are dynamically loaded during deployment :
@@ -199,10 +231,18 @@ public class ConfigurationMetaData extends MetaData
       //Get depends object names
       for (Iterator dependsElements = getChildrenByTagName(element, "depends"); dependsElements.hasNext();)
       {
-         Element dependsElement = (Element)dependsElements.next();
+         Element dependsElement = (Element) dependsElements.next();
          String dependsName = getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
+
+      // Check for clustering configuration
+      Element clusterConfigElement = getOptionalChild(element, "cluster-config");
+      if (clusterConfigElement != null)
+      {
+         clusterConfig = new ClusterConfigMetaData();
+         clusterConfig.importJbossXml(clusterConfigElement);
+      }
    }
 
    // Package protected ---------------------------------------------
@@ -211,20 +251,23 @@ public class ConfigurationMetaData extends MetaData
 
    // Private -------------------------------------------------------
    private static String commitOptionToString(byte commitOption)
-      throws DeploymentException {
-
-      try {
+         throws DeploymentException
+   {
+      try
+      {
          return commitOptionStrings[commitOption];
-      } catch( ArrayIndexOutOfBoundsException e ) {
+      }
+      catch (ArrayIndexOutOfBoundsException e)
+      {
          throw new DeploymentException("Invalid commit option: " + commitOption);
       }
    }
 
    private static byte stringToCommitOption(String commitOption)
-      throws DeploymentException {
-
-      for( byte i=0; i<commitOptionStrings.length; ++i )
-         if( commitOptionStrings[i].equals(commitOption) )
+         throws DeploymentException
+   {
+      for (byte i = 0; i < commitOptionStrings.length; ++i)
+         if (commitOptionStrings[i].equals(commitOption))
             return i;
 
       throw new DeploymentException("Invalid commit option: '" + commitOption + "'");
@@ -236,7 +279,7 @@ public class ConfigurationMetaData extends MetaData
     * @throws DeploymentException on failure to parse refreshRate as a long
     */
    private static long stringToRefreshRate(String refreshRate)
-      throws DeploymentException
+         throws DeploymentException
    {
       try
       {
@@ -244,10 +287,11 @@ public class ConfigurationMetaData extends MetaData
          // Convert from seconds to milliseconds
          rate *= 1000;
          return rate;
-      } catch ( Exception e)
+      }
+      catch (Exception e)
       {
          throw new DeploymentException("Invalid optiond-refresh-rate '"
-            + refreshRate + "'. Should be a number");
+               + refreshRate + "'. Should be a number");
       }
 
    }

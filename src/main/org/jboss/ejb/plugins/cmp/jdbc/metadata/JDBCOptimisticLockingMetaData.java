@@ -6,16 +6,16 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
+import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
 
 /**
  * Optimistick locking metadata
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class JDBCOptimisticLockingMetaData
 {

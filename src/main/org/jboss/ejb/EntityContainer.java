@@ -4,27 +4,35 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb;
 
-import java.lang.ClassLoader;
-import javax.ejb.Timer;
-import javax.management.MBeanException;
-import javax.management.MBeanInfo;
-import javax.management.MBeanOperationInfo;
-import javax.management.MBeanParameterInfo;
-import javax.management.ReflectionException;
-import org.jboss.ejb.timer.ContainerTimer;
-import org.jboss.ejb.entity.EntityInvocationRegistry;
-import org.jboss.ejb.entity.EntityPersistenceManager;
-import org.jboss.ejb.entity.EntityPersistenceManagerXMLFactory;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Collection;
+import java.util.Hashtable;
+
+import javax.ejb.Handle;
+import javax.ejb.HomeHandle;
+import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBMetaData;
+import javax.ejb.RemoveException;
+import javax.ejb.EJBException;
+
+import javax.transaction.Transaction;
+import javax.management.ObjectName;
+
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationKey;
-import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.PayloadKey;
-import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.metadata.EntityMetaData;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.monitor.StatisticsProvider;
-import org.jboss.security.SecurityAssociation;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.util.collection.SerializableEnumeration;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -39,189 +47,268 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.99 $
+ * @version $Revision: 1.100 $
+ *
+ * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
 public class EntityContainer
-   extends Container implements
-   InstancePoolContainer, StatisticsProvider
+   extends Container
+   implements EJBProxyFactoryContainer, InstancePoolContainer,
+      EntityContainerMBean
 {
    /**
-    * The persistence manager for this entity.
-    * @todo replace this with a link to an MBean service.
+    * These are the mappings between the home interface methods and the
+    * container methods.
     */
-   private EntityPersistenceManager entityPersistenceManager;
+   protected Map homeMapping = new HashMap();
 
    /**
-    * The primary key class of this entity.
+    * These are the mappings between the remote/local interface methods and the
+    * bean methods.
     */
-   private Class primaryKeyClass;
+   protected Map beanMapping = new HashMap();
+
+   /** This is the persistence manager for this container */
+   protected EntityPersistenceManager persistenceManager;
+
+   /** This is the instance cache for this container */
+   protected InstanceCache instanceCache;
+
+   /** This is the instancepool that is to be used */
+   protected InstancePool instancePool;
+
+   protected TxEntityMap txEntityMap = new TxEntityMap();
 
    /**
-    * Commit Option D cache invalidation thread.
+    * This is the first interceptor in the chain. The last interceptor must
+    * be provided by the container itself.
     */
-   private OptionDInvalidator optionDInvalidator;
-
-   // These members contains statistics variable
-   //private long createCount = 0;
-   //private long removeCount = 0;
+   protected Interceptor interceptor;
 
    /**
-    * Determines if state can be written to resource manager.
+    * <code>readOnly</code> determines if state can be written to resource manager.
     */
-   private boolean readOnly = false;
-
-   /**
-    * Does this container support multiple instances with the same id?
-    */
-   private boolean multiInstance = false;
+   protected boolean readOnly = false;
 
    /**
     * This provides a way to find the entities that are part of a given
     * transaction EntitySynchronizationInterceptor and InstanceSynchronization
     * manage this instance.
     */
-   private static EntityInvocationRegistry entityInvocationRegistry =
-         new EntityInvocationRegistry();
+   protected static GlobalTxEntityMap globalTxEntityMap = new GlobalTxEntityMap();
 
-   public static EntityInvocationRegistry getEntityInvocationRegistry()
+   public static GlobalTxEntityMap getGlobalTxEntityMap()
    {
-      return entityInvocationRegistry;
+      return globalTxEntityMap;
    }
 
    /**
-    * Gets the primary key class of the Entity.
+    * Stores all of the entities associated with the specified transaction.
+    * As per the spec 9.6.4, entities must be synchronized with the datastore
+    * when an ejbFind<METHOD> is called.
+    * Also, all entities within entire transaction should be synchronized before
+    * a remove, otherwise there may be problems with 'cascade delete'.
+    *
+    * @param tx the transaction that associated entites will be stored
+    * @throws Exception if an problem occures while storing the entities
     */
-   public Class getPrimaryKeyClass()
+   public static void synchronizeEntitiesWithinTransaction(Transaction tx)
    {
-     return primaryKeyClass;
+      // If there is no transaction, there is nothing to synchronize.
+      if(tx != null)
+      {
+         getGlobalTxEntityMap().synchronizeEntities(tx);
+      }
    }
 
-   /**
-    * Is this entity read only?
-    */
+   // Public --------------------------------------------------------
+
    public boolean isReadOnly()
    {
       return readOnly;
    }
 
-   /**
-    * Does this container user multiple instances with the same id?
-    */
-   public boolean isMultiInstance()
+   public LocalProxyFactory getLocalProxyFactory()
    {
-      return multiInstance;
+      return localProxyFactory;
    }
 
-   /**
-    * Set the container to use or not user multiple instances with the
-    * same id?
-    */
-   public void setMultiInstance(boolean multiInstance)
+   public void setInstancePool(InstancePool ip)
    {
-      this.multiInstance = multiInstance;
+      if (ip == null)
+         throw new IllegalArgumentException("Null pool");
+
+      this.instancePool = ip;
+      ip.setContainer(this);
    }
 
-   /**
-    * Gets the persistence manager for this entity.
-    */
+   public InstancePool getInstancePool()
+   {
+      return instancePool;
+   }
+
+   public TxEntityMap getTxEntityMap()
+   {
+      return txEntityMap;
+   }
+
+   public void setInstanceCache(InstanceCache ic)
+   {
+      if (ic == null)
+         throw new IllegalArgumentException("Null cache");
+
+      this.instanceCache = ic;
+      ic.setContainer(this);
+   }
+
+   public InstanceCache getInstanceCache()
+   {
+      return instanceCache;
+   }
+
    public EntityPersistenceManager getPersistenceManager()
    {
-      return entityPersistenceManager;
+      return persistenceManager;
+   }
+
+   public void setPersistenceManager(EntityPersistenceManager pm)
+   {
+      if (pm == null)
+         throw new IllegalArgumentException("Null persistence manager");
+
+      persistenceManager = pm;
+      pm.setContainer(this);
+   }
+
+   public void addInterceptor(Interceptor in)
+   {
+      if (interceptor == null)
+      {
+         interceptor = in;
+      }
+      else
+      {
+         Interceptor current = interceptor;
+         while (current.getNext() != null)
+         {
+            current = current.getNext();
+         }
+
+         current.setNext(in);
+      }
+   }
+
+   public Interceptor getInterceptor()
+   {
+      return interceptor;
+   }
+
+   public Class getHomeClass()
+   {
+      return homeInterface;
+   }
+
+   public Class getRemoteClass()
+   {
+      return remoteInterface;
    }
 
    /**
-    * Sets the persistence manager for this entity.
-    * @param entityPersistenceManager the new persistence manager for this
-    * entity; must not be null
+    * Returns a new instance of the bean class or a subclass of the bean class.
+    * If this is 1.x cmp, simply return a new instance of the bean class.
+    * If this is 2.x cmp, return a subclass that provides an implementation
+    * of the abstract accessors.
+    *
+    * @see java.lang.Class#newInstance
+    *
+    * @return   The new instance.
     */
-   public void setPersistenceManager(EntityPersistenceManager entityPersistenceManager)
-   {
-      if(entityPersistenceManager == null)
-      {
-         throw new IllegalArgumentException("entityPersistenceManager is null");
-      }
-      this.entityPersistenceManager = entityPersistenceManager;
+   public Object createBeanClassInstance() throws Exception {
+      return persistenceManager.createBeanClassInstance();
    }
 
-   /**
-    * Describe <code>typeSpecificInitialize</code> method here.
-    * entity specific initialization.
-    */
-   protected void typeSpecificCreate()  throws Exception
-   {
-      // Make some additional validity checks with regards to the container configuration
-      checkCoherency ();
+   // Container implementation --------------------------------------
 
-      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
-      setInstanceCache( createInstanceCache( conf, false, getClassLoader() ) );
-      setInstancePool( createInstancePool( conf, getClassLoader() ) );
-      //Set the bean Lock Manager
-      setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), getClassLoader()));
-
-      EntityMetaData entityMetaData = (EntityMetaData)metaData;
-      if(entityMetaData.getPrimaryKeyClass() != null)
-      {
-         primaryKeyClass = classLoader.loadClass(entityMetaData.getPrimaryKeyClass());
-      }
-
-      // Persistence Manager
-      EntityPersistenceManagerXMLFactory factory =  new EntityPersistenceManagerXMLFactory();
-      entityPersistenceManager = factory.create(this, conf.getPersistenceManagerElement());
-      entityPersistenceManager.setContainer(this);
-      entityPersistenceManager.create();
-      readOnly = ((EntityMetaData)metaData).isReadOnly();
-      // Init instance cache
-      getInstanceCache().create();
-   }
-
-   /*
    protected void createService() throws Exception
    {
-      typeSpecificInitialize();
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
       try
       {
+         // Acquire classes from CL
+         if (metaData.getHome() != null)
+            homeInterface = classLoader.loadClass(metaData.getHome());
+         if (metaData.getRemote() != null)
+            remoteInterface = classLoader.loadClass(metaData.getRemote());
+
          // Call default init
          super.createService();
 
-         // Acquire classes from CL
-         if(metaData.getHome() != null)
-         {
-            homeInterface = classLoader.loadClass(metaData.getHome());
-         }
-         if(metaData.getRemote() != null)
-         {
-            remoteInterface = classLoader.loadClass(metaData.getRemote());
-         }
+         // Make some additional validity checks with regards to the container configuration
+         checkCoherency ();
+
+         // Map the bean methods
+         setupBeanMapping();
+
+         // Map the home methods
+         setupHomeMapping();
 
          // Map the interfaces to Long
          setupMarshalledInvocationMapping();
 
+         // Initialize pool
+         instancePool.create();
+         // Try to register the instance pool as an MBean
+         try
+         {
+            ObjectName containerName = super.getJmxName();
+            Hashtable props = containerName.getKeyPropertyList();
+            props.put("plugin", "pool");
+            ObjectName poolName = new ObjectName(containerName.getDomain(), props);
+            server.registerMBean(instancePool, poolName);
+         }
+         catch(Throwable t)
+         {
+            log.debug("Failed to register cache as mbean", t);
+         }
+
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.create();
+         }
+
+         // Init instance cache
+         instanceCache.create();
+         // Try to register the instance cache as an MBean
+         try
+         {
+            ObjectName containerName = super.getJmxName();
+            Hashtable props = containerName.getKeyPropertyList();
+            props.put("plugin", "cache");
+            ObjectName cacheName = new ObjectName(containerName.getDomain(), props);
+            server.registerMBean(instanceCache, cacheName);
+         }
+         catch(Throwable t)
+         {
+            log.debug("Failed to register cache as mbean", t);
+         }
+
+         // Init persistence
+         persistenceManager.create();
 
          // Initialize the interceptor by calling the chain
          Interceptor in = interceptor;
-         while(in != null)
+         while (in != null)
          {
             in.setContainer(this);
             in.create();
             in = in.getNext();
          }
-
-         // Initialize pool
-         getInstancePool().create();
-
-         for(Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
-         {
-            String invokerBinding = (String)it.next();
-            EJBProxyFactory proxyFactory =
-                  (EJBProxyFactory) proxyFactories.get(invokerBinding);
-            proxyFactory.create();
-         }
-
+         readOnly = ((EntityMetaData)metaData).isReadOnly();
       }
       finally
       {
@@ -229,8 +316,7 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   */
-   /*
+
    protected void startService() throws Exception
    {
       // Associate thread with classloader
@@ -246,27 +332,25 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory proxyFactory =
-                  (EJBProxyFactory)proxyFactories.get(invokerBinding);
-            proxyFactory.start();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.start();
          }
 
-         // Start the persistence manager
-         getPersistenceManager().start();
-
          // Start instance cache
-         getInstanceCache().start();
+         instanceCache.start();
+
+         // Start persistence
+         persistenceManager.start();
 
          // Start the instance pool
-         getInstancePool().start();
+         instancePool.start();
 
-         // Creat and start the OptionDInvalidator if necessary
-         ConfigurationMetaData configuration = getBeanMetaData().getContainerConfiguration();
-         if(configuration.getCommitOption() == ConfigurationMetaData.D_COMMIT_OPTION)
+         // Start all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
          {
-            optionDInvalidator = new OptionDInvalidator(
-                  configuration.getOptionDRefreshRate());
-            optionDInvalidator.start();
+            in.start();
+            in = in.getNext();
          }
       }
       finally
@@ -275,39 +359,7 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-*/
-   protected void typeSpecificStart() throws Exception
-   {
-         // Start the persistence manager
-         getPersistenceManager().start();
 
-         // Start instance cache
-         getInstanceCache().start();
-
-         // Creat and start the OptionDInvalidator if necessary
-         ConfigurationMetaData configuration = getBeanMetaData().getContainerConfiguration();
-         if(configuration.getCommitOption() == ConfigurationMetaData.D_COMMIT_OPTION)
-         {
-            optionDInvalidator = new OptionDInvalidator(
-                  configuration.getOptionDRefreshRate());
-            optionDInvalidator.start();
-         }
-   }
-
-   protected void typeSpecificStop() throws Exception
-   {
-         if(optionDInvalidator != null)
-         {
-            optionDInvalidator.die();
-            optionDInvalidator = null;
-         }
-         // Stop instance cache
-         getInstanceCache().stop();
-
-         // Start the persistence manager
-         getPersistenceManager().stop();
-   }
-   /*
    protected void stopService() throws Exception
    {
       // Associate thread with classloader
@@ -316,17 +368,10 @@ public class EntityContainer
 
       try
       {
-         if(optionDInvalidator != null)
-         {
-            optionDInvalidator.die();
-            optionDInvalidator = null;
-         }
-
          //Stop items in reverse order from start
          //This assures that CachedConnectionInterceptor will get removed
          //from in between this and the pm before the pm is stopped.
          // Stop all interceptors in the chain
-         //??Might be a problem, the superclass is now also stopping the interceptors.
          Interceptor in = interceptor;
          while (in != null)
          {
@@ -335,22 +380,22 @@ public class EntityContainer
          }
 
          // Stop the instance pool
-         getInstancePool().stop();
+         instancePool.stop();
+
+
+         // Stop persistence
+         persistenceManager.stop();
 
          // Stop instance cache
-         getInstanceCache().stop();
+         instanceCache.stop();
 
          // Stop container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory proxyFactory =
-                  (EJBProxyFactory)proxyFactories.get(invokerBinding);
-            proxyFactory.stop();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.stop();
          }
-
-         // Start the persistence manager
-         getPersistenceManager().stop();
 
          // Call default stop
          super.stopService();
@@ -361,17 +406,7 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-*/
-   protected void typeSpecificDestroy() throws Exception
-   {
-         // Destroy instance cache
-         getInstanceCache().destroy();
-         getInstanceCache().setContainer(null);
-         // Destroy the persistence manager
-         getPersistenceManager().destroy();
-         getPersistenceManager().setContainer(null);
-   }
-   /*
+
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
@@ -384,18 +419,43 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory proxyFactory =
-                  (EJBProxyFactory)proxyFactories.get(invokerBinding);
-            proxyFactory.destroy();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            ci.destroy();
          }
 
          // Destroy instance cache
-         getInstanceCache().destroy();
-         getInstanceCache().setContainer(null);
+         instanceCache.destroy();
+         instanceCache.setContainer(null);
+         try
+         {
+            ObjectName containerName = super.getJmxName();
+            Hashtable props = containerName.getKeyPropertyList();
+            props.put("plugin", "cache");
+            ObjectName cacheName = new ObjectName(containerName.getDomain(), props);
+            server.unregisterMBean(cacheName);
+         }
+         catch(Throwable ignore)
+         {
+         }
+
+         // Destroy persistence
+         persistenceManager.destroy();
+         persistenceManager.setContainer(null);
 
          // Destroy the pool
-         getInstancePool().destroy();
-         getInstancePool().setContainer(null);
+         instancePool.destroy();
+         instancePool.setContainer(null);
+         try
+         {
+            ObjectName containerName = super.getJmxName();
+            Hashtable props = containerName.getKeyPropertyList();
+            props.put("plugin", "pool");
+            ObjectName poolName = new ObjectName(containerName.getDomain(), props);
+            server.unregisterMBean(poolName);
+         }
+         catch(Throwable ignore)
+         {
+         }
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
@@ -406,9 +466,8 @@ public class EntityContainer
             in = in.getNext();
          }
 
-         // Start the persistence manager
-         getPersistenceManager().destroy();
-         getPersistenceManager().setContainer(null);
+         MarshalledInvocation.removeHashes(homeInterface);
+         MarshalledInvocation.removeHashes(remoteInterface);
 
          // Call default destroy
          super.destroyService();
@@ -419,235 +478,519 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-*/
-   /**
-    * Returns a new instance of the bean class or a subclass of the bean class.
-    * If this is 1.x cmp, simply return a new instance of the bean class.
-    * If this is 2.x cmp, return a subclass that provides an implementation
-    * of the abstract accessors.
-    *
-    * @see java.lang.Class#newInstance
-    *
-    * @return   The new instance.
-    */
-   public Object createBeanClassInstance() throws Exception
+
+   public Object internalInvokeHome(Invocation mi) throws Exception
    {
-      return entityPersistenceManager.createEntityInstance();
+      return getInterceptor().invokeHome(mi);
+   }
+
+   public Object internalInvoke(Invocation mi) throws Exception
+   {
+      // Invoke through interceptors
+      return getInterceptor().invoke(mi);
+   }
+
+   // EJBObject implementation --------------------------------------
+
+   public void remove(Invocation mi)
+      throws RemoteException, RemoveException
+   {
+      // synchronize entities with the datastore before the bean is removed
+      // this will write queued updates so datastore will be consistent before removal
+      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+         synchronizeEntitiesWithinTransaction(mi.getTransaction());
+
+      // Get the persistence manager to do the dirty work
+      getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
+
+      // We signify "removed" with a null id
+      // There is no need to synchronize on the context since all the threads reaching here have
+      // gone through the InstanceInterceptor so the instance is locked and we only have one thread
+      // the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
+      ((EnterpriseContext) mi.getEnterpriseContext()).setId(null);
+      removeCount++;
    }
 
    /**
-    * Stores the entity in the persistence manager.
-    *
-    * @todo This call sould be completely eliminated.  Only the persistence
-    * manager should determine when a store is called.  This means that the
-    * persistence manager will be listening for transaction demarcation events
-    * and invocation demarcation events. The concept of an invocation
-    * demarcation event does not currently exist in JBoss, but it will provide
-    * simmilar events to the transaction events and will be used in place of
-    * the transaction events when you are not running in a transaction.
+    * @throws Error    Not yet implemented.
     */
-   public void storeEntity(EntityEnterpriseContext ctx) throws Exception
+   public Handle getHandle(Invocation mi)
+      throws RemoteException
    {
-      entityPersistenceManager.storeEntity(ctx);
+      // TODO
+      throw new Error("Not yet implemented");
    }
 
    /**
-    * Has this been been modifed during the current transaction or invocation
-    * in the event you are running without a transaction.
-    *
-    * @todo replace this method with calls directly to the persistence manager
-    * service when we make the persistence manager a service.
+    * @throws Error    Not yet implemented.
     */
-   public boolean isModified(EntityEnterpriseContext ctx) throws Exception
+   public Object getPrimaryKey(Invocation mi)
+      throws RemoteException
    {
-      return entityPersistenceManager.isEntityModified(ctx);
+      // TODO
+      throw new Error("Not yet implemented");
    }
 
    /**
-    * Callback notification from the instance pool/ cache that this entity is
-    * about to be activated.
-    *
-    * @todo replace this method with calls directly to the persistence manager
-    * service when we make the persistence manager a service.
+    * @throws IllegalStateException     If container invoker is null.
     */
-   public void activateEntity(EntityEnterpriseContext ctx) throws Exception
+   public EJBHome getEJBHome(Invocation mi)
+      throws RemoteException
    {
-      entityPersistenceManager.activateEntity(ctx);
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+      return (EJBHome) ci.getEJBHome();
+   }
+
+   public boolean isIdentical(Invocation mi)
+      throws RemoteException
+   {
+      return ((EJBObject)mi.getArguments()[0]).getPrimaryKey().equals(((EnterpriseContext) mi.getEnterpriseContext()).getId());
+      // TODO - should also check type
    }
 
    /**
-    * Callback notification from the instance pool/ cache that this entity is
-    * about to be passivated.
-    *
-    * @todo replace this method with calls directly to the persistence manager
-    * service when we make the persistence manager a service.
+    * MF FIXME these are implemented on the client
     */
-   public void passivateEntity(EntityEnterpriseContext ctx) throws Exception
+   public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
-      entityPersistenceManager.passivateEntity(ctx);
+      return localProxyFactory.getEJBLocalHome();
    }
 
-   public void handleEjbTimeout( Timer pTimer ) {
-//AS      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
-      Object id = ((ContainerTimer)pTimer).getKey();
-
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader( getClassLoader() );
-
-      try
-      {
-         Invocation invocation = new Invocation(
-            id,
-            EJB_TIMEOUT,
-            new Class[] { Timer.class },
-            ( getTransactionManager() == null ?
-                 null:
-                 getTransactionManager().getTransaction()
-            ),
-            SecurityAssociation.getPrincipal(),
-            SecurityAssociation.getCredential()
-         );
-         invocation.setArguments( new Object[] { pTimer } );
-         invocation.setType( InvocationType.LOCAL );
-         invocation.setValue(
-            InvocationKey.CALLBACK_METHOD,
-            beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
-            PayloadKey.TRANSIENT
-         );
-         invocation.setValue(
-            InvocationKey.CALLBACK_ARGUMENTS,
-            invocation.getArguments(),
-            PayloadKey.TRANSIENT
-         );
-
-         invoke( invocation );
-      }
-      catch( Exception e ) {
-          e.printStackTrace();
-          throw new RuntimeException( "call ejbTimeout() failed: " + e );
-      }
-/*AS TODO: Manage the exceptions properly
-      catch (AccessException ae)
-      {
-         throw new AccessLocalException( ae.getMessage(), ae );
-      }
-      catch (NoSuchObjectException nsoe)
-      {
-         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
-      }
-      catch (TransactionRequiredException tre)
-      {
-         throw new TransactionRequiredLocalException( tre.getMessage() );
-      }
-      catch (TransactionRolledbackException trbe)
-      {
-         throw new TransactionRolledbackLocalException(
-               trbe.getMessage(), trbe );
-      }
-*/
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(oldCl);
-      }
+   /**
+    * @throws Error    Not yet implemented.
+    */
+   public void removeLocalHome(Invocation mi)
+      throws RemoteException, RemoveException
+   {
+      throw new Error("Not Yet Implemented");
    }
 
-
-   /*
-   protected void setupMarshalledInvocationMapping() throws Exception
+   /**
+    * Local home interface implementation
+    */
+   public EJBLocalObject createLocalHome(Invocation mi)
+      throws Exception
    {
-      if(homeInterface != null)
+      // The persistence manager takes care of the wiring and creating the EJBLocalObject
+      getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+
+      // The context implicitely carries the EJBObject
+      createCount++;
+      return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
+   }
+
+   /**
+    * Delegates to the persistence manager postCreateEntityMethod.
+    */
+   public void postCreateLocalHome(Invocation mi) throws Exception
+   {
+      // The persistence manager takes care of the post create step
+      getPersistenceManager().postCreateEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+   }
+
+   public Object findLocal(Invocation mi)
+      throws Exception
+   {
+      /**
+       * As per the spec 9.6.4, entities must be synchronized with the datastore
+       * when an ejbFind<METHOD> is called.
+       */
+      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+         synchronizeEntitiesWithinTransaction(mi.getTransaction());
+
+      // Multi-finder?
+      if (!mi.getMethod().getReturnType().equals(getLocalClass()))
       {
-         Method[] methods = homeInterface.getMethods();
-         for(int i = 0; i < methods.length; i++)
+         // Iterator finder
+         Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+
+         // Get the EJBObjects with that
+         Collection ec = localProxyFactory.getEntityLocalCollection(c);
+
+         // BMP entity finder methods are allowed to return java.util.Enumeration.
+         try {
+            if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration")))
+            {
+               return java.util.Collections.enumeration(ec);
+            }
+            else
+            {
+               return ec;
+            }
+         } catch (ClassNotFoundException e)
          {
-            marshalledInvocationMapping.put(
-                  new Long(MethodHashing.calculateHash(methods[i])),
-                  methods[i]);
+            // shouldn't happen
+            return ec;
          }
-      }
-
-      if(remoteInterface != null)
-      {
-         Method[] methods = remoteInterface.getMethods();
-         for(int i = 0; i < methods.length; i++)
-         {
-            marshalledInvocationMapping.put(
-                  new Long(MethodHashing.calculateHash(methods[i])),
-                  methods[i]);
-         }
-      }
-   }
-   */
-   /**
-    * Build the container MBean information on attributes, contstructors,
-    * operations, and notifications. Currently there are no attributes, no
-    * constructors, no notifications, and the following ops:
-    * <ul>
-    * <li>'invoke' -&gt; invoke(Invocation);</li>
-    * <li>'getHome' -&gt; return EBJHome interface;</li>
-    * <li>'getRemote' -&gt; return EJBObject interface</li>
-    * <li>'getCacheSize' -&gt; return the entity's cache size</li>
-    * <li>'flushCache' -&gt; flush the entity's cache</li>
-    * </ul>
-    */
-   public MBeanInfo getMBeanInfo()
-   {
-      MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
-
-      MBeanInfo superInfo = super.getMBeanInfo();
-      int superOpInfoCount = superInfo.getOperations().length;
-      MBeanOperationInfo[] opInfo = new MBeanOperationInfo[superOpInfoCount +2];
-      System.arraycopy(superInfo.getOperations(), 0, opInfo, 0, superOpInfoCount);
-      opInfo[superOpInfoCount] =
-         new MBeanOperationInfo("getCacheSize", "Get the Container cache size.",
-                                noParams,
-                                "java.lang.Integer", MBeanOperationInfo.INFO);
-      opInfo[superOpInfoCount + 1] =
-         new MBeanOperationInfo("flushCache", "Flush the Container cache.",
-            noParams,
-            "void", MBeanOperationInfo.ACTION);
-      return new MBeanInfo(getClass().getName(),
-                           "EJB Entity Container MBean",
-                           superInfo.getAttributes(),
-                           superInfo.getConstructors(),
-                           opInfo,
-                           superInfo.getNotifications());
-   }
-
-   /**
-    * Handle a operation invocation.
-    */
-   public Object invoke(String actionName, Object[] params, String[] signature)
-      throws MBeanException, ReflectionException
-   {
-      if(params != null && params.length == 1 &&
-            !(params[0] instanceof Invocation))
-      {
-         throw new MBeanException(new IllegalArgumentException(
-                  "Expected zero or single Invocation argument"));
-      }
-
-      // marcf: FIXME: these should be exposed on the cache
-
-      // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
-      if (actionName.equals("getCacheSize")) {
-         return new Integer(((EntityCache)getInstanceCache()).getCacheSize());
-      }
-      else if(actionName.equals("flushCache"))
-      {
-         log.info("flushing cache");
-         ((EntityCache)getInstanceCache()).flush();
-         return null;
       }
       else
       {
-         return super.invoke(actionName, params, signature);
+         // Single entity finder
+         Object id = getPersistenceManager().findEntity(mi.getMethod(),
+            mi.getArguments(),
+            (EntityEnterpriseContext)mi.getEnterpriseContext());
+
+         //create the EJBObject
+         return localProxyFactory.getEntityEJBLocalObject(id);
       }
+   }
+
+   // Home interface implementation ---------------------------------
+
+   /**
+    * This methods finds the target instances by delegating to the persistence
+    * manager It then manufactures EJBObject for all the involved instances
+    * found.
+    */
+   public Object find(Invocation mi) throws Exception
+   {
+      /**
+       * As per the spec 9.6.4, entities must be synchronized with the datastore
+       * when an ejbFind<METHOD> is called.
+       */
+      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+         synchronizeEntitiesWithinTransaction(mi.getTransaction());
+
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+      // Multi-finder?
+      if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
+      {
+         // Iterator finder
+         Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+
+         // Get the EJBObjects with that
+         Collection ec = ci.getEntityCollection(c);
+
+         // BMP entity finder methods are allowed to return java.util.Enumeration.
+         // We need a serializable Enumeration, so we can't use Collections.enumeration()
+         try {
+            if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration")))
+            {
+               return new SerializableEnumeration(ec);
+            }
+            else
+            {
+               return ec;
+            }
+         } catch (ClassNotFoundException e)
+         {
+            // shouldn't happen
+            return ec;
+         }
+      }
+      else
+      {
+         // Single entity finder
+         Object id = getPersistenceManager().findEntity(mi.getMethod(),
+            mi.getArguments(),
+            (EntityEnterpriseContext)mi.getEnterpriseContext());
+
+         //create the EJBObject
+         return (EJBObject)ci.getEntityEJBObject(id);
+      }
+   }
+
+   /**
+    * store entity
+    */
+   public void storeEntity(EntityEnterpriseContext ctx) throws Exception
+   {
+      if (ctx.getId() != null)
+      {
+         if(getPersistenceManager().isModified(ctx)) {
+            getPersistenceManager().storeEntity(ctx);
+         }
+      }
+   }
+
+   /**
+    * Delegates to the persistence manager postCreateEntityMethod.
+    */
+   public void postCreateHome(Invocation mi) throws Exception
+   {
+      // The persistence manager takes care of the post create step
+      getPersistenceManager().postCreateEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+   }
+
+   /**
+    * This method takes care of the wiring of the "EJBObject" trio
+    * (target, context, proxy).  It delegates to the persistence manager.
+    */
+   public EJBObject createHome(Invocation mi)
+      throws Exception
+   {
+      // The persistence manager takes care of the wiring and creating the EJBObject
+      getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+
+      // The context implicitely carries the EJBObject
+      createCount++;
+      return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
+   }
+
+   /**
+    * A method for the getEJBObject from the handle
+    */
+   public EJBObject getEJBObject(Invocation mi)
+      throws RemoteException
+   {
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+      // All we need is an EJBObject for this Id;
+      return (EJBObject)ci.getEntityEJBObject(((EntityCache) instanceCache).createCacheKey(mi.getId()));
+   }
+
+   // EJBHome implementation ----------------------------------------
+
+   /**
+    * @throws Error    Not yet implemented.
+    */
+   public void removeHome(Invocation mi)
+      throws RemoteException, RemoveException
+   {
+      throw new Error("Not yet implemented");
+   }
+
+   public EJBMetaData getEJBMetaDataHome(Invocation mi)
+      throws RemoteException
+   {
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+      return ci.getEJBMetaData();
+   }
+
+   /**
+    * @throws Error    Not yet implemented.
+    */
+   public HomeHandle getHomeHandleHome(Invocation mi)
+      throws RemoteException
+   {
+      // TODO
+      throw new Error("Not yet implemented");
+   }
+
+   /**
+    * @jmx:managed-attribute
+    * @return the current cache size
+    */
+   public long getCacheSize()
+   {
+      return instanceCache.getCacheSize();
+   }
+
+   /** Flush the cache
+    * @jmx:managed-operation
+    */
+   public void flushCache()
+   {
+      instanceCache.flush();
+   }
+
+   // StatisticsProvider implementation ------------------------------------
+
+   public Map retrieveStatistic()
+   {
+      // Loop through all Interceptors and add statistics
+      Map lStatistics = new HashMap();
+      StatisticsProvider lProvider = (StatisticsProvider) getPersistenceManager();
+      lStatistics.putAll( lProvider.retrieveStatistic() );
+      lProvider = (StatisticsProvider) getInstancePool();
+      lStatistics.putAll( lProvider.retrieveStatistic() );
+      return lStatistics;
+   }
+
+   public void resetStatistic()
+   {
+   }
+
+   // Private -------------------------------------------------------
+
+   private void setupHomeMappingImpl(Method[] m,
+                                     String finderName,
+                                     String append)
+      throws Exception
+   {
+      // Adrian Brock: This should go away when we don't support EJB1x
+      boolean isEJB1x = metaData.getApplicationMetaData().isEJB1x();
+
+      for (int i = 0; i < m.length; i++)
+      {
+         String methodName = m[i].getName();
+         try
+         {
+            try // Try home method
+            {
+               String ejbHomeMethodName = "ejbHome" + methodName.substring(0,1).toUpperCase() + methodName.substring(1);
+               homeMapping.put(m[i], beanClass.getMethod(ejbHomeMethodName, m[i].getParameterTypes()));
+
+               continue;
+            }
+            catch (NoSuchMethodException ignore) {} // just go on with other types of methods
+
+
+            // Implemented by container (in both cases)
+            if (methodName.startsWith("find"))
+            {
+               homeMapping.put(m[i], this.getClass().getMethod(finderName, new Class[] { Invocation.class }));
+            }
+            else if (methodName.equals("create") ||
+                  (isEJB1x == false && methodName.startsWith("create")))
+            {
+               homeMapping.put(m[i], this.getClass().getMethod("create"+append, new Class[] { Invocation.class }));
+               beanMapping.put(m[i], this.getClass().getMethod("postCreate"+append, new Class[] { Invocation.class }));
+            }
+            else
+            {
+               homeMapping.put(m[i], this.getClass().getMethod(methodName+append, new Class[] { Invocation.class }));
+            }
+         }
+         catch (NoSuchMethodException e)
+         {
+            throw new NoSuchMethodException("Could not find matching method for "+m[i]);
+         }
+      }
+   }
+
+   protected void setupHomeMapping() throws Exception
+   {
+      try {
+         if (homeInterface != null)
+         {
+            Method[] m = homeInterface.getMethods();
+            setupHomeMappingImpl( m, "find", "Home" );
+         }
+         if (localHomeInterface != null)
+         {
+            Method[] m = localHomeInterface.getMethods();
+            setupHomeMappingImpl( m, "findLocal", "LocalHome" );
+         }
+
+         // Special methods
+
+         // Get the One on Handle (getEJBObject), get the class
+         Class handleClass = Class.forName("javax.ejb.Handle");
+
+         // Get the methods (there is only one)
+         Method[] handleMethods = handleClass.getMethods();
+
+         //Just to make sure let's iterate
+         for (int j=0; j<handleMethods.length ;j++)
+         {
+            //Get only the one called handle.getEJBObject
+            if (handleMethods[j].getName().equals("getEJBObject"))
+            {
+               //Map it in the home stuff
+               homeMapping.put(handleMethods[j],
+                               this.getClass().getMethod("getEJBObject",
+                                                         new Class[] {Invocation.class}));
+            }
+         }
+      }
+      catch (Exception e)
+      {
+         // ditch the half built mappings
+         homeMapping.clear();
+         beanMapping.clear();
+
+         throw e;
+      }
+   }
+
+   private void setupBeanMappingImpl( Method[] m, String intfName )
+      throws Exception
+   {
+      for (int i = 0; i < m.length; i++)
+      {
+         if (!m[i].getDeclaringClass().getName().equals(intfName))
+         {
+            // Implemented by bean
+            beanMapping.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+         }
+         else
+         {
+            // Implemented by container
+            beanMapping.put(m[i], getClass().getMethod(m[i].getName(),
+                                                       new Class[] { Invocation.class }));
+         }
+      }
+   }
+
+   protected void setupBeanMapping() throws Exception
+   {
+      try {
+         if (remoteInterface != null)
+         {
+            Method[] m = remoteInterface.getMethods();
+            setupBeanMappingImpl( m, "javax.ejb.EJBObject" );
+         }
+         if (localInterface != null)
+         {
+            Method[] m = localInterface.getMethods();
+            setupBeanMappingImpl( m, "javax.ejb.EJBLocalObject" );
+         }
+      }
+      catch (Exception e)
+      {
+         // ditch the half built mappings
+         homeMapping.clear();
+         beanMapping.clear();
+
+         throw e;
+      }
+   }
+
+   protected void setupMarshalledInvocationMapping() throws Exception
+   {
+      // Create method mappings for container invoker
+      if (homeInterface != null)
+      {
+         Method [] m = homeInterface.getMethods();
+         for (int i = 0 ; i<m.length ; i++)
+         {
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+         }
+      }
+
+      if (remoteInterface != null)
+      {
+         Method [] m = remoteInterface.getMethods();
+         for (int j = 0 ; j<m.length ; j++)
+         {
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+         }
+      }
+
+      // Get the getEJBObjectMethod
+      Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
+
+      // Hash it
+      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
 
    Interceptor createContainerInterceptor()
    {
-      return null;
+      return new ContainerInterceptor();
    }
 
    protected void checkCoherency () throws Exception
@@ -657,7 +1000,7 @@ public class EntityContainer
       if (metaData.isClustered())
       {
          boolean clusteredProxyFactoryFound = false;
-         for (java.util.Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
             EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
@@ -672,45 +1015,93 @@ public class EntityContainer
       }
    }
 
-   private class OptionDInvalidator extends Thread
+   // Inner classes -------------------------------------------------
+
+   /**
+    * This is the last step before invocation - all interceptors are done
+    */
+   class ContainerInterceptor
+      extends AbstractContainerInterceptor
    {
-      private long refreshRate;
-      private volatile boolean shouldRun = true;
-
-      public OptionDInvalidator(long refreshRate)
+      public Object invokeHome(Invocation mi) throws Exception
       {
-         super("Option D Invalidator");
-         this.refreshRate = refreshRate;
-      }
+         // Invoke and handle exceptions
+         Method miMethod = mi.getMethod();
+         Method m = (Method) homeMapping.get(miMethod);
+         if( m == null )
+         {
+            String msg = "Invalid invocation, check your deployment packaging"
+               +", method="+miMethod;
+            throw new EJBException(msg);
+         }
 
-      public void die()
-      {
-         shouldRun = false;
-         interrupt();
-      }
-
-      public void run()
-      {
-         while(shouldRun)
+         if (m.getDeclaringClass().equals(EntityContainer.class))
          {
             try
             {
-               sleep(refreshRate);
+               return m.invoke(EntityContainer.this, new Object[] { mi });
             }
-            catch (InterruptedException  e)
+            catch (Exception e)
             {
-               interrupted();
-            }
-
-            if(shouldRun)
-            {
-               if(log.isTraceEnabled())
-               {
-                  log.trace("Flushing the valid contexts");
-               }
-               ((EntityCache)getInstanceCache()).flush();
+               rethrow(e);
             }
          }
+         else // Home method
+         {
+            try
+            {
+               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+            }
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
+         }
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();
+      }
+
+      public Object invoke(Invocation mi) throws Exception
+      {
+         // Get method
+         Method miMethod = mi.getMethod();
+         Method m = (Method) beanMapping.get(miMethod);
+         if( m == null )
+         {
+            String msg = "Invalid invocation, check your deployment packaging"
+               +", method="+miMethod;
+            throw new EJBException(msg);
+         }
+
+         // Select instance to invoke (container or bean)
+         if (m.getDeclaringClass().equals(EntityContainer.class))
+         {
+            // Invoke and handle exceptions
+            try
+            {
+               return m.invoke(EntityContainer.this, new Object[]{ mi });
+            }
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
+         }
+         else
+         {
+            // Invoke and handle exceptions
+            try
+            {
+               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+            }
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
+         }
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();
       }
    }
 }

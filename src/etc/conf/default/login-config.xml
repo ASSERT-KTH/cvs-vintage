@@ -23,7 +23,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.7 $
+$Revision: 1.8 $
 -->
 
 <policy>
@@ -91,6 +91,17 @@ $Revision: 1.7 $
       changed to a stronger authentication mechanism as required.
     -->
     <application-policy name = "jmx-console">
+       <authentication>
+          <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
+             flag = "required" />
+       </authentication>
+    </application-policy>
+
+    <!-- A template configuration for the web-console web application. This
+      defaults to the UsersRolesLoginModule the same as other and should be
+      changed to a stronger authentication mechanism as required.
+    -->
+    <application-policy name = "web-console">
        <authentication>
           <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
              flag = "required" />

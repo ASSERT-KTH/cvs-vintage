@@ -13,7 +13,7 @@ import java.util.Stack;
  *  A simple thread pool.
  *
  *  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 public class ThreadPool
 {
@@ -24,12 +24,15 @@ public class ThreadPool
    /**
     *  Stack of idle threads cached for future use.
     */
-   private Stack pool = new Stack();
+   private final Stack pool = new Stack();
 
    /**
     *  Maximum number of idle threads cached in this pool.
     */
    private int maxSize = 10;
+
+
+   private boolean enabled = false;
 
    // Static --------------------------------------------------------
 
@@ -43,6 +46,22 @@ public class ThreadPool
    }
 
    // Public --------------------------------------------------------
+   public synchronized void enable()
+   {
+      enabled = true;
+   }
+
+   public synchronized void disable()
+   {
+      enabled = false;
+      while (!pool.isEmpty())
+      {
+         Worker w = (Worker)pool.pop();
+         w.die();
+      } // end of while ()
+   }
+
+
 
    /**
     *  Set the maximum number of idle threads cached in this pool.
@@ -75,10 +94,14 @@ public class ThreadPool
     */
    private synchronized void returnWorker(Worker w)
    {
-      if (pool.size() < maxSize)
+      if (enabled && pool.size() < maxSize)
+      {
          pool.push(w);
+      }
       else
-         w.die();   
+      {
+         w.die();
+      } // end of else
    }
 
    // Inner classes -------------------------------------------------
@@ -123,7 +146,7 @@ public class ThreadPool
       public synchronized void run(Runnable work)
       {
          if (this.work != null)
-           throw new IllegalStateException("Worker already has work to do.");
+            throw new IllegalStateException("Worker already has work to do.");
          this.work = work;
          this.notify();
       }
@@ -144,7 +167,7 @@ public class ThreadPool
                // Clear work
                work = null;
             }
-                
+
             // Return to pool of cached idle threads
             returnWorker(this);
 

@@ -12,14 +12,14 @@ import javax.naming.NamingException;
 import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.util.naming.Util;
+import org.jboss.naming.Util;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class EnvEntryMetaData extends MetaData {
     // Constants -----------------------------------------------------

@@ -4,7 +4,6 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
 package org.jboss.ejb;
 
 import java.rmi.RemoteException;
@@ -31,30 +30,28 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
  *
  * @see Container
  * 
- * @version <tt>$Revision: 1.2 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @version $Revision: 1.3 $
  *
  *<p><b>20011219 marc fleury:</b>
- * <ul>
- *  <li>Moved from typed return to Object to allow for optimizations in creation
- *  <li>Per Dain Sundstrom requests removed the Remote Exception.
- *  <li>The Container Invoker is going to be replaced by the ProxyFactory 
- *</ul>
+* <ul>
+*  <li>Moved from typed return to Object to allow for optimizations in creation
+*  <li>Per Dain Sundstrom requests removed the Remote Exception.
+*  <li>The Container Invoker is going to be replaced by the ProxyFactory 
+*</ul>
  */
 public interface EJBProxyFactory
-   extends ContainerPlugin
+extends ContainerPlugin
 {
    /**
     * Set the invoker meta data so that the ProxyFactory can initialize properly
     */
    void setInvokerMetaData(InvokerProxyBindingMetaData imd);
-   
    /**
     * Set the invoker jndi binding
     */
    void setInvokerBinding(String binding);
-   
    /**
     * This method is called whenever the metadata for this container is
     * needed.

@@ -10,12 +10,14 @@ import javax.management.ObjectName;
 
 import org.jboss.system.Service;
 
+import org.w3c.dom.Element;
+
 /** An mbean interface for a proxy factory that can expose any interface
  * with RMI compatible semantics for access to remote clients using HTTP
  * as the transport.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface HttpProxyFactoryMBean extends Service
 {
@@ -36,8 +38,50 @@ public interface HttpProxyFactoryMBean extends Service
    /** Set the http URL to the InvokerServlet */
    public void setInvokerURL(String invokerURL);
 
+   /** If there is no invokerURL set, then one will be constructed via the
+    * concatenation of invokerURLPrefix + the local host + invokerURLSuffix.
+    */
+   public String getInvokerURLPrefix();
+   /** If there is no invokerURL set, then one will be constructed via the
+    * concatenation of invokerURLPrefix + the local host + invokerURLSuffix.
+    * An example prefix is "http://", and this is the default value.
+    */
+   public void setInvokerURLPrefix(String invokerURLPrefix);
+
+   /** If there is no invokerURL set, then one will be constructed via the
+    * concatenation of invokerURLPrefix + the local host + invokerURLSuffix.
+    */
+   public String getInvokerURLSuffix();
+   /** If there is no invokerURL set, then one will be constructed via the
+    * concatenation of invokerURLPrefix + the local host + invokerURLSuffix.
+    * An example suffix is "/invoker/JMXInvokerServlet" and this is the default
+    * value.
+    */
+   public void setInvokerURLSuffix(String invokerURLSuffix);
+
+   /** A flag if the InetAddress.getHostName() or getHostAddress() method
+    * should be used as the host component of invokerURLPrefix + host +
+    * invokerURLSuffix. If true getHostName() is used, false getHostAddress().
+    */
+   public boolean getUseHostName();
+   /** A flag if the InetAddress.getHostName() or getHostAddress() method
+    * should be used as the host component of invokerURLPrefix + host +
+    * invokerURLSuffix. If true getHostName() is used, false getHostAddress().
+    */
+   public void setUseHostName(boolean flag);
+
    /** Get the RMI compatible interface that the HttpInvokerProxy implements */
    public Class getExportedInterface();
    /** Set the RMI compatible interface that the HttpInvokerProxy implements */
    public void setExportedInterface(Class exportedInterface);
+
+   public Element getClientInterceptors();
+   public void setClientInterceptors(Element config) throws Exception;
+   /** Get the proxy instance created by the factory.
+    */
+   public Object getProxy();
+   /** Create a new proxy instance with the given id, no jndi name and all
+    * other settings the same as the jndi bound proxy.
+    */
+   public Object getProxy(Object id);
 }

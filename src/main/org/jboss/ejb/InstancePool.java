@@ -7,38 +7,15 @@
 package org.jboss.ejb;
 
 
-import org.jboss.monitor.StatisticsProvider;
-
 /**
  * Defines the model for a EnterpriseContext instance pool.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.12 $
- *
- * <p><b>Revisions:</b>
- * <p><b>20010718 andreas schaefer:</b>
- * <ul>
- * <li>- Marked the InstancePool as Statistics Provider
- * </ul>
- * <p><b>20011208 Vincent Harcq:</b>
- * <ul>
- * <li> Added a Pool Feeder (Thread that pre-create bean instances to avoid
- *      setContext overhead.
- * </ul>
+ * @version $Revision: 1.13 $
  */
 public interface InstancePool
-   extends ContainerPlugin, StatisticsProvider
+   extends ContainerPlugin
 {
-   /**
-    *  Add an instance in the Pool.
-    *  Is used by the TimedInstancePoolFeeder thread to create instances ready for use by
-    *  the interceptor.
-    *
-    * @exception Exception when an Instance can not be instantiated
-    */
-   public void add()
-         throws Exception;
-
    /**
     * Get an instance without identity.
     *

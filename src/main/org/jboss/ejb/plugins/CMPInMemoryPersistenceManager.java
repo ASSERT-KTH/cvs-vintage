@@ -37,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @see org.jboss.ejb.EntityPersistenceStore
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
@@ -162,7 +162,7 @@ public class CMPInMemoryPersistenceManager
             cmpField = ejbClass.getField ((String)i.next ());
             cmpFieldType = cmpField.getType ();
             
-            // find the type of the field and reset it
+            // find the type of the field and resets it
             // to the default value
             if (cmpFieldType.equals (boolean.class))
             {
@@ -247,11 +247,27 @@ public class CMPInMemoryPersistenceManager
       }
    }
 
-   public Object postCreateEntity(Method m, Object[] args, EntityEnterpriseContext ctx) throws Exception
+   /**
+    * This method is called after the createEntity.
+    * The persistence manager is responsible for handling the results properly
+    * wrt the persistent store.
+    *
+    * @param m           the ejbPostCreate method in the bean class that was
+    *                    called
+    * @param args        any create parameters
+    * @param instance    the instance being used for this create call
+    * @return            null
+    *
+    * @throws Exception
+    */
+   public Object postCreateEntity(final Method m,
+                                  final Object[] args,
+                                  final EntityEnterpriseContext ctx)
+      throws Exception
    {
       return null;
    }
-
+   
    /**
     * This method is called when single entities are to be found. The
     * persistence manager must find out whether the wanted instance is

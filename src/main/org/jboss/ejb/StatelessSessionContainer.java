@@ -7,30 +7,27 @@
 
 package org.jboss.ejb;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
+import java.util.Hashtable;
+import java.rmi.RemoteException;
+
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
+import javax.ejb.EJBObject;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBMetaData;
+import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
+import javax.ejb.EJBException;
+import javax.management.ObjectName;
+
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.util.MethodHashing;
 
 /**
  * The container for <em>stateless</em> session beans.
@@ -38,10 +35,11 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
-public class StatelessSessionContainer extends Container
+public class StatelessSessionContainer
+   extends Container
+   implements EJBProxyFactoryContainer, InstancePoolContainer
 {
    /**
     * These are the mappings between the home interface methods and the
@@ -55,41 +53,87 @@ public class StatelessSessionContainer extends Container
     */
    protected Map beanMapping;
 
+   /** This is the instancepool that is to be used */
+   protected InstancePool instancePool;
 
-   protected void typeSpecificCreate()  throws Exception
+   /**
+    * This is the first interceptor in the chain. The last interceptor must
+    * be provided by the container itself
+    */
+   protected Interceptor interceptor;
+
+   public LocalProxyFactory getLocalProxyFactory()
    {
-      // Make some additional validity checks with regards to the container configuration
-      checkCoherency ();
-
-      setupBeanMapping();
-      setupHomeMapping();
-      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
-      setInstancePool( createInstancePool( conf, getClassLoader() ) );
+      return localProxyFactory;
    }
 
-   protected void typeSpecificDestroy() throws Exception
+   public void setInstancePool(InstancePool ip)
    {
-      stopTimers();
+      if (ip == null)
+         throw new IllegalArgumentException("Null pool");
+
+      this.instancePool = ip;
+      ip.setContainer(this);
    }
 
-   /*
+   public InstancePool getInstancePool()
+   {
+      return instancePool;
+   }
+
+   public void addInterceptor(Interceptor in)
+   {
+      if (interceptor == null)
+      {
+         interceptor = in;
+      } else
+      {
+         Interceptor current = interceptor;
+         while ( current.getNext() != null)
+         {
+            current = current.getNext();
+         }
+
+         current.setNext(in);
+      }
+   }
+
+   public Interceptor getInterceptor()
+   {
+      return interceptor;
+   }
+
+   public Class getHomeClass()
+   {
+      return homeInterface;
+   }
+
+   public Class getRemoteClass()
+   {
+      return remoteInterface;
+   }
+
+   // Container implementation --------------------------------------
+
    protected void createService() throws Exception
    {
-      typeSpecificInitialize();
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
       try
       {
-
-         // Call default init
-         super.createService();
          // Acquire classes from CL
          if (metaData.getHome() != null)
             homeInterface = classLoader.loadClass(metaData.getHome());
          if (metaData.getRemote() != null)
             remoteInterface = classLoader.loadClass(metaData.getRemote());
+
+         // Call default init
+         super.createService();
+
+         // Make some additional validity checks with regards to the container configuration
+         checkCoherency ();
 
          // Map the bean methods
          setupBeanMapping();
@@ -101,7 +145,20 @@ public class StatelessSessionContainer extends Container
          setupMarshalledInvocationMapping();
 
          // Initialize pool
-         getInstancePool().create();
+         instancePool.create();
+         // Try to register the instance pool as an MBean
+         try
+         {
+            ObjectName containerName = super.getJmxName();
+            Hashtable props = containerName.getKeyPropertyList();
+            props.put("plugin", "pool");
+            ObjectName poolName = new ObjectName(containerName.getDomain(), props);
+            server.registerMBean(instancePool, poolName);
+         }
+         catch(Throwable t)
+         {
+            log.debug("Failed to register pool as mbean", t);
+         }
 
          // Init container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -110,6 +167,8 @@ public class StatelessSessionContainer extends Container
             EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
             ci.create();
          }
+
+
 
          // Initialize the interceptor by calling the chain
          Interceptor in = interceptor;
@@ -147,8 +206,15 @@ public class StatelessSessionContainer extends Container
          }
 
          // Start the instance pool
-         getInstancePool().start();
+         instancePool.start();
 
+         // Start all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.start();
+            in = in.getNext();
+         }
       }
       finally
       {
@@ -177,8 +243,15 @@ public class StatelessSessionContainer extends Container
          }
 
          // Stop the instance pool
-         getInstancePool().stop();
+         instancePool.stop();
 
+         // Stop all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.stop();
+            in = in.getNext();
+         }
       }
       finally
       {
@@ -193,7 +266,6 @@ public class StatelessSessionContainer extends Container
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      stopTimers();
       try
       {
          // Destroy container invoker
@@ -206,8 +278,19 @@ public class StatelessSessionContainer extends Container
          }
 
          // Destroy the pool
-         getInstancePool().destroy();
-         getInstancePool().setContainer(null);
+         instancePool.destroy();
+         instancePool.setContainer(null);
+         try
+         {
+            ObjectName containerName = super.getJmxName();
+            Hashtable props = containerName.getKeyPropertyList();
+            props.put("plugin", "pool");
+            ObjectName poolName = new ObjectName(containerName.getDomain(), props);
+            server.unregisterMBean(poolName);
+         }
+         catch(Throwable ignore)
+         {
+         }
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
@@ -218,6 +301,9 @@ public class StatelessSessionContainer extends Container
             in = in.getNext();
          }
 
+         MarshalledInvocation.removeHashes(homeInterface);
+         MarshalledInvocation.removeHashes(remoteInterface);
+
          // Call default destroy
          super.destroyService();
       }
@@ -227,7 +313,24 @@ public class StatelessSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
+
+   public Object internalInvokeHome(Invocation mi) throws Exception
+   {
+      return getInterceptor().invokeHome(mi);
+   }
+
+   /**
+   * This method does invocation interpositioning of tx and security,
+   * retrieves the instance from an object table, and invokes the method
+   * on the particular instance
    */
+   public Object internalInvoke(Invocation mi)
+      throws Exception
+   {
+      // Invoke through interceptors
+      return getInterceptor().invoke(mi);
+   }
+
    // EJBObject implementation --------------------------------------
 
    /**
@@ -263,14 +366,16 @@ public class StatelessSessionContainer extends Container
       throws RemoteException
    {
       EJBProxyFactory ci = getProxyFactory();
-      if (ci == null) {
-         throw new IllegalStateException();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
       }
       return (EJBHome) ci.getEJBHome();
    }
 
    /**
-    * @return Always false
+    * @return    Always false
     */
    public boolean isIdentical(Invocation mi)
       throws RemoteException
@@ -278,16 +383,24 @@ public class StatelessSessionContainer extends Container
       return false; // TODO
    }
 
+   // EJBLocalObject implementation
+
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
       return localProxyFactory.getEJBLocalHome();
    }
 
+   // EJBLocalHome implementation
+
    public EJBLocalObject createLocalHome()
       throws CreateException
    {
       if (localProxyFactory == null)
-         throw new IllegalStateException();
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+      createCount ++;
       return localProxyFactory.getStatelessSessionEJBLocalObject();
    }
 
@@ -299,13 +412,18 @@ public class StatelessSessionContainer extends Container
       // todo
    }
 
+   // EJBHome implementation ----------------------------------------
+
    public EJBObject createHome()
       throws RemoteException, CreateException
    {
        EJBProxyFactory ci = getProxyFactory();
-      if (ci == null) {
-         throw new IllegalStateException();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
       }
+      createCount ++;
       Object obj = ci.getStatelessSessionEJBObject();
       return (EJBObject)obj;
    }
@@ -316,6 +434,7 @@ public class StatelessSessionContainer extends Container
    public void removeHome(Handle handle)
       throws RemoteException, RemoveException
    {
+      removeCount ++;
       // TODO
    }
 
@@ -325,6 +444,7 @@ public class StatelessSessionContainer extends Container
    public void removeHome(Object primaryKey)
       throws RemoteException, RemoveException
    {
+      removeCount ++;
       // TODO
    }
 
@@ -347,6 +467,8 @@ public class StatelessSessionContainer extends Container
       // TODO
       return null;
    }
+
+   // Protected  ----------------------------------------------------
 
    protected void setupHomeMapping()
       throws NoSuchMethodException
@@ -434,17 +556,10 @@ public class StatelessSessionContainer extends Container
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
       }
-      if( TimedObject.class.isAssignableFrom( beanClass ) ) {
-          // Map ejbTimeout
-          map.put(
-             TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
-             beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
-          );
-      }
 
       beanMapping = map;
    }
-   /*
+
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       // Create method mappings for container invoker
@@ -453,7 +568,7 @@ public class StatelessSessionContainer extends Container
          Method [] m = homeInterface.getMethods();
          for (int i = 0 ; i<m.length ; i++)
          {
-            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[i])), m[i]);
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
          }
       }
 
@@ -462,7 +577,7 @@ public class StatelessSessionContainer extends Container
          Method [] m = remoteInterface.getMethods();
          for (int j = 0 ; j<m.length ; j++)
          {
-            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[j])), m[j]);
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
          }
       }
 
@@ -470,34 +585,13 @@ public class StatelessSessionContainer extends Container
       Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
 
       // Hash it
-      marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
+      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
-   */
+
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }
-
-   //Moved from EjbModule-------------------
-   /**
-    * Describe <code>typeSpecificInitialize</code> method here.
-    * stateless session specific initialization.
-    */
-   /*   protected void typeSpecificInitialize()  throws Exception
-   {
-      ClassLoader cl = getDeploymentInfo().ucl;
-      ClassLoader localCl = getDeploymentInfo().localCl;
-      int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
-
-      genericInitialize(transType, cl, localCl );
-      if (getBeanMetaData().getHome() != null)
-      {
-         createProxyFactories(cl);
-      }
-      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
-      setInstancePool( createInstancePool( conf, cl ) );
-   }
-*/
 
    protected void checkCoherency () throws Exception
    {
@@ -524,65 +618,78 @@ public class StatelessSessionContainer extends Container
    /**
     * This is the last step before invocation - all interceptors are done
     */
-   class ContainerInterceptor extends AbstractContainerInterceptor
+   class ContainerInterceptor
+      extends AbstractContainerInterceptor
    {
-      public InvocationResponse invoke(Invocation mi) throws Exception
+      public Object invokeHome(Invocation mi) throws Exception
       {
-         if(mi.getType().isHome())
+         Method miMethod = mi.getMethod();
+         Method m = (Method) homeMapping.get(miMethod);
+         if( m == null )
          {
-            Method m = (Method)homeMapping.get(mi.getMethod());
+            String msg = "Invalid invocation, check your deployment packaging"
+               +", method="+miMethod;
+            throw new EJBException(msg);
+         }
 
+         try
+         {
+            return m.invoke(StatelessSessionContainer.this, mi.getArguments());
+         }
+         catch (Exception e)
+         {
+            rethrow(e);
+         }
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();
+      }
+
+      public Object invoke(Invocation mi) throws Exception
+      {
+         // wire the transaction on the context, this is how the instance remember the tx
+         EnterpriseContext ctx = (EnterpriseContext) mi.getEnterpriseContext();
+         if (ctx.getTransaction() == null)
+            ctx.setTransaction(mi.getTransaction());
+
+         // Get method and instance to invoke upon
+         Method miMethod = mi.getMethod();
+         Method m = (Method) beanMapping.get(miMethod);
+         if( m == null )
+         {
+            String msg = "Invalid invocation, check your deployment packaging"
+               +", method="+miMethod;
+            throw new EJBException(msg);
+         }
+
+         //If we have a method that needs to be done by the container (EJBObject methods)
+         if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
+         {
             try
             {
-               return new InvocationResponse(m.invoke(StatelessSessionContainer.this, mi.getArguments()));
+               return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
             }
             catch (Exception e)
             {
                rethrow(e);
             }
-
-            // We will never get this far, but the compiler does not know that
-            throw new org.jboss.util.UnreachableStatementException();
          }
-         else
+         else // we have a method that needs to be done by a bean instance
          {
-            // wire the transaction on the context, this is how the instance
-            // remember the tx
-            if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
-               ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
-
-            // Get method and instance to invoke upon
-            Method m = (Method)beanMapping.get(mi.getMethod());
-
-            //If we have a method that needs to be done by the container
-            // (EJBObject methods)
-            if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
+            // Invoke and handle exceptions
+            try
             {
-               try
-               {
-                  return new InvocationResponse(m.invoke(StatelessSessionContainer.this, new Object[] { mi }));
-               }
-               catch (Exception e)
-               {
-                  rethrow(e);
-               }
+               Object bean = ctx.getInstance();
+               return m.invoke(bean, mi.getArguments());
             }
-            else // we have a method that needs to be done by a bean instance
+            catch (Exception e)
             {
-               // Invoke and handle exceptions
-               try
-               {
-                  return new InvocationResponse(m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments()));
-               }
-               catch (Exception e)
-               {
-                  rethrow(e);
-               }
+               rethrow(e);
             }
-
-            // We will never get this far, but the compiler does not know that
-            throw new org.jboss.util.UnreachableStatementException();
          }
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();
       }
    }
 }

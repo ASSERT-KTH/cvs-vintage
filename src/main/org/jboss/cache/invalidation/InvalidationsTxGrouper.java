@@ -11,6 +11,7 @@ import javax.transaction.Transaction;
 import org.jboss.logging.Logger;
 import java.util.HashMap;
 import javax.transaction.Synchronization;
+import org.jboss.cache.invalidation.InvalidationGroup;
 import java.io.Serializable;
 import java.util.HashSet;
 import javax.transaction.Status;
@@ -37,7 +38,7 @@ import java.util.Iterator;
  * @see InvalidationsTxGrouper.InvalidationSynchronization
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -49,20 +50,20 @@ import java.util.Iterator;
 
 public class InvalidationsTxGrouper
 {
-
+   
    // Constants -----------------------------------------------------
-
+   
    // Attributes ----------------------------------------------------
-
+   
    // Static --------------------------------------------------------
-
+   
    protected static HashMap synchronizations = new HashMap();
    protected static Logger log = Logger.getLogger(InvalidationsTxGrouper.class);
 
    // Constructors --------------------------------------------------
-
+   
    // Public --------------------------------------------------------
-
+   
    public static void registerInvalidationSynchronization(Transaction tx, InvalidationGroup group, Serializable key) throws Exception
    {
       InvalidatorSynchronization synch = null;
@@ -79,15 +80,15 @@ public class InvalidationsTxGrouper
    }
 
    // Z implementation ----------------------------------------------
-
+   
    // Y overrides ---------------------------------------------------
-
+   
    // Package protected ---------------------------------------------
-
+   
    // Protected -----------------------------------------------------
-
+   
    // Private -------------------------------------------------------
-
+   
    // Inner classes -------------------------------------------------
 
 }
@@ -99,12 +100,12 @@ public class InvalidationsTxGrouper
        *  The transaction we follow.
        */
       protected Transaction tx;
-
+  
       /**
        *  The context we manage.
        */
       protected HashMap ids = new HashMap();
-
+  
       /**
        *  Create a new isynchronization instance.
        */
@@ -119,7 +120,7 @@ public class InvalidationsTxGrouper
 
          // the grouping is (in order): by InvalidationManager, by InvalidationGroup
          //
-         HashMap relatedInvalidationMgr = (HashMap)ids.get(im);
+         HashMap relatedInvalidationMgr = (HashMap)ids.get(im);         
          if (relatedInvalidationMgr == null)
          {
             synchronized (ids)
@@ -129,11 +130,11 @@ public class InvalidationsTxGrouper
                {
                   relatedInvalidationMgr = new HashMap ();
                   ids.put (im, relatedInvalidationMgr);
-               }
+               }               
             }
          }
-
-         HashSet relatedInvalidations = (HashSet)relatedInvalidationMgr.get(group);
+         
+         HashSet relatedInvalidations = (HashSet)relatedInvalidationMgr.get(group);         
          if (relatedInvalidations == null)
          {
             synchronized (relatedInvalidationMgr)
@@ -143,23 +144,16 @@ public class InvalidationsTxGrouper
                {
                   relatedInvalidations = new HashSet ();
                   relatedInvalidationMgr.put (group, relatedInvalidations);
-               }
+               }               
             }
          }
-
+         
          relatedInvalidations.add(key);
       }
-
+  
       // Synchronization implementation -----------------------------
-
-
-      /**
-       * The <code>beforeCompletion</code> method sends suicide notes
-       * to other cache members if the transaction is active.  NOTE:
-       * the logic here might not be what was originally intended, but
-       * the previous code ALWAYS sent suicide notes.
-       *
-       */
+  
+      
       public void beforeCompletion()
       {
          // This is an independent point of entry. We need to make sure the
@@ -167,18 +161,29 @@ public class InvalidationsTxGrouper
          //
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-
+         
          try
          {
-            try
-            {
-               sendBatchInvalidations();
+            int status = Status.STATUS_ROLLEDBACK;
+            try { 
+               status = tx.getStatus(); 
             }
-            catch (Exception ex)
+            catch (javax.transaction.SystemException se)
             {
-               InvalidationsTxGrouper.log.error("Failed to send seppuku message", ex);
+               InvalidationsTxGrouper.log.error("Failed to get transaction status: ", se);
             }
-
+            if (status != Status.STATUS_ROLLEDBACK
+                || status != Status.STATUS_MARKED_ROLLBACK)
+            {
+               try
+               {
+                  sendBatchInvalidations();
+               }
+               catch (Exception ex)
+               {
+                  InvalidationsTxGrouper.log.warn("Failed sending invalidations messages", ex);
+               }
+            }
             synchronized (InvalidationsTxGrouper.synchronizations)
             {
                InvalidationsTxGrouper.synchronizations.remove(tx);
@@ -189,13 +194,13 @@ public class InvalidationsTxGrouper
             Thread.currentThread().setContextClassLoader(oldCl);
          }
       }
-
-
+      
+  
       public void afterCompletion(int status)
       {
          // complete
       }
-
+      
       protected void sendBatchInvalidations()
       {
          // we iterate over all InvalidationManager involved
@@ -204,40 +209,40 @@ public class InvalidationsTxGrouper
          while (imIter.hasNext ())
          {
             InvalidationManagerMBean im = (InvalidationManagerMBean)imIter.next ();
-
+            
             // get associated groups
-            //
-            HashMap relatedInvalidationMgr = (HashMap)ids.get(im);
-
+            //            
+            HashMap relatedInvalidationMgr = (HashMap)ids.get(im);     
+            
             BatchInvalidation[] bomb = new BatchInvalidation[relatedInvalidationMgr.size ()];
-
+            
             Iterator groupsIter = relatedInvalidationMgr.keySet ().iterator ();
             int i=0;
             while (groupsIter.hasNext ())
             {
                InvalidationGroup group = (InvalidationGroup)groupsIter.next ();
                HashSet sourceIds = (HashSet)relatedInvalidationMgr.get (group);
-
+               
                Serializable[] ids = new Serializable[sourceIds.size ()];
                sourceIds.toArray (ids);
                BatchInvalidation batch = new BatchInvalidation (ids, group.getGroupName ());
-
+               
                bomb[i] = batch;
-
+               
                i++;
             }
-
+            
             // do the batch-invalidation for this IM
             //
             im.batchInvalidate (bomb);
-
+            
          }
-
+         
          // Help the GC to remove this big structure
          //
          this.ids = null;
-
+         
       }
-
+      
    }
-
+   

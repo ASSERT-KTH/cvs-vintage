@@ -9,12 +9,16 @@ import java.lang.reflect.Method;
 /** A method invocation statistics collection class.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class InvocationStatistics
 {
    /** A HashMap<Method, TimeStatistic> of the method invocations */
    private Map methodStats;
+
+   public long concurrentCalls = 0;
+   public long maxConcurrentCalls = 0;
+   public long lastResetTime = System.currentTimeMillis();
 
    public class TimeStatistic
    {
@@ -62,6 +66,18 @@ public class InvocationStatistics
       }
    }
 
+   public synchronized void callIn ()
+   {
+      concurrentCalls++;
+      if (concurrentCalls > maxConcurrentCalls)
+         maxConcurrentCalls = concurrentCalls;
+   }
+
+   public synchronized void callOut ()
+   {
+      concurrentCalls--;
+   }
+
    /** Resets all current TimeStatistics.
     *
     */
@@ -76,6 +92,8 @@ public class InvocationStatistics
             stat.reset();
          }
       }
+      maxConcurrentCalls = 0;
+      lastResetTime = System.currentTimeMillis();
    }
 
    /** Access the current collection of method invocation statistics
@@ -88,7 +106,7 @@ public class InvocationStatistics
    }
 
    /** Generate an XML fragement for the InvocationStatistics. The format is
-    * <InvocationStatistics>
+    * <InvocationStatistics concurrentCalls="c">
     *    <method name="aMethod" count="x" minTime="y" maxTime="z" totalTime="t" />
     *    ...
     * </InvocationStatistics>
@@ -97,7 +115,10 @@ public class InvocationStatistics
     */
    public String toString()
    {
-      StringBuffer tmp = new StringBuffer("<InvocationStatistics>\n");
+      StringBuffer tmp = new StringBuffer("<InvocationStatistics concurrentCalls='");
+      tmp.append(concurrentCalls);
+      tmp.append("' >\n");
+
       HashMap copy = new HashMap(methodStats);
       Iterator iter = copy.entrySet().iterator();
       while( iter.hasNext() )

@@ -12,7 +12,8 @@ DOCTYPE jboss-web
 <!-- The jboss-web element is the root element.
 -->
 <!ELEMENT jboss-web (class-loading?, security-domain?, context-root?,
-   virtual-host?, resource-env-ref*, resource-ref* , ejb-ref*)>
+   virtual-host?, resource-env-ref*, resource-ref* , ejb-ref* , ejb-local-ref*,
+   depends*)>
 
 <!-- The class-loading element allows one to override the default class
 loading behavior of the web container. You can specify the
@@ -138,6 +139,17 @@ Example:
 -->
 <!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
 
+<!-- The ejb-local-ref element maps from the servlet ENC relative name
+of the ejb local reference to the deployment environment JNDI name of
+the bean.
+Example:
+    <ejb-local-ref>
+        <ejb-ref-name>ejb/Bean0</ejb-ref-name>
+        <local-jndi-name>deployed/ejbs/Bean0</local-jndi-name>
+    </ejb-local-ref>
+-->
+<!ELEMENT ejb-local-ref (ejb-ref-name , (local-jndi-name|jndi-name))>
+
 <!-- The ejb-ref-name element gives the ENC relative name used
 in the web.xml ejb-ref-name element.
 
@@ -153,8 +165,20 @@ Used in: resource-ref, resource-env-ref, ejb-ref
 -->
 <!ELEMENT jndi-name (#PCDATA)>
 
+<!--
+  The JNDI name under with the local home interface should be bound
+
+  Used in: ejb-local-ref
+-->
+<!ELEMENT local-jndi-name (#PCDATA)>
+
 <!-- The res-url element value is url a URL string.
 
    Used in: resource-ref
 -->
 <!ELEMENT res-url (#PCDATA)>
+
+<!-- The depends element gives a JMX ObjectName of a service on which the
+container or ejb depends.
+-->
+<!ELEMENT depends (#PCDATA)>

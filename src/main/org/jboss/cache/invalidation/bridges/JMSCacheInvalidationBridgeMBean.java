@@ -15,10 +15,10 @@ package org.jboss.cache.invalidation.bridges;
  * In the future, it should be possible, through a JMX attribute, to list
  * the InvalidationGroup that should be included/excluded
  *
- * @see InvalidationManagerMBean
+ * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -28,7 +28,7 @@ package org.jboss.cache.invalidation.bridges;
  * </ul>
  */
 
-public interface JMSCacheInvalidationBridgeMBean
+public interface JMSCacheInvalidationBridgeMBean 
    extends org.jboss.system.ServiceMBean
 {
    public static final int AUTO_ACKNOWLEDGE_MODE = 1;
@@ -58,6 +58,12 @@ public interface JMSCacheInvalidationBridgeMBean
     */   
    public String getTopicName ();
    public void setTopicName (String topicName);
+
+   /**
+   * Provider URL to use for JMS access. If null, use the default settings
+   */
+   public String getProviderUrl();
+   public void setProviderUrl(String url);
    
    /**
     * Status of the JMS topic wrt transactions

@@ -3,7 +3,7 @@ rem -------------------------------------------------------------------------
 rem JBoss Bootstrap Script for Win32
 rem -------------------------------------------------------------------------
 
-rem $Id: deployer.bat,v 1.3 2003/05/05 15:09:06 starksm Exp $
+rem $Id: deployer.bat,v 1.4 2003/08/27 04:31:52 patriot1burke Exp $
 
 @if not "%ECHO%" == ""  echo %ECHO%
 @if "%OS%" == "Windows_NT"  setlocal

@@ -7,9 +7,8 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Iterator;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
@@ -33,11 +32,13 @@ import EDU.oswego.cs.dl.util.concurrent.FIFOSemaphore;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.32 $
+ *  @version $Revision: 1.33 $
+ *
+ * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public abstract class AbstractInstancePool
    extends ServiceMBeanSupport
-   implements InstancePool, XmlLoadable
+   implements AbstractInstancePoolMBean, InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
 
@@ -58,6 +59,7 @@ public abstract class AbstractInstancePool
    protected int maxSize = 30;
    /** determine if we reuse EnterpriseContext objects i.e. if we actually do pooling */
    protected boolean reclaim = false;
+
 
    // Static --------------------------------------------------------
 
@@ -85,31 +87,24 @@ public abstract class AbstractInstancePool
    }
 
    /**
-    * A pool is reclaim if it push back its dirty instances in its stack.
+    * @jmx:managed-attribute
+    * @return the current pool size
     */
-   public boolean getReclaim()
+   public int getCurrentSize()
    {
-      return reclaim;
-   }
-
-   public void setReclaim(boolean reclaim)
-   {
-      this.reclaim = reclaim;
+      synchronized (pool)
+      {
+         return this.pool.size();
+      }
    }
 
    /**
-    * Add a instance in the pool
+    * @jmx:managed-attribute
+    * @return the current pool size
     */
-   public void add()
-      throws Exception
+   public int getMaxSize()
    {
-      EnterpriseContext ctx = create(container.createBeanClassInstance());
-      if( log.isTraceEnabled() )
-         log.trace("Add instance "+this+"#"+ctx);
-      synchronized (pool)
-      {
-         pool.addFirst(ctx);
-      }
+      return this.maxSize;
    }
 
    /**
@@ -140,6 +135,7 @@ public abstract class AbstractInstancePool
       {
          if (!pool.isEmpty())
          {
+            //mReadyBean.remove();
             return (EnterpriseContext) pool.removeFirst();
          }
       }
@@ -184,34 +180,21 @@ public abstract class AbstractInstancePool
 
       try
       {
-         if (this.reclaim)
+         // Add the unused context back into the pool
+         synchronized (pool)
          {
-            // Add the unused context back into the pool
-            synchronized (pool)
+            if (pool.size() < maxSize)
             {
-               if (pool.size() < maxSize)
-               {
-                  pool.addFirst(ctx);
-               } // end of if ()
+               pool.addFirst(ctx);
+            } // end of if ()
             }
-            // If we block when maxSize instances are in use, invoke release on strictMaxSize
-            if( strictMaxSize != null )
-               strictMaxSize.release();
-         }
-         else
-         {
-            // Discard the context
-            discard (ctx);
-         }
+         // If we block when maxSize instances are in use, invoke release on strictMaxSize
+         if( strictMaxSize != null )
+            strictMaxSize.release();
       }
       catch (Exception ignored)
       {
       }
-   }
-
-   public int getMaxSize()
-   {
-      return this.maxSize;
    }
 
    public void discard(EnterpriseContext ctx)
@@ -241,15 +224,6 @@ public abstract class AbstractInstancePool
       }
    }
 
-   public int getCurrentSize()
-   {
-      synchronized (pool)
-      {
-         return this.pool.size();
-      }
-   }
-
-
    /**
     * XmlLoadable implementation
     */
@@ -274,18 +248,12 @@ public abstract class AbstractInstancePool
       try
       {
          if( delay != null )
-            this.strictTimeout = Integer.parseInt(delay);
+            this.strictTimeout = Long.parseLong(delay);
       }
       catch (NumberFormatException e)
       {
          throw new DeploymentException("Invalid strictTimeout value for instance pool configuration");
       }
-   }
-
-   // StatisticsProvider implementation ------------------------------------
-
-   public void retrieveStatistics( List container, boolean reset )
-   {
    }
 
    // Package protected ---------------------------------------------

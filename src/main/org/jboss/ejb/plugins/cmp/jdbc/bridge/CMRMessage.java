@@ -14,11 +14,11 @@ import java.io.ObjectStreamException;
  * interceptor chain and caught by the JDBCRelationInterceptor.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class CMRMessage implements Serializable {
    private static int nextOrdinal = 0;
-   private static final CMRMessage[] VALUES = new CMRMessage[3];
+   private static final CMRMessage[] VALUES = new CMRMessage[4];
 
    public static final CMRMessageKey CMR_MESSAGE_KEY = new CMRMessageKey();
 
@@ -26,9 +26,11 @@ public final class CMRMessage implements Serializable {
          new CMRMessage("GET_RELATED_ID");
    public static final CMRMessage ADD_RELATION = 
          new CMRMessage("ADD_RELATION");
-   public static final CMRMessage REMOVE_RELATION = 
+   public static final CMRMessage REMOVE_RELATION =
          new CMRMessage("REMOVE_RELATION");
-   
+   public static final CMRMessage INIT_RELATED_CTX =
+         new CMRMessage("INIT_RELATED_CTX");
+
 
    private final transient String name;
    private final int ordinal;

@@ -49,8 +49,8 @@ import org.jboss.util.id.UID;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.41 $</tt>
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
+ * @version <tt>$Revision: 1.42 $</tt>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -185,7 +185,7 @@ public class StatefulSessionFilePersistenceManager
       String ejbName = con.getBeanMetaData().getEjbName();
 
       // Get the system data directory
-      File dir = ServerConfigLocator.locate().getServerDataDir();
+      File dir = ServerConfigLocator.locate().getServerTempDir();
 
       // Setup the reference to the session data store directory
       dir = new File(dir, storeDirName);
@@ -293,7 +293,7 @@ public class StatefulSessionFilePersistenceManager
    {
       boolean debug = log.isDebugEnabled();
       if (debug) {
-         log.debug("Attempting to activate; ctx=" + ctx + " id=" + ctx.getId());
+         log.debug("Attempting to activate; ctx=" + ctx);
       }
       
       Object id = ctx.getId();
@@ -331,7 +331,7 @@ public class StatefulSessionFilePersistenceManager
       ((SessionBean)ctx.getInstance()).ejbActivate();
       
       if (debug) {
-         log.info("Activation complete; ctx=" + ctx);
+         log.debug("Activation complete; ctx=" + ctx);
       }
    }
 

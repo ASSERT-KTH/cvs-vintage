@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b>
  *

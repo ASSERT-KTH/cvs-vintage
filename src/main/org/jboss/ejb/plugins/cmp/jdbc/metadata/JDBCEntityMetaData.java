@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
@@ -30,11 +31,11 @@ import org.w3c.dom.Element;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
+ * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
-public final class JDBCEntityMetaData
-{
+public final class JDBCEntityMetaData {
    /**
     * application metadata in which this entity is defined
     */
@@ -104,6 +105,12 @@ public final class JDBCEntityMetaData
     * Should we drop the table when undeployed?
     */
    private final boolean removeTable;
+   
+   /**
+    * What command should be issued directly after creation
+    * of a table?
+    */
+   private final ArrayList tablePostCreateCmd;
    
    /**
     * Should we use 'SELECT ... FOR UPDATE' syntax when loading?
@@ -186,15 +193,19 @@ public final class JDBCEntityMetaData
     */
    private final int fetchSize;
 
-   /**
-    * entity command meta data
-    */
+   /** entity command meta data */
    private final JDBCEntityCommandMetaData entityCommand;
 
-   /** 
-    * optimistic locking metadata
-    */
+
+   /** optimistic locking metadata */
+
    private final JDBCOptimisticLockingMetaData optimisticLocking;
+
+
+   /** audit metadata */
+
+   private final JDBCAuditMetaData audit;
+
 
    /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and 
@@ -210,30 +221,24 @@ public final class JDBCEntityMetaData
     */
    public JDBCEntityMetaData(
          JDBCApplicationMetaData jdbcApplication,
-         EntityMetaData entity) throws DeploymentException
-   {
+         EntityMetaData entity) throws DeploymentException {
+
       this.jdbcApplication = jdbcApplication;
       entityName = entity.getEjbName();
       abstractSchemaName = entity.getAbstractSchemaName();
       listCacheMax = 1000;
       fetchSize = 0;
 
-      try
-      {
+      try {
          entityClass = getClassLoader().loadClass(entity.getEjbClass());
-      }
-      catch (ClassNotFoundException e)
-      {
+      } catch (ClassNotFoundException e) {
          throw new DeploymentException("entity class not found: " + entityName);
       }
 
-      try
-      {
+      try {
          primaryKeyClass = 
                getClassLoader().loadClass(entity.getPrimaryKeyClass());
-      }
-      catch (ClassNotFoundException e)
-      {
+      } catch (ClassNotFoundException e) {
          throw new DeploymentException("could not load primary key class: " +
                entity.getPrimaryKeyClass());
       }
@@ -242,59 +247,40 @@ public final class JDBCEntityMetaData
       primaryKeyFieldName = entity.getPrimKeyField();
 
       String home = entity.getHome();
-      if(home != null)
-      {
-         try
-         {
+      if(home != null) {
+         try {
             homeClass = getClassLoader().loadClass(home);
-         }
-         catch (ClassNotFoundException e)
-         {
+         } catch (ClassNotFoundException e) {
             throw new DeploymentException("home class not found: " + home);
          }
-         try
-         {
+         try {
             remoteClass = getClassLoader().loadClass(entity.getRemote());
-         }
-         catch (ClassNotFoundException e)
-         {
+         } catch (ClassNotFoundException e) {
             throw new DeploymentException("remote class not found: " + 
                   entity.getRemote());
          }
-      }
-      else
-      {
+      } else {
          homeClass = null;
          remoteClass = null;
       }
 
       String localHome = entity.getLocalHome();
-      if(localHome != null)
-      {
-         try
-         {
+      if(localHome != null) {
+         try {
             localHomeClass = getClassLoader().loadClass(localHome);
-         }
-         catch (ClassNotFoundException e)
-         {
+         } catch (ClassNotFoundException e) {
             throw new DeploymentException("local home class not found: " +
                   localHome);
          }
-         try
-         {
+         try {
             localClass = getClassLoader().loadClass(entity.getLocal());
-         }
-         catch (ClassNotFoundException e)
-         {
+         } catch (ClassNotFoundException e) {
             throw new DeploymentException("local class not found: " +
                   entity.getLocal());
          }
-      }
-      else
-      {
+      } else {
          // we must have a home or local home
-         if(home == null)
-         {
+         if(home == null) {
             throw new DeploymentException("Entity must have atleast a home " +
                   "or local home: " + entityName);
          }
@@ -317,19 +303,18 @@ public final class JDBCEntityMetaData
       primaryKeyConstraint = false;
       readOnly = false;
       readTimeOut = -1;
+      tablePostCreateCmd = null;
 
       // build the metadata for the cmp fields now in case there is
       // no jbosscmp-jdbc.xml
       List nonPkFieldNames = new ArrayList();
-      for(Iterator i = entity.getCMPFields(); i.hasNext();)
-      {
+      for(Iterator i = entity.getCMPFields(); i.hasNext(); ) {
          String cmpFieldName = (String)i.next();
          JDBCCMPFieldMetaData cmpField = 
                new JDBCCMPFieldMetaData(this, cmpFieldName);         
          cmpFields.add(cmpField);
          cmpFieldsByName.put(cmpFieldName, cmpField);
-         if(!cmpField.isPrimaryKeyMember())
-         {
+         if(!cmpField.isPrimaryKeyMember()) {
             nonPkFieldNames.add(cmpFieldName);
          }
       }
@@ -338,12 +323,12 @@ public final class JDBCEntityMetaData
       // AL: this is set up only in this constructor
       // AL: because, AFAIK, others are called with default value
       // AL: produced by this one
-      if(primaryKeyClass == java.lang.Object.class)
+      if( primaryKeyClass == java.lang.Object.class )
       {
          JDBCCMPFieldMetaData upkField =
-            new JDBCCMPFieldMetaData(this);
-         cmpFields.add(upkField);
-         cmpFieldsByName.put(upkField.getFieldName(), upkField);
+            new JDBCCMPFieldMetaData( this );
+         cmpFields.add( upkField );
+         cmpFieldsByName.put( upkField.getFieldName(), upkField );
       }
 
       // set eager load fields to all group.
@@ -355,8 +340,8 @@ public final class JDBCEntityMetaData
       queryFactory = new JDBCQueryMetaDataFactory(this);
 
       for(Iterator queriesIterator = entity.getQueries();
-            queriesIterator.hasNext();)
-      {
+            queriesIterator.hasNext();) {
+
          QueryMetaData queryData = (QueryMetaData)queriesIterator.next();
          Map newQueries = queryFactory.createJDBCQueryMetaData(queryData);
 
@@ -370,8 +355,10 @@ public final class JDBCEntityMetaData
       readAhead = JDBCReadAheadMetaData.DEFAULT;
       entityCommand = null;
 
-      // set optimistic locking group to null
       optimisticLocking = null;
+
+      audit = null;
+
    }
 
    /**
@@ -389,8 +376,7 @@ public final class JDBCEntityMetaData
    public JDBCEntityMetaData(
          JDBCApplicationMetaData jdbcApplication, 
          Element element, 
-         JDBCEntityMetaData defaultValues) throws DeploymentException
-   {
+         JDBCEntityMetaData defaultValues) throws DeploymentException {
 
       // store passed in application... application in defaultValues may 
       // be different because jdbcApplication is imutable
@@ -398,6 +384,7 @@ public final class JDBCEntityMetaData
 
       // set default values
       entityName = defaultValues.getName();
+      abstractSchemaName = defaultValues.getAbstractSchemaName();
       entityClass = defaultValues.getEntityClass();
       primaryKeyClass = defaultValues.getPrimaryKeyClass();
       isCMP1x = defaultValues.isCMP1x;
@@ -408,25 +395,12 @@ public final class JDBCEntityMetaData
       localClass = defaultValues.getLocalClass();
       queryFactory = new JDBCQueryMetaDataFactory(this);
 
-      if(isCMP1x && defaultValues.getAbstractSchemaName() == null)
-      {
-         abstractSchemaName = 
-            MetaData.getOptionalChildContent(element, "abstract-schema-name");
-      }
-      else
-      {
-         abstractSchemaName = defaultValues.getAbstractSchemaName();
-      }
-
       // datasource name
       String dataSourceNameString = 
             MetaData.getOptionalChildContent(element, "datasource");
-      if(dataSourceNameString != null)
-      {
+      if(dataSourceNameString != null) {
          dataSourceName = dataSourceNameString;
-      }
-      else
-      {
+      } else {
          dataSourceName = defaultValues.getDataSourceName();
       }
       
@@ -434,160 +408,134 @@ public final class JDBCEntityMetaData
       // set in standardjbosscmp-jdbc.xml)
       String datasourceMappingString = 
             MetaData.getOptionalChildContent(element, "datasource-mapping");
-      if(datasourceMappingString != null)
-      {
+      if(datasourceMappingString != null) {
          datasourceMapping = 
                jdbcApplication.getTypeMappingByName(datasourceMappingString);
       
-         if(datasourceMapping == null)
-         {
+         if(datasourceMapping == null) {
             throw new DeploymentException("Error in jbosscmp-jdbc.xml : " +
                   "datasource-mapping " + datasourceMappingString + 
                   " not found");
          }
-      }
-      else
-      {
+      } else {
          datasourceMapping = defaultValues.getTypeMapping();
       }
 
       // get table name
       String tableStr = MetaData.getOptionalChildContent(element, "table-name");
-      if(tableStr != null)
-      {
+      if(tableStr != null) {
          tableName = tableStr;
-      }
-      else
-      {
+      } else {
          tableName = defaultValues.getDefaultTableName();
       }
 
       // create table?  If not provided, keep default.
       String createStr =
             MetaData.getOptionalChildContent(element, "create-table");
-      if(createStr != null)
-      {
+      if(createStr != null) {
          createTable = Boolean.valueOf(createStr).booleanValue();
-      }
-      else
-      {
+      } else {
          createTable = defaultValues.getCreateTable();
       }
 
        // remove table?  If not provided, keep default.
       String removeStr = 
             MetaData.getOptionalChildContent(element, "remove-table");
-      if(removeStr != null)
-      {
+      if(removeStr != null) {
          removeTable = Boolean.valueOf(removeStr).booleanValue();
-      }
-      else
-      {
+      } else {
          removeTable = defaultValues.getRemoveTable();
       }
 
+	  // get the SQL command to execute after table creation
+	  Element posttc = MetaData.getOptionalChild(element,"post-table-create");
+	  if (posttc!=null) {		  	  	
+		  Iterator it = MetaData.getChildrenByTagName(posttc,"sql-statement");
+		  tablePostCreateCmd = new ArrayList();
+		  while (it.hasNext()) {
+		  	Element etmp = (Element)it.next();		  	
+		  	tablePostCreateCmd.add(MetaData.getElementContent(etmp));
+		  }
+		   
+	  }
+	  else {
+	  	tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();  
+	  }
+		
+		
       // read-only
       String readOnlyStr =
             MetaData.getOptionalChildContent(element, "read-only");
-      if(readOnlyStr != null)
-      {
+      if(readOnlyStr != null) {
          readOnly = Boolean.valueOf(readOnlyStr).booleanValue();
-      }
-      else
-      {
+      } else {
          readOnly = defaultValues.isReadOnly();
       }
 
       // read-time-out
       String readTimeOutStr =
             MetaData.getOptionalChildContent(element, "read-time-out");
-      if(readTimeOutStr != null)
-      {
-         try
-         {
+      if(readTimeOutStr != null) {
+         try {
             readTimeOut = Integer.parseInt(readTimeOutStr);
-         }
-         catch(NumberFormatException e)
-         {
+         } catch (NumberFormatException e) {
             throw new DeploymentException("Invalid number format in " +
                   "read-time-out '" + readTimeOutStr + "': " + e);
          }
-      }
-      else
-      {
+      } else {
          readTimeOut = defaultValues.getReadTimeOut();
       }
 
       String sForUpStr = 
             MetaData.getOptionalChildContent(element, "row-locking");
-      if(sForUpStr != null)
-      {
+      if(sForUpStr != null) {
          rowLocking = 
                !isReadOnly() && (Boolean.valueOf(sForUpStr).booleanValue());
-      }
-      else
-      {
+      } else {
          rowLocking = defaultValues.hasRowLocking();
       }
 
       // primary key constraint?  If not provided, keep default.
       String pkStr = MetaData.getOptionalChildContent(element, "pk-constraint");
-      if(pkStr != null)
-      {
+      if(pkStr != null) {
          primaryKeyConstraint = Boolean.valueOf(pkStr).booleanValue();
-      }
-      else
-      {
+      } else {
          primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
       }
 
       // list-cache-max
       String listCacheMaxStr = 
             MetaData.getOptionalChildContent(element, "list-cache-max");
-      if(listCacheMaxStr != null)
-      {
-         try
-         {
+      if(listCacheMaxStr != null) {
+         try {
             listCacheMax = Integer.parseInt(listCacheMaxStr);
-         }
-         catch (NumberFormatException e)
-         {
+         } catch (NumberFormatException e) {
             throw new DeploymentException("Invalid number format in read-" +
                   "ahead list-cache-max '" + listCacheMaxStr + "': " + e);
          }
-         if(listCacheMax < 0)
-         {
+         if(listCacheMax < 0) {
             throw new DeploymentException("Negative value for read ahead " +
                   "list-cache-max '" + listCacheMaxStr + "'.");
          }
-      }
-      else
-      {
+      } else {
          listCacheMax = defaultValues.getListCacheMax();
       }
 
       // fetch-size
       String fetchSizeStr = 
       MetaData.getOptionalChildContent(element, "fetch-size");
-      if(fetchSizeStr != null)
-      {
-         try
-         {
+      if(fetchSizeStr != null) {
+         try {
             fetchSize = Integer.parseInt(fetchSizeStr);
-         }
-         catch (NumberFormatException e)
-         {
+         } catch (NumberFormatException e) {
             throw new DeploymentException("Invalid number format in " +
                   "fetch-size '" + fetchSizeStr + "': " + e);
          }
-         if(fetchSize < 0)
-         {
+         if(fetchSize < 0) {
             throw new DeploymentException("Negative value for fetch size " +
                   "fetch-size '" + fetchSizeStr + "'.");
          }
-      }
-      else
-      {
+      } else {
          fetchSize = defaultValues.getFetchSize();
       }
 
@@ -597,8 +545,7 @@ public final class JDBCEntityMetaData
 
       // update all existing queries with the new read ahead value
       for(Iterator cmpFieldIterator = defaultValues.cmpFields.iterator();
-            cmpFieldIterator.hasNext();)
-      {
+            cmpFieldIterator.hasNext(); ) {
          
          JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(
                this,
@@ -609,8 +556,7 @@ public final class JDBCEntityMetaData
 
       // apply new configurations to the cmpfields
       for(Iterator i = MetaData.getChildrenByTagName(element, "cmp-field"); 
-            i.hasNext();)
-      {
+            i.hasNext(); ) {
 
          Element cmpFieldElement = (Element)i.next();
          String fieldName =
@@ -618,8 +564,7 @@ public final class JDBCEntityMetaData
 
          JDBCCMPFieldMetaData oldCMPField =
                (JDBCCMPFieldMetaData)cmpFieldsByName.get(fieldName);
-         if(oldCMPField == null)
-         {
+         if(oldCMPField == null) {
             throw new DeploymentException("CMP field not found : fieldName=" +
                   fieldName);
          }
@@ -636,18 +581,17 @@ public final class JDBCEntityMetaData
       }
 
       // unknown primary key field
-      if(primaryKeyClass == java.lang.Object.class)
+      if( primaryKeyClass == java.lang.Object.class )
       {
-         Element upkElement = MetaData.getOptionalChild(element, "unknown-pk");
-         if(upkElement != null)
+         Element upkElement = MetaData.getOptionalChild( element, "unknown-pk" );
+         if( upkElement != null )
          {
             // assume now there is only one upk field
             JDBCCMPFieldMetaData oldUpkField = null;
-            for(Iterator iter = cmpFields.iterator(); iter.hasNext();)
+            for( Iterator iter = cmpFields.iterator(); iter.hasNext(); )
             {
-               JDBCCMPFieldMetaData cmpField = 
-                  (JDBCCMPFieldMetaData)iter.next();
-               if(cmpField.isUnknownPkField())
+               JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)iter.next();
+               if( cmpField.isUnknownPkField() )
                {
                   oldUpkField = cmpField;
                   break;
@@ -655,20 +599,19 @@ public final class JDBCEntityMetaData
             }
 
             // IMO, this is a redundant check
-            if(oldUpkField == null)
-            {
-               oldUpkField = new JDBCCMPFieldMetaData(this);
-            }
+            if( oldUpkField == null )
+               oldUpkField = new JDBCCMPFieldMetaData( this );
 
             JDBCCMPFieldMetaData upkField = 
-               new JDBCCMPFieldMetaData(this, upkElement, oldUpkField);
+               new JDBCCMPFieldMetaData( this, upkElement, oldUpkField);
 
             // remove old upk field
-            cmpFieldsByName.remove(oldUpkField.getFieldName());
-            cmpFieldsByName.put(upkField.getFieldName(), upkField);
+            cmpFieldsByName.remove( oldUpkField.getFieldName() );
+            cmpFieldsByName.put( upkField.getFieldName(), upkField );
 
-            int oldUpkFieldInd = cmpFields.indexOf(oldUpkField);
-            cmpFields.set(oldUpkFieldInd, upkField);
+            int oldUpkFieldInd = cmpFields.indexOf( oldUpkField );
+            cmpFields.remove( oldUpkField );
+            cmpFields.add( oldUpkFieldInd, upkField );
          }
       }
 
@@ -679,39 +622,21 @@ public final class JDBCEntityMetaData
       // eager-load
       Element eagerLoadGroupElement = MetaData.getOptionalChild(
             element, "eager-load-group");
-      if(eagerLoadGroupElement != null)
-      {
+      if(eagerLoadGroupElement != null) {
          String eagerLoadGroupTmp = 
                MetaData.getElementContent(eagerLoadGroupElement);
-         if(eagerLoadGroupTmp != null && eagerLoadGroupTmp.trim().length()==0)
-         {
+         if(eagerLoadGroupTmp != null && eagerLoadGroupTmp.trim().length()==0) {
             eagerLoadGroupTmp = null;
          }
          if(eagerLoadGroupTmp != null 
                && !eagerLoadGroupTmp.equals("*")
-               && !loadGroups.containsKey(eagerLoadGroupTmp))
-         {
+               && !loadGroups.containsKey(eagerLoadGroupTmp)) {
             throw new DeploymentException("Eager load group not found: " +
                   "eager-load-group=" + eagerLoadGroupTmp);
          }
          eagerLoadGroup = eagerLoadGroupTmp;
-      }
-      else
-      {
-         eagerLoadGroup = defaultValues.getEagerLoadGroup();
-      }
-
-      // optimistic locking group
-      Element optimisticLockingEl = MetaData.getOptionalChild(
-            element, "optimistic-locking");
-      if(optimisticLockingEl != null) {
-
-
-         optimisticLocking = new JDBCOptimisticLockingMetaData(
-            this, optimisticLockingEl);
-
       } else {
-         optimisticLocking = defaultValues.getOptimisticLocking();
+         eagerLoadGroup = defaultValues.getEagerLoadGroup();
       }
 
       // lazy-loads
@@ -721,33 +646,61 @@ public final class JDBCEntityMetaData
       // read-ahead
       Element readAheadElement =
             MetaData.getOptionalChild(element, "read-ahead");
-      if(readAheadElement != null)
-      {
+      if(readAheadElement != null) {
          readAhead = new JDBCReadAheadMetaData(
                readAheadElement, defaultValues.getReadAhead());
-      }
-      else
-      {
+      } else {
          readAhead = defaultValues.readAhead;
       }
+
+
+      // optimistic locking group
+
+      Element optimisticLockingEl = MetaData.getOptionalChild(
+
+            element, "optimistic-locking");
+
+      if(optimisticLockingEl != null) {
+
+         optimisticLocking = new JDBCOptimisticLockingMetaData(
+
+            this, optimisticLockingEl);
+
+      } else {
+
+         optimisticLocking = defaultValues.getOptimisticLocking();
+
+      }
+
+
+
+      // audit
+
+      Element auditElement = MetaData.getOptionalChild(element, "audit");
+
+      if (auditElement != null) 
+         audit = new JDBCAuditMetaData(this, auditElement);
+
+      else
+         audit = defaultValues.getAudit();
+
 
       // queries
 
       // update all existing queries with the new read ahead value
       for(Iterator queriesIterator = defaultValues.queries.values().iterator();
-            queriesIterator.hasNext();)
-      {
+            queriesIterator.hasNext(); ) {
          
-         JDBCQueryMetaData query = (JDBCQueryMetaData)queriesIterator.next();
-         query.setReadAhead(readAhead);
+         JDBCQueryMetaData query = queryFactory.createJDBCQueryMetaData(
+               (JDBCQueryMetaData)queriesIterator.next(),
+               readAhead);
          queries.put(query.getMethod(), query);
       }
 
       // apply new configurations to the queries
       for(Iterator queriesIterator = 
             MetaData.getChildrenByTagName(element, "query"); 
-            queriesIterator.hasNext();)
-      {
+            queriesIterator.hasNext(); ) {
 
          Element queryElement = (Element)queriesIterator.next();
          Map newQueries = queryFactory.createJDBCQueryMetaData(
@@ -763,11 +716,10 @@ public final class JDBCEntityMetaData
       Element entityCommandEl = 
             MetaData.getOptionalChild(element, "entity-command");
 
-      if(entityCommandEl != null)
-      {
+      if(entityCommandEl != null) {
 
          // command name in xml
-         String entityCommandName = entityCommandEl.getAttribute("name");
+         String entityCommandName = entityCommandEl.getAttribute( "name" );
 
          // default entity command
          // The logic to assign the default value:
@@ -781,27 +733,20 @@ public final class JDBCEntityMetaData
          JDBCEntityCommandMetaData defaultEntityCommand =
             defaultValues.getEntityCommand();
 
-         if((defaultEntityCommand == null)
-            || (!entityCommandName.equals(
-               defaultEntityCommand.getCommandName())))
-         {
+         if( (defaultEntityCommand == null)
+            || ( !entityCommandName.equals(
+               defaultEntityCommand.getCommandName()) ) ) {
             defaultEntityCommand = jdbcApplication.getEntityCommandByName(
-                  entityCommandName);
+                                      entityCommandName );
          }
 
-         if(defaultEntityCommand != null)
-         {
-            entityCommand = new JDBCEntityCommandMetaData(
-                  entityCommandEl,
-                  defaultEntityCommand);
+         if(defaultEntityCommand != null) {
+            entityCommand = new JDBCEntityCommandMetaData( entityCommandEl,
+                                   defaultEntityCommand );
+         } else {
+            entityCommand = new JDBCEntityCommandMetaData( entityCommandEl );
          }
-         else
-         {
-            entityCommand = new JDBCEntityCommandMetaData(entityCommandEl);
-         }
-      }
-      else
-      {
+      } else {
          entityCommand = defaultValues.getEntityCommand();
       }
    }
@@ -810,18 +755,16 @@ public final class JDBCEntityMetaData
     * Loads the load groups of cmp fields from the xml element
     */
    private void loadLoadGroupsXml(Element element)
-         throws DeploymentException
-   {
+         throws DeploymentException {
+
       Element loadGroupsElement = 
             MetaData.getOptionalChild(element, "load-groups");
-      if(loadGroupsElement == null)
-      {
+      if(loadGroupsElement == null) {
          // no info, default work already done in constructor
          return;
       }
       
       // only allowed for cmp 2.x
-      if(isCMP1x)
       if(isCMP1x) {
          throw new DeploymentException("load-groups are only allowed " +
                "for CMP 2.x");
@@ -830,20 +773,17 @@ public final class JDBCEntityMetaData
       // load each group
       Iterator groups = MetaData.getChildrenByTagName(
             loadGroupsElement, "load-group");
-      while(groups.hasNext())
-      {
+      while(groups.hasNext()) {
          Element groupElement = (Element)groups.next();
 
          // get the load-group-name
          String loadGroupName = MetaData.getUniqueChildContent(
                groupElement, "load-group-name");
-         if(loadGroups.containsKey(loadGroupName))
-         {
+         if(loadGroups.containsKey(loadGroupName)) {
             throw new DeploymentException("Load group already defined: " +
                   " load-group-name=" + loadGroupName);
          }
-         if(loadGroupName.equals("*"))
-         {
+         if(loadGroupName.equals("*")) {
             throw new DeploymentException("The * load group is automatically " +
                   "defined and can't be overriden");
          }
@@ -852,15 +792,13 @@ public final class JDBCEntityMetaData
          // add each field
          Iterator fields =
                MetaData.getChildrenByTagName(groupElement, "field-name");
-         while(fields.hasNext())
-         {
+         while(fields.hasNext()) {
             String fieldName = 
                   MetaData.getElementContent((Element)fields.next());
 
             // check if the field is a cmp field that it is not a pk memeber
             JDBCCMPFieldMetaData field = getCMPFieldByName(fieldName);
-            if(field != null && field.isPrimaryKeyMember())
-            {
+            if(field != null && field.isPrimaryKeyMember()) {
                throw new DeploymentException("Primary key fields can not be" +
                      " a member of a load group: " +
                      " load-group-name=" + loadGroupName +
@@ -880,21 +818,18 @@ public final class JDBCEntityMetaData
     * Loads the list of lazy load groups from the xml element.
     */
    private void loadLazyLoadGroupsXml(Element element)
-         throws DeploymentException
-   {
+         throws DeploymentException {
 
       Element lazyLoadGroupsElement = 
             MetaData.getOptionalChild(element, "lazy-load-groups");
 
       // If no info, we're done. Default work was already done in constructor.
-      if(lazyLoadGroupsElement == null)
-      {
+      if(lazyLoadGroupsElement == null) {
          return;
       }
 
       // only allowed for cmp 2.x
-      if(isCMP1x)
-      {
+      if(isCMP1x) {
          throw new DeploymentException("lazy-load-groups is only allowed " +
                "for CMP 2.x");
       }
@@ -902,13 +837,11 @@ public final class JDBCEntityMetaData
       // get the fields
       Iterator loadGroupNames = MetaData.getChildrenByTagName(
             lazyLoadGroupsElement, "load-group-name");
-      while(loadGroupNames.hasNext())
-      {
+      while(loadGroupNames.hasNext()) {
          String loadGroupName = MetaData.getElementContent(
                (Element)loadGroupNames.next());
          if(!loadGroupName.equals("*")
-               && !loadGroups.containsKey(loadGroupName))
-         {
+               && !loadGroups.containsKey(loadGroupName)) {
             throw new DeploymentException("Lazy load group not found: " +
                   "load-group-name=" + loadGroupName);
          }
@@ -922,8 +855,7 @@ public final class JDBCEntityMetaData
     * Gets the meta data for the application of which this entity is a member.
     * @return the meta data for the application that this entity is a memeber
     */
-   public JDBCApplicationMetaData getJDBCApplication()
-   {
+   public JDBCApplicationMetaData getJDBCApplication() {
       return jdbcApplication;
    }
 
@@ -931,8 +863,7 @@ public final class JDBCEntityMetaData
     * Gets the name of the datasource in jndi for this entity
     * @return the name of datasource in jndi
     */
-   public String getDataSourceName()
-   {
+   public String getDataSourceName() {
       return dataSourceName;
    }
 
@@ -940,8 +871,7 @@ public final class JDBCEntityMetaData
     * Gets the jdbc type mapping for this entity
     * @return the jdbc type mapping for this entity
     */
-   public JDBCTypeMappingMetaData getTypeMapping()
-   {
+   public JDBCTypeMappingMetaData getTypeMapping() {
       return datasourceMapping;
    }
    
@@ -949,8 +879,7 @@ public final class JDBCEntityMetaData
     * Gets the name of this entity. The name come from the ejb-jar.xml file.
     * @return the name of this entity
     */
-   public String getName()
-   {
+   public String getName() {
       return entityName;
    }
 
@@ -959,8 +888,7 @@ public final class JDBCEntityMetaData
     * the ejb-jar.xml file.
     * @return the abstract schema name of this entity
     */
-   public String getAbstractSchemaName()
-   {
+   public String getAbstractSchemaName() {
       return abstractSchemaName;
    }
 
@@ -970,8 +898,7 @@ public final class JDBCEntityMetaData
     * @return the class loader which is used to load all classes used by
     *    this entity
     */
-   public ClassLoader getClassLoader()
-   {
+   public ClassLoader getClassLoader() {
       return jdbcApplication.getClassLoader();
    }
    
@@ -979,8 +906,7 @@ public final class JDBCEntityMetaData
     * Gets the implementation class of this entity
     * @return the implementation class of this entity
     */
-   public Class getEntityClass()
-   {
+   public Class getEntityClass() {
       return entityClass;
    }
    
@@ -988,8 +914,7 @@ public final class JDBCEntityMetaData
     * Gets the home class of this entity
     * @return the home class of this entity
     */
-   public Class getHomeClass()
-   {
+   public Class getHomeClass() {
       return homeClass;
    }
    
@@ -997,8 +922,7 @@ public final class JDBCEntityMetaData
     * Gets the remote class of this entity
     * @return the remote class of this entity
     */
-   public Class getRemoteClass()
-   {
+   public Class getRemoteClass() {
       return remoteClass;
    }
    
@@ -1006,8 +930,7 @@ public final class JDBCEntityMetaData
     * Gets the local home class of this entity
     * @return the local home class of this entity
     */
-   public Class getLocalHomeClass()
-   {
+   public Class getLocalHomeClass() {
       return localHomeClass;
    }
    
@@ -1015,8 +938,7 @@ public final class JDBCEntityMetaData
     * Gets the local class of this entity
     * @return the local class of this entity
     */
-   public Class getLocalClass()
-   {
+   public Class getLocalClass() {
       return localClass;
    }
    
@@ -1024,8 +946,7 @@ public final class JDBCEntityMetaData
     * Does this entity use CMP version 1.x
     * @return true if this entity used CMP version 1.x; otherwise false
     */
-   public boolean isCMP1x()
-   {
+   public boolean isCMP1x() {
       return isCMP1x;
    }
    
@@ -1033,8 +954,7 @@ public final class JDBCEntityMetaData
     * Does this entity use CMP version 2.x
     * @return true if this entity used CMP version 2.x; otherwise false
     */
-   public boolean isCMP2x()
-   {
+   public boolean isCMP2x() {
       return !isCMP1x;
    }
 
@@ -1042,8 +962,7 @@ public final class JDBCEntityMetaData
     * Gets the cmp fields of this entity
     * @return an unmodifiable collection of JDBCCMPFieldMetaData objects
     */
-   public List getCMPFields()
-   {
+   public List getCMPFields() {
       return Collections.unmodifiableList(cmpFields);
    }
    
@@ -1052,33 +971,15 @@ public final class JDBCEntityMetaData
     * look up the load group.
     * @return the name of the eager load group
     */
-   public String getEagerLoadGroup()
-   {
+   public String getEagerLoadGroup() {
       return eagerLoadGroup;
    }
-
-   /**
-    * Gets the name of the optimistic locking load group.
-    * This name can be used to look up the load group.
-    * @return the name of the optimistic locking group
-    */
-   public String getOptimisticLockingGroup() {
-      return optimisticLocking == null ? null : optimisticLocking.getGroupName();
-   }
-
-   /**
-    * Returns optimistic locking metadata
-    */
-   public JDBCOptimisticLockingMetaData getOptimisticLocking() {
-      return optimisticLocking;
-   }
-
+   
    /**
     * Gets the collection of lazy load group names.
     * @return an unmodifiable collection of load group names
     */
-   public List getLazyLoadGroups()
-   {
+   public List getLazyLoadGroups() {
       return Collections.unmodifiableList(lazyLoadGroups);
    }
 
@@ -1087,8 +988,7 @@ public final class JDBCEntityMetaData
     * forms a logical load group.
     * @return an unmodifiable map of load groups (Lists) by group name.
     */
-   public Map getLoadGroups()
-   {
+   public Map getLoadGroups() {
       return Collections.unmodifiableMap(loadGroups);
    }
 
@@ -1097,11 +997,9 @@ public final class JDBCEntityMetaData
     * @return the load group with the specified name
     * @throws EJBException if group with the specified name is not found
     */
-   public List getLoadGroup(String name) throws DeploymentException
-   {
+   public List getLoadGroup(String name) throws DeploymentException {
       List group = (List)loadGroups.get(name);
-      if(group == null)
-      {
+      if(group == null) {
          throw new DeploymentException("Unknown load group: name=" + name);
       }
       return group;
@@ -1109,12 +1007,37 @@ public final class JDBCEntityMetaData
 
 
    /**
+
+    * Returns optimistic locking metadata
+
+    */
+
+   public JDBCOptimisticLockingMetaData getOptimisticLocking() {
+
+      return optimisticLocking;
+
+   }
+
+
+   /**
+
+    * Returns audit metadata
+
+    */
+
+   public JDBCAuditMetaData getAudit()
+   {
+
+      return audit;
+
+   }
+
+   /**
     * Gets the cmp field with the specified name
     * @param name the name of the desired field
     * @return the cmp field with the specified name or null if not found
     */
-   public JDBCCMPFieldMetaData getCMPFieldByName(String name)
-   {
+   public JDBCCMPFieldMetaData getCMPFieldByName(String name) {
       return (JDBCCMPFieldMetaData)cmpFieldsByName.get(name);
    }
 
@@ -1125,14 +1048,14 @@ public final class JDBCEntityMetaData
     * @throws DeploymentException if the field is not found
     */
    private JDBCCMPFieldMetaData getExistingFieldByName(String name) 
-         throws DeploymentException
-   {
+         throws DeploymentException {
 
       JDBCCMPFieldMetaData field = getCMPFieldByName(name);
       if(field == null)
       {
-         throw new DeploymentException("field-name '" + name + 
-               "' found in jbosscmp-jdbc.xml but not in ejb-jar.xml");
+         throw new DeploymentException( "Entity Bean '" + entityName +
+            "': CMP field '" + name + "' found in jbosscmp-jdbc.xml but " +
+            "not in ejb-jar.xml" );
       }
       return field;
    }
@@ -1141,8 +1064,7 @@ public final class JDBCEntityMetaData
     * Gets the name of the table to which this entity is persisted
     * @return the name of the table to which this entity is persisted
     */
-   public String getDefaultTableName()
-   {
+   public String getDefaultTableName() {
       return tableName;
    }
    
@@ -1151,8 +1073,7 @@ public final class JDBCEntityMetaData
     * create database table when the entity is deployed.
     * @return true if the store manager should attempt to create the table
     */
-   public boolean getCreateTable()
-   {
+   public boolean getCreateTable() {
       return createTable;
    }
 
@@ -1161,9 +1082,17 @@ public final class JDBCEntityMetaData
     * remove database table when the entity is undeployed.
     * @return true if the store manager should attempt to remove the table
     */
-   public boolean getRemoveTable()
-   {
+   public boolean getRemoveTable() {
       return removeTable;
+   }
+   
+   /**
+    * Get the (user-defined) SQL commands that sould be issued after table 
+    * creation
+    * @return the SQL command to issue to the DB-server
+    */
+   public ArrayList getDefaultTablePostCreateCmd() {
+   	  return tablePostCreateCmd;
    }
    
    /**
@@ -1172,8 +1101,7 @@ public final class JDBCEntityMetaData
     * @return true if the store manager should add a primary key constraint to
     *       the create table sql statement
     */
-   public boolean hasPrimaryKeyConstraint()
-   {
+   public boolean hasPrimaryKeyConstraint() {
       return primaryKeyConstraint;
    }
 
@@ -1183,16 +1111,14 @@ public final class JDBCEntityMetaData
     * @return true if the store manager should add a row locking
     *       clause when selecting data from the table
     */
-   public boolean hasRowLocking()
-   {
+   public boolean hasRowLocking() {
       return rowLocking;
    }
 
    /**
     * The maximum number of qurey result lists that will be tracked.
     */
-   public int getListCacheMax()
-   {
+   public int getListCacheMax() {
       return listCacheMax;
    }
 
@@ -1200,8 +1126,7 @@ public final class JDBCEntityMetaData
     * The number of rows that the database driver should get in a single
     * trip to the database.
     */
-   public int getFetchSize()
-   {
+   public int getFetchSize() {
       return fetchSize;
    }
 
@@ -1210,8 +1135,7 @@ public final class JDBCEntityMetaData
     * Gets the queries defined on this entity
     * @return an unmodifiable collection of JDBCQueryMetaData objects
     */
-   public Collection getQueries()
-   {
+   public Collection getQueries() {
       return Collections.unmodifiableCollection(queries.values());
    }
    
@@ -1221,8 +1145,7 @@ public final class JDBCEntityMetaData
     * @return an unmodifiable collection of the relationship roles defined
     *    for this entity
     */
-   public Collection getRelationshipRoles()
-   {
+   public Collection getRelationshipRoles() {
       return jdbcApplication.getRolesForEntity(entityName);
    }
       
@@ -1230,8 +1153,7 @@ public final class JDBCEntityMetaData
     * Gets the primary key class for this entity
     * @return the primary key class for this entity
     */
-   public Class getPrimaryKeyClass()
-   {
+   public Class getPrimaryKeyClass() {
       return primaryKeyClass;
    }
 
@@ -1239,8 +1161,7 @@ public final class JDBCEntityMetaData
     * Gets the entity command metadata
     * @return the entity command metadata
     */
-   public JDBCEntityCommandMetaData getEntityCommand()
-   {
+   public JDBCEntityCommandMetaData getEntityCommand() {
       return entityCommand;
    }
    
@@ -1249,8 +1170,7 @@ public final class JDBCEntityMetaData
     * the database.
     * @return true if this entity is read only
     */
-   public boolean isReadOnly()
-   {
+   public boolean isReadOnly() {
       return readOnly;
    }
    
@@ -1264,8 +1184,7 @@ public final class JDBCEntityMetaData
     * @return the length of time that a read is valid or -1 if the read is only
     *       valid for the length of the transaction
     */
-   public int getReadTimeOut()
-   {
+   public int getReadTimeOut() {
       return readTimeOut;
    }
 
@@ -1275,8 +1194,7 @@ public final class JDBCEntityMetaData
     * @return the name of the primary key field of this entity or null 
     *    if the primary key is multivalued
     */
-   public String getPrimaryKeyFieldName()
-   {
+   public String getPrimaryKeyFieldName() {
       return primaryKeyFieldName;
    }
 
@@ -1285,8 +1203,7 @@ public final class JDBCEntityMetaData
     * Gets the read ahead meta data for this entity.
     * @return the read ahead meta data for this entity.
     */
-   public JDBCReadAheadMetaData getReadAhead()
-   {
+   public JDBCReadAheadMetaData getReadAhead() {
       return readAhead;
    }
 
@@ -1298,10 +1215,8 @@ public final class JDBCEntityMetaData
     * @return true if this object is the same as the object argument; 
     *    false otherwise
     */
-   public boolean equals(Object o)
-   {
-      if(o instanceof JDBCEntityMetaData)
-      {
+   public boolean equals(Object o) {
+      if(o instanceof JDBCEntityMetaData) {
          JDBCEntityMetaData entity = (JDBCEntityMetaData)o;
          return entityName.equals(entity.entityName) &&
                jdbcApplication.equals(entity.jdbcApplication);
@@ -1315,8 +1230,7 @@ public final class JDBCEntityMetaData
     * the entityName
     * @return a hash code value for this object
     */
-   public int hashCode()
-   {
+   public int hashCode() {
       int result = 17;
       result = 37*result + jdbcApplication.hashCode();
       result = 37*result + entityName.hashCode();
@@ -1331,8 +1245,10 @@ public final class JDBCEntityMetaData
     *
     * @return a string representation of the object
     */
-   public String toString()
-   {
+   public String toString() {
       return "[JDBCEntityMetaData : entityName=" + entityName + "]";
    }
 }
+/*
+vim:ts=3:sw=3:et
+*/

@@ -7,10 +7,7 @@
 		<project>j2ee</project>
 		<project>jmx</project>
 		<project>naming</project>
-		<project>persistence</project>
-		<project>remoting</project>
 		<project>system</project>
-		<project>thirdparty</project>
 		<project>transaction</project>
 	</projects>
 	<buildSpec>

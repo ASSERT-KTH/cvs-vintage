@@ -11,14 +11,12 @@ import java.net.URL;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.deployment.DeploymentInfo;
 
-import org.w3c.dom.Element;
-
 /** A WebApplication represents the information for a war deployment.
 
  @see AbstractWebContainer
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.9 $
+ @version $Revision: 1.10 $
  */
 public class WebApplication
 {
@@ -133,11 +131,6 @@ public class WebApplication
       this.metaData = metaData;
    }
 
-   public Element getWebAppElement()
-   {
-      return metaData.getWebAppElement();
-   }
-
    public Object getAppData()
    {
       return data;
@@ -172,4 +165,3 @@ public class WebApplication
       return buffer.toString();
    }
 }
-

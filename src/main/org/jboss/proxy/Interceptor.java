@@ -12,22 +12,19 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 
 /**
  * The base class for all interceptors.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
- *
- * <p><b>2002/2/27: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @version $Revision: 1.4 $
  */
 public abstract class Interceptor
    implements Externalizable
 {
+   /** The serialVersionUID. @since 1.2 */
+   private static final long serialVersionUID = 4358098404672505200L;
+
    /** The next interceptor in the chain. */
    protected Interceptor nextInterceptor;
  
@@ -49,7 +46,7 @@ public abstract class Interceptor
       return nextInterceptor;
    }
 
-   public abstract InvocationResponse invoke(Invocation mi) throws Throwable;
+   public abstract Object invoke(Invocation mi) throws Throwable;
    
    /**
     * Writes the next interceptor.

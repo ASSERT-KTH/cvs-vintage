@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCInsertRelationsCommand {
    protected JDBCStoreManager manager;
@@ -51,15 +51,17 @@ public class JDBCInsertRelationsCommand {
       
       JDBCCMRFieldBridge cmrField = relationData.getLeftCMRField();
       try {
+         // get the sql
+         String sql = getSQL(relationData);
+         boolean debug = log.isDebugEnabled();
+         if(debug)
+            log.debug("Executing SQL: " + sql);
+
          // get the connection
          DataSource dataSource = cmrField.getDataSource();
          con = dataSource.getConnection();
          
-         // get the sql
-         String sql = getSQL(relationData);
-         
          // get a prepared statement
-         log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
          
          Iterator pairs = relationData.addedRelations.iterator();
@@ -71,7 +73,8 @@ public class JDBCInsertRelationsCommand {
          
             int rowsAffected = ps.executeUpdate();
          
-            log.debug("Rows affected = " + rowsAffected);
+            if(debug)
+               log.debug("Rows affected = " + rowsAffected);
          }
       } catch(Exception e) {
          throw new EJBException("Could insert relations into " +
@@ -86,7 +89,7 @@ public class JDBCInsertRelationsCommand {
       JDBCCMRFieldBridge left = relationData.getLeftCMRField();
       JDBCCMRFieldBridge right = relationData.getRightCMRField();
       
-      StringBuffer sql = new StringBuffer();
+      StringBuffer sql = new StringBuffer(200);
       sql.append("INSERT INTO ").append(
            left.getTableName());      
 

@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 
@@ -20,33 +19,45 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
+ * @jmx:mbean extends="org.jboss.ejb.plugins.AbstractInstanceCacheMBean"
  */
-public class EntityInstanceCache extends AbstractInstanceCache implements EntityCache
+public class EntityInstanceCache
+   extends AbstractInstanceCache 
+   implements org.jboss.ejb.EntityCache, EntityInstanceCacheMBean
 {
-   private EntityContainer container;
+   // Constants -----------------------------------------------------
 
-   public int getCacheSize()
-   {
-      return getCache().size();
-   }
+   // Attributes ----------------------------------------------------
+   /* The container */
+   private EntityContainer m_container;
 
-   public void flush()
-   {
-      getCache().flush();
-   }
+   // Static --------------------------------------------------------
 
+   // Constructors --------------------------------------------------
+
+   // Public --------------------------------------------------------
+
+   /* From ContainerPlugin interface */
    public void setContainer(Container c) 
    {
-      this.container = (EntityContainer)c;
+      m_container = (EntityContainer)c;
    }
 
+   // Z implementation ----------------------------------------------
+   public Object createCacheKey(Object id)
+   {
+      return id;
+   }
+
+   // Y overrides ---------------------------------------------------
    public EnterpriseContext get(Object id) 
       throws RemoteException, NoSuchObjectException 
    {
-      return super.get(id);
+      EnterpriseContext rtn = null;
+      rtn = super.get(id);
+      return rtn;
    }
-
    public void remove(Object id)
    {
       super.remove(id);
@@ -56,36 +67,42 @@ public class EntityInstanceCache extends AbstractInstanceCache implements Entity
    {
       synchronized( this )
       {
-         this.container = null;
+         this.m_container = null;
       }
       super.destroy();
    }
 
+   protected Object getKey(EnterpriseContext ctx) 
+   {
+      return ((EntityEnterpriseContext)ctx).getCacheKey();
+   }
+   protected void setKey(Object id, EnterpriseContext ctx) 
+   {
+      ((EntityEnterpriseContext)ctx).setCacheKey(id);
+      ctx.setId(id);
+   }
+
    protected synchronized Container getContainer()
    {
-      return container;
+      return m_container;
    }
 
-   protected void passivate(EnterpriseContext ctx) throws Exception
+   protected void passivate(EnterpriseContext ctx) throws RemoteException
    {
-      container.passivateEntity((EntityEnterpriseContext)ctx);
+      m_container.getPersistenceManager().passivateEntity((EntityEnterpriseContext)ctx);
    }
-
-   protected void activate(EnterpriseContext ctx) throws Exception
+   protected void activate(EnterpriseContext ctx) throws RemoteException
    {
-      container.activateEntity((EntityEnterpriseContext)ctx);
+      m_container.getPersistenceManager().activateEntity((EntityEnterpriseContext)ctx);
    }
-
    protected EnterpriseContext acquireContext() throws Exception
    {
-      return container.getInstancePool().get();
+      return m_container.getInstancePool().get();
    }
-
    protected void freeContext(EnterpriseContext ctx)
    {
-      container.getInstancePool().free(ctx);
+      m_container.getInstancePool().free(ctx);
    }
-
    protected boolean canPassivate(EnterpriseContext ctx) 
    {
       if (ctx.isLocked()) 
@@ -93,14 +110,21 @@ public class EntityInstanceCache extends AbstractInstanceCache implements Entity
          // The context is in the interceptor chain
          return false;
       }
-      else if (ctx.getTransaction() != null) 
+
+      if (ctx.getTransaction() != null)
       {
          return false;
       }
-      else if (container.getLockManager().canPassivate(ctx.getId()))
-      {
-         return false;
-      }
-      return true;
+
+      Object key = ((EntityEnterpriseContext)ctx).getCacheKey();
+      return m_container.getLockManager().canPassivate(key);
    }
+
+   // Package protected ---------------------------------------------
+
+   // Protected -----------------------------------------------------
+
+   // Private -------------------------------------------------------
+
+   // Inner classes -------------------------------------------------
 }

@@ -9,8 +9,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.9 2003/03/02 03:00:25 starksm Exp $
-$Revision: 1.9 $
+$Id: jboss_3_0.dtd,v 1.10 2003/08/27 04:32:39 patriot1burke Exp $
+$Revision: 1.10 $
 
 Overview of the architecture of jboss.xml
 
@@ -186,7 +186,7 @@ Overview of the architecture of jboss.xml
 -->
 <!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , home-invoker? , bean-invoker? ,
 configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* ,
-clustered? , cluster-config?, method-attributes?)>
+clustered? , cluster-config?, method-attributes?, depends*)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -199,7 +199,7 @@ clustered? , cluster-config?, method-attributes?)>
 -->
 <!ELEMENT session (ejb-name , jndi-name? , local-jndi-name? , home-invoker? , bean-invoker? ,
 configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* ,
-clustered? , cluster-config?, method-attributes?)>
+clustered? , cluster-config?, method-attributes?, depends*)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -212,7 +212,7 @@ clustered? , cluster-config?, method-attributes?)>
 -->
 <!ELEMENT message-driven (ejb-name , destination-jndi-name , mdb-user? , mdb-passwd? , mdb-client-id?,
 mdb-subscription-id? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* ,
-resource-env-ref*)>
+resource-env-ref*, depends*)>
 
 <!--
   The ejb-name element gives the name of the bean, it must correspond to
@@ -243,8 +243,9 @@ resource-env-ref*)>
 -->
 <!ELEMENT local-jndi-name (#PCDATA)>
 
-<!-- The read-only element flags an entity bean or a method as read only.
-  Such a bean or method will never trigger a store. Defaults to false.
+<!--
+  The read-only element flags an entity bean as read only.
+  The bean will never be ejbStored. Defaults to false.
   It must be one of the following :
     <read-only>true</read-only>
     <read-only>false</read-only>
@@ -278,6 +279,11 @@ resource-env-ref*)>
   Used in: entity, session, and message-driven
 -->
 <!ELEMENT configuration-name (#PCDATA)>
+
+<!-- The depends element gives a JMX ObjectName of a service on which the
+container or ejb depends.
+-->
+<!ELEMENT depends (#PCDATA)>
 
 <!ELEMENT destination-jndi-name (#PCDATA)>
 

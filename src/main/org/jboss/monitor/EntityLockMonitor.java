@@ -30,7 +30,7 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.naming.NonSerializableFactory;
+import org.jboss.naming.NonSerializableFactory;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -43,7 +43,7 @@ import javax.naming.Reference;
  *
  * @see Monitorable
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class EntityLockMonitor
    extends ServiceMBeanSupport
@@ -93,19 +93,16 @@ public class EntityLockMonitor
       if (contenders > maxContenders) maxContenders = contenders;
       sumContenders += contenders;
    }
-   
    public synchronized void decrementContenders(long time)
    {
       times.add(new Long(time));
       contenders--;
    }
-   
    public synchronized long getAverageContenders()
    {
       if (contentions == 0) return 0;
       return sumContenders / contentions;
    }
-   
    public synchronized long getMaxContenders()
    {
       return maxContenders;
@@ -209,7 +206,7 @@ public class EntityLockMonitor
    {
       bind();
 
-      log.info("EntityLockMonitor started");
+	  log.info("EntityLockMonitor started");
    }
 
    protected void stopService() {
@@ -218,8 +215,8 @@ public class EntityLockMonitor
          unbind();
       }
       catch (Exception ignored) {}
-      
-	log.info("EntityLockMonitor stopped");
+
+	  log.info("EntityLockMonitor stopped");
    }
 
    private void bind() throws NamingException

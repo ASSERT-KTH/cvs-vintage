@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.sql.Types;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 
@@ -19,11 +20,12 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCMappingMetaData
 {
    static Logger log = Logger.getLogger(JDBCMappingMetaData.class.getName());
+
    /**
     * Gets the JDBC type constant int for the name. The mapping from name to jdbc
     * type is contained in java.sql.Types.
@@ -32,28 +34,36 @@ public final class JDBCMappingMetaData
     * @return the int type constant from java.sql.Types
     * @see java.sql.Types
     */
-   public static int getJdbcTypeFromName(String name) throws DeploymentException {
-      if (name == null) {
+   public static int getJdbcTypeFromName(String name) throws DeploymentException
+   {
+      if(name == null)
+      {
          throw new DeploymentException("jdbc-type cannot be null");
       }
 
-      try {
+      try
+      {
          Integer constant = (Integer)Types.class.getField(name).get(null);
          return constant.intValue();
 
-      } catch (Exception e) {
+      }
+      catch(Exception e)
+      {
          log.warn("Unrecognized jdbc-type: " + name + ", using Types.OTHER", e);
          return Types.OTHER;
       }
    }
 
-
-
+   /** fully qualified Java type name */
    private final String javaType;
-
+   /** JDBC type according to java.sql.Types */
    private final int jdbcType;
-
+   /** SQL type */
    private final String sqlType;
+   /** fully qualified Java type <code>javaType</code> is mapped to */
+   private final String mappedType;
+   /** fully qualified Java type name of the Mapper implementation */
+   private final String mapper;
 
    /**
     * Constructs a mapping with the data contained in the mapping xml element
@@ -63,22 +73,37 @@ public final class JDBCMappingMetaData
     *      this mapping
     * @throws DeploymentException if the xml element is not semantically correct
     */
-   public JDBCMappingMetaData(Element element) throws DeploymentException {
-
+   public JDBCMappingMetaData(Element element) throws DeploymentException
+   {
       javaType = MetaData.getUniqueChildContent(element, "java-type");
-
       jdbcType = getJdbcTypeFromName(MetaData.getUniqueChildContent(element, "jdbc-type"));
-
       sqlType = MetaData.getUniqueChildContent(element, "sql-type");
+      mapper = null;
+      mappedType = null;
    }
 
    /**
-    * Getts the java type of this mapping. The java type is used to differentiate
+    * This constructor is used for user type mapping
+    */
+   public JDBCMappingMetaData(JDBCUserTypeMappingMetaData userTypeMappingMD,
+                              int jdbcType,
+                              String sqlType)
+   {
+      this.javaType = userTypeMappingMD.getJavaType();
+      this.jdbcType = jdbcType;
+      this.sqlType = sqlType;
+      this.mappedType = userTypeMappingMD.getMappedType();
+      this.mapper = userTypeMappingMD.getMapper();
+   }
+
+   /**
+    * Gets the java type of this mapping. The java type is used to differentiate
     * this mapping from other mappings.
     *
     * @return the java type of this mapping
     */
-   public String getJavaType() {
+   public String getJavaType()
+   {
       return javaType;
    }
 
@@ -88,7 +113,8 @@ public final class JDBCMappingMetaData
     *
     * @return the jdbc type of this mapping
     */
-   public int getJdbcType() {
+   public int getJdbcType()
+   {
       return jdbcType;
    }
 
@@ -98,7 +124,18 @@ public final class JDBCMappingMetaData
     *
     * @return the sql type String of this mapping
     */
-   public String getSqlType() {
+   public String getSqlType()
+   {
       return sqlType;
+   }
+
+   public String getMapper()
+   {
+      return mapper;
+   }
+
+   public String getMappedType()
+   {
+      return mappedType;
    }
 }

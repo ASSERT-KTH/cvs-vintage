@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationHandler;
 
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.PayloadKey;
@@ -27,13 +26,18 @@ import org.jboss.invocation.PayloadKey;
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ClientContainer
    implements Externalizable, InvocationHandler
 {
-   /** 
+   /** The serialVersionUID. @since 1.5 */
+   private static final long serialVersionUID = -4061374432170701306L;
+
+   /** An empty method parameter list. */
+   protected static final Object[] EMPTY_ARGS = {};
+
+   /**
     * The <em>static</em> information that gets attached to every invocation. 
     */ 
    public InvocationContext context;
@@ -41,9 +45,6 @@ public class ClientContainer
    /** The first interceptor in the chain. */
    public Interceptor next;
    
-   /** An empty method parameter list. */
-   protected static final Object[] EMPTY_ARGS = {};
-
    /**
     * Exposed for externalization.
     */
@@ -81,9 +82,7 @@ public class ClientContainer
                           PayloadKey.AS_IS);
       
       // send the invocation down the client interceptor chain
-      InvocationResponse response = next.invoke(invocation);
-      Object rtn = response.getResponse();
-      return rtn;
+      return next.invoke(invocation);
    }
    
    public Interceptor setNext(Interceptor interceptor) 

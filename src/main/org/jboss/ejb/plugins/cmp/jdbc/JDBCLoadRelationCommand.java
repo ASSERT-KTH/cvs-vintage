@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map; 
 import javax.ejb.EJBException; 
 
-import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge; 
@@ -34,7 +33,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -52,25 +51,18 @@ public class JDBCLoadRelationCommand {
             manager.getMetaData().getName());
    }
 
-   public Collection execute(
-         JDBCCMRFieldBridge cmrField, 
-         EntityEnterpriseContext ctx) 
-   {
-      Object primaryKey = ctx.getId();
+   public Collection execute(JDBCCMRFieldBridge cmrField, Object pk) {
       JDBCCMRFieldBridge relatedCMRField = cmrField.getRelatedCMRField();
 
       // get the read ahead cahces
-      PrefetchCache prefetchCache = manager.getPrefetchCache();
-      PrefetchCache relatedPrefetchCache = 
-            cmrField.getRelatedManager().getPrefetchCache();
+      ReadAheadCache readAheadCache = manager.getReadAheadCache();
+      ReadAheadCache relatedReadAheadCache = 
+            cmrField.getRelatedManager().getReadAheadCache();
       
-      // get the keys to load
-      List loadKeys = JDBCContext.getLoadKeys(ctx);
-      if(loadKeys == null)
-      {
-         loadKeys = Collections.singletonList(ctx.getId());
-      }
-
+      // get the finder results associated with this context, if it exists
+      ReadAheadCache.EntityReadAheadInfo info =
+            readAheadCache.getEntityReadAheadInfo(pk);
+      List loadKeys = info.getLoadKeys();
 
       // generate the sql
       String sql = getSQL(cmrField, loadKeys.size());
@@ -124,7 +116,7 @@ public class JDBCLoadRelationCommand {
             ref[0] = null;
 
             // if we are loading more then one entity, load the pk from the row
-            Object loadedPk = primaryKey;
+            Object loadedPk = pk;
             if(loadKeys.size() > 1) {
                // load the pk
                for(Iterator fields=myKeyFields.iterator(); fields.hasNext();) {
@@ -151,7 +143,7 @@ public class JDBCLoadRelationCommand {
                // if the related cmr field is single valued we can pre-load
                // the reverse relationship
                if(relatedCMRField.isSingleValued()) {
-                  relatedPrefetchCache.addPrefetchData(
+                  relatedReadAheadCache.addPreloadData(
                         loadedFk,
                         relatedCMRField,
                         Collections.singletonList(loadedPk));
@@ -164,7 +156,7 @@ public class JDBCLoadRelationCommand {
 
                   // read the value and store it in the readahead cache
                   index = field.loadArgumentResults(rs, index, ref);
-                  relatedPrefetchCache.addPrefetchData(loadedFk, field, ref[0]);
+                  relatedReadAheadCache.addPreloadData(loadedFk, field, ref[0]);
                }
             }
          }
@@ -178,17 +170,17 @@ public class JDBCLoadRelationCommand {
 
             // store the results list for readahead on-load
             JDBCReadAheadMetaData readAhead = cmrField.getReadAhead();
-            relatedPrefetchCache.addFinderResults(results, readAhead);
+            relatedReadAheadCache.addFinderResults(results, readAhead);
 
             // store the preloaded relationship (unless this is the realts we
             // are actually after)
-            if(!key.equals(primaryKey)) {
-               prefetchCache.addPrefetchData(key, cmrField, results);
+            if(!key.equals(pk)) {
+               readAheadCache.addPreloadData(key, cmrField, results);
             }
          }
 
          // success, return the results
-         return (List)resultsMap.get(primaryKey);
+         return (List)resultsMap.get(pk); 
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
@@ -207,6 +199,7 @@ public class JDBCLoadRelationCommand {
       String relationTable = getRelationTable(cmrField);
       String relatedTable = cmrField.getRelatedJDBCEntity().getTableName();
       
+      // do we need to join the relation table and the related table
       // do we need to join the relation table and the related table
       boolean join = ((preloadFields.size() > 0) || cmrField.allFkFieldsMappedToPkFields())
          && !relationTable.equals(relatedTable);

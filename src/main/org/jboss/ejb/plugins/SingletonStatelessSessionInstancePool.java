@@ -7,7 +7,8 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.ejb.EJBException;
 
@@ -27,18 +28,7 @@ import org.w3c.dom.Element;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.22 $
- *
- * <p><b>Revisions:</b>
- * <p><b>20010718 andreas schaefer:</b>
- * <ul>
- * <li>- Added Statistics Gathering
- * </ul>
- *  <p><b>20011208 Vincent Harcq:</b>
- *  <ul>
- *  <li>- A TimedInstancePoolFeeder thread is started at first use of the pool
- *       and will populate the pool with new instances at a regular period.
- *  </ul>
+ *  @version $Revision: 1.23 $
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
@@ -116,6 +106,9 @@ public class SingletonStatelessSessionInstancePool
             throw new EJBException("Could not instantiate bean", e);
          }
       }
+      else
+      {
+      }
 
       // Lock and return instance
       inUse = true;
@@ -168,11 +161,6 @@ public class SingletonStatelessSessionInstancePool
       return 1;
    }
 
-   // StatisticsProvider implementation ------------------------------------
-   
-   public void retrieveStatistics( List container, boolean reset ) {
-   }
-   
    public int getMaxSize()
    {
       return 1;

@@ -14,20 +14,19 @@ import javax.naming.NamingException;
 import javax.naming.ServiceUnavailableException;
 
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.proxy.Interceptor;
 
 /** A client interceptor that handles the wrapping of exceptions to
  * NamingExceptions
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ExceptionInterceptor extends Interceptor
    implements Externalizable
 {
-   /** The serialVersionUID. @since 1.2 */
-   private static final long serialVersionUID = 9208056528786546687L;
+   /** The serialVersionUID. @since 1.1.2.1 */
+   private static final long serialVersionUID = 6010013004557885014L;
 
    /** Handle methods locally on the client
     *
@@ -35,7 +34,7 @@ public class ExceptionInterceptor extends Interceptor
     * @return
     * @throws Throwable
     */
-   public InvocationResponse invoke(Invocation mi) throws Throwable
+   public Object invoke(Invocation mi) throws Throwable
    {
       Object value = null;
       try
@@ -59,7 +58,7 @@ public class ExceptionInterceptor extends Interceptor
          throw sue;
       }
 
-      return new InvocationResponse(value);
+      return value;
    }
 
 }

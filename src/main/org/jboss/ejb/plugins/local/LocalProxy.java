@@ -12,12 +12,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import javax.ejb.EJBLocalObject;
+import javax.naming.InitialContext;
 
 /** Abstract superclass of local interface proxies.
 
  @author  <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.8 $
+ @version $Revision: 1.9 $
  */
 public abstract class LocalProxy implements Serializable
 {
@@ -153,7 +154,8 @@ public abstract class LocalProxy implements Serializable
       }
       else if (m.equals(GET_EJB_HOME))
       {
-         throw new UnsupportedOperationException();
+         InitialContext ctx = new InitialContext();
+         return ctx.lookup(jndiName);
       }
       else if (m.equals(IS_IDENTICAL))
       {

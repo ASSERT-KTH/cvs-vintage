@@ -19,7 +19,6 @@ import javax.naming.Reference;
 import javax.naming.RefAddr;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.ObjectFactory;
-import javax.net.ssl.HttpsURLConnection;
 
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.invocation.http.interfaces.AnyhostVerifier;
@@ -34,7 +33,7 @@ import org.jnp.interfaces.NamingContext;
  @see javax.naming.spi.InitialContextFactory
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.2 $
+ @version $Revision: 1.3 $
  */
 public class HttpNamingContextFactory
    implements InitialContextFactory, ObjectFactory
@@ -91,15 +90,15 @@ public class HttpNamingContextFactory
    private Naming getNamingServer(URL providerURL) throws ClassNotFoundException, IOException
    {
       // Initialize the proxy Util class to integrate JAAS authentication
-      //Util.init();
+      Util.init();
       log.debug("Retrieving content from : "+providerURL);
       HttpURLConnection conn = (HttpURLConnection) providerURL.openConnection();
-      if( conn instanceof HttpsURLConnection )
+      if( conn instanceof com.sun.net.ssl.HttpsURLConnection )
       {
          // See if the org.jboss.security.ignoreHttpsHost property is set
          if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
          {
-            HttpsURLConnection sconn = (HttpsURLConnection) conn;
+            com.sun.net.ssl.HttpsURLConnection sconn = (com.sun.net.ssl.HttpsURLConnection) conn;
             AnyhostVerifier verifier = new AnyhostVerifier();
             sconn.setHostnameVerifier(verifier);
          }

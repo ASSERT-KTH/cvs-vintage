@@ -26,7 +26,7 @@ as a pass-through security manager when you want noop security.
 @see #doesUserHaveRole(Principal, Set)
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public class NullSecurityManager
     implements SubjectSecurityManager, RealmMapping, Serializable

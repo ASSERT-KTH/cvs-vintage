@@ -7,27 +7,23 @@
 
 package org.jboss.invocation.jrmp.interfaces;
 
-import java.io.Externalizable;
 import java.io.IOException;
+import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.rmi.ConnectException;
 import java.rmi.MarshalledObject;
 import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.RemoteStub;
 import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
+
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.invocation.local.LocalInvoker;
-import org.jboss.security.SecurityAssociation;
 import org.jboss.tm.TransactionPropagationContextFactory;
-import org.jboss.invocation.ServerID;
 
 /**
  * JRMPInvokerProxy, local to the proxy and is capable of delegating to
@@ -35,20 +31,17 @@ import org.jboss.invocation.ServerID;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
 {
-   /** Serial Version Identifier. */
-   // private static final long serialVersionUID = 1870461898442160570L;
-
+   /** Serial Version Identifier. @since 1.7.2.4 */
+   private  static final long serialVersionUID = -3713605626489646730L;
    // Attributes ----------------------------------------------------
 
    // Invoker to the remote JMX node
    protected Invoker remoteInvoker;
-
-   private ServerID serverID;
 
    /**
     * Factory for transaction propagation contexts.
@@ -65,8 +58,7 @@ public class JRMPInvokerProxy
    //  @todo: MOVE TO TRANSACTION
    //
    // TPC factory
-   public static void setTPCFactory(TransactionPropagationContextFactory tpcf)
-   {
+   public static void setTPCFactory(TransactionPropagationContextFactory tpcf) {
       tpcFactory = tpcf;
    }
 
@@ -96,20 +88,11 @@ public class JRMPInvokerProxy
 
    /**
     * The name of of the server.
-    *
-    * @todo make this more reasonable.
     */
-   public ServerID getServerID() throws Exception
+   public String getServerHostName() throws Exception
    {
-      if (serverID == null) {
-         serverID =  remoteInvoker.getServerID();
-         //      serverID =  new ServerID(remoteInvoker.getServerHostName(), 0, false);
-      } // end of if ()
-
-      return serverID;
+      return remoteInvoker.getServerHostName();
    }
-
-   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
 
    /**
     * ???
@@ -132,8 +115,8 @@ public class JRMPInvokerProxy
     * local if we are local.
     * @todo Shouldn't we unwrap _ALL_ RemoteExceptions?
     */
-   public InvocationResponse invoke(Invocation invocation)
-      throws Throwable
+   public Object invoke(Invocation invocation)
+      throws Exception
    {
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
       MarshalledInvocation mi = new MarshalledInvocation(invocation);
@@ -149,8 +132,8 @@ public class JRMPInvokerProxy
       {
          try
          {
-            InvocationResponse result = remoteInvoker.invoke(mi);
-            return result;
+            MarshalledObject result = (MarshalledObject) remoteInvoker.invoke(mi);
+            return result.get();
          }
          catch (ConnectException ce)
          {
@@ -188,7 +171,6 @@ public class JRMPInvokerProxy
 
    /**
     * Externalize this instance and handle obtaining the remoteInvoker stub
-    *
     */
    public void writeExternal(final ObjectOutput out)
       throws IOException
@@ -218,3 +200,4 @@ public class JRMPInvokerProxy
       remoteInvoker = (Invoker) in.readObject();
    }
 }
+

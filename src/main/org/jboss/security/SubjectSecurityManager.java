@@ -15,7 +15,7 @@ import javax.security.auth.Subject;
 Subject and security domain.
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.7 $
+@version $Revision: 1.8 $
 */
 public interface SubjectSecurityManager extends AuthenticationManager
 {

@@ -9,49 +9,52 @@ package org.jboss.ejb.plugins.lock;
 import org.jboss.logging.Logger;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCOptimisticLockingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.TransactionLocal;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
 import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.Container;
-import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.invocation.Invocation;
-import org.jboss.tm.TransactionLocal;
+import org.jboss.deployment.DeploymentException;
 
+import javax.transaction.Transaction;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.transaction.Transaction;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Collection;
-import java.util.List;
 import java.util.Iterator;
-
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class is an optmistic lock implementation.
  * It locks fields and their values during transaction.
- * Locked fields and their values are added to the WHERE clause of
+ * Locked fields and their values are added to the WHERE clause of the
  * UPDATE SQL statement when entity is stored.
- * The following strategies supported:
+ * The following strategies are supported:
  * - fixed group of fields
- *   Fixed group of fields is used. The fields and their values are
+ *   Fixed group of fields is used for locking . The fields and their values are
  *   locked at the beginning of a transaction. The group name must match
  *   one of the entity's load-group-name.
  * - modified strategy
  *   The fields that were modified during transaction are used as lock.
  *   All entity's field values are locked at the beginning of the transaction.
- *   The fields are locked only after actual change.
+ *   The fields are locked only after its actual change.
  * - read strategy
  *   The fields that were read/modified during transaction.
  *   All entity's field values are locked at the beginning of the transaction.
  *   The fields are locked only after they were accessed.
  * - version-column strategy
  *   This adds additional version field of type java.lang.Long. Each update
- *   of the entity will increase the version by 1.
+ *   of the entity will increase the version value by 1.
  * - timestamp-column strategy
  *   Adds additional timestamp column of type java.util.Date. Each update
  *   of the entity will set the field to the current time.
@@ -59,11 +62,11 @@ import java.util.Iterator;
  *   Adds additional column. The type is defined by user. The key generator
  *   is used to set the next value.
  *
- * Note: all optimistic locking related code should be rewritten when get
+ * Note: all optimistic locking related code should be rewritten when in the
  * new CMP design.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCOptimisticLock
    extends BeanLockSupport
@@ -76,12 +79,6 @@ public class JDBCOptimisticLock
    /** locking metadata per lock instance. it should not be accessed directly
     but through the corresponding getter method instead */
    private JDBCOptimisticLockingMetaData metadata;
-
-   /** store manager per container */
-   private static final Map managerByContainer = new HashMap();
-   /** store manager per lock instance. it should not be accessed directly
-    but through the corresponding getter method instead */
-   private JDBCStoreManager manager;
 
    /** key generators per container */
    private static final Map keyGeneratorByContainer = new HashMap();
@@ -97,9 +94,14 @@ public class JDBCOptimisticLock
 
    /** entity container */
    private EntityContainer container;
+   /** The trace level logging flag, only set in ctor */
+   private boolean trace;
 
    // Constructor ------------------------------------
-   public JDBCOptimisticLock() { }
+   public JDBCOptimisticLock()
+   {
+      trace = log.isTraceEnabled();
+   }
 
    // Static -----------------------------------------
    /**
@@ -147,10 +149,7 @@ public class JDBCOptimisticLock
       throws DeploymentException
    {
       EntityContainer container = manager.getContainer();
-      // register metadata
       lockMetaDataByContainer.put( container, metadata );
-      // register store manager
-      managerByContainer.put( manager.getContainer(), manager );
 
       // look up key generator factory
       if(metadata.getKeyGeneratorFactory() != null)
@@ -218,16 +217,6 @@ public class JDBCOptimisticLock
    }
 
    /**
-    * Returns store manager per lock instance.
-    */
-   public JDBCStoreManager getJDBCStoreManager()
-   {
-      if(manager == null)
-         manager = (JDBCStoreManager)managerByContainer.get(container);
-      return manager;
-   }
-
-   /**
     * Returns key generator per lock instance.
     */
    public KeyGenerator getKeyGenerator()
@@ -254,18 +243,18 @@ public class JDBCOptimisticLock
     */
    public void fieldStateEventCallback(CMPMessage msg,
                                        JDBCFieldBridge field,
-                                       Object value)
+                                       EntityEnterpriseContext ctx)
    {
-      getLockingStrategy().fieldStateEventCallback(msg, field, value);
+      getLockingStrategy().fieldStateEventCallback(msg, field, ctx);
    }
 
    /**
     * This method actually locks the field
     * by delegating the call to locking strategy implementation.
     */
-   public void lockField(JDBCFieldBridge field)
+   public void lockField(JDBCFieldBridge field, EntityEnterpriseContext ctx)
    {
-      getLockingStrategy().lockField(field);
+      getLockingStrategy().lockField(field, ctx);
    }
 
    /**
@@ -278,21 +267,34 @@ public class JDBCOptimisticLock
    }
 
    /**
+    * Updates locked field values. This method is stored when data is stored
+    * in a physical store but transaction is not committed yet.
+    */
+   public void updateLockedFieldValues(EntityEnterpriseContext ctx)
+   {
+      for(Iterator lockedFieldsIter = getLockedFields(ctx).iterator(); lockedFieldsIter.hasNext();)
+      {
+         final JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)lockedFieldsIter.next();
+         lockingStrategy.updateLockedFieldValue(field, ctx);
+      }
+   }
+
+   /**
     * Returns locked field's value
     * by delegating the call to locking strategy implementation.
     */
-   public Object getLockedFieldValue( JDBCCMPFieldBridge field )
+   public Object getLockedFieldValue( JDBCCMPFieldBridge field, EntityEnterpriseContext ctx)
    {
-      return getLockingStrategy().getLockedFieldValue(field);
+      return getLockingStrategy().getLockedFieldValue(field, ctx);
    }
 
    /**
     * Returns all the locked fields
     * by delegating the call to locking strategy implementation.
     */
-   public Collection getLockedFields()
+   public Collection getLockedFields(EntityEnterpriseContext ctx)
    {
-      return getLockingStrategy().getLockedFields();
+      return getLockingStrategy().getLockedFields(ctx);
    }
 
    // BeanLockSupport overrides ----------------------
@@ -304,28 +306,38 @@ public class JDBCOptimisticLock
    public void schedule(Invocation mi)
       throws Exception
    {
-      Object id = mi.getId();
-      if(id == null)
+      Object key = mi.getId();
+      if(key == null)
          return;
 
-      EntityEnterpriseContext ctx = EntityContainer.getEntityInvocationRegistry().getContext(
-                  container,
-                  id,
-                  mi.getTransaction());
+      Transaction tx = mi.getTransaction();
+
+      EntityEnterpriseContext ctx = null;
+      if(tx != null)
+         ctx = container.getTxEntityMap().getCtx(tx, key);
       if(ctx == null)
       {
          ctx = (EntityEnterpriseContext)container.getInstancePool().get();
-         ctx.setId(id);
-         container.activateEntity(ctx);
+         ctx.setCacheKey(key);
+         ctx.setId(key);
+         container.getTxEntityMap().associate(tx, ctx);
+         EntityPersistenceManager pm = container.getPersistenceManager();
+         pm.activateEntity(ctx);
+         ctx.setTransaction(tx);
+         mi.setEnterpriseContext(ctx);
+         container.getPersistenceManager().loadEntity(ctx);
+         ctx.setValid(true);
       }
 
-      if(log.isTraceEnabled())
-         log.trace("schedule> method=" + mi.getMethod().getName() + "; tx=" + mi.getTransaction());
+      if( trace )
+         log.trace("schedule> method="
+            + (mi.getMethod() == null ? "null" : mi.getMethod().getName())
+            + "; tx=" + mi.getTransaction());
 
       // lock fields and values new transaction came in
       if(getTransaction() != mi.getTransaction())
       {
-         if(log.isTraceEnabled())
+         if( trace )
             log.trace("schedule> other tx came in: tx="
                + (mi.getTransaction() == null ? "null" : "" + mi.getTransaction().getStatus())
                + "; " + (ctx == null ? "ctx=null" : "ctx.id=" + ctx.getId()));
@@ -336,7 +348,7 @@ public class JDBCOptimisticLock
          getLockingStrategy().schedule(ctx);
       }
 
-      if(log.isTraceEnabled())
+      if( trace )
          log.trace("schedule> "
             + (ctx == null ? "ctx=null" : "ctx.id=" + ctx.getId())
             + "; id=" + getId()
@@ -367,6 +379,21 @@ public class JDBCOptimisticLock
       // complete
    }
 
+   public String toString()
+   {
+      StringBuffer buffer = new StringBuffer(100);
+      buffer.append(super.toString());
+      buffer.append(", bean=").append(container.getBeanMetaData().getEjbName());
+      buffer.append(", id=").append(id);
+      buffer.append(", refs=").append(refs);
+      buffer.append(", tx=").append(getTransaction());
+      buffer.append(", synched=").append(synched);
+      buffer.append(", timeout=").append(txTimeout);
+      buffer.append(", lockingStrategy="+lockingStrategy);
+      return buffer.toString();
+   }
+
+
    // Inner ------------------------------------------
    /**
     * This class defines and implements methods common to all
@@ -376,7 +403,7 @@ public class JDBCOptimisticLock
    {
       // Attributes ----------------------------------
       /** this is where field values are locked */
-      private TransactionLocal lockedFieldValues = new TransactionLocal()
+      private TransactionLocal lockedFieldValuesByCtxId = new TransactionLocal()
       {
          public Object initialValue()
          {
@@ -385,15 +412,17 @@ public class JDBCOptimisticLock
       };
 
       /** this is where fields are locked */
-      private TransactionLocal lockedFields = new TransactionLocal()
+      private TransactionLocal lockedFieldsByCtxId = new TransactionLocal()
       {
          public Object initialValue()
          {
             return new HashMap();
          }
       };
+      protected boolean lsTrace = log.isInfoEnabled();
 
       // Public --------------------------------------
+
       /**
        * Returns initial value for a locking field
        */
@@ -421,7 +450,7 @@ public class JDBCOptimisticLock
        */
       void fieldStateEventCallback(CMPMessage msg,
                                    JDBCFieldBridge field,
-                                   Object value)
+                                   EntityEnterpriseContext ctx)
       {
          // ignore by default
       }
@@ -435,18 +464,24 @@ public class JDBCOptimisticLock
       /**
        * This method actually locks the field
        */
-      public void lockField(JDBCFieldBridge field)
+      public void lockField(JDBCFieldBridge field, EntityEnterpriseContext ctx)
       {
-         Map fields = (Map) lockedFields.get();
+         Map fieldsPerCtxId = (Map)lockedFieldsByCtxId.get();
+         Map fields = (Map)fieldsPerCtxId.get(ctx.getId());
+         if(fields == null)
+         {
+            fields = new HashMap();
+            fieldsPerCtxId.put(ctx.getId(), fields);
+         }
          if(!fields.containsKey(field) && !field.isPrimaryKeyMember())
          {
-            if(log.isTraceEnabled())
+            if( lsTrace )
                log.trace("lockField> field=" + field.getFieldName());
             fields.put( field, field );
          }
          else
          {
-            if(log.isTraceEnabled())
+            if( lsTrace )
                log.trace("lockField> field " + field.getFieldName()
                   + " is already locked or is a primary key");
          }
@@ -457,12 +492,18 @@ public class JDBCOptimisticLock
        */
       public void lockFieldValue(JDBCFieldBridge field, EntityEnterpriseContext ctx)
       {
-         Map fieldValues = (Map)lockedFieldValues.get();
+         Map fieldValuesPerCtxId = (Map)lockedFieldValuesByCtxId.get();
+         Map fieldValues = (Map)fieldValuesPerCtxId.get(ctx.getId());
+         if(fieldValues == null)
+         {
+            fieldValues = new HashMap();
+            fieldValuesPerCtxId.put(ctx.getId(), fieldValues);
+         }
          if(!fieldValues.containsKey(field) && !field.isPrimaryKeyMember())
          {
             //field.resetPersistenceContext(ctx);
             Object value = field.getInstanceValue(ctx);
-            if(log.isTraceEnabled())
+            if( lsTrace )
                log.trace("lockFieldValue> field=" + field.getFieldName()
                   + "; value " + value);
             fieldValues.put(field, value);
@@ -470,19 +511,46 @@ public class JDBCOptimisticLock
       }
 
       /**
+       * Updates locked field value
+       */
+      public void updateLockedFieldValue(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx)
+      {
+         if(field.isPrimaryKeyMember())
+            return;
+         Map fieldValuesPerCtxId = (Map)lockedFieldValuesByCtxId.get();
+         Map fieldValues = (Map)fieldValuesPerCtxId.get(ctx.getId());
+         if(fieldValues == null)
+            return;
+
+         Object value = field.getInstanceValue(ctx);
+         if( lsTrace )
+            log.trace("updateLockedFieldValue> field=" + field.getFieldName()
+               + "; value " + value);
+         fieldValues.put(field, value);
+      }
+
+      /**
        * Returns locked field's value
        */
-      public Object getLockedFieldValue(JDBCCMPFieldBridge field)
+      public Object getLockedFieldValue(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx)
       {
-         return ((Map)lockedFieldValues.get()).get(field);
+         Map fieldValuesPerCtxId = (Map)lockedFieldValuesByCtxId.get();
+         Map fieldValues = (Map)fieldValuesPerCtxId.get(ctx.getId());
+         if(fieldValues == null)
+            return null;
+         return fieldValues.get(field);
       }
 
       /**
        * Returns all the locked fields
        */
-      public Collection getLockedFields()
+      public Collection getLockedFields(EntityEnterpriseContext ctx)
       {
-         return ((Map)lockedFields.get()).keySet();
+         Map fieldsPerCtxId = (Map)lockedFieldsByCtxId.get();
+         Map lockedFields = (Map)fieldsPerCtxId.get(ctx.getId());
+         if(lockedFields == null)
+            return Collections.EMPTY_LIST;
+         return lockedFields.keySet();
       }
    }
 
@@ -504,14 +572,14 @@ public class JDBCOptimisticLock
       // LockingStrategy implementation --------------------
       public void schedule( EntityEnterpriseContext ctx )
       {
-         if(log.isTraceEnabled())
+         if( lsTrace )
             log.trace("schedule> locking group");
 
          for( Iterator iter = fields.iterator(); iter.hasNext(); )
          {
             JDBCFieldBridge field = ( JDBCCMPFieldBridge ) iter.next();
             this.lockFieldValue(field, ctx);
-            this.lockField(field);
+            this.lockField(field, ctx);
          }
       }
    }
@@ -526,23 +594,37 @@ public class JDBCOptimisticLock
       private List fields;
 
       // Constructor ---------------------------------------
-      public ModifiedLockingStrategy(List fields)
+      public ModifiedLockingStrategy(List entityFields)
       {
-         this.fields = fields;
+         fields = new ArrayList(entityFields.size() + 3);
+         for(Iterator iter = entityFields.iterator(); iter.hasNext();)
+         {
+            Object nextField = iter.next();
+            if(nextField instanceof JDBCCMRFieldBridge)
+            {
+               JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)nextField;
+               if(cmrField.hasForeignKey())
+                  fields.addAll(cmrField.getForeignKeyFields());
+            }
+            else
+            {
+               fields.add(nextField);
+            }
+         }
       }
 
       // LockingStrategy implementation --------------------
       void fieldStateEventCallback(CMPMessage msg,
                                    JDBCFieldBridge field,
-                                   Object value)
+                                   EntityEnterpriseContext ctx)
       {
          if(msg == CMPMessage.CHANGED)
-            this.lockField(field);
+            this.lockField(field, ctx);
       }
 
       public void schedule(EntityEnterpriseContext ctx)
       {
-         if(log.isTraceEnabled())
+         if( lsTrace )
             log.trace("schedule> modified strategy: locking all field values");
          for(Iterator iter = fields.iterator(); iter.hasNext();)
          {
@@ -562,23 +644,37 @@ public class JDBCOptimisticLock
       private List fields;
 
       // Constructor ---------------------------------------
-      public ReadLockingStrategy(List fields)
+      public ReadLockingStrategy(List entityFields)
       {
-         this.fields = fields;
+         fields = new ArrayList(entityFields.size() + 3);
+         for(Iterator iter = entityFields.iterator(); iter.hasNext();)
+         {
+            Object nextField = iter.next();
+            if(nextField instanceof JDBCCMRFieldBridge)
+            {
+               JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)nextField;
+               if(cmrField.hasForeignKey())
+                  fields.addAll(cmrField.getForeignKeyFields());
+            }
+            else
+            {
+               fields.add(nextField);
+            }
+         }
       }
 
       // LockingStrategy implementation --------------------
       void fieldStateEventCallback(CMPMessage msg,
                                    JDBCFieldBridge field,
-                                   Object value)
+                                   EntityEnterpriseContext ctx)
       {
          if(msg == CMPMessage.ACCESSED || msg == CMPMessage.CHANGED)
-            this.lockField( field );
+            this.lockField(field, ctx);
       }
 
       public void schedule(EntityEnterpriseContext ctx)
       {
-         if(log.isTraceEnabled())
+         if( lsTrace )
             log.trace("schedule> read strategy: locking all field values");
          for(Iterator iter = fields.iterator(); iter.hasNext();)
          {
@@ -631,11 +727,11 @@ public class JDBCOptimisticLock
 
       public void schedule(EntityEnterpriseContext ctx)
       {
-         if(log.isTraceEnabled())
+         if( lsTrace )
             log.trace("schedule> locking version field: " + versionField.getFieldName());
 
          this.lockFieldValue(versionField, ctx);
-         this.lockField(versionField);
+         this.lockField(versionField, ctx);
       }
    }
 
@@ -671,11 +767,11 @@ public class JDBCOptimisticLock
 
       public void schedule(EntityEnterpriseContext ctx)
       {
-         if(log.isTraceEnabled())
+         if( lsTrace )
             log.trace("schedule> locking timestamp field: " + timestampField.getFieldName());
 
          this.lockFieldValue(timestampField, ctx);
-         this.lockField(timestampField);
+         this.lockField(timestampField, ctx);
       }
    }
 
@@ -708,10 +804,10 @@ public class JDBCOptimisticLock
 
       public void schedule(EntityEnterpriseContext ctx)
       {
-         if(log.isTraceEnabled())
+         if( lsTrace )
             log.trace("schedule> locking generated field: " + keyGenField.getFieldName());
          this.lockFieldValue(keyGenField, ctx);
-         this.lockField(keyGenField);
+         this.lockField(keyGenField, ctx);
       }
    }
 }

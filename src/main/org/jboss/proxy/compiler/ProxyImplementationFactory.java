@@ -29,7 +29,7 @@ import org.apache.bcel.generic.Type;
  * Factory to create the bytecode implementation of various methods
  * required by the ProxyCompiler.
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author <a href="mailto:neale@isismanor.co.uk">Neale Swinnerton</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -72,13 +72,13 @@ public class ProxyImplementationFactory
    private InstructionFactory iFactory;
 
    /**
-    * Initializes a <code>ProxyImplementationFactory</code> instance.
+    * Creates a new <code>ProxyImplementationFactory</code> instance.
     *
     * @param superClassName    a <code>String</code> value
     * @param proxyClassName    a <code>String</code> value
     * @param cg                a <code>ClassGen</code> value
     */
-   public void init(final String superClassName, 
+   public ProxyImplementationFactory(final String superClassName, 
                                      final String proxyClassName, 
                                      final ClassGen cg) 
    {
@@ -239,7 +239,7 @@ public class ProxyImplementationFactory
     * @return the method
     * 
     */
-   public Method[] createConstructors() 
+   public Method createConstructor() 
    {
       MethodGen mg = new MethodGen(Constants.ACC_PUBLIC,
                                    Type.VOID,
@@ -265,7 +265,7 @@ public class ProxyImplementationFactory
       mg.setMaxStack();
       mg.setMaxLocals();
 
-      return new Method[] { getMethodAndTidyup(mg) };
+      return getMethodAndTidyup(mg);
    }
 
    /**
@@ -470,44 +470,4 @@ public class ProxyImplementationFactory
 
       return m;
    }         
-	/**
-	 * Returns the constPool.
-	 * @return ConstantPoolGen
-	 */
-	public ConstantPoolGen getConstPool() {
-		return constPool;
-	}
-	
-	/**
-	 * Returns the iFactory.
-	 * @return InstructionFactory
-	 */
-	public InstructionFactory getIFactory() {
-		return iFactory;
-	}
-	
-	/**
-	 * Returns the il.
-	 * @return InstructionList
-	 */
-	public InstructionList getIl() {
-		return il;
-	}
-	
-	/**
-	 * Returns the proxyClassName.
-	 * @return String
-	 */
-	public String getProxyClassName() {
-		return proxyClassName;
-	}
-	
-	/**
-	 * Returns the superClassName.
-	 * @return String
-	 */
-	public String getSuperClassName() {
-		return superClassName;
-	}
-
 }

@@ -6,41 +6,78 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.util.Hashtable;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.Name;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
+import java.util.Map;
+
+import org.jboss.invocation.Invocation;
+
+import org.jboss.metadata.SessionMetaData;
 
 /**
- * This interceptor handles transactions for session BMT beans.
+ *   This interceptor handles transactions for session BMT beans.
  *
- * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
- * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.27 $
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
+ *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ *   @version $Revision: 1.28 $
  */
-public final class TxInterceptorBMT extends TxInterceptorCMT
+public class TxInterceptorBMT
+   extends AbstractTxInterceptorBMT
 {
 
+   // Attributes ----------------------------------------------------
 
-   //public void create() throws Exception
-   public void start() throws Exception
+   // Static --------------------------------------------------------
+
+   // Constructors --------------------------------------------------
+
+   // Public --------------------------------------------------------
+
+   // Interceptor implementation --------------------------------------
+
+   public void create()
+      throws Exception
    {
       // Do initialization in superclass.
-      super.start();
-
+      super.create();
+ 
+      // Set the atateless attribute
+      stateless = ((SessionMetaData)container.getBeanMetaData()).isStateless();
    }
 
-
-   //public void destroy()
-   public void stop()
+   public Object invokeHome(Invocation mi)
+      throws Exception
    {
-      super.stop();
+      if (stateless)
+         // stateless: no context, no transaction, no call to the instance
+         return getNext().invokeHome(mi);
+      else
+         return invokeNext(mi);
    }
+
+   public Object invoke(Invocation mi)
+      throws Exception
+   {
+      return invokeNext(mi);
+   }
+
+  // Monitorable implementation ------------------------------------
+  public void sample(Object s)
+  {
+    // Just here to because Monitorable request it but will be removed soon
+  }
+  public Map retrieveStatistic()
+  {
+    return null;
+  }
+  public void resetStatistic()
+  {
+  }
+
+   // Protected  ----------------------------------------------------
+
+   // Inner classes -------------------------------------------------
+
 }
+

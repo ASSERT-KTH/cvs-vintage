@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDynamicQLQueryMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -20,7 +19,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCCommandFactory {
 
@@ -56,11 +55,7 @@ public class JDBCCommandFactory {
 
    public JDBCQueryCommand createDynamicQLQuery(JDBCQueryMetaData q) 
          throws DeploymentException {
-      if (((JDBCDynamicQLQueryMetaData)q).useNewCompiler()) {
-         return new JDBCNewDynamicQLQuery(manager, q);
-      } else {
-         return new JDBCDynamicQLQuery(manager, q);
-      }
+      return new JDBCDynamicQLQuery(manager, q);
    }
 
    public JDBCQueryCommand createJBossQLQuery(JDBCQueryMetaData q) 
@@ -123,14 +118,13 @@ public class JDBCCommandFactory {
       return new JDBCFindEntitiesCommand(manager);
    }
    
-   public JDBCCreateEntityCommand createCreateEntityCommand()
+   public JDBCCreateCommand createCreateEntityCommand()
       throws DeploymentException {
 
-      JDBCCreateEntityCommand cec = null;
+      JDBCCreateCommand cec = null;
       try {
-         cec = (JDBCCreateEntityCommand)manager.getMetaData().
+         cec = (JDBCCreateCommand)manager.getMetaData().
                   getEntityCommand().getCommandClass().newInstance();
-               //new JDBCCreateEntityCommand();
          cec.init(manager);
       }
       catch( DeploymentException de )
@@ -147,10 +141,14 @@ public class JDBCCommandFactory {
       return cec;
    }
 
+
    public JDBCPostCreateEntityCommand createPostCreateEntityCommand() {
+
       return new JDBCPostCreateEntityCommand(manager);
+
    }
-   
+
+
    public JDBCRemoveEntityCommand createRemoveEntityCommand() {
       return new JDBCRemoveEntityCommand(manager);
    }

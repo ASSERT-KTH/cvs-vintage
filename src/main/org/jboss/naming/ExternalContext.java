@@ -37,7 +37,6 @@ import javax.naming.ldap.Control;
 import javax.naming.spi.ObjectFactory;
 
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.naming.NonSerializableFactory;
 
 /**
  * A MBean that binds an arbitrary InitialContext into the JBoss default
@@ -48,9 +47,9 @@ import org.jboss.util.naming.NonSerializableFactory;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @see org.jboss.util.naming.NonSerializableFactory
+ * @see org.jboss.naming.NonSerializableFactory
  * 
- * @version <tt>$Revision: 1.16 $</tt>
+ * @version <tt>$Revision: 1.17 $</tt>
  * @author  Scott.Stark@jboss.org
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -350,7 +349,7 @@ public class ExternalContext
 
       public SerializableInitialContext()
       {
-         this("nns");
+         this("SerializableInitialContext");
       }
       
       public SerializableInitialContext(String addrType)

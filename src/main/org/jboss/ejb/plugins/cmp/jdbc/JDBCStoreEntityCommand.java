@@ -9,11 +9,12 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Collection;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -34,13 +35,16 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;
    private Logger log;
-   
+   private JDBCCMPFieldBridge updatedPrincipal;
+   private JDBCCMPFieldBridge updatedTime;
+   private JDBCCMPFieldBridge versionField;
+
    public JDBCStoreEntityCommand(JDBCStoreManager manager) {
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -50,6 +54,11 @@ public class JDBCStoreEntityCommand {
             this.getClass().getName() + 
             "." + 
             manager.getMetaData().getName());
+
+      // locate auto-update fields
+      versionField = entity.getVersionField();
+      updatedPrincipal = entity.getUpdatedPrincipalField();
+      updatedTime = entity.getUpdatedTimeField();
    }
    
    public void execute(EntityEnterpriseContext ctx) {
@@ -63,6 +72,19 @@ public class JDBCStoreEntityCommand {
          return;
       }
 
+      // Set the audit fields
+      if (updatedPrincipal != null && updatedPrincipal.isDirty(ctx) == false)
+      {
+         updatedPrincipal.setInstanceValue(ctx, ctx.getEJBContext().getCallerPrincipal().getName());
+         dirtyFields.add(updatedPrincipal);
+      }
+      if (updatedTime != null && updatedTime.isDirty(ctx) == false)
+      {
+         updatedTime.setInstanceValue(ctx, new Date()); 
+         dirtyFields.add(updatedTime);
+      }
+
+      // the fields used in the SET clause
       List setFields = new ArrayList(
          dirtyFields.size() + (entity.getVersionField() == null ? 0 : 1));
       setFields.addAll(dirtyFields);
@@ -72,14 +94,14 @@ public class JDBCStoreEntityCommand {
       // the fields used in the WHERE clause
       List whereFields = new ArrayList(entity.getPrimaryKeyFields());
       Collection lockedFields = Collections.EMPTY_LIST;
-      JDBCOptimisticLock lock = manager.getOptimisticLock(ctx);
-      if(lock != null) {
-         lockedFields = lock.getLockedFields();
+      JDBCOptimisticLock optimisticLock = manager.getOptimisticLock(ctx);
+      if(optimisticLock != null) {
+         lockedFields = optimisticLock.getLockedFields(ctx);
          whereFields.addAll(lockedFields);
       }
 
       // generate sql
-      StringBuffer sql = new StringBuffer();
+      StringBuffer sql = new StringBuffer(); 
       sql.append("UPDATE ").append(entity.getTableName());
       sql.append(" SET ").append(SQLUtil.getSetClause(setFields));
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(whereFields));
@@ -90,7 +112,7 @@ public class JDBCStoreEntityCommand {
       try {
          // get the connection
          con = entity.getDataSource().getConnection();
-
+         
          // create the statement
          if(log.isDebugEnabled()) {
             log.debug("Executing SQL: " + sql);
@@ -105,8 +127,7 @@ public class JDBCStoreEntityCommand {
          }
 
          // SET: set new value for version field
-         if(entity.getVersionField() != null) {
-            JDBCCMPFieldBridge versionField = entity.getVersionField();
+         if(versionField != null) {
             Object nextVal = manager.getOptimisticLock(ctx).getNextLockingValue(
                versionField, versionField.getInstanceValue(ctx));
             versionField.setInstanceValue(ctx, nextVal);
@@ -119,16 +140,18 @@ public class JDBCStoreEntityCommand {
          // WHERE: set optimistically locked field values
          for(Iterator iter = lockedFields.iterator(); iter.hasNext();) {
             JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)iter.next();
-            Object lockedValue = lock.getLockedFieldValue(field);
+            Object lockedValue = optimisticLock.getLockedFieldValue(field, ctx);
             index = field.setArgumentParameters(ps, index, lockedValue);
          }
+
+         if(optimisticLock != null)
+            optimisticLock.updateLockedFieldValues(ctx);
 
          // execute statement
          rowsAffected = ps.executeUpdate();
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
-         e.printStackTrace();
          throw new EJBException("Store failed", e);
       } finally {
          JDBCUtil.safeClose(ps);

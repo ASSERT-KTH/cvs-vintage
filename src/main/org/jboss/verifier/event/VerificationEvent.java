@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEvent.java,v 1.11 2002/09/18 13:19:58 lqd Exp $
+ * $Id: VerificationEvent.java,v 1.12 2003/08/27 04:32:36 patriot1burke Exp $
  */
 
 
@@ -35,9 +35,9 @@ import org.jboss.verifier.Section;
 
 /**
  *
- * @author Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.11 $
- * @since JDK 1.3
+ * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
+ * @version $Revision: 1.12 $
+ * @since  	JDK 1.3
  */
 public class VerificationEvent extends EventObject {
 
@@ -93,8 +93,8 @@ public class VerificationEvent extends EventObject {
       }
       else
       {
-         throw new IllegalArgumentException( "Unknown Event State: " +
-            state);
+         throw new IllegalArgumentException( STATE_NOT_RECOGNIZED + ": "
+            + state);
       }
    }
 
@@ -256,6 +256,10 @@ public class VerificationEvent extends EventObject {
       return buf.toString();
    }
 
+    /*
+     * String constants
+     */
+   private final static String STATE_NOT_RECOGNIZED = "Unknown event state";
 }
 /*
 vim:ts=3:sw=3:et

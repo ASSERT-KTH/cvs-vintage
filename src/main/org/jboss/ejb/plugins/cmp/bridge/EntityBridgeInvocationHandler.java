@@ -19,10 +19,6 @@ import java.util.Map;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.transaction.Transaction;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
@@ -42,7 +38,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
@@ -51,10 +47,6 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final Map fieldMap;
    private final Map selectorMap;
    private EntityEnterpriseContext ctx;
-
-   private final MBeanServer server;
-   private final ObjectName objectCopier;
-   private final String[] copyArgs = new String[] {"java.lang.Object"};
    
    /**
     * Creates an invocation handler for the specified entity.
@@ -71,16 +63,6 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       this.container = container;
       this.entityBridge = entityBridge;
       this.beanClass = beanClass;
-
-      server = container.getServer();
-      try
-      {
-         objectCopier = new ObjectName("jboss:service=ObjectCopier");
-      }
-      catch(Exception e)
-      {
-         throw new EJBException("Error creating object copier name", e);
-      }
 
       fieldMap = createFieldMap();
       selectorMap = createSelectorMap();
@@ -110,7 +92,7 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
                tx = container.getTransactionManager().getTransaction();
             }
             if (!container.getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
-               EntityContainer.getEntityInvocationRegistry().synchronizeEntities(tx);
+               EntityContainer.synchronizeEntitiesWithinTransaction(tx);
             return selector.execute(args);
          }
       } catch(RuntimeException e) {
@@ -137,24 +119,12 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
             throw new EJBException("EJB home methods are not allowed to " +
                   "access CMP or CMR fields: methodName=" + methodName);
          }
-
-         if(field instanceof CMPFieldBridge)
-         {
-            if(methodName.startsWith("get")) {
-               return copy(field.getValue(ctx));
-            } else if(methodName.startsWith("set")) {
-               field.setValue(ctx, copy(args[0]));
-               return null;
-            }
-         }   
-         else
-         {
-            if(methodName.startsWith("get")) {
-               return field.getValue(ctx);
-            } else if(methodName.startsWith("set")) {
-               field.setValue(ctx, args[0]);
-               return null;
-            }
+   
+         if(methodName.startsWith("get")) {
+            return field.getValue(ctx);
+         } else if(methodName.startsWith("set")) {
+            field.setValue(ctx, args[0]);
+            return null;
          }
       } catch(RuntimeException e) {
          throw e;
@@ -167,34 +137,6 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
             "methodName=" + methodName);
    }
    
-   private Object copy(Object source)
-   {
-      try
-      {
-         return server.invoke(
-               objectCopier, 
-               "copy", 
-               new Object[] {source},
-               copyArgs);
-      }
-      catch(MBeanException e)
-      {
-         throw new EJBException(
-               "Exception occured in copy", 
-               e.getTargetException());
-      }
-      catch(ReflectionException e)
-      {
-         throw new EJBException(
-               "Exception occured in copy", 
-               e.getTargetException());
-      }
-      catch(Exception e)
-      {
-         throw new EJBException("Exception occured while copying value", e);
-      }
-   }
-
    private Map getAbstractAccessors() {
       Method[] methods = beanClass.getMethods();
       Map abstractAccessors = new HashMap(methods.length);

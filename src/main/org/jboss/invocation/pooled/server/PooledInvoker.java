@@ -9,35 +9,27 @@
 
 package org.jboss.invocation.pooled.server;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.LinkedList;
+import javax.management.ObjectName;
+import javax.naming.InitialContext;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.pooled.interfaces.PooledInvokerProxy;
+import org.jboss.invocation.pooled.interfaces.ServerAddress;
+import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
+import org.jboss.logging.Logger;
+import org.jboss.naming.Util;
+import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
-import org.jboss.util.naming.Util;
-import org.jboss.logging.Logger;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.rmi.MarshalledObject;
-import javax.management.ObjectName;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.Name;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
-import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
-import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.invocation.pooled.interfaces.PooledInvokerProxy;
-import org.jboss.invocation.ServerID;
-import java.util.LinkedList;
-import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
-import org.jboss.proxy.TransactionInterceptor;
-import org.jboss.mx.util.JMXExceptionDecoder;
-import java.net.Socket;
 
 /**
  * This invoker pools Threads and client connections to one server socket.
@@ -59,44 +51,45 @@ import java.net.Socket;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
-public final class PooledInvoker extends ServiceMBeanSupport implements PooledInvokerMBean, Runnable
+public class PooledInvoker extends ServiceMBeanSupport
+   implements PooledInvokerMBean, Runnable
 {
 
    /**
     * logger instance.
     */
-   final static private Logger log = Logger.getLogger(PooledInvoker.class);
+   final static protected Logger log = Logger.getLogger(PooledInvoker.class);
 
    /**
     * If the TcpNoDelay option should be used on the socket.
     */
-   private boolean enableTcpNoDelay = false;
+   protected boolean enableTcpNoDelay = false;
 
    /**
     * The internet address to bind to by default.
     */
-   private String serverBindAddress = null;
+   protected String serverBindAddress = null;
 
    /**
     * The server port to bind to.
     */
-   private int serverBindPort = 0;
+   protected int serverBindPort = 0;
 
    /**
     * The internet address client will use to connect to the sever.
     */
-   private String clientConnectAddress = null;
+   protected String clientConnectAddress = null;
 
    /**
     * The port a client will use to connect to the sever.
     */
-   private int clientConnectPort = 0;
+   protected int clientConnectPort = 0;
 
-   private int backlog = 200;
+   protected int backlog = 200;
 
-   private ServerSocket serverSocket = null;
+   protected ServerSocket serverSocket = null;
 
-   private int timeout = 60000; // 60 seconds.
+   protected int timeout = 60000; // 60 seconds.
 
    protected int maxPoolSize = 300;
 
@@ -112,12 +105,12 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
     * ObjectName of the <code>transactionManagerService</code> we use.
     * Probably should not be here -- used to set txInterceptor tx mananger.
     */
-   private ObjectName transactionManagerService;
+   protected ObjectName transactionManagerService;
 
-   private PooledInvokerProxy optimizedInvokerProxy = null;
+   protected PooledInvokerProxy optimizedInvokerProxy = null;
 
-   private static TransactionPropagationContextFactory tpcFactory;
-   private static TransactionPropagationContextImporter tpcImporter;
+   protected static TransactionPropagationContextFactory tpcFactory;
+   protected static TransactionPropagationContextImporter tpcImporter;
 
    ////////////////////////////////////////////////////////////////////////
    //
@@ -131,6 +124,12 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
    public String getName()
    {
       return "Optimized-Invoker";
+   }
+
+
+   protected void jmxBind()
+   {
+      Registry.bind(getServiceName(), optimizedInvokerProxy);
    }
 
    /**
@@ -152,7 +151,10 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
       // and the transaction propagation context importer
       tpcImporter = (TransactionPropagationContextImporter) ctx.lookup("java:/TransactionPropagationContextImporter");
 
-      //WTF shouldn't this be PooledInvokerProxy?
+      // FIXME marcf: This should not be here
+      TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
+
+      //TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       ///////////////////////////////////////////////////////////      
@@ -176,14 +178,14 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
       serverSocket = new ServerSocket(serverBindPort, backlog, bindAddress);
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
-      ServerID sa = new ServerID(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeout); 
+      ServerAddress sa = new ServerAddress(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeout); 
       optimizedInvokerProxy = new PooledInvokerProxy(sa, clientMaxPoolSize);
 
       ///////////////////////////////////////////////////////////      
       // Register the service with the rest of the JBoss Kernel
       ///////////////////////////////////////////////////////////      
       // Export references to the bean
-      Registry.bind(getServiceName(), optimizedInvokerProxy);
+      jmxBind();
       // Bind the invoker in the JNDI invoker naming space
       // It should look like so "invokers/<hostname>/trunk" 
       Util.rebind(ctx, "invokers/" + clientConnectAddress + "/pooled", optimizedInvokerProxy);
@@ -198,7 +200,7 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
          acceptThreads[i].start();
       }
    }
-   
+
    public void run()
    {
       
@@ -208,10 +210,10 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
          {
             Socket socket = serverSocket.accept();
             //System.out.println("Thread accepted: " + Thread.currentThread());
-
             ServerThread thread = null;
             boolean newThread = false;
-            synchronized(clientpool)
+            
+            while (thread == null)
             {
                synchronized(threadpool)
                {
@@ -219,21 +221,39 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
                   {
                      thread = (ServerThread)threadpool.removeFirst();
                   }
-                  else
-                  {
-                     thread = new ServerThread(socket, this, clientpool, threadpool, timeout);
-                     newThread = true;
-                  }
-                  clientpool.insert(thread, thread);
                }
+               if (thread == null)
+               {
+                  synchronized(clientpool)
+                  {
+                     if (clientpool.size() < maxPoolSize) 
+                     {
+                        thread = new ServerThread(socket, this, clientpool, threadpool, timeout);
+                        newThread = true;
+                     }
+                     if (thread == null)
+                     {
+                        clientpool.evict();
+                        log.debug("**** WAITING *****");
+                        clientpool.wait();
+                        log.debug("**** WOKE UP *****");
+                     }
+                  }
+               }
+            }
+            synchronized(clientpool)
+            {
+               clientpool.insert(thread, thread);
             }
             
             if (newThread)
             {
+               log.debug("**** ACQUIRED NEW *****");
                thread.start();
             }
             else
             {
+               log.debug("**** ACQUIRED OLD *****");
                thread.wakeup(socket, timeout);
             }
          }
@@ -268,13 +288,21 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
          ServerThread thread = (ServerThread)threadpool.removeFirst();
          thread.shutdown();
       }
+
       try
       {
-         ctx.unbind("invokers/" + clientConnectAddress + "/trunk");
+         ctx.unbind("invokers/" + clientConnectAddress + "/pooled");
       }
       finally
       {
          ctx.close();
+      }
+      try
+      {
+         serverSocket.close();
+      }
+      catch(Exception e)
+      {         
       }
    }
 
@@ -288,38 +316,34 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
     * The ServerProtocol will use this method to service an invocation 
     * request.
     */
-   public InvocationResponse invoke(Invocation invocation) throws Exception
+   public Object invoke(Invocation invocation) throws Exception
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread currentThread = Thread.currentThread();
+      ClassLoader oldCl = currentThread.getContextClassLoader();
       try
       {
 
-         // Deserialize the transaction if it is there  
-         invocation.setTransaction(importTPC(((MarshalledInvocation) invocation).getTransactionPropagationContext()));
-
-         // Extract the ObjectName, the rest is still marshalled
-         // ObjectName mbean = new ObjectName((String) invocation.getContainer());
-
-         // This is bad it should at least be using a sub set of the Registry 
-         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on 
-         // that subset FIXME it will speed up lookup times
+         // Deserialize the transaction if it is there
+         MarshalledInvocation mi = (MarshalledInvocation) invocation;
+         invocation.setTransaction(importTPC(mi.getTransactionPropagationContext()));
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
-         Object obj = getServer().invoke(mbean, "", new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
+         Object obj = getServer().invoke(mbean, "invoke",
+               new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
 
-         return (InvocationResponse)obj;
+         return obj;
       }
       catch (Exception e)
       {
-         JMXExceptionDecoder.rethrow(e);
+         org.jboss.mx.util.JMXExceptionDecoder.rethrow(e);
 
          // the compiler does not know an exception is thrown by the above
          throw new org.jboss.util.UnreachableStatementException();
       }
       finally
       {
-         Thread.currentThread().setContextClassLoader(oldCl);
+         currentThread.setContextClassLoader(oldCl);
       }
    }
 

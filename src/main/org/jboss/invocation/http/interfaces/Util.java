@@ -8,6 +8,7 @@ package org.jboss.invocation.http.interfaces;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectStreamException;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
 import java.net.Authenticator;
@@ -15,8 +16,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationException;
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociationAuthenticator;
@@ -24,7 +25,7 @@ import org.jboss.security.SecurityAssociationAuthenticator;
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
 */
 public class Util
 {
@@ -46,6 +47,14 @@ public class Util
       }
    }
 
+   /** Install the SecurityAssociationAuthenticator as the default
+    * java.net.Authenticator
+    */
+   public static void init()
+   {
+      Authenticator.setDefault(new SecurityAssociationAuthenticator());
+   }
+
    /** Post the Invocation as a serialized MarshalledInvocation object. This is
     using the URL class for now but this should be improved to a cluster aware
     layer with full usage of HTTP 1.1 features, pooling, etc.
@@ -53,17 +62,19 @@ public class Util
    public static Object invoke(URL externalURL, Invocation mi)
       throws Exception
    {
+      if( log.isTraceEnabled() )
+         log.trace("invoke, externalURL="+externalURL);
       /* Post the MarshalledInvocation data. This is using the URL class
        for now but this should be improved to a cluster aware layer with
        full usage of HTTP 1.1 features, pooling, etc.
        */
       HttpURLConnection conn = (HttpURLConnection) externalURL.openConnection();
-      if( conn instanceof HttpsURLConnection )
+      if( conn instanceof com.sun.net.ssl.HttpsURLConnection )
       {
          // See if the org.jboss.security.ignoreHttpsHost property is set
          if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
          {
-            HttpsURLConnection sconn = (HttpsURLConnection) conn;
+            com.sun.net.ssl.HttpsURLConnection sconn = (com.sun.net.ssl.HttpsURLConnection) conn;
             AnyhostVerifier verifier = new AnyhostVerifier();
             sconn.setHostnameVerifier(verifier);
          }
@@ -74,8 +85,17 @@ public class Util
       conn.setRequestMethod("POST");
       OutputStream os = conn.getOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(os);
-      oos.writeObject(mi);
-      oos.flush();
+      try
+      {
+         oos.writeObject(mi);
+         oos.flush();
+      }
+      catch (ObjectStreamException e)
+      {
+         // This generally represents a programming/deployment error,
+         // not a communication problem
+         throw new InvocationException(e);
+      }
 
       // Get the response MarshalledValue object
       InputStream is = conn.getInputStream();
@@ -87,7 +107,9 @@ public class Util
       // If the encoded value is an exception throw it
       Object value = mv.get();
       if( value instanceof Exception )
+      {
          throw (Exception) value;
+      }
 
       return value;
    }

@@ -1,119 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project [
-  <!ENTITY buildmagic SYSTEM "../tools/etc/buildfragments/buildmagic.ent">
-  <!ENTITY tools      SYSTEM "../tools/etc/buildfragments/tools.ent">
-  <!ENTITY libraries  SYSTEM "../tools/etc/buildfragments/libraries.ent">
-  <!ENTITY modules    SYSTEM "../tools/etc/buildfragments/modules.ent">
-  <!ENTITY defaults   SYSTEM "../tools/etc/buildfragments/defaults.ent">
-  <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
+   <!ENTITY buildmagic SYSTEM "../tools/etc/buildmagic/buildmagic.ent">
+   <!ENTITY libraries SYSTEM "../tools/etc/buildmagic/libraries.ent">
+   <!ENTITY modules SYSTEM "../tools/etc/buildmagic/modules.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.146 2003/07/06 19:21:09 eli201 Exp $ -->
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
 
-<!--+======================================================================+-->
-<!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
-<!--|                                                                      |-->
-<!--| Distributable under LGPL license.                                    |-->
-<!--| See terms of license at http://www.gnu.org.                          |-->
-<!--|                                                                      |-->
-<!--| This file has been designed to work with the 'tools' module and      |-->
-<!--| Buildmagic extentions.                                               |-->
-<!--+======================================================================+-->
+<!-- $Id: build.xml,v 1.147 2003/08/27 04:31:52 patriot1burke Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
-  <!--+====================================================================+-->
-  <!--| Setup                                                              |-->
-  <!--|                                                                    |-->
-  <!--| Include the common build elements.                                 |-->
-  <!--|                                                                    |-->
-  <!--| This defines several different targets, properties and paths.      |-->
-  <!--| It also sets up the basic extention tasks amoung other things.     |-->
-  <!--+====================================================================+-->
+  <!-- ================================================================== -->
+  <!-- Setup                                                              -->
+  <!-- ================================================================== -->
+
+  <!--
+     | Include the common Buildmagic elements.
+     |
+     | This defines several different targets, properties and paths.
+     | It also sets up the basic extention tasks amoung other things.
+   -->
 
   &buildmagic;
-  &libraries;
-  &modules;
-  &defaults;
-  &tools;
-  &targets;
 
 
-  <!--+====================================================================+-->
-  <!--| Initialization                                                     |-->
-  <!--|                                                                    |-->
-  <!--| Initialize the build system.  Other targets should depend on       |-->
-  <!--| 'init'.                                                            |-->
-  <!--+====================================================================+-->
+  <!-- ================================================================== -->
+  <!-- Initialization                                                     -->
+  <!-- ================================================================== -->
 
-  <target name="init" depends="_default:init">
-    <!-- Add module specific elements here. -->
+  <!--
+     | Initialize the build system.  Must depend on '_buildmagic:init'.  
+     | Other targets should depend on 'init' or things will mysteriously fail.
+   -->
+
+  <target name="init" unless="init.disable" depends="_buildmagic:init">
   </target>
 
 
-  <!--+====================================================================+-->
-  <!--| Configuration                                                      |-->
-  <!--|                                                                    |-->
-  <!--| This target is invoked by the Buildmagic initialization logic      |-->
-  <!--| and should contain module specific configuration elements.         |-->
-  <!--+====================================================================+-->
+  <!-- ================================================================== -->
+  <!-- Configuration                                                      -->
+  <!-- ================================================================== -->
+
+  <!--
+     | Configure the build system.  
+     |
+     | This target is invoked by the Buildmagic initialization logic and 
+     | should contain module specific configuration elements.
+   -->
 
   <target name="configure" unless="configure.disable">
+
+    <!-- =================== -->
+    <!-- Basic Configuration -->
+    <!-- =================== -->
 
     <!-- Module name(s) & version -->
     <property name="module.name" value="server"/>
     <property name="module.Name" value="JBoss Server"/>
+    <property name="module.version" value="DEV"/>
 
-    <!-- Configure thirdparty libraries -->
-    <call target="configure-libraries"/>
+    <!-- ========= -->
+    <!-- Libraries -->
+    <!-- ========= -->
+
+    &libraries;
+    <!-- The combined library classpath -->
     <path id="library.classpath">
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
       <path refid="sun.jts.classpath"/>
-      <path refid="apache.xalan.classpath"/>
+      <path refid="apache.crimson.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="apache.bcel.classpath"/>
-      <path refid="dom4j.dom4j.classpath"/>
+      <path refid="apache.commons.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
       <path refid="gnu.getopt.classpath"/>
       <path refid="oswego.concurrent.classpath"/>
       <path refid="junit.junit.classpath"/>
-      <path refid="mysql.mysql.classpath"/>
-      <path refid="gnu.regexp.classpath"/>
-      <path refid="informix.informix.classpath"/>
     </path>
 
-    <!-- Configure modules -->
-    <call target="configure-modules"/>
+    <!-- ======= -->
+    <!-- Modules -->
+    <!-- ======= -->
+
+    &modules;
+    <!-- The combined dependant module classpath -->
     <path id="dependentmodule.classpath">
       <path refid="jboss.j2ee.classpath"/>
       <path refid="jboss.common.classpath"/>
       <path refid="jboss.system.classpath"/>
       <path refid="jboss.jmx.classpath"/>
       <path refid="jboss.naming.classpath"/>
-      <path refid="jboss.management.classpath"/>
       <path refid="jboss.transaction.classpath"/>
-      <path refid="jboss.connector.classpath"/>
-      <path refid="jboss.persistence.classpath"/>
-      <path refid="jboss.remoting.classpath"/>
     </path>
 
-    <!--+=======================================+-->
-    <!--| Override any default properties here. |-->
-    <!--+=======================================+-->
+    <!-- ===== -->
+    <!-- Tasks -->
+    <!-- ===== -->
 
-    <!-- Configure defaults & build tools -->
-    <call target="configure-defaults"/>
-    <call target="configure-tools"/>
+    <!-- Where source files live -->
+    <property name="source.java" value="${module.source}/main"/>
+    <property name="source.etc" value="${module.source}/etc"/>
+    <property name="source.bin" value="${module.source}/bin"/>
+    <property name="source.docs" value="${module.source}/docs"/>
+    <property name="source.resources" value="${module.source}/resources"/>
 
-    <!--+=======================================+-->
-    <!--| Define module specific elements here. |-->
-    <!--+=======================================+-->
+    <!-- Where build generated files will go -->
+    <property name="build.classes" value="${module.output}/classes"/>
+    <property name="build.lib" value="${module.output}/lib"/>
+    <property name="build.api" value="${module.output}/api"/>
+    <property name="build.etc" value="${module.output}/etc"/>
+    <property name="build.bin" value="${module.output}/bin"/>
+    <property name="build.docs" value="${module.output}/docs"/>
+    <property name="build.parsers" value="${module.output}/parsers"/>
+    <property name="build.beans" value="${module.output}/beans"/>
+    <property name="build.gen-src" value="${module.output}/gen-src"/>
+    <property name="build.gen" value="${module.output}/gen"/>
+    <property name="build.resources" value="${module.output}/resources"/>
+    <property name="build.reports" value="${module.output}/reports"/>
 
-    <!-- Users should override by defining a property in build/local.properties -->
+    <!-- Install/Release structure -->
+    <property name="install.id" value="${module.name}-${module.version}"/>
+    <property name="release.id" value="${install.id}"/>
+    <property name="install.root" value="${module.output}/${install.id}"/>
+
+    <!-- The combined thirdparty classpath -->
+    <path id="thirdparty.classpath">
+      <path refid="library.classpath"/>
+      <path refid="dependentmodule.classpath"/>
+    </path>
+
+    <!-- This module is based on Java 1.2 -->
+    <property name="javac.target" value="1.2"/>
+
+    <!-- RMIC should generate stubs compatible with Java 1.2+ -->
+    <property name="rmic.stubVersion" value="1.2"/>
+
+    <!-- classpath and local.classpath must have a value using with a path -->
+    <property name="classpath" value=""/>
+    <property name="local.classpath" value=""/>
+
+    <!-- The classpath required to build classes. -->
+    <path id="javac.classpath">
+      <pathelement path="${classpath}"/>
+      <pathelement path="${local.classpath}"/>
+      <path refid="thirdparty.classpath"/>
+    </path>
+
+    <!-- The classpath required to build javadocs. -->
+    <path id="javadoc.classpath">
+      <path refid="javac.classpath"/>
+    </path>
+
+    <!-- Packages to include when generating api documentation -->
+    <property name="javadoc.packages" value="org.jboss.*"/>
+
+    <!-- Override JUnit defaults -->
+    <property name="junit.timeout" value="240000"/> <!-- 4 minutes -->
+    <property name="junit.batchtest.todir" value="${build.reports}"/>
+    <property name="junit.jvm.options" value="-Ddummy"/>
+
+    <!-- xdoclet -->
+    <path id="xdoclet.task.classpath">
+      <path refid="javac.classpath"/>
+      <fileset dir="${project.thirdparty}/xdoclet-xdoclet/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <property name="xdoclet.task.classpath" 
+	      refid="xdoclet.task.classpath"/>
 
     <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
     <property name="default.type.mapping" value="Hypersonic SQL"/>
+    <!-- override the default in build/local.properties -->
 
     <!-- cmp1 persistence manager for standardjboss.xml -->
     <!--JAWS-->
@@ -127,35 +194,34 @@
     <!--with-->
     <property name="jca.connection.interceptor" value="&lt;interceptor&gt;org.jboss.resource.connectionmanager.CachedConnectionInterceptor&lt;/interceptor&gt;"/>
 
-    <property name="jboss.server.log.console.threshold" value="INFO"/>
-
   </target>
 
 
-  <!--+====================================================================+-->
-  <!--| Compile                                                            |-->
-  <!--|                                                                    |-->
-  <!--| This target should depend on other compile-* targets for each      |-->
-  <!--| different type of compile that needs to be performed, short of     |-->
-  <!--| documentation compiles.                                            |-->
-  <!--+====================================================================+-->
+  <!-- ================================================================== -->
+  <!-- Compile                                                            -->
+  <!-- ================================================================== -->
 
-  <target name="compile"
-	  description="Compile all source files."
+  <!-- 
+     |  Compile everything.
+     |
+     |  This target should depend on other compile-* targets for each 
+     |  different type of compile that needs to be performed, short of
+     |  documentation compiles.
+    -->
+  <target name="compile" 
 	  depends="generate-parsers,
-                   compile-bean-sources,
+                   compile-bean-sources, 
                    compile-mbean-sources,
-                   compile-classes,
-                   compile-rmi,
-                   _default:compile-etc,
-                   _default:compile-resources,
-                   _default:compile-bin">
-    <!-- Add module specific elements here. -->
-  </target>
+                   compile-classes, 
+                   compile-rmi, 
+                   compile-etc, 
+                   compile-resources, 
+                   compile-bin"
+	  description="Compile all source files."/>
 
   <!-- Generate parsers -->
   <target name="generate-parsers" depends="init">
-    <mkdir dir="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"/>
+    <mkdir dir="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"/>
 
     <!--
        | make sure to generate the JBoss-QL parser first so the node
@@ -164,51 +230,48 @@
 
     <!-- JBoss-QL parser -->
     <jjtree
-      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt"
-	   outputdirectory="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt" 
+	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
 	   javacchome="${sun.javacc.lib}"/>
 
     <javacc
-      target="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jj"
+      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jj"
 	   javacchome="${sun.javacc.lib}"/>
 
     <!-- EJB-QL parser -->
     <jjtree
-      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"
-	   outputdirectory="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt" 
+	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
 	   javacchome="${sun.javacc.lib}"/>
 
     <javacc
-      target="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj"
+      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj" 
 	   javacchome="${sun.javacc.lib}"/>
-
-    <!-- New EJB-QL Parser -->
-    <mkdir dir="${build.gen-src}/org/jboss/cmp/ejb/ejbql"/>
-    <jjtree target="${source.java}/org/jboss/cmp/ejb/ejbql/EJBQL20Parser.jjt"
-            outputdirectory="${build.gen-src}/org/jboss/cmp/ejb/ejbql"
-            javacchome="${sun.javacc.lib}" />
-    <javacc target="${build.gen-src}/org/jboss/cmp/ejb/ejbql/EJBQL20Parser.jj"
-            javacchome="${sun.javacc.lib}"/>
 
   </target>
 
   <!-- Compile mbeans with XDoclet -->
   <target name="compile-mbean-sources" depends="init">
+    <taskdef name="jmxdoclet" classname="xdoclet.modules.jmx.JMXDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.gen-src}"/>
-    <jmxdoclet destdir="${build.gen-src}"
+    <jmxdoclet
+	     destdir="${build.gen-src}"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
-        <include name="org/jboss/aspect/jmx/*.java"/>
-        <include name="org/jboss/copy/ObjectCopier.java"/>
         <include name="org/jboss/deployment/EARDeployer.java"/>
+        <include name="org/jboss/ejb/Container.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
         <include name="org/jboss/ejb/EJBDeployer.java"/>
+        <include name="org/jboss/ejb/EntityContainer.java"/>
+        <include name="org/jboss/ejb/MessageDrivenContainer.java"/>
+        <include name="org/jboss/ejb/plugins/AbstractInstanceCache.java"/>
+        <include name="org/jboss/ejb/plugins/AbstractInstancePool.java"/>
+        <include name="org/jboss/ejb/plugins/EntityInstanceCache.java"/>
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
-        <include name="org/jboss/ejb/timer/*TimerSource.java"/>
-        <include name="org/jboss/ejb/timer/*PersistenceManager.java"/>
+        <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
+        <include name="org/jboss/ejb/plugins/jms/JMSContainerInvoker.java"/>
         <include name="org/jboss/invocation/**/*.java"/>
-        <include name="org/jboss/proxy/**/*.java"/>
         <include name="org/jboss/jms/**/*.java"/>
         <include name="org/jboss/jmx/**/*.java"/>
         <include name="org/jboss/logging/**/*.java"/>
@@ -221,10 +284,11 @@
 
   <!-- Compile EJB beans with XDoclet -->
   <target name="compile-bean-sources" depends="init">
+    <taskdef name="ejbdoclet" classname="xdoclet.modules.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
 
-    <mkdir dir="${build.gen-src}"/>
-    <mkdir dir="${build.resources}/ejbadaptor/META-INF"/>
-    <ejbdoclet destdir="${build.gen-src}"
+    <mkdir dir="${build.beans}/ejbadaptor"/>
+    <ejbdoclet
+	     destdir="${build.beans}/ejbadaptor"
 	     ejbspec="1.1"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
@@ -235,52 +299,15 @@
       <remoteinterface/>
       <homeinterface/>
       <session/>
-      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.resources}/ejbadaptor/META-INF"/>
-      <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.resources}/ejbadaptor/META-INF"/>
+      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
+      <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.beans}/ejbadaptor/META-INF"/>
     </ejbdoclet>
 
   </target>
 
-  <!-- Generate sources for jdbc2 -->
-  <target name="gen-src-jdbc2" depends="init" unless="HAVE_JDK_1.4">
-    <echo message="generating sources for JDBC2"/>
-    <mkdir dir="${build.gen-src}"/>
-    <copy todir="${build.gen-src}" filtering="yes">
-      <fileset dir="${source.java}">
-         <include name="org/jboss/ejb/plugins/cmp/jdbc/**/*.jpp"/>
-      </fileset>
-      <mapper type="glob" from="*.jpp" to="*.java"/>
-      <filterset>
-        <filter token="JDK1.4START" value="/*"/>
-        <filter token="JDK1.4END" value="*/"/>
-        <filter token="JDK1.3START" value=""/>
-        <filter token="JDK1.3END" value=""/>
-      </filterset>
-    </copy>
-  </target>
-
-  <!-- Generate sources for jdbc3 -->
-  <target name="gen-src-jdbc3" depends="init" if="HAVE_JDK_1.4">
-    <echo message="generating sources for JDBC3"/>
-    <mkdir dir="${build.gen-src}"/>
-    <copy todir="${build.gen-src}" filtering="yes">
-      <fileset dir="${source.java}">
-         <include name="org/jboss/ejb/plugins/cmp/jdbc/**/*.jpp"/>
-      </fileset>
-      <mapper type="glob" from="*.jpp" to="*.java"/>
-      <filterset>
-        <filter token="JDK1.4START" value=""/>
-        <filter token="JDK1.4END" value=""/>
-        <filter token="JDK1.3START" value="/*"/>
-        <filter token="JDK1.3END" value="*/"/>
-      </filterset>
-    </copy>
-  </target>
-
   <!-- Compile all class files -->
-  <target name="compile-classes" depends="init,gen-src-jdbc2,gen-src-jdbc3">
+  <target name="compile-classes" depends="init">
     <mkdir dir="${build.classes}"/>
-
     <javac destdir="${build.classes}"
            optimize="${javac.optimize}"
 	   target="${javac.target}"
@@ -294,13 +321,12 @@
        <classpath refid="javac.classpath"/>
 
        <src path="${source.java}"/>
+       <src path="${build.parsers}"/>
+       <src path="${build.beans}"/>
        <src path="${build.gen-src}"/>
 
        <include name="${javac.includes}"/>
        <exclude name="${javac.excludes}"/>
-
-       <exclude name="org/jboss/invocation/trunk/client/nbio/*.java" unless="HAVE_JDK_1.4"/>
-       <exclude name="org/jboss/invocation/trunk/server/nbio/*.java" unless="HAVE_JDK_1.4"/>
 
        <exclude name="org/jboss/ejb/plugins/cmp/jdbc/jdbc3/*.java" unless="HAVE_JDK_1.4"/>
     </javac>
@@ -329,24 +355,65 @@
     </rmic>
   </target>
 
+  <!-- Compile resource files -->
+  <target name="compile-resources" depends="init">
+    <mkdir dir="${build.resources}"/>
+    <copy todir="${build.resources}" filtering="yes">
+      <fileset dir="${source.resources}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Compile etc files (manifests and such) -->
+  <target name="compile-etc" depends="init">
+    <mkdir dir="${build.etc}"/>
+    <copy todir="${build.etc}" filtering="yes" overwrite="yes">
+      <fileset dir="${source.etc}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+    <copy todir="${build.etc}/manifest" filtering="yes">
+      <fileset dir="${project.root}/build/etc">
+         <include name="version.mf"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Compile bin scripts -->
+  <target name="compile-bin" depends="init">
+    <mkdir dir="${build.bin}"/>
+    <copy todir="${build.bin}" filtering="yes">
+      <fileset dir="${source.bin}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+
+    <fixcrlf srcdir="${build.bin}"
+	     eol="lf" eof="remove"
+	     includes="**/*.sh"/>
+
+    <fixcrlf srcdir="${build.bin}" 
+	     eol="crlf" eof="remove"
+	     includes="**/*.bat, **/*.cmd"/>
+
+    <chmod perm="+x">
+      <fileset dir="${build.bin}">
+         <include name="**/*.sh"/>
+      </fileset>
+    </chmod>
+  </target>
+
 
   <!-- ================================================================== -->
-  <!-- Tests                                                              -->
+  <!-- Archives                                                           -->
   <!-- ================================================================== -->
 
-  <target name="tests" depends="_default:tests"/>
-
-  <!--+====================================================================+-->
-  <!--| Generate Output                                                    |-->
-  <!--|                                                                    |-->
-  <!--| Generates the target output for this module. Target output is      |-->
-  <!--| the output which is ment to be released or used by external        |-->
-  <!--| modules.                                                           |-->
-  <!--+====================================================================+-->
-
-  <target name="output"
-	  description="Generate all target output."
-          depends="_buildmagic:build-bypass-check"
+  <!-- 
+     |  Build all jar files.
+    -->
+  <target name="jars" description="Builds all jar files."
+     depends="_buildmagic:build-bypass-check"
 	  unless="build-bypass.on">
 
     <call target="compile"/>
@@ -357,7 +424,7 @@
     <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
-
+        
         <!-- Exclude command line utilities -->
         <exclude name="org/jboss/*"/>
 
@@ -366,24 +433,10 @@
 
         <!-- Exclude key factory stuff -->
         <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
-        <exclude name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
-
-
-        <!-- Exclude object copier -->
-        <exclude name="org/jboss/copy/**"/>
       </fileset>
-
-      <!-- HACK -->
-      <fileset dir="${build.classes}">
-        <!-- But include this interface because the Farm needs it -->
-        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
-        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptorImpl.class"/>
-        <include name="org/jboss/jmx/adaptor/interfaces/Adaptor*.class"/>
-      </fileset>
-
+      
       <fileset dir="${build.resources}">
         <include name="org/jboss/**"/>
-        <include name="stylesheets/**"/>
         <exclude name="org/jboss/ejb/deployment/**"/>
         <exclude name="org/jboss/ejb/plugins/**"/>
       </fileset>
@@ -393,9 +446,9 @@
     <jar jarfile="${build.lib}/jboss-minimal.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
+        <include name="org/jboss/invocation/*"/>
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
-        <include name="org/jboss/invocation/**"/>
       </fileset>
     </jar>
 
@@ -404,25 +457,35 @@
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/proxy/**"/>
-        <include name="org/jboss/invocation/*.class"/>
-        <include name="org/jboss/invocation/remoting/*.class"/>
-	<include name="org/jboss/invocation/trunk/client/**/*.class"/>
-        <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
+        <include name="org/jboss/invocation/ByValueInvokerInterceptor.class"/>
+        <include name="org/jboss/invocation/Invocation.class"/>
+        <include name="org/jboss/invocation/InvocationContext.class"/>
+        <include name="org/jboss/invocation/InvocationKey.class"/>
+        <include name="org/jboss/invocation/InvocationException.class"/>
+        <include name="org/jboss/invocation/InvocationType.class"/>
+        <include name="org/jboss/invocation/Invoker.class"/>
+        <include name="org/jboss/invocation/InvokerInterceptor.class"/>
+        <include name="org/jboss/invocation/PayloadKey.class"/>
+        <include name="org/jboss/invocation/MarshalledInvocation.class"/>
+        <include name="org/jboss/invocation/MarshalledValue.class"/>
+        <include name="org/jboss/invocation/MarshalledValueInputStream.class"/>
+        <include name="org/jboss/invocation/MarshalledValueOutputStream.class"/>
+        <include name="org/jboss/invocation/http/interfaces/*"/>
+        <include name="org/jboss/invocation/jrmp/interfaces/*"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
-        <include name="org/jboss/invocation/nrmi/ClientInterceptor.class"/>
-        <include name="org/jboss/invocation/nrmi/algorithm/*"/>
-	<include name="org/jboss/invocation/pooled/interfaces/*"/>
+        <include name="org/jboss/invocation/pooled/interfaces/*.class"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
-<!--SOME VERSION OF INTERCEPTOR NEEDS TO BE AVAILABLE TO THE CLIENT,
- BUT CONTAINERPLUGIN AND STATISTICSPROVIDER ARE HERE ONLY BECAUSE
-THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFIED-->
-        <include name="org/jboss/ejb/ContainerPlugin.class"/>
-        <include name="org/jboss/ejb/Interceptor.class"/>
-        <include name="org/jboss/monitor/StatisticsProvider.class"/>
-        <include name="org/jboss/ejb/plugins/TxSupport*.class"/>
+        <include name="org/jboss/ejb/plugins/cmp/jdbc/Mapper.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
+        <include name="org/jboss/naming/*NamingContextFactory*.class"/>
+        <include name="org/jboss/naming/interceptors/*"/>
+        <include name="org/jboss/tm/JBossTransactionRolledbackException.class"/>
+        <include name="org/jboss/tm/JBossTransactionRolledbackLocalException.class"/>
+        <include name="org/jboss/tm/usertx/client/*.class"/>
+        <include name="org/jboss/tm/usertx/interfaces/*.class"/>
+        <include name="org/jboss/tm/usertx/server/*Stub.class"/>
       </fileset>
     </jar>
 
@@ -435,20 +498,21 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       <fileset dir="${build.resources}/org/jboss/verifier"/>
     </jar>
 
-    <!-- jmx-rmi-adaptor.sar -->
+    <!-- jmx-adaptor-plugin.jar -->
+    <jar jarfile="${build.lib}/jmx-adaptor-plugin.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/**"/>
+      </fileset>
+    </jar>
+    <!-- jmx-rmi-adaptor.sar --> 
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar"
          manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/adaptor/rmi/**"/>
-        <include name="org/jboss/jmx/connector/notification/**"/>
-        <include name="org/jboss/jmx/connector/rmi/**"/>
-      </fileset>
       <fileset dir="${build.resources}/jmx-rmi-adapter">
         <include name="**/*"/>
       </fileset>
     </jar>
 
-    <!-- jmx-ejb-adaptor.jar -->
+    <!-- jmx-ejb-adaptor.jar
     <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
@@ -457,8 +521,25 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
       </fileset>
-      <fileset dir="${build.resources}/ejbadaptor">
+      <fileset dir="${build.beans}/ejbadaptor">
         <include name="META-INF/**"/>
+      </fileset>
+    </jar>
+-->
+
+    <!-- jmx-invoker-adaptor-client.jar --> 
+    <jar jarfile="${build.lib}/jmx-invoker-adaptor-client.jar"
+         manifest="${build.etc}/default.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/connector/invoker/client/**"/>
+      </fileset>
+    </jar>
+
+    <!-- jmx-invoker-adaptor-server.sar --> 
+    <jar jarfile="${build.lib}/jmx-invoker-adaptor-server.sar"
+         manifest="${build.etc}/default.mf">
+      <fileset dir="${build.resources}/jmx-invoker-adaptor">
+        <include name="**/*"/>
       </fileset>
     </jar>
 
@@ -475,35 +556,13 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 
-    <!-- jmx-ejb-connector-server.sar -->
+    <!-- jmx-ejb-connector-server.sar --> 
     <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar"
          manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/connector/notification/**"/>
-        <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
-      </fileset>
       <fileset dir="${build.resources}/jmx-ejb-connector-server">
         <include name="**/*"/>
       </fileset>
     </jar>
-
-    <!-- jmx-html-adaptor.sar -->
-    <!-- (should try to use jlink for this) -->
-<!-- AS It seems that the HTML-Adaptor is gone therefore not need to create
-     this SAR file anymore
-    <unjar src="${sun.jmx.lib}/jmxtools.jar" dest="${build.classes}"/>
-    <jar jarfile="${build.lib}/jmx-html-adaptor.sar">
-         <!- - manifest="${build.etc}/manifest/rmiconnector.mf"> - ->
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/interfaces/**"/>
-        <include name="org/jboss/jmx/server/**"/>
-        <include name="org/jboss/jmx/client**"/>
-      </fileset>
-      <fileset dir="${build.resources}/jmx-html-adaptor">
-        <include name="**/*"/>
-      </fileset>
-    </jar>
--->
 
     <!-- jmx-rmi-adaptor.jar -->
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.jar"
@@ -527,6 +586,7 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
         <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
+        <include name="org/jboss/jmx/adaptor/rmi/RMINotificationListener.class"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
         <include name="org/jboss/jmx/connector/notification/*"/>
         <include name="org/jboss/jmx/connector/rmi/**"/>
@@ -585,6 +645,20 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 
+    <!-- uuid-key-generator.sar -->
+    <jar jarfile="${build.lib}/uuid-key-generator.sar"
+         manifest="${build.etc}/default.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+      </fileset>
+      <fileset dir="${build.resources}/uuid-key-generator">
+        <include name="**/*"/>
+      </fileset>
+    </jar>
+
+    <!-- SQLException Processor -->
+    <copy todir="${build.lib}" file="${build.resources}/exception-processor/sqlexception-service.xml"/>
+
     <!--
        | JBoss/Testsuite Support
      -->
@@ -605,69 +679,73 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 
-    <!-- keygenerators.jar -->
-    <jar jarfile="${build.lib}/keygenerators.jar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
-        <include name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
-      </fileset>
-    </jar>
-    
-    <!-- object-copier.sar -->
-    <jar jarfile="${build.lib}/object-copier.sar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/copy/**"/>
-      </fileset>
-      <fileset dir="${build.resources}/copy">
-        <include name="**/*"/>
-      </fileset>
-    </jar>
-
-    <!-- Generate checksums -->
-    <call target="_default:compile-checksums"/>
-
     <!-- Update the build marker to allow bypassing -->
     <touch file="${build-bypass.marker}"/>
 
   </target>
 
+  <!-- ================================================================== -->
+  <!-- Install & Release                                                  -->
+  <!-- ================================================================== -->
 
-  <!--+====================================================================+-->
-  <!--| Documents                                                          |-->
-  <!--|                                                                    |-->
-  <!--| Generate all documentation for this module.                        |-->
-  <!--+====================================================================+-->
+  <target name="install" 
+	  description="Install the structure for a release."
+	  depends="all, _buildmagic:install:default"/>
 
-  <target name="docs" depends="_default:docs">
-    <mkdir dir="${build.docs}"/>
-    <copy todir="${build.docs}" filtering="yes">
-      <fileset dir="${source.docs}">
-         <include name="**/*"/>
-      </fileset>
-    </copy>
+  <target name="release" depends="install"/>
+
+  <target name="release-zip" 
+	  description="Builds a ZIP distribution."
+	  depends="release, _buildmagic:release:zip"/>
+
+  <target name="release-tar" 
+	  description="Builds a TAR distribution."
+	  depends="release, _buildmagic:release:tar"/>
+
+  <target name="release-tgz" 
+	  description="Builds a TAR-GZ distribution."
+	  depends="release, _buildmagic:release:tgz"/>
+
+  <target name="release-all"
+	  description="Builds a distribution for each archive type."
+	  depends="release-zip, release-tgz"/>
+
+
+  <!-- ================================================================== -->
+  <!-- Cleaning                                                           -->
+  <!-- ================================================================== -->
+
+  <!-- Clean up all build output -->
+  <target name="clean" 
+	  description="Cleans up most generated files."
+	  depends="_buildmagic:clean">
+  </target>
+
+  <!-- Clean up all generated files -->
+  <target name="clobber" 
+	  description="Cleans up all generated files."
+	  depends="_buildmagic:clobber, clean">
   </target>
 
 
-  <!--+====================================================================+-->
-  <!--| Misc.                                                              |-->
-  <!--|                                                                    |-->
-  <!--| Standard targets and psuedo-targets.                               |-->
-  <!--+====================================================================+-->
+  <!-- ================================================================== -->
+  <!-- Misc.                                                              -->
+  <!-- ================================================================== -->
 
-  <target name="clean" depends="_default:clean">
-    <!-- Add module specific elements here. -->
-  </target>
+  <target name="main"
+	  description="Executes the default target (most)."
+	  depends="most"/>
+    
+  <target name="all"
+	  description="Builds everything."
+	  depends="jars, docs"/>
 
-  <target name="clobber" depends="_default:clobber">
-    <!-- Add module specific elements here. -->
-  </target>
+  <target name="most" 
+	  description="Builds almost everything."
+	  depends="jars"/>
 
-  <!-- main, all, most and help are primary psuedo-targets -->
-  <target name="main" depends="most"/>
-  <target name="all" depends="_default:all"/>
-  <target name="most" depends="_default:most"/>
-  <target name="help" depends="_default:help"/>
+  <target name="help" 
+          description="Show this help message."
+	  depends="_buildmagic:help:standard"/>
 
 </project>

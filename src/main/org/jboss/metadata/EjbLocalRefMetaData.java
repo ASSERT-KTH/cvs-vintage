@@ -6,6 +6,7 @@
  */
 package org.jboss.metadata;
 
+import java.util.HashMap;
 import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
@@ -33,7 +34,11 @@ public class EjbLocalRefMetaData extends MetaData {
 	
 	// internal link: map name to link
    private String link;
+
+   // external link: map name to jndiName
+   private String jndiName;
 	
+   private HashMap invokerMap = new HashMap();
 
     // Static --------------------------------------------------------
     
@@ -51,12 +56,25 @@ public class EjbLocalRefMetaData extends MetaData {
 	
    public String getLink() { return link; }
 
+   public String getJndiName() { return jndiName; }
+
+   public String getInvokerBinding(String bindingName) { return (String)invokerMap.get(bindingName); }
+
     public void importEjbJarXml(Element element) throws DeploymentException {
       name = getElementContent(getUniqueChild(element, "ejb-ref-name"));
       type = getElementContent(getUniqueChild(element, "ejb-ref-type"));
       localHome = getElementContent(getUniqueChild(element, "local-home"));
       local = getElementContent(getUniqueChild(element, "local"));
       link = getElementContent(getOptionalChild(element, "ejb-link"));
-   }		
-    
+   }
+	
+   public void importJbossXml(Element element) throws DeploymentException {
+      jndiName = getElementContent(getOptionalChild(element, "local-jndi-name"));
+   }
+	
+    public void importJbossXml(String invokerBinding, Element element) throws DeploymentException 
+    {
+      String refJndiName = getElementContent(getOptionalChild(element, "local-jndi-name"));
+      invokerMap.put(invokerBinding, refJndiName);
+    }   
 }

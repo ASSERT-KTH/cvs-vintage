@@ -7,9 +7,6 @@
 
 package org.jboss.cache.invalidation.triggers;
 
-import org.jboss.invocation.InvocationResponse;
-import org.jboss.tm.TxUtils;
-
 /**
  * The role of this interceptor is to detect that an entity has been modified
  * after an invocation has been performed an use the InvalidationsTxGrouper
@@ -18,32 +15,32 @@ import org.jboss.tm.TxUtils;
  *
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
-public class EntityBeanCacheBatchInvalidatorInterceptor
+public class EntityBeanCacheBatchInvalidatorInterceptor 
       extends org.jboss.ejb.plugins.AbstractInterceptor
 {
    protected boolean doCacheInvalidations = true;
    protected org.jboss.cache.invalidation.InvalidationManagerMBean invalMgr = null;
    protected org.jboss.cache.invalidation.InvalidationGroup ig = null;
    protected org.jboss.ejb.EntityContainer container = null;
-
+    
    public void start() throws Exception
    {
-      org.jboss.metadata.EntityMetaData emd = ((org.jboss.metadata.EntityMetaData)this.getContainer ().getBeanMetaData ());
-      doCacheInvalidations = emd.doDistributedCacheInvalidations ();
-
+      org.jboss.metadata.EntityMetaData emd = ((org.jboss.metadata.EntityMetaData)this.getContainer ().getBeanMetaData ());      
+      doCacheInvalidations = emd.doDistributedCacheInvalidations ();      
+      
       if (doCacheInvalidations)
       {
          // we are interested in receiving cache invalidation callbacks
          //
          String groupName = emd.getDistributedCacheInvalidationConfig ().getInvalidationGroupName ();
          String imName = emd.getDistributedCacheInvalidationConfig ().getInvalidationManagerName ();
-
-         this.invalMgr = (org.jboss.cache.invalidation.InvalidationManagerMBean)org.jboss.system.Registry.lookup (imName);
+         
+         this.invalMgr = (org.jboss.cache.invalidation.InvalidationManagerMBean)org.jboss.system.Registry.lookup (imName);         
          this.ig = this.invalMgr.getInvalidationGroup (groupName);
       }
-   }
+   }      
 
    public void stop()
    {
@@ -51,20 +48,20 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
       this.ig.removeReference (); // decrease the usage counter
       this.ig = null;
    }
-
+ 
    // Interceptor implementation --------------------------------------
-
+ 
    protected boolean changed (org.jboss.invocation.Invocation mi, org.jboss.ejb.EntityEnterpriseContext ctx) throws Exception
    {
       if (ctx.getId() == null) return true;
 
-      if(!container.isReadOnly())
+      if(!container.isReadOnly()) 
       {
          java.lang.reflect.Method method = mi.getMethod();
             if(method == null ||
                !container.getBeanMetaData().isMethodReadOnly(method.getName()))
             {
-               if (container.isModified(ctx))
+               if (container.getPersistenceManager().isModified(ctx))
                {
                   return true;
                }
@@ -73,12 +70,8 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
       return false;
    }
 
-   public InvocationResponse invoke(org.jboss.invocation.Invocation mi) throws Exception
+   public Object invoke(org.jboss.invocation.Invocation mi) throws Exception
    {
-      if(mi.getType().isHome()) {
-         return getNext().invoke(mi);
-      }
-
       if (doCacheInvalidations)
       {
          // We are going to work with the context a lot
@@ -89,11 +82,11 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
          javax.transaction.Transaction tx = mi.getTransaction();
 
          // Invocation with a running Transaction
-         if (TxUtils.isActive(tx))
+         if (tx != null && tx.getStatus() != javax.transaction.Status.STATUS_NO_TRANSACTION)
          {
             //Invoke down the chain
-            InvocationResponse retVal = getNext().invoke(mi);
-            //Object retVal = getNext().invoke(mi);
+            Object retVal = getNext().invoke(mi);  
+            //Object retVal = getNext().invoke(mi);  
 
             if (changed(mi, ctx))
             {
@@ -106,8 +99,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
          //
          else
          { // No tx
-            InvocationResponse result = getNext().invoke(mi);
-//            Object result = getNext().invoke(mi);
+            Object result = getNext().invoke(mi);
 
             if (changed(mi, ctx))
             {
@@ -119,7 +111,11 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
       else
       {
          return getNext().invoke(mi);
-//         return getNext().invoke(mi);
       }
    }
+
+   public void setContainer(org.jboss.ejb.Container container) { this.container = (org.jboss.ejb.EntityContainer)container; }
+
+   public org.jboss.ejb.Container getContainer() { return container; }
+   
 }

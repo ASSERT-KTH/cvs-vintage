@@ -28,13 +28,12 @@ import javax.management.MalformedObjectNameException;
 
 import org.jboss.invocation.http.interfaces.HttpInvokerProxy;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.logging.Logger;
-import org.jboss.util.naming.Util;
+import org.jboss.naming.Util;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.Strings;
@@ -43,12 +42,15 @@ import org.jboss.util.Strings;
  * The HttpInvoker ... into the JMX base.
  *
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class HttpInvoker extends ServiceMBeanSupport
    implements HttpInvokerMBean
 {
    private String invokerURL;
+   private String invokerURLPrefix = "http://";
+   private String invokerURLSuffix = ":8080/invoker/JMXInvokerServlet";
+   private boolean useHostName = false;
 
    // Public --------------------------------------------------------
 
@@ -64,9 +66,37 @@ public class HttpInvoker extends ServiceMBeanSupport
       log.debug("Set invokerURL to "+this.invokerURL);
    }
 
+   public String getInvokerURLPrefix()
+   {
+      return invokerURLPrefix;
+   }
+   public void setInvokerURLPrefix(String invokerURLPrefix)
+   {
+      this.invokerURLPrefix = invokerURLPrefix;
+   }
+
+   public String getInvokerURLSuffix()
+   {
+      return invokerURLSuffix;
+   }
+   public void setInvokerURLSuffix(String invokerURLSuffix)
+   {
+      this.invokerURLSuffix = invokerURLSuffix;
+   }
+
+   public boolean getUseHostName()
+   {
+      return useHostName;
+   }
+   public void setUseHostName(boolean flag)
+   {
+      this.useHostName = flag;
+   }
+
    protected void startService()
       throws Exception
    {
+      checkInvokerURL();
       InitialContext context = new InitialContext();
       Invoker delegateInvoker = new HttpInvokerProxy(invokerURL);
 
@@ -112,7 +142,7 @@ public class HttpInvoker extends ServiceMBeanSupport
    /**
     * Invoke a Remote interface method.
     */
-   public InvocationResponse invoke(Invocation invocation)
+   public Object invoke(Invocation invocation)
       throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -134,7 +164,7 @@ public class HttpInvoker extends ServiceMBeanSupport
             "invoke", args, sig);
 
          // Return the raw object and let the http layer marshall it
-         return (InvocationResponse)obj;
+         return obj;
       }
       catch (Exception e)
       {
@@ -169,5 +199,19 @@ public class HttpInvoker extends ServiceMBeanSupport
    protected Transaction importTPC(Object tpc)
    {
       return null;
+   }
+
+   /** Validate that the invokerURL is set, and if not build it from
+    * the invokerURLPrefix + host + invokerURLSuffix.
+    */
+   protected void checkInvokerURL() throws UnknownHostException
+   {
+      if( invokerURL == null )
+      {
+         InetAddress addr = InetAddress.getLocalHost();
+         String host = useHostName ? addr.getHostName() : addr.getHostAddress();
+         String url = invokerURLPrefix + host + invokerURLSuffix;
+         setInvokerURL(url);
+      }
    }
 }

@@ -30,9 +30,11 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.sql.CallableStatement;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.math.BigDecimal;
 
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
@@ -46,7 +48,10 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @version $Revision: 1.16 $
+ *
+ * <p><b>Revisions:</b>
  *
  * <p><b>20021023 Steve Coy:</b>
  * <ul>
@@ -65,10 +70,7 @@ import org.jboss.logging.Logger;
  *     function needed to know what type of data to retrieve. Also, we 
  *     explicitly get the driver to return appropriate types for JAVA_OBJECT,
  *     OTHER and STRUCT data.
- * <li>Even though it's not referenced anywhere, I changed
- *     {@link isBinaryJDBCType} so that JAVA_OBJECT, OTHER and STRUCT are no
- *     longer considered to be "binary" types.
- *            
+ *
  * </ul>
  */
 public final class JDBCUtil
@@ -260,8 +262,22 @@ public final class JDBCUtil
                // to do with a ByteArrayInputStream as it only releases its reference.
             }
             break;
-       
-         
+
+         //
+         // Some drivers e.g. Sybase jConnect 5.5 assume scale of 0 with setObject(index, value, type)
+         // resulting in truncation of BigDecimals. However, setting scale to
+         // zero for other datatypes may result in truncation for other inexact
+         // numerics. Instead explictly use setBigDecimal when assigning
+         // BigDecimals to a DECIMAL or NUMERIC column
+         case Types.DECIMAL:
+         case Types.NUMERIC:
+            if (value instanceof BigDecimal) {
+               ps.setBigDecimal(index, (BigDecimal) value);
+            } else {
+               ps.setObject(index, value, jdbcType, 0);
+            }
+            break;
+
          //
          // Let the JDBC driver handle these if it can.
          // If it can't, then don't use them!
@@ -281,6 +297,112 @@ public final class JDBCUtil
       } 
    }
 
+
+   /**
+    * Used for all retrieval of parameters from <code>CallableStatement</code>s.
+    * Implements tracing, and allows some tweaking of returned types.
+    *
+    * @param log where to log to
+    * @param cs the <code>CallableStatement</code> from which an out parameter is being retrieved
+    * @param index index of the result column.
+    * @param jdbcType a {@link java.sql.Types} constant used to determine the
+    *                 most appropriate way to extract the data from rs.
+    * @param destination The class of the variable this is going into
+    * @return the value
+    */
+   public static Object getParameter(Logger log, CallableStatement cs, int index, int jdbcType, Class destination) throws SQLException
+   {
+      Object value = null;
+      switch (jdbcType) {
+         //
+         // Large types
+         //
+         case Types.CLOB:
+         case Types.LONGVARCHAR:
+         case Types.BLOB:
+         case Types.LONGVARBINARY:
+            throw new UnsupportedOperationException();
+
+         //
+         // Small binary types
+         //
+         case Types.BINARY:
+         case Types.VARBINARY:
+            {
+               byte[] bytes = cs.getBytes(index);
+               if (!cs.wasNull())
+               {
+                  if (destination == byte[].class)
+                     value = bytes;
+                  else
+                     value = convertToObject(bytes);
+               }
+               if (log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index +
+                        ", javaType=" + destination.getName() +
+                        ", Binary, value=" + value);
+               }
+            }
+            break;
+
+         //
+         // Specialist types that the
+         // driver should handle
+         //
+         case Types.JAVA_OBJECT:
+         case Types.STRUCT:
+         case Types.ARRAY:
+         case Types.OTHER:
+            {
+               value = cs.getObject(index);
+               if (log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index +
+                        ", javaType=" + destination.getName() +
+                        ", Object, value=" + value);
+               }
+            }
+            break;
+
+         //
+         // Non-binary types
+         //
+         default:
+         Method method = (Method)csTypes.get(destination.getName());
+         if(method != null)
+         {
+            try
+            {
+               value = method.invoke(cs, new Object[]{new Integer(index)});
+               if(cs.wasNull())
+               {
+                  value = null;
+               }
+
+               if(log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index +
+                        ", javaType=" + destination.getName() +
+                        ", Simple, value=" + value);
+               }
+            } catch(IllegalAccessException e)
+            {
+               // Whatever, I guess non-binary will not work for this field.
+            } catch(InvocationTargetException e)
+            {
+               // Whatever, I guess non-binary will not work for this field.
+            }
+         }
+         else
+         {
+            value = cs.getObject(index);
+            if(log.isTraceEnabled()) {
+               log.trace("Get result: index=" + index +
+                     ", javaType=" + destination.getName() +
+                     ", Object, value=" + value);
+            }
+         }
+      }
+      return coerceToJavaType(value, destination);
+   }
 
    /**
     * Used for all retrieval of results from <code>ResultSet</code>s.
@@ -569,7 +691,7 @@ public final class JDBCUtil
          {
             return ((java.math.BigDecimal)value).toBigInteger();
          }
-
+         
          // oops got the wrong type - nothing we can do
          throw new SQLException("Got a " + value.getClass().getName() + "[cl=" +
                System.identityHashCode(value.getClass().getClassLoader()) +
@@ -590,25 +712,7 @@ public final class JDBCUtil
          throw new SQLException("Unable to load to deserialize result: "+e);
       }
    }
-   
-   /**
-    * Returns true if the JDBC type should be (de-)serialized as a
-    * binary stream and false otherwise.
-    *
-    * @param jdbcType the JDBC type
-    * @return true if binary type, false otherwise
-    */
-   public static boolean isBinaryJDBCType(int jdbcType)
-   {
-      return (Types.BINARY == jdbcType ||
-            Types.BLOB == jdbcType ||
-     //     Types.JAVA_OBJECT == jdbcType ||
-            Types.LONGVARBINARY == jdbcType ||
-     //     Types.OTHER == jdbcType ||
-     //     Types.STRUCT == jdbcType ||
-            Types.VARBINARY == jdbcType);
-   }
-   
+
    /**
     * Coerces the input value into the correct type for the specified
     * jdbcType.
@@ -840,7 +944,8 @@ public final class JDBCUtil
    //
    private static Map jdbcTypeNames;
    private final static Map rsTypes;
-   
+   private final static Map csTypes;
+
    /**
     * Gets the JDBC type name corresponding to the given type code.
     * Only used in debug log messages.
@@ -856,12 +961,12 @@ public final class JDBCUtil
    
    static
    {
+      Class[] arg = new Class[] {Integer.TYPE};
+
       // Initialize the mapping between non-binary java result set
       // types and the method on ResultSet that is used to retrieve
       // a value of the java type.
       rsTypes = new HashMap();
-      Class[] arg = new Class[]
-      {Integer.TYPE};
       try
       {
          // java.util.Date
@@ -942,6 +1047,90 @@ public final class JDBCUtil
          log.error("SQL error", e);
       }
       
+      // Initialize the mapping between non-binary java result set
+      // types and the method on CallableStatement that is used to retrieve
+      // a value of the java type.
+      csTypes = new HashMap();
+      try
+      {
+         // java.util.Date
+         csTypes.put(java.util.Date.class.getName(),
+               CallableStatement.class.getMethod("getTimestamp", arg));
+         // java.sql.Date
+         csTypes.put(java.sql.Date.class.getName(),
+               CallableStatement.class.getMethod("getDate", arg));
+         // Time
+         csTypes.put(java.sql.Time.class.getName(),
+               CallableStatement.class.getMethod("getTime", arg));
+         // Timestamp
+         csTypes.put(java.sql.Timestamp.class.getName(),
+               CallableStatement.class.getMethod("getTimestamp", arg));
+         // BigDecimal
+         csTypes.put(java.math.BigDecimal.class.getName(),
+               CallableStatement.class.getMethod("getBigDecimal", arg));
+         // java.sql.Ref Does this really work?
+         csTypes.put(java.sql.Ref.class.getName(),
+               CallableStatement.class.getMethod("getRef", arg));
+         // String
+         csTypes.put(java.lang.String.class.getName(),
+               CallableStatement.class.getMethod("getString", arg));
+         // Boolean
+         csTypes.put(java.lang.Boolean.class.getName(),
+               CallableStatement.class.getMethod("getBoolean", arg));
+         // boolean
+         csTypes.put(Boolean.TYPE.getName(),
+               CallableStatement.class.getMethod("getBoolean", arg));
+         // Byte
+         csTypes.put(java.lang.Byte.class.getName(),
+               CallableStatement.class.getMethod("getByte", arg));
+         // byte
+         csTypes.put(Byte.TYPE.getName(),
+               CallableStatement.class.getMethod("getByte", arg));
+         // Character
+         csTypes.put(java.lang.Character.class.getName(),
+               CallableStatement.class.getMethod("getString", arg));
+         // char
+         csTypes.put(Character.TYPE.getName(),
+               CallableStatement.class.getMethod("getString", arg));
+         // Short
+         csTypes.put(java.lang.Short.class.getName(),
+               CallableStatement.class.getMethod("getShort", arg));
+         // short
+         csTypes.put(Short.TYPE.getName(),
+               CallableStatement.class.getMethod("getShort", arg));
+         // Integer
+         csTypes.put(java.lang.Integer.class.getName(),
+               CallableStatement.class.getMethod("getInt", arg));
+         // int
+         csTypes.put(Integer.TYPE.getName(),
+               CallableStatement.class.getMethod("getInt", arg));
+         // Long
+         csTypes.put(java.lang.Long.class.getName(),
+               CallableStatement.class.getMethod("getLong", arg));
+         // long
+         csTypes.put(Long.TYPE.getName(),
+               CallableStatement.class.getMethod("getLong", arg));
+         // Float
+         csTypes.put(java.lang.Float.class.getName(),
+               CallableStatement.class.getMethod("getFloat", arg));
+         // float
+         csTypes.put(Float.TYPE.getName(),
+               CallableStatement.class.getMethod("getFloat", arg));
+         // Double
+         csTypes.put(java.lang.Double.class.getName(),
+               CallableStatement.class.getMethod("getDouble", arg));
+         // double
+         csTypes.put(Double.TYPE.getName(),
+               CallableStatement.class.getMethod("getDouble", arg));
+         // byte[]   (scoy: I expect that this will no longer be invoked)
+         csTypes.put("[B",
+               CallableStatement.class.getMethod("getBytes", arg));
+      } catch(NoSuchMethodException e)
+      {
+         // Should never happen
+         log.error("SQL error", e);
+      }
+
       // Initializes the map between jdbcType (int) and the name of the type.
       // This map is used to print meaningful debug and error messages.
       jdbcTypeNames = new HashMap();
@@ -958,5 +1147,19 @@ public final class JDBCUtil
          }
       }
    }
-   
+
+   /**
+    * Helper method to read the result of SQL function in SELECT.
+    * It always reads with parameter index 1.
+    * @param rs  the result set to read from (next() should already be called)
+    * @param jdbcType  expected JDBC type as defined in java.sql.Types
+    * @param destination  the type to return
+    * @return  the result of the function
+    * @throws SQLException
+    */
+   public static Object getFunctionResult(ResultSet rs, int jdbcType, Class destination)
+      throws SQLException
+   {
+      return getResult(log, rs, 1, jdbcType, destination);
+   }
 }

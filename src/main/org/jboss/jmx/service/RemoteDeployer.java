@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
 /**
  * A JMX client to deploy an application into a running JBoss server via RMI.
  *
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -64,10 +64,10 @@ public class RemoteDeployer
 {
    /** Class logger. */
    private static final Logger log = Logger.getLogger(Deployer.class);
-
+   
    /** A proxy to the deployer instance on the remote server. */
    protected Deployer deployer;
-
+   
    /**
     * Construct a new <tt>RemoteDeployer</tt>.
     */
@@ -76,7 +76,7 @@ public class RemoteDeployer
    {
       init(deployerName, env, adapterName);
    }
-
+   
    /**
     * Construct a new <tt>RemoteDeployer</tt>.
     *
@@ -86,14 +86,15 @@ public class RemoteDeployer
    {
       Hashtable env = null;
       
-      if (url != null) {
+      if (url != null)
+      {
          env = new Hashtable();
          env.put(Context.PROVIDER_URL, url);
       }
-
-      init(deployerName, env, adapterName);      
+      
+      init(deployerName, env, adapterName);
    }
-
+   
    /**
     * Construct a new <tt>RemoteDeployer</tt>.
     *
@@ -111,7 +112,7 @@ public class RemoteDeployer
     */
    public RemoteDeployer() throws Exception
    {
-      this(MainDeployerMBean.OBJECT_NAME, (Hashtable)null, null);
+      this(MainDeployerMBean.OBJECT_NAME, (Hashtable)null, "jmx/rmi/RMIAdaptor");
    }
 
    protected void init(ObjectName deployerName, Hashtable env, String adapterName)
@@ -135,37 +136,37 @@ public class RemoteDeployer
    {
       RemoteMBeanServer server = null;
       InitialContext ctx;
-      if (env == null) {
+      if (env == null)
+      {
          ctx = new InitialContext();
       }
-      else {
+      else
+      {
          ctx = new InitialContext(env);
       }
-
-      // if adapter is null, the use the default
-      if (adapterName == null) {
-         adapterName = org.jboss.jmx.adaptor.rmi.RMIAdaptorService.LOCAL_NAME;
-      }
       
-      try {
+      try
+      {
          Object obj = ctx.lookup( adapterName );
          log.debug("RMI Adapter: " + obj);
          
-         if (!(obj instanceof RMIAdaptor)) {
+         if (!(obj instanceof RMIAdaptor))
+         {
             throw new RuntimeException("Object not of type: RMIAdaptorImpl, but: " +
-                                       (obj == null ? "not found" : obj.getClass().getName()));
+            (obj == null ? "not found" : obj.getClass().getName()));
          }
          
          server = new RMIConnectorImpl((RMIAdaptor) obj);
          log.debug("Remote MBean Server : " + server);
       }
-      finally {
+      finally
+      {
          ctx.close();
       }
       
       return server;
    }
-
+   
    /**
     * Deploys the given url on the remote server.
     *
@@ -177,7 +178,7 @@ public class RemoteDeployer
    {
       deployer.deploy(url);
    }
-
+   
    /**
     * Deploys the given url on the remote server.
     *
@@ -202,7 +203,7 @@ public class RemoteDeployer
    {
       deployer.undeploy(url);
    }
-
+   
    /**
     * Undeploys the application specifed by the given url on the remote server.
     *
@@ -226,7 +227,7 @@ public class RemoteDeployer
    {
       return deployer.isDeployed(url);
    }
-
+   
    /**
     * Check if the given url is deployed on thr remote server.
     *
@@ -241,13 +242,13 @@ public class RemoteDeployer
       return deployer.isDeployed(Strings.toURL(url));
    }
    
-
+   
    /////////////////////////////////////////////////////////////////////////
    //                         Command Line Support                        //
    /////////////////////////////////////////////////////////////////////////
-
+   
    public static final String PROGRAM_NAME = System.getProperty("program.name", "deployer");
-
+   
    /**
     * Switches equate to commands for the desired deploy/undeploy operation to execute;
     * this is the base class for those commands.
@@ -255,14 +256,15 @@ public class RemoteDeployer
    protected static abstract class DeployerCommand
    {
       protected URL url;
-
-      public DeployerCommand(String url) throws Exception {
+      
+      public DeployerCommand(String url) throws Exception
+      {
          this.url = Strings.toURL(url);
       }
       
       public abstract void execute(Deployer deployer) throws Exception;
    }
-
+   
    protected static void displayUsage()
    {
       System.out.println("usage: " + PROGRAM_NAME + " [options] (operation)+");
@@ -281,10 +283,11 @@ public class RemoteDeployer
       System.out.println("    -i, --isdeployed=<url>    Check if a URL is deployed on the remote server");
       System.out.println();
    }
-
+   
    public static void main(final String[] args) throws Exception
    {
-      if (args.length == 0) {
+      if (args.length == 0)
+      {
          displayUsage();
          System.exit(0);
       }
@@ -300,11 +303,11 @@ public class RemoteDeployer
          new LongOpt("isdeployed", LongOpt.REQUIRED_ARGUMENT, null, 'i'),
          new LongOpt("redeploy", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
       };
-
+      
       Getopt getopt = new Getopt(PROGRAM_NAME, args, sopts, lopts);
       int code;
       String arg;
-
+      
       List commands = new ArrayList();
       String serverURL = null;
       String adapterName = null;
@@ -323,7 +326,7 @@ public class RemoteDeployer
                // this will catch non-option arguments
                // (which we don't currently care about)
                System.err.println(PROGRAM_NAME + ": unused non-option argument: " +
-                                  getopt.getOptarg());
+               getopt.getOptarg());
                break; // for completeness
                
             case 'h':
@@ -357,77 +360,83 @@ public class RemoteDeployer
                serverURL = getopt.getOptarg();
                break;
             }
-
+            
             case 'a':
             {
                adapterName = getopt.getOptarg();
                break;
             }
-
+            
             case 'd':
             {
-               commands.add(new DeployerCommand(getopt.getOptarg()) {
-                     public void execute(Deployer deployer) throws Exception
-                     {
-                        deployer.deploy(url);
-                        System.out.println(url + " has been deployed.");         
-                     }
-                  });
+               commands.add(new DeployerCommand(getopt.getOptarg())
+               {
+                  public void execute(Deployer deployer) throws Exception
+                  {
+                     deployer.deploy(url);
+                     System.out.println(url + " has been deployed.");
+                  }
+               });
                break;
             }
-
+            
             case 'u':
             {
-               commands.add(new DeployerCommand(getopt.getOptarg()) {
-                     public void execute(Deployer deployer) throws Exception
-                     {
-                        deployer.undeploy(url);
-                        System.out.println(url + " has been undeployed.");
-                     }
-                  });
+               commands.add(new DeployerCommand(getopt.getOptarg())
+               {
+                  public void execute(Deployer deployer) throws Exception
+                  {
+                     deployer.undeploy(url);
+                     System.out.println(url + " has been undeployed.");
+                  }
+               });
                break;
             }
-
+            
             case 'r':
             {
-               commands.add(new DeployerCommand(getopt.getOptarg()) {
-                     public void execute(Deployer deployer) throws Exception
+               commands.add(new DeployerCommand(getopt.getOptarg())
+               {
+                  public void execute(Deployer deployer) throws Exception
+                  {
+                     if (deployer.isDeployed(url))
                      {
-                        if (deployer.isDeployed(url)) {
-                           deployer.undeploy(url);
-                        }
-                        deployer.deploy(url);
-                        System.out.println(url + " has been redeployed.");
+                        deployer.undeploy(url);
                      }
-                  });
+                     deployer.deploy(url);
+                     System.out.println(url + " has been redeployed.");
+                  }
+               });
                break;
             }
             
             case 'i':
             {
-               commands.add(new DeployerCommand(getopt.getOptarg()) {
-                     public void execute(Deployer deployer) throws Exception
-                     {
-                        boolean deployed = deployer.isDeployed(url);
-                        System.out.println(url + " is " + (deployed ? "deployed." : "not deployed."));
-                     }
-                  });
-               break;               
+               commands.add(new DeployerCommand(getopt.getOptarg())
+               {
+                  public void execute(Deployer deployer) throws Exception
+                  {
+                     boolean deployed = deployer.isDeployed(url);
+                     System.out.println(url + " is " + (deployed ? "deployed." : "not deployed."));
+                  }
+               });
+               break;
             }
-
+            
             default:
                // this should not happen,
                // if it does throw an error so we know about it
                throw new Error("unhandled option code: " + code);
          }
       }
-
+      
       // setup the deployer
       Deployer deployer = new RemoteDeployer(serverURL, adapterName);
       
       // now execute all of the commands
       Iterator iter = commands.iterator();
-      while (iter.hasNext()) {
+      while (iter.hasNext())
+      {
          DeployerCommand command = (DeployerCommand)iter.next();
          command.execute(deployer);
       }

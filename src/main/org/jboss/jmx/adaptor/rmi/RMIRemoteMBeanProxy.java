@@ -18,7 +18,7 @@ import javax.management.ObjectName;
  * A factory for producing MBean proxies that run on a distant node and access
  * the server through RMI. Most of the code comes from MBeanProxy.
  *
- * @version <tt>$Revision: 1.1 $</tt>
+ * @version <tt>$Revision: 1.2 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  */
 public class RMIRemoteMBeanProxy 
@@ -88,7 +88,7 @@ public class RMIRemoteMBeanProxy
    
    protected RMIAdaptor getRmiAdaptor () throws Exception
    {
-      return (RMIAdaptor)new javax.naming.InitialContext().lookup (RMIAdaptorService.LOCAL_NAME);
+      return (RMIAdaptor)new javax.naming.InitialContext().lookup (RMIAdaptorService.DEFAULT_JNDI_NAME);
    }
 
 

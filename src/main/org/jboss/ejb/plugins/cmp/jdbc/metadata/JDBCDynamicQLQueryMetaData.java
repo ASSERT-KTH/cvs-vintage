@@ -13,13 +13,12 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
 
 /**
- * This class which contains information about an DynamicQL query.
+ * Immutable class which contains information about an DynamicQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
-{
+public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData {
    /**
     * The method to which this query is bound.
     */
@@ -28,27 +27,39 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
    /**
     * Should the query return Local or Remote beans.
     */
-   private boolean resultTypeMappingLocal;
+   private final boolean resultTypeMappingLocal;
+
+   private final JDBCReadAheadMetaData readAhead;
 
    /**
-    * Read ahead meta data.
+    * Constructs a JDBCDynamicQLQueryMetaData with DynamicQL declared in the 
+    * jboss-ql elemnt and is invoked by the specified method.
+    * @param queryMetaData the metadata about this query
     */
-   private JDBCReadAheadMetaData readAhead;
+   public JDBCDynamicQLQueryMetaData(
+         JDBCDynamicQLQueryMetaData defaults,
+         JDBCReadAheadMetaData readAhead) throws DeploymentException {
+      
+      this.method = defaults.getMethod();
+      this.readAhead = readAhead;
+      this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
+   }
 
-   // Jeremy's hack
-   private boolean useNewCompiler;
-   
+
    /**
-    * Constructs a JDBCDynamicQLQueryMetaData which is invoked by the 
-    * specified method.
-    * @param method the method which invokes this query
+    * Constructs a JDBCDynamicQLQueryMetaData with DynamicQL declared in the 
+    * jboss-ql elemnt and is invoked by the specified method.
+    * @param queryMetaData the metadata about this query
     */
-   public JDBCDynamicQLQueryMetaData(Method method) throws DeploymentException
-   {
+   public JDBCDynamicQLQueryMetaData(
+         JDBCQueryMetaData jdbcQueryMetaData,
+         Element element,
+         Method method,
+		 JDBCReadAheadMetaData readAhead) throws DeploymentException {
+      
       this.method = method;
-      readAhead = JDBCReadAheadMetaData.DEFAULT;
-      resultTypeMappingLocal = true;
-      useNewCompiler = false;
+      this.readAhead = readAhead;
+      resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
 
       Class[] parameterTypes = method.getParameterTypes();
       if(parameterTypes.length != 2 ||
@@ -59,43 +70,22 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
       }
    }
 
-   public void loadXML(Element queryElement) throws DeploymentException
-   {
-      useNewCompiler = "true".equals(queryElement.getAttribute("useNewCompiler"));
-   }
-
    // javadoc in parent class
-   public Method getMethod()
-   {
+   public Method getMethod() {
       return method;
    }
 
-   // javadoc in interface
-   public boolean isResultTypeMappingLocal()
-   {
+   // javadoc in parent class
+   public boolean isResultTypeMappingLocal() {
       return resultTypeMappingLocal;
    }
 
-   // javadoc in interface
-   public void setResultTypeMappingLocal(boolean resultTypeMappingLocal)
-   {
-      this.resultTypeMappingLocal = resultTypeMappingLocal;
-   }
-      
-   // javadoc in interface
-   public JDBCReadAheadMetaData getReadAhead()
-   {
+   /**
+    * Gets the read ahead metadata for the query.
+    * @return the read ahead metadata for the query.
+    */
+   public JDBCReadAheadMetaData getReadAhead() {
       return readAhead;
-   }
-
-   // javadoc in interface
-   public void setReadAhead(JDBCReadAheadMetaData readAhead)
-   {
-      this.readAhead = readAhead;
-   }
-
-   public boolean useNewCompiler() {
-      return useNewCompiler;
    }
 
    /**
@@ -106,10 +96,8 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
     * @return true if this object is the same as the object argument; 
     *    false otherwise
     */
-   public boolean equals(Object o)
-   {
-      if(o instanceof JDBCDynamicQLQueryMetaData)
-      {
+   public boolean equals(Object o) {
+      if(o instanceof JDBCDynamicQLQueryMetaData) {
          return ((JDBCDynamicQLQueryMetaData)o).method.equals(method);
       }
       return false;
@@ -120,8 +108,7 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
     * computed by the method which invokes this query.
     * @return a hash code value for this object
     */
-   public int hashCode()
-   {
+   public int hashCode() {
       return method.hashCode();
    }
    /**
@@ -134,8 +121,7 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
     *
     * @return a string representation of the object
     */
-   public String toString()
-   {
+   public String toString() {
       return "[JDBCDynamicQLQueryMetaData : method=" + method + "]";
    }
 }

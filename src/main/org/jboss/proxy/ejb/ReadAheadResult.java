@@ -19,15 +19,13 @@ import java.util.ArrayList;
  * array of ahead results via {@link #getAheadResults()}.
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ReadAheadResult
-implements Externalizable
+      implements Externalizable
 {
-   // Constants -----------------------------------------------------
-
-   /** Serial Version Identifier. */
-//   private static final long serialVersionUID = -1523442773137704949L;
+   /** Serial Version Identifier. @since 1.1 */
+   private static final long serialVersionUID = -4041516583763000658L;
 
    // Attributes ----------------------------------------------------
 
@@ -50,26 +48,33 @@ implements Externalizable
 
    // Constructors --------------------------------------------------
 
-   public ReadAheadResult() {}
+   public ReadAheadResult()
+   {
+   }
 
    // Static --------------------------------------------------------
 
    // Public --------------------------------------------------------
 
-   public void setMainResult(Object mainResult) {
+   public void setMainResult(Object mainResult)
+   {
       this.mainResult = mainResult;
    }
 
-   public void addAheadResult(Object aheadResult) {
+   public void addAheadResult(Object aheadResult)
+   {
       aheadList.add(aheadResult);
    }
 
-   public Object getMainResult() {
+   public Object getMainResult()
+   {
       return mainResult;
    }
 
-   public Object[] getAheadResult() {
-      if (aheadArray == null) {
+   public Object[] getAheadResult()
+   {
+      if (aheadArray == null)
+      {
          aheadArray = aheadList.toArray(new Object[aheadList.size()]);
          aheadList = null;
       }
@@ -84,14 +89,14 @@ implements Externalizable
    // Private -------------------------------------------------------
 
    public void writeExternal(ObjectOutput out)
-      throws IOException
+         throws IOException
    {
       out.writeObject(mainResult);
       out.writeObject(getAheadResult());
    }
 
    public void readExternal(ObjectInput in)
-      throws IOException, ClassNotFoundException
+         throws IOException, ClassNotFoundException
    {
       mainResult = in.readObject();
       aheadArray = (Object[]) in.readObject();

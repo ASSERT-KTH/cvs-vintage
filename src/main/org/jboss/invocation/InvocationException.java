@@ -11,7 +11,7 @@ package org.jboss.invocation;
  * from communication exceptions.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
 */
 public class InvocationException
     extends Exception

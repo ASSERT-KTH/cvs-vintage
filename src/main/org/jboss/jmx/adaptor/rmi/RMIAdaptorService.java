@@ -15,6 +15,7 @@ import javax.management.MalformedObjectNameException;
 
 import javax.naming.InitialContext;
 
+import org.jboss.naming.Util;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -23,7 +24,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss.jmx:type=adaptor,protocol=RMI"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -32,43 +33,36 @@ public class RMIAdaptorService
    extends ServiceMBeanSupport
    implements RMIAdaptorServiceMBean
 {
-   //AS I am not quite sure if this works but somehow the protocol should become
-   //AS part of the JNDI name because there could be more than one protcol
-   
-   public static final String JNDI_NAME = "jmx:rmi";
+   // Constants -----------------------------------------------------
    public static final String JMX_NAME = "jmx";
    public static final String PROTOCOL_NAME = "rmi";
-
-   /**
-    * This is where the local adapter will be bound into JNDI.
-    *
-    * <p>
-    * Not using <em>localhost</em> as {@link #mHost} could potentially
-    * return that, so <em>local</em> is a little safer... I guess.
-    */
-   public static final String LOCAL_NAME = "jmx:local:rmi";
+   public static final String DEFAULT_JNDI_NAME = "jmx/rmi/RMIAdaptor";
 
    /** The RMI adapter instance. */
    private RMIAdaptor adaptor;
 
-   /** Cached host name. */
-   private String mHost;
+   /** The InetAddress localhost name used for the legacy JNDI name */
+   private String host;
 
-   /** JNDI prefix or null for none. */
-   private String mName;
+   /** The legacy JNDI suffix or null for none. */
+   private String name;
 
-   /** The user supplied JNDI name or null for the default. */
-   private String jndiName;
+   /** The user supplied JNDI name */
+   private String jndiName = DEFAULT_JNDI_NAME;
 
-   /** Flag to enable or disable binding to LOCAL_NAME. */
-   private boolean bindLocal = true;
+   /** The port the container will be exported on */
+   private int rmiPort = 0;
+   /** The connect backlog for the rmi listening port */
+   private int backlog = 50;
+   /** The address to bind the rmi port on */
+   protected String serverAddress;
 
    /**
     * @jmx:managed-constructor
     */
    public RMIAdaptorService(String name)
    {
-      mName = name;
+      this.name = name;
    }
 
    /**
@@ -82,84 +76,113 @@ public class RMIAdaptorService
    /**
     * @jmx:managed-attribute
     */
-   public void setJNDIName(final String jndiName)
+   public void setJndiName(final String jndiName)
    {
       this.jndiName = jndiName;
    }
-   
+
    /**
     * @jmx:managed-attribute
     */
-   public String getJNDIName()
+   public String getJndiName()
    {
-      if (jndiName == null) {
-         if (mName != null) {
-            return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME + ":" + mName;
-         }
-         // else
-         
-         return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME;
-      }
-      // else
-      
       return jndiName;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public void setBindLocal(final boolean flag)
+   public int getBacklog()
    {
-      this.bindLocal = flag;
+      return backlog;
    }
-   
    /**
     * @jmx:managed-attribute
     */
-   public boolean getBindLocal()
+   public void setBacklog(int backlog)
    {
-      return this.bindLocal;
+      this.backlog = backlog;
    }
 
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setRMIObjectPort(final int rmiPort)
+   {
+      this.rmiPort = rmiPort;
+   }
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getRMIObjectPort()
+   {
+      return rmiPort;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setServerAddress(final String address)
+   {
+      this.serverAddress = address;
+   }
+   /**
+    * @jmx:managed-attribute
+    */
+   public String getServerAddress()
+   {
+      return serverAddress;
+   }
+
+   /** The legacy hard-coded name. Get rid of this in the future
+    * @jmx:managed-attribute
+    * @deprecated
+    */
+   public String getLegacyJndiName()
+   {
+      if (name != null)
+      {
+         return JMX_NAME + ":" + host + ":" + PROTOCOL_NAME + ":" + name;
+      }
+      else
+      {
+         return JMX_NAME + ":" + host + ":" + PROTOCOL_NAME;
+      }
+   }
 
    ///////////////////////////////////////////////////////////////////////////
    //                    ServiceMBeanSupport Overrides                      //
    ///////////////////////////////////////////////////////////////////////////
-   
-   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws MalformedObjectNameException
-   {
-      return name == null ? OBJECT_NAME : name;
-   }
 
    protected void startService() throws Exception
    {
-      mHost = InetAddress.getLocalHost().getHostName();
-      adaptor = new RMIAdaptorImpl(server);
+      // Setup the RMI server object
+      InetAddress bindAddress = null;
+      if( serverAddress != null && serverAddress.length() > 0 )
+         bindAddress = InetAddress.getByName(serverAddress);
+      adaptor = new RMIAdaptorImpl(getServer(), rmiPort, bindAddress, backlog);
+      log.debug("Created RMIAdaptorImpl: "+adaptor);
+      InitialContext iniCtx = new InitialContext();
 
-      InitialContext ctx = new InitialContext();
-
-      try {
-         ctx.bind(getJNDIName(), adaptor);
-
-         if (bindLocal) {
-            ctx.bind(LOCAL_NAME, adaptor);
-         }
-      }
-      finally {
-         ctx.close();
-      }
+      // Bind the RMI object under the JndiName attribute
+      Util.bind(iniCtx, jndiName, adaptor);
+      // Bind under the hard-coded legacy name for compatibility
+      host = InetAddress.getLocalHost().getHostName();
+      String legacyName = getLegacyJndiName();
+      iniCtx.bind(legacyName, adaptor);
    }
 
    protected void stopService() throws Exception
    {
       InitialContext ctx = new InitialContext();
 
-      try {
-         ctx.unbind(getJNDIName());
-         ctx.unbind(LOCAL_NAME);
+      try
+      {
+         ctx.unbind(getJndiName());
+         ctx.unbind(getLegacyJndiName());
       }
-      finally {
+      finally
+      {
          ctx.close();
       }
    }

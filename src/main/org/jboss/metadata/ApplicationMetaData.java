@@ -10,17 +10,14 @@ package org.jboss.metadata;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * The top level meta data from the jboss.xml and ejb-jar.xml descriptor.
@@ -29,9 +26,8 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
- * @author <a href="mailto:Christoph.Jung@infor.de">Christoph Jung</a>
  *
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -206,46 +202,42 @@ public class ApplicationMetaData
 
       if( docType == null )
       {
-         // test if this is a 2.1 schema-based descriptor
-         if("http://java.sun.com/xml/ns/j2ee".equals(element.getNamespaceURI())) {
-            ejbVersion=2;
-         } else {
-            // No good, EJB 1.1/2.1 requires a DOCTYPE declaration
-            throw new DeploymentException( "ejb-jar.xml must either obey "+
-               "the right xml schema or define a valid DOCTYPE!" );
-         } 
-      } else {
-         String publicId = docType.getPublicId();
-         if( publicId == null )
-         {
-            // We need a public Id
-            throw new DeploymentException( "The DOCTYPE declaration in " +
-               "ejb-jar.xml must define a PUBLIC id" );
-         }
-
-         // Check for a known public Id
-         if( publicId.startsWith(
-            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0") )
-         {
-            ejbVersion = 2;
-         }
-         else if( publicId.startsWith(
-            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1") )
-         {
-            ejbVersion = 1;
-         }
-         else
-         {
-            // Unknown
-            throw new DeploymentException( "Unknown PUBLIC id in " +
-               "ejb-jar.xml: " + publicId );
-         }
+         // No good, EJB 1.1/2.0 requires a DOCTYPE declaration
+         throw new DeploymentException( "ejb-jar.xml must define a " +
+            "valid DOCTYPE!" );
       }
-      
+
+      String publicId = docType.getPublicId();
+      if( publicId == null )
+      {
+         // We need a public Id
+         throw new DeploymentException( "The DOCTYPE declaration in " +
+            "ejb-jar.xml must define a PUBLIC id" );
+      }
+
+      // Check for a known public Id
+      if( publicId.startsWith(
+         "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0") )
+      {
+         ejbVersion = 2;
+      }
+      else if( publicId.startsWith(
+         "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1") )
+      {
+         ejbVersion = 1;
+      }
+      else
+      {
+         // Unknown
+         throw new DeploymentException( "Unknown PUBLIC id in " + 
+            "ejb-jar.xml: " + publicId );
+      }
+
       // find the beans
       Element enterpriseBeans = getUniqueChild(element, "enterprise-beans");
 
       // Entity Beans
+      HashMap schemaNameMap = new HashMap();
       Iterator iterator = getChildrenByTagName(enterpriseBeans, "entity");
       while (iterator.hasNext())
       {
@@ -261,7 +253,23 @@ public class ApplicationMetaData
                "for Entity Bean " + entityMetaData.getEjbName() + ": " +
                e.getMessage());
          }
-         beans.add(entityMetaData);
+
+         // Ensure unique-ness of <abstract-schema-name>
+         String abstractSchemaName = entityMetaData.getAbstractSchemaName();
+         if( abstractSchemaName != null )
+         {
+            if( schemaNameMap.containsKey(abstractSchemaName) )
+            {
+               //
+               throw new DeploymentException( entityMetaData.getEjbName() +
+                  ": Duplicate abstract-schema name '" + abstractSchemaName +
+                  "'. Already defined for Entity '" +
+                  ((EntityMetaData)schemaNameMap.get(abstractSchemaName)).getEjbName() + "'." );
+            }
+            schemaNameMap.put( abstractSchemaName, entityMetaData );
+         }
+
+         beans.add( entityMetaData );
       }
 
       // Session Beans
@@ -302,6 +310,23 @@ public class ApplicationMetaData
                messageDrivenMetaData.getEjbName() + ": " + e.getMessage());
          }
          beans.add(messageDrivenMetaData);
+      }
+
+      // Enforce unique-ness of declared ejb-name Elements
+      Set ejbNames = new HashSet();
+      Iterator beanIt = beans.iterator();
+      while( beanIt.hasNext() )
+      {
+         BeanMetaData bmd = (BeanMetaData)beanIt.next();
+
+         String beanName = bmd.getEjbName();
+         if( ejbNames.contains(beanName) )
+         {
+            throw new DeploymentException( "Duplicate definition of an " +
+               "EJB with name '" + beanName + "'." );
+         }
+
+         ejbNames.add( beanName );
       }
 
       // Relationships
@@ -449,10 +474,41 @@ public class ApplicationMetaData
                Element containerTransaction = (Element)iterator.next();
 
                // find the type of the transaction
+               byte transactionType;
                String type = getElementContent( getUniqueChild(
                   containerTransaction, "trans-attribute") );
 
-               TxSupport transactionType = TxSupport.byName(type);
+               if( type.equalsIgnoreCase("NotSupported") ||
+                  type.equalsIgnoreCase("Not_Supported") )
+               {
+                  transactionType = TX_NOT_SUPPORTED;
+               }
+               else if( type.equalsIgnoreCase("Supports") )
+               {
+                  transactionType = TX_SUPPORTS;
+               }
+               else if( type.equalsIgnoreCase("Required") )
+               {
+                  transactionType = TX_REQUIRED;
+               }
+               else if( type.equalsIgnoreCase("RequiresNew") ||
+                  type.equalsIgnoreCase("Requires_New") )
+               {
+                  transactionType = TX_REQUIRES_NEW;
+               }
+               else if( type.equalsIgnoreCase("Mandatory") )
+               {
+                  transactionType = TX_MANDATORY;
+               }
+               else if( type.equalsIgnoreCase("Never") )
+               {
+                  transactionType = TX_NEVER;
+               }
+               else
+               {
+                  throw new DeploymentException( "invalid " +
+                     "<transaction-attribute> : " + type);
+               }
 
                // find the methods
                Iterator methods = getChildrenByTagName(

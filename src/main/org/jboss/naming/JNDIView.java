@@ -34,7 +34,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss:type=JNDIView"
  *            extends="org.jboss.system.ServiceMBean"
  *            
- * @version <tt>$Revision: 1.20 $</tt>
+ * @version <tt>$Revision: 1.21 $</tt>
  * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author  Vladimir Blagojevic <vladimir@xisnext.2y.net>
  * @author  <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>

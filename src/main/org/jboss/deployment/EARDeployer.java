@@ -20,8 +20,10 @@ import java.util.jar.JarFile;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.util.file.JarUtils;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
+import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
+import org.jboss.util.file.JarUtils;
+
 import org.w3c.dom.Element;
 
 /**
@@ -31,7 +33,8 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.27 $
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.28 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -48,13 +51,13 @@ public class EARDeployer
       return urlStr.endsWith("ear") || urlStr.endsWith("ear/");
    }
    
-   public boolean init(DeploymentInfo di)
+   public void init(DeploymentInfo di)
       throws DeploymentException
    {
       try
       {
          log.info("Init J2EE application: " + di.url);
-         
+
          InputStream in = di.localCl.getResourceAsStream("META-INF/application.xml");
          if( in == null )
             throw new DeploymentException("No META-INF/application.xml found");
@@ -72,15 +75,12 @@ public class EARDeployer
          in = di.localCl.getResourceAsStream("META-INF/jboss-app.xml");
          if( in != null )
          {
-            org.w3c.dom.Document jbossXmlDoc = xfl.getDocument(in, "META-INF/jboss-app.xml");
-            Element jbossApp = jbossXmlDoc.getDocumentElement();
-            org.dom4j.Document jbossXmlDom4jDoc = XmlFileLoader.convertDoc(jbossXmlDoc);
+            Element jbossApp = xfl.getDocument(in, "META-INF/jboss-app.xml").getDocumentElement();
             in.close();
             // Import module/service archives to metadata
             metaData.importXml(jbossApp, true);
             // Check for a loader-repository for scoping
-            org.dom4j.Element jbossDom4jApp = jbossXmlDom4jDoc.getRootElement();
-            org.dom4j.Element loader = jbossDom4jApp.element("loader-repository"); 
+            Element loader = MetaData.getOptionalChild(jbossApp, "loader-repository");
             initLoaderRepository(di, loader);
          }
 
@@ -90,11 +90,13 @@ public class EARDeployer
             File file = new File(di.url.getFile());
             
             // If not directory we watch the package
-            if (!file.isDirectory()) {
+            if (!file.isDirectory())
+            {
                di.watch = di.url;
             }
             // If directory we watch the xml files
-            else {
+            else
+            {
                di.watch = new URL(di.url, "META-INF/application.xml");
             }
          }
@@ -186,21 +188,16 @@ public class EARDeployer
       }
 
       super.init(di);
- 
-      return true;
-   }
-
-   protected void processNestedDeployments(DeploymentInfo di)
-   {
-      //most of init should be in here...
-   }
-
-   protected boolean isDeployable(String name, URL url) 
-   {
-      return super.isDeployable(name, url) || name.endsWith("-ds.xml") ||
-         name.endsWith("-service.xml");
    }
    
+   public void start(DeploymentInfo di)
+      throws DeploymentException
+   {
+      super.start (di);
+      log.info ("Started J2EE application: " + di.url);
+   }
+
+
    /**
     * Describe <code>destroy</code> method here.
     *
@@ -212,20 +209,39 @@ public class EARDeployer
       log.info("Undeploying J2EE application, destroy step: " + di.url);
       super.destroy(di);
    }
-   
+
    /** Build the ear scoped repository
     *
     * @param di the deployment info passed to deploy
     * @param loader the jboss-app/loader-repository element
     * @throws Exception
     */
-   protected void initLoaderRepository(DeploymentInfo di, org.dom4j.Element loader)
+   protected void initLoaderRepository(DeploymentInfo di, Element loader)
       throws Exception
    {
       if( loader == null )
          return;
 
-      LoaderRepositoryFactory.LoaderRepositoryConfig config = LoaderRepositoryFactory.parseRepositoryConfig(loader);
+      LoaderRepositoryConfig config = LoaderRepositoryFactory.parseRepositoryConfig(loader);
       di.setRepositoryInfo(config);
+   }
+
+   /**
+    * Add -ds.xml and -service.xml as legitimate deployables.
+    */
+   protected boolean isDeployable(String name, URL url)
+   {
+      return super.isDeployable(name, url) || name.endsWith("-ds.xml") ||
+         name.endsWith("-service.xml");
+   }
+
+   /** Override the default behavior of looking into the archive for deployables
+    * as only those explicitly listed in the application.xml and jboss-app.xml
+    * should be deployed.
+    *
+    * @param di
+    */
+   protected void processNestedDeployments(DeploymentInfo di)
+   {
    }
 }

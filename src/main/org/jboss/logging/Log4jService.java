@@ -26,17 +26,16 @@ import javax.management.MalformedObjectNameException;
    
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.xml.DOMConfigurator;
-
-import org.jboss.util.ThrowableHandler;
-import org.jboss.util.ThrowableListener;
-import org.jboss.util.NullArgumentException;
-import org.jboss.util.Strings;
 
 import org.jboss.logging.util.LoggerStream;
 import org.jboss.logging.util.OnlyOnceErrorHandler;
-
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.util.ThrowableHandler;
+import org.jboss.util.ThrowableListener;
+import org.jboss.util.Strings;
+import org.jboss.util.stream.Streams;
 
 /**
  * Initializes the Log4j logging framework.  Supports XML and standard
@@ -52,7 +51,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss.system:type=Log4jService,service=Logging"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.26 $</tt>
+ * @version <tt>$Revision: 1.27 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
@@ -120,7 +119,10 @@ public class Log4jService
     * <tt>STDERR</tt> logger.
     */   
    private boolean catchSystemErr = CATCH_SYSTEM_ERR;
-   
+
+   /** The org.apache.log4j.helpers.LogLog.setQuietMode flag setting */
+   private boolean log4jQuietMode = true;
+
    /** The URL watch timer (in daemon mode). */
    private Timer timer = new Timer(true);
 
@@ -237,7 +239,30 @@ public class Log4jService
    {
       return catchSystemErr;
    }
-   
+
+   /**
+    * Get the org.apache.log4j.helpers.LogLog.setQuietMode flag
+    *
+    * @jmx:managed-attribute
+    *
+    * @return  True if enabled, false if disabled.
+    */
+   public boolean getLog4jQuietMode()
+   {
+      return log4jQuietMode;
+   }
+   /**
+    * Set the org.apache.log4j.helpers.LogLog.setQuietMode flag
+    *
+    * @jmx:managed-attribute
+    *
+    * @return  True if enabled, false if disabled.
+    */
+   public void setLog4jQuietMode(boolean flag)
+   {
+      this.log4jQuietMode = flag;
+   }
+
    /**
     * Get the refresh period.
     *
@@ -549,7 +574,7 @@ public class Log4jService
          URLConnection conn = configURL.openConnection();
          reconfigure(conn);
       }
-      
+
       private void reconfigure(final URLConnection conn) 
       {
          log.info("Configuring from URL: " + configURL);
@@ -574,7 +599,8 @@ public class Log4jService
             xml = contentType.equalsIgnoreCase("text/xml");
             xml |= contentType.equalsIgnoreCase("application/xml");
          }
-         if (trace) log.trace("reconfiguring; xml=" + xml);
+         if (trace)
+            log.trace("reconfiguring; xml=" + xml);
 
          // Dump our config if trace is enabled
          if (trace)
@@ -582,7 +608,7 @@ public class Log4jService
             try
             {
                java.io.InputStream is = conn.getInputStream();
-               org.jboss.util.stream.Streams.copy(is, System.out);
+               Streams.copy(is, System.out);
             }
             catch (Exception e)
             {
@@ -601,6 +627,11 @@ public class Log4jService
          {
             PropertyConfigurator.configure(configURL);
          }
+
+         /* Set the LogLog.QuietMode. As of log4j1.2.8 this needs to be set to
+         avoid deadlock on exception at the appender level. See bug#696819.
+         */
+         LogLog.setQuietMode(log4jQuietMode);
 
          // but make sure they get reinstalled again
          installSystemAdapters();

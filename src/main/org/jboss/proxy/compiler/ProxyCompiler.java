@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
 /**
  * Manages bytecode assembly for dynamic proxy generation.
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -35,12 +35,6 @@ public class ProxyCompiler
 
    /** The suffix for proxy implementation classnames. */
    public final static String IMPL_SUFFIX = "$Proxy";
-   
-   /**
-    * Used to generate unique Proxy Class Names
-    */
-   static int proxyidCounter=0;
-   int proxyid=proxyidCounter++;
 
    /** The Runtime classloader for the target proxy. */
    Runtime runtime;
@@ -57,9 +51,6 @@ public class ProxyCompiler
    /** The class of the targret proxy (set by runtime). */
    Class proxyType;
    
-   /** The factory used to generate the bytecodes for the proxy class */
-   ProxyImplementationFactory factory;
-   
    /**
     * Creates a new <code>ProxyCompiler</code> instance.
     *
@@ -71,14 +62,12 @@ public class ProxyCompiler
    public ProxyCompiler(final ClassLoader parent,
                         final Class superclass,
                         final Class targetTypes[],
-                        final Method methods[], 
-                        ProxyImplementationFactory factory)
+                        final Method methods[])
       throws Exception
    {
       this.superclass = superclass;
       this.targetTypes = targetTypes;
       this.methods = methods;
-      this.factory = factory;
 
       this.runtime = new Runtime(parent);
       this.runtime.targetTypes = targetTypes;
@@ -99,10 +88,8 @@ public class ProxyCompiler
       //
       // Note that all infrastructure must be public, because the
       // $Impl class is inside a different class loader.
-      return "org.jboss.proxy.compiler.ProxyCompiler"+IMPL_SUFFIX+proxyid;
-      // HRC: The following would not fly if targetTypes[0].getName() == "java.lang.Runtime"
-      // we generating proxies int the "java.lang" package is illeagal
-      //return targetTypes[0].getName() + IMPL_SUFFIX;
+
+      return targetTypes[0].getName() + IMPL_SUFFIX;
    }
       
    /**
@@ -144,17 +131,12 @@ public class ProxyCompiler
                                  Constants.ACC_PUBLIC | Constants.ACC_FINAL,
 				 interfaceNames);
       
-      // Should we used the default ProxyFactory??
-      if( factory == null )
-	      factory = new ProxyImplementationFactory();	      
-      factory.init(superClassName, proxyClassName, cg);
+      ProxyImplementationFactory factory = 
+         new ProxyImplementationFactory(superClassName, proxyClassName, cg);
 
       cg.addField(factory.createInvocationHandlerField());
       cg.addField(factory.createRuntimeField());
-      
-      org.apache.bcel.classfile.Method constructors[] = factory.createConstructors();
-      for( int i=0; i < constructors.length; i++ ) 
-	      cg.addMethod(constructors[i]);
+      cg.addMethod(factory.createConstructor());
       
       // ProxyTarget implementation
 

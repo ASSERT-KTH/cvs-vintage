@@ -1,12 +1,9 @@
-/***************************************
- *                                     *
- *  JBoss: The OpenSource J2EE WebOS   *
- *                                     *
- *  Distributable under LGPL license.  *
- *  See terms of license at gnu.org.   *
- *                                     *
- ***************************************/
-
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.metadata;
 
 import java.util.HashMap;
@@ -18,68 +15,65 @@ import org.w3c.dom.NodeList;
 
 import org.jboss.invocation.InvocationType;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.plugins.TxSupport;
 
 /**
- * Provides a container and parser for the metadata of a message driven
- * bean.
+ * Provides a container and parser for the metadata of a message driven bean.
  *
  * <p>Have to add changes ApplicationMetaData and ConfigurationMetaData.
  *
- * @version <tt>$Revision: 1.27 $</tt>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ *
+ * <p><b>Revisions:</b></p>
+ * <p><b>20011031: Andy</b>
+ * <ul>
+ * <li>Ensured that the <message-selector> value in the descriptor does not
+ *     be compromised by leading and trailing spaces as well as line-breaks</li>
+ * </ul>
+ * </p>
+ *
+ * @version $Revision: 1.28 $
  */
 public class MessageDrivenMetaData
-   extends BeanMetaData
+extends BeanMetaData
 {
    // Constants -----------------------------------------------------
-
-   public static final int AUTO_ACKNOWLEDGE_MODE =
-      Session.AUTO_ACKNOWLEDGE;
-   public static final int DUPS_OK_ACKNOWLEDGE_MODE =
-      Session.DUPS_OK_ACKNOWLEDGE;
-   public static final int CLIENT_ACKNOWLEDGE_MODE =
-      Session.CLIENT_ACKNOWLEDGE;
+   
+   public static final int AUTO_ACKNOWLEDGE_MODE = Session.AUTO_ACKNOWLEDGE;
+   public static final int DUPS_OK_ACKNOWLEDGE_MODE = Session.DUPS_OK_ACKNOWLEDGE;
+   public static final int CLIENT_ACKNOWLEDGE_MODE = Session.CLIENT_ACKNOWLEDGE;
    public static final byte DURABLE_SUBSCRIPTION = 0;
    public static final byte NON_DURABLE_SUBSCRIPTION = 1;
+   public static final byte TX_UNSET = 9;
    public static final String DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING = "message-driven-bean";
 
    // Attributes ----------------------------------------------------
+   
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
    private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
-   private TxSupport methodTransactionType = null;
+   private byte methodTransactionType = TX_UNSET;
    private String destinationType;
    private String messageSelector;
    private String destinationJndiName;
-   private String username;
-   private String password;
+   private String user;
+   private String passwd;
    private String clientId;
    private String subscriptionId;
-
-   // True to enable the usage of XA connections.
-   private boolean xaConnection = true;
-
-   // True if server sessions are transacted.
-   private boolean sessionPoolTransacted = true;
-
+   
    // Static --------------------------------------------------------
-
+   
    // Constructors --------------------------------------------------
-   public MessageDrivenMetaData( ApplicationMetaData app )
+   
+   public MessageDrivenMetaData(ApplicationMetaData app)
    {
-      super( app, BeanMetaData.MDB_TYPE );
+      super(app, BeanMetaData.MDB_TYPE);
    }
-
+   
    // Public --------------------------------------------------------
-
+   
    /**
     * Get the message acknowledgement mode.
-    * @todo remove, this should be handled byte the jca adapter.
-    *
-    *@todo THIS IS VERY BROKEN, it checks tx support using a NULL METHOD!
     *
     * @return    MessageDrivenMetaData.AUTO_ACKNOWLADGE_MODE or
     *            MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE or
@@ -96,17 +90,17 @@ public class MessageDrivenMetaData
       // but there is NO transaction support for this.
       // I,e, we can not use the JMS transaction for
       // message ack: hence we must use manual ack.
-
+      
       // But for NOT_SUPPORTED this is not true here we
       // should have AUTO_ACKNOWLEDGE_MODE
-
+      
       // This is not true for now. For JBossMQ we relly
       // completely on transaction handling. For JBossMQ, the
       // ackmode is actually not relevant. We keep it here
       // anyway, if we find that this is needed for other
       // JMS provider, or is not good.
-
-      if (getMethodTransactionType(null, new Class[] {}, InvocationType.LOCAL) == TxSupport.REQUIRED)
+      
+      if (getMethodTransactionType() == TX_REQUIRED)
       {
          return CLIENT_ACKNOWLEDGE_MODE;
       }
@@ -115,90 +109,50 @@ public class MessageDrivenMetaData
          return acknowledgeMode;
       }
    }
-   /*
-   public boolean getUseXAConnection()
-   {
-      return xaConnection;
-   }
-
-   public boolean getSessionPoolTransacted()
-   {
-      return sessionPoolTransacted;
-   }
-   */
-   /**
-    * @todo activation spec
-    * Get the Destination type ( Queue / Topic )
-    */
+   
    public String getDestinationType()
    {
       return destinationType;
    }
-
-   /**
-    * @todo activation spec
-    * Get the message selector
-    */
+   
    public String getMessageSelector()
    {
       return messageSelector;
    }
-
-   /**
-    * @todo activation spec
-    * Get the JNDI Name of the destination
-    */
+   
    public String getDestinationJndiName()
    {
       return destinationJndiName;
    }
-
-   /**
-    * Get declared User for this MDB
-    */
-   public String getUsername()
+   
+   public String getUser()
    {
-      return username;
+      return user;
    }
-
-   /**
-    * Get declared password for this MDB
-    */
-   public String getPassword()
+   
+   public String getPasswd()
    {
-      return password;
+      return passwd;
    }
-
-   /**
-    * @todo activation spec
-    * The <code>getClientId</code> method
-    *
-    * @return a <code>String</code> value
-    */
+   
    public String getClientId()
    {
       return clientId;
    }
-
-   /**
-    * @todo activation spec
-    * The <code>getSubscriptionId</code> method
-    *
-    * @return a <code>String</code> value
-    */
+   
    public String getSubscriptionId()
    {
       return subscriptionId;
    }
-
+   
    /**
     * Check MDB methods TX type, is cached here
     */
-   /*   public TxSupport getMethodTransactionType()
+   public byte getMethodTransactionType()
    {
-      if( methodTransactionType == null )
+      if (methodTransactionType == TX_UNSET)
       {
-         if( isContainerManagedTx() )
+         if (isContainerManagedTx())
          {
             //
             // Here we should have a way of looking up wich message class
@@ -207,45 +161,35 @@ public class MessageDrivenMetaData
             // The MessageDrivenContainer needs this too!!
             //
             Class[] sig = { Message.class };
-            if( super.getMethodTransactionType("onMessage", sig, null)
-               == TxSupport.REQUIRED )
+            if (super.getMethodTransactionType("onMessage", sig, null) == MetaData.TX_REQUIRED)
             {
-               methodTransactionType = TxSupport.REQUIRED;
+               methodTransactionType = TX_REQUIRED;
             }
             else
             {
-               methodTransactionType = TxSupport.NOT_SUPPORTED;
+               methodTransactionType = TX_NOT_SUPPORTED;
             }
          }
          else
          {
-            //THIS IS A CHANGE FROM "UNKNOWN" which got mapped to DEFAULT later!
-            methodTransactionType = TxSupport.DEFAULT;
+            methodTransactionType = TX_UNKNOWN;
          }
       }
-
       return methodTransactionType;
    }
-   */
+
    /**
-    * @todo use session metadata method.
     * Overide here, since a message driven bean only ever have one method,
     * which we might cache.
     */
-   public TxSupport getMethodTransactionType(String methodName, Class[] params,
+   public byte getMethodTransactionType(String methodName, Class[] params,
       InvocationType iface)
    {
-      if (isBeanManagedTx())
-      {
-         return TxSupport.STATELESS_BMT;
-      }
-      return super.getMethodTransactionType(methodName, params, iface);
       // An MDB may only ever have on method
-      //      return getMethodTransactionType();
+      return getMethodTransactionType();
    }
 
    /**
-    * @todo activation spec
     * Get the subscription durability mode.
     *
     * @return    MessageDrivenMetaData.DURABLE_SUBSCRIPTION or
@@ -255,51 +199,62 @@ public class MessageDrivenMetaData
    {
       return subscriptionDurability;
    }
-
+   
    public String getDefaultConfigurationName()
    {
       return ConfigurationMetaData.MESSAGE_DRIVEN_13;
    }
-
-   public void importEjbJarXml( Element element )
-      throws DeploymentException
+   
+   public void importEjbJarXml(Element element) throws DeploymentException
    {
       super.importEjbJarXml(element);
-
-      //ejb2.1
-      localClass = getOptionalChildContent(element, "messaging-type");
-      if (localClass == null)
-      {
-         localClass = "javax.jms.MessageListener";
-      } // end of if ()
-
-
+      
       messageSelector = getOptionalChildContent(element, "message-selector");
-      if (messageSelector != null)
+      if( messageSelector != null )
       {
-         // Convert \n and \r to spaces
-         messageSelector = messageSelector.replace('\n', ' ');
-         messageSelector = messageSelector.replace('\r', ' ').trim();
-
-         // If the selector is an empty string then null it for easier
-         // detection
-         if( "".equals(messageSelector) )
+         //AS Check for Carriage Returns, remove them and trim the selector
+         int i = -1;
+         // Note this only works this way because the search and replace are distinct
+         while( ( i = messageSelector.indexOf( "\r\n" ) ) >= 0 )
+         {
+            // Replace \r\n by a space
+            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
+            " " +
+            ( i >= messageSelector.length() - 2 ? "" : messageSelector.substring( i + 2 ) );
+         }
+         i = -1;
+         while( ( i = messageSelector.indexOf( "\r" ) ) >= 0 )
+         {
+            // Replace \r by a space
+            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
+            " " +
+            ( i >= messageSelector.length() - 1 ? "" : messageSelector.substring( i + 1 ) );
+         }
+         i = -1;
+         while( ( i = messageSelector.indexOf( "\n" ) ) >= 0 )
+         {
+            // Replace \n by a space
+            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
+            " " +
+            ( i >= messageSelector.length() - 1 ? "" : messageSelector.substring( i + 1 ) );
+         }
+         // Finally trim it. This is here because only carriage returns and linefeeds are transformed
+         // to spaces
+         messageSelector = messageSelector.trim();
+         if( "".equals( messageSelector ) )
          {
             messageSelector = null;
          }
       }
-
+      
       // destination is optional
-      Element destination = getOptionalChild( element,
-         "message-driven-destination" );
+      Element destination = getOptionalChild(element, "message-driven-destination");
       if (destination != null)
       {
-         destinationType = getUniqueChildContent(destination,
-            "destination-type" );
-         if( destinationType.equals("javax.jms.Topic") )
+         destinationType = getUniqueChildContent(destination, "destination-type");
+         if (destinationType.equals("javax.jms.Topic"))
          {
-            String subscr = getOptionalChildContent( destination,
-               "subscription-durability" );
+            String subscr = getOptionalChildContent(destination, "subscription-durability");
             // Should we do sanity check??
             if( subscr != null && subscr.equals("Durable") )
             {
@@ -307,22 +262,19 @@ public class MessageDrivenMetaData
             }
             else
             {
-               subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
+               subscriptionDurability = NON_DURABLE_SUBSCRIPTION;//Default
             }
          }
       }
-
+      
       // set the transaction type
-      String transactionType = getUniqueChildContent( element,
-         "transaction-type");
+      String transactionType = getUniqueChildContent(element, "transaction-type");
       if (transactionType.equals("Bean"))
       {
          containerManagedTx = false;
          String ack = getOptionalChildContent(element, "acknowledge-mode");
-
-         if (ack == null ||
-             ack.equalsIgnoreCase("Auto-acknowledge") ||
-             ack.equalsIgnoreCase("AUTO_ACKNOWLEDGE"))
+         if( ack == null || ack.equalsIgnoreCase("Auto-acknowledge") ||
+            ack.equalsIgnoreCase("AUTO_ACKNOWLEDGE"))
          {
             acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
          }
@@ -333,7 +285,7 @@ public class MessageDrivenMetaData
          }
          else
          {
-            throw new DeploymentException("Invalid acknowledge-mode: " + ack);
+            throw new DeploymentException("invalid acknowledge-mode: " + ack);
          }
       }
       else if (transactionType.equals("Container"))
@@ -343,44 +295,34 @@ public class MessageDrivenMetaData
       else
       {
          throw new DeploymentException
-            ("Transaction type should be 'Bean' or 'Container'");
+         ("transaction type should be 'Bean' or 'Container'");
       }
    }
 
-   public void importJbossXml( Element element )
-      throws DeploymentException
+   public void importJbossXml(Element element) throws DeploymentException
    {
       super.importJbossXml(element);
-
-      destinationJndiName = getUniqueChildContent( element,
-         "destination-jndi-name");
-      username = getOptionalChildContent(element, "mdb-user");
-      password = getOptionalChildContent(element,"mdb-passwd");
+      
+      // set the jndi name, (optional)
+      destinationJndiName = getUniqueChildContent(element, "destination-jndi-name");
+      user = getOptionalChildContent(element, "mdb-user");
+      passwd = getOptionalChildContent(element,"mdb-passwd");
       clientId = getOptionalChildContent(element,"mdb-client-id");
       subscriptionId = getOptionalChildContent(element,"mdb-subscription-id");
-
-      String temp;
-
-      temp = getOptionalChildContent(element, "session-pool-transacted");
-      if( temp != null )
-      {
-         sessionPoolTransacted = new Boolean(temp).booleanValue();
-      }
-
-      temp = getOptionalChildContent(element, "xa-connection");
-      if (temp != null)
-      {
-         xaConnection = new Boolean(temp).booleanValue();
-      }
    }
+   
+   public void defaultInvokerBindings()   
+   {   
+     this.invokerBindings = new HashMap();   
+     this.invokerBindings.put(DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING, getJndiName());
+   } 
 
-   public void defaultInvokerBindings()
-   {
-      this.invokerBindings = new HashMap();
-      this.invokerBindings.put(
-         DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING, getJndiName() );
-   }
+   // Package protected ---------------------------------------------
+   
+   // Protected -----------------------------------------------------
+   
+   // Private -------------------------------------------------------
+   
+   // Inner classes -------------------------------------------------
 }
-/*
-vim:ts=3:sw=3:et
-*/
+

@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * class loader.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class MarshalledValueInputStream
    extends ObjectInputStream

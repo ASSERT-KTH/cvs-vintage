@@ -8,9 +8,12 @@
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.lang.reflect.Field;
-import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.ejb.EJBException;
+import javax.ejb.EJBLocalObject;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -33,118 +36,152 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @version $Revision: 1.18 $
  */
-public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
+public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
+{
+   // Attributes for a foreign key field mapped to a CMP field
+   /** CMR field this foreign key field is a part of */
+   private final JDBCCMRFieldBridge myCMRField;
+   /** CMP field this foreign key field is mapped to */
+   private final JDBCCMP2xFieldBridge cmpFieldIAmMappedTo;
 
-   /** indicates whether this field is FK field mapped to a PK field */
-   private final boolean fkFieldMappedToPkField;
+   // Attributes for CMP field that have a foreign key field[s] mapped to it
+   /** the list of foreign key fields mapped to this CMP field */
+   private final List fkFieldsMappedToMe = new ArrayList();
 
-   public JDBCCMP2xFieldBridge(
-         JDBCStoreManager manager,
-         JDBCCMPFieldMetaData metadata) throws DeploymentException {
+   // Constructors
 
+   public JDBCCMP2xFieldBridge(JDBCStoreManager manager,
+                               JDBCCMPFieldMetaData metadata)
+      throws DeploymentException
+   {
       super(manager, metadata);
-      fkFieldMappedToPkField = false;
-   }
-
-   public JDBCCMP2xFieldBridge(
-         JDBCStoreManager manager,
-         JDBCCMPFieldMetaData metadata,
-         JDBCType jdbcType) throws DeploymentException {
-
-      super(manager, metadata, jdbcType);
-      fkFieldMappedToPkField = false;
+      myCMRField = null;
+      cmpFieldIAmMappedTo = null;
    }
 
    /**
-    * This constructor is used to create a foreign key field that is
+    * This constructor creates a foreign key field.
+    */
+   public JDBCCMP2xFieldBridge(JDBCStoreManager manager,
+                               JDBCCMPFieldMetaData metadata,
+                               JDBCType jdbcType)
+      throws DeploymentException
+   {
+      super(manager, metadata, jdbcType);
+      myCMRField = null;
+      cmpFieldIAmMappedTo = null;
+   }
+
+   /**
+    * This constructor is used to create a foreign key field instance that is
     * a part of primary key field. See JDBCCMRFieldBridge.
     */
-   public JDBCCMP2xFieldBridge(
-      JDBCStoreManager manager,
-      String fieldName,
-      Class fieldType,
-      JDBCType jdbcType,
-      boolean readOnly,
-      long readTimeOut,
-      boolean primaryKeyMember,
-      Class primaryKeyClass,
-      Field primaryKeyField,
-      boolean isUnknownPk)
-   throws DeploymentException {
-      super(
-         manager,
+   public JDBCCMP2xFieldBridge(JDBCStoreManager manager,
+                               String fieldName,
+                               Class fieldType,
+                               JDBCType jdbcType,
+                               boolean readOnly,
+                               long readTimeOut,
+                               Class primaryKeyClass,
+                               Field primaryKeyField,
+                               JDBCCMRFieldBridge myCMRField,
+                               JDBCCMP2xFieldBridge cmpFieldIAmMappedTo)
+      throws DeploymentException
+   {
+      super(manager,
          fieldName,
          fieldType,
          jdbcType,
          readOnly,
          readTimeOut,
-         primaryKeyMember,
+         false,
          primaryKeyClass,
          primaryKeyField,
-         isUnknownPk
+         false,
+         false
       );
-      fkFieldMappedToPkField = true;
+      this.myCMRField = myCMRField;
+      this.cmpFieldIAmMappedTo = cmpFieldIAmMappedTo;
+      cmpFieldIAmMappedTo.addFkFieldMappedToMe(this);
    }
 
-   public boolean isFkFieldMappedToPkField() {
-      return fkFieldMappedToPkField;
+   // Public
+
+   public JDBCCMP2xFieldBridge getCmpFieldIAmMappedTo()
+   {
+      return cmpFieldIAmMappedTo;
    }
 
-   public Object getInstanceValue(EntityEnterpriseContext ctx) {
+   public boolean isFKFieldMappedToCMPField()
+   {
+      return cmpFieldIAmMappedTo != null;
+   }
+
+   public FieldState getFieldState(EntityEnterpriseContext ctx)
+   {
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      FieldState fieldState = (FieldState)jdbcCtx.get(this);
+      if(fieldState == null)
+      {
+         fieldState = new FieldState();
+         jdbcCtx.put(this, fieldState);
+      }
+      return fieldState;
+   }
+
+   public void setInstanceValue(EntityEnterpriseContext ctx,
+                                Object value,
+                                JDBCCMP2xFieldBridge dontUpdateThisFKField)
+   {
+      setInstanceValue(ctx, value, dontUpdateThisFKField, true);
+   }
+
+   // JDBCFieldBridge implementation
+
+   public Object getInstanceValue(EntityEnterpriseContext ctx)
+   {
+      // notify optimistic lock
+      getManager().fieldStateEventCallback(ctx, CMPMessage.ACCESSED, this);
+
       FieldState fieldState = getFieldState(ctx);
-      if(!fieldState.isLoaded) {
-         getManager().loadField(this, ctx);
-         if(!fieldState.isLoaded) {
-            throw new EJBException("Could not load field value: " +
-               getFieldName());
+      if(!fieldState.isLoaded)
+      {
+         if(cmpFieldIAmMappedTo != null)
+         {
+            return cmpFieldIAmMappedTo.getInstanceValue(ctx);
+         }
+         else
+         {
+            getManager().loadField(this, ctx);
+            if(!fieldState.isLoaded)
+               throw new EJBException("Could not load field value: " + getFieldName());
          }
       }
-
-      // notify optimistic lock
-      getManager().fieldStateEventCallback(ctx, CMPMessage.ACCESSED, this, fieldState.value);
 
       return fieldState.value;
    }
 
-   public void setInstanceValue(EntityEnterpriseContext ctx, Object value) {
-      FieldState fieldState = getFieldState(ctx);
-
-      // short-circuit to avoid repetive comparisons
-      // The field is considered dirty if it is
-      // not loaded yet
-      // OR it is already dirty
-      // OR it is changed
-      // The above doesn't touch version field (to avoid races in UPDATE sql)
-      // and FK field mapped to a PK field
-      fieldState.isDirty =
-         (!fieldState.isLoaded || fieldState.isDirty || changed(fieldState.value, value))
-         && (getManager().getEntityBridge().getVersionField() != this) && !fkFieldMappedToPkField;
-
-      // notify optimistic lock, but only if the bean is created
-      if(ctx.getId() != null && fieldState.isLoaded())
-         getManager().fieldStateEventCallback(ctx, CMPMessage.CHANGED, this, fieldState.value);
-
-      // we are loading the field right now so it isLoaded
-      fieldState.isLoaded = true;
-
-      // update current value
-      fieldState.value = value;
+   public void setInstanceValue(EntityEnterpriseContext ctx, Object value)
+   {
+      setInstanceValue(ctx, value, null, !isPrimaryKeyMember());
    }
 
-   public boolean isLoaded(EntityEnterpriseContext ctx) {
+   public boolean isLoaded(EntityEnterpriseContext ctx)
+   {
       return getFieldState(ctx).isLoaded;
    }
 
    /**
     * Has the value of this field changes since the last time clean was called.
     */
-   public boolean isDirty(EntityEnterpriseContext ctx) {
+   public boolean isDirty(EntityEnterpriseContext ctx)
+   {
       // read only and primary key fields are never dirty
-      if(isReadOnly() || isPrimaryKeyMember()) {
+      if(isReadOnly() || isPrimaryKeyMember())
          return false;
-      }
       return getFieldState(ctx).isDirty;
    }
 
@@ -152,62 +189,199 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
     * Mark this field as clean. Saves the current state in context, so it
     * can be compared when isDirty is called.
     */
-   public void setClean(EntityEnterpriseContext ctx) {
+   public void setClean(EntityEnterpriseContext ctx)
+   {
       FieldState fieldState = getFieldState(ctx);
       fieldState.isDirty = false;
 
       // update last read time
-      if(isReadOnly()) {
+      if(isReadOnly())
          fieldState.lastRead = System.currentTimeMillis();
-      }
    }
 
-   public void resetPersistenceContext(EntityEnterpriseContext ctx) {
-      if(isReadTimedOut(ctx)) {
+   public void resetPersistenceContext(EntityEnterpriseContext ctx)
+   {
+      if(isReadTimedOut(ctx))
+      {
          JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
          jdbcCtx.put(this, new FieldState());
       }
    }
 
-   public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
+   public boolean isReadTimedOut(EntityEnterpriseContext ctx)
+   {
       // if we are read/write then we are always timed out
-      if(!isReadOnly()) {
+      if(!isReadOnly())
          return true;
-      }
 
       // if read-time-out is -1 then we never time out.
-      if(getReadTimeOut() == -1) {
+      if(getReadTimeOut() == -1)
          return false;
-      }
 
-      long readInterval = System.currentTimeMillis() -
-            getFieldState(ctx).lastRead;
+      long readInterval = System.currentTimeMillis() - getFieldState(ctx).lastRead;
       return readInterval >= getReadTimeOut();
    }
 
-   public FieldState getFieldState(EntityEnterpriseContext ctx) {
-      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
-      FieldState fieldState = (FieldState)jdbcCtx.get(this);
-      if(fieldState == null) {
-         fieldState = new FieldState();
-         jdbcCtx.put(this, fieldState);
+   // Private
+
+   private void setInstanceValue(EntityEnterpriseContext ctx,
+                                 Object value,
+                                 JDBCCMP2xFieldBridge dontUpdateThisFKField,
+                                 boolean updateFKFieldsMappedToMe)
+   {
+      FieldState fieldState = getFieldState(ctx);
+      boolean changed = changed(fieldState.value, value);
+
+      // determine if this change should mark the field dirty
+      if(getManager().getEntityBridge().getVersionField() == this)
+      {
+         // this is the version field so do not treat as dirty
+         fieldState.isDirty = false;
       }
-      return fieldState;
+      else if(isFKFieldMappedToCMPField())
+      {
+         // this is a FK field mapped to a PK field so cannot be dirty
+         fieldState.isDirty = false;
+      }
+      else if(dontUpdateThisFKField != null)
+      {
+         // this is a CMP field that is updated by the change of a FK field mapped to it
+         // it is dirty only if the fk field is already loaded
+         fieldState.isDirty = dontUpdateThisFKField.isLoaded(ctx);
+      }
+      else
+      {
+         // OK, we really are dirty
+         //fieldState.isDirty = true;
+         fieldState.isDirty = fieldState.isDirty || changed;
+      }
+
+      // notify optimistic lock, but only if the bean is created
+      if(ctx.getId() != null && fieldState.isLoaded())
+         getManager().fieldStateEventCallback(ctx, CMPMessage.CHANGED, this);
+
+      // update current value
+      fieldState.value = value;
+
+      // update cmp field this fk field is mapped to before this fk is marked as loaded
+      if(cmpFieldIAmMappedTo != null
+         && !cmpFieldIAmMappedTo.isPrimaryKeyMember()
+         && changed)
+         cmpFieldIAmMappedTo.setInstanceValue(ctx, value, this);
+
+      // update foreign key fields mapped to this CMP field and
+      // mark their CMR fields as not loaded
+      if(updateFKFieldsMappedToMe
+         && !fkFieldsMappedToMe.isEmpty()
+         && ctx.isValid()
+         && changed
+         && fieldState.isLoaded)
+         updateFKFieldsMappedToMe(ctx, value, dontUpdateThisFKField);
+
+      // we are loading the field right now so it isLoaded
+      fieldState.isLoaded = true;
+
    }
 
-   public static class FieldState {
+   private void addFkFieldMappedToMe(JDBCCMP2xFieldBridge fkFieldMappedToMe)
+   {
+      fkFieldsMappedToMe.add(fkFieldMappedToMe);
+   }
+
+   /**
+    * Updates foreign key fields mapped to this CMP field.
+    * @param ctx - entity's context;
+    * @param newFieldValue - new newFieldValue;
+    * @param excludeFKField - foreign key field to exclude from list of fields to update.
+    */
+   private void updateFKFieldsMappedToMe(EntityEnterpriseContext ctx,
+                                         Object newFieldValue,
+                                         JDBCCMP2xFieldBridge excludeFKField)
+   {
+      for(Iterator fkIter = fkFieldsMappedToMe.iterator(); fkIter.hasNext();)
+      {
+         JDBCCMP2xFieldBridge fkFieldMappedToMe = (JDBCCMP2xFieldBridge)fkIter.next();
+         if(fkFieldMappedToMe == excludeFKField)
+            continue;
+
+         Object curRelatedId = fkFieldMappedToMe.myCMRField.getRelatedIdFromContextFK(ctx);
+
+         // ATTENTION HERE
+         // Update fkFieldMappedToMe to a new newFieldValue before destroying relationship.
+         // Because foreign key can be complex and destroying relationship will set
+         // all foreign key fields to NULL. To work around this, update this
+         // foreign key field preserving other foreign key fields and get
+         // id newFieldValue for potentially related entity. Then destroy relationship
+         // NULLifying all the foreign key fields. And finally if there is related
+         // entity with calculated id, set foreign key fields to related values.
+         fkFieldMappedToMe.setInstanceValue(ctx, newFieldValue);
+         Object newRelatedId = fkFieldMappedToMe.myCMRField.getRelatedIdFromContextCMP(ctx);
+
+         // destroy old relationship
+         if(curRelatedId != null)
+         {
+            fkFieldMappedToMe.myCMRField.getRelatedCMRField().
+               removeRelatedPKWaitingForMyPK(curRelatedId, ctx.getId());
+
+            try
+            {
+               EJBLocalObject relatedEntity = fkFieldMappedToMe.myCMRField.getRelatedEntityByFK(curRelatedId, ctx);
+               if(relatedEntity != null)
+                  fkFieldMappedToMe.myCMRField.destroyRelationLinks(ctx, curRelatedId);
+            }
+            catch(Exception e)
+            {
+               // no such object
+            }
+         }
+
+         // establish new relationship
+         if(newRelatedId != null)
+         {
+            try
+            {
+               EJBLocalObject relatedEntity = fkFieldMappedToMe.myCMRField.getRelatedEntityByFK(newRelatedId, ctx);
+               if(relatedEntity != null)
+                  fkFieldMappedToMe.myCMRField.createRelationLinks(ctx, newRelatedId);
+               else
+               {
+                  // set foreign key to a new value
+                  fkFieldMappedToMe.myCMRField.setForeignKey(ctx, newRelatedId);
+                  // put calculated relatedId to the waiting list
+                  fkFieldMappedToMe.myCMRField.getRelatedCMRField().
+                     addRelatedPKWaitingForMyPK(newRelatedId, ctx.getId());
+               }
+            }
+            catch(Exception e)
+            {
+               // no such object
+            }
+         }
+      }
+   }
+
+   // Inner ------------------------------------------------
+   public static class FieldState
+   {
+      // Attributes ----------------------------------------
       private Object value;
       private boolean isLoaded = false;
       private boolean isDirty = false;
       private long lastRead = -1;
 
-      public Object getValue() {
+      // Public --------------------------------------------
+      public Object getValue()
+      {
          return value;
       }
-      public boolean isLoaded() {
+
+      public boolean isLoaded()
+      {
          return isLoaded;
       }
-      public boolean isDirty() {
+
+      public boolean isDirty()
+      {
          return isDirty;
       }
    }

@@ -19,22 +19,23 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Section.java,v 1.6 2003/03/31 23:40:48 ejort Exp $
+ * $Id: Section.java,v 1.7 2003/08/27 04:32:36 patriot1burke Exp $
  */
 
 // standard imports
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.Enumeration;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.text.ParseException;
 
 
 /**
  * Represents a section in the EJB spec.
  *
  * @author Juha Lindfors
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since  JDK 1.3
  */
 public class Section {

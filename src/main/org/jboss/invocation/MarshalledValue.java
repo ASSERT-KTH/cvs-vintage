@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.io.OutputStream;
 
 import java.util.Arrays;
 
@@ -23,7 +22,7 @@ import java.util.Arrays;
  * not support class annotations and dynamic class loading.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class MarshalledValue
    implements java.io.Externalizable
@@ -36,15 +35,12 @@ public class MarshalledValue
     * <code>null</code> then the object marshalled was a <code>null</code>
     * reference.
     */
-   private byte[] serializedForm = null;
+   private byte[] serializedForm;
    
    /**
     * The RMI MarshalledObject hash of the serializedForm array
     */
    private int hashCode;
-   private boolean isHashComputed = false;
-   
-   private ByteArrayOutputStream baos = null;
 
    /**
     * Exposed for externalization.
@@ -56,12 +52,20 @@ public class MarshalledValue
 
    public MarshalledValue(Object obj) throws IOException
    {
-      baos = new ByteArrayOutputStream();
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
       MarshalledValueOutputStream mvos = new MarshalledValueOutputStream(baos);
       mvos.writeObject(obj);
       mvos.flush();
+      serializedForm = baos.toByteArray();
+      mvos.close();
+      // Use the java.rmi.MarshalledObject hash code calculation
+      int hash = 0;
+      for (int i = 0; i < serializedForm.length; i++)
+      {
+         hash = 31 * hash + serializedForm[i];
+      }
       
-      isHashComputed = false;
+      hashCode = hash;
    }
 
    public Object get() throws IOException, ClassNotFoundException
@@ -71,7 +75,9 @@ public class MarshalledValue
 
       ByteArrayInputStream bais = new ByteArrayInputStream(serializedForm);
       MarshalledValueInputStream mvis = new MarshalledValueInputStream(bais);
-      return mvis.readObject();
+      Object retValue =  mvis.readObject();
+      mvis.close();
+      return retValue;
    }
 
    public byte[] toByteArray()
@@ -92,19 +98,6 @@ public class MarshalledValue
     */
    public int hashCode()
    {
-      // lazy computing of hash: we don't need it most of the time
-      //
-      if (!isHashComputed)
-      {
-         int hash = 0;
-         for (int i = 0; i < serializedForm.length; i++)
-         {
-            hash = 31 * hash + serializedForm[i];
-         }
-         
-         hashCode = hash;
-      }
-
       return hashCode;
    }
 
@@ -151,7 +144,7 @@ public class MarshalledValue
          serializedForm = new byte[length];
          in.readFully(serializedForm);
       }
-      isHashComputed = false;
+      hashCode = in.readInt();
    }
 
    /**
@@ -172,7 +165,12 @@ public class MarshalledValue
     */
    public void writeExternal(ObjectOutput out) throws IOException
    {
-      out.writeInt(baos.size());
-      baos.writeTo((OutputStream)out);
+      int length = serializedForm != null ? serializedForm.length : 0;
+      out.writeInt(length);
+      if( length > 0 )
+      {
+         out.write(serializedForm);
+      }
+      out.writeInt(hashCode);
    }
 }

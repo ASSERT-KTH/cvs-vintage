@@ -11,17 +11,18 @@ This is the XML DTD for the jbosscmp-jdbc deployment descriptor.
 The root element of JBossCMP-JDBC configuration files.
 -->
 <!ELEMENT jbosscmp-jdbc (defaults?, enterprise-beans?, relationships?,
-         dependent-value-classes?, type-mappings?, entity-commands?)>
+          dependent-value-classes?, type-mappings?, entity-commands?,
+          user-type-mappings?)>
 
 <!--
 The optional defaults elements contains the default values for
 entities, and relationships.
 -->
 <!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?,
-         remove-table?, read-only?, read-time-out?, row-locking?,
-         pk-constraint?, fk-constraint?, preferred-relation-mapping?,
-         read-ahead?, list-cache-max?, fetch-size?, unknown-pk?,
-         create-entity-command?, entity-command?)>
+         remove-table?, post-table-create?, read-only?, read-time-out?, 
+         row-locking?,  pk-constraint?, fk-constraint?, 
+         preferred-relation-mapping?, read-ahead?, list-cache-max?, 
+         fetch-size?, unknown-pk?, entity-command?)>
 
 <!--
 The optional datasource element contains the jndi-name used to lookup
@@ -57,6 +58,19 @@ The remove-table element must be one of the two following:
 -->
 <!ELEMENT remove-table (#PCDATA)>
 
+
+<!--
+Execute arbitrary SQL code directly after the database table is created.
+This command is only executed if create-table is true and the table
+did not previously exist.	
+-->	
+<!ELEMENT post-table-create (sql-statement+)>
+
+<!--
+The SQL Statement to be executed. Note that this is not translated
+into database specific SQL, but passed literally to the database.
+-->
+<!ELEMENT sql-statement (#PCDATA)>
 
 <!--
 Is the entity or cmp-field read-only?
@@ -168,10 +182,11 @@ be configured.
 The entity element contains the configuration of an entity
 -->
 <!ELEMENT entity (ejb-name, (datasource, datasource-mapping)?, create-table?,
-         remove-table?, read-only?, read-time-out?, row-locking?,
-         pk-constraint?, read-ahead?, list-cache-max?, fetch-size?, table-name?,
-         cmp-field*, load-groups?, eager-load-group?, lazy-load-groups?,
-         query*, unknown-pk?, entity-command?, optimistic-locking?, audit?)>
+         remove-table?, post-table-create?, read-only?, read-time-out?, 
+         row-locking?,pk-constraint?, read-ahead?, list-cache-max?, fetch-size?,
+         table-name?, cmp-field*, load-groups?, eager-load-group?, 
+         lazy-load-groups?, query*, unknown-pk?, entity-command?,  
+         optimistic-locking?, audit?)>
 
 <!--
 Name of the entity being configured.  This must match an entity declared
@@ -192,7 +207,7 @@ The cmp-field element contains the configuration of a cmp-field.
 -->
 <!ELEMENT cmp-field (field-name, read-only?, read-time-out?,
          column-name?, not-null?, ((jdbc-type, sql-type) | (property+))?,
-         auto-increment? )>
+         auto-increment?, dbindex? )>
 
 
 <!--
@@ -212,6 +227,12 @@ The name of the column that will hold the data for this field.
 If present the field will not allow a field value.
 -->
 <!ELEMENT not-null EMPTY>
+
+<!--
+If present, the server will try to create an index on the column
+in the database called <fieldname>_index
+-->
+<!ELEMENT dbindex EMPTY>
 
 
 <!--
@@ -340,7 +361,7 @@ Explicitly declared sql fragments.
 <!--
 Delcares what is to be selected.  A finder may only have the distinct element.
 -->
-<!ELEMENT select (distinct?, (ejb-name, field-name?)?, alias?)>
+<!ELEMENT select (distinct?, (ejb-name, field-name?)?, alias?, additional-columns?)>
 
 
 <!--
@@ -390,6 +411,17 @@ Example: <alias>my_table</alias>
 
 
 <!--
+Declares other columns to be selected to satisfy ordering
+by arbitrary columns with ejbFinders or to facilitate aggregate
+functions in ejbSelects.
+
+Example: <additional-columns>, join-table1.column1,
+            join-table2.column2</additional-columns>
+-->
+<!ELEMENT additional-columns (#PCDATA)>
+
+
+<!--
 The relationships element contains the ejb-relation elements that will
 be configured.
 -->
@@ -424,6 +456,7 @@ Specifies that the ejb-relation should be mapped with a relation-table.
 -->
 <!ELEMENT relation-table-mapping (table-name?,
          (datasource, datasource-mapping)?, create-table?, remove-table?,
+         post-table-create?,
          row-locking?, pk-constraint?)>
 
 
@@ -455,8 +488,8 @@ The field-name element must match the field-name of one of the
 primary key fields of the this entity.
 -->
 <!ELEMENT key-field (field-name,
-         ((column-name, (jdbc-type, sql-type)?) | (property*))
-         )>
+         ((column-name, (jdbc-type, sql-type)?) | (property*)),
+         dbindex?)>
 
 
 <!--
@@ -548,10 +581,9 @@ ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)
 <!ELEMENT fk-constraint-template (#PCDATA)>
 
 <!--
-This element is used to define an auto-increment template
+This element is used to define auto-increment template for a column
 -->
 <!ELEMENT auto-increment-template (#PCDATA)>
-
 
 <!--
 An alias header is prepended to a generated table alias by the EJB-QL compiler
@@ -617,8 +649,9 @@ follows:
 <!--
 Unknown primary key configuration
 -->
-<!ELEMENT unknown-pk (key-generator-factory?, unknown-pk-class, field-name?, read-only?, read-time-out?,
-   column-name?, (jdbc-type, sql-type)?, auto-increment?)>
+<!ELEMENT unknown-pk (key-generator-factory?, unknown-pk-class, field-name?,
+   read-only?, read-time-out?,
+   column-name?, (jdbc-type, sql-type)?, auto-increment? )>
 
 <!--
 The unknown primary key class.
@@ -748,3 +781,26 @@ Updated by principal, default is audit_updated_by
 Updated time, default is audit_updated_time
 -->
 <!ELEMENT updated-time (field-name?, column-name?, (jdbc-type, sql-type)?)>
+
+<!--
+  Container for user-type-mapping elements
+-->
+<!ELEMENT user-type-mappings (user-type-mapping+)>
+
+<!--
+  Defines a mapping of a user type to a column providing a mapper class.
+  Mapper is like a mediator: when storing, it takes an instance of the user
+  type and translates it to a column value; when loading, it takes a column
+  value and translates it to an instance of the user type.
+-->
+<!ELEMENT user-type-mapping (java-type, mapped-type, mapper)>
+
+<!--
+  The type a java-type in user-type-mapping is mapped to.
+-->
+<!ELEMENT mapped-type (#PCDATA)>
+
+<!--
+  Mapper class for user-type-mapping.
+-->
+<!ELEMENT mapper (#PCDATA)>

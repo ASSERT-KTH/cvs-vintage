@@ -17,30 +17,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.40 2003/05/20 03:43:03 starksm Exp $
+ * $Id: AbstractVerifier.java,v 1.41 2003/08/27 04:32:36 patriot1burke Exp $
  */
 package org.jboss.verifier.strategy;
 
 // standard imports
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.Arrays;
+
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.gjt.lindfors.pattern.StrategyContext;
+// non-standard class dependencies
+import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
-import org.jboss.verifier.Section;
-import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.metadata.SessionMetaData;
+
 import org.jboss.verifier.factory.VerificationEventFactory;
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.Section;
+import org.jboss.logging.Logger;
+
+import org.gjt.lindfors.pattern.StrategyContext;
 
 
 /**
@@ -76,12 +84,14 @@ import org.jboss.verifier.factory.VerificationEventFactory;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
    implements VerificationStrategy
 {
+   static final Logger log = Logger.getLogger(AbstractVerifier.class);
+
    protected final static String EJB_OBJECT_INTERFACE  =
       "javax.ejb.EJBObject";
 
@@ -155,6 +165,33 @@ public abstract class AbstractVerifier
  *************************************************************************
  */
 
+   public boolean isAssignableFrom(String className, Class assignableFromClass)
+   {
+      try
+      {
+         Class clazz = this.classloader.loadClass(className);
+         return clazz.isAssignableFrom(assignableFromClass);
+      }
+      catch(ClassNotFoundException e)
+      {
+         log.warn("Failed to find class: "+className, e);
+      }
+      return false;
+   }
+   public boolean isAssignableFrom(Class clazz, String assignableFromClassName)
+   {
+      try
+      {
+         Class assignableFromClass = this.classloader.loadClass(assignableFromClassName);
+         return clazz.isAssignableFrom(assignableFromClass);
+      }
+      catch(ClassNotFoundException e)
+      {
+         log.warn("Failed to find class: "+assignableFromClassName, e);
+      }
+      return false;
+   }
+
    public abstract boolean isCreateMethod(Method m);
 
    public abstract boolean isEjbCreateMethod(Method m);
@@ -210,7 +247,9 @@ public abstract class AbstractVerifier
       for (int i = 0; i < exception.length; ++i)
       {
          // Fix for bug #607805: an IOException is OK for local interfaces
-         if( exception[i].equals(java.io.IOException.class) )
+         // Fix for bug #626430: java.lang.Exception is also OK
+         if( exception[i].equals(java.io.IOException.class)
+            || exception[i].equals(java.lang.Exception.class) )
          {
             continue;
          }
@@ -218,7 +257,8 @@ public abstract class AbstractVerifier
 //            if (java.rmi.RemoteException.class.isAssignableFrom(exception[i]))
 // According to the RMI spec. a remote interface must throw an RemoteException
 // or any of its super classes therefore the check must be done vice versa
-         if( exception[i].isAssignableFrom(java.rmi.RemoteException.class) )
+
+         if( isAssignableFrom(exception[i], "java.rmi.RemoteException") )
          {
             return true;
          }
@@ -252,7 +292,7 @@ public abstract class AbstractVerifier
    }
 
    /**
-    * checks if the method has no checked exceptions in its throws clause.
+    * checks if the method throws no checked exceptions in its throws clause.
     */
    public boolean throwsNoException(Method method)
    {
@@ -276,9 +316,9 @@ public abstract class AbstractVerifier
    public boolean throwsCreateException(Method method)
    {
       Class[] exception = method.getExceptionTypes();
-
-      for (int i = 0; i < exception.length; ++i) {
-         if (javax.ejb.CreateException.class.isAssignableFrom(exception[i]))
+      for (int i = 0; i < exception.length; ++i)
+      {
+         if( isAssignableFrom("javax.ejb.CreateException", exception[i]))
             return true;
       }
 
@@ -293,8 +333,9 @@ public abstract class AbstractVerifier
    {
       Class[] exception = method.getExceptionTypes();
 
-      for (int i = 0; i < exception.length; ++i) {
-         if (javax.ejb.FinderException.class.isAssignableFrom(exception[i]))
+      for (int i = 0; i < exception.length; ++i)
+      {
+         if( isAssignableFrom("javax.ejb.FinderException", exception[i]))
             return true;
       }
 
@@ -454,7 +495,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasMessageDrivenBeanInterface( Class c )
    {
-      return javax.ejb.MessageDrivenBean.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.MessageDrivenBean", c);
    }
 
    /**
@@ -462,7 +503,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasMessageListenerInterface( Class c )
    {
-      return javax.jms.MessageListener.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.jms.MessageListener", c);
    }
 
    /**
@@ -470,7 +511,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasSessionBeanInterface( Class c )
    {
-      return javax.ejb.SessionBean.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.SessionBean", c);
    }
 
    /**
@@ -478,7 +519,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasEntityBeanInterface( Class c )
    {
-      return javax.ejb.EntityBean.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.EntityBean", c);
    }
 
    /**
@@ -486,7 +527,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasEJBObjectInterface( Class c )
    {
-      return javax.ejb.EJBObject.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.EJBObject", c);
    }
 
    /**
@@ -494,7 +535,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasEJBLocalObjectInterface( Class c )
    {
-      return javax.ejb.EJBLocalObject.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.EJBLocalObject", c);
    }
 
    /**
@@ -503,7 +544,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasEJBHomeInterface( Class c )
    {
-      return javax.ejb.EJBHome.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.EJBHome", c);
    }
 
    /**
@@ -512,7 +553,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasEJBLocalHomeInterface( Class c )
    {
-      return javax.ejb.EJBLocalHome.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.EJBLocalHome", c);
    }
 
    /**
@@ -520,7 +561,7 @@ public abstract class AbstractVerifier
     */
    public boolean hasSessionSynchronizationInterface( Class c )
    {
-      return javax.ejb.SessionSynchronization.class.isAssignableFrom(c);
+      return isAssignableFrom("javax.ejb.SessionSynchronization", c);
    }
 
    /**
@@ -864,7 +905,6 @@ public abstract class AbstractVerifier
       Class[] b = target.getExceptionTypes();
       Class rteClass = null;
       Class errorClass = null;
-      Class iteClass = null;
 
       try
       {
@@ -879,10 +919,10 @@ public abstract class AbstractVerifier
       for( int i = 0; i < a.length; ++i )
       {
          if( rteClass.isAssignableFrom(a[i])
-            || errorClass.isAssignableFrom(a[i]))
+            || errorClass.isAssignableFrom(a[i]) )
          {
-            // Skip over subclasses of java.lang.RuntimeException,
-            // java.lang.Error and InvocationTargetException
+            // Skip over subclasses of java.lang.RuntimeException and
+            // java.lang.Error
             continue;
          }
 
@@ -1018,72 +1058,6 @@ public abstract class AbstractVerifier
       {
          return false;
       }
-   }
-
-   /**
-    * Checks whether the given class or any of its superclasses defines
-    * a custom 'equals' method instead of using the default one provided
-    * by java.lang.Object
-    *
-    * @param clazz Class to check
-    *
-    * @return <code>true</code> if the equals method is defined
-    */
-   public final boolean definesEquals( Class clazz )
-   {
-      Class[] params = new Class[] { Object.class };
-
-      while( clazz != null && !clazz.equals(Object.class) )
-      {
-         try
-         {
-            Method m = clazz.getDeclaredMethod( "equals",  params );
-            if( m.getReturnType() == Boolean.TYPE )
-            {
-               return true;
-            }
-         }
-         catch( NoSuchMethodException nsme )
-         {
-            // no problem, try superclasses ...
-         }
-         clazz = clazz.getSuperclass();
-      }
-
-      return false;
-   }
-
-   /**
-    * Checks whether the given class or any of its superclasses defines
-    * a custom 'hashCode' method instead of using the default one provided
-    * by java.lang.Object
-    *
-    * @param clazz Class to check
-    *
-    * @return <code>true</code> if the hashCode method is defined
-    */
-   public final boolean definesHashCode( Class clazz )
-   {
-      Class[] params = new Class[0];
-
-      while( clazz != null && !clazz.equals(Object.class) )
-      {
-         try
-         {
-            Method m = clazz.getDeclaredMethod( "hashCode", params );
-            if( m.getReturnType() == Integer.TYPE )
-            {
-               return true;
-            }
-         }
-         catch( NoSuchMethodException nsme )
-         {
-            // no problem, try superclass
-         }
-         clazz = clazz.getSuperclass();
-      }
-
-      return false;
    }
 
 

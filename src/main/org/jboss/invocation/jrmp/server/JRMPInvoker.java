@@ -8,54 +8,41 @@
 package org.jboss.invocation.jrmp.server;
 
 import java.lang.reflect.Method;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import java.io.IOException;
-
+import java.io.Serializable;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RemoteStub;
-import java.rmi.ServerException;
 import java.rmi.MarshalledObject;
 
-import java.util.Date;
-
+import javax.management.ObjectName;
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
 import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
-
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import javax.management.ObjectName;
-import javax.management.MBeanException;
-import javax.management.RuntimeMBeanException;
-import javax.management.RuntimeOperationsException;
-import javax.management.MBeanRegistration;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
 
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
-import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.invocation.ServerID;
+import org.jboss.invocation.MarshalledValueInputStream;
 import org.jboss.logging.Logger;
+import org.jboss.mx.util.JMXExceptionDecoder;
+import org.jboss.net.sockets.DefaultSocketFactory;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.security.SecurityDomain;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
-import org.jboss.mx.util.JMXExceptionDecoder;
-import org.jboss.net.sockets.DefaultSocketFactory;
 
 /**
  * The JRMPInvoker is an RMI implementation that can generate Invocations
@@ -65,7 +52,7 @@ import org.jboss.net.sockets.DefaultSocketFactory;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -101,8 +88,10 @@ public class JRMPInvoker
    protected String sslDomain;
 
    protected RemoteStub invokerStub;
-
+   /** The socket accept backlog */
    protected int backlog = 200;
+   /** A flag to enable caching of classes in the MarshalledValueInputStream */
+   protected boolean enableClassCaching = false;
 
    private static TransactionPropagationContextFactory tpcFactory;
    private static TransactionPropagationContextImporter tpcImporter;
@@ -148,88 +137,98 @@ public class JRMPInvoker
    }
 
    /**
-    * The <code>getServerID</code> method returns a ServerID instance
-    * to identify this server to clients.  It is used also to make
-    * server-specific mbean object names unique on the client.
-    *
-    * @todo find out if the tcpnodelay or connect timeout parameters
-    * can have any meaning.
-    *
-    * @return a <code>ServerID</code> value
+    * @jmx:managed-attribute
     */
-   public ServerID getServerID()
+   public boolean getEnableClassCaching()
    {
-      String address = serverAddress;
-      if (address == null)
-      {
-         try
-         {
-            address = InetAddress.getLocalHost().getHostName();
-         }
-         catch (Exception ignored)
-         {
-            address = "unknownLocalhost";
-         }
-
-      } // end of if ()
-      return new ServerID(address, rmiPort, false, 0);
+      return enableClassCaching;
    }
-
-   public org.jboss.remoting.ident.Identity getIdentity() {return null;}
 
    /**
     * @jmx:managed-attribute
     */
-   public void setRMIObjectPort(final int rmiPort) {
+   public void setEnableClassCaching(boolean flag)
+   {
+      enableClassCaching = flag;
+      MarshalledValueInputStream.useClassCache(enableClassCaching);
+   }
+
+   /**
+    * @return The localhost name or null.
+    */
+   public String getServerHostName()
+   {
+      try
+      {
+         return InetAddress.getLocalHost().getHostName();
+      }
+      catch (Exception ignored)
+      {
+         return null;
+      }
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setRMIObjectPort(final int rmiPort)
+   {
       this.rmiPort = rmiPort;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public int getRMIObjectPort() {
+   public int getRMIObjectPort()
+   {
       return rmiPort;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public void setRMIClientSocketFactory(final String name) {
+   public void setRMIClientSocketFactory(final String name)
+   {
       clientSocketFactoryName = name;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public String getRMIClientSocketFactory() {
+   public String getRMIClientSocketFactory()
+   {
       return clientSocketFactoryName;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public void setRMIServerSocketFactory(final String name) {
+   public void setRMIServerSocketFactory(final String name)
+   {
       serverSocketFactoryName = name;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public String getRMIServerSocketFactory() {
+   public String getRMIServerSocketFactory()
+   {
       return serverSocketFactoryName;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public void setServerAddress(final String address) {
+   public void setServerAddress(final String address)
+   {
       serverAddress = address;
    }
 
    /**
     * @jmx:managed-attribute
     */
-   public String getServerAddress() {
+   public String getServerAddress()
+   {
       return serverAddress;
    }
 
@@ -248,7 +247,8 @@ public class JRMPInvoker
       return sslDomain;
    }
 
-   public RemoteStub getStub() {
+   public Serializable getStub()
+   {
       return this.invokerStub;
    }
 
@@ -291,11 +291,13 @@ public class JRMPInvoker
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
 
+      // FIXME marcf: This should not be here
+      TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       Invoker delegateInvoker = createDelegateInvoker();
 
-      // Export references to the bean
+      // Make the remote invoker proxy available for use by the proxy factory
       Registry.bind(support.getServiceName(), delegateInvoker);
 
       // Export CI
@@ -328,6 +330,9 @@ public class JRMPInvoker
       {
          ctx.close();
       }
+      this.clientSocketFactory = null;
+      this.serverSocketFactory = null;
+      this.invokerStub = null;
    }
 
    protected void destroyService() throws Exception
@@ -339,41 +344,37 @@ public class JRMPInvoker
    /**
     * Invoke a Remote interface method.
     */
-   public InvocationResponse invoke(Invocation invocation)
+   public Object invoke(Invocation invocation)
       throws Exception
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread currentThread = Thread.currentThread();
+      ClassLoader oldCl = currentThread.getContextClassLoader();
+      ObjectName mbean = null;
       try
       {
          // Deserialize the transaction if it is there
-         invocation.setTransaction(importTPC(((MarshalledInvocation) invocation).getTransactionPropagationContext()));
+         MarshalledInvocation mi = (MarshalledInvocation) invocation;
+         invocation.setTransaction(importTPC(mi.getTransactionPropagationContext()));
 
-         // Extract the ObjectName, the rest is still marshalled
-         // ObjectName mbean = new ObjectName((String) invocation.getContainer());
-
-         // This is bad it should at least be using a sub set of the Registry
-         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on
-         // that subset FIXME it will speed up lookup times
-         ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getObjectName());
+         mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
          Object obj = support.getServer().invoke(mbean,
-                                                 "",
+                                                 "invoke",
                                                  new Object[] {invocation},
                                                  Invocation.INVOKE_SIGNATURE);
-
-         return (InvocationResponse)obj;
+         return new MarshalledObject(obj);
       }
       catch (Exception e)
       {
-         JMXExceptionDecoder.rethrow(e);
-
-         // the compiler does not know an exception is thrown by the above
-         throw new org.jboss.util.UnreachableStatementException();
+         e = (Exception) JMXExceptionDecoder.decode(e);
+         if( log.isTraceEnabled() )
+            log.trace("Failed to invoke on mbean: "+mbean, e);
+         throw e;
       }
       finally
       {
-         Thread.currentThread().setContextClassLoader(oldCl);
+         currentThread.setContextClassLoader(oldCl);
       }
    }
 
@@ -418,8 +419,8 @@ public class JRMPInvoker
    }
 
    /** Load and instantiate the clientSocketFactory, serverSocketFactory using
-       the TCL and set the bind address and SSL domain if the serverSocketFactory
-       supports it.
+    the TCL and set the bind address and SSL domain if the serverSocketFactory
+    supports it.
    */
    protected void loadCustomSocketFactories()
    {
@@ -467,7 +468,7 @@ public class JRMPInvoker
                }
             }
             /* See if the server socket supports setSecurityDomain(SecurityDomain)
-               if an sslDomain was specified
+            if an sslDomain was specified
             */
             if( sslDomain != null )
             {
@@ -529,19 +530,23 @@ public class JRMPInvoker
    // Delegate the ServiceMBean details to our support delegate
    //
 
-   public String getName() {
+   public String getName()
+   {
       return support.getName();
    }
 
-   public MBeanServer getServer() {
+   public MBeanServer getServer()
+   {
       return support.getServer();
    }
 
-   public int getState() {
+   public int getState()
+   {
       return support.getState();
    }
 
-   public String getStateString() {
+   public String getStateString()
+   {
       return support.getStateString();
    }
 
@@ -550,7 +555,7 @@ public class JRMPInvoker
       support.create();
    }
 
-   public void start()throws Exception
+   public void start() throws Exception
    {
       support.start();
    }
@@ -586,4 +591,3 @@ public class JRMPInvoker
       support.postDeregister();
    }
 }
-

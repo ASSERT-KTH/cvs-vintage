@@ -6,16 +6,8 @@
 */
 package org.jboss.jmx.adaptor.rmi;
 
-import java.io.ObjectInputStream;
-
-import java.rmi.server.UnicastRemoteObject;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.management.Attribute;
@@ -24,7 +16,6 @@ import javax.management.ObjectName;
 import javax.management.QueryExp;
 import javax.management.ObjectInstance;
 import javax.management.NotificationFilter;
-import javax.management.NotificationListener;
 import javax.management.MBeanInfo;
 
 import javax.management.AttributeNotFoundException;
@@ -36,7 +27,6 @@ import javax.management.ListenerNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanRegistrationException;
 import javax.management.NotCompliantMBeanException;
-import javax.management.OperationsException;
 import javax.management.ReflectionException;
 
 /**
@@ -44,11 +34,10 @@ import javax.management.ReflectionException;
  * is nearly the same as the MBeanServer Interface but
  * has an additional RemoteException.
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  */
 public interface RMIAdaptor 
    extends Remote
@@ -178,7 +167,11 @@ public interface RMIAdaptor
 
    String getDefaultDomain() throws RemoteException;
 
-   String[] getDomains() throws RemoteException;
+   MBeanInfo getMBeanInfo(ObjectName pName)
+      throws InstanceNotFoundException,
+             IntrospectionException,
+             ReflectionException,
+             RemoteException;
 
    void addNotificationListener(ObjectName pName,
                                 ObjectName pListener,
@@ -187,20 +180,37 @@ public interface RMIAdaptor
       throws InstanceNotFoundException,
              RemoteException;
 
+   /**
+    *
+    * @param pName
+    * @param listener
+    * @param filter
+    * @param handback
+    * @throws InstanceNotFoundException
+    * @throws RemoteException
+    */
+   void addNotificationListener(ObjectName name,
+                                RMINotificationListener listener,
+                                NotificationFilter filter,
+                                Object handback)
+      throws InstanceNotFoundException,
+             RemoteException;
+
    void removeNotificationListener(ObjectName pName, ObjectName pListener)
       throws InstanceNotFoundException,
              ListenerNotFoundException,
              RemoteException;
 
-   void removeNotificationListener(ObjectName pName, ObjectName pListener, 
-                                   NotificationFilter filter, Object handback)
+   /**
+    *
+    * @param name
+    * @param listener
+    * @throws InstanceNotFoundException
+    * @throws ListenerNotFoundException
+    * @throws RemoteException
+    */
+   void removeNotificationListener(ObjectName name, RMINotificationListener listener)
       throws InstanceNotFoundException,
              ListenerNotFoundException,
-             RemoteException;
-
-   MBeanInfo getMBeanInfo(ObjectName pName)
-      throws InstanceNotFoundException,
-             IntrospectionException,
-             ReflectionException,
              RemoteException;
 }

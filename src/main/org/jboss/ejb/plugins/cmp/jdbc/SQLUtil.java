@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class SQLUtil {
    public static String fixTableName(String tableName, DataSource dataSource) 
@@ -73,7 +74,7 @@ public class SQLUtil {
    public static String fixConstraintName(String name, DataSource dataSource) 
          throws DeploymentException {
 
-      return fixTableName(name, dataSource);
+      return fixTableName(name, dataSource).replace('.', '_');
    }
    
    // =======================================================================
@@ -689,5 +690,49 @@ public class SQLUtil {
          }
       }
       return Collections.unmodifiableList(types);
+   }
+
+   public static boolean tableExists(
+         String tableName, DataSource dataSource
+         ) throws DeploymentException {
+
+      Connection con = null;
+      ResultSet rs = null;
+      try {
+         con = dataSource.getConnection();
+
+         // (a j2ee spec compatible jdbc driver has to fully
+         // implement the DatabaseMetaData)
+         DatabaseMetaData dmd = con.getMetaData();
+         String catalog = con.getCatalog();
+         String schema = null;
+         String quote = dmd.getIdentifierQuoteString();
+         if (tableName.startsWith(quote)) {
+            if (tableName.endsWith(quote) == false) {
+               throw new DeploymentException("Mismatched quote in table name: "+tableName);
+            }
+            int quoteLength = quote.length();
+            tableName = tableName.substring(quoteLength, tableName.length()-quoteLength);
+            if (dmd.storesLowerCaseQuotedIdentifiers())
+               tableName = tableName.toLowerCase();
+            else if (dmd.storesUpperCaseQuotedIdentifiers())
+               tableName = tableName.toUpperCase();
+         } else {
+            if (dmd.storesLowerCaseIdentifiers())
+               tableName = tableName.toLowerCase();
+            else if (dmd.storesUpperCaseIdentifiers())
+               tableName = tableName.toUpperCase();
+         }
+         rs = dmd.getTables(catalog, schema, tableName, null);
+         return rs.next();
+      } catch(SQLException e) {
+         // This should not happen. A J2EE compatiable JDBC driver is
+         // required fully support metadata.
+         throw new DeploymentException("Error while checking if table aleady " +
+               "exists", e);
+      } finally {
+         JDBCUtil.safeClose(rs);
+         JDBCUtil.safeClose(con);
+      }
    }
 }

@@ -29,8 +29,9 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
+ * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -86,6 +87,11 @@ public final class JDBCCMPFieldMetaData {
    private final boolean notNull;
    
    /**
+    * Should an index for this field be generated?
+    */
+   private final boolean genIndex;
+   
+   /**
     * The Field object in the primary key class for this
     * cmp field, or null if this field is the prim-key-field.
     */
@@ -124,6 +130,7 @@ public final class JDBCCMPFieldMetaData {
       primaryKeyMember = true;
       notNull = true;
       primaryKeyField = null;
+      genIndex = false;
 
       unknownPkField = true;
       autoIncrement = false;
@@ -150,6 +157,7 @@ public final class JDBCCMPFieldMetaData {
       sqlType = null;
       readOnly = entity.isReadOnly();
       readTimeOut = entity.getReadTimeOut();
+      genIndex = false;
 
       // initialize primary key info
       String pkFieldName = entity.getPrimaryKeyFieldName();
@@ -251,6 +259,8 @@ public final class JDBCCMPFieldMetaData {
 
       // is the field auto-increment?
       autoIncrement = defaultValues.isAutoIncrement();
+      
+      genIndex = false; // If <dbindex/> is not given on a field, no index is wanted. 
    }
 
    /**
@@ -286,7 +296,7 @@ public final class JDBCCMPFieldMetaData {
       }
 
       // Field type
-      // AL: must be set for unknow-pk
+      // must be set for unknow-pk
       String unknownPkClass = MetaData.getOptionalChildContent(
          element, "unknown-pk-class" );
       if( unknownPkClass == null ) {
@@ -367,7 +377,15 @@ public final class JDBCCMPFieldMetaData {
       // is the field auto-increment?
       autoIncrement =
          MetaData.getOptionalChild(element, "auto-increment") != null;
+         
+      // should an index for this field be generated?
+      if (MetaData.getOptionalChild(element,"dbindex") == null)
+      	genIndex=false;
+      else
+        genIndex=true;
    }
+   
+   
 
    /**
     * Constructs cmp field meta data with the data contained in the cmp-field 
@@ -456,6 +474,12 @@ public final class JDBCCMPFieldMetaData {
       // is the field auto-increment?
       autoIncrement =
          MetaData.getOptionalChild(element, "auto-increment") != null;
+
+	 // should an index for this field be generated?
+	 if (MetaData.getOptionalChild(element,"dbindex") == null)
+	   genIndex=false;
+	 else
+	   genIndex=true;         	   
    }
 
    /**
@@ -532,33 +556,64 @@ public final class JDBCCMPFieldMetaData {
 
       // not auto-increment because it represents a foreign key
       autoIncrement = false;
+
+		//		should an index be generated? Default is no.
+		genIndex=false;
    }
+
 
    /**
+
     * Constructs a field that is used as an optimistic lock
+
     */
+
    public JDBCCMPFieldMetaData(JDBCEntityMetaData entity,
+
                                String fieldName,
+
                                Class fieldType,
+
                                String columnName,
+
                                int jdbcType,
+
                                String sqlType)
+
       throws DeploymentException {
+
       this.entity = entity;
+
       this.fieldName = fieldName;
+
       this.fieldType = fieldType;
+
       this.columnName = columnName;
+
       this.jdbcType = jdbcType;
+
       this.sqlType = sqlType;
 
+
+
       readOnly = false;
+
       readTimeOut = -1;
+
       primaryKeyMember = false;
+
       notNull = true;
+
       primaryKeyField = null;
+
       unknownPkField = false;
+
       autoIncrement = false;
+      
+		genIndex = false;
+
    }
+
 
    /**
     * Gets the entity on which this field is defined
@@ -655,6 +710,22 @@ public final class JDBCCMPFieldMetaData {
     */
    public boolean isNotNull() {
       return notNull;
+   }
+
+   /**
+    * Should an index for this field be generated?
+    * Normally this should be false for primary key fields
+    * But it seems there are databases that do not automatically
+    * put indices on primary keys *sigh*
+    * @return true if an index should be generated on this field
+    */
+   public boolean isIndexed() {
+   	/*
+   	if (isPrimaryKeyMember())
+   	  return false;
+   	else
+   	*/
+   	  return genIndex;
    }
 
    /**

@@ -41,7 +41,8 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.16 $
+ * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
+ * @version $Revision: 1.17 $
  *
  * <p><b>Revisions:</b>
  *
@@ -63,6 +64,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    private final Class primaryKeyClass;
    private final Field primaryKeyField;
    private final boolean unknownPk;
+   private final boolean indexed;
    
    public JDBCAbstractCMPFieldBridge(
          JDBCStoreManager manager, 
@@ -88,7 +90,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
             metadata.isPrimaryKeyMember(),
             metadata.getEntity().getPrimaryKeyClass(),
             metadata.getPrimaryKeyField(),
-            metadata.isUnknownPkField());
+            metadata.isUnknownPkField(),
+            metadata.isIndexed());
    }
 
    public JDBCAbstractCMPFieldBridge(
@@ -101,7 +104,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          boolean primaryKeyMember,
          Class primaryKeyClass,
          Field primaryKeyField,
-         boolean unknownPk) {
+         boolean unknownPk,
+         boolean indexed) {
 
       this.manager = manager;
 
@@ -117,6 +121,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       this.primaryKeyField = primaryKeyField;
       
       this.unknownPk = unknownPk;
+      this.indexed = indexed;
 
       this.log = Logger.getLogger(
             this.getClass().getName() + 
@@ -166,6 +171,10 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    public boolean isUnknownPk() {
       return unknownPk;
    }
+   
+   public boolean isIndexed() {
+   	  return indexed;
+   }
 
    public abstract boolean isReadTimedOut(EntityEnterpriseContext ctx);
    
@@ -179,7 +188,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          throw new EJBException("Field is read-only: " +
                "fieldName=" + getFieldName());
       }
-      if(isPrimaryKeyMember() && manager.getEntityBridge().isCreated(ctx)) {
+      if(isPrimaryKeyMember() && manager.getEntityBridge().isEjbCreateDone(ctx)) {
          throw new IllegalStateException("A CMP field that is a member " +
                "of the primary key can only be set in ejbCreate " +
                "[EJB 2.0 Spec. 10.3.5].");

@@ -9,23 +9,15 @@ package org.jboss.ejb;
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
 
-import org.jboss.monitor.StatisticsProvider;
-
 /**
  * The plugin that gives a container a cache for bean instances.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.11 $
- *      
- * <p><b>Revisions:</b>
- * <p><b>20010718 andreas schaefer:</b>
- * <ul>
- * <li>- Marked the InstanceCache as Statistics Provider
- * </ul>
+ * @version $Revision: 1.12 $
  */
 public interface InstanceCache
-   extends ContainerPlugin, StatisticsProvider
+   extends ContainerPlugin
 {
    /**
     * Gets a bean instance from this cache given the identity.  This method
@@ -89,8 +81,13 @@ public interface InstanceCache
     */
    boolean isActive(Object id);
 
-
-   
+   /** Get the current cache size
+    *
+    * @return the size of the cache
+    */
+   long getCacheSize();
+   /** Flush the cache.
+    *
+    */
+   void flush();
 }
-
-

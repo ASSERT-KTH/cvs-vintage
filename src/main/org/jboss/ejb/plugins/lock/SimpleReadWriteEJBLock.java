@@ -36,7 +36,7 @@ import org.jboss.invocation.Invocation;
  *
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/6/4: yarrumretep</b>
@@ -71,36 +71,30 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	boolean reading = container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName());
 	Transaction miTx = mi.getTransaction();
 
-        try
-        {
-           sync();
-           try
-           {
-              if(reading)
-              {
-                 if(trace)
+	sync();
+	try
+	{
+	    if(reading)
+	    {
+		if(trace)
 		    trace(miTx, "READ  (RQ)", mi.getMethod());
-                 getReadLock(miTx);
-                 if(trace)
+		getReadLock(miTx);
+		if(trace)
 		    trace(miTx, "READ  (GT)", mi.getMethod());
-              }
-              else
-              {
-                 if(trace)
+	    }
+	    else
+	    {
+		if(trace)
 		    trace(miTx, "WRITE (RQ)", mi.getMethod());
-                 getWriteLock(miTx);
-                 if(trace)
+		getWriteLock(miTx);
+		if(trace)
 		    trace(miTx, "WRITE (GT)", mi.getMethod());
-              }
-           }
-           finally
-           {
-              releaseSync();
-           }
-        }
-        catch (Exception ignored)
-        {
-        }
+	    }
+	}
+	finally
+	{
+	    releaseSync();
+	}
     }
 
     private void getReadLock(Transaction tx)
@@ -213,11 +207,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	}
 	finally
 	{
-           try
-           {
-              sync();
-           }
-           catch (Exception ignored) {}
+	    sync();
 	}
     }
     
@@ -315,22 +305,16 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	
 	public void afterCompletion(int status)
 	{
-           try
-           {
-              lock.sync();
-              try
-              {
-                 lock.releaseReadLock(transaction);
-              }
-              finally
-              {
-                 lock.releaseSync();
-              }
-              recycle();
-           }
-           catch (Exception ex)
-           {
-           }
+	    lock.sync();
+	    try
+	    {
+		lock.releaseReadLock(transaction);
+	    }
+	    finally
+	    {
+		lock.releaseSync();
+	    }
+	    recycle();
 	}
     }
     

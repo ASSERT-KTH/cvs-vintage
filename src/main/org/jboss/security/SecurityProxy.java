@@ -16,7 +16,7 @@ Custom security checks are those that cannot be described using the
 standard EJB deployment time declarative role based security.
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public interface SecurityProxy
 {

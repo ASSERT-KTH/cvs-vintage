@@ -43,15 +43,15 @@ public class ServerThread extends Thread
 {
    final static private Logger log = Logger.getLogger(ServerThread.class);
 
-   protected boolean running = true;
    protected ObjectInputStream in;
    protected ObjectOutputStream out;
    protected Socket socket;
    protected PooledInvoker invoker;
    protected LRUPool clientpool;
    protected LinkedList threadpool;
-   protected boolean handlingResponse = false;
-   protected boolean shutdown = false;
+   protected volatile boolean running = true;
+   protected volatile boolean handlingResponse = true; // start off as true so that nobody can interrupt us
+   protected volatile boolean shutdown = false;
    protected static int id = 0;
 
    public ServerThread(Socket socket, PooledInvoker invoker, LRUPool clientpool, LinkedList threadpool, int timeout) throws Exception
@@ -70,7 +70,7 @@ public class ServerThread extends Thread
       running = false;
       // This is a race and there is a chance
       // that a invocation is going on at the time
-      // of the interrupt.  But I see know way right
+      // of the interrupt.  But I see no way right
       // now to protect for this.
 
       // NOTE ALSO!:
@@ -88,12 +88,38 @@ public class ServerThread extends Thread
       
    }
 
+   public void evict()
+   {
+      running = false;
+      // This is a race and there is a chance
+      // that a invocation is going on at the time
+      // of the interrupt.  But I see no way right
+      // now to protect for this.
+      // There may not be a problem because interrupt only effects
+      // threads blocking on IO.
+      
+
+      // NOTE ALSO!:
+      // Shutdown should never be synchronized.
+      // We don't want to hold up accept() thread! (via LRUpool)
+      if (!handlingResponse)
+      {
+         try
+         {
+            this.interrupt();
+            this.interrupted(); // clear
+         }
+         catch (Exception ignored) {}
+      }
+   }
+
 
    public synchronized void wakeup(Socket socket, int timeout) throws Exception
    {
-      //System.out.println("**** reused");
       this.socket = socket;
       socket.setSoTimeout(timeout);
+      running = true;
+      handlingResponse = true;
       this.notify();
    }
 
@@ -127,21 +153,21 @@ public class ServerThread extends Thread
                      {
                         //System.out.println("removing myself from the pool: " + clientpool.size());
                         clientpool.remove(this);
-                        if (clientpool.size() + threadpool.size() < invoker.getMaxPoolSize())
-                        {
-                           //System.out.println("adding myself to threadpool");
-                           threadpool.add(this);
-                        }
+                        //System.out.println("adding myself to threadpool");
+                        threadpool.add(this);
+                        clientpool.notify();
                      }
                   }
+                  log.debug("begin thread wait");
                   this.wait();
+                  log.debug("WAKEUP in SERVER THREAD");
                }
             }
          }
       }
       catch (Exception ignored) 
       {
-         ignored.printStackTrace();
+         log.debug("Exiting run on exception", ignored);
       }
    }
 
@@ -152,6 +178,13 @@ public class ServerThread extends Thread
       // that the socket is still active
       byte ACK = in.readByte();
       //System.out.println("****acknowledge read byte" + Thread.currentThread());
+
+      // HERE IS THE RACE between ACK received and handlingResponse = true
+      // We can't synchronize because readByte blocks and client is expecting
+      // a response and we don't want to hang client.
+      // see shutdown and evict for more details
+      // There may not be a problem because interrupt only effects
+      // threads blocking on IO. and this thread will just continue.
       handlingResponse = true;
       
       out.writeByte(ACK);
@@ -189,6 +222,7 @@ public class ServerThread extends Thread
     */
    protected void dorun()
    {
+      log.debug("beginning dorun");
       running = true;
       handlingResponse = true;
       try
@@ -226,6 +260,10 @@ public class ServerThread extends Thread
             //System.out.println("exception found!");
             log.debug("socket timed out");
             running = false;
+         }
+         catch (InterruptedException intr)
+         {
+            log.debug("interrupted");
          }
          catch (Exception ex)
          {

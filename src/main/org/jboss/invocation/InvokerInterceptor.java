@@ -13,7 +13,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 
 import org.jboss.proxy.Interceptor;
@@ -22,21 +21,17 @@ import org.jboss.util.id.GUID;
 
 /**
  * A very simple implementation of it that branches to the local stuff.
- *
+ * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
- *
- * <p><b>2001/02/28: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.5 $
  */
 public class InvokerInterceptor
    extends Interceptor
    implements Externalizable
 {
-   /** Serial Version Identifier. */
-   // private static final long serialVersionUID = 1870461898442160570L;
+   /** Serial Version Identifier. @since 1.2 */
+   private static final long serialVersionUID = 2548120545997920357L;
 
    /** The value of our local Invoker.ID to detect when we are local. */
    private GUID invokerID = Invoker.ID;
@@ -45,53 +40,62 @@ public class InvokerInterceptor
    protected Invoker remoteInvoker;
 
    /** Static references to local invokers. */
-   protected static Invoker localInvoker;
+   protected static Invoker localInvoker; 
 
    /**
     * Get the local invoker reference, useful for optimization.
     */
-   public static Invoker getLocal() {
+   public static Invoker getLocal()
+   {
       return localInvoker;
    }
 
    /**
     * Set the local invoker reference, useful for optimization.
     */
-   public static void setLocal(Invoker invoker) {
+   public static void setLocal(Invoker invoker)
+   {
       localInvoker = invoker;
    }
 
    /**
     * Exposed for externalization.
     */
-   public InvokerInterceptor() {
+   public InvokerInterceptor()
+   {
       super();
    }
 
    /**
-    * Returns wether we are local to the originating container or not.
+    * Returns wether we are local to the originating container or not. 
     */
-   public boolean isLocal() {
+   public boolean isLocal()
+   {
       return invokerID.equals(Invoker.ID);
-      // return containerStartup == Invoker.STARTUP;
    }
 
    /**
-    * The invocation on the delegate, calls the right invoker.
-    * Remote if we are remote, local if we are local.
+    * The invocation on the delegate, calls the right invoker.  
+    * Remote if we are remote, local if we are local. 
     */
-   public InvocationResponse invoke(Invocation invocation)
-      throws Throwable
+   public Object invoke(Invocation invocation)
+      throws Exception
    {
-      // optimize if calling another bean in same EJB-application
-      if (isLocal()) {
+      Object returnValue = null;
+      InvocationContext ctx = invocation.getInvocationContext();
+      // optimize if calling another bean in same server VM
+      if ( isLocal() )
+      {
          // The payload as is is good
-         return localInvoker.invoke(invocation);
+         returnValue = localInvoker.invoke(invocation);
       }
-      else {
-         // this payload will go through marshalling
-         return invocation.getInvocationContext().getInvoker().invoke(invocation);
+      else
+      {
+         // The payload will go through marshalling at the invoker layer
+         Invoker invoker = ctx.getInvoker();
+         returnValue = invoker.invoke(invocation);
       }
+      return returnValue;
    }
 
    /**

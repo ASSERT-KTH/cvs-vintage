@@ -16,7 +16,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  * CMPStoreManager JDBCActivateEntityCommand
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCInitEntityCommand {
    private JDBCEntityBridge entity;

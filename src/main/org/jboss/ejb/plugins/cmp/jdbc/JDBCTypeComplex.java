@@ -24,7 +24,7 @@ import javax.ejb.EJBException;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCTypeComplex implements JDBCType {
    private JDBCTypeComplexProperty[] properties;

@@ -24,11 +24,10 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jnp.interfaces.Naming;
 import org.jnp.server.Main;
-import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.util.MethodHashing;
 
 /**
  * A JBoss service that starts the jnp JNDI server.
@@ -36,7 +35,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -62,12 +61,12 @@ public class NamingService
    {
       return naming.getPort();
    }
-   
+
    public void setRmiPort(int port)
    {
       naming.setRmiPort(port);
    }
-   
+
    public int getRmiPort()
    {
       return naming.getRmiPort();
@@ -77,7 +76,7 @@ public class NamingService
    {
       return naming.getBindAddress();
    }
-   
+
    public void setBindAddress(String host) throws UnknownHostException
    {
       naming.setBindAddress(host);
@@ -97,7 +96,7 @@ public class NamingService
    {
       return naming.getBacklog();
    }
-   
+
    public void setBacklog(int backlog)
    {
       naming.setBacklog(backlog);
@@ -116,7 +115,7 @@ public class NamingService
    {
       return naming.getClientSocketFactory();
    }
-   
+
    public void setClientSocketFactory(String factoryClassName)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
@@ -127,7 +126,7 @@ public class NamingService
    {
       return naming.getServerSocketFactory();
    }
-   
+
    public void setServerSocketFactory(String factoryClassName)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
@@ -144,9 +143,9 @@ public class NamingService
       throws Exception
    {
       boolean debug = log.isDebugEnabled();
-      
+
       // Read jndi.properties into system properties
-      // RO: this is necessary because some components (=Tomcat servlets) use a 
+      // RO: this is necessary because some components (=Tomcat servlets) use a
       // buggy classloader that disallows finding the resource properly
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       InputStream is = loader.getResourceAsStream("jndi.properties");
@@ -163,7 +162,7 @@ public class NamingService
          System.setProperty(key, value);
       }
       naming.start();
-      
+
       /* Create a default InitialContext and dump out its env to show what properties
          were used in its creation. If we find a Context.PROVIDER_URL property
          issue a warning as this means JNDI lookups are going through RMI.
@@ -206,7 +205,7 @@ public class NamingService
       for(int m = 0; m < methods.length; m ++)
       {
          Method method = methods[m];
-         Long hash = new Long(MethodHashing.calculateHash(method));
+         Long hash = new Long(MarshalledInvocation.calculateHash(method));
          tmpMap.put(hash, method);
       }
       marshalledInvocationMapping = Collections.unmodifiableMap(tmpMap);
@@ -238,7 +237,7 @@ public class NamingService
     *
     * @jmx:managed-attribute
     *
-    * @return A Map<Long hash, Method> of the Naming interface 
+    * @return A Map<Long hash, Method> of the Naming interface
     */
    public Map getMethodMap()
    {
@@ -251,7 +250,7 @@ public class NamingService
     *
     * @param invocation    A pointer to the invocation object
     * @return              Return value of method invocation.
-    * 
+    *
     * @throws Exception    Failed to invoke method.
     */
    public Object invoke(Invocation invocation) throws Exception

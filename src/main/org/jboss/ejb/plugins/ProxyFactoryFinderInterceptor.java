@@ -9,79 +9,124 @@ package org.jboss.ejb.plugins;
 
 import javax.ejb.EJBException;
 
+import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.naming.ENCThreadLocalKey;
 
 /** 
- * This interceptor injects the ProxyFactory into the ThreadLocal container 
- * variable
+ * This interceptor injects the ProxyFactory into the ThreadLocal container variable
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
-public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
+public class ProxyFactoryFinderInterceptor
+   extends AbstractInterceptor
 {
-   protected void setProxyFactory(
-         String invokerBinding, 
-         Invocation invocation) throws Exception
+
+   public void create() throws Exception
    {
-      // if(BeanMetaData.LOCAL_INVOKER_PROXY_BINDING.equals(invokerBinding)) return;
+   }
+
+   protected void setProxyFactory(String invokerBinding, Invocation mi) throws Exception
+   {
+      //      if (BeanMetaData.LOCAL_INVOKER_PROXY_BINDING.equals(invokerBinding)) return;
       if (invokerBinding == null)
       {
-         log.trace("invokerBinding is null in ProxyFactoryFinder");
+         log.trace("invokerBInding is null in ProxyFactoryFinder");
          return;
       }
-
-
-      Object proxyFactory = getContainer().lookupProxyFactory(invokerBinding);
+      /*
+      if (invokerBinding == null)
+      {
+         log.error("***************** invokerBinding is null ********");
+         log.error("Method name: " + mi.getMethod().getName());
+         log.error("jmx name: " + container.getJmxName().toString());
+         new Throwable().printStackTrace();
+         log.error("*************************");
+         throw new EJBException("Couldn't insert proxy factory, " +
+               "invokerBinding was null");
+      }
+      */
+      Object proxyFactory = container.lookupProxyFactory(invokerBinding);
       if (proxyFactory == null)
       {
          String methodName;
-         if(invocation.getMethod() != null) {
-            methodName = invocation.getMethod().getName();
-         }
-         else 
+         if(mi.getMethod() != null) {
+            methodName = mi.getMethod().getName();
+         } else 
          {
             methodName ="<no method>";
          }
 
          log.error("***************** proxyFactory is null ********");
          log.error("Method name: " + methodName);
-         log.error("jmx name: " + getContainer().getJmxName().toString());
+         log.error("jmx name: " + container.getJmxName().toString());
          log.error("invokerBinding: " + invokerBinding);
          log.error("Stack trace", new Throwable());
          log.error("*************************");
          throw new EJBException("Couldn't find proxy factory");
       }
-      getContainer().setProxyFactory(proxyFactory);
+      container.setProxyFactory(proxyFactory);
    }
 
-   public InvocationResponse invoke(Invocation invocation) throws Exception
+   public Object invokeHome(Invocation mi)
+      throws Exception
    {
       String invokerBinding = 
-            (String)invocation.getValue(InvocationKey.INVOKER_PROXY_BINDING);
-      setProxyFactory(invokerBinding, invocation);
+            (String)mi.getValue(InvocationKey.INVOKER_PROXY_BINDING);
+      setProxyFactory(invokerBinding, mi);
 
       String oldInvokerBinding = ENCThreadLocalKey.getKey();
-
-      // Only override current ENC binding if we're not local or there has 
-      // not been a previous call
+      // Only override current ENC binding if we're not local
       //      if ((!BeanMetaData.LOCAL_INVOKER_PROXY_BINDING.equals(invokerBinding)) || oldInvokerBinding == null)
       if (invokerBinding != null || oldInvokerBinding == null)
       {
          ENCThreadLocalKey.setKey(invokerBinding);
       }
 
+      Interceptor next = getNext();
+      Object value = null;
       try
       {
-         return getNext().invoke(invocation);
+         value = next.invokeHome(mi);
       }
       finally
       {
          ENCThreadLocalKey.setKey(oldInvokerBinding);
       }
+
+      return value;
    }
+
+   public Object invoke(Invocation mi)
+      throws Exception
+   {
+      String invokerBinding = 
+            (String)mi.getValue(InvocationKey.INVOKER_PROXY_BINDING);
+      setProxyFactory(invokerBinding, mi);
+
+      String oldInvokerBinding = ENCThreadLocalKey.getKey();
+      // Only override current ENC binding if we're not local or there has not been a previous call
+      //      if ((!BeanMetaData.LOCAL_INVOKER_PROXY_BINDING.equals(invokerBinding)) || oldInvokerBinding == null)
+      if (invokerBinding != null || oldInvokerBinding == null)
+      {
+         ENCThreadLocalKey.setKey(invokerBinding);
+      }
+
+      Interceptor next = getNext();
+      Object value = null;
+      try
+      {
+         value = next.invoke(mi);
+      }
+      finally
+      {
+         ENCThreadLocalKey.setKey(oldInvokerBinding);
+      }
+
+      return value;
+   }
+
 }

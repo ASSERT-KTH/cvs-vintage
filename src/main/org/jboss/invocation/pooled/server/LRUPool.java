@@ -28,7 +28,14 @@ public class LRUPool extends LRUCachePolicy
    protected void entryRemoved(LRUCachePolicy.LRUCacheEntry entry) 
    {
       ServerThread thread = (ServerThread)entry.m_object;
-      thread.shutdown();
+      thread.evict();
+   }
+
+   public void evict()
+   {
+      // the entry will be removed by ageOut
+      ServerThread thread = (ServerThread)m_list.m_tail.m_object;
+      thread.evict();
    }
    
 }

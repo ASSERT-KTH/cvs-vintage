@@ -9,57 +9,53 @@ package org.jboss.invocation;
 import java.io.Serializable;
 import java.io.ObjectStreamException;
 
-import java.util.ArrayList;
-
-/**
- * Type safe enumeration used for to identify the invocation types.
+/** Type safe enumeration used for to identify the invocation types.
+ *
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.4 $
  */
-public final class InvocationType implements Serializable {
-   // these fields are used for serialization
-   private static int nextOrdinal = 0;
-   private static final ArrayList values = new ArrayList(4);
+public final class InvocationType implements Serializable
+{
+   /** Serial Version Identifier. @since 1.2 */
+   private static final long serialVersionUID = 6460196085190851775L;
 
-   public static final InvocationType REMOTE = 
-         new InvocationType("REMOTE", false, false);
-   public static final InvocationType LOCAL = 
-         new InvocationType("LOCAL", false, true);
-   public static final InvocationType HOME = 
-         new InvocationType("HOME", true, false);
-   public static final InvocationType LOCALHOME = 
-         new InvocationType("LOCALHOME", true, true);
+   /** The max ordinal value in use for the InvocationType enums. When you add a
+    * new key enum value you must assign it an ordinal value of the current
+    * MAX_TYPE_ID+1 and update the MAX_TYPE_ID value.
+    */
+   private static final int MAX_TYPE_ID = 3;
+
+   /** The array of InvocationKey indexed by ordinal value of the key */
+   private static final InvocationType[] values = new InvocationType[MAX_TYPE_ID+1];
+
+   public static final InvocationType REMOTE =
+         new InvocationType("REMOTE", 0);
+   public static final InvocationType LOCAL =
+         new InvocationType("LOCAL", 1);
+   public static final InvocationType HOME =
+         new InvocationType("HOME", 2);
+   public static final InvocationType LOCALHOME =
+         new InvocationType("LOCALHOME", 3);
 
    private final transient String name;
-   private final transient boolean isLocal;
-   private final transient boolean isHome;
 
    // this is the only value serialized
    private final int ordinal;
- 
-   private InvocationType(String name, boolean isHome, boolean isLocal) {
+
+   private InvocationType(String name, int ordinal)
+   {
       this.name = name;
-      this.isLocal = isLocal;
-      this.isHome = isHome;
-      this.ordinal = nextOrdinal++;
-      values.add(this);
+      this.ordinal = ordinal;
+      values[ordinal] = this;
    }
 
-   public boolean isLocal()
+   public String toString()
    {
-      return isLocal;
-   }
-
-   public boolean isHome()
-   {
-      return isHome;
-   }
-
-   public String toString() {
       return name;
    }
 
-   Object readResolve() throws ObjectStreamException {
-      return values.get(ordinal);
+   Object readResolve() throws ObjectStreamException
+   {
+      return values[ordinal];
    }
 }
-
-

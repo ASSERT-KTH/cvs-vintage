@@ -18,12 +18,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * This class generates a query from JBoss-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @version $Revision: 1.4 $
  */
 public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
 
    public JDBCJBossQLQuery(
-         JDBCStoreManager manager, 
+         JDBCStoreManager manager,
          JDBCQueryMetaData q) throws DeploymentException {
 
       super(manager, q);
@@ -32,7 +33,7 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
       if(getLog().isDebugEnabled()) {
          getLog().debug("JBossQL: " + metadata.getJBossQL());
       }
-      
+
       JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(
             (Catalog)manager.getApplicationData("CATALOG"));
 
@@ -43,11 +44,15 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
                metadata.getMethod().getParameterTypes(),
                metadata.getReadAhead());
       } catch(Throwable t) {
-         throw new DeploymentException("Error compiling ejbql", t);
+         t.printStackTrace();
+         throw new DeploymentException("Error compiling JBossQL " +
+            "statement '" + metadata.getJBossQL() + "'", t);
       }
-      
+
       setSQL(compiler.getSQL());
-      
+      setOffsetParam(compiler.getOffset());
+      setLimitParam(compiler.getLimit());
+
       // set select object
       if(compiler.isSelectEntity()) {
          JDBCEntityBridge selectEntity = compiler.getSelectEntity();
@@ -61,9 +66,16 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
             String eagerLoadGroup = readahead.getEagerLoadGroup();
             setPreloadFields(selectEntity.getLoadGroup(eagerLoadGroup));
          }
-      } else {
+      }
+      else if(compiler.isSelectField())
+      {
          setSelectField(compiler.getSelectField());
       }
+      else
+      {
+         setSelectFunction(compiler.getSelectFunction(), compiler.getStoreManager());
+      }
+
 
       // get the parameter order
       setParameterList(compiler.getInputParameters());

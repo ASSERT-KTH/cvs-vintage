@@ -20,7 +20,6 @@ import javax.naming.InitialContext;
 
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
@@ -33,34 +32,40 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author  <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.12 $
- *
- * @todo make this go through the client interceptor stack so it can
- * get the context info such as security, tx.
+ * @version $Revision: 1.13 $
  */
 public class StatefulHandleImpl
-   implements Handle
+      implements Handle
 {
+   /** Serial Version Identifier. */
+   static final long serialVersionUID = -6324520755180597156L;
+
    /** A reference to {@link Handle#getEJBObject}. */
    protected static final Method GET_EJB_OBJECT;
 
    /**
     * Initialize <tt>Handle</tt> method references.
     */
-   static {
-      try {
+   static
+   {
+      try
+      {
          GET_EJB_OBJECT = Handle.class.getMethod("getEJBObject", new Class[0]);
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          e.printStackTrace();
          throw new ExceptionInInitializerError(e);
       }
    }
 
    /** The identity of the bean. */
-   public InvocationContext ctx;
+   public int objectName;
+   public String jndiName;
+   public String invokerProxyBinding;
+   public Invoker invoker;
+   public Object id;
 
    /**
     * Construct a <tt>StatefulHandleImpl</tt>.
@@ -71,10 +76,36 @@ public class StatefulHandleImpl
     * @param name      JNDI name.
     * @param id        Identity of the bean.
     */
-   public StatefulHandleImpl(InvocationContext ctx)
+   public StatefulHandleImpl(
+         int objectName,
+         String jndiName,
+         Invoker invoker,
+         String invokerProxyBinding,
+         Object id)
    {
-      this.ctx = ctx;
+      this.objectName = objectName;
+      this.jndiName = jndiName;
+      this.invoker = invoker;
+      this.id = id;
+      this.invokerProxyBinding = invokerProxyBinding;
    }
+
+   /**
+    * @return the internal session identifier
+    */
+   public Object getID()
+   {
+      return id;
+   }
+
+   /**
+    * @return the jndi name
+    */
+   public String getJNDIName()
+   {
+      return jndiName;
+   }
+
    /**
     * Handle implementation.
     *
@@ -93,41 +124,36 @@ public class StatefulHandleImpl
     *
     * @throws ServerException    Could not get EJBObject.
     */
-   public EJBObject getEJBObject() throws RemoteException {
-      try {
+   public EJBObject getEJBObject() throws RemoteException
+   {
+      try
+      {
          Invocation invocation =
-         new Invocation(
-            null,
-            GET_EJB_OBJECT,
-            new Object[] {ctx.getCacheId()},
-            //No transaction set up in here? it will get picked up in the proxy
-            null,
-            // fix for bug 474134 from Luke Taylor
-            SecurityAssociation.getPrincipal(),
-            SecurityAssociation.getCredential());
+               new Invocation(
+                     null,
+                     GET_EJB_OBJECT,
+                     new Object[]{id},
+                     //No transaction set up in here? it will get picked up in the proxy
+                     null,
+                     // fix for bug 474134 from Luke Taylor
+                     SecurityAssociation.getPrincipal(),
+                     SecurityAssociation.getCredential());
 
-         invocation.setObjectName(ctx.getObjectName());
+         invocation.setObjectName(new Integer(objectName));
          invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
-               ctx.getInvokerProxyBinding(), PayloadKey.AS_IS);
+               invokerProxyBinding, PayloadKey.AS_IS);
 
          // It is a home invocation
          invocation.setType(InvocationType.HOME);
-         invocation.setInvocationContext(ctx);
 
          // Get the invoker to the target server (cluster or node)
 
          // Ship it
-         Invoker invoker = ctx.getInvoker();
-         InvocationResponse response = invoker.invoke(invocation);
-         return (EJBObject)response.getResponse();
+         return (EJBObject) invoker.invoke(invocation);
       }
       catch (Exception e)
       {
          throw new ServerException("Could not get EJBObject", e);
-      }
-      catch (Throwable e)
-      {
-         throw new ServerException("Could not get EJBObject" +  e.getMessage());
       }
    }
 }

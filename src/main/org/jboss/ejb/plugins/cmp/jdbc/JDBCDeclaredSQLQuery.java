@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -107,53 +107,42 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
       if(metadata.isSelectDistinct()) {
          sql.append("DISTINCT ");
       }
-      
+
       String alias = metadata.getAlias();
       String from = metadata.getFrom();
+      String table;
+      String selectList;
       if(getSelectField() == null) {
 
          // we are selecting a full entity
-         String table = getSelectEntity().getTableName();
+         table = getSelectEntity().getTableName();
 
          // get a list of all fields to be loaded
          List loadFields = new ArrayList();
          loadFields.addAll(getSelectEntity().getPrimaryKeyFields());
          loadFields.addAll(getPreloadFields());
 
-         if(alias != null && alias.trim().length()>0) {
-            sql.append(SQLUtil.getColumnNamesClause(loadFields, alias));
-            sql.append(" FROM ");
-            sql.append(table).append(" ").append(alias);
-            if(from != null && from.trim().length()>0) {
-               sql.append(" ").append(from);
-            }
-         } else if(from != null && from.trim().length()>0) {
-            sql.append(SQLUtil.getColumnNamesClause(loadFields, table));
-            sql.append(" FROM ").append(table).append(" ").append(from);
-         } else {
-            sql.append(SQLUtil.getColumnNamesClause(loadFields));
-            sql.append(" FROM ").append(table);
-         }
+         selectList = SQLUtil.getColumnNamesClause(loadFields, getTableAlias(alias, from, table));
       } else {
 
          // we are just selecting one field
          JDBCCMPFieldBridge selectField = getSelectField();
-         String table = 
-               getSelectField().getManager().getEntityBridge().getTableName();
-         if(alias != null && alias.trim().length()>0) {
-            sql.append(SQLUtil.getColumnNamesClause(selectField, alias));
-            sql.append(" FROM ");
-            sql.append(table).append(" ").append(alias);
-            sql.append(" ").append(from);
-         } else if(from != null && from.trim().length()>0) {
-            sql.append(SQLUtil.getColumnNamesClause(selectField, table));
-            sql.append(" FROM ").append(table).append(" ").append(from);
-         } else {
-            sql.append(SQLUtil.getColumnNamesClause(selectField));
-            sql.append(" FROM ").append(table);
-         }
+         table = getSelectField().getManager().getEntityBridge().getTableName();
+         selectList = SQLUtil.getColumnNamesClause(selectField, getTableAlias(alias, from, table));
       }
-       
+      sql.append(selectList);
+      String additionalColumns = metadata.getAdditionalColumns();
+      if (additionalColumns != null) {
+         sql.append(additionalColumns);
+      }
+      sql.append(" FROM ").append(table);
+      if (alias != null) {
+         sql.append(' ').append(alias);
+      }
+      if (from != null) {
+         sql.append(' ').append(from);
+      }
+
       String where = metadata.getWhere();
       if(where != null && where.trim().length() > 0) {
          sql.append(" WHERE ").append(where);
@@ -169,5 +158,18 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
          sql.append(" ").append(other);
       }
       return sql.toString();
+   }
+
+   private String getTableAlias(String alias, String from, String table)
+   {
+      String tableAlias;
+      if (alias != null) {
+         tableAlias = alias;
+      } else if (from != null) {
+         tableAlias = table;
+      } else {
+         tableAlias = "";
+      }
+      return tableAlias;
    }
 }

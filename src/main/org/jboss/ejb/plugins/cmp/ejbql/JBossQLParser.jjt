@@ -4,12 +4,12 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 options {
    BUILD_NODE_FILES=false;
    MULTI=true;
    VISITOR=true;
-   
+
    JAVA_UNICODE_ESCAPE = true;
    STATIC = false;
 
@@ -46,8 +46,9 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  * This class parses JBossQL into an abstract syntax tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
- */                            
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @version $Revision: 1.9 $
+ */
 public class JBossQLParser {
    private Catalog catalog;
    private Class[] argumentTypes;
@@ -70,15 +71,22 @@ public class JBossQLParser {
       if(fromBeginIndex < 0) {
          throw new ParseException("FROM not found");
       }
+
       int fromEndIndex = lowerCase.indexOf("where");
+      ///////////////////// CHANGED //////////////////////////////
       if(fromEndIndex < 0) {
-         ///////////////////// CHANGED //////////////////////////////
          fromEndIndex = lowerCase.indexOf("order by");
-         if(fromEndIndex < 0) {
-            fromEndIndex = ejbql.length();
-         }
-         ////////////////////////////////////////////////////////////
       }
+      if(fromEndIndex < 0) {
+         fromEndIndex = lowerCase.indexOf("offset");
+      }
+      if(fromEndIndex < 0) {
+         fromEndIndex = lowerCase.indexOf("limit");
+      }
+      if(fromEndIndex < 0) {
+         fromEndIndex = ejbql.length();
+      }
+      ////////////////////////////////////////////////////////////
 
       // just the from clause
       char[] from = ejbql.toCharArray();
@@ -97,7 +105,7 @@ public class JBossQLParser {
       ReInit(new CharArrayReader(sansFrom));
       ASTEJBQL ejbqlNode = EJBQL();
 
-      // replace the dummy from clause in the EJBQL 
+      // replace the dummy from clause in the EJBQL
       // node with the real from node
       ejbqlNode.jjtAddChild(fromNode, 1);
 
@@ -122,7 +130,7 @@ public class JBossQLParser {
          ASTParameter parameterNode,
          String number,
          int type) {
-         
+
       parameterNode.number = Integer.parseInt(number);
       parameterNode.type = type;
    }
@@ -135,14 +143,14 @@ PARSER_END(JBossQLParser)
 ASTEJBQL EJBQL() #EJBQL :
 {}
 {
-   SelectClause() FromKeyword() [WhereClause()] [OrderByClause()] <EOF>
+   SelectClause() FromKeyword() [WhereClause()] [OrderByClause()] [LimitClause()] <EOF>
    { return jjtThis; }
 }
 
 ASTOrderBy OrderByClause() #OrderBy :
 {}
 {
-   <ORDER> <BY> OrderByPathExpression() ( <COMMA> OrderByPathExpression() ) * 
+   <ORDER> <BY> OrderByPathExpression() ( <COMMA> OrderByPathExpression() ) *
    { return jjtThis; }
 }
 
@@ -152,7 +160,14 @@ void OrderByPathExpression() #OrderByPath :
    ( NumericValuedPath() | StringValuedPath() | DatetimeValuedPath() )
       [<ASC> | <DESC> { jjtThis.ascending=false; } ]
 }
-  
+
+void LimitClause() #LimitOffset :
+{}
+{
+     <OFFSET> NumericValuedParameter() { jjtThis.hasOffset = true; } [<LIMIT> NumericValuedParameter() { jjtThis.hasLimit = true; }]
+   | <LIMIT> NumericValuedParameter() { jjtThis.hasLimit = true; }
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 void FromKeyword() #From :
@@ -172,7 +187,7 @@ ASTFrom FromClause() #From :
 {}
 {
    (
-      <FROM> IdentificationVariableDeclaration() 
+      <FROM> IdentificationVariableDeclaration()
          ( <COMMA> IdentificationVariableDeclaration() )*
    ) { return jjtThis; }
 }
@@ -208,10 +223,11 @@ ASTSelect SelectClause() #Select :
 {}
 {
    (
-      <SELECT> [<DISTINCT> { jjtThis.distinct=true; }] 
-      ( 
+      <SELECT> [<DISTINCT> { jjtThis.distinct=true; }]
+      (
          <OBJECT> <LPAREN> IdentificationVariable() <RPAREN> |
-         SingleValuedPath() 
+         SingleValuedPath() |
+         FunctionsAllowedInSelect()
       )
    ) { return jjtThis; }
 }
@@ -219,7 +235,7 @@ ASTSelect SelectClause() #Select :
 ASTWhere WhereClause() #Where :
 {}
 {
-   <WHERE> ConditionalExpression() 
+   <WHERE> ConditionalExpression()
    { return jjtThis; }
 }
 
@@ -238,7 +254,7 @@ void ConditionalTerm() #void :
       ConditionalFactor() ( <AND> ConditionalFactor() )*
    ) #And(>1)
 }
-   
+
 void ConditionalFactor() #void :
 { boolean not = false; }
 {
@@ -257,12 +273,19 @@ void ConditionalPrimary() #void :
 {}
 {
    LOOKAHEAD(<LPAREN> ConditionalExpression() <RPAREN>)
-      (<LPAREN> ConditionalExpression() <RPAREN>) #ConditionalParenthetical 
+      (<LPAREN> ConditionalExpression() <RPAREN>) #ConditionalParenthetical
 |
    SimpleCondExpression()
 }
 
 ////////////////////// New or changed elements /////////////////////////////
+
+void FunctionsAllowedInSelect() #void :
+{}
+{
+   FunctionsReturningNumerics() |
+   FunctionsReturningStrings()
+}
 
 void SimpleCondExpression() #void :
 {}
@@ -280,33 +303,33 @@ void SimpleCondExpression() #void :
 |
    LOOKAHEAD((StringValue() | ArithmeticValue() | DatetimeValue()) [<NOT>] <IN>)
       InExpression()
-| 
+|
    ComparisonExpression()
 }
 
 void BetweenExpression() #Between :
 {}
 {
-   (ArithmeticExpression() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
+   (ArithmeticExpression() [<NOT> { jjtThis.not=true; } ] <BETWEEN>
       ArithmeticExpression() <AND> ArithmeticExpression())
 |
-   (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
+   (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <BETWEEN>
       DatetimeValue() <AND> DatetimeValue())
 |
-   (StringValue() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
+   (StringValue() [<NOT> { jjtThis.not=true; } ] <BETWEEN>
       StringValue() <AND> StringValue())
 }
 
 void InExpression() #In :
 {}
 {
-   (StringValue() [<NOT> { jjtThis.not=true; } ] <IN> 
+   (StringValue() [<NOT> { jjtThis.not=true; } ] <IN>
       <LPAREN> StringValue() ( <COMMA> StringValue() )* <RPAREN>)
 |
-   (ArithmeticValue() [<NOT> { jjtThis.not=true; } ] <IN> 
+   (ArithmeticValue() [<NOT> { jjtThis.not=true; } ] <IN>
       <LPAREN>  ArithmeticValue() ( <COMMA> ArithmeticValue() )* <RPAREN>)
 |
-   (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <IN> 
+   (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <IN>
       <LPAREN> DatetimeValue() ( <COMMA> DatetimeValue() )* <RPAREN>)
 }
 
@@ -347,14 +370,14 @@ void ComparisonExpression() #void :
 ////////////////////// New or changed elements /////////////////////////////
    LOOKAHEAD(StringValue() ( <EQ> | <GT> | <GE> | <LT> | <LE> | <NE> ) )
    (
-      StringValue() 
+      StringValue()
       (
          <EQ> { jjtThis.opp="="; } |
          <GT> { jjtThis.opp=">"; } |
          <GE> { jjtThis.opp=">="; } |
          <LT> { jjtThis.opp="<"; } |
          <LE> { jjtThis.opp="<="; } |
-         <NE> { jjtThis.opp="<>"; } 
+         <NE> { jjtThis.opp="<>"; }
       )
       StringExpression()
    ) #StringComparison
@@ -364,7 +387,7 @@ void ComparisonExpression() #void :
    (
       BooleanValue()
       [
-         ( 
+         (
             <EQ> { jjtThis.opp="="; } |
             <NE> { jjtThis.opp="<>"; }
          ) BooleanExpression()
@@ -381,7 +404,7 @@ void ComparisonExpression() #void :
          <GE> { jjtThis.opp=">="; } |
          <LT> { jjtThis.opp="<"; } |
          <LE> { jjtThis.opp="<="; } |
-         <NE> { jjtThis.opp="<>"; } 
+         <NE> { jjtThis.opp="<>"; }
       )
       DatetimeExpression()
    ) #DatetimeComparison
@@ -408,7 +431,7 @@ void ComparisonExpression() #void :
    ) #EntityComparison
 |
    LOOKAHEAD(ArithmeticValue() ( <EQ> | <GT> | <GE> | <LT> | <LE> | <NE> ) )
-   ( 
+   (
       ArithmeticValue()
       (
          <EQ> { jjtThis.opp="="; } |
@@ -416,19 +439,19 @@ void ComparisonExpression() #void :
          <GE> { jjtThis.opp=">="; } |
          <LT> { jjtThis.opp="<"; } |
          <LE> { jjtThis.opp="<="; } |
-         <NE> { jjtThis.opp="<>"; } 
+         <NE> { jjtThis.opp="<>"; }
       )
       SingleValueDesignator()
    ) #ArithmeticComparison
 |
-   BetweenExpression() 
+   BetweenExpression()
 }
 
 ////////////////////// New or changed elements /////////////////////////////
 void ArithmeticValue() #void :
 {}
 {
-   NumericValuedPath() | FunctionsReturningNumerics() | 
+   NumericValuedPath() | FunctionsReturningNumerics() |
    NumericLiteral() | NumericValuedParameter()
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -463,7 +486,7 @@ void ArithmeticTerm() #void :
 {}
 {
    (
-      ArithmeticFactor() 
+      ArithmeticFactor()
       (
          (
             <MULT> { jjtThis.addOpp("*"); } |
@@ -495,22 +518,22 @@ void ArithmeticPrimary() #void :
 void StringValue() #void :
 {}
 {
-   StringValuedPath() | FunctionsReturningStrings() | 
-   StringLiteral()| StringValuedParameter() 
+   StringValuedPath() | FunctionsReturningStrings() |
+   StringLiteral()| StringValuedParameter()
 }
 ////////////////////////////////////////////////////////////////////////////
 
 void StringExpression() #void :
 {}
 {
-   StringPrimary() | StringValuedParameter() 
+   StringPrimary() | StringValuedParameter()
 }
 
 void StringPrimary() #void :
 {}
 {
    StringValuedPath() |
-   StringLiteral() | 
+   StringLiteral() |
    (<LPAREN> StringExpression() <RPAREN>) #StringParenthetical |
    FunctionsReturningStrings()
 }
@@ -526,7 +549,7 @@ void DatetimeValue() #void :
 void DatetimeExpression() #void :
 {}
 {
-   DatetimeValue() 
+   DatetimeValue()
 }
 
 void BooleanValue() #void :
@@ -538,32 +561,32 @@ void BooleanValue() #void :
 void BooleanExpression() #void :
 {}
 {
-   BooleanValue() 
+   BooleanValue()
 }
 
 void ValueClassValue() #void :
 {}
 {
-   ValueClassValuedPath() | ValueClassValuedParameter() 
+   ValueClassValuedPath() | ValueClassValuedParameter()
 }
 
 void ValueClassExpression() #void :
 {}
 {
-   ValueClassValue() 
+   ValueClassValue()
 }
 
 
 void EntityBeanValue() #void :
 {}
 {
-   EntityValuedPath() | IdentificationVariable() | EntityValuedParameter() 
+   EntityValuedPath() | IdentificationVariable() | EntityValuedParameter()
 }
 
 void EntityBeanExpression() #void :
 {}
 {
-   EntityBeanValue() 
+   EntityBeanValue()
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -576,7 +599,7 @@ void FunctionsReturningStrings() #void :
    ) #Concat
 |
    (
-      <SUBSTRING> <LPAREN> 
+      <SUBSTRING> <LPAREN>
          StringExpression() <COMMA>
          ArithmeticExpression() <COMMA>
          ArithmeticExpression() <RPAREN>
@@ -597,17 +620,17 @@ void FunctionsReturningNumerics() #void :
 {}
 {
    (
-      <LENGTH> <LPAREN> StringExpression() <RPAREN> 
+      <LENGTH> <LPAREN> StringExpression() <RPAREN>
    ) #Length
 |
    (
-      <LOCATE> <LPAREN> 
+      <LOCATE> <LPAREN>
             StringExpression() <COMMA> StringExpression()
             [ <COMMA> ArithmeticExpression()] <RPAREN>
    ) #Locate
 |
    (
-      <ABS> <LPAREN> ArithmeticExpression() <RPAREN> 
+      <ABS> <LPAREN> ArithmeticExpression() <RPAREN>
    ) #Abs
 |
    (
@@ -617,20 +640,25 @@ void FunctionsReturningNumerics() #void :
 /* Not implemented yet
 |
    (
-      <MOD> <LPAREN> 
+      <MOD> <LPAREN>
          ArithmeticExpression() <COMMA>
          ArithmeticExpression() <RPAREN>
    ) #Mod
 */
+|
+   (
+      <COUNT> <LPAREN> SingleValuedPath() <RPAREN>
+   ) #Count
+
 ////////////////////////////////////////////////////////////////////////////
 }
 
 Token CollectionValuedPath() #Path :
 { Token t; }
 {
-   t=<COLLECTION_VALUED_PATH> 
-   { 
-      initPathNode(jjtThis, t.image, EJBQLTypes.ENTITY_TYPE); 
+   t=<COLLECTION_VALUED_PATH>
+   {
+      initPathNode(jjtThis, t.image, EJBQLTypes.ENTITY_TYPE);
       return t;
    }
 }
@@ -638,10 +666,10 @@ Token CollectionValuedPath() #Path :
 Token IdentificationVariable() #Path :
 { Token t; }
 {
-   t=<IDENTIFICATION_VARIABLE> 
-   { 
+   t=<IDENTIFICATION_VARIABLE>
+   {
       t.image = t.image.toLowerCase();
-      initPathNode(jjtThis, t.image, EJBQLTypes.ENTITY_TYPE); 
+      initPathNode(jjtThis, t.image, EJBQLTypes.ENTITY_TYPE);
       return t;
    }
 }
@@ -649,22 +677,22 @@ Token IdentificationVariable() #Path :
 Token AbstractSchema() #AbstractSchema :
 { Token t; }
 {
-   t=<ABSTRACT_SCHEMA> 
-   { 
+   t=<ABSTRACT_SCHEMA>
+   {
       jjtThis.abstractSchemaName = t.image;
       jjtThis.entity = catalog.getEntityByAbstractSchemaName(t.image);
-      return t; 
+      return t;
    }
 }
 
 Token Identifier() #Identifier :
 { Token t; }
 {
-   t=<IDENTIFIER> 
-   { 
+   t=<IDENTIFIER>
+   {
       t.image = t.image.toLowerCase();
       jjtThis.identifier = t.image;
-      return t; 
+      return t;
    }
 }
 
@@ -682,84 +710,84 @@ void SingleValuedPath() #void :
 void NumericValuedPath() #Path :
 { Token t; }
 {
-   t=<NUMERIC_VALUED_PATH> 
+   t=<NUMERIC_VALUED_PATH>
    { initPathNode(jjtThis, t.image, EJBQLTypes.NUMERIC_TYPE); }
 }
 
 void StringValuedPath() #Path :
 { Token t; }
 {
-   t=<STRING_VALUED_PATH> 
+   t=<STRING_VALUED_PATH>
    { initPathNode(jjtThis, t.image, EJBQLTypes.STRING_TYPE); }
 }
 
 void DatetimeValuedPath() #Path :
 { Token t; }
 {
-   t=<DATETIME_VALUED_PATH> 
+   t=<DATETIME_VALUED_PATH>
    { initPathNode(jjtThis, t.image, EJBQLTypes.DATETIME_TYPE); }
 }
 
 void BooleanValuedPath() #Path :
 { Token t; }
 {
-   t=<BOOLEAN_VALUED_PATH> 
+   t=<BOOLEAN_VALUED_PATH>
    { initPathNode(jjtThis, t.image, EJBQLTypes.BOOLEAN_TYPE); }
 }
 
 void EntityValuedPath() #Path :
 { Token t; }
 {
-   t=<ENTITY_VALUED_PATH> 
+   t=<ENTITY_VALUED_PATH>
    { initPathNode(jjtThis, t.image, EJBQLTypes.ENTITY_TYPE); }
 }
 
 void ValueClassValuedPath() #Path :
 { Token t; }
 {
-   t=<VALUE_CLASS_VALUED_PATH> 
+   t=<VALUE_CLASS_VALUED_PATH>
    { initPathNode(jjtThis, t.image, EJBQLTypes.VALUE_CLASS_TYPE); }
 }
 
 void NumericValuedParameter() #Parameter :
 { Token t; }
 {
-   t=<NUMERIC_VALUED_PARAMETER> 
+   t=<NUMERIC_VALUED_PARAMETER>
    { initParameterNode(jjtThis, t.image, EJBQLTypes.NUMERIC_TYPE); }
 }
 
 void StringValuedParameter() #Parameter :
 { Token t; }
 {
-   t=<STRING_VALUED_PARAMETER> 
+   t=<STRING_VALUED_PARAMETER>
    { initParameterNode(jjtThis, t.image, EJBQLTypes.STRING_TYPE); }
 }
 
 void DatetimeValuedParameter() #Parameter :
 { Token t; }
 {
-   t=<DATETIME_VALUED_PARAMETER> 
+   t=<DATETIME_VALUED_PARAMETER>
    { initParameterNode(jjtThis, t.image, EJBQLTypes.DATETIME_TYPE); }
 }
 
 void BooleanValuedParameter() #Parameter :
 { Token t; }
 {
-   t=<BOOLEAN_VALUED_PARAMETER> 
+   t=<BOOLEAN_VALUED_PARAMETER>
    { initParameterNode(jjtThis, t.image, EJBQLTypes.BOOLEAN_TYPE); }
 }
 
 void EntityValuedParameter() #Parameter :
 { Token t; }
 {
-   t=<ENTITY_VALUED_PARAMETER> 
+   t=<ENTITY_VALUED_PARAMETER>
    { initParameterNode(jjtThis, t.image, EJBQLTypes.ENTITY_TYPE); }
 }
 
 void ValueClassValuedParameter() #Parameter :
 { Token t; }
 {
-   t=<VALUE_CLASS_VALUED_PARAMETER> 
+   t=<VALUE_CLASS_VALUED_PARAMETER>
    { initParameterNode(jjtThis, t.image, EJBQLTypes.VALUE_CLASS_TYPE); }
 }
 
@@ -769,7 +797,7 @@ void NumericLiteral() #void :
    (
       t=<INTEGER_LITERAL> { jjtThis.setValue(t.image); }
    ) #ExactNumericLiteral
-| 
+|
    (
       t=<FLOATING_POINT_LITERAL> { jjtThis.setValue(t.image); }
    ) #ApproximateNumericLiteral
@@ -778,14 +806,14 @@ void NumericLiteral() #void :
 void StringLiteral() #StringLiteral :
 { Token t; }
 {
-   t=<STRING_LITERAL> 
+   t=<STRING_LITERAL>
    { jjtThis.value=t.image; }
 }
 
 void BooleanLiteral() #BooleanLiteral :
 { Token t; }
 {
-   <TRUE> { jjtThis.value=true; } | <FALSE> { jjtThis.value=false; } 
+   <TRUE> { jjtThis.value=true; } | <FALSE> { jjtThis.value=false; }
 }
 
 /////////////////////////
@@ -808,7 +836,7 @@ TOKEN_MGR_DECLS :
       pathList = new ArrayList();
       fieldList = new ArrayList();
    }
-   
+
    private void throwUnknownPath(
          String reason,
          String fieldName) {
@@ -820,7 +848,7 @@ TOKEN_MGR_DECLS :
             input_stream.getEndLine(),
             input_stream.getEndColumn());
    }
-   
+
    private void addPath(String nav) {
       String fieldName = nav.substring(0, nav.length()-1);
       if(fieldList.size() > 0) {
@@ -877,6 +905,7 @@ TOKEN_MGR_DECLS :
 |  < AS: "AS" >
 |  < BETWEEN: "BETWEEN" >
 |  < CONCAT: "CONCAT" >
+|  < COUNT: "COUNT" >
 |  < DISTINCT: "DISTINCT" >
 |  < EMPTY: "EMPTY" >
 |  < ESCAPE: "ESCAPE" >
@@ -903,6 +932,8 @@ TOKEN_MGR_DECLS :
 |  < BY: "BY" >
 |  < DESC: "DESC" >
 |  < LCASE: "LCASE" >
+|  < LIMIT: "LIMIT" >
+|  < OFFSET: "OFFSET" >
 |  < ORDER: "ORDER" >
 |  < UCASE: "UCASE" >
 ////////////////////////////////////////////////////////////////////////////
@@ -1033,15 +1064,15 @@ TOKEN_MGR_DECLS :
    < UNKNOWN_PARAMETER: "?" <INTEGER_LITERAL> >
    {
       int n = EJBQLTypes.UNKNOWN_TYPE;
-      try { 
+      try {
          n = Integer.parseInt(matchedToken.image.substring(1, lengthOfMatch));
       } catch(Exception e) { /* Should never come here. */ }
-      
+
       matchedToken.image = "" + n;
 
       // zero base the index
-      n--;   
-      
+      n--;
+
       if(n < argumentTypes.length) {
          switch(EJBQLTypes.getEJBQLType(argumentTypes[n])) {
             case EJBQLTypes.NUMERIC_TYPE:
@@ -1080,9 +1111,9 @@ TOKEN_MGR_DECLS :
  */
 <DEFAULT> SPECIAL_TOKEN :  /* Navigation */
 {
-   < <NAME> <DOT> > { 
+   < <NAME> <DOT> > {
       resetPath();
-      addPath(matchedToken.image.toLowerCase()); 
+      addPath(matchedToken.image.toLowerCase());
    } : IN_NAVIGATION
 }
 
@@ -1146,6 +1177,6 @@ TOKEN_MGR_DECLS :
 |  < VALUE_CLASS_VALUED_PATH: [] >
 |  < UNKNOWN_PATH: [] >
 |  < COLLECTION_VALUED_PATH: [] >
-}  
+}
 
 

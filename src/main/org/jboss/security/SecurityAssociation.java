@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.11 $
+@version $Revision: 1.12 $
  */
 public final class SecurityAssociation
 {

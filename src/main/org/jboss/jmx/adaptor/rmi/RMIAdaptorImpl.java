@@ -7,26 +7,21 @@
 
 package org.jboss.jmx.adaptor.rmi;
 
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.net.InetAddress;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Iterator;
+import java.io.Serializable;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.ObjectName;
 import javax.management.QueryExp;
 import javax.management.ObjectInstance;
-import javax.management.Notification;
 import javax.management.NotificationFilter;
-import javax.management.NotificationListener;
 import javax.management.MBeanServer;
 import javax.management.MBeanInfo;
 
@@ -39,66 +34,71 @@ import javax.management.ListenerNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanRegistrationException;
 import javax.management.NotCompliantMBeanException;
-import javax.management.OperationsException;
 import javax.management.ReflectionException;
 
-import javax.naming.InitialContext;
-
 import org.jboss.logging.Logger;
-
-import org.jboss.jmx.connector.notification.JMSNotificationListener;
-import org.jboss.jmx.connector.notification.RMINotificationListener;
+import org.jboss.net.sockets.DefaultSocketFactory;
 
 /**
  * RMI Interface for the server side Connector which
  * is nearly the same as the MBeanServer Interface but
  * has an additional RemoteException.
  *
- * @todo implement notifications
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
- **/
+ * @author Scott.Stark@jboss.org
+ */
 public class RMIAdaptorImpl
    extends UnicastRemoteObject
    implements RMIAdaptor
 {
-   protected Logger log = Logger.getLogger(this.getClass());
-   
+   protected static Logger log = Logger.getLogger(RMIAdaptorImpl.class);
+
    /**
     * Reference to the MBeanServer all the methods of this Connector are
     * forwarded to
     **/
-   protected MBeanServer mServer;
+   protected MBeanServer mbeanServer;
 
-   /** Pool of registered listeners **/
-   protected Vector mListeners = new Vector();
+   /** A list of the registered listener object names */
+   protected Vector listenerNames = new Vector();
+   /** A HashSet<RMINotificationListener, NotificationListenerDelegate> for the
+    registered listeners */
+   protected HashMap remoteListeners = new HashMap();
 
    public RMIAdaptorImpl(MBeanServer pServer) throws RemoteException
    {
-      mServer = pServer;
+      super();
+      mbeanServer = pServer;
    }
-	
+   public RMIAdaptorImpl(MBeanServer server, int port, InetAddress bindAddress,
+      int backlog)
+      throws RemoteException
+   {
+      super(port, null, new DefaultSocketFactory(bindAddress, backlog));
+      this.mbeanServer = server;
+   }
+
    // RMIAdaptor implementation -------------------------------------
 
    public Object instantiate(String className)
       throws ReflectionException, MBeanException, RemoteException
    {
-      return mServer.instantiate(className);
+      return mbeanServer.instantiate(className);
    }
    
    public Object instantiate(String className, ObjectName loaderName) 
       throws ReflectionException, MBeanException, InstanceNotFoundException, RemoteException
    {
-      return mServer.instantiate(className, loaderName);
+      return mbeanServer.instantiate(className, loaderName);
    }
    
    public Object instantiate(String className, Object[] params, String[] signature)
       throws ReflectionException, MBeanException, RemoteException
    {
-      return mServer.instantiate(className, params, signature);      
+      return mbeanServer.instantiate(className, params, signature);      
    }
 
    public Object instantiate(String className,
@@ -107,7 +107,7 @@ public class RMIAdaptorImpl
                              String[] signature)
       throws ReflectionException, MBeanException, InstanceNotFoundException, RemoteException
    {
-      return mServer.instantiate(className, loaderName, params, signature);
+      return mbeanServer.instantiate(className, loaderName, params, signature);
    }
    
    public ObjectInstance createMBean(String pClassName, ObjectName pName)
@@ -118,7 +118,7 @@ public class RMIAdaptorImpl
              NotCompliantMBeanException,
              RemoteException
    {
-      return mServer.createMBean( pClassName, pName );
+      return mbeanServer.createMBean( pClassName, pName );
    }
 
    public ObjectInstance createMBean(String pClassName,
@@ -132,7 +132,7 @@ public class RMIAdaptorImpl
              InstanceNotFoundException,
              RemoteException
    {
-      return mServer.createMBean( pClassName, pName, pLoaderName );
+      return mbeanServer.createMBean( pClassName, pName, pLoaderName );
    }
 
    public ObjectInstance createMBean(String pClassName,
@@ -146,7 +146,7 @@ public class RMIAdaptorImpl
              NotCompliantMBeanException,
              RemoteException
    {
-      return mServer.createMBean( pClassName, pName, pParams, pSignature );
+      return mbeanServer.createMBean( pClassName, pName, pParams, pSignature );
    }
 
    public ObjectInstance createMBean(String pClassName,
@@ -162,7 +162,7 @@ public class RMIAdaptorImpl
              InstanceNotFoundException,
              RemoteException
    {
-      return mServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
+      return mbeanServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
    }
 
    public ObjectInstance registerMBean(Object object, ObjectName name) 
@@ -171,7 +171,7 @@ public class RMIAdaptorImpl
              NotCompliantMBeanException,
              RemoteException
    {
-      return mServer.registerMBean(object, name);
+      return mbeanServer.registerMBean(object, name);
    }
    
    public void unregisterMBean(ObjectName pName)
@@ -179,44 +179,44 @@ public class RMIAdaptorImpl
              MBeanRegistrationException,
              RemoteException
    {
-      mServer.unregisterMBean( pName );
+      mbeanServer.unregisterMBean( pName );
    }
 
    public ObjectInstance getObjectInstance(ObjectName pName)
       throws InstanceNotFoundException,
              RemoteException
    {
-      return mServer.getObjectInstance( pName );
+      return mbeanServer.getObjectInstance( pName );
    }
 
    public Set queryMBeans(ObjectName pName, QueryExp pQuery)
       throws RemoteException
    {
-      return mServer.queryMBeans( pName, pQuery );
+      return mbeanServer.queryMBeans( pName, pQuery );
    }
 
    public Set queryNames(ObjectName pName, QueryExp pQuery)
       throws RemoteException
    {
-      return mServer.queryNames( pName, pQuery );
+      return mbeanServer.queryNames( pName, pQuery );
    }
 
    public boolean isRegistered(ObjectName pName)
       throws RemoteException
    {
-      return mServer.isRegistered( pName );
+      return mbeanServer.isRegistered( pName );
    }
 
    public boolean isInstanceOf(ObjectName pName, String pClassName)
       throws InstanceNotFoundException,
              RemoteException
    {
-      return mServer.isInstanceOf( pName, pClassName );
+      return mbeanServer.isInstanceOf( pName, pClassName );
    }
 
    public Integer getMBeanCount() throws RemoteException
    {
-      return mServer.getMBeanCount();
+      return mbeanServer.getMBeanCount();
    }
 
    public Object getAttribute(ObjectName pName, String pAttribute)
@@ -226,7 +226,7 @@ public class RMIAdaptorImpl
              ReflectionException,
              RemoteException
    {
-      return mServer.getAttribute( pName, pAttribute );
+      return mbeanServer.getAttribute( pName, pAttribute );
    }
 
    public AttributeList getAttributes(ObjectName name, String[] attributes)
@@ -235,7 +235,7 @@ public class RMIAdaptorImpl
              RemoteException
    {
       // Filter out any non-Serializable attributes
-      AttributeList attrs = mServer.getAttributes(name, attributes);
+      AttributeList attrs = mbeanServer.getAttributes(name, attributes);
       Iterator iter = attrs.iterator();
       while( iter.hasNext() )
       {
@@ -255,7 +255,7 @@ public class RMIAdaptorImpl
              ReflectionException,
              RemoteException
    {
-      mServer.setAttribute( pName, pAttribute );
+      mbeanServer.setAttribute( pName, pAttribute );
    }
 
    public AttributeList setAttributes(ObjectName pName, AttributeList pAttributes)
@@ -263,7 +263,7 @@ public class RMIAdaptorImpl
              ReflectionException,
              RemoteException
    {
-      return mServer.setAttributes( pName, pAttributes );
+      return mbeanServer.setAttributes( pName, pAttributes );
    }
 
    public Object invoke(ObjectName pName,
@@ -275,17 +275,21 @@ public class RMIAdaptorImpl
              ReflectionException,
              RemoteException
    {
-      return mServer.invoke( pName, pActionName, pParams, pSignature );
+      return mbeanServer.invoke( pName, pActionName, pParams, pSignature );
    }
 
    public String getDefaultDomain() throws RemoteException
    {
-      return mServer.getDefaultDomain();
+      return mbeanServer.getDefaultDomain();
    }
 
-   public String[] getDomains() throws RemoteException
+   public MBeanInfo getMBeanInfo(ObjectName pName)
+      throws InstanceNotFoundException,
+             IntrospectionException,
+             ReflectionException,
+             RemoteException
    {
-      return mServer.getDomains();
+      return mbeanServer.getMBeanInfo( pName );
    }
 
    public void addNotificationListener(ObjectName pName,
@@ -295,13 +299,13 @@ public class RMIAdaptorImpl
       throws InstanceNotFoundException,
              RemoteException
    {
-      mServer.addNotificationListener(
+      mbeanServer.addNotificationListener(
          pName,
          pListener,
          pFilter,
          pHandback
          );
-      mListeners.addElement( pListener );
+      listenerNames.addElement( pListener );
    }
 
    public void removeNotificationListener(ObjectName pName,
@@ -310,28 +314,31 @@ public class RMIAdaptorImpl
              ListenerNotFoundException,
              RemoteException
    {
-      mServer.removeNotificationListener(pName, pListener);
-      mListeners.removeElement( pListener );
+      mbeanServer.removeNotificationListener(pName, pListener);
+      listenerNames.removeElement( pListener );
    }
 
-   public void removeNotificationListener(ObjectName pName,
-                                          ObjectName pListener,
-                                          NotificationFilter filter,
-                                          Object handback)
-      throws InstanceNotFoundException,
-             ListenerNotFoundException,
-             RemoteException
+
+   public void addNotificationListener(ObjectName name,
+      RMINotificationListener listener, NotificationFilter filter,
+      Object handback)
+      throws InstanceNotFoundException, RemoteException
    {
-      throw new RuntimeException("NYI");
+      NotificationListenerDelegate delegate = new NotificationListenerDelegate(listener);
+      remoteListeners.put(listener, delegate);
+      delegate.handleNotification(null, null);
+      mbeanServer.addNotificationListener(name, delegate, filter, handback);
    }
 
-   public MBeanInfo getMBeanInfo(ObjectName pName)
-      throws InstanceNotFoundException,
-             IntrospectionException,
-             ReflectionException,
-             RemoteException
+   public void removeNotificationListener(ObjectName name,
+      RMINotificationListener listener)
+      throws InstanceNotFoundException, ListenerNotFoundException,
+         RemoteException
    {
-      return mServer.getMBeanInfo( pName );
+      NotificationListenerDelegate delegate = (NotificationListenerDelegate)
+         remoteListeners.remove(listener);
+      if( delegate == null )
+         throw new ListenerNotFoundException("No listener matches: "+listener);
+      mbeanServer.removeNotificationListener(name, delegate);
    }
 }
-

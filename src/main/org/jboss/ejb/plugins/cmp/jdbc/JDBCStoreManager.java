@@ -17,14 +17,10 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-
-import javax.management.MBeanException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
-
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
@@ -32,30 +28,19 @@ import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
-
 import org.jboss.ejb.BeanLock;
-
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
-
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
-
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
-
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCMetaDataMigrationUtil;
-
-
+import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
-
-import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
-import org.jboss.tm.TxUtils;
 
 /**
  * JDBCStoreManager manages storage of persistence data into a table.
@@ -72,43 +57,42 @@ import org.jboss.tm.TxUtils;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
-
+   
    /**
     * The key used to store the tx data map.
     */
    private static final Object TX_DATA_KEY = "TX_DATA_KEY";
-
+   
    private EjbModule ejbModule;
    private EntityContainer container;
    private Logger log;
-
+   
    private JDBCEntityMetaData metaData;
    private JDBCEntityBridge entityBridge;
-   private JDBCMetaDataMigrationUtil.Config config;
-
+   
    private JDBCTypeFactory typeFactory;
    private JDBCQueryManager queryManager;
-
+   
    private JDBCCommandFactory commandFactory;
-
-   private PrefetchCache prefetchCache;
-
+   
+   private ReadAheadCache readAheadCache;
+   
    // Manager life cycle commands
    private JDBCInitCommand initCommand;
    private JDBCStartCommand startCommand;
    private JDBCStopCommand stopCommand;
    private JDBCDestroyCommand destroyCommand;
-
+   
    // Entity life cycle commands
    private JDBCCreateBeanClassInstanceCommand createBeanClassInstanceCommand;
    private JDBCInitEntityCommand initEntityCommand;
    private JDBCFindEntityCommand findEntityCommand;
    private JDBCFindEntitiesCommand findEntitiesCommand;
-   private JDBCCreateEntityCommand createEntityCommand;
+   private JDBCCreateCommand createEntityCommand;
    private JDBCPostCreateEntityCommand postCreateEntityCommand;
    private JDBCRemoveEntityCommand removeEntityCommand;
    private JDBCLoadEntityCommand loadEntityCommand;
@@ -116,16 +100,12 @@ public class JDBCStoreManager implements EntityPersistenceStore
    private JDBCStoreEntityCommand storeEntityCommand;
    private JDBCActivateEntityCommand activateEntityCommand;
    private JDBCPassivateEntityCommand passivateEntityCommand;
-
+   
    // commands
    private JDBCLoadRelationCommand loadRelationCommand;
    private JDBCDeleteRelationsCommand deleteRelationsCommand;
    private JDBCInsertRelationsCommand insertRelationsCommand;
-
-   // for the copy method
-   private ObjectName objectCopier;
-   private final String[] copyArgs = new String[] {"java.lang.Object"};
-
+   
    /**
     * A Transaction manager so that we can link preloaded data to a transaction
     */
@@ -139,7 +119,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
    {
       return container;
    }
-
+   
    /**
     * Sets the container for this entity.
     * @param container the container for this entity
@@ -154,7 +134,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
          ejbModule = container.getEjbModule();
          log = Logger.getLogger(
                this.getClass().getName() +
-               "." +
+               "." + 
                container.getBeanMetaData().getEjbName());
       } else {
          ejbModule = null;
@@ -165,129 +145,69 @@ public class JDBCStoreManager implements EntityPersistenceStore
    {
       return entityBridge;
    }
-
+   
    public JDBCTypeFactory getJDBCTypeFactory()
    {
       return typeFactory;
    }
-
+   
    public JDBCEntityMetaData getMetaData()
    {
       return metaData;
    }
-
-   public JDBCMetaDataMigrationUtil.Config getConfig()
-   {
-      return config;
-   }
-
+   
    public JDBCQueryManager getQueryManager()
    {
       return queryManager;
    }
-
+   
    public JDBCCommandFactory getCommandFactory()
    {
       return commandFactory;
    }
-
-   public PrefetchCache getPrefetchCache()
+   
+   public ReadAheadCache getReadAheadCache()
    {
-      return prefetchCache;
-   }
-
-   public Object copy(Object source)
-   {
-      try
-      {
-         return container.getServer().invoke(
-               objectCopier,
-               "copy",
-               new Object[] {source},
-               copyArgs);
-      }
-      catch(MBeanException e)
-      {
-         throw new EJBException(
-               "Exception occured in copy",
-               e.getTargetException());
-      }
-      catch(ReflectionException e)
-      {
-         throw new EJBException(
-               "Exception occured in copy",
-               e.getTargetException());
-      }
-      catch(Exception e)
-      {
-         throw new EJBException("Exception occured while copying value", e);
-      }
+      return readAheadCache;
    }
 
    /**
-
     * This method is called whenever field's state is changed.
-
     * It delegates the event to the optimistic lock associated with
-
     * this container.
-
     * see get/setInstanceValue
-
     */
-
    public void fieldStateEventCallback(EntityEnterpriseContext ctx,
-
                                        CMPMessage msg,
-
-                                       JDBCFieldBridge field,
-
-                                       Object value)
-
+                                       JDBCFieldBridge field)
    {
-
       if(ctx.getId() == null)
-
          return;
-
-      BeanLock lock = container.getLockManager().getLock(ctx.getId());
-
-      if(lock instanceof JDBCOptimisticLock)
-
-         ((JDBCOptimisticLock)lock).fieldStateEventCallback(msg, field, value);
-
+      if(entityBridge.getMetaData().getOptimisticLocking() != null)
+      {
+         BeanLock lock = container.getLockManager().getLock(ctx.getId());
+         lock.removeRef();
+         ((JDBCOptimisticLock)lock).fieldStateEventCallback(msg, field, ctx);
+      }
    }
 
-
-
    /**
-
     * Returns optimistic lock associated with the context or null
-
     * if the context is not associated with id
-
     */
-
    public JDBCOptimisticLock getOptimisticLock(EntityEnterpriseContext ctx)
-
    {
-
       if(ctx.getId() == null)
-
          return null;
 
-
-
-      Object lock = container.getLockManager().getLock(ctx.getId());
-
-      if(lock instanceof JDBCOptimisticLock)
-
+      if(entityBridge.getMetaData().getOptimisticLocking() != null)
+      {
+         BeanLock lock = container.getLockManager().getLock(ctx.getId());
+         lock.removeRef();
          return (JDBCOptimisticLock)lock;
-
+      }
       return null;
-
    }
-
 
    //
    // Genertic data containers
@@ -296,22 +216,22 @@ public class JDBCStoreManager implements EntityPersistenceStore
    {
       return ejbModule.getModuleDataMap();
    }
-
+   
    public Object getApplicationData(Object key)
    {
       return ejbModule.getModuleData(key);
    }
-
+   
    public void putApplicationData(Object key, Object value)
    {
       ejbModule.putModuleData(key, value);
    }
-
+   
    public void removeApplicationData(Object key)
    {
       ejbModule.removeModuleData(key);
    }
-
+   
    public Map getApplicationTxDataMap()
    {
       try
@@ -320,24 +240,26 @@ public class JDBCStoreManager implements EntityPersistenceStore
          if(tx == null) {
             return null;
          }
-
+         
          // get the map between the tx and the txDataMap
          Map txMap = (Map)getApplicationData(TX_DATA_KEY);
          synchronized(txMap)
          {
             // get the txDataMap from the txMap
             Map txDataMap = (Map)txMap.get(tx);
-
+            
             // do we have an existing map
             int status = tx.getStatus();
-            if(txDataMap == null && TxUtils.isActive(tx))
+            if(txDataMap == null &&
+            (status == Status.STATUS_ACTIVE ||
+            status == Status.STATUS_PREPARING))
             {
-
+               
                // We want to be notified when the transaction commits
                ApplicationTxDataSynchronization synch =
                      new ApplicationTxDataSynchronization(tx);
                tx.registerSynchronization(synch);
-
+               
                // create and add the new map
                txDataMap = new HashMap();
                txMap.put(tx, txDataMap);
@@ -352,7 +274,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
          throw new EJBException("Error getting application tx data map.", e);
       }
    }
-
+   
    public Object getApplicationTxData(Object key)
    {
       Map map = getApplicationTxDataMap();
@@ -362,7 +284,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       }
       return null;
    }
-
+   
    public void putApplicationTxData(Object key, Object value)
    {
       Map map = getApplicationTxDataMap();
@@ -371,7 +293,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
          map.put(key, value);
       }
    }
-
+   
    public void removeApplicationTxData(Object key)
    {
       Map map = getApplicationTxDataMap();
@@ -380,7 +302,33 @@ public class JDBCStoreManager implements EntityPersistenceStore
          map.remove(key);
       }
    }
-
+   
+   public Map getEntityTxDataMap()
+   {
+      Map entityTxDataMap = (Map)getApplicationTxData(this);
+      if(entityTxDataMap == null)
+      {
+         entityTxDataMap = new HashMap();
+         putApplicationTxData(this, entityTxDataMap);
+      }
+      return entityTxDataMap;
+   }
+   
+   public Object getEntityTxData(Object key)
+   {
+      return getEntityTxDataMap().get(key);
+   }
+   
+   public void putEntityTxData(Object key, Object value)
+   {
+      getEntityTxDataMap().put(key, value);
+   }
+   
+   public void removeEntityTxData(Object key)
+   {
+      getEntityTxDataMap().remove(key);
+   }
+   
    private void initApplicationDataMap()
    {
       Map moduleData = ejbModule.getModuleDataMap();
@@ -394,9 +342,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
          }
       }
    }
-
-   /**
-    * Does almost nothing because other services such
+   
+   /** 
+    * Does almost nothing because other services such 
     * as JDBC data sources may not have been started.
     */
    public void create() throws Exception
@@ -404,7 +352,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       // Store a reference to this manager in an application level hashtable.
       // This way in the start method other managers will be able to know
       // the other managers.
-      HashMap managersMap =
+      HashMap managersMap = 
             (HashMap)getApplicationData("CREATED_JDBCStoreManagers");
       if(managersMap == null)
       {
@@ -416,24 +364,24 @@ public class JDBCStoreManager implements EntityPersistenceStore
             this);
    }
 
-   /**
+   /** 
     * Bring the store to a fully initialized state
     */
    public void start() throws Exception
    {
       //
       //
-      // Start Phase 1: create bridge and commands but
+      // Start Phase 1: create bridge and commands but 
       // don't access other entities
       initStoreManager();
 
-
+      
       // If all managers have been started (this is the last manager),
-      // complete the other two phases of startup.
+      // complete the other two phases of startup.  
       Catalog catalog = (Catalog)getApplicationData("CATALOG");
-      HashMap managersMap =
+      HashMap managersMap = 
             (HashMap)getApplicationData("CREATED_JDBCStoreManagers");
-      if(catalog.getEntityCount() == managersMap.size() &&
+      if(catalog.getEntityCount() == managersMap.size() && 
             catalog.getEJBNames().equals(managersMap.keySet())) {
 
          // Make a copy of the managers (for safty)
@@ -441,7 +389,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
          // remove the managers list (it is no longer needed)
          removeApplicationData("CREATED_JDBCStoreManagers");
-
+         
          //
          //
          // Start Phase 2: resolve relationships
@@ -449,23 +397,15 @@ public class JDBCStoreManager implements EntityPersistenceStore
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.resolveRelationships();
 
-
             // optimistic lock initialization
-
             if(manager.getEntityBridge().getMetaData().getOptimisticLocking() != null) {
-
                // register manager and locking metadata with optimictic lock
-
                JDBCOptimisticLock.register(
-
                   manager, manager.getEntityBridge().getMetaData().getOptimisticLocking()
-
                );
-
             }
-
          }
-
+         
          //
          //
          // Start Phase 3: create tables and compile queries
@@ -473,30 +413,18 @@ public class JDBCStoreManager implements EntityPersistenceStore
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.startStoreManager();
          }
-
       }
    }
 
    /**
     * Preforms as much initialization as possible without referencing
-    * another entity.
+    * another entity.  
     */
    private void initStoreManager() throws Exception {
-      log.debug("Initializing CMP plugin for " +
-            container.getBeanMetaData().getEjbName());
+      log.debug("Initializing CMP plugin for " + container.getBeanMetaData().getEjbName());
 
       // get the transaction manager
       tm = container.getTransactionManager();
-
-      // setup object copier
-      try
-      {
-         objectCopier = new ObjectName("jboss:service=ObjectCopier");
-      }
-      catch(Exception e)
-      {
-         throw new EJBException("Error creating object copier name", e);
-      }
 
       // initializes the generic data containers
       initApplicationDataMap();
@@ -506,8 +434,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
       // setup the type factory, which is used to map java types to sql types.
       typeFactory = new JDBCTypeFactory(
-            metaData.getTypeMapping(),
-            metaData.getJDBCApplication().getValueClasses());
+         metaData.getTypeMapping(),
+         metaData.getJDBCApplication().getValueClasses(),
+         metaData.getJDBCApplication().getUserTypeMappings()
+      );
 
       // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, this);
@@ -522,7 +452,8 @@ public class JDBCStoreManager implements EntityPersistenceStore
       catalog.addEntity(entityBridge);
 
       // create the read ahead cache
-      prefetchCache = new PrefetchCache(this);
+      readAheadCache = new ReadAheadCache(this);
+      readAheadCache.create();
 
       // Set up Commands
       commandFactory = new JDBCCommandFactory(this);
@@ -545,7 +476,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       startCommand = commandFactory.createStartCommand();
       stopCommand = commandFactory.createStopCommand();
       destroyCommand = commandFactory.createDestroyCommand();
-
+      
       // Entity commands
       initEntityCommand = commandFactory.createInitEntityCommand();
       createBeanClassInstanceCommand =
@@ -560,7 +491,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       storeEntityCommand = commandFactory.createStoreEntityCommand();
       activateEntityCommand = commandFactory.createActivateEntityCommand();
       passivateEntityCommand = commandFactory.createPassivateEntityCommand();
-
+      
       // Relation commands
       loadRelationCommand = commandFactory.createLoadRelationCommand();
       deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
@@ -568,17 +499,19 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
       // Create the query manager
       queryManager = new JDBCQueryManager(this);
-
+      
       // Execute the start command, creates the tables
       startCommand.execute();
-
+      
       // Start the query manager. At this point is creates all of the
       // query commands. The must occure in the start phase, as
       // queries can opperate on other entities in the application, and
       // all entities are gaurenteed to be createed until the start phase.
       queryManager.start();
+      
+      readAheadCache.start();
    }
-
+   
    public void stop()
    {
       // On deploy errors, sometimes CMPStoreManager was never initialized!
@@ -586,8 +519,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          stopCommand.execute();
       }
+      
+      readAheadCache.stop();
    }
-
+   
    public void destroy()
    {
       // On deploy errors, sometimes CMPStoreManager was never initialized!
@@ -595,15 +530,18 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          destroyCommand.execute();
       }
+      
+      if(readAheadCache != null) {
+         readAheadCache.destroy();
+      }
 
-      prefetchCache = null;
-
+      readAheadCache = null;
       if(queryManager != null) {
          queryManager.clear();
       }
       queryManager = null;
       //Remove proxy from proxy map so UnifiedClassloader may be released
-      if (createBeanClassInstanceCommand != null)
+      if (createBeanClassInstanceCommand != null) 
       {
          createBeanClassInstanceCommand.destroy();
       } // end of if ()
@@ -619,34 +557,28 @@ public class JDBCStoreManager implements EntityPersistenceStore
     */
    public Object createBeanClassInstance() throws Exception
    {
+      if(createBeanClassInstanceCommand == null)
+         throw new IllegalStateException("createBeanClassInstanceCommand == null");
       return createBeanClassInstanceCommand.execute();
    }
-
+   
    public void initEntity(EntityEnterpriseContext ctx)
    {
       initEntityCommand.execute(ctx);
    }
 
-   public Object createEntity(
-         Method createMethod,
-         Object[] args,
-         EntityEnterpriseContext ctx) throws CreateException
+   public Object createEntity(Method createMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws CreateException
    {
-
       Object pk = createEntityCommand.execute(createMethod, args, ctx);
-
-      // mark the entity as created
-      entityBridge.setCreated(ctx);
-
+      if(pk == null)
+         throw new CreateException("Primary key for created instance is null.");
       return pk;
    }
 
-   public Object postCreateEntity(
-         Method createMethod,
-         Object[] args,
-         EntityEnterpriseContext ctx) throws CreateException
+   public Object postCreateEntity(Method createMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws CreateException
    {
-
       return postCreateEntityCommand.execute(createMethod, args, ctx);
    }
 
@@ -655,10 +587,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
          Object[] args,
          EntityEnterpriseContext ctx) throws FinderException
    {
-
+      
       return findEntityCommand.execute(finderMethod, args, ctx);
    }
-
+   
    public Collection findEntities(
          Method finderMethod,
          Object[] args,
@@ -666,13 +598,23 @@ public class JDBCStoreManager implements EntityPersistenceStore
    {
       return findEntitiesCommand.execute(finderMethod, args, ctx);
    }
-
+   
    public void activateEntity(EntityEnterpriseContext ctx)
    {
       activateEntityCommand.execute(ctx);
    }
 
+   /**
+    * Loads entity.
+    * If entity not found NoSuchEntityException is thrown.
+    * @param ctx - entity context.
+    */
    public void loadEntity(EntityEnterpriseContext ctx)
+   {
+      loadEntity(ctx, true);
+   }
+
+   public boolean loadEntity(EntityEnterpriseContext ctx, boolean failIfNotFound)
    {
       // is any on the data already in the entity valid
       if(!ctx.isValid())
@@ -683,31 +625,29 @@ public class JDBCStoreManager implements EntityPersistenceStore
          }
          entityBridge.resetPersistenceContext(ctx);
       }
-
+      
       // mark the entity as created; if it was loading it was created
       entityBridge.setCreated(ctx);
-
-      loadEntityCommand.execute(ctx);
+      
+      return loadEntityCommand.execute(ctx, failIfNotFound);
    }
-
-   public void loadField(
-   JDBCCMPFieldBridge field, EntityEnterpriseContext ctx)
+   
+   public void loadField(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx)
    {
-
       loadEntityCommand.execute(field, ctx);
    }
-
+   
    public boolean isModified(EntityEnterpriseContext ctx)
    {
-      return isModifiedCommand.execute( ctx );
+      return isModifiedCommand.execute(ctx);
    }
-
+   
    public void storeEntity(EntityEnterpriseContext ctx)
    {
       storeEntityCommand.execute(ctx);
       synchronizeRelationData();
    }
-
+   
    private void synchronizeRelationData()
    {
       Map txData = getApplicationTxDataMap();
@@ -715,7 +655,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          return;
       }
-
+      
       Iterator iterator = txData.values().iterator();
       while(iterator.hasNext())
       {
@@ -723,18 +663,18 @@ public class JDBCStoreManager implements EntityPersistenceStore
          if(obj instanceof RelationData)
          {
             RelationData relationData = (RelationData) obj;
-
+            
             // only need to bother if neither side has a foreign key
             if(!relationData.getLeftCMRField().hasForeignKey() &&
             !relationData.getRightCMRField().hasForeignKey())
             {
-
+               
                // delete all removed pairs from relation table
                deleteRelations(relationData);
-
+               
                // insert all added pairs into the relation table
                insertRelations(relationData);
-
+               
                relationData.addedRelations.clear();
                relationData.removedRelations.clear();
                relationData.notRelatedPairs.clear();
@@ -742,48 +682,46 @@ public class JDBCStoreManager implements EntityPersistenceStore
          }
       }
    }
-
+   
    public void passivateEntity(EntityEnterpriseContext ctx)
    {
       passivateEntityCommand.execute(ctx);
    }
-
+   
    public void removeEntity(EntityEnterpriseContext ctx) throws RemoveException
    {
       removeEntityCommand.execute(ctx);
    }
-
+   
    //
    // Relationship Commands
    //
-   public Collection loadRelation(
-         JDBCCMRFieldBridge cmrField,
-         EntityEnterpriseContext ctx)
+   public Collection loadRelation(JDBCCMRFieldBridge cmrField, Object pk)
    {
-      return loadRelationCommand.execute(cmrField, ctx);
+      return loadRelationCommand.execute(cmrField, pk);
    }
-
+   
    public void deleteRelations(RelationData relationData)
    {
       deleteRelationsCommand.execute(relationData);
    }
-
+   
    public void insertRelations(RelationData relationData)
    {
       insertRelationsCommand.execute(relationData);
    }
-
+   
    private JDBCEntityMetaData loadJDBCEntityMetaData()
          throws DeploymentException
    {
-
+      
       ApplicationMetaData amd =
       container.getBeanMetaData().getApplicationMetaData();
-
+      
       // Get JDBC MetaData
       JDBCApplicationMetaData jamd =
       (JDBCApplicationMetaData)amd.getPluginData("CMP-JDBC");
-
+      
       if (jamd == null)
       {
          // we are the first cmp entity to need jbosscmp-jdbc.
@@ -793,19 +731,11 @@ public class JDBCStoreManager implements EntityPersistenceStore
          container.getClassLoader(),
          container.getLocalClassLoader(),
          log);
-
+         
          jamd = jfl.load();
          amd.addPluginData("CMP-JDBC", jamd);
-         amd.addPluginData("CMP-JDBC-NEW", JDBCMetaDataMigrationUtil.createSchemata(amd, jamd));
       }
-
-      // Get GLS configuration
-      config = (JDBCMetaDataMigrationUtil.Config) amd.getPluginData("CMP-JDBC-NEW");
-      if (config == null) {
-         config = JDBCMetaDataMigrationUtil.createSchemata(amd, jamd);
-         amd.addPluginData("CMP-JDBC-NEW", config);
-      }
-
+      
       // Get JDBC Bean MetaData
       String ejbName = container.getBeanMetaData().getEjbName();
       JDBCEntityMetaData metadata = jamd.getBeanByEjbName(ejbName);
@@ -815,14 +745,14 @@ public class JDBCStoreManager implements EntityPersistenceStore
       }
       return metadata;
    }
-
+   
    private class ApplicationTxDataSynchronization implements Synchronization
    {
       /**
        *  The transaction we follow.
        */
       private Transaction tx;
-
+      
       /**
        *  Create a new instance synchronization instance.
        */
@@ -830,7 +760,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          this.tx = tx;
       }
-
+      
       /**
        * Unused
        */
@@ -838,7 +768,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       {
          //no-op
       }
-
+      
       /**
        * Free-up any data associated with this transaction.
        */

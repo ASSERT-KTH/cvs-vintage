@@ -13,13 +13,12 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.naming.Name;
-import org.jboss.invocation.InvocationType;
 
 /** The proxy for an EJBLocalHome object.
 
  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.8 $
+ @version $Revision: 1.9 $
  */
 public class LocalHomeProxy
    extends LocalProxy
@@ -103,12 +102,12 @@ public class LocalHomeProxy
          // The trick is simple we trick the container in believe it
          // is a remove() on the instance
          Object id = args[0];
-         retValue = factory.invoke(id, REMOVE_OBJECT, EMPTY_ARGS, InvocationType.LOCAL);
+         retValue = factory.invoke(id, REMOVE_OBJECT, EMPTY_ARGS);
       }
       // If not taken care of, go on and call the container
       else
       {
-         retValue = factory.invoke(null, m, args, InvocationType.LOCALHOME);
+         retValue = factory.invokeHome(m, args);
       }
 
       return retValue;

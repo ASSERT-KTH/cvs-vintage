@@ -6,19 +6,24 @@
 */
 package org.jboss.invocation.http.server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import javax.management.MalformedObjectNameException;
+import java.util.Iterator;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.invocation.http.interfaces.HttpInvokerProxy;
-import org.jboss.logging.Logger;
-import org.jboss.util.naming.Util;
+import org.jboss.invocation.http.interfaces.ClientMethodInterceptor;
+import org.jboss.naming.Util;
 import org.jboss.proxy.GenericProxyFactory;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.Strings;
+import org.jboss.metadata.MetaData;
+import org.w3c.dom.Element;
 
 /** Create an interface proxy that uses HTTP to communicate with the server
  * side object that exposes the corresponding JMX invoke operation. Any request
@@ -26,7 +31,7 @@ import org.jboss.util.Strings;
  * MarshalledValue with the Naming proxy as its content.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class HttpProxyFactory extends ServiceMBeanSupport
    implements HttpProxyFactoryMBean
@@ -38,10 +43,22 @@ public class HttpProxyFactory extends ServiceMBeanSupport
    private Object theProxy;
    /** The http URL to the InvokerServlet */
    private String invokerURL;
+   /** The alternative prefix used to build the invokerURL */
+   private String invokerURLPrefix = "http://";
+   /** The alternative suffix used to build the invokerURL */
+   private String invokerURLSuffix = ":8080/invoker/JMXInvokerServlet";
+   /** The alternative host or ip flag used to build the invokerURL */
+   private boolean useHostName = false;
    /** The JNDI name under which the HttpInvokerProxy will be bound */
    private String jndiName;
    /** The interface that the HttpInvokerProxy implements */
    private Class exportedInterface;
+   private Element interceptorConfig;
+   private ArrayList interceptorClasses;
+
+   public HttpProxyFactory()
+   {
+   }
 
    public ObjectName getInvokerName()
    {
@@ -73,6 +90,33 @@ public class HttpProxyFactory extends ServiceMBeanSupport
       log.debug("Set invokerURL to "+this.invokerURL);
    }
 
+   public String getInvokerURLPrefix()
+   {
+      return invokerURLPrefix;
+   }
+   public void setInvokerURLPrefix(String invokerURLPrefix)
+   {
+      this.invokerURLPrefix = invokerURLPrefix;
+   }
+
+   public String getInvokerURLSuffix()
+   {
+      return invokerURLSuffix;
+   }
+   public void setInvokerURLSuffix(String invokerURLSuffix)
+   {
+      this.invokerURLSuffix = invokerURLSuffix;
+   }
+
+   public boolean getUseHostName()
+   {
+      return useHostName;
+   }
+   public void setUseHostName(boolean flag)
+   {
+      this.useHostName = flag;
+   }
+
    public Class getExportedInterface()
    {
       return exportedInterface;
@@ -80,6 +124,48 @@ public class HttpProxyFactory extends ServiceMBeanSupport
    public void setExportedInterface(Class exportedInterface)
    {
       this.exportedInterface = exportedInterface;
+   }
+
+   public Element getClientInterceptors()
+   {
+      return interceptorConfig;
+   }
+   public void setClientInterceptors(Element config) throws Exception
+   {
+      this.interceptorConfig = config;
+      Iterator interceptorElements = MetaData.getChildrenByTagName(interceptorConfig, "interceptor");
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      if( interceptorClasses != null )
+         interceptorClasses.clear();
+      else
+         interceptorClasses = new ArrayList();
+      while( interceptorElements != null && interceptorElements.hasNext() )
+      {
+         Element ielement = (Element) interceptorElements.next();
+         String className = null;
+         className = MetaData.getElementContent(ielement);
+         Class clazz = loader.loadClass(className);
+         interceptorClasses.add(clazz);
+      }
+   }
+
+   public Object getProxy()
+   {
+      return theProxy;
+   }
+
+   public Object getProxy(Object id)
+   {
+      Class[] ifaces = {exportedInterface};
+      ArrayList interceptorClasses = null; //defineInterceptors();
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      GenericProxyFactory proxyFactory = new GenericProxyFactory();
+      Object newProxy = null;
+      /*
+      Object newProxy = proxyFactory.createProxy(id, jmxInvokerName,
+         null, null, null, interceptorClasses, loader, ifaces);
+         */
+      return newProxy;
    }
 
    /** Initializes the servlet.
@@ -90,28 +176,37 @@ public class HttpProxyFactory extends ServiceMBeanSupport
        externalURL. This proxy will be associated with a naming JMX invoker
        given by the jmxInvokerName.
        */
-      if( invokerURL == null )
-      {
-         invokerURL = "http://localhost:8080/invoker/JMXInvokerServlet";
-         log.warn("No invokerURL attribute specified, defaulting to localhost:8080");
-      }
-      HttpInvokerProxy delegateInvoker = new HttpInvokerProxy(invokerURL);
+      Invoker delegateInvoker = createInvoker();
       Integer nameHash = new Integer(jmxInvokerName.hashCode());
-      Registry.bind(jmxInvokerName, delegateInvoker);
+      log.debug("Bound delegate: "+delegateInvoker
+         +" for invoker="+jmxInvokerName);
+      /* Create a binding betweeh the invoker name hash and the jmx name
+      This is used by the HttpInvoker to map from the Invocation ObjectName
+      hash value to the target JMX ObjectName.
+      */
       Registry.bind(nameHash, jmxInvokerName);
 
       Object cacheID = null;
+      String proxyBindingName = null;
       Class[] ifaces = {exportedInterface};
-      ArrayList interceptorClasses = new ArrayList();
-      interceptorClasses.add(InvokerInterceptor.class);
+      /* Initialize interceptorClasses with default client interceptor list
+         if no client interceptor configuration was provided */
+      if( interceptorClasses == null )
+         interceptorClasses = defineDefaultInterceptors();
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       GenericProxyFactory proxyFactory = new GenericProxyFactory();
       theProxy = proxyFactory.createProxy(cacheID, jmxInvokerName,
-         jndiName, null, interceptorClasses, loader, ifaces);
-      log.debug("Created HttpInvokerProxy for invoker="+jmxInvokerName);
+         delegateInvoker, jndiName, proxyBindingName, interceptorClasses,
+         loader, ifaces);
+      log.debug("Created HttpInvokerProxy for invoker="+jmxInvokerName
+         +", nameHash="+nameHash);
 
-      InitialContext iniCtx = new InitialContext();
-      Util.bind(iniCtx, jndiName, theProxy);
+      if( jndiName != null )
+      {
+         InitialContext iniCtx = new InitialContext();
+         Util.bind(iniCtx, jndiName, theProxy);
+         log.debug("Bound proxy under jndiName="+jndiName);
+      }
    }
 
    protected void stopService() throws Exception
@@ -119,8 +214,44 @@ public class HttpProxyFactory extends ServiceMBeanSupport
       Integer nameHash = new Integer(jmxInvokerName.hashCode());
       Registry.unbind(jmxInvokerName);
       Registry.unbind(nameHash);
-      InitialContext iniCtx = new InitialContext();
-      Util.unbind(iniCtx, jndiName);
+      if( jndiName != null )
+      {
+         InitialContext iniCtx = new InitialContext();
+         Util.unbind(iniCtx, jndiName);
+      }
    }
 
+   /** Build the default interceptor list. This consists of:
+    * ClientMethodInterceptor
+    * InvokerInterceptor
+    */
+   protected ArrayList defineDefaultInterceptors()
+   {
+      ArrayList tmp = new ArrayList();
+      tmp.add(ClientMethodInterceptor.class);
+      tmp.add(InvokerInterceptor.class);
+      return tmp;
+   }
+
+   /** Create the Invoker
+    */
+   protected Invoker createInvoker() throws Exception
+   {
+      checkInvokerURL();
+      HttpInvokerProxy delegateInvoker = new HttpInvokerProxy(invokerURL);
+      return delegateInvoker;
+   }
+   /** Validate that the invokerURL is set, and if not build it from
+    * the invokerURLPrefix + host + invokerURLSuffix.
+    */
+   protected void checkInvokerURL() throws UnknownHostException
+   {
+      if( invokerURL == null )
+      {
+         InetAddress addr = InetAddress.getLocalHost();
+         String host = useHostName ? addr.getHostName() : addr.getHostAddress();
+         String url = invokerURLPrefix + host + invokerURLSuffix;
+         setInvokerURL(url);
+      }
+   }
 }

@@ -14,7 +14,7 @@ import java.security.Principal;
  * from the current SecurityAssociation state.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class SecurityAssociationAuthenticator extends Authenticator
 {

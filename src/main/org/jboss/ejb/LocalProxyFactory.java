@@ -6,12 +6,10 @@
  */
 package org.jboss.ejb;
 
-
 import java.util.Collection;
+
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.transaction.xa.XAResource;
 
 /**
  * This is an extension to the EJBProxyFactory interface. Although some
@@ -21,9 +19,9 @@ import javax.transaction.xa.XAResource;
  * this interface.
  *
  * @see EJBProxyFactory
- *
+ * 
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface LocalProxyFactory
    extends ContainerPlugin
@@ -53,7 +51,7 @@ public interface LocalProxyFactory
     * @return       an implementation of the local interface for this container
     */
    EJBLocalObject getStatefulSessionEJBLocalObject(Object id);
-
+      
    /**
     * This method is called whenever an EJBLocalObject implementation for an
     * entitybean is needed.
@@ -62,7 +60,7 @@ public interface LocalProxyFactory
     * @return      an implementation of the local interface for this container
     */
    EJBLocalObject getEntityEJBLocalObject(Object id);
-
+   
    /**
     * This method is called whenever a collection of EJBLocalObjects for a
     * collection of primary keys is needed.
@@ -72,7 +70,4 @@ public interface LocalProxyFactory
     *                interface for this container
     */
    Collection getEntityLocalCollection(Collection enum);
-
-   MessageEndpoint getMessageEndpoint(XAResource xaResource);
-
 }
