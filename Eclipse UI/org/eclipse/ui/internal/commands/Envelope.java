@@ -13,46 +13,51 @@ package org.eclipse.ui.internal.commands;
 
 import org.eclipse.ui.internal.util.Util;
 
-final class CommandEnvelope implements Comparable {
+final class Envelope implements Comparable {
 
 	private final static int HASH_FACTOR = 89;
-	private final static int HASH_INITIAL = CommandEnvelope.class.getName().hashCode();	
+	private final static int HASH_INITIAL = Envelope.class.getName().hashCode();	
 
-	static CommandEnvelope create(String command) {
-		return new CommandEnvelope(command);
-	}
+	private String id;
 
-	private String command;
+	private transient int hashCode;
+	private transient boolean hashCodeComputed;
 	
-	private CommandEnvelope(String command) {
-		this.command = command;
+	Envelope(String id) {
+		this.id = id;
 	}
 	
 	public int compareTo(Object object) {
-		CommandEnvelope commandEnvelope = (CommandEnvelope) object;
-		int compareTo = Util.compare(command, commandEnvelope.command);
+		Envelope envelope = (Envelope) object;
+		int compareTo = Util.compare(id, envelope.id);
 		return compareTo;
 	}
 	
 	public boolean equals(Object object) {
-		if (!(object instanceof CommandEnvelope))
+		if (!(object instanceof Envelope))
 			return false;
 
-		CommandEnvelope commandEnvelope = (CommandEnvelope) object;	
-		return Util.equals(command, commandEnvelope.command);
+		Envelope envelope = (Envelope) object;	
+		boolean equals = true;
+		equals &= Util.equals(id, envelope.id);
+		return equals;		
 	}
 
 	public int hashCode() {
-		int result = HASH_INITIAL;
-		result = result * HASH_FACTOR + Util.hashCode(command);
-		return result;
+		if (!hashCodeComputed) {
+			hashCode = HASH_INITIAL;
+			hashCode = hashCode * HASH_FACTOR + Util.hashCode(id);
+			hashCodeComputed = true;
+		}
+			
+		return hashCode;		
 	}
 	
 	public String toString() {
-		return command;
+		return id;
 	}
 
-	String getCommand() {
-		return command;	
+	String getId() {
+		return id;	
 	}
 }
