@@ -4,10 +4,6 @@
     <!-- Debug low-level events in XmlMapper startup -->
     <xmlmapper:debug level="0" />
 
-    <!-- This config is used for JDK1.1 
-         server2.xml will be used for JDK1.2
-      -->
-
     <!-- 
 
     Logging:
@@ -117,7 +113,8 @@
         <ContextInterceptor 
             className="org.apache.tomcat.context.WebXmlReader" />
 
-        <!-- Uncomment out if you have JDK1.2 and want to use policy 
+        <!-- Uncomment out if you have JDK1.2 and want to implement
+	     the Java SecurityManager
         <ContextInterceptor 
             className="org.apache.tomcat.context.PolicyInterceptor" />
         -->
