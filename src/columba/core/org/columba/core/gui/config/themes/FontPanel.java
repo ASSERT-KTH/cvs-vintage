@@ -118,6 +118,7 @@ public class FontPanel extends JPanel implements ActionListener {
 					"general",
 					"overwrite_main_font"));
                 overwriteCheckBox.addActionListener(this);
+		layout.setConstraints(overwriteCheckBox, c);
 		fontPanel.add(overwriteCheckBox);
 
 		c.gridx = 0;
@@ -135,7 +136,6 @@ public class FontPanel extends JPanel implements ActionListener {
 					RESOURCE_PATH,
 					"general",
 					"main_font"));
-		//fontPanel.add(mainFontLabel);
 		layout.setConstraints(mainFontLabel, c);
 		fontPanel.add(mainFontLabel);
 
