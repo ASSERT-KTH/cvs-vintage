@@ -48,6 +48,8 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Collections;
 
 import org.apache.torque.om.NumberKey;
 
@@ -152,40 +154,32 @@ public class AttributePeer
         return crit;
     }
 
+
     private static List sortAttributesByCreatingUser(List result,
-                                               String sortPolarity)
+                                                     String sortPolarity)
         throws Exception
     {
-        // if sorting by creating user, must do sort in java
-        String[] names = new String[result.size()];
-        boolean inOrder= false;
-        Object[] temp = result.toArray();
-        while (!inOrder)
+        final int polarity = ("asc".equals(sortPolarity)) ? 1 : -1;   
+        Comparator c = new Comparator() 
         {
-            inOrder = true;
-            for  (int i = 1; i<temp.length; i++)
+            public int compare(Object o1, Object o2) 
             {
-                Attribute currentAttr = (Attribute)temp[i];
-                Attribute lastAttr = (Attribute)temp[i-1];
-                if ((sortPolarity.equals("asc") && 
-                    currentAttr.getCreatedUserName().compareTo(lastAttr.getCreatedUserName()) < 0)
-                   || (sortPolarity.equals("desc") &&
-                    currentAttr.getCreatedUserName().compareTo(lastAttr.getCreatedUserName()) > 0))
-                   
-
+                int i = 0;
+                try
                 {
-                    inOrder = false;
-                    temp[i] = lastAttr;
-                    temp[i-1] = currentAttr;
+                    i = polarity * 
+                        ((Attribute)o1).getCreatedUserName()
+                         .compareTo(((Attribute)o2).getCreatedUserName());
                 }
-            }
-        }
-        List orderedList = new ArrayList(); 
-        for  (int j = 1; j<temp.length; j++)
-        {
-            orderedList.add(temp[j]);
-        }
-        return orderedList;
+                catch (Exception e)
+                {
+                    //
+                }
+                return i;
+             }
+        };
+        Collections.sort(result, c);
+        return result;
     }
 
     /**
