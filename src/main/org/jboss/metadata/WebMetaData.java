@@ -23,17 +23,26 @@ import org.jboss.deployment.DeploymentException;
  
  * @author Scott.Stark@jboss.org
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class WebMetaData implements XmlLoadable
 {
+   /** The web.xml resource-refs */
    private HashMap resourceReferences = new HashMap();
+   /** The web.xml resource--env-refs */
    private HashMap resourceEnvReferences = new HashMap();
+   /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
+   /** web.xml ejb-refs */
    private HashMap ejbReferences = new HashMap();
+   /** web.xml ejb-local-refs */
    private HashMap ejbLocalReferences = new HashMap();
+   /** Currently unused as security-roles are not used */
    private ArrayList securityRoleReferences = new ArrayList();
-   private boolean distributable=false;
+   /** The web.xml distributable flag */
+   private boolean distributable = false;
+   /** The jboss-web.xml class-loading.java2ClassLoadingCompliance flag */
+   private boolean java2ClassLoadingCompliance = false;
    /** The war context root as specified as the jboss-web.xml
     descriptor level. */
    private String contextRoot;
@@ -128,10 +137,24 @@ public class WebMetaData implements XmlLoadable
    }
 
    /** returns the in-memory rep of web.xml */
-   public Element getWebAppElement() {
+   public Element getWebAppElement()
+   {
       return webAppElement;
    }
-   
+
+   /** A flag indicating if the normal Java2 parent first class loading model
+    * should be used over the servlet 2.3 web container first model.
+    * @return true for parent first, false for the servlet 2.3 model
+    */
+   public boolean getJava2ClassLoadingCompliance()
+   {
+      return java2ClassLoadingCompliance;
+   }
+   public void setJava2ClassLoadingCompliance(boolean flag)
+   {
+      java2ClassLoadingCompliance = flag;
+   }
+
    public void importXml(Element element) throws Exception
    {
       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
