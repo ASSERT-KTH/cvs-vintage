@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.39 $</tt>
+ * @version <tt>$Revision: 1.40 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -81,7 +81,11 @@ public class EJBDeployer
    /** A flag indicating if deployment descriptors should be validated */
    private boolean validateDTDs;
 
+   /** Service name for the web service */
    private ObjectName webServiceName;
+
+   /** Service name for the JSR-109 compliant (axis) webservice */
+   private ObjectName jsr109ServiceName;
 
    private ObjectName transactionManagerServiceName;
    private TransactionManager tm;
@@ -293,6 +297,27 @@ public class EJBDeployer
       this.webServiceName = webServiceName;
    }
 
+   /**
+    * Get the jsr109ServiceName value.
+    * @return the jsr109ServiceName value.
+    *
+    * @jmx:managed-attribute
+    */
+   public ObjectName getJSR109ServiceName()
+   {
+      return jsr109ServiceName;
+   }
+
+   /**
+    * Set the jsr109ServiceName value.
+    * @return the jsr109ServiceName value.
+    *
+    * @jmx:managed-attribute
+    */
+   public void setJSR109ServiceName(ObjectName jsr109ServiceName)
+   {
+      this.jsr109ServiceName = jsr109ServiceName;
+   }
 
    /**
     * Get the TransactionManagerServiceName value.
@@ -400,7 +425,6 @@ public class EJBDeployer
                di.setRepositoryInfo(config);
             }
          }
-
       }
       catch (Exception e)
       {
@@ -413,25 +437,50 @@ public class EJBDeployer
       super.init(di);
    }
 
-   /** 
+   /**
     * This is here as a reminder that we may not want to allow ejb jars to
     * have arbitrary sub deployments. Currently we do.
-    * It is also here as a temporary solution to get JSR-109 simultaneous
-    * web service deployments going
+    * It is also here as a temporary solution to get JSR-109 simultaneous web service deployments going.
     * @param di
     * @throws DeploymentException
-    */ 
+    */
    protected void processNestedDeployments(DeploymentInfo di)
       throws DeploymentException
    {
       super.processNestedDeployments(di);
+
       // look for web service deployments
-      URL webServiceUrl=di.localCl.getResource("META-INF/webservices.xml");
-      if(webServiceUrl!=null) {
-         DeploymentInfo sub=new DeploymentInfo(webServiceUrl,di,getServer());
-         sub.localCl=di.localCl;
-         sub.localUrl=di.localUrl;
+      if (isJSR109Deployment(di))
+      {
+         if (jsr109ServiceName != null)
+         {
+            URL webServiceUrl = di.localCl.getResource("META-INF/webservices.xml");
+            DeploymentInfo sub = new DeploymentInfo(webServiceUrl, di, getServer());
+            sub.localCl = di.localCl;
+            sub.localUrl = di.localUrl;
+         }
+         else
+         {
+            log.warn("this is a webservice, but 'JSR109ServiceName' is not set'");
+         }
       }
+   }
+
+   /**
+    * Return true if this deployment contains <code>META-INF/webservices.xml</code>
+    * @param di
+    * @return
+    */
+   private boolean isJSR109Deployment(DeploymentInfo di)
+   {
+      // look for web service deployments
+      URL webServiceUrl = di.localCl.getResource("META-INF/webservices.xml");
+      if (webServiceUrl != null && jsr109ServiceName != null)
+      {
+         return true;
+      }
+
+      return false;
    }
 
    public synchronized void create(DeploymentInfo di)
@@ -509,11 +558,11 @@ public class EJBDeployer
       try
       {
          ApplicationMetaData metadata = (ApplicationMetaData) di.metaData;
-         EjbModule ejbModule = new EjbModule(di, tm, webServiceName);
+         EjbModule ejbModule = new EjbModule(di, tm, webServiceName, jsr109ServiceName);
          String name = metadata.getJmxName();
          if( name == null )
          {
-            name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName; 
+            name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName;
          }
          // Build an escaped JMX name including deployment shortname
          ObjectName ejbModuleName = ObjectNameConverter.convert(name);
@@ -532,6 +581,12 @@ public class EJBDeployer
          log.debug( "Deploying: " + di.url );
          // Invoke the create life cycle method
          serviceController.create(di.deployedObject);
+
+         // create the webservice
+         if (isJSR109Deployment(di))
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceCreate", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
       }
       catch (Exception e)
       {
@@ -559,6 +614,12 @@ public class EJBDeployer
          // Register deployment. Use the application name in the hashtable
          // FIXME: this is obsolete!! (really?!)
          deployments.put(di.url, di);
+
+         // start the webservice
+         if (isJSR109Deployment(di))
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceStart", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
       }
       catch (Exception e)
       {
@@ -575,6 +636,12 @@ public class EJBDeployer
    {
       try
       {
+         // stop the webservice
+         if (isJSR109Deployment(di))
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceStop", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+
          serviceController.stop(di.deployedObject);
       }
       catch (Exception e)
@@ -593,6 +660,12 @@ public class EJBDeployer
 
       try
       {
+         // destroy the webservice
+         if (isJSR109Deployment(di))
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceDestroy", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+
          serviceController.destroy( di.deployedObject );
          serviceController.remove( di.deployedObject );
       }
