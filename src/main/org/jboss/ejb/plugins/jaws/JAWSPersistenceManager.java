@@ -67,7 +67,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -300,129 +300,109 @@ public class JAWSPersistenceManager
          }
       }
    }
-   
-   public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
-      throws RemoteException, CreateException
-   {
-      // Get methods
-      try
-      {
-         Method createMethod = container.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
-         Method postCreateMethod = container.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());
-      
-         // Call ejbCreate
-         createMethod.invoke(ctx.getInstance(), args);
-         
-         // Extract pk
-         Object id = null;
-         if (compoundKey)
-         {
-            try
-            {
-               id = primaryKeyClass.newInstance();
-            } catch (InstantiationException e)
-            {
-               throw new ServerException("Could not create primary key",e);
-            }
-            
-            for (int i = 0; i < pkFields.size(); i++)
-            {
-               Field from = (Field)pkFields.get(i);
-               Field to = (Field)pkClassFields.get(i);
-               to.set(id,from.get(ctx.getInstance()));
-            }
-         } else
-         {
-            id = ((Field)pkFields.get(0)).get(ctx.getInstance());
-         }
-         
-         log.debug("Create, id is "+id);
-         
-         // Check duplicate
-         if (beanExists(id)) {
-          
-         // it exists, we need the DuplicateKey thingy
-          throw new DuplicateKeyException("Entity with key "+id+" already exists");
-       }
-       
-       // We know we are OK and can proceed with the insert
-       // Set id
-         ctx.setId(id);
- 
-         // Lock instance in cache
-         ((EntityContainer)container).getInstanceCache().insert(ctx);
-         
-         // Create EJBObject
-         ctx.setEJBObject(container.getContainerInvoker().getEntityEJBObject(id));
-
-         // Insert in db
-         log.debug("Insert");
-         Connection con = null;
-         PreparedStatement stmt = null;
-         ResultSet rs = null;
-         try
-         {
-            con = getConnection();
-            log.debug("SQL:"+insertSql);
-            stmt = con.prepareStatement(insertSql);
-            
-            int idx = 1; // Parameter-index
-            int refIdx = 0; // EJB-reference index, into ejbRefs
-            for (int i = 0; i < cmpFields.size(); i++)
-            {
-               int jdbcType = getCMPFieldJDBCType(i);
-               Object value = getCMPFieldValue(ctx.getInstance(), i);
-               if (jdbcType == Types.REF)
-               {
-                  idx = setForeignKey(stmt, idx, refIdx++, value);
-               } else
-               {
-                  setParameter(stmt, idx++, jdbcType, value);
-               }
-            }
-            
-            stmt.executeUpdate();
-         } catch (SQLException e)
-         {
-          log.exception(e);
-            throw new CreateException("Could not create entity:"+e);
-         } finally
-         {
-            if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
-            if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
-            if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
-         }
-         
-         // Store state to be able to do tuned updates
-         PersistenceContext pCtx = new PersistenceContext();
-         
-         // If read-only, set last read to now
-         if (readOnly) pCtx.lastRead = System.currentTimeMillis();
-         
-         // Save initial state for tuned updates
-         pCtx.state = getState(ctx);
-         
-         ctx.setPersistenceContext(pCtx);
-         
-         // Invoke postCreate
-         postCreateMethod.invoke(ctx.getInstance(), args);
-      } catch (InvocationTargetException e)
-      {    
-        
-         throw new CreateException("Create failed:"+e);
-      } catch (NoSuchMethodException e)
-      {
-         throw new CreateException("Create methods not found:"+e);
-      } catch (IllegalAccessException e)
-      {
-         throw new CreateException("Could not create entity:"+e);
-      } 
-   }
+	
+	public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+	throws RemoteException, CreateException
+	{
+		
+		try {
+			// Extract pk
+			Object id = null;
+			if (compoundKey)
+			{
+				try
+				{
+					id = primaryKeyClass.newInstance();
+				} catch (InstantiationException e)
+				{
+					throw new ServerException("Could not create primary key",e);
+				}
+				
+				for (int i = 0; i < pkFields.size(); i++)
+				{
+					Field from = (Field)pkFields.get(i);
+					Field to = (Field)pkClassFields.get(i);
+					to.set(id,from.get(ctx.getInstance()));
+				}
+			} else
+			{
+				id = ((Field)pkFields.get(0)).get(ctx.getInstance());
+			}
+			
+			log.debug("Create, id is "+id);
+			
+			// Check duplicate
+			if (beanExists(id)) {
+				
+				// it exists, we need the DuplicateKey thingy
+				throw new DuplicateKeyException("Entity with key "+id+" already exists");
+			}
+			
+			// We know we are OK and can proceed with the insert
+			// Set id
+			ctx.setId(id);
+			
+			// Insert in db
+			log.debug("Insert");
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			try
+			{
+				con = getConnection();
+				log.debug("SQL:"+insertSql);
+				stmt = con.prepareStatement(insertSql);
+				
+				int idx = 1; // Parameter-index
+				int refIdx = 0; // EJB-reference index, into ejbRefs
+				for (int i = 0; i < cmpFields.size(); i++)
+				{
+					int jdbcType = getCMPFieldJDBCType(i);
+					Object value = getCMPFieldValue(ctx.getInstance(), i);
+					if (jdbcType == Types.REF)
+					{
+						idx = setForeignKey(stmt, idx, refIdx++, value);
+					} else
+					{
+						setParameter(stmt, idx++, jdbcType, value);
+					}
+				}
+				
+				stmt.executeUpdate();
+			} catch (SQLException e)
+			{
+				log.exception(e);
+				throw new CreateException("Could not create entity:"+e);
+			} finally
+			{
+				if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
+					if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+					if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+			}
+			
+			// Store state to be able to do tuned updates
+			PersistenceContext pCtx = new PersistenceContext();
+			
+			// If read-only, set last read to now
+			if (readOnly) pCtx.lastRead = System.currentTimeMillis();
+				
+			// Save initial state for tuned updates
+			pCtx.state = getState(ctx);
+			
+			ctx.setPersistenceContext(pCtx);
+		
+		} catch (IllegalAccessException e) {
+			
+			log.exception(e);
+			throw new CreateException("Could not create entity:"+e);
+		}
+	
+	}
    
    /*
    *  beanExists
    *
-   *  Checks in the database that the backend already holds the entity
+   *  Checks in the database tha t the backend already holds the entity
    *  
    */
    public boolean beanExists(EntityEnterpriseContext ctx) 
