@@ -28,7 +28,12 @@
   </tr>
   <tr>
    <th width="120">Availability</th>
-   <td>#queryTypeSelectBox ($query)
+   <td>
+#if (!$user.CurrentMITList || $user.CurrentMITList.isSingleModule())
+    #queryTypeSelectBox ($query)
+#else
+    Cross module queries always have personal scope 
+#end
    </td>
   </tr>
   <tr>
