@@ -1,4 +1,4 @@
-// $Id: TestUMLElementOwnershipVisibilityButtonGroup.java,v 1.6 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLElementOwnershipVisibilityButtonGroup.java,v 1.7 2004/08/26 19:45:02 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,8 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
     public void testVisibilityProtected() {
 	if (group == null) return; // Inconclusive
         elem.setVisibility(MVisibilityKind.PROTECTED);
-        assertEquals(group.getSelection(), group.getProtectedButton().getModel());
+        assertEquals(group.getSelection(), 
+                     group.getProtectedButton().getModel());
     }
 
 
@@ -101,7 +102,8 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
         super.setUp();
         elem = new MClassImpl();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-        MockUMLUserInterfaceContainer cont = new MockUMLUserInterfaceContainer();
+        MockUMLUserInterfaceContainer cont = 
+            new MockUMLUserInterfaceContainer();
         cont.setTarget(elem);
 
 	// If we cannot create the group, we assume that it is because

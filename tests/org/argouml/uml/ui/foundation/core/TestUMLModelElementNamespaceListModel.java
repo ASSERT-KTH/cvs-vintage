@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementNamespaceListModel.java,v 1.7 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLModelElementNamespaceListModel.java,v 1.8 2004/08/26 19:45:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,9 @@ public class TestUMLModelElementNamespaceListModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test for setNameSpace.
+     */
     public void testSetNamespace() {
         MNamespace ns = CoreFactory.getFactory().createNamespace();
         elem.setNamespace(ns);

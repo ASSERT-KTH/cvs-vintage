@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.9 2004/07/31 22:30:23 kataka Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.10 2004/08/26 19:45:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,11 +72,13 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         elem.setNamespace(m);       
         stereotypes = new MStereotype[10];
         for (int i = 0; i < 10; i++) {
-            stereotypes[i] = ExtensionMechanismsFactory.getFactory().buildStereotype(elem, "test" + i);
+            stereotypes[i] = ExtensionMechanismsFactory.getFactory()
+                .buildStereotype(elem, "test" + i);
         }
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);   
-        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem}));  
+        model.targetSet(new TargetEvent(this, "set", new Object[0], 
+                                        new Object[] {elem}));  
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.7 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.8 2004/08/26 19:45:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,8 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLFeatureOwnerComboBoxModel();
-        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem}));
+        model.targetSet(new TargetEvent(this, "set", new Object[0], 
+                                        new Object[] {elem}));
         types = new MClassifier[10];
         MModel m = ModelManagementFactory.getFactory().createModel();
 	ProjectManager.getManager().getCurrentProject().setRoot(m);

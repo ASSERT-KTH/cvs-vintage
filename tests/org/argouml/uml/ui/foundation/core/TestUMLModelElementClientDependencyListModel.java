@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.8 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.9 2004/08/26 19:45:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,8 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
         MDependency[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
             suppliers[i] = CoreFactory.getFactory().buildClass(ns);
-            dependencies[i] = CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
+            dependencies[i] = 
+                CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }
         assertEquals(10, model.getSize());
         assertEquals(model.getElementAt(5), dependencies[5]);
@@ -103,7 +104,8 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
         MDependency[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
             suppliers[i] = CoreFactory.getFactory().buildClass(ns);
-            dependencies[i] = CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
+            dependencies[i] = 
+                CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }
         for (int i = 0; i < 5; i++) {
             elem.removeClientDependency(dependencies[i]);
