@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.240 2004/09/01 22:52:05 spestov Exp $
+ * @version $Id: jEdit.java,v 1.241 2004/09/01 23:20:37 spestov Exp $
  */
 public class jEdit
 {
@@ -1005,8 +1005,7 @@ public class jEdit
 	 */
 	public static void addPluginJAR(String path)
 	{
-		// backwards compatibility...
-		PluginJAR jar = new EditPlugin.JAR(new File(path));
+		PluginJAR jar = new PluginJAR(new File(path));
 		jars.addElement(jar);
 		jar.init();
 
