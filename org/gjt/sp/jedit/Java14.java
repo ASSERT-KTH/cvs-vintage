@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.1 2001/12/26 05:33:24 spestov Exp $
+ * @version $Id: Java14.java,v 1.2 2001/12/27 00:29:23 spestov Exp $
  */
 public class Java14
 {
@@ -74,22 +74,26 @@ public class Java14
 	//{{{ MyFocusManager class
 	static class MyFocusManager extends DefaultKeyboardFocusManager
 	{
-		public void processKeyEvent(Component comp, KeyEvent evt)
+		public boolean postProcessKeyEvent(KeyEvent evt)
 		{
-			for(;;)
+			if(!evt.isConsumed())
 			{
-				if(comp == null || comp instanceof Dialog)
-					break;
-				else if(comp instanceof View)
+				Component comp = (Component)evt.getSource();
+				for(;;)
 				{
-					((View)comp).processKeyEvent(evt);
-					return;
+					if(comp == null || comp instanceof Dialog)
+						break;
+					else if(comp instanceof View)
+					{
+						((View)comp).processKeyEvent(evt);
+						return true;
+					}
+					else
+						comp = comp.getParent();
 				}
-				else
-					comp = comp.getParent();
 			}
 
-			super.processKeyEvent(comp,evt);
+			return super.postProcessKeyEvent(evt);
 		}
 	} //}}}
 
