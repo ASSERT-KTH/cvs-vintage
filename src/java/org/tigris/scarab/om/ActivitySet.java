@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.2 2002/10/09 18:26:01 jmcnally Exp $
+ * @version $Id: ActivitySet.java,v 1.3 2002/10/09 22:28:10 jmcnally Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -151,9 +151,7 @@ public class ActivitySet
         context.put("issue", issue);
         context.put("attachment", getAttachment());
         context.put("activityList", getActivityList());
-        
-        String replyToUser = "scarab.email.modifyissue";
-        
+                
         if (subject == null)
         {
             subject = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
@@ -193,6 +191,8 @@ public class ActivitySet
             }
         }
         
+        String[] replyToUser = issue.getModule().getSystemEmail();
+
         return Email.sendEmail( context, issue.getModule(), getCreator(), 
             replyToUser, toUsers, ccUsers, subject, template);
     }

@@ -53,6 +53,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.log4j.Category;
 import org.apache.regexp.RECompiler;
@@ -76,6 +77,8 @@ import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
+import org.apache.fulcrum.localization.Localization;
+import org.apache.turbine.Turbine;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
@@ -109,6 +112,7 @@ import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 
@@ -130,7 +134,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.57 2002/10/09 00:26:00 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.58 2002/10/09 22:28:10 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -2205,6 +2209,50 @@ try{
         return rep;
     }
 
+    /**
+     * All emails related to this module will have a copy sent to
+     * this address.  A system-wide default email address can be specified in 
+     * Scarab.properties with the key: scarab.email.archive.toAddress
+     */
+    public abstract String getArchiveEmail();
+
+    /**
+     * The default address that is used to fill out either the From or
+     * ReplyTo header on emails related to this module.  In many cases
+     * the From field is taken as the user who acted that resulted in the 
+     * email, but replies should still go to the central location for
+     * the module, so in this address would be used in the ReplyTo field.
+     *
+     * @return a <code>String[]</code> of length=2 where the first element
+     * is a name such as "Scarab System" and the second is an email address.
+     */
+    public String[] getSystemEmail()
+    {
+        String name = Turbine.getConfiguration()
+            .getString("scarab.email.default.fromName");
+        if (name == null || name.length() == 0) 
+        {
+            name = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "DefaultEmailNameForModule", 
+                getRealName().toUpperCase());
+        }
+        
+        String email = Turbine.getConfiguration()
+            .getString("scarab.email.default.fromAddress"); 
+
+        if (email == null || email.length() == 0) 
+        {
+            email = getArchiveEmail();
+        }
+        if (email == null || email.length() == 0) 
+        {
+            email = "help@localhost";
+        }        
+        String[] result = {name, email};
+        return result;
+    }
+
     
     /**
      * Used for ordering Groups.
@@ -2244,3 +2292,4 @@ try{
         return ModuleManager.getMethodResult();
     }
 }
+

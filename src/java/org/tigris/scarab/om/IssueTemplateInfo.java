@@ -121,8 +121,9 @@ public  class IssueTemplateInfo
                     toUsers = new ScarabUser[1];
                     toUsers[0] = user;
                 }
-                Email.sendEmail(context, module, null, null, Arrays.asList(toUsers), 
-                                null, subject, template);
+                Email.sendEmail(context, module, module.getSystemEmail(), 
+                    module.getSystemEmail(), Arrays.asList(toUsers), 
+                    null, subject, template);
             }
         }
         save();

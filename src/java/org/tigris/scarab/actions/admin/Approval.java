@@ -91,7 +91,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.25 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.26 2002/10/09 22:28:09 jmcnally Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -227,8 +227,8 @@ public class Approval extends RequireLoginFirstAction
                     getString("scarab.email.approval.template",
                               "email/Approval.vm");
                 if (!Email.sendEmail(new ContextAdapter(context), 
-                                     module, user, null, toUser, subject,
-                                     template))
+                                     module, user, module.getSystemEmail(), 
+                                     toUser, subject, template))
                 {
                     scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                 }
