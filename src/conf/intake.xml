@@ -330,9 +330,9 @@
         </field>
         <field name="SortAttributeId" key="sai" type="NumberKey"/>
         <field name="SortPolarity" key="sp" type="String"/>
-        <!--Commenting out until we want to do pagination in the IssueSearch class
-             <field name="ResultsPerPage" key="rpp" type="int"/> 
-        -->
+        <field name="NullUser" key="nu" type="boolean"  mapToProperty=""/>
+        <field name="NullUserAttr" key="nua" type="String"  mapToProperty=""/>
+        <field name="ResultsPerPage" key="rpp" type="int"/> 
 </group>
 
 <group name="Module" key="mod" mapToObject="om.ScarabModule">
