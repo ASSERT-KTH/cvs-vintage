@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.30 $
+ *   @version $Revision: 1.31 $
  */
 public abstract class Container
 {
@@ -324,9 +324,6 @@ public abstract class Container
    * setupEnvironment
    *
    * This method sets up the naming environment of the bean.
-   * it sets the root it creates for the naming in the "BeanClassLoader"
-   * that loader shares the root for all instances of the bean and
-   * is part of the "static" metaData of the bean.
    * We create the java: namespace with properties, EJB-References, and
    * DataSource ressources.
    *

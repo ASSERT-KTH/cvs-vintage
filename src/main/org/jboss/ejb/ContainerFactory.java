@@ -76,65 +76,65 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.52 $
+*   @version $Revision: 1.53 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
     implements ContainerFactoryMBean
 {
-    // Constants -----------------------------------------------------
-    public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
-    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
-    public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
-    public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
+   // Constants -----------------------------------------------------
+   public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
+   public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
+   public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
+   public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
 
-    // Attributes ----------------------------------------------------
+   // Attributes ----------------------------------------------------
    // Temp directory where deployed jars are stored
-    File tmpDir;
+   File tmpDir;
 
-    // The logger of this service
-    Log log = new Log(getName());
+   // The logger of this service
+   Log log = new Log(getName());
 
-    // A map of current deployments. If a deployment is made and it is already in this map,
-    // then undeploy it first (i.e. make it a re-deploy).
-    HashMap deployments = new HashMap();
+   // A map of current deployments. If a deployment is made and it is already in this map,
+   // then undeploy it first (i.e. make it a re-deploy).
+   HashMap deployments = new HashMap();
 
-    // Verify EJB-jar contents on deployments
-    boolean verifyDeployments = false;
-    boolean verifierVerbose   = false;
+   // Verify EJB-jar contents on deployments
+   boolean verifyDeployments = false;
+   boolean verifierVerbose   = false;
 
-    // Public --------------------------------------------------------
+   // Public --------------------------------------------------------
 
-    /**
-     * Implements the abstract <code>getObjectName()</code> method in superclass
-     * to return this service's name.
-     *
-     * @param   server
-     * @param   name
-     *
-     * @exception MalformedObjectNameException
-     * @return
-     */
-    public ObjectName getObjectName(MBeanServer server, ObjectName name)
-       throws javax.management.MalformedObjectNameException
-    {
-       return new ObjectName(OBJECT_NAME);
-    }
+   /**
+   * Implements the abstract <code>getObjectName()</code> method in superclass
+   * to return this service's name.
+   *
+   * @param   server
+   * @param   name
+   *
+   * @exception MalformedObjectNameException
+   * @return
+   */
+   public ObjectName getObjectName(MBeanServer server, ObjectName name)
+   throws javax.management.MalformedObjectNameException
+   {
+      return new ObjectName(OBJECT_NAME);
+   }
 
-    /**
-     * Implements the abstract <code>getName()</code> method in superclass to
-     * return the name of this object.
-     *
-     * @return <tt>'Container factory'</code>
-     */
-    public String getName()
-    {
-       return "Container factory";
-    }
+   /**
+   * Implements the abstract <code>getName()</code> method in superclass to
+   * return the name of this object.
+   *
+   * @return <tt>'Container factory'</code>
+   */
+   public String getName()
+   {
+      return "Container factory";
+   }
 
-    /**
-     * Implements the template method in superclass. This method inits the factory
-     */
+   /**
+   * Implements the template method in superclass. This method inits the factory
+   */
    public void initService()
    {
       URL tmpFile = getClass().getResource("/tmp.properties");
@@ -157,137 +157,138 @@ public class ContainerFactory
          {
             log.debug("Previous deployments removed");
          }
-      } else
+      }
+      else
       {
          log.debug("Using the systems temporary directory");
       }
    }
 
-    /**
-     * Implements the template method in superclass. This method stops all the
-     * applications in this server.
-     */
-    public void stopService()
-    {
-       Iterator apps = deployments.values().iterator();
-       while (apps.hasNext())
-       {
+   /**
+   * Implements the template method in superclass. This method stops all the
+   * applications in this server.
+   */
+   public void stopService()
+   {
+      Iterator apps = deployments.values().iterator();
+      while (apps.hasNext())
+      {
          Application app = (Application)apps.next();
          app.stop();
-       }
-    }
+      }
+   }
 
-    /**
-     * Implements the template method in superclass. This method destroys all
-     * the applications in this server and clears the deployments list.
-     */
-    public void destroyService()
-    {
-       Iterator apps = deployments.values().iterator();
-       while (apps.hasNext())
-       {
+   /**
+   * Implements the template method in superclass. This method destroys all
+   * the applications in this server and clears the deployments list.
+   */
+   public void destroyService()
+   {
+      Iterator apps = deployments.values().iterator();
+      while (apps.hasNext())
+      {
          Application app = (Application)apps.next();
          app.destroy();
-       }
+      }
 
-       deployments.clear();
-    }
+      deployments.clear();
+   }
 
-    /**
-     * Enables/disables the application bean verification upon deployment.
-     *
-     * @param   verify  true to enable; false to disable
-     */
-    public void setVerifyDeployments(boolean verify)
-    {
-       verifyDeployments = verify;
-    }
+   /**
+   * Enables/disables the application bean verification upon deployment.
+   *
+   * @param   verify  true to enable; false to disable
+   */
+   public void setVerifyDeployments(boolean verify)
+   {
+      verifyDeployments = verify;
+   }
 
-    /**
-     * Returns the state of bean verifier (on/off)
-     *
-     * @return   true if enabled; false otherwise
-     */
-    public boolean getVerifyDeployments()
-    {
-       return verifyDeployments;
-    }
+   /**
+   * Returns the state of bean verifier (on/off)
+   *
+   * @return   true if enabled; false otherwise
+   */
+   public boolean getVerifyDeployments()
+   {
+      return verifyDeployments;
+   }
 
-    /**
-     * Enables/disables the verbose mode on the verifier.
-     *
-     * @param   verbose  true to enable; false to disable
-     */
-    public void setVerifierVerbose(boolean verbose)
-    {
-        verifierVerbose = verbose;
-    }
+   /**
+   * Enables/disables the verbose mode on the verifier.
+   *
+   * @param   verbose  true to enable; false to disable
+   */
+   public void setVerifierVerbose(boolean verbose)
+   {
+      verifierVerbose = verbose;
+   }
 
-    /**
-     * Returns the state of the bean verifier (verbose/non-verbose mode)
-     *
-     * @return true if enabled; false otherwise
-     */
-    public boolean getVerifierVerbose()
-    {
-        return verifierVerbose;
-    }
+   /**
+   * Returns the state of the bean verifier (verbose/non-verbose mode)
+   *
+   * @return true if enabled; false otherwise
+   */
+   public boolean getVerifierVerbose()
+   {
+      return verifierVerbose;
+   }
 
-    /**
-    *   Deploy the file at this URL. This method is typically called from remote administration
-    *   tools that cannot handle java.net.URL's as parameters to methods
-    *
-    * @param   url
-    * @exception   MalformedURLException
-    * @exception   DeploymentException
-    */
-    public void deploy(String url)
-       throws MalformedURLException, DeploymentException
-    {
-       // Delegate to "real" deployment
-       deploy(new URL(url));
-    }
+   /**
+   *   Deploy the file at this URL. This method is typically called from remote administration
+   *   tools that cannot handle java.net.URL's as parameters to methods
+   *
+   * @param   url
+   * @exception   MalformedURLException
+   * @exception   DeploymentException
+   */
+   public void deploy(String url)
+   throws MalformedURLException, DeploymentException
+   {
+      // Delegate to "real" deployment
+      deploy(new URL(url));
+   }
 
 
-    /**
-    *   Undeploy the file at this URL. This method is typically called from remote administration
-    *   tools that cannot handle java.net.URL's as parameters to methods
-    *
-    * @param   url
-    * @exception   MalformedURLException
-    * @exception   DeploymentException
-    */
-    public void undeploy(String url)
-       throws MalformedURLException, DeploymentException
-    {
-       // Delegate to "real" undeployment
-       undeploy(new URL(url));
-    }
+   /**
+   *   Undeploy the file at this URL. This method is typically called from remote administration
+   *   tools that cannot handle java.net.URL's as parameters to methods
+   *
+   * @param   url
+   * @exception   MalformedURLException
+   * @exception   DeploymentException
+   */
+   public void undeploy(String url)
+   throws MalformedURLException, DeploymentException
+   {
+      // Delegate to "real" undeployment
+      undeploy(new URL(url));
+   }
 
-    /**
-    *   Deploy EJBs pointed to by an URL.
-    *   The URL may point to an EJB-JAR, an EAR-JAR, or an codebase
-    *   whose structure resembles that of an EJB-JAR. <p>
-    *
-    *   The latter is useful for development since no packaging is required.
-    *
-    * @param       url  URL where EJB deployment information is contained
-    *
-    * @exception   DeploymentException
-    */
-    public synchronized void deploy(URL url)
-       throws DeploymentException
-    {
-       // Create application
-       Application app = new Application();
+   /**
+   *   Deploy EJBs pointed to by an URL.
+   *   The URL may point to an EJB-JAR, an EAR-JAR, or an codebase
+   *   whose structure resembles that of an EJB-JAR. <p>
+   *
+   *   The latter is useful for development since no packaging is required.
+   *
+   * @param       url  URL where EJB deployment information is contained
+   *
+   * @exception   DeploymentException
+   */
+   public synchronized void deploy(URL url)
+   throws DeploymentException
+   {
+      // Create application
+      Application app = new Application();
 
-       try
-       {
+      try
+      {
          Log.setLog(log);
 
          // Check if already deployed -> undeploy first, this is re-deploy
          if (deployments.containsKey(url))
-          undeploy(url);
+            undeploy(url);
 
 
          app.setURL(url);
@@ -304,12 +305,13 @@ public class ContainerFactory
          if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/"))
          {
 
-          File jarFile = new File(url.getFile());
+            File jarFile = new File(url.getFile());
             File tmp;
             if (tmpDir == null)
             {
                tmp = File.createTempFile("tmpejbjar",".jar");
-            } else
+            }
+            else
             {
                tmp = File.createTempFile("tmpejbjar",".jar", tmpDir);
             }
@@ -340,7 +342,7 @@ public class ContainerFactory
                      try
                      {
 
-                     URL u;
+                        URL u;
                         File dir;
 
                         // Extension to "Class-Path:" format: dir/*
@@ -358,7 +360,8 @@ public class ContainerFactory
                                  log.debug("Added " + dir + File.separator + files[i]);
                               }
                            }
-                        } else
+                        }
+                        else
                         {
                            urlList.add(new URL(url, classPathEntry));
                            log.debug("Added "+ classPathEntry);
@@ -377,7 +380,8 @@ public class ContainerFactory
 
             urls = new URL[urlList.size()];
             urls = (URL[])urlList.toArray(urls);
-         } else
+         }
+         else
          {
             urls = new URL[] { url };
          }
@@ -390,7 +394,7 @@ public class ContainerFactory
          XmlFileLoader efm = new XmlFileLoader();
 
          // the file manager gets its file from the classloader
-           efm.setClassLoader(cl);
+         efm.setClassLoader(cl);
 
          // Load XML
          ApplicationMetaData metaData = efm.load();
@@ -398,44 +402,45 @@ public class ContainerFactory
 
 
          // Check validity
-            Log.setLog(new Log("Verifier"));
+         Log.setLog(new Log("Verifier"));
 
-            // wrapping this into a try - catch block to prevent errors in
-            // verifier from stopping the deployment
-            try {
+         // wrapping this into a try - catch block to prevent errors in
+         // verifier from stopping the deployment
+         try {
 
-                if (verifyDeployments)
-                {
-                    BeanVerifier verifier = new BeanVerifier();
+            if (verifyDeployments)
+            {
+               BeanVerifier verifier = new BeanVerifier();
 
-                    verifier.addVerificationListener(new VerificationListener()
-                    {
-                       public void beanChecked(VerificationEvent event)
-                       {
-                           Logger.debug(event.getMessage());
-                       }
+               verifier.addVerificationListener(new VerificationListener()
+                  {
+                  public void beanChecked(VerificationEvent event)
+                  {
+                     Logger.debug(event.getMessage());
+                  }
 
-                       public void specViolation(VerificationEvent event)
-                       {
-                           if (verifierVerbose)
-                               Logger.log(event.getVerbose());
-                           else
-                               Logger.log(event.getMessage());
-                       }
-                    });
+                  public void specViolation(VerificationEvent event)
+                  {
+                     if (verifierVerbose)
+                        Logger.log(event.getVerbose());
+                     else
+                        Logger.log(event.getMessage());
+                  }
+               });
 
 
-                    Logger.log("Verifying " + url);
+               Logger.log("Verifying " + url);
 
-                    verifier.verify(url, metaData, cl);
-                }
+               verifier.verify(url, metaData, cl);
             }
-            catch (Throwable t) {
-                Logger.exception(t);
-            }
+         }
+         catch (Throwable t)
+         {
+            Logger.exception(t);
+         }
 
-            // unset verifier log
-            Log.unsetLog();
+         // unset verifier log
+         Log.unsetLog();
 
          // Get list of beans for which we will create containers
          Iterator beans = metaData.getEnterpriseBeans();
@@ -444,313 +449,326 @@ public class ContainerFactory
          Context ctx = new InitialContext();
          while(beans.hasNext())
          {
-          BeanMetaData bean = (BeanMetaData)beans.next();
+            BeanMetaData bean = (BeanMetaData)beans.next();
 
-          log.log("Deploying "+bean.getEjbName());
+            log.log("Deploying "+bean.getEjbName());
 
-          if (bean.isSession()) // Is session?
-          {
-              if (((SessionMetaData)bean).isStateless()) // Is stateless?
-              {
-                 // Create container
-                 StatelessSessionContainer container = new StatelessSessionContainer();
+            if (bean.isSession()) // Is session?
+            {
+               if (((SessionMetaData)bean).isStateless()) // Is stateless?
+               {
+                  // Create container
+                  StatelessSessionContainer container = new StatelessSessionContainer();
 
-                 // Create classloader for this container
-                 container.setClassLoader(new BeanClassLoader(cl));
+                  // Create classloader for this container
+                  // Only used to identify bean. Not really used for class loading!
+                  container.setClassLoader(new URLClassLoader(new URL[0], cl));
 
-                 // Set metadata
-                 container.setBeanMetaData(bean);
+                  // Set metadata
+                  container.setBeanMetaData(bean);
 
-                 // get the container configuration for this bean
-                 // a default configuration is now always provided
-                 ConfigurationMetaData conf = bean.getContainerConfiguration();
+                  // get the container configuration for this bean
+                  // a default configuration is now always provided
+                  ConfigurationMetaData conf = bean.getContainerConfiguration();
 
-                 // Set transaction manager
-                 container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+                  // Set transaction manager
+                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-                 // Set security manager & role mapping manager
-                 String securityManagerJNDIName = conf.getAuthenticationModule();
-                 String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+                  // Set security manager & role mapping manager
+                  String securityManagerJNDIName = conf.getAuthenticationModule();
+                  String roleMappingManagerJNDIName = conf.getRoleMappingManager();
 
-                 if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
-                 {
-                   try
-                   {
-                     EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
-                     container.setSecurityManager( ejbS );
-                   }
-                   catch (NamingException ne)
-                   {
-                    throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
-                   }
+                  if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+                  {
+                     try
+                     {
+                        EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                        container.setSecurityManager( ejbS );
+                     }
+                     catch (NamingException ne)
+                     {
+                        throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                     }
 
-                   try
-                   {
-                     RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
-                     container.setRealmMapping( rM );
-                   }
-                   catch (NamingException ne)
-                   {
-                    throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
-                   }
-                 }
+                     try
+                     {
+                        RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                        container.setRealmMapping( rM );
+                     }
+                     catch (NamingException ne)
+                     {
+                        throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                     }
+                  }
 
-                 // Set container invoker
-                 ContainerInvoker ci = null;
+                  // Set container invoker
+                  ContainerInvoker ci = null;
                  try {
                     ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-                 } catch(Exception e) {
+                     } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
-                 }
+                     }
                  if (ci instanceof XmlLoadable) {
                    // the container invoker can load its configuration from the jboss.xml element
                    ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-                 }
+                     }
                  container.setContainerInvoker(ci);
 
-                 // Set instance pool
-                 InstancePool ip = null;
+                  // Set instance pool
+                  InstancePool ip = null;
                  try {
                     ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-                 } catch(Exception e) {
+                     } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
-                 }
+                     }
                   if (ip instanceof XmlLoadable) {
                    ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
-                 }
+                     }
                  container.setInstancePool(ip);
 
-                 // Create interceptors
+                  // Create interceptors
 
-                 container.addInterceptor(new LogInterceptor());
-                 container.addInterceptor(new SecurityInterceptor());
+                  container.addInterceptor(new LogInterceptor());
+                  container.addInterceptor(new SecurityInterceptor());
 
-           if (((SessionMetaData)bean).isContainerManagedTx()) {
-              // CMT
-              container.addInterceptor(new TxInterceptorCMT());
-                    container.addInterceptor(new StatelessSessionInstanceInterceptor());
+                  if (((SessionMetaData)bean).isContainerManagedTx())
+                  {
+                     // CMT
+                     container.addInterceptor(new TxInterceptorCMT());
+                     container.addInterceptor(new StatelessSessionInstanceInterceptor());
 
-           } else {
-              // BMT
-              container.addInterceptor(new StatelessSessionInstanceInterceptor());
-              container.addInterceptor(new TxInterceptorBMT());
-           }
+                  }
+                  else
+                  {
+                     // BMT
+                     container.addInterceptor(new StatelessSessionInstanceInterceptor());
+                     container.addInterceptor(new TxInterceptorBMT());
+                  }
 
-                 // Finally we add the last interceptor from the container
-                 container.addInterceptor(container.createContainerInterceptor());
+                  // Finally we add the last interceptor from the container
+                  container.addInterceptor(container.createContainerInterceptor());
 
-                 // Add container to application
-                 app.addContainer(container);
-              } else // Stateful
-              {
-                 // Create container
-                 StatefulSessionContainer container = new StatefulSessionContainer();
+                  // Add container to application
+                  app.addContainer(container);
+               }
+               else // Stateful
+               {
+                  // Create container
+                  StatefulSessionContainer container = new StatefulSessionContainer();
 
-                 // Create classloader for this container
-                 container.setClassLoader(new BeanClassLoader(cl));
+                  // Create classloader for this container
+                  // Only used to identify bean. Not really used for class loading!
+                  container.setClassLoader(new URLClassLoader(new URL[0], cl));
 
-                 // Set metadata
-                 container.setBeanMetaData(bean);
+                  // Set metadata
+                  container.setBeanMetaData(bean);
 
-                 // Set transaction manager
-                 container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+                  // Set transaction manager
+                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-                 // Get container configuration
-                 ConfigurationMetaData conf = bean.getContainerConfiguration();
+                  // Get container configuration
+                  ConfigurationMetaData conf = bean.getContainerConfiguration();
 
-                 // Set security manager & role mapping manager
-                 String securityManagerJNDIName = conf.getAuthenticationModule();
-                 String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+                  // Set security manager & role mapping manager
+                  String securityManagerJNDIName = conf.getAuthenticationModule();
+                  String roleMappingManagerJNDIName = conf.getRoleMappingManager();
 
-                 if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
-                 {
-                   try
-                   {
-                     EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
-                     container.setSecurityManager( ejbS );
-                   }
-                   catch (NamingException ne)
-                   {
-                    throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
-                   }
+                  if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+                  {
+                     try
+                     {
+                        EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                        container.setSecurityManager( ejbS );
+                     }
+                     catch (NamingException ne)
+                     {
+                        throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                     }
 
-                   try
-                   {
-                     RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
-                     container.setRealmMapping( rM );
-                   }
-                   catch (NamingException ne)
-                   {
-                    throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
-                   }
-                 }
+                     try
+                     {
+                        RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                        container.setRealmMapping( rM );
+                     }
+                     catch (NamingException ne)
+                     {
+                        throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                     }
+                  }
 
-                 // Set container invoker
-                 ContainerInvoker ci = null;
+                  // Set container invoker
+                  ContainerInvoker ci = null;
                  try {
                     ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-                 } catch(Exception e) {
+                     } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
-                 }
+                     }
                  if (ci instanceof XmlLoadable) {
                    // the container invoker can load its configuration from the jboss.xml element
                    ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-                 }
+                     }
                  container.setContainerInvoker(ci);
 
-                 // Set instance cache
-                 InstanceCache ic = null;
+                  // Set instance cache
+                  InstanceCache ic = null;
                  try {
                     ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance();
-                 } catch(Exception e) {
+                     } catch(Exception e) {
                     throw new DeploymentException("Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)");
-                 }
+                     }
                  if (ic instanceof XmlLoadable) {
                    ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
-                 }
+                     }
                  container.setInstanceCache(ic);
 
-                 // No real instance pool, use the shadow class
-                 container.setInstancePool(new StatefulSessionInstancePool());
+                  // No real instance pool, use the shadow class
+                  container.setInstancePool(new StatefulSessionInstancePool());
 
-                 // Set persistence manager
-                 container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+                  // Set persistence manager
+                  container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 
-                 // Create interceptors
-                 container.addInterceptor(new LogInterceptor());
+                  // Create interceptors
+                  container.addInterceptor(new LogInterceptor());
 
-           if (((SessionMetaData)bean).isContainerManagedTx()) {
-              // CMT
-              container.addInterceptor(new TxInterceptorCMT());
-                    container.addInterceptor(new StatefulSessionInstanceInterceptor());
+                  if (((SessionMetaData)bean).isContainerManagedTx())
+                  {
+                     // CMT
+                     container.addInterceptor(new TxInterceptorCMT());
+                     container.addInterceptor(new StatefulSessionInstanceInterceptor());
 
-           } else {
-              // BMT : the tx interceptor needs the context from the instance interceptor
-              container.addInterceptor(new StatefulSessionInstanceInterceptor());
-              container.addInterceptor(new TxInterceptorBMT());
-           }
+                  }
+                  else
+                  {
+                     // BMT : the tx interceptor needs the context from the instance interceptor
+                     container.addInterceptor(new StatefulSessionInstanceInterceptor());
+                     container.addInterceptor(new TxInterceptorBMT());
+                  }
 
-                 container.addInterceptor(new SecurityInterceptor());
+                  container.addInterceptor(new SecurityInterceptor());
 
-                 container.addInterceptor(container.createContainerInterceptor());
+                  container.addInterceptor(container.createContainerInterceptor());
 
-                 // Add container to application
-                 app.addContainer(container);
-              }
-          } else // Entity
-          {
-              // Create container
-              EntityContainer container = new EntityContainer();
+                  // Add container to application
+                  app.addContainer(container);
+               }
+            }
+            else // Entity
+            {
+               // Create container
+               EntityContainer container = new EntityContainer();
 
-              // Create classloader for this container
-              container.setClassLoader(new BeanClassLoader(cl));
+               // Create classloader for this container
+               // Only used to identify bean. Not really used for class loading!
+               container.setClassLoader(new URLClassLoader(new URL[0], cl));
 
-              // Set metadata
-              container.setBeanMetaData(bean);
+               // Set metadata
+               container.setBeanMetaData(bean);
 
-              // Set transaction manager
-              container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+               // Set transaction manager
+               container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-              // Get container configuration
-              ConfigurationMetaData conf = bean.getContainerConfiguration();
+               // Get container configuration
+               ConfigurationMetaData conf = bean.getContainerConfiguration();
 
-              // Set security manager & role mapping manager
-              String securityManagerJNDIName = conf.getAuthenticationModule();
-              String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+               // Set security manager & role mapping manager
+               String securityManagerJNDIName = conf.getAuthenticationModule();
+               String roleMappingManagerJNDIName = conf.getRoleMappingManager();
 
-              if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
-              {
-                try
-                {
-                  EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
-                  container.setSecurityManager( ejbS );
-                }
-                catch (NamingException ne)
-                {
-                 throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
-                }
+               if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+               {
+                  try
+                  {
+                     EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                     container.setSecurityManager( ejbS );
+                  }
+                  catch (NamingException ne)
+                  {
+                     throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                  }
 
-                try
-                {
-                  RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
-                  container.setRealmMapping( rM );
-                }
-                catch (NamingException ne)
-                {
-                 throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
-                }
-              }
+                  try
+                  {
+                     RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                     container.setRealmMapping( rM );
+                  }
+                  catch (NamingException ne)
+                  {
+                     throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                  }
+               }
 
-              // Set container invoker
-              ContainerInvoker ci = null;
+               // Set container invoker
+               ContainerInvoker ci = null;
               try {
                  ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-              } catch(Exception e) {
+                  } catch(Exception e) {
                  throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
-              }
+                  }
               if (ci instanceof XmlLoadable) {
                 // the container invoker can load its configuration from the jboss.xml element
                 ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-              }
+                  }
               container.setContainerInvoker(ci);
 
-              // Set instance cache
-              InstanceCache ic = null;
+               // Set instance cache
+               InstanceCache ic = null;
               try {
                  ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance();
-              } catch(Exception e) {
+                  } catch(Exception e) {
                  throw new DeploymentException("Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)");
-              }
+                  }
               if (ic instanceof XmlLoadable) {
                 ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
-              }
+                  }
               container.setInstanceCache(ic);
 
-              // Set instance pool
-              InstancePool ip = null;
+               // Set instance pool
+               InstancePool ip = null;
               try {
                  ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-              } catch(Exception e) {
+                  } catch(Exception e) {
                  throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
-              }
+                  }
                if (ip instanceof XmlLoadable) {
                 ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
-              }
+                  }
               container.setInstancePool(ip);
 
-              // Set persistence manager
-              if (((EntityMetaData) bean).isBMP()) {
+               // Set persistence manager
+               if (((EntityMetaData) bean).isBMP())
+               {
 
-                 //Should be BMPPersistenceManager
-                 container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-              }
-              else {
+                  //Should be BMPPersistenceManager
+                  container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+               }
+               else
+               {
 
-                 // CMP takes a manager and a store
-                 org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager = new org.jboss.ejb.plugins.CMPPersistenceManager();
+                  // CMP takes a manager and a store
+                  org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager = new org.jboss.ejb.plugins.CMPPersistenceManager();
 
-                 //Load the store from configuration
-                 persistenceManager.setPersistenceStore((EntityPersistenceStore)cl.loadClass(conf.getPersistenceManager()).newInstance());
+                  //Load the store from configuration
+                  persistenceManager.setPersistenceStore((EntityPersistenceStore)cl.loadClass(conf.getPersistenceManager()).newInstance());
 
-                 // Set the manager on the container
-                 container.setPersistenceManager(persistenceManager);
-              }
+                  // Set the manager on the container
+                  container.setPersistenceManager(persistenceManager);
+               }
 
-              // Create interceptors
-              container.addInterceptor(new LogInterceptor());
-              container.addInterceptor(new SecurityInterceptor());
+               // Create interceptors
+               container.addInterceptor(new LogInterceptor());
+               container.addInterceptor(new SecurityInterceptor());
 
-           // entity beans are always CMT
-           container.addInterceptor(new TxInterceptorCMT());
+               // entity beans are always CMT
+               container.addInterceptor(new TxInterceptorCMT());
 
-           container.addInterceptor(new EntityInstanceInterceptor());
-              container.addInterceptor(new EntitySynchronizationInterceptor());
+               container.addInterceptor(new EntityInstanceInterceptor());
+               container.addInterceptor(new EntitySynchronizationInterceptor());
 
-              container.addInterceptor(container.createContainerInterceptor());
+               container.addInterceptor(container.createContainerInterceptor());
 
-              // Add container to application
-              app.addContainer(container);
-          }
+               // Add container to application
+               app.addContainer(container);
+            }
          }
 
          // Init application
@@ -768,15 +786,16 @@ public class ContainerFactory
 
          // Register deployment. Use the original name in the hashtable
          deployments.put(origUrl, app);
-       }
-        catch (Exception e)
-       {
-            if (e instanceof NullPointerException) {
-                // Avoids useless 'null' messages on a server trace.
-                // Let's be honest and spam them with a stack trace.
-                // NPE should be considered an internal server error anyways.
-                Logger.exception(e);
-            }
+      }
+      catch (Exception e)
+      {
+         if (e instanceof NullPointerException)
+         {
+            // Avoids useless 'null' messages on a server trace.
+            // Let's be honest and spam them with a stack trace.
+            // NPE should be considered an internal server error anyways.
+            Logger.exception(e);
+         }
 
          Logger.exception(e);
          //Logger.debug(e.getMessage());
@@ -785,69 +804,67 @@ public class ContainerFactory
          app.destroy();
 
          throw new DeploymentException("Could not deploy "+url.toString(), e);
-       } finally
-       {
+      } finally
+      {
          Log.unsetLog();
-       }
-    }
+      }
+   }
 
 
-    /**
-    *   Remove previously deployed EJBs.
-    *
-    * @param   url
-    * @exception   DeploymentException
-    */
-    public void undeploy(URL url)
-    throws DeploymentException
-    {
-       // Get application from table
-       Application app = (Application)deployments.get(url);
+   /**
+   *   Remove previously deployed EJBs.
+   *
+   * @param   url
+   * @exception   DeploymentException
+   */
+   public void undeploy(URL url)
+   throws DeploymentException
+   {
+      // Get application from table
+      Application app = (Application)deployments.get(url);
 
-       // Check if deployed
-       if (app == null)
-       {
+      // Check if deployed
+      if (app == null)
+      {
          throw new DeploymentException("URL not deployed");
-       }
+      }
 
-       // Undeploy application
-       Log.setLog(log);
-       log.log("Undeploying:"+url);
-       app.stop();
-       app.destroy();
+      // Undeploy application
+      Log.setLog(log);
+      log.log("Undeploying:"+url);
+      app.stop();
+      app.destroy();
 
-       // Remove deployment
-       deployments.remove(url);
+      // Remove deployment
+      deployments.remove(url);
 
-       // Done
-       log.log("Undeployed application: "+app.getName());
+      // Done
+      log.log("Undeployed application: "+app.getName());
 
-       Log.unsetLog();
-    }
+      Log.unsetLog();
+   }
 
-    /**
-    *   is the aplication with this url deployed
-    *
-    * @param   url
-    * @exception   MalformedURLException
-    */
-     public boolean isDeployed(String url)
-        throws MalformedURLException
-     {
-          return isDeployed (new URL (url));
-     }
+   /**
+   *   is the aplication with this url deployed
+   *
+   * @param   url
+   * @exception   MalformedURLException
+   */
+   public boolean isDeployed(String url)
+   throws MalformedURLException
+   {
+      return isDeployed (new URL (url));
+   }
 
-    /**
-    *   check if the application with this url is deployed
-    *
-    * @param   url
-    * @return true if deployed
-    */
-    public boolean isDeployed (URL url)
-    {
-         return (deployments.get(url) != null);
-    }
-
-
-    // Protected -----------------------------------------------------
+   /**
+   *   check if the application with this url is deployed
+   *
+   * @param   url
+   * @return true if deployed
+   */
+   public boolean isDeployed (URL url)
+   {
+      return (deployments.get(url) != null);
+   }
 }
+
