@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.6 2003/10/26 18:36:14 alexb Exp $
+// $Id: ExplorerTreeModel.java,v 1.7 2003/10/26 18:45:27 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,9 +95,9 @@ ItemListener{
             ExplorerTreeNode changeNode = (ExplorerTreeNode)nodesArray[x];
             this.nodeChanged(changeNode);
             
-            ExplorerTreeNode parentNode = (ExplorerTreeNode)changeNode.getParent();
-            parentNode.orderChildren();
-            this.nodeStructureChanged(parentNode);
+//            ExplorerTreeNode parentNode = (ExplorerTreeNode)changeNode.getParent();
+//            parentNode.orderChildren();
+//            this.nodeStructureChanged(parentNode);
         }
     }
     
