@@ -25,15 +25,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  *
- * <p><b>Revisions:</b></p>
- * <p><b>20011031: Andy</b>
- * <ul>
- * <li>Ensured that the <message-selector> value in the descriptor does not
- *     be compromised by leading and trailing spaces as well as line-breaks</li>
- * </ul>
- * </p>
- *
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class MessageDrivenMetaData
 extends BeanMetaData
@@ -48,11 +40,14 @@ extends BeanMetaData
    public static final byte TX_UNSET = 9;
    public static final String DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING = "message-driven-bean";
 
+   public static final String DEFAULT_MESSAGING_TYPE = "javax.jms.MessageListener";
+
    // Attributes ----------------------------------------------------
    
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
    private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
    private byte methodTransactionType = TX_UNSET;
+   private String messagingType;
    private String destinationType;
    private String messageSelector;
    private String destinationJndiName;
@@ -109,7 +104,17 @@ extends BeanMetaData
          return acknowledgeMode;
       }
    }
-   
+
+   public String getMessagingType()
+   {
+      return messagingType;
+   }
+
+   public boolean isJMSMessagingType()
+   {
+      return DEFAULT_MESSAGING_TYPE.equals(messagingType);
+   }
+
    public String getDestinationType()
    {
       return destinationType;
@@ -246,7 +251,10 @@ extends BeanMetaData
             messageSelector = null;
          }
       }
-      
+
+      // messaging-type is new to EJB-2.1
+      messagingType = getOptionalChildContent(element, "messaging-type", DEFAULT_MESSAGING_TYPE);
+
       // destination is optional
       Element destination = getOptionalChild(element, "message-driven-destination");
       if (destination != null)

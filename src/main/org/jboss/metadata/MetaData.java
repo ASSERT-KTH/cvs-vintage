@@ -21,7 +21,7 @@ import org.jboss.util.StringPropertyReplacer;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -266,6 +266,19 @@ public abstract class MetaData
       throws DeploymentException
    {
       return getElementContent(getOptionalChild(element, tagName));
+   }
+
+   /**
+    * Macro to get the content of an optional child element with default value.
+    *
+    * @param element    The parent element.
+    * @param tagName    The name of the desired child.
+    * @return           The element content or null.
+    */
+   public static String getOptionalChildContent(Element element, String tagName, String defaultValue)
+           throws DeploymentException
+   {
+      return getElementContent(getOptionalChild(element, tagName), defaultValue);
    }
 
    public static boolean getOptionalChildBooleanContent(Element element, String name) throws DeploymentException
