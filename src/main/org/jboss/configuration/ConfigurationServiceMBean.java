@@ -12,7 +12,7 @@ package org.jboss.configuration;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public interface ConfigurationServiceMBean
 {
@@ -20,6 +20,14 @@ public interface ConfigurationServiceMBean
    public static final String OBJECT_NAME = ":service=Configuration";
     
    // Public --------------------------------------------------------
+
+    /**
+     * Get the attribute value auto-trim flag.
+     *
+     * @return  True if attribute values are auto-trimmed.
+     */
+    boolean getAutoTrim();
+   
 	public void load(org.w3c.dom.Document conf)
 		throws Exception;
 		

@@ -45,14 +45,14 @@ import org.jboss.util.XmlHelper;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  Scott_Stark@displayscape.com
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
    implements ConfigurationServiceMBean
 {
-   // Constants -----------------------------------------------------
-    static Hashtable primitives = new Hashtable();
+    // Constants -----------------------------------------------------
+    private static Hashtable primitives = new Hashtable();
 
     static
     {
@@ -63,22 +63,52 @@ public class ConfigurationService
         primitives.put("long",Long.TYPE);
     }
 
-   // Attributes ----------------------------------------------------
-    Log log = Log.createLog(getName());
+    // Attributes ----------------------------------------------------
+    private final Log log = Log.createLog(getName());
 
-    MBeanServer server;
-    ObjectName serviceControl;
+    private MBeanServer server;
+    private ObjectName serviceControl;
 
-   // Static --------------------------------------------------------
+    /** Flag to indicate if attribute values should be automatically trimmed. */
+    private boolean autoTrim;
+   
+    // Static --------------------------------------------------------
 
-   // Constructors --------------------------------------------------
+    // Constructors --------------------------------------------------
 
-   // Public --------------------------------------------------------
+    /**
+     * Construct a <tt>ConfigurationService</tt>.
+     *
+     * @param autoTrim  True to enable auto-trimming of attribute values.
+     */
+    public ConfigurationService(final boolean autoTrim) {
+        this.autoTrim = autoTrim;
+    }
+
+    /**
+     * Construct a <tt>ConfigurationService</tt> that will not auto-trim
+     * attribute values.
+     */
+    public ConfigurationService() {
+        this(false);
+    }
+   
+    // Public --------------------------------------------------------
+
+    /**
+     * Get the attribute value auto-trim flag.
+     *
+     * @return  True if attribute values are auto-trimmed.
+     */
+    public boolean getAutoTrim() {
+        return autoTrim;
+    }
+
     public ObjectName getObjectName(MBeanServer server, ObjectName name)
-       throws javax.management.MalformedObjectNameException
+        throws javax.management.MalformedObjectNameException
     {
         this.server = server;
-       return new ObjectName(OBJECT_NAME);
+        return new ObjectName(OBJECT_NAME);
     }
 
     public String getName()
@@ -125,6 +155,10 @@ public class ConfigurationService
                     {
                         String attributeValue = ((Text)attributeElement.getFirstChild()).getData();
 
+                        if (autoTrim) {
+                            attributeValue = attributeValue.trim();
+                        }
+                        
                         MBeanAttributeInfo[] attributes = info.getAttributes();
                         for (int k = 0; k < attributes.length; k++)
                         {
