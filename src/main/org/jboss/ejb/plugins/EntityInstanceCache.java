@@ -21,7 +21,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class EntityInstanceCache
 	extends AbstractInstanceCache 
@@ -68,6 +68,8 @@ public class EntityInstanceCache
 		}
 		super.remove(id);
 	}
+
+	/*
 	public synchronized Sync getLock(Object id) 
 	{
 		if (!(id instanceof CacheKey)) 
@@ -84,7 +86,7 @@ public class EntityInstanceCache
 		}
 		super.removeLock(id);
 	}
-	
+	*/
 	protected Object getKey(EnterpriseContext ctx) 
 	{
 		return ((EntityEnterpriseContext)ctx).getCacheKey();
