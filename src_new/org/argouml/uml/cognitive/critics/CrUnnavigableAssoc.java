@@ -1,5 +1,5 @@
 
-// $Id: CrUnnavigableAssoc.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,19 +26,18 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.behavior.collaborations.*;
-import ru.novosoft.uml.model_management.*;
-
-import org.argouml.cognitive.*;
+import java.util.Collection;
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */
@@ -53,10 +52,10 @@ public class CrUnnavigableAssoc extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAAssociation(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAAssociation(dm))) return NO_PROBLEM;
 	MAssociation asc = (MAssociation) dm;
 	Collection conn = asc.getConnections();
-	if (org.argouml.model.ModelFacade.isAAssociationRole(asc))
+	if (ModelFacade.isAAssociationRole(asc))
 	    conn = ((MAssociationRole) asc).getConnections();
 	for (Iterator iter = conn.iterator(); iter.hasNext();) {
 	    MAssociationEnd ae = (MAssociationEnd) iter.next();

@@ -1,4 +1,4 @@
-// $Id: CrUselessInterface.java,v 1.7 2003/06/30 19:23:18 linus Exp $
+// $Id: CrUselessInterface.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,14 +28,13 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import java.awt.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Goal;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
 
 // Use Model through ModelFacade
-import org.argouml.model.ModelFacade;
 
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */

@@ -1,4 +1,4 @@
-// $Id: Profile.java,v 1.7 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: Profile.java,v 1.8 2003/08/30 22:04:19 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,10 @@
 
 
 package org.argouml.uml;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
-import java.util.*;
+import java.util.Iterator;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  *   This abstract class captures the configurable behavior of Argo.

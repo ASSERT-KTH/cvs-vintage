@@ -1,6 +1,6 @@
 
 
-// $Id: CrReturnWithoutCall.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrReturnWithoutCall.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,23 +29,23 @@
 // File: CrReturnWithoutCall.java
 // Classes: CrReturnWithoutCall
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrReturnWithoutCall.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrReturnWithoutCall.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-
-import org.argouml.cognitive.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.sequence.ui.FigSeqLink;
 import org.argouml.uml.diagram.sequence.ui.FigSeqObject;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
-
 import org.tigris.gef.util.VectorSet;
 
-
+import ru.novosoft.uml.behavior.common_behavior.MLink;
+import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 
 public class CrReturnWithoutCall extends CrUML {
 
@@ -97,7 +97,7 @@ public class CrReturnWithoutCall extends CrUML {
 		    while (it.hasNext()) {
 			MStimulus ms = (MStimulus) it.next();
 			if (ms.getDispatchAction() != null
-			    && org.argouml.model.ModelFacade.isAReturnAction(ms.getDispatchAction()))
+			    && ModelFacade.isAReturnAction(ms.getDispatchAction()))
 			{
 			    found = true;
 			    Vector edges =
@@ -113,8 +113,8 @@ public class CrReturnWithoutCall extends CrUML {
 				    while (it2.hasNext()) {
 					MStimulus ms2 = (MStimulus) it2.next();
 					if (ms2.getDispatchAction() != null
-					    && ((org.argouml.model.ModelFacade.isACallAction(ms2.getDispatchAction()))
-						|| (org.argouml.model.ModelFacade.isASendAction(ms2.getDispatchAction())))
+					    && ((ModelFacade.isACallAction(ms2.getDispatchAction()))
+						|| (ModelFacade.isASendAction(ms2.getDispatchAction())))
 					    && (second.getPortNumber(figs)
 						< fsl.getPortNumber(figs))
 					    && (ms.getSender()

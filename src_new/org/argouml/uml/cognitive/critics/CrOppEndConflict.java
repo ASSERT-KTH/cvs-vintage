@@ -1,4 +1,4 @@
-// $Id: CrOppEndConflict.java,v 1.6 2003/06/30 19:23:18 linus Exp $
+// $Id: CrOppEndConflict.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,10 +21,12 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.6 2003/06/30 19:23:18 linus Exp $
+// $Id: CrOppEndConflict.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
+
 package org.argouml.uml.cognitive.critics;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-// $Id: OperKeyword.java,v 1.4 2003/06/30 21:59:32 linus Exp $
+// $Id: OperKeyword.java,v 1.5 2003/08/30 22:04:19 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,12 @@
 
 package org.argouml.uml;
 
-import java.util.*;
-import java.beans.*;
+import java.io.Serializable;
+import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.data_types.MCallConcurrencyKind;
+import ru.novosoft.uml.foundation.data_types.MScopeKind;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-
-public class OperKeyword implements java.io.Serializable {
+public class OperKeyword implements Serializable {
     public static final OperKeyword NONE = new OperKeyword("none");
     public static final OperKeyword STATIC = new OperKeyword("static");
     public static final OperKeyword FINAL = new OperKeyword("final");

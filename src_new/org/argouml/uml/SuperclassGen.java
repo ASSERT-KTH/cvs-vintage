@@ -1,4 +1,4 @@
-// $Id: SuperclassGen.java,v 1.3 2003/06/30 19:23:18 linus Exp $
+// $Id: SuperclassGen.java,v 1.4 2003/08/30 22:04:19 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,15 @@
 
 package org.argouml.uml;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
+import org.tigris.gef.util.ChildGenerator;
+import ru.novosoft.uml.foundation.core.MGeneralizableElement;
+import ru.novosoft.uml.foundation.core.MGeneralization;
 
-import ru.novosoft.uml.foundation.core.*;
 
-import org.tigris.gef.util.*;
 
 /** Utility class to generate the children of a class.  In this case
  *  the "children" of a class are it's base classes. */

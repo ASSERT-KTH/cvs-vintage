@@ -1,5 +1,5 @@
 
-// $Id: WizOperName.java,v 1.8 2003/08/25 19:15:48 bobtarling Exp $
+// $Id: WizOperName.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,27 +28,27 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.8 2003/08/25 19:15:48 bobtarling Exp $
+// $Id: WizOperName.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-
-import org.argouml.uml.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+import javax.swing.JPanel;
 import org.apache.log4j.Category;
-import org.argouml.cognitive.ui.*;
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
-import org.tigris.gef.util.*;
-
-import org.argouml.kernel.*;
+import org.argouml.cognitive.ui.WizStepChoice;
+import org.argouml.cognitive.ui.WizStepCue;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
+
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
+import ru.novosoft.uml.model_management.MModel;
+import ru.novosoft.uml.model_management.MPackage;
 
 /** A wizard to help the user change the name of an operation to a better name.
  * Same as WizMEName expect that it handles the special case where 
@@ -195,7 +195,7 @@ public class WizOperName extends WizMEName {
                 for (Iterator iter = m.getOwnedElements().iterator();
                      iter.hasNext();) {
                     MModelElement candidate = (MModelElement) iter.next();
-		    if (!(org.argouml.model.ModelFacade.isAStereotype(candidate)))
+		    if (!(ModelFacade.isAStereotype(candidate)))
                         continue;
                     MStereotype ster = (MStereotype) candidate;
                     MNamespace ns = ster.getNamespace();
@@ -271,7 +271,7 @@ public class WizOperName extends WizMEName {
                     ownedElement = (MModelElement) iter.next();
                     targetName = ownedElement.getName();
                     if (targetName != null && phantomName.equals(targetName)) {
-                        if (org.argouml.model.ModelFacade.isAPackage(ownedElement)) {
+                        if (ModelFacade.isAPackage(ownedElement)) {
                             ns = (MPackage) ownedElement;
                             break;
                         }

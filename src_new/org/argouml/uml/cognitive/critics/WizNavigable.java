@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: WizNavigable.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,23 +27,23 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: WizNavigable.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-
+import java.util.Vector;
+import javax.swing.JPanel;
 import org.apache.log4j.Category;
-import org.argouml.cognitive.ui.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
 
-import org.tigris.gef.util.*;
+import org.argouml.cognitive.ui.WizStepChoice;
+import org.argouml.kernel.Wizard;
+import org.tigris.gef.util.VectorSet;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
-import org.argouml.kernel.*;
+
 
 /** A non-modal wizard to help the user change navigability
  *  of an association. */

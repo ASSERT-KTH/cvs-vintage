@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalPackName.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrUnconventionalPackName.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,18 +27,16 @@
 // File: CrUnconventionalPackName.java
 // Classes: CrUnconventionalPackName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalPackName.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrUnconventionalPackName.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import javax.swing.*;
-
-import org.argouml.kernel.*;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import javax.swing.Icon;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
-
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 public class CrUnconventionalPackName extends CrUML {

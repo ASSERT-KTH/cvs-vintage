@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.8 2003/06/30 19:23:18 linus Exp $
+// $Id: WizAssocComposite.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,26 +25,25 @@
 // File: WizAssocComposite.java
 // Classes: WizAssocComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizAssocComposite.java,v 1.8 2003/06/30 19:23:18 linus Exp $
+// $Id: WizAssocComposite.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected and
 // tidied up as part of fix to issue 619.
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-
+import java.util.Iterator;
+import java.util.Vector;
+import javax.swing.JPanel;
 import org.apache.log4j.Category;
-import org.argouml.cognitive.ui.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
 
-import org.argouml.kernel.*;
-import org.tigris.gef.util.*;
-
+import org.argouml.cognitive.ui.WizStepChoice;
+import org.argouml.kernel.Wizard;
+import org.tigris.gef.util.VectorSet;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 /**
  * <p>A non-modal wizard to assist the user in changing aggregation of an

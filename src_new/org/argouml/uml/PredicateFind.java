@@ -1,5 +1,5 @@
 
-// $Id: PredicateFind.java,v 1.3 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: PredicateFind.java,v 1.4 2003/08/30 22:04:19 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,13 @@
 
 package org.argouml.uml;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
-
+import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Diagram;
-import org.tigris.gef.util.*;
+
+import org.tigris.gef.util.Predicate;
+import org.tigris.gef.util.PredicateTrue;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.model_management.MModel;
 
 public class PredicateFind implements Predicate {
 
@@ -64,7 +65,7 @@ public class PredicateFind implements Predicate {
     }
 
     public boolean predicate(Object o) {
-	if (!(org.argouml.model.ModelFacade.isAModelElement(o))) return false;
+	if (!(ModelFacade.isAModelElement(o))) return false;
 	MModelElement me = (MModelElement) o;
 	return _type.predicate(me) && _specific.predicate(me) &&
 	    _elementName.predicate(me.getName());

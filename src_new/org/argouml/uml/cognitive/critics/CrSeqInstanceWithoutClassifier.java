@@ -1,5 +1,5 @@
 
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,18 +29,16 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-
-import org.argouml.cognitive.*;
+import java.util.Collection;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
-
 import org.tigris.gef.util.VectorSet;
 
-
+import ru.novosoft.uml.behavior.common_behavior.MInstance;
 
 /**
  * A critic to detect when an object in a deployment-diagram
@@ -92,7 +90,7 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
 	    Object obj = figs.elementAt(i);
 	    if (!(obj instanceof FigNodeModelElement)) continue;
 	    FigNodeModelElement fn = (FigNodeModelElement) obj;
-	    if (fn != null && (org.argouml.model.ModelFacade.isAInstance(fn.getOwner()))) {
+	    if (fn != null && (ModelFacade.isAInstance(fn.getOwner()))) {
 		MInstance minst = (MInstance) fn.getOwner();
 		if (minst != null) {
 		    Collection col = minst.getClassifiers();

@@ -1,4 +1,4 @@
-// $Id: CrNonAggDataType.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNonAggDataType.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,12 @@
 // File: CrNonAggDataType.java
 // Classes: CrNonAggDataType
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNonAggDataType.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNonAggDataType.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
 
 /** Well-formedness rule [1] for MDataType. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */

@@ -1,6 +1,6 @@
 
 
-// $Id: UUIDManager.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: UUIDManager.java,v 1.7 2003/08/30 22:04:19 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,19 +26,17 @@
 
 package org.argouml.uml;
 
-import java.rmi.server.UID;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.net.UnknownHostException;
+import java.rmi.server.UID;
 
 import org.apache.log4j.Category;
 import org.argouml.application.security.ArgoSecurityManager;
-
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.behavior.state_machines.*;
-import ru.novosoft.uml.behavior.collaborations.*;
-import ru.novosoft.uml.behavior.use_cases.*;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
 
 /** @stereotype singleton
  */
@@ -56,7 +54,7 @@ public class UUIDManager {
         try {
             _address = InetAddress.getLocalHost(); 
         }
-	catch (java.net.UnknownHostException e) {
+	catch (UnknownHostException e) {
             cat.fatal("ERROR: unable to get localhost information.", e);
             cat.fatal("On Unix systems this usually indicates that your /etc/hosts file is incorrectly setup.");
             cat.fatal("Stopping execution of ArgoUML.");
@@ -98,28 +96,28 @@ public class UUIDManager {
 
 	while (oeIterator.hasNext()) {
             MModelElement me = (MModelElement) oeIterator.next();
-            if (org.argouml.model.ModelFacade.isAModel(me) ||
+            if (ModelFacade.isAModel(me) ||
                 // me instanceof MNamespace ||
-                org.argouml.model.ModelFacade.isAClassifier(me) ||
-                org.argouml.model.ModelFacade.isAFeature(me) ||
-                org.argouml.model.ModelFacade.isAStateVertex(me) ||
-		org.argouml.model.ModelFacade.isAStateMachine(me) ||
-                org.argouml.model.ModelFacade.isATransition(me) ||
-                org.argouml.model.ModelFacade.isACollaboration(me) ||
-		org.argouml.model.ModelFacade.isAMessage(me) ||
-                org.argouml.model.ModelFacade.isAAssociation(me) ||
-                org.argouml.model.ModelFacade.isAAssociationEnd(me) ||
-                org.argouml.model.ModelFacade.isAGeneralization(me) ||
-                org.argouml.model.ModelFacade.isADependency(me) ||
-                org.argouml.model.ModelFacade.isAStereotype(me) ||
-		org.argouml.model.ModelFacade.isAUseCase(me)) {
+                ModelFacade.isAClassifier(me) ||
+                ModelFacade.isAFeature(me) ||
+                ModelFacade.isAStateVertex(me) ||
+		ModelFacade.isAStateMachine(me) ||
+                ModelFacade.isATransition(me) ||
+                ModelFacade.isACollaboration(me) ||
+		ModelFacade.isAMessage(me) ||
+                ModelFacade.isAAssociation(me) ||
+                ModelFacade.isAAssociationEnd(me) ||
+                ModelFacade.isAGeneralization(me) ||
+                ModelFacade.isADependency(me) ||
+                ModelFacade.isAStereotype(me) ||
+		ModelFacade.isAUseCase(me)) {
                 uuid = me.getUUID();
                 if (uuid == null) {
                     me.setUUID(getNewUUID());
                 }
             }
 	    //recursive handling of namespaces, needed for Collaborations
-	    if (org.argouml.model.ModelFacade.isANamespace(me)) {
+	    if (ModelFacade.isANamespace(me)) {
 		cat.debug("Found another namespace: " + me);
 		createModelUUIDS((MNamespace) me);
 	    }

@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.19 2003/06/30 18:00:28 linus Exp $
+// $Id: CrUML.java,v 1.20 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,24 +25,19 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.19 2003/06/30 18:00:28 linus Exp $
+// $Id: CrUML.java,v 1.20 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-
-import org.tigris.gef.util.*;
-
 import org.apache.log4j.Category;
-import org.argouml.application.api.*;
-import org.argouml.kernel.*;
-import org.argouml.ui.*;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import org.argouml.application.api.Argo;
+import org.argouml.cognitive.Decision;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.ocl.OCLEvaluator;
-import java.io.*;
-import java.util.*;
+import org.tigris.gef.util.VectorSet;
 
 /** "Abstract" Critic subclass that captures commonalities among all
  *  critics in the UML domain.  This class also defines and registers

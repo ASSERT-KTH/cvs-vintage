@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.10 2003/06/30 18:00:28 linus Exp $
+// $Id: CrOperNameConflict.java,v 1.11 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,14 +28,14 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import javax.swing.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import java.util.Iterator;
+import java.util.Vector;
+import javax.swing.Icon;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
 
 // Use Model through ModelFacade
-import org.argouml.model.ModelFacade;
 
 /**
  * <p> A critic to detect when a class has operations with two matching

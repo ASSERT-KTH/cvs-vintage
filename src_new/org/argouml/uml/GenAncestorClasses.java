@@ -1,5 +1,5 @@
 
-// $Id: GenAncestorClasses.java,v 1.4 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: GenAncestorClasses.java,v 1.5 2003/08/30 22:04:19 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,15 @@
 
 package org.argouml.uml;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Vector;
+import org.argouml.model.ModelFacade;
+import org.tigris.gef.util.ChildGenerator;
+import ru.novosoft.uml.foundation.core.MGeneralizableElement;
+import ru.novosoft.uml.foundation.core.MGeneralization;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
 
-import org.tigris.gef.util.*;
 
 /** Utility class to generate the base classes of a class. It
  *  recursively moves up the class hierarchy.  But id does that in a
@@ -42,7 +45,7 @@ public class GenAncestorClasses implements ChildGenerator {
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
 
-	if (!(org.argouml.model.ModelFacade.isAGeneralizableElement(o))) return res.elements();
+	if (!(ModelFacade.isAGeneralizableElement(o))) return res.elements();
 	MGeneralizableElement cls = (MGeneralizableElement) o;
 	Collection gens = cls.getGeneralizations();
 	if (gens == null) return res.elements();

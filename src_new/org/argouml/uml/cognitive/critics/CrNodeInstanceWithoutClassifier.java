@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.5 2003/06/30 21:59:32 linus Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,15 +28,14 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-
-import org.tigris.gef.util.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.uml.diagram.deployment.ui.*;
+import java.util.Collection;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
+import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.tigris.gef.util.VectorSet;
+import ru.novosoft.uml.behavior.common_behavior.MNodeInstance;
 
 /**
  * A critic to detect when there are node-instances that

@@ -1,5 +1,5 @@
 
-// $Id: CrUnconventionalClassName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrUnconventionalClassName.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,20 +28,20 @@
 // File: CrUnconventionalClassName.java
 // Classes: CrUnconventionalClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrUnconventionalClassName.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import javax.swing.*;
+import javax.swing.Icon;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
 
-import org.argouml.kernel.*;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 public class CrUnconventionalClassName extends CrUML {
 
@@ -53,7 +53,7 @@ public class CrUnconventionalClassName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAClass(dm)) && !(org.argouml.model.ModelFacade.isAInterface(dm)))
+	if (!(ModelFacade.isAClass(dm)) && !(ModelFacade.isAInterface(dm)))
 	    return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	String myName = cls.getName();

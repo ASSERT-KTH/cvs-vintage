@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+// $Id: WizManyNames.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,22 +27,19 @@
 // File: WizManyNames.java
 // Classes: WizManyNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizManyNames.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+// $Id: WizManyNames.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-
+import java.util.Vector;
+import javax.swing.JPanel;
 import org.apache.log4j.Category;
-import org.argouml.application.api.*;
-import org.argouml.cognitive.ui.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
 
-import org.argouml.kernel.*;
+import org.argouml.application.api.Argo;
+import org.argouml.cognitive.ui.WizStepManyTextFields;
+import org.argouml.kernel.Wizard;
+import ru.novosoft.uml.foundation.core.MModelElement;
+
 
 /** A non-modal wizard to help the user change the name of a
  *  MModelElement to a better name. */

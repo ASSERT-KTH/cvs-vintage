@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceInsideElement.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNodeInstanceInsideElement.java,v 1.5 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,19 +25,16 @@
 // File: CrNodeInstanceInsideElement.java
 // Classes: CrNodeInstanceInsideElement
 // Original Author: jrobbins@5eichler@informatik.uni-hamburg.de
-// $Id: CrNodeInstanceInsideElement.java,v 1.4 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNodeInstanceInsideElement.java,v 1.5 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-
-import org.tigris.gef.util.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.uml.diagram.deployment.ui.*;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
+import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.tigris.gef.util.VectorSet;
 
 /**
  * A critic to detect when there are node-instances that

@@ -1,5 +1,5 @@
 
-// $Id: CrUnconventionalOperName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrUnconventionalOperName.java,v 1.10 2003/08/30 22:04:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,22 +28,19 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrUnconventionalOperName.java,v 1.10 2003/08/30 22:04:20 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.model_management.*;
-
-import org.tigris.gef.util.*;
-
-import org.argouml.kernel.*;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
+import org.argouml.model.ModelFacade;
+import org.tigris.gef.util.VectorSet;
+import ru.novosoft.uml.foundation.core.MFeature;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MOperation;
 
 public class CrUnconventionalOperName extends CrUML {
 
@@ -55,7 +52,7 @@ public class CrUnconventionalOperName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAOperation(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAOperation(dm))) return NO_PROBLEM;
 	MOperation oper = (MOperation) dm;
 	String myName = oper.getName();
 	if (myName == null || myName.equals("")) return NO_PROBLEM;
@@ -98,7 +95,7 @@ public class CrUnconventionalOperName extends CrUML {
      * possible where we are suggested to make the operation a constructor.
      */
     protected boolean candidateForConstructor(MModelElement me) {
-	if (!(org.argouml.model.ModelFacade.isAOperation(me))) return false;
+	if (!(ModelFacade.isAOperation(me))) return false;
 	MOperation oper = (MOperation) me;
 	String myName = oper.getName();
 	if (myName == null || myName.equals("")) return false;
