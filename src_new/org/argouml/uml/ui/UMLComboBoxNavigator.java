@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxNavigator.java,v 1.8 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLComboBoxNavigator.java,v 1.9 2004/07/28 13:15:07 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 public class UMLComboBoxNavigator extends JPanel implements ActionListener {
 
     private static ImageIcon _icon =
-        ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource(
+        ResourceLoaderWrapper.lookupIconResource(
             "ComboNav");
     private UMLUserInterfaceContainer _container;
     private JComboBox _box;

@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.31 2004/02/29 12:35:46 linus Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.32 2004/07/28 13:15:07 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,11 +23,15 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JComboBox;
+
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 
-import java.awt.event.*;
-import javax.swing.*;
-import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.MElementEvent;
 
 /**
@@ -59,6 +63,7 @@ public class UMLInitialValueComboBox extends JComboBox
     /** Creates new BooleanChangeListener */
     public UMLInitialValueComboBox(UMLUserInterfaceContainer container) {
         super();
+        setBackground(Color.GREEN.brighter());
         _container = container;
         
         for (int i = 0; i < listItems.length; i++) {

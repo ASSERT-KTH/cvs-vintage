@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.24 2004/07/26 22:43:51 mkl Exp $
+// $Id: UMLAction.java,v 1.25 2004/07/28 13:15:07 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,7 @@ public class UMLAction extends AbstractAction {
     public UMLAction(String name) {
         this(name, true, HAS_ICON);
     }
+    
     public UMLAction(String name, boolean hasIcon) {
         this(name, true, hasIcon);
     }

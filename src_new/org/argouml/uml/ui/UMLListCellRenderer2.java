@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.22 2004/07/26 08:33:34 mkl Exp $
+// $Id: UMLListCellRenderer2.java,v 1.23 2004/07/28 13:15:07 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.22 2004/07/26 08:33:34 mkl Exp $
+// $Id: UMLListCellRenderer2.java,v 1.23 2004/07/28 13:15:07 mkl Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
@@ -86,8 +86,10 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
                 // ----- setup similar to the super() implementation -----
                 setComponentOrientation(list.getComponentOrientation());
                 if (isSelected) {
+                    setForeground(list.getSelectionForeground());
                     setBackground(list.getSelectionBackground());
                 } else {
+                    setForeground(list.getForeground());
                     setBackground(list.getBackground());
                 }
 

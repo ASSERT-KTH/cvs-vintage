@@ -1,4 +1,4 @@
-// $Id: UMLLinkedList.java,v 1.14 2004/07/24 15:44:46 mkl Exp $
+// $Id: UMLLinkedList.java,v 1.15 2004/07/28 13:15:07 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 // $header$
 package org.argouml.uml.ui;
 
+import java.awt.Color;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -50,6 +52,8 @@ public class UMLLinkedList extends UMLList2 implements ListSelectionListener {
         UMLModelElementListModel2 dataModel, boolean showIcon) {
         super(dataModel, new UMLLinkedListCellRenderer(showIcon));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setForeground(Color.BLUE);
+        setSelectionForeground(Color.BLUE.darker());
         _mouseListener = new UMLLinkMouseListener(this);
         addMouseListener(_mouseListener);
         addListSelectionListener(this);

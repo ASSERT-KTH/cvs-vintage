@@ -1,4 +1,4 @@
-// $Id: UMLComboBox.java,v 1.7 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: UMLComboBox.java,v 1.8 2004/07/28 13:15:07 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,10 @@
 
 package org.argouml.uml.ui;
 import javax.swing.*;
+
+import org.argouml.ui.LookAndFeelMgr;
+
+import java.awt.Color;
 import java.awt.event.*;
 import ru.novosoft.uml.MElementEvent;
 
@@ -42,6 +46,8 @@ public class UMLComboBox
 
     public UMLComboBox(UMLComboBoxModel model) {
         super(model);
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        setBackground(Color.GREEN.brighter());
         _model = model;
 	addActionListener(_model);
     }
