@@ -29,7 +29,7 @@ import javax.transaction.xa.XAException;
  *
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -261,7 +261,7 @@ public class TransactionImpl
 
    public boolean equals(Object obj)
    {
-      return ((TransactionImpl)obj).xid.getGlobalTransactionId().equals(xid.getGlobalTransactionId());
+	  return ((TransactionImpl)obj).xid.equals(xid);
    }
 
    public int hashCode()

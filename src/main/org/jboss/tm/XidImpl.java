@@ -13,7 +13,7 @@ import javax.transaction.xa.Xid;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class XidImpl
    implements Xid, java.io.Serializable
@@ -51,6 +51,23 @@ public class XidImpl
       return branchId;
    }
    
+   /*
+   * equals works on all the bytes of the Xid
+   */
+   public boolean equals(Object obj) {
+	   
+	 byte[] otherGlobalId = ((XidImpl) obj).globalId;
+     
+	 for (int i = 0 ; i<globalId.length ; i++) {
+		
+		 if (otherGlobalId[i] != globalId[i]) {
+			
+			  return false;
+		 }
+	 }	
+ 	
+	 return true;
+   }
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------

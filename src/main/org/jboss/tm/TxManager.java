@@ -1,4 +1,4 @@
-/*
+ /*
  * jBoss, the OpenSource EJB server
  *
  * Distributable under GPL license.
@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class TxManager
    implements TransactionManager
@@ -77,18 +77,24 @@ public class TxManager
       
 //DEBUG      Logger.debug("Current="+current);
       
-      if (current == null)
-         return noTx;
-      else
+    //  if (current == null)
+
+         // MF FIXME 
+		 // WHY?????
+	//	 return noTx;
+    //  else
          return current;
    }
 
+   // FIXME MF: resume has another meaning
+   // it means "resume the suspended transaction"
+   // Not resume the association with thread 
    public void resume(Transaction tobj)
             throws InvalidTransactionException,
                    java.lang.IllegalStateException,
                    SystemException
    {
-//DEBUG      Logger.debug("resume tx");
+//      Logger.debug("resume tx with "+tobj);
       tx.set(tobj);
    }
                    
@@ -126,15 +132,30 @@ public class TxManager
       return current;
    }
    
+   /*
+   * The following 2 methods are here to provide association and disassociation of the thread
+   */
+   public Transaction disassociateThread() {
+	
+	   	Transaction current = (Transaction) tx.get();
+	
+	   	tx.set(null);
+
+		return current;
+   }
+   
+   public void associateThread(Transaction transaction) {
+	
+	   tx.set(transaction);
+   }
+   
+   
    // Package protected ---------------------------------------------
    void removeTransaction()
    {
       tx.set(null);
    }
-   void associateTransaction(Transaction transaction) {
-	
-	   tx.set(transaction);
-   }
+   
    
    // There has got to be something better :)
    static TxManager getTransactionManager() {
