@@ -7,37 +7,27 @@
 
 package org.jboss.ejb;
 
-import java.rmi.RemoteException;
-import java.security.Identity;
-import java.security.Principal;
-import java.util.Properties;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.TimerService;
-import javax.transaction.Status;
-import javax.transaction.Transaction;
-import javax.transaction.UserTransaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.Synchronization;
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
-import javax.transaction.RollbackException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-
 import org.jboss.logging.Logger;
-import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
-
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
+
+import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.TimerService;
+import javax.transaction.*;
+import java.rmi.RemoteException;
+import java.security.Identity;
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.lang.reflect.Proxy;
 
 /**
  * The EnterpriseContext is used to associate EJB instances with
@@ -52,7 +42,8 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.62 $
+ * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
+ * @version $Revision: 1.63 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -62,7 +53,24 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 public abstract class EnterpriseContext
 {
    // Constants -----------------------------------------------------
-    
+
+   /** These constants are used to validate method access */
+   public static final Integer IN_EJB_ACTIVATE = new Integer(100);
+   public static final Integer IN_EJB_PASSIVATE = new Integer(101);
+   public static final Integer IN_EJB_REMOVE = new Integer(102);
+   public static final Integer IN_EJB_CREATE = new Integer(103);
+   public static final Integer IN_EJB_POST_CREATE = new Integer(104);
+   public static final Integer IN_EJB_HOME = new Integer(105);
+   public static final Integer IN_EJB_TIMEOUT = new Integer(106);
+
+   public static final Integer IN_EJB_LOAD = new Integer(200);
+   public static final Integer IN_EJB_STORE = new Integer(201);
+   public static final Integer IN_SET_ENTITY_CONTEXT = new Integer(202);
+   public static final Integer IN_UNSET_ENTITY_CONTEXT = new Integer(203);
+
+   public static final Integer IN_SET_SESSION_CONTEXT = new Integer(300);
+   public static final Integer IN_SET_MESSAGE_DRIVEN_CONTEXT = new Integer(400);
+
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
@@ -93,18 +101,16 @@ public abstract class EnterpriseContext
    Object id; 
    
    /** The instance is being used.  This locks it's state */
-   int locked = 0;  
+   int locked = 0;
 	
    /** The instance is used in a transaction, synchronized methods on the tx */
    Object txLock = new Object();
-                  
-
 
    // Static --------------------------------------------------------
    //Registration for CachedConnectionManager so our UserTx can notify
    //on tx started.
    private static ServerVMClientUserTransaction.UserTransactionStartedListener tsl;
-   
+
    /**
     * The <code>setUserTransactionStartedListener</code> method is called by 
     * CachedConnectionManager on start and stop.  The tsl is notified on 
@@ -213,7 +219,7 @@ public abstract class EnterpriseContext
       this.synch = null;
       this.transaction = null;
    }
-       
+
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
@@ -237,6 +243,22 @@ public abstract class EnterpriseContext
        *  first call to <code>getUserTransaction()</code>.
        */
       private UserTransactionImpl userTransaction = null;
+
+      /**
+       * Holds one of the IN_METHOD constants, to indicate that we are in an ejb method
+       * According to the EJB2.1 spec not all context methods can be accessed at all times
+       * For example ctx.getPrimaryKey() should throw an IllegalStateException when called from within ejbCreate()
+       */
+      protected Integer inMethodFlag;
+
+      /**
+       * Set when the instance enters an ejb method, reset on exit
+       * @param inMethodFlag one of the IN_METHOD contants or null
+       */
+      void setInMethodFlag(Integer inMethodFlag)
+      {
+         this.inMethodFlag = inMethodFlag;
+      }
 
       /**
        * @deprecated

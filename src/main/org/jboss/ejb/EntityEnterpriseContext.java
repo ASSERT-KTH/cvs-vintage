@@ -29,7 +29,7 @@ import javax.ejb.TimerService;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -226,8 +226,12 @@ public class EntityEnterpriseContext extends EnterpriseContext
 		
       public Object getPrimaryKey()
       {
+         if (inMethodFlag == IN_EJB_CREATE)
+            throw new IllegalStateException("Cannot be invoked from ejbCreate");
+         
          return id;
       }
+
       public TimerService getTimerService() throws IllegalStateException
       {
          return getContainer().getTimerService( id );
