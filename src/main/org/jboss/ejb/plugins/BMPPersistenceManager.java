@@ -6,30 +6,29 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.rmi.RemoteException;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.HashMap;
-
-import javax.ejb.EntityBean;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
-
 import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityCache;
-import org.jboss.ejb.EntityPersistenceManager;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-
+import org.jboss.ejb.EntityPersistenceManager;
+import org.jboss.ejb.EnterpriseContext;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ConfigurationMetaData;
+
+import javax.ejb.CreateException;
+import javax.ejb.EJBException;
+import javax.ejb.EJBObject;
+import javax.ejb.EntityBean;
+import javax.ejb.FinderException;
+import javax.ejb.RemoveException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
 *  Persistence manager for BMP entites.  All calls are simply deligated
@@ -39,7 +38,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.46 $
+*  @version $Revision: 1.47 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -118,7 +117,7 @@ public class BMPPersistenceManager
     * @return the new instance
     */
     public Object createBeanClassInstance() throws Exception {
-        return con.getBeanClass().newInstance();
+       return con.getBeanClass().newInstance();
     }
 
    private void createMethodCache( Method[] methods )
@@ -188,10 +187,12 @@ public class BMPPersistenceManager
          EntityEnterpriseContext ctx)
    throws Exception
    {
+
       Object id = null;
       try
       {
          // Call ejbCreate<METHOD)
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
          Method createMethod = (Method)createMethods.get(m);
          id = createMethod.invoke(ctx.getInstance(), args);
       } catch (IllegalAccessException e)
@@ -230,6 +231,9 @@ public class BMPPersistenceManager
             throw (Error)e;
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
 
       // set the id
       ctx.setId(id);
@@ -259,6 +263,7 @@ public class BMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_POST_CREATE);
          Method postCreateMethod = (Method)postCreateMethods.get(m);
          postCreateMethod.invoke(ctx.getInstance(), args);
       } catch (IllegalAccessException e)
@@ -297,23 +302,44 @@ public class BMPPersistenceManager
             throw (Error)e;
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
    }
 
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
    throws Exception
    {
-      // call the finder method
-      Object objectId = callFinderMethod(finderMethod, args, ctx);
+      try
+      {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
 
-      // get the cache, create a new key and return this new key
-      return ((EntityCache)con.getInstanceCache()).createCacheKey( objectId );
+         // call the finder method
+         Object objectId = callFinderMethod(finderMethod, args, ctx);
+
+         // get the cache, create a new key and return this new key
+         return ((EntityCache)con.getInstanceCache()).createCacheKey( objectId );
+      }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
    }
 
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
    throws Exception
    {
       // call the finder method
-      Object result = callFinderMethod(finderMethod, args, ctx);
+      Object result;
+      try
+      {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
+         result = callFinderMethod(finderMethod, args, ctx);
+      }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
 
       if (result == null)
       {
@@ -378,6 +404,7 @@ public class BMPPersistenceManager
 
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_ACTIVATE);
          ejbActivate.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -402,6 +429,9 @@ public class BMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
    }
 
    public void loadEntity(EntityEnterpriseContext ctx)
@@ -409,6 +439,7 @@ public class BMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_LOAD);
          ejbLoad.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -433,6 +464,9 @@ public class BMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
    }
 
    public boolean isModified(EntityEnterpriseContext ctx) throws Exception
@@ -451,6 +485,7 @@ public class BMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
          ejbStore.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -475,6 +510,9 @@ public class BMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)
@@ -482,6 +520,7 @@ public class BMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_PASSIVATE);
          ejbPassivate.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -506,6 +545,9 @@ public class BMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
    }
 
    public void removeEntity(EntityEnterpriseContext ctx)
@@ -513,6 +555,7 @@ public class BMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
          ejbRemove.invoke(ctx.getInstance(), EMPTY_OBJECT_ARRAY);
       } catch (IllegalAccessException e)
       {
@@ -541,6 +584,9 @@ public class BMPPersistenceManager
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }
+      }
+      finally{
+         ctx.popInMethodFlag();
       }
    }
 

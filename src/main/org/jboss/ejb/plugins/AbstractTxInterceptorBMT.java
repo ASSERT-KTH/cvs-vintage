@@ -29,7 +29,7 @@ import org.jboss.invocation.Invocation;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
@@ -125,7 +125,15 @@ abstract class AbstractTxInterceptorBMT
          EnterpriseContext ctx = ((EnterpriseContext) mi.getEnterpriseContext());
 
          // Set the threadlocal to the userTransaction of the instance
-         userTransaction.set(ctx.getEJBContext().getUserTransaction());
+         try
+         {
+            ctx.pushInMethodFlag(EnterpriseContext.IN_INTERCEPTOR_METHOD);
+            userTransaction.set(ctx.getEJBContext().getUserTransaction());
+         }
+         finally
+         {
+            ctx.popInMethodFlag();
+         }
 
          // Get the bean instance transaction
          Transaction beanTx = ctx.getTransaction();

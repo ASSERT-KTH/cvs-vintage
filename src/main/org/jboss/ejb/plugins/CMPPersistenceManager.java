@@ -23,6 +23,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
+import org.jboss.ejb.EnterpriseContext;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -38,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -171,6 +172,7 @@ public class CMPPersistenceManager
       // Call ejbCreate on the target bean
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
          Method createMethod = (Method)createMethods.get(m);
          createMethod.invoke(ctx.getInstance(), args);
       }
@@ -202,10 +204,22 @@ public class CMPPersistenceManager
             throw (Error)e;
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
 
       // if insertAfterEjbPostCreate == true, this will INSERT entity
       // otherwise, primary key is extracted from the context and returned
-      Object id = store.createEntity(m, args, ctx);
+      Object id;
+      try
+      {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+         id = store.createEntity(m, args, ctx);
+      }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
 
       // Set the key on the target context
       ctx.setId(id);
@@ -236,6 +250,8 @@ public class CMPPersistenceManager
 
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_POST_CREATE);
+
          Method postCreateMethod = (Method)postCreateMethods.get(m);
          postCreateMethod.invoke(ctx.getInstance(), args);
          if(insertAfterEjbPostCreate)
@@ -269,30 +285,41 @@ public class CMPPersistenceManager
             throw (Error)e;
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
    }
 
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws Exception
    {
-      // For now only optimize fBPK
-      if(finderMethod.getName().equals("findByPrimaryKey"))
+      try
       {
-         if(args[0] == null)
-            throw new IllegalArgumentException("findByPrimaryKey called with null argument.");
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
 
-         if(commitOption != ConfigurationMetaData.B_COMMIT_OPTION
-            && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
+         // For now only optimize fBPK
+         if(finderMethod.getName().equals("findByPrimaryKey"))
          {
-            Object key = ctx.getCacheKey();
-            if(key == null)
+            if(args[0] == null)
+               throw new IllegalArgumentException("findByPrimaryKey called with null argument.");
+
+            if(commitOption != ConfigurationMetaData.B_COMMIT_OPTION
+               && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
             {
-               key = ((EntityCache)con.getInstanceCache()).createCacheKey(args[0]);
-            }
-            if(con.getInstanceCache().isActive(key))
-            {
-               return key; // Object is active -> it exists -> no need to call finder
+               Object key = ctx.getCacheKey();
+               if(key == null)
+               {
+                  key = ((EntityCache)con.getInstanceCache()).createCacheKey(args[0]);
+               }
+               if(con.getInstanceCache().isActive(key))
+               {
+                  return key; // Object is active -> it exists -> no need to call finder
+               }
             }
          }
+      }
+      finally{
+         ctx.popInMethodFlag();
       }
 
       // The store will find the entity and return the primaryKey
@@ -306,9 +333,17 @@ public class CMPPersistenceManager
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws Exception
    {
-      // return the finderResults so that the invoker layer can extend this back
-      // giving the client an OO 'cursor'
-      return store.findEntities(finderMethod, args, ctx);
+      try
+      {
+         // return the finderResults so that the invoker layer can extend this back
+         // giving the client an OO 'cursor'
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_FIND);
+         return store.findEntities(finderMethod, args, ctx);
+      }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
    }
 
    /*
@@ -344,6 +379,7 @@ public class CMPPersistenceManager
 
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_ACTIVATE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbActivate();
       }
@@ -364,6 +400,9 @@ public class CMPPersistenceManager
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }
+      }
+      finally{
+         ctx.popInMethodFlag();
       }
 
       // The implementation of the call can be left absolutely empty, the
@@ -394,6 +433,7 @@ public class CMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbStore();
       }
@@ -415,6 +455,9 @@ public class CMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
 
       //long lStart = System.currentTimeMillis();
       // Have the store deal with storing the fields of the instance
@@ -428,6 +471,7 @@ public class CMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_PASSIVATE);
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbPassivate();
       }
@@ -449,6 +493,9 @@ public class CMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
 
       //long lStart = System.currentTimeMillis();
       store.passivateEntity(ctx);
@@ -462,6 +509,8 @@ public class CMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
+
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbRemove();
       }
@@ -488,6 +537,10 @@ public class CMPPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
+      finally{
+         ctx.popInMethodFlag();
+      }
+
       //long lStart = System.currentTimeMillis();
       store.removeEntity(ctx);
       //mRemove.add();
@@ -497,6 +550,8 @@ public class CMPPersistenceManager
    {
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_LOAD);
+
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbLoad();
       }
@@ -517,6 +572,9 @@ public class CMPPersistenceManager
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }
+      }
+      finally{
+         ctx.popInMethodFlag();
       }
    }
 

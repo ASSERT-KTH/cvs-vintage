@@ -36,7 +36,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -123,7 +123,8 @@ public class StatefulSessionInstanceInterceptor
       {
          // Invoke through interceptors
          return getNext().invokeHome(mi);
-      } finally
+      }
+      finally
       {
          synchronized (ctx)
          {
@@ -275,41 +276,50 @@ public class StatefulSessionInstanceInterceptor
          
          try
          {
+            ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
             // Invoke through interceptors
             return getNext().invoke(mi);
-         } catch (RemoteException e)
+
+         }
+         catch (RemoteException e)
          {
             // Discard instance
             cache.remove(methodID);
             pool.discard(ctx);
             ctx = null;
-            
+
             throw e;
-         } catch (RuntimeException e)
+         }
+         catch (RuntimeException e)
          {
             // Discard instance
             cache.remove(methodID);
             pool.discard(ctx);
             ctx = null;
-            
+
             throw e;
-         } catch (Error e)
+         }
+         catch (Error e)
          {
             // Discard instance
             cache.remove(methodID);
             pool.discard(ctx);
             ctx = null;
-            
+
             throw e;
-         } finally
+         }
+         finally
          {
+            ctx.popInMethodFlag();
+
             if (ctx != null)
             {
                // Still a valid instance
                lock.sync(); // synchronized(ctx)
                try
                {
-                  
+
                   // release it
                   ctx.unlock();
                   
