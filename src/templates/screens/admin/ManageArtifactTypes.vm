@@ -6,7 +6,7 @@ $page.setTitle("Attribute Editor")
 
 <form method="get" action="$link.setPage("admin,ManageArtifactTypes.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="nextTemplate" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="$scarabR.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
 <div class="functnbar">
   <table cellpadding="4" cellspacing="0" border="1">
