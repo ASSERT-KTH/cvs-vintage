@@ -93,7 +93,13 @@ public class CachedHeaderfields {
         "columba.color",
 
         // account ID
-        "columba.accountuid"
+        "columba.accountuid",
+        
+        // to
+        "columba.to",
+        
+        // from
+        "columba.from"
     };
 
     // these are cached by default

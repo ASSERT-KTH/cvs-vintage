@@ -71,6 +71,8 @@ public class ColumbaHeader {
         attributes.put("columba.priority",
             new Integer(basicHeader.getPriority()));
 
+
+        
         Address from = basicHeader.getFrom();
 
         if (from != null) {
@@ -79,6 +81,26 @@ public class ColumbaHeader {
             attributes.put("columba.from", new Address(""));
         }
 
+
+        Address[] to = basicHeader.getTo();
+
+        if (to.length > 0) {
+            //We save only the first item in the to-list
+            attributes.put("columba.to", to[0]);
+        } else {
+            attributes.put("columba.to", new Address(""));
+        }
+        
+        Address[] cc = basicHeader.getCc();
+
+        if (cc.length >0) {
+            //We save only the first item in the cc-list            
+            attributes.put("columba.cc", cc[0]);
+        } else {
+            attributes.put("columba.cc", new Address(""));
+        }
+        
+        
         attributes.put("columba.host", "");
         attributes.put("columba.date", basicHeader.getDate());
 
