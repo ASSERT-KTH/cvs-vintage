@@ -40,6 +40,12 @@ public class LeftJustifyAction extends FrameAction {
 				"composer",
 				"menu_format_left_justify"));
 
+		setTooltipText(
+			MailResourceLoader.getString(
+				"menu",
+				"composer",
+				"menu_format_left_justify_tooltip"));
+				
 		setLargeIcon(ImageLoader.getImageIcon("stock_text_align_left.png"));
 		setSmallIcon(
 			ImageLoader.getSmallImageIcon("stock_text_align_left-16.png"));

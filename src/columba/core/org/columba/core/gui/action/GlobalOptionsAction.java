@@ -34,7 +34,7 @@ public class GlobalOptionsAction extends FrameAction {
 				"mainframe",
 				"menu_edit_generaloptions"));
 
-		setLongDescription(
+		setTooltipText(
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",

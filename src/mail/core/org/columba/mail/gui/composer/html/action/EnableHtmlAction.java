@@ -15,8 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JCheckBoxMenuItem;
+
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -27,7 +35,10 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
-public class EnableHtmlAction extends CheckBoxAction {
+public class EnableHtmlAction
+	extends CheckBoxAction
+	implements ActionListener {
+		
 
 	/**
 	 * @param frameController
@@ -40,6 +51,56 @@ public class EnableHtmlAction extends CheckBoxAction {
 				"menu",
 				"composer",
 				"menu_format_enable_html"));
+
+	}
+
+	/** 
+	 * Overwritten to initialize the selection state of the
+	 * CheckBoxMenuItem.
+	 * 
+	 * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
+	 */
+	public void setCheckBoxMenuItem(
+		JCheckBoxMenuItem checkBoxMenuItem,
+		AbstractFrameView frameView) {
+		super.setCheckBoxMenuItem(checkBoxMenuItem);
+
+		System.out.println("---------->initialize enableHtmlAction");
+		
+		// enable/disable menuitem, based on configuration text/html state
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+
+		//	create default element if not available
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		if (enableHtml.equals("true"))
+			getCheckBoxMenuItem().setSelected(true);
+		else
+			getCheckBoxMenuItem().setSelected(false);
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+
+		boolean selection = getCheckBoxMenuItem().isSelected();
+
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+
+		//	create default element if not available
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+
+		// change configuration based on menuitem selection	 
+		htmlElement.addAttribute("enable", new Boolean(selection).toString());
 	}
 
 }

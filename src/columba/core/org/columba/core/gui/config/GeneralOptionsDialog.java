@@ -58,6 +58,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
+	// TODO: this dialog should make use of core i18n properties only
 	private static final String RESOURCE_PATH = "org.columba.mail.i18n.dialog";
 
 	// button panel

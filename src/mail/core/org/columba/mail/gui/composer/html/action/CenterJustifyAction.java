@@ -40,8 +40,15 @@ public class CenterJustifyAction extends FrameAction {
 				"composer",
 				"menu_format_center_justify"));
 
+		setTooltipText(
+			MailResourceLoader.getString(
+				"menu",
+				"composer",
+				"menu_format_center_justify_tooltip"));
+
 		setLargeIcon(ImageLoader.getImageIcon("stock_text_align_center.png"));
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_text_align_center-16.png"));
+		setSmallIcon(
+			ImageLoader.getSmallImageIcon("stock_text_align_center-16.png"));
 	}
 
 }

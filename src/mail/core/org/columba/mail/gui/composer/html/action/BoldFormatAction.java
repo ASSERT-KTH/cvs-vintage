@@ -15,9 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html.action;
 
+import java.awt.event.ActionEvent;
+import java.util.Observable;
+import java.util.Observer;
+
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -25,23 +31,69 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
-public class BoldFormatAction extends CheckBoxAction {
+public class BoldFormatAction extends CheckBoxAction implements Observer {
 
 	/**
 	 * @param frameController
 	 * @param name
 	 */
 	public BoldFormatAction(AbstractFrameController frameController) {
-		
+
 		super(
 			frameController,
 			MailResourceLoader.getString(
 				"menu",
 				"composer",
 				"menu_format_bold"));
-		
-		setLargeIcon( ImageLoader.getImageIcon("stock_text_bold.png") );
-		setSmallIcon( ImageLoader.getSmallImageIcon("stock_text_bold-16.png"));
+
+		setLargeIcon(ImageLoader.getImageIcon("stock_text_bold.png"));
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_text_bold-16.png"));
+
+		setTooltipText(
+			MailResourceLoader.getString(
+				"menu",
+				"composer",
+				"menu_format_bold_tooltip"));
+
+		// register for text selection changes
+		((ComposerController) frameController)
+			.getEditorController()
+			.addObserver(
+			this);
+	}
+
+	/**
+	 * Method is called when text selection has changed.
+	 * <p>
+	 * Enable/Disable this actions on selection changes. 
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		Boolean isSelected = (Boolean) arg1;
+
+		if (isSelected.equals(Boolean.TRUE)) {
+			// text is selected
+			setEnabled(true);
+		} else {
+			// no selection
+			setEnabled(false);
+		}
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		// this action is disabled when the text/plain editor is used
+		// -> so, its safe to just cast to HtmlEditorController here
+		HtmlEditorController editorController =
+			(HtmlEditorController) ((ComposerController) frameController)
+				.getEditorController();
+
+		editorController.toggleBold();
+
 	}
 
 }

@@ -32,6 +32,8 @@ import org.columba.mail.util.MailResourceLoader;
  *  - heading 2
  *  - heading 3
  *  - address
+ * 
+ * Note: This is the place to add further formats like lists, etc.
  *
  * TODO: add actionPerformed-method
  * 
@@ -41,7 +43,7 @@ public class ParagraphMenu extends IMenu {
 
 	ButtonGroup group;
 
-	final static String[] items =
+	public final static String[] STYLES =
 		{
 			"Normal",
 			"Preformatted",
@@ -69,8 +71,8 @@ public class ParagraphMenu extends IMenu {
 	protected void initMenu() {
 		group = new ButtonGroup();
 
-		for (int i = 0; i < items.length; i++) {
-			JRadioButtonMenuItem m = new JRadioButtonMenuItem(items[i]);
+		for (int i = 0; i < STYLES.length; i++) {
+			JRadioButtonMenuItem m = new JRadioButtonMenuItem(STYLES[i]);
 			add(m);
 
 			group.add(m);

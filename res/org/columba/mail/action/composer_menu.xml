@@ -50,14 +50,11 @@
 	<menu name="menu_message">
 		<menuitem action="AttachFile"/>	 
 		<menuitem action="Spellcheck"/>	
+		<separator />
+		<menuitem checkboxaction="SignMessage"/>	
+		<menuitem checkboxaction="EncryptMessage"/>
 		<extensionpoint name="top" />	
 		<extensionpoint name="bottom" />
 	</menu>
 	
-	<menu name="menu_security">
-		<menuitem checkboxaction="SignMessage"/>	
-		<menuitem checkboxaction="EncryptMessage"/>
-		<extensionpoint name="top" />	
-		<extensionpoint name="bottom" />	
-	</menu>
 </menubar>

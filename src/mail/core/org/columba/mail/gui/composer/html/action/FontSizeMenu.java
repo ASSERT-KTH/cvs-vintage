@@ -32,7 +32,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class FontSizeMenu extends IMenu {
 
-	final static String[] sizes = { "-2", "-1", "0", "1", "2", "3" };
+	public final static String[] SIZES = { "-2", "-1", "0", "+1", "+2", "+3" };
 	ButtonGroup group;
 
 	/**
@@ -53,8 +53,8 @@ public class FontSizeMenu extends IMenu {
 	protected void initMenu() {
 		group = new ButtonGroup();
 
-		for (int i = 0; i < sizes.length; i++) {
-			JRadioButtonMenuItem m = new JRadioButtonMenuItem(sizes[i]);
+		for (int i = 0; i < SIZES.length; i++) {
+			JRadioButtonMenuItem m = new JRadioButtonMenuItem(SIZES[i]);
 			add(m);
 
 			group.add(m);

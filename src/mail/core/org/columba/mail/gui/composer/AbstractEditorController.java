@@ -17,6 +17,7 @@
 package org.columba.mail.gui.composer;
 
 import java.awt.Font;
+import java.util.Observable;
 
 import javax.swing.JComponent;
 
@@ -27,12 +28,15 @@ import org.columba.core.gui.focus.FocusOwner;
  * Controllers used in Composer: TextEditorController and
  * HtmlEditorController. As such, it defines the common
  * interface needed by mainly the ComposerController.
- * 
+ * <p>
+ * It extends Observable to allow all actions to enable/disable
+ * themselves on text selection changes.
  * 
  * @author Karl Peder Olesen (karlpeder), 2003-09-06
  */
-public abstract class AbstractEditorController implements FocusOwner {
+public abstract class AbstractEditorController extends Observable implements FocusOwner {
 
+	
 	/** Reference to the controller */
 	protected ComposerController controller;
 	
@@ -127,5 +131,5 @@ public abstract class AbstractEditorController implements FocusOwner {
 	public abstract void redo();
 	public abstract void selectAll();
 	public abstract JComponent getComponent();
-
+	
 }

@@ -39,8 +39,9 @@ import org.columba.mail.gui.composer.ComposerController;
  * @author Karl Peder Olesen
  *
  */
-public class HtmlEditorController extends AbstractEditorController
-		implements DocumentListener, CaretListener {
+public class HtmlEditorController
+	extends AbstractEditorController
+	implements DocumentListener, CaretListener {
 
 	/** Main view (WYSIWYG) */
 	protected HtmlEditorView view;
@@ -50,10 +51,10 @@ public class HtmlEditorController extends AbstractEditorController
 	 */
 	public HtmlEditorController(ComposerController controller) {
 		super(controller);
-		
+
 		// create view (by passing null as document, the view creates it)
 		view = new HtmlEditorView(this, null);
-		
+
 		MainInterface.focusManager.registerComponent(this);
 		view.addCaretListener(this);
 
@@ -79,16 +80,15 @@ public class HtmlEditorController extends AbstractEditorController
 		}
 	}
 
-
 	/*************** Methods for setting html specific formatting *************/
-	
+
 	/**
 	 * Toggle bold font in the view on/off
 	 */
 	public void toggleBold() {
 		view.toggleBold();
 	}
-	
+
 	/**
 	 * Toggle italic font in the view on/off
 	 */
@@ -102,15 +102,14 @@ public class HtmlEditorController extends AbstractEditorController
 	public void toggleUnderline() {
 		view.toggleUnderline();
 	}
-	
-	
+
 	/**
 	 * Sets format of selected text to normal paragraph (p tag) 
 	 */
 	public void setFormatNormal() {
 		view.setFormatOfSelectedText(HTML.Tag.P);
 	}
-	
+
 	/**
 	 * Sets format of selected text to a heading
 	 *  
@@ -120,23 +119,23 @@ public class HtmlEditorController extends AbstractEditorController
 	 */
 	public void setFormatHeading(int level) {
 		switch (level) {
-			case 1:
+			case 1 :
 				view.setFormatOfSelectedText(HTML.Tag.H1);
 				break;
-			case 2:
+			case 2 :
 				view.setFormatOfSelectedText(HTML.Tag.H2);
 				break;
-			case 3:
+			case 3 :
 				view.setFormatOfSelectedText(HTML.Tag.H3);
 				break;
-			default:
+			default :
 				// unsupported
-				ColumbaLogger.log.error("Heading level " + level +
-						" not supported");
+				ColumbaLogger.log.error(
+					"Heading level " + level + " not supported");
 				break;
 		}
 	}
-	
+
 	/** 
 	 * Method for inserting a break (BR) element
 	 */
@@ -222,21 +221,21 @@ public class HtmlEditorController extends AbstractEditorController
 	public void cut() {
 		view.cut();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.focus.FocusOwner#copy()
 	 */
 	public void copy() {
 		view.copy();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.focus.FocusOwner#paste()
 	 */
 	public void paste() {
 		view.paste();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.focus.FocusOwner#delete()
 	 */
@@ -271,7 +270,6 @@ public class HtmlEditorController extends AbstractEditorController
 	public JComponent getComponent() {
 		return view;
 	}
-
 
 	/***************** Methods necessary to hide view from clients ************/
 
@@ -326,7 +324,6 @@ public class HtmlEditorController extends AbstractEditorController
 		view.setEnabled(enabled);
 	}
 
-
 	/***************** DocumentListener Implementation ************************/
 
 	/* (non-Javadoc)
@@ -348,18 +345,36 @@ public class HtmlEditorController extends AbstractEditorController
 		// TODO Auto-generated method stub
 	}
 
-
 	/******************* CaretListener Implementation *************************/
 
 	/**
 	 * Used to update actions (cut, copy, etc.) via the focusManager. This is 
 	 * done since charet updates may have coursed text selections etc. to
 	 * change, which in turn should enable/disable cut, copy, etc. actions.
+	 * <p>
+	 * This method also notifies all observers which are specific to 
+	 * the HTML component only. This includes almost all actions in
+	 * package org.columba.mail.gui.composer.html.action
+	 * <p>
+	 * TODO: This is a bit more complex, because you additionally need to 
+	 * read the state of the text. This is necessary to for example toggle
+	 * the BoldFormatAction. 
 	 * 
 	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
 	 */
 	public void caretUpdate(CaretEvent e) {
 		MainInterface.focusManager.updateActions();
+
+		boolean bool = false;
+		if (view.getSelectedText() == null) {
+			bool = false;
+		} else if (view.getSelectedText().length() > 0) {
+			bool = true;
+		}
+
+		setChanged();
+		notifyObservers(new Boolean(bool));
+
 	}
 
 }

@@ -29,7 +29,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
-/*
+/**
  * 
  * 
  *
@@ -290,14 +290,14 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		for (int i = 0; i < count; i++) {
 			XmlElement action = parentNode.getElement(i);
 			String s = action.getAttribute("name");
-			System.out.println("s=" + s);
+			
 
 			XmlElement element =
 				MainInterface.pluginManager.getPluginElement(s);
 			if (element == null) {
 				// this is no external plugin
 				// -> just add it to the list
-				System.out.println("internal plugin: "+s);
+				
 				
 				list.add(s);
 				continue;
@@ -307,7 +307,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			if (enabled == null)
 				enabled = "true";
 			boolean e = new Boolean(enabled).booleanValue();
-			System.out.println("enabled=" + e);
+			
 
 			if (e == true)
 				list.add(s);

@@ -25,7 +25,7 @@ import javax.swing.KeyStroke;
  * It provides much more attributes than JAbstractAction,
  * including:
  * - i18n tooltip
- * - i18n long description
+ * - i18n short description (tooltip!)
  * - toolbar name (this is shorter to save visual space in the toolbar)
  * - an additional large icon used in the toolbar
  * - JavaHelp topic ID
@@ -34,17 +34,19 @@ import javax.swing.KeyStroke;
  * 
  * The preferred way should be to use methods instead to add
  * additional information to the action.
+ * 
+ * In property files this value ends with "tooltip".
  * <p>
  * Note: There exist two descriptions: a LONG_DESCRIPTION and
  * a SHORT_DESCRIPTION.
  * 
- * We only use the LONG_DESCRIPTION as the tooltip text and the 
+ * We only use the SMALL_DESCRIPTION as the tooltip text and the 
  * display text of the statusbar, when hovering over the menuitem
  * associated with this action. This also means much less work 
  * for translator who didn't know how to handle this description
  * anyway.
  * 
- * There is no SHORT_DESCRIPTION anymore!! 
+ * There is no LONG_DESCRIPTION anymore!! 
  *
  * Example: @see org.columba.core.gui.action.CancelAction
  *
@@ -142,8 +144,8 @@ public class BasicAction extends JAbstractAction {
 	 * 
 	 * @return		long description
 	 */
-	public String getLongDescription() {
-		return (String) getValue(Action.LONG_DESCRIPTION);
+	public String getTooltipText() {
+		return (String) getValue(Action.SHORT_DESCRIPTION);
 	}
 	
 	/**
@@ -152,9 +154,9 @@ public class BasicAction extends JAbstractAction {
 	 * 
 	 * @param s		long description
 	 */
-	public void setLongDescription( String s)
+	public void setTooltipText( String s)
 	{
-		putValue( Action.LONG_DESCRIPTION, s );
+		putValue( Action.SHORT_DESCRIPTION, s );
 	}
 
 	/**

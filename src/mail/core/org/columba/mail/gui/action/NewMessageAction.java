@@ -56,19 +56,18 @@ public class NewMessageAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		//((MailFrameModel)MainInterface.frameModel).getComposerModel().openView();
+		
 		new ComposerController();
 		
+		
 		// TEST TEST TEST *20030907, karlpeder*
-		//ComposerController ctrl = new ComposerController();
-		//ComposerModel model = new ComposerModel(true);
-		//ctrl.setComposerModel(model);
-		
-		
 		/*
-		ComposerController controller = new ComposerController();
-		controller.showComposerWindow();
+		ComposerController ctrl = new ComposerController();
+		ComposerModel model = new ComposerModel(true);
+		ctrl.setComposerModel(model);
 		*/
+		
+		
 	}
 
 }

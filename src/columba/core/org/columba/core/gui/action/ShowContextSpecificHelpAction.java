@@ -50,7 +50,7 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 		setLargeIcon(ImageLoader.getImageIcon("stock_help-agent.png"));
 		*/
 		
-		setLongDescription("Context-specific help");
+		setTooltipText("Context-specific help");
 		
 		enableToolBarText(false);
 		

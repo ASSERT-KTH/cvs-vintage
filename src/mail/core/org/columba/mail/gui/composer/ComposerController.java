@@ -303,7 +303,7 @@ public class ComposerController
 	protected void init() {
 		// init model (defaults to empty plain text message)
 		composerModel = new ComposerModel();
-		
+
 		// init controllers for different parts of the composer
 		identityInfoPanel = new IdentityInfoPanel();
 		attachmentController = new AttachmentController(this);
@@ -313,15 +313,24 @@ public class ComposerController
 		accountController = new AccountController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
 
-		// init controller for the editor depending on message type
-		if (getModel().isHtml())
-			editorController = new HtmlEditorController(this);		
-		else
-			editorController = new TextEditorController(this);
-		
-		// init charset handling
 		XmlElement optionsElement =
 			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		// create default element if not available
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		// set model based on configuration
+		if ( enableHtml.equals("true")) getModel().setHtml(true);
+			else getModel().setHtml(false);
+
+		// init controller for the editor depending on message type
+		if (getModel().isHtml())
+			editorController = new HtmlEditorController(this);
+		else
+			editorController = new TextEditorController(this);
+
+		// init charset handling
 		XmlElement charsetElement = optionsElement.getElement("charset");
 		if (charsetElement == null) {
 			charsetElement = new XmlElement("charset");
@@ -331,7 +340,7 @@ public class ComposerController
 		}
 		setCharsetManager(new CharsetManager(charsetElement));
 		getCharsetManager().addCharsetListener(this);
-		
+
 		// Hack to ensure charset is set correctly at start-up
 		String charset = charsetElement.getAttribute("name");
 		if (charset != null) {
@@ -364,30 +373,30 @@ public class ComposerController
 	public void setComposerModel(ComposerModel model) {
 		boolean wasHtml = composerModel.isHtml();
 		composerModel = model;
-		
+
 		if (wasHtml != composerModel.isHtml()) {
 			// new editor controller needed
 			if (composerModel.isHtml())
 				editorController = new HtmlEditorController(this);
 			else
 				editorController = new TextEditorController(this);
-		
+
 			// an update of the view is also necessary.
-			((ComposerView) getView()).setNewEditorView();
+			 ((ComposerView) getView()).setNewEditorView();
 		}
-		
+
 		// Update all component according to the new model
 		updateComponents(true);
 	}
 
 	/* *20030831, karlpeder* Using method on super class instead
 	public void close() {
-                ColumbaLogger.log.info("closing ComposerController");
+	            ColumbaLogger.log.info("closing ComposerController");
 		view.saveWindowPosition();
 		view.setVisible(false);
 	}
 	*/
-	
+
 	/**
 	 * @return CharsetManager
 	 */
