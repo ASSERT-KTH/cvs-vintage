@@ -48,7 +48,7 @@ public class Jspc {
 	    processArgs( args );
 	Vector v=new Vector();
 	String commonDir=installDir + File.separator + "lib" +
-	    File.separator + "container";
+	    File.separator + "common";
 	IntrospectionUtils.addToClassPath( v, commonDir);
 	IntrospectionUtils.addToolsJar(v);
 	String containerDir=installDir + File.separator + "lib" +
