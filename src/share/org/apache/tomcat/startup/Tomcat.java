@@ -240,7 +240,11 @@ public class Tomcat {
 	    } else if (arg.equals("-f") || arg.equals("-config")) {
 		i++;
 		if( i < args.length )
-		    configFile = args[i]; 
+		    configFile = args[i];
+	    } else if (arg.equals("-h") || arg.equals("-home")) {
+		i++;
+		if (i < args.length)
+		    System.getProperties().put("tomcat.home", args[i]);
 	    }
 	}
 	return true;
