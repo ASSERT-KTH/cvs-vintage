@@ -34,6 +34,7 @@
  <action name="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>
  <action name="ReplyToAll" class="org.columba.mail.gui.table.action.ReplyToAllAction"/>
  <action name="ReplyAsAttachment" class="org.columba.mail.gui.table.action.ReplyAsAttachmentAction"/>
+ <action name="ReplyWithTemplate" class="org.columba.mail.gui.table.action.ReplyWithTemplateAction"/>
  <action name="Forward" class="org.columba.mail.gui.table.action.ForwardAction"/>
  <action name="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
  <action name="MarkAsRead" class="org.columba.mail.gui.table.action.MarkAsReadAction"/>

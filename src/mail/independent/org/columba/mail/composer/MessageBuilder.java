@@ -431,6 +431,64 @@ public class MessageBuilder {
 	}
 
 	/** 
+		 * 
+		 * Fill the <code>ComposerModel</code> with headerfields,
+		 * bodytext and mimeparts
+		 * 
+		 * @param message   A <code>Message</code> which contains
+		 *                  the headerfield/bodytext/mimeparts of 
+		 *                  of the message we want to reply/forward.
+		 * 
+		 * @param model     The <code>ComposerModel</code> we want to 
+		 *                  pass the information to.
+		 * 
+		 * @param templateBody bodytext of template message
+		 * 
+		 */
+	public void createMessageFromTemplate(
+		ColumbaMessage message,
+		ComposerModel model,
+		String templateBody) {
+
+		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
+
+		MimePart bodyPart = message.getBodyPart();
+
+		if (bodyPart != null) {
+			String charset =
+				bodyPart.getHeader().getContentParameter("charset");
+			if (charset != null) {
+				model.setCharsetName(charset);
+			}
+		}
+
+		model.setSubject(createReplySubject(header));
+
+		String to = createTo(header);
+
+		if (to != null) {
+			model.setTo(to);
+			addSenderToAddressbook(to);
+		}
+
+		createMailingListHeaderItems(header, model);
+
+		AccountItem accountItem = getAccountItem(header.getHeader());
+		model.setAccountItem(accountItem);
+
+		// prepend "> " to every line of the bodytext
+		String bodyText = createQuotedBodyText(message);
+		if (bodyText == null) {
+			bodyText = "<Error parsing bodytext>";
+		}
+		StringBuffer buf = new StringBuffer(bodyText);
+		buf.append(templateBody);
+
+		model.setBodyText(buf.toString());
+
+	}
+
+	/** 
 	 * 
 	 * Fill the <code>ComposerModel</code> with headerfields,
 	 * bodytext and mimeparts.
@@ -445,25 +503,28 @@ public class MessageBuilder {
 	 *                  pass the information to.
 	 * 
 	 */
-	public static void openMessage(Source messagesource, ComposerModel model) throws ParserException, IOException {
-		Message message = MessageParser.parse( messagesource );
-		Header header= message.getHeader();
+	public static void openMessage(Source messagesource, ComposerModel model)
+		throws ParserException, IOException {
+		Message message = MessageParser.parse(messagesource);
+		Header header = message.getHeader();
 		BasicHeader basicHeader = new BasicHeader(header);
-		
+
 		// copy every headerfield the original message contains
-		model.setHeader( header );
+		model.setHeader(header);
 
 		model.setTo(header.get("To"));
 
 		AccountItem accountItem = getAccountItem(header);
 		model.setAccountItem(accountItem);
-		
-		model.setSubject( basicHeader.getSubject() );
 
-		LocalMimePart bodyPart = (LocalMimePart) message.getMimePartTree().getFirstTextPart("html");
+		model.setSubject(basicHeader.getSubject());
 
-		if( bodyPart.getHeader().getMimeType().getSubtype().equals("html") ) {
-			model.setBodyText(HtmlParser.htmlToText(bodyPart.getBody().toString()));
+		LocalMimePart bodyPart =
+			(LocalMimePart) message.getMimePartTree().getFirstTextPart("html");
+
+		if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+			model.setBodyText(
+				HtmlParser.htmlToText(bodyPart.getBody().toString()));
 		} else {
 			model.setBodyText(bodyPart.getBody().toString());
 		}
