@@ -9,7 +9,9 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.w3c.dom.Element;
 
@@ -22,7 +24,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -31,14 +33,54 @@ public class JDBCQueryMetaDataFactory {
       this.entity = entity;
    }
 
-   public JDBCQueryMetaData createJDBCQueryMetaData(
-         QueryMetaData queryMetaData,
-         Method method) throws DeploymentException  {
+   public Map createJDBCQueryMetaData(QueryMetaData queryData)
+         throws DeploymentException {
 
-      return new JDBCQlQueryMetaData(queryMetaData, method);
+      Method[] methods = getQueryMethods(queryData);
+      Map queries = new HashMap(methods.length);
+      for(int i=0; i<methods.length; i++) {
+         queries.put(methods[i],
+               new JDBCQlQueryMetaData(queryData, methods[i]));
+      }
+      return queries;
    }
 
-   public JDBCQueryMetaData createJDBCQueryMetaData(
+   public Map createJDBCQueryMetaData(
+         Element queryElement,
+         Map defaultValues,
+         JDBCReadAheadMetaData readAhead) throws DeploymentException {
+
+      // get the query methods
+      Method[] methods = getQueryMethods(queryElement);
+      
+      // read-ahead
+      Element readAheadElement =
+            MetaData.getOptionalChild(queryElement, "read-ahead");
+      if(readAheadElement != null) {
+         readAhead = new JDBCReadAheadMetaData(readAheadElement, readAhead);
+      }
+
+      Map queries = new HashMap(methods.length);
+      for(int i=0; i<methods.length; i++) {
+         JDBCQueryMetaData defaultValue = 
+               (JDBCQueryMetaData)defaultValues.get(methods[i]);
+
+         if(defaultValue == null) {
+            throw new DeploymentException("Unknown query method : "+methods[i]);
+         }
+
+         JDBCQueryMetaData jdbcQueryData = createJDBCQueryMetaData(
+               defaultValue, 
+               queryElement, 
+               methods[i], 
+               readAhead);
+
+         queries.put(methods[i], jdbcQueryData);
+      }
+      return queries;
+   }
+         
+   private JDBCQueryMetaData createJDBCQueryMetaData(
          JDBCQueryMetaData jdbcQueryMetaData,
          Element queryElement,
          Method method,
@@ -75,7 +117,7 @@ public class JDBCQueryMetaDataFactory {
             "Error in query spedification for method " + method.getName());
    }
 
-   public Method[] getQueryMethods(Element queryElement)
+   private Method[] getQueryMethods(Element queryElement)
          throws DeploymentException {
 
       // query-method sub-element
@@ -100,14 +142,14 @@ public class JDBCQueryMetaDataFactory {
       return getQueryMethods(methodName, parameters);
    }
 
-   public Method[] getQueryMethods(QueryMetaData queryData)
+   private Method[] getQueryMethods(QueryMetaData queryData)
          throws DeploymentException {
       String methodName = queryData.getMethodName();
       Class[] parameters = convertToJavaClasses(queryData.getMethodParams());
       return getQueryMethods(methodName, parameters);
    }
 
-   public Method[] getQueryMethods(
+   private Method[] getQueryMethods(
          String methodName,
          Class parameters[]) throws DeploymentException {
 
@@ -115,20 +157,28 @@ public class JDBCQueryMetaDataFactory {
       ArrayList methods = new ArrayList(2);
       if(methodName.startsWith("ejbSelect")) {
          // bean method
-         methods.add(getQueryMethod(
-                  methodName,
-                  parameters,
-                  entity.getEntityClass()));
+         Method method = getQueryMethod(
+                  methodName, parameters, entity.getEntityClass());
+         if(method != null) {
+            methods.add(method);
+         }
       } else {
          // remote home
          Class homeClass = entity.getHomeClass();
          if(homeClass != null) {
-            methods.add(getQueryMethod(methodName, parameters, homeClass));
+            Method method = getQueryMethod(methodName, parameters, homeClass);
+            if(method != null) {
+               methods.add(method);
+            }
          }
          // local home
          Class localHomeClass = entity.getLocalHomeClass();
          if(localHomeClass != null) {
-            methods.add(getQueryMethod(methodName, parameters, localHomeClass));
+            Method method = getQueryMethod(
+                  methodName, parameters, localHomeClass);
+            if(method != null) {
+               methods.add(method);
+            }
          }
       }          
 
