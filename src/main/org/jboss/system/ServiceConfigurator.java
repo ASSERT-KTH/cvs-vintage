@@ -40,7 +40,7 @@ import org.w3c.dom.Text;
 *
 * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
-* @version $Revision: 1.16 $
+* @version $Revision: 1.17 $
 *
 * <p><b>20010830 marc fleury:</b>
 * <ul>
@@ -191,155 +191,158 @@ public class ServiceConfigurator
          // The MBean is no longer available
          throw new DeploymentException("trying to configure nonexistent mbean: " + objectName);
       }
+      // Set mbean references (object names)
+      ArrayList mbeans = new ArrayList();
 
       // Set attributes
       MBeanAttributeInfo[] attributes = info.getAttributes();
-      NodeList attrs = mbeanElement.getElementsByTagName("attribute");
+      //NodeList attrs = mbeanElement.getElementsByTagName("attribute");
+      NodeList attrs = mbeanElement.getChildNodes();
       for (int j = 0; j < attrs.getLength(); j++)
       {
-         Element attributeElement = (Element)attrs.item(j);
-         String attributeName = attributeElement.getAttribute("name");
-         attrfound:
-         if (attributeElement.hasChildNodes())
-         {
-            // Get the attribute value
-            Node n = attributeElement.getFirstChild();
-            String attributeText = null;
-            if( n instanceof Text )
-            {
-               attributeText = ((Text)n).getData().trim();
-            }
+	 if (attrs.item(j).getNodeType() == Node.ELEMENT_NODE)
+	 {
 
-            for (int k = 0; k < attributes.length; k++)
-            {
-               if (attributeName.equals(attributes[k].getName()))
-               {
-                  String typeName = attributes[k].getType();
-                  Class typeClass;
-                  if (primitives.containsKey(typeName))
-                  {
-                     typeClass = (Class)primitives.get(typeName);
-                  }
-                  else
-                  {
-                     typeClass = Class.forName(typeName);
-                  }
+	    Element element = (Element)attrs.item(j);
+	    if (element.getTagName().equals("attribute"))
+	    {
+	       String attributeName = element.getAttribute("name");
+	    attrfound:
+	       if (element.hasChildNodes())
+	       {
+		  // Get the attribute value
+		  Node n = element.getFirstChild();
+		  String attributeText = null;
+		  if( n instanceof Text )
+		  {
+		     attributeText = ((Text)n).getData().trim();
+		  }
 
-                  Object value = null;
+		  for (int k = 0; k < attributes.length; k++)
+		  {
+		     if (attributeName.equals(attributes[k].getName()))
+		     {
+			String typeName = attributes[k].getType();
+			Class typeClass;
+			if (primitives.containsKey(typeName))
+			{
+			   typeClass = (Class)primitives.get(typeName);
+			}
+			else
+			{
+			   typeClass = Class.forName(typeName);
+			}
 
-                  // HRC: Is the attribute type a org.w3c.dom.Element??
-                  if (typeClass.equals(Element.class))
-                  {
-                     // Then we can pass the first child Element of this
-                     // attributeElement
-                     NodeList nl = attributeElement.getChildNodes();
-                     for (int i=0; i < nl.getLength(); i++)
-                     {
-                        n = nl.item(i);
-                        if (n.getNodeType() == Node.ELEMENT_NODE)
-                        {
-                           value = (Element) n;
-                           break;
-                        }
-                     }
-                  }
+			Object value = null;
+
+			// HRC: Is the attribute type a org.w3c.dom.Element??
+			if (typeClass.equals(Element.class))
+			{
+			   // Then we can pass the first child Element of this
+			   // element
+			   NodeList nl = element.getChildNodes();
+			   for (int i=0; i < nl.getLength(); i++)
+			   {
+			      n = nl.item(i);
+			      if (n.getNodeType() == Node.ELEMENT_NODE)
+			      {
+				 value = (Element) n;
+				 break;
+			      }
+			   }
+			}
+			
+			if (value == null)
+			{
+			   PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
+			   editor.setAsText(attributeText);
+			   value = editor.getValue();
+			}
+			
+			if (debug)
+			   log.debug(attributeName + " set to " + value + " in " + objectName);
                   
-                  if (value == null)
-                  {
-                     PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
-                     editor.setAsText(attributeText);
-                     value = editor.getValue();
-                  }
+			server.setAttribute(objectName, new Attribute(attributeName, value));
                   
-                  if (debug)
-                     log.debug(attributeName + " set to " + value + " in " + objectName);
-                  
-                  server.setAttribute(objectName, new Attribute(attributeName, value));
-                  
-                  break attrfound;
-               }//if name matches
-            }//for attr names
-            throw new DeploymentException("No Attribute found with name: " +  attributeName);
-         }//if has children
-      }
+			break attrfound;
+		     }//if name matches
+		  }//for attr names
+		  throw new DeploymentException("No Attribute found with name: " +  attributeName);
+	       }//if has children
+	    }
+	    //end of "attribute
+	    else if (element.getTagName().equals("depends"))
+	    {
       
-      // Set mbean references (object names)
-      ArrayList mbeans = new ArrayList();
-      
-      NodeList dependsElements = mbeanElement.getElementsByTagName("depends");
-      if (debug)
-         log.debug("found " + dependsElements.getLength() + " depends elements");
-      for (int j = 0; j < dependsElements.getLength(); j++) {
-         Element dependsElement = (Element)dependsElements.item(j);
-      dependAttrFound:
-         if (!dependsElement.hasChildNodes()) 
-         {
-            throw new DeploymentException("No ObjectName supplied for depends in  " + objectName);   
+
+	    dependAttrFound:
+	       if (!element.hasChildNodes()) 
+	       {
+		  throw new DeploymentException("No ObjectName supplied for depends in  " + objectName);   
          
-         }		
+	       }		
          
-         String mbeanRefName = dependsElement.getAttribute("optional-attribute-name");
-         if ("".equals(mbeanRefName)) 
-         {
-            mbeanRefName = null;
-         } // end of if ()
+	       String mbeanRefName = element.getAttribute("optional-attribute-name");
+	       if ("".equals(mbeanRefName)) 
+	       {
+		  mbeanRefName = null;
+	       } // end of if ()
          
-         // Get the mbeanRef value
-         String value = ((Text)dependsElement.getFirstChild()).getData().trim();
+	       // Get the mbeanRef value
+	       String value = ((Text)element.getFirstChild()).getData().trim();
  
-         ObjectName dependsObjectName = new ObjectName(value);
-         if (!mbeans.contains(dependsObjectName)) 
-         {
-            mbeans.add(dependsObjectName);
-         } // end of if ()
-         if (debug)
-            log.debug("considering " + ((mbeanRefName == null)? "<anonymous>": mbeanRefName.toString()) + " with object name " + dependsObjectName);
-         if (mbeanRefName != null) 
-         {
-            //if if doesn't exist or has wrong type, we'll get an exception
-            server.setAttribute(objectName, new Attribute(mbeanRefName, dependsObjectName));
-         } // end of if ()
-      }  
+	       ObjectName dependsObjectName = new ObjectName(value);
+	       if (!mbeans.contains(dependsObjectName)) 
+	       {
+		  mbeans.add(dependsObjectName);
+	       } // end of if ()
+	       if (debug)
+		  log.debug("considering " + ((mbeanRefName == null)? "<anonymous>": mbeanRefName.toString()) + " with object name " + dependsObjectName);
+	       if (mbeanRefName != null) 
+	       {
+		  //if if doesn't exist or has wrong type, we'll get an exception
+		  server.setAttribute(objectName, new Attribute(mbeanRefName, dependsObjectName));
+	       } // end of if ()
+	    }  
+	    //end of depends
+	    else if (element.getTagName().equals("depends-list"))
+	    {      
       
-      
-      // Set lists of mbean references (object names)
+	       String dependsListName = element.getAttribute("optional-attribute-name");
+	       if ("".equals(dependsListName)) 
+	       {
+		  dependsListName = null;
+	       } // end of if ()
 
-      NodeList mBeanRefLists = mbeanElement.getElementsByTagName("depends-list");
-      for (int j = 0; j < mBeanRefLists.getLength(); j++) {
-         Element mBeanRefListElement = (Element)mBeanRefLists.item(j);
-         String mBeanRefListName = mBeanRefListElement.getAttribute("optional-attribute-name");
-         if ("".equals(mBeanRefListName)) 
-         {
-            mBeanRefListName = null;
-         } // end of if ()
+	       NodeList dependsList = element.getElementsByTagName("depends-list-element");
+	       ArrayList dependsListNames = new ArrayList();
+	       for (int l = 0; l < dependsList.getLength(); l++) 
+	       {
+		  Element dependsElement = (Element)dependsList.item(l);
+		  if (!dependsElement.hasChildNodes()) 
+		  {
+		     throw new DeploymentException("Empty depends-list-element!");    
+		  } // end of if ()
 
-         NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("depends-list-element");
-         ArrayList mBeanRefListNames = new ArrayList();
-         for (int l = 0; l < mBeanRefList.getLength(); l++) 
-         {
-            Element mBeanRefElement = (Element)mBeanRefList.item(l);
-            if (!mBeanRefElement.hasChildNodes()) 
-            {
-               throw new DeploymentException("Empty depends-list-element!");    
-            } // end of if ()
-
-            // Get the mbeanRef value
-            String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
-            ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
-            if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
-            {
-               mBeanRefListNames.add(mBeanRefObjectName);
-            } // end of if ()
-            if (!mbeans.contains(mBeanRefObjectName)) 
-            {
-               mbeans.add(mBeanRefObjectName);
-            } // end of if ()
+		  // Get the depends value
+		  String dependsValue = ((Text)dependsElement.getFirstChild()).getData().trim();
+		  ObjectName dependsObjectName = new ObjectName(dependsValue);
+		  if (!dependsListNames.contains(dependsObjectName)) 
+		  {
+		     dependsListNames.add(dependsObjectName);
+		  } // end of if ()
+		  if (!mbeans.contains(dependsObjectName)) 
+		  {
+		     mbeans.add(dependsObjectName);
+		  } // end of if ()
             
-         } // end of for ()
-         if (mBeanRefListName != null) 
-         {
-            server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
-         } // end of if ()
+	       } // end of for ()
+	       if (dependsListName != null) 
+	       {
+		  server.setAttribute(objectName, new Attribute(dependsListName, dependsListNames));
+	       } // end of if ()
+	    }//end of depends-list
+	 }
       }
       return mbeans;
    }
