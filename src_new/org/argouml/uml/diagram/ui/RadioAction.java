@@ -1,4 +1,4 @@
-// $Id: RadioAction.java,v 1.4 2003/10/31 15:24:49 jjones Exp $
+// $Id: RadioAction.java,v 1.5 2003/12/23 20:35:32 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
-import org.tigris.toolbutton.AbstractButtonAction;
+import org.tigris.toolbar.toolbutton.AbstractButtonAction;
 
 /**
  * A wrapper around a standard action to indicate that any buttons created
