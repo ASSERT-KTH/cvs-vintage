@@ -53,9 +53,9 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.imap.protocol.IMAPProtocol;
-import org.columba.ristretto.pop3.protocol.POP3Exception;
-import org.columba.ristretto.pop3.protocol.POP3Protocol;
+import org.columba.ristretto.imap.IMAPProtocol;
+import org.columba.ristretto.pop3.POP3Exception;
+import org.columba.ristretto.pop3.POP3Protocol;
 
 import com.jgoodies.forms.layout.FormLayout;
 

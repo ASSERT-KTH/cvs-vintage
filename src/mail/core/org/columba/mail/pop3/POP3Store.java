@@ -40,13 +40,13 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
-import org.columba.ristretto.pop3.protocol.POP3Exception;
-import org.columba.ristretto.pop3.protocol.POP3Protocol;
-import org.columba.ristretto.pop3.protocol.ScanListEntry;
-import org.columba.ristretto.pop3.protocol.UidListEntry;
+import org.columba.ristretto.pop3.POP3Exception;
+import org.columba.ristretto.pop3.POP3Protocol;
+import org.columba.ristretto.pop3.ScanListEntry;
+import org.columba.ristretto.pop3.UidListEntry;
 
 /**
  * @author freddy

@@ -45,14 +45,14 @@ import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MessageDate;
 import org.columba.ristretto.message.MessageIDGenerator;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.RFC822Date;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.ParserException;
 
 public class MessageComposer {
@@ -155,7 +155,7 @@ public class MessageComposer {
 		// date
 		Date date = new Date();
 		header.set("columba.date", date);
-		header.set("Date", RFC822Date.toString(date));
+		header.set("Date", MessageDate.toString(date));
 
 		// copy flags
 		header.setFlags(model.getMessage().getHeader().getFlags());

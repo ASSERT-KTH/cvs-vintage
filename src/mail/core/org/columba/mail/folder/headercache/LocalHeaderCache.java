@@ -33,10 +33,10 @@ import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
-import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
 
 

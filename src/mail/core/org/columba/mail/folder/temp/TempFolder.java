@@ -16,27 +16,32 @@
 
 package org.columba.mail.folder.temp;
 
-import org.columba.core.io.DiskIO;
+import java.io.File;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.logging.Logger;
 
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.DiskIO;
+import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
-import org.columba.ristretto.message.*;
-import org.columba.ristretto.message.io.SourceInputStream;
-import org.columba.ristretto.message.io.TempSourceFactory;
+import org.columba.ristretto.io.SourceInputStream;
+import org.columba.ristretto.io.TempSourceFactory;
+import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.parser.MessageParser;
-
-import java.io.File;
-import java.io.InputStream;
-
-import java.util.Hashtable;
-import java.util.logging.Logger;
 
 /**
  * @author freddy

@@ -28,10 +28,10 @@ import javax.swing.JComponent;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.util.AddressListRenderer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.message.Address;
-import org.columba.ristretto.message.AddressListRenderer;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 

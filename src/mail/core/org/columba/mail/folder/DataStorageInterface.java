@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.ristretto.message.io.Source;
-
 import java.io.InputStream;
+
+import org.columba.ristretto.io.Source;
 
 
 /**

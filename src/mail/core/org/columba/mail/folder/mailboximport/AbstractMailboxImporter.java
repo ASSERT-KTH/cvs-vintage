@@ -16,20 +16,18 @@
 
 package org.columba.mail.folder.mailboximport;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-
-import org.columba.mail.folder.MessageFolder;
-
-import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.ristretto.message.io.SourceInputStream;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.io.SourceInputStream;
 
 /**
  * This is the base class for mailbox importers.

@@ -15,44 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.io.DiskIO;
-import org.columba.core.io.StreamUtils;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.attachment.AttachmentModel;
-import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.parser.text.HtmlParser;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.BasicHeader;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.CharSequenceSource;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-
 import java.text.DateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -63,6 +31,34 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.DiskIO;
+import org.columba.core.io.StreamUtils;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.attachment.AttachmentModel;
+import org.columba.mail.gui.message.util.DocumentParser;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.parser.text.HtmlParser;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
 
 
 /**

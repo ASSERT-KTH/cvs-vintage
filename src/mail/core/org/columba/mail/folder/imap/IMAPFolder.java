@@ -53,15 +53,15 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.imap.IMAPFlags;
-import org.columba.ristretto.imap.protocol.IMAPException;
+import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.ParserException;
 

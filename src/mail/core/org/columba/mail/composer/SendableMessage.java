@@ -17,16 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.composer;
 
-import org.columba.core.io.CloneStreamMaster;
-
-import org.columba.mail.message.ColumbaMessage;
-
-import org.columba.ristretto.message.io.SourceInputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.List;
+
+import org.columba.core.io.CloneStreamMaster;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.io.SourceInputStream;
 
 
 public class SendableMessage extends ColumbaMessage {

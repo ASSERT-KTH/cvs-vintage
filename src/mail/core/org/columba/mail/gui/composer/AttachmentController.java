@@ -33,10 +33,10 @@ import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.main.MainInterface;
 import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.FileSource;
 
 /**
  * Controller for the attachment view.

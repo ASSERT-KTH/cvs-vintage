@@ -24,8 +24,8 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.TableUpdater;
@@ -34,8 +34,8 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.ScoreMessageCommand;
+import org.columba.ristretto.io.SourceInputStream;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.io.SourceInputStream;
 
 /**
  * After downloading the message from the POP3 server, its added to the Inbox

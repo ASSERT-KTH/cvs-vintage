@@ -15,32 +15,28 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import org.columba.core.io.StreamUtils;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
+import org.columba.core.io.StreamUtils;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
-
 import org.columba.ristretto.composer.MimePartRenderer;
 import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.io.SequenceInputStream;
+import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.ristretto.message.io.SequenceInputStream;
-import org.columba.ristretto.message.io.Source;
-
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
 
 
 public class MultipartEncryptedRenderer extends MimePartRenderer {

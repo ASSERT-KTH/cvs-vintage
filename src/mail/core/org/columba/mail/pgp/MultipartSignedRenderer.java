@@ -15,27 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import org.columba.core.io.CloneStreamMaster;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Vector;
 
+import org.columba.core.io.CloneStreamMaster;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
-
 import org.columba.ristretto.composer.MimePartRenderer;
 import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.io.SequenceInputStream;
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.SequenceInputStream;
-
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import java.util.Vector;
 
 
 public class MultipartSignedRenderer extends MimePartRenderer {

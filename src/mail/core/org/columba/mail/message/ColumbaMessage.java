@@ -17,11 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
+import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.io.Source;
 
 /**
  * Adds Columba-specific features to the default {@link Message}object found in

@@ -32,8 +32,8 @@ import java.text.MessageFormat;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.imap.protocol.IMAPDisconnectedException;
-import org.columba.ristretto.imap.protocol.IMAPException;
+import org.columba.ristretto.imap.IMAPDisconnectedException;
+import org.columba.ristretto.imap.IMAPException;
 
 /**
  * Handles all exceptions catched by Worker.construct(). Opens error dialogs.

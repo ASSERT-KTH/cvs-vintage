@@ -30,8 +30,8 @@ import org.columba.mail.folder.RootFolder;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPProtocol;
 import org.columba.ristretto.imap.ListInfo;
-import org.columba.ristretto.imap.protocol.IMAPProtocol;
 
 /**
  * Root folder for IMAP folders.

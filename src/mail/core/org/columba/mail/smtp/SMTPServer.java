@@ -37,7 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
-import org.columba.ristretto.pop3.protocol.POP3Exception;
+import org.columba.ristretto.pop3.POP3Exception;
 import org.columba.ristretto.progress.ProgressObserver;
 import org.columba.ristretto.smtp.SMTPException;
 import org.columba.ristretto.smtp.SMTPProtocol;

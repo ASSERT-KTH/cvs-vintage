@@ -15,6 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.folder.search;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
@@ -31,12 +43,10 @@ import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
-
 import org.columba.core.command.StatusObservable;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
-
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.DataStorageInterface;
@@ -45,23 +55,9 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.io.Source;
 import org.columba.ristretto.parser.MessageParser;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 
 /**
