@@ -53,6 +53,7 @@ import java.util.ArrayList;
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.commons.util.SequencedHashtable;
@@ -76,7 +77,7 @@ import org.tigris.scarab.security.ScarabSecurityPull;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.31 2001/09/07 01:10:25 elicia Exp $
+    @version $Id: Search.java,v 1.32 2001/09/12 21:25:32 jmcnally Exp $
 */
 public class Search extends TemplateAction
 {
@@ -186,7 +187,8 @@ public class Search extends TemplateAction
         {
             queryGroup.setProperties(query);
             query.setUserId(user.getUserId());
-            query.save(user, scarab.getCurrentModule(), context);
+            query.saveAndSendEmail(user, scarab.getCurrentModule(),
+                new ContextAdapter(context));
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -210,8 +212,9 @@ public class Search extends TemplateAction
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         Query query = scarabR.getQuery();
         query.setValue(newValue);
-        query.save((ScarabUser)data.getUser(), scarabR.getCurrentModule(), 
-                    context);
+        query.saveAndSendEmail((ScarabUser)data.getUser(), 
+                        scarabR.getCurrentModule(), 
+                        new ContextAdapter(context));
     }
 
     /**

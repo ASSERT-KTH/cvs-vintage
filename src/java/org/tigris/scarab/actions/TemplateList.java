@@ -65,11 +65,12 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.IssueTemplate;
 import org.tigris.scarab.om.IssueTemplatePeer;
 
+
 /**
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.1 2001/09/08 01:18:07 elicia Exp $
+    @version $Id: TemplateList.java,v 1.2 2001/09/12 21:25:32 jmcnally Exp $
 */
 public class TemplateList extends TemplateAction
 {
@@ -103,7 +104,8 @@ public class TemplateList extends TemplateAction
         {
             templateGroup.setProperties(issueTemplate);
             issueTemplate.setUserId(user.getUserId());
-            issueTemplate.save(user, scarab.getCurrentModule(), context);
+            issueTemplate
+                .saveAndSendEmail(user, scarab.getCurrentModule(), context);
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE);

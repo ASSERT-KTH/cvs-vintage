@@ -3,7 +3,6 @@ package org.tigris.scarab.om;
 import java.util.List;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.modules.ContextAdapter; 
-import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -12,6 +11,7 @@ import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.Email;
 
 /** 
@@ -35,11 +35,10 @@ public  class IssueTemplate
     }
 
 
-    public void save( ScarabUser user, ModuleEntity module, 
-                      TemplateContext context )
+    public void saveAndSendEmail( ScarabUser user, ModuleEntity module, 
+                                  TemplateContext context )
         throws Exception
     {
-        ScarabSecurity security = SecurityFactory.getInstance();
         // If it's a global template, user must have Item | Approve 
         // permission,  Or its Approved field gets set to false
         if (getTypeId().equals(USER__PK))
@@ -48,10 +47,14 @@ public  class IssueTemplate
         }
         else
         {
+            ScarabSecurity security = SecurityFactory.getInstance();
             setApproved(security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
                                                user, module));
         } 
 
+        save();
+
+        ScarabSecurity security = SecurityFactory.getInstance();
         if (!security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
                                     user, module))
         {
@@ -69,7 +72,6 @@ public  class IssueTemplate
             Email.sendEmail(new ContextAdapter(context), null, toUser,
                             subject, template);
         }
-        super.save();
     }
 
     /**
@@ -84,7 +86,7 @@ public  class IssueTemplate
      * Checks if user has permission to approve template. 
      */
     public void setApproved( ScarabUser user, ScarabModule module,
-                            boolean approved, RunData data)
+                            boolean approved)
          throws Exception
     {                
         ScarabSecurity security = SecurityFactory.getInstance();
@@ -97,16 +99,15 @@ public  class IssueTemplate
         } 
         else
         {
-            data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
         }
-            
     }
 
     /**
      * Checks if user has permission to reject template.
      */
     public void setDeleted( ScarabUser user, ScarabModule module,
-                            boolean deleted, RunData data)
+                            boolean deleted)
          throws Exception
     {                
         boolean hasPerm = false;
@@ -120,7 +121,7 @@ public  class IssueTemplate
         } 
         else
         {
-            data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
         }
             
     }

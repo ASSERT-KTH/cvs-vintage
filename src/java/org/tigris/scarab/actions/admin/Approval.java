@@ -69,13 +69,14 @@ import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.tools.Email;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.2 2001/09/10 23:04:28 elicia Exp $
+    @version $Id: Approval.java,v 1.3 2001/09/12 21:25:32 jmcnally Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -121,12 +122,26 @@ public class Approval extends TemplateAction
 
                if (action.equals("reject"))
                {
-                   query.setDeleted(user, module, true, data);
+                   try
+                   {
+                       query.setDeleted(user, module, true);
+                   }
+                   catch (ScarabException e)
+                   {
+                       data.setMessage(e.getMessage());
+                   }
                    actionWord = "rejected";
                } 
                else if (action.equals("approve"))
                {
-                   query.setApproved(user, module, true, data);
+                   try
+                   {
+                       query.setApproved(user, module, true);
+                   }
+                   catch(ScarabException e)
+                   {
+                       data.setMessage(e.getMessage());
+                   }
                    actionWord = "approved";
                }
 
@@ -149,12 +164,26 @@ System.out.println(templateId);
 
                if (action.equals("reject"))
                {
-                   template.setDeleted(user, module, true, data);
+                   try
+                   {
+                       template.setDeleted(user, module, true);
+                   }
+                   catch(ScarabException e)
+                   {
+                       data.setMessage(e.getMessage());
+                   }
                    actionWord = "rejected";
                } 
                else if (action.equals("approve"))
                {
-                   template.setApproved(user, module, true, data);
+                   try
+                   {
+                       template.setApproved(user, module, true);
+                   }
+                   catch(ScarabException e)
+                   {
+                       data.setMessage(e.getMessage());
+                   }
                    actionWord = "approved";
                }
             }
