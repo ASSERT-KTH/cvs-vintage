@@ -6,12 +6,13 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.11 2004/11/26 07:02:34 tdiesler Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.12 2004/12/26 14:19:09 loubyansky Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
 import org.jboss.xml.binding.ObjectModelFactory;
 import org.jboss.xml.binding.Unmarshaller;
+import org.jboss.xml.binding.UnmarshallerFactory;
 import org.xml.sax.Attributes;
 
 import javax.xml.namespace.QName;
@@ -53,7 +54,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       }
 
       // setup the XML binding Unmarshaller
-      Unmarshaller unmarshaller = new Unmarshaller();
+      Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
       InputStream is = jaxrpcMappingFile.openStream();
       try
       {
