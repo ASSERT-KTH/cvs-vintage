@@ -59,7 +59,18 @@ public class TestServer {
 				lNamingName
 			);
 			System.out.println( "Start the Naming Server" );
+			try {
 			lServer.invoke( lNamingName, "init", new Object[] {}, new String[] {} );
+			}
+			catch( MBeanException me ) {
+				System.err.println( "TestServer.main(), caught: " + me +
+					", target: " + me.getTargetException() );
+				me.printStackTrace();
+				me.getTargetException().printStackTrace();
+			}
+			catch( Exception e ) {
+				e.printStackTrace();
+			}
 			lServer.invoke( lNamingName, "start", new Object[] {}, new String[] {} );
 			System.out.println( "Load and register the JMX RMI-Connector" );
 			ObjectName lConnectorName = new ObjectName( lServer.getDefaultDomain(), "service", "RMIConnector" );
