@@ -128,7 +128,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.2 2002/03/14 01:45:14 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.3 2002/03/14 01:53:26 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -320,7 +320,7 @@ public abstract class AbstractScarabModule
     /**
      * recursive helper method for getAncestors()
      */
-    private void addAncestors(ModuleEntity module)
+    private void addAncestors(Module module)
         throws Exception
     {
         if (!module.getParentId().equals(ROOT_ID))
