@@ -611,7 +611,7 @@ follows:
 <!--
 Unknown primary key configuration
 -->
-<!ELEMENT unknown-pk (unknown-pk-class, read-only?, read-time-out?,
+<!ELEMENT unknown-pk (unknown-pk-class, field-name?, read-only?, read-time-out?,
    column-name?, (jdbc-type, sql-type)?, auto-increment? )>
 
 <!--
