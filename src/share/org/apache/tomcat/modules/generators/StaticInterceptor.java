@@ -80,6 +80,7 @@ public class StaticInterceptor extends BaseInterceptor {
     String charset=null;
     private boolean extraSafety=false;
     private boolean useInternal=false;
+    private boolean strict23Welcome=false;
 
     public StaticInterceptor() {
     }
@@ -104,6 +105,14 @@ public class StaticInterceptor extends BaseInterceptor {
     */
     public void setUseInternal(boolean internal) {
 	useInternal = internal;
+    }
+
+    /** Support the 2.3 behavior of allowing mapped servlets as welcome files.
+     * @param support <code>true</code> Allow mapped servlets.
+     *                <code>false</code> Allow only files.
+     */
+    public void setStrict23Welcome(boolean support) {
+	strict23Welcome = support;
     }
 
     public void setUseAcceptLanguage(boolean use) {
@@ -206,7 +215,13 @@ public class StaticInterceptor extends BaseInterceptor {
 	    return 0;
 	}
 	// Directory, check if we have a welcome file
-	String welcomeFile = getWelcomeFile(ctx, file);
+	
+	String welcomeFile = null;
+	if( strict23Welcome ) {
+	    welcomeFile = getStrictWelcomeFile(ctx, file, pathInfo);
+	} else {
+	    welcomeFile = getWelcomeFile(ctx, file);
+	}
 	if( debug > 0 )
 	    log( "DefaultServlet: welcome file: "  + welcomeFile);
 	
@@ -234,6 +249,7 @@ public class StaticInterceptor extends BaseInterceptor {
         BaseInterceptor ri[];
 	String requestURI=req.requestURI().toString();
 	String redirectURI=concatPath(requestURI,welcomeFile);
+	Context ctx = req.getContext();
 	req.requestURI().setString(redirectURI);
 	req.unparsedURI().recycle();
 	req.servletPath().recycle();
@@ -247,7 +263,11 @@ public class StaticInterceptor extends BaseInterceptor {
 	   we need to contextMap again to catch extention-mapped servlets.
 	*/
 	int status = 0;
-	ri=cm.getContainer().getInterceptors(Container.H_contextMap);
+	if(ctx == null) {
+	    ri=cm.getContainer().getInterceptors(Container.H_contextMap);
+	} else {
+	    ri = ctx.getContainer().getInterceptors(Container.H_contextMap);
+	}
 	
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].contextMap( req );
@@ -319,19 +339,43 @@ public class StaticInterceptor extends BaseInterceptor {
 	}
     }
 
+    private String getStrictWelcomeFile(Context context, File dir, String pathInfo) {
+        String wf[]= context.getWelcomeFiles();
+        BaseInterceptor ri[] = context.getContainer().
+	                          getInterceptors(Container.H_contextMap);
+	for(int i=0; i < wf.length; i++) {
+	    if(getOneWelcomeFile(dir, wf[i])) {
+		return wf[i];
+	    }
+	    String wfURI = concatPath(pathInfo, wf[i]);
+	    Request req = cm.createRequest(context, wfURI);
+	    int status = 0;
+	
+	    for( int j=0; j< ri.length; j++ ) {
+		status=ri[j].contextMap( req );
+		if( status!=0 ) break;
+	    }
+	    if(status == 0 && req.servletPath() != null && !req.servletPath().equals("")) {
+		return req.servletPath().toString().substring(pathInfo.length());
+	    }
+	}
+	    
+	return null;
+    }
     private String getWelcomeFile(Context context, File dir) {
         String wf[]= context.getWelcomeFiles();
 
 	for( int i=0; i<wf.length; i++ ) {
-	    File f = new File(dir, wf[i]);
-	    if (f.exists()) {
+	    if (getOneWelcomeFile(dir, wf[i])) {
 		return wf[i];
 	    }
 	}
 	return null;
     }
-
-
+    private boolean getOneWelcomeFile(File dir, String wf) {
+	File f = new File(dir, wf);
+	return f.exists();
+    }
 }
 
 // -------------------- Handlers --------------------
