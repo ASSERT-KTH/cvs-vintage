@@ -1,50 +1,25 @@
 #set ($user = $data.User)
-$l10n.Issue:       $issue.UniqueId ($issue.DefaultText)
+#set ($defaultText = $issue.DefaultText)
+$l10n.YouCanViewIssue:
+
+    $link.getIssueIdAbsoluteLink($issue)
+
+$l10n.Type:        $issue.RModuleIssueType.DisplayName
+$l10n.IssueId:    $issue.UniqueId #if($defaultText && $defaultText.length() > 0)($defaultText.trim())#end
+
 $l10n.ModifiedBy: $user.Name
              $user.UserName ($user.Email)
 
-$l10n.YouCanViewIssue:
-
-     $link.getIssueIdAbsoluteLink($issue)
-
-#if (!$activityList.isEmpty())
 $l10n.ModificationsMade:
 ---------------------------------------------------------------------
-#set ($actAttData = $activity.Attachment.Data)
-#set ($firstTime = true)
-#foreach ($activity in $activityList)
-#if ($actAttData)
-$actAttData
-#elseif ($activity.Depend)
-## This is a hack, we are in a loop, so check to see if the
-## second activity Description (there are only two in this case)
-## is a duplicate of the first. The weird spacing is thanks to Velocity.
-    #if ($firstTime)
-        #set ($prevMessage = $activity.Description)
-        #set ($actSetAttach = $activity.ActivitySet.Attachment.Data)
 
-$prevMessage
-        #set ($firstTime = false)
-    #else
-        #if (!$prevMessage.equals($activity.Description))
+#foreach ($desc in $uniqueActivityDescriptions)
+$desc
+#end
 
-$activity.Description
-        #end
-    #end
-#else
-$activity.Description
-
-#if ($attachment.Data && ! $attachment.Data.toString().equals($activity.Description.toString()))
-$l10n.Comment:
+#if ($attachment.Data)
+$l10n.Reason:
 $attachment.Data
-#end
-#end
-#end
-#if ($actSetAttach && $actSetAttach.toString().length() > 0)
-
-$l10n.Comment:
-$actSetAttach
-#end
 #end
 
 ---------------------------------------------------------------------

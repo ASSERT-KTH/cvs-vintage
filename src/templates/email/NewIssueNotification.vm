@@ -1,30 +1,28 @@
 #set ($user = $issue.ModifiedBy)
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
+#set ($attachmentData = $attachment.Data)
+#set ($defaultText = $issue.DefaultText)
 $l10n.YouCanViewIssue:
 
     $link.getIssueIdAbsoluteLink($issue)
 
 $l10n.Type:        $issue.RModuleIssueType.DisplayName
-$l10n.IssueId:    $issue.UniqueId
+$l10n.IssueId:    $issue.UniqueId #if($defaultText && $defaultText.length() > 0)($defaultText.trim())#end
+
 $l10n.ReportedBy: $user.Name
              $user.UserName ($user.Email)
 
-$l10n.Details:
+$l10n.NewIssueDetails:
 ---------------------------------------------------------------------
 
-#set ($attrValues = $issue.AttributeValuesMap)
-#foreach ($group in $module.getAttributeGroups($issueType))
-#foreach ($att in $group.Attributes)
-#set ($rma = $module.getRModuleAttribute($att, $issueType))
-#set ($attVal = "")
-#if ($rma.Active)
-#set ($attVal = $attrValues.get($att.getName().toUpperCase()))
-#if ($attVal.Value) 
-$rma.DisplayValue: $attVal.Value
+#foreach ($desc in $uniqueActivityDescriptions)
+$desc
 #end
-#end
-#end
+#if ($attachmentData && $attachmentData.length() > 0)
+
+$l10n.Reason:
+$attachmentData
 #end
 
 ---------------------------------------------------------------------
