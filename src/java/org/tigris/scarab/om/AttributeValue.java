@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.77 2002/11/12 19:04:02 elicia Exp $
+ * @version $Id: AttributeValue.java,v 1.78 2002/11/27 23:02:08 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -295,13 +295,17 @@ public abstract class AttributeValue
 
     public boolean equals(Object obj)
     {
-        boolean b = super.equals(obj);
-        if (!b) 
+        boolean b = false;
+        if (obj instanceof AttributeValue) 
         {
-            AttributeValue aval = (AttributeValue)obj;
-            b = getChainedValue() == null
-                && ObjectUtils.equals(aval.getAttributeId(), getAttributeId())
-                && ObjectUtils.equals(aval.getIssueId(), getIssueId());
+            b = super.equals(obj);
+            if (!b) 
+            {
+                AttributeValue aval = (AttributeValue)obj;
+                b = (getChainedValue() == null) && 
+                    ObjectUtils.equals(aval.getAttributeId(), getAttributeId())
+                    && ObjectUtils.equals(aval.getIssueId(), getIssueId());
+            }
         }
         return b;
     }
