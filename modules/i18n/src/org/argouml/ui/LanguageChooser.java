@@ -1,4 +1,4 @@
-// $Id: LanguageChooser.java,v 1.2 2003/06/29 23:16:08 linus Exp $
+// $Id: LanguageChooser.java,v 1.3 2003/09/04 17:38:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,7 +162,7 @@ public class LanguageChooser extends UMLAction implements PluggableMenu {
         Translator.setLocale(locale);
 
         LocaleEvent e = new LocaleEvent(this, locale);
-        org.argouml.ui.ProjectBrowser.TheInstance.localeChanged(e);
-            
+		// TODO Implement this later
+        // org.argouml.ui.ProjectBrowser.getInstance().localeChanged(e);
     }
 }
