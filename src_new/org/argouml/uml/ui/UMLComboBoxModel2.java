@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.44 2004/09/15 19:17:04 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.45 2004/12/02 19:51:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.uml.ui;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +53,8 @@ import ru.novosoft.uml.MElementListener;
  */
 public abstract class UMLComboBoxModel2
     extends AbstractListModel
-    implements MElementListener, ComboBoxModel, TargetListener {
+    implements MElementListener, ComboBoxModel, TargetListener, 
+    PropertyChangeListener {
 
     private static final Logger LOG =
         Logger.getLogger(UMLComboBoxModel2.class);
@@ -120,6 +123,38 @@ public abstract class UMLComboBoxModel2
         // soon as we improve targetChanged
         isClearable = clearable;
         propertySetName = name;
+    }
+
+    /**
+     * If the property that this comboboxmodel depicts is changed by the UML
+     * model, this method will make sure that it is changed in the comboboxmodel
+     * too.
+     * 
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        // TODO: complete this!
+        // propertySet
+        if (evt.getPropertyName().equals(propertySetName)
+                && evt.getSource() == getTarget()
+            && (isClearable || evt.getNewValue() != null))
+        {
+            Object elem = evt.getNewValue();
+            if (!contains(elem)) {
+                addElement(elem);
+            }
+            setSelectedItem(elem);
+        }
+        // removed
+//        if (contains(getChangedElement(e))) {
+//            Object o = evt.getOldValue();
+//            if (o instanceof Collection) {
+//                removeAll((Collection) o);
+//            } else {
+//                removeElement(o);
+//            }
+//        }
+        //TODO: and more to add!
     }
 
     /**
