@@ -19,7 +19,8 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.8 $
  */
 public class NamingService
    extends ServiceMBeanSupport
