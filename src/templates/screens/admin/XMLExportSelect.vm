@@ -44,5 +44,11 @@ $page.setTitle("XML Export")
 #end
 
 $intake.declareGroups()
+
+<script>
+<!--
+document.xmlexportselect.${xmlExportSelectGroup.FederatedIds.Key}.focus();
+// -->
+</script>
 </form>
 </div>
