@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.9 2002/02/11 09:25:51 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.10 2002/02/15 03:03:16 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -229,8 +229,8 @@ public abstract class InputHandler extends KeyAdapter
 	{
 		Buffer buffer = view.getBuffer();
 
-		if(buffer.insideCompoundEdit())
-			buffer.endCompoundEdit();
+		/* if(buffer.insideCompoundEdit())
+			buffer.endCompoundEdit(); */
 
 		// remember the last executed action
 		if(lastAction == action)
@@ -332,8 +332,8 @@ public abstract class InputHandler extends KeyAdapter
 			JEditTextArea textArea = view.getTextArea();
 
 			Buffer buffer = view.getBuffer();
-			if(!buffer.insideCompoundEdit())
-				buffer.beginCompoundEdit();
+			/* if(!buffer.insideCompoundEdit())
+				buffer.beginCompoundEdit(); */
 
 			int _repeatCount = getRepeatCount();
 			if(_repeatCount == 1)
@@ -377,8 +377,8 @@ public abstract class InputHandler extends KeyAdapter
 	{
 		Buffer buffer = view.getBuffer();
 
-		if(buffer.insideCompoundEdit())
-			buffer.endCompoundEdit();
+		/* if(buffer.insideCompoundEdit())
+			buffer.endCompoundEdit(); */
 
 		String charStr = MiscUtilities.charsToEscapes(String.valueOf(ch));
 

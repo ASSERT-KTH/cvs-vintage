@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.47 2002/02/11 09:25:51 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.48 2002/02/15 03:03:16 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -134,6 +134,21 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		addExtension(SELECTION_LAYER,new PaintSelection());
 		addExtension(WRAP_GUIDE_LAYER,new WrapGuide());
 		addExtension(BRACKET_HIGHLIGHT_LAYER,new BracketHighlight());
+	} //}}}
+
+	//{{{ setBounds() method
+	/**
+	 * It is a bad idea to override this, but we need to get the component
+	 * event before the first repaint.
+	 */
+	public void setBounds(int x, int y, int width, int height)
+	{
+		super.setBounds(x,y,width,height);
+
+		textArea.recalculateVisibleLines();
+		textArea.recalculateLastPhysicalLine();
+		textArea.propertiesChanged();
+		textArea.scrollBarsInitialized = true;
 	} //}}}
 
 	//{{{ isManagingFocus() method

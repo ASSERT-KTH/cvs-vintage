@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.6 2002/02/07 08:17:06 spestov Exp $
+ * @version $Id: Java14.java,v 1.7 2002/02/15 03:03:16 spestov Exp $
  */
 public class Java14
 {
@@ -82,6 +82,11 @@ public class Java14
 	//{{{ MyFocusManager class
 	static class MyFocusManager extends DefaultKeyboardFocusManager
 	{
+		MyFocusManager()
+		{
+			setDefaultFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
+		}
+
 		public boolean postProcessKeyEvent(KeyEvent evt)
 		{
 			if(!evt.isConsumed())

@@ -26,7 +26,10 @@ package org.gjt.sp.jedit;
 import com.microstar.xml.*;
 import javax.swing.plaf.metal.*;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Element;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Keymap;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -47,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.47 2002/02/11 03:15:30 spestov Exp $
+ * @version $Id: jEdit.java,v 1.48 2002/02/15 03:03:16 spestov Exp $
  */
 public class jEdit
 {
@@ -1991,7 +1994,7 @@ public class jEdit
 			// Don't show the welcome message if jEdit was started
 			// with the -nosettings switch
 			if(settingsDirectory != null && getBooleanProperty("firstTime"))
-				new HelpViewer("jeditresource:/doc/welcome.html");
+				new HelpViewer();
 			else if(jEdit.getBooleanProperty("tip.show"))
 				new TipOfTheDay(newView);
 

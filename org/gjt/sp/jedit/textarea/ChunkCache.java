@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.24 2002/02/12 04:13:52 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.25 2002/02/15 03:03:16 spestov Exp $
  */
 public class ChunkCache
 {
@@ -608,10 +608,6 @@ public class ChunkCache
 	//{{{ updateChunksUpTo() method
 	void updateChunksUpTo(int lastScreenLine)
 	{
-		// TODO
-		if(lastScreenLine >= lineInfo.length)
-			textArea.recalculateVisibleLines();
-
 		if(!textArea.softWrap)
 			return;
 
@@ -718,6 +714,8 @@ public class ChunkCache
 					length = buffer.getLineLength(physicalLine) - offset + 1;
 			}
 
+			boolean lastSubregion = (out.size() == 0);
+
 			if(i == lastScreenLine
 				&& lastScreenLine != lineInfo.length - 1)
 			{
@@ -730,7 +728,8 @@ public class ChunkCache
 				 * lastScreenLine, we need to keep updating the
 				 * chunk list to ensure proper alignment of
 				 * invalidation flags (see start of method) */
-				if(info.physicalLine != physicalLine)
+				if(info.physicalLine != physicalLine
+					|| info.lastSubregion != lastSubregion)
 				{
 					lastScreenLine++;
 					needFullRepaint = true;
@@ -742,7 +741,7 @@ public class ChunkCache
 			}
 
 			info.physicalLine = physicalLine;
-			info.lastSubregion = (out.size() == 0);
+			info.lastSubregion = lastSubregion;
 			info.offset = offset;
 			info.length = length;
 			info.chunks = chunks;

@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001 Slava Pestov
+ * Copyright (C) 2001, 2002 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
  * An adapter you can subclass to avoid having to implement all the methods
  * of the <code>BufferChangeListener</code> interface.
  * @author Slava Pestov
- * @version $Id: BufferChangeAdapter.java,v 1.5 2002/01/15 11:01:33 spestov Exp $
+ * @version $Id: BufferChangeAdapter.java,v 1.6 2002/02/15 03:03:16 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class BufferChangeAdapter implements BufferChangeListener
@@ -71,5 +71,18 @@ public abstract class BufferChangeAdapter implements BufferChangeListener
 	 */
 	public void contentRemoved(Buffer buffer, int startLine, int offset,
 		int numLines, int length) {}
+	//}}}
+
+	//{{{ transactionComplete() method
+	/**
+	 * Called after an undo or compound edit has finished. The text area
+	 * uses this event to queue up and collapse cleanup operations so they
+	 * are only run once during a long transaction (such as a "Replace All"
+	 * operation.)
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.0pre6
+	 */
+	public void transactionComplete(Buffer buffer) {}
 	//}}}
 }
