@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.19 2005/01/09 14:58:12 linus Exp $
+// $Id: CmdCreateNode.java,v 1.20 2005/01/09 16:28:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     static {
         // TODO: Is this the correct way to do this after refactoring the
         //       model component? Please review! /Linus
-        Method[] methodArray = UmlFactory.class.getMethods();
+        Method[] methodArray = Model.getUmlFactory().getClass().getMethods();
         for (int i = 0; i < methodArray.length; i++) {
             if (methodArray[i].getName().startsWith("get")
                     && !methodArray[i].getName().equals("getFactory")
@@ -164,6 +164,7 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
      * @see org.tigris.gef.base.CmdCreateNode#makeNode()
      */
     public Object makeNode() {
+        LOG.info("Trying to create a new node");
         // here we should implement usage of the factories
         // since i am kind of lazy i use reflection
 
@@ -185,6 +186,7 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
                         .getMethods());
                 Iterator it2 = createMethods.iterator();
                 String classname = getCreateClassName();
+                LOG.info("Trying to create a node for " + classname);
                 while (it2.hasNext()) {
                     Method method = (Method) it2.next();
                     String methodname = method.getName();
@@ -197,7 +199,9 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
 			    factory, method,
 			};
                         cache.put(_args.get("className"), params);
-                        return method.invoke(factory, emptyParam);
+                        Object newNode = method.invoke(factory, emptyParam);
+                        LOG.info("Returning a node of " + newNode.getClass().getName());
+                        return newNode;
                     }
                 }
                 it2 = createMethods.iterator();
@@ -213,15 +217,17 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
 			    factory, method,
 			};
                         cache.put(_args.get("className"), params);
-                        return method.invoke(factory, emptyParam);
+                        Object newNode =  method.invoke(factory, emptyParam);
+                        LOG.info("Returning a node of " + newNode.getClass().getName());
+                        return newNode;
                     }
                 }
 
             }
-        } catch (IllegalAccessException e2) {
-            LOG.error(e2);
-        } catch (InvocationTargetException e3) {
-            LOG.error(e3);
+        } catch (IllegalAccessException ex) {
+            LOG.error("IllegalAccessException ", ex);
+        } catch (InvocationTargetException ex) {
+            LOG.error("InvocationTargetException ", ex);
         }
         LOG.debug("delegating to super.makeNode");
         return super.makeNode();

@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.11 2005/01/09 14:58:07 linus Exp $
+// $Id: UmlFactoryImpl.java,v 1.12 2005/01/09 16:28:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,7 +145,9 @@ import ru.novosoft.uml.model_management.MSubsystem;
  * @since ARGO0.11.2
  * @author Thierry Lach
  */
-class UmlFactoryImpl extends AbstractUmlModelFactory implements UmlFactory {
+// TODO change back to default visibility when
+// reflection taken out of CmdCreateNode
+public class UmlFactoryImpl extends AbstractUmlModelFactory implements UmlFactory {
 
     /**
      * The logger.
