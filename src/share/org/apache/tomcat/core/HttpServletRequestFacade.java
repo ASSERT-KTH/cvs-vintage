@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.10 2000/04/21 20:45:02 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/04/21 20:45:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.11 2000/05/12 15:55:25 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/05/12 15:55:25 $
  *
  * ====================================================================
  *
@@ -85,6 +85,10 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     private StringManager sm = StringManager.getManager(Constants.Package);
     private Request request;
 
+    /** Used to shield the servlet from the internal implementation.
+     */
+    HttpSessionFacade sessionFacade;
+    
     private boolean usingStream = false;
     private boolean usingReader = false;
 
@@ -106,6 +110,7 @@ public class HttpServletRequestFacade implements HttpServletRequest {
 	// XXX In JDK1.2, call a security class to see if the code has
 	// the right permission !!!
         this.request = request;
+	sessionFacade=new HttpSessionFacade();
     }
 
     /** Not public - is called only from RequestImpl
@@ -113,6 +118,7 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     void recycle() {
 	usingReader=false;
 	usingStream=false;
+	sessionFacade.recycle();
     }
     
     public Object getAttribute(String name) {
@@ -252,7 +258,15 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public HttpSession getSession(boolean create) {
-        return request.getSession(create);
+	HttpSession realSession = request.getSession( create );
+	// No real session, return null
+	if( realSession == null ) {
+	    sessionFacade.recycle();
+	    return null;
+	}
+
+	sessionFacade.setRealSession( realSession );
+        return sessionFacade;
     }
 
     public BufferedReader getReader() throws IOException {
