@@ -38,7 +38,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -253,6 +253,14 @@ public class JAWSPersistenceManager
       throws RemoteException, CreateException
    {
       return createEntityCommand.execute(m, args, ctx);
+   }
+
+   public Object postCreateEntity(Method m,
+                            Object[] args,
+                            EntityEnterpriseContext ctx)
+      throws RemoteException, CreateException
+   {
+      return null;
    }
 
    public Object findEntity(Method finderMethod,
