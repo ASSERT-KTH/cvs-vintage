@@ -43,7 +43,6 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
-import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
@@ -110,12 +109,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// also register interest in tree seleciton events
 		// for updating the title
 		treeHandler.addSelectionListener(this);
-
-		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(
-				attachmentController);
-		getSelectionManager().addSelectionHandler(attachmentHandler);
-		// attachment viewer registers interest in table selection events
-		tableHandler.addSelectionListener(attachmentHandler);
 
 		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
@@ -271,7 +264,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						"splitpanes", "header", 100));
 		}
 
-
 		getContainer().extendMenuFromFile(this,
 				"org/columba/mail/action/menu.xml");
 
@@ -291,7 +283,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
 		messageController.createPopupMenu();
-		attachmentController.createPopupMenu();
 
 		return panel;
 	}

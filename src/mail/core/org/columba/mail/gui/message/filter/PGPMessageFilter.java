@@ -23,15 +23,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.Main;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.viewer.EncryptionStatusViewer;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.JSCFController;
@@ -85,8 +86,8 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	private List listeners;
 
-	public PGPMessageFilter(FrameMediator mediator) {
-		super(mediator);
+	public PGPMessageFilter(MailFrameMediator mediator, MessageController messageController) {
+		super(mediator, messageController);
 
 		listeners = new ArrayList();
 	}

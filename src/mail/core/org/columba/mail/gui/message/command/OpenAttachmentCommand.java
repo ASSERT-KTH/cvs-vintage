@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.message.attachment.command;
+package org.columba.mail.gui.message.command;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +33,6 @@ import org.columba.core.io.TempFileStore;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;

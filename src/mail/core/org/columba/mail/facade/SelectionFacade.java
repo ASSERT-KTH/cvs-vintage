@@ -32,8 +32,9 @@ public class SelectionFacade implements ISelectionFacade {
 	/**
 	 * Get currently selected folder in JTree.
 	 * 
-	 * @param mediator		top-level frame mediator		
-	 * @return				selected folder
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected folder
 	 */
 	public IMailFolderCommandReference getTreeSelection(
 			MailFrameMediator mediator) {
@@ -43,8 +44,9 @@ public class SelectionFacade implements ISelectionFacade {
 	/**
 	 * Get currently selected messages in JTable.
 	 * 
-	 * @param mediator		top-level frame mediator
-	 * @return				selected messages
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected messages
 	 */
 	public IMailFolderCommandReference getTableSelection(
 			MailFrameMediator mediator) {
@@ -54,23 +56,27 @@ public class SelectionFacade implements ISelectionFacade {
 	/**
 	 * Get currently selected attachments in AttachmentViewer.
 	 * 
-	 * @param mediator		top-level frame mediator
-	 * @return				selected attachments
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected attachments
 	 */
 	public IMailFolderCommandReference getAttachmentSelection(
 			MailFrameMediator mediator) {
-		return mediator.getAttachmentSelection();
+		return ((MessageController) ((MessageViewOwner) mediator)
+				.getMessageController()).getAttachmentsViewer()
+				.getLocalReference();
 	}
 
 	/**
 	 * Get currently selected text in MessageViewer.
 	 * 
-	 * @param mediator		top-level frame mediator
-	 * @return				selected text
+	 * @param mediator
+	 *            top-level frame mediator
+	 * @return selected text
 	 */
 	public String getTextSelection(MailFrameMediator mediator) {
-		return ((MessageController)((MessageViewOwner) mediator).getMessageController())
-				.getBodytextViewer().getSelectedText();
+		return ((MessageController) ((MessageViewOwner) mediator)
+				.getMessageController()).getBodytextViewer().getSelectedText();
 	}
 
 }

@@ -17,21 +17,35 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.viewer;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.AttachmentModel;
-import org.columba.mail.gui.message.attachment.util.AttachmentImageIconLoader;
+import org.columba.mail.gui.message.action.OpenAttachmentAction;
+import org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.frapuccino.iconpanel.IconPanel;
+import org.frapuccino.swing.DynamicFileFactory;
+import org.frapuccino.swing.DynamicFileTransferHandler;
 
 /**
  * @author fdietz
@@ -39,16 +53,31 @@ import org.frapuccino.iconpanel.IconPanel;
  */
 public class AttachmentsViewer extends IconPanel implements Viewer {
 
-	private AttachmentModel model;
 	private MimeTree mimePartTree;
-	
-	public AttachmentsViewer(AttachmentModel model) {
+
+	private ColumbaPopupMenu menu;
+
+	private AttachmentModel model;
+
+	private MailFrameMediator mediator;
+
+	private MailFolderCommandReference ref;
+
+	public AttachmentsViewer(MailFrameMediator mediator) {
 		super();
-		
-		this.model = model;
-		
+
+		this.mediator = mediator;
+
+		model = new AttachmentModel();
+
 		setOpaque(true);
 		setBackground(UIManager.getColor("List.background"));
+
+		setDragEnabled(true);
+		setTransferHandler(new AttachmentTransferHandler(new FileGenerator()));
+
+		MouseListener popupListener = new PopupListener();
+		addMouseListener(popupListener);
 	}
 
 	/**
@@ -112,8 +141,8 @@ public class AttachmentsViewer extends IconPanel implements Viewer {
 
 			ImageIcon icon = null;
 
-			icon = AttachmentImageIconLoader.getImageIcon(type.getType(), type
-					.getSubtype());
+			icon = new AttachmentImageIconLoader().getImageIcon(type.getType(),
+					type.getSubtype());
 
 			add(icon, text, tooltip.toString());
 			output = true;
@@ -123,25 +152,219 @@ public class AttachmentsViewer extends IconPanel implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.IMailbox, java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
+	 * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.IMailbox,
+	 *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
 	 */
-	public void view(IMailbox folder, Object uid, MailFrameMediator mediator) throws Exception {
+	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
+			throws Exception {
+
+		setLocalReference(new MailFolderCommandReference(folder,
+				new Object[] { uid }));
+
 		mimePartTree = folder.getMimePartTree(uid);
-		
+
 	}
 
 	/**
 	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		setMimePartTree(mimePartTree);	
+		setMimePartTree(mimePartTree);
 	}
 
 	/**
 	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
 	 */
 	public JComponent getView() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
+
+	public void createPopupMenu() {
+		//menu = new AttachmentMenu(getFrameController());
+		menu = new ColumbaPopupMenu(mediator,
+				"org/columba/mail/action/attachment_contextmenu.xml");
+
+		// set double-click action for attachment viewer
+		setDoubleClickAction(new OpenAttachmentAction(mediator));
+	}
+
+	private JPopupMenu getPopupMenu() {
+		// bug #999990 (fdietz): make sure popup menu is created correctly
+		if (menu == null) {
+			createPopupMenu();
+
+		}
+
+		return menu;
+	}
+
+	public void setLocalReference(MailFolderCommandReference ref) {
+		this.ref = ref;
+	}
+
+	public MailFolderCommandReference getLocalReference() {
+		Integer[] address = getSelectedMimePart().getAddress();
+		ref.setAddress(address);
+
+		return ref;
+	}
+
+	class PopupListener extends MouseAdapter {
+		public void mousePressed(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		private void maybeShowPopup(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				/*
+				 * if (getView().countSelected() <= 1) {
+				 * getView().select(e.getPoint(), 0); }
+				 */
+
+				if (countSelected() >= 1) {
+					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		}
+	}
+
+	private class FileGenerator implements DynamicFileFactory {
+
+		/** {@inheritDoc} */
+		public File[] createFiles(JComponent arg0) throws IOException {
+			File[] files = new File[1];
+
+			SaveAttachmentTemporaryCommand command = new SaveAttachmentTemporaryCommand(
+					mediator.getSelectionManager()
+							.getHandler("mail.attachment").getSelection());
+
+			CommandProcessor.getInstance().addOp(command);
+
+			command.waitForCommandToComplete();
+
+			files[0] = command.getTempAttachmentFile();
+
+			return files;
+		}
+	}
+
+	/**
+	 * Returns the selected mime part from the model.
+	 * 
+	 * @return the selected mime part.
+	 */
+	public StreamableMimePart getSelectedMimePart() {
+		return (StreamableMimePart) model.getDisplayedMimeParts().get(
+				getSelectedIndex());
+	}
+
+	/**
+	 * Transfer handler for the attachment view.
+	 * 
+	 * The Sun DnD integration with the the native platform, requires that the
+	 * file is already exists on the disk, when a File DnD is issued. This
+	 * TransferHandler will create the files locally when the
+	 * 
+	 * @linkplain java.awt.datatransfer.Transferable#getTransferData(java.awt.datatransfer.DataFlavor)
+	 *            method is called. That method is the last method called before
+	 *            the DnD has completed. The actual extraction is done through
+	 *            the SaveAttachmentTemporaryCommand, and there might be
+	 *            problems waiting for other commands to finish before it. The
+	 *            method does not complete until the file has been created, ie
+	 *            locks up the DnD action.
+	 *            <p>
+	 * @author redsolo
+	 * @see org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand
+	 * @see org.frappucino.swing.DynamicFileTransferHandler
+	 */
+	public class AttachmentTransferHandler extends DynamicFileTransferHandler {
+
+		/**
+		 * Setup the dynamic transfer handler.
+		 * 
+		 * @param factory
+		 *            the factory that creates the file for the DnD action.
+		 */
+		public AttachmentTransferHandler(DynamicFileFactory factory) {
+			super(factory, DynamicFileTransferHandler.LATE_GENERATION);
+		}
+
+		/**
+		 * Returns the COPY action.
+		 * 
+		 * @param c
+		 *            ignored.
+		 * @return the
+		 * @link TransferHandler#COPY COPY action.
+		 */
+		public int getSourceActions(JComponent c) {
+			return TransferHandler.COPY;
+		}
+
+		/**
+		 * Returns always false. The attachment transfer handler can only export
+		 * data flavors, and not import them.
+		 * 
+		 * @param comp
+		 *            ignored.
+		 * @param transferFlavors
+		 *            ignored.
+		 * @return false.
+		 */
+		public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
+			return false;
+		}
+	}
+
+	/**
+	 * Imageloader using a content-type and subtype to determine the image name.
+	 * <p>
+	 * Automatically falls back to the default icon.
+	 * 
+	 * @author fdietz
+	 */
+	class AttachmentImageIconLoader {
+
+		/**
+		 * Utility constructor.
+		 */
+		private AttachmentImageIconLoader() {
+		}
+
+		/**
+		 * Returns the image icon for the content type.
+		 * 
+		 * @param contentType
+		 *            content type
+		 * @param contentSubtype
+		 *            content sub type
+		 * @return an Image Icon for the content type.
+		 */
+		public ImageIcon getImageIcon(String contentType, String contentSubtype) {
+			StringBuffer buf = new StringBuffer();
+			buf.append("mime/gnome-");
+			buf.append(contentType);
+			buf.append("-");
+			buf.append(contentSubtype);
+			buf.append(".png");
+
+			ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
+
+			if (icon == null) {
+				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-"
+						+ contentType + ".png");
+			}
+
+			if (icon == null) {
+				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-text.png");
+			}
+
+			return icon;
+		}
+	}
+
 }

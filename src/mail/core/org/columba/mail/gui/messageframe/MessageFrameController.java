@@ -32,7 +32,6 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
@@ -53,10 +52,11 @@ import org.columba.mail.util.MailResourceLoader;
 public class MessageFrameController extends AbstractMailFrameController
 		implements TableViewOwner, ContentPane {
 
-	private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.messageframe");
-	
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.messageframe");
+
 	private static final int MAX_SUBJECT_LENGTH = 50;
-	
+
 	IMailFolderCommandReference treeReference;
 
 	IMailFolderCommandReference tableReference;
@@ -75,13 +75,6 @@ public class MessageFrameController extends AbstractMailFrameController
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);
 
-		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(
-				attachmentController);
-		getSelectionManager().addSelectionHandler(attachmentHandler);
-		// attachment viewer registers interest in table selection events
-		tableSelectionHandler.addSelectionListener(attachmentHandler);
-
-		//getContainer().setContentPane(this);
 	}
 
 	/**
@@ -123,29 +116,29 @@ public class MessageFrameController extends AbstractMailFrameController
 	 */
 	public void setTableSelection(IMailFolderCommandReference references) {
 		tableReference = references;
-		
+
 		try {
-			
+
 			// Get the subject from the cached Header
-			AbstractMessageFolder folder = (AbstractMessageFolder) references.getSourceFolder();
-			IColumbaHeader header = folder.getHeaderList().get(references.getUids()[0]);
-			String subject = (String)header.get("columba.subject");
-			
+			AbstractMessageFolder folder = (AbstractMessageFolder) references
+					.getSourceFolder();
+			IColumbaHeader header = folder.getHeaderList().get(
+					references.getUids()[0]);
+			String subject = (String) header.get("columba.subject");
+
 			/*
-			// Trim it to the max length of MAX_SUBJECT_LENGTH
-			subject = subject.trim();
-			
-			if( subject.length() > MAX_SUBJECT_LENGTH ) {
-				subject = subject.substring(0,MAX_SUBJECT_LENGTH-3) + "...";
-			}
-			*/
-			
+			 * // Trim it to the max length of MAX_SUBJECT_LENGTH subject =
+			 * subject.trim();
+			 * 
+			 * if( subject.length() > MAX_SUBJECT_LENGTH ) { subject =
+			 * subject.substring(0,MAX_SUBJECT_LENGTH-3) + "..."; }
+			 */
+
 			getContainer().getFrame().setTitle(subject);
 		} catch (Exception e) {
 			LOG.warning(e.toString());
 		}
-		
-		
+
 		tableSelectionHandler.setSelection(tableReference);
 	}
 
@@ -176,11 +169,9 @@ public class MessageFrameController extends AbstractMailFrameController
 
 		getContainer().extendToolbar(
 				this,
-				MailConfig.getInstance().get("messageframe_toolbar").getElement(
-						"toolbar"));
-		
-		attachmentController.createPopupMenu();
-		
+				MailConfig.getInstance().get("messageframe_toolbar")
+						.getElement("toolbar"));
+
 		/*
 		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
 		 * addToolBar(folderInfoPanel); }
@@ -196,7 +187,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
 	}
-	
+
 	/**
 	 * @see org.columba.core.gui.frame.FrameMediator#getContentPane()
 	 */

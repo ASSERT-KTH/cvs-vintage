@@ -64,9 +64,11 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
 import org.columba.mail.gui.message.util.ColumbaURL;
+import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.gui.message.viewer.BodyTextViewer;
 import org.columba.mail.gui.message.viewer.EncryptionStatusViewer;
 import org.columba.mail.gui.message.viewer.HeaderViewer;
+import org.columba.mail.gui.message.viewer.InlineAttachmentsViewer;
 import org.columba.mail.gui.message.viewer.SpamStatusViewer;
 
 /**
@@ -89,7 +91,7 @@ public class MessageController extends JScrollPane implements
 	//    protected AbstractMailFrameController abstractFrameController;
 	protected FrameMediator frameController;
 
-	protected AttachmentController attachmentController;
+	protected AttachmentsViewer attachmentsViewer;
 
 	private EncryptionStatusViewer securityInformationController;
 
@@ -99,6 +101,8 @@ public class MessageController extends JScrollPane implements
 
 	private HeaderViewer headerController;
 
+	private InlineAttachmentsViewer inlineAttachmentsViewer;
+	
 	private PGPMessageFilter pgpFilter;
 
 	public static final int VIEWER_HTML = 1;
@@ -112,11 +116,9 @@ public class MessageController extends JScrollPane implements
 	private JPanel panel;
 
 	//private MessageSelectionManager messageSelectionManager;
-	public MessageController(FrameMediator frameMediator,
-			AttachmentController attachmentController) {
+	public MessageController(FrameMediator frameMediator) {
 		this.frameController = frameMediator;
-		this.attachmentController = attachmentController;
-
+		
 		spamStatusController = new SpamStatusViewer(
 				(MailFrameMediator) frameController);
 		bodytextViewer = new BodyTextViewer();
@@ -129,7 +131,11 @@ public class MessageController extends JScrollPane implements
 		bodytextViewer.addMouseListener(this);
 		bodytextViewer.addCaretListener(this);
 
-		pgpFilter = new PGPMessageFilter(frameController);
+		attachmentsViewer = new AttachmentsViewer((MailFrameMediator)frameMediator);
+		
+		inlineAttachmentsViewer = new InlineAttachmentsViewer();
+		
+		pgpFilter = new PGPMessageFilter((MailFrameMediator)frameMediator, this);
 		pgpFilter.addSecurityStatusListener(securityInformationController);
 		pgpFilter.addSecurityStatusListener(headerController.getStatusPanel());
 
@@ -181,7 +187,8 @@ public class MessageController extends JScrollPane implements
 			bottom.add(securityInformationController.getView(),
 					BorderLayout.NORTH);
 
-		bottom.add(attachmentController.getView(), BorderLayout.CENTER);
+		bottom.add(attachmentsViewer, BorderLayout.CENTER);
+		//bottom.add(inlineAttachmentsViewer, BorderLayout.CENTER);
 
 		panel.add(bottom, BorderLayout.SOUTH);
 	}
@@ -684,9 +691,10 @@ public class MessageController extends JScrollPane implements
 				(MailFrameMediator) frameController);
 		getHeaderController().view(folder, uid,
 				(MailFrameMediator) frameController);
-		attachmentController.getView().view(folder, uid,
+		attachmentsViewer.view(folder, uid,
 				(MailFrameMediator) frameController);
-
+		inlineAttachmentsViewer.view(folder, uid, (MailFrameMediator) frameController);
+		
 		getSpamStatusViewer().view(folder, uid,
 				(MailFrameMediator) frameController);
 		getSecurityInformationViewer().view(folder, uid,
@@ -704,7 +712,8 @@ public class MessageController extends JScrollPane implements
 
 		getBodytextViewer().updateGUI();
 		getHeaderController().updateGUI();
-		attachmentController.getView().updateGUI();
+		attachmentsViewer.updateGUI();
+		inlineAttachmentsViewer.updateGUI();
 		getSpamStatusViewer().updateGUI();
 		getSecurityInformationViewer().updateGUI();
 
@@ -718,12 +727,7 @@ public class MessageController extends JScrollPane implements
 		return pgpFilter;
 	}
 
-	/**
-	 * @return Returns the attachmentController.
-	 */
-	public AttachmentController getAttachmentController() {
-		return attachmentController;
-	}
+	
 
 	/**
 	 * @see org.columba.mail.gui.message.IMessageController#filterMessage(org.columba.mail.folder.IMailbox,
@@ -741,4 +745,10 @@ public class MessageController extends JScrollPane implements
 		getUrlObservable().addObserver(observer);
 	}
 
+	/**
+	 * @return Returns the attachmentsViewer.
+	 */
+	public AttachmentsViewer getAttachmentsViewer() {
+		return attachmentsViewer;
+	}
 }

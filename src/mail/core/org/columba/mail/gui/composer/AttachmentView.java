@@ -21,7 +21,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import org.columba.mail.gui.message.attachment.util.AttachmentImageIconLoader;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeType;
@@ -38,6 +38,8 @@ public class AttachmentView extends IconPanel {
 
 	/** Reference to the controller controlling this view */
 	private AttachmentController attachmentController;
+	
+	private AttachmentImageIconLoader attachmentIconLoader;
 
 	/** Underlying data model for the list view */
 	private DefaultListModel listModel;
@@ -60,6 +62,8 @@ public class AttachmentView extends IconPanel {
 
 		setBackground(UIManager.getColor("List.background"));
 
+		attachmentIconLoader = new AttachmentImageIconLoader();
+		
 		//setModel(listModel);
 
 		//setCellRenderer(new ListRenderer());
@@ -98,7 +102,7 @@ public class AttachmentView extends IconPanel {
 
 		MimeType mimeType = header.getMimeType();
 
-		ImageIcon icon = AttachmentImageIconLoader.getImageIcon(mimeType
+		ImageIcon icon = attachmentIconLoader.getImageIcon(mimeType
 				.getType(), mimeType.getSubtype());
 
 		String text = header.getFileName();
@@ -191,5 +195,52 @@ public class AttachmentView extends IconPanel {
 	 */
 	public AttachmentController getController() {
 		return attachmentController;
+	}
+	
+	/**
+	 * Imageloader using a content-type and subtype to determine the image name.
+	 * <p>
+	 * Automatically falls back to the default icon.
+	 * 
+	 * @author fdietz
+	 */
+	class AttachmentImageIconLoader {
+
+		/**
+		 * Utility constructor.
+		 */
+		private AttachmentImageIconLoader() {
+		}
+
+		/**
+		 * Returns the image icon for the content type.
+		 * 
+		 * @param contentType
+		 *            content type
+		 * @param contentSubtype
+		 *            content sub type
+		 * @return an Image Icon for the content type.
+		 */
+		public ImageIcon getImageIcon(String contentType, String contentSubtype) {
+			StringBuffer buf = new StringBuffer();
+			buf.append("mime/gnome-");
+			buf.append(contentType);
+			buf.append("-");
+			buf.append(contentSubtype);
+			buf.append(".png");
+
+			ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
+
+			if (icon == null) {
+				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-"
+						+ contentType + ".png");
+			}
+
+			if (icon == null) {
+				icon = ImageLoader.getUnsafeImageIcon("mime/gnome-text.png");
+			}
+
+			return icon;
+		}
 	}
 }

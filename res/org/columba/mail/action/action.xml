@@ -134,9 +134,9 @@
  <action name="InsertBreakAction" class="org.columba.mail.gui.composer.html.action.InsertBreakAction" />
  
  <!-- attachment -->
- <action name="OpenAttachment" class="org.columba.mail.gui.message.attachment.action.OpenAction"/>
- <action name="OpenAttachmentWith" class="org.columba.mail.gui.message.attachment.action.OpenWithAction"/>
- <action name="SaveAttachmentAs" class="org.columba.mail.gui.message.attachment.action.SaveAsAction"/>
+ <action name="OpenAttachment" class="org.columba.mail.gui.message.action.OpenAttachmentAction"/>
+ <action name="OpenAttachmentWith" class="org.columba.mail.gui.message.action.OpenWithAttachmentAction"/>
+ <action name="SaveAttachmentAs" class="org.columba.mail.gui.message.action.SaveAsAttachmentAction"/>
  
  
 </actionlist>

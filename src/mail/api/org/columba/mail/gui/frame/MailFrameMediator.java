@@ -20,30 +20,23 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folderoptions.IFolderOptionsController;
 
-
 /**
  * Adds selection handling methods to the {@link FrameMediator}
- *
+ * 
  * @author fdietz
  */
 public interface MailFrameMediator extends FrameMediator {
-    public IMailFolderCommandReference getTableSelection();
+	public IMailFolderCommandReference getTableSelection();
 
-    public void setTableSelection(IMailFolderCommandReference r);
+	public void setTableSelection(IMailFolderCommandReference r);
 
-    public IMailFolderCommandReference getTreeSelection();
+	public IMailFolderCommandReference getTreeSelection();
 
-    public void setTreeSelection(IMailFolderCommandReference r);
+	public void setTreeSelection(IMailFolderCommandReference r);
 
-    public IMailFolderCommandReference getAttachmentSelection();
+	public void registerTableSelectionListener(ISelectionListener l);
 
-    public void setAttachmentSelection(IMailFolderCommandReference r);
+	public void registerTreeSelectionListener(ISelectionListener l);
 
-    public void registerTableSelectionListener(ISelectionListener l);
-
-    public void registerTreeSelectionListener(ISelectionListener l);
-
-    public void registerAttachmentSelectionListener(ISelectionListener l);
-
-    public IFolderOptionsController getFolderOptionsController();
+	public IFolderOptionsController getFolderOptionsController();
 }

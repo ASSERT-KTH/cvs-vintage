@@ -13,20 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.message.attachment.action;
+package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.attachment.command.OpenAttachmentCommand;
-import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionChangedEvent;
+import org.columba.mail.gui.frame.MessageViewOwner;
+import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.message.command.OpenAttachmentCommand;
+import org.columba.mail.gui.message.viewer.AttachmentsViewer;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -35,9 +34,11 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
-public class OpenAction extends AbstractColumbaAction implements
-		ISelectionListener {
-	public OpenAction(FrameMediator frameMediator) {
+public class OpenAttachmentAction extends AbstractColumbaAction {
+
+	private AttachmentsViewer viewer;
+
+	public OpenAttachmentAction(FrameMediator frameMediator) {
 		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
 				"attachmentopen"));
 
@@ -49,10 +50,9 @@ public class OpenAction extends AbstractColumbaAction implements
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
 		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
 
-		if (frameMediator.getSelectionManager() != null) {
-			((MailFrameMediator) frameMediator)
-					.registerAttachmentSelectionListener(this);
-		}
+		this.viewer = ((MessageController) ((MessageViewOwner) frameMediator)
+				.getMessageController()).getAttachmentsViewer();
+
 	}
 
 	/*
@@ -62,23 +62,11 @@ public class OpenAction extends AbstractColumbaAction implements
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// bug #999990 (fdietz) check if attachment is really selected
-		MailFolderCommandReference ref = (MailFolderCommandReference) getFrameMediator()
-				.getSelectionManager().getHandler("mail.attachment")
-				.getSelection();
+		MailFolderCommandReference ref = viewer.getLocalReference();
+
 		if (ref.getAddress() != null)
-			CommandProcessor.getInstance().addOp(new OpenAttachmentCommand(ref));
+			CommandProcessor.getInstance()
+					.addOp(new OpenAttachmentCommand(ref));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((AttachmentSelectionChangedEvent) e).getAddress() != null) {
-			setEnabled(true);
-		} else {
-			setEnabled(false);
-		}
-	}
 }

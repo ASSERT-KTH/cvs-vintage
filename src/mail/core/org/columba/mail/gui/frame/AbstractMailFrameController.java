@@ -31,7 +31,6 @@ import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.folderoptions.IFolderOptionsController;
-import org.columba.mail.gui.message.AttachmentController;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.MessageController;
 
@@ -40,12 +39,9 @@ import org.columba.mail.gui.message.MessageController;
  *  
  */
 public class AbstractMailFrameController extends DefaultFrameController
-		implements MailFrameMediator, MessageViewOwner, AttachmentViewOwner,
-		CharsetOwnerInterface {
+		implements MailFrameMediator, MessageViewOwner, CharsetOwnerInterface {
 
 	public MessageController messageController;
-
-	public AttachmentController attachmentController;
 
 	private IFolderOptionsController folderOptionsController;
 
@@ -62,9 +58,7 @@ public class AbstractMailFrameController extends DefaultFrameController
 	public AbstractMailFrameController(ViewItem viewItem) {
 		super(viewItem);
 
-		attachmentController = new AttachmentController(this);
-
-		messageController = new MessageController(this, attachmentController);
+		messageController = new MessageController(this);
 
 		folderOptionsController = new FolderOptionsController(this);
 
@@ -139,13 +133,6 @@ public class AbstractMailFrameController extends DefaultFrameController
 	 */
 	public IMessageController getMessageController() {
 		return messageController;
-	}
-
-	/**
-	 * @see org.columba.mail.gui.frame.AttachmentViewOwner#getAttachmentController()
-	 */
-	public AttachmentController getAttachmentController() {
-		return attachmentController;
 	}
 
 	public void setCharset(Charset charset) {

@@ -17,11 +17,12 @@
 package org.columba.mail.gui.message.filter;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
-import org.columba.mail.gui.message.attachment.selection.AttachmentSelectionHandler;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.message.IColumbaMessage;
@@ -38,10 +39,12 @@ import org.columba.mail.message.IColumbaMessage;
  */
 public abstract class AbstractFilter implements Filter {
 
-    private FrameMediator mediator;
-
-    public AbstractFilter(FrameMediator mediator) {
+    private MailFrameMediator mediator;
+    private MessageController messageController;
+    
+    public AbstractFilter(MailFrameMediator mediator, MessageController messageController) {
         this.mediator = mediator;
+        this.messageController = messageController;
     }
     /**
      * @return 
@@ -69,9 +72,7 @@ public abstract class AbstractFilter implements Filter {
 
         // this is needed to be able to open attachments of the decrypted
         // message
-        AttachmentSelectionHandler h = ((AttachmentSelectionHandler) mediator
-                .getSelectionManager().getHandler("mail.attachment"));
-        h.setLocalReference(local);
+        messageController.getAttachmentsViewer().setLocalReference(local);
         
         return local;
     }

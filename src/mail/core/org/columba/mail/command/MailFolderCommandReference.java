@@ -65,7 +65,7 @@ public class MailFolderCommandReference extends DefaultFolderCommandReference
 
 		this.message = message;
 	}
-
+	
 	/**
 	 * Constructor for MailFolderCommandReference.
 	 * 
@@ -105,6 +105,10 @@ public class MailFolderCommandReference extends DefaultFolderCommandReference
 
 	public Integer[] getAddress() {
 		return address;
+	}
+	
+	public void setAddress(Integer[] address) {
+		this.address = address;
 	}
 
 
