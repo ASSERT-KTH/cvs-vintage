@@ -1,5 +1,5 @@
 <td id="rightcol" width="20%">
-    <div class="www">
+    <div class="help" id="modulehelp">
         
         <p><img src="$data.Request.ContextPath/images/module2.gif" 
         width="113" height="51" alt="" border="0" /></p>
