@@ -1,17 +1,17 @@
 #set ( $queryId = $data.Parameters.getString("queryId"))
 #set ( $query = $scarabR.getQuery() )
 #set ( $queryGroup = $intake.Query.mapTo($query)) 
+#set ($module = $scarabR.CurrentModule)
 
       <div class="app" id="search.vm">
        <h2>Edit Query '$query.Name'</h2>
 
        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
-#set ($action = $link.setPage("secure,EditQuery.vm").setAction("SaveQuery").addPathInfo("nextTemplate", "secure,EditQuery.vm"))
+#set ($action = $link.setPage("secure,EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "secure,EditQuery.vm"))
 
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId">
-<input type="hidden" name="searchType" value="advanced" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$query.Value">
       <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -37,8 +37,8 @@
 
         <tr>
          <th width="120">location:</th>
-         <td>current project '$data.User.CurrentModule.Name'</td>
-         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$data.User.CurrentModule.ModuleId">
+         <td>current project '$module.Name'</td>
+         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId">
         </tr>
        </table>
       </div>
@@ -56,6 +56,7 @@
 
 <form action="$action" method="get">
 <input type="hidden" name="queryId" value="$queryId">
+<input type="hidden" name="searchType" value="advanced" />
 
 #set ( $search = $scarabR.Search )
 #set ( $query = $intake.SearchIssue.mapTo($search) )
