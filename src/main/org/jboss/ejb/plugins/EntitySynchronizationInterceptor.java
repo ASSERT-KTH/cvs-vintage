@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -243,7 +243,7 @@ public class EntitySynchronizationInterceptor
             {
                lock.schedule(mi);
                register(ctx, tx); // Set tx
-               lock.releaseMethodLock();
+               lock.endInvocation(mi);
             }
             finally
             {
@@ -284,7 +284,11 @@ public class EntitySynchronizationInterceptor
          }
          catch (Exception ex)
          {
-            clearContextTx("loadEntity Exception", ctx, tx, log.isTraceEnabled());
+            // readonly does not synchronize, lock or belong with transaction.
+            if (!container.isReadOnly() && !container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()))
+            {
+               clearContextTx("loadEntity Exception", ctx, tx, log.isTraceEnabled());
+            }
             throw ex;
          }
    
@@ -298,17 +302,15 @@ public class EntitySynchronizationInterceptor
       // Invocation with a running Transaction
       if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
       {
-         try
-         {     
-            //Invoke down the chain
-            return getNext().invoke(mi);  
-         }
-         finally
+         // readonly does not synchronize, lock or belong with transaction.
+         if (!container.isReadOnly() && !container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName()))
          {
             //register the wrapper with the transaction monitor (but only register once).
             // The transaction demarcation will trigger the storage operations
             register(ctx,tx);
          }
+         //Invoke down the chain
+         return getNext().invoke(mi);  
       }
       //
       else
