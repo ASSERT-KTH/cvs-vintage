@@ -65,6 +65,7 @@ $page.setTitle("Enter issue")
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
         #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+        #set ($templAttVal = "")
         #set ($templAttVal = $templ.getAttributeValue($att))
         #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
         #if ($attVal.Attribute.AttributeType.ValidationKey)
@@ -89,8 +90,8 @@ $page.setTitle("Enter issue")
                    #attrValueLeafSelect ($attVal $field "" false)
                  #end
               #else
-               #if ($templ)
-                 #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
+               #if ($templAttVal.Value)
+                  #templateAttrValueText ( $attVal $templAttVal "50")  
                #else
                  #attrValueText ( $attVal "50" )
                #end
