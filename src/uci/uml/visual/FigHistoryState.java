@@ -27,11 +27,12 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigHistoryState.java,v 1.1 1999/02/06 03:07:44 jrobbins Exp $
+// $Id: FigHistoryState.java,v 1.2 1999/02/19 19:16:44 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
 import com.sun.java.swing.*;
@@ -132,6 +133,13 @@ public class FigHistoryState extends FigStateVertex {
 
   public void setLineWidth(int w) { _head.setLineWidth(w); }
   public int getLineWidth() { return _head.getLineWidth(); }
+
+  ////////////////////////////////////////////////////////////////
+  // Event handlers
+  
+  public void mouseClicked(MouseEvent me) { }
+  public void keyPressed(KeyEvent ke) { }
+
 
   static final long serialVersionUID = 6572261327347541373L;
 

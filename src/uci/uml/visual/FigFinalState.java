@@ -27,11 +27,12 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.7 1999/02/06 03:07:41 jrobbins Exp $
+// $Id: FigFinalState.java,v 1.8 1999/02/19 19:16:42 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
 import com.sun.java.swing.*;
@@ -122,6 +123,13 @@ public class FigFinalState extends FigStateVertex {
 
   public void setLineWidth(int w) { _outCircle.setLineWidth(w); }
   public int getLineWidth() { return _outCircle.getLineWidth(); }
+
+  ////////////////////////////////////////////////////////////////
+  // Event handlers
+  
+  public void mouseClicked(MouseEvent me) { }
+  public void keyPressed(KeyEvent ke) { }
+
 
   static final long serialVersionUID = -3506578343969467480L;
 

@@ -27,7 +27,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.11 1998/11/20 19:54:28 jrobbins Exp $
+// $Id: Layer.java,v 1.12 1999/02/19 19:14:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -153,6 +153,30 @@ public abstract class Layer implements java.io.Serializable {
   public boolean getOnMenu() { return _onMenu; }
 
   public abstract Vector getContents();
+
+  public Vector getContentsNoEdges() {
+    Vector contents = getContents();
+    int size = contents.size();
+    Vector res = new Vector(size);
+    for (int i = 0; i < size; i++) {
+      Object o = contents.elementAt(i);
+      if (!(o instanceof FigEdge))
+	res.addElement(o);
+    }
+    return res;
+  }
+
+  public Vector getContentsEdgesOnly() {
+    Vector contents = getContents();
+    int size = contents.size();
+    Vector res = new Vector(size);
+    for (int i = 0; i < size; i++) {
+      Object o = contents.elementAt(i);
+      if (o instanceof FigEdge)
+	res.addElement(o);
+    }
+    return res;
+  }
 
   /** Return the Vector of Editors that are showing this Layer. */
   public Vector getEditors() { return _editors; }

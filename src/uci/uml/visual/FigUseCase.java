@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.12 1999/02/06 03:07:59 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.13 1999/02/19 19:16:51 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -146,9 +146,9 @@ public class FigUseCase extends FigNodeModelElement {
   // event handlers
 
   /** Update the text labels */
-  protected void modelChanged() {
-    super.modelChanged();
-    // needs-more-work: update extension points?
-  }
+//   protected void modelChanged() {
+//     super.modelChanged();
+//     // needs-more-work: update extension points?
+//   }
 
 } /* end class FigUseCase */

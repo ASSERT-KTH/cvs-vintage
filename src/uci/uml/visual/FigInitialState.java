@@ -27,11 +27,12 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.7 1999/02/06 03:07:45 jrobbins Exp $
+// $Id: FigInitialState.java,v 1.8 1999/02/19 19:16:45 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
 import com.sun.java.swing.*;
@@ -117,6 +118,12 @@ public class FigInitialState extends FigStateVertex {
 
   public void setLineWidth(int w) { _head.setLineWidth(w); }
   public int getLineWidth() { return _head.getLineWidth(); }
+
+  ////////////////////////////////////////////////////////////////
+  // Event handlers
+  
+  public void mouseClicked(MouseEvent me) { }
+  public void keyPressed(KeyEvent ke) { }
 
   static final long serialVersionUID = 6572261327347541373L;
 

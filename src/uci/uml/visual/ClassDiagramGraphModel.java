@@ -27,7 +27,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.13 1998/10/20 00:31:08 jrobbins Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.14 1999/02/19 19:16:28 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -58,13 +58,13 @@ implements MutableGraphModel, VetoableChangeListener {
    *  Also, elements from other models will have their FigNodes add a
    *  line to say what their model is. */
 
-  protected Model _model;
+  protected Namespace _model;
 
   ////////////////////////////////////////////////////////////////
   // accessors
 
-  public Model getModel() { return _model; }
-  public void setModel(Model m) {
+  public Namespace getNamespace() { return _model; }
+  public void setNamespace(Namespace m) {
     if (_model != null) _model.removeVetoableChangeListener(this);
     _model = m;
     if (_model != null) _model.addVetoableChangeListener(this);

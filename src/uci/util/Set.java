@@ -28,7 +28,7 @@
 // File: Set.java
 // Classes: Set
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Set.java,v 1.7 1999/02/06 03:08:08 jrobbins Exp $
+// $Id: Set.java,v 1.8 1999/02/19 19:17:08 jrobbins Exp $
 
 package uci.util;
 
@@ -78,10 +78,17 @@ public class Set implements java.io.Serializable  {
     addAllElementsSuchThat(s.elements(), p);
   }
 
-  public void remove(Object o) { _v.removeElement(o); }
-  public void removeElement(Object o) { _v.removeElement(o); }
+  public void remove(Object o) {
+    if (o != null) _v.removeElement(o);
+  }
+  public void removeElement(Object o) {
+    if (o != null) _v.removeElement(o);
+  }
   public void removeAllElements() { _v.removeAllElements(); }
-  public boolean contains(Object o) { return _v.contains(o); }
+  public boolean contains(Object o) {
+    if (o != null) return _v.contains(o);
+    return false;
+  }
   public boolean containsSuchThat(Predicate p) {
     return findSuchThat(p) != null;
   }

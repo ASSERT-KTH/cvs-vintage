@@ -27,7 +27,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.11 1999/02/06 03:07:40 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.12 1999/02/19 19:16:41 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -40,6 +40,7 @@ import com.sun.java.swing.plaf.metal.MetalLookAndFeel;
 
 import uci.gef.*;
 import uci.graph.*;
+import uci.argo.kernel.*;
 import uci.uml.ui.*;
 import uci.uml.generate.*;
 import uci.uml.Foundation.Core.*;
@@ -113,6 +114,12 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
   ////////////////////////////////////////////////////////////////
   // accessors
 
+  public String getTipString(MouseEvent me) {
+    ToDoItem item = hitClarifier(me.getX(), me.getY());
+    if (item != null) return item.getHeadline();
+    if (getOwner() != null) return getOwner().toString();
+    return toString();
+  }
   public Vector getPopUpActions() {
     Vector popUpActions = super.getPopUpActions();
     popUpActions.addElement(new CmdUMLProperties());

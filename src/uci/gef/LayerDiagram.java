@@ -28,7 +28,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.12 1999/02/06 03:05:46 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.13 1999/02/19 19:14:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -179,6 +179,16 @@ public class LayerDiagram extends Layer {
       if (f.getOwner() == obj) return f;
     }
     return null;
+  }
+
+  public int presentationCountFor(Object obj) {
+    int count = 0;
+    Enumeration figs = elements();
+    while (figs.hasMoreElements()) {
+      Fig f = (Fig) figs.nextElement();
+      if (f.getOwner() == obj) count++;
+    }
+    return count;
   }
 
   ////////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.1 1998/11/03 22:10:45 jrobbins Exp $
+// $Id: CrSubclassReference.java,v 1.2 1999/02/19 19:15:15 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -117,7 +117,6 @@ public class CrSubclassReference extends CrUML {
 	offs.addElement(otherCls);
       }
     }
-    
     return offs;
   }
 

@@ -26,7 +26,7 @@
 
 <!-- Argo/UML project file DTD -->
 <!-- original author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.dtd,v 1.1 1999/02/06 03:03:18 jrobbins Exp $ -->
+<!-- $Id: argo.dtd,v 1.2 1999/02/19 19:14:31 jrobbins Exp $ -->
 
 <!-- Here is an example of an Argo/UML project file named thoughts.argo:
 
@@ -70,7 +70,7 @@
 
 <!ELEMENT member EMPTY >
 <!ATTLIST member
-            type (xmi | diagram | text | html | argo | other)  #required
+            type (xmi | pgml | text | html | argo | other)  #required
             name CDATA #required >
 
 <!ELEMENT historyfile EMPTY >

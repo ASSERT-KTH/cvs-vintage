@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.9 1999/02/06 03:07:32 jrobbins Exp $
+// $Id: FigActor.java,v 1.10 1999/02/19 19:16:33 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -152,10 +152,10 @@ public class FigActor extends FigNodeModelElement {
   ////////////////////////////////////////////////////////////////
   // event handlers
 
-  /** Update the text labels */
-  protected void modelChanged() {
-    super.modelChanged();
-  }
+//   /** Update the text labels */
+//   protected void modelChanged() {
+//     super.modelChanged();
+//   }
 
 
 } /* end class FigActor */

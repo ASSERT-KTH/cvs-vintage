@@ -26,7 +26,7 @@
 
 // File: FigClassifierRole.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.1 1999/02/06 03:07:37 jrobbins Exp $
+// $Id: FigClassifierRole.java,v 1.2 1999/02/19 19:16:38 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -168,10 +168,12 @@ public class FigClassifierRole extends FigNodeModelElement {
     if (cr == null) return;
     String nameStr = GeneratorDisplay.Generate(cr.getName()).trim();
     String baseString = cr.getBaseString().trim();
-    if( nameStr == "" && baseString == "")
-      _name.setText("");
-    else
-      _name.setText(nameStr.trim() + " : " + baseString);
+    if (_readyToEdit) {
+      if( nameStr == "" && baseString == "")
+	_name.setText("");
+      else
+	_name.setText(nameStr.trim() + " : " + baseString);
+    }
   }
 
 //  public void keyPressed(KeyEvent ke) {}

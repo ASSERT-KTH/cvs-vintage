@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/graphedit/demo
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.5 1999/01/01 00:16:18 jrobbins Exp $
+# $Id: Makefile,v 1.6 1999/02/19 19:14:52 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -41,6 +41,7 @@ CLASSES = \
 	SampleEdge.class \
 	SampleEdge2.class \
 	SampleNode.class \
+	FigSampleNode.class \
 	SampleNode2.class \
 	SamplePalette.class \
 	SamplePort.class \

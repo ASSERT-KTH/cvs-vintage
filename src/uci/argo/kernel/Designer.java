@@ -27,7 +27,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.16 1999/01/01 00:15:59 jrobbins Exp $
+// $Id: Designer.java,v 1.17 1999/02/19 19:14:27 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -281,7 +281,7 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
   }
   public void setCritiquingInterval(int i) { _critiquingInterval = i; }
 
-   public synchronized static void setCritiquingRoot(Object d) {
+   public static void setCritiquingRoot(Object d) {
      _CritiquingRoot = d;
      theDesigner()._toDoList.removeAllElements();
      synchronized (theDesigner()) {
@@ -471,7 +471,3 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
   public boolean canFixIt(ToDoItem item) { return false; }
 
 } /* end class Designer */
-
-
-
-

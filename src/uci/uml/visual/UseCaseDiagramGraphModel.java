@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.8 1998/10/20 00:31:24 jrobbins Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.9 1999/02/19 19:17:01 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -57,13 +57,13 @@ implements MutableGraphModel, VetoableChangeListener {
    *  Also, elements from other models will have their FigNodes add a
    *  line to say what their model is. */
 
-  protected Model _model;
+  protected Namespace _model;
 
   ////////////////////////////////////////////////////////////////
   // accessors
 
-  public Model getModel() { return _model; }
-  public void setModel(Model m) {
+  public Namespace getNamespace() { return _model; }
+  public void setNamespace(Namespace m) {
     if (_model != null) _model.removeVetoableChangeListener(this);
     _model = m;
     if (_model != null) _model.addVetoableChangeListener(this);

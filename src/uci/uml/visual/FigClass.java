@@ -27,7 +27,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.28 1999/02/06 03:07:36 jrobbins Exp $
+// $Id: FigClass.java,v 1.29 1999/02/19 19:16:37 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -158,14 +158,14 @@ public class FigClass extends FigNodeModelElement  {
     super.setEnclosingFig(encloser);
     if (!(getOwner() instanceof ModelElement)) return;
     ModelElement me = (ModelElement) getOwner();
-    Model m = null;
+    Namespace m = null;
     ProjectBrowser pb = ProjectBrowser.TheInstance;
     if (encloser != null && (encloser.getOwner() instanceof Model)) {
-      m = (Model) encloser.getOwner();
+      m = (Namespace) encloser.getOwner();
     }
     else {
       if (pb.getTarget() instanceof UMLDiagram) {
-	m = (Model) ((UMLDiagram)pb.getTarget()).getModel();
+	m = (Namespace) ((UMLDiagram)pb.getTarget()).getNamespace();
       }
     }
     try {

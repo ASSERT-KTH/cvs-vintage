@@ -27,7 +27,7 @@
 // File: FigEdgePoly.java
 // Classes: FigEdgePoly
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigEdgePoly.java,v 1.3 1998/10/20 00:22:54 jrobbins Exp $
+// $Id: FigEdgePoly.java,v 1.4 1999/02/19 19:14:40 jrobbins Exp $
 
 package uci.gef;
 
@@ -68,6 +68,10 @@ public class FigEdgePoly extends FigEdge {
     return res;
   }
 
+  ////////////////////////////////////////////////////////////////
+  // accessors
+
+  public void setInitiallyLaidOut(boolean b) { _initiallyLaidOut = b; }
 
   ////////////////////////////////////////////////////////////////
   // routing methods

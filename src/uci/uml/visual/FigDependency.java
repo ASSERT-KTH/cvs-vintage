@@ -27,7 +27,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.9 1999/02/06 03:07:38 jrobbins Exp $
+// $Id: FigDependency.java,v 1.10 1999/02/19 19:16:40 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -63,6 +63,7 @@ public class FigDependency extends FigEdgeModelElement {
   public void setFig(Fig f) {
     super.setFig(f);
     _fig.setDashed(true);
+    computeRoute();
   }
 
   protected boolean canEdit(Fig f) { return false; }

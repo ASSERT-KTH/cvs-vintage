@@ -27,11 +27,12 @@
 // File: FigJoinState.java
 // Classes: FigJoinState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigJoinState.java,v 1.4 1999/02/06 03:07:48 jrobbins Exp $
+// $Id: FigJoinState.java,v 1.5 1999/02/19 19:16:46 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
 import com.sun.java.swing.*;
@@ -126,6 +127,13 @@ public class FigJoinState extends FigStateVertex {
 
   public void setLineWidth(int w) { _head.setLineWidth(w); }
   public int getLineWidth() { return _head.getLineWidth(); }
+
+  ////////////////////////////////////////////////////////////////
+  // Event handlers
+  
+  public void mouseClicked(MouseEvent me) { }
+  public void keyPressed(KeyEvent ke) { }
+
 
   static final long serialVersionUID = 2075803883819230367L;
 
