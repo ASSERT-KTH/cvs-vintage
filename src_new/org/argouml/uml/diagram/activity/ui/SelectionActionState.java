@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.15 2003/08/31 16:15:24 alexb Exp $
+// $Id: SelectionActionState.java,v 1.14 2003/08/31 16:11:06 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionActionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActionState.java,v 1.15 2003/08/31 16:15:24 alexb Exp $
+// $Id: SelectionActionState.java,v 1.14 2003/08/31 16:11:06 alexb Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -51,6 +51,9 @@ import org.tigris.gef.graph.MutableGraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.Handle;
+
+import ru.novosoft.uml.behavior.activity_graphs.MActionStateImpl;
+import ru.novosoft.uml.behavior.state_machines.MTransition;
 
 public class SelectionActionState extends SelectionWButtons {
     protected static Category cat = 
