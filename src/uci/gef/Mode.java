@@ -27,7 +27,7 @@
 // File: Mode.java
 // Classes: Mode
 // Original Author: ics125 spring 1996
-// $Id: Mode.java,v 1.6 1998/07/02 02:52:35 jrobbins Exp $
+// $Id: Mode.java,v 1.7 1998/10/20 00:23:08 jrobbins Exp $
 
 package uci.gef;
 
@@ -185,5 +185,6 @@ implements Serializable, KeyListener, MouseListener, MouseMotionListener {
   /** Just calls paint(g) bt default. */
   public void print(Graphics g) { paint(g); }
 
+  static final long serialVersionUID = 7960954871341784898L;
 } /* end class Mode */
 

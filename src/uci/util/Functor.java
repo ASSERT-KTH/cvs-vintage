@@ -28,7 +28,7 @@
 // File: Functor.java
 // Interfaces: Functor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Functor.java,v 1.4 1998/07/02 02:53:46 jrobbins Exp $
+// $Id: Functor.java,v 1.5 1998/10/20 00:31:29 jrobbins Exp $
 
 package uci.util;
 
@@ -42,4 +42,6 @@ import java.util.*;
 
 public interface Functor extends java.io.Serializable  {
   public Object apply(Object x);
+  
+  static final long serialVersionUID = -8357537933535035881L;
 } /* end interface Functor */

@@ -27,7 +27,7 @@
 // File: ModeBroom.java
 // Classes: ModeBroom
 // Original Author: ics125 spring 1996
-// $Id: ModeBroom.java,v 1.2 1998/10/16 00:08:20 jrobbins Exp $
+// $Id: ModeBroom.java,v 1.3 1998/10/20 00:23:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -406,5 +406,6 @@ public class ModeBroom extends Mode {
 
   }
 
+  static final long serialVersionUID = 8477764856706223037L;
 } /* end class ModeBroom */
 

@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.18 1998/10/16 00:08:18 jrobbins Exp $
+// $Id: FigNode.java,v 1.19 1998/10/20 00:22:58 jrobbins Exp $
 
 package uci.gef;
 
@@ -477,5 +477,6 @@ implements MouseListener, PropertyChangeListener, Serializable {
       fe.cleanUp();
     }
   }
-
+  static final long serialVersionUID = -6733563667370736365L;
+  
 } /* end class FigNode */

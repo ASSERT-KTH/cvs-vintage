@@ -27,7 +27,7 @@
 // File: PathConv.java
 // Classes: PathConv
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConv.java,v 1.13 1998/10/09 01:05:03 jrobbins Exp $
+// $Id: PathConv.java,v 1.14 1998/10/20 00:23:23 jrobbins Exp $
 
 package uci.gef;
 
@@ -91,4 +91,6 @@ public abstract class PathConv implements java.io.Serializable {
     res.y += dy;
 
   }
+
+  static final long serialVersionUID = -2090491388402219290L;
 } /* end class PathConv */

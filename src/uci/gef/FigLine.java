@@ -25,7 +25,7 @@
 // File: FigLine.java
 // Classes: FigLine
 // Original Author: ics125 spring 1996
-// $Id: FigLine.java,v 1.13 1998/10/08 00:05:49 jrobbins Exp $
+// $Id: FigLine.java,v 1.14 1998/10/20 00:22:57 jrobbins Exp $
 
 package uci.gef;
 
@@ -308,6 +308,8 @@ public class FigLine extends Fig {
     calcBounds();
     firePropChange("bounds", null, null);    
   }
+
+  static final long serialVersionUID = -1388823280311397581L;
 
 } /* end class FigLine */
 

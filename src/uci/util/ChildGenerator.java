@@ -28,7 +28,7 @@
 // File: ChildGenerator.java
 // Classes: ChildGenerator
 // Original Author: jason robbins
-// $Id: ChildGenerator.java,v 1.4 1998/07/02 02:53:43 jrobbins Exp $
+// $Id: ChildGenerator.java,v 1.5 1998/10/20 00:31:26 jrobbins Exp $
 
 package uci.util;
 
@@ -41,5 +41,6 @@ import java.util.*;
 public interface ChildGenerator extends java.io.Serializable {
   /** Reply a Enumeration of the children of the given Object */
   public Enumeration gen(Object o);
+  static final long serialVersionUID = -6461174793151552095L;
 } /* end interface ChildGenerator */
 

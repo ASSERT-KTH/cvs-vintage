@@ -28,7 +28,7 @@
 // File: SampleNode.java
 // Classes: SampleNode
 // Original Author: ics125b spring 1996
-// $Id: SampleNode.java,v 1.8 1998/07/02 02:53:11 jrobbins Exp $
+// $Id: SampleNode.java,v 1.9 1998/10/20 00:26:11 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -134,5 +134,7 @@ public class SampleNode extends NetNode implements Serializable {
   public void keyPressed(KeyEvent e) {
     //    System.out.println("sample node got keyDown");
   }
+
+  static final long serialVersionUID = -8629963393808576433L;
 
 } /* end class SampleNode */

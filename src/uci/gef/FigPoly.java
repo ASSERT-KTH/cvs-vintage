@@ -27,7 +27,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.11 1998/10/16 00:08:18 jrobbins Exp $
+// $Id: FigPoly.java,v 1.12 1998/10/20 00:22:58 jrobbins Exp $
 
 package uci.gef;
 
@@ -548,6 +548,8 @@ public class FigPoly extends Fig {
     _w = polyBounds.width;
     _h = polyBounds.height;
   }
+
+  static final long serialVersionUID = 469741678140186635L;
 
 } /* end class FigPoly */
 

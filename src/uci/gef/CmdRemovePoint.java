@@ -28,7 +28,7 @@
 // File: CmdRemovePoint.java
 // Classes: CmdRemovePoint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdRemovePoint.java,v 1.5 1998/07/02 02:51:59 jrobbins Exp $
+// $Id: CmdRemovePoint.java,v 1.6 1998/10/20 00:22:40 jrobbins Exp $
 
 package uci.gef;
 
@@ -69,5 +69,7 @@ public class CmdRemovePoint extends Cmd {
   public void undoIt() {
     System.out.println("this operation currently cannot be undone");
   }
+
+  static final long serialVersionUID = 1761687061656172699L;
 
 } /* end class CmdRemovePoint */

@@ -28,7 +28,7 @@
 // File: Guide.java
 // Classes: Guide
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Guide.java,v 1.4 1998/07/02 02:52:26 jrobbins Exp $
+// $Id: Guide.java,v 1.5 1998/10/20 00:23:01 jrobbins Exp $
 
 package uci.gef;
 
@@ -63,5 +63,8 @@ public abstract class Guide implements java.io.Serializable {
 
   /** Bring up a dialog box to set the parameters for this
    *  guide. E.g., set the size of a grid. */
-  public void adjust() { };
-}
+   public void adjust() { };
+
+  static final long serialVersionUID = -3263257514204584581L;
+} /* end class Guide */
+

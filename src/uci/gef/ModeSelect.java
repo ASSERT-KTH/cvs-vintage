@@ -27,7 +27,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125 spring 1996
-// $Id: ModeSelect.java,v 1.14 1998/10/13 18:09:34 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.15 1998/10/20 00:23:19 jrobbins Exp $
 
 package uci.gef;
 
@@ -205,5 +205,6 @@ public class ModeSelect extends Mode {
     nextMode.mousePressed(me);
   }
 
+  static final long serialVersionUID = -8847591655429149135L;
 } /* end class ModeSelect */
 

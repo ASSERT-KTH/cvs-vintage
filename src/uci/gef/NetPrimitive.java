@@ -28,7 +28,7 @@
 // File: NetPrimitive.java
 // Classes: NetPrimitive
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NetPrimitive.java,v 1.10 1998/07/02 02:52:52 jrobbins Exp $
+// $Id: NetPrimitive.java,v 1.11 1998/10/20 00:23:22 jrobbins Exp $
 
 package uci.gef;
 
@@ -96,5 +96,6 @@ public class NetPrimitive implements java.io.Serializable {
   public void firePropertyChange(String pName, int oldV, int newV) {
     _changeSup.firePropertyChange(pName, new Integer(oldV), new Integer(newV));
   }
-  
+
+  static final long serialVersionUID = 2197255223665843110L;
 } /* end class NetPrimitive */

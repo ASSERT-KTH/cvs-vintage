@@ -27,7 +27,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: your email address here
-// $Id: FigNote.java,v 1.5 1998/09/17 18:48:54 jrobbins Exp $
+// $Id: FigNote.java,v 1.6 1998/10/20 00:31:17 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -111,6 +111,7 @@ public class FigNote extends FigNodeModelElement {
     p.moveToTrash(elmt);
     super.dispose();
   }
+
 
 
 

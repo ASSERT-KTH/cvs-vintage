@@ -27,7 +27,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.3 1998/08/06 21:32:26 jrobbins Exp $
+// $Id: FigInitialState.java,v 1.4 1998/10/20 00:31:13 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -144,5 +144,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     catch (PropertyVetoException pve) { }
     super.dispose();
   }
+
+  static final long serialVersionUID = 6572261327347541373L;
 
 } /* end class FigInitialState */

@@ -28,7 +28,7 @@
 // File: CmdAdjustGuide.java
 // Classes: CmdAdjustGuide
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustGuide.java,v 1.5 1998/07/02 02:51:50 jrobbins Exp $
+// $Id: CmdAdjustGuide.java,v 1.6 1998/10/20 00:22:32 jrobbins Exp $
 
 package uci.gef;
 
@@ -50,5 +50,7 @@ public class CmdAdjustGuide extends Cmd {
   }
 
   public void undoIt() { }
+
+  static final long serialVersionUID = -8804405544872141957L;
 
 } /* end class CmdAdjustGuide */

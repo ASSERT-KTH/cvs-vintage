@@ -27,7 +27,7 @@
 // File: CmdDistribute.java
 // Classes: CmdDistribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdDistribute.java,v 1.2 1998/10/16 00:08:14 jrobbins Exp $
+// $Id: CmdDistribute.java,v 1.3 1998/10/20 00:22:36 jrobbins Exp $
 
 package uci.gef;
 
@@ -208,6 +208,8 @@ public class CmdDistribute extends Cmd {
   }
 
   public Rectangle getLastBBox() { return _bbox; }
+
+    static final long serialVersionUID = 1344866391413571335L;
 
 } /* end class CmdDistribute */
 

@@ -29,7 +29,7 @@
 // File: FigInk.java
 // Classes: FigInk
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigInk.java,v 1.4 1998/07/02 02:52:18 jrobbins Exp $
+// $Id: FigInk.java,v 1.5 1998/10/20 00:22:57 jrobbins Exp $
 
 package uci.gef;
 
@@ -71,6 +71,8 @@ public class FigInk extends FigPoly {
   public boolean contains(int x, int y) {
     return super.findHandle(x, y) != -1;
   }
+
+  static final long serialVersionUID = 660593786382654496L;
 
 } /* end class FigInk */
 

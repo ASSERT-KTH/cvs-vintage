@@ -28,7 +28,7 @@
 // File: FlexibleApplet.java
 // Classes: FlexibleApplet
 // Original Author: ics125b spring 1996
-// $Id: FlexibleApplet.java,v 1.8 1998/07/02 02:53:07 jrobbins Exp $
+// $Id: FlexibleApplet.java,v 1.9 1998/10/20 00:26:07 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -225,5 +225,7 @@ public class FlexibleApplet extends Applet {
     //
     return info;
   }
+
+  static final long serialVersionUID = -5917674608779926046L;
 
 } /* end class FlexibleApplet */

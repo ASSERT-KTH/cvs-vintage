@@ -28,7 +28,7 @@
 // File: CmdSetMode.java
 // Classes: CmdSetMode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSetMode.java,v 1.5 1998/07/02 02:52:03 jrobbins Exp $
+// $Id: CmdSetMode.java,v 1.6 1998/10/20 00:22:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -113,5 +113,7 @@ public class CmdSetMode extends Cmd {
   public void undoIt() {
     System.out.println("undo does not make sense for setting modes");
   }
+
+  static final long serialVersionUID = -4531712223929955885L;
 
 } /* end class CmdSetMode */

@@ -27,7 +27,7 @@
 // File: DefaultGraphEdgeRenderer.java
 // Classes: DefaultGraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphEdgeRenderer.java,v 1.7 1998/07/02 02:58:04 jrobbins Exp $
+// $Id: DefaultGraphEdgeRenderer.java,v 1.8 1998/10/20 00:27:20 jrobbins Exp $
 
 package uci.graph;
 
@@ -48,5 +48,5 @@ implements GraphEdgeRenderer, java.io.Serializable {
     if (!(edge instanceof NetEdge))  return null;
     return ((NetEdge)edge).presentationFor(lay);
   }
-
+  static final long serialVersionUID = 1489442708189176127L;
 } /* end class DefaultGraphEdgeRenderer */

@@ -28,7 +28,7 @@
 // File: LayerPerspective.java
 // Classes: LayerPerspective
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPerspective.java,v 1.9 1998/08/06 21:31:46 jrobbins Exp $
+// $Id: LayerPerspective.java,v 1.10 1998/10/20 00:23:07 jrobbins Exp $
 
 package uci.gef;
 
@@ -240,6 +240,7 @@ public class LayerPerspective extends LayerDiagram implements GraphListener {
 //   }
 
 
-  
+
+  static final long serialVersionUID = -4474641874921584572L;
 } /* end class LayerPerspective */
 

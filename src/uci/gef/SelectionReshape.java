@@ -28,7 +28,7 @@
 // File: SelectionReshape.java
 // Classes: SelectionReshape
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionReshape.java,v 1.10 1998/10/09 01:05:04 jrobbins Exp $
+// $Id: SelectionReshape.java,v 1.11 1998/10/20 00:23:30 jrobbins Exp $
 
 package uci.gef;
 
@@ -188,5 +188,6 @@ public class SelectionReshape extends Selection
     //super.keyTyped(ke);
   }
 
+    static final long serialVersionUID = -7030659500756989233L;
 } /* end class SelectionReshape */
 

@@ -28,7 +28,7 @@
 // File: SamplePalette.java
 // Classes: SamplePalette
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SamplePalette.java,v 1.6 1998/07/02 02:53:13 jrobbins Exp $
+// $Id: SamplePalette.java,v 1.7 1998/10/20 00:26:12 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -72,5 +72,7 @@ public class SamplePalette extends PaletteFig {
       add(image2, "Image2", "Image2");
     }
   }
+
+  static final long serialVersionUID = -2808153269152965859L;
 
 } /* end class SamplePalette */

@@ -28,7 +28,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.14 1998/10/16 00:08:21 jrobbins Exp $
+// $Id: ModeModify.java,v 1.15 1998/10/20 00:23:17 jrobbins Exp $
 
 package uci.gef;
 
@@ -233,5 +233,6 @@ public class ModeModify extends Mode {
     return _minDeltaAchieved;
   }
 
+  static final long serialVersionUID = -5048296582544436022L;
 } /* end class ModeModify */
 

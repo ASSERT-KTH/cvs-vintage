@@ -28,7 +28,7 @@
 // File: FunctorIdentity.java
 // Classes: FunctorIdentity
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FunctorIdentity.java,v 1.4 1998/07/02 02:53:47 jrobbins Exp $
+// $Id: FunctorIdentity.java,v 1.5 1998/10/20 00:31:30 jrobbins Exp $
 
 package uci.util;
 
@@ -41,4 +41,6 @@ import java.util.*;
 
 public class FunctorIdentity implements Functor {
   public Object apply(Object x) { return x; }
+  
+  static final long serialVersionUID = 7427499478247001211L;
 } /* end class FunctorIdentity */

@@ -27,7 +27,7 @@
 // File: FigGeneralization.java
 // Classes: FigGeneralization
 // Original Author: abonner@ics.uci.edu
-// $Id: FigGeneralization.java,v 1.10 1998/10/09 01:05:39 jrobbins Exp $
+// $Id: FigGeneralization.java,v 1.11 1998/10/20 00:31:12 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -79,6 +79,7 @@ public class FigGeneralization extends FigEdgeModelElement {
     // do not set _name
     updateStereotypeText();
   }
+
 
 
 } /* end class FigGeneralization */

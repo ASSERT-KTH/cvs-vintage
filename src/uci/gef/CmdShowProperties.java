@@ -28,7 +28,7 @@
 // File: CmdShowProperties.java
 // Classes: CmdShowProperties
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdShowProperties.java,v 1.2 1998/07/02 02:52:04 jrobbins Exp $
+// $Id: CmdShowProperties.java,v 1.3 1998/10/20 00:22:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -55,5 +55,7 @@ public class CmdShowProperties extends Cmd {
   public void undoIt() {
     System.out.println("undo CmdShowProperties is not supported");
   }
+
+  static final long serialVersionUID = 3037486521222920373L;
 
 } /* end class CmdShowProperties */

@@ -28,7 +28,7 @@
 // File: SampleEdge2.java
 // Classes: SampleEdge2
 // Original Author: ics125b spring 1996
-// $Id: SampleEdge2.java,v 1.4 1998/07/02 02:53:11 jrobbins Exp $
+// $Id: SampleEdge2.java,v 1.5 1998/10/20 00:26:10 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -43,5 +43,7 @@ public class SampleEdge2 extends NetEdge {
   public FigEdge makePresentation(Layer lay) {
     return new FigEdgeRectiline();
   }
+
+  static final long serialVersionUID = 6622246206628841051L;
 
 } /* end class SampleEdge2 */

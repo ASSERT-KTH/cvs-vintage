@@ -27,7 +27,7 @@
 // File: FigCircle.java
 // Classes: FigCircle
 // Original Author: ics125 spring 1996
-// $Id: FigCircle.java,v 1.4 1998/07/02 02:52:12 jrobbins Exp $
+// $Id: FigCircle.java,v 1.5 1998/10/20 00:22:52 jrobbins Exp $
 
 package uci.gef;
 
@@ -89,6 +89,7 @@ public class FigCircle extends Fig {
     return distSquared <= 1.01;
   }
 
+  static final long serialVersionUID = 4192370690690777913L;
 
 } /* end class FigCircle */
 

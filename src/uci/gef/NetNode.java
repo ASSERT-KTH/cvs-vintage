@@ -28,7 +28,7 @@
 // File: NetNode.java
 // Classes: NetNode
 // Original Author: ics125 spring 1996
-// $Id: NetNode.java,v 1.10 1998/07/02 02:52:51 jrobbins Exp $
+// $Id: NetNode.java,v 1.11 1998/10/20 00:23:21 jrobbins Exp $
 
 package uci.gef;
 
@@ -165,6 +165,7 @@ implements GraphNodeHooks, java.io.Serializable  {
   public void postPlacement(Editor ed) { }
 
 
-  
+
+  static final long serialVersionUID = 6562548365621157454L;
 } /* end class NetNode */
 

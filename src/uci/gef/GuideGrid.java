@@ -28,7 +28,7 @@
 // File: GuideGrid.java
 // Classes: GuideGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GuideGrid.java,v 1.4 1998/07/02 02:52:27 jrobbins Exp $
+// $Id: GuideGrid.java,v 1.5 1998/10/20 00:23:02 jrobbins Exp $
 
 package uci.gef;
 
@@ -84,4 +84,5 @@ public class GuideGrid extends Guide {
     else _gridSize *= 2;
   }
 
+  static final long serialVersionUID = -7881039726350677403L;
 } /* end class GuideGrid */

@@ -28,7 +28,7 @@
 // File: NodeWall.java
 // Classes: NodeWall
 // Original Author: ics125b spring 1996
-// $Id: NodeWall.java,v 1.5 1998/07/02 02:53:09 jrobbins Exp $
+// $Id: NodeWall.java,v 1.6 1998/10/20 00:26:08 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -68,5 +68,7 @@ public class NodeWall extends NetNode implements Serializable {
     fn.bindPort(powerPort2, obj3);
     return fn;
   }
+
+  static final long serialVersionUID = -6306614428888650160L;
 
 } /* end class NodeWall */

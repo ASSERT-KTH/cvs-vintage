@@ -28,7 +28,7 @@
 // File: NetPort.java
 // Classes: NetPort
 // Original Author: ics125 spring 1996
-// $Id: NetPort.java,v 1.10 1998/07/02 02:52:51 jrobbins Exp $
+// $Id: NetPort.java,v 1.11 1998/10/20 00:23:21 jrobbins Exp $
 
 package uci.gef;
 
@@ -169,5 +169,6 @@ implements GraphPortHooks, java.io.Serializable {
   }
 
 
+  static final long serialVersionUID = 6658397967869283099L;
 } /* end class NetPort */
 

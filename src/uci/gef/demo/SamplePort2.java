@@ -28,7 +28,7 @@
 // File: SamplePort2.java
 // Classes: SamplePort2
 // Original Author: ics125b spring 1996
-// $Id: SamplePort2.java,v 1.6 1998/07/02 02:53:14 jrobbins Exp $
+// $Id: SamplePort2.java,v 1.7 1998/10/20 00:26:13 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -71,4 +71,5 @@ public class SamplePort2 extends SamplePort implements Serializable {
     // really a java.lang.Class method that is missing: isSubclass()
   }
 
+  static final long serialVersionUID = -1531712489556040622L;
 } /* end class SamplePort2 */

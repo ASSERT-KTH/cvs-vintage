@@ -27,7 +27,7 @@
 // File: GraphEdgeRenderer.java
 // Interfaces: GraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphEdgeRenderer.java,v 1.8 1998/07/15 18:22:25 jrobbins Exp $
+// $Id: GraphEdgeRenderer.java,v 1.9 1998/10/20 00:27:22 jrobbins Exp $
 
 package uci.graph;
 
@@ -44,4 +44,5 @@ public interface GraphEdgeRenderer extends java.io.Serializable {
   /** Return a Fig that can be used to represent the given edge */
   FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge);
 
+  static final long serialVersionUID = -3081556642159305118L;
 } /* end interface GraphEdgeRenderer */

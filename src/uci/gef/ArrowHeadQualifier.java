@@ -26,7 +26,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHeadQualifier.java,v 1.2 1998/08/06 21:31:25 jrobbins Exp $
+// $Id: ArrowHeadQualifier.java,v 1.3 1998/10/20 00:22:30 jrobbins Exp $
 
 package uci.gef;
 
@@ -95,5 +95,7 @@ public class ArrowHeadQualifier extends ArrowHead {
     temp = new FigText(x3,y3,x2,y2 , Color.blue, "Times", 8);
     temp.setText("qualifier");
   }
+
+  static final long serialVersionUID = 4785521344140183388L;
 
 } /* end class ArrowHeadQualifier */

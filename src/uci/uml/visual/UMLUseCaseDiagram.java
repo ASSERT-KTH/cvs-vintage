@@ -27,7 +27,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.5 1998/10/08 00:06:49 jrobbins Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.6 1998/10/20 00:31:24 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -143,4 +143,6 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     _toolBar.add(_actionInk);
   }
   
+  static final long serialVersionUID = 9120268784682936786L;
+
 } /* end class UMLUseCaseDiagram */

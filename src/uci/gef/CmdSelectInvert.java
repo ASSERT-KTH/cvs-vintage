@@ -28,7 +28,7 @@
 // File: CmdSelectInvert.java
 // Classes: CmdSelectInvert
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectInvert.java,v 1.5 1998/07/02 02:52:01 jrobbins Exp $
+// $Id: CmdSelectInvert.java,v 1.6 1998/10/20 00:22:43 jrobbins Exp $
 
 package uci.gef;
 
@@ -60,6 +60,8 @@ public class CmdSelectInvert extends Cmd {
   public void undoIt() {
     System.out.println("Undo does not make sense for CmdSelectInvert");
   }
+
+  static final long serialVersionUID = 6936776969114546088L;
 
 } /* end class CmdSelectInvert */
 

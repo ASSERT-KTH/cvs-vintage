@@ -28,7 +28,7 @@
 // File: CmdOpen.java
 // Classes: CmdOpen
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpen.java,v 1.6 1998/07/02 02:51:57 jrobbins Exp $
+// $Id: CmdOpen.java,v 1.7 1998/10/20 00:22:39 jrobbins Exp $
 
 package uci.gef;
 
@@ -111,6 +111,8 @@ public class CmdOpen extends Cmd implements FilenameFilter {
   public void undoIt() {
     System.out.println("Undo does not make sense for CmdOpen");
   }
+
+  static final long serialVersionUID = 2041332028613457262L;
 
 } /* end class CmdOpen */
 

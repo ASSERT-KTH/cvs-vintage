@@ -27,7 +27,7 @@
 // File: CmdAlign.java
 // Classes: CmdAlign
 // Original Author: ics125 spring 1996
-// $Id: CmdAlign.java,v 1.6 1998/10/13 18:09:30 jrobbins Exp $
+// $Id: CmdAlign.java,v 1.7 1998/10/20 00:22:33 jrobbins Exp $
 
 package uci.gef;
 
@@ -115,6 +115,8 @@ public class CmdAlign extends Cmd {
   }
 
   public void undoIt() { }
+
+  static final long serialVersionUID = -2725163107655680773L;
 
 } /* end class CmdAlign */
 

@@ -27,7 +27,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.15 1998/09/17 18:48:16 jrobbins Exp $
+// $Id: FigText.java,v 1.16 1998/10/20 00:23:00 jrobbins Exp $
 
 package uci.gef;
 
@@ -539,10 +539,10 @@ public class FigText extends Fig implements KeyListener, MouseListener {
     }
     _w = _expandOnly ? Math.max(_w, overallW) : overallW;
     _h = _expandOnly ? Math.max(_h, overallH) : overallH;
-  }  
+  }
+
+  static final long serialVersionUID = 468901636070058091L;
+
+
 } /* end class FigText */
-
-
-////////////////////////////////////////////////////////////////
-
 

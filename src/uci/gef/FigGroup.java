@@ -29,7 +29,7 @@
 // File: FigGroup.java
 // Classes: FigGroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigGroup.java,v 1.6 1998/07/15 18:21:42 jrobbins Exp $
+// $Id: FigGroup.java,v 1.7 1998/10/20 00:22:56 jrobbins Exp $
 
 package uci.gef;
 
@@ -199,6 +199,7 @@ public class FigGroup extends Fig {
     _h = bbox.height;
   }
 
+  static final long serialVersionUID = 5329475606052749531L;
 
 } /* end class FigGroup */
 

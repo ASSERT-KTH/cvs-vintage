@@ -27,7 +27,7 @@
 // File: ArrowHeadNone.java
 // Classes: ArrowHeadNone
 // Original Author: abonner@ics.uci.ed
-// $Id: ArrowHeadNone.java,v 1.8 1998/08/06 21:31:24 jrobbins Exp $
+// $Id: ArrowHeadNone.java,v 1.9 1998/10/20 00:22:29 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,5 +42,7 @@ public class ArrowHeadNone extends ArrowHead {
   public static ArrowHeadNone TheInstance = new ArrowHeadNone();
 
   public void paint(Graphics g, Point start, Point end) { }
+
+  static final long serialVersionUID = -9166691134489182687L;
 
 } /* end class ArrowHeadNone */

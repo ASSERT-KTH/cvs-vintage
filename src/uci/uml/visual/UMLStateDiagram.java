@@ -27,7 +27,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.5 1998/10/08 00:06:49 jrobbins Exp $
+// $Id: UMLStateDiagram.java,v 1.6 1998/10/20 00:31:23 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -161,5 +161,7 @@ public class UMLStateDiagram extends UMLDiagram {
     _toolBar.add(_actionPoly);
     _toolBar.add(_actionInk);
   }
+
+  static final long serialVersionUID = -7053852720393032172L;
 
 } /* end class UMLStateDiagram */

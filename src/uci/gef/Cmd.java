@@ -28,7 +28,7 @@
 // File: Action.java
 // Classes: Action
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Cmd.java,v 1.6 1998/07/02 02:51:48 jrobbins Exp $
+// $Id: Cmd.java,v 1.7 1998/10/20 00:22:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -214,6 +214,8 @@ implements java.io.Serializable {
   public static Cmd cmdAtIndex(int i) {
     return (Cmd) _registeredCmds.elementAt(i);
   }
+
+  static final long serialVersionUID = -7733814100559726063L;
 
 } /* end class Cmd */
 

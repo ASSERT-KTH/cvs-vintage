@@ -27,7 +27,7 @@
 // File: GraphModel.java
 // Interfaces: GraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphModel.java,v 1.5 1998/07/15 18:22:26 jrobbins Exp $
+// $Id: GraphModel.java,v 1.6 1998/10/20 00:27:24 jrobbins Exp $
 
 package uci.graph;
 
@@ -84,4 +84,5 @@ public interface GraphModel extends java.io.Serializable {
   void addGraphEventListener(GraphListener listener);
   void removeGraphEventListener(GraphListener listener);
 
+  static final long serialVersionUID = -110420686972437523L;
 } /* end interface GraphModel */

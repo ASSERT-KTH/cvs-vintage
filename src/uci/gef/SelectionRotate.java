@@ -28,7 +28,7 @@
 // File: SelectionRotate.java
 // Classes: SelectionRotate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionRotate.java,v 1.4 1998/07/02 02:53:03 jrobbins Exp $
+// $Id: SelectionRotate.java,v 1.5 1998/10/20 00:23:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -66,6 +66,6 @@ public class SelectionRotate extends Selection {
    *  or the body of the Fig. Needs-more-work. */
   public int hitHandle(Rectangle r) { return -2; }
 
-
+  static final long serialVersionUID = -1661014460931572067L;
 } /* end class SelectionRotate */
 

@@ -28,7 +28,7 @@
 // File: CmdAdjustPageBreaks.java
 // Classes: CmdAdjustPageBreaks
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustPageBreaks.java,v 1.5 1998/07/02 02:51:50 jrobbins Exp $
+// $Id: CmdAdjustPageBreaks.java,v 1.6 1998/10/20 00:22:33 jrobbins Exp $
 
 package uci.gef;
 
@@ -53,5 +53,7 @@ public class CmdAdjustPageBreaks extends Cmd {
   }
 
   public void undoIt() { }
+
+  static final long serialVersionUID = -7371943510060203731L;
 
 } /* end class CmdAdjustPageBreaks */

@@ -28,7 +28,7 @@
 // File: CmdScroll.java
 // Classes: CmdSroll
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdScroll.java,v 1.5 1998/07/02 02:52:00 jrobbins Exp $
+// $Id: CmdScroll.java,v 1.6 1998/10/20 00:22:42 jrobbins Exp $
 
 package uci.gef;
 
@@ -89,5 +89,7 @@ public class CmdScroll extends Cmd {
   public void undoIt() {
     System.out.println("Cannot undo CmdScroll, yet.");
   }
+
+  static final long serialVersionUID = 1541329454323562639L;
 
 } /* end class CmdScroll */

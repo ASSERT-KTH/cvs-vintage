@@ -27,7 +27,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.9 1998/08/06 21:31:42 jrobbins Exp $
+// $Id: Layer.java,v 1.10 1998/10/20 00:23:04 jrobbins Exp $
 
 package uci.gef;
 
@@ -281,4 +281,5 @@ public abstract class Layer implements java.io.Serializable {
    * @see LayerGrid */
   public void adjust() { }
 
+  static final long serialVersionUID = 8654800923889173867L;
 } /* end class Layer */

@@ -28,7 +28,7 @@
 // File: SelectionResize.java
 // Classes: SelectionResize
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionResize.java,v 1.7 1998/10/09 01:05:04 jrobbins Exp $
+// $Id: SelectionResize.java,v 1.8 1998/10/20 00:23:30 jrobbins Exp $
 
 package uci.gef;
 
@@ -156,5 +156,6 @@ public class SelectionResize extends Selection {
     _content.setBounds(newX, newY, newW, newH);
   }
 
+  static final long serialVersionUID = 474488384900031706L;
 } /* end class SelectionResize */
 

@@ -28,7 +28,7 @@
 // File: NodePrinter.java
 // Classes: NodePrinter
 // Original Author: ics125b spring 1996
-// $Id: NodePrinter.java,v 1.5 1998/07/02 02:53:08 jrobbins Exp $
+// $Id: NodePrinter.java,v 1.6 1998/10/20 00:26:08 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -82,5 +82,7 @@ public class NodePrinter extends NetNode implements Serializable {
 
     return fn;
   }
+
+  static final long serialVersionUID = -1991803325169884172L;
 
 } /* end class NodePrinter */

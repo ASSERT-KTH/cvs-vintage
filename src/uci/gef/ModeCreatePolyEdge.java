@@ -27,7 +27,7 @@
 // File: ModeCreatePolyEdge.java
 // Classes: ModeCreateEdge
 // Original Author: agauthie@ics.uci.edu
-// $Id: ModeCreatePolyEdge.java,v 1.1 1998/10/08 00:05:53 jrobbins Exp $
+// $Id: ModeCreatePolyEdge.java,v 1.2 1998/10/20 00:23:16 jrobbins Exp $
 
 package uci.gef;
 
@@ -253,4 +253,5 @@ public class ModeCreatePolyEdge extends ModeCreate {
     }
   }
 
+  static final long serialVersionUID = 4751338603988166591L;
 } /* end class ModeCreatePolyEdge */

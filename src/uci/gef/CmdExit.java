@@ -28,7 +28,7 @@
 // File: CmdExit.java
 // Classes: CmdExit
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdExit.java,v 1.5 1998/07/02 02:51:54 jrobbins Exp $
+// $Id: CmdExit.java,v 1.6 1998/10/20 00:22:36 jrobbins Exp $
 
 package uci.gef;
 
@@ -49,5 +49,7 @@ public class CmdExit extends Cmd {
   public void undoIt() {
     System.out.println("Undo does not make sense for CmdExit");
   }
+
+  static final long serialVersionUID = -4375051821931525151L;
 
 } /* end class CmdExit */

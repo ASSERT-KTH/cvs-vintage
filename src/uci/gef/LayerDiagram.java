@@ -28,7 +28,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.9 1998/08/06 21:31:44 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.10 1998/10/20 00:23:05 jrobbins Exp $
 
 package uci.gef;
 
@@ -265,5 +265,6 @@ public class LayerDiagram extends Layer {
   }
 
 
+  static final long serialVersionUID = 8414225047168410183L;
 } /* end class LayerDiagram */
 

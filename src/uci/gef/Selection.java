@@ -28,7 +28,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.11 1998/10/13 18:09:35 jrobbins Exp $
+// $Id: Selection.java,v 1.12 1998/10/20 00:23:27 jrobbins Exp $
 
 package uci.gef;
 
@@ -238,4 +238,5 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
       ((MouseListener)_content).mouseExited(me);
   }
 
+  static final long serialVersionUID = -8987901537232412200L;
 } /* end class Selection */

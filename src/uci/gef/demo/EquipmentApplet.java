@@ -28,7 +28,7 @@
 // File: EquipmentApplet.java
 // Classes: EquipmentApplet
 // Original Author: ics125b spring 1996
-// $Id: EquipmentApplet.java,v 1.8 1998/08/06 21:31:52 jrobbins Exp $
+// $Id: EquipmentApplet.java,v 1.9 1998/10/20 00:26:06 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -144,5 +144,7 @@ public class EquipmentApplet extends JApplet {
       "Copyright (c) 1996-1998 Regents of the University of California.\n"+
       "All rights reserved.\n\n";
   }
+
+  static final long serialVersionUID = -5151592540895237366L;
 
 } /* end class EquipmentApplet */

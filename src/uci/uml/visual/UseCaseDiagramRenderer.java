@@ -27,7 +27,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.5 1998/08/06 21:32:42 jrobbins Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.6 1998/10/20 00:31:25 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -105,5 +105,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     System.out.println("needs-more-work UseCaseDiagramRenderer getFigEdgeFor");
     return null;
   }
+
+  static final long serialVersionUID = 2217410137377934879L;
 
 } /* end class UseCaseDiagramRenderer */

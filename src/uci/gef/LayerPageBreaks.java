@@ -28,7 +28,7 @@
 // File: LayerPageBreaks.java
 // Classes: LayerPageBreaks
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPageBreaks.java,v 1.6 1998/10/16 00:08:20 jrobbins Exp $
+// $Id: LayerPageBreaks.java,v 1.7 1998/10/20 00:23:06 jrobbins Exp $
 
 package uci.gef;
 
@@ -140,4 +140,5 @@ public class LayerPageBreaks extends Layer {
     refreshEditors();
   }
 
+  static final long serialVersionUID = 4861970222441627645L;
 } /* end class LayerPageBreaks */

@@ -27,7 +27,7 @@
 // File: CmdDelete.java
 // Classes: CmdDelete
 // Original Author: ics125 spring 1996
-// $Id: CmdDelete.java,v 1.5 1998/07/02 02:51:52 jrobbins Exp $
+// $Id: CmdDelete.java,v 1.6 1998/10/20 00:22:35 jrobbins Exp $
 
 package uci.gef;
 
@@ -56,5 +56,7 @@ public class CmdDelete extends Cmd {
   }
 
   public void undoIt() { }
+
+  static final long serialVersionUID = -7377351910704590075L;
 
 } /* end class CmdDelete */

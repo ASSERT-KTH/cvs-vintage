@@ -28,7 +28,7 @@
 // File: SelectionManager.java
 // Classes: SelectionManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionManager.java,v 1.11 1998/10/16 00:08:22 jrobbins Exp $
+// $Id: SelectionManager.java,v 1.12 1998/10/20 00:23:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -468,4 +468,5 @@ implements Serializable, KeyListener, MouseListener, MouseMotionListener {
     else return new SelectionNoop(f);
   }
 
+  static final long serialVersionUID = 2368764390192079273L;
 } /* end class SelectionManager */

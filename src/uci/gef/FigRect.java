@@ -28,7 +28,7 @@
 // File: FigRect.java
 // Classes: FigRect
 // Original Author: ics125 spring 1996
-// $Id: FigRect.java,v 1.5 1998/07/02 02:52:21 jrobbins Exp $
+// $Id: FigRect.java,v 1.6 1998/10/20 00:23:00 jrobbins Exp $
 
 package uci.gef;
 
@@ -70,6 +70,8 @@ public class FigRect extends Fig implements Serializable {
       g.drawRect(_x, _y, _w - _lineWidth, _h - _lineWidth);
     }
   }
+
+  static final long serialVersionUID = 769067862802923166L;
 
 } /* end class FigRect */
 

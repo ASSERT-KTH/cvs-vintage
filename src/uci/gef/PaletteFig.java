@@ -28,7 +28,7 @@
 // File: PaletteFig.java
 // Classes: PaletteFig
 // Original Author: ics125 spring 1996
-// $Id: PaletteFig.java,v 1.7 1998/07/02 02:52:53 jrobbins Exp $
+// $Id: PaletteFig.java,v 1.8 1998/10/20 00:23:23 jrobbins Exp $
 
 package uci.gef;
 
@@ -83,7 +83,8 @@ public class PaletteFig extends uci.ui.ToolBar {
 //     image2Button.canStick(true);
   }
 
-  
+
+  static final long serialVersionUID = 3484460904733989358L;
 } /* end class PaletteFig */
 
 

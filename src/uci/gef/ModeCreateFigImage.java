@@ -28,7 +28,7 @@
 // File: ModeCreateFigImage.java
 // Classes: ModeCreateFigImage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigImage.java,v 1.6 1998/07/02 02:52:39 jrobbins Exp $
+// $Id: ModeCreateFigImage.java,v 1.7 1998/10/20 00:23:12 jrobbins Exp $
 
 package uci.gef;
 
@@ -127,5 +127,6 @@ public class ModeCreateFigImage extends ModeCreate {
     mouseMoved(me);
   }
 
+  static final long serialVersionUID = 8852868877960387013L;
 } /* end class ModeCreateFigImage */
 

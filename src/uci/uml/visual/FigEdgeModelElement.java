@@ -27,7 +27,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.7 1998/10/09 01:05:39 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.8 1998/10/20 00:31:11 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -243,6 +243,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     if (own instanceof ModelElement)
       ((ModelElement)own).addVetoableChangeListener(this);
   }
+
 
 
 } /* end class FigEdgeModelElement */

@@ -28,7 +28,7 @@
 // File: CmdCreateNode.java
 // Classes: CmdCreateNode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdCreateNode.java,v 1.6 1998/07/15 18:21:38 jrobbins Exp $
+// $Id: CmdCreateNode.java,v 1.7 1998/10/20 00:22:34 jrobbins Exp $
 
 package uci.gef;
 
@@ -119,5 +119,7 @@ public class CmdCreateNode extends Cmd implements GraphFactory {
       ((GraphNodeHooks)newNode).initialize(_args);
     return newNode;
   }
+
+  static final long serialVersionUID = 6058024926862904714L;
 
 } /* end class CmdCreateNode */

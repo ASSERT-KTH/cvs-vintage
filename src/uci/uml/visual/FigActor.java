@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.5 1998/07/15 18:17:57 jrobbins Exp $
+// $Id: FigActor.java,v 1.6 1998/10/20 00:31:09 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -141,4 +141,5 @@ public class FigActor extends FigNodeModelElement {
 //     p.moveToTrash(elmt);
 //     super.dispose();
 //   }
+
 } /* end class FigActor */

@@ -29,7 +29,7 @@
 // File: FigImage.java
 // Classes: FigImage
 // Original Author: brw@tusc.com.au
-// $Id: FigImage.java,v 1.4 1998/07/02 02:52:17 jrobbins Exp $
+// $Id: FigImage.java,v 1.5 1998/10/20 00:22:56 jrobbins Exp $
 
 package uci.gef;
 
@@ -121,6 +121,7 @@ public class FigImage extends Fig implements ImageObserver {
     setLocation(snapX, snapY);
   }
 
+static final long serialVersionUID = 3355684374450331076L;
 
 } /* end of FigImage class */
 

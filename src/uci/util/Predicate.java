@@ -28,7 +28,7 @@
 // File: Predicate.java
 // Classes: Predicate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Predicate.java,v 1.4 1998/07/02 02:53:47 jrobbins Exp $
+// $Id: Predicate.java,v 1.5 1998/10/20 00:31:30 jrobbins Exp $
 
 package uci.util;
 
@@ -41,4 +41,5 @@ public interface Predicate extends java.io.Serializable {
 
   public boolean predicate(Object obj);
 
+  static final long serialVersionUID = -7512674166694210004L;
 } /* end interface Predicate */

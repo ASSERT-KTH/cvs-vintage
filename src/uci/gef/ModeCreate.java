@@ -28,7 +28,7 @@
 // File: ModeCreate.java
 // Classes: ModeCreate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreate.java,v 1.13 1998/07/15 18:21:49 jrobbins Exp $
+// $Id: ModeCreate.java,v 1.14 1998/10/20 00:23:10 jrobbins Exp $
 
 package uci.gef;
 
@@ -192,5 +192,6 @@ public abstract class ModeCreate extends Mode {
    *  (specifically, its default graphical attributes). */
   public abstract Fig createNewItem(MouseEvent me, int snapX, int snapY);
 
+  static final long serialVersionUID = -997186474502969920L;
 } /* end class ModeCreate */
 

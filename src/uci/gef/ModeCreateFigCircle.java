@@ -28,7 +28,7 @@
 // File: ModeCreateFigCircle.java
 // Classes: ModeCreateFigCircle
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateFigCircle.java,v 1.6 1998/07/02 02:52:38 jrobbins Exp $
+// $Id: ModeCreateFigCircle.java,v 1.7 1998/10/20 00:23:12 jrobbins Exp $
 
 package uci.gef;
 
@@ -55,5 +55,6 @@ public class ModeCreateFigCircle extends ModeCreate {
     return new FigCircle(snapX, snapY, 0, 0);
   }
 
+  static final long serialVersionUID = -3516866789951523716L;
 } /* end class ModeCreateFigCircle */
 

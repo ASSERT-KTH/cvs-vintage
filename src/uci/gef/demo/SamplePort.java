@@ -28,7 +28,7 @@
 // File: SamplePort.java
 // Classes: SamplePort
 // Original Author: ics125b spring 1996
-// $Id: SamplePort.java,v 1.6 1998/07/02 02:53:13 jrobbins Exp $
+// $Id: SamplePort.java,v 1.7 1998/10/20 00:26:13 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -73,5 +73,7 @@ public class SamplePort extends NetPort implements Serializable{
     // needs-more-work: should work with subclasses too. This is
     // really a java.lang.Class method that is missing: isSubclass()
   }
+
+  static final long serialVersionUID = 8149499028941447392L;
 
 } /* end class SamplePort */

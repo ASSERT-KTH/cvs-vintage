@@ -28,7 +28,7 @@
 // File: PortData.java
 // Classes: PortData
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PortData.java,v 1.6 1998/07/02 02:53:09 jrobbins Exp $
+// $Id: PortData.java,v 1.7 1998/10/20 00:26:09 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -66,5 +66,7 @@ public class PortData extends NetPort implements Serializable {
     try { return Class.forName("uci.gef.demo.EdgeData"); }
     catch (java.lang.ClassNotFoundException ignore) { return null; }
   }
+
+  static final long serialVersionUID = 7364448827419124632L;
 
 } /* end class PortData */

@@ -27,7 +27,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.6 1998/10/09 01:05:38 jrobbins Exp $
+// $Id: FigDependency.java,v 1.7 1998/10/20 00:31:11 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -79,6 +79,7 @@ public class FigDependency extends FigEdgeModelElement {
     }
     super.dispose();
   }
+
 
 
 } /* end class FigDependency */

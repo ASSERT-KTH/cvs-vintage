@@ -28,7 +28,7 @@
 // File: CmdSequence.java
 // Classes: CmdSequence
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSequence.java,v 1.5 1998/07/02 02:52:03 jrobbins Exp $
+// $Id: CmdSequence.java,v 1.6 1998/10/20 00:22:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -91,6 +91,8 @@ public class CmdSequence extends Cmd {
     for (int i = _cmds.size() - 1; i >= 0; --i)
       ((Cmd)_cmds.elementAt(i)).undoIt();
   }
+
+  static final long serialVersionUID = -519229891556663991L;
 
 } /* end class CmdSequence */
 

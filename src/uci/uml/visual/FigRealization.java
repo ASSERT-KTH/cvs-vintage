@@ -27,7 +27,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.4 1998/10/09 01:05:40 jrobbins Exp $
+// $Id: FigRealization.java,v 1.5 1998/10/20 00:31:18 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -83,5 +83,6 @@ public class FigRealization extends FigEdgeModelElement {
   }
 
   
+
 } /* end class FigRealization */
 

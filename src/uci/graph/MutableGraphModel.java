@@ -27,7 +27,7 @@
 // File: MutableGraphModel.java
 // Interfaces: MutableGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphModel.java,v 1.4 1998/07/02 02:58:12 jrobbins Exp $
+// $Id: MutableGraphModel.java,v 1.5 1998/10/20 00:27:26 jrobbins Exp $
 
 package uci.graph;
 
@@ -78,4 +78,5 @@ public interface MutableGraphModel extends GraphModel {
   /** Contruct and add a new edge of the given kind. Sends a notification. */
   Object connect(Object fromPort, Object toPort, Class edgeClass);
 
+  static final long serialVersionUID = -752649940921643399L;
 } /* end interface MutableGraphModel */

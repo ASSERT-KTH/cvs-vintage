@@ -28,7 +28,7 @@
 // File: PrefsEditor.java
 // Classes: PrefsEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PrefsEditor.java,v 1.4 1998/07/02 02:52:58 jrobbins Exp $
+// $Id: PrefsEditor.java,v 1.5 1998/10/20 00:23:26 jrobbins Exp $
 
 package uci.gef;
 
@@ -146,4 +146,5 @@ public class PrefsEditor extends Frame {
     return false;
   }
 
+  static final long serialVersionUID = -4806975320706481196L;
 } /* end class PrefsEditor */

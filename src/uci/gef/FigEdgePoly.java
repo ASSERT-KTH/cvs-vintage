@@ -27,7 +27,7 @@
 // File: FigEdgePoly.java
 // Classes: FigEdgePoly
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigEdgePoly.java,v 1.2 1998/10/09 01:05:01 jrobbins Exp $
+// $Id: FigEdgePoly.java,v 1.3 1998/10/20 00:22:54 jrobbins Exp $
 
 package uci.gef;
 
@@ -342,5 +342,6 @@ public class FigEdgePoly extends FigEdge {
     }
   }
 
+  static final long serialVersionUID = -8604764896732440025L;
 
 } /* end class FigEdgePoly */

@@ -27,7 +27,7 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.5 1998/10/09 01:20:37 jrobbins Exp $
+// $Id: FigLink.java,v 1.6 1998/10/20 00:31:15 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -66,6 +66,7 @@ public class FigLink extends FigEdgeModelElement {
     super.dispose();
   }
   
+
 
 } /* end class FigLink */
 

@@ -28,7 +28,7 @@
 // File: ModeCreateArc.java
 // Classes: ModeCreateArc
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateArc.java,v 1.6 1998/07/02 02:52:37 jrobbins Exp $
+// $Id: ModeCreateArc.java,v 1.7 1998/10/20 00:23:10 jrobbins Exp $
 
 package uci.gef;
 
@@ -174,4 +174,5 @@ public class ModeCreateArc extends ModeCreate {
     me.consume();
   }
 
+  static final long serialVersionUID = 1205146280196230051L;
 } /* end class ModeCreateArc */

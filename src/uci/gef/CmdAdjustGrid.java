@@ -28,7 +28,7 @@
 // File: CmdAdjustGrid.java
 // Classes: CmdAdjustGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustGrid.java,v 1.5 1998/07/02 02:51:49 jrobbins Exp $
+// $Id: CmdAdjustGrid.java,v 1.6 1998/10/20 00:22:32 jrobbins Exp $
 
 package uci.gef;
 
@@ -49,5 +49,7 @@ public class CmdAdjustGrid extends Cmd {
   }
 
   public void undoIt() { }
+
+  static final long serialVersionUID = 8709869596112129058L;
 
 } /* end class CmdAdjustGrid */

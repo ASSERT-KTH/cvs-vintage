@@ -27,7 +27,7 @@
 // File: ModeCreateFigRRect.java
 // Classes: ModeCreateFigRRect
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigRRect.java,v 1.6 1998/07/02 02:52:42 jrobbins Exp $
+// $Id: ModeCreateFigRRect.java,v 1.7 1998/10/20 00:23:14 jrobbins Exp $
 
 package uci.gef;
 
@@ -53,5 +53,6 @@ public class ModeCreateFigRRect extends ModeCreate {
     return new FigRRect(snapX, snapY, 0, 0);
   }
 
+  static final long serialVersionUID = 5332607128680312828L;
 } /* end class ModeCreateFigRRect */
 

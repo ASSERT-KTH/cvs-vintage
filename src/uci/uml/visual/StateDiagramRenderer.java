@@ -27,7 +27,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: your email address here
-// $Id: StateDiagramRenderer.java,v 1.5 1998/08/06 21:32:39 jrobbins Exp $
+// $Id: StateDiagramRenderer.java,v 1.6 1998/10/20 00:31:21 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -102,5 +102,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     return null;
   }
 
+
+  static final long serialVersionUID = 8448809085349795886L;
 
 } /* end class StateDiagramRenderer */

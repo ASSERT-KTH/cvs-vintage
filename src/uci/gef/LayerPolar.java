@@ -27,7 +27,7 @@
 // File: LayerPolar.java
 // Classes: LayerPolar
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPolar.java,v 1.7 1998/07/02 02:52:34 jrobbins Exp $
+// $Id: LayerPolar.java,v 1.8 1998/10/20 00:23:08 jrobbins Exp $
 
 package uci.gef;
 
@@ -172,4 +172,5 @@ public class LayerPolar extends Layer {
     }
   }
 
+  static final long serialVersionUID = 3779653161933865683L;
 } /* end class LayerPolar */

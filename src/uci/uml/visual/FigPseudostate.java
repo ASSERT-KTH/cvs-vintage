@@ -27,7 +27,7 @@
 // File: FigPseudostate.java
 // Classes: FigPseudostate
 // Original Author: your email address here
-// $Id: FigPseudostate.java,v 1.4 1998/08/06 21:32:33 jrobbins Exp $
+// $Id: FigPseudostate.java,v 1.5 1998/10/20 00:31:17 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -147,5 +147,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
   }
 
 
+
+  static final long serialVersionUID = -9014856528084865206L;
 
 } /* end class FigPseudostate */

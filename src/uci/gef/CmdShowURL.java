@@ -28,7 +28,7 @@
 // File: CmdShowURL.java
 // Classes: CmdShowURL
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdShowURL.java,v 1.5 1998/07/02 02:52:05 jrobbins Exp $
+// $Id: CmdShowURL.java,v 1.6 1998/10/20 00:22:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -66,6 +66,8 @@ public class CmdShowURL extends Cmd {
   }
 
   public void undoIt() { System.out.println("Needs-More-Work"); }
+
+  static final long serialVersionUID = 6935852249858580737L;
 
 } /* end class CmdShowURL */
 

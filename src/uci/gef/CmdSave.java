@@ -29,7 +29,7 @@
 // File: CmdSave.java
 // Classes: CmdSave
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSave.java,v 1.5 1998/07/02 02:52:00 jrobbins Exp $
+// $Id: CmdSave.java,v 1.6 1998/10/20 00:22:42 jrobbins Exp $
 
 package uci.gef;
 
@@ -131,5 +131,6 @@ public class CmdSave extends Cmd implements FilenameFilter {
     System.out.println("Undo does not make sense for CmdSave");
   }
 
+  static final long serialVersionUID = 8022413001067764087L;
 } /* end class CmdSave */
 

@@ -27,7 +27,7 @@
 // File: PredFigInRect.java
 // Classes: PredFigInRect
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PredFigInRect.java,v 1.4 1998/07/02 02:52:57 jrobbins Exp $
+// $Id: PredFigInRect.java,v 1.5 1998/10/20 00:23:25 jrobbins Exp $
 
 package uci.gef;
 
@@ -58,4 +58,5 @@ public class PredFigInRect implements Predicate {
     return ((Fig)o).intersects(_r);
   }
 
+  static final long serialVersionUID = -4214393174685581373L;
 } /* end class PredFigInRect */

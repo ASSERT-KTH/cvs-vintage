@@ -28,7 +28,7 @@
 // File: CmdNull.java
 // Classes: CmdNull
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdNull.java,v 1.5 1998/07/02 02:51:56 jrobbins Exp $
+// $Id: CmdNull.java,v 1.6 1998/10/20 00:22:38 jrobbins Exp $
 
 package uci.gef;
 
@@ -50,5 +50,7 @@ public class CmdNull extends Cmd {
 
   /** This is the only undo method that works :) */
   public void undoIt() { }
+
+  static final long serialVersionUID = -6732585178941738791L;
 
 } /* end class CmdNull */

@@ -27,7 +27,7 @@
 // File: FigMessage.java
 // Classes: FigMessage
 // Original Author: your email address here
-// $Id: FigMessage.java,v 1.2 1998/07/02 02:57:21 jrobbins Exp $
+// $Id: FigMessage.java,v 1.3 1998/10/20 00:31:15 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -61,6 +61,8 @@ public class FigMessage extends FigEdgeLine {
     super.dispose();
   }
   
+
+  static final long serialVersionUID = -5076205612412365929L;
 
 } /* end class FigMessage */
 

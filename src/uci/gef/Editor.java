@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.18 1998/10/16 00:08:16 jrobbins Exp $
+// $Id: Editor.java,v 1.19 1998/10/20 00:22:50 jrobbins Exp $
 
 package uci.gef;
 
@@ -675,5 +675,6 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
     remove(f);
   }
 
+  static final long serialVersionUID = -3313673451324513650L;
 
 } /* end class Editor */

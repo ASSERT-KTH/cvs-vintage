@@ -27,7 +27,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.7 1998/09/10 21:42:14 jrobbins Exp $
+// $Id: ClassDiagramRenderer.java,v 1.8 1998/10/20 00:31:08 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -157,5 +157,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     return null;
   }
 
+
+  static final long serialVersionUID = 675407719309039112L;
 
 } /* end class ClassDiagramRenderer */

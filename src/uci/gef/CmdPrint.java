@@ -28,7 +28,7 @@
 // File: CmdPrint.java
 // Classes: CmdPrint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdPrint.java,v 1.5 1998/07/02 02:51:58 jrobbins Exp $
+// $Id: CmdPrint.java,v 1.6 1998/10/20 00:22:40 jrobbins Exp $
 
 package uci.gef;
 
@@ -70,6 +70,8 @@ public class CmdPrint extends Cmd {
   public void undoIt() {
     System.out.println("Undo does not make sense for CmdPrint");
   }
+
+  static final long serialVersionUID = -2426429729992407570L;
 
 } /* end class CmdPrint */
 

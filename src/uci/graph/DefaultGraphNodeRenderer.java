@@ -27,7 +27,7 @@
 // File: DefaultGraphNodeRenderer.java
 // Classes: DefaultGraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphNodeRenderer.java,v 1.7 1998/07/02 02:58:05 jrobbins Exp $
+// $Id: DefaultGraphNodeRenderer.java,v 1.8 1998/10/20 00:27:21 jrobbins Exp $
 
 package uci.graph;
 
@@ -51,4 +51,5 @@ implements GraphNodeRenderer, java.io.Serializable {
     return null;
   }
 
+  static final long serialVersionUID = -5636144866601300460L;
 } /* end class DefaultGraphNodeRenderer */

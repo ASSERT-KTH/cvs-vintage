@@ -27,7 +27,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.6 1998/10/08 00:06:46 jrobbins Exp $
+// $Id: FigTransition.java,v 1.7 1998/10/20 00:31:20 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -108,6 +108,7 @@ public class FigTransition extends FigEdgeModelElement {
     catch (PropertyVetoException pve) { }
     super.dispose();
   }
+
 
 
 } /* end class FigTransition */

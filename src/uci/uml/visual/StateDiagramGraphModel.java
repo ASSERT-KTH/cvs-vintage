@@ -27,7 +27,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.6 1998/10/08 00:06:47 jrobbins Exp $
+// $Id: StateDiagramGraphModel.java,v 1.7 1998/10/20 00:31:21 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -310,6 +310,8 @@ implements MutableGraphModel, VetoableChangeListener {
       }
     }
   }
+
+  static final long serialVersionUID = -8056507319026044174L;
 
 } /* end class StateDiagramGraphModel */
 

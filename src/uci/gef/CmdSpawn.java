@@ -27,7 +27,7 @@
 // File: CmdSpawn.java
 // Classes: CmdSpawn
 // Original Author: ics125 spring 1996
-// $Id: CmdSpawn.java,v 1.6 1998/07/02 02:52:06 jrobbins Exp $
+// $Id: CmdSpawn.java,v 1.7 1998/10/20 00:22:47 jrobbins Exp $
 
 package uci.gef;
 
@@ -57,5 +57,7 @@ public class CmdSpawn extends Cmd {
   }
 
   public void undoIt() { System.out.println("Cannot undo CmdSpawn"); }
+
+  static final long serialVersionUID = 4713965679378778473L;
 
 } /* end class CmdSpawn */

@@ -28,7 +28,7 @@
 // File: EnumerationSingle.java
 // Classes: EnumerationSingle
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationSingle.java,v 1.4 1998/07/02 02:53:46 jrobbins Exp $
+// $Id: EnumerationSingle.java,v 1.5 1998/10/20 00:31:29 jrobbins Exp $
 
 package uci.util;
 
@@ -61,7 +61,8 @@ implements Enumeration, java.io.Serializable {
     }
     else throw new NoSuchElementException();
   }
-
+  
+  static final long serialVersionUID = -4656163047752777866L;
 } /* end class EnumerationSingle */
 
 

@@ -28,7 +28,7 @@
 // File: ExecuteCmdWindow.java
 // Classes: ExecuteCmdWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ExecuteCmdWindow.java,v 1.5 1998/07/02 02:52:11 jrobbins Exp $
+// $Id: ExecuteCmdWindow.java,v 1.6 1998/10/20 00:22:51 jrobbins Exp $
 
 package uci.gef;
 
@@ -147,5 +147,7 @@ public class ExecuteCmdWindow extends Frame {
     catch (Exception e) { System.out.println("malformed?"); }
     ce.executeCmd(showIt, null);
   }
+
+  static final long serialVersionUID = 7244235935139519043L;
 
 } /* end class ExecuteCmdWindow */

@@ -28,7 +28,7 @@
 // File: NodeCPU.java
 // Classes: NodeCPU
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NodeCPU.java,v 1.7 1998/07/02 02:53:07 jrobbins Exp $
+// $Id: NodeCPU.java,v 1.8 1998/10/20 00:26:07 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -153,5 +153,7 @@ public class NodeCPU extends NetNode implements Serializable {
     fn.bindPort(dataPort, obj3);
     return fn;
   }
+
+  static final long serialVersionUID = -4727051976743645287L;
 
 } /* end class NodeCPU */

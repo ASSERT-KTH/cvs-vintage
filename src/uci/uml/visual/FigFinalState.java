@@ -27,7 +27,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: your email address here
-// $Id: FigFinalState.java,v 1.3 1998/08/06 21:32:25 jrobbins Exp $
+// $Id: FigFinalState.java,v 1.4 1998/10/20 00:31:12 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -151,6 +151,8 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     catch (PropertyVetoException pve) { }
     super.dispose();
   }
+  static final long serialVersionUID = -3506578343969467480L;
+
 } /* end class FigFinalState */
 
 

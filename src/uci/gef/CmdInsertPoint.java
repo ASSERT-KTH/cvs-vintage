@@ -28,7 +28,7 @@
 // File: CmdInsertPoint.java
 // Classes: CmdInsertPoint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdInsertPoint.java,v 1.5 1998/07/02 02:51:55 jrobbins Exp $
+// $Id: CmdInsertPoint.java,v 1.6 1998/10/20 00:22:37 jrobbins Exp $
 
 package uci.gef;
 
@@ -81,5 +81,7 @@ public class CmdInsertPoint extends Cmd {
   public void undoIt() {
     System.out.println("this operation currently cannot be undone");
   }
+
+  static final long serialVersionUID = -5908422271539106160L;
 
 } /* end class CmdInsertPoint */

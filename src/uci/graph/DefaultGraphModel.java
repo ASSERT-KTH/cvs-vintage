@@ -27,7 +27,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphModel.java,v 1.7 1998/07/02 02:58:05 jrobbins Exp $
+// $Id: DefaultGraphModel.java,v 1.8 1998/10/20 00:27:21 jrobbins Exp $
 
 package uci.graph;
 
@@ -226,4 +226,5 @@ implements java.io.Serializable {
   }
 
 
+  static final long serialVersionUID = -2451989834037886234L;
 } /* end class DefaultGraphModel */

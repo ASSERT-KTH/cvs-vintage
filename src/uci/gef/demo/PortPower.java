@@ -28,7 +28,7 @@
 // File: PortPower.java
 // Classes: PortPower
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PortPower.java,v 1.6 1998/07/02 02:53:10 jrobbins Exp $
+// $Id: PortPower.java,v 1.7 1998/10/20 00:26:09 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -88,5 +88,7 @@ public class PortPower extends NetPort implements Serializable {
     // needs-more-work: should work with subclasses too. This is
     // really a java.lang.Class method that is missing: isSubclass()
   }
+
+  static final long serialVersionUID = 3420759475537576464L;
 
 } /* end class PortPower */

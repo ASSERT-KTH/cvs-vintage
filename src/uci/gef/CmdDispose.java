@@ -27,7 +27,7 @@
 // File: CmdDispose.java
 // Classes: CmdDispose
 // Original Author: ics125 spring 1996
-// $Id: CmdDispose.java,v 1.5 1998/07/02 02:51:53 jrobbins Exp $
+// $Id: CmdDispose.java,v 1.6 1998/10/20 00:22:35 jrobbins Exp $
 
 package uci.gef;
 
@@ -53,5 +53,7 @@ public class CmdDispose extends Cmd {
   }
 
   public void undoIt() { }
+
+  static final long serialVersionUID = 2499196667334037672L;
 
 } /* end class CmdDispose */

@@ -25,7 +25,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHead.java,v 1.11 1998/08/06 21:31:19 jrobbins Exp $
+// $Id: ArrowHead.java,v 1.12 1998/10/20 00:22:27 jrobbins Exp $
 
 package uci.gef;
 
@@ -105,4 +105,5 @@ public abstract class ArrowHead implements java.io.Serializable {
     return Math.sqrt(dx*dx+dy*dy);
   }
 
+  static final long serialVersionUID = 4150958987048733172L;
 } /* end class ArrowHead */

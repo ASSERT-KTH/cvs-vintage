@@ -28,7 +28,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHeadDiamond.java,v 1.8 1998/08/06 21:31:20 jrobbins Exp $
+// $Id: ArrowHeadDiamond.java,v 1.9 1998/10/20 00:22:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -103,5 +103,7 @@ public class ArrowHeadDiamond extends ArrowHead {
     g.setColor(arrowLineColor);
     g.drawPolygon(diamond);
   }
+
+  static final long serialVersionUID = 3743517930964884443L;
 
 } /* end class ArrowHeadDiamond */

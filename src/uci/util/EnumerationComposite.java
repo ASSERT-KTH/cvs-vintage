@@ -28,7 +28,7 @@
 // File: EnumerationComposite.java
 // Classes: EnumerationComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationComposite.java,v 1.4 1998/07/02 02:53:44 jrobbins Exp $
+// $Id: EnumerationComposite.java,v 1.5 1998/10/20 00:31:27 jrobbins Exp $
 
 package uci.util;
 
@@ -103,4 +103,6 @@ implements Enumeration, java.io.Serializable {
       _nextElement = ((Enumeration)_subs.firstElement()).nextElement();
   }
 
+  
+  static final long serialVersionUID = -1970828633671289903L;
 } /* end class EnumerationComposite */

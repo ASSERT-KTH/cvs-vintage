@@ -27,7 +27,7 @@
 // File: FigRRect.java
 // Classes: FigRRect
 // Original Author: ics125 spring 1996
-// $Id: FigRRect.java,v 1.4 1998/07/02 02:52:21 jrobbins Exp $
+// $Id: FigRRect.java,v 1.5 1998/10/20 00:22:59 jrobbins Exp $
 
 package uci.gef;
 
@@ -89,6 +89,8 @@ public class FigRRect extends FigRect {
 		      _radius, _radius);
     }
   }
+
+  static final long serialVersionUID = 5242299525923672421L;
 
 } /* end class FigRRect */
 

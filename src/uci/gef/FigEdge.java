@@ -28,7 +28,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.20 1998/10/16 00:08:17 jrobbins Exp $
+// $Id: FigEdge.java,v 1.21 1998/10/20 00:22:53 jrobbins Exp $
 
 package uci.gef;
 
@@ -421,5 +421,7 @@ implements PropertyChangeListener {
     PathConv getPath() { return _path; }
     Fig getFig() { return _fig; }
   }
+
+  static final long serialVersionUID = 5276706932173784022L;
 
 } /* end class FigEdge */

@@ -27,7 +27,7 @@
 // File: PathConvPercentPlusConst.java
 // Classes: PathConvPercentPlusConst
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercentPlusConst.java,v 1.5 1998/07/02 21:41:40 jrobbins Exp $
+// $Id: PathConvPercentPlusConst.java,v 1.6 1998/10/20 00:23:25 jrobbins Exp $
 
 package uci.gef;
 
@@ -78,4 +78,5 @@ public class PathConvPercentPlusConst extends PathConv {
 
   public void setClosestPoint(Point newPoint) { }
 
+  static final long serialVersionUID = -4850310567595975985L;
 }/* end class PathConvPercentPlusConst */

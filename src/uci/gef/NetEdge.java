@@ -28,7 +28,7 @@
 // File: NetEdge.java
 // Classes: NetEdge
 // Original Author: ics125 spring 1996
-// $Id: NetEdge.java,v 1.10 1998/07/02 02:52:49 jrobbins Exp $
+// $Id: NetEdge.java,v 1.11 1998/10/20 00:23:20 jrobbins Exp $
 
 package uci.gef;
 
@@ -165,5 +165,6 @@ implements GraphEdgeHooks, java.io.Serializable {
 
 
 
+  static final long serialVersionUID = -1750647124723651686L;
 } /* end class NetEdge */
 

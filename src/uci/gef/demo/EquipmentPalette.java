@@ -28,7 +28,7 @@
 // File: EquipmentPalette.java
 // Classes: EquipmentPalette
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EquipmentPalette.java,v 1.6 1998/07/02 02:53:06 jrobbins Exp $
+// $Id: EquipmentPalette.java,v 1.7 1998/10/20 00:26:06 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -55,5 +55,7 @@ public class EquipmentPalette extends uci.ui.ToolBar {
     add(new CmdCreateNode(NodeWall.class, "Wall"), "Wall", "NodeOne");
   }
 
+
+  static final long serialVersionUID = 5835769152970981878L;
 
 } /* end class EquipmentPalette */

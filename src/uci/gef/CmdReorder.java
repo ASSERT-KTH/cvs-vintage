@@ -28,7 +28,7 @@
 // File: CmdReorder.java
 // Classes: CmdReorder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdReorder.java,v 1.5 1998/07/02 02:51:59 jrobbins Exp $
+// $Id: CmdReorder.java,v 1.6 1998/10/20 00:22:41 jrobbins Exp $
 
 package uci.gef;
 
@@ -88,6 +88,8 @@ public class CmdReorder extends Cmd {
   public void undoIt() {
     System.out.println("Connot undo CmdReorder, yet");
   }
+
+  static final long serialVersionUID = -3129263720315040861L;
 
 } /* end class CmdReorder */
 

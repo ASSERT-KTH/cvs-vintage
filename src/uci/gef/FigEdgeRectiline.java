@@ -27,7 +27,7 @@
 // File: FigEdgeRectiline.java
 // Classes: FigEdgeRectiline
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdgeRectiline.java,v 1.5 1998/07/02 02:52:15 jrobbins Exp $
+// $Id: FigEdgeRectiline.java,v 1.6 1998/10/20 00:22:55 jrobbins Exp $
 
 package uci.gef;
 
@@ -249,5 +249,7 @@ public class FigEdgeRectiline extends FigEdge {
     }
     return true;
   }
+
+  static final long serialVersionUID = -1248646557077429084L;
 
 } /* end class FigEdgeRectiline */

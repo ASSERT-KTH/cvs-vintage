@@ -28,7 +28,7 @@
 // File: SelectionMove.java
 // Classes: SelectionMove
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionMove.java,v 1.5 1998/07/17 22:54:09 jrobbins Exp $
+// $Id: SelectionMove.java,v 1.6 1998/10/20 00:23:29 jrobbins Exp $
 
 package uci.gef;
 
@@ -76,5 +76,6 @@ public class SelectionMove extends Selection {
   public int hitHandle(Rectangle r) { return -1; }
 
 
+  static final long serialVersionUID = -3988412251995936654L;
 } /* end class SelectionMove */
 

@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.8 1998/09/29 21:50:57 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.9 1998/10/20 00:31:20 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -125,6 +125,7 @@ public class FigUseCase extends FigNodeModelElement {
     p.moveToTrash(elmt);
     super.dispose();
   }
+
 
 
 

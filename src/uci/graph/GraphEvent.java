@@ -27,7 +27,7 @@
 // File: GraphEvent.java
 // Interfaces: GraphEvent
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphEvent.java,v 1.4 1998/07/02 02:58:07 jrobbins Exp $
+// $Id: GraphEvent.java,v 1.5 1998/10/20 00:27:23 jrobbins Exp $
 
 package uci.graph;
 
@@ -55,4 +55,5 @@ public class GraphEvent extends EventObject implements java.io.Serializable {
 
   public Object getArg() { return _arg; }
 
+  static final long serialVersionUID = 3781526441836741632L;
 } /* end class GraphEvent */

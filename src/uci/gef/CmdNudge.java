@@ -28,7 +28,7 @@
 // File: CmdNudge.java
 // Classes: CmdNudge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdNudge.java,v 1.5 1998/07/02 02:51:56 jrobbins Exp $
+// $Id: CmdNudge.java,v 1.6 1998/10/20 00:22:38 jrobbins Exp $
 
 package uci.gef;
 
@@ -101,6 +101,8 @@ public class CmdNudge extends Cmd {
   }
 
   public void undoIt() { System.out.println("Cannot undo CmdNudge, yet."); }
+
+  static final long serialVersionUID = 2758012588187712689L;
 
 } /* end class CmdNudge */
 

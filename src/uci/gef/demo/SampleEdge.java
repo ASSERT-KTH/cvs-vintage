@@ -28,7 +28,7 @@
 // File: SampleEdge.java
 // Classes: SampleEdge
 // Original Author: ics125b spring 1996
-// $Id: SampleEdge.java,v 1.6 1998/07/02 02:53:10 jrobbins Exp $
+// $Id: SampleEdge.java,v 1.7 1998/10/20 00:26:10 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -66,5 +66,7 @@ public class SampleEdge extends NetEdge {
 
     return foo;
   }
+
+  static final long serialVersionUID = -3351193870220408015L;
 
 } /* end class SampleEdge */

@@ -28,7 +28,7 @@
 // File: SelectionNoop.java
 // Classes: SelectionNoop
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionNoop.java,v 1.5 1998/07/17 22:54:11 jrobbins Exp $
+// $Id: SelectionNoop.java,v 1.6 1998/10/20 00:23:29 jrobbins Exp $
 
 package uci.gef;
 
@@ -73,5 +73,6 @@ public class SelectionNoop extends Selection {
   public int hitHandle(Rectangle r) { return -2; }
 
 
+  static final long serialVersionUID = 5762844795338457292L;
 } /* end class SelectionNoop */
 

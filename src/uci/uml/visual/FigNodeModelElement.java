@@ -27,7 +27,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.5 1998/09/29 21:50:56 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.6 1998/10/20 00:31:16 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -224,5 +224,6 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     if (own instanceof ModelElement)
       ((ModelElement)own).addVetoableChangeListener(this);
   }
+
 
 } /* end class FigNodeModelElement */

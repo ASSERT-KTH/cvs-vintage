@@ -27,7 +27,7 @@
 // File: FigTextEditor.java
 // Classes: FigTextEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigTextEditor.java,v 1.6 1998/09/17 18:48:16 jrobbins Exp $
+// $Id: FigTextEditor.java,v 1.7 1998/10/20 00:23:01 jrobbins Exp $
 
 package uci.gef;
 
@@ -212,5 +212,7 @@ implements PropertyChangeListener, DocumentListener, KeyListener {
 	      bbox.width + EXTRA*2, bbox.height + EXTRA*2 );
     setFont(_target.getFont());
   }
-  
+
+  static final long serialVersionUID = 5253658760578153001L;
+
 } /* end class FigTextEditor */

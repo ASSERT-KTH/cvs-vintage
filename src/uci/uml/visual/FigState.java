@@ -27,7 +27,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: ics 125b silverbullet team
-// $Id: FigState.java,v 1.8 1998/10/08 00:06:45 jrobbins Exp $
+// $Id: FigState.java,v 1.9 1998/10/20 00:31:18 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -171,6 +171,7 @@ public class FigState extends FigNodeModelElement {
     catch (PropertyVetoException pve) { }
     super.dispose();
   }
+
 
 
 

@@ -27,7 +27,7 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.5 1998/09/17 18:48:53 jrobbins Exp $
+// $Id: FigInstance.java,v 1.6 1998/10/20 00:31:14 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -127,5 +127,6 @@ public class FigInstance extends FigNodeModelElement {
     calcBounds(); //_x = x; _y = y; _w = w; _h = h;
     updateEdges();
   }
+
 
 } /* end class FigInstance */

@@ -28,7 +28,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHeadTriangle.java,v 1.6 1998/08/06 21:31:27 jrobbins Exp $
+// $Id: ArrowHeadTriangle.java,v 1.7 1998/10/20 00:22:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -75,5 +75,7 @@ public class ArrowHeadTriangle extends ArrowHead {
     g.setColor(arrowLineColor);
     g.drawPolygon(triangle);
   }
+
+  static final long serialVersionUID = 9201510549374593518L;
 
 } /* end class ArrowHeadTriangle */

@@ -28,7 +28,7 @@
 // File: Enum.java
 // Classes: Enum
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Enum.java,v 1.4 1998/07/02 02:53:44 jrobbins Exp $
+// $Id: Enum.java,v 1.5 1998/10/20 00:31:26 jrobbins Exp $
 
 package uci.util;
 
@@ -97,4 +97,6 @@ public class Enum implements Enumeration, java.io.Serializable {
     }
   }
 
+  
+  static final long serialVersionUID = 8795272597408860203L;
 } /* end class Enum */

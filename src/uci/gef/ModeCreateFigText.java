@@ -27,7 +27,7 @@
 // File: ModeCreateFigText.java
 // Classes: ModeCreateFigText
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateFigText.java,v 1.6 1998/07/02 02:52:44 jrobbins Exp $
+// $Id: ModeCreateFigText.java,v 1.7 1998/10/20 00:23:15 jrobbins Exp $
 
 package uci.gef;
 
@@ -50,5 +50,7 @@ public class ModeCreateFigText extends ModeCreate {
     return new FigText(snapX, snapY, 0, 0);
   }
 
+  static final long serialVersionUID = 8022413001067764087L;
+  
 } /* end class ModeCreateFigText */
 

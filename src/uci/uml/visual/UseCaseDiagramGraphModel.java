@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.7 1998/10/08 00:06:50 jrobbins Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.8 1998/10/20 00:31:24 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -274,6 +274,8 @@ implements MutableGraphModel, VetoableChangeListener {
       }
     }
   }
+
+  static final long serialVersionUID = -8516841965639203796L;
 
 } /* end class UseCaseDiagramGraphModel */
 

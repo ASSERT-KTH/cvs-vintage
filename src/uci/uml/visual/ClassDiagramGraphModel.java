@@ -27,7 +27,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.12 1998/10/09 01:05:37 jrobbins Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.13 1998/10/20 00:31:08 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -408,6 +408,8 @@ implements MutableGraphModel, VetoableChangeListener {
       }
     }
   }
+
+  static final long serialVersionUID = -2638688086415040146L;
 
 } /* end class ClassDiagramGraphModel */
 

@@ -27,7 +27,7 @@
 // File: CheckManager.java
 // Class: CheckManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckManager.java,v 1.2 1998/07/02 02:57:30 jrobbins Exp $
+// $Id: CheckManager.java,v 1.3 1998/10/20 00:22:19 jrobbins Exp $
 
 package uci.argo.checklist;
 
@@ -50,8 +50,7 @@ public class CheckManager implements java.io.Serializable {
 
   ////////////////////////////////////////////////////////////////
   // constructor
-  protected CheckManager() { }
-
+  public CheckManager() { }
 
   ////////////////////////////////////////////////////////////////
   // static accessors
@@ -59,22 +58,18 @@ public class CheckManager implements java.io.Serializable {
   public static Checklist getChecklistFor(Object dm) {
     Checklist cl = (Checklist) _lists.get(dm);
     if (cl != null) return cl;
-    
     java.lang.Class cls = dm.getClass();
     while (cls != null) {
       cl = (Checklist) _lists.get(cls);
       if (cl != null) return cl;
       cls = cls.getSuperclass();
     }
-
-    return null;    
+    return null;
   }
-
 
   public static void register(Object dm, Checklist cl) {
     _lists.put(dm, cl);
   }
-
 
   public static ChecklistStatus getStatusFor(Object dm) {
     ChecklistStatus cls = (ChecklistStatus) _stats.get(dm);

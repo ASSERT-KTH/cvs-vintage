@@ -28,7 +28,7 @@
 // File: CmdUseRotate.java
 // Classes: CmdUseRotate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUseRotate.java,v 1.5 1998/07/02 02:52:09 jrobbins Exp $
+// $Id: CmdUseRotate.java,v 1.6 1998/10/20 00:22:49 jrobbins Exp $
 
 package uci.gef;
 
@@ -68,6 +68,8 @@ public class CmdUseRotate extends Cmd {
   }
 
   public void undoIt() { System.out.println("not done yet"); }
+
+  static final long serialVersionUID = -541850234261920628L;
 
 } /* end class CmdUseRotate */
 

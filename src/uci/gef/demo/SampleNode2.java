@@ -28,7 +28,7 @@
 // File: SampleNode2.java
 // Classes: SampleNode2
 // Original Author: ics125b spring 1996
-// $Id: SampleNode2.java,v 1.7 1998/07/02 02:53:12 jrobbins Exp $
+// $Id: SampleNode2.java,v 1.8 1998/10/20 00:26:11 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -65,5 +65,7 @@ public class SampleNode2 extends SampleNode implements Serializable {
     fn.setBlinkPorts(true);
     return fn;
   }
+
+  static final long serialVersionUID = 6298627794743859836L;
 
 } /* end class SampleNode2 */

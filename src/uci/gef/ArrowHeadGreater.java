@@ -26,7 +26,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHeadGreater.java,v 1.2 1998/08/06 21:31:22 jrobbins Exp $
+// $Id: ArrowHeadGreater.java,v 1.3 1998/10/20 00:22:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -74,5 +74,7 @@ public class ArrowHeadGreater extends ArrowHead {
     g.drawLine(x1, y1, xTo, yTo);
     g.drawLine(x2, y2, xTo, yTo);
   }
+
+  static final long serialVersionUID = -2068339065042672894L;
 
 }

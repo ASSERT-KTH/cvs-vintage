@@ -28,7 +28,7 @@
 // File: EnumerationPredicate.java
 // Classes: EnumerationPredicate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationPredicate.java,v 1.4 1998/07/02 02:53:45 jrobbins Exp $
+// $Id: EnumerationPredicate.java,v 1.5 1998/10/20 00:31:28 jrobbins Exp $
 
 
 package uci.util;
@@ -91,4 +91,6 @@ implements Enumeration, java.io.Serializable  {
     }
   }
 
+  
+  static final long serialVersionUID = -33702065612228873L;
 } /* end class EnumerationPredicate */

@@ -28,7 +28,7 @@
 // File: EdgeData.java
 // Classes: EdgeData
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EdgeData.java,v 1.6 1998/07/02 02:53:05 jrobbins Exp $
+// $Id: EdgeData.java,v 1.7 1998/10/20 00:26:04 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -101,5 +101,7 @@ public class EdgeData extends NetEdge implements Serializable {
   public FigEdge makePresentation(Layer lay) {
     return new FigEdgeRectiline();
   }
+
+  static final long serialVersionUID = 3557704616625241980L;
 
 } /* end class EdgeData */

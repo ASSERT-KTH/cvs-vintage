@@ -25,7 +25,7 @@
 // File: FigEdgeLineDotted.java
 // Classes: FigEdgeLineDotted
 // Original Author: abonner@ics.uci.edu
-// $Id: FigEdgeLineDotted.java,v 1.2 1998/08/06 21:31:35 jrobbins Exp $
+// $Id: FigEdgeLineDotted.java,v 1.3 1998/10/20 00:22:54 jrobbins Exp $
 
 package uci.gef;
 
@@ -48,6 +48,8 @@ public class FigEdgeLineDotted extends FigEdgeLine {
     returned.setDashed(true);
     return returned;
   }
+
+  static final long serialVersionUID = 6555264606667346084L;
 
 } /* end class FigEdgeLineDotted */
 

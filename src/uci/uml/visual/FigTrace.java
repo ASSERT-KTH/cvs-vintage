@@ -27,7 +27,7 @@
 // File: FigTrace.java
 // Classes: FigTrace
 // Original Author: your email address here
-// $Id: FigTrace.java,v 1.2 1998/07/02 02:57:23 jrobbins Exp $
+// $Id: FigTrace.java,v 1.3 1998/10/20 00:31:19 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -61,6 +61,8 @@ public class FigTrace extends FigEdgeLine {
     super.dispose();
   }
   
+
+  static final long serialVersionUID = -2094146244090391544L;
 
 } /* end class FigTrace */
 

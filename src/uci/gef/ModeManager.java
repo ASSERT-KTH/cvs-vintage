@@ -28,7 +28,7 @@
 // File: ModeManager.java
 // Classes: ModeManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeManager.java,v 1.6 1998/07/02 02:52:45 jrobbins Exp $
+// $Id: ModeManager.java,v 1.7 1998/10/20 00:23:17 jrobbins Exp $
 
 package uci.gef;
 
@@ -234,4 +234,5 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
     }
   }
 
+  static final long serialVersionUID = -8650764865339534461L;
 } /* end class ModeManager */

@@ -28,7 +28,7 @@
 // File: NetList.java
 // Classes: NetList
 // Original Author: ics125 spring 1996
-// $Id: NetList.java,v 1.7 1998/07/02 02:52:50 jrobbins Exp $
+// $Id: NetList.java,v 1.8 1998/10/20 00:23:20 jrobbins Exp $
 
 package uci.gef;
 
@@ -92,5 +92,6 @@ public class NetList extends NetPrimitive implements java.io.Serializable {
     if (a != null && _edges.contains(a)) _edges.removeElement(a);
   }
 
+  static final long serialVersionUID = -238774170084340147L;
 } /* end class NetList */
 

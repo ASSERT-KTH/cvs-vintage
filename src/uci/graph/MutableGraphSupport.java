@@ -28,7 +28,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphSupport.java,v 1.5 1998/07/02 02:58:13 jrobbins Exp $
+// $Id: MutableGraphSupport.java,v 1.6 1998/10/20 00:27:27 jrobbins Exp $
 
 package uci.graph;
 
@@ -185,4 +185,5 @@ implements MutableGraphModel, java.io.Serializable {
     }
   }
 
+  static final long serialVersionUID = -6282336117485054663L;
 } /* end class MutableGraphSupport */

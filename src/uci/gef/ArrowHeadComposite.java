@@ -27,7 +27,7 @@
 // File: ArrowHeadComposite.java
 // Classes: ArrowHeadComposite
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHeadComposite.java,v 1.1 1998/08/06 21:41:33 jrobbins Exp $
+// $Id: ArrowHeadComposite.java,v 1.2 1998/10/20 00:22:27 jrobbins Exp $
 
 package uci.gef;
 
@@ -76,5 +76,7 @@ public class ArrowHeadComposite extends ArrowHead {
     }
   }
 
+
+  static final long serialVersionUID = 1408058795883023563L;
 
 } /* end class ArrowHeadComposite */

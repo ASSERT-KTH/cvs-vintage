@@ -28,7 +28,7 @@
 // File: PredicateTrue.java
 // Classes: PredicateTrue
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PredicateTrue.java,v 1.4 1998/07/02 02:53:48 jrobbins Exp $
+// $Id: PredicateTrue.java,v 1.5 1998/10/20 00:31:31 jrobbins Exp $
 
 package uci.util;
 
@@ -47,4 +47,6 @@ public class PredicateTrue implements Predicate {
     return _theInstance;
   }
 
+  
+  static final long serialVersionUID = 1136743715428919058L;
 } /* end class PredicateTrue */

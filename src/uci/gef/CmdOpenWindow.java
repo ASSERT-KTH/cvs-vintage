@@ -28,7 +28,7 @@
 // File: CmdOpenWindow.java
 // Classes: CmdOpenWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpenWindow.java,v 1.5 1998/07/02 02:51:57 jrobbins Exp $
+// $Id: CmdOpenWindow.java,v 1.6 1998/10/20 00:22:39 jrobbins Exp $
 
 package uci.gef;
 
@@ -70,5 +70,7 @@ public class CmdOpenWindow extends Cmd {
   public void undoIt() {
     System.out.println("undo CmdOpenWindow is not supported");
   }
+
+  static final long serialVersionUID = -4053109533615914080L;
 
 } /* end class CmdOpenWindow */

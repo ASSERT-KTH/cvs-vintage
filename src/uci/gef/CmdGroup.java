@@ -28,7 +28,7 @@
 // File: CmdGroup.java
 // Classes: CmdGroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdGroup.java,v 1.5 1998/07/02 02:51:54 jrobbins Exp $
+// $Id: CmdGroup.java,v 1.6 1998/10/20 00:22:37 jrobbins Exp $
 
 package uci.gef;
 
@@ -71,6 +71,8 @@ public class CmdGroup extends Cmd {
   }
 
   public void undoIt() { System.out.println("not done yet"); }
+
+  static final long serialVersionUID = -348801435790084205L;
 
 } /* end class CmdGroup */
 

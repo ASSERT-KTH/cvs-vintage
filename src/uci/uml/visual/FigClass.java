@@ -27,7 +27,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.24 1998/09/29 21:50:54 jrobbins Exp $
+// $Id: FigClass.java,v 1.25 1998/10/20 00:31:10 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -195,6 +195,7 @@ public class FigClass extends FigNodeModelElement  {
 
 
   
+
 } /* end class FigClass */
 
 

@@ -28,7 +28,7 @@
 // File: Progress.java
 // Classes: Progress
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Progress.java,v 1.5 1998/07/02 02:53:49 jrobbins Exp $
+// $Id: Progress.java,v 1.6 1998/10/20 00:31:31 jrobbins Exp $
 
 package uci.util;
 
@@ -210,4 +210,6 @@ public class Progress extends Frame implements ActionListener {
     _p.dispose();
   }
 
+  static final long serialVersionUID = -4554332933828014635L;
+  
 } /* end class Progress */

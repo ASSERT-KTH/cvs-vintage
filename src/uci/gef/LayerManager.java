@@ -28,7 +28,7 @@
 // File: LayerManager.java
 // Classes: LayerManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerManager.java,v 1.5 1998/08/06 21:31:45 jrobbins Exp $
+// $Id: LayerManager.java,v 1.6 1998/10/20 00:23:06 jrobbins Exp $
 
 package uci.gef;
 
@@ -226,4 +226,5 @@ public class LayerManager implements java.io.Serializable  {
       ((Layer) _layers.elementAt(i)).postLoad();
   }
 
+  static final long serialVersionUID = 1910040372518652814L;
 } /* end class LayerManager */

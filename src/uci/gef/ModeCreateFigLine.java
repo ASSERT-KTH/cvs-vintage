@@ -28,7 +28,7 @@
 // File: ModeCreateFigLine.java
 // Classes: ModeCreateFigLine
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateFigLine.java,v 1.6 1998/07/02 02:52:41 jrobbins Exp $
+// $Id: ModeCreateFigLine.java,v 1.7 1998/10/20 00:23:13 jrobbins Exp $
 
 package uci.gef;
 
@@ -53,5 +53,6 @@ public class ModeCreateFigLine extends ModeCreate {
     return new FigLine(snapX, snapY, snapX, snapY);
   }
 
+  static final long serialVersionUID = -3304638182491116996L;
 } /* end class ModeCreateFigLine */
 

@@ -27,7 +27,7 @@
 // File: ModePlace.java
 // Classes: ModePlace
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModePlace.java,v 1.8 1998/07/15 18:21:52 jrobbins Exp $
+// $Id: ModePlace.java,v 1.9 1998/10/20 00:23:18 jrobbins Exp $
 
 package uci.gef;
 
@@ -158,4 +158,5 @@ public class ModePlace extends Mode {
   /** Paint the FigNode being dragged around. */
   public void paint(Graphics g) { if (_pers != null) _pers.paint(g); }
 
+  static final long serialVersionUID = -6165862797493969514L;
 } /* end class ModePlace */

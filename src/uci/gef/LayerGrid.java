@@ -28,7 +28,7 @@
 // File: LayerGrid.java
 // Classes: LayerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerGrid.java,v 1.12 1998/07/02 02:52:31 jrobbins Exp $
+// $Id: LayerGrid.java,v 1.13 1998/10/20 00:23:05 jrobbins Exp $
 
 package uci.gef;
 
@@ -243,5 +243,6 @@ public class LayerGrid extends Layer {
     refreshEditors();
   }
 
+  static final long serialVersionUID = -6881857653751712834L;
 } /* end class LayerGrid */
 

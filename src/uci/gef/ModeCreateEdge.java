@@ -27,7 +27,7 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.11 1998/09/17 18:48:18 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.12 1998/10/20 00:23:11 jrobbins Exp $
 
 package uci.gef;
 
@@ -170,4 +170,5 @@ public class ModeCreateEdge extends ModeCreate {
     me.consume();
   }
 
+  static final long serialVersionUID = -427957543380196265L;
 } /* end class ModeCreateEdge */

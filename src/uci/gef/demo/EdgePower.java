@@ -28,7 +28,7 @@
 // File: EdgePower.java
 // Classes: EdgePower
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EdgePower.java,v 1.4 1998/07/02 02:53:05 jrobbins Exp $
+// $Id: EdgePower.java,v 1.5 1998/10/20 00:26:05 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -76,5 +76,7 @@ public class EdgePower extends NetEdge implements Serializable {
   public FigEdge makePresentation(Layer lay) {
     return new FigEdgeLine();
   }
+
+  static final long serialVersionUID = -2818734475958408590L;
 
 } /* end class EdgePower */

@@ -27,7 +27,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.9 1998/10/08 00:06:48 jrobbins Exp $
+// $Id: UMLClassDiagram.java,v 1.10 1998/10/20 00:31:22 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -174,4 +174,6 @@ public class UMLClassDiagram extends UMLDiagram {
     _toolBar.add(_actionInk);
   }
   
+  static final long serialVersionUID = -3425290329620076830L;
+
 } /* end class UMLClassDiagram */

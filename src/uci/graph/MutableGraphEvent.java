@@ -27,7 +27,7 @@
 // File: MutableGraphEvent.java
 // Interfaces: MutableGraphEvent
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphEvent.java,v 1.2 1998/07/02 02:58:12 jrobbins Exp $
+// $Id: MutableGraphEvent.java,v 1.3 1998/10/20 00:27:26 jrobbins Exp $
 
 package uci.graph;
 
@@ -55,4 +55,5 @@ public class MutableGraphEvent extends EventObject {
 
   public Object getArg() { return _arg; }
 
+  static final long serialVersionUID = 6208274975962684251L;
 } /* end class MutableGraphEvent */

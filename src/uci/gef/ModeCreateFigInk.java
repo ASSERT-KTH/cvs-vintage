@@ -27,7 +27,7 @@
 // File: ModeCreateFigInk.java
 // Classes: ModeCreateFigInk
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateFigInk.java,v 1.6 1998/07/02 02:52:40 jrobbins Exp $
+// $Id: ModeCreateFigInk.java,v 1.7 1998/10/20 00:23:13 jrobbins Exp $
 
 package uci.gef;
 
@@ -97,5 +97,6 @@ public class ModeCreateFigInk extends ModeCreate {
       y < _lastY + MIN_DELTA;
   }
 
+  static final long serialVersionUID = -6846010734902778871L;
 } /* end class ModeCreateFigInk */
 

@@ -28,7 +28,7 @@
 // File: EnumerationEmpty.java
 // Classes: EnumerationEmpty
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationEmpty.java,v 1.4 1998/07/02 02:53:45 jrobbins Exp $
+// $Id: EnumerationEmpty.java,v 1.5 1998/10/20 00:31:27 jrobbins Exp $
 
 package uci.util;
 
@@ -53,4 +53,6 @@ implements Enumeration, java.io.Serializable {
   protected static EnumerationEmpty _theInstance = new EnumerationEmpty();
   public static EnumerationEmpty theInstance() { return _theInstance; }
 
+  
+  static final long serialVersionUID = -4072852623703469113L;
 } /* end class EnumerationEmpty */

@@ -27,7 +27,7 @@
 // File: ModeCreateFigPoly.java
 // Classes: ModeCreateFigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigPoly.java,v 1.6 1998/07/02 02:52:41 jrobbins Exp $
+// $Id: ModeCreateFigPoly.java,v 1.7 1998/10/20 00:23:14 jrobbins Exp $
 
 package uci.gef;
 
@@ -131,5 +131,6 @@ public class ModeCreateFigPoly extends ModeCreate {
       y < _lastY + Editor.GRIP_SIZE;
   }
 
+  static final long serialVersionUID = 6071576667504398840L;
 } /* end class ModeCreateFigPoly */
 

@@ -27,7 +27,7 @@
 // File: FigEdgeLine.java
 // Classes: FigEdgeLine
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdgeLine.java,v 1.8 1998/10/08 00:05:48 jrobbins Exp $
+// $Id: FigEdgeLine.java,v 1.9 1998/10/20 00:22:53 jrobbins Exp $
 
 package uci.gef;
 
@@ -71,6 +71,8 @@ public class FigEdgeLine extends FigEdge {
       paintHighlightLine(g, f.getX1(), f.getY1(), f.getX2(), f.getY2());
     }
   }
+
+  static final long serialVersionUID = -8455231483004481128L;
 
 } /* end class FigEdgeLine */
 

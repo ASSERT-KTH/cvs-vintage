@@ -28,7 +28,7 @@
 // File: Set.java
 // Classes: Set
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Set.java,v 1.5 1998/07/02 02:53:49 jrobbins Exp $
+// $Id: Set.java,v 1.6 1998/10/20 00:31:32 jrobbins Exp $
 
 package uci.util;
 
@@ -194,5 +194,7 @@ public class Set implements java.io.Serializable  {
     }
     return touched;
   }
+
+  static final long serialVersionUID = 2576846502555732231L;
 
 } /* end class Set */

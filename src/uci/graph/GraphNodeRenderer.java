@@ -27,7 +27,7 @@
 // File: GraphNodeRenderer.java
 // Interfaces: GraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphNodeRenderer.java,v 1.8 1998/07/15 18:22:28 jrobbins Exp $
+// $Id: GraphNodeRenderer.java,v 1.9 1998/10/20 00:27:25 jrobbins Exp $
 
 package uci.graph;
 
@@ -44,4 +44,5 @@ public interface GraphNodeRenderer extends java.io.Serializable {
   /** Return a Fig that can be used to represent the given node */
   FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node);
 
+  static final long serialVersionUID = -1903371615366346013L;
 } /* end interface GraphNodeRenderer */
