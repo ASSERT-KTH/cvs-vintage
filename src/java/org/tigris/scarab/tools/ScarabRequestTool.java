@@ -256,12 +256,7 @@ public class ScarabRequestTool
      */    
     public ScarabRequestTool()
     {
-        TimeZone tmpTimeZone = null;
-        if (TIME_ZONE != null) 
-        {
-            tmpTimeZone = TimeZone.getTimeZone(TIME_ZONE);
-        }        
-        timezone = tmpTimeZone;
+        timezone = TIME_ZONE == null ? null : TimeZone.getTimeZone(TIME_ZONE);
     }
 
     /**
