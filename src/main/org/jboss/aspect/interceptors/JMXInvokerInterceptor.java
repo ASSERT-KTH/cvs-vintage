@@ -29,8 +29,6 @@ import org.jboss.invocation.Invocation;
 import org.jboss.util.Classes;
 import org.jboss.util.jmx.MBeanServerLocator;
 
-import sun.security.krb5.Credentials;
-
 /**
  * The JMXInvokerInterceptor allows pass down method invocations
  * through the JBossMX interceptor stack.
@@ -77,7 +75,7 @@ public class JMXInvokerInterceptor implements AspectInterceptor
     	// of ThreadLocals instead of the DP attachments.
     	Transaction tx = (Transaction)invocation.attachments.get(TRANSACTION_KEY);
     	Principal principle = (Principal)invocation.attachments.get(PRINCIPLE_KEY);
-    	Credentials credentials = (Credentials)invocation.attachments.get(CREDENTIAL_KEY);
+    	Object credentials = (Object)invocation.attachments.get(CREDENTIAL_KEY);
     	
     	// Convert the AspectInvocation into a JBoss Invocation
     	Invocation jmxInvocation = new Invocation( 
