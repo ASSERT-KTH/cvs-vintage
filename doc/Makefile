@@ -1,5 +1,5 @@
 # Author:  Vadim Nasardinov (vadimn@redhat.com)
-# Version: $Id: Makefile,v 1.1 2005/02/07 21:22:53 el-vadimo Exp $
+# Version: $Id: Makefile,v 1.2 2005/02/15 14:07:46 benoitf Exp $
 # Since:   2005-02-07
 
 build:=../output
@@ -17,12 +17,18 @@ all: docbook-html docbook-pdf
 clean:
 	rm -rf $(out_dir)
 
-docbook-html: images $(out_dir)/book1.html
+style:
+	cp $(in_dir)/carol.css $(out_dir)/
+
+
+docbook-html: images style $(out_dir)/book1.html
 
 docbook-pdf: $(out_dir)/usermanual.pdf
 
 $(out_dir)/usermanual.pdf: $(db_files)
 	docbook2pdf --output $(out_dir) usermanual/usermanual.docbook
+
+
 
 images: $(img_files_out)
 
@@ -32,5 +38,5 @@ $(out_dir)/img/%: $(in_dir)/img/%
 
 $(out_dir)/book1.html: $(db_files)
 	mkdir -p $(@D)
-	docbook2html --output $(out_dir) usermanual/usermanual.docbook
+	docbook2html --dsl usermanual/style.dsl --output $(out_dir) usermanual/usermanual.docbook
 
