@@ -45,6 +45,7 @@ Tomcat 3.3.1 Beta 1 Release:
               (see if recent changes address this)
         5722  Forward to a page that have no extension displays a blank page
               (try to fix to do something better than display a blank page)
+        6004  Cannot configure keystoreType
 
 
 Tomcat 3.3.1 Release Candidate 1 Release:
@@ -84,17 +85,19 @@ Tomcat 3.3.1 Final Release:
 The following bugs will be updated with the following resolution:
 
 Bug   Resolution  From   Description
-2202  WORKSFORME  REMIND sendRedirect with enctype="Multipart/form-data" does not
+2202  FIXED       REMIND sendRedirect with enctype="Multipart/form-data" does not
                          work
 3168  WONTFIX     LATER  Reloading JSP Pages with includes in it
 3290  INVALID     LATER  Sessions not sharing properly (lack of test case)
-3333  WORKSFORME  LATER  request.getParameter("action") return only static page
+3333  FIXED       LATER  request.getParameter("action") return only static page
                          value
-4426  WONTFIX     NEW    DB polling
+4426  INVALID     NEW    DB polling
 5246  WONTFIX     NEW    illegal tag at jsp:plugin
 5411  INVALID     NEW    JSP session does not work with IE/IIS5/Tomcat 3.3
 5449  WORKSFORME  NEW    ajp13 and security constraints don't work
-5560  INVALID     NEW    Removal of unnecessary white space in output
+5560  WONTFIX     NEW    Removal of unnecessary white space in output
+5647  INVALID     REOPND Settting an error page for the status code 500 doesn't
+                         display the page.
 
 
 The following bugs will be left with their current resolution:
