@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.9 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionExportXMI.java,v 1.10 2004/09/05 16:57:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,7 +212,7 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
                 ProjectMember member = (ProjectMember) it.next();
                 if (member.getType().equalsIgnoreCase("xmi")) {
                     try {
-                        member.save(new FileWriter(selectedFile));
+                        member.save(new FileWriter(selectedFile), null);
                     } catch (Exception ex) {
                         String sMessage =
                             MessageFormat.format(Translator.localize(

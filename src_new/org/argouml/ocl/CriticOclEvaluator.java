@@ -1,4 +1,4 @@
-// $Id: OCLEvaluator.java,v 1.7 2004/09/05 16:57:49 bobtarling Exp $
+// $Id: CriticOclEvaluator.java,v 1.1 2004/09/05 16:57:49 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,17 +31,24 @@ import org.tigris.gef.ocl.ExpansionException;
 
 
 /**
- * OCLEvaluator is responsible for evaluating simple OCL expressions.
- * Such expressions are for example used in the critiques.<p>
+ * CriticOclEvaluator is responsible for evaluating simple OCL expressions
+ * used in the critiques.<p>
  *
  * @stereotype singleton
  */
-public class OCLEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
+public class CriticOclEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
 
-    public OCLEvaluator() {
+    private static final CriticOclEvaluator INSTANCE = 
+        new CriticOclEvaluator();
+
+    private CriticOclEvaluator() {
     }
-
-    protected synchronized String evalToString(Object self, String expr)
+    
+    public static final CriticOclEvaluator getInstance() {
+        return INSTANCE;
+    }
+    
+    public synchronized String evalToString(Object self, String expr)
             throws ExpansionException {
         String res = null;
         if (GET_NAME_EXPR_1.equals(expr) && ModelFacade.isAModelElement(self)) 
@@ -76,8 +83,8 @@ public class OCLEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
         return res;
     }
 
-    protected synchronized String evalToString(
-            Object self, 
+    public synchronized String evalToString(
+            Object self,
             String expr, 
             String sep) throws ExpansionException {
         _scratchBindings.put("self", self);

@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.21 2004/08/16 16:57:35 mvw Exp $
+// $Id: ProjectMember.java,v 1.22 2004/09/05 16:57:48 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,12 @@
 
 package org.argouml.kernel;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
 
@@ -129,12 +134,47 @@ public abstract class ProjectMember {
     public abstract void load() throws IOException, org.xml.sax.SAXException;
 
     /**
-     * Save the projectmember to the given writer.
-     * @param writer
+     * Save the projectmember as XML to the given writer.
+     * @param writer The Writer to which appen the save.
+     * @param indent The offset to which to indent the XML
      * @throws Exception
      */
-    public abstract void save(Writer writer) throws Exception;
+    public abstract void save(Writer writer, Integer indent) throws SaveException;
 
+    /**
+     * Send an existing file of XML to the PrintWriter.
+     * @param writer the PrintWriter.
+     * @param file the File
+     * @param indent How far to indent in the writer.
+     * @throws SaveException on any errors.
+     */
+    protected void addXmlFileToWriter(PrintWriter writer, File file, int indent) 
+            throws SaveException {
+        try {
+            String padding =
+                "                                          ".substring(0,indent);
+            BufferedReader reader = 
+                new BufferedReader(new FileReader(file));
+            
+            // Skip the <?xml... first line
+            String line = reader.readLine();
+            while (line != null && (line.startsWith("<?xml ") || line.startsWith("<!DOCTYPE "))) {
+                line = reader.readLine();
+            }
+            
+            while (line != null) {
+                (writer).print(padding);
+                (writer).println(line);
+                line = reader.readLine();
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            throw new SaveException(e);
+        } catch (IOException e) {
+            throw new SaveException(e);
+        }
+    }
+    
     public void remove() {
         name = null;
         project = null;

@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.30 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrUML.java,v 1.31 2004/09/05 16:57:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.30 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrUML.java,v 1.31 2004/09/05 16:57:50 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,7 +38,9 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.ocl.CriticOclEvaluator;
 import org.argouml.ocl.OCLEvaluator;
+import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.util.VectorSet;
 
 /** "Abstract" Critic subclass that captures commonalities among all
@@ -201,36 +203,47 @@ public class CrUML extends Critic {
      * @param offs is the elements to replace
      */
     public String expand(String res, VectorSet offs) {
-//	cat.debug("expanding: " + res);
-
-	if (offs.size() == 0) return res;
-
-	Object off1 = offs.firstElement();
-
-	StringBuffer beginning = new StringBuffer("");
-	int matchPos = res.indexOf(OCL_START);
-
-	// replace all occurances of OFFENDER with the name of the
-	// first offender
-	while (matchPos != -1) {
-	    int endExpr = res.indexOf(OCL_END, matchPos + 1);
-	    // check if there is no OCL_END; if so, the critic expression 
-	    // is not correct and can not be expanded
-	    if (endExpr == -1) break; 
-	    if (matchPos > 0) beginning.append(res.substring(0, matchPos));
-	    String expr = res.substring(matchPos + OCL_START.length(), endExpr);
-	    String evalStr = OCLEvaluator.SINGLETON.evalToString(off1, expr);
-//	    cat.debug("expr='" + expr + "' = '" + evalStr + "'");
-	    if (expr.endsWith("") && evalStr.equals(""))
-		evalStr = "(anon)";
-	    beginning.append(evalStr);
-	    res = res.substring(endExpr + OCL_END.length());
-	    matchPos = res.indexOf(OCL_START);
-	}
-	if (beginning.length() == 0) // This is just to avoid creation of a new
-	    return res;		// string when not needed.
-	else
-	    return beginning.append(res).toString();
+        
+        if (offs.size() == 0) return res;
+        
+        Object off1 = offs.firstElement();
+        
+        StringBuffer beginning = new StringBuffer("");
+        int matchPos = res.indexOf(OCL_START);
+        
+        // replace all occurances of OFFENDER with the name of the
+        // first offender
+        while (matchPos != -1) {
+            int endExpr = res.indexOf(OCL_END, matchPos + 1);
+            // check if there is no OCL_END; if so, the critic expression 
+            // is not correct and can not be expanded
+            if (endExpr == -1) {
+                break; 
+            }
+            if (matchPos > 0) {
+                beginning.append(res.substring(0, matchPos));
+            }
+            String expr = res.substring(matchPos + OCL_START.length(), endExpr);
+            String evalStr = null;
+            try {
+                evalStr = CriticOclEvaluator.getInstance().evalToString(off1, expr);
+            } catch (ExpansionException e) {
+                // Really ought to have a CriticException to throw here.
+                LOG.error("Failed to evaluate critic expression", e);
+            }
+            if (expr.endsWith("") && evalStr.equals("")) {
+                evalStr = "(anon)";
+            }
+            beginning.append(evalStr);
+            res = res.substring(endExpr + OCL_END.length());
+            matchPos = res.indexOf(OCL_START);
+        }
+        if (beginning.length() == 0) {
+            // This is just to avoid creation of a new
+            return res;		// string when not needed.
+        } else {
+            return beginning.append(res).toString();
+        }
     }
     
     /** create a new UMLToDoItem.
