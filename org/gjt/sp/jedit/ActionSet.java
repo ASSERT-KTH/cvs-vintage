@@ -24,7 +24,7 @@ import java.util.*;
 /**
  * A set of actions..
  * @author Slava Pestov
- * @version $Id: ActionSet.java,v 1.1 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.2 2001/09/21 08:09:51 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -35,6 +35,7 @@ public class ActionSet
 	 */
 	public ActionSet()
 	{
+		this(null);
 	}
 
 	/**
@@ -45,6 +46,7 @@ public class ActionSet
 	public ActionSet(String label)
 	{
 		this.label = label;
+		actions = new Hashtable();
 	}
 
 	/**
@@ -103,6 +105,15 @@ public class ActionSet
 	public EditAction getAction(String name)
 	{
 		return (EditAction)actions.get(name);
+	}
+
+	/**
+	 * Returns the number of actions in the set.
+	 * @since jEdit 4.0pre1
+	 */
+	public int getActionCount()
+	{
+		return actions.size();
 	}
 
 	/**

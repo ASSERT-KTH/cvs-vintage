@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.8 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: jEdit.java,v 1.9 2001/09/21 08:09:51 spestov Exp $
  */
 public class jEdit
 {
@@ -2942,20 +2942,6 @@ loop:		for(int i = 0; i < list.length; i++)
 				+ ".shortcut2");
 			if(shortcut2 != null)
 				inputHandler.addKeyBinding(shortcut2,action);
-		}
-
-		Vector macros = Macros.getMacroList();
-
-		for(int i = 0; i < macros.size(); i++)
-		{
-			Macros.Macro macro = (Macros.Macro)macros.elementAt(i);
-			String shortcut1 = jEdit.getProperty(macro.name + ".shortcut");
-			if(shortcut1 != null)
-				jEdit.getInputHandler().addKeyBinding(shortcut1,macro.action);
-
-			String shortcut2 = jEdit.getProperty(macro.name + ".shortcut2");
-			if(shortcut2 != null)
-				jEdit.getInputHandler().addKeyBinding(shortcut2,macro.action);
 		}
 	}
 }

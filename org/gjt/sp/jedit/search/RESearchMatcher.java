@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.1 2001/09/02 05:37:57 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.2 2001/09/21 08:09:51 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
@@ -99,7 +99,7 @@ public class RESearchMatcher implements SearchMatcher
 
 		if(beanshell)
 		{
-			int count = match.getSubCount();
+			int count = re.getNumSubs();
 			for(int i = 0; i < count; i++)
 				replaceNS.setVariable("_" + i,match.toString(i));
 

@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.1 2001/09/02 05:38:02 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.2 2001/09/21 08:09:51 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  */
@@ -657,6 +657,7 @@ loop:			for(int i = 0; i < len; i++)
 					// such a SEQ because it would
 					// break the AT_LINE_START
 					// MARK_PREVIOUS rule.
+
 					continue loop;
 				default:
 					break;
@@ -670,7 +671,7 @@ loop:			for(int i = 0; i < len; i++)
 
 			// if we got this far with digit = true, then the keyword
 			// consists of all digits. Add it as such.
-			if(digit)
+			if(digit && seenSomeDigits)
 			{
 				if(start != lastOffset)
 				{

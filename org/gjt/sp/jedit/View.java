@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: View.java,v 1.3 2001/09/21 08:09:51 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -685,7 +685,9 @@ public class View extends JFrame implements EBComponent
 
 		setJMenuBar(GUIUtilities.loadMenuBar("view.mbar"));
 
-		toolBars = new Box(BoxLayout.Y_AXIS);
+		toolBars = new JPanel(new VariableGridLayout(
+			VariableGridLayout.FIXED_NUM_COLUMNS,
+			1));
 
 		inputHandler = new DefaultInputHandler(this,(DefaultInputHandler)
 			jEdit.getInputHandler());
@@ -761,7 +763,7 @@ public class View extends JFrame implements EBComponent
 
 	private DockableWindowManager dockableWindowManager;
 
-	private Box toolBars;
+	private JPanel toolBars;
 	private JToolBar toolBar;
 	private SearchBar searchBar;
 
@@ -893,7 +895,6 @@ public class View extends JFrame implements EBComponent
 				toolBars.remove(toolBar);
 
 			toolBar = GUIUtilities.loadToolBar("view.toolbar");
-			toolBar.add(Box.createGlue());
 
 			toolBars.add(toolBar,0);
 			getRootPane().revalidate();

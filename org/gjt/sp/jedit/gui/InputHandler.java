@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.3 2001/09/21 08:09:51 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -156,6 +156,18 @@ public abstract class InputHandler extends KeyAdapter
 	public void readNextChar(String code)
 	{
 		readNextChar = code;
+	}
+
+	/**
+	 * Resets the last action count. This should be called when an
+	 * editing operation that is not an action is invoked, for example
+	 * a mouse click.
+	 * @since jEdit 4.0pre1
+	 */
+	public void resetLastActionCount()
+	{
+		lastAction = null;
+		lastActionCount = 0;
 	}
 
 	/**

@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.5 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.6 2001/09/21 08:09:51 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3066,7 +3066,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 
 		firstVisibleLine = buffer.virtualToPhysical(firstVisibleLine);
 
-		int firstVisible = getLineEndOffset(firstVisibleLine) - 1;
+		int firstVisible = getLineStartOffset(firstVisibleLine);
 
 		if(select)
 			extendSelection(caret,firstVisible);
@@ -4960,6 +4960,10 @@ forward_scan:		do
 
 		public void mousePressed(MouseEvent evt)
 		{
+			// so that Home <mouse click> Home is not the same
+			// as pressing Home twice in a row
+			view.getInputHandler().resetLastActionCount();
+
 			buffer.endCompoundEdit();
 
 			grabFocus();

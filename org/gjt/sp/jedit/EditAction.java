@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: EditAction.java,v 1.3 2001/09/21 08:09:51 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -47,7 +47,7 @@ public abstract class EditAction
 	/**
 	 * Returns the internal name of this action.
 	 */
-	public final String getName()
+	public String getName()
 	{
 		return name;
 	}
@@ -57,7 +57,7 @@ public abstract class EditAction
 	 * value of the property named by the action's internal name suffixed
 	 * with <code>.label</code>.
 	 */
-	public final String getLabel()
+	public String getLabel()
 	{
 		return jEdit.getProperty(name + ".label");
 	}
