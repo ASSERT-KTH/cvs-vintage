@@ -48,11 +48,10 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.46 2001/12/23 08:42:59 spestov Exp $
+ * @version $Id: Buffer.java,v 1.47 2001/12/24 07:30:24 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
-
 	//{{{ Some constants
 	/**
 	 * Line separator property.
@@ -91,6 +90,12 @@ public class Buffer implements EBComponent
 	 * @since jEdit 4.0pre1
 	 */
 	public static final String TRAILING_EOL = "trailingEOL";
+
+	/**
+	 * This property is set to 'true' if the file should be GZipped.
+	 * @since jEdit 4.0pre4
+	 */
+	public static final String GZIPPED = "gzipped";
 	//}}}
 
 	//{{{ Input/output methods
@@ -1785,6 +1790,16 @@ public class Buffer implements EBComponent
 			setFoldHandler(new IndentFoldHandler());
 		else
 			setFoldHandler(new DummyFoldHandler());
+
+		View[] views = jEdit.getViews();
+		for(int i = 0; i < views.length; i++)
+		{
+			EditPane[] editPanes = views[i].getEditPanes();
+			for(int j = 0; j < editPanes.length; j++)
+			{
+				editPanes[j].getTextArea().getPainter().propertiesChanged();
+			}
+		}
 	} //}}}
 
 	//{{{ getTabSize() method

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.12 2001/12/22 08:39:54 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.13 2001/12/24 07:30:24 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1067,15 +1067,13 @@ loop:		for(int i = 0; i < str.length(); i++)
 		else
 			stack.addElement(directory);
 
-		String[] _files = directory.list();
+		File[] _files = directory.listFiles();
 		if(_files == null)
 			return;
 
 		for(int i = 0; i < _files.length; i++)
 		{
-			String name = _files[i];
-
-			File file = new File(directory,name);
+			File file = _files[i];
 			if(file.isDirectory())
 			{
 				if(recurse)
@@ -1094,7 +1092,7 @@ loop:		for(int i = 0; i < str.length(); i++)
 			}
 			else
 			{
-				if(!filter.isMatch(name))
+				if(!filter.isMatch(file.getName()))
 					continue;
 
 				String path = file.getPath();
