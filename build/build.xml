@@ -197,6 +197,7 @@
         <filter token="LOG_LEVEL_TORQUE" value="${scarab.log.level.torque}"/>
         <filter token="LOG_FILE_TORQUE" value="${scarab.log.file.torque}"/>
         <filter token="LOG_APPEND_TORQUE" value="${scarab.log.append.torque}"/>
+        <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
@@ -972,6 +973,12 @@
                 <exclude name="**/www/**"/>
             </fileset>
         </copy>
+
+        <!-- In the distribution, turn on Velocity template caching -->
+        <replace file="${final.dir}/build/default.properties">
+            <replacetoken><![CDATA[scarab.template.cache=false]]></replacetoken>
+            <replacevalue><![CDATA[scarab.template.cache=true]]></replacevalue>
+        </replace>
     </target>
 
     <!-- ================================================================== -->
