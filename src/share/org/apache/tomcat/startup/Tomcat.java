@@ -116,7 +116,7 @@ public class Tomcat {
     void setConnectorHelper( XmlMapper xh ) {
 
 	xh.addRule( "ContextManager/Connector", xh.objectCreate(null, "className"));
-	xh.addRule( "ContextManager/Connector", xh.setParent( "setContextManager") );
+	xh.addRule( "ContextManager/Connector", xh.setParent( "setServer", "java.lang.Object") );
 	xh.addRule( "ContextManager/Connector", xh.addChild( "addServerConnector", "org.apache.tomcat.core.ServerConnector") );
 
 	xh.addRule( "ContextManager/Connector/Parameter", xh.methodSetter("setProperty",2) );
