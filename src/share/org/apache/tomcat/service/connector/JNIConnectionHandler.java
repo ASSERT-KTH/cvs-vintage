@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.3 2000/04/17 21:02:29 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/04/17 21:02:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.4 2000/05/01 12:29:26 shachor Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/01 12:29:26 $
  *
  * ====================================================================
  *
@@ -121,8 +121,6 @@ public class JNIConnectionHandler {
     	    }
 
     	    contextM.service( reqA, resA );
-
-    	    resA.finish();
     	} catch(Exception ex) {
     	    ex.printStackTrace();
     	}

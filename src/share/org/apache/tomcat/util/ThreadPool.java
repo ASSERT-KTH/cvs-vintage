@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.4 2000/02/29 13:43:26 shachor Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/29 13:43:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.5 2000/05/01 12:29:09 shachor Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/01 12:29:09 $
  *
  * ====================================================================
  *
@@ -228,8 +228,15 @@ public class ThreadPool  {
             stopThePool = true;
             monitor.terminate();
             monitor = null;
-            for(int i = 0 ; i < currentThreadCount ; i++) {
-                ((ControlRunnable)(pool.elementAt(i))).terminate();
+            for(int i = 0 ; i < (currentThreadCount - currentThreadsBusy) ; i++) {
+                try {
+                    ((ControlRunnable)(pool.elementAt(i))).terminate();
+                } catch(Throwable t) {
+                    /* 
+					 * Do nothing... The show must go on, we are shutting 
+					 * down the pool and nothing should stop that.
+					 */
+                }
             }
             currentThreadsBusy = currentThreadCount = 0;
             pool = null;
@@ -285,12 +292,28 @@ public class ThreadPool  {
             maxThreads = MAX_THREADS;
         }
 
-        if(maxSpareThreads == maxThreads || maxSpareThreads <= 0) {
-            maxSpareThreads = maxThreads/2;
+        if(maxSpareThreads >= maxThreads) {
+            maxSpareThreads = maxThreads;
         }
 
-        if(minSpareThreads >=  maxSpareThreads || minSpareThreads <= 0) {
-            minSpareThreads = maxSpareThreads/2;
+		if(maxSpareThreads <= 0) {
+            if(1 == maxThreads) {
+                maxSpareThreads = 1;
+            } else {
+                maxSpareThreads = maxThreads/2;
+            }
+        }
+
+        if(minSpareThreads >  maxSpareThreads) {
+            minSpareThreads =  maxSpareThreads;
+		}
+
+		if(minSpareThreads <= 0) {
+            if(1 == maxSpareThreads) {
+                minSpareThreads = 1;
+            } else {
+                minSpareThreads = maxSpareThreads/2;
+            }
         }
     }
 
