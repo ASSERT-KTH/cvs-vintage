@@ -1,12 +1,38 @@
+Columba v1.0 M2
+
+New features:
 - added import/export of filters in the filters dialog (redsolo)
 - added drag and drop support between two filter dialogs (redsolo)
-- fixing getting the right id for signing, if a id is given in the security panel it 
-  should be used instead of the sender
 - adding always sign feature to security panel (waffel)
-- fixed bug in security panel, now the settings are saved and remember 
-  correct (waffel)
-- fixed bug when hit Alt+D to delete a message (waffel)
 - added question dialog when delete a folder
+- cleanup of mail-checking, unified POP3/IMAP mail-checking, added IMAP accounts
+  the the "Check for new Message..." submenu (fdietz)
+- added folder-based options support, a new plugin entrypoint to easily
+  add more options in the future, a plugin selection dialog, currently
+  supports filtering/sorting/threadedview/columns configuration (fdietz)
+- visible columns can be customized with new dialog, see 
+  View->Configure Columns.. menuitem (fdietz)
+- added Message coloring support, added filter and filter action (redsolo)
+- cleanup of all addressbook dialogs (fdietz)
+- added tooltips to message-list columns (fdietz)
+- fixed exception dialog layout (fdietz)
+- SMTP/IMAP/POP3 authentication cleanups, includes automatically selecting the
+  most secure method, including updates in the account dialog, to query
+  for these methods (tstich)
+- filters can be enabled/disabled (fdietz)
+- cleanup of filter framework (fdietz)
+- cleanup of JTree folder DND, added DND of messages support (redsolo)
+- added subscribe dialog (tstich)
+- replaced log4j, with java.util.logging (javaprog)
+- cleanup of composer.commands, using inputstreams only (tstich)
+- added account-based filter (redsolo)
+- new About Dialog, added contributors list, added memory monitor (ryad kalla/javaprog)
+- cleanup of the action infrastructure (javaprog)
+- cleanup of message-builder package (fdietz)
+- added spam column, spam filters, filter actions, mark as spam/not spam actions (fdietz)
+- refactored Config framework (javaprog)
+
+Fixed bugs:
 - fixed error in printing when no character set is specified
   in message (karlpeder)
 - the correct account is now selected when replying (karlpeder)
@@ -14,9 +40,14 @@
   switching between html and plain text in the composer (karlpeder)
 - fixed open file handles of attachments after sending
 - fixed bug which caused message size to be zero after import (karlpeder)
-- refactored Config framework (javaprog)
+- fixing getting the right id for signing, if a id is given in the security panel it 
+  should be used instead of the sender
+- fixed bug in security panel, now the settings are saved and remember 
+  correct (waffel)
+- fixed bug when hit Alt+D to delete a message (waffel)  
 
 
+  
 Columba v1.0 M1.1
 
 Bugs:
@@ -36,7 +67,7 @@ Bugs:
 - only open composer window, if at least one account exists (fdietz)
 - decode filenames of attachments when saving to disk (fdietz)
 - win32 removing of messages bug (tstich)
-
+- fixed SMTP authentication bug (fdietz)
 
 Columba v1.0 M1 ::Black Mamba::
 
@@ -323,7 +354,7 @@ Version 0.9.10
     * imap synchronize fixes
     * imap lsub fixes (there were some problems with retrieving the
       folder list and the path delimiter)
-    *�local folder locking fixes (local folders are now locked from
+    *???local folder locking fixes (local folders are now locked from
       an outside controller - removed nearly all locking code
       from the folder)
     * new composer-ui:
@@ -445,7 +476,7 @@ Version 0.9.8
     * Fixed the ELHO/HELO smtp commands to use "localhost.localdomain" 
       instead of the real hostname. This should fix problems with 
       TCP-tunneling, NAT (IP Masquerading in Linux), and hosts without 
-      fully qualified domainname (Eduardo P�rez)
+      fully qualified domainname (Eduardo P???rez)
     * Fixed imap folder bug, which prevented INBOX from appearing (Frederik)
     * Changed imap folder hierarchy parser. The delimiter character isn't 
       hardcoded anymore. This fixes the folder hierarchy view for cyrus 
