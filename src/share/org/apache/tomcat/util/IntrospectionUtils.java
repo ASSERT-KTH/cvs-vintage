@@ -376,6 +376,145 @@ public final class IntrospectionUtils {
 	return new String(chars);
     }
 
+    // -------------------- Class path tools --------------------
+
+    /** Add all the jar files in a dir to the classpath,
+     *  represented as a Vector of URLs.
+     */ 
+    public static void addToClassPath( Vector cpV, String dir ) {
+	try{
+            String cpComp[]=getFilesByExt(dir, ".jar");
+            if (cpComp != null){
+                int jarCount=cpComp.length;
+                for( int i=0; i< jarCount ; i++ ) {
+                    cpV.addElement( getURL(  dir , cpComp[i] ));
+                }
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
+    public static void addToolsJar( Vector v )
+    {
+	try {
+	    v.addElement( new URL( "file", "" ,
+				   System.getProperty( "java.home" ) +
+				   "/../lib/tools.jar"));
+	} catch ( MalformedURLException ex ) {
+	    ex.printStackTrace();
+	}
+    }
+
+    
+    /** Return all files with a given extension in a dir
+     */
+    public static String[] getFilesByExt( String ld, String ext ) {
+	File dir = new File(ld);
+        String[] names=null;
+	final String lext=ext;
+        if (dir.isDirectory()){
+            names = dir.list( new FilenameFilter(){
+            public boolean accept(File d, String name) {
+                if (name.endsWith(lext)){
+                    return true;
+                }
+                return false;
+            }
+            });
+        }
+	return names;
+    }
+
+
+    /** Construct a file url from a file, using a base dir
+     */
+    public static URL getURL( String base, String file ) {
+        try {
+            File baseF = new File(base);
+            File f = new File(baseF,file);
+            String path = f.getCanonicalPath();
+            if( f.isDirectory() ){
+                    path +="/";
+            }
+            return new URL( "file", "", path );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * add elements from the classpath <i>cp</i> to a Vector
+     * <i>jars</i> as file URLs (We use Vector for JDK 1.1 compat).
+     * <p>
+     * @param <b>cp</b> a String classpath of directory or jar file
+     *                    elements separated by path.separator delimiters.
+     * @return a Vector of URLs.
+     */
+    public static void addJarsFromClassPath(Vector jars, String cp)
+            throws IOException,MalformedURLException
+    {
+        String sep = System.getProperty("path.separator");
+        String token;
+        StringTokenizer st;
+        if(cp!=null){
+            st = new StringTokenizer(cp,sep);
+            while(st.hasMoreTokens()){
+                File f = new File(st.nextToken());
+                String path = f.getCanonicalPath();
+                if(f.isDirectory()){
+                        path += "/";
+                }
+                URL url = new URL("file","",path);
+                if(!jars.contains(url)){
+                        jars.addElement(url);
+                }
+            }
+        }
+    }
+
+    /** Return a URL[] that can be used to construct a class loader
+     */
+    public static URL[] getClassPath(Vector v){
+        URL[] urls=new URL[ v.size() ];
+        for( int i=0; i<v.size(); i++ ) {
+            urls[i]=(URL)v.elementAt( i );
+        }
+        return urls;
+    }
+
+    // -------------------- Mapping command line params to setters
+
+    public static void processArgs(Object proxy, String args[],
+				   String args0[], String args1[])
+	throws Exception
+    {
+	for( int i=0; i< args.length; i++ ) {
+	    String arg=args[i];
+	    if( arg.startsWith("-"))
+		arg=arg.substring(1);
+
+	    for( int j=0; j< args0.length ; j++ ) {
+		if( args0[j].equalsIgnoreCase( arg )) {
+		    IntrospectionUtils.setAttribute( proxy, args0[j], "true");
+		    break;
+		}
+	    }
+	    for( int j=0; j< args1.length ; j++ ) {
+		if( args1[j].equalsIgnoreCase( arg )) {
+		    i++;
+		    if( i < args.length )
+			IntrospectionUtils.setAttribute( proxy,
+							 args1[j], args[i]);
+		    break;
+		}
+	    }
+	}
+    }
+
+    
     // -------------------- Get property --------------------
     // This provides a layer of abstraction
 
