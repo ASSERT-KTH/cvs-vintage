@@ -44,13 +44,13 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.command.ExceptionHandler;
+import org.columba.core.config.Config;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SmtpItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.AuthenticationManager;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
@@ -170,7 +170,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 				authenticationComboBox.setEnabled(false);
 			}
 
-			defaultAccountCheckBox.setEnabled(MailInterface.config
+			defaultAccountCheckBox.setEnabled(MailConfig.getInstance()
 					.getAccountList().getDefaultAccountUid() != accountItem
 					.getInteger("uid"));
 
@@ -450,8 +450,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 			if (!storePasswordCheckBox.isSelected()) {
 				return;
 			} else {
-				File configPath = MainInterface.config.getConfigDirectory();
-				File defaultConfigPath = MainInterface.config
+				File configPath = Config.getInstance().getConfigDirectory();
+				File defaultConfigPath = Config.getInstance()
 						.getDefaultConfigPath();
 				while (!configPath.equals(defaultConfigPath)) {
 					configPath = configPath.getParentFile();

@@ -37,7 +37,7 @@ import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 
 /**
  * Delete selected contact or group item.
@@ -98,7 +98,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 				try {
 					folder.remove(uids[i]);
 				} catch (Exception e) {
-					if (MainInterface.DEBUG)
+					if (Main.DEBUG)
 						e.printStackTrace();
 
 					new ErrorDialog(e.getMessage(), e);

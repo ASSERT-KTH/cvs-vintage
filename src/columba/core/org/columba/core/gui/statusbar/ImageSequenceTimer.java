@@ -30,10 +30,10 @@ import javax.swing.Timer;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
+import org.columba.core.config.Config;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 
 /**
  * Animated image showing background activity.
@@ -123,7 +123,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
     }
 
     protected void init() {
-        ThemeItem item = MainInterface.config.getOptionsConfig().getThemeItem();
+        ThemeItem item = Config.getInstance().getOptionsConfig().getThemeItem();
 
         //String pulsator = item.getPulsator();
         String pulsator = "default";
@@ -136,7 +136,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
             initDefault();
         } else {
             try {
-                File zipFile = new File(MainInterface.config.getConfigDirectory() +
+                File zipFile = new File(Config.getInstance().getConfigDirectory() +
                         "/pulsators/" + pulsator + ".jar");
 
                 String zipFileEntry = new String(pulsator +
@@ -166,7 +166,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
                     String istr = (new Integer(i)).toString();
                     String image = (String) properties.getProperty(istr);
 
-                    zipFile = new File(MainInterface.config.getConfigDirectory() +
+                    zipFile = new File(Config.getInstance().getConfigDirectory() +
                             "/pulsators/" + pulsator + ".jar");
 
                     zipFileEntry = new String(pulsator + "/" + image);

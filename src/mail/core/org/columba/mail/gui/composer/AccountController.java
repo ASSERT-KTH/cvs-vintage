@@ -22,7 +22,7 @@ import javax.swing.JCheckBoxMenuItem;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.config.MailConfig;
 
 
 /**
@@ -41,7 +41,7 @@ public class AccountController implements ItemListener {
 
         view = new AccountView(this);
 
-        AccountList config = MailInterface.config.getAccountList();
+        AccountList config = MailConfig.getInstance().getAccountList();
 
         for (int i = 0; i < config.count(); i++) {
             view.addItem(config.get(i));

@@ -23,9 +23,10 @@ import org.columba.core.gui.action.OpenNewAddressbookWindowAction;
 import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.gui.action.ShowHelpAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.OSInfo;
 import org.columba.mail.gui.action.ReceiveSendAction;
@@ -45,17 +46,23 @@ import org.columba.mail.gui.action.ReceiveSendAction;
 public class NativeWrapperHandler implements NativeWrapper {
 
 	private NativeWrapper wrapper;
+
 	private JPopupMenu menu;
+
 	private FrameMediator mediator;
 
-	public NativeWrapperHandler(FrameMediator mediator) {
-		this.mediator = mediator;
-		
+	private static NativeWrapperHandler instance = new NativeWrapperHandler();
+
+	public NativeWrapperHandler() {
+
+		this.mediator = FrameModel.getInstance().getActiveFrameMediator()
+				.getFrameMediator();
+
 		if (OSInfo.isWin32Platform()) {
 			try {
 				wrapper = new Win32Wrapper(this);
 			} catch (Exception e) {
-				if (MainInterface.DEBUG)
+				if (Main.DEBUG)
 					e.printStackTrace();
 				new ErrorDialog(e.getMessage(), e);
 			}
@@ -75,6 +82,10 @@ public class NativeWrapperHandler implements NativeWrapper {
 				wrapper.setTrayIconVisible(false);
 			}
 		});
+	}
+
+	public static NativeWrapperHandler getInstance() {
+		return instance;
 	}
 
 	/**
@@ -112,7 +123,9 @@ public class NativeWrapperHandler implements NativeWrapper {
 		if (menu == null) {
 			menu = new JPopupMenu();
 			menu.add(new CMenuItem(new OpenNewMailWindowAction(mediator)));
-			menu.add(new CMenuItem(new OpenNewAddressbookWindowAction(mediator)));
+			menu
+					.add(new CMenuItem(new OpenNewAddressbookWindowAction(
+							mediator)));
 			menu.addSeparator();
 			menu.add(new CMenuItem(new ReceiveSendAction(mediator)));
 			menu.addSeparator();

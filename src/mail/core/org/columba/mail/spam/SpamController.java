@@ -26,9 +26,10 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.io.CloneStreamMaster;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.macchiato.DBWrapper;
 import org.macchiato.Message;
 import org.macchiato.SpamFilter;
@@ -104,7 +105,7 @@ public class SpamController {
 	private SpamController() throws Exception {
 
 		// create directory <config-folder>/mail/spamdb
-		File configDirectory = MainInterface.config.getConfigDirectory();
+		File configDirectory = Config.getInstance().getConfigDirectory();
 		File mailDirectory = new File(configDirectory, "mail");
 		File file = new File(mailDirectory, "spamdb");
 		if (!file.exists())
@@ -132,7 +133,7 @@ public class SpamController {
 				e.printStackTrace();
 			}
 			
-			File configDirectory = MainInterface.config.getConfigDirectory();
+			File configDirectory = Config.getInstance().getConfigDirectory();
 			File mailDirectory = new File(configDirectory, "mail");
 			instance.file = new File(mailDirectory, "spam.db");
 		}
@@ -284,7 +285,7 @@ public class SpamController {
 				db.close();
 			}
 		} catch (Exception e) {
-			if (MainInterface.DEBUG) {
+			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
 			//TODO (@author fdietz): i18n

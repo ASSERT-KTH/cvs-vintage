@@ -31,282 +31,306 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 import org.columba.core.xml.XmlElement;
 
 /**
- * This is the core class to handle i18n in columba, loading, handling and returning localized strings.
- * It should not be used directly, use MailResourceLoader or AddressbookResourceLoader (or *ResourceLoader) instead.
+ * This is the core class to handle i18n in columba, loading, handling and
+ * returning localized strings. It should not be used directly, use
+ * MailResourceLoader or AddressbookResourceLoader (or *ResourceLoader) instead.
  * 
- * Behaviour:
- * When a resource is needed, getString() or getMnemonics() are called. They look for a resource with that name (in the current locale bundles).
- * If it is not found, they look for the resource in the global resource bundle (for the current locale). If this is not found, "FIXME" is returned.
+ * Behaviour: When a resource is needed, getString() or getMnemonics() are
+ * called. They look for a resource with that name (in the current locale
+ * bundles). If it is not found, they look for the resource in the global
+ * resource bundle (for the current locale). If this is not found, "FIXME" is
+ * returned.
  * 
- * Example of usage: We need to get the text for "my_cool_button" located into "org/columba/modules/mail/i18n/action/something_else_than_action"
- * sPath: org/columba/modules/mail/i18n/action/ => The complete package path.
- * sName: something_else_than_action => the name of the _it_IT.properties file.
- * sID: my_cool_button => the name to be looked for inside sName file.
- * We can call:
- * a) MailResourceLoader.getString("action", "something_else_than_action", "my_cool_button");
- * b) ResourceLoader.getString("org/columba/modules/mail/i18n/action", "something_else_than_action", "my_cool_button");
- * They'll both work.
+ * Example of usage: We need to get the text for "my_cool_button" located into
+ * "org/columba/modules/mail/i18n/action/something_else_than_action" sPath:
+ * org/columba/modules/mail/i18n/action/ => The complete package path. sName:
+ * something_else_than_action => the name of the _it_IT.properties file. sID:
+ * my_cool_button => the name to be looked for inside sName file. We can call:
+ * a) MailResourceLoader.getString("action", "something_else_than_action",
+ * "my_cool_button"); b)
+ * ResourceLoader.getString("org/columba/modules/mail/i18n/action",
+ * "something_else_than_action", "my_cool_button"); They'll both work.
  * 
- * We need to gets its mnemonic:
- * a) MailResourceLoader.getMnemonic("action", "something_else_than_action", "my_cool_button");
- * b) ResourceLoader.getMnemonic("org/columba/modules/mail/i18n/action", "something_else_than_action", "my_cool_button");
+ * We need to gets its mnemonic: a) MailResourceLoader.getMnemonic("action",
+ * "something_else_than_action", "my_cool_button"); b)
+ * ResourceLoader.getMnemonic("org/columba/modules/mail/i18n/action",
+ * "something_else_than_action", "my_cool_button");
  */
 public class GlobalResourceLoader {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.util");
+	private static final Logger LOG = Logger.getLogger("org.columba.core.util");
 
-    protected static ClassLoader classLoader;
-    protected static Hashtable htBundles = new Hashtable(80);
-    protected static ResourceBundle globalBundle;
-    private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
-    
-    static {
-        initClassLoader();
-    }
+	protected static ClassLoader classLoader;
 
-    /**
-     * Initialize in org.columba.core.main.Main to use user-definable
-     * language pack.
-     */
-    public static void loadLanguage() {
-        XmlElement locale = MainInterface.config.get("options").getElement("/options/locale");
+	protected static Hashtable htBundles = new Hashtable(80);
 
-        // no configuration available, create default config
-        if (locale == null) {
-            // create new locale xml treenode
-            locale = new XmlElement("locale");
-            locale.addAttribute("language", "en");
-            MainInterface.config.get("options").getElement("/options").addElement(locale);
-        }
+	protected static ResourceBundle globalBundle;
 
-        String language = locale.getAttribute("language");
-        String country = locale.getAttribute("country", "");
-        String variant = locale.getAttribute("variant", "");
-        Locale.setDefault(new Locale(language, country, variant));
-        initClassLoader();
-    }
-    
-    public static Locale[] getAvailableLocales() {
-        Set locales = new HashSet();
-        locales.add(new Locale("en", ""));
+	private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
 
-        FileFilter langpackFileFilter = new LangPackFileFilter();
-        File[] langpacks = MainInterface.config.getConfigDirectory().listFiles(langpackFileFilter);
+	static {
+		initClassLoader();
+	}
 
-        for (int i = 0; i < langpacks.length; i++) {
-            locales.add(extractLocaleFromFilename(langpacks[i].getName()));
-        }
+	/**
+	 * Initialize in org.columba.core.main.Main to use user-definable language
+	 * pack.
+	 */
+	public static void loadLanguage() {
+		XmlElement locale = Config.getInstance().get("options").getElement(
+				"/options/locale");
 
-        langpacks = new File(".").listFiles(langpackFileFilter);
+		// no configuration available, create default config
+		if (locale == null) {
+			// create new locale xml treenode
+			locale = new XmlElement("locale");
+			locale.addAttribute("language", "en");
+			Config.getInstance().get("options").getElement("/options")
+					.addElement(locale);
+		}
 
-        for (int i = 0; i < langpacks.length; i++) {
-            locales.add(extractLocaleFromFilename(langpacks[i].getName()));
-        }
+		String language = locale.getAttribute("language");
+		String country = locale.getAttribute("country", "");
+		String variant = locale.getAttribute("variant", "");
+		Locale.setDefault(new Locale(language, country, variant));
+		initClassLoader();
+	}
 
-        return (Locale[]) locales.toArray(new Locale[0]);
-    }
+	public static Locale[] getAvailableLocales() {
+		Set locales = new HashSet();
+		locales.add(new Locale("en", ""));
 
-    private static Locale extractLocaleFromFilename(String name) {
-        String language = "";
-        String country = "";
-        String variant = "";
-        name = name.substring(9, name.length() - 4);
+		FileFilter langpackFileFilter = new LangPackFileFilter();
+		File[] langpacks = Config.getInstance().getConfigDirectory().listFiles(
+				langpackFileFilter);
 
-        StringTokenizer tokenizer = new StringTokenizer(name, "_");
+		for (int i = 0; i < langpacks.length; i++) {
+			locales.add(extractLocaleFromFilename(langpacks[i].getName()));
+		}
 
-        if (tokenizer.hasMoreElements()) {
-            language = tokenizer.nextToken();
+		langpacks = new File(".").listFiles(langpackFileFilter);
 
-            if (tokenizer.hasMoreElements()) {
-                country = tokenizer.nextToken();
+		for (int i = 0; i < langpacks.length; i++) {
+			locales.add(extractLocaleFromFilename(langpacks[i].getName()));
+		}
 
-                if (tokenizer.hasMoreElements()) {
-                    variant = tokenizer.nextToken();
-                }
-            }
-        }
+		return (Locale[]) locales.toArray(new Locale[0]);
+	}
 
-        return new Locale(language, country, variant);
-    }
+	private static Locale extractLocaleFromFilename(String name) {
+		String language = "";
+		String country = "";
+		String variant = "";
+		name = name.substring(9, name.length() - 4);
 
-    protected static void initClassLoader() {
-        File langpack = null;
-        if (MainInterface.config != null) {
-            langpack = lookupLanguagePackFile(Locale.getDefault(), 
-                MainInterface.config.getConfigDirectory());
-        }
+		StringTokenizer tokenizer = new StringTokenizer(name, "_");
 
-        if (langpack == null) {
-            langpack = lookupLanguagePackFile(Locale.getDefault(), new File("."));
-        }
+		if (tokenizer.hasMoreElements()) {
+			language = tokenizer.nextToken();
 
-        if (langpack != null) {
-            LOG.fine("Creating new i18n class loader for " + langpack.getPath());
+			if (tokenizer.hasMoreElements()) {
+				country = tokenizer.nextToken();
 
-            try {
-                classLoader = new URLClassLoader(new URL[] {langpack.toURL()});
-            } catch (MalformedURLException mue) {
-            }
-             //does not occur
-        } else {
-            // using default english language, shipped with Columba
-            
-            // we can't use SystemClassLoader here, because that
-            // wouldn't work with java webstart,
-            // ResourceBundle uses its own internal classloader
-            // if no classloader is given
-            //  -> set classloader = null
-            /*
-            classLoader = ClassLoader.getSystemClassLoader();
-            */
-            classLoader = null;
-        }
-        
-        try {
-            // use ResourceBundle's internal classloader
-            if (classLoader == null) {
-                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
-                        Locale.getDefault());
-            } else {
-                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
-                        Locale.getDefault(), classLoader);
-            }
-        } catch (MissingResourceException mre) {
-            throw new RuntimeException(
-                "Global resource bundle not found, Columba cannot start.");
-        }
-    }
-    
-    /**
-     * Checks whether there is a language pack file corresponding to the given
-     * locale in the specified directory.
-     */
-    private static File lookupLanguagePackFile(Locale locale, File directory) {
-        File langpack = new File(directory, "langpack_" + locale.toString() + ".jar");
-        if (!langpack.exists() || !langpack.isFile()) {
-            langpack = new File(directory, "langpack_" + locale.getLanguage() + ".jar");
-        }
-        return langpack.exists() && langpack.isFile() ? langpack : null;
-    }
+				if (tokenizer.hasMoreElements()) {
+					variant = tokenizer.nextToken();
+				}
+			}
+		}
 
-    protected static String generateBundlePath(String sPath, String sName) {
-        return sPath + "." + sName;
-    }
+		return new Locale(language, country, variant);
+	}
 
-    /*
-            This method returns the translation for the given string identifier. If no translation is found, the default english item is used.
-            Should this fail too, the sID string will be returned.
+	protected static void initClassLoader() {
+		File langpack = null;
+		try {
+			langpack = lookupLanguagePackFile(Locale.getDefault(), Config
+					.getInstance().getConfigDirectory());
+		} catch (RuntimeException ex) {
+			// this is ok
+		}
 
-            Example usage call: getString("org/columba/modules/mail/i18n/", "dialog", "close")
-            We'll look for "close" in "org/columba/modules/mail/i18n/dialog/dialog_locale_LOCALE.properties"
-            Thus:
-            sPath: "org/columba/modules/mail/i18n/dialog"
-            sName: "dialog"
-            sID: "close"
-            The bundle name will be: "org/columba/modules/mail/i18n/dialog/dialog"
+		if (langpack == null) {
+			langpack = lookupLanguagePackFile(Locale.getDefault(),
+					new File("."));
+		}
 
-            Hypotetically this method should not be available to classes different from *ResourceLoader
-            (example: MailResourceLoader, AddressbookResourceLoader); this means that *ResourceLoader classes *do know* how to call this method.
-    */
-    public static String getString(String sPath, String sName, String sID) {
-        if ((sID == null) || sID.equals("")) {
-            return null;
-        }
+		if (langpack != null) {
+			LOG
+					.fine("Creating new i18n class loader for "
+							+ langpack.getPath());
 
-        ResourceBundle bundle = null;
-        String sBundlePath = null;
+			try {
+				classLoader = new URLClassLoader(new URL[] { langpack.toURL() });
+			} catch (MalformedURLException mue) {
+			}
+			//does not occur
+		} else {
+			// using default english language, shipped with Columba
 
-        if ((sPath != null) && !sPath.equals("")) {
-            //Find out if we already loaded the needed ResourceBundle
-            //object in the hashtable.
-            sBundlePath = generateBundlePath(sPath, sName);
-            bundle = (ResourceBundle) htBundles.get(sBundlePath);
-        }
+			// we can't use SystemClassLoader here, because that
+			// wouldn't work with java webstart,
+			// ResourceBundle uses its own internal classloader
+			// if no classloader is given
+			//  -> set classloader = null
+			/*
+			 * classLoader = ClassLoader.getSystemClassLoader();
+			 */
+			classLoader = null;
+		}
 
-        if ((bundle == null) && (sBundlePath != null)) {
-            try {
-                // use ResourceBundle's internal classloader
-                if (classLoader == null) {
-                    bundle = ResourceBundle.getBundle(sBundlePath,
-                            Locale.getDefault());
-                } else {
-                    bundle = ResourceBundle.getBundle(sBundlePath,
-                            Locale.getDefault(), classLoader);
-                }
+		try {
+			// use ResourceBundle's internal classloader
+			if (classLoader == null) {
+				globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
+						Locale.getDefault());
+			} else {
+				globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
+						Locale.getDefault(), classLoader);
+			}
+		} catch (MissingResourceException mre) {
+			throw new RuntimeException(
+					"Global resource bundle not found, Columba cannot start.");
+		}
+	}
 
-                htBundles.put(sBundlePath, bundle);
-            } catch (MissingResourceException mre) {
-            }
-        }
+	/**
+	 * Checks whether there is a language pack file corresponding to the given
+	 * locale in the specified directory.
+	 */
+	private static File lookupLanguagePackFile(Locale locale, File directory) {
+		File langpack = new File(directory, "langpack_" + locale.toString()
+				+ ".jar");
+		if (!langpack.exists() || !langpack.isFile()) {
+			langpack = new File(directory, "langpack_" + locale.getLanguage()
+					+ ".jar");
+		}
+		return langpack.exists() && langpack.isFile() ? langpack : null;
+	}
 
-        if (bundle != null) {
-            try {
-                return bundle.getString(sID);
-            } catch (MissingResourceException mre) {
-            }
-        }
+	protected static String generateBundlePath(String sPath, String sName) {
+		return sPath + "." + sName;
+	}
 
-        try {
-            return globalBundle.getString(sID);
-        } catch (MissingResourceException mre) {
-            LOG.severe("'" + sID + "' in '" + sBundlePath + "' could not be found.");
+	/*
+	 * This method returns the translation for the given string identifier. If
+	 * no translation is found, the default english item is used. Should this
+	 * fail too, the sID string will be returned.
+	 * 
+	 * Example usage call: getString("org/columba/modules/mail/i18n/", "dialog",
+	 * "close") We'll look for "close" in
+	 * "org/columba/modules/mail/i18n/dialog/dialog_locale_LOCALE.properties"
+	 * Thus: sPath: "org/columba/modules/mail/i18n/dialog" sName: "dialog" sID:
+	 * "close" The bundle name will be:
+	 * "org/columba/modules/mail/i18n/dialog/dialog"
+	 * 
+	 * Hypotetically this method should not be available to classes different
+	 * from *ResourceLoader (example: MailResourceLoader,
+	 * AddressbookResourceLoader); this means that *ResourceLoader classes *do
+	 * know* how to call this method.
+	 */
+	public static String getString(String sPath, String sName, String sID) {
+		if ((sID == null) || sID.equals("")) {
+			return null;
+		}
 
-            return sID;
-        }
-    }
+		ResourceBundle bundle = null;
+		String sBundlePath = null;
 
-    public static void reload() {
-        initClassLoader();
-        LOG.fine("Reloading cached resource bundles for locale " + Locale.getDefault().toString());
+		if ((sPath != null) && !sPath.equals("")) {
+			//Find out if we already loaded the needed ResourceBundle
+			//object in the hashtable.
+			sBundlePath = generateBundlePath(sPath, sName);
+			bundle = (ResourceBundle) htBundles.get(sBundlePath);
+		}
 
-        try {
-            // use ResourceBundle's internal classloader
-            if (classLoader == null) {
-                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
-                        Locale.getDefault());
-            } else {
-                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
-                        Locale.getDefault(), classLoader);
-            }
-        } catch (MissingResourceException mre) {
-        }
-         //should not occur, otherwise the static initializer should have thrown a RuntimeException
+		if ((bundle == null) && (sBundlePath != null)) {
+			try {
+				// use ResourceBundle's internal classloader
+				if (classLoader == null) {
+					bundle = ResourceBundle.getBundle(sBundlePath, Locale
+							.getDefault());
+				} else {
+					bundle = ResourceBundle.getBundle(sBundlePath, Locale
+							.getDefault(), classLoader);
+				}
 
-        String bundlePath;
-        ResourceBundle bundle;
+				htBundles.put(sBundlePath, bundle);
+			} catch (MissingResourceException mre) {
+			}
+		}
 
-        for (Enumeration entries = htBundles.keys(); entries.hasMoreElements();) {
-            try {
-                bundlePath = (String) entries.nextElement();
+		if (bundle != null) {
+			try {
+				return bundle.getString(sID);
+			} catch (MissingResourceException mre) {
+			}
+		}
 
-                //retrieve new bundle
-                // use ResourceBundle's internal classloader
-                if (classLoader == null) {
-                    bundle = ResourceBundle.getBundle(bundlePath,
-                            Locale.getDefault());
-                } else {
-                    bundle = ResourceBundle.getBundle(bundlePath,
-                            Locale.getDefault(), classLoader);
-                }
+		try {
+			return globalBundle.getString(sID);
+		} catch (MissingResourceException mre) {
+			LOG.severe("'" + sID + "' in '" + sBundlePath
+					+ "' could not be found.");
 
-                //overwrite old bundle
-                htBundles.put(bundlePath, bundle);
-            } catch (MissingResourceException mre) {
-            }
-             //should not occur, otherwise the bundlePath would not be in the hashtable
-        }
-    }
+			return sID;
+		}
+	}
 
-    public static class LangPackFileFilter implements FileFilter {
-        public boolean accept(File file) {
-            String name = file.getName().toLowerCase();
+	public static void reload() {
+		initClassLoader();
+		LOG.fine("Reloading cached resource bundles for locale "
+				+ Locale.getDefault().toString());
 
-            return file.isFile() && name.startsWith("langpack_")
-                && name.endsWith(".jar");
-        }
-    }
+		try {
+			// use ResourceBundle's internal classloader
+			if (classLoader == null) {
+				globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
+						Locale.getDefault());
+			} else {
+				globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
+						Locale.getDefault(), classLoader);
+			}
+		} catch (MissingResourceException mre) {
+		}
+		//should not occur, otherwise the static initializer should have thrown
+		// a RuntimeException
+
+		String bundlePath;
+		ResourceBundle bundle;
+
+		for (Enumeration entries = htBundles.keys(); entries.hasMoreElements();) {
+			try {
+				bundlePath = (String) entries.nextElement();
+
+				//retrieve new bundle
+				// use ResourceBundle's internal classloader
+				if (classLoader == null) {
+					bundle = ResourceBundle.getBundle(bundlePath, Locale
+							.getDefault());
+				} else {
+					bundle = ResourceBundle.getBundle(bundlePath, Locale
+							.getDefault(), classLoader);
+				}
+
+				//overwrite old bundle
+				htBundles.put(bundlePath, bundle);
+			} catch (MissingResourceException mre) {
+			}
+			//should not occur, otherwise the bundlePath would not be in the
+			// hashtable
+		}
+	}
+
+	public static class LangPackFileFilter implements FileFilter {
+		public boolean accept(File file) {
+			String name = file.getName().toLowerCase();
+
+			return file.isFile() && name.startsWith("langpack_")
+					&& name.endsWith(".jar");
+		}
+	}
 }

@@ -27,13 +27,13 @@ import javax.swing.JPanel;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -69,7 +69,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
-		super(new ViewItem(MailInterface.config.get("options").getElement(
+		super(new ViewItem(MailConfig.getInstance().get("options").getElement(
 				"/options/gui/messageframe/view")));
 
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
@@ -176,7 +176,7 @@ public class MessageFrameController extends AbstractMailFrameController
 
 		getContainer().extendToolbar(
 				this,
-				MailInterface.config.get("messageframe_toolbar").getElement(
+				MailConfig.getInstance().get("messageframe_toolbar").getElement(
 						"toolbar"));
 		
 		attachmentController.createPopupMenu();

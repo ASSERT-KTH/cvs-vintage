@@ -139,7 +139,7 @@ public class ColumbaCmdLineParser {
 		Boolean debugValue = (Boolean) parser.getOptionValue(debug);
 
 		if (debugValue != null) {
-			MainInterface.DEBUG = debugValue.booleanValue();
+			Main.DEBUG = debugValue.booleanValue();
 		}
 	}
 

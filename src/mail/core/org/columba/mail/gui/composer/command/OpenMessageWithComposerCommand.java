@@ -30,10 +30,10 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -113,7 +113,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 				.getAccountItem(accountUid);
 		model.setAccountItem(accountItem);
 
-		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 
 		boolean preferHtml = Boolean.valueOf(html.getAttribute("prefer"))

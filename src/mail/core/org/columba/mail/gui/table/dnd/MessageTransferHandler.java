@@ -26,7 +26,6 @@ import javax.swing.JTree;
 import javax.swing.TransferHandler;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;

@@ -33,14 +33,14 @@ import java.util.logging.Logger;
 import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.main.VersionInfo;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
@@ -455,7 +455,7 @@ public class MessageComposer {
 
 		if (model.isHtml()) {
 			// compose message body as multipart/alternative
-			XmlElement composerOptions = MailInterface.config
+			XmlElement composerOptions = MailConfig.getInstance()
 					.getComposerOptionsConfig().getRoot()
 					.getElement("/options");
 			XmlElement html = composerOptions.getElement("html");
@@ -545,7 +545,7 @@ public class MessageComposer {
 				adr = Address.parse((String) headerItemList.get(0));
 				header.set("columba.to", adr);
 			} catch (ParserException e) {
-				if (MainInterface.DEBUG)
+				if (Main.DEBUG)
 					e.printStackTrace();
 			}
 		}
@@ -558,7 +558,7 @@ public class MessageComposer {
 				adr = Address.parse((String) headerItemList.get(0));
 				header.set("columba.cc", adr);
 			} catch (ParserException e) {
-				if (MainInterface.DEBUG)
+				if (Main.DEBUG)
 					e.printStackTrace();
 			}
 

@@ -20,15 +20,12 @@ import javax.swing.RepaintManager;
 
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.config.Config;
-import org.columba.core.gui.ClipboardManager;
-import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.DebugRepaintManager;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
@@ -41,6 +38,8 @@ import org.columba.mail.main.MailMain;
  */
 public class Main {
 	private static boolean showStartUpFrame = true;
+	/** If true, enables debugging output from org.columba.core.logging */
+	public static boolean DEBUG = false;
 
 	private Main() {
 	}
@@ -61,7 +60,7 @@ public class Main {
 		Profile profile = ProfileManager.getInstance().getProfile(path);
 
 		// initialize configuration with selected profile
-		MainInterface.config = new Config(profile.getLocation());
+		new Config(profile.getLocation());
 
 		// if user doesn't overwrite logger settings with commandline arguments
 		// just initialize default logging
@@ -72,34 +71,34 @@ public class Main {
 
 		// enable debugging of repaint manager to track down swing gui
 		// access from outside the awt-event dispatcher thread
-		if (MainInterface.DEBUG)
+		if (Main.DEBUG)
 			RepaintManager.setCurrentManager(new DebugRepaintManager());
 
+		// show splash screen
 		StartUpFrame frame = null;
 		if (showStartUpFrame) {
 			frame = new StartUpFrame();
 			frame.setVisible(true);
 		}
 
+		// register protocol handler
 		System.setProperty("java.protocol.handler.pkgs", System.getProperty(
 				"java.protocol.handler.pkgs", "")
 				+ "|org.columba.core.url");
 
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
-		
-		//MainInterface.pluginManager = new PluginManager();
-
-		//MainInterface.backgroundTaskManager = new BackgroundTaskManager();
-
+	
 		// init addressbook component
 		AddressbookMain.getInstance();
 
 		// init mail component
 		MailMain.getInstance();
 
+		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
 
+		// set Look & Feel
 		ThemeSwitcher.setTheme();
 
 		// init font configuration
@@ -108,19 +107,15 @@ public class Main {
 		// set application wide font
 		FontProperties.setFont();
 
-	
-
+		// hide splash screen
 		if (frame != null) {
 			frame.setVisible(false);
 		}
 
+		// restore frames of last session
 		if (FrameModel.getInstance().getOpenFrames().length == 0) {
 			FrameModel.getInstance().openStoredViews();
 		}
-
-		// initialize native code wrapper
-		MainInterface.nativeWrapper = new NativeWrapperHandler(
-				FrameModel.getInstance().getOpenFrames()[0].getFrameMediator());
 
 		// handle commandline parameters
 		handleCommandLineParameters(args);

@@ -24,7 +24,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.main.ConnectionStateImpl;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.config.MailConfig;
 
 
 /**
@@ -48,7 +48,7 @@ public class MailCheckingManager extends Observable {
         list = new Vector();
 
         // get list of all accounts
-        AccountList accountList = MailInterface.config.getAccountList();
+        AccountList accountList = MailConfig.getInstance().getAccountList();
 
         // for each account
         for (int i = 0; i < accountList.count(); i++) {

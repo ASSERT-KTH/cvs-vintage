@@ -48,19 +48,19 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -84,7 +84,7 @@ implements ActionListener, ListSelectionListener {
         super(mediator.getView().getFrame(), MailResourceLoader.getString(
             "dialog", "account", "dialog_title"), true);
         this.mediator = mediator;
-        accountList = MailInterface.config.getAccountList();
+        accountList = MailConfig.getInstance().getAccountList();
         
         initComponents();
         getRootPane().registerKeyboardAction(this, "CLOSE",
@@ -281,7 +281,7 @@ implements ActionListener, ListSelectionListener {
         String action = e.getActionCommand();
         if (action.equals("CLOSE")) {
             try {
-                MainInterface.config.save();
+            	Config.getInstance().save();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

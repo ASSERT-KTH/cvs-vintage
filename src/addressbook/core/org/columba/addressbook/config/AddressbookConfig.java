@@ -44,6 +44,8 @@ public class AddressbookConfig {
 
     private File folderFile;
 
+    private static AddressbookConfig instance = new AddressbookConfig(Config.getInstance());
+    
     /**
      * @see java.lang.Object#Object()
      */
@@ -100,4 +102,11 @@ public class AddressbookConfig {
     protected DefaultXmlConfig getPlugin(String id) {
         return config.getPlugin(MODULE_NAME, id);
     }
+    
+	/**
+	 * @return Returns the instance.
+	 */
+	public static AddressbookConfig getInstance() {
+		return instance;
+	}
 }

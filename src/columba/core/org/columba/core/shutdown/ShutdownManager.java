@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.session.ColumbaServer;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -222,7 +222,7 @@ public class ShutdownManager {
         try {
             dialog = new ShutdownDialog();
         } catch (Exception e) {
-            if (MainInterface.DEBUG) e.printStackTrace();
+            if (Main.DEBUG) e.printStackTrace();
         }
         return dialog;
     }

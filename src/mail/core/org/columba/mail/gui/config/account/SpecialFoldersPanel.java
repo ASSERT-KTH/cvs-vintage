@@ -35,12 +35,12 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -118,7 +118,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
             defaultAccountCheckBox.setSelected(item.getBoolean(
                     "use_default_account"));
 
-            defaultAccountCheckBox.setEnabled(MailInterface.config.getAccountList()
+            defaultAccountCheckBox.setEnabled(MailConfig.getInstance().getAccountList()
                                                                   .getDefaultAccountUid() == accountItem.getInteger(
                     "uid"));
 

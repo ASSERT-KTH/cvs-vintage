@@ -21,9 +21,9 @@ import javax.swing.JComboBox;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.main.MailInterface;
 
 
 /**
@@ -53,7 +53,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
 
         accountComboBox = new JComboBox();
 
-        AccountList accountList = MailInterface.config.getAccountList();
+        AccountList accountList = MailConfig.getInstance().getAccountList();
         int size = accountList.count();
 
         for (int i = 0; i < size; i++) {

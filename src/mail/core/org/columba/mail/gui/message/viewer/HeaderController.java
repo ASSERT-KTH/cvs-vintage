@@ -27,10 +27,10 @@ import javax.swing.JComponent;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.util.AddressListRenderer;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
@@ -66,7 +66,7 @@ public class HeaderController implements Viewer {
 	public void view(MessageFolder folder, Object uid,
 			MailFrameMediator mediator) throws Exception {
 		// add headerfields which are about to show up
-		XmlElement headerviewerElement = MailInterface.config.get("options")
+		XmlElement headerviewerElement = MailConfig.getInstance().get("options")
 				.getElement("/options/headerviewer");
 		DefaultItem item = new DefaultItem(headerviewerElement);
 		int style = item.getInteger("style", 0);

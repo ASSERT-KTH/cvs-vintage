@@ -15,12 +15,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.main;
 
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
@@ -36,9 +34,7 @@ public class AddressbookMain extends DefaultMain {
     
 	private static AddressbookMain instance = new AddressbookMain(); 
 	
-	public AddressbookMain() {
-		AddressbookInterface.config = new AddressbookConfig(MainInterface.config);
-		
+	public AddressbookMain() {	
 		 // init addressbook plugin handlers
 		PluginManager.getInstance().addHandlers("org/columba/addressbook/plugin/pluginhandler.xml");
        

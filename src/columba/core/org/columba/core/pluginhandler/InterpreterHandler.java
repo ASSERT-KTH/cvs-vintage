@@ -17,7 +17,7 @@ package org.columba.core.pluginhandler;
 
 import java.util.Hashtable;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginLoader;
 import org.columba.core.scripting.AbstractInterpreter;
@@ -68,7 +68,7 @@ public class InterpreterHandler extends AbstractPluginHandler {
                         "main_class"), pluginManager.getPluginType(id),
                     pluginManager.getJarFile(id), null));
         } catch (Exception e) {
-        	if ( MainInterface.DEBUG )
+        	if ( Main.DEBUG )
         		e.printStackTrace();
         }
     }

@@ -26,11 +26,11 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.template.ChooseTemplateDialog;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -72,7 +72,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 		// get mimeparts
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 
 		// Which Bodypart shall be shown? (html/plain)

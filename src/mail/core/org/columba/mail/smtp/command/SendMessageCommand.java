@@ -25,7 +25,6 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;

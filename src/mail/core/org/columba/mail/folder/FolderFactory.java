@@ -26,7 +26,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.plugin.FolderPluginHandler;
 
 /**
@@ -44,7 +44,7 @@ public class FolderFactory {
 
     // parent directory for mail folders
     // for example: ".columba/mail/"
-    private String path = MailInterface.config.getConfigDirectory().getPath();
+    private String path = MailConfig.getInstance().getConfigDirectory().getPath();
 
     protected FolderFactory() throws PluginHandlerNotFoundException {
         // Get the handler

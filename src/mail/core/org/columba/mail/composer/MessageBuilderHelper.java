@@ -28,8 +28,8 @@ import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -275,10 +275,10 @@ public class MessageBuilderHelper {
 	 *  
 	 */
 	public static AccountItem getAccountItem(Integer accountUid) {
-		if (MailInterface.config == null)
+		if (MailConfig.getInstance() == null)
 			return null;
 
-		AccountList list = MailInterface.config.getAccountList();
+		AccountList list = MailConfig.getInstance().getAccountList();
 		AccountItem accountItem = null;
 		list.getDefaultAccount();
 
@@ -402,11 +402,11 @@ public class MessageBuilderHelper {
 	 * @return true, if enabled. false, otherwise
 	 */
 	public static boolean isHTMLEnabled() {
-		if (MailInterface.config == null)
+		if (MailConfig.getInstance() == null)
 			return false;
 
 		// get configuration
-		XmlElement optionsElement = MailInterface.config
+		XmlElement optionsElement = MailConfig.getInstance()
 				.get("composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
 

@@ -26,13 +26,12 @@ import javax.swing.Timer;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.columba.mail.main.MailInterface;
 
 
 /**
@@ -73,7 +72,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
     public MarkAsReadTimer(TableController tableController) {
         this.tableController = tableController;
 
-        XmlElement markasread = MailInterface.config.get("options").getElement("/options/markasread");
+        XmlElement markasread = MailConfig.getInstance().get("options").getElement("/options/markasread");
 
         // listen for configuration changes
         markasread.addObserver(this);
@@ -174,7 +173,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
         LOG.info("/options/markasread#delay has changed");
 
         // configuration has changed
-        XmlElement markasread = MailInterface.config.get("options").getElement("/options/markasread");
+        XmlElement markasread = MailConfig.getInstance().get("options").getElement("/options/markasread");
         String delay = markasread.getAttribute("delay", "2");
 
         // enable timer

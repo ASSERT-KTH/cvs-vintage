@@ -51,6 +51,8 @@ public class MailConfig {
 
     protected File composerOptionsFile;
  
+    private static MailConfig instance = new MailConfig(Config.getInstance());
+    
     /**
      * @see java.lang.Object#Object()
      */
@@ -91,6 +93,7 @@ public class MailConfig {
 
     }
 
+    
     
     public File getConfigDirectory() {
         return path;
@@ -171,4 +174,10 @@ public class MailConfig {
                 .getName());
     }
 
+	/**
+	 * @return Returns the instance.
+	 */
+	public static MailConfig getInstance() {
+		return instance;
+	}
 }

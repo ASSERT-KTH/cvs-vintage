@@ -21,9 +21,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
@@ -42,7 +40,7 @@ public class PluginFinderTest extends TestCase {
         file.mkdir();
 
         // initialize configuration - core
-        MainInterface.config = new Config(file);
+        //Config.getInstance() = new Config(file);
     }
    
 

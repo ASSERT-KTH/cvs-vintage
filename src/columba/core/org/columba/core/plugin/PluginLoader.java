@@ -22,7 +22,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.columba.core.loader.ExternalClassLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.pluginhandler.InterpreterHandler;
 import org.columba.core.scripting.AbstractInterpreter;
 
@@ -61,7 +61,7 @@ public final class PluginLoader {
             return null;
         }
 
-        if (MainInterface.DEBUG) {
+        if (Main.DEBUG) {
             LOG.fine("loading.. " + className);
         }
 

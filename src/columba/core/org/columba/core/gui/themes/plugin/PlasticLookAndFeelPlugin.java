@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.swing.UIManager;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 import org.columba.core.xml.XmlElement;
 
 import com.jgoodies.clearlook.ClearLookManager;
@@ -69,7 +69,7 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
                         : Options.getSystemLookAndFeelClassName();
         ;
         */
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement themeElement = gui.getElement("theme");
 

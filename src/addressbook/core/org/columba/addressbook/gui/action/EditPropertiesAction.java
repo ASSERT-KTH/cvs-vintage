@@ -41,7 +41,7 @@ import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 
 /**
  * Edit properties of selected contact or group.
@@ -106,7 +106,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				card = (Contact) folder.get(uids[0]);
 			} catch (Exception e) {
 
-				if (MainInterface.DEBUG)
+				if (Main.DEBUG)
 					e.printStackTrace();
 
 				new ErrorDialog(e.getMessage(), e);
@@ -121,7 +121,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 					// modify card properties in folder
 					folder.modify(uids[0], card);
 				} catch (Exception e1) {
-					if (MainInterface.DEBUG)
+					if (Main.DEBUG)
 						e1.printStackTrace();
 
 					new ErrorDialog(e1.getMessage(), e1);

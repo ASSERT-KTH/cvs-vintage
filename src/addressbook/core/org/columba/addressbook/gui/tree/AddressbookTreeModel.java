@@ -22,11 +22,11 @@ import java.util.Enumeration;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;
@@ -41,7 +41,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
 	private static AddressbookTreeModel instance = new AddressbookTreeModel(
-			AddressbookInterface.config.get("tree").getElement("/tree"));
+			AddressbookConfig.getInstance().get("tree").getElement("/tree"));
 
 	public AddressbookTreeModel(XmlElement root) {
 		super(new Root(root));

@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -75,7 +75,7 @@ public class SessionController {
  * Reads a stored port number from the file ".auth" in the config directory.
  */
     protected static int deserializePortNumber() throws IOException {
-        File file = new File(MainInterface.config.getConfigDirectory(), ".auth");
+        File file = new File(Config.getInstance().getConfigDirectory(), ".auth");
         BufferedReader reader = null;
 
         try {
@@ -101,7 +101,7 @@ public class SessionController {
  */
     protected static void serializePortNumber(int port)
         throws IOException {
-        File file = new File(MainInterface.config.getConfigDirectory(), ".auth");
+        File file = new File(Config.getInstance().getConfigDirectory(), ".auth");
 
         if (port == -1) {
             file.delete();

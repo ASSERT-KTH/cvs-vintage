@@ -41,7 +41,7 @@ import javax.swing.JScrollPane;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.filter.Filter;
@@ -139,7 +139,7 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 PluginManager.getInstance().getHandler(
                     "org.columba.mail.filteraction");
         } catch (PluginHandlerNotFoundException ex) {
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 ex.printStackTrace();
             }
         }

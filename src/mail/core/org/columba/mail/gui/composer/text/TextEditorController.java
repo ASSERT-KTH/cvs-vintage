@@ -26,8 +26,8 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.composer.ComposerController;
@@ -84,7 +84,7 @@ public class TextEditorController extends AbstractEditorController
 
         view.addCaretListener(this);
 
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement guiElement = options.getElement("gui");
         fonts = guiElement.getElement("fonts");
 

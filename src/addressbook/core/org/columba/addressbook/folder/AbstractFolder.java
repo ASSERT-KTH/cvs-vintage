@@ -31,8 +31,8 @@ import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
 
 /**
  * Abstract base class for every contact folder.
@@ -76,7 +76,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	public AbstractFolder(FolderItem item) {
 		super(item);
 
-		String dir = MainInterface.config.getConfigDirectory()
+		String dir = Config.getInstance().getConfigDirectory()
 				+ "/addressbook/" + getUid();
 
 		if (DiskIO.ensureDirectory(dir)) {

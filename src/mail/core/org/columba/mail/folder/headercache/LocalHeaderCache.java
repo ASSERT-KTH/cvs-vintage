@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.util.ListTools;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
@@ -199,7 +199,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 			((LocalFolder) folder).setNextMessageUid(nextUid);
 
 		} catch (Exception e) {
-			if (MainInterface.DEBUG) {
+			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
 		} finally {
@@ -237,7 +237,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		try {
 			writer = new ObjectWriter(headerFile);
 		} catch (Exception e) {
-			if (MainInterface.DEBUG) {
+			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
 		}

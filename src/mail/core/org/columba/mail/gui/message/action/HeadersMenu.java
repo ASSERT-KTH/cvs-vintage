@@ -30,9 +30,9 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.main.MailInterface;
 
 /**
  * Submenu containing three choices: Show default headers, show custom headers
@@ -78,7 +78,7 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 		group.add(allMenuItem);
 		add(allMenuItem);
 
-		element = MailInterface.config.get("options").getElement(
+		element = MailConfig.getInstance().get("options").getElement(
 				"/options/headerviewer");
 		element.addObserver(this);
 

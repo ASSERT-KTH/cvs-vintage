@@ -23,13 +23,13 @@ import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.imap.IMAPServer;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPProtocol;
 import org.columba.ristretto.imap.ListInfo;
@@ -90,7 +90,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 		observable = new StatusObservableImpl();
 
-		accountItem = MailInterface.config.getAccountList().uidGet(
+		accountItem = MailConfig.getInstance().getAccountList().uidGet(
 				folderItem.getInteger("account_uid"));
 
 		updateConfiguration();

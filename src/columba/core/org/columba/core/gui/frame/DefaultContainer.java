@@ -39,7 +39,7 @@ import org.columba.core.gui.menu.ColumbaMenu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ColumbaToolBar;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TooltipMouseHandler;
@@ -619,7 +619,7 @@ public class DefaultContainer extends JFrame implements Container,
 	public void setTitle(String arg0) {
 		String title = windowname; 
 		
-		if(MainInterface.DEBUG) {
+		if(Main.DEBUG) {
 		 	title += " DEBUG MODE";
 		}
 		

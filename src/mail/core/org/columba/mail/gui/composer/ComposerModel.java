@@ -26,7 +26,7 @@ import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
@@ -266,7 +266,7 @@ public class ComposerModel {
 
 	public AccountItem getAccountItem() {
 		if (accountItem == null) {
-			return MailInterface.config.getAccountList().get(0);
+			return MailConfig.getInstance().getAccountList().get(0);
 		} else {
 			return accountItem;
 		}
@@ -317,7 +317,7 @@ public class ComposerModel {
 	}
 
 	public void setAccountItem(String host, String address) {
-		setAccountItem(MailInterface.config.getAccountList().hostGetAccount(
+		setAccountItem(MailConfig.getInstance().getAccountList().hostGetAccount(
 				host, address));
 	}
 

@@ -41,15 +41,15 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.config.Config;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
@@ -115,7 +115,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 		setContentType("text/html");
 
-		XmlElement gui = MailInterface.config.get("options").getElement(
+		XmlElement gui = MailConfig.getInstance().get("options").getElement(
 				"/options/gui");
 		XmlElement messageviewer = gui.getElement("messageviewer");
 
@@ -158,7 +158,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		name = font.getName();
 		size = new Integer(font.getSize()).toString();
 
-		XmlElement options = MainInterface.config.get("options").getElement(
+		XmlElement options = Config.getInstance().get("options").getElement(
 				"/options");
 		XmlElement gui1 = options.getElement("gui");
 		XmlElement fonts = gui1.getElement("fonts");
@@ -200,7 +200,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
 
-		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 
 		//ensure that there is an HTML part in the email, otherwise JTextPanel

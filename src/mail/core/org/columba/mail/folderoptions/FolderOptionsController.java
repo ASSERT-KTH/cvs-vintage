@@ -15,19 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import org.columba.core.main.MainInterface;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.TableController;
 import org.columba.mail.plugin.FolderOptionsPluginHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**

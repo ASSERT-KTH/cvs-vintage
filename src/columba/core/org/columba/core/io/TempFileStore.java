@@ -17,7 +17,7 @@ package org.columba.core.io;
 
 import java.io.File;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 
 /**
  * Factory to create temporary Files on the file storage.
@@ -26,7 +26,7 @@ public final class TempFileStore {
     private static File tempDir;
 
     static {
-        File configDir = MainInterface.config.getConfigDirectory();
+        File configDir = Config.getInstance().getConfigDirectory();
 
         tempDir = new File(configDir, "tmp");
         DiskIO.emptyDirectory(tempDir);

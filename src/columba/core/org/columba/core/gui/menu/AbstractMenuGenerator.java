@@ -26,7 +26,7 @@ import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
@@ -183,7 +183,7 @@ public abstract class AbstractMenuGenerator {
 							        "org.columba.core.action")).getAction(next.getAttribute(
 							            "action"), frameMediator);
 						} catch (PluginHandlerNotFoundException e) {
-							if ( MainInterface.DEBUG)
+							if ( Main.DEBUG)
 								e.printStackTrace();
 						}
 						

@@ -36,7 +36,7 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.mail.plugin.ImportPluginHandler;
@@ -120,7 +120,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
             String description = importer.getDescription();
             descriptionLabel.setText(description);
         } catch (PluginLoadingFailedException e) {
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 e.printStackTrace();
             }
         }

@@ -21,7 +21,7 @@ import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.VCARD;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
@@ -51,7 +51,7 @@ public final class ContactFacade {
 		try {
 			adr = Address.parse(address);
 		} catch (ParserException e1) {
-			if ( MainInterface.DEBUG)
+			if ( Main.DEBUG)
 			e1.printStackTrace();
 			return;
 		}

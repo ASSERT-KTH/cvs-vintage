@@ -38,11 +38,11 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.action.FontSizeMenu;
 import org.columba.mail.gui.composer.html.action.ParagraphMenu;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -92,7 +92,7 @@ implements ActionListener, Observer, ContainerListener {
         controller.addContainerListenerForEditor(this);
 
         // register for changes to editor type (text / html)
-        XmlElement optionsElement = MailInterface.config.get("composer_options")
+        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
                                                         .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
@@ -136,7 +136,7 @@ implements ActionListener, Observer, ContainerListener {
         sizeComboBox.setFocusable(false);
 
         // set initial enabled state of combo boxes
-        XmlElement optionsElement = MailInterface.config.get("composer_options")
+        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
                                                         .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
         String s = htmlElement.getAttribute("enable", "false");

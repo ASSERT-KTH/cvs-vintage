@@ -22,12 +22,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
-import org.columba.mail.main.MailInterface;
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFDriverManager;
 import org.waffel.jscf.JSCFException;
@@ -100,7 +100,7 @@ public class JSCFController
    */
   public JSCFConnection getConnection (String userID) throws JSCFException
   {
-    PGPItem pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
+    PGPItem pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
         .getPGPItem();
     JSCFConnection con = (JSCFConnection) connectionMap.get(userID);
 
@@ -128,7 +128,7 @@ public class JSCFController
       catch (PluginHandlerNotFoundException e)
       {
         LOG.fine("PluginHandler not found" + e);
-        if (MainInterface.DEBUG)
+        if (Main.DEBUG)
         {
           e.printStackTrace();
         }
@@ -168,7 +168,7 @@ public class JSCFController
    */
   public JSCFConnection getConnection () throws JSCFException
   {
-    PGPItem pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
+    PGPItem pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
         .getPGPItem();
 
     return getConnection(pgpItem.get("id"));

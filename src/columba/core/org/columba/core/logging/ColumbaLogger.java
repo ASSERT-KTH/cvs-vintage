@@ -24,7 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
+import org.columba.core.main.Main;
 import org.columba.ristretto.log.RistrettoLogger;
 
 /**
@@ -82,7 +83,7 @@ public final class ColumbaLogger {
             // init console handler
             Handler consoleHandler = new ConsoleHandler();
 
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 consoleHandler.setFormatter(new DebugFormatter());
                 consoleHandler.setLevel(Level.ALL);
                 //System.setProperty("javax.net.debug", "ssl,handshake,data,trustmanager"); // init java.net.ssl debugging
@@ -111,7 +112,7 @@ public final class ColumbaLogger {
             if (logConfigFile == null) {
 
                 // create logging file in "<users config-folder>/log"
-                File file = new File(MainInterface.config.getConfigDirectory(), "log");
+                File file = new File(Config.getInstance().getConfigDirectory(), "log");
                 if ( !file.exists()) file.mkdir();
                 
                 File loggingFile = new File(file, "columba.log");
@@ -121,7 +122,7 @@ public final class ColumbaLogger {
                     Handler handler = new FileHandler(loggingFile.getPath(), false);
                     handler.setFormatter(new SimpleFormatter()); // don't use standard XML formatting
 
-                    if (MainInterface.DEBUG) {
+                    if (Main.DEBUG) {
                         handler.setLevel(Level.ALL);
                     } else {
                         handler.setLevel(Level.WARNING);

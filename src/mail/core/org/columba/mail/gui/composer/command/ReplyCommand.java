@@ -31,12 +31,12 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.mail.gui.util.AddressListRenderer;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -114,7 +114,7 @@ public class ReplyCommand extends FolderCommand {
         // get mimeparts
         MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+        XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                 .getRoot().getElement("/options/html");
 
         // Which Bodypart shall be shown? (html/plain)

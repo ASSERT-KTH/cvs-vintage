@@ -74,13 +74,6 @@ public class Config {
     protected File toolsFile;
     
     private static Config instance;
-    
-    /**
-     * Creates a new configuration from the default directory.
-     */
-    public Config() {
-        this(null);
-    }
 
     /**
      * Creates a new configuration from the given directory.

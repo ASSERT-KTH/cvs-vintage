@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 
 
 /**
@@ -57,7 +57,7 @@ public final class PluginFinder {
             LOG.fine("Folder \"" + programFolder.getPath() + "\" doesn't exist.");
         }
 
-        File configFolder = new File(MainInterface.config.getConfigDirectory(),
+        File configFolder = new File(Config.getInstance().getConfigDirectory(),
                 "plugins");
 
         if (configFolder.exists()) {

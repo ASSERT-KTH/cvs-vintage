@@ -29,7 +29,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.MessageFolder;
@@ -95,7 +95,7 @@ public class FetchNewMessagesCommand extends Command {
 
 			if ( worker.cancelled() ) throw new CommandCancelledException();
 			
-			if (MainInterface.DEBUG) {
+			if (Main.DEBUG) {
 				LOG.fine(newMessagesUidList.toString());
 			}
 

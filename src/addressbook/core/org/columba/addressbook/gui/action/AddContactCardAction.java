@@ -27,7 +27,7 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 
 /**
  * Add new contact card to selected addressbook.
@@ -75,7 +75,7 @@ public class AddContactCardAction extends DefaultTreeAction {
 				// add contact to folder
 				folder.add(card);
 			} catch (Exception e) {
-				if (MainInterface.DEBUG)
+				if (Main.DEBUG)
 					e.printStackTrace();
 
 				new ErrorDialog(e.getMessage(), e);

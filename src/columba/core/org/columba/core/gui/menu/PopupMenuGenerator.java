@@ -26,7 +26,7 @@ import javax.swing.JPopupMenu;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
@@ -99,7 +99,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                             menu.add(tmp);
                         }
                     } catch (Exception e) {
-                        if (MainInterface.DEBUG) {
+                        if (Main.DEBUG) {
                             LOG.severe(e + ": " + next.getAttribute("action"));
                             e.printStackTrace();
                         }

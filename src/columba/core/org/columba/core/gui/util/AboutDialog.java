@@ -48,7 +48,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.main.VersionInfo;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.AddressLabel;
@@ -255,7 +255,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
             "about", "ackPane"), ackPanel);
         
-        if (MainInterface.DEBUG) {
+        if (Main.DEBUG) {
             tabbedPane.addTab("Memory", new MemoryPanel());
         }
         

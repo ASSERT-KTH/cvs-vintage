@@ -17,7 +17,6 @@ package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.main.MailInterface;
 
 
 public class FolderItem extends DefaultItem {
@@ -43,7 +42,7 @@ public class FolderItem extends DefaultItem {
      */
     public static XmlElement getGlobalOptions() {
         //      use global table options
-        XmlElement tableElement = MailInterface.config.get("options")
+        XmlElement tableElement = MailConfig.getInstance().get("options")
                                                       .getElement("/options/gui/table");
 
         return tableElement;

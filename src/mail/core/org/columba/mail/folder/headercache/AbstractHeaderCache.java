@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -134,7 +134,7 @@ public abstract class AbstractHeaderCache {
 				try {
 					load();
 				} catch (Exception e) {
-					if (MainInterface.DEBUG)
+					if (Main.DEBUG)
 						e.printStackTrace();
 
 					// failed to load original header-cache file
@@ -152,7 +152,7 @@ public abstract class AbstractHeaderCache {
 						headerFile.renameTo(oldFile);
 						
 					} catch (Exception e2) {
-						if (MainInterface.DEBUG)
+						if (Main.DEBUG)
 							e2.printStackTrace();
 
 						headerCacheLoaded = true;

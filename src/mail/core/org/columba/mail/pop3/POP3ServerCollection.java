@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.main.MailInterface;
 
 
 public class POP3ServerCollection { //implements ActionListener
@@ -41,7 +41,7 @@ public class POP3ServerCollection { //implements ActionListener
         serverList = new Vector();
         listeners = new Vector();
 
-        AccountList list = MailInterface.config.getAccountList();
+        AccountList list = MailConfig.getInstance().getAccountList();
 
         for (int i = 0; i < list.count(); i++) {
             AccountItem accountItem = list.get(i);

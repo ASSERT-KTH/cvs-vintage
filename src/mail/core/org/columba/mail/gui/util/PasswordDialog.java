@@ -39,10 +39,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -226,8 +226,8 @@ public class PasswordDialog extends JDialog implements ActionListener {
 			if (!checkbox.isSelected()) {
 				return;
 			} else {
-				File configPath = MainInterface.config.getConfigDirectory();
-				File defaultConfigPath = MainInterface.config
+				File configPath = Config.getInstance().getConfigDirectory();
+				File defaultConfigPath = Config.getInstance()
 						.getDefaultConfigPath();
 				while (!configPath.equals(defaultConfigPath)) {
 					configPath = configPath.getParentFile();

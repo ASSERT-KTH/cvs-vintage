@@ -36,10 +36,10 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.main.MainInterface;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
 import org.columba.core.print.cHGroup;
@@ -52,9 +52,9 @@ import org.columba.core.print.cVGroup;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
@@ -201,7 +201,7 @@ public class PrintMessageCommand extends FolderCommand {
             MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
 
             // Does the user prefer html or plain text?
-            XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+            XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                                                   .getRoot().getElement("/options/html");
             boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer"))
                                       .booleanValue();
@@ -367,7 +367,7 @@ public class PrintMessageCommand extends FolderCommand {
          * @return true, if scaling is allowed false, otherwise
          */
     protected boolean isScalingAllowed() {
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement printer = null;
 
         if (options != null) {

@@ -41,8 +41,8 @@ import javax.swing.text.html.HTML;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
+import org.columba.core.config.Config;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLDocument;
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLEditorKit;
@@ -114,7 +114,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
         Font font = FontProperties.getTextFont();
         setFont(font);
 
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement fonts = gui.getElement("fonts");
 

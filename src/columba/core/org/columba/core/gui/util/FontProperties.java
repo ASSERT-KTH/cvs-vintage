@@ -24,7 +24,7 @@ import java.util.Observer;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 import org.columba.core.xml.XmlElement;
 
 
@@ -53,7 +53,7 @@ public class FontProperties extends Observable implements Observer {
      *
      */
     public FontProperties() {
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         fonts = gui.getElement("fonts");
 

@@ -16,7 +16,6 @@
 package org.columba.mail.mailchecking;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.pop3.POP3Server;

@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.gui.table.model.HeaderTableModel;
@@ -134,7 +134,7 @@ public class TableView extends TreeTable {
             try {
                 r = (DefaultLabelRenderer) handler.getPlugin(name, null);
             } catch (Exception e) {
-                if (MainInterface.DEBUG) {
+                if (Main.DEBUG) {
                     e.printStackTrace();
                 }
 

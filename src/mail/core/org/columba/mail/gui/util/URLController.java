@@ -30,10 +30,10 @@ import org.columba.addressbook.model.VCARD;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.main.MailInterface;
 
 public class URLController implements ActionListener {
     private String address;
@@ -95,7 +95,7 @@ public class URLController implements ActionListener {
         model.setTo(address);
 
         // init model to html or text according to stored option		
-        XmlElement optionsElement = MailInterface.config.get("composer_options")
+        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
                                                         .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 

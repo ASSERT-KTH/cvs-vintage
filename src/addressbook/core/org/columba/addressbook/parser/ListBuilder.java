@@ -30,7 +30,7 @@ import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.VCARD;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 
 /**
  * Provides methods for creating new lists from other
@@ -113,7 +113,7 @@ public class ListBuilder {
 						item = collected.get(uid);
 	
 				} catch (Exception e) {
-					if (MainInterface.DEBUG)
+					if (Main.DEBUG)
 						e.printStackTrace();
 				}
 	

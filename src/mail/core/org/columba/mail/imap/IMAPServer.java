@@ -40,7 +40,6 @@ import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.util.ListTools;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaHeader;
@@ -62,7 +62,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
         try {
             reader = new ObjectReader(headerFile);
         } catch (Exception e) {
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 e.printStackTrace();
             }
         }
@@ -131,7 +131,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
         try {
             writer = new ObjectWriter(headerFile);
         } catch (Exception e) {
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 e.printStackTrace();
             }
         }

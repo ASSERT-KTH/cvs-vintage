@@ -19,17 +19,16 @@ import java.util.ResourceBundle;
 
 import javax.swing.JToolBar;
 
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.gui.toolbar.ToolbarButton;
 
 
 public class AddressbookToolBar extends JToolBar {
-    private AddressbookInterface addressbookInterface;
+    
     private ResourceBundle toolbarLabels;
 
-    public AddressbookToolBar(AddressbookInterface addressbookInterface) {
+    public AddressbookToolBar() {
         super();
-        this.addressbookInterface = addressbookInterface;
+        
 
         addCButtons();
 

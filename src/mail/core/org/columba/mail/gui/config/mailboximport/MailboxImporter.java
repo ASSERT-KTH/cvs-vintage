@@ -24,7 +24,7 @@ import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -50,7 +50,7 @@ class MailboxImporter implements WizardModelListener {
 			importer = (AbstractMailboxImporter) pluginHandler.getPlugin(
 					(String) data.getData("Plugin.ID"), args);
 		} catch (PluginLoadingFailedException e1) {
-			if (MainInterface.DEBUG)
+			if (Main.DEBUG)
 				e1.printStackTrace();
 
 			return;

@@ -26,7 +26,7 @@ import javax.swing.JWindow;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 
 import com.jniwrapper.DefaultLibraryLoader;
 import com.jniwrapper.win32.Msg;
@@ -86,7 +86,7 @@ public class Win32Wrapper implements NativeWrapper, TrayIconListener {
 			// load Columba.ico from temporary file
 			icon.loadFromFile(destFile.getAbsolutePath());
 		} catch (Exception e) {
-			if ( MainInterface.DEBUG)
+			if ( Main.DEBUG)
 				e.printStackTrace();
 		}
 		

@@ -19,7 +19,7 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.headercache.ObjectReader;
@@ -66,7 +66,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
         try {
             reader = new ObjectReader(headerFile);
         } catch (Exception e) {
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 e.printStackTrace();
             }
         }
@@ -120,7 +120,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
         try {
             writer = new ObjectWriter(headerFile);
         } catch (Exception e) {
-            if (MainInterface.DEBUG) {
+            if (Main.DEBUG) {
                 e.printStackTrace();
             }
         }

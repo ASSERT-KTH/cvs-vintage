@@ -25,7 +25,6 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.ConnectionStateImpl;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.tree.TreeModel;

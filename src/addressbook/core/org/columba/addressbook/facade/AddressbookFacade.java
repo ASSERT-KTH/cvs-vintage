@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.core.xml.XmlElement;
 
 
@@ -26,7 +26,7 @@ import org.columba.core.xml.XmlElement;
  */
 public class AddressbookFacade {
     public static XmlElement getConfigElement(String configName) {
-        XmlElement root = AddressbookInterface.config.get(configName);
+        XmlElement root = AddressbookConfig.getInstance().get(configName);
 
         return root;
     }

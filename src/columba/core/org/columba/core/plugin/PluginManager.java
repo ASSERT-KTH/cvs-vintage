@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.gui.plugin.AbstractConfigPlugin;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -375,11 +375,11 @@ public class PluginManager {
                 handler = (AbstractPluginHandler) c.newInstance();
                 registerHandler(handler);
             } catch (ClassNotFoundException e) {
-                if (MainInterface.DEBUG) e.printStackTrace();
+                if (Main.DEBUG) e.printStackTrace();
             } catch (InstantiationException e1) {
-                if (MainInterface.DEBUG) e1.printStackTrace();
+                if (Main.DEBUG) e1.printStackTrace();
             } catch (IllegalAccessException e1) {
-                if (MainInterface.DEBUG) e1.printStackTrace();
+                if (Main.DEBUG) e1.printStackTrace();
             }
         }
     }

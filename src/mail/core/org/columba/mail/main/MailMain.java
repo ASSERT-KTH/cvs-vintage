@@ -22,11 +22,11 @@ import javax.swing.JPanel;
 
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.config.Config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.main.DefaultMain;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
@@ -52,8 +52,6 @@ public class MailMain extends DefaultMain {
     private static MailMain instance = new MailMain();
 	
 	public MailMain() {
-MailInterface.config = new MailConfig(MainInterface.config);
-		
 		 // Init PGP
         MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
         renderer.addMimePartRenderer(new MultipartSignedRenderer());
@@ -95,7 +93,7 @@ MailInterface.config = new MailConfig(MainInterface.config);
 	 * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
 	 */
 	public void handleCommandLineParameters(String[] args) {
-		if (MailInterface.config.getAccountList().count() == 0) {
+		if (MailConfig.getInstance().getAccountList().count() == 0) {
 			new AccountWizardLauncher().launchWizard(true);
 		}
 		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
@@ -109,7 +107,7 @@ MailInterface.config = new MailConfig(MainInterface.config);
 	private void checkDefaultClient() {
 		// Check if Columba is the default mail client
 		SystemDefaultMailClientHandler defaultClientHandler = new SystemDefaultMailClientHandler();
-		DefaultItem item = new DefaultItem(MailInterface.config.get("options"));
+		DefaultItem item = new DefaultItem(MailConfig.getInstance().get("options"));
 
 		boolean checkDefault = item.getBoolean("options/defaultclient", "check", true);
 		

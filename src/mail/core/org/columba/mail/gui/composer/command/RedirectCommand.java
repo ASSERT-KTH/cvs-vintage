@@ -29,10 +29,10 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.util.AddressListRenderer;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
@@ -90,7 +90,7 @@ public class RedirectCommand extends ForwardCommand {
 		// get mimeparts
 		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 
 		// Which Bodypart shall be shown? (html/plain)

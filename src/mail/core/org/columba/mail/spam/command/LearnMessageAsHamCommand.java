@@ -25,7 +25,7 @@ import java.util.List;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
@@ -102,7 +102,7 @@ public class LearnMessageAsHamCommand extends FolderCommand {
 					worker.setProgressBarValue(j);
 				}
 			} catch (Exception e) {
-				if (MainInterface.DEBUG) {
+				if (Main.DEBUG) {
 					e.printStackTrace();
 				}
 			} finally {

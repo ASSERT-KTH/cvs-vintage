@@ -37,6 +37,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
@@ -51,7 +52,6 @@ import org.columba.mail.gui.tree.action.ApplyFilterAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -254,7 +254,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		getContainer().setInfoPanel(folderInfoPanel);
 
-		int count = MailInterface.config.getAccountList().count();
+		int count = MailConfig.getInstance().getAccountList().count();
 
 		if (count == 0) {
 			//pack();
@@ -278,7 +278,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			throw new RuntimeException(ex);
 		}
 
-		getContainer().extendToolbar(this, MailInterface.config.get("main_toolbar")
+		getContainer().extendToolbar(this, MailConfig.getInstance().get("main_toolbar")
 				.getElement("toolbar"));
 
 		

@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.loader.DefaultClassLoader;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
@@ -161,7 +161,7 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 		try {
 			plugin = getPlugin(name, className, args);
 		} catch (Exception e) {
-			if (MainInterface.DEBUG)
+			if (Main.DEBUG)
 				e.printStackTrace();
 
 			// show error message
@@ -253,7 +253,7 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 							+ "\" for plugin \"" + name + "\".");
 
 					// list all attributes of this plugin
-					if (MainInterface.DEBUG)
+					if (Main.DEBUG)
 						XmlElement.printNode(action, " ");
 				}
 
@@ -267,7 +267,7 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 		LOG
 				.severe("Check if the plugin was disabled before. If so, set the enabled-attribute in plugin.xml to \"true\"");
 
-		if (MainInterface.DEBUG) {
+		if (Main.DEBUG) {
 			// list all available plugins of this handler
 			XmlElement.printNode(parentNode, " ");
 		}

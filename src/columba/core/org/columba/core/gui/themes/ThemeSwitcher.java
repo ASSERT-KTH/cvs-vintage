@@ -23,8 +23,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.xml.XmlElement;
@@ -44,7 +45,7 @@ public class ThemeSwitcher {
 
     public static void setTheme() {
         // get configuration
-        XmlElement themeConfig = MainInterface.config.get("options")
+        XmlElement themeConfig = Config.getInstance().get("options")
                 .getElement("/options/gui/theme");
 
         String pluginName = null;
@@ -65,7 +66,7 @@ public class ThemeSwitcher {
             theme.setLookAndFeel();
         } catch (Exception ex) {
 
-            if (MainInterface.DEBUG) ex.printStackTrace();
+            if (Main.DEBUG) ex.printStackTrace();
 
             JOptionPane.showMessageDialog(null, "Error while trying to load "
                     + pluginName

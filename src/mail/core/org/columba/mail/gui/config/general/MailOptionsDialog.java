@@ -43,7 +43,7 @@ import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -89,7 +89,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
     public void updateComponents(boolean b) {
         if (b) {
-            XmlElement options = MailInterface.config.get("options").getElement("/options");
+            XmlElement options = MailConfig.getInstance().get("options").getElement("/options");
 
             XmlElement gui = options.getElement("gui");
 
@@ -141,7 +141,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                                         .booleanValue();
             preferHtmlCheckBox.setSelected(preferhtml);            
             boolean disablehtml = Boolean.valueOf(html.getAttribute("disable"))										.booleanValue();            disableHtmlCheckBox.setSelected(disablehtml);            
-            XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
+            XmlElement composerOptions = MailConfig.getInstance().getComposerOptionsConfig()
                                                              .getRoot()
                                                              .getElement("/options");
             XmlElement subject = composerOptions.getElement("subject");
@@ -186,7 +186,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             spellButton.setText(path);
             */
         } else {
-            XmlElement options = MailInterface.config.get("options").getElement("/options");
+            XmlElement options = MailConfig.getInstance().get("options").getElement("/options");
 
             XmlElement gui = options.getElement("gui");
 
@@ -241,7 +241,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                 html.addAttribute("prefer", Boolean.FALSE.toString());
             }                        //            preferHtmlCheckBox.notifyObservers();            
             if (disableHtmlCheckBox.isSelected()) {                html.addAttribute("disable", Boolean.TRUE.toString());            } else {                html.addAttribute("disable", Boolean.FALSE.toString());            }//            disableHtmlCheckBox.notifyObservers();                        
-            XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
+            XmlElement composerOptions = MailConfig.getInstance().getComposerOptionsConfig()
                                                              .getRoot()
                                                              .getElement("/options");
 

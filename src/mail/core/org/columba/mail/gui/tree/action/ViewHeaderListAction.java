@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MessageViewOwner;

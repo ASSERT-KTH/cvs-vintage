@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;

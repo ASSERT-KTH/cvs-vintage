@@ -25,13 +25,13 @@ import java.util.List;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.JSCFController;
@@ -134,7 +134,7 @@ public class PGPMessageFilter extends AbstractFilter {
 		// - multipart/signed
 		String contentType = (String) header.get("Content-Type");
 
-		AccountItem defAccount = MailInterface.config.getAccountList()
+		AccountItem defAccount = MailConfig.getInstance().getAccountList()
 				.getDefaultAccount();
 
 		boolean pgpActive = false;
@@ -185,7 +185,7 @@ public class PGPMessageFilter extends AbstractFilter {
 		} else {
 			PGPItem pgpItem = null;
 			// we need the pgpItem, to extract the path to gpg
-			pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
+			pgpItem = MailConfig.getInstance().getAccountList().getDefaultAccount()
 					.getPGPItem();
 			// this is wrong! we need the default id.
 			//pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0]
@@ -352,7 +352,7 @@ public class PGPMessageFilter extends AbstractFilter {
 
 		} catch (JSCFException e) {
 
-			if (MainInterface.DEBUG)
+			if (Main.DEBUG)
 				e.printStackTrace();
 
 			pgpMode = SecurityInformationController.VERIFICATION_FAILURE;

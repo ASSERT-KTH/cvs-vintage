@@ -21,21 +21,21 @@ import java.util.MissingResourceException;
 
 import javax.swing.tree.DefaultTreeModel;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -52,14 +52,14 @@ public class TreeModel extends DefaultTreeModel {
     protected TempFolder tempFolder;
     private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-    private static TreeModel instance = new TreeModel(MailInterface.config.getFolderConfig());
+    private static TreeModel instance = new TreeModel(MailConfig.getInstance().getFolderConfig());
     
     public TreeModel(FolderXmlConfig folderConfig) {
         super(new Root(folderConfig.getRoot().getElement("tree")));
         this.folderXmlConfig = folderConfig;
 
         // create temporary folder in "<your-config-folder>/mail/"
-        tempFolder = new TempFolder(MainInterface.config.getConfigDirectory() +
+        tempFolder = new TempFolder(Config.getInstance().getConfigDirectory() +
                 "/mail/");
 
         createDirectories(((AbstractFolder) getRoot()).getConfiguration().getRoot(),
@@ -172,7 +172,7 @@ public class TreeModel extends DefaultTreeModel {
 
         // parent directory for mail folders
         // for example: ".columba/mail/"
-        String path = MainInterface.config.getConfigDirectory() + "/mail/";
+        String path = Config.getInstance().getConfigDirectory() + "/mail/";
         Object[] args = { item, path };
         AbstractFolder folder = null;
 

@@ -26,10 +26,10 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CRadioButtonMenuItem;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.comparator.FolderComparator;
 import org.columba.mail.gui.tree.comparator.UnreadFolderComparator;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -90,7 +90,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
      * Loads the configuration.
      */
     private void loadConfig() {
-        XmlElement element = MailInterface.config.get("options").getElement("/options/gui/tree/sorting");
+        XmlElement element = MailConfig.getInstance().get("options").getElement("/options/gui/tree/sorting");
 
         FolderComparator comparator = null;
         if (element != null) {
@@ -133,9 +133,9 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
      * Saves the config.
      */
     private void saveConfig() {
-        XmlElement treeElement = MailInterface.config.get("options").getElement("/options/gui/tree");
+        XmlElement treeElement = MailConfig.getInstance().get("options").getElement("/options/gui/tree");
         if (treeElement == null) {
-            treeElement = MailInterface.config.get("options").getElement("/options/gui").addSubElement("tree");
+            treeElement = MailConfig.getInstance().get("options").getElement("/options/gui").addSubElement("tree");
         }
 
         XmlElement element = treeElement.getElement("sorting");

@@ -34,11 +34,11 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
@@ -86,7 +86,7 @@ public class POP3Server {
 
 		int uid = accountItem.getUid();
 
-		file = new File(MailInterface.config.getPOP3Directory(), (new Integer(
+		file = new File(MailConfig.getInstance().getPOP3Directory(), (new Integer(
 				uid)).toString());
 
 		PopItem item = accountItem.getPopItem();

@@ -24,15 +24,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.main.MailMain;
+import org.columba.core.main.Main;
 
 /**
  * Abstract testcase creates a folder in setUp and removes it in tearDown.
@@ -45,121 +39,107 @@ import org.columba.mail.main.MailMain;
  */
 public class AbstractFolderTst extends TestCase {
 
-    /** A source folder. */
-    protected MessageFolder sourceFolder;
+	/** A source folder. */
+	protected MessageFolder sourceFolder;
 
-    /** A destination folder. */
-    protected MessageFolder destFolder;
+	/** A destination folder. */
+	protected MessageFolder destFolder;
 
-    /** A set with all created folders. */
-    private Set folders;
+	/** A set with all created folders. */
+	private Set folders;
 
-    private static int folderId = 0;
+	private static int folderId = 0;
 
-    private MailboxTstFactory factory;
+	private MailboxTstFactory factory;
 
-    /**
-     * Constructor for test.
-     * <p>
-     * This is used when executing this individual test only or
-     * by the ant task.
-     * <p>
-     */
-    public AbstractFolderTst(String test) {
-        super(test);
+	/**
+	 * Constructor for test.
+	 * <p>
+	 * This is used when executing this individual test only or by the ant task.
+	 * <p>
+	 */
+	public AbstractFolderTst(String test) {
+		super(test);
 
-        this.factory = new MHFolderFactory();
-    }
-    
-    /**
-     * Constructor for test.
-     * <p>
-     * Used by {@link AllTests}.
-     */
-    public AbstractFolderTst(MailboxTstFactory factory, String test) {
-        super(test);
+		this.factory = new MHFolderFactory();
+	}
 
-        this.factory = factory;
-    }
+	/**
+	 * Constructor for test.
+	 * <p>
+	 * Used by {@link AllTests}.
+	 */
+	public AbstractFolderTst(MailboxTstFactory factory, String test) {
+		super(test);
 
-    /**
-     * @see TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-    		
-    	// create config-folder
-        File file = new File("test_config");
-        file.mkdir();
+		this.factory = factory;
+	}
 
-        // initialize configuration - core
-        MainInterface.config = new Config(file);
+	/**
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
 
-        // initialize configuration - mail component
-        MailInterface.config = new MailConfig(MainInterface.config);
+		// create config-folder
+		File file = new File("test_config");
+		file.mkdir();
 
-        // initialize configuration - addressbook component
-        AddressbookInterface.config = new AddressbookConfig(
-                MainInterface.config);
-        
-        // init background manager (needed by ShutdownManager)
-        //MainInterface.backgroundTaskManager = new BackgroundTaskManager();
-        
-        //PluginManager.getInstance() = new PluginManager();
-        
-        MailMain.getInstance();
-      
-    	 MainInterface.DEBUG = true;
-    	 ColumbaLogger.createDefaultHandler();
-    	 
-        folders = new HashSet();
-        sourceFolder = factory.createFolder(folderId++);
-        folders.add(sourceFolder);
-        destFolder = factory.createFolder(folderId++);
-        folders.add(destFolder);
-        
-        
-    }
+		//MailMain.getInstance();
 
-    public MessageFolder createFolder() {
-        MessageFolder folder = factory.createFolder(folderId++);
-        folders.add(folder);
-        
-        return folder;
-    }
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-            MessageFolder folder = (MessageFolder) iterator.next();
-            File f = folder.getDirectoryFile();
+		new Config(file);
 
-            // delete all mails in folder
-            File[] list = f.listFiles();
+		Main.DEBUG = true;
+		ColumbaLogger.createDefaultHandler();
 
-            for (int i = 0; i < list.length; i++) {
-                list[i].delete();
-            }
+		folders = new HashSet();
+		sourceFolder = factory.createFolder(folderId++);
+		folders.add(sourceFolder);
+		destFolder = factory.createFolder(folderId++);
+		folders.add(destFolder);
 
-            // delete folder
-            f.delete();
-            folder.removeFolder();
-        }
-        new File(FolderTstHelper.homeDirectory + "/folders/").delete();
-    }
+	}
 
-    /**
-     * @return Returns the folder.
-     */
-    public MessageFolder getSourceFolder() {
-        return sourceFolder;
-    }
+	public MessageFolder createFolder() {
+		MessageFolder folder = factory.createFolder(folderId++);
+		folders.add(folder);
 
-    /**
-     * @return Returns the destFolder.
-     */
-    public MessageFolder getDestFolder() {
-        return destFolder;
-    }
-  
+		return folder;
+	}
+
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
+			MessageFolder folder = (MessageFolder) iterator.next();
+			File f = folder.getDirectoryFile();
+
+			// delete all mails in folder
+			File[] list = f.listFiles();
+
+			for (int i = 0; i < list.length; i++) {
+				list[i].delete();
+			}
+
+			// delete folder
+			f.delete();
+			folder.removeFolder();
+		}
+		new File(FolderTstHelper.homeDirectory + "/folders/").delete();
+	}
+
+	/**
+	 * @return Returns the folder.
+	 */
+	public MessageFolder getSourceFolder() {
+		return sourceFolder;
+	}
+
+	/**
+	 * @return Returns the destFolder.
+	 */
+	public MessageFolder getDestFolder() {
+		return destFolder;
+	}
+
 }

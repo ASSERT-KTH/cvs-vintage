@@ -41,7 +41,6 @@ import javax.swing.tree.TreePath;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;

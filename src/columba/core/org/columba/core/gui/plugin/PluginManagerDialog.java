@@ -50,12 +50,12 @@ import javax.swing.filechooser.FileFilter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
@@ -358,7 +358,7 @@ implements ActionListener, TreeSelectionListener {
 
     protected void installPlugin(File file) {
         // use user's config folder in his/her home-folder
-        File destination = new File(MainInterface.config.getConfigDirectory(),
+        File destination = new File(Config.getInstance().getConfigDirectory(),
                 "plugins");
 
         File pluginDirectory;

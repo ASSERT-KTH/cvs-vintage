@@ -25,17 +25,16 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -105,13 +104,13 @@ public class SendAllMessagesCommand extends FolderCommand {
 			if (message.getAccountUid() != actAccountUid) {
 				actAccountUid = message.getAccountUid();
 
-				AccountItem accountItem = MailInterface.config.getAccountList()
+				AccountItem accountItem = MailConfig.getInstance().getAccountList()
 						.uidGet(actAccountUid);
 
 				if (accountItem == null)
 				{
 					//use the default account
-				  accountItem = MailInterface.config.getAccountList().getDefaultAccount();
+				  accountItem = MailConfig.getInstance().getAccountList().getDefaultAccount();
 				  
 				  if (accountItem == null)
 				    continue; //skip message if there's no account available to send it

@@ -40,6 +40,7 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.FrameModel;
@@ -51,7 +52,6 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
@@ -142,7 +142,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
     }
 
     public void updateComponents(boolean b) {
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement themeElement = gui.getElement("theme");
 
@@ -163,7 +163,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             textFontElement = fonts.addSubElement("text");
         }
 
-        GuiItem item = MainInterface.config.getOptionsConfig().getGuiItem();
+        GuiItem item = Config.getInstance().getOptionsConfig().getGuiItem();
 
         //mainFont = item.getMainFont();
         //textFont = item.getTextFont();
@@ -260,7 +260,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             themeElement.addAttribute("name", selection);
 
             // get language configuration
-            XmlElement locale = MainInterface.config.get("options").getElement("/options/locale");
+            XmlElement locale = Config.getInstance().get("options").getElement("/options/locale");
 
             // set language config based on selected item
             Locale l = (Locale) languageComboBox.getSelectedItem();

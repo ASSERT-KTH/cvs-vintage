@@ -58,7 +58,7 @@ public class ProfileManager {
 	/**
 	 * using singleton pattern to instanciate class
 	 */
-	private static ProfileManager instance;
+	private static ProfileManager instance = new ProfileManager();
 
 	/**
 	 * Comment for <code>xml</code>
@@ -95,8 +95,6 @@ public class ProfileManager {
 	 * @return instance
 	 */
 	public static ProfileManager getInstance() {
-		if (instance == null)
-			instance = new ProfileManager();
 
 		return instance;
 	}
@@ -388,6 +386,10 @@ public class ProfileManager {
 	 */
 	public Profile getCurrentProfile() {
 		return currentProfile;
+	}
+	
+	public void setCurrentProfile(String path) {
+		currentProfile = getProfile(path);
 	}
 
 	/**

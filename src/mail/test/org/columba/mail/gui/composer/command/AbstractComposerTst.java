@@ -19,16 +19,11 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.File;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.main.MailInterface;
 
 /**
  * @author fdietz
@@ -60,20 +55,10 @@ public class AbstractComposerTst extends AbstractFolderTst {
         file = new File("test_config");
         file.mkdir();
 
-        // initialize configuration - core
-        MainInterface.config = new Config(file);
-
-        // initialize configuration - mail component
-        MailInterface.config = new MailConfig(MainInterface.config);
-
-        // initialize configuration - addressbook component
-        AddressbookInterface.config = new AddressbookConfig(
-                MainInterface.config);
+     
+   
         
-        // init background manager (needed by ShutdownManager)
-        //MainInterface.backgroundTaskManager = new BackgroundTaskManager();
-        
-        AccountList list = MailInterface.config.getAccountList();
+        AccountList list = MailConfig.getInstance().getAccountList();
         list.addEmptyAccount("pop3");
     }
 

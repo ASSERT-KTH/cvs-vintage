@@ -46,16 +46,16 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import org.columba.core.command.ExceptionHandler;
+import org.columba.core.config.Config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.imap.IMAPServer;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPProtocol;
@@ -203,7 +203,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 			secureCheckBox.addActionListener(this);
 			sslComboBox.addActionListener(this);
 			
-			defaultAccountCheckBox.setEnabled(MailInterface.config
+			defaultAccountCheckBox.setEnabled(MailConfig.getInstance()
 					.getAccountList().getDefaultAccountUid() != accountItem
 					.getInteger("uid"));
 
@@ -551,8 +551,8 @@ public class IncomingServerPanel extends DefaultPanel implements
         if (!storePasswordCheckBox.isSelected()) {
             return;
         } else {
-            File configPath = MainInterface.config.getConfigDirectory();
-            File defaultConfigPath = MainInterface.config.getDefaultConfigPath();
+            File configPath = Config.getInstance().getConfigDirectory();
+            File defaultConfigPath = Config.getInstance().getDefaultConfigPath();
             while (!configPath.equals(defaultConfigPath)) {
                 configPath = configPath.getParentFile();
                 if (configPath == null) {
@@ -680,7 +680,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 		else if (defaultAccountCheckBox.isSelected())
 		{
 		  AccountItem defaultAccount = 
-		    MailInterface.config.getAccountList().getDefaultAccount();
+		  	MailConfig.getInstance().getAccountList().getDefaultAccount();
 		  
 			if (defaultAccount.getAccountType() !=
 					accountItem.getAccountType())

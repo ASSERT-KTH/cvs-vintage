@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.Header;
@@ -137,7 +137,7 @@ public final class CommandHelper {
 		Object accountUid = folder.getAttribute(uid, "columba.accountuid");
 		if (accountUid != null) {
 			// try to get account using the account ID
-			item = MailInterface.config.getAccountList().uidGet(
+			item = MailConfig.getInstance().getAccountList().uidGet(
 					((Integer) accountUid).intValue());
 
 		}
@@ -146,7 +146,7 @@ public final class CommandHelper {
 			// try to get the account using the email address
 			Header header = folder.getHeaderFields(uid, new String[] { "To" });
 
-			item = MailInterface.config.getAccountList().getAccount(
+			item = MailConfig.getInstance().getAccountList().getAccount(
 					header.get("To"));
 
 		}
@@ -154,7 +154,7 @@ public final class CommandHelper {
 		if (item == null) {
 			// use default account as fallback
 
-			item = MailInterface.config.getAccountList().getDefaultAccount();
+			item = MailConfig.getInstance().getAccountList().getDefaultAccount();
 		}
 
 		return item;

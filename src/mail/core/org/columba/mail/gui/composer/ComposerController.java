@@ -54,12 +54,12 @@ import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.HtmlToolbar;
 import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.swing.MultipleTransferHandler;
@@ -125,7 +125,7 @@ public class ComposerController extends DefaultFrameController implements
 	private HtmlToolbar htmlToolbar;
 
 	public ComposerController() {
-		this(new ViewItem(MailInterface.config
+		this(new ViewItem(MailConfig.getInstance()
 				.get("composer_options").getElement("/options/gui/view")));
 	}
 	
@@ -149,7 +149,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
-		XmlElement optionsElement = MailInterface.config
+		XmlElement optionsElement = MailConfig.getInstance()
 				.get("composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
 
@@ -281,7 +281,7 @@ public class ComposerController extends DefaultFrameController implements
 			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
 			// set splitpane position based on configuration settings
-			XmlElement viewElement = MailInterface.config.get(
+			XmlElement viewElement = MailConfig.getInstance().get(
 					"composer_options").getElement("/options/gui/view");
 			ViewItem viewItem = new ViewItem(viewElement);
 			// default value is 200 pixel
@@ -394,7 +394,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
-		XmlElement viewElement = MailInterface.config.get("composer_options")
+		XmlElement viewElement = MailConfig.getInstance().get("composer_options")
 				.getElement("/options/gui/view");
 		ViewItem viewItem = new ViewItem(viewElement);
 		int pos = viewItem.getInteger("splitpanes", "attachment", 200);
@@ -562,7 +562,7 @@ public class ComposerController extends DefaultFrameController implements
 			// new editor controller needed
 			switchEditor(composerModel.isHtml());
 
-			XmlElement optionsElement = MailInterface.config.get(
+			XmlElement optionsElement = MailConfig.getInstance().get(
 					"composer_options").getElement("/options");
 			XmlElement htmlElement = optionsElement.getElement("html");
 
@@ -643,7 +643,7 @@ public class ComposerController extends DefaultFrameController implements
 	public void setCharset(Charset charset) {
 		this.charset = charset;
 
-		XmlElement optionsElement = MailInterface.config
+		XmlElement optionsElement = MailConfig.getInstance()
 				.get("composer_options").getElement("/options");
 		XmlElement charsetElement = optionsElement.getElement("charset");
 
@@ -727,7 +727,7 @@ public class ComposerController extends DefaultFrameController implements
 	public void savePositions(ViewItem viewItem) {
 		super.savePositions(viewItem);
 
-		XmlElement viewElement = MailInterface.config.get("composer_options")
+		XmlElement viewElement = MailConfig.getInstance().get("composer_options")
 				.getElement("/options/gui/view");
 		viewItem = new ViewItem(viewElement);
 
@@ -899,7 +899,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		getContainer().extendToolbar(
 				this,
-				MailInterface.config.get("composer_toolbar").getElement(
+				MailConfig.getInstance().get("composer_toolbar").getElement(
 						"toolbar"));
 
 		getContainer().setInfoPanel(getIdentityInfoPanel());

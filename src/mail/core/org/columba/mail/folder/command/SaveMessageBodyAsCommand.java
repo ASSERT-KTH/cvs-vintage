@@ -36,16 +36,16 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
@@ -264,7 +264,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     private boolean getInclAllHeadersOption() {
         boolean defaultValue = false; // default value
 
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
 
         if (options == null) {
             return defaultValue;
@@ -291,7 +291,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      *            Value of the option (true to incl. all headers)
      */
     private void storeInclAllHeadersOption(boolean val) {
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
 
         if (options == null) {
             return;
@@ -324,7 +324,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     private StreamableMimePart getMessageBodyPart(Object uid, MessageFolder srcFolder,
         WorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
-        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+        XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                                               .getRoot().getElement("/options/html");
 
         // Get body of message depending on user preferences
@@ -474,7 +474,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      */
     private String getDefaultStyleSheet() {
         // read configuration from options.xml file
-        XmlElement textFont = MainInterface.config.get("options").getElement("/options/gui/textfont");
+        XmlElement textFont = Config.getInstance().get("options").getElement("/options/gui/textfont");
         String name = textFont.getAttribute("name");
         String size = textFont.getAttribute("size");
 

@@ -23,7 +23,7 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.Main;
 import org.columba.core.mimetype.MimeRouter;
 import org.columba.ristretto.message.MimeHeader;
 
@@ -185,7 +185,7 @@ public class ColumbaViewer extends AbstractViewer {
 		try {
 			child = Runtime.getRuntime().exec(viewer + " " + url);
 		} catch (Exception ex) {
-			if ( MainInterface.DEBUG)
+			if ( Main.DEBUG)
 				ex.printStackTrace();
 			
 			JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());

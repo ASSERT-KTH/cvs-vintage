@@ -21,8 +21,8 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
+import org.columba.core.config.Config;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 
@@ -52,7 +52,7 @@ class ExternalToolsWizardModelListener implements WizardModelListener {
         String id = (String) data.getData("id");
 
         // get configuration
-        XmlElement root = MainInterface.config.get("external_tools").getElement("tools");
+        XmlElement root = Config.getInstance().get("external_tools").getElement("tools");
 
         for (int i = 0; i < root.count(); i++) {
             XmlElement child = root.getElement(i);

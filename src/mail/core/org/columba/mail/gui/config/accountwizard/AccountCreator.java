@@ -22,13 +22,13 @@ import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.ristretto.message.Address;
 
@@ -41,7 +41,7 @@ class AccountCreator implements WizardModelListener {
 
     public void wizardFinished(WizardModelEvent e) {
         String type = (String) data.getData("IncomingServer.type");
-        AccountItem account = MailInterface.config.getAccountList()
+        AccountItem account = MailConfig.getInstance().getAccountList()
                                                   .addEmptyAccount(type.toLowerCase());
 
         if (account == null) {
@@ -67,7 +67,7 @@ class AccountCreator implements WizardModelListener {
             //       -> this way "path" would be handled in the factory, too
             // parent directory for mail folders
             // for example: ".columba/mail/"
-            String path = MailInterface.config.getConfigDirectory().getPath();
+            String path = MailConfig.getInstance().getConfigDirectory().getPath();
 
             IMAPRootFolder parentFolder = new IMAPRootFolder(account, path);
             ((AbstractFolder) TreeModel.getInstance().getRoot()).add(parentFolder);

@@ -27,8 +27,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
+import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
@@ -55,11 +55,11 @@ public class FrameModel {
 	protected List activeFrameCtrls = new LinkedList();
 
 	/** viewlist xml treenode */
-	protected XmlElement viewList = MainInterface.config.get("options")
+	protected XmlElement viewList = Config.getInstance().get("options")
 			.getElement("/options/gui/viewlist");
 
 	/** Default view specifications to be used when opening a new view */
-	protected XmlElement defaultViews = MainInterface.config.get("options")
+	protected XmlElement defaultViews = Config.getInstance().get("options")
 			.getElement("/options/gui/defaultviews");
 
 	protected FramePluginHandler handler;
@@ -374,7 +374,7 @@ public class FrameModel {
 	protected ViewItem loadDefaultView(String id) {
 		// If defaultViews doesn't exist, create it (backward compatibility)
 		if (defaultViews == null) {
-			XmlElement gui = MainInterface.config.get("options").getElement(
+			XmlElement gui = Config.getInstance().get("options").getElement(
 					"/options/gui");
 			defaultViews = new XmlElement("defaultviews");
 			gui.addElement(defaultViews);

@@ -26,8 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
+import org.columba.core.config.Config;
 import org.columba.core.gui.plugin.AbstractConfigPlugin;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
@@ -49,7 +49,7 @@ public class PlasticLookAndFeelConfigPlugin extends AbstractConfigPlugin {
     public PlasticLookAndFeelConfigPlugin() {
         super();
 
-        XmlElement options = MainInterface.config.get("options").getElement("/options");
+        XmlElement options = Config.getInstance().get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         themeElement = gui.getElement("theme");
     }

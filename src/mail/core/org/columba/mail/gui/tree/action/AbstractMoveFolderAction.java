@@ -25,11 +25,11 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
-import org.columba.mail.main.MailInterface;
 
 
 /**
@@ -63,11 +63,11 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
      * Register for notifications when the Tree node changes.
      */
     private void registerSortingObserver() {
-        XmlElement sortElement = MailInterface.config.get("options").getElement("/options/gui/tree/sorting");
+        XmlElement sortElement = MailConfig.getInstance().get("options").getElement("/options/gui/tree/sorting");
         if (sortElement == null) {
-            XmlElement treeElement = MailInterface.config.get("options").getElement("/options/gui/tree");
+            XmlElement treeElement = MailConfig.getInstance().get("options").getElement("/options/gui/tree");
             if (treeElement == null) {
-                treeElement = MailInterface.config.get("options").getElement("/options/gui").addSubElement("tree");
+                treeElement = MailConfig.getInstance().get("options").getElement("/options/gui").addSubElement("tree");
             }
             sortElement = treeElement.addSubElement("sorting");
         }
@@ -83,7 +83,7 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
      * Enables or disables the action.
      */
     private void enableAction() {
-        XmlElement sortElement = MailInterface.config.get("options").getElement("/options/gui/tree/sorting");
+        XmlElement sortElement = MailConfig.getInstance().get("options").getElement("/options/gui/tree/sorting");
 
         DefaultItem item = new DefaultItem(sortElement);
         boolean sorted = item.getBoolean("sorted");

@@ -24,10 +24,10 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.menu.CButton;
 import org.columba.core.gui.util.ImageUtil;
-import org.columba.core.main.MainInterface;
 
 
 public class ToolbarButton extends CButton {
@@ -50,7 +50,7 @@ public class ToolbarButton extends CButton {
         setRequestFocusEnabled(false);
         setMargin(new Insets(1, 1, 1, 1));
 
-        GuiItem item = MainInterface.config.getOptionsConfig().getGuiItem();
+        GuiItem item = Config.getInstance().getOptionsConfig().getGuiItem();
 
         WITH_TEXT = item.getBoolean("toolbar", "enable_text");
         ALIGNMENT = item.getBoolean("toolbar", "text_position");

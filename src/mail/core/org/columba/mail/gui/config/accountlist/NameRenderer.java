@@ -22,7 +22,7 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -77,7 +77,7 @@ public class NameRenderer extends JLabel implements TableCellRenderer {
 
         buf.append(item.getName());
 
-        if (MailInterface.config.getAccountList().getDefaultAccountUid() == item.getUid()) {
+        if (MailConfig.getInstance().getAccountList().getDefaultAccountUid() == item.getUid()) {
             buf.append(" (" +
                 MailResourceLoader.getString("dialog", "account", "standard") +
                 ")");

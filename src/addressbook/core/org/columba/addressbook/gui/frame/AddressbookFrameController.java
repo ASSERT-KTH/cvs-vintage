@@ -29,11 +29,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.table.FilterToolbar;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContainerInfoPanel;
@@ -134,7 +134,7 @@ public class AddressbookFrameController extends DefaultFrameController
 			throw new RuntimeException(ex);
 		}
 
-		getContainer().extendToolbar(this, AddressbookInterface.config.get(
+		getContainer().extendToolbar(this, AddressbookConfig.getInstance().get(
 				"main_toolbar").getElement("toolbar"));
 
 		getContainer().setInfoPanel(new ContainerInfoPanel());
