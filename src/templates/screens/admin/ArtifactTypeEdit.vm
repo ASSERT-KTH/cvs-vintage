@@ -58,7 +58,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
       #if ($issueTypeLock)
         $value
       #else
-        <textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key"></textarea>
+        <textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">$value</textarea>
       #end
     </td>
     </tr>
