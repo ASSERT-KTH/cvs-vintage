@@ -13,6 +13,7 @@
 // Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 // All Rights Reserved.
+//$Log: Filter.java,v $
 
 package org.columba.mail.filter;
 
