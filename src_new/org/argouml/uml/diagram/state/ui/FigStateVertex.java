@@ -1,5 +1,5 @@
 
-// $Id: FigStateVertex.java,v 1.12 2003/09/13 22:06:06 alexb Exp $
+// $Id: FigStateVertex.java,v 1.13 2004/02/28 22:29:33 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 
 /** Abstract class to with common behavior for nestable nodes in UML
-    MState diagrams. */
+    Statechart diagrams. */
 
 public abstract class FigStateVertex extends FigNodeModelElement {
 

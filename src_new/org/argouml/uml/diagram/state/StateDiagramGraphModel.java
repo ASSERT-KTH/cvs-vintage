@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.35 2003/09/14 17:07:31 alexb Exp $
+// $Id: StateDiagramGraphModel.java,v 1.36 2004/02/28 22:29:29 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -171,7 +171,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
 
     /** Add the given node to the graph, if valid. */
     public void addNode(Object node) {
-	cat.debug("adding state diagram node: " + node);
+	cat.debug("adding statechart diagram node: " + node);
 	if (!canAddNode(node)) return;
 	if (!(org.argouml.model.ModelFacade.isAStateVertex(node))) {
 	    cat.error("internal error: got past canAddNode");
@@ -197,7 +197,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
 
     /** Add the given edge to the graph, if valid. */
     public void addEdge(Object edge) {
-	cat.debug("adding state diagram edge!!!!!!");
+	cat.debug("adding statechart diagram edge!!!!!!");
    
 	if (!canAddEdge(edge)) return;
 	Object tr = /*(MTransition)*/ edge;
