@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2000 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -57,7 +57,7 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
  * Author:      Michal Mosiewicz <mimo@interdata.pl>                         *
- * Version:     $Revision: 1.5 $                                            *
+ * Version:     $Revision: 1.6 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -194,7 +194,9 @@ static int ajpv12_auth(jserv_config *cfg, pool *p, int sock, char *secret,
 
 static int ajpv12_sendnbytes(BUFF * bsock, const void *buffer, int bufferlen ) {
     unsigned char bytes[2];
-    static const char null_b[2] = { 0xff, 0xff };
+    static char null_b[2];
+    null_b[0] = 0xff;
+    null_b[1] = 0xff;
     if( buffer != NULL ) {
 	bytes[0] = (unsigned char) ( (bufferlen >> 8) & 0xff );
 	bytes[1] = (unsigned char) ( bufferlen & 0xff );
@@ -250,7 +252,7 @@ static char *original_uri(request_rec *r)
     }
 
     last = first;
-    while (*last && !ap_isspace(*last)) {
+    while (*last && !ap_isspace(*last) && *last != '?') {
      ++last;                 /* end at next whitespace */
     }
 
@@ -327,8 +329,11 @@ static int ajpv12_pass_headers(jserv_config *cfg, jserv_request *req, request_re
 
 static int ajpv12_handle_in(jserv_config *cfg, jserv_request *req, request_rec *r, int *state, BUFF * buffsocket) {
     int ret;
-
+#ifdef HAVE_APFD /* IBM Apache */
+    if( buffsocket->pfd_in->sd < 0 ) {
+#else
     if( buffsocket->fd_in < 0 ) {
+#endif
 	jserv_error(JSERV_LOG_EMERG,cfg,"ajp12: ajpv12_handle_in: input socket non existing");
         return 500;
     }
@@ -336,26 +341,39 @@ static int ajpv12_handle_in(jserv_config *cfg, jserv_request *req, request_rec *
     switch( *state ) {
 
         case 0:
-            if( data_available(buffsocket->fd_in)) {
-           
+#ifdef HAVE_APFD /* IBM Apache */
+            if(data_available(buffsocket->pfd_in->sd)) {
+#else
+            if(data_available(buffsocket->fd_in)) {
+#endif
                 ret = ajpv12_pass_headers(cfg,req,r,buffsocket);
                 if( ret==500 ) 
                     return ret;
                 (*state)++;
                 return ret;
-
             }
 
             break;
 
         case 1:
+#ifdef HAVE_APFD /* IBM Apache */
+            if(data_available(buffsocket->pfd_in->sd)) {
+#else
             if(data_available(buffsocket->fd_in)) {
+#endif
                 char buffer[HUGE_STRING_LEN];
                 int len;
                 len = (int) ap_bread(buffsocket, buffer, HUGE_STRING_LEN);
+
+#ifdef HAVE_APFD /* IBM Apache */
+                if(r->connection->client->pfd->sd >= 0) {
+                    if(ap_bwrite(r->connection->client, buffer, len) < len) {
+                        r->connection->client->pfd->sd =-1;
+#else
                 if(r->connection->client->fd >= 0) {
                     if(ap_bwrite(r->connection->client, buffer, len) < len) {
                         r->connection->client->fd =-1;
+#endif
                         jserv_error(JSERV_LOG_EMERG,cfg,"ajp12: Connnection reset by peer");
                     }
                 } else {
@@ -487,8 +505,9 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
 	 * Need to re-escape it for this, since the entire URI was
 	 * un-escaped before we determined where the PATH_INFO began.
 	 */
-	/* XXX In 2.2 we need to add "contextPath" or zone to the path_info !!!!!
-	 */
+        /* XXX In 2.2 we need to add "contextPath" or zone to the path_info !!!!!
+         */
+
 	request_rec *pa_req;
 
 	pa_req = ap_sub_req_lookup_uri(ap_escape_uri(r->pool, r->path_info), r);
@@ -516,7 +535,7 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
 
     ajpv12_sendstring( buffsocket, r->args );
     ajpv12_sendstring( buffsocket, r->connection->remote_ip);
-    ajpv12_sendstring( buffsocket, r->connection->remote_host);
+    ajpv12_sendstring( buffsocket, ap_get_remote_host( r->connection, r->per_dir_config, REMOTE_HOST ));
     ajpv12_sendstring( buffsocket, r->connection->user);
     ajpv12_sendstring( buffsocket, r->connection->ap_auth_type);
     ajpv12_sendstring( buffsocket, ap_psprintf(r->pool, "%u", ap_get_server_port(r)));
@@ -537,22 +556,50 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
     ajpv12_sendstring( buffsocket, ap_psignature("", r));
     ajpv12_sendstring( buffsocket, ap_get_server_version());
 
-    /* begin jluc */
-    /* Send routing info var & SSL CLIENT Certificates DNs */
+    /* Send routing info var */
     if (r->subprocess_env) {
         ajpv12_sendstring( buffsocket, ap_table_get(r->subprocess_env, "JSERV_ROUTE"));
-	/* XXX uncommented out for tomcat 3.1 release - in sync with current JServ */
-        ajpv12_sendstring( buffsocket, ap_table_get(r->subprocess_env, "SSL_CLIENT_DN"));
-        ajpv12_sendstring( buffsocket, ap_table_get(r->subprocess_env, "SSL_CLIENT_IDN"));
     }
     else {
         ajpv12_sendstring( buffsocket, "");
-	/* XXX commented out for tomcat release - need to be in sync with current JServ 
-        ajpv12_sendstring( buffsocket, "");
-        ajpv12_sendstring( buffsocket, "");
-        */
     }
-    /* end jluc */
+    /* these 2 lines are here for compatibility with Tomcat & older versions of */
+    /* mod_jserv (JServ 1.1): the solution found by me (Jean-Luc) was bad, and  */
+    /* is now replaced with the ApJServEnvVar parameter.                        */  
+
+    ajpv12_sendstring( buffsocket, "");
+    ajpv12_sendstring( buffsocket, "");
+
+    /* Send the environment variables dynamically added in config file */
+    /* see : ApJServEnvVar directive */
+    /* we here use a new marker value = 5 for that */
+    /* if cfg-envvars is empty nothing will be sent (no overhead) */
+    /* if a value is null or empty it won't be sent */
+    if (!ap_is_empty_table(cfg->envvars)) {
+        int i;
+        const char *value; 
+        array_header *hdr_arr;
+        table_entry *elts;
+        ap_add_common_vars(r);
+        hdr_arr = ap_table_elts(cfg->envvars);
+        elts = (table_entry *) hdr_arr->elts;
+
+        for (i = 0; i < hdr_arr->nelts; ++i) {
+            if (!elts[i].key) continue;
+	    value = ap_table_get(r->subprocess_env, elts[i].key);
+            if (value && *value) {
+/*              jserv_error(JSERV_LOG_DEBUG,cfg,"ajp12: env var %s %s %s",elts[i].key, elts[i].val, value ); */
+	        ret = ( ajpv12_mark( buffsocket, 5) ||
+		        ajpv12_sendstring( buffsocket, elts[i].val) ||
+		        ajpv12_sendstring( buffsocket, value) );
+
+                if ( ret != 0 ) {
+                    jserv_error(JSERV_LOG_EMERG,cfg,"ajp12: cannot send env var");
+                    THROW_EXCEPTION;
+                }
+            }
+        }
+    }  
   
 
     /* Send the request headers */
@@ -636,6 +683,7 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
     ap_pclosesocket(r->pool,sock);
     return OK;
 }
+
 
 /* ========================================================================= */
 /* Our function handler */

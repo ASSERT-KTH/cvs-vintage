@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2000 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -60,7 +60,7 @@
  * Comments:                                                                 *
  * Author:      Jean-Luc Rochat <jlrochat@jnix.com>                          *
  * Updated:     June 1999 Bernard Bernstein <bernard@corp.talkcity.com>      *
- * Version:     $Revision: 1.1 $                                              *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 
 #include "jserv.h"
@@ -174,7 +174,7 @@ int watchdog_init (jserv_config *cfg) {
 	    mypid = getpid();
 	    jserv_setwatchdogpid(mypid);
   	    for (;jserv_getwatchdogpid() == mypid;) {
-		sleep(10);
+		sleep(cfg->vminterval);
 
     		jserv_error(JSERV_LOG_DEBUG,cfg,"watchdog:(%d) wakeup", mypid);
 	 	host = jserv_get1st_host(&Shmhost);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2000 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -57,7 +57,7 @@
  * Description: wrapper protocol implementation for Win32 systems            *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>,                      *
  *              Ed Korthof <ed@ultimanet.com>                                *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 #include "http_conf_globals.h"
@@ -428,8 +428,8 @@ pid_t wrapper_spawn(void) {
 				}
 			}
 
-			/* delay before rechecking for jvm */
-			sleep(3);
+			/* delay before rechecking for jvm (jluc: hope it's the rigth place) */
+			sleep(wrapper_data->config->vminterval);
         }
     }
 

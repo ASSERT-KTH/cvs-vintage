@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: Apache JServ global include file                             *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.2 $                                            *
+ * Version:     $Revision: 1.3 $                                            *
  *****************************************************************************/
 #ifndef __JSERV_H__
 #define __JSERV_H__
@@ -117,6 +117,8 @@
 #define JSERV_DEFAULT_LOGFILE       "./logs/mod_jserv.log"
 #define JSERV_DEFAULT_SECRETFILE    "./conf/jserv.secret.key"
 #define JSERV_DEFAULT_VMTIMEOUT     10
+#define JSERV_DEFAULT_VMINTERVAL    10
+
 
 /* Currently defined protocol functions (many could be added) */
 #define JSERV_SHUTDOWN 1
@@ -179,6 +181,9 @@ struct jserv_config {
     jserv_config *next;         /* Next server strucure in servers chain*/
     int retryattempts;          /* Number of times to attempt to connect */
     int vmtimeout;              /* Seconds to give the JVM to start/stop */
+    int vminterval;             /* interval to poll the JVM  */
+    table *envvars;             /* table of env vars to send */
+
 };
 
 /* ========================================================================= */

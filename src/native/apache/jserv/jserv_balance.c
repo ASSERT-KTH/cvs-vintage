@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 1997-1999 The Java Apache Project. All rights reserved.     *
+ * Copyright (c) 1997-2000 The Java Apache Project. All rights reserved.     *
  *                                                                           *
  * Redistribution and use in source and binary forms, with or without        *
  * modification, are permitted provided that the following conditions are    *
@@ -54,7 +54,7 @@
  * Author:      Bernard Bernstein <bernard@corp.talkcity.com>                *
  * Updated:     March 1999 Jean-Luc Rochat <jlrochat@jnix.com>               *
  * Description: solved part of fail-over problems & LB improvments           *
- * Version:     $Revision: 1.3 $
+ * Version:     $Revision: 1.4 $                                             *
  *****************************************************************************/
 
 #include "jserv.h"
@@ -70,8 +70,9 @@
 /* then so must the other. This must stay in sync with the session cookie  */
 /* or parameter set by the java code                                       */
 
-#define SESSION_IDENTIFIER "JSESSIONID"
-#define SESSION_IDENTIFIER_PARAM "jsessionid"
+#define SESSION_IDENTIFIER_JSERV "JServSessionId"
+#define SESSION_IDENTIFIER_TOMCAT "JSESSIONID"
+#define SESSION_IDENTIFIER_TOMCAT_PARAM "jsessionid"
 #define ROUTING_IDENTIFIER "JSERV_ROUTE"
 
 /* ========================================================================= */
@@ -86,13 +87,17 @@ get_param(char *name, request_rec *r)
 
   pname = ap_pstrcat(r->pool, pname, "=", NULL);
 
-  /*   if (!r->args) { */
-  /*     return NULL; */
-  /*   } */
+/* commented out: original JServ code
+  if (!r->args) {
+    return NULL;
+  }
 
-  /* XXX Will not work if ;jsessionid is not a path param for the last 
-     path component */
+  value = strstr(r->args, pname);
+* end of original code */
+
+/* XXX Will not work if ;jsessionid is not a path param for the last path component */
   value = strstr(r->uri, pname);
+
   if (value) {
     value += strlen(pname);
     varg = value;
@@ -139,24 +144,51 @@ get_cookie(char *name, request_rec *r)
 /* ========================================================================= */
 /* Retrieve session id from the cookie or the parameter                      */
 /* (parameter first)                                                         */
+/* We are here able to dispatch & maintain sessions on JServ and Tomcat      */
+/*   */
+/* ========================================================================= */
 static char *
 get_jserv_sessionid(request_rec *r, char *zone)
 {
   char *val;
   char sessionid[256];
-  char sessionid_p[256];
-  strcpy(sessionid, SESSION_IDENTIFIER);
-  strcpy(sessionid_p, SESSION_IDENTIFIER_PARAM);
 
-  /* 
-   * Not needed anymore... the route is based on the cookie's 
-   * "path"
-   * strcat(sessionid, zone); 
-   */
+ /* first JServ 1.1 as it is the production one */
+  strcpy(sessionid, SESSION_IDENTIFIER_JSERV);
+  strcat(sessionid, zone);
+  val = get_param(sessionid, r);
 
-  val = get_param(sessionid_p, r);
-  if (val == NULL)
-    val = get_cookie(sessionid, r);
+  if (val == NULL) {
+      val = get_cookie(sessionid, r);
+
+      if (val == NULL) {
+         /* second JServ 1.0 as it is still used (no zone appended)*/
+          strcpy(sessionid, SESSION_IDENTIFIER_JSERV);
+          val = get_param(sessionid, r);
+
+          if (val == NULL) {
+              val = get_cookie(sessionid, r);
+
+              if (val == NULL) {
+                 /* 3rd Tomcat as nobody uses it in a LB production env yest */
+                 /* Tomcat using parameter */
+                  strcpy(sessionid, SESSION_IDENTIFIER_TOMCAT_PARAM);
+                  val = get_param(sessionid, r);
+
+                  if (val == NULL) {
+                     /* Tomcat using parameter (uppercase) is it useful ? */
+                     strcpy(sessionid, SESSION_IDENTIFIER_TOMCAT);
+                     val = get_param(sessionid, r);
+                  }
+                  if (val == NULL) {
+                     /* Tomcat using cookie */
+                     strcpy(sessionid, SESSION_IDENTIFIER_TOMCAT);
+                     val = get_cookie(sessionid, r);
+                  }
+              }
+          }
+      }
+  }
   return val;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2000 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: wrapper protocol: starts and controls the JVM used by JServ  *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include "jserv_wrapper.h"
 /* what should I do about Win32 re: time?? */
@@ -731,7 +731,7 @@ static int wrapper_init(jserv_config *cfg) {
         /* Protocol will be resolved further on */
         wrapper_data->config->protocol=NULL;
         /* Host is LOCALHOST (jserv is started here) */
-        wrapper_data->config->host=ap_pstrdup(wrapper_pool,"localhost");
+        wrapper_data->config->host=ap_pstrdup(wrapper_pool,cfg->host);
         wrapper_data->config->hostaddr=jserv_resolve(wrapper_data->config->host);
         /* Port will be resolved further on */
         wrapper_data->config->port=0;
@@ -748,6 +748,7 @@ static int wrapper_init(jserv_config *cfg) {
         wrapper_data->config->secretsize=0;
         /* these are used only by the wrapper */
         wrapper_data->config->vmtimeout=cfg->vmtimeout;
+        wrapper_data->config->vminterval=cfg->vminterval;
         wrapper_data->config->retryattempts=cfg->retryattempts;
 
         /* This is the only jserv_config element */

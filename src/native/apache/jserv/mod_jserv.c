@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2000 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,7 +58,7 @@
  *              It provides a common entry point for protocols and runs      * 
  *              configuration, initialization and request tasks.             *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.2 $                                                 *
+ * Version:     $Revision: 1.3 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -330,7 +330,9 @@ static void *jserv_server_config_create(pool *p, server_rec *s) {
     }
 
     cfg->retryattempts=0;
+    cfg->vminterval=JSERV_DEFAULT_VMINTERVAL;
     cfg->vmtimeout=JSERV_DEFAULT_VMTIMEOUT;
+    cfg->envvars=ap_make_table(p,0);
 
     /* We created the server config */
     return(cfg);
@@ -463,6 +465,7 @@ static void *jserv_server_config_merge(pool *p, void *vbase, void *voverride) {
         cfg->next=NULL;
     }
     cfg->retryattempts = base->retryattempts;
+    cfg->vminterval = base->vminterval;
     cfg->vmtimeout = base->vmtimeout;
 
     /* All done */
@@ -1164,6 +1167,18 @@ static const char *jserv_cfg_secretkey(cmd_parms *cmd, void *dummy,
 }
 
 /* ========================================================================= */
+/* Handle ApJServEnvVar directive (TAKE2) */
+static const char *jserv_cfg_envvar(cmd_parms *cmd, void *dummy, 
+                                       char *value1, char *value2) {
+    jserv_config *cfg = jserv_server_config_get(cmd->server);
+    const char *ret;
+
+    ap_table_add(cfg->envvars, ap_pstrdup(cmd->pool,value1), ap_pstrdup(cmd->pool,value2));
+
+    return NULL;
+}
+
+/* ========================================================================= */
 /* Handle ApJServProtocolProperty directive (TAKE23) */
 static const char *jserv_cfg_parameter(cmd_parms *cmd,void *dummy,char *value1,
                                        char *value2,char *value3) {
@@ -1206,7 +1221,19 @@ static const char *jserv_cfg_setvmtimeout(cmd_parms *cmd, void *dummy,
     server_rec *s = cmd->server;
     jserv_config *cfg = jserv_server_config_get(s);
     cfg->vmtimeout = atoi(num);
-	if (cfg->vmtimeout < 3) cfg->vmtimeout = 3;
+    if (cfg->vmtimeout < 3) cfg->vmtimeout = JSERV_DEFAULT_VMTIMEOUT;
+    return NULL;
+}
+
+/*****************************************************************************
+ * Handle ApJServVMInterval directive (TAKE1)                                *
+ *****************************************************************************/
+static const char *jserv_cfg_setvminterval(cmd_parms *cmd, void *dummy,
+		char *num) {
+    server_rec *s = cmd->server;
+    jserv_config *cfg = jserv_server_config_get(s);
+    cfg->vminterval = atoi(num);
+    if (cfg->vminterval < 3) cfg->vminterval = JSERV_DEFAULT_VMINTERVAL;
     return NULL;
 }
 
@@ -1660,6 +1687,10 @@ static command_rec jserv_commands[] = {
      "Apache JServ: retry attempts (1s appart) before returning server error"},
     {"ApJServVMTimeout", jserv_cfg_setvmtimeout, NULL, RSRC_CONF, TAKE1,
      "Apache JServ: the amount of time given for the JVM to start or stop"},
+    {"ApJServVMInterval", jserv_cfg_setvminterval, NULL, RSRC_CONF, TAKE1,
+     "Apache JServ: the interval between 2 polls of the JVM "},
+    {"ApJServEnvVar", jserv_cfg_envvar, NULL, RSRC_CONF, TAKE2,
+     "Apache JServ: protocol ajpv12 : env var to send to the server"},
     {NULL}
 };
 
