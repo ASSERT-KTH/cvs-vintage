@@ -3,265 +3,192 @@
 #set ($module = $user.CurrentModule)
 ##set ($issue = $user.ReportingIssue)
 
-#set ($currentIssue = $om.Issue.setKey($data.Parameters.getString("currentIssueId")) )
 
-  <FORM METHOD="post" NAME="Report2Form" action="$action">
-  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-    <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
-    </TR>
-</TABLE>
+<FORM METHOD="get" NAME="Report2Form" action="$action">
 
-<P>
-<!-- current project and login -->
-  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-    <TR>
-      <TD BGCOLOR="#FFFFFF" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD>
-      <TD ALIGN="right" NOWRAP CLASS="PlainText">Logged in: <A HREF="/">jon 123</A></TD>
-    </TR>
-  </TABLE>
-<!-- end current project and login -->
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   <TR>
     <TD WIDTH="50%" VALIGN="top">
 
       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
         <TR>
-          <TD CLASS="Header" BGCOLOR="#999999" COLSPAN="2">&nbsp;POSSIBLE ISSUE MATCHES</TD>
-        </TR>
-      </TABLE>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="SectionHeader" bgcolor="#cccccc">Issue ID#</TD>
-          <TD VALIGN="top" CLASS="SectionHeader" bgcolor="#cccccc">Issue Summary</TD>
+          <TD COLSPAN="2">POSSIBLE ISSUE MATCHES</TD>
         </TR>
 
+        <TR>
+          <TD>Issue ID#</TD>
+          <TD>Issue Summary</TD>
+        </TR>
+
+#set ( $currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
 #foreach ($issue in $issueList)
-    #set ( $issueLink = $link.setPage($link.currentTemplate) )
-    #set ( $issueLink = $issueLink.addData("currentIssueId", $issue.UniqueId) )
 
-    #if ( == $issue.PrimaryKey)
+   ##set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("nextTempate", $link.CurrentView).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue") )
+
+    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
+
+    #if ( $currentIssueId == $issue.UniqueId )
+        #set ( $currentIssue = $issue )        
+
         <TR>
-          <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">
-            $issue.UniqueId</TD>
-          <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">
-            $issue.Summary</TD>
+          <TD bgcolor="#CCDDFF">
+
+        $issue.UniqueId 
+
+          </TD>
+          <TD bgcolor="#CCDDFF">
+
+        $issue.ModuleAttributeValuesMap.get("SUMMARY").Value 
+
+          </TD>
         </TR>
+
     #else
+
         <TR>
-          <TD VALIGN="top" CLASS="TableData">
-            <a href="$issueLink">$issue.UniqueId</a></TD>
-          <TD VALIGN="top" CLASS="TableData">$issue.Summary</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
+          <TD>
+            <a href="$issueLink">$issue.UniqueId</a>
+
+          </TD>
+          <TD>
+
+        $issue.ModuleAttributeValuesMap.get("SUMMARY").Value 
+
+          </TD>
         </TR>
         <TR>
           <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
                 <SPACER TYPE="block" HEIGHT="1"></TD>
         </TR>			
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
+
     #end
 #end
+
       </TABLE>
 
     </TD>
+
     <TD>&nbsp;&nbsp;</TD>
+
     <TD WIDTH="50%" VALIGN="top">
 
+
+## The issue details
+
+
       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
         <TR>
-          <TD CLASS="Header" BGCOLOR="#999999" COLSPAN="2">&nbsp;ISSUE DETAILS</TD>
-        </TR>
-      </TABLE>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
+          <TD BGCOLOR="#999999">ISSUE DETAILS</TD>
         </TR>
         <TR>
-          <TD nowrap VALIGN="top" CLASS="TableDataHeader">Issue ID#:</TD>
-          <TD VALIGN="top" CLASS="TableData">
+          <TD>
 
-$currentIssue.UniqueId
+            Issue ID#: $currentIssue.UniqueId
 
           </TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Status:</TD>
-          <TD VALIGN="top" CLASS="TableData">
+        </tr>
+
+#foreach ( $attVal in $currentIssue.ModuleAttributeValuesMap.values() )
+
+        <tr><td>
+
+    $attVal.Attribute.Name:<br>
+    #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
+
+        <a href="mailto:$attVal.Value">$attVal.Value</a>
+
+    #else
+        $!attVal.Value
+    #end
+        </td></tr>
+
+#end
+
+        <TR>
+          <TD>
+
+Reported by:<br>
+#set ( $email = $currentIssue.UserRelatedByCreatedBy.Email )
+          <A HREF="mailto:$email">$email</A>
+
+          </TD>
+        </tr>
+
+        <tr>
+          <TD>
+
+Date Entered:<br>
+$currentIssue.CreatedDate
+
+          </TD>
+        </TR>
+
+        <tr>
+          <TD>
+
+Last Modified:<br>
+$currentIssue.ModifiedDate
+
+          </TD>
+        </TR>
 
 
-Closed</TD>
+        <TR>
+          <TD>Votes:</TD>
+          <TD>12</TD>
         </TR>
+
+
         <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
+          <TD>Depends On:<br>
+
+#set ( $comma = "" )
+#foreach ($issue in $currentIssue.BlockerIssues)
+    #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+
+            $comma<A HREF="$issueLink">$issue.UniqueId</A>
+    #set ( $comma = ", " )
+#end
+          </TD>
+        </tr>
+
         <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Component:</TD>
-          <TD VALIGN="top" CLASS="TableData">Java SWING UI widget set</TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Resolution:</TD>
-          <TD VALIGN="top" CLASS="TableData">$resolution</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Summary:</TD>
-          <TD VALIGN="top" COLSPAN="4" CLASS="TableData">UI widgets don't accurately reflect the native widgets found on each wireless delivery platform</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-	<TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Description:</TD>
-          <TD VALIGN="top" CLASS="TableData">$description</TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Type:</TD>
-          <TD VALIGN="top" CLASS="TableData">$type</TD>
-        </TR>
-        <TR>
-        <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Reported by:</TD>
-          <TD VALIGN="top" CLASS="TableData"><A HREF="cam@collab.net">cam@collab.net</A></TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Date Entered:</TD>
-          <TD VALIGN="top" CLASS="TableData">2000-06-13</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Assigned to:</TD>
-          <TD VALIGN="top" CLASS="TableData"><A HREF="mailto:jon@collab.net">jon@collab.net</A></TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Last Modified:</TD>
-          <TD VALIGN="top" CLASS="TableData">2000-08-21</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Severity</TD>
-          <TD VALIGN="top" CLASS="TableData">Minor</TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Priority:</TD>
-          <TD VALIGN="top" CLASS="TableData">P4</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Keywords</TD>
-          <TD VALIGN="top" CLASS="TableData">UI, widgets, swing</TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Votes:</TD>
-          <TD VALIGN="top" CLASS="TableData">12</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-		
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataHeader">Depends On:</TD>
-          <TD VALIGN="top" CLASS="TableData"><A HREF="/">13567</A>, <A HREF="/">23084</A></TD>
-          <TD VALIGN="top">&nbsp;</TD>
-          <TD VALIGN="top" CLASS="TableDataHeader">Dependents:</TD>
-          <TD VALIGN="top" CLASS="TableData">??</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-      </TABLE>
-      <P>
-      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD class="PlainTextHeader" colspan="2">Does this issue match yours?</TD>
-	</TR>
-	<TR>
-          <TD class="PlainText"><input type="submit" name="eventSubmit_doYes" value="Yes">(Vote)</TD>
-          <TD class="PlainText"><input type="submit" name="eventSubmit_doNo" value="No">(Next issue)</TD>
-        </TR>
-        <TR>
-          <TD class="PlainText" colspan="2"><a href="#Comments">Add Comment</a></TD>
-	</TR>
-        <TR>
-          <TD class="PlainText" colspan="2"><input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine">(New Search)</TD>
-	</TR>
-        <TR>
-          <TD class="PlainText" colspan="2"><input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)</TD>
-	</TR>
-      </TABLE>
-      <P>
+          <TD>Dependents:<br>
+
+#set ( $comma = "" )
+#foreach ($issue in $currentIssue.BlockerIssues)
+    #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+
+            $comma<A HREF="$issueLink">$issue.UniqueId</A>
+    #set ( $comma = ", " )
+#end
+
+          </TD>
+        </tr>
+
+
+
+
+
+<tr><td>
+Does this issue match yours?
+<input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
+<input type="submit" name="eventSubmit_doNo" value="No">(Next issue)<br>
+<br>
+<input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine">(New Search)
+<input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)
+
+</td></tr>
+
+
+#*  Comments are not ready
+<a href="#Comments">Add Comment</a>
+
+
+<P>
 <a name="Comments">
-      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD class="SectionHeader" BGCOLOR="#cccccc">&nbsp;Comments</TD>
-        </TR>
-      </TABLE>
-
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
+Comments<br>
+<br>
           <TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:bob@collab.net">bob@collab.net</A></SPAN></TD>
           <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
         </TR>
@@ -287,27 +214,21 @@ Closed</TD>
         <TR>
           <TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>
         </TR>
-        <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-	<TR>
-	  <TD COLSPAN="5"><TEXTAREA NAME="description" value="$description" COLS="40" ROWS="3"></TEXTAREA></TD>
-	</TR>
-        <TR>
-          <TD COLSPAN="5"><input type="submit" name="eventSubmit_doAddComment" value="Add Comment"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-      </TABLE>
+
+
+Add a comment<br>
+<br>
+<TEXTAREA NAME="" value="$description" COLS="40" ROWS="3"></TEXTAREA><br>
+<input type="submit" name="eventSubmit_doAddComment" value="Add Comment">
+
+*#
+
+      </table>
 
     </TD>
   </TR>
 </TABLE>
 </form>
+
+<a href="$link.addPathInfo($data.Parameters).setPathInfo("nextTempate", "entry,Wizard3.vm").setPage("entry,Wizard3.vm") )">Finish Issue</a>
+

@@ -36,6 +36,29 @@ public abstract class AttributeValue
     {
     }
 
+
+    /**
+     * Makes sure to set the Value as well, to make display of the
+     * option easier
+     *
+     * @param optionId a <code>NumberKey</code> value
+     */
+    public void setOptionId(NumberKey optionId)
+        throws Exception
+    {
+        List options = getAttribute().getAttributeOptions();
+        for ( int i=options.size()-1; i>=0; i-- ) 
+        {
+            AttributeOption option = (AttributeOption)options.get(i);
+            if ( option.getOptionId().equals(optionId) ) 
+            {
+                setValue(option.getDisplayValue());
+                break;
+            }
+        }
+        super.setOptionId(optionId);
+    }
+
     // need a local reference
     private Attribute aAttribute;                 
     public Attribute getAttribute() throws Exception

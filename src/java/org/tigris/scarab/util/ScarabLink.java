@@ -50,6 +50,7 @@ package org.tigris.scarab.util;
 import org.apache.turbine.util.template.TemplateLink;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.DynamicURI;
+import org.apache.turbine.util.ParameterParser;
 // Scarab
 import org.tigris.scarab.om.*;
 
@@ -58,19 +59,44 @@ import org.tigris.scarab.om.*;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.1 2000/12/18 05:03:34 jon Exp $
+    @version $Id: ScarabLink.java,v 1.2 2001/04/04 08:43:49 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
 {
+    private RunData data;
+
     /**
      * Constructor.
      *
      * @param data A Turbine RunData object.
      */
-    public ScarabLink(RunData data)
+    public ScarabLink()
     {
-        super(data);
     }
+
+
+    /**
+     * This will initialise a TemplateLink object that was
+     * constructed with the default constructor (ApplicationTool
+     * method).
+     *
+     * @param data assumed to be a RunData object
+     */
+    public void init(Object data)
+    {
+        // we just blithely cast to RunData as if another object
+        // or null is passed in we'll throw an appropriate runtime
+        // exception.
+        super.init(data);
+        this.data = (RunData)data;
+    }
+
+    public void dispose()
+    {
+        System.out.println("ScarabLink dispose() called");
+        this.data = null;
+    }
+
     /**
      * Sets the template variable used by the Template Service.
      *
@@ -79,10 +105,34 @@ public class ScarabLink extends TemplateLink
      */
     public DynamicURI setPage(String t)
     {
+        /*
         String project_id = data.getParameters().getString(ModuleManager.CURRENT_PROJECT, "");
         if (project_id.length() > 0)
             addPathInfo(ModuleManager.CURRENT_PROJECT, project_id);
         addPathInfo("template",t);
+        */
+        super.setPage(t);
+        return this;
+    }
+
+    /**
+     * Returns the name of the template that is being being processed
+     */
+    public String getCurrentView()
+    {
+        return data.getTemplateInfo().getScreenTemplate().replace('/', ',');
+    }
+
+    public ScarabLink setPathInfo(String key, String value)
+    {
+        removePathInfo(key);
+        addPathInfo(key, value);
+        return this;
+    }
+
+    public ScarabLink addPathInfo(String key, ParameterParser pp)
+    {
+        addPathInfo(key, pp);
         return this;
     }
 }    

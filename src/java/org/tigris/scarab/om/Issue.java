@@ -35,6 +35,11 @@ public class Issue
     implements Persistent
 {
 
+    public String getUniqueId() throws Exception
+    {
+        return getIdPrefix() + getIdCount();
+    }
+
     /**
      * AttributeValues that are relevant to the issue's current module.
      * Empty AttributeValues that are relevant for the module, but have 
@@ -43,9 +48,15 @@ public class Issue
     public HashMap getModuleAttributeValuesMap() throws Exception
     {
         Criteria crit = new Criteria(2)
-            .add(RModuleAttributePeer.DELETED, false);        
-        Attribute[] attributes = getModule().getAttributes(crit);
-        HashMap siaValuesMap = getAttributeValuesMap();
+            .add(RModuleAttributePeer.DELETED, false);
+        
+        Attribute[] attributes = null;
+        HashMap siaValuesMap = null;
+        // this exception is getting lost 
+        try{
+        attributes = getModule().getAttributes(crit);
+        siaValuesMap = getAttributeValuesMap();
+        }catch (Exception e){e.printStackTrace();}
 
         HashMap map = new HashMap( (int)(1.25*attributes.length + 1) );
 
@@ -65,6 +76,7 @@ public class Issue
                 map.put( key, aval );
             }
         }
+        
         return map;
     }
 
@@ -196,47 +208,19 @@ System.out.println(aval.getAttribute().getName() + " was not set. "
         super.save();
     }       
 
-
+    
     /**
-        calls the doPopulate() method with validation false
-    */
-    public Issue doPopulate(RunData data)
+     * Performs a search over an issue's attribute values.
+     *
+     * @param keywords a <code>String[]</code> value
+     * @param useAnd, an AND search if true, otherwise OR
+     * @return a <code>List</code> value
+     */
+    public static List searchKeywords(String[] keywords, boolean useAnd)
         throws Exception
     {
-        return doPopulate(data, false);
-    }
-
-    /**
-        populates project based on the existing project data from POST
-    */
-    public Issue doPopulate(RunData data, boolean validate)
-        throws Exception
-    {
-        String prefix = ""; //getQueryKey().toLowerCase();
-
-        if ( isNew() ) 
-        {
-            String project_id = 
-                data.getParameters().getString(prefix + "id"); 
-            if (validate)
-            {
-                if (project_id == null)
-                    throw new Exception ( "Missing project_id!" );
-            }
-            setPrimaryKey(new NumberKey(project_id));
-            setCreatedBy( (NumberKey)
-                          ((ScarabUser)data.getUser()).getPrimaryKey() );
-            setCreatedDate( new Date() );
-        }
-
-        if (validate)
-        {
-        }
-
-        return this;
+        Criteria c = new Criteria(0);
+        return IssuePeer.doSelect(c);
     }
 
 }
-
-
-

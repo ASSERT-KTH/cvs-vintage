@@ -46,7 +46,7 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Iterator;
+import java.util.*;
 
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
@@ -54,6 +54,7 @@ import org.apache.velocity.*;
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
+import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
@@ -72,21 +73,51 @@ import org.tigris.scarab.util.*;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.3 2001/04/03 20:52:53 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.4 2001/04/04 08:43:49 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
     public void doSubmitattributes( RunData data, Context context ) 
         throws Exception
     {
+        //until we get the user and module set through normal application
+        BaseScarabObject.tempWorkAround(data,context);
+
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
         
         if ( intake.isAllValid() ) 
         {
-            String template = data.getParameters()
-                .getString(ScarabConstants.NEXT_TEMPLATE, "Report2.vm");
-            setTemplate(data, template);            
+            // search for duplicate issues based on summary
+            ScarabUser user = (ScarabUser)data.getUser();
+            Issue issue = user.getReportingIssue();
+
+            AttributeValue aval = (AttributeValue)issue
+                .getModuleAttributeValuesMap().get("SUMMARY");
+            Group group = intake.get("AttributeValue", aval.getQueryKey());
+            String summary = group.get("Value").toString();
+
+            StringTokenizer st = new StringTokenizer(summary, " ");
+            String[] keywords = new String[st.countTokens()];
+            int i=0;
+            while (st.hasMoreTokens()) 
+            {
+                keywords[i++] = st.nextToken();
+            }
+
+            List matchingIssues = Issue.searchKeywords(keywords, false);
+            String template = null;
+            if ( matchingIssues.size() > 0 ) 
+            {
+                
+                context.put("issueList", matchingIssues);
+                template = "entry,Wizard2.vm";
+            }
+            else 
+            {                 
+                template = "entry,Wizard3.vm";
+            }
+            setTemplate(data, template);
         }
     }
 
@@ -128,7 +159,8 @@ public class ReportIssue extends VelocityAction
                 issue.save();
 
                 String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, "entry/Report3.vm");
+                    .getString(ScarabConstants.NEXT_TEMPLATE, 
+                               "entry,Wizard3.vm");
                 setTemplate(data, template);            
             }
             else 
@@ -140,6 +172,19 @@ public class ReportIssue extends VelocityAction
         }
 
     }
+
+    public void doAddvote( RunData data, Context context ) 
+        throws Exception
+    {
+        /*
+        ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = user.getReportingIssue();
+        issue.addVote();
+        */
+
+        
+    }
+
     /**
         This manages clicking the Cancel button
     */
