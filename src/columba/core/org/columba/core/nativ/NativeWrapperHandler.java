@@ -23,6 +23,7 @@ import org.columba.core.gui.action.OpenNewAddressbookWindowAction;
 import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.gui.action.ShowHelpAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.OSInfo;
@@ -54,6 +55,7 @@ public class NativeWrapperHandler implements NativeWrapper {
 			} catch (Exception e) {
 				if (MainInterface.DEBUG)
 					e.printStackTrace();
+				new ErrorDialog(e.getMessage(), e);
 			}
 		}
 

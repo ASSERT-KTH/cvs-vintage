@@ -235,7 +235,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- create a release zip file for linux and unix flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a binary release -->
-	<target name="zip-bin-unix" depends="jar,run-script, linefeeds-unix,test"
+	<target name="zip-bin-unix" depends="jar,run-script, linefeeds-unix"
 	description="create a release zip file for linux and unix flavors containing the jar file and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile is going to columba-unix-${version}-bin.zip "/>
 		<zip zipfile="columba-unix-${version}-bin.zip" update="true">
@@ -262,7 +262,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a binary release -->
-	<target name="zip-bin-win32" depends="jar,run-script, linefeeds-win32,test"
+	<target name="zip-bin-win32" depends="jar,run-script, linefeeds-win32"
 	description="create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile is going to columba-win32-${version}-bin.zip "/>
 		<zip zipfile="columba-win32-${version}-bin.zip" update="true">
@@ -285,13 +285,14 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<exclude name="plugins/**" />
 				<exclude name="classes/**"/>
 			</zipfileset>
-			<zipfileset dir="." includes="native/win32/launcher/bin/columba.exe" fullpath="columba-win32-${version}-bin/columba.exe"/>
+			<!--<zipfileset dir="." includes="native/win32/launcher/bin/columba.exe" fullpath="columba-win32-${version}-bin/columba.exe"/>-->
+			<zipfileset dir="." includes="native/win32/launcher/src/Columba.ico" fullpath="columba-win32-${version}-bin/Columba.ico"/>
 		</zip>
 	</target>
 
 	<!-- create a source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
-	<target name="zip-source-unix" depends="init,run-script,linefeeds-unix,test"
+	<target name="zip-source-unix" depends="init,run-script,linefeeds-unix"
 	description="create an source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<zip zipfile="columba-unix-${version}-src.zip" update="true">
@@ -325,7 +326,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- create a source zip file for windows flavors, containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
-	<target name="zip-source-win32" depends="init,run-script,linefeeds-win32,test"
+	<target name="zip-source-win32" depends="init,run-script,linefeeds-win32"
 	description="create a source zip file for windows flavors containing all sources and README, LICENSE, CHANGES, AUTHORS">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<zip zipfile="columba-win32-${version}-src.zip" update="true">
@@ -363,7 +364,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"
+	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32,test"
 	description=" this target creates two zip-files, one for binary release and one for the source stuff"/>
 
 	<!-- signing jar-files for Java WebStart -->

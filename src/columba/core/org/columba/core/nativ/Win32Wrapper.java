@@ -19,16 +19,16 @@ package org.columba.core.nativ;
 
 import java.awt.Component;
 import java.awt.Window;
-import java.util.Iterator;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 
+import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+
 import com.jniwrapper.DefaultLibraryLoader;
 import com.jniwrapper.win32.Msg;
 import com.jniwrapper.win32.gdi.Icon;
-import com.jniwrapper.win32.registry.RegistryKey;
-import com.jniwrapper.win32.registry.RegistryKeyValues;
 import com.jniwrapper.win32.shell.TrayIcon;
 import com.jniwrapper.win32.shell.TrayIconListener;
 import com.jniwrapper.win32.shell.TrayMessage;
@@ -65,28 +65,21 @@ public class Win32Wrapper implements NativeWrapper, TrayIconListener {
 
 		// init icon
 		Icon icon = new Icon();
-		icon.loadFromFile("res/org/columba/core/images/Columba.ico");
+		try {
+			icon.loadFromFile("res/org/columba/core/images/Columba.ico");
+			
+		} catch (RuntimeException e) {
+			if ( MainInterface.DEBUG)
+				e.printStackTrace();
+			
+			// Columba.ico is in columba.jar, Icon can't load images from jar-files
+			// -> fall-back to shipped version
+			icon.loadFromFile("Columba.ico");
+		}
+		
 		trayIcon.setIcon(icon);
 
 		trayIcon.addTrayListener(this);
-		
-		/**
-		 * Code sample for Hana 
-		 * -> remove this if not needed anymore
-		 */
-		// get registry key ( add "boolean true", if you need write access, otherwise read-access)
-		RegistryKey currentVersion = RegistryKey.LOCAL_MACHINE.openSubKey("Software\\Microsoft\\Windows\\CurrentVersion");
-		// for each subkey of "CurrentVersion"
-		Iterator it = currentVersion.getSubkeys().iterator();
-		while (it.hasNext()) {
-			// get child
-			RegistryKey child = (RegistryKey) it.next();
-			// get values of child
-			RegistryKeyValues value = new RegistryKeyValues(child);
-			// print map of all child values
-			System.out.println(value.keySet().toString());
-		}	
-
 	}
 
 	/**
