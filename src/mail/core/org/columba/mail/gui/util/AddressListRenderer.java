@@ -19,56 +19,70 @@ package org.columba.mail.gui.util;
 import org.columba.ristretto.message.Address;
 
 /**
- * An HTML link renderer for the Address class
- * The addresses are rendered as HTML links:
- * <code>
+ * An HTML link renderer for the Address class The addresses are rendered as
+ * HTML links: <code>
  * &lt;A HREF="mailto:[email-address]"&gt;[display-name]&lt;/A&lt;
  * </code>
+ * 
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class AddressListRenderer {
 
-    /**
-     * Makes sure that noone creates instances of this class.
-     * This is a helper class, the static methods should be used instead.
-     */
-    private AddressListRenderer() {
-    }
+	/**
+	 * Makes sure that noone creates instances of this class. This is a helper
+	 * class, the static methods should be used instead.
+	 */
+	private AddressListRenderer() {
+	}
 
-    /**
-     * Returns a string buffer with the addresses in HTML links.
-     * The addresses will be put into HTML link:
-     * <code>
-     * &lt;A HREF="mailto:[email-address]"&gt;[display-name]&lt;/A&lt;
-     * </code>
-     * @param addresses addresses to render as HTML links.
-     * @return a String buffer.
-     */
-    public static StringBuffer renderToHTMLWithLinks(Address[] addresses) {
-        StringBuffer result = new StringBuffer();
+	/**
+	 * Returns a string buffer with the addresses in HTML links. The addresses
+	 * will be put into HTML link: <code>
+	 * &lt;A HREF="mailto:[email-address]"&gt;[display-name]&lt;/A&lt;
+	 * </code>
+	 * 
+	 * @param addresses
+	 *            addresses to render as HTML links.
+	 * @return a String buffer.
+	 */
+	public static StringBuffer renderToHTMLWithLinks(Address[] addresses) {
+		StringBuffer result = new StringBuffer();
 
-        if ((addresses != null) && (addresses.length > 0)) {
-            appendAddress(addresses[0], result);
+		if ((addresses != null) && (addresses.length > 0)) {
+			appendAddress(addresses[0], result);
 
-            for (int i = 1; i < addresses.length; i++) {
-                result.append(", ");
-                appendAddress(addresses[i], result);
-            }
-        }
+			for (int i = 1; i < addresses.length; i++) {
+				result.append(", ");
+				appendAddress(addresses[i], result);
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * Adds the address to the string buffer as a HTML link.
-     * @param address the address to render as a HTML link.
-     * @param result the string buffer to add the HTML link to.
-     */
-    private static void appendAddress(Address address, StringBuffer result) {
-        result.append("<A HREF=\"mailto:");
-        result.append(address.getMailAddress());
-        result.append("\">");
-        result.append(address.getShortAddress());
-        result.append("</A>");
-    }
+	/**
+	 * Adds the address to the string buffer as a HTML link.
+	 * 
+	 * @param address
+	 *            the address to render as a HTML link.
+	 * @param result
+	 *            the string buffer to add the HTML link to.
+	 */
+	private static void appendAddress(Address address, StringBuffer result) {
+		result.append("<A HREF=\"mailto:");
+		result.append(address.getMailAddress());
+		result.append("\">");
+		if (address.getDisplayName().length() != 0) {
+			
+			result.append(address.getDisplayName());
+			result.append(" ");		
+			result.append("&lt;"+address.getMailAddress()+"&gt;");
+			
+		} else
+			result.append(address.getShortAddress());
+
+		result.append("</A>");
+		
+		System.out.println("reslt="+result.toString());
+	}
 }
