@@ -165,6 +165,9 @@
         <field name="ModuleId" key="modid" type="NumberKey">
             <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
+        <field name="TypeId" key="iti" type="NumberKey" >
+            <rule name="mask" value="[0-9]+">badIdMessage</rule>
+        </field>
         <field name="FederatedId" key="fid" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
@@ -292,7 +295,7 @@
     </field>
 </group>
 
-<group name="IssueTemplate" key="isstemp" mapToObject="om.IssueTemplate">
+<group name="IssueTemplateInfo" key="iti" mapToObject="om.IssueTemplateInfo">
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
