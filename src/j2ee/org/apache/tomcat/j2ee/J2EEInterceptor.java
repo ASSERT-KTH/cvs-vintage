@@ -55,8 +55,9 @@ public class J2EEInterceptor extends BaseInterceptor {
 	this.invM= (InvocationManagerImpl) Switch.getSwitch().
 	    getInvocationManager();
 	config= ServerConfiguration.getConfiguration();
+	// minimize the changes in j2ee ( temp, until properties are moved)
 	localStrings = new
-	    LocalStringManagerImpl(com.sun.web.security.Constants.class);
+	    LocalStringManagerImpl(com.sun.web.security.DataConstraint.class);
     }
 
     public void engineInit( ContextManager cm ) throws TomcatException {
@@ -194,7 +195,7 @@ public class J2EEInterceptor extends BaseInterceptor {
 	    // Log the information here
 	    // le.printStackTrace();
 	    Log.err.println(le);
-	    le.printStackTrace();
+	    //le.printStackTrace();
 	    log("Login failed for..: " + user);
 	    return 0;
 	}
@@ -234,18 +235,25 @@ public class J2EEInterceptor extends BaseInterceptor {
 
 	String realm="default";  //ctx.getRealmName();
 
+	ServletWrapper sw=req.getWrapper();
+	String mappedRole=null;
+	String role=null;
 	for( int i=0; i< roles.length ; i++ ) {
-	    if(isUserInRole(appName, roles[i]) ) {
+	    role=roles[i];
+	    mappedRole=sw.getSecurityRole( role );
+	    if( mappedRole==null) mappedRole=role;
+	    
+	    if(isUserInRole(appName, mappedRole) ) {
 		if( debug>0 ) log("Role match " +
-				  roles[i]);
+				  roles[i] + " " +  mappedRole);
 		return 0;
 	    }
 	    if( debug>0 ) log("Role match failed " +
-			      roles[i]);
+			      roles[i] + " " + mappedRole);
 	}
 	
 	if( debug>0  ) log("UnAuthorized " +
-					roles[0] );
+					role + " " + mappedRole);
  	return HttpServletResponse.SC_UNAUTHORIZED;
 	// XXX check transport
     }
