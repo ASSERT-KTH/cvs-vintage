@@ -33,6 +33,10 @@ public class Module
 {
     private static final NumberKey ROOT_ID = new NumberKey("0");
 
+    /**
+     * Creates a new Issue.
+     *
+     */
     public Issue getNewIssue(ScarabUser user)
         throws Exception
     {
@@ -46,7 +50,6 @@ public class Module
         issue.setDeleted(false);
         return issue;
     }
-
 
     /**
      * gets a list of all of the Attributes in a Module based on the Criteria.
@@ -73,6 +76,21 @@ public class Module
         throws Exception
     {
         return getAttributes(new Criteria());
+    }
+
+    /**
+     * gets a list of all of the AttributeOptions for a given Attribute.
+     */
+    public AttributeOption[] getAttributeOptions(Attribute attr)
+        throws Exception
+    {
+        List attributeOptions = attr.getAttributeOptions();
+        AttributeOption[] ao = new AttributeOption[attributeOptions.size()];
+        for ( int i=0; i<attributeOptions.size(); i++ ) 
+        {
+            ao[i] = ((AttributeOption) attributeOptions.get(i));
+        }
+        return ao;
     }
 
     public void save() throws Exception

@@ -73,7 +73,7 @@ import org.tigris.scarab.util.*;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.4 2001/04/04 08:43:49 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.5 2001/04/04 18:08:24 jon Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -199,8 +199,4 @@ public class ReportIssue extends VelocityAction
     {
         doCancel(data, context);
     }
-
 }
-
-
-
