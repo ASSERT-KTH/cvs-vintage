@@ -7,9 +7,9 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- *
+ *  
  */
-public class InputStreamParams extends HttpServlet {
+public class RDIncludeISParams extends HttpServlet {
 
     public void service(HttpServletRequest request,
 			HttpServletResponse response)
@@ -18,14 +18,19 @@ public class InputStreamParams extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
-	ServletUtil.printBody( request, out );
-	out.flush();
+	// No parameter is read 
 
-	String pi=(String)request.
-	    getAttribute( "javax.servlet.include.path_info");
-	if( pi==null ) pi="";
+	String uri="params.InputStreamParams/include1?a=b";
+	out.println("Calling RD.include for: " + uri);
+	// The POST body should be available in the included
+	// servlet - it should not be read before the first
+	// getParameter.
+	RequestDispatcher rd=request.getRequestDispatcher(uri);
+
+	rd.include( request, response );
+
 	ServletUtil.printParamValues( "", " ]",
-				      pi + ":", " = [ ",
+				      "postInclude1:", " = [ ",
 				      "", "",
 				      " , ",
 				      request, out );
