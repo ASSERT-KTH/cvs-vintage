@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book>
+  <title>Scarab</title>
+
+  <subtitle>The Definitive Guide</subtitle>
+
+  <bookinfo>
+    <author>
+      <firstname>Daniel</firstname>
+
+      <surname>Patterson</surname>
+    </author>
+
+    <copyright>
+      <year>2003</year>
+    </copyright>
+  </bookinfo>
+
+  <preface>
+    <title>Preface</title>
+
+    <para></para>
+
+    <sect1>
+      <title>Audience</title>
+
+      <para>This book is targette</para>
+    </sect1>
+
+    <sect1>
+      <title>How This Book is Organised</title>
+
+      <para></para>
+    </sect1>
+
+    <sect1>
+      <title>Typographic Conventions</title>
+
+      <para></para>
+    </sect1>
+  </preface>
+
+  <glossary>
+    <glossdiv>
+      <title></title>
+
+      <glossentry>
+        <glossterm>Issue Type</glossterm>
+
+        <glosssee>A definition of a type of issue, which is essentially a
+        collection of attributes. Common issue types are &#34;Bug&#34; or
+        &#34;Enhancement&#34;.</glosssee>
+      </glossentry>
+
+      <glossentry>
+        <glossterm>Issue</glossterm>
+
+        <glosssee>An instance of an issue type inside a module. An issue is
+        something that a user has entered into the system.</glosssee>
+      </glossentry>
+
+      <glossentry>
+        <glossterm>Attribute</glossterm>
+
+        <glosssee>An attribute is an item of data to be stored about an issue.
+        Attributes represent things like names, dates, status&#39;,
+        descriptions, etc.</glosssee>
+      </glossentry>
+
+      <glossentry>
+        <glossterm>Module</glossterm>
+
+        <glosssee>Modules are where issues are created. Modules let you group
+        issues together (e.g. per-project, or per-customer).</glosssee>
+      </glossentry>
+    </glossdiv>
+  </glossary>
+
+  <chapter>
+    <title>Introduction</title>
+
+    <sect1>
+      <title>What is Scarab?</title>
+
+      <para>Scarab is a customisable issue tracking system. It allows you to
+      create issue types that suite your needs, then collect and track data on
+      those issue types.</para>
+
+      <para>It is web based and written in Java. It stores issue information
+      in a database, MySQL being the primary platform, but it is also rumoured
+      to work on Oracle, PostgreSQL and DB2. It runs as a J2EE web application
+      (WAR), and by default, comes bundled with the Tomcat servlet container.
+      This, along with a MySQL database is all you need to get up and running.</para>
+
+      <sect2>
+        <title>How Scarab Differs from other issue tracking systems</title>
+
+        <para>Scarab is extremely customisable. It contains no hard-coded
+        workflow (e.g. Bugs move from Open to Closed) and no hard-coded issue
+        type definitions. You have complete freedom to define your issues the
+        way you want them. The downside of this is a bit more start-up effort,
+        but you get something that more closely fits your needs.</para>
+
+        <para>Most other issue-trackers (Bugzilla, Issuezilla, SourgeForge,
+        Gnats) contain issue-processing logic as part of the application. This
+        means you&#39;re often stuck in the workflow defined by that system.
+        Scarab does not limit you in this way and gives you a much bigger gun
+        to blow your foot off with.</para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Scarab&#39;s History</title>
+
+      <para>TODO</para>
+    </sect1>
+
+    <sect1>
+      <title>Scarab&#39;s Features</title>
+
+      <para>TODO</para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Basic Concepts</title>
+
+    <para>In this section, we&#39;ll examine the basic concepts that drive
+    Scarab so that when you see the user interface, you&#39;ll understand what
+    is being represented on screen.</para>
+
+    <sect1>
+      <title>The Anatomy of an Issue</title>
+
+      <para>Scarab is a system for storing issues. Because everyone has their
+      own idea about what kind of issue data they should be capturing, Scarab
+      lets you define your own structure.</para>
+
+      <sect2>
+        <title>Issue Types</title>
+
+        <para>An issue type is a description of the structure of a set of
+        issues. An issue type might be a Bug, a Defect, a Work Order, a Help
+        Request, etc. It is up to you to define what your issue types are.
+        Issue types themselves are not issues, they simply describe what
+        information can be captured for that type.</para>
+
+        <para>There are two kinds of issue types. Global and module. Global
+        issue types themselves only act as a template for creating issue-types
+        on a per-module basis (for a description of modules, see lower down).
+        Module issue-types are what define the information that is captured
+        for each issue-type in each module.</para>
+      </sect2>
+
+      <sect2>
+        <title>Attributes</title>
+
+        <para>Attributes are the pieces of information that you bundle
+        together in your issue type definitions. An attribute is an atomic
+        piece of information, like &#34;name&#34; or &#34;description&#34; or
+        &#34;Operating System&#34;.</para>
+
+        <para>Attributes are created globally in Scarab. Where possible,
+        it&#39;s a good idea to re-use attributes between issue-types. This
+        will allow you, should you want to, to produce reports for issues
+        across different modules that share common attributes.</para>
+      </sect2>
+
+      <sect2>
+        <title>Issues</title>
+
+        <para>An issue is an &#34;instance&#34; of an issue type. An issue is
+        what you enter data for. Issues are given a unique identifier. In
+        addition to the attributes you define in the issue type definition, an
+        issue also has the following information associated with it:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Attachments</para>
+
+            <para>You can attach (multiple) files to issues. This is useful
+            for adding extra information related to an issue alongside it
+            (i.e. a logfile that was taken when a bug was found)</para>
+          </listitem>
+
+          <listitem>
+            <para>Comments</para>
+
+            <para>Arbitary comments can be added to issues. This is where
+            general commentary about the issue is stored (i.e. discussion
+            about the issue). Comments are appended as they are added, as
+            opposed to issue attributes, which contain only a single value.</para>
+          </listitem>
+
+          <listitem>
+            <para>Dependencies</para>
+
+            <para>Dependencies can be used to describe relationships between
+            issues. Dependencies can be:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Blocking</para>
+
+                <para>This means that the related issue prevents some kind of
+                further action on the issue you are looking at. This
+                relationship is descriptive, it doesn&#39;t actually stop you
+                doing anything in Scarab, it simply tells you something about
+                the relationship between the issues.</para>
+              </listitem>
+
+              <listitem>
+                <para>Non-blocking</para>
+
+                <para>This means that the related issue doesn&#39;t prevent
+                things happening to the issue you are looking at.</para>
+              </listitem>
+
+              <listitem>
+                <para>Duplicate</para>
+
+                <para>This means that the related issue is the same as the one
+                you are looking at.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>URLs</para>
+
+            <para>This is a place to store URL&#39;s that provide additional
+            information for the issue (this may be a link to a page that
+            demonstrates a bug, if the product you&#39;re capturing issues for
+            is a website for example).</para>
+          </listitem>
+
+          <listitem>
+            <para>Personnel</para>
+
+            <para>You can create associations between an issue and users in
+            the system. The &#34;name&#34; of the association is configured by
+            you as part of the issue type, and will usually look something
+            like &#34;assigned to&#34;, or &#34;owned by&#34; or
+            &#34;interested in&#34;. Again, these associations are only
+            informational, and don&#39;t actually infer any different
+            functionality in Scarab based on their value or name (i.e.
+            it&#39;s up to you to interpret what the information means).</para>
+          </listitem>
+        </itemizedlist>
+      </sect2>
+
+      <sect2>
+        <title>Issue modification audit trail</title>
+
+        <para>All changes to everything on an issue is tracked in the issues
+        audit trail. For changes to issue attributes, you almost always
+        (comments are the exceptions) have to supply a reason for your change.
+        All changes are logged, along with the reason for each change.</para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Modules</title>
+
+      <para></para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Installation</title>
+
+    <para>In this section, we&#39;ll outline the basic installation process.
+    Because Scarab is written as a J2EE Web Application, this means that you
+    can deploy it in a few different ways. Scarab comes bundled with a copy of
+    Apache Tomcat, a servlet container, that you can use to run Scarab
+    out-of-the-box. Take a look at the later section &#34;Alternative ways of
+    running&#34; for some clues on how to run Scarab in a not out-of-the-box
+    way.</para>
+
+    <sect1>
+      <title>Building the code</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Prerequisites</title>
+
+        <para>Ant</para>
+
+        <para>Java 1.3.1 or higher</para>
+      </sect2>
+
+      <sect2>
+        <title>Getting the code</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Configuring the build</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Build it!</title>
+
+        <para></para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Creating the database</title>
+
+      <para></para>
+    </sect1>
+
+    <sect1>
+      <title>Running Scarab</title>
+
+      <para></para>
+    </sect1>
+
+    <sect1>
+      <title>Alternative ways of running</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Deploying as a J2EE WAR</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Running under other Servlet containers</title>
+
+        <para></para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Platform Specific Notes</title>
+
+      <para></para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Using Scarab</title>
+
+    <para>This section will outline how you use Scarab in a day to day way.
+    We&#39;ll cover all the common things you do, as well as some of the
+    not-so-common ones.</para>
+
+    <para>In general, the majority of the tasks that you will perform inside
+    Scarab will be related to the creation and update of issues. However,
+    there are a few other things you can do and sometimes need to do before
+    other portions of the system will do anything useful.</para>
+
+    <para>Lets begin.</para>
+
+    <sect1>
+      <title>Registering for an Account</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Creating your account</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Getting access to modules</title>
+
+        <para></para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Issues</title>
+
+      <para>This section will outline the majority of the operations
+      you&#39;ll perform when inside Scarab.</para>
+
+      <sect2>
+        <title>Creating a new Issue</title>
+
+        <para>1. Select the appropriate module</para>
+
+        <para>2. Choose the issue type you want to create</para>
+
+        <para>3. Fill out the details for the issue</para>
+
+        <para>4. If present, identify duplicates</para>
+
+        <para>5. Complete!</para>
+      </sect2>
+
+      <sect2>
+        <title>Modfying an Issue</title>
+
+        <para>1. Find the issue you want to modify (either by query, or by
+        entering the number in the search box)</para>
+
+        <sect3>
+          <title>Changing attribute data</title>
+
+          <para></para>
+        </sect3>
+
+        <sect3>
+          <title>Modifying Personnel information</title>
+
+          <para></para>
+        </sect3>
+
+        <sect3>
+          <title>Adding comments</title>
+
+          <para></para>
+        </sect3>
+
+        <sect3>
+          <title>Adding attachments and URLs</title>
+
+          <para></para>
+        </sect3>
+
+        <sect3>
+          <title>Setting up dependencies between issues</title>
+
+          <para></para>
+        </sect3>
+      </sect2>
+
+      <sect2>
+        <title>Viewing an issues history</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Deleting issues (and why you can&#39;t)</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Moving/copying issues</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Creating and Using Templates</title>
+
+        <para></para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Queries</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Module Queries</title>
+
+        <para>For each issue-type in your module,</para>
+      </sect2>
+
+      <sect2>
+        <title>Cross-module Queries</title>
+
+        <para>If you&#39;ve defined the same issue-type (or even remotely
+        similar issue types that share attributes) in multiple modules, you
+        can create queries that span many modules. This is useful for finding
+        out things across many projects (i.e. show me all open issues in
+        modules X, Y and Z).</para>
+      </sect2>
+
+      <sect2>
+        <title>Pre-defined queries</title>
+
+        <para>There are a couple of pre-defined queries. The &#34;My
+        Issues&#34; query will show you all issues that have you assigned in
+        some way as a &#34;personnel attribute&#34;.</para>
+      </sect2>
+
+      <sect2>
+        <title>Saving queries</title>
+
+        <para>Queries can be saved, making it easy to create queries that do
+        things like &#34;show me all bugs in the &#34;open&#34; state&#34;, or
+        &#34;show me all bugs that were opened this week&#34;.</para>
+
+        <sect3>
+          <title>Personal vs. Module wide</title>
+
+          <para>Personal queries are only visible to you, module-wide queries
+          are visible to all people in that module and require approval to
+          create (although, you may have that permission yourself).</para>
+        </sect3>
+      </sect2>
+
+      <sect2>
+        <title>Customising your query results</title>
+
+        <para>Adding/removing attributes from view, sorting, exporting to XLS,
+        CSV.</para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Reports</title>
+
+      <para></para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Administration</title>
+
+    <para></para>
+
+    <sect1>
+      <title>Configuration</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Structure and Layout</title>
+
+        <para>**Best practises</para>
+      </sect2>
+
+      <sect2>
+        <title>Re-use principals</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Creating Modules</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Creating Attributes and Issue Types</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Adding Issue Types to Modules</title>
+
+        <para></para>
+
+        <sect3>
+          <title>Customising Issue Types</title>
+
+          <para></para>
+        </sect3>
+      </sect2>
+
+      <sect2>
+        <title>User Management</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Roles and Permissions</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Approvals</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Email configuration</title>
+
+        <para></para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Backups</title>
+
+      <para>Outline what needs to be backed up</para>
+    </sect1>
+
+    <sect1>
+      <title>Imports and Exports</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Settings</title>
+
+        <para></para>
+      </sect2>
+
+      <sect2>
+        <title>Issue Data</title>
+
+        <para></para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Search Indexes</title>
+
+      <para></para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Customisation</title>
+
+    <para>In this section, we&#39;ll examine the various options you&#39;ve
+    got for customising Scarab to fit in your environment. This section will
+    not discuss how to customise issue types, see the Administration chapter
+    for that.</para>
+
+    <sect1>
+      <title>Customising templates</title>
+
+      <para>Email templates, web templates, how to go about upgrading without
+      breaking</para>
+    </sect1>
+
+    <sect1>
+      <title>Customising the authentication database</title>
+
+      <para></para>
+    </sect1>
+
+    <sect1>
+      <title>Workflow customisation</title>
+
+      <para></para>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Development</title>
+
+    <para></para>
+
+    <sect1>
+      <title>How to Contribute</title>
+
+      <para>Lurk on the mailing lists</para>
+
+      <para>Get code, hack</para>
+
+      <para>Submit patches</para>
+
+      <para>Get CVS access</para>
+
+      <para>(refer to existing how to contribute doc)</para>
+    </sect1>
+
+    <sect1>
+      <title>Resources</title>
+
+      <para>Where to get the code, what libs are used and where they&#39;re
+      from, what technologies/standards are adhered to. Mailing lists,
+      websites. Fill this in properly.</para>
+
+      <para>Reference the FAQ.</para>
+    </sect1>
+
+    <sect1>
+      <title>Architecture and Design</title>
+
+      <para>Data model: How data is stored (torque), issues, attributes,
+      modules, activities</para>
+
+      <para>User interface: layouts, templates</para>
+
+      <para>Business logic: ....</para>
+    </sect1>
+  </chapter>
+
+  <appendix>
+    <title>Troubleshooting</title>
+
+    <para>Include some items from the FAQ here (particularly those about
+    database errors).</para>
+  </appendix>
+</book>
