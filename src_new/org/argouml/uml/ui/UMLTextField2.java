@@ -1,4 +1,4 @@
-// $Id: UMLTextField2.java,v 1.11 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLTextField2.java,v 1.12 2004/11/28 20:48:51 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,8 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextField2.java,v 1.11 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLTextField2.java,v 1.12 2004/11/28 20:48:51 mvw Exp $
 package org.argouml.uml.ui;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JTextField;
 
@@ -31,16 +34,13 @@ import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargettableModelView;
 
-import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.MElementListener;
-
 /**
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
 public class UMLTextField2
     extends JTextField
-    implements MElementListener, TargettableModelView {
+    implements PropertyChangeListener, TargettableModelView {
         
     /**
      * Constructor for UMLTextField2.
@@ -57,46 +57,12 @@ public class UMLTextField2
     }
 
     /**
-     * @see ru.novosoft.uml.MElementListener#propertySet(ru.novosoft.uml.MElementEvent)
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
-    public void propertySet(MElementEvent e) {
-        ((UMLPlainTextDocument) getDocument()).propertySet(e);
+    public void propertyChange(PropertyChangeEvent evt) {
+        ((UMLPlainTextDocument) getDocument()).propertyChange(evt);
     }
 
-    /**
-     * @see ru.novosoft.uml.MElementListener#roleAdded(ru.novosoft.uml.MElementEvent)
-     */
-    public void roleAdded(MElementEvent e) {
-        ((UMLPlainTextDocument) getDocument()).roleAdded(e);
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
-     */
-    public void roleRemoved(MElementEvent e) {
-        ((UMLPlainTextDocument) getDocument()).roleRemoved(e);
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#listRoleItemSet(ru.novosoft.uml.MElementEvent)
-     */
-    public void listRoleItemSet(MElementEvent e) {
-        ((UMLPlainTextDocument) getDocument()).listRoleItemSet(e);
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#removed(ru.novosoft.uml.MElementEvent)
-     */
-    public void removed(MElementEvent e) {
-        ((UMLPlainTextDocument) getDocument()).removed(e);
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#recovered(ru.novosoft.uml.MElementEvent)
-     */
-    public void recovered(MElementEvent e) {
-        ((UMLPlainTextDocument) getDocument()).recovered(e);
-    }
     /** 
      * @see org.argouml.ui.targetmanager.TargettableModelView#getTargettableModel()
      */
