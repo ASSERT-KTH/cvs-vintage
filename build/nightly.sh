@@ -18,7 +18,7 @@ DEPBUILD=0
 
 ## Environment variables
 if [ -z ${JAVA_HOME} ] ; then
-    if [ ${OSTYPE} = "macos" -o ${OSTYPE} = "darwin1.0" ] ; then
+    if [ ${OSTYPE} = "macos" -o ${OSTYPE} = "darwin1.0" -o ${OSTYPE} = "darwin" ] ; then
         JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
     elif [ ${OSTYPE} = "linux" ] ; then
         JAVA_HOME="/usr/local/java"
