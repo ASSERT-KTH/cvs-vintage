@@ -6,12 +6,12 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 
-<h3>Issue ID Range</h3>
+<h3>Issue ID query</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
 <th width="120">
-    Issue ID# range
+    Issue ID range
     #fieldErrorMsg($searchGroup.MinId "")
     #fieldErrorMsg($searchGroup.MaxId "")
 </th>
@@ -93,7 +93,7 @@ from:&#160;<input type="text" size="20"
 <h3>Personnel association search</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">&nbsp;</th>
+<th nowrap="nowrap">Select</th>
 <th align="left"><strong>Name</strong></th>
 <th align="left"><strong>Email</strong></th>
 <th align="left"><strong>Association</strong></th>
