@@ -29,7 +29,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
 /**
  * Context for message driven beans.
  * 
- * @version <tt>$Revision: 1.20 $</tt>
+ * @version <tt>$Revision: 1.21 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -148,17 +148,6 @@ public class MessageDrivenEnterpriseContext
       {
          throw new IllegalStateException
             ("MDB must not call isCallerInRole (EJB 2.0 15.4.3)");
-      }
-
-      /**
-       * Not allowed for MDB.
-       *
-       * @throws IllegalStateException  Always
-       */
-      public Principal getCallerPrincipal()
-      {
-         throw new IllegalStateException
-            ("MDB must not call getCallerPrincipal (EJB 2.0 15.4.3)");
       }
 
       /** Helper to check if the tx type is TX_REQUIRED. */
