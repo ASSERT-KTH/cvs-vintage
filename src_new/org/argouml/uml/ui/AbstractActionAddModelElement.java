@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.3 2002/12/29 21:18:25 kataka Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.4 2003/04/29 19:25:08 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -73,7 +73,7 @@ public abstract class AbstractActionAddModelElement extends UMLChangeAction {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         UMLAddDialog dialog = new UMLAddDialog(getChoices(), getSelected(), getDialogTitle(), isMultiSelect(), isExclusive());
-        int result = dialog.showDialog(ProjectBrowser.TheInstance);
+        int result = dialog.showDialog(ProjectBrowser.getInstance());
         if (result == JOptionPane.OK_OPTION) {
             doIt(dialog.getSelected());
         }

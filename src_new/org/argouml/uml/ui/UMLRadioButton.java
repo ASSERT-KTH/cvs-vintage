@@ -63,7 +63,7 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
     }
     public void itemStateChanged(final ItemEvent event) {
 		cat.debug(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());		try {
-        	_property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);		}		catch (PropertyVetoException ve) {			ProjectBrowser.TheInstance.getStatusBar().showStatus(ve.getMessage());			setSelected(_property.getProperty(_container.getTarget()));    	}        // yes we should update        update();
+        	_property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);		}		catch (PropertyVetoException ve) {			ProjectBrowser.getInstance().getStatusBar().showStatus(ve.getMessage());			setSelected(_property.getProperty(_container.getTarget()));    	}        // yes we should update        update();
     }
 
     public void targetChanged() {

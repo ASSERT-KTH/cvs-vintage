@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.19 2003/04/27 18:59:29 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.20 2003/04/29 19:25:10 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -236,7 +236,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
                         // 2002-07-15
             			// Jaap Branderhorst
             			// Force an update of the navigation pane to solve issue 323
-            			ProjectBrowser.TheInstance.getNavigatorPane().forceUpdate();
+            			ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
                     }
                     catch(Exception e) {
                         cat.error(e.toString() + " in PropPanelGeneralization.newElement", e);

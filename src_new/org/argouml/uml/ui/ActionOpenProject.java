@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.19 2003/04/20 11:57:20 linus Exp $
+// $Id: ActionOpenProject.java,v 1.20 2003/04/29 19:25:08 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +80,7 @@ public class ActionOpenProject extends UMLAction {
      * @param e an event
      */
     public void actionPerformed(ActionEvent e) {
-        ProjectBrowser pb = ProjectBrowser.TheInstance;
+        ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
 
         if (p != null && p.needsSave()) {
@@ -187,7 +187,7 @@ public class ActionOpenProject extends UMLAction {
         try {
             p = ProjectManager.getManager().loadProject(url);
 
-            ProjectBrowser.TheInstance.showStatus(
+            ProjectBrowser.getInstance().showStatus(
                 MessageFormat.format(
                     Argo.localize(
                         "Actions",
@@ -265,7 +265,7 @@ public class ActionOpenProject extends UMLAction {
      */
     private void showErrorPane(String message) {
         JOptionPane.showMessageDialog(
-            ProjectBrowser.TheInstance,
+            ProjectBrowser.getInstance(),
             message,
             "Error",
             JOptionPane.ERROR_MESSAGE);

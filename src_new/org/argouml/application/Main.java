@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.66 2003/04/20 11:57:20 linus Exp $
+// $Id: Main.java,v 1.67 2003/04/29 19:25:06 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,7 @@ package org.argouml.application;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -243,7 +241,8 @@ public class Main {
         LookAndFeelMgr.SINGLETON.setCurrentTheme(themeMemory);
 
         // make the projectbrowser
-        ProjectBrowser pb = new ProjectBrowser("ArgoUML", doSplash);
+        ProjectBrowser.setSplash(doSplash);
+        ProjectBrowser pb = ProjectBrowser.getInstance();
 
         JOptionPane.setRootFrame(pb);
 

@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.55 2003/02/03 19:02:35 thn Exp $
+// $Id: FigClass.java,v 1.56 2003/04/29 19:25:07 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -72,16 +72,7 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.MAttribute;
-import ru.novosoft.uml.foundation.core.MBehavioralFeature;
-import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MElementResidence;
-import ru.novosoft.uml.foundation.core.MFeature;
-import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
-import ru.novosoft.uml.foundation.core.MStructuralFeature;
+import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
@@ -579,9 +570,9 @@ public class FigClass extends FigNodeModelElement {
             highlightedFigText.setHighlighted(true);
             try {
                 ParserDisplay.SINGLETON.parseAttributeFig(cls, (MAttribute) highlightedFigText.getOwner(), highlightedFigText.getText().trim());
-                ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+                ProjectBrowser.getInstance().getStatusBar().showStatus("");
             } catch (ParseException pe) {
-                ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+                ProjectBrowser.getInstance().getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
             }
             return;
         }
@@ -591,9 +582,9 @@ public class FigClass extends FigNodeModelElement {
             highlightedFigText.setHighlighted(true);
             try {
                 ParserDisplay.SINGLETON.parseOperationFig(cls, (MOperation) highlightedFigText.getOwner(), highlightedFigText.getText().trim());
-                ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+                ProjectBrowser.getInstance().getStatusBar().showStatus("");
             } catch (ParseException pe) {
-                ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+                ProjectBrowser.getInstance().getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
             }
             return;
         }
@@ -936,7 +927,7 @@ public class FigClass extends FigNodeModelElement {
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
-                ProjectBrowser.TheInstance.setTarget(f);
+                ProjectBrowser.getInstance().setTarget(f);
             }
         } else if (f == _operVec && _operVec.getHeight() > 0) {
             Vector v = _operVec.getFigs();
@@ -947,11 +938,11 @@ public class FigClass extends FigNodeModelElement {
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
-                ProjectBrowser.TheInstance.setTarget(f);
+                ProjectBrowser.getInstance().setTarget(f);
             }
         }
         if (targetIsSet == false)
-            ProjectBrowser.TheInstance.setTarget(getOwner());
+            ProjectBrowser.getInstance().setTarget(getOwner());
 
     }
 

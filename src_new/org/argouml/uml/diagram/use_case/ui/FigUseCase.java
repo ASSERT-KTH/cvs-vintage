@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.13 2003/02/06 07:19:38 mkl Exp $
+// $Id: FigUseCase.java,v 1.14 2003/04/29 19:25:08 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -949,7 +949,7 @@ public class FigUseCase extends FigNodeModelElement {
         // If we didn't get the EP compartment, we just select ourself.
 
         if (!targetIsSet) {
-            ProjectBrowser.TheInstance.setTarget(getOwner());
+            ProjectBrowser.getInstance().setTarget(getOwner());
         }
     }
 

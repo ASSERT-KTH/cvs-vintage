@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.26 2003/01/29 22:21:56 kataka Exp $
+// $Id: PropPanelActor.java,v 1.27 2003/04/29 19:25:09 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -112,7 +112,7 @@ public class PropPanelActor extends PropPanelClassifier {
      */
 
     public void newActor() {
-        ProjectBrowser.TheInstance.setTarget(UseCasesFactory.getFactory().buildActor(getTarget()));
+        ProjectBrowser.getInstance().setTarget(UseCasesFactory.getFactory().buildActor(getTarget()));
     }
 
    

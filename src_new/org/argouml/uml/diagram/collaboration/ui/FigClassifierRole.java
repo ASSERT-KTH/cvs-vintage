@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.15 2003/01/25 19:52:13 kataka Exp $
+// $Id: FigClassifierRole.java,v 1.16 2003/04/29 19:25:07 kataka Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -444,9 +444,9 @@ public class FigClassifierRole extends FigNodeModelElement {
             String s = ft.getText();
 	    try {
 		ParserDisplay.SINGLETON.parseClassifierRole(cls, s);
-		ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+		ProjectBrowser.getInstance().getStatusBar().showStatus("");
 	    } catch (ParseException pe) {
-		ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+		ProjectBrowser.getInstance().getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
 	    }
         }
     }

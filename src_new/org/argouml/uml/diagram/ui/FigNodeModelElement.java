@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.60 2003/04/28 08:18:51 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.61 2003/04/29 19:25:08 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.text.ParseException;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -504,10 +503,10 @@ public abstract class FigNodeModelElement
                 ParserDisplay.SINGLETON.parseModelElement(
                     me,
                     ft.getText().trim());
-                ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+                ProjectBrowser.getInstance().getStatusBar().showStatus("");
                 updateNameText();
             } catch (ParseException pe) {
-                ProjectBrowser.TheInstance.getStatusBar().showStatus(
+                ProjectBrowser.getInstance().getStatusBar().showStatus(
                     "Error: " + pe + " at " + pe.getErrorOffset());
             }
             //me.setName(ft.getText());

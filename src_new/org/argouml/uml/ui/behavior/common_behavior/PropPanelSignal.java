@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.20 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelSignal.java,v 1.21 2003/04/29 19:25:09 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,7 @@ public class PropPanelSignal extends PropPanelModelElement {
     	if (target instanceof MSignal) {
     		MSignal signal = (MSignal)target;
     		MReception reception = CommonBehaviorFactory.getFactory().buildReception(signal);
-    		ProjectBrowser.TheInstance.setTarget(reception);
+    		ProjectBrowser.getInstance().setTarget(reception);
     	}
     }
 
@@ -147,7 +147,7 @@ public class PropPanelSignal extends PropPanelModelElement {
 	    	choices.addAll(CoreHelper.getHelper().getAllBehavioralFeatures());
 	    	selected.addAll(signal.getContexts());
 	    	UMLAddDialog dialog = new UMLAddDialog(choices, selected, Argo.localize("UMLMenu", "dialog.title.add-contexts"), true, true);
-	    	int returnValue = dialog.showDialog(ProjectBrowser.TheInstance);
+	    	int returnValue = dialog.showDialog(ProjectBrowser.getInstance());
 	    	if (returnValue == JOptionPane.OK_OPTION) {
 	    		signal.setContexts(dialog.getSelected());
 	    	}

@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.32 2003/01/27 20:06:59 kataka Exp $
+// $Id: PropPanelClassifier.java,v 1.33 2003/04/29 19:25:09 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +119,7 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
             MOperation newOper =
                 UmlFactory.getFactory().getCore().buildOperation(
                     (MClassifier) target);
-            ProjectBrowser.TheInstance.setTarget(newOper);
+            ProjectBrowser.getInstance().setTarget(newOper);
         }
     }
 
@@ -129,7 +129,7 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
             MClassifier cls = (MClassifier) target;
             MAttribute attr =
                 UmlFactory.getFactory().getCore().buildAttribute(cls);
-            ProjectBrowser.TheInstance.setTarget(attr);
+            ProjectBrowser.getInstance().setTarget(attr);
         }
     }
 

@@ -24,7 +24,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.9 2002/12/29 21:18:25 kataka Exp $
+// $Id: FigComment.java,v 1.10 2003/04/29 19:25:07 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -186,7 +186,7 @@ public class FigComment extends FigNodeModelElement implements VetoableChangeLis
         // Andreas Rueckert <a_rueckert@gmx.net>
         if (element instanceof MStateVertex) {
 
-            ProjectBrowser pb = ProjectBrowser.TheInstance; // If the current target is a state diagram, we have to
+            ProjectBrowser pb = ProjectBrowser.getInstance(); // If the current target is a state diagram, we have to
             if (pb.getTarget() instanceof UMLStateDiagram) { // check, if we are editing the diagram.
                 StateDiagramGraphModel gm = (StateDiagramGraphModel) (((UMLStateDiagram) pb.getTarget()).getGraphModel());
                 node.setNamespace(gm.getNamespace()); // We are editing, so we set the Namespace directly.

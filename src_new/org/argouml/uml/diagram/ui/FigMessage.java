@@ -23,7 +23,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.14 2003/01/01 22:39:59 kataka Exp $
+// $Id: FigMessage.java,v 1.15 2003/04/29 19:25:08 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -214,9 +214,9 @@ public class FigMessage extends FigNodeModelElement {
        String s = ft.getText();
        try {
 	  ParserDisplay.SINGLETON.parseMessage(mes, s);
-	  ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+	  ProjectBrowser.getInstance().getStatusBar().showStatus("");
        } catch (ParseException pe) {
-	  ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+	  ProjectBrowser.getInstance().getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
        }
     }
     else

@@ -25,7 +25,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.30 2003/04/06 11:49:54 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.31 2003/04/29 19:25:09 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -109,7 +109,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 	}	
 
 	public void newAttribute() {
-        ProjectBrowser.TheInstance.setTarget(UmlFactory.getFactory().getCore().buildAttribute(getTarget()));
+        ProjectBrowser.getInstance().setTarget(UmlFactory.getFactory().getCore().buildAttribute(getTarget()));
 	}
 
 } /* end class PropPanelAttribute */

@@ -25,15 +25,15 @@
 // Classes: FigGeneralization
 // Original Author: abonner@ics.uci.edu
 // Author discriminator: jaap.branderhorst@xs4all.nl
-// $Id: FigGeneralization.java,v 1.7 2003/01/24 20:20:00 kataka Exp $
+// $Id: FigGeneralization.java,v 1.8 2003/04/29 19:25:08 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.ui.ProjectBrowser;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadTriangle;
@@ -75,7 +75,7 @@ public class FigGeneralization extends FigEdgeModelElement {
     setBetweenNearestPoints(true);
     
     if (getLayer() == null) {
-	   	setLayer(ProjectBrowser.TheInstance.getActiveDiagram().getLayer());
+	   	setLayer(ProjectManager.getManager().getCurrentProject().getActiveDiagram().getLayer());
     }
     
   }

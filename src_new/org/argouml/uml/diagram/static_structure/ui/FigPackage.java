@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.16 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigPackage.java,v 1.17 2003/04/29 19:25:07 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -162,7 +162,7 @@ public class FigPackage extends FigNodeModelElement {
                     if (lPkg != null) {
                         MNamespace lNS = lPkg;
 
-                        ProjectBrowser lPB = ProjectBrowser.TheInstance;
+                        ProjectBrowser lPB = ProjectBrowser.getInstance();
                         Project lP =
                             ProjectManager.getManager().getCurrentProject();
 
@@ -186,7 +186,7 @@ public class FigPackage extends FigNodeModelElement {
                                     me.consume();
                                     super.mouseClicked(me);
                                     ProjectBrowser
-                                        .TheInstance
+                                        .getInstance()
                                         .getNavigatorPane()
                                         .addToHistory(
                                         lDiagram);
@@ -202,7 +202,7 @@ public class FigPackage extends FigNodeModelElement {
                             super.mouseClicked(me);
 
                             ProjectBrowser
-                                .TheInstance
+                                .getInstance()
                                 .getNavigatorPane()
                                 .addToHistory(
                                 lFirst);
@@ -237,7 +237,7 @@ public class FigPackage extends FigNodeModelElement {
                                     lP.addMember(lNew);
 
                                     ProjectBrowser
-                                        .TheInstance
+                                        .getInstance()
                                         .getNavigatorPane()
                                         .addToHistory(
                                         lNew);
@@ -453,7 +453,7 @@ public class FigPackage extends FigNodeModelElement {
             return;
         MModelElement me = (MModelElement) getOwner();
         MNamespace m = null;
-        ProjectBrowser pb = ProjectBrowser.TheInstance;
+        ProjectBrowser pb = ProjectBrowser.getInstance();
         try {
             // If moved into an Package
             if (encloser != null

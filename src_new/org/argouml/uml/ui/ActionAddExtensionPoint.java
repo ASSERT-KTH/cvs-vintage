@@ -24,7 +24,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.2 2002/08/08 14:20:25 kataka Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.3 2003/04/29 19:25:08 kataka Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -32,13 +32,13 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.kernel.*;
+import java.awt.event.ActionEvent;
+
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.uml.*;
-import org.argouml.ui.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-import java.awt.event.*;
+import org.argouml.ui.ProjectBrowser;
+
+import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
 
 
 /**
@@ -128,7 +128,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
         // Find the target in the project browser. We can only do anything if
         // its a use case.
 
-	ProjectBrowser pb     = ProjectBrowser.TheInstance;
+	ProjectBrowser pb     = ProjectBrowser.getInstance();
 	Object         target = pb.getDetailsTarget();
 
 	if (!(target instanceof MUseCase)) {
@@ -155,7 +155,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
      */
 
     public boolean shouldBeEnabled() {
-	ProjectBrowser pb     = ProjectBrowser.TheInstance;
+	ProjectBrowser pb     = ProjectBrowser.getInstance();
 	Object         target = pb.getDetailsTarget();
 
 	return super.shouldBeEnabled() && (target instanceof MUseCase);

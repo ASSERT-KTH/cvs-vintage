@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.27 2003/04/28 08:18:51 kataka Exp $
+// $Id: FigEdgeModelElement.java,v 1.28 2003/04/29 19:25:08 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -52,7 +52,6 @@ import java.util.Vector;
 import javax.swing.Icon;
 import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.Notation;
@@ -78,8 +77,8 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDManager;
-import org.argouml.uml.ui.ActionProperties;
 import org.argouml.uml.ui.ActionDeleteFromDiagram;
+import org.argouml.uml.ui.ActionProperties;
 import org.argouml.util.Trash;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
@@ -88,6 +87,7 @@ import org.tigris.gef.presentation.FigEdgePoly;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.FigText;
+
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
@@ -112,7 +112,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   public static Font ITALIC_LABEL_FONT;
 
   static {
-    LABEL_FONT = MetalLookAndFeel.getSubTextFont();
+    LABEL_FONT = new Font("Dialog", Font.PLAIN, 10);
     ITALIC_LABEL_FONT = new Font(LABEL_FONT.getFamily(),
 				 Font.ITALIC, LABEL_FONT.getSize());
   }

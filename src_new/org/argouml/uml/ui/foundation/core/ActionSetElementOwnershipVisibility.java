@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.4 2003/01/06 20:03:05 kataka Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.5 2003/04/29 19:25:09 kataka Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -83,7 +83,7 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
     }
     
     private void markAsChanged() {
-        ProjectBrowser pb = ProjectBrowser.TheInstance;
+        ProjectBrowser pb = ProjectBrowser.getInstance();
         if (pb == null) return;
         Project p = ProjectManager.getManager().getCurrentProject();
         if (p == null) return;

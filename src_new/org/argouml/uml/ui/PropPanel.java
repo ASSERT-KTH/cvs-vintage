@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.44 2003/03/28 21:10:51 alexb Exp $
+// $Id: PropPanel.java,v 1.45 2003/04/29 19:25:08 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -665,11 +665,11 @@ abstract public class PropPanel extends TabSpawnable implements TabModelTarget, 
         if (target instanceof MBase) {
             MModelElement newTarget = ((MModelElement) target).getModelElementContainer();
             MBase base = (MBase) target;
-            ProjectBrowser.TheInstance.setTarget(base);
+            ProjectBrowser.getInstance().setTarget(base);
             ActionEvent event = new ActionEvent(this, 1, "delete");
             ActionRemoveFromModel.SINGLETON.actionPerformed(event);
             if (newTarget != null) {
-                ProjectBrowser.TheInstance.setTarget(newTarget);
+                ProjectBrowser.getInstance().setTarget(newTarget);
             }
         }
     }

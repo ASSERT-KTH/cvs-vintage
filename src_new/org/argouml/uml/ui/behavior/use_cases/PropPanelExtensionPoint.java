@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.15 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.16 2003/04/29 19:25:09 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         MUseCase owner = ((MExtensionPoint) target).getUseCase();
 
         if(owner != null) {
-            ProjectBrowser.TheInstance.setTarget(owner);
+            ProjectBrowser.getInstance().setTarget(owner);
         }
     }
 

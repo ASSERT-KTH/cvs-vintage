@@ -24,7 +24,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.12 2002/12/12 23:58:00 kataka Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.13 2003/04/29 19:25:08 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -38,6 +38,7 @@ import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import org.apache.log4j.Category;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -219,9 +220,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 
             if (newNode instanceof GraphNodeHooks)
                  ((GraphNodeHooks) newNode).initialize(_args);
-            if (newNode instanceof MBase) 
-                ((MBase)newNode).addMElementListener(UmlModelEventPump.getPump());
-
+            UmlFactory.getFactory().addListenersToModelElement(newNode);
             if (mgm.canAddNode(newNode)) {
                 GraphNodeRenderer renderer = editor.getGraphNodeRenderer();
                 Layer lay = editor.getLayerManager().getActiveLayer();
