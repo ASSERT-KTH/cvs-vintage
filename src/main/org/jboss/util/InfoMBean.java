@@ -9,15 +9,16 @@ package org.jboss.util;
 import java.lang.Object;
 
 /**
- *   <description> 
+ * The management interface for the Info bean.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.4 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
+ * @version $Revision: 1.5 $
  */
-public interface InfoMBean {
-	public String listMemoryUsage();
-	public String listSystemInfo();
-	public String listThreadDump();
+public interface InfoMBean
+{
+   String listMemoryUsage();
+   String listSystemInfo();
+   String listThreadDump();
+   String runGarbageCollector();
 }

@@ -20,7 +20,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -113,6 +113,16 @@ public class Info
       return rc.toString();
    }
 
+   public String runGarbageCollector() {
+      StringBuffer buff = new StringBuffer();
+      buff.append("<h3>Before</h3>");
+      buff.append(listMemoryUsage());
+      buff.append("<h3>After</h3>");
+      System.gc();
+      buff.append(listMemoryUsage());
+      return buff.toString();
+   }
+   
    public String listMemoryUsage() {
       String rc= "<P><B>Total Memory: </B>" +
          (Runtime.getRuntime().totalMemory()) +
