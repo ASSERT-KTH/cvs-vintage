@@ -65,7 +65,7 @@ import ru.novosoft.uml.foundation.core.MComment;
  * // naming for extension points in convertValueToText.
  * </pre>
  *
- * $Id: DisplayTextTree.java,v 1.20 2003/04/12 12:36:49 alexb Exp $
+ * $Id: DisplayTextTree.java,v 1.21 2003/04/12 14:26:37 alexb Exp $
  */
 public class DisplayTextTree 
     extends JTree {
@@ -270,6 +270,13 @@ public class DisplayTextTree
      * in priority by not running until the second invokeLater().
      * Depending on the queue order in invokeLater() this might result in
      * updates but it is probably far from every file.
+     *
+     * @see org.argouml.model.uml.UmlModelListener
+     * @see org.argouml.uml.ui.ActionRemoveFromModel
+     * @see org.argouml.uml.ui.ActionAddDiagram
+     * @see org.argouml.ui.NavigatorPane
+     * @see org.argouml.uml.ui.foundation.core.PropPanelGeneralization
+     * @see org.argouml.uml.ui.UMLReflectionListModel
      */
     public void forceUpdate() {
         

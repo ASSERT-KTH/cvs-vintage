@@ -94,7 +94,7 @@ import ru.novosoft.uml.model_management.MModel;
  * note connected to individual UML artifacts and to diagrams
  * themselves.
  *
- * $Id: NavigatorPane.java,v 1.25 2003/04/12 12:36:49 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.26 2003/04/12 14:26:37 alexb Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -253,7 +253,16 @@ public class NavigatorPane
         return _tree.getLastSelectedPathComponent();
     }
     
-    /** needs documenting */
+    /**
+     * Notification from Argo that the model has changed and
+     * the Tree view needs updating.
+     *
+     * @see org.argouml.model.uml.UmlModelListener
+     * @see org.argouml.uml.ui.ActionRemoveFromModel
+     * @see org.argouml.uml.ui.ActionAddDiagram
+     * @see org.argouml.uml.ui.foundation.core.PropPanelGeneralization
+     * @see org.argouml.uml.ui.UMLReflectionListModel
+     */
     public void forceUpdate() {
         _tree.forceUpdate();
     }
