@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1998, 2003 Slava Pestov
+ * Copyright (C) 1998, 2004 Slava Pestov
  * Portions copyright (C) 1999, 2000 mike dillon
  *
  * This program is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.215 2004/05/24 19:18:32 spestov Exp $
+ * @version $Id: Buffer.java,v 1.216 2004/05/28 06:03:11 spestov Exp $
  */
 public class Buffer
 {
@@ -2865,7 +2865,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 		}
 	} //}}}
 
-	//{{{ insertAtColumn()
+	//{{{ insertAtColumn() method
 	/**
 	 * Like the {@link #insert(int,String)} method, but inserts the string at
 	 * the specified virtual column. Inserts spaces as appropriate if
@@ -2895,6 +2895,55 @@ loop:		for(int i = 0; i < seg.count; i++)
 		finally
 		{
 			writeUnlock();
+		}
+	} //}}}
+
+	//{{{ insertIndented() method
+	/**
+	 * Inserts a string into the buffer, indenting each line of the string
+	 * to match the indent of the first line.
+	 *
+	 * @param offset The offset
+	 * @param text The text
+	 *
+	 * @return The number of characters of indent inserted on each new
+	 * line. This is used by the abbreviations code.
+	 *
+	 * @since jEdit 4.2pre14
+	 */
+	public int insertIndented(int offset, String text)
+	{
+		try
+		{
+			beginCompoundEdit();
+
+			// obtain the leading indent for later use
+			int firstLine = getLineOfOffset(offset);
+			String lineText = getLineText(firstLine);
+			int leadingIndent
+				= MiscUtilities.getLeadingWhiteSpaceWidth(
+				lineText,getTabSize());
+
+			String whiteSpace = MiscUtilities.createWhiteSpace(
+				leadingIndent,getBooleanProperty("noTabs")
+				? 0 : getTabSize());
+
+			insert(offset,text);
+
+			int lastLine = getLineOfOffset(offset + text.length());
+
+			// note that if firstLine == lastLine, loop does not
+			// execute
+			for(int i = firstLine + 1; i <= lastLine; i++)
+			{
+				insert(getLineStartOffset(i),whiteSpace);
+			}
+
+			return whiteSpace.length();
+		}
+		finally
+		{
+			endCompoundEdit();
 		}
 	} //}}}
 
