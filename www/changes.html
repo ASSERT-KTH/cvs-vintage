@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.257 2002/10/17 19:13:23 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.258 2002/10/17 20:49:57 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -39,7 +39,19 @@
                     it results in one email that includes the user in the 
                     subject. 
                     For more information, see Bug Report
-                    #<a href="http://issues.whichever.com/issues/id/SCB112">SCB112</a>. (TL)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB112">SCB112</a>. (JDM)</li>
+                <li>if the user has their homepage tab set to EnterNew... tab
+                    and they change current issue type, redirect to the 
+                    entry/Wizard*.vm template.  This improves the process of 
+                    entering many issues of different types.  This is related
+                    though not exactly what is requested in 
+                    Bug Report
+                    #<a href="http://issues.whichever.com/issues/id/SCB255">SCB255</a>. (JDM)</li>
+                <li>Almost all text (~95%) is now i18n.  With Exception 
+                    messages being the only class of messages still known
+                    to be english only. (JDM, Carol, et.al.)</li>
+                <li>The ability to update/reindex the search index has been
+                    added as an admin menu item. (JDM)</li>
             </ul>
         </td>
     </tr>
@@ -97,6 +109,10 @@
                     during a copy/move.
                     For more information, see Bug Report
                     #<a href="http://issues.whichever.com/issues/id/SCB271">SCB271</a>. (JDM)</li>
+                <li>All actions have some minimal permission that is required, 
+                    before they are executed.  Previously, the security was 
+                    largely enforced by the user not seeing the ui which would
+                    invoke the action. (JDM)</li>
                  <li>Fixed bug where if you assign a user to an attribute, then change
                      the attribute before submitting, it would assign to former attribute.(EWD)</li>
             </ul>
