@@ -427,7 +427,7 @@
         <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
         <required-message>intake_FieldRequired</required-message>
     </field>
-    <field name="DataAsString" key="das" type="String">
+    <field name="Data" key="das" type="String">
         <rule name="maxLength" value="8388607">intake_DescriptionMustBeLessThan8MB</rule>
         <required-message>intake_FieldRequired</required-message>
     </field>
