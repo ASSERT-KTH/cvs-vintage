@@ -425,31 +425,73 @@
         <copy tofile="${build.dest.scarab}/ScarabBundle_de.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_de_DE.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_de.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_de_DE.properties"/>
+        
         <copy tofile="${build.dest.scarab}/ScarabBundle_en.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_en.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_en_US.properties"/>
+        
         <copy tofile="${build.dest.scarab}/ScarabBundle_fr.properties" 
               filtering="no" 
               file="${src.i18n.dir}/ScarabBundle_fr_FR.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_fr.properties" 
+              filtering="no" 
+              file="${src.i18n.dir}/InitDbScarabBundle_fr_FR.properties"/>
+        
         <copy tofile="${build.dest.scarab}/ScarabBundle_ja.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_ja_JP.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_ja.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_ja_JP.properties"/>
+        
         <copy tofile="${build.dest.scarab}/ScarabBundle_ko.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_ko_KR.properties"/>
-        <copy tofile="${build.dest.scarab}/ScarabBundle_nl.properties" 
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_ko.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_ko_KR.properties"/>
+        
+        <copy tofile="${build.dest.scarab}/ScarabBundle_nl.properties"
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_nl_NL.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_nl.properties"
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_nl_NL.properties"/>
+        
         <copy tofile="${build.dest.scarab}/ScarabBundle_pt.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_pt_BR.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_pt.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_pt_BR.properties"/>
+        
         <copy tofile="${build.dest.scarab}/ScarabBundle_ru.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_ru_RU.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_ru.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_ru_RU.properties"/>
+        
+        <copy tofile="${build.dest.scarab}/ScarabBundle_zh.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/ScarabBundle_zh_CN.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_zh.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_zh_CN.properties"/>
+        
         <!-- final default language is english -->
         <copy tofile="${build.dest.scarab}/ScarabBundle.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
+        <copy tofile="${build.dest.scarab}/InitDbScarabBundle.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/InitDbScarabBundle_en_US.properties"/>
 
         <!-- copy JCS configuration into classpath -->
         <filter token="JCS_CACHE_PROPERTIES" value="${scarab.jcs.cache.properties}"/>
