@@ -146,7 +146,6 @@
 #end
 #end
 
-#if ($tempList)
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
     
@@ -162,7 +161,6 @@
 <div class="functnbar2">
  <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
-#end
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
