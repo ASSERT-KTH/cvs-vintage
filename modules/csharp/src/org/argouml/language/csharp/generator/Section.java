@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.5 2004/09/26 20:45:37 mvw Exp $
+// $Id: Section.java,v 1.6 2004/12/14 22:51:28 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,11 +38,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class is used by GeneratorCSharp for handling of code sections.
  */
 public class Section {
     private Map mAry;
+    
+    private static final Logger LOG = Logger.getLogger(Section.class);
 
     private static final String BEGIN = "// section ";
     private static final String END1 = " begin";
@@ -79,11 +83,11 @@ public class Section {
     // =======================================================================
     public void write(String filename, String indent) {
         try {
-            System.out.println("Start reading");
+            LOG.debug("Start reading");
             FileReader f = new FileReader(filename);
             BufferedReader fr = new BufferedReader(f);
             FileWriter fw = new FileWriter(filename + ".out");
-            System.out.println("Total size of Map: " + mAry.size());
+            LOG.debug("Total size of Map: " + mAry.size());
             String line = "";
             while (line != null) {
                 line = fr.readLine();
@@ -94,14 +98,14 @@ public class Section {
                         fw.write(line + "\n");
                         if (content != null) {
                             fw.write(content);
-                            // System.out.println(line);
+                            // LOG.debug(line);
                             // System.out.print(content);
                         }
                         line = fr.readLine(); // read end section;
                         mAry.remove(sectionId);
                     }
                     fw.write(line + "\n");
-                    // System.out.println(line);
+                    // LOG.debug(line);
                 }
             }
             if (!mAry.isEmpty()) {
@@ -119,7 +123,7 @@ public class Section {
             fr.close();
             fw.close();
         } catch (IOException e) {
-            System.out.println("Error: " + e.toString());
+            LOG.debug("Error: " + e.toString());
         }
     }
 
@@ -128,7 +132,7 @@ public class Section {
      */
     public void read(String filename) {
         try {
-            System.out.println("Start reading");
+            LOG.debug("Start reading");
             FileReader f = new FileReader(filename);
             BufferedReader fr = new BufferedReader(f);
 
@@ -158,7 +162,7 @@ public class Section {
             fr.close();
 
         } catch (IOException e) {
-            System.out.println("Error: " + e.toString());
+            LOG.debug("Error: " + e.toString());
         }
     }
 
