@@ -4,7 +4,7 @@
 #set ($currentIssue = $user.ReportingIssue)
 
 
-<form method="GET" NAME="Report2Form" action="$action">
+<form method="GET" name="Report2Form" action="$action">
 
 
       <h1>Identified as Duplicate (2.1.1)</h1>
@@ -134,7 +134,7 @@
     #set ($checked = '')
 #end
           <td><input type="radio" name="$issueGroup.Id.Key" 
-                  value="issue.IssueId"$checked /></td>
+                  value="$issue.IssueId"$checked /></td>
 
           <td><strong>$issue.UniqueId</strong></td>
          
@@ -170,13 +170,18 @@
       <p><input type="submit"  name="eventSubmit_doAddvote" 
              value="add vote to selected" class="button" /></p>
 
+
+#set ( $atch = $scarabR.Attachment )
+#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
+
       <div class="listtable">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
          <td width="120" class="a"><strong>append with note:</strong></td>
 
          <td class="b">
-          <textarea rows="4" cols="40" class="text"></textarea>
+          <textarea name="$intakeAttachment.DataAsString.Key" rows="4" 
+              cols="40" class="text">$!intakeAttachment.DataAsString</textarea>
 
           <p><input type="submit" name="eventSubmit_doAddnote" 
                  value="submit note" class="button" /></p>
@@ -195,6 +200,16 @@
               value="cancel" class="button" />
        </p>
       </div>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -377,9 +392,10 @@ Add a comment<br>
 
       </table>
 
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
+$intake.declareGroups()
 </form>
 
 

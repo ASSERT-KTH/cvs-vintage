@@ -96,13 +96,12 @@
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
          <tr>
           <td width="120" class="a"><strong>Attachment Description:</strong></td>
+
 #set ( $atch = $scarabR.Attachment )
-$atch
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
 
-
           <td class="b">
-           <textarea name="$intakeAttachment.Name.Key" column="45" row="2" 
+           <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2" 
                 class="text">$!intakeAttachment.Name</textarea>
             <p>
               Please provide a short (less than 250 characters) description 
@@ -116,7 +115,7 @@ $atch
 
           <td class="b">
            <input type="file" name="$intakeAttachment.File.Key" size="45" 
-                class="text" value="$intakeAttachment.File.FileName"/>
+                class="text" value="$!intakeAttachment.File.Value.FileName"/>
 
            <p>Click Browse and select a file. If you do not see a Browse button, your browser does not support file uploads. (Windows users, set Files of Type: to be All Files (*.*) to get a complete file listing.) The File field cannot be used to rename files.</p>
 

@@ -27,16 +27,33 @@ public class Attachment
     extends BaseAttachment
     implements Persistent
 {
-    
-    private FileItem file;
+    public static final NumberKey FILE__PK = new NumberKey("1");
+    public static final NumberKey COMMENT__PK = new NumberKey("2");
+    public static final NumberKey URL__PK = new NumberKey("3");
 
     /**
      * Returns the data field converted to a string
      */
     public String getDataAsString() throws Exception
     {
-        return new String(getData());
+        byte[] data = getData();
+        String dataString = null;
+        if ( data != null ) 
+        {
+            dataString = new String(data);
+        }
+        
+        return dataString;
     }
+
+    /**
+     * Converts a String comment into a byte[]
+     */
+    public void setDataAsString(String data) throws Exception
+    {
+        setData(data.getBytes());
+    }
+    
 
     /**
      * There is no reason to reconstruct the FileItem, always returns null.

@@ -244,7 +244,7 @@ try{
                 attachment = new Attachment();
             }
         }        
-}catch(Exception e){e.printStackTrace();}
+}catch(Exception e){e.printStackTrace(); throw e;}
         return attachment;
  
    }
@@ -347,10 +347,38 @@ try{
      * @return a <code>Issue</code> value
      */
     public Issue getIssue()
+        throws Exception
     {
+        try{
         if (issue == null)
-            this.issue = new Issue();
-        return this.issue;
+        {
+            Group issueGroup = getIntakeTool()
+                .get("Issue", IntakeTool.DEFAULT_KEY, false);
+            if ( issueGroup != null ) 
+            {            
+                String issueId =  issueGroup.get("Id").toString();
+                if ( issueId == null || issueId.length() == 0 )
+                {
+                    issue = new Issue();
+                }
+                else 
+                {
+                    issue = IssuePeer
+                        .retrieveByPK(new NumberKey(issueId));
+                }
+            }
+            else 
+            {
+                issue = new Issue();
+            }
+        }        
+}catch(Exception e)
+{
+e.printStackTrace(); 
+throw e;
+}
+
+        return issue;
     }
 
     /**

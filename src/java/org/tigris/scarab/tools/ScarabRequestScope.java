@@ -68,7 +68,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.6 2001/05/21 23:09:13 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.7 2001/06/27 22:47:05 jmcnally Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -102,7 +102,7 @@ public interface ScarabRequestScope extends ApplicationTool
      *
      * @return a <code>Issue</code> value
      */
-    public Issue getIssue();
+    public Issue getIssue() throws Exception;
 
     /**
      * Get a specific module by key value.
