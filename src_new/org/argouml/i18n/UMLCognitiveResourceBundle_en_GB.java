@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle_en_GB.java
 // Classes: UMLCognitiveResourceBundle_en_GB
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle_en_GB.java,v 1.5 2003/11/21 20:00:31 mvw Exp $
+// $Id: UMLCognitiveResourceBundle_en_GB.java,v 1.6 2003/11/28 16:56:00 jhraigniac Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -113,10 +113,6 @@ public class UMLCognitiveResourceBundle_en_GB extends ListResourceBundle {
         {"mnemonic.button.next", "N"},
         {"mnemonic.button.finish", "F"},
         {"mnemonic.button.help", "H"},
-
-        {"level.low", "Low"},
-        {"level.medium", "Medium"},
-        {"level.high", "High"},
 
 	// Critics text
         { "CrAssocNameConflict_head" ,
