@@ -569,7 +569,7 @@ public class ContextManager {
 	    ctx=getContext("");
 	}
 	if(ctx.getDebug() > 0 ) ctx.log("In error handler " + code + " " + t +  " / " + req );
-	
+	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	String path=null;
 	ServletWrapper errorServlet=null;
 
@@ -578,7 +578,7 @@ public class ContextManager {
 	    errorServlet=ctx.getServletByName("tomcat.errorPage");
 	} else if( req.getAttribute("javax.servlet.error.status_code") != null ||
 	    req.getAttribute("javax.servlet.error.exception_type")!=null) {
-	    
+	    //  /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	    if( ctx.getDebug() > 0 ) ctx.log( "Error: exception inside exception servlet " +
 					      req.getAttribute("javax.servlet.error.status_code") + " " +
 					      req.getAttribute("javax.servlet.error.exception_type"));
@@ -647,8 +647,7 @@ public class ContextManager {
 	if( req.getAttribute("tomcat.servlet.error.handler") != null &&
 	    code >= 400 ) {
 	    // error page for 404 doesn't exist... ( or watchdog tests :-)
-	    ctx.log( "Error/loop in default error handler " + req );
-	    ctx.log( "Error/loop " + code + " " + t + " " +  path );
+	    ctx.log( "Error/loop in default error handler " + req + " " + code + " " + t + " " +  path );
 	} else {
 	    if( ctx.getDebug() > 0 ) ctx.log( "Error: Calling servlet " + errorServlet );
 	    req.setAttribute("tomcat.servlet.error.handler", errorServlet);

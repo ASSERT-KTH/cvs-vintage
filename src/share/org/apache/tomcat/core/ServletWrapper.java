@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.29 2000/02/17 07:52:20 costin Exp $
- * $Revision: 1.29 $
- * $Date: 2000/02/17 07:52:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.30 2000/02/18 00:17:48 costin Exp $
+ * $Revision: 1.30 $
+ * $Date: 2000/02/18 00:17:48 $
  *
  * ====================================================================
  *
@@ -358,8 +358,16 @@ public class ServletWrapper {
 	    
 	    handleReload();
 
-	    if( ! initialized )
-		loadServlet();
+	    if( ! initialized ) {
+		try {
+		    loadServlet();
+		} catch(Exception ex ) {
+		    // return not found
+		    res.setStatus( 404 );
+		    contextM.handleError( req, res, null, 404 );
+		    return;
+		}
+	    }
 	    
 	    // XXX to expensive  per/request, un-load is not so frequent and
 	    // the API doesn't require a special state for destroy
