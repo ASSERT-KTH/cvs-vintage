@@ -1,12 +1,12 @@
 
 <html>
   <head>
-    <!-- $Id: tomcat_ug.html,v 1.2 2000/03/16 20:43:22 costin Exp $ -->
+    <!-- $Id: tomcat_ug.html,v 1.3 2000/03/20 23:50:35 costin Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href=style.css>
     <title>Tomcat - A Minimalistic Users Guid</title>
-    <!-- Changed by: Costin Manolache, 16-Mar-2000 -->
+    <!-- Changed by: Costin Manolache, 20-Mar-2000 -->
   </head>
   <body link="#0000ff" vlink="#800080">
     <!-- Banner element, all hail the Project! -->
@@ -560,9 +560,15 @@
     </p>
 
     <p> When Tomcat starts up it will automatically generate a configuration file for
-        Apache in <code>TOMCAT_HOME/conf/tomcat-apache.conf</code> Most of the time you don't need to 
-        do anything but include this file ( using Include ) in your httpd.conf.
-        If you have special needs, you can use this file as a base for  your customized configuration.
+        Apache in <code>TOMCAT_HOME/conf/tomcat-apache.conf</code>. Most of the time you don't need to 
+        do anything but include this file ( be appending "Include TOMCAT_HOME/conf/tomcat-apache.conf" )
+ 	in your httpd.conf.  If you have special needs, you can use this file as a base for  your 
+	customized configuration, but then you'll need to change it every time you add a new context.
+    </p>
+    <p>
+      <b>Tomcat 3.1:</b> you need to restart tomcat and apache after adding a new context, apache
+      doesn't support configuration changes without a restart. The apache config file is generated
+      when tomcat starts, so you'll need to start tomcat before apache.
     </p>
 
     <p> The Apache-Tomcat configuration uses Apache core configuration directives
