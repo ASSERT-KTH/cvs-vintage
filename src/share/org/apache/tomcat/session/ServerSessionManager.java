@@ -65,7 +65,6 @@ import java.util.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.threads.*;
-import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.log.*;
 
 /**

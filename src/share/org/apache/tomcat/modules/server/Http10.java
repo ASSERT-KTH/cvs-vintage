@@ -61,7 +61,6 @@
 package org.apache.tomcat.modules.server;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
 import java.io.*;

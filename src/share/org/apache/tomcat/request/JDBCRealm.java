@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.28 2000/12/28 01:57:41 costin Exp $
- * $Revision: 1.28 $
- * $Date: 2000/12/28 01:57:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.29 2000/12/30 08:26:49 costin Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/12/30 08:26:49 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -63,7 +63,6 @@
 package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
 import java.security.*;
 import java.security.Principal;
