@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.30 2002/09/17 14:11:14 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.31 2002/09/17 15:55:15 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -616,7 +616,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
 		action = generateAction(act);
     }
 
-    return predecessors + number + " : " + m.getName() + " " + action;
+    return predecessors + number + " : " + action;
   }
 
     public String generateAssociationFrom(MAssociation a, MAssociationEnd ae) {
