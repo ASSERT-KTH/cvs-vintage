@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.14 2001/05/30 18:34:10 jon Exp $
+$Id: README.txt,v 1.15 2001/08/09 19:38:18 jon Exp $
 
 Welcome to Scarab!
 
@@ -25,15 +25,13 @@ JDK 1.2 or higher.
 You must have the JAVA_HOME environment variable properly set to be the 
 location of your JDK installation directory.
 
+You must have Ant installed and ANT_HOME defined in your environment as
+well as ANT_HOME/bin in your PATH.
+
 MySQL is assumed to be installed and running with appropriately configured 
 access control setup (see below for more detail). We will be supporting a
 wide range of databases in the released version of Scarab, however, we are
 currently doing development primarily on MySQL.
-
-If you are on a Windows machine, we require you to first have Cygwin installed 
-and you must run the .sh shell scripts from within the Cygwin bash shell. You 
-can very easily download and install Cygwin from here:
-<http://sources.redhat.com/cygwin/>
 
 All of the necessary .jar files for building and running Scarab are included 
 in the /lib directory and the build system is setup to include these into 
@@ -69,7 +67,7 @@ in the src/conf/TurbineResources.properties file to name of a mail
 server that allows you to relay email through it.
 
 NOTE: If you modify this value after you have build the sandbox
-      (instructions below), then you will need to re-run the build.sh
+      (instructions below), then you will need to re-run the ant
       script and restart the servlet engine in order for the changes to
       take effect.
 
@@ -80,32 +78,28 @@ NOTE: If you modify this value after you have build the sandbox
 To build the sandbox on your machine, you simply need to do the following:
 
 cd build
-./build.sh
+ant
 
 This will create a directory in the scarab directory called "target".
 Within there will be pretty much everything that you need to get started
 with running Scarab. You can safely remove this directory at any point
 as the source files for creating this directory are in the /lib and /src
 directory. If you edit any of the files in the /lib or /src directory,
-then you should simply re-run the build.sh compile script and it will
-deal with copying and compiling the changed files.
+then you should simply re-run the ant script and it will deal with
+copying and compiling the changed files.
 
-NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
-      the Tomcat that comes with Scarab, you can safely undefine it and follow 
-      the directions below for running the sandbox.
+NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are
+      using the Tomcat that comes with Scarab, you can safely undefine
+      it and follow the directions below for running the sandbox.
 
-NOTE: If you already have an existing Tomcat installation and prefer to run 
-      Scarab from there, create a file called .ant.properties in the
-      build directory or in your $HOME directory. The contents of this
-      file should be a single line equating the variable
-      build.dir.scarab to the path to Tomcat. For example:
-
-      build.dir.scarab=/usr/local/jakarta-tomcat
-
+NOTE: If you already have an existing Tomcat installation and prefer
+      to run Scarab from there, first build Scarab and then copy the 
+      target/webapps/scarab directory into your own Tomcat installation.
+      
 NOTE: There may be problems building and running Scarab with Tomcat 3.2.1. 
-      If your current Tomcat installation is not 4.0, you can either
-      compile to the default target/ directory or wait until 4.0 is
-      formally released.
+      We have not done this testing yet. If your current Tomcat
+      installation is not 4.0, you can either compile to the default
+      target/ directory or wait until 4.0 is formally released.
 
 
 -------------------------------------------------------------------------
@@ -128,12 +122,18 @@ NOTE: This will attempt to first drop a database called "scarab" and
 
 NOTE: If you need to specify a host/username/password, you will need to 
       edit the create-mysql-database.sh/.bat script to specify these to
-      the Mysql client. Also make sure to edit the
-      src/conf/TurbineResources.properties file and modify the
-      database.default.url, database.default.username and
-      database.default.password properties. Once you have done this, you
-      will need to build the sandbox again in order to copy the TR.props
-      file to the right location.
+      the MySQL client. We have added a feature to the .sh script which
+      prevents you from needing to edit it, simply pass the
+      username/password in as arguments when you execute it.
+      
+      ./create-mysql-database.sh USERNAME PASSWORD
+      
+      Also make sure to edit the src/conf/TurbineResources.properties
+      file and modify the database.default.url,
+      database.default.username and database.default.password
+      properties. Once you have done this, you will need to build the
+      sandbox again in order to copy the TR.props file to the right
+      location.
 
 
 -------------------------------------------------------------------------
@@ -145,30 +145,15 @@ following the steps above under building the sandbox, all you need to do
 is:
 
 cd target
-./bin/catalina.sh run
+./scarab.sh     <-- Unix
+bin\startup.bat <-- Win32
 
 Then, in your web browser, go to:
 
-<http://localhost:8080/scarab/servlet/scarab>
+    <http://localhost:8080/scarab/servlet/scarab>
 
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
-      the Tomcat that comes with Scarab, you can safely undefine it and follow 
-      the directions below for running the sandbox.
-
-
--------------------------------------------------------------------------
-| B U I L D I N G  U S E C A S E  D O C S                               |
--------------------------------------------------------------------------
-
-The usecase documentation is important in Scarab because it defines the
-overall application logic. Building the usecases takes advantage of
-Anakia (which is part of Velocity) to transform the XML definitions into
-HTML files. In order to build the HTML files, all you need to do is
-this:
-
-cd build
-./build.sh usecases <-- Unix
-build.bat usecases  <-- Win32
+      the Tomcat that comes with Scarab, you can safely undefine it.
 
 
 -------------------------------------------------------------------------

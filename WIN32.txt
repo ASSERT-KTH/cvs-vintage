@@ -1,20 +1,12 @@
 ------------------------------------------------------------------------------
 | W I N D O W S  N O T E S                                                   |
 ------------------------------------------------------------------------------
-$Id: WIN32.txt,v 1.1 2001/04/20 18:49:04 jon Exp $
+$Id: WIN32.txt,v 1.2 2001/08/09 19:38:18 jon Exp $
 
 Building Scarab on standard Win32 systems could be made easier and more 
 failsafe. Volunteers to help with this effort are appreciated. Below are some 
 notes that you will need to take into consideration when attempting to build 
 Scarab. These notes do not apply to building Scarab on Unix systems.
-
-===============================================================================
-
-If you have jakarta-turbine checked out next to Scarab, you must first build it 
-first one time before attempting to build Scarab:
-
-    cd jakarta-turbine/build
-    build-turbine.bat jar
 
 ===============================================================================
 
@@ -24,13 +16,5 @@ Scarab on Win32 systems. Volunteers to port shell scripts and keep things
 up to date are appreciated.
 
     <http://sources.redhat.com/cygwin/>
-
-===============================================================================
-
-If you are using the .bat files, then building Scarab will require a network 
-connection to the Internet. The reason is that there are some .xml files which 
-are validated using a DTD file. Because of problems with some JVM's trying to 
-resolve DTD files which are enclosed in a .jar file, the resolver will attempt
-to find the DTD file on the jakarta.apache.org website.
 
 ===============================================================================
