@@ -39,8 +39,8 @@ import java.awt.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.8 $
- * $Date: 2001/05/31 16:55:32 $
+ * $Revision: 1.9 $
+ * $Date: 2001/06/26 05:45:38 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -143,7 +143,7 @@ public class JavaImport {
     public static void parseFile( Project p, File f, DiagramInterface diagram)
 	throws Exception {
 	// Create a scanner that reads from the input stream passed to us
-	JavaLexer lexer = new JavaLexer( new FileInputStream( f));
+	JavaLexer lexer = new JavaLexer(new BufferedInputStream(new FileInputStream( f)));
 	
 	// We use a special Argo token, that stores the preceding
 	// whitespaces.
