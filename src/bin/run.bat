@@ -1,4 +1,8 @@
 @echo off
+@if not "%ECHO%" == ""  echo %ECHO%
+@if "%OS%" == "Windows_NT"  setlocal
+
+
 rem java -DINFO_ALL -jar run.jar
 rem java -Djboss.verifier.isEnabled=true -jar run.jar
 
