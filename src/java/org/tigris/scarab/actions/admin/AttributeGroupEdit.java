@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.11 2002/02/02 02:58:41 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.12 2002/02/03 04:55:25 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -178,6 +178,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                catch (Exception e)
                {
                    data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   log().debug("Remove attribute-module mapping - unsuccessful");
                }
 
                // Remove attribute - module mapping from template type
@@ -191,6 +192,8 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                catch (Exception e)
                {
                    data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   log().debug(
+                       "Remove template attribute-module mapping - unsuccessful");
                }
 
                // Remove attribute - group mapping
@@ -204,6 +207,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                catch (Exception e)
                {
                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                  log().debug("Remove attribute-group mapping - unsuccessful");
                }
 
                if (attribute.isOptionAttribute())
@@ -218,13 +222,25 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                        for (int j = 0; j<rmos.size();j++)
                        {
                            RModuleOption rmo = (RModuleOption)rmos.get(j);
-                           try
+                           // rmo's may be inherited by the parent module.
+                           // don't delete unless they are directly associated
+                           // with this module.  Will know by the first one.
+                           if (rmo.getModuleId().equals(module.getModuleId())) 
                            {
-                               rmo.delete(user);
+                               try
+                               {
+                                   rmo.delete(user);
+                               }
+                               catch (Exception e)
+                               {
+                                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                                   log().debug(
+                                        "Remove option-module mapping - unsuccessful");
+                               }
                            }
-                           catch (Exception e)
+                           else 
                            {
-                               data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                               break;
                            }
                        }
                     }
