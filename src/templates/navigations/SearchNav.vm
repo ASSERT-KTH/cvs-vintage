@@ -18,7 +18,7 @@
 <form action="$link.setPage("Index.vm").setAction("Search")" method="post">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
   <select name="go" tabindex="3">
-    <option value="Index.vm">Select query...</option>
+    <option value="AdvancedQuery.vm">Select query...</option>
     <option value="AdvancedQuery.vm">&#160;Advanced</option>
     <option value="Search.vm">&#160;Custom</option>
     <option value="IssueList.vm">&#160;Most Recent</option>
@@ -28,14 +28,14 @@
 #set ($globalQueries = $module.getGlobalQueries($issuetype))
 
 #if ($privateQueries && $privateQueries.size() > 0)
-    <option value="Index.vm">Saved Queries (personal)...</option>
+    <option value="QueryList.vm">Saved Queries (personal)...</option>
    #foreach ($query in $privateQueries)
     <option value="$query.QueryId">&#160;$query.Name</option>
    #end
 #end
 
 #if ($globalQueries && $globalQueries.size() > 0)
-    <option value="Index.vm">Saved Queries (project)...</option>
+    <option value="QueryList.vm">Saved Queries (project)...</option>
    #foreach ($query in $globalQueries)
     <option value="$query.QueryId">&#160;$query.Name</option>
    #end

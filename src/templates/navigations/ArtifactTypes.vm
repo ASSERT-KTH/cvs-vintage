@@ -17,7 +17,8 @@
     <div><small>$link.setPage("QueryList.vm").setLabel("Saved queries")</small></div>
     <div><small>$link.setPage("TemplateList.vm").setLabel("Template list")</small></div>
     <div><small>$link.setPage("reports,Step1.vm").setLabel("New report")</small></div>
-    <div><small>Saved reports</small></div></div>
+##    <div><small>Saved reports</small></div>
+    </div>
   #else
     <div><small>$link.setPage("$wizardScreen").setAction("SelectIssueType").setPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$wizardScreen").setPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$rmit.DisplayText")</small></div>
   #end
