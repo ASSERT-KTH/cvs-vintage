@@ -13,28 +13,29 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
 
-
+/**
+ * Opens a new mail window.
+ */
 public class OpenNewMailWindowAction extends AbstractColumbaAction {
     public OpenNewMailWindowAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_file_new_mail"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+    /*
+     * Opens a new mail window using the FrameModel instance in MainInterface.
      */
     public void actionPerformed(ActionEvent evt) {
-        FrameModel.openView("ThreePaneMail");
-
-        //getFrameController().getModel().openView();
+        MainInterface.frameModel.openView("ThreePaneMail");
     }
 }

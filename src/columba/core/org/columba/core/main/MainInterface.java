@@ -23,6 +23,7 @@ import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.PluginManager;
 
 /**
@@ -40,6 +41,9 @@ public class MainInterface {
 
     /** Configuration file management */
     public static Config config;
+    
+    /** Maintains references to all open frames */
+    public static FrameModel frameModel;
 
     /** Addressbook treemodel */
     // TODO: move this to the addressbook component

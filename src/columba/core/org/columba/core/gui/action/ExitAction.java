@@ -18,7 +18,6 @@ package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -48,12 +47,10 @@ public class ExitAction extends AbstractColumbaAction {
             KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+    /*
+     * Calls System.exit(int) to start the shutdown procedure.
      */
     public void actionPerformed(ActionEvent evt) {
-        //MainInterface.frameModel.saveAll();
-        //MainInterface.addressbookModel.saveAll();
-        FrameModel.saveAndCloseAll();
+        System.exit(0);
     }
 }

@@ -15,22 +15,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
 
-
 /**
- * @author frd
+ * Opens a new addressbook window.
  *
- * To change this generated comment go to Window>Preferences>Java>Code
- * Generation>Code and Comments
+ * @author frd
  */
 public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
     public OpenNewAddressbookWindowAction(FrameMediator controller) {
@@ -47,13 +46,10 @@ public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * Uses the FrameModel instance in MainInterface to open a new
+     * addressbook window.
      */
     public void actionPerformed(ActionEvent evt) {
-        FrameModel.openView("Addressbook");
-
-        //getFrameController().getModel().openView();
+        MainInterface.frameModel.openView("Addressbook");
     }
 }

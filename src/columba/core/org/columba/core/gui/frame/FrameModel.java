@@ -16,18 +16,18 @@
 
 package org.columba.core.gui.frame;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * FrameModel manages all frames. It keeps a list of every
@@ -44,33 +44,30 @@ import java.util.Vector;
  */
 public class FrameModel {
     /** list of frame controllers */
-    protected static List activeFrameCtrls;
+    protected List activeFrameCtrls;
 
     /** viewlist xml treenode */
-    protected static XmlElement viewList = MainInterface.config.get("options").getElement("/options/gui/viewlist");
+    protected XmlElement viewList = 
+        MainInterface.config.get("options").getElement("/options/gui/viewlist");
 
     /** Default view specifications to be used when opening a new view */
-    protected static XmlElement defaultViews = MainInterface.config.get("options").getElement("/options/gui/defaultviews");
-
-    /** Used for bookkeeping related to saveAll and close methods */
-    private static boolean isSavingAll = false;
+    protected XmlElement defaultViews = 
+        MainInterface.config.get("options").getElement("/options/gui/defaultviews");
 
     /**
-     * Constructor which initializes static fields for view lists and
+     * Constructor which initializes fields for view lists and
      * creates the views stored in the existing view list using
      * createFrameController (used at start-up to display the same
      * views/windows as when last time Columba was closed).
      */
     public FrameModel() {
-        activeFrameCtrls = new Vector();
+        activeFrameCtrls = new LinkedList();
 
         // load all frames from configuration file
         for (int i = 0; i < viewList.count(); i++) {
             // get element from view list
             XmlElement view = viewList.getElement(i);
             String id = view.getAttribute("id");
-
-            ColumbaLogger.log.info("id=" + id);
 
             // create frame controller for this view...
             FrameMediator c = createFrameController(id, new ViewItem(view));
@@ -86,9 +83,44 @@ public class FrameModel {
          */
         if (activeFrameCtrls.size() == 0) {
             ColumbaLogger.log.info(
-                "No views specified - opening mail view as default");
+                "No views specified, opening mail view as default");
             openView("ThreePaneMail");
         }
+        
+        //this is executed on shutdown: store all open frames so that they
+        //can be restored on the next start
+        ShutdownManager.getShutdownManager().register(new Runnable() {
+            public void run() {
+                //used to temporarily store the values while the original
+                //viewList gets modified by the close method
+                List newViewList = new LinkedList();
+                
+                ViewItem v;
+                //we cannot use an iterator here because the close method
+                //manipulates the list
+                while (activeFrameCtrls.size() > 0) {
+                    FrameMediator c = (FrameMediator) activeFrameCtrls.get(0);
+                    v = c.getViewItem();
+
+                    //store every open frame in our temporary list
+                    newViewList.add(v.getRoot());
+
+                    //close every open frame
+                    c.close();
+                }
+                
+                //if not we haven't actually closed a frame, leave viewList as is
+                if (newViewList.size() > 0) {
+                    //the close method manipulates the viewList so we have to
+                    //remove the existing element and fill in our temporarily
+                    //stored ones
+                    viewList.removeAllElements();
+                    for (Iterator it = newViewList.iterator(); it.hasNext();) {
+                        viewList.addElement((XmlElement)it.next());
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -104,7 +136,7 @@ public class FrameModel {
      *
      * @return                                frame controller
      */
-    public static FrameMediator createFrameController(String id,
+    public FrameMediator createFrameController(String id,
         ViewItem viewItem) {
         // get plugin handler for handling frames
         FramePluginHandler handler = null;
@@ -139,7 +171,7 @@ public class FrameModel {
      *                                         e.g. "ThreePaneMail" or "Addressbook"
      * @return                        Frame controller for the given view type
      */
-    public static FrameMediator openView(String id) {
+    public FrameMediator openView(String id) {
         // look for default view settings (if not found, null is returned)
         ViewItem view = loadDefaultView(id);
 
@@ -160,7 +192,7 @@ public class FrameModel {
      * @param        id        id specifying view type
      * @return        View settings
      */
-    protected static ViewItem loadDefaultView(String id) {
+    protected ViewItem loadDefaultView(String id) {
         // If defaultViews doesn't exist, create it (backward compatibility)
         if (defaultViews == null) {
             XmlElement gui = MainInterface.config.get("options").getElement("/options/gui");
@@ -195,7 +227,7 @@ public class FrameModel {
      *
      * @param        view        view settings to be stored
      */
-    protected static void saveDefaultView(ViewItem view) {
+    protected void saveDefaultView(ViewItem view) {
         if (view == null) {
             return; // nothing to save
         }
@@ -214,37 +246,6 @@ public class FrameModel {
     }
 
     /**
-     * Stores view settings for all currently open views and then
-     * closes them.
-     * Is called when exiting Columba.
-     */
-    public static void saveAndCloseAll() {
-        // Signal to the close method to react differently
-        isSavingAll = true;
-
-        viewList.removeAllElements();
-
-        // store view settings and close all open views
-        for (Iterator it = activeFrameCtrls.iterator(); it.hasNext();) {
-            FrameMediator c = (FrameMediator) it.next();
-            ViewItem v = c.getViewItem();
-
-            // store current view settings
-            viewList.addElement(v.getRoot());
-            saveDefaultView(v);
-
-            /*
-             * Close the view. This will also call the close method below
-             * via the frame controllers close method. Since the isSavingAll
-             * flag is set, this will do nothing
-             */
-            c.close();
-        }
-
-        System.exit(0);
-    }
-
-    /**
      * Called when a frame is closed. The reference is removed from the
      * list of active (shown) frames.
      * If it's the last open view, the view settings are stored in the
@@ -252,33 +253,17 @@ public class FrameModel {
      * to do actually...)
      * @param c                Reference to frame controller for the view which is closed
      */
-    public static void close(FrameMediator c) {
-        /*
-         * *20030828, karlpeder* If we are closing all windows (via saveAll()),
-         * the code below should not be executed for two reasons:
-         * 1) When last frame: The handling of viewList is made in saveAll
-         * 2) When not last: If elements are removed from list, the iterator used
-         *    in saveAll messes up.
-         */
-        if (!isSavingAll) {
-            // Check if the frame controller has been registered, else do nothing
-            if (activeFrameCtrls.contains(c)) {
-                if (activeFrameCtrls.size() == 1) {
-                    // last frame
-                    //  -> exit Columba
-                    viewList.removeAllElements();
-
-                    ViewItem v = c.getViewItem();
-
-                    // store view settings
-                    viewList.addElement(v.getRoot());
-                    saveDefaultView(v);
-                    System.exit(0);
-                } else {
-                    // just remove reference - and save view settings
-                    saveDefaultView(c.getViewItem());
-                    activeFrameCtrls.remove(c);
-                }
+    public void close(FrameMediator c) {
+        // Check if the frame controller has been registered, else do nothing
+        if (activeFrameCtrls.contains(c)) {
+            ViewItem v = c.getViewItem();
+            saveDefaultView(v);
+            activeFrameCtrls.remove(c);
+            if (activeFrameCtrls.size() == 0) {
+                //this is the last frame so store its data in the viewList
+                viewList.removeAllElements();
+                viewList.addElement(v.getRoot());
+                System.exit(0);
             }
         }
     }

@@ -118,8 +118,8 @@ public class Main {
         addressbook.initGui();
 
         mail.initGui();
-
-        new FrameModel();
+        
+        MainInterface.frameModel = new FrameModel();
 
         frame.setVisible(false);
 

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.frame;
 
 import org.columba.core.config.ViewItem;
@@ -26,7 +27,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 import java.awt.event.MouseAdapter;
-
 
 /**
  * The Controller is responsible for creating a view.
@@ -199,7 +199,7 @@ public abstract class AbstractFrameController implements FrameMediator {
          * If this frame hasn't been opened using FrameModel methods,
          * FrameModel.close does nothing.
          */
-        FrameModel.close(this);
+        MainInterface.frameModel.close(this);
     }
 
     /**
