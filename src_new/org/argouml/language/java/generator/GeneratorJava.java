@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.39 2002/08/19 08:41:40 kataka Exp $
+// $Id: GeneratorJava.java,v 1.40 2002/08/30 22:44:15 BobTarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -204,6 +204,9 @@ implements PluggableNotation, FileGenerator {
         return null;
     }
 
+  public String generateAssociationRole(MAssociationRole m) {
+      return "";
+  }
 
   public String generateOperation (MOperation op, boolean documented) {
     StringBuffer sb = new StringBuffer(80);
