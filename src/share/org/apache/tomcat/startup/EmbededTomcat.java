@@ -553,10 +553,6 @@ public class EmbededTomcat {
 					 modules.elementAt( i ) );
 	    }
 	    contextM.init();
-	    Class shfc = containerCL.loadClass(
-		            "org.apache.tomcat.util.net.StreamHandlerFactory");
-       	    URL.setURLStreamHandlerFactory(
-				 (URLStreamHandlerFactory)shfc.newInstance());
 	} catch( Throwable ex ) {
 	    if( ex instanceof InvocationTargetException ) {
 		ex=((InvocationTargetException)ex).getTargetException();
