@@ -243,6 +243,8 @@
         <filter token="HOMEPAGE" value="${scarab.homepage}"/>
         <filter token="PIPELINE_DESCRIPTOR"
             value="${scarab.default.pipeline.descriptor}"/>
+        <filter token="REQUEST_ERROR_HANDLER"
+            value="${scarab.request.error.handler}"/>
         <filter token="ADMIN_USERNAME" value="${scarab.user.username}"/>
         <filter token="ADMIN_PASSWORD" value="${scarab.user.password}"/>
         <filter token="ADMIN_FIRSTNAME" value="${scarab.user.firstname}"/>

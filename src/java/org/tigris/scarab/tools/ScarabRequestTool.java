@@ -291,6 +291,7 @@ public class ScarabRequestTool
         if (issueSearch != null)
         {
             // This must _always_ be called by dispose()
+            Log.get().debug("IssueSearch object is disposed of properly.");
             issueSearch.close();
             issueSearch = null;
         }
