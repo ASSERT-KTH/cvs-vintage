@@ -325,7 +325,7 @@ implements ServletContext {
     }
 
     public String getServerInfo() {
-        return contextM.getServerInfo();
+        return context.getEngineHeader();
     }
 
     public void log(String msg) {

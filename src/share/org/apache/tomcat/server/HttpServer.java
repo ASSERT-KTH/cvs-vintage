@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.8 2000/01/10 19:23:56 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/10 19:23:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.9 2000/01/10 22:35:31 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/01/10 22:35:31 $
  *
  * ====================================================================
  *
@@ -370,27 +370,8 @@ public class HttpServer {
 
 
     /**
-     * Gets the server info string for this server.
-     */
-
-    public String getServerInfo() {
-        return contextM.getServerInfo();
-    }
-
-    /**
-     * Sets the server info string for this server. This string must
-     * be of the form <productName>/<productVersion> [(<optionalInfo>)]
-     */
-
-    public void setServerInfo(String serverInfo) {
-        contextM.setServerInfo( serverInfo );
-    }
-
-
-    /**
      * Gets the server header for this server.
      */
-
     public String getServerHeader() {
 	// XXX XXX Ugly, but we want to remove the properties stuff
 	// which is worse
@@ -400,76 +381,8 @@ public class HttpServer {
 
 
     /**
-     * Gets the default Context for this server.
-     */
-
-    public Context getDefaultContext() {
-        return contextM.getContext("");
-    }
-
-
-    /**
-     * Gets an enumeration of the names of all the contexts in the system.
-     */
-    
-    public Enumeration getContextNames() {
-        return contextM.getContextNames();
-    }
-
-
-    /**
-     * Gets a context by it's name
-     *
-     * @param name The name of the requested context
-     */
-    
-    public Context getContext(String name) {
-	return contextM.getContext( name );
-    }
-
-
-    /**
-     * Gets the context that is responsible for requests for a
-     * particular path.
-     *
-     * @param path The path for which a responsible context is desired
-     */
-    
-    public Context getContextByPath(String path) {
-	return contextM.getContextByPath( path );
-    }
-
-
-    /**
-     * Creates a new context within this server.
-     *
-     * @param path The root path to be handled by this context
-     * @param docBase The document base URL for this context
-     * @throws IllegalStateException if there is already a context
-     *         rooted at the path given or if the contextName is
-     *         not unique.
-     */
-
-    public Context addContext(String path, URL docBase) {
-	return contextM.addContext(path, docBase);
-    }
-
-
-    /**
-     * Removes a context from service.
-     *
-     * @param name The name of the context to be removed
-     */
-    
-    public void removeContext(String name) {
-	contextM.removeContext(name);
-    }
-    
-
-    /**
      * Starts the server.
      */
-
     public void start() throws HttpServerException {
 	Context defaultContext=contextM.getContext("");
 

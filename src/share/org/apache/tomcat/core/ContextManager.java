@@ -98,13 +98,6 @@ public class ContextManager {
     private Hashtable contexts = new Hashtable();
 
     /**
-     * The server information string to be returned by the server
-     * associated with this ContextManager.
-     */
-    private String serverInfo = null;
-
-
-    /**
      * The virtual host name for the Server this ContextManager
      * is associated with.
      */
@@ -121,55 +114,9 @@ public class ContextManager {
      * Construct a new ContextManager instance with default values.
      */
     public ContextManager() {
-
-    }
-    
-
-    // XXX XXX who calls this ? It should use per context info
-    // Wrong because it's not a property of context manager ( maybe
-    // defaultServerInfo
-    /**
-     * Gets the server info string for this server
-     */
-    public String getServerInfo() {
-	if( serverInfo==null) 
-	    serverInfo=getContext("").getEngineHeader();
-
-        return serverInfo;
     }
 
-
-    // XXX context property
-    /**
-     * Sets the server info string for this server. This string must
-     * be of the form <productName>/<productVersion> [(<optionalInfo>)]
-     *
-     * @param serverInfo The new server information string
-     */
-    public void setServerInfo(String serverInfo) {
-        this.serverInfo = serverInfo;
-    }
-
-
-    /**
-     * Gets the document base of the default context for this server.
-     */
-    // XXX wrong - ContextManager has no document base !
-    public URL getDocumentBase() {
-	return getContext("").getDocumentBase();
-    }
-
-
-    /**
-     * Sets the document base of the default context for this server.
-     *
-     * @param docBase The new document base
-     */
-
-    public void setDocumentBase(URL docBase) {
-	getContext("").setDocumentBase(docBase);
-    }
-
+    // -------------------- Context repository --------------------
     /**
      * Get the names of all the contexts in this server.
      */
@@ -184,68 +131,31 @@ public class ContextManager {
      *
      * @param name Name of the requested context
      */
-    
     public Context getContext(String name) {
 	return (Context)contexts.get(name);
     }
 
+
+    
     /**
      * Adds a new Context to the set managed by this ContextManager.
-     * XXX Why is there no context name argument?
-     * XXX Should this be synchronized?
      *
-     * @param path Path prefix to be processed by this Context
-     * @param docBase Document base URL for this Context
+     * @param ctx context to be added.
      */
-    public Context addContext(String path, URL docBase) {
-	// assert path!=null
-        if (path == null) {
-	    String msg = sm.getString("server.defaultContext.path.npe");
-	    throw new NullPointerException(msg);
-	}
+    public void addContext( Context ctx ) {
+	// assert "valid path" 
 
-        path = path.trim();
-
-	if (path.length() > 0 &&
-	    docBase == null) {
-	    String msg = sm.getString("server.defaultContext.docBase.npe");
-
-	    throw new NullPointerException(msg);
-	}
-
-        if (contexts.get(path) != null) {
-	    String msg = sm.getString("server.createctx.existname",
-	        path);
-
-	    throw new IllegalStateException(msg);
-	}
-
-	if (docBase == null) {
-	    throw new RuntimeException("XXX SHOULD NEVER HAPPEN");
-	}
-
-	Context context = new Context(this, path, docBase);
-
-
-	// check to see if defaultContext
-
-	if (path.length() == 0) {
-	    contexts.put("",context);
-	} else {
-	    contexts.put(path, context);
-	}
-
-	return context;
+	// it will replace existing context - it's better than 
+	// IllegalStateException.
+	contexts.put( ctx.getPath(), ctx );
     }
-
-
+    
     /**
      * Removes a context from service.
      * XXX Should this be synchronized?
      *
      * @param name Name of the Context to be removed
      */
-    
     public void removeContext(String name) {
 	if (name.equals("")){
 	    throw new IllegalArgumentException(name);

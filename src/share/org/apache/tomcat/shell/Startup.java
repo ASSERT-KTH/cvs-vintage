@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.9 2000/01/10 19:23:57 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/01/10 19:23:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.10 2000/01/10 22:35:31 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/01/10 22:35:31 $
  *
  * ====================================================================
  *
@@ -129,9 +129,13 @@ public class Startup {
 	    while (contexts.hasMoreElements()) {
 	        ContextConfig contextConfig =
 		    (ContextConfig)contexts.nextElement();
-                Context context = contextManager.addContext(
-		    contextConfig.getPath(),
-		    contextConfig.getDocumentBase());
+
+		Context context = new Context(contextManager,
+					      contextConfig.getPath(),
+					      contextConfig.getDocumentBase());
+
+                contextManager.addContext(context);
+
 		String contextWorkDirPath =
 		    getContextWorkDirPath(serverConfig,
 			contextManagerConfig,
