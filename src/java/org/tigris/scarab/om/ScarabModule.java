@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.36 2001/10/11 17:34:09 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.37 2001/10/12 17:30:08 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -226,8 +226,6 @@ public class ScarabModule
         {
             ScarabSecurity security = SecurityFactory.getInstance();
             String permission = attribute.getPermission();
-            System.out.println("Attribute: " + attribute.getName() + 
-                               " has permission " + permission); 
             if ( permission == null ) 
             {
                 throw new ScarabException("Attribute: " + attribute.getName() + 
@@ -239,7 +237,6 @@ public class ScarabModule
                 users = security.getUsers(permission, this);
             }
         }
-        System.out.println("# of Users: " + users.length); 
         
         return users;
     }
