@@ -10,9 +10,10 @@ fi
 
 cp=$CLASSPATH
 
-CLASSPATH=${TOMCAT_HOME}/lib/tomcat_util.jar:$CLASSPATH
-CLASSPATH=${TOMCAT_HOME}/lib/parser.jar:$CLASSPATH
-CLASSPATH=${TOMCAT_HOME}/lib/jaxp.jar:$CLASSPATH
+CLASSPATH=${TOMCAT_HOME}/lib/container/tomcat_util.jar:$CLASSPATH
+CLASSPATH=${TOMCAT_HOME}/lib/common/core_util.jar:$CLASSPATH
+CLASSPATH=${TOMCAT_HOME}/lib/container/parser.jar:$CLASSPATH
+CLASSPATH=${TOMCAT_HOME}/lib/container/jaxp.jar:$CLASSPATH
 CLASSPATH=${TOMCAT_HOME}/webapps/admin/WEB-INF/lib/ant.jar:$CLASSPATH
 CLASSPATH=${TOMCAT_HOME}/webapps/admin/WEB-INF/classes:$CLASSPATH
 
