@@ -46,7 +46,7 @@ import org.gjt.sp.jedit.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: FoldVisibilityManager.java,v 1.29 2003/02/07 23:23:40 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.30 2003/02/21 20:12:19 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -811,8 +811,10 @@ public class FoldVisibilityManager
 		if(start > end || start < 0 || end >= offsetMgr.getLineCount())
 			throw new ArrayIndexOutOfBoundsException(start + ", " + end);
 
+		if(start < getFirstVisibleLine() || end > getLastVisibleLine())
+			expandAllFolds();
 		// ideally, this should somehow be rolled into the below loop.
-		if(start != offsetMgr.getLineCount() - 1
+		else if(start != offsetMgr.getLineCount() - 1
 			&& !offsetMgr.isLineVisible(start + 1,index))
 			expandFold(start,false);
 
