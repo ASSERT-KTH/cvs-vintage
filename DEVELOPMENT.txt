@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 | D E V E L O P E M E N T  N O T E S                                         |
 ------------------------------------------------------------------------------
-$Id: DEVELOPMENT.txt,v 1.7 2001/08/09 19:38:18 jon Exp $
+$Id: DEVELOPMENT.txt,v 1.8 2001/08/21 18:44:31 jon Exp $
 
             Below are some notes for doing development with Scarab.
 
@@ -32,11 +32,11 @@ scarab/target/webapps/scarab/WEB-INF/classes/org/tigris/scarab/screens/Foo.class
 You can make the above procedure easier by simply removing the entire target 
 tree and re-creating it. Next, you are going to ask why the source file is 
 stored in the WEB-INF directory. The reason is because Ant allows us to do 
-String replacement in the source files. So, at some point in the future, we will 
-probably use this functionality to include a version number into one of the 
-source files so that it is possible to see what version of Scarab is running. 
-There are other reasons for doing this as well, but this is an easy example to 
-explain. :-)
+String replacement in the source files. So, at some point in the future, we 
+will probably use this functionality to include a version number into one 
+of the source files so that it is possible to see what version of Scarab 
+is running. There are other reasons for doing this as well, but this is 
+an easy example to explain. :-)
 
 At any point, you should be able to build a fresh target tree. This means 
 that you should be able to kill Tomcat, remove the target directory and 

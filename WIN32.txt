@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 | W I N D O W S  N O T E S                                                   |
 ------------------------------------------------------------------------------
-$Id: WIN32.txt,v 1.2 2001/08/09 19:38:18 jon Exp $
+$Id: WIN32.txt,v 1.3 2001/08/21 18:44:31 jon Exp $
 
 Building Scarab on standard Win32 systems could be made easier and more 
 failsafe. Volunteers to help with this effort are appreciated. Below are some 
@@ -10,10 +10,10 @@ Scarab. These notes do not apply to building Scarab on Unix systems.
 
 ===============================================================================
 
-We highly recommend that you install cygwin instead of using the .bat files. The 
-reason is that our primary focus is currently on Unix systems and not on running 
-Scarab on Win32 systems. Volunteers to port shell scripts and keep things
-up to date are appreciated.
+We highly recommend that you install cygwin instead of using the .bat 
+files. The reason is that our primary focus is currently on Unix systems 
+and not on running Scarab on Win32 systems. Volunteers to port shell 
+scripts and keep things up to date are appreciated.
 
     <http://sources.redhat.com/cygwin/>
 
