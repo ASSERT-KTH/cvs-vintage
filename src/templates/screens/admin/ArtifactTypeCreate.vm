@@ -1,0 +1,57 @@
+$page.setTitle("Attribute Editor")
+
+#set ($module = $scarabR.CurrentModule)
+#set ($issueType = $scarabR.IssueType)
+#set ($group = $intake.IssueType.mapTo($issueType))
+
+<div class="app" id="div2-1-4-0">
+
+<h2>Create artifact type</h2>
+
+<form method="get" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
+<input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+
+<div class="functnbar">
+    <table cellpadding="4" cellspacing="0" border="1">
+    <tr>
+    <td class="firstchild">
+    <div>Screen options:</div>
+      <input type="submit" value="Create" name="eventSubmit_doCreatenew" />&#160;
+      <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
+    </td>
+  </tr>
+  </table>
+</div>
+
+<h3>Artifact type details</h3>
+<div class="axial">
+    <table border="0" cellspacing="2" cellpadding="3">
+    <tr>
+    <th>Artifact type name</th>
+    <td><input type="text" size="25" name="$group.Name.Key" value="$!group.Name.Value"/>
+    </td>
+    </tr>
+    <tr>
+    <th>Artifact type desc</th>
+    <td><textarea rows="4" cols="40" name="$group.Description.Key">$!group.Description.Value</textarea></td>
+    </tr>
+    </table>
+</div>
+
+<div class="functnbar2">
+    <table cellpadding="4" cellspacing="0" border="1">
+    <tr>
+    <td class="firstchild">
+    <div>Screen options:</div>
+      <input type="submit" value="Create" name="eventSubmit_doCreatenew" />&#160;
+      <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
+    </td>
+  </tr>
+  </table>
+</div>
+
+$intake.declareGroups()
+</form>
+</div>

@@ -1,0 +1,58 @@
+$page.setTitle("Artifact Type Edit")
+
+<div id="globalartifactshow" class="app">
+<h2>$page.Title</h2>
+<p>
+This page is for selecting an Artifact Type to edit which is defined in a global scale.
+</p>
+
+<form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="get">
+<input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild">
+<input type="submit" value="Submit" name="eventSubmit_doSubmit" />
+<input type="submit" value="Create New Artifact Type" name="eventSubmit_doGotocreatepage" />
+<input type="submit" value="Delete Selected Artifact Types" name="eventSubmit_doSubmit" />
+</td>
+</tr>
+</table>
+</div>
+
+<h3>Attributes</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>Deleted</th>
+<th>Attribute Name</th>
+<th>Description</th>
+</tr>
+#set ($allIssueTypes = $scarabG.AllIssueTypes)
+#foreach( $issueType in $allIssueTypes )
+#set ($group = $intake.IssueType.mapTo($issueType))
+#indexedRows($velocityCount)
+<td>#booleanCheckbox ($group.Deleted)</td>
+<td><input type="text" name="$group.Name.Key" value="$group.Name.Value"></td>
+<td><textarea name="$group.Description.Key" rows="2" cols="60" >$!group.Description</textarea></td>
+</tr>
+#end
+</table>
+
+$intake.declareGroups()
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild">
+<input type="submit" value="Submit" name="eventSubmit_doSubmit" />
+<input type="submit" value="Create New Artifact Type" name="eventSubmit_doGotocreatepage" />
+<input type="submit" value="Delete Selected Artifact Type" name="eventSubmit_doSubmit" />
+</td>
+</tr>
+</table>
+
+</form>
+</div>

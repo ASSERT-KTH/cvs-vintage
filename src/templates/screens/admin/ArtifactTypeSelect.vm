@@ -28,11 +28,7 @@ $page.setTitle("Artifact Type Select")
 <h3>Artifact Types</h3>
 
     <p><strong class="alert">
-    There are no more artifact types to add to this module. 
-    #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-    Please click the Create new button to create a new artifact type.
-    #end</strong>
-    </p>
+    There are no more artifact types to add to this module.</strong></p>
 
 <div class="functnbar2">
     <table cellpadding="4" cellspacing="0" border="1">

@@ -24,7 +24,6 @@ $page.setTitle("Attribute Editor")
 #if (!$issueTypes.isEmpty())
       <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
 #end
-      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
       <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
@@ -50,7 +49,7 @@ $page.setTitle("Attribute Editor")
 #set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="delete_$rmit.IssueTypeId"/></td>
-<td><a href="$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId)">$rmit.IssueType.Name</a></td>
+<td><a href="$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId)">#if ($rmit.DisplayName) $rmit.DisplayName #else $rmit.IssueType.Name #end</a></td>
 <td>#booleanCheckbox ($rmitGroup.Active)</td>
 <td>#booleanCheckbox ($rmitGroup.Display)</td>
 <td>#numericSelect( $rmitGroup.Order.Key 1 5 $rmit.Order 1 )</td>
@@ -73,7 +72,6 @@ $page.setTitle("Attribute Editor")
 #if (!$issueTypes.isEmpty())
       <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
 #end
-      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
       <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
