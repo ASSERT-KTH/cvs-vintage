@@ -3,7 +3,7 @@
 # Author: Kunle Odutola
 #         May 2001
 #
-# $Id: build.sh,v 1.2 2001/05/21 16:08:21 kunle Exp $
+# $Id: build.sh,v 1.3 2002/03/15 11:41:02 jeremybennett Exp $
 #
  
 # +-------------------------------------------------------------------------+
@@ -66,7 +66,7 @@ LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/xalan.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/xerces.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/bsf.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/js.jar
-LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/fop.jar
+#LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/fop.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/w3c.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib
 
@@ -85,6 +85,6 @@ echo
 echo Starting Ant...
 echo
 
-$JAVA_HOME/bin/$JAVACMD -Xmx128M -classpath $LOCAL_CLASSPATH -Dant.home=$ANT_HOME -Dant.opts=$ANT_OPTS org.apache.tools.ant.Main $*
+$JAVA_HOME/bin/$JAVACMD -classpath $LOCAL_CLASSPATH -Dant.home=$ANT_HOME -Dant.opts=$ANT_OPTS org.apache.tools.ant.Main $*
 
 exit
