@@ -77,7 +77,7 @@ goto cleanup
 :runAnt
 rem Run ant
 echo Using classpath: %CLASSPATH%
-java %ANT_OPTS -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
+java %ANT_OPTS% -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runJspc
