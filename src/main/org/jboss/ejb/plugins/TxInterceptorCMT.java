@@ -7,15 +7,16 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.EJBException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRequiredException;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.BeanMetaData;
 
@@ -27,7 +28,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -46,19 +47,17 @@ extends AbstractTxInterceptor
    
    // Interceptor implementation --------------------------------------
    
-   public Object invokeHome(Invocation mi)
-   throws Exception
+   public Object invokeHome(Invocation invocation) throws Exception
    {
-      return runWithTransactions(false, mi);
+      return runWithTransactions(invocation);
    }
    
    /**
     *  This method does invocation interpositioning of tx management
     */
-   public Object invoke(Invocation mi)
-   throws Exception
+   public Object invoke(Invocation invocation) throws Exception
    {
-      return runWithTransactions(true, mi);
+      return runWithTransactions(invocation);
    }
    
    // Private  ------------------------------------------------------
@@ -116,14 +115,12 @@ extends AbstractTxInterceptor
      *                          of a method in the remote interface, otherwise
      *                          it is an invocation of a method in the home
      *                          interface.
-     *  @param mi The <code>Invocation</code> of this call.
+     *  @param invocation The <code>Invocation</code> of this call.
      */
-   private Object runWithTransactions(boolean remoteInvocation,
-      Invocation mi)
-      throws Exception
+   private Object runWithTransactions(Invocation invocation) throws Exception
    {
       // Old transaction is the transaction that comes with the MI
-      Transaction oldTransaction = mi.getTransaction();
+      Transaction oldTransaction = invocation.getTransaction();
       // New transaction is the new transaction this might start
       Transaction newTransaction = null;
       
@@ -131,9 +128,13 @@ extends AbstractTxInterceptor
       if( trace )
          log.trace("Current transaction in MI is " + oldTransaction);
       
-      byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
-      if( trace )
-         printMethod(mi.getMethod(), transType);
+      InvocationType type = invocation.getType();
+      byte transType = getTransactionMethod(
+            invocation.getMethod(), 
+            type == InvocationType.REMOTE || type == InvocationType.LOCAL);
+
+      if ( trace )
+         printMethod(invocation.getMethod(), transType);
 
       // Thread arriving must be clean (jboss doesn't set the thread
       // previously). However optimized calls come with associated
@@ -147,10 +148,12 @@ extends AbstractTxInterceptor
          switch (transType)
          {
             case MetaData.TX_NOT_SUPPORTED:
+            {
                // Do not set a transaction on the thread even if in MI, just run
-               return invokeNext(remoteInvocation, mi, false);
-               
+               return invokeNext(invocation, false);
+            }   
             case MetaData.TX_REQUIRED:
+            {
                if (oldTransaction == null)
                { // No tx running
                   // Create tx
@@ -162,10 +165,11 @@ extends AbstractTxInterceptor
                      log.trace("Starting new tx " + newTransaction);
                   
                   // Let the method invocation know
-                  mi.setTransaction(newTransaction);
+                  invocation.setTransaction(newTransaction);
                }
                else
-               { // We have a tx propagated
+               { 
+                  // We have a tx propagated
                   // Associate it with the thread
                   tm.resume(oldTransaction);
                }
@@ -173,7 +177,7 @@ extends AbstractTxInterceptor
                // Continue invocation
                try
                {
-                  return invokeNext(remoteInvocation, mi, newTransaction != null);
+                  return invokeNext(invocation, oldTransaction != null);
                }
                finally
                {
@@ -202,7 +206,7 @@ extends AbstractTxInterceptor
                      }
                      
                      // reassociate the oldTransaction with the Invocation (even null)
-                     mi.setTransaction(oldTransaction);
+                     invocation.setTransaction(oldTransaction);
                   }
                   // Always drop thread association even if committing or
                   // rolling back the newTransaction because not all TMs
@@ -214,27 +218,29 @@ extends AbstractTxInterceptor
                   tm.suspend();
                   
                }
-               
+            } 
             case MetaData.TX_SUPPORTS:
             {
                // Associate old transaction with the thread
                // Some TMs cannot resume a null transaction and will throw
                // an exception (e.g. Tyrex), so make sure it is not null
-               if (oldTransaction != null)
+               if (oldTransaction != null) 
+               {
                   tm.resume(oldTransaction);
+               }
                
                try
                {
-                  return invokeNext(remoteInvocation, mi, false);
+                  return invokeNext(invocation, oldTransaction != null);
                }
                finally
                {
                   tm.suspend();
                }
                
-               // Even on error we don't do anything with the tx, we didn't start it
+               // Even on error we don't do anything with the tx, 
+               // we didn't start it
             }
-            
             case MetaData.TX_REQUIRES_NEW:
             {
                // Always begin a transaction
@@ -244,11 +250,11 @@ extends AbstractTxInterceptor
                newTransaction = tm.getTransaction();
                
                // Set it on the method invocation
-               mi.setTransaction(newTransaction);
+               invocation.setTransaction(newTransaction);
                // Continue invocation
                try
                {
-                  return invokeNext(remoteInvocation, mi, true);
+                  return invokeNext(invocation, false);
                }
                finally
                {
@@ -268,29 +274,33 @@ extends AbstractTxInterceptor
                   }
                   
                   // set the old transaction back on the method invocation
-                  mi.setTransaction(oldTransaction);
+                  invocation.setTransaction(oldTransaction);
                   tm.suspend();
                }
             }
             case MetaData.TX_MANDATORY:
+            {
                if (oldTransaction == null) // no transaction = bad!
                   throw new TransactionRequiredException("Transaction Required, read the spec!");
                // Associate it with the thread
                tm.resume(oldTransaction);
                try
                {
-                  return invokeNext(remoteInvocation, mi, false);
+                  return invokeNext(invocation, true);
                } finally
                {
                   tm.suspend();
                }
-               
+            }   
             case MetaData.TX_NEVER:
-               if (oldTransaction != null) // Transaction = bad!
-                  throw new RemoteException("Transaction not allowed");
-               return invokeNext(remoteInvocation, mi, false);
+            {
+               if (oldTransaction != null) 
+               {
+                  throw new EJBException("Transaction not allowed");
+               }
+               return invokeNext(invocation, false);
+            }
          }
-         
       }
       finally
       {

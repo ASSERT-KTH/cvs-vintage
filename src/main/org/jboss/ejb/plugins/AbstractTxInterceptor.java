@@ -6,6 +6,9 @@
 */
 package org.jboss.ejb.plugins;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.rmi.NoSuchObjectException;
@@ -15,155 +18,233 @@ import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
 
+import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
+import javax.ejb.NoSuchObjectLocalException;
+import javax.ejb.TransactionRolledbackLocalException;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 import org.jboss.logging.Logger;
 
 /**
- *  A common superclass for the transaction interceptors.
+ * A common superclass for the transaction interceptors.
  *
- *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.8 $
+ * The only important method in this class is invokeNext which is incharge
+ * of invoking the next interceptor and if an exception is thrown, it must
+ * follow the rules in the EJB 2.0 specification section 18.3.  These 
+ * rules specify if the transaction is rolled back and what exception
+ * should be thrown.
+ *
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @version $Revision: 1.9 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
 {
 
-    // Attributes ----------------------------------------------------
-    /** Local reference to the container's TransactionManager. */
-    protected TransactionManager tm;
+   /** 
+    * Local reference to the container's TransactionManager. 
+    */
+   protected TransactionManager tm;
 
-    /** The container that we manage transactions for. */
-    protected Container container;
+   /** 
+    * The container that we manage transactions for. 
+    */
+   protected Container container;
 
-    // Static --------------------------------------------------------
+   /**
+    * Get the container that we manage transactions for.
+    */
+   public void setContainer(Container container)
+   {
+      this.container = container;
+   }
 
-    // Constructors --------------------------------------------------
+   /**
+    * Get the container that we manage transactions for.
+    */
+   public Container getContainer()
+   {
+      return container;
+   }
 
-    // Public --------------------------------------------------------
+   public void create() throws Exception
+   {
+      tm = (TransactionManager) getContainer().getTransactionManager();
+   }
 
-    /**
-     *  Set the container that we manage transactions for.
-     */
-    public void setContainer(Container container)
-    {
-        this.container = container;
-    }
+   /**
+    * This method calls the next interceptor in the chain.
+    *
+    * All Throwables are caught and divided into two groups: application
+    * exceptions and system exceptions.  Application exception are simply
+    * rethrown.  System exceptions result in the transaction being marked 
+    * for rollback only.  If the transaction was not started by the container
+    * (i.e., it was inherited from the client) the system exception is wrapped
+    * in a TransactionRolledBack[Local]Exception.
+    *
+    * @param invocation The <code>Invocation</code> of this call.
+    *
+    * @param inheritedTx If <code>true</code> the transaction has just been started 
+    * in this interceptor.
+    *
+    * @throws Excetion if an exception occures in the interceptor chain.  The
+    * actual exception throw is governed by the rules in the EJB 2.0 
+    * specification section 18.3
+    */
+   protected Object invokeNext(
+         Invocation invocation,
+         boolean inheritedTx)
+      throws Exception
+   {
+      InvocationType type = invocation.getType();
+      try 
+      {
+         if (type == InvocationType.REMOTE || type == InvocationType.LOCAL) 
+         {
+            return getNext().invoke(invocation);
+         }
+         else
+         {
+            return getNext().invokeHome(invocation);
+         }
+      } 
+      catch (Throwable e) 
+      {
+         // if this is an ApplicationException, just rethrow it
+         if (e instanceof Exception && 
+               !(e instanceof RuntimeException || e instanceof RemoteException))
+         {
+            throw (Exception)e;
+         }
 
-    /**
-     *  Get the container that we manage transactions for.
-     */
-    public Container getContainer()
-    {
-        return container;
-    }
-
-    // Interceptor implementation --------------------------------------
-
-    public void create()
-        throws Exception
-    {
-        tm = (TransactionManager) getContainer().getTransactionManager();
-    }
-
-    // Protected  ----------------------------------------------------
-
-    /**
-     *  This method calls the next interceptor in the chain.
-     *
-     *  Throwables <code>Error</code>, <code>RemoteException</code> and
-     *  <code>RuntimeException</code> are caught and result in the transaction
-     *  being marked for rollback only. If such a non-application exception
-     *  happens with a transaction that was not started locally, it is wrapped
-     *  in a <code>TransactionRolledbackException</code>.
-     *
-     *  @param remoteInvocation If <code>true</code> this is an invocation
-     *                          of a method in the remote interface, otherwise
-     *                          it is an invocation of a method in the home
-     *                          interface.
-     *  @param mi The <code>Invocation</code> of this call.
-     *  @param newTx If <code>true</code> the transaction has just been
-     *               started in this interceptor.
-     */
-    protected Object invokeNext(boolean remoteInvocation, Invocation mi,
-                                boolean newTx)
-        throws Exception
-    {
-        try {
-            if (remoteInvocation)
-                return getNext().invoke(mi);
-            else
-                return getNext().invokeHome(mi);
-        } catch (RuntimeException e) {
-            try {
-                if(mi.getTransaction() != null) {
-                    mi.getTransaction().setRollbackOnly();
-                }
-            } catch (SystemException ex) {
-                log.error("invokeNext", ex);
-            } catch (IllegalStateException ex) {
-                log.error("invokeNext", ex);
+         // attempt to rollback the transaction
+         if(invocation.getTransaction() != null) 
+         {
+            try 
+            {
+               invocation.getTransaction().setRollbackOnly();
             }
-            RemoteException ex;
-            if (newTx) {
-                if (e instanceof NoSuchEntityException) {
-                    // Convert NoSuchEntityException to a NoSuchObjectException
-                    // with the same detail.
-                    ex = new NoSuchObjectException(e.getMessage());
-                    ex.detail = ((NoSuchEntityException)e).getCausedByException();
-                    throw ex;
-                }
-                // OSH: Should this be wrapped?
-                ex = new ServerException(e.getMessage());
-            } else
-                // We inherited tx: Tell caller we marked for rollback only.
-                ex = new TransactionRolledbackException(e.getMessage());
-            ex.detail = e;
-            throw ex;
-        } catch (RemoteException e) {
-           if (mi.getTransaction() != null)
-           {
-              try {
-                 mi.getTransaction().setRollbackOnly();
-              } catch (SystemException ex) {
-                log.error("invokeNext", ex);
-              } catch (IllegalStateException ex) {
-                log.error("invokeNext", ex);
-              }
-              RemoteException ex;
-              if (newTx) {
-                 if (e instanceof NoSuchObjectException)
-                    throw e; // Do not wrap this.
-                 // OSH: Should this be wrapped?
-                 ex = new ServerException(e.getMessage());
-              } else
-                 ex = new TransactionRolledbackException(e.getMessage());
-              ex.detail = e;
-              throw ex;
-           }
-           else
-           {
-              throw e;
-           }
-        } catch (Error e) {
-            if (mi.getTransaction() != null) {
-                try {
-                    mi.getTransaction().setRollbackOnly();
-                } catch (IllegalStateException ex) {
-                }
-                RemoteException tre = new TransactionRolledbackException(e.getMessage());
-                tre.detail = e;
-                throw tre;
+            catch (SystemException ex) 
+            {
+               log.error("SystemException while setting transaction " +
+                     "for rollback only", ex);
+            } 
+            catch (IllegalStateException ex) 
+            {
+               log.error("IllegalStateException while setting transaction " +
+                     "for rollback only", ex);
+            }
+         } 
+
+         // is this a local invocation
+         boolean isLocal = 
+               type == InvocationType.LOCAL ||
+               type == InvocationType.LOCALHOME;
+
+         // if this transaction was NOT inherited from the caller we simply
+         // rethrow the exception, and LogInterceptor will handle 
+         // all exception conversions.
+         if (!inheritedTx) 
+         {
+            if(e instanceof Exception) {
+               throw (Exception) e;
+            }
+            if(e instanceof Error) {
+               throw (Error) e;
+            }
+
+            // we have some funky throwable, wrap it
+            if (isLocal) 
+            {
+               String msg = formatException("Unexpected Throwable", e);
+               throw new EJBException(msg);
+            }
+            else 
+            {
+               ServerException ex = new ServerException("Unexpected Throwable");
+               ex.detail = e;
+               throw ex;
+            }
+         }
+ 
+         // to be nice we coerce the execption to an interface friendly type
+         // before wrapping it with a transaction rolled back exception
+         Throwable cause;
+         if (e instanceof NoSuchEntityException) 
+         {
+            NoSuchEntityException nsee = (NoSuchEntityException)e;
+            if (isLocal) 
+            {
+               cause = new NoSuchObjectLocalException(
+                     nsee.getMessage(),
+                     nsee.getCausedByException());
             } else {
-                // This exception will be transformed into a RemoteException
-                // by the LogInterceptor
-                throw e;
+               cause = new NoSuchObjectException(nsee.getMessage());
+
+               // set the detil of the exception
+               ((NoSuchObjectException)cause).detail = 
+                     nsee.getCausedByException();
             }
-        }
-    }
-
-    // Inner classes -------------------------------------------------
-
+         }
+         else 
+         {
+            if (isLocal) 
+            {
+               // local transaction rolled back exception can only wrap 
+               // an exception so we create an EJBException for the cause
+               if(e instanceof Exception) 
+               {
+                 cause = e; 
+               }
+               else if(e instanceof Error) 
+               {
+                 String msg = formatException("Unexpected Error 1", e);
+                 cause = new EJBException(msg);
+               }
+               else
+               {
+                  String msg = formatException("Unexpected Throwable 2", e);
+                  cause = new EJBException(msg);
+               }
+            }
+            else 
+            {
+               // remote transaction rolled back exception can wrap
+               // any throwable so we are ok
+               cause = e;
+            }
+         }
+         
+         // We inherited tx: Tell caller we marked for rollback only.
+         if (isLocal) 
+         {
+            throw new TransactionRolledbackLocalException(
+                  cause.getMessage(),
+                  (Exception)cause);
+         }
+         else
+         {
+            TransactionRolledbackException ex = 
+                  new TransactionRolledbackException(cause.getMessage());
+            ex.detail = cause;
+            throw ex;
+         }
+      }
+   }
+   
+   private String formatException(String msg, Throwable t)
+   {
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      if( msg != null )
+      {
+         pw.println(msg);
+      }
+      t.printStackTrace(pw);
+      return sw.toString();
+   }
 }

@@ -42,7 +42,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.41 $
+*  @version $Revision: 1.42 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -488,7 +488,6 @@ implements EntityPersistenceManager
          }
          else if (e instanceof RuntimeException)
          {
-            log.info("RuntimeException: ", e);
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }

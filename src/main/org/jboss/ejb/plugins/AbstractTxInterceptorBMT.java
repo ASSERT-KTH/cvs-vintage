@@ -29,7 +29,7 @@ import org.jboss.invocation.Invocation;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
@@ -107,7 +107,7 @@ abstract class AbstractTxInterceptorBMT
     *                          interface.
     *  @param mi The <code>Invocation</code> of this call.
     */
-   protected Object invokeNext(boolean remoteInvocation, Invocation mi)
+   protected Object invokeNext(Invocation mi)
       throws Exception
    {
       // Save the transaction that comes with the MI
@@ -141,7 +141,7 @@ abstract class AbstractTxInterceptorBMT
          try {
             // Let the superclass call next interceptor and do the exception
             // handling
-            return super.invokeNext(remoteInvocation, mi, true);
+            return super.invokeNext(mi, false);
          } finally {
             try {
                if (stateless)

@@ -19,7 +19,7 @@ import org.jboss.invocation.Invocation;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class MessageDrivenTxInterceptorBMT
    extends AbstractTxInterceptorBMT
@@ -33,7 +33,7 @@ public class MessageDrivenTxInterceptorBMT
    public Object invoke(Invocation mi)
       throws Exception
    {
-      return invokeNext(true, mi);
+      return invokeNext(mi);
    }
   // Monitorable implementation ------------------------------------
   public void sample(Object s)

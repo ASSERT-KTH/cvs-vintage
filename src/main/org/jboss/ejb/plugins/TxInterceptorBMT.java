@@ -20,7 +20,7 @@ import org.jboss.metadata.SessionMetaData;
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.21 $
+ *   @version $Revision: 1.22 $
  */
 public class TxInterceptorBMT
    extends AbstractTxInterceptorBMT
@@ -53,13 +53,13 @@ public class TxInterceptorBMT
          // stateless: no context, no transaction, no call to the instance
          return getNext().invokeHome(mi);
       else
-         return invokeNext(false, mi);
+         return invokeNext(mi);
    }
 
    public Object invoke(Invocation mi)
       throws Exception
    {
-      return invokeNext(true, mi);
+      return invokeNext(mi);
    }
 
   // Monitorable implementation ------------------------------------
