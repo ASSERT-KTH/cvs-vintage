@@ -54,9 +54,9 @@ import org.w3c.dom.Element;
  *      @see <related>
  *      @author Peter Antman (peter.antman@tim.se)
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.9 $
+ *      @version $Revision: 1.10 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -317,28 +317,32 @@ ContainerInvoker, XmlLoadable
 	   connection = queueConnection;
 	   Logger.debug("Queue connectionConsumer set up");
 	   }
-       exListener = new ExceptionListenerImpl(this);
-       connection.setExceptionListener(exListener);
    }
     
+    // Start the connection
     public void start()
 	throws Exception
     {
 	Logger.debug("Starting JMSContainerInvoker");
+	exListener = new ExceptionListenerImpl(this);
+	connection.setExceptionListener(exListener);
 	connection.start();
     }
     
-    // What are the differences between stop and destroy?
+    // Stop the connection
     public void stop()
     {
 	Logger.debug("Stopping JMSContainerInvoker");
+	// Silence the exception listener
 	if (exListener != null)
 	    exListener.stop();
 	innerStop();
+	
     }
-    
-    protected void innerStop() {
 
+    // Stop done from inside, we should not stop the exceptionListener in
+    // inner stop
+    protected void innerStop() {
 	try {
 	    if (connection != null)
 		connection.setExceptionListener(null);
@@ -347,12 +351,20 @@ ContainerInvoker, XmlLoadable
 	    Logger.log("Could not set JMSContainerInvoker ExceptionListener to null :" + se);
 	}	
 	
+	// Stop the connection
 	try {
-	    if(connection == null) 
+	    if(connection != null) 
 		connection.stop();
 	}catch(Exception cs) {
-	    Logger.log("Could not stop JMSContainerInvoker consumer:" + cs);
+	    Logger.log("Could not stop JMS connection:" + cs);
 	}
+    }
+    
+    
+    // Take down all fixtures
+    public void destroy()
+    {
+	Logger.debug("Destroying JMSContainerInvoker");
 	try {
 	    if (pool instanceof org.jboss.jms.asf.StdServerSessionPool) {
 		org.jboss.jms.asf.StdServerSessionPool p =
@@ -360,7 +372,7 @@ ContainerInvoker, XmlLoadable
 		p.clear();
 	    }
 	}catch(Exception pe) {
-	    Logger.log("Could not cleat ServerSessionPool:" + pe);
+	    Logger.log("Could not clear ServerSessionPool:" + pe);
 	}
 	
 	
@@ -374,13 +386,8 @@ ContainerInvoker, XmlLoadable
 	    if (connection != null)
 		connection.close();
 	}catch(Exception ex) {
-		Logger.log("Could not close JMSContainerInvoker connection:" + ex);
+	    Logger.log("Could not close JMSContainerInvoker connection:" + ex);
 	}
-    }
-    
-    public void destroy()
-    {
-	Logger.debug("Destroying JMSContainerInvoker");
     }
     
     // XmlLoadable implementation
@@ -493,7 +500,9 @@ ContainerInvoker, XmlLoadable
 			    Thread.sleep(10000);
 			}catch(InterruptedException ie) { tryIt=false; return;}
 			//try {
+			// Reboot container
 			invoker.innerStop();
+			invoker.destroy();
 			invoker.init();
 			invoker.start();
 			tryIt = false;
