@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.86 2004/11/03 13:32:16 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.87 2004/11/05 16:03:06 schrouf Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -2530,6 +2530,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <row-locking-template>select ?1 from ?2 where ?3 order by ?4 for update</row-locking-template>
          <pk-constraint-template>PRIMARY KEY (?2) CONSTRAINT ?1</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT FOREIGN KEY (?3) REFERENCES ?4 (?5) CONSTRAINT ?2</fk-constraint-template>
+         <auto-increment-template>?1 serial(1)</auto-increment-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
