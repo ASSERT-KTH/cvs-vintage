@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.9 $
+* @version $Revision: 1.10 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -130,21 +130,20 @@ implements EARDeployerMBean
          log.error("Error in init step of ear deployment", e);
          throw new DeploymentException("Error in accessing application metadata: ", e);
       }
-      
+      // Create the appropriate JSR-77 instance, this has to be done in init
+      // EAR create is called after sub-component creates that need this MBean
+      ObjectName lApplication = J2EEApplication.create(
+         server,
+         di.shortName,
+         di.localUrl
+      );
    }
    
    
    public void create(DeploymentInfo di)
       throws DeploymentException
    {
-      // now try to deploy
-      log.info("Deploying J2EE application, create step: " + di.url);
-      // Create the appropriate JSR-77 instance
-      ObjectName lApplication = J2EEApplication.create(
-         server,
-         di.shortName,
-         di.localUrl
-      );
+      log.info("Deploying J2EE application, create step, a no-op: " + di.url);
    }
    
    public void start(DeploymentInfo di)
