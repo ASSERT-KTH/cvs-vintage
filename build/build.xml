@@ -12,13 +12,13 @@
 
     <!-- Give user a chance to override without editing this file
          (and without using -D arguments each time they build) -->
-    <property file="${user.home}/scarab.build.properties" /> 
+    <property file="${user.home}/scarab.build.properties" />
     <property file="${user.home}/build.properties" />
+    <property file="${basedir}/${configuration.file}" />
 
     <!--  Allow a build.properties in the project root in the
           same place it would be used by Maven. -->
-    <property file="${basedir}/../build.properties"/>    
-	<property file="${basedir}/${configuration.file}" />
+    <property file="${basedir}/../build.properties"/>
     <property file="${basedir}/default.properties" />
     <property file="${basedir}/default.${scarab.database.type}.properties" />
 
@@ -27,7 +27,7 @@
     <property name="final.name" value="${project}-${version}"/>
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
 
-    <property name="src.conf.dir" value="${src.dir}/conf"/>    
+    <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.webapp.dir" value="${src.dir}/webapp"/>
@@ -87,6 +87,7 @@
     <!-- ================================================================== -->
     <!-- Prepares the build directory                                       -->
     <!-- ================================================================== -->
+
     <target name="prepare" depends="prepare-build-dir">
 
 		<echo> Scarab database admin user = ${scarab.database.admin.username}</echo>
@@ -113,27 +114,26 @@
              <fileset dir="${src.dir}/conf/conf">
                  <include name="**/*.*"/>
              </fileset>
-        </copy>     
+        </copy>
 
         <!-- Conditionally copy templates -->
         <antcall target="copy-templates" />
-   
 
         <!-- Conditionally copy extension conf -->
-        <available property="extensions.conf.exist" 
-            	   file="${extensions.conf.dir}"/>
+        <available property="extensions.conf.exist"
+                   file="${extensions.conf.dir}"/>
         <antcall target="copy-conf-extensions"/>
 
 		<!-- things to go into the web-inf directory -->
         <copy todir="${build.project.webinf}/lib" filtering="no" flatten="true">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
-                <exclude name="**/xalan*.jar"/>  
+                <exclude name="**/xalan*.jar"/>
                 <include name="**/*.jar"/>
             </fileset>
             <fileset dir="${basedir}/../www/repository">
-            	<include name="**/**.jar"/>
-	        </fileset>
+                <include name="**/**.jar"/>
+            </fileset>
         </copy>
 
         <!-- Conditionally copy extension libraries -->
@@ -141,7 +141,7 @@
                    file="${extensions.lib.dir}"/>
         <antcall target="copy-lib-extensions"/>
 
-		<!-- Copy the appropriate database driver to the webapp lib folder -->
+        <!-- Copy the appropriate database driver to the webapp lib folder -->
         <echo>Using ${scarab.database.type} JDBC driver from:
     ${lib.dir}/${scarab.jdbc.driver.jar}
         </echo>
@@ -152,7 +152,6 @@
                 <include name="**/${scarab.jdbc.driver.jar}"/>
             </fileset>
         </copy>
-
 
         <!-- Name of the initial Scarab Administrator user -->
         <!-- Name of the Scarab database instance          -->
@@ -184,8 +183,6 @@
             <fileset dir="${src.conf.dir}/classes"/>
         </copy>
 
-      
-
     </target>
 
     <!-- conditional file copy used in prepare target-->
@@ -212,7 +209,7 @@
     <!-- ================================================================== -->
     <!-- Copies templates to WEB-INF directory, if specified                -->
     <!-- ================================================================== -->
-    <target name="copy-templates" if="scarab.copy.templates">
+    <target name="copy-templates">
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}"/>
         </copy>
@@ -255,7 +252,7 @@
     <target name="schema-check">
         <echo message="checking: ${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
         <uptodate property="schema.uptodate"
-                  targetfile="${build.sql.scarab}/mysql/${project}.sql">
+                  targetfile="${build.sql.scarab}/${scarab.database.type}/${project}.sql">
             <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="scheduler-schema.xml"/>
@@ -270,32 +267,31 @@
     <!-- Generate SQL from Torque for all databases                         -->
     <!-- ================================================================== -->
     <target name="sql-all" depends="schema-check" description="Generate SQL DDL for all databases"
-    	    unless="schema.uptodate">
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="mysql"/>    			    		
-    	</antcall>
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="mssql"/>    			    		
-    	</antcall>   
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="oracle"/>    			    		
-    	</antcall>     	 	
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="db2"/>    			    		
-    	</antcall>     	
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="hypersonic"/>    			    		
-    	</antcall>     	
-    	<antcall target="sql-specific-db">
-    		<param name="generatesql.database.type" value="postgresql"/>    			    		
-    	</antcall>       	
+            unless="schema.uptodate">
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type" value="mysql"/>
+        </antcall>
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type" value="mssql"/>
+        </antcall>
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type" value="oracle"/>
+        </antcall>
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type" value="db2"/>
+        </antcall>
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type" value="hypersonic"/>
+        </antcall>
+        <antcall target="sql-specific-db">
+            <param name="generatesql.database.type" value="postgresql"/>
+        </antcall>
     </target>
     
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
     <target name="sql-specific-db" depends="torque-copy-all-schema">
-
         <filter token="DATABASE_TYPE" value="${generatesql.database.type}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
@@ -303,7 +299,7 @@
         <filter token="DATABASE_PORT" value="${scarab.database.port}"/>
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/> 
-               
+        
         <!-- copy the scarab specific build.properties over -->
         <copy file="${src.conf.dir}/torque.props" 
               tofile="${torque.dir.scarab}/build.properties"
@@ -320,9 +316,9 @@
                       value="${torque.dir.scarab}/build.properties"/>
             <property name="idTableXMLFile" value=""/>
         </ant>
-		
-		<mkdir dir="${build.sql.scarab}/${generatesql.database.type}/"/>
-		
+
+        <mkdir dir="${build.sql.scarab}/${generatesql.database.type}/"/>
+
         <move file="${src.sql.dir}/${project}-schema.sql"
             tofile="${build.sql.scarab}/${generatesql.database.type}/${project}.sql"/>
         <move file="${src.sql.dir}/turbine-schema.sql"
@@ -331,7 +327,7 @@
             tofile="${build.sql.scarab}/${generatesql.database.type}/scheduler.sql"/>
         <move file="${src.sql.dir}/id-table-schema.sql"
             tofile="${build.sql.scarab}/${generatesql.database.type}/id-table.sql"/>
-    </target>       
+    </target>
 
     <!-- ================================================================== -->
     <!-- Generate OM/Peer classes from Torque                               -->
@@ -347,13 +343,12 @@
 
     <target name="om-peer-generate" depends="generated-check" 
             unless="gen.uptodate">
- 		
- 		<!-- Generate the Torque files for the specified database type -->
+        <!-- Generate the Torque files for the specified database type -->
         <antcall target="sql-specific-db">
             <param name="generatesql.database.type"
                    value="${scarab.database.type}"/>
         </antcall>
-        
+ 		
         <!-- we don't want to generate the OM objects for Turbine 
              tables because they already exists in the fulcrum.jar -->
         <delete file="${torque.dir.scarab}/schema/turbine-schema.xml"/>
@@ -367,7 +362,7 @@
 
     </target>
 
-    <target name="om-peer" depends="om-peer-generate" 
+    <target name="om-peer" depends="om-peer-generate"
             unless="gen.uptodate">
     </target>
 
@@ -776,14 +771,14 @@
 
   
 
-  
+
 
 <!-- ============================================================= -->
 <!-- Targets beyond this point are currently considered broken or  -->
 <!-- experimental - User Beware!                                  -->
 <!-- ============================================================= -->
 
-  
+
 
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
