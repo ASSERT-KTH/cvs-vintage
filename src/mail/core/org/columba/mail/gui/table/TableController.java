@@ -463,6 +463,9 @@ public class TableController {
 
 		getView().clearSelection();
 
+		getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		
+		/*
 		JViewport viewport =
 			((JScrollPane) getView().getParent().getParent()).getViewport();
 
@@ -472,15 +475,7 @@ public class TableController {
 
 		viewport.validate();
 
-		System.out.println("table: " + getView().getRowCount());
-		System.out.println("height: " + getView().getHeight());
-
-		System.out.println("tree: " + getView().getTree().getRowCount());
-		System.out.println("height: " + getView().getTree().getHeight());
-		System.out.println(
-			"row*rowheight: "
-				+ (getView().getRowCount() * getView().getRowHeight()));
-
+		
 		Rectangle rect =
 			new Rectangle(
 				getView().getSize().width,
@@ -491,7 +486,7 @@ public class TableController {
 			getView().scrollRectToVisible(new Rectangle(0, 0, 0, 0));
 		else
 			getView().scrollRectToVisible(rect);
-		//getView().getCellRect(row - 1, 0, false));
+		*/
 
 	}
 }
