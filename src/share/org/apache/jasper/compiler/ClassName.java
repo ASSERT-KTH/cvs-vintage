@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ClassName.java,v 1.1 1999/10/09 00:20:35 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ClassName.java,v 1.2 2000/01/18 02:54:57 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/18 02:54:57 $
  *
  * ====================================================================
  * 
@@ -82,9 +82,9 @@ public class ClassName {
     static String processClassData(InputStream in) throws JasperException, IOException {
 	DataInputStream din = new DataInputStream(in);
 	din.readInt(); // magic
-	din.readShort(); // majorVersion
-	din.readShort(); // minorVersion
-	int count = din.readShort(); // #constant pool entries
+	din.readUnsignedShort(); // majorVersion
+	din.readUnsignedShort(); // minorVersion
+	int count = din.readUnsignedShort(); // #constant pool entries
 	ConstantPool[] constantPool = new ConstantPool[count];
 	constantPool[0] = new ConstantPool();
 	for (int i = 1; i < constantPool.length; i++) {
@@ -105,8 +105,8 @@ public class ClassName {
 	    if (constantPool[i].index2 > 0)
 		constantPool[i].arg2 = constantPool[constantPool[i].index2];
 	}
-	short accessFlags = din.readShort();
-	ConstantPool thisClass = constantPool[din.readShort()];
+	int accessFlags = din.readUnsignedShort();
+	ConstantPool thisClass = constantPool[din.readUnsignedShort()];
         din.close();
 	return printClassName(thisClass.arg1.strValue);
     }
@@ -210,7 +210,7 @@ class ConstantPool {
     String name; 		// String for the type
     ConstantPool  arg1;	// index to first argument
     ConstantPool  arg2;	// index to second argument
-    short index1, index2;
+    int index1, index2;
     String 	strValue; 		// ASCIZ String value
     int		intValue;
     long	longValue;
@@ -251,32 +251,32 @@ class ConstantPool {
 	switch (type) {
 	    case CLASS:
 		name = "Class";
-		index1 = din.readShort();
+		index1 = din.readUnsignedShort();
 		index2 = -1;
 		break;
 	    case FIELDREF:
 		name = "Field Reference";
-		index1 = din.readShort();
-		index2 = din.readShort();
+		index1 = din.readUnsignedShort();
+		index2 = din.readUnsignedShort();
 		break;
 	    case METHODREF:
 		name = "Method Reference";
-		index1 = din.readShort();
-		index2 = din.readShort();
+		index1 = din.readUnsignedShort();
+		index2 = din.readUnsignedShort();
 		break;
 	    case INTERFACE:
 		name = "Interface Method Reference";
-		index1 = din.readShort();
-		index2 = din.readShort();
+		index1 = din.readUnsignedShort();
+		index2 = din.readUnsignedShort();
 		break;
 	    case NAMEANDTYPE:
 		name = "Name and Type";
-		index1 = din.readShort();
-		index2 = din.readShort();
+		index1 = din.readUnsignedShort();
+		index2 = din.readUnsignedShort();
 		break;
 	    case STRING:
 		name = "String";
-		index1 = din.readShort();
+		index1 = din.readUnsignedShort();
 		index2 = -1;
 		break;
 	    case INTEGER:
@@ -304,7 +304,7 @@ class ConstantPool {
 
 		StringBuffer xxBuf = new StringBuffer();
 
-		len = din.readShort();
+		len = din.readUnsignedShort();
 		while (len > 0) {
 		    c = (char) (din.readByte());
 		    xxBuf.append(c);
