@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +26,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -237,56 +238,49 @@ public class JDBCQueryMetaDataFactory {
       return (Class[]) classes.toArray(new Class[classes.size()]);
    }
    
-   private static final String[] PRIMITIVES = {
-         "boolean",
-         "byte",
-         "char",
-         "short",
-         "int",
-         "long",
-         "float",
-         "double"};
+   private static final Map PRIMITIVES;
+   static {
+      HashMap map = new HashMap(10);
+      map.put("boolean", Boolean.TYPE);
+      map.put("byte", Byte.TYPE);
+      map.put("char", Character.TYPE);
+      map.put("short", Short.TYPE);
+      map.put("int", Integer.TYPE);
+      map.put("long", Long.TYPE);
+      map.put("float", Float.TYPE);
+      map.put("double", Double.TYPE);
+      PRIMITIVES = Collections.unmodifiableMap(map);
+   }
    
-   private static final Class[] PRIMITIVE_CLASSES = {
-         Boolean.TYPE,
-         Byte.TYPE,
-         Character.TYPE,
-         Short.TYPE,
-         Integer.TYPE,
-         Long.TYPE,
-         Float.TYPE,
-         Double.TYPE};
-
    private Class convertToJavaClass(String name) throws DeploymentException {
-      // Check primitive first
-      for (int i = 0; i < PRIMITIVES.length; i++) {
-         if(name.equals(PRIMITIVES[i])) {
-            return PRIMITIVE_CLASSES[i];
-         }
-      }
-      
       int arraySize = 0;
       while(name.endsWith("[]")) {
          name = name.substring(0, name.length()-2);
          arraySize++;
       }
 
-      try {
-         // get the base class
-         Class c = entity.getClassLoader().loadClass(name);
+      // Check primitive first
+      Class c = (Class)PRIMITIVES.get(name);
 
-         // if we have an array get the array class
-         if(arraySize > 0) {
-            int[] dimensions = new int[arraySize];
-            for(int i=0; i<arraySize; i++) {
-               dimensions[i]=1;
-            }
-            c = Array.newInstance(c, dimensions).getClass();
+      // was it a primitive
+      if(c == null) {
+         try {
+            // get the base class
+            c = entity.getClassLoader().loadClass(name);
+         } catch(ClassNotFoundException e) {
+            throw new DeploymentException("Parameter class not found: " + name);
          }
-
-         return c;
-      } catch(ClassNotFoundException e) {
-         throw new DeploymentException("Parameter class not found: " + name);
       }
+
+      // if we have an array get the array class
+      if(arraySize > 0) {
+         int[] dimensions = new int[arraySize];
+         for(int i=0; i<arraySize; i++) {
+            dimensions[i]=1;
+         }
+         c = Array.newInstance(c, dimensions).getClass();
+      }
+
+      return c;
    }
 }
