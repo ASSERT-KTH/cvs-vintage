@@ -93,20 +93,10 @@
     <condition property="test.conform.dir.exist">
       <available file="${test.conform.src}"/>
     </condition>
-    <condition property="interceptor.classes.presents">
-      <available classname="org.omg.PortableInterceptor.ORBInitInfo">
-	<classpath refid="test.classpath"/>
-      </available>
-    </condition>
     <antcall target="compile.conform"/>
   </target>  
 
-  <target name="compile.conform" if="test.conform.dir.exist">   
-    <condition property="interceptor.classes.presents">
-      <available classname="org.omg.PortableInterceptor.ORBInitInfo">
-	<classpath refid="test.classpath"/>
-      </available>
-    </condition>
+  <target name="compile.conform" if="test.conform.dir.exist">
     <javac 
       srcdir="${test.src}"
       destdir="${test.build}/classes"
@@ -115,24 +105,8 @@
       nowarn="${compile.nowarn}"
       optimize="${compile.optimize}">
       <classpath refid="test.classpath"/>
-      <include name="**/conform/**/*.java"/>    
-      <exclude name="**/carol/jtests/conform/basic/clients/rmiiiop/*.java"/>
-      <exclude name="**/carol/jtests/conform/interceptor/iiop/*.java"/>
+      <include name="**/conform/**/*.java"/>  
     </javac> 
-    <antcall target="compile.conform.iiop"/>
-  </target>
-  <target name="compile.conform.iiop" if="interceptor.classes.presents">   
-    <javac 
-      srcdir="${test.src}"
-      destdir="${test.build}/classes"
-      deprecation="${deprecation}"
-      debug="${compile.debug}"
-      nowarn="${compile.nowarn}"
-      optimize="${compile.optimize}">
-      <classpath refid="test.classpath"/>   
-      <include name="**/carol/jtests/conform/basic/clients/rmiiiop/*.java"/>
-      <include name="**/carol/jtests/conform/interceptor/iiop/*.java"/>
-    </javac>
   </target>
   
   <target name="compile.stub">      
@@ -168,33 +142,9 @@
   present in ${jdoc} directory.
   -->
   <target name="jdoc">
-    <condition property="interceptor.classes.presents">
-      <available classname="org.omg.PortableInterceptor.ORBInitInfo">
-	<classpath refid="test.classpath"/>
-      </available>
-    </condition>
     <mkdir dir="${test.dist.jdoc}"/>
     <javadoc
       packagenames="org.objectweb.carol.jtests.*"
-      excludepackagenames="org.objectweb.carol.jtests.conform.interceptor.iiop.*,org.objectweb.carol.jtests.conform.basic.clients.rmiiiop.*"
-      defaultexcludes="yes"
-      destdir="${test.dist.jdoc}"
-      windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer Tests API"
-      doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer  Tests API"
-      author="true" version="true" use="true">
-      <sourcepath>
-	<pathelement path="${test.src}"/>
-	<pathelement path="${test.build}/classes"/>
-      </sourcepath>
-      <classpath refid="test.classpath"/>
-    </javadoc> 
-    <antcall target="jdoc.iiop"/>
-  </target>
-  <!-- iiop java doc -->
-  <target name="jdoc.iiop" if="interceptor.classes.presents">
-    <mkdir dir="${dist.jdoc}"/>
-    <javadoc
-      packagenames="org.objectweb.carol.jtests.conform.interceptor.iiop.*,org.objectweb.carol.jtests.conform.basic.clients.rmiiiop.*"
       defaultexcludes="yes"
       destdir="${test.dist.jdoc}"
       windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer Tests API"
@@ -237,7 +187,7 @@
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
-  <target name="test.all" description="Lauch all the test" depends="dist">   
+  <target name="test.all" description="Lauch all the test">   
     <multipleAnt dir="${test.conform}" />
   </target> 
 

@@ -138,7 +138,7 @@ public class CommunicationConfiguration {
 	    if (rmiFileInputStream != null) {
 		rmiProps.load(rmiFileInputStream);
 	    } else {
-		throw new RMIConfigurationException("Missing " + CAROL_FILE_NAME + " in the CLASSPATH");
+		rmiProps = null;
 	    }
 
 	    // load the jndi configuration file
@@ -147,44 +147,44 @@ public class CommunicationConfiguration {
 		jndiProps.load(jndiFileInputStream);
 	    } else {
 		jndiProps = null;
-	    }	    
+	    }
+	    
 	} catch(Exception e) {
 	    throw new RMIConfigurationException("Exception occur when loading rmi/jndi configuration file: " + e);
-        }
-
-	loadCarolConfiguration(rmiProps, jndiProps);
+        }	
+	loadCarolConfiguration(rmiProps , jndiProps);
     }
 
     /**
      * This method read a rmi configuration from 2 Properties 
-     * @param rmiProps The orbX environment
-     * @param jndiProps The jndiX environment
+     * @param rmiProps The orbX environment (can be null) 
+     * @param jndiProps The jndiX environment (can be null) 
      * @throws RMIConfigurationException if a there is a problem with those environment (field missing for example)
      */ 
       public static synchronized void loadCarolConfiguration(Properties rmiProps, Properties jndiProps) throws RMIConfigurationException {
 
+	Properties carolProps = CarolDefaultValues.getCarolProperties(rmiProps, jndiProps);
 	Properties jvmProps = new Properties();	    
 	jvmProps.putAll(System.getProperties());
  
-	String defaultPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.RMI_PREFIX + "." + RMIConfiguration.DEFAULT_PREFIX ;
-	String jvmPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.JVM_PREFIX;
-	String rmiPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.RMI_PREFIX;
-	String jndiPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.JNDI_PREFIX;
-	String activation_prefix = rmiPref + "."  + RMIConfiguration.ACTIVATION_PREFIX;
+	String jvmPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JVM_PREFIX;
+	String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.RMI_PREFIX;
+	String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
+	String activation_prefix = rmiPref + "."  + CarolDefaultValues.ACTIVATION_PREFIX;
 
     	//Parse the properties
-	for (Enumeration e =  rmiProps.propertyNames() ; e.hasMoreElements() ;) {
+	for (Enumeration e =  carolProps.propertyNames() ; e.hasMoreElements() ;) {
 
 	    String pkey = ((String)e.nextElement()).trim();
 	    if  (pkey.startsWith(activation_prefix)) { // get default rmi name : the first activated rmi
-		StringTokenizer pTok = new StringTokenizer(rmiProps.getProperty(pkey), ",");
+		StringTokenizer pTok = new StringTokenizer(carolProps.getProperty(pkey), ",");
 		if (pTok.hasMoreTokens()) {
 		    defaultRMI = (pTok.nextToken()).trim();
 		} else {
 		   throw new RMIConfigurationException("There is no rmi activated in the file " + CAROL_FILE_NAME); 
 		}
 	    } else if (pkey.startsWith(jvmPref)) { // jvm properties
-		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), (rmiProps.getProperty(pkey)).trim());	
+		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), (carolProps.getProperty(pkey)).trim());	
 	    } else if ((pkey.startsWith(rmiPref)) || (pkey.startsWith(jndiPref))) { // this is a carol properties
 		StringTokenizer pkeyToken = new StringTokenizer(pkey, ".");
 		pkeyToken.nextToken();
@@ -192,7 +192,7 @@ public class CommunicationConfiguration {
 		String rmiName = (pkeyToken.nextToken()).trim();
 		
 		if  (!rmiConfigurationTable.containsKey(rmiName)) {
-		    RMIConfiguration rmiConf =  new RMIConfiguration(rmiName, rmiProps, jndiProps);
+		    RMIConfiguration rmiConf =  new RMIConfiguration(rmiName, carolProps, jndiProps);
 		    rmiConfigurationTable.put(rmiName, rmiConf);
 		}
 	    } else { // this is not a carol properties 
@@ -201,15 +201,7 @@ public class CommunicationConfiguration {
 	}
  	// add the jvm properties in the jvm 
 	System.setProperties(jvmProps);
-
 	configurationLoaded = true;
-
-	// is there a  default protocol activate ? 
-	if (defaultRMI==null) {
-	    throw new RMIConfigurationException("There is no default RMI");
-	} else if (!getDefaultProtocol().isActivate()) {
-	    throw new RMIConfigurationException("The default protocol : " + defaultRMI + " must be activate");
-	}
       }
 
     

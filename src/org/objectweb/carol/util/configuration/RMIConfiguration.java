@@ -44,51 +44,6 @@ public class RMIConfiguration {
 
 
     /**
-     * Carol prefix
-     */
-    public static String CAROL_PREFIX="carol";
-
-    /**
-     * RMI Prefix 
-     */
-    public static String RMI_PREFIX="rmi";
-
-    /**
-     * JNDI Prefix
-     */
-    public static String JNDI_PREFIX="jndi";
-
-    /**
-     * JVM Prefix
-     */
-    public static String JVM_PREFIX="jvm";
-
-    /**
-     * activation Prefix
-     */
-    public static String ACTIVATION_PREFIX="activated";
-
-    /**
-     * default Prefix
-     */
-    public static String DEFAULT_PREFIX="default";
-
-    /**
-     * portable remote object Prefix
-     */
-    public static String PRO_PREFIX="PortableRemoteObjectClass";
-
-    /**
-     * jndi factory Prefix
-     */
-    public static String FACTORY_PREFIX="java.naming.factory.initial";
-
-    /**
-     * jndi url  Prefix
-     */
-    public static String URL_PREFIX="java.naming.provider.url";
-
-    /**
      * RMI Architecture name
      */
     public String rmiName = null;
@@ -108,8 +63,6 @@ public class RMIConfiguration {
      */
     private Properties jndiProperties = null;
 
-
-
     /**
      * Constructor,
      * This constructor make a validation 
@@ -125,9 +78,9 @@ public class RMIConfiguration {
      * -
      */
     public RMIConfiguration(String name, Properties rmiProperties, Properties jndiProperties) throws RMIConfigurationException {
-	String rmiPref = CAROL_PREFIX + "." +  RMI_PREFIX + "." + name;
-	String jndiPref = CAROL_PREFIX + "." +  JNDI_PREFIX + "." + name;
-	String activatedPref = CAROL_PREFIX + "." +  RMI_PREFIX + "." + ACTIVATION_PREFIX;
+	String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." +  CarolDefaultValues.RMI_PREFIX + "." + name;
+	String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." +  CarolDefaultValues.JNDI_PREFIX + "." + name;
+	String activatedPref = CarolDefaultValues.CAROL_PREFIX + "." +  CarolDefaultValues.RMI_PREFIX + "." + CarolDefaultValues.ACTIVATION_PREFIX;
 	
 
 	// RMI Properties
@@ -146,10 +99,10 @@ public class RMIConfiguration {
 	}
 
 	// PortableRemoteObjectClass flag	
-	if (rmiProperties.getProperty( rmiPref + "." + PRO_PREFIX ) == null) {
-	    throw new RMIConfigurationException("The flag " + rmiPref + "." + PRO_PREFIX + " missing in the configuration file");
+	if (rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.PRO_PREFIX ) == null) {
+	    throw new RMIConfigurationException("The flag " + rmiPref + "." + CarolDefaultValues.PRO_PREFIX + " missing in the configuration file");
 	} else {
-	    pro = rmiProperties.getProperty( rmiPref + "." + PRO_PREFIX ).trim();
+	    pro = rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.PRO_PREFIX ).trim();
 	}	
 	
 	// jndi properties
@@ -165,11 +118,11 @@ public class RMIConfiguration {
  
     
 	if (inRmiFile) {
-	    if (rmiProperties.getProperty(jndiPref + "." + FACTORY_PREFIX ) == null) {
-		throw new RMIConfigurationException("The flag " + jndiPref + "." + FACTORY_PREFIX + " missing in the rmi configuration file");
+	    if (rmiProperties.getProperty(jndiPref + "." + CarolDefaultValues.FACTORY_PREFIX ) == null) {
+		throw new RMIConfigurationException("The flag " + jndiPref + "." + CarolDefaultValues.FACTORY_PREFIX + " missing in the rmi configuration file");
 	    }
-	    if (rmiProperties.getProperty(jndiPref + "." +  URL_PREFIX ) == null) {
-		throw new RMIConfigurationException("The flag " + jndiPref + "." + URL_PREFIX + " missing in the rmi configuration file");
+	    if (rmiProperties.getProperty(jndiPref + "." +  CarolDefaultValues.URL_PREFIX ) == null) {
+		throw new RMIConfigurationException("The flag " + jndiPref + "." + CarolDefaultValues.URL_PREFIX + " missing in the rmi configuration file");
 	    }
 	    this.jndiProperties= new Properties();
 	    for (Enumeration e = rmiProperties.propertyNames() ; e.hasMoreElements() ;) {

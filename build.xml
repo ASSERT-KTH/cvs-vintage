@@ -71,11 +71,6 @@
   <!-- **********************************-->
   <!-- compile all -->
   <target name="compile" description="Compiles carol">
-    <condition property="interceptor.classes.presents">
-      <available classname="org.omg.PortableInterceptor.ORBInitInfo">
-	<classpath refid="externals.classpath"/>
-      </available>
-    </condition>
     <condition property="jonathan.jar.present">
       <available file="${jonathan.jar}"/>
     </condition>   
@@ -97,11 +92,9 @@
       optimize="${compile.optimize}">
       <classpath refid="carol.classpath"/>
       <include name="**/*.java"/>
-      <!-- exclude specific rmi iiop interception features -->
-      <exclude name="**/org/objectweb/carol/rmi/iiop/interceptor/*.java"/>
       <!-- exclude specific jonathan interception features -->
       <exclude name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
-      <!-- we didn'nt exclude the jrmp features because existed in all java 2 jdk --> 
+      <!-- we didn'nt exclude the iiop and jrmp features because existed in all java 2 jdk (> 1.3)--> 
     </javac>     
   </target>
 
@@ -112,25 +105,14 @@
     </rmic>     
   </target>
 
-  <target name="compile.iiop" if="interceptor.classes.presents">
-    <javac 
-      srcdir="${src}"
-      destdir="${build}/classes"
-      deprecation="${deprecation}"
-      debug="${compile.debug}"
-      nowarn="${compile.nowarn}"
-      optimize="${compile.optimize}">
-      <classpath refid="externals.classpath"/>
-      <!-- include specific rmi iiop interception features -->
-      <include name="**/org/objectweb/carol/rmi/iiop/interceptor/*.java"/>
-    </javac>       
+  <target name="compile.iiop">       
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
-    <classpath refid="carol.classpath"/>
+      <classpath refid="carol.classpath"/>
     </rmic> 
-   <rmic base="${build}/classes" iiop="true" compiler="sun"
+    <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.iiop.IIOPReferenceWrapper">
-    <classpath refid="carol.classpath"/>
+      <classpath refid="carol.classpath"/>
     </rmic>
   </target>
 
@@ -192,7 +174,6 @@
     </condition>
     <javadoc
       packagenames="org.objectweb.*"
-      excludepackagenames="org.objectweb.carol.rmi.iiop.interceptor.*"
       defaultexcludes="yes"
       destdir="${dist.jdoc}"
       windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
@@ -204,26 +185,7 @@
       </sourcepath>
       <classpath refid="externals.classpath"/>
     </javadoc>
-    <antcall target="jdoc.iiop"/>
   </target>
-
-  <!-- iiop java doc -->
-  <target name="jdoc.iiop" if="interceptor.classes.presents">
-    <mkdir dir="${dist.jdoc}"/>
-    <javadoc
-      packagenames="org.objectweb.carol.rmi.iiop.interceptor.*"
-      destdir="${dist.jdoc}"
-      windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
-      doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer "
-      author="true" version="true" use="true" >
-      <sourcepath>
-	<pathelement path="${src}"/>
-	<pathelement path="${build}/classes"/>
-      </sourcepath>
-      <classpath refid="externals.classpath"/>
-    </javadoc>
-  </target>
-
 
   <!-- *************************************-->
   <!-- *********        DOC      **********-->

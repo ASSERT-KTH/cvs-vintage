@@ -24,9 +24,6 @@
 
   
   <target name="compile.sun">
-    <condition property="is.jvm.1.4">
-      <equals  arg1="${ant.java.version}" arg2="1.4"/>
-    </condition>
     <antcall target="compile.sunjrmp1.1"/> 
     <antcall target="compile.sunjrmp1.2"/> 
     <antcall target="compile.suniiop"/>  
@@ -73,7 +70,7 @@
   </target>
 
   <!--  Compile Remote Interface Stub/Skel target for Sun Rmi iiop -->
-  <target name="compile.suniiop" if="is.jvm.1.4">
+  <target name="compile.suniiop">
     <mkdir   dir="${test.build.stub}/suniiop"/>
     <rmic base="${test.build.stub}/suniiop" iiop="true"
       compiler="sun"

@@ -59,7 +59,7 @@ public class ProcessException extends Exception implements Serializable {
      * throwable constructor
     */
     public ProcessException(Throwable ex) {
-	super("ProcessException", ex);
+	super("ProcessException" + ex);
     }
     
     /**
