@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.21 2002/11/23 22:04:39 kataka Exp $
+// $Id: Notation.java,v 1.22 2002/12/22 00:22:50 linus Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -65,7 +65,7 @@ implements PropertyChangeListener {
 
   /** Define a static log4j category variable for ArgoUML notation.
    */
-  public final static Category cat = Category.getInstance("org.argouml.application.notation");
+  public final static Logger cat = Logger.getLogger("org.argouml.application.notation");
     // TODO:  JDK 1.2 seems to not return the package name if
     // not running from a jar.
     //
