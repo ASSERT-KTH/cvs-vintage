@@ -79,7 +79,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.65 $
+ * @version $Revision: 1.66 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -344,6 +344,7 @@ public class EjbModule
             if( parentPC != null && parentPC != pc )
                parentPC.linkConfiguration(pc);
          }
+         pc.commit();
 
          //only one iteration should be necessary, but we won't sweat it.
          //2 iterations are needed by cmp...jdbc/bridge/JDBCCMRFieldBridge which
@@ -1030,6 +1031,7 @@ public class EjbModule
       {
          addMissingMethodPermissions(bean, clazz, InvocationType.REMOTE, pc);
       }
+      pc.commit();
    }
 
    private void getInterfaces(Class iface, HashSet tmp)

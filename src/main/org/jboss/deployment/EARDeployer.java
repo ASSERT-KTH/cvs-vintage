@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.security.Policy;
 
 import javax.management.ObjectName;
 import javax.security.jacc.PolicyConfigurationFactory;
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -294,6 +295,11 @@ public class EARDeployer
       super.start (di);
       try
       {
+         // Commit the top level policy configuration
+         PolicyConfiguration pc = (PolicyConfiguration)
+            di.context.get("javax.security.jacc.PolicyConfiguration");
+         pc.commit();
+         Policy.getPolicy().refresh();
          serviceController.start(di.deployedObject);
       }
       catch (Exception e)

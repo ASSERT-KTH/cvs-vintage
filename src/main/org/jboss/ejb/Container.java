@@ -13,10 +13,10 @@ import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.ejb.txtimer.EJBTimerService;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.invocation.InvocationKey;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -27,9 +27,9 @@ import org.jboss.metadata.MessageDestinationMetaData;
 import org.jboss.metadata.MessageDestinationRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.mx.util.MBeanProxy;
 import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.mx.util.ObjectNameFactory;
-import org.jboss.mx.util.MBeanProxy;
 import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
@@ -62,14 +62,15 @@ import javax.xml.soap.SOAPMessage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.Policy;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
-import java.security.PrivilegedExceptionAction;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -91,7 +92,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.165 $
+ * @version $Revision: 1.166 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -720,6 +721,8 @@ public abstract class Container
       if (localHomeInterface != null)
          ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome());
       ejbModule.createMissingPermissions(this, metaData);
+      // Allow the policy to incorporate the policy configs
+      Policy.getPolicy().refresh();
    }
 
    /**
@@ -917,6 +920,12 @@ public abstract class Container
          }
          // Restore the incoming context id
          contextID = SecurityActions.setContextID(contextID);
+
+         // Remove msg from ThreadLocal to prevent leakage into the thread pool
+         if (mi.getType() == InvocationType.SERVICE_ENDPOINT)
+         {
+            SOAPMsgPolicyContextHandler.setMessage(null);
+         }
       }
    }
 
@@ -1249,14 +1258,11 @@ public abstract class Container
       {
          Iterator enum = beanMetaData.getMessageDestinationReferences();
 
-         ApplicationMetaData application = beanMetaData.getApplicationMetaData();
-
          while (enum.hasNext())
          {
             MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) enum.next();
 
             String refName = ref.getRefName();
-            String resType = ref.getType();
             String jndiName = ref.getJNDIName();
             String link = ref.getLink();
             if (link != null)

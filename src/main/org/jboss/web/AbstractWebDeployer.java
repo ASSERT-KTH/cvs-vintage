@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.security.Policy;
 import javax.management.MBeanServer;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -146,7 +147,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.23 $
+@version $Revision: 1.24 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -368,6 +369,11 @@ public abstract class AbstractWebDeployer
          if( parentPC != null && parentPC != pc )
             parentPC.linkConfiguration(pc);
 
+         // Commit the policy configuration
+         pc.commit();
+         // Allow the policy to incorporate the policy configs
+         Policy.getPolicy().refresh();
+         
          warInfo = new WebApplication(webMetaData);
          warInfo.setDeploymentInfo(di);
          warInfo.setClassLoader(warLoader);
