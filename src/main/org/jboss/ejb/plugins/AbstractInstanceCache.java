@@ -49,7 +49,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -179,7 +179,8 @@ public abstract class AbstractInstanceCache
                }
                catch (Exception x)
                {
-                  freeContext(ctx);
+                  if (ctx != null)
+                     freeContext(ctx);
                   throw new NoSuchObjectException(x.getMessage());
                }
             }
