@@ -1,6 +1,6 @@
 #macro (viewIssue $currentIssue $module)
 
-<h2>Issue ID: TBNS1</h2>
+<h2>Issue ID: $currentIssue.UniqueId</h2>
 
 <div class="functnbar">
 <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="name="eventSubmit_doGotoothertemplate"  />&nbsp;<input type="submit" value="Copy" name="name="eventSubmit_doGotoothertemplate"  />&nbsp;issue
@@ -115,7 +115,7 @@
         #set ($comma = ",")
       #end
       #set ($assignedUser = $scarabR.getUser($assignee.UserId))
-      #<a href="mailto:$assignedUser.Email">$assignedUser.FirstName $assignedUser.LastName</a>$comma
+      <a href="mailto:$assignedUser.Email">$assignedUser.FirstName $assignedUser.LastName</a>$comma
     #end
   #end
   </td>
