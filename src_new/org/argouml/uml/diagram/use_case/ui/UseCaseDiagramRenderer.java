@@ -24,7 +24,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.6 2002/10/08 20:04:33 kataka Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.7 2002/11/26 19:52:22 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -32,17 +32,24 @@
 
 package org.argouml.uml.diagram.use_case.ui;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-import org.tigris.gef.graph.*;
-
 import org.apache.log4j.Category;
-import org.argouml.uml.diagram.ui.*;
+import org.argouml.uml.diagram.ui.FigAssociation;
+import org.argouml.uml.diagram.ui.FigDependency;
+import org.argouml.uml.diagram.ui.FigGeneralization;
+import org.tigris.gef.base.Layer;
+import org.tigris.gef.graph.GraphEdgeRenderer;
+import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.graph.GraphNodeRenderer;
+import org.tigris.gef.presentation.FigEdge;
+import org.tigris.gef.presentation.FigNode;
+import ru.novosoft.uml.behavior.use_cases.MActor;
+import ru.novosoft.uml.behavior.use_cases.MExtend;
+import ru.novosoft.uml.behavior.use_cases.MInclude;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MDependency;
+import ru.novosoft.uml.foundation.core.MGeneralization;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
 
 // could be singleton

@@ -25,7 +25,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.15 2002/11/20 05:50:19 mkl Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.16 2002/11/26 19:52:22 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -35,21 +35,31 @@
 
 package org.argouml.uml.diagram.use_case;
 
-import java.util.*;
-import java.beans.*;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-import ru.novosoft.uml.model_management.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.VetoableChangeListener;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Category;
-
-import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.uml.MMUtil;
+import org.argouml.uml.diagram.UMLMutableGraphSupport;
+import ru.novosoft.uml.behavior.use_cases.MActor;
+import ru.novosoft.uml.behavior.use_cases.MExtend;
+import ru.novosoft.uml.behavior.use_cases.MInclude;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MDependency;
+import ru.novosoft.uml.foundation.core.MGeneralizableElement;
+import ru.novosoft.uml.foundation.core.MGeneralization;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.foundation.core.MRelationship;
+import ru.novosoft.uml.model_management.MElementImport;
 
 /**
  * <p>This class defines a bridge between the UML meta-model representation of
@@ -517,11 +527,11 @@ public class UseCaseDiagramGraphModel extends UMLMutableGraphSupport
 
         _edges.addElement(edge);
 
-        if ((edge instanceof MAssociation) || 
+        if (((edge instanceof MAssociation) || 
             (edge instanceof MGeneralization) ||
             (edge instanceof MExtend) ||
             (edge instanceof MInclude) ||
-            (edge instanceof MDependency)) {
+            (edge instanceof MDependency)) && ((MModelElement)edge).getNamespace() == null) {
             _model.addOwnedElement((MModelElement) edge);
         }
 
