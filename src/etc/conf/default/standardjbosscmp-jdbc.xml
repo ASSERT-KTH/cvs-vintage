@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.80 2004/06/24 12:57:22 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.81 2004/07/12 21:24:11 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1711,8 +1711,10 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <name>mySQL</name>
          <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 ORDER BY ?4 FOR UPDATE</row-locking-template>
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
-         <!-- does not work for compound keys <fk-constraint-template>ALTER TABLE ?1 ADD INDEX ind_?3 (?3), ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template> -->
-         <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+         <!-- does not work for compound keys <fk-constraint-template>ALTER TABLE ?1 ADD INDEX ind_?3 (?3), ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+              <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+         -->
+         <fk-constraint-template>ALTER TABLE ?1 ADD INDEX (?3), ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <auto-increment-template>?1 auto_increment</auto-increment-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
