@@ -26,24 +26,25 @@ import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 import javax.management.ObjectName;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.ContainerInvokerContainer;
+import org.jboss.ejb.FinderResults;
+import org.jboss.ejb.ListCacheKey;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvocationContext;
-import org.jboss.proxy.Interceptor;
-import org.jboss.proxy.ClientContainer;
-import org.jboss.proxy.ejb.handle.HomeHandleImpl;
+import org.jboss.logging.Logger;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.naming.Util;
+import org.jboss.proxy.Interceptor;
+import org.jboss.proxy.ClientContainer;
+import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.system.Registry;
-import org.jboss.ejb.FinderResults;
-import org.jboss.ejb.ListCacheKey;
-
-import org.jboss.logging.Logger;
+import org.jboss.util.NestedRuntimeException;
 import org.w3c.dom.Element;
 
 
@@ -62,7 +63,7 @@ import org.w3c.dom.Element;
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -205,15 +206,19 @@ public class ProxyFactory
 
    /** Load the client interceptor classes
     */
-   protected void initInterceptorClasses()
+   protected void initInterceptorClasses() throws Exception
    {
       ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
 
       Element homeInterceptorConf = configMetaData.getClientInterceptorConf(HOME_INTERCEPTOR);
       loadInterceptorClasses(homeInterceptorClasses, homeInterceptorConf);
+      if( homeInterceptorClasses.size() == 0 )
+         throw new DeploymentException("There are no home interface interceptors configured");
 
       Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
       loadInterceptorClasses(beanInterceptorClasses, beanInterceptorConf);
+      if( beanInterceptorClasses.size() == 0 )
+         throw new DeploymentException("There are no bean interface interceptors configured");
 
       Element listEntityInterceptorConf = configMetaData.getClientInterceptorConf(LIST_ENTITY_INTERCEPTOR);
       loadInterceptorClasses(listEntityInterceptorClasses, listEntityInterceptorConf);
@@ -225,55 +230,44 @@ public class ProxyFactory
     * @exception Exception if an error occurs
     */
    protected void loadInterceptorClasses(ArrayList classes, Element interceptors)
+      throws Exception
    {
-      try
+      Iterator interceptorElements = MetaData.getChildrenByTagName(interceptors, "interceptor");
+      ClassLoader loader = container.getClassLoader();
+      Interceptor last = null;
+      while( interceptorElements != null && interceptorElements.hasNext() )
       {
-         Iterator interceptorElements = MetaData.getChildrenByTagName(interceptors, "interceptor");
-         ClassLoader loader = container.getClassLoader();
-         Interceptor last = null;
-         while( interceptorElements != null && interceptorElements.hasNext() )
-         {
-            Element ielement = (Element) interceptorElements.next();
-            String className = null;
-            className = MetaData.getElementContent(ielement);
-            Class clazz = loader.loadClass(className);
-            classes.add(clazz);
-         }
-      }
-      catch (Exception ex)
-      {
-         log.error("failed to load client interceptor chain", ex);
+         Element ielement = (Element) interceptorElements.next();
+         String className = null;
+         className = MetaData.getElementContent(ielement);
+         Class clazz = loader.loadClass(className);
+         classes.add(clazz);
       }
    }
+
    /** The <code>loadInterceptorChain</code> create instances of interceptor
     * classes previously loaded in loadInterceptorClasses
     *
     * @exception Exception if an error occurs
     */
    protected void loadInterceptorChain(ArrayList chain, ClientContainer client)
+      throws Exception
    {
-      try
+      Interceptor last = null;
+      for (int i = 0; i < chain.size(); i++)
       {
-         Interceptor last = null;
-         for (int i = 0; i < chain.size(); i++)
+         Class clazz = (Class)chain.get(i);
+         Interceptor interceptor = (Interceptor) clazz.newInstance(); 
+         if (last == null)
          {
-            Class clazz = (Class)chain.get(i);
-            Interceptor interceptor = (Interceptor) clazz.newInstance(); 
-            if (last == null)
-            {
-               last = interceptor;
-               client.setNext(interceptor);
-            }
-            else
-            {
-               last.setNext(interceptor);
-               last = interceptor;
-            }
+            last = interceptor;
+            client.setNext(interceptor);
          }
-      }
-      catch (Exception ex)
-      {
-         log.error("failed to load client interceptor chain", ex);
+         else
+         {
+            last.setNext(interceptor);
+            last = interceptor;
+         }
       }
    }
 
@@ -289,7 +283,7 @@ public class ProxyFactory
       {   
          // Create a stack from the description (in the future) for now we hardcode it
          InvocationContext context = new InvocationContext();
-      
+
          context.setObjectName(new Integer(objectName));
          context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
          // The behavior for home proxying should be isolated in an interceptor FIXME
@@ -297,15 +291,15 @@ public class ProxyFactory
          context.setValue(org.jboss.proxy.ejb.HomeInterceptor.EJB_METADATA, ejbMetaData);
          
          ClientContainer client = new ClientContainer(context);
-      
          loadInterceptorChain(homeInterceptorClasses, client);
          
+         ContainerInvokerContainer invoker = (ContainerInvokerContainer) container;
          // Create the EJBHome
          this.home = (EJBHome) Proxy.newProxyInstance(
                // Class loader pointing to the right classes from deployment
-               ((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
+               invoker.getHomeClass().getClassLoader(),
                // The classes we want to implement home and handle
-               new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
+               new Class[] { invoker.getHomeClass(), Class.forName("javax.ejb.Handle")},
                // The home proxy as invocation handler
                client);
 
@@ -329,14 +323,14 @@ public class ProxyFactory
             this.statelessObject = 
                (EJBObject)Proxy.newProxyInstance(
                   // Correct CL         
-                  ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                  invoker.getRemoteClass().getClassLoader(),
                   // Interfaces    
-                  new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
+                  new Class[] { invoker.getRemoteClass() } ,
                   // SLSB proxy as invocation handler
                   client
                   );
          }
-         
+
          // Bind the home in the JNDI naming space
          Util.rebind(
             // The context
@@ -346,9 +340,7 @@ public class ProxyFactory
             // The Home
             getEJBHome());
   
-         if (log.isDebugEnabled())
-            log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
-      
+        log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());      
       }
       catch (Exception e)
       {
@@ -366,7 +358,6 @@ public class ProxyFactory
       {
          InitialContext ctx = new InitialContext();
          ctx.unbind(container.getBeanMetaData().getJndiName());
-      
       } 
       catch (Exception e)
       {
@@ -407,17 +398,23 @@ public class ProxyFactory
       context.setInvoker(beanInvoker);
       
       ClientContainer client = new ClientContainer(context);
-      
-      loadInterceptorChain(beanInterceptorClasses, client);
-            
+      try
+      {
+         loadInterceptorChain(beanInterceptorClasses, client);
+      }
+      catch(Exception e)
+      {
+         throw new NestedRuntimeException("Failed to load interceptor chain", e);
+      }
+
+      ContainerInvokerContainer invoker = (ContainerInvokerContainer) container;
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
-         ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+         invoker.getRemoteClass().getClassLoader(),
          // Interfaces
-         new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+         new Class[] { invoker.getRemoteClass() },
          // Proxy as invocation handler
          client);
-         
    }
 
    /** Create an EJBObject proxy for an entity given its primary key.
@@ -434,23 +431,32 @@ public class ProxyFactory
       
       ClientContainer client = new ClientContainer(context);
       
-      loadInterceptorChain(beanInterceptorClasses, client);
-            
+      try
+      {
+         loadInterceptorChain(beanInterceptorClasses, client);
+      }
+      catch(Exception e)
+      {
+         throw new NestedRuntimeException("Failed to load interceptor chain", e);
+      }
+
+      ContainerInvokerContainer invoker = (ContainerInvokerContainer) container;
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
-         ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+         invoker.getRemoteClass().getClassLoader(),
          // Interfaces
-         new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+         new Class[] { invoker.getRemoteClass() },
          // Proxy as invocation handler
          client);
    }
-   
+
    /** Create a Collection EJBObject proxies for an entity given its primary keys.
     */
    public Collection getEntityCollection(Collection ids)
    {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
+      ContainerInvokerContainer invoker = (ContainerInvokerContainer) container;
       
       if ((ids instanceof FinderResults) && ((FinderResults) ids).isReadAheadOnLoadUsed())
       {
@@ -470,10 +476,17 @@ public class ProxyFactory
       
             ClientContainer client = new ClientContainer(context);
       
-            loadInterceptorChain(listEntityInterceptorClasses, client);
+            try
+            {
+               loadInterceptorChain(listEntityInterceptorClasses, client);
+            }
+            catch(Exception e)
+            {
+               throw new NestedRuntimeException("Failed to load interceptor chain", e);
+            }
             
-            list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                                            new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
+            list.add(Proxy.newProxyInstance(invoker.getRemoteClass().getClassLoader(),
+                                            new Class[] { invoker.getRemoteClass(), ReadAheadBuffer.class },
                                             client));
          }
       }
@@ -491,14 +504,21 @@ public class ProxyFactory
       
             ClientContainer client = new ClientContainer(context);
       
-            loadInterceptorChain(beanInterceptorClasses, client);
+            try
+            {
+               loadInterceptorChain(beanInterceptorClasses, client);
+            }
+            catch(Exception e)
+            {
+               throw new NestedRuntimeException("Failed to load interceptor chain", e);
+            }
             
-            list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                                            new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+            list.add(Proxy.newProxyInstance(invoker.getRemoteClass().getClassLoader(),
+                                            new Class[] { invoker.getRemoteClass() },
                                             client));
          }
       }
       return list;
    }
-   
+
 }
