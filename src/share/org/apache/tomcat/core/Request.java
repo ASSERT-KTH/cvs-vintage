@@ -65,7 +65,7 @@ import org.apache.tomcat.util.http.Parameters;
 import org.apache.tomcat.util.http.ContentType;
 import org.apache.tomcat.util.http.Cookies;
 
-import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.buf.*;
 
 
 //import org.apache.tomcat.util.http.*;
@@ -109,6 +109,9 @@ import java.util.Hashtable;
  * @author Costin Manolache
  */
 public class Request {
+    // As specified in the servlet specs
+    public static final String DEFAULT_CHARACTER_ENCODING="ISO-8859-1";
+    
     public static final String SESSIONID_FROM_COOKIE="cookie";
     public static final String SESSIONID_FROM_URL="url";
     public static final int MAX_INCLUDE=10;
@@ -143,6 +146,9 @@ public class Request {
     // that is known only after header parsing. Work in progress.
     protected MessageBytes schemeMB=new MessageBytes();
 
+    // uri without any parsing performed
+    protected MessageBytes unparsedURIMB=new MessageBytes();
+
     protected MessageBytes methodMB=new MessageBytes();
     protected MessageBytes uriMB=new MessageBytes();
     protected MessageBytes queryMB=new MessageBytes();
@@ -171,7 +177,8 @@ public class Request {
     // how much body we still have to read.
     protected int available = -1; 
 
-    protected String contentType = null;
+    protected MessageBytes contentTypeMB=null;
+    //    protected String contentType = null;
     protected String charEncoding = null;
     protected MessageBytes serverNameMB=new MessageBytes();
 
@@ -208,6 +215,8 @@ public class Request {
     Request parent;
     Request child;
 
+    UDecoder urlDecoder;
+    
     // Error handling support
     Exception errorException;
 
@@ -218,7 +227,9 @@ public class Request {
     public Request() {
  	headers = new MimeHeaders();
 	scookies = new Cookies( headers );
+	urlDecoder=new UDecoder();
 	params.setQuery( queryMB );
+	params.setURLDecoder( urlDecoder );
 	params.setHeaders( headers );
 	initRequest(); 	
     }
@@ -243,8 +254,13 @@ public class Request {
 	return context;
     }
 
-    int encodingInfo;
-    int attributeInfo;
+    public UDecoder getURLDecoder() {
+	return urlDecoder;
+    }
+
+    // cached note ids 
+    private int encodingInfo;
+    private int attributeInfo;
     
     public void setContextManager( ContextManager cm ) {
 	contextM=cm;
@@ -296,6 +312,10 @@ public class Request {
     
     public MessageBytes requestURI() {
 	return uriMB;
+    }
+
+    public MessageBytes unparsedURI() {
+	return unparsedURIMB;
     }
 
     public MessageBytes query() {
@@ -373,19 +393,38 @@ public class Request {
 
 	int len=getContentLength();
 	int available=getAvailable();
-
+	
 	// read only available ( someone else may have read the content )
 	if( available > 0 ) {
 	    try {
-		byte[] formData = new byte[available];
+		byte[] formData=null;
+		if( available < CACHED_POST_LEN ) {
+		    if( postData == null ) postData=new byte[CACHED_POST_LEN];
+		    formData=postData;
+		} else {
+		    formData = new byte[available];
+		}
 		readBody( formData, available );
-		params.processData( formData );
+		
+		handleQueryParameters();
+
+		params.processParameters( formData, 0, available );
 	    } catch(IOException ex ) {
+		ex.printStackTrace();
 		// XXX should we throw exception or log ?
 		return;
 	    }
 	}
     }
+
+    public void handleQueryParameters() {
+	params.setEncoding( getCharacterEncoding() );
+	params.handleQueryParameters();
+    }
+    
+    // Avoid re-allocating the buffer for each post
+    private static int CACHED_POST_LEN=8192;
+    private byte postData[]=null;
 
     public Parameters parameters() {
 	return params;
@@ -414,14 +453,17 @@ public class Request {
 	    }
 	}
 	
-        charEncoding = ContentType.getCharsetFromContentType(getContentType());
-	return charEncoding;
+	// if( charEncoding == null )
+	// 	    charEncoding=DEFAULT_CHARACTER_ENCODING;
+ 	return charEncoding;
     }
 
     public void setCharEncoding( String enc ) {
 	this.charEncoding=enc;
+	//	if( enc==null ) enc=DEFAULT_CHARACTER_ENCODING;
+	//	b2c=getDecoder( enc );
     }
-
+    
     public void setContentLength( int  len ) {
 	this.contentLength=len;
 	available=len;
@@ -437,19 +479,26 @@ public class Request {
 	return contentLength;
     }
 
-    // XXX XXX POSSIBLE BUG - should trim the charset encoding ( or not ? )
     public String getContentType() {
-	if(contentType != null) return contentType;
-	contentType = getHeader("content-type");
-	if(contentType != null) return contentType;
-	// can be null!! -
-	return contentType;
+	contentType();
+	if( contentTypeMB==null ||
+	    contentTypeMB.isNull() ) return null;
+	return contentTypeMB.toString();
     }
 
     public void setContentType( String type ) {
-	this.contentType=type;
+	contentTypeMB.setString( type );
     }
 
+    public MessageBytes contentType() {
+	if( contentTypeMB == null )
+	    contentTypeMB=headers.getValue( "content-type" );
+	return contentTypeMB;
+    }
+
+    public void setContentType( MessageBytes mb  ) {
+	contentTypeMB=mb;
+    }
     // -------------------- Security info -------------------- 
     
     public void setAuthType(String authType) {
@@ -906,7 +955,7 @@ public class Request {
 	//        parametersH.clear();
 	params.recycle();
 	contentLength = -1;
-        contentType = null;
+        contentTypeMB=null;
         charEncoding = null;
         authType = null;
         remoteUser = null;
@@ -924,6 +973,7 @@ public class Request {
         serverPort=-1;
         sessionIdSource = null;
 	sessionId=null;
+	//	b2c=null;
 	
 	scookies.recycle();
 	
@@ -940,6 +990,7 @@ public class Request {
 	reqRoles=null;
 
 	uriMB.recycle();
+	unparsedURIMB.recycle();
 	contextMB.recycle();
 	pathInfoMB.recycle();
 	servletPathMB.recycle();
