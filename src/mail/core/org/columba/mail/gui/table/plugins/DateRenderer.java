@@ -34,8 +34,10 @@ import javax.swing.UIManager;
 public class DateRenderer extends DefaultLabelRenderer {
     static SimpleDateFormat dfWeek = new SimpleDateFormat("EEE HH:mm",
             Locale.getDefault());
-    static DateFormat dfCommon = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-            DateFormat.SHORT);
+   
+    // use local date settings
+    DateFormat dfCommon = DateFormat.getDateInstance();
+    
     static final long OneDay = 24 * 60 * 60 * 1000;
     static TimeZone localTimeZone = TimeZone.getDefault();
     private Font plainFont;
@@ -74,15 +76,6 @@ public class DateRenderer extends DefaultLabelRenderer {
             return this;
         }
 
-        /*
-if (!(value instanceof Date)) {
-setText("");
-return this;
-}
-
-if (value instanceof String)
-return this;
-*/
         Date date = (Date) ((MessageNode) value).getHeader().get("columba.date");
 
         if (date == null) {
