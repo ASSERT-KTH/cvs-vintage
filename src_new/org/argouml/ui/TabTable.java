@@ -1,4 +1,4 @@
-// $Id: TabTable.java,v 1.3 2003/08/30 18:47:05 alexb Exp $
+// $Id: TabTable.java,v 1.4 2004/09/01 16:48:22 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,12 +29,17 @@ import org.argouml.uml.ui.TabProps;
 
 public class TabTable extends TabProps {
 
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * The constructor.
+     * 
+     */
     public TabTable() {
 	super("Table", "table.TablePanel");
     }
 
+    /**
+     * @see org.argouml.uml.ui.TabProps#initPanels()
+     */
     protected void initPanels() {
 	// dont preload any table panels
     }
