@@ -396,7 +396,7 @@ public class Request {
         if( contentLength > -1 ) return contentLength;
 
 	MessageBytes clB=headers.getValue("content-length");
-        contentLength = (clB==null) ? -1 : clB.getInt();
+        contentLength = (clB==null || clB.isNull() ) ? -1 : clB.getInt();
 
 	return contentLength;
     }
