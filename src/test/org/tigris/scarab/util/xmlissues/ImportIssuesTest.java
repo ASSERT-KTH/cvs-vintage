@@ -66,35 +66,14 @@ import org.tigris.scarab.om.ActivityPeer;
  * A Testing Suite for the ImportIssues class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ImportIssuesTest.java,v 1.2 2003/08/28 02:54:24 jmcnally Exp $
+ * @version $Id: ImportIssuesTest.java,v 1.3 2004/01/31 18:15:39 dep4b Exp $
  */
 public class ImportIssuesTest extends BaseTestCase
 {
     private static final String INPUT_FILENAME = "test-issues.xml";
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public ImportIssuesTest()
-    {
-        super(ImportIssuesTest.class.getName());
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new ImportIssuesTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
-        log("Running ImportIssues tests");
-        testImportIssuesViaXMLFile();
-        testActivitySetCorruption();
-    }
-
-    private void testImportIssuesViaXMLFile()
+    public void testImportIssuesViaXMLFile()
         throws Exception
     {
         // this is quite a hack, need to modify ImportIssues to work with an
@@ -134,7 +113,7 @@ public class ImportIssuesTest extends BaseTestCase
      *
      * @exception Exception if an error occurs
      */
-    private void testActivitySetCorruption()
+    public void testActivitySetCorruption()
         throws Exception
     {
         Criteria crit = new Criteria();

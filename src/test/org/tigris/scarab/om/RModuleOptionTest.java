@@ -53,7 +53,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleOptionTest.java,v 1.3 2003/06/24 19:01:48 jmcnally Exp $
+ * @version $Id: RModuleOptionTest.java,v 1.4 2004/01/31 18:15:39 dep4b Exp $
  */
 public class RModuleOptionTest extends BaseTestCase
 {
@@ -62,60 +62,44 @@ public class RModuleOptionTest extends BaseTestCase
     private AttributeOption high = null;
     private IssueType issueType = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public RModuleOptionTest()
-    {
-        super("RModuleOptionTest");
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new RModuleOptionTest();
-    }
 
-    protected void runTest()
-            throws Throwable
-    {
+    public void setUp() throws Exception
+	{
+    	super.setUp();
         issueType = getDefaultIssueType();
         priority = AttributeManager.getInstance(new NumberKey("7"));
         high = AttributeOptionManager.getInstance(new NumberKey("54"));
         rmo = getModule().getRModuleOption(high, issueType);
-        testGetDisplayValue();
-        testGetLevel();
-        testSetLevel();
-        testGetRModuleAttribute();
-        testDelete();
+        
     }
 
-    private void testGetDisplayValue() throws Exception
+    public void testGetDisplayValue() throws Exception
     {
         System.out.println("\ntestGetDisplayValue()");
         assertEquals("High", rmo.getDisplayValue());
     }
 
-    private void testGetLevel() throws Exception
+    public void testGetLevel() throws Exception
     {
         System.out.println("\ntestGetLevel()");
         assertEquals(0, rmo.getLevel());
     }
 
-    private void testSetLevel() throws Exception
+    public void testSetLevel() throws Exception
     {
         System.out.println("\ntestSetLevel()");
         rmo.setLevel(2);
         assertEquals(2, rmo.getLevel());
     }
 
-    private void testGetRModuleAttribute() throws Exception
+    public void testGetRModuleAttribute() throws Exception
     {
         System.out.println("\ntestGetRModuleAttribute()");
         assertEquals("Priority", rmo.getRModuleAttribute(issueType).getAttribute().getName());
     }
 
-    private void testDelete() throws Exception
+    public void testDelete() throws Exception
     {
         System.out.println("\ntestDelete()");
         rmo.delete();

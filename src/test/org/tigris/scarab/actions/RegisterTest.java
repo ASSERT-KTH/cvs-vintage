@@ -46,9 +46,7 @@ package org.tigris.scarab.actions;
  * individuals on behalf of CollabNet.
  */ 
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Tests {@link org.tigris.scarab.actions.Register}.
@@ -58,19 +56,6 @@ import junit.framework.TestSuite;
 public class RegisterTest extends TestCase
 {
     private Register register;
-
-    /**
-     * Creates a new instance.
-     */
-    public RegisterTest(String name)
-    {
-        super(name);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite(RegisterTest.class);
-    }
 
     protected void setUp()
     {

@@ -54,35 +54,17 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabUserImpl class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabUserTest.java,v 1.4 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: ScarabUserTest.java,v 1.5 2004/01/31 18:15:38 dep4b Exp $
  */
 public class ScarabUserTest extends BaseTestCase
 {
-    /**
-     * Creates a new instance.
-     *
-     */
-    public ScarabUserTest()
-    {
-        super("ScarabUserTest");
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new ScarabUserTest();
-    }
 
-    protected void runTest()
-        throws Throwable
-    {
-        testSetPasswordExpire();
-        testGetModules();
-    }
     
-    private void testSetPasswordExpire()
+    public void testSetPasswordExpire()
         throws Exception
     {
-        log("testSetPasswordExpire()");
+
         ScarabUser user = getUser1();
         Calendar cal = Calendar.getInstance();
         cal.set(2010, 9, 2);
@@ -95,10 +77,9 @@ public class ScarabUserTest extends BaseTestCase
         assertEquals(user.isPasswordExpired(), false);        
     }
 
-    private void testGetModules()
+    public void testGetModules()
         throws Exception
     {
-        log("testGetModules()");
         ScarabUser user = getUser1();
         List modules = user.getModules(true);
         assertEquals(8, modules.size());

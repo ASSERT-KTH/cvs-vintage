@@ -53,27 +53,14 @@ import org.tigris.scarab.test.BaseTestCase;
  * Used for testing the ScarabUtil.java class.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: EmailLinkTest.java,v 1.5 2003/12/12 15:28:56 mpoeschl Exp $
+ * @version $Id: EmailLinkTest.java,v 1.6 2004/01/31 18:15:39 dep4b Exp $
  */
 public class EmailLinkTest extends BaseTestCase
 {
-    /**
-     * Creates a new instance.
-     *
-     */
-    public EmailLinkTest()
-    {
-        super("EmailLinkTest");
-    }
+   
 
-    public static junit.framework.Test suite()
-    {
-        return new EmailLinkTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
+	public void testEmailLink() throws Exception
+	{
         Module module = getModule();
         EmailLink el = new EmailLink(module);
         el.setPage("Foo.vm").addPathInfo("foo", "bar").addPathInfo("jjj","aaa");

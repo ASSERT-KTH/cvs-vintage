@@ -52,49 +52,35 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleIssueTypeTest.java,v 1.3 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: RModuleIssueTypeTest.java,v 1.4 2004/01/31 18:15:39 dep4b Exp $
  */
 public class RModuleIssueTypeTest extends BaseTestCase
 {
     private RModuleIssueType rmit = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public RModuleIssueTypeTest()
-    {
-        super("RModuleIssueTypeTest");
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new RModuleIssueTypeTest();
-    }
 
-    protected void runTest()
-            throws Throwable
-    {
+    public void setUp() throws Exception
+	{
+    	super.setUp();
         rmit = getModule().getRModuleIssueType(getDefaultIssueType());
-        testGetDisplayText();
-        testCopy();
-        testDelete();
+      
     }
 
-    private void testGetDisplayText() throws Exception
+    public void testGetDisplayText() throws Exception
     {
         System.out.println("\ntestGetDisplayText()");
         assertEquals("Defect", rmit.getDisplayName());
     }
 
-    private void testCopy() throws Exception
+    public void testCopy() throws Exception
     {
         System.out.println("\ntestCopy()");
         RModuleIssueType rmit2 = rmit.copy();
         assertEquals(rmit.getIssueTypeId(), rmit2.getIssueTypeId());
     }
 
-    private void testDelete() throws Exception
+    public void testDelete() throws Exception
     {
         System.out.println("\ntestDelete()");
         rmit.delete(getUser1());

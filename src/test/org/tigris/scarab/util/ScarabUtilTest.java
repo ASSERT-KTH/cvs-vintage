@@ -52,14 +52,11 @@ import junit.framework.TestCase;
  * Used for testing the ScarabUtil.java class.
  *
  * @author <a href="mailto:Sebastian.Dietrich@anecon.com">Sebastian Dietrich</a>
- * @version $Id: ScarabUtilTest.java,v 1.2 2003/12/19 22:26:02 dep4b Exp $
+ * @version $Id: ScarabUtilTest.java,v 1.3 2004/01/31 18:15:39 dep4b Exp $
  */
 public class ScarabUtilTest extends TestCase
 {
-	public static junit.framework.Test suite()
-	{
-		return new junit.framework.TestSuite(ScarabUtilTest.class);
-	}
+
 	
 	public void testUrlEncode()
 	{

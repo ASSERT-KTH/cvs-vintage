@@ -55,7 +55,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupTest.java,v 1.7 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: AttributeGroupTest.java,v 1.8 2004/01/31 18:15:39 dep4b Exp $
  */
 public class AttributeGroupTest extends BaseTestCase
 {
@@ -63,35 +63,18 @@ public class AttributeGroupTest extends BaseTestCase
     private Attribute severity = null;
     private Attribute desc = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public AttributeGroupTest()
-    {
-        super("AttributeGroupTest");
-    }
+   
 
-    public static junit.framework.Test suite()
+   public void setUp() throws Exception
     {
-        return new AttributeGroupTest();
-    }
-
-    protected void runTest()
-            throws Throwable
-    {
+   		super.setUp();
         severity = AttributeManager.getInstance(new NumberKey("9"));
         desc = AttributeManager.getInstance(new NumberKey("1"));
         group = AttributeGroupManager.getInstance(new NumberKey("131"));
 
-        testGetAttributes();
-        testDeleteAttribute();
-        testAddAttribute();
-        testGetRAttributeAttributeGroup();
-        testDelete();
     }
 
-    private void testDeleteAttribute() throws Exception
+    public void testDeleteAttribute() throws Exception
     {
         System.out.println("\ntestDeleteAttribute()");
         group.deleteAttribute(severity, getUser1(), getModule());
@@ -99,7 +82,7 @@ public class AttributeGroupTest extends BaseTestCase
         assertEquals(5, group.getAttributes().size());
     }
 
-    private void testAddAttribute() throws Exception
+    public void testAddAttribute() throws Exception
     {
         System.out.println("\ntestAddAttribute()");
         group.addAttribute(severity);
@@ -108,19 +91,19 @@ public class AttributeGroupTest extends BaseTestCase
         assertEquals(7, group.getAttributes().size());
     }
 
-    private void testGetAttributes() throws Exception
+    public void testGetAttributes() throws Exception
     {
         System.out.println("\ntestGetAttributes()");
         assertEquals(7, group.getAttributes().size());
     }
 
-    private void testGetRAttributeAttributeGroup() throws Exception
+    public void testGetRAttributeAttributeGroup() throws Exception
     {
         System.out.println("\ntestGetRAttributeAttributeGroup()");
         assertEquals("9", group.getRAttributeAttributeGroup(severity).getAttributeId().toString());
     }
 
-    private void testDelete() throws Exception
+    public void testDelete() throws Exception
     {
         System.out.println("\ntestDelete()");
         group.delete();

@@ -58,38 +58,17 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.18 2003/12/12 15:28:56 mpoeschl Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.19 2004/01/31 18:15:39 dep4b Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
     private ScarabModule newModule = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public ScarabModuleTest()
-    {
-        super("ScarabModuleTest");
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new ScarabModuleTest();
-    }
 
-    protected void runTest()
-        throws Throwable
+
+    public void testGetParents() throws Exception
     {
-        testGetParents();
-        testCreateNew();
-        testGetUsers();
-        testIssueTypes();
-    }
-    
-    private void testGetParents() throws Exception
-    {
-        log("testGetParents()");
         Module module = (Module) ModuleManager
             .getInstance(new NumberKey(7), false);
         List parents = module.getAncestors();
@@ -101,9 +80,8 @@ public class ScarabModuleTest extends BaseTestCase
         }
         System.out.println ("parents=" + parents.size());
     }
-    private void testCreateNew() throws Exception
+    public void testCreateNew() throws Exception
     {
-        log("testCreateNew()");
         Module me = ModuleManager.getInstance();
         me.setRealName("New Module");
         me.setOwnerId(new Integer(1));
@@ -113,7 +91,7 @@ public class ScarabModuleTest extends BaseTestCase
         newModule = (ScarabModule)me;
     }
 
-    private void testIssueTypes() throws Exception
+    public void testIssueTypes() throws Exception
     {
         List issueTypes = newModule.getRModuleIssueTypes();
         for (int i = 0;i<issueTypes.size();i++)
@@ -131,7 +109,7 @@ public class ScarabModuleTest extends BaseTestCase
         }
     }
 
-    private void testGetAttributeGroups(IssueType issueType) 
+    public void testGetAttributeGroups(IssueType issueType) 
         throws Exception
     {
         System.out.println ("testGetAttributeGroups()");
@@ -144,14 +122,13 @@ public class ScarabModuleTest extends BaseTestCase
     }
 
 
-    private void testGetUsers() throws Exception
+    public void testGetUsers() throws Exception
     {
-        log("testGetUsers()");
         ScarabUser[] users = newModule.getUsers(ScarabSecurity.ISSUE__VIEW);
         System.out.println(users);
     }
 
-    private void testGetAllAttributeValuesMap(Issue issue) throws Exception
+    public void testGetAllAttributeValuesMap(Issue issue) throws Exception
     {
         System.out.println ("testGetAllAttributeValuesMap()");
         Map attrMap = issue.getAllAttributeValuesMap();
@@ -183,7 +160,7 @@ public class ScarabModuleTest extends BaseTestCase
         }
     }
 
-    private void testGetUserAttributes(IssueType issueType)
+    public void testGetUserAttributes(IssueType issueType)
         throws Exception
     {
         System.out.println ("testGetUserAttributes");

@@ -72,11 +72,7 @@ public class SubsetIteratorTest extends TestCase
  {
 	 super(testName);
  }
- public static junit.framework.Test suite()
- {
-   return new junit.framework.TestSuite(SubsetIteratorTest.class);
- }
- 
+
  public void setUp() 
  {
    Collection coll = new ArrayList();

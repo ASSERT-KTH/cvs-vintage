@@ -60,31 +60,9 @@ import org.tigris.scarab.test.BaseTestCase;
 public class AttributeAccessTest
     extends BaseTestCase
 {    
-    /**
-     * Creates a new instance.
-     */
-    public AttributeAccessTest()
-    {
-        super("AttributeAccessTest");
-    }
+ 
 
-    public static junit.framework.Test suite()
-    {
-        return new AttributeAccessTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
-        testRetrieveQueryColumnIDs();
-        testDeleteQueryColumnIDs();
-        testRetrieveRequiredAttributeIDs();
-        testRetrieveQuickSearchAttributeIDs();
-        testRetrieveActiveAttributeOMs();
-        testRetrieveDefaultTextAttributeID();
-        testRetrieveFirstActiveTextAttributeID();
-    }
-
+ 
     public void testRetrieveQueryColumnIDs()
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();

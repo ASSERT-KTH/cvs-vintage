@@ -53,25 +53,12 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivitySetTest.java,v 1.4 2003/03/25 20:31:54 jmcnally Exp $
+ * @version $Id: ActivitySetTest.java,v 1.5 2004/01/31 18:15:39 dep4b Exp $
  */
 public class ActivitySetTest extends BaseTestCase
 {
      private ActivitySet trans = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public ActivitySetTest()
-    {
-        super("ActivitySetTest");
-    }
-
-    public static junit.framework.Test suite()
-    {
-        return new ActivitySetTest();
-    }
 
     protected void runTest()
             throws Throwable

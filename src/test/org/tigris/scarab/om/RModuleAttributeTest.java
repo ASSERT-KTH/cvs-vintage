@@ -53,58 +53,44 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleAttributeTest.java,v 1.4 2003/06/24 19:01:48 jmcnally Exp $
+ * @version $Id: RModuleAttributeTest.java,v 1.5 2004/01/31 18:15:38 dep4b Exp $
  */
 public class RModuleAttributeTest extends BaseTestCase
 {
     private RModuleAttribute rma = null;
     private Attribute platform = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public RModuleAttributeTest()
-    {
-        super("RModuleAttributeTest");
-    }
+   
 
-    public static junit.framework.Test suite()
-    {
-        return new RModuleAttributeTest();
-    }
-
-    protected void runTest()
-            throws Throwable
-    {
+    public void setUp() throws Exception
+	{
+    	super.setUp();
         platform = AttributeManager.getInstance(new NumberKey("5"));
         rma = getModule().getRModuleAttribute(platform,
                                               getDefaultIssueType());
-        testGetDisplayValue();
-        testSetIsDefaultText();
-        testDelete();
+        
     }
 
-    private void testGetDisplayValue() throws Exception
+    public void testGetDisplayValue() throws Exception
     {
         System.out.println("\ntestGetDisplayValue()");
         assertEquals("Platform", rma.getDisplayValue());
     }
 
-    private void testGetIsDefaultText() throws Exception
+    public void testGetIsDefaultText() throws Exception
     {
         System.out.println("\ntestGetIsDefaultText()");
         assertEquals(false, rma.getIsDefaultText());
     }
 
-    private void testSetIsDefaultText() throws Exception
+    public void testSetIsDefaultText() throws Exception
     {
         System.out.println("\ntestGetIsDefaultText()");
         rma.setIsDefaultText(true);
         assertEquals(true, rma.getIsDefaultText());
     }
 
-    private void testDelete() throws Exception
+    public void testDelete() throws Exception
     {
         System.out.println("\ntestDelete()");
         rma.delete();

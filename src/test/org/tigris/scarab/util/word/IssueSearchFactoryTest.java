@@ -46,10 +46,10 @@ package org.tigris.scarab.util.word;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.test.BaseTestCase;
 
 /**
  * A Testing Suite for the util.word.IssueSearchFactory class.  This class
@@ -62,39 +62,18 @@ import org.tigris.scarab.om.ScarabUser;
  * given in millis.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchFactoryTest.java,v 1.2 2003/07/25 17:31:20 thierrylach Exp $
+ * @version $Id: IssueSearchFactoryTest.java,v 1.3 2004/01/31 18:15:39 dep4b Exp $
  */
 public class IssueSearchFactoryTest extends BaseTestCase
 {
     private IssueSearch search;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public IssueSearchFactoryTest()
-    {
-        super(IssueSearchFactoryTest.class.getName());
-    }
-
-    public static junit.framework.Test suite()
-    {
-        return new IssueSearchFactoryTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
-        log("Running IssueSearchFactory tests");
-        testSingleThread();
-        testConcurrency();
-    }
-
+  
     /**
      * Testing the factory's limit using one thread
      * can't test maxWait this way.
      */
-    private void testSingleThread()
+    public void testSingleThread()
         throws Exception
     {
         IssueSearchFactory issueSearchFactory = new IssueSearchFactory()
@@ -143,7 +122,7 @@ public class IssueSearchFactoryTest extends BaseTestCase
         }
     }
 
-    private void testConcurrency()
+    public void testConcurrency()
         throws Exception 
     {
         String message = multipleThreads(1);

@@ -67,10 +67,7 @@ public class SubsetIteratorWithSizeTest extends SubsetIteratorTest
     protected static final int SIZE = 2;
     protected static final int OFFSET = 2;
 
-    public static junit.framework.Test suite()
-    {
-        return new junit.framework.TestSuite(SubsetIteratorWithSizeTest.class);
-    }
+
     public SubsetIteratorWithSizeTest(String testName)
     {
         super(testName);

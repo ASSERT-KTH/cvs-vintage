@@ -48,6 +48,7 @@ package org.tigris.scarab.util.word;
 
 
 import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeValue;
@@ -60,39 +61,14 @@ import org.tigris.scarab.util.IteratorWithSize;
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.6 2003/09/10 00:51:03 jmcnally Exp $
+ * @version $Id: IssueSearchTest.java,v 1.7 2004/01/31 18:15:39 dep4b Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {
     private IssueSearch search;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public IssueSearchTest()
-    {
-        super(IssueSearchTest.class.getName());
-    }
-
-    public static junit.framework.Test suite()
-    {
-        return new IssueSearchTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
-        log("Running IssueSearch tests");
-        testSingleOptionAttribute();
-        testWrongOptionAttribute();
-        testUserWithAny();
-        testUserWithCreatedBy();
-        testUserWithAssignedTo();
-        testUserWithAssignedToAndCreatedDate();
-        testSingleOptionAndUserWithAny();
-        testLargeQuery();
-    }
+    private int[] attributeIds = {3, 4, 6, 7, 8}; //, 9, 12};
+    private int[] optionIds = {1, 8, 24, 54, 58}; //, 62, 88};
 
     private IssueSearch getSearch()
         throws Exception, MaxConcurrentSearchException
@@ -106,7 +82,7 @@ public class IssueSearchTest extends BaseTestCase
         return search;
     }
 
-    private void testSingleOptionAttribute()
+    public void testSingleOptionAttribute()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -121,7 +97,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 
-    private void testWrongOptionAttribute()
+    public void testWrongOptionAttribute()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -136,7 +112,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 
-    private void testUserWithAny()
+    public void testUserWithAny()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -147,7 +123,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 
-    private void testUserWithCreatedBy()
+    public void testUserWithCreatedBy()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -158,7 +134,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 
-    private void testUserWithAssignedTo()
+    public void testUserWithAssignedTo()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -169,7 +145,7 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 
-    private void testUserWithAssignedToAndCreatedDate()
+    public void testUserWithAssignedToAndCreatedDate()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -182,7 +158,7 @@ public class IssueSearchTest extends BaseTestCase
     }
 
 
-    private void testSingleOptionAndUserWithAny()
+    public void testSingleOptionAndUserWithAny()
         throws Exception
     {
         IssueSearch search = getSearch();
@@ -199,9 +175,8 @@ public class IssueSearchTest extends BaseTestCase
         IssueSearchFactory.INSTANCE.notifyDone();
     }
 
-    private int[] attributeIds = {3, 4, 6, 7, 8}; //, 9, 12};
-    private int[] optionIds = {1, 8, 24, 54, 58}; //, 62, 88};
-    private void testLargeQuery()
+
+    public void testLargeQuery()
         throws Exception
     {
         IssueSearch search = getSearch();

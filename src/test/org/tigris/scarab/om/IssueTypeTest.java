@@ -53,7 +53,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTypeTest.java,v 1.8 2003/10/14 04:59:24 jmcnally Exp $
+ * @version $Id: IssueTypeTest.java,v 1.9 2004/01/31 18:15:38 dep4b Exp $
  */
 public class IssueTypeTest extends BaseTestCase
 {
@@ -61,24 +61,11 @@ public class IssueTypeTest extends BaseTestCase
     private IssueType issueType = null;
     private AttributeGroup ag = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public IssueTypeTest()
-    {
-        super("IssueTypeTest");
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new IssueTypeTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
+    public void setUp() throws Exception {
+    	
         createTestIssueType(); 
+        /*
         testGetTemplateId();
         testGetInstanceByName();
         testCopy();
@@ -92,21 +79,22 @@ public class IssueTypeTest extends BaseTestCase
         testGetUserAttributes();
         testGetRIssueTypeOptions();
         testGetAvailableAttributes();
+        */
     }
     
-    private void testGetTemplateId() throws Exception
+    public void testGetTemplateId() throws Exception
     {
         assertEquals(Integer.parseInt(issueType.getTemplateId().toString()),
                      Integer.parseInt(issueType.getIssueTypeId().toString()) + 1);
     }
 
-    private void testGetInstanceByName() throws Exception
+    public void testGetInstanceByName() throws Exception
     {
         IssueType retIssueType = IssueType.getInstance(issueType.getName());
         assertEquals(retIssueType.getName(), issueType.getName());
     }
 
-    private void testCopy() throws Exception
+    public void testCopy() throws Exception
     {
         IssueType newIssueType = issueType.copyIssueType();
         assertEquals(newIssueType.getName(), issueType.getName() + " (copy)");
@@ -119,7 +107,7 @@ public class IssueTypeTest extends BaseTestCase
         assertEquals(template.getName(), newTemplate.getName());
     }
 
-    private void createTestIssueType() throws Exception
+    public void createTestIssueType() throws Exception
     {
         issueType = new IssueType();
         issueType.setName("test issue type");
@@ -131,62 +119,62 @@ public class IssueTypeTest extends BaseTestCase
         template.save();
     }
 
-    private void testCreateDefaultGroups() throws Exception
+    public void testCreateDefaultGroups() throws Exception
     {
         issueType.createDefaultGroups();
         testGetAttributeGroups(2);
     }
 
-    private void testGetAttributeGroups(int expectedSize) throws Exception
+    public void testGetAttributeGroups(int expectedSize) throws Exception
     {
         assertEquals(expectedSize,
                      issueType.getAttributeGroups(null, true).size());
     }
 
-    private void testCreateNewGroup() throws Exception
+    public void testCreateNewGroup() throws Exception
     {
         System.out.println("\ntestCreateNewGroup()");
         ag = issueType.createNewGroup();
     }
 
-    private void testGetDedupeSequence() throws Exception
+    public void testGetDedupeSequence() throws Exception
     {
         assertEquals(issueType.getDedupeSequence(), 2);
     }
 
-    private void testAddRIssueTypeAttribute() throws Exception
+    public void testAddRIssueTypeAttribute() throws Exception
     {
         System.out.println("\ntestAddRIssueTypeAttribute()");
         ag.addAttribute(getPlatformAttribute());
         ag.addAttribute(getAssignAttribute());
     }
 
-    private void testGetRIssueTypeAttributes() throws Exception
+    public void testGetRIssueTypeAttributes() throws Exception
     {
         assertEquals(issueType.getRIssueTypeAttributes(false, "non-user").size(), 1);
         assertEquals(issueType.getRIssueTypeAttributes(false, "user").size(), 1);
     }
 
-    private void testGetRIssueTypeAttribute() throws Exception
+    public void testGetRIssueTypeAttribute() throws Exception
     {
         System.out.println("\ntestGetRIssueTypeAttribute()");
         System.out.println(issueType.getRIssueTypeAttribute(getPlatformAttribute()));
         System.out.println(issueType.getRIssueTypeAttribute(getAssignAttribute()));
     }
 
-    private void testGetUserAttributes() throws Exception
+    public void testGetUserAttributes() throws Exception
     {
         System.out.println("\ntestGetUserAttributes()");
         assertEquals(issueType.getUserAttributes(false).size(), 1);
     }
 
-    private void testGetRIssueTypeOptions() throws Exception
+    public void testGetRIssueTypeOptions() throws Exception
     {
         System.out.println("\ntestGetIssueTypeOptions()");
         assertEquals(issueType.getRIssueTypeOptions(getPlatformAttribute(), false).size(), 8);
     }
 
-    private void testGetAvailableAttributes() throws Exception
+    public void testGetAvailableAttributes() throws Exception
     {
         System.out.println("\ntestGetAvailableAttributes()");
         assertEquals(issueType.getAvailableAttributes("data").size(), 9);

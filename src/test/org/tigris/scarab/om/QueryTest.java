@@ -56,47 +56,24 @@ import org.tigris.scarab.util.ScarabException;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.14 2003/12/12 15:28:56 mpoeschl Exp $
+ * @version $Id: QueryTest.java,v 1.15 2004/01/31 18:15:38 dep4b Exp $
  */
 public class QueryTest extends BaseTestCase
 {
     private Query query = null;
     private Query query1 = null;
 
-    /**
-     * Creates a new instance.
-     *
-     */
-    public QueryTest()
-    {
-        super("QueryTest");
-    }
 
-    public static junit.framework.Test suite()
-    {
-        return new QueryTest();
-    }
 
-    protected void runTest()
-            throws Throwable
+    public void setUp() throws Exception
     {
+    	super.setUp();
         query = Query.getInstance();
         query1 = Query.getInstance();
 
-        testGetAllQueryTypes();
-        testSave();
-        testSaveAndSendEmail();
-// Not really a test of anything and this code was moved
-// into scarabR
-//        testGetExecuteLink();
-//        testGetEditLink();
-        testApprove();
-        testSubscribe();
-        testCopy();
-        testDelete();
     }
 
-    private void testSave() throws Exception
+    public void testSave() throws Exception
     {
         System.out.println("\ntestSave()");
         query.setUserId(new Integer(1));
@@ -117,7 +94,7 @@ public class QueryTest extends BaseTestCase
 
     }
 
-    private void testSaveAndSendEmail() throws Exception
+    public void testSaveAndSendEmail() throws Exception
     {
         System.out.println("\ntestSaveAndSendEmail()");
         query1.setUserId(new Integer(2));
@@ -137,7 +114,7 @@ public class QueryTest extends BaseTestCase
 
     }
 /*
-    private void testGetExecuteLink() throws Exception
+    public void testGetExecuteLink() throws Exception
     {
         System.out.println("\ntestGetExecuteLink()");
         String exLink = query.getExecuteLink("dummy");
@@ -146,7 +123,7 @@ public class QueryTest extends BaseTestCase
             "&pagenum=1&searchId=1&searchisp=asc&remcurmitl=true", exLink);
     }
 
-    private void testGetEditLink() throws Exception
+    public void testGetEditLink() throws Exception
     {
         System.out.println("\ntestGetEditLink()");
         String edLink = query.getEditLink("dummy");
@@ -155,7 +132,7 @@ public class QueryTest extends BaseTestCase
                      "&searchId=1&searchisp=asc&remcurmitl=true", edLink);
     }
 */
-    private void testGetAllQueryTypes() throws Exception
+    public void testGetAllQueryTypes() throws Exception
     {
         String[] scopeNames = {"personal", "module"};
         System.out.println("\ntestGetAllQueryTypes()");
@@ -171,7 +148,7 @@ public class QueryTest extends BaseTestCase
         }
     }
 
-    private void testApprove() throws Exception
+    public void testApprove() throws Exception
     {
         boolean caught = false;
         System.out.println("\ntestSetApproved()");
@@ -194,7 +171,7 @@ public class QueryTest extends BaseTestCase
         assertTrue(query.getApproved());
     }
 
-    private void testSubscribe() throws Exception
+    public void testSubscribe() throws Exception
     {
         System.out.println("\ntestSubscribe()");
         query.subscribe(getUser2(), new Integer(1));
@@ -215,7 +192,7 @@ public class QueryTest extends BaseTestCase
         assertTrue(!caught);
     }
 
-    private void testCopy() throws Exception
+    public void testCopy() throws Exception
     {
         Query newQuery = query.copy();
         assertEquals(newQuery.getName(), query.getName());
@@ -226,7 +203,7 @@ public class QueryTest extends BaseTestCase
         assertEquals(rqu.getIsSubscribed(), rquNew.getIsSubscribed());
     }
 
-    private void testDelete() throws Exception
+    public void testDelete() throws Exception
     {
         boolean caught = false;
         System.out.println("\ntestSetDeleted()");
