@@ -47,6 +47,15 @@
         </init-param>
     </servlet>
 -->
+    <servlet-mapping>
+        <servlet-name>scarab</servlet-name>
+        <url-pattern>/servlet/scarab</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>scarab</servlet-name>
+        <url-pattern>/servlet/scarab/*</url-pattern>
+    </servlet-mapping>
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>templates</web-resource-name>
