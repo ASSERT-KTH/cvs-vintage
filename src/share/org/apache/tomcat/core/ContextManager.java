@@ -313,6 +313,7 @@ public class ContextManager {
     public void removeServlet( Context ctx, ServletWrapper sw )
 	throws TomcatException
     {
+	if( sw==null) return;
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeServlet( ctx, sw );
@@ -347,13 +348,12 @@ public class ContextManager {
 	}
     }
 
-    public void addSecurityConstraint( Context ctx, String path[], String methods[],
-				       String transport, String roles[] )
+    public void addSecurityConstraint( Context ctx, String path, Container ct )
 	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].addSecurityConstraint( ctx, path, methods, transport, roles );
+	    cI[i].addSecurityConstraint( ctx, path, ct );
 	}
     }
 
@@ -523,7 +523,6 @@ public class ContextManager {
 	    }
 
 	    // XXX Hardcoded - it will be changed in the next step.( costin )
-
 	    processRequest( rrequest );
 
 	    if( rrequest.getWrapper() == null ) {

@@ -89,44 +89,17 @@ public class Context {
     private String docBase;
 
     // internal state / related objects
-    private boolean initialized = false;
     private ContextManager contextM;
     private ServletContextFacade contextFacade;
-    private SessionManager sessionManager;
-    private ServletWrapper defaultServlet = null;
 
-    private URL documentBase;
-    
-    // 
+    private SessionManager sessionManager;
+    private ServletLoader servletL;
+    boolean reloadable=true; // XXX change default to false after testing
+
     private Hashtable attributes = new Hashtable();
 
-    // work dir
     private File workDir;
-    private boolean isWorkDirPersistent = false;
-
-    // tomcat specific properties
-    private String engineHeader = null;
-    private URL servletBase = null;
-    private boolean isInvokerEnabled = false;
-    boolean reloadable=true; // XXX change default to false after testing
     
-    // for serving WARs directly 
-    private File warDir = null;
-    private boolean isWARExpanded = false;
-    private boolean isWARValidated = false;
-
-//     // Class Loading
-//     private String classPath = ""; // classpath used by the classloader.
-//     private Vector classPaths = new Vector();
-//     private Vector libPaths = new Vector();
-//     // XXX deprecated
-//     private ServletClassLoader servletLoader;
-    private ServletLoader servletL;
-
-    // Interceptors
-    private Vector initInterceptors = new Vector();
-    private Vector serviceInterceptors = new Vector();
-    private Vector destroyInterceptors = new Vector();
     private RequestSecurityProvider rsProvider;
 
     private Vector contextInterceptors = new Vector();
@@ -152,6 +125,8 @@ public class Context {
 
     // Maps specified in web.xml ( String url -> ServletWrapper  )
     private Hashtable mappings = new Hashtable();
+    Hashtable constraints=new Hashtable();
+    private ServletWrapper defaultServlet = null;
     
     // Authentication properties
     String authMethod;
@@ -487,6 +462,30 @@ public class Context {
 	    }
 	}
     }
+    
+    public void addSecurityConstraint( String path[], String methods[],
+				       String roles[], String transport)
+	throws TomcatException
+    {
+	for( int i=0; i< path.length; i++ ) {
+	    Container ct=new Container();
+	    ct.setContext( this );
+	    ct.setTransport( transport );
+	    ct.setRoles( roles );
+	    
+	    // XXX check if exists, merge if true.
+	    constraints.put( path[i], ct );
+	    contextM.addSecurityConstraint( this, path[i], ct);
+	}
+    }
+
+    public Enumeration getSecurityConstraints() {
+	return constraints.keys();
+    }
+
+    public Container getSecurityConstraint( String path ) {
+	return (Container)constraints.get(path);
+    }
 
     public ServletWrapper getDefaultServlet() {
 	if( defaultServlet==null)
@@ -683,78 +682,124 @@ public class Context {
     }
 
     // -------------------- Deprecated
-    // 
+    // tomcat specific properties
+    private boolean isWorkDirPersistent = false;
+    private String engineHeader = null;
+    private URL documentBase;
+    private URL servletBase = null;
+    private boolean isInvokerEnabled = false;
+    // for serving WARs directly 
+    private File warDir = null;
+    private boolean isWARExpanded = false;
+    private boolean isWARValidated = false;
 
+
+
+    /**  @deprecated
+     */
     public boolean isInvokerEnabled() {
         return isInvokerEnabled;
     }
-
     
+    /**  @deprecated
+     */
     public void setInvokerEnabled(boolean isInvokerEnabled) {
         this.isInvokerEnabled = isInvokerEnabled;
     }
 
+    /**  @deprecated
+     */
     public boolean isWorkDirPersistent() {
         return this.isWorkDirPersistent;
     }
 
+    /**  @deprecated
+     */
     public void setWorkDirPersistent( boolean b ) {
 	isWorkDirPersistent=b;
     }
     
+    /**  @deprecated
+     */
     public File getWorkDir() {
 	return workDir;
     }
 
+    /**  @deprecated
+     */
     public void setWorkDir(File workDir) {
 	this.workDir = workDir;
     }
 
     /** Set work dir using a String property
+     *  @deprecated
      */
     public void setWorkDirPath(String workDir) {
 	this.workDir=new File(workDir);
     }
+
+    /**  @deprecated
+     */
     public String getEngineHeader() {
 	return engineHeader;
     }
 
+    /**  @deprecated
+     */
     public void setEngineHeader(String s) {
         engineHeader=s;
     }
 
+    /**  @deprecated
+     */
     public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
 	this.rsProvider = rsProvider;
     }
 
+    /**  @deprecated
+     */
     public RequestSecurityProvider getRequestSecurityProvider() {
 	return this.rsProvider;
     }
 
+    /**  @deprecated
+     */
     public File getWARDir() {
         return this.warDir;
     }
 
+    /**  @deprecated
+     */
     public void setWARDir( File f ) {
 	warDir=f;
     }
 
+    /**  @deprecated
+     */
     public boolean isWARExpanded() {
         return this.isWARExpanded;
     }
 
+    /**  @deprecated
+     */
     public void setIsWARExpanded(boolean isWARExpanded) {
         this.isWARExpanded = isWARExpanded;
     }
 
+    /**  @deprecated
+     */
     public boolean isWARValidated() {
         return this.isWARValidated;
     }
 
+    /**  @deprecated
+     */
     public void setIsWARValidated(boolean isWARValidated) {
         this.isWARValidated = isWARValidated;
     }
     
+    /**  @deprecated
+     */
     public void addContextInterceptor( ContextInterceptor ci) {
 	contextInterceptors.addElement( ci );
     }
@@ -766,6 +811,7 @@ public class Context {
 	returning the vector - the interceptors will not change at
 	runtime and array access is faster and easier than vector
 	access
+	@deprecated
     */
     public ContextInterceptor[] getContextInterceptors() {
 	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
@@ -777,6 +823,8 @@ public class Context {
 	return cInterceptors;
     }
 
+    /**  @deprecated
+     */
     public void addRequestInterceptor( RequestInterceptor ci) {
 	requestInterceptors.addElement( ci );
     }
@@ -788,6 +836,7 @@ public class Context {
 	returning the vector - the interceptors will not change at
 	runtime and array access is faster and easier than vector
 	access
+	@deprecated 
     */
     public RequestInterceptor[] getRequestInterceptors() {
 	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {

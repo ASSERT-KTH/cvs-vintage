@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.7 2000/02/14 04:59:39 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/14 04:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.8 2000/02/15 17:35:37 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/02/15 17:35:37 $
  *
  * ====================================================================
  *
@@ -128,8 +128,7 @@ public interface ContextInterceptor {
      *  here and path in addMapping into UrlMatch and transport, roles and wrapper
      *  under UrlAction ( or something like that ).
      */
-    public void addSecurityConstraint( Context ctx, String path[], String methods[],
-				       String transport, String roles[] ) throws TomcatException;
+    public void addSecurityConstraint( Context ctx, String path, Container dirConf ) throws TomcatException;
 
 
     /** Servlet Init  notification

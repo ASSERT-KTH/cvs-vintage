@@ -200,7 +200,6 @@ class SCAction extends XmlAction {
 	String tag=ctx.getTag(ctx.getTagCount()-1);
 	SecurityConstraint sc=(SecurityConstraint)st.pop();
 	Context context=(Context)st.peek();
-	ContextManager cm=context.getContextManager();
 	
 	st.push( sc ); // restore stack
 	// add all patterns that will need security
@@ -212,8 +211,8 @@ class SCAction extends XmlAction {
 	    ResourceCollection rc=(ResourceCollection)en.nextElement();
 	    String paths[]=rc.getPatterns();
 	    String meths[]=rc.getMethods();
-	    cm.addSecurityConstraint( context, paths, meths ,
-				      transport, roles);
+	    context.addSecurityConstraint(  paths, meths ,
+					    roles, transport);
 	}
     }
     public void cleanup( SaxContext ctx) {

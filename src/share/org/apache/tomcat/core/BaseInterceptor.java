@@ -140,8 +140,7 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 
     /** 
      */
-    public void addSecurityConstraint( Context ctx, String path[], String methods[],
-				       String transport, String roles[] )
+    public void addSecurityConstraint( Context ctx, String path, Container ct )
 	throws TomcatException
     {
     }

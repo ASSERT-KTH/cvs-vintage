@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.16 2000/02/13 20:49:40 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/02/13 20:49:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.17 2000/02/15 17:35:38 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/02/15 17:35:38 $
  *
  * ====================================================================
  *
@@ -128,6 +128,7 @@ public class RequestImpl  implements Request {
     // set by interceptors
     protected String servletName;
     protected ServletWrapper handler = null;
+    Container container;
     
     protected String mappedPath = null;
 
@@ -411,6 +412,14 @@ public class RequestImpl  implements Request {
 	this.handler=handler;
     }
 
+    public Container getContainer() {
+	return container;
+    }
+    
+    public void setContainer(Container container) {
+	this.container=container;
+    }
+
     /** The file - result of mapping the request ( using aliases and other
      *  mapping rules. Usefull only for static resources.
      */
@@ -552,7 +561,8 @@ public class RequestImpl  implements Request {
 	didParameters = false;
 	didReadFormData = false;
 	didCookies = false;
-
+	container=null;
+	handler=null;
 	scheme = "http";// no need to use Constants
 	method = "GET";
 	requestURI="/";

@@ -171,6 +171,10 @@ public interface Request  {
     
     public void setWrapper(ServletWrapper handler) ;
 
+    public Container getContainer() ;
+    
+    public void setContainer(Container handler) ;
+
     /** The file - result of mapping the request ( using aliases and other
      *  mapping rules. Usefull only for static resources.
      */

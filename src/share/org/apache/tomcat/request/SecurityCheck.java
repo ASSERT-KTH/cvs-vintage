@@ -58,70 +58,46 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.request;
+
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import javax.servlet.http.*;
 
 /**
+ * Will process the request and determine the session Id, and set it
+ * in the Request.
+ * It also marks the session as accessed.
  *
- * @author James Todd [gonzo@eng.sun.com]
+ * This implementation only handles Cookies sessions, please extend or
+ * add new interceptors for other methods.
+ * 
  */
-
-public class Constants {
-    public static final String TOMCAT_NAME = "Tomcat Web Server";
-    public static final String TOMCAT_VERSION = "3.1M1";
-
-    public static final String JSP_NAME = "JSP";
-    public static final String JSP_VERSION = "1.1";
+public class SecurityCheck extends  BaseInterceptor {
+    
+    public SecurityCheck() {
+    }
 	
-    public static final String SERVLET_NAME = "Servlet";
-    public static final int SERVLET_MAJOR = 2;
-    public static final int SERVLET_MINOR = 2;
+    public int beforeBody( Request rrequest, Response response ) {
+	String roles[]=rrequest.getContainer().getRoles();
+	if( roles!=null ) {
+	    System.out.println("XXX XXX XXX EXPECT ROLES " );
+	    for( int i=0; i< roles.length; i++ ) {
+		System.out.println(roles[i]);
+	    }
 
-    public static final String INVOKER_SERVLET_NAME = "invoker";
-    public static final String DEFAULT_SERVLET_NAME = "default";
+	}
+	// extract user, passwd
 
-    public static final String ATTRIB_WORKDIR1 = "sun.servlet.workdir";
-    public static final String ATTRIB_WORKDIR = "javax.servlet.context.tempdir";
+	// check if user is authenticated
 
-    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
-    public static final String SESSION_PARAMETER_NAME = "jsessionid";
-    
-    public static final String Package = "org.apache.tomcat.core";
-    public static final int RequestURIMatchRecursion = 5;
-    public static final String WORK_DIR = "work";
+	// check if auth user is in one of the required roles
+	
+	return 0;
+    }
 
-    public static final String LOCALE_DEFAULT="en";
-    
-    public static final String ATTRIBUTE_RequestURI =
-	"javax.servlet.include.request_uri";
-    public static final String ATTRIBUTE_ServletPath =
-	"javax.servlet.include.servlet_path";
-    public static final String ATTRIBUTE_PathInfo =
-	"javax.servlet.include.path_info";
-    public static final String ATTRIBUTE_QueryString =
-	"javax.servlet.include.query_string";
-    public static final String ATTRIBUTE_Dispatch =
-	"javax.servlet.dispatch.request_uri";
-    public static final String ATTRIBUTE_ERROR_EXCEPTION_TYPE =
-	"javax.servlet.error.exception_type";
-    public static final String ATTRIBUTE_ERROR_MESSAGE =
-	"javax.servlet.error.message";
-    public static final String ATTRIBUTE_RESOLVED_SERVLET =
-	"org.apache.tomcat.servlet.resolved";
-    
-    public static final String WEB_XML_PublicId =
-	"-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
-    public static final String WEB_XML_Resource =
-	"/org/apache/tomcat/deployment/web.dtd";
-
-    public static final String HTML = "text/html";
-
-    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
-    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
-
-
-    // deprecated
-    public static final String[] MASKED_DIR = {
-	"META-INF","WEB-INF"
-    };
 
 }

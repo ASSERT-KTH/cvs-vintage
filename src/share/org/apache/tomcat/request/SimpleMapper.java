@@ -75,6 +75,20 @@ import java.util.*;
 public class SimpleMapper extends  BaseInterceptor  {
     int debug=0;
     ContextManager cm;
+    // String context prefix -> Mappings context maps
+    Hashtable contextPaths=new Hashtable();
+
+    // security restrictions 
+    Hashtable securityConstraints=new Hashtable();
+    
+    class Mappings {
+	Context ctx;
+	Container defaultContainer;
+	Hashtable prefixMappedServlets;
+	Hashtable extensionMappedServlets;
+	Hashtable pathMappedServlets;
+    }
+
     
     public SimpleMapper() {
 	methods.addElement("contextMap");
@@ -98,11 +112,8 @@ public class SimpleMapper extends  BaseInterceptor  {
     }
 
     public void setDebug( int level ) {
+	if(level!=0) System.out.println("SimpleMapper - set debug " + level);
 	debug=level;
-    }
-
-    public void setDebug( String level ) {
-	debug=new Integer( level ).intValue();
     }
 
     void log( String msg ) {
@@ -152,46 +163,76 @@ public class SimpleMapper extends  BaseInterceptor  {
 	return OK;
     }
 
-
+    /** 
+     */
     public int requestMap(Request req) {
 	Context context=req.getContext();
 	String path=req.getLookupPath();
-        ServletWrapper wrapper = null;
+        Container container = null;
 
 	String ctxP=context.getPath();
 	Mappings m=(Mappings)contextPaths.get(ctxP);
 
 	if(debug>0) context.log( "Mapping: " + req );
-	//	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 
-	// try an exact match
-        wrapper = getPathMatch(m, context, path, req);
-
-	// try a prefix match
-	if( wrapper == null ) 
-	    wrapper = getPrefixMatch(m, context, path, req);
-
-	// try an extension match
-	if (wrapper == null) 
-	    wrapper = getExtensionMatch(m, context, path, req);
-
-	// set default wrapper, return
-	if (wrapper == null) {
-	    wrapper = context.getDefaultServlet();
-	    req.setWrapper( wrapper );
+	container=findContainer( m, path, context, req );
+	
+	// set default container, return
+	if (container == null) {
+	    container=m.defaultContainer;
+	    if( m.defaultContainer.getHandler() == null ) {
+		ServletWrapper sw=context.getDefaultServlet();
+		m.defaultContainer.setHandler( sw );
+	    }
+	    req.setWrapper( m.defaultContainer.getHandler() );
 	    req.setServletPath( "" );
 	    req.setPathInfo( path);
 	    if(debug>0) context.log("Default mapper " + "\n    " + req);
+	}  else {
+	    req.setWrapper( container.getHandler() );
+	    
+	    if(debug>0) context.log("Found wrapper using getMapPath " + "\n    " + req);
+	}
+	req.setContainer( container );
+
+	// the container already has security properties
+	// in it, no need to search again
+	if( container.getRoles() != null ) {
+	    if(debug>0) context.log("Existing security constraint " + "\n    " + container.getRoles());
 	    return OK;
-	} 
-
-	req.setWrapper( wrapper );
-
-	if(debug>0) context.log("Found wrapper using getMapPath " + "\n    " + req);
-
+	}
+	
+	// Now find the security restrictions for req
+	m=(Mappings)securityConstraints.get(ctxP);
+	if( m==null) return OK;
+	Container scontainer=findContainer( m, path, context, req);
+	if( m==null ) {
+	    // no security
+	    return OK;
+	}
+	// Merge the security info into the container
+	//
+	if(debug>0) context.log("Found security constraing " + "\n    " + scontainer.getRoles());
+	container.setRoles( scontainer.getRoles());
+	container.setTransport( scontainer.getTransport());
+	
 	return OK;
     }
 
+
+    private Container findContainer( Mappings m, String path, Context context, Request req )
+    {
+	Container container = getPathMatch(m, context, path, req);
+
+	// try a prefix match
+	if( container == null ) 
+	    container = getPrefixMatch(m, context, path, req);
+
+	// try an extension match
+	if (container == null) 
+	    container = getExtensionMatch(m, context, path, req);
+	return container;
+    }
 
     // -------------------- Internal representation of mappings --------------------
     /* Implementation:
@@ -200,16 +241,6 @@ public class SimpleMapper extends  BaseInterceptor  {
        efficient char[] matching ( instead of creating a lot of String garbage ).
 
     */
-
-    // String prefix -> Mappings context maps
-    Hashtable contextPaths=new Hashtable();
-    
-    class Mappings {
-	Context ctx;
-	Hashtable prefixMappedServlets;
-	Hashtable extensionMappedServlets;
-	Hashtable pathMappedServlets;
-    }
 
 
     /** Called when a context is added to a CM
@@ -230,8 +261,25 @@ public class SimpleMapper extends  BaseInterceptor  {
 	while( enum.hasMoreElements() ) {
 	    String path=(String) enum.nextElement();
 	    ServletWrapper sw=ctx.getServletMapping( path );
+	    Container ct=new Container();
+	    ct.setContext( ctx );
+	    ct.setHandler( sw );
 	    if(debug>0) ctx.log("Adding existing " + path );
-	    addMapping( ctx, path, sw );
+	    addMapping( contextPaths, ctx, path, ct );
+	}
+	// set default container
+	Container def=new Container();
+	def.setContext( ctx );
+	ServletWrapper wrapper = ctx.getDefaultServlet();
+	def.setHandler( wrapper );
+	m.defaultContainer=def;
+	
+	enum=ctx.getSecurityConstraints();
+	while( enum.hasMoreElements() ) {
+	    String path=(String) enum.nextElement();
+	    Container ct=ctx.getSecurityConstraint( path );
+	    if(debug>0) ctx.log("Adding existing " + path );
+	    addMapping( securityConstraints, ctx, path, ct );
 	}
 
     }
@@ -250,11 +298,21 @@ public class SimpleMapper extends  BaseInterceptor  {
     }
 
 
+    /** Notification - new handler mapping
+     */
+    public void addMapping( Context ctx, String path, ServletWrapper sw)
+	throws TomcatException
+    {
+	Container ct=new Container();
+	ct.setContext( ctx );
+	ct.setHandler( sw );
+	if(debug>0) ctx.log("Adding existing " + path );
+	addMapping( contextPaths, ctx, path, ct );
+    }
+
     /**
-     * Maps a named servlet to a particular path or extension.
-     * If the named servlet is unregistered, it will be added
-     * and subsequently mapped.
-     *
+     * Associate URL pattern  to a set of propreties.
+     * 
      * Note that the order of resolution to handle a request is:
      *
      *    exact mapped servlet (eg /catalog)
@@ -263,12 +321,20 @@ public class SimpleMapper extends  BaseInterceptor  {
      *    default servlet
      *
      */
-    public void addMapping( Context ctx, String path, ServletWrapper sw)
+    void addMapping( Hashtable mtable, Context ctx, String path, Container ct)
 	throws TomcatException
     {
 	String ctxP=ctx.getPath();
-	Mappings m=(Mappings)contextPaths.get(ctxP);
-	if(debug>0) ctx.log( "Add mapping " + path + " " + sw + " " + m );
+	Mappings m=(Mappings)mtable.get(ctxP);
+	if( m==null ) {
+	    m=new Mappings();
+	    m.ctx=ctx;
+	    m.prefixMappedServlets=new Hashtable();
+	    m.extensionMappedServlets=new Hashtable();
+	    m.pathMappedServlets=new Hashtable();
+	    mtable.put( ctxP, m );
+	}
+	if(debug>0) ctx.log( "Add mapping " + path + " " + ct + " " + m );
 	
 	path = path.trim();
 
@@ -276,12 +342,12 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    return;
 	if (path.startsWith("/") &&
 	    path.endsWith("/*")){
-	    m.prefixMappedServlets.put(path, sw);
+	    m.prefixMappedServlets.put(path, ct);
 	    //	    System.out.println("Map " + path + " -> " + sw );
 	} else if (path.startsWith("*.")) {
-	    m.extensionMappedServlets.put(path, sw);
+	    m.extensionMappedServlets.put(path, ct);
 	} else if (! path.equals("/")) {
-	    m.pathMappedServlets.put(path, sw);
+	    m.pathMappedServlets.put(path, ct);
 	} 
     }
 
@@ -310,52 +376,51 @@ public class SimpleMapper extends  BaseInterceptor  {
 	String path=ctx.getPath();
 	Mappings m=(Mappings)contextPaths.get(path);
 	
-	if (m.prefixMappedServlets.contains(sw)) {
-	    Enumeration enum = m.prefixMappedServlets.keys();
+	Enumeration enum = m.prefixMappedServlets.keys();
 	    
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
-		
-		if (m.prefixMappedServlets.get(key).equals(sw)) {
-		    m.prefixMappedServlets.remove(key);
-		}
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    
+	    if (((Container)m.prefixMappedServlets.get(key)).getHandler().equals(sw)) {
+		m.prefixMappedServlets.remove(key);
 	    }
 	}
 	
-	if (m.extensionMappedServlets.contains(sw)) {
-	    Enumeration enum = m.extensionMappedServlets.keys();
+	enum = m.extensionMappedServlets.keys();
 	    
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    
+	    if (((Container)m.extensionMappedServlets.get(key)).getHandler().equals(sw)) {
+		m.extensionMappedServlets.remove(key);
+		}
+	}
 
-		if (m.extensionMappedServlets.get(key).equals(sw)) {
-		    m.extensionMappedServlets.remove(key);
-		}
-	    }
-	}
-	
-	if (m.pathMappedServlets.contains(sw)) {
-	    Enumeration enum = m.pathMappedServlets.keys();
+	enum = m.pathMappedServlets.keys();
 	    
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
-
-		if (m.pathMappedServlets.get(key).equals(sw)) {
-		    m.pathMappedServlets.remove(key);
-		}
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    
+	    if (((Container)m.pathMappedServlets.get(key)).getHandler().equals(sw)) {
+		m.pathMappedServlets.remove(key);
 	    }
 	}
-	
     }
     
+    public void addSecurityConstraint( Context ctx, String path, Container ct)
+	throws TomcatException
+    {
+	if(debug>0) ctx.log( "Add SC " + path + " " + ct );
+	addMapping( securityConstraints, ctx, path, ct );
+    }
 
 
     // -------------------- Implementation --------------------
     /** Get an exact match ( /catalog ) - rule 1 in 10.1
      */
-    private ServletWrapper getPathMatch(Mappings m, Context context, String path, Request req) {
-        ServletWrapper wrapper = null;
-	wrapper = (ServletWrapper)m.pathMappedServlets.get(path);
+    private Container getPathMatch(Mappings m, Context context, String path, Request req) {
+        Container wrapper = null;
+	wrapper = (Container)m.pathMappedServlets.get(path);
 
 	if (wrapper != null) {
 	    req.setServletPath( path );
@@ -368,8 +433,8 @@ public class SimpleMapper extends  BaseInterceptor  {
 
     /** Match a prefix rule - /foo/bar/index.html/abc
      */
-    private ServletWrapper getPrefixMatch(Mappings m, Context context, String path, Request req) {
-	ServletWrapper wrapper = null;
+    private Container getPrefixMatch(Mappings m, Context context, String path, Request req) {
+	Container wrapper = null;
         String s = path;
 
 	// /baz/== /baz ==/baz/* 
@@ -380,11 +445,11 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    // XXX we can remove /* in prefix map when we add it, so no need
 	    // for another string creation
 	    if(debug>2) context.log( "Prefix: " + s  );
-	    wrapper = (ServletWrapper)m.prefixMappedServlets.get(s + "/*" );
-	    // 	    Enumeration en=m.prefixMappedServlets.keys();
-	    // 	    while( en.hasMoreElements() ) {
-	    // 		System.out.println("XXX: " + en.nextElement());
-	    // 	    }
+	    wrapper = (Container)m.prefixMappedServlets.get(s + "/*" );
+	    //Enumeration en=m.prefixMappedServlets.keys();
+	    //while( en.hasMoreElements() ) {
+	    //System.out.println("XXX: " + en.nextElement());
+	    //}
 	    
 	    if (wrapper == null)
 		s=removeLast( s );
@@ -407,13 +472,13 @@ public class SimpleMapper extends  BaseInterceptor  {
     // It looks like it's broken: try /foo/bar.jsp/test/a.baz -> will not match it
     // as baz, but neither as .jsp, which is wrong.
     // XXX Fix this code - I don't think evolution will work in this class.
-    private ServletWrapper getExtensionMatch(Mappings m, Context context, String path, Request req) {
+    private Container getExtensionMatch(Mappings m, Context context, String path, Request req) {
 	String extension=getExtension( path );
 	if( extension == null ) return null;
 
 	// XXX need to store the extensions without *, to avoid extra
 	// string creation
-	ServletWrapper wrapper= (ServletWrapper)m.extensionMappedServlets.get("*" + extension);
+	Container wrapper= (Container)m.extensionMappedServlets.get("*" + extension);
 	if (wrapper == null)
 	    return null;
 

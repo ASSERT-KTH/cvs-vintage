@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.25 2000/02/14 04:59:39 costin Exp $
- * $Revision: 1.25 $
- * $Date: 2000/02/14 04:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.26 2000/02/15 17:35:38 costin Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/02/15 17:35:38 $
  *
  * ====================================================================
  *
@@ -447,14 +447,6 @@ public class ServletWrapper {
     protected void handleInit(Context context, Servlet servlet, ServletConfig servletConfig )
 	throws ServletException, IOException
     {
-	//	Vector v=context.getInitInterceptors();
-	// 	for( int i=0; i<v.size(); i++ ) {
-	// 	    try { 
-	// 		((LifecycleInterceptor)v.elementAt(i)).preInvoke( context, servlet );
-	// 	    } catch(InterceptorException ex ) {
-	// 		ex.printStackTrace();
-	// 	    }
-	// 	}
 	ContextInterceptor cI[]=context.getContextInterceptors();
 	for( int i=0; i<cI.length; i++ ) {
 	    try {
@@ -475,13 +467,6 @@ public class ServletWrapper {
 	    }
 
 	}
-	// 	for( int i=v.size()-1; i>=0 ; i-- ) {
-	// 	    try { 
-	// 		((LifecycleInterceptor)v.elementAt(i)).postInvoke( context, servlet );
-	// 	    } catch(InterceptorException ex ) {
-	// 		ex.printStackTrace();
-	// 	    }
-	// 	}
     }
 
     /** Call destroy(), with all interceptors before and after in the
@@ -490,14 +475,6 @@ public class ServletWrapper {
     protected void handleDestroy(Context context, Servlet servlet )
 	throws ServletException, IOException
     {
-	// 	Vector v=context.getDestroyInterceptors();
-	// 	for( int i=0; i<v.size(); i++ ) {
-	// 	    try { 
-	// 		((LifecycleInterceptor)v.elementAt(i)).preInvoke( context, servlet );
-	// 	    } catch(InterceptorException ex ) {
-	// 		ex.printStackTrace();
-	// 	    }
-	// 	}
 	ContextInterceptor cI[]=context.getContextInterceptors();
 	for( int i=0; i<cI.length; i++ ) {
 	    try {
@@ -516,16 +493,6 @@ public class ServletWrapper {
 	    }
 
 	}
-	// if an exception is thrown in init, no end interceptors will be called.
-	// that was in the origianl code
-
-	// 	for( int i=v.size()-1; i>=0 ; i-- ) {
-	// 	    try { 
-	// 		((LifecycleInterceptor)v.elementAt(i)).postInvoke( context, servlet );
-	// 	    } catch(InterceptorException ex ) {
-	// 		ex.printStackTrace();
-	// 	    }
-	// 	}
     }
     
 
@@ -536,18 +503,6 @@ public class ServletWrapper {
 				  HttpServletRequestFacade request, HttpServletResponseFacade response )
 	throws ServletException, IOException
     {
-	// XXX pass Request and Response as paramters - all tomcat code use this pattern,
-	// we need to use Facade only when we call the Servlet methods
-	
-	// 	Vector v = context.getServiceInterceptors();
-	// 	for( int i=0; i<v.size(); i++ ) {
-	// 	    try { 
-	// 		((ServiceInterceptor)v.elementAt(i)).preInvoke(context, servlet,
-	// 								  request, response);
-	// 	    } catch(InterceptorException ex ) {
-	// 		ex.printStackTrace();
-	// 	    }
-	// 	}
 	RequestInterceptor cI[]=context.getRequestInterceptors();
 	for( int i=0; i<cI.length; i++ ) {
 	    cI[i].preService( request.getRealRequest(), response.getRealResponse() ); // ignore the error - like in the original code
@@ -564,14 +519,6 @@ public class ServletWrapper {
 	for( int i=cI.length-1; i>=0; i-- ) {
 	    cI[i].postService( request.getRealRequest() , response.getRealResponse() ); // ignore the error - like in the original code
 	}
-	// 	for( int i=v.size()-1; i>=0 ; i-- ) {
-	// 	    try { 	
-	// 		((ServiceInterceptor)v.elementAt(i)).postInvoke(context, servlet,
-	// 								  request, response);
-	// 	    } catch(InterceptorException ex ) {
-	// 		ex.printStackTrace();
-	// 	    }
-	// 	}
     }
 
     // Fancy sync logic is to make sure that no threads are in the
