@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class TxManager
    implements TransactionManager
@@ -67,7 +67,7 @@ public class TxManager
       if (current == null)
          return Status.STATUS_NO_TRANSACTION;
       else
-         return getTransaction().getStatus();
+         return current.getStatus();
    }
    
    public Transaction getTransaction()

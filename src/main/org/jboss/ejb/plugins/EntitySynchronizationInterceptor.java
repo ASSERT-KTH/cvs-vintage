@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -151,7 +151,8 @@ public class EntitySynchronizationInterceptor
 			EnterpriseContext ctx = mi.getEnterpriseContext();
          if (ctx.getId() != null)
          {
-				if (mi.getTransaction().getStatus() == Status.STATUS_ACTIVE)
+				if (mi.getTransaction() != null &&
+				    mi.getTransaction().getStatus() == Status.STATUS_ACTIVE)
 				{
 					// Set tx
 					register(ctx, mi.getTransaction());
@@ -174,7 +175,8 @@ public class EntitySynchronizationInterceptor
       
 //DEBUG      Logger.debug("TX:"+(current.getStatus() == Status.STATUS_ACTIVE));
       
-      if (current.getStatus() == Status.STATUS_ACTIVE)
+      if (current != null &&
+	      current.getStatus() == Status.STATUS_ACTIVE)
       {
          // Synchronize with DB
          if (!ctx.isSynchronized())
