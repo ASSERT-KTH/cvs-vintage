@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.2 2004/12/26 15:33:56 linus Exp $
+// $Id: ArgoParser.java,v 1.3 2004/12/31 02:37:35 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,8 +225,15 @@ public class ArgoParser extends SAXParserBase {
      * @throws SAXException on any error parsing the member XML.
      */
     protected void handleMember(XMLElement e) throws SAXException {
-        LOG.info("Handle member");
-        memberList.add(e.getAttribute("type"));
+        String type = e.getAttribute("type");
+        // The members list dictates the order in which the
+        // members are loaded. So make sure that XMI is at the top
+        // and others below.
+        if (type.equals("xmi")) {
+            memberList.add(0, type);
+        } else {
+            memberList.add(type);
+        }
     }
 
     /**
