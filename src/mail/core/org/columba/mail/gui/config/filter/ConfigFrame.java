@@ -423,8 +423,14 @@ public class ConfigFrame
 			listView.update();
 
 		} else if (action.equals("EDIT")) {
-			Filter filter = getSelected();
-			showFilterDialog(filter);
+			Filter oldFilter = getSelected();
+			Filter newFilter = (Filter) oldFilter.clone();
+			if (showFilterDialog(newFilter)) {
+				int index = listView.getSelectedRow();
+				filterList.insert(newFilter, index);
+				filterList.remove(index+1);
+				listView.update(index);
+			}
 			
 		} else if (action.equals("MOVEUP")) {
 			int[] selectedRows = listView.getSelectedRows();
