@@ -459,7 +459,7 @@
               filtering="true" overwrite="true"/>
 
         <ant antfile="build-torque.xml"
-             dir="${torque.dir.scarab}" target="project-sql"
+             dir="${torque.dir.scarab}" target="sql"
              inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
@@ -500,7 +500,7 @@
         <delete file="${torque.dir.scarab}/schema/scheduler-schema.xml"/>
 
         <ant antfile="build-torque.xml" dir="${torque.dir.scarab}" 
-                target="project-om" inheritAll="false">
+                target="om" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
             <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
