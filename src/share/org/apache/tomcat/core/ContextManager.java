@@ -165,8 +165,7 @@ public class ContextManager {
     public ContextManager() {
     }
 
-
-    // -------------------- Setable properties: tomcat directories  --------------------
+    // -------------------- setable properties: tomcat directories  --------------------
 
     /** 
      *  The home of the tomcat instance - you can have multiple
@@ -741,7 +740,7 @@ public class ContextManager {
 
     /** Called for error-codes
      */
-    void handleStatus( Request req, Response res, int code ) {
+    public void handleStatus( Request req, Response res, int code ) {
 	String errorPath=null;
 	ServletWrapper errorServlet=null;
 	

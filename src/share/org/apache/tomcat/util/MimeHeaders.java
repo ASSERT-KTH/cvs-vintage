@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.4 2000/02/16 17:46:58 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/16 17:46:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.5 2000/05/23 16:57:08 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/23 16:57:08 $
  *
  * ====================================================================
  *
@@ -136,7 +136,6 @@ public class MimeHeaders {
     /**
      * Creates a new MimeHeaders object using a default buffer size.
      */
-
     public MimeHeaders() {
 	this(512);
     }
@@ -144,12 +143,10 @@ public class MimeHeaders {
     /**
      * Clears all header fields.
      */
-
     public void clear() {
 	for (int i = 0; i < count; i++) {
 	    headers[i].reset();
 	}
-
 	count = 0;
     }
 

@@ -254,7 +254,7 @@ public interface Request  {
 
     /** One-to-One with Facade
      */
-    public HttpServletRequestFacade getFacade() ;
+    public HttpServletRequest getFacade() ;
 
     /** Pointer to the server engine - for errors, etc
      */

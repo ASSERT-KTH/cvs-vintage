@@ -79,7 +79,7 @@ public class FixHeaders extends  BaseInterceptor implements RequestInterceptor {
     public int beforeBody( Request request, Response response ) {
 	HttpDate date = new HttpDate(System.currentTimeMillis());
 	response.setHeader("Date", date.toString());
-	response.setHeader("Status", Integer.toString(response.getStatus()));
+	// 	response.setHeader("Status", Integer.toString(response.getStatus()));
         response.setHeader("Content-Type", response.getContentType());
 
 	String contentLanguage=response.getLocale().getLanguage();

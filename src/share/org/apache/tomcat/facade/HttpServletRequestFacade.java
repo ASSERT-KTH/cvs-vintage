@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.12 2000/05/12 19:36:47 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/05/12 19:36:47 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,9 +58,11 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.*;
 import java.io.*;
 import java.net.*;
 import java.security.*;
@@ -79,48 +77,40 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
+ * @author Costin Manolache
  */
-public final class HttpServletRequestFacade implements HttpServletRequest {
+final class HttpServletRequestFacade implements HttpServletRequest {
+    // Use the strings from core
+    private static StringManager sm = StringManager.getManager("org.apache.tomcat.core");
 
-    private StringManager sm = StringManager.getManager(Constants.Package);
     private Request request;
 
-    /** Used to shield the servlet from the internal implementation.
-     */
     HttpSessionFacade sessionFacade;
     
     private boolean usingStream = false;
     private boolean usingReader = false;
 
-    public Request getRealRequest() {
-	// XXX In JDK1.2, call a security class to see if the code has
-	// the right permission !!!
-	Context ctx=request.getContext();
-	if( ctx==null || ! ctx.isTrusted() ) {
-	    // you are not allowed to access internal tomcat objects.
-	    // finer control with a security manager...
-	    //	    throw new SecurityException("Attempt to access internal objects");
-	}
-	return request;
-    }
-
-    /** Not public - called only from RequestImpl
+    /** Not public 
      */
     HttpServletRequestFacade(Request request) {
-	// XXX In JDK1.2, call a security class to see if the code has
-	// the right permission !!!
         this.request = request;
-	sessionFacade=new HttpSessionFacade();
     }
 
-    /** Not public - is called only from RequestImpl
+    /** Not public - is called only from FacadeManager on behalf of Request
      */
     void recycle() {
 	usingReader=false;
 	usingStream=false;
-	sessionFacade.recycle();
+	if( sessionFacade!=null) sessionFacade.recycle();
+    }
+
+    /** Not public - is called only from FacadeManager
+     */
+    Request getRealRequest() {
+	return request;
     }
     
+    // -------------------- Public facade methods --------------------
     public Object getAttribute(String name) {
 	return request.getAttribute(name);
     }
@@ -153,6 +143,9 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
 	return request.getCookies();
     }
 
+    /** Tomcat Request doesn't deal with header to date conversion.
+     *  We delegate this to RequestUtil. ( adapter function )
+     */
     public long getDateHeader(String name) {
 	String value=request.getHeader( name );
 	if( value==null) return -1;
@@ -176,17 +169,20 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
     public Enumeration getHeaderNames() {
         return request.getHeaderNames();
     }
-    
+
+    /** Adapter: Tomcat Request allows both stream and writer access.
+     */
     public ServletInputStream getInputStream() throws IOException {
 	if (usingReader) {
 	    String msg = sm.getString("reqfac.getinstream.ise");
 	    throw new IllegalStateException(msg);
 	}
-
 	usingStream = true;
 	return request.getInputStream();
     }
 
+    /** Adapter: Tomcat Request doesn't deal with header to int conversion.
+     */
     public int getIntHeader(String name)
 	throws  NumberFormatException
     {
@@ -200,6 +196,8 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
         return request.getMethod();
     }
 
+    /** Adapter: Request doesn't deal with this servlet convention
+     */
     public String getParameter(String name) {
         String[] values = getParameterValues(name);
         if (values != null) {
@@ -249,12 +247,13 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
         return request.getServerPort();
     }
 
+    /** Adapter: Tomcat Request allows both stream and writer access.
+     */
     public BufferedReader getReader() throws IOException {
 	if (usingStream) {
 	    String msg = sm.getString("reqfac.getreader.ise");
 	    throw new IllegalStateException(msg);
 	}
-
 	usingReader = true;
 	return request.getReader();
     }
@@ -271,6 +270,8 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
         return request.getRequestURI();
     }
 
+    /** Facade: we delegate to the right object ( the context )
+     */
     public RequestDispatcher getRequestDispatcher(String path) {
         if (path == null)
 	    return null;
@@ -290,14 +291,20 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
 	return request.getContext().getRequestDispatcher(path);
     }
 
+    /** Adapter: first elelment
+     */
     public Locale getLocale() {
 	return (Locale)getLocales().nextElement();
     }
 
+    /** Delegate to RequestUtil
+     */
     public Enumeration getLocales() {
         return RequestUtil.getLocales(this);
     }
 
+    /** Delegate to Context
+     */
     public String getContextPath() {
         return request.getContext().getPath();
     }
@@ -312,6 +319,7 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
     public String getRealPath(String name) {
         return request.getContext().getRealPath(name);
     }
+    
     // -------------------- Security --------------------
     public String getAuthType() {
 	return request.getAuthType();
@@ -330,18 +338,22 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     // -------------------- Session --------------------
+
     public HttpSession getSession() {
         return request.getSession(true);
     }
-    
+
+    /** Create the Facade for session.
+     */
     public HttpSession getSession(boolean create) {
 	HttpSession realSession = request.getSession( create );
 	// No real session, return null
 	if( realSession == null ) {
-	    sessionFacade.recycle();
+	    if( sessionFacade!= null) sessionFacade.recycle();
 	    return null;
 	}
-
+	if(sessionFacade==null)
+	    sessionFacade=new HttpSessionFacade();
 	sessionFacade.setRealSession( realSession );
         return sessionFacade;
     }
@@ -357,6 +369,8 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
 	return (session != null);
     }
 
+    /** Adapter - Request uses getSessionIdSource
+     */
     public boolean isRequestedSessionIdFromCookie() {
 	return Request.SESSIONID_FROM_COOKIE.equals( request.getSessionIdSource() );
     }

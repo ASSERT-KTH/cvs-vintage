@@ -202,7 +202,7 @@ public interface Response {
     /** One-to-one with Facade.
      *  You can use HttpResponseFacade.
      */
-    public HttpServletResponseFacade getFacade() ;
+    public HttpServletResponse getFacade() ;
 
     /** One-to-one relation with Request
      */

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.45 2000/05/15 21:00:31 jon Exp $
- * $Revision: 1.45 $
- * $Date: 2000/05/15 21:00:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.46 2000/05/23 16:56:46 costin Exp $
+ * $Revision: 1.46 $
+ * $Date: 2000/05/23 16:56:46 $
  *
  * ====================================================================
  *
@@ -62,7 +62,9 @@
  */ 
 package org.apache.tomcat.core;
 
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.servlets.TomcatInternalServlet;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -85,10 +87,12 @@ public class ServletWrapper {
     protected ContextManager contextM;
 
     // servletName is stored in config!
+    protected String servletName;
     protected String servletClassName; // required
-    protected ServletConfigImpl config;
     protected Servlet servlet;
     protected Class servletClass;
+
+    protected ServletConfig configF;
 
     // Jsp pages
     private String path = null;
@@ -136,22 +140,20 @@ public class ServletWrapper {
     int origin;
 
     public ServletWrapper() {
-        config = new ServletConfigImpl();
     }
 
     ServletWrapper(Context context) {
-        config = new ServletConfigImpl();
 	setContext( context );
     }
 
     public void setContext( Context context) {
         this.context = context;
 	contextM=context.getContextManager();
-	config.setContext( context );
 	isReloadable=context.getReloadable();
+        configF = context.getFacadeManager().createServletConfig( this );
     }
 
-    protected Context getContext() {
+    public Context getContext() {
 	return context;
     }
 
@@ -172,13 +174,13 @@ public class ServletWrapper {
     }
 
     public String getServletName() {
-        return config.getServletName();
+	return (servletName != null) ? servletName : servletClassName;
     }
 
     public void setServletName(String servletName) {
-        config.setServletName(servletName);
+        this.servletName=servletName;
     }
-
+    
     public String getPath() {
         return this.path;
     }
@@ -201,7 +203,6 @@ public class ServletWrapper {
 
     public void setServletClass(String servletClassName) {
         this.servletClassName = servletClassName;
-	config.setServletClassName(servletClassName);
     }
 
     /** Security Role Ref represent a mapping between servlet role names and
@@ -231,9 +232,26 @@ public class ServletWrapper {
     public void addInitParam( String name, String value ) {
 	if( initArgs==null) {
 	    initArgs=new Hashtable();
-	    config.setInitArgs( initArgs );
 	}
 	initArgs.put( name, value );
+    }
+
+    public String getInitParameter(String name) {
+	if (initArgs != null) {
+            return (String)initArgs.get(name);
+        } else {
+            return null;
+        }
+    }
+
+    public Enumeration getInitParameterNames() {
+        if (initArgs != null) {
+            return initArgs.keys();
+        } else {
+            // dirty hack to return an empty enumeration
+            Vector v = new Vector();
+            return v.elements();
+        }
     }
     
     void destroy() {
@@ -314,11 +332,12 @@ public class ServletWrapper {
 	    servlet = (Servlet)servletClass.newInstance();
 	    if( servlet==null ) throw new ServletException("Error insantiating servlet "  + servletClassName );
 	    //	System.out.println("Loading " + servletClassName + " " + servlet );
+
+	    checkInternal(servlet, servletClassName);
 	    
-	    config.setServletClassName(servlet.getClass().getName());
 	    try {
 		final Servlet sinstance = servlet;
-		final ServletConfigImpl servletConfig = config;
+		final ServletConfig servletConfig = configF;
 		
 		ContextInterceptor cI[]=context.getContextInterceptors();
 		for( int i=0; i<cI.length; i++ ) {
@@ -357,6 +376,13 @@ public class ServletWrapper {
 	    }
     }
 
+    private void checkInternal( Servlet s, String servletClassName ) {
+	if( ! servletClassName.startsWith("org.apache.tomcat") ) return;
+	if( s instanceof TomcatInternalServlet ) {
+	    ((TomcatInternalServlet)s).setFacadeManager( context.getFacadeManager());
+	}
+    }
+    
     // XXX Move it to interceptor - so it can be customized
     // Reloading
     // XXX ugly - should find a better way to deal with invoker
@@ -522,7 +548,7 @@ public class ServletWrapper {
     }
     
     public String toString() {
-	String toS="Wrapper(" + config.getServletName() + " ";
+	String toS="Wrapper(" + getServletName() + " ";
 	if( servlet!=null ) toS=toS+ "S:" + servlet.getClass().getName();
 	else  toS= toS + servletClassName;
 	return toS + ")";

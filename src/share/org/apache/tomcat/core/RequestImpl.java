@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.37 2000/05/21 06:51:52 costin Exp $
- * $Revision: 1.37 $
- * $Date: 2000/05/21 06:51:52 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -64,6 +60,7 @@
 
 package org.apache.tomcat.core;
 
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
@@ -118,7 +115,7 @@ public class RequestImpl  implements Request {
     
     // Request
     protected Response response;
-    protected HttpServletRequestFacade requestFacade;
+    protected HttpServletRequest requestFacade;
     protected Context context;
     protected ContextManager contextM;
     protected Hashtable attributes = new Hashtable();
@@ -153,7 +150,6 @@ public class RequestImpl  implements Request {
     protected int serverPort;
     protected String remoteAddr;
     protected String remoteHost;
-
 
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
@@ -252,7 +248,11 @@ public class RequestImpl  implements Request {
 
     public int getContentLength() {
         if( contentLength > -1 ) return contentLength;
-	contentLength = getFacade().getIntHeader("content-length");
+
+	String value=getHeader( "content-length" );
+	if( value==null) return -1;
+
+	contentLength = Integer.parseInt(value);
 	return contentLength;
     }
 
@@ -343,11 +343,11 @@ public class RequestImpl  implements Request {
     // End hints
 
     // -------------------- Request methods ( high level )
-    public HttpServletRequestFacade getFacade() {
+    public HttpServletRequest getFacade() {
 	// some requests are internal, and will never need a
 	// facade - no need to create a new object unless needed.
         if( requestFacade==null )
-	    requestFacade = new HttpServletRequestFacade(this);
+	    requestFacade = context.getFacadeManager().createHttpServletRequestFacade(this);
 	return requestFacade;
     }
 
@@ -565,6 +565,10 @@ public class RequestImpl  implements Request {
 
     // -------------------- End utils
     public void recycle() {
+	if( requestFacade != null && context!=null ) {
+	    context.getFacadeManager().recycle(this);
+	}
+
 	context = null;
         attributes.clear();
         parameters.clear();
@@ -596,7 +600,6 @@ public class RequestImpl  implements Request {
 	pathInfo=null;
 	pathTranslatedIsSet=false;
 
-	if( requestFacade != null ) requestFacade.recycle();
 	// XXX a request need to override those if it cares
 	// about security
 	remoteAddr="127.0.0.1";

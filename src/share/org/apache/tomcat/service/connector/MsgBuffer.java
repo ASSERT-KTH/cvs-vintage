@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.6 2000/05/19 07:14:16 shachor Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/19 07:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.7 2000/05/23 16:56:55 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/23 16:56:55 $
  *
  * ====================================================================
  *
@@ -74,6 +74,10 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 // XXX check limits?
+
+
+/** Encapsulated messages passed between Tomcat and Web servers
+ */
 public class MsgBuffer {
     byte buff[];
     int len;
@@ -94,6 +98,11 @@ public class MsgBuffer {
 	return buff;
     }
 
+    public void setBuff(byte[] b) {
+	buff=b;
+	maxlen = b.length;
+    }
+
     public int getLen() {
 	return len;
     }
@@ -102,6 +111,8 @@ public class MsgBuffer {
 	return maxlen;
     }
     
+    /** Verify the buffer and read the len
+     */
     public int checkIn() {
 	pos=4;
 	int mark=BuffTool.getInt( buff,0 );

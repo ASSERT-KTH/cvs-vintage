@@ -58,8 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import javax.servlet.ServletOutputStream;
@@ -77,7 +78,8 @@ import javax.servlet.ServletOutputStream;
  * @author Mandar Raje [mandar@eng.sun.com]
  * @author Costin Manolache [costin@eng.sun.com]
  */
-public class ServletOutputStreamFacade extends ServletOutputStream {
+final class ServletOutputStreamFacade extends ServletOutputStream {
+    // Use the strings from core
     protected StringManager sm = StringManager.getManager("org.apache.tomcat.core");
     // encoding
     private Writer writer=null;

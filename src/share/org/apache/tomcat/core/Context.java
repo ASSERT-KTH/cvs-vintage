@@ -61,6 +61,7 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.context.*;
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
@@ -107,7 +108,7 @@ public class Context {
 
     // internal state / related objects
     private ContextManager contextM;
-    private ServletContextFacade contextFacade;
+    private ServletContext contextFacade;
 
     private SessionManager sessionManager;
     private ServletLoader servletL;
@@ -164,6 +165,7 @@ public class Context {
     boolean trusted=false;
     String vhost=null;
     Vector vhostAliases=new Vector();
+    FacadeManager facadeM;
     
     public Context() {
 	defaultContainer=new Container();
@@ -171,9 +173,11 @@ public class Context {
 	defaultContainer.setPath( null ); // default container
     }
 
-    ServletContextFacade getFacade() {
+    /** Every context is associated with a facade
+     */
+    public ServletContext getFacade() {
         if(contextFacade==null )
-	    contextFacade = new ServletContextFacade(contextM, this);
+	    contextFacade = getFacadeManager().createServletContextFacade( this );
 	return contextFacade;
     }
 
@@ -186,6 +190,15 @@ public class Context {
 
     public void setContextManager(ContextManager cm) {
 	contextM=cm;
+    }
+
+    public FacadeManager getFacadeManager() {
+	if( facadeM==null ) {
+	    /* XXX make it configurable
+	     */
+	    facadeM=new SimpleFacadeManager( this );
+	}
+	return facadeM;
     }
 
     /** Base URL for this context
@@ -350,15 +363,25 @@ public class Context {
     }
 
     public Object getAttribute(String name) {
-        if (name.equals("org.apache.tomcat.jsp_classpath")) {
-	    //return getServletLoader().getClassPath();
-	    String cp= getServletLoader().getClassPath();
-	    //	    System.out.println("CP: " + cp);
-	    return cp;
-	}
-	else if(name.equals("org.apache.tomcat.classloader")) {
-	  return this.getServletLoader();
-        }else {
+        if (name.startsWith("org.apache.tomcat")) {
+	    // XXX XXX XXX XXX Security - servlets may get too much access !!!
+	    // right now we don't check because we need JspServlet to
+	    // be able to access classloader and classpath
+	    
+	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
+		String cp= getServletLoader().getClassPath();
+		return cp;
+	    }
+
+	    if(name.equals("org.apache.tomcat.classloader")) {
+		return this.getServletLoader();
+	    }
+	    if( name.equals("org.apache.tomcat.facade")) {
+		if( ! allowAttribute(name) ) return null;
+		return this.getFacadeManager();
+	    }
+	    return null; // org.apache.tomcat namespace is reserved in tomcat
+	} else {
             Object o = attributes.get(name);
             return attributes.get(name);
         }
@@ -732,7 +755,7 @@ public class Context {
     }
 
 
-    Context getContext(String path) {
+    public Context getContext(String path) {
 	if (! path.startsWith("/")) {
 	    return null; // according to spec, null is returned
 	    // if we can't  return a servlet, so it's more probable
@@ -792,7 +815,7 @@ public class Context {
      *    from the path - that's the only way a user can do that unless he have
      *    prior knowledge of the mappings !
      */
-    String getRealPath( String path) {
+    public String getRealPath( String path) {
 	// No need for a sub-request, that's a great simplification
 	// in servlet space.
 
@@ -1044,14 +1067,6 @@ public class Context {
         this.documentBase=s;
     }
 
-    public void setTrusted( boolean t ) {
-	trusted=t;
-    }
-
-    public boolean isTrusted() {
-	return trusted;
-    }
-
     /** Make this context visible as part of a virtual host
      */
     public void setHost( String h ) {
@@ -1075,6 +1090,28 @@ public class Context {
 
     public Enumeration getHostAliases() {
 	return vhostAliases.elements();
+    }
+    // -------------------- Security - trusted code -------------------- 
+    
+    public void setTrusted( boolean t ) {
+	trusted=t;
+    }
+
+    public boolean isTrusted() {
+	return trusted;
+    }
+
+    public boolean allowAttribute( String name ) {
+	// check if we can access this attribute.
+	if( isTrusted() ) return true;
+	if( true ) {
+	    // XXX  XXX XXX
+	    log( "Illegal access to internal attribute ");
+	    return true;
+	}
+	 	
+	// XXX We may check Permissions, etc 
+	return false;
     }
     
 }

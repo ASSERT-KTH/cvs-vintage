@@ -62,6 +62,7 @@ package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.*;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

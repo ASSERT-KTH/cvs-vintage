@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletConfigImpl.java,v 1.3 2000/02/08 18:50:45 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/08 18:50:45 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -65,73 +61,32 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.facade.*;
 import java.io.*;
 import java.net.*;
+import java.security.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- * 
- * @author James Davidson [duncan@eng.sun.com]
- * @author James Todd [gonzo@eng.sun.com]
+ *   Control for facades - this is the only "gate" between servlets
+ *   and tomcat.
  */
-
-class ServletConfigImpl
-implements ServletConfig {
-
-    private Context context;
-    private Hashtable initArgs;
-    private String servletName = null;
-    private String servletClassName = null;
+public interface FacadeManager {
+    public ServletContext createServletContextFacade(Context ctx);
     
-    ServletConfigImpl() {
-    }
+    public  HttpServletRequest createHttpServletRequestFacade(Request req);
 
-    void setContext( Context ctx ) {
-	context=ctx;
-    }
-    
-    ServletConfigImpl(Context context) {
-        this.context = context;
-    }
+    public  HttpServletResponse createHttpServletResponseFacade(Response res);
 
-    void setInitArgs(Hashtable initArgs) {
-        this.initArgs = initArgs;
-    }
-    
-    public ServletContext getServletContext() {
-        return context.getFacade();
-    }
+    public ServletConfig createServletConfig(ServletWrapper sw);
 
-    public String getInitParameter(String name) {
-        if (initArgs != null) {
-            return (String)initArgs.get(name);
-        } else {
-            return null;
-        }
-    }
+    public  void recycle( Request req );
 
-    public Enumeration getInitParameterNames() {
-        if (initArgs != null) {
-            return initArgs.keys();
-        } else {
-            // dirty hack to return an empty enumeration
-            Vector v = new Vector();
+    public  Request getRealRequest( HttpServletRequest req ); 
 
-            return v.elements();
-        }
-    }
+    public Context getRealContext( ServletContext ctx );
 
-    public String getServletName() {
-      return (servletName != null) ? servletName : servletClassName;
-    }
-
-    void setServletName(String servletName) {
-        this.servletName = servletName;
-    }
-
-    void setServletClassName(String servletClassName) {
-        this.servletClassName = servletClassName;
-    }
 }
+    

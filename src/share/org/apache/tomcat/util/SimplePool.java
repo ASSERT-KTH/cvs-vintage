@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SimplePool.java,v 1.1 2000/05/12 21:54:40 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/12 21:54:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SimplePool.java,v 1.2 2000/05/23 16:57:09 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/23 16:57:09 $
  *
  * ====================================================================
  *
@@ -96,6 +96,9 @@ public final class SimplePool  {
 	lock=new Object();
     }
 
+    public  void set(Object o) {
+	put(o);
+    }
     /**
      * Add the object to the pool, silent nothing if the pool is full
      */

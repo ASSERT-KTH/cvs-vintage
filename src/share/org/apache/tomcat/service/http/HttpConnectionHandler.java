@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.23 2000/05/12 02:24:41 costin Exp $
- * $Revision: 1.23 $
- * $Date: 2000/05/12 02:24:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.24 2000/05/23 16:56:59 costin Exp $
+ * $Revision: 1.24 $
+ * $Date: 2000/05/23 16:56:59 $
  *
  * ====================================================================
  *
@@ -183,7 +183,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
 	    reqA.readNextRequest(resA);
 
-	    int contentLength = reqA.getFacade().getIntHeader("content-length");
+	    int contentLength = reqA.getContentLength();
 	    if (contentLength != -1) {
 		BufferedServletInputStream sis =
 		    (BufferedServletInputStream)reqA.getInputStream();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.25 2000/05/21 06:51:52 costin Exp $
- * $Revision: 1.25 $
- * $Date: 2000/05/21 06:51:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.26 2000/05/23 16:56:46 costin Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/05/23 16:56:46 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.facade.*;
 /**
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
@@ -83,7 +84,7 @@ public class ResponseImpl implements Response {
         StringManager.getManager("org.apache.tomcat.core");
 
     protected Request request;
-    protected HttpServletResponseFacade responseFacade;
+    protected HttpServletResponse responseFacade;
     protected Vector userCookies = new Vector();
     protected String contentType = Constants.DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
@@ -101,18 +102,19 @@ public class ResponseImpl implements Response {
     protected boolean usingWriter = false;
     protected boolean started = false;
     protected boolean committed = false;
-
+    
     boolean notIncluded=true;
     
     StringBuffer body=new StringBuffer();
 
     public ResponseImpl() {
-        responseFacade = new HttpServletResponseFacade(this);
 	out=new BufferedServletOutputStream();
 	out.setResponse(this);
     }
 
-    public HttpServletResponseFacade getFacade() {
+    public HttpServletResponse getFacade() {
+        if( responseFacade==null )
+	    responseFacade = request.getContext().getFacadeManager().createHttpServletResponseFacade(this);
 	return responseFacade;
     }
 

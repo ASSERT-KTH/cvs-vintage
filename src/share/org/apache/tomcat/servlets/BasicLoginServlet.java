@@ -62,21 +62,22 @@ package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.*;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 
 /**
- *
+ *  
  */
-public class BasicLoginServlet extends HttpServlet {
-    
+public final class BasicLoginServlet extends TomcatInternalServlet {
+
     public void service(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException
     {
-	Request req=((HttpServletRequestFacade)request).getRealRequest();
+	Request req=facadeM.getRealRequest( request );
 	Context ctx=req.getContext();
 	String realm=ctx.getRealmName();
 	if(realm==null) realm="default";

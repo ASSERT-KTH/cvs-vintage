@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/SessionContextImpl.java,v 1.1 1999/10/09 00:30:21 duncan Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/SessionContextImpl.java,v 1.1 2000/05/23 16:56:52 costin Exp $
  * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:21 $
+ * $Date: 2000/05/23 16:56:52 $
  *
  * ====================================================================
  *
@@ -62,8 +62,9 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
+import org.apache.tomcat.core.*;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.servlet.*;
@@ -73,8 +74,7 @@ import javax.servlet.http.*;
  * 
  * @author duncan@eng.sun.com
  */
-
-public class SessionContextImpl implements HttpSessionContext {
+final class SessionContextImpl implements HttpSessionContext {
 
     /**
      *

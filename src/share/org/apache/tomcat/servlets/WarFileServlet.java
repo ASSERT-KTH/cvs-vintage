@@ -59,6 +59,7 @@
 package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import java.io.*;
@@ -75,8 +76,8 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-public class WarFileServlet extends HttpServlet {
-    private ServletContextFacade facade;
+public class WarFileServlet extends TomcatInternalServlet {
+    private ServletContext facade;
     private String servletInfo = "DefaultServlet";
     private Context context;
     private FileNameMap  mimeTypes;
@@ -84,8 +85,8 @@ public class WarFileServlet extends HttpServlet {
     private DateFormat dateFormat = new SimpleDateFormat(datePattern);
     
     public void init() throws ServletException {
-	facade = (ServletContextFacade)getServletContext();
-	context = facade.getRealContext();
+	facade = getServletContext();
+	context = facadeM.getRealContext(facade);
 	mimeTypes = context.getMimeMap();
     }
 

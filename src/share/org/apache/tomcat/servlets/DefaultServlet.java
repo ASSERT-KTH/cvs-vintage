@@ -61,6 +61,7 @@ package org.apache.tomcat.servlets;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.facade.*;
 import java.io.*;
 import java.net.*;
 import java.text.*;
@@ -74,7 +75,7 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-public class DefaultServlet extends HttpServlet {
+public final class DefaultServlet extends TomcatInternalServlet {
     private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
     private static final DateFormat dateFormat = new SimpleDateFormat(datePattern);
 
@@ -84,9 +85,10 @@ public class DefaultServlet extends HttpServlet {
     int debug=0;
 
     public void init() throws ServletException {
-	contextF = getServletContext();
-	context = ((ServletContextFacade)getServletContext()).getRealContext();
 
+	contextF = getServletContext();
+	context = facadeM.getRealContext( contextF );
+	
 	// doesn't change - set it in init!
 	docBase = context.getDocBase();
         if (! docBase.endsWith("/")) {

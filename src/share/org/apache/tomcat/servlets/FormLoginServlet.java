@@ -62,6 +62,7 @@ package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.*;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -70,14 +71,14 @@ import javax.servlet.http.*;
 /**
  *
  */
-public class FormLoginServlet extends HttpServlet {
+public class FormLoginServlet extends TomcatInternalServlet {
     int debug=0;
     
     public void init() throws ServletException {
 	ServletConfig config=getServletConfig();
 	ServletContext context=config.getServletContext();
-
-	Context ctx=((ServletContextFacade)context).getRealContext();
+	
+	Context ctx=facadeM.getRealContext( context );
 	if( ! "FORM".equals( ctx.getAuthMethod() ))
 	    return;
 	try {
@@ -113,7 +114,7 @@ public class FormLoginServlet extends HttpServlet {
 			HttpServletResponse response)
 	throws ServletException, IOException
     {
-	Request req=((HttpServletRequestFacade)request).getRealRequest();
+	Request req=facadeM.getRealRequest(request);
 	Context ctx=req.getContext();
 	String realm=ctx.getRealmName();
 

@@ -397,10 +397,10 @@ public class XmlMapper
 
 	String dtdURL = (String) dtds.get(publicId);
 	if (dtdURL == null) {
-	    log("Entity: " + publicId + " --> " + systemId);
+	    //	    log("Entity: " + publicId + " --> " + systemId);
 	    return (null);
 	} else {
-	    log("Entity: " + publicId + " --> " + dtdURL);
+	    //	    log("Entity: " + publicId + " --> " + dtdURL);
 	    return (new InputSource(dtdURL));
 	}
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.15 2000/05/12 19:36:48 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/05/12 19:36:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.1 2000/05/23 16:56:51 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/05/23 16:56:51 $
  *
  * ====================================================================
  *
@@ -62,9 +62,10 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -77,22 +78,29 @@ import javax.servlet.http.*;
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Costin Manolache
  */
-
-public final class HttpServletResponseFacade
-    implements HttpServletResponse
+final class HttpServletResponseFacade  implements HttpServletResponse
 {
-    private static StringManager sm =
-        StringManager.getManager(Constants.Package);
-    private Response response;
-
-    Response getRealResponse() {
-	return response;
-    }
+    // Use the strings from core
+    private static StringManager sm =  StringManager.getManager("org.apache.tomcat.core");
     
-    public HttpServletResponseFacade(Response response) {
+    private Response response;
+    private boolean usingStream = false;
+    private boolean usingWriter = false;
+
+    /** Package
+     */
+    HttpServletResponseFacade(Response response) {
         this.response = response;
     }
+
+    void recycle() {
+	usingStream = false;
+	usingWriter= false;
+    }
+    
+    // -------------------- Public methods -------------------- 
 
     public void addCookie(Cookie cookie) {
         response.addCookie(cookie);
@@ -102,8 +110,10 @@ public final class HttpServletResponseFacade
 	return response.containsHeader(name);
     }
 
+    /** Delegate to various components of tomcat. This is not
+     *  part of response, but session code.
+     */
     public String encodeRedirectURL(String location) {
-
 	if (isEncodeable(toAbsolute(location)))
 	    return (toEncoded(location,
 			      response.getRequest().getRequestedSessionId()));
@@ -119,19 +129,16 @@ public final class HttpServletResponseFacade
     }
 
     public String encodeURL(String url) {
-
 	if (isEncodeable(toAbsolute(url)))
 	    return (toEncoded(url,
 			      response.getRequest().getRequestedSessionId()));
 	else
 	    return (url);
-
     }
 
     /**
      * @deprecated
      */
-    
     public String encodeUrl(String url) {
 	return encodeURL(url);
     }
@@ -141,20 +148,22 @@ public final class HttpServletResponseFacade
     }
     
     public ServletOutputStream getOutputStream() {
-	if (response.isUsingWriter() ) {
+	if ( usingWriter ) {
 	    String msg = sm.getString("serverResponse.outputStream.ise");
 	    throw new IllegalStateException(msg);
 	}
+	usingStream=true;
 	response.setUsingStream( true );
 	return response.getOutputStream();
 	// response.getBufferedOutputStream().getServletOutputStreamFacade();
     }
 
     public PrintWriter getWriter() throws IOException {
-	if (response.isUsingStream() ) {
+	if (usingStream) {
 	    String msg = sm.getString("serverResponse.writer.ise");
 	    throw new IllegalStateException(msg);
 	}
+	usingWriter= true ;
 	response.setUsingWriter( true );
 	return response.getWriter();
     }
@@ -166,8 +175,10 @@ public final class HttpServletResponseFacade
     public void sendError(int sc, String msg) throws IOException {
 	if (isCommitted())
 	    throw new IllegalStateException(sm.getString("hsrf.error.ise"));
+
 	else if (sc != HttpServletResponse.SC_UNAUTHORIZED)	// CRM: FIXME
 	    reset();
+
 	setStatus( sc );
 	Request request=response.getRequest();
 	request.setAttribute("javax.servlet.error.message", msg);
@@ -261,6 +272,9 @@ public final class HttpServletResponseFacade
     public void setStatus(int sc, String msg) {
 	response.setStatus(sc);
     }    
+
+
+    // -------------------- Private methods -------------------- 
     
     /**
      * Return <code>true</code> if the specified URL should be encoded with

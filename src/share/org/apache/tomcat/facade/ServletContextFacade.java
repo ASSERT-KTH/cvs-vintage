@@ -58,8 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
@@ -77,7 +78,8 @@ import javax.servlet.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
-public final class ServletContextFacade implements ServletContext {
+final class ServletContextFacade implements ServletContext {
+    // Use the strings from core
     private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
     private ContextManager contextM;
     private Context context;
@@ -87,14 +89,16 @@ public final class ServletContextFacade implements ServletContext {
         this.context = context;
     }
 
-    /**
-     * The one package level hole through the facade for use by
-     * the default servlet and invoker servlet
-     */
-    public Context getRealContext() {
-	// XXX call security !
+    Context getRealContext() {
 	return context;
     }
+
+    // -------------------- Public facade methods --------------------
+    public ServletContext getContext(String path) {
+        Context target=context.getContext(path);
+	return target.getFacade();
+    }
+
     
     public Object getAttribute(String name) {
         return context.getAttribute(name);
@@ -112,10 +116,6 @@ public final class ServletContextFacade implements ServletContext {
         context.removeAttribute(name);
     } 
     
-    public ServletContext getContext(String path) {
-        return context.getContext(path).getFacade();
-    }
-
     public int getMajorVersion() {
         return Constants.SERVLET_MAJOR;
     }

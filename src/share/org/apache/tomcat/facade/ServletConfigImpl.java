@@ -1,6 +1,10 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/ServletConfigImpl.java,v 1.1 2000/05/23 16:56:51 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/05/23 16:56:51 $
+ *
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -58,10 +62,10 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
-import org.apache.tomcat.session.*;
-import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -69,123 +73,34 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- * Facade for http session. Used to prevent servlets to access
- * internal tomcat objects.
- *
- * This is a "special" facade - since session management is
- * (more or less) orthogonal to request processing, it is
- * indpendent of tomcat architecture. It will provide a
- * HttpSession implementation ( but it's not guaranteed
- * in any way it is "safe" ), and HttpSessionFacade will
- * act as a "guard" to make sure only servlet API public
- * methods are exposed.
- *
- * Another thing to note is that this object will be recycled
- * and will allways be set in a request. The "real" session
- * object will determine if the request is part of a session.
- *
- * @author James Duncan Davidson [duncan@eng.sun.com]
- * @author Jason Hunter [jch@eng.sun.com]
+ * 
+ * @author James Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
- * @author costin@eng.sun.com
  */
-public final class HttpSessionFacade implements HttpSession {
-    HttpSession realSession;
+final class ServletConfigImpl implements ServletConfig {
+
+    ServletWrapper servletW;
     
-    HttpSessionFacade() {
+    ServletConfigImpl( ServletWrapper sw) {
+	servletW=sw;
     }
 
-    /** Package-level method - accessible only by core
-     */
-    void setRealSession(HttpSession s) {
- 	realSession=s;
-     }
-
-    /** Package-level method - accessible only by core
-     */
-    void recycle() {
-	realSession=null;
-    }
+    // -------------------- public facade -------------------- 
     
-    public String getId() {
-	return realSession.getId();
+    public ServletContext getServletContext() {
+	return servletW.getContext().getFacade();
     }
 
-    public long getCreationTime() {
-	return realSession.getCreationTime();
-    }
-    
-    /**
-     * We return our own "disabled" SessionContext -
-     * regardless of what the real session returns.
-     *
-     * @deprecated
-     */
-    public HttpSessionContext getSessionContext() {
-	return new SessionContextImpl();
-    }
-    
-    public long getLastAccessedTime() {
-	return realSession.getLastAccessedTime();
+    public String getInitParameter(String name) {
+        return servletW.getInitParameter( name );
     }
 
-    public void invalidate() {
-	realSession.invalidate();
+    public Enumeration getInitParameterNames() {
+	return servletW.getInitParameterNames();
     }
 
-    public boolean isNew() {
-	return realSession.isNew();
-    }
-    
-    /**
-     * @deprecated
-     */
-    public void putValue(String name, Object value) {
-	realSession.putValue(name, value);
+    public String getServletName() {
+	return servletW.getServletName();
     }
 
-    public void setAttribute(String name, Object value) {
-	realSession.setAttribute( name, value );
-    }
-
-    /**
-     * @deprecated
-     */
-    public Object getValue(String name) {
-	return realSession.getValue(name);
-    }
-
-    public Object getAttribute(String name) {
-	return realSession.getAttribute(name);
-    }
-    
-    /**
-     * @deprecated
-     */
-    public String[] getValueNames() {
-	return realSession.getValueNames();
-    }
-
-    public Enumeration getAttributeNames() {
-	return realSession.getAttributeNames();
-    }
-
-    /**
-     * @deprecated
-     */
-    public void removeValue(String name) {
-	realSession.removeAttribute(name);
-    }
-
-    public void removeAttribute(String name) {
-	realSession.removeAttribute(name);
-    }
-
-    public void setMaxInactiveInterval(int interval) {
-	realSession.setMaxInactiveInterval( interval );
-    }
-
-    public int getMaxInactiveInterval() {
-	return realSession.getMaxInactiveInterval();
-    }
 }

@@ -60,6 +60,7 @@ package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.core.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -77,14 +78,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-
-public class InvokerServlet extends HttpServlet {
+public class InvokerServlet extends TomcatInternalServlet {
     private Context context;
     
     public void init() throws ServletException {
-	ServletContextFacade facade =
-	    (ServletContextFacade)getServletContext();
-        context = facade.getRealContext();
+        context = facadeM.getRealContext( getServletContext());
     }
     
     public void service(HttpServletRequest request,HttpServletResponse response)
@@ -194,9 +192,7 @@ public class InvokerServlet extends HttpServlet {
         }
 
 	if( context.getDebug() > 3 ) context.log( "Invoker-based execution " + newServletPath + " " + newPathInfo );
-        HttpServletRequestFacade requestfacade = (HttpServletRequestFacade)request;
-        HttpServletResponseFacade responsefacade = (HttpServletResponseFacade)response;
-	Request realRequest = requestfacade.getRealRequest();
+	Request realRequest = facadeM.getRealRequest( request );
 	Response realResponse = realRequest.getResponse();
 
 	if (! inInclude) {

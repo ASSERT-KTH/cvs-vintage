@@ -59,6 +59,7 @@
 package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
@@ -79,13 +80,13 @@ import javax.servlet.http.*;
  *  Report an error - if no other error page was set up or
  *  if an error happens in an error page.
  */
-public class DefaultErrorPage extends HttpServlet {
+public final class DefaultErrorPage extends TomcatInternalServlet {
 
     public void service(HttpServletRequest requestH,
 			HttpServletResponse responseH)
 	throws ServletException, IOException
     {
-	Request request=((HttpServletRequestFacade)requestH).getRealRequest();
+	Request request=facadeM.getRealRequest( requestH );
 	Response response=request.getResponse();
 
 	// use internal APIs - we can avoid them,but it's easier and faster

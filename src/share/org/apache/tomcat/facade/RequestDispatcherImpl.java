@@ -58,19 +58,31 @@
  */
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+/* This code needs a re-write, it's very ugly.
+   The hardest problem is the requirement to pass the "same" request, but with
+   small modifications. One solution is to use a facade ( was used in tomcat
+   origianlly ). The current solution is to save the modified attributes
+   and restore after the method returns. This saves one object creation -
+   since the subRequest object still has to be created.
+
+   The details are facade-specific, shouldn't affect the core.
+*/
+
 /*
   We do a new sub-request for each include() or forward().
   Even if today we take all decisions based only on path, that may
   change ( i.e. a request can take different paths based on authentication,
-  headers, etc - other Interceptors may affect it).
+  headers, etc - other Interceptors may affect it), that means we need to
+  call CM.
 
   I think this is the correct action - instead of doing a lookup when
   we construct the dispatcher. ( costin )
@@ -85,8 +97,9 @@ import javax.servlet.http.*;
  * @author Alex Cruikshank [alex@epitonic.com]
  * @author costin@dnt.ro
  */
-public class RequestDispatcherImpl implements RequestDispatcher {
-    private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
+final class RequestDispatcherImpl implements RequestDispatcher {
+    // Use the strings from core
+    private static StringManager sm = StringManager.getManager("org.apache.tomcat.core");
     
     Context context;
     // path dispatchers
@@ -98,11 +111,11 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
     /** Used for Context.getRD( path )
      */
-    RequestDispatcherImpl(Context context) {
+    public RequestDispatcherImpl(Context context) {
         this.context = context;
     }
 
-    void setPath( String urlPath ) {
+    public void setPath( String urlPath ) {
 	// separate the query string
 	int i = urlPath.indexOf("?");
 	if( i<0 )
@@ -115,15 +128,20 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         }
     }
 
-    void setName( String name ) {
+    public void setName( String name ) {
 	this.name=name;
     }
+
+    // -------------------- Public methods --------------------
     
     public void forward(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
+	/** We need to find the request/response. The servlet API
+	 *  guarantees that we will receive the original request as parameter.
+	 */
 	Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
-        Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
+        Response realResponse = realRequest.getResponse();
 
 	// according to specs (as of 2.2: started is OK, just not committed)
 	if (realResponse.isBufferCommitted()) 
@@ -171,7 +189,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	throws ServletException, IOException
     {
         Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
-	Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
+	Response realResponse = realRequest.getResponse();
 
 	// the strange case in a separate method
 	if( name!=null) {
