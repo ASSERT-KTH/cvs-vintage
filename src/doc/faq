@@ -57,6 +57,7 @@ A: In simple terms, it means that there was some "Internal Server
    specific problem/exception can be obtained by looking at the 
    server-side trace.
 
+
 Q: What do I need in my CLASSPATH?
 
 A: All you need is a correct version of JDK (1.1.x or 1.2). 
@@ -70,19 +71,31 @@ A: All you need is a correct version of JDK (1.1.x or 1.2).
    All other classes, jar files that are needed, are put by the startserver
    script and you don't need to worry about them.
 
+
 Q: Where are the classes for JSPs and Servlets?
 
-A: lib/facade22.jar	      -- Servlet Engine classes.
-   lib/jaxp.jar               -- Public APIs for XML parser interface
-   lib/parser.jar             -- Public XML parser reference implementation
-   lib/tomcat_core.jar        -- Tomcat web server core classes
-   lib/tomcat_modules.jar     -- Tomcat module classes
-   lib/tomcat-startup.jar     -- Tomcat start/stop classes
-   lib/common/servlet.jar     -- Public APIs for Servlet.
-   lib/shared/jasper.jar      -- JSP Engine classes
-   lib/shared/tomcat_util.jar -- Utility classes.
-   lib/tomcat.jar             -- Executable jar for starting Tomcat
-   lib/stop-tomcat.jar        -- Executable jar for stopping Tomcat
+A: lib classes:
+
+     tomcat.jar         -- Executable jar for starting Tomcat
+     stop-tomcat.jar    -- Executable jar for stopping Tomcat
+
+   lib/common classes
+
+     core_util.jar      -- Utility classes used by apps and container
+     jasper-runtime.jar -- JSP Engine runtime classes
+     servlet.jar        -- Public APIs for Servlets and JSP
+     tomcat_core.jar    -- Tomcat web server core classes
+
+   lib/container classes
+
+     facade22.jar       -- Servlet Engine classes.
+     jasper.jar         -- JSP Engine translation classes
+     jaxp.jar           -- Public APIs for XML parser interface
+     parser.jar         -- Public XML parser reference implementation
+     tomcat_modules.jar -- Tomcat module classes
+     tomcat_util.jar    -- Utility classes.
+     tomcat-startup.jar -- Tomcat start/stop classes
+
 
 Q: Can I combine these classes with other webservers?
 
@@ -90,6 +103,7 @@ A: The JSP engine uses just the public portion of the Java Servlet 2.2
    API. In theory, it could run on other servlet engines that support 
    the Servlet 2.2 API but we have not tested this release on any servlet 
    engine other than the one in Tomcat.
+
 
 Q: Where do I put my jsp sources and beans?
 
@@ -196,11 +210,13 @@ A: A web-application is a collection of resources such as jsps, servlets,
 
      http://localhost:8080/WEBAPP/yourfile.jsp
 
+
 Q: How are the URIs mapped at the server?
 
 A: First, the web-server will match the beginning of the requested URI
    against the prefixes of all contexts (web-applications). If no context 
    matches, it will use the default context instead. 
+
 
 Q: What do different init parameters for the JSP engine mean?
 
@@ -281,3 +297,48 @@ Q: What do different init parameters for the JSP engine mean?
             *.jsp
         </url-pattern>
     </servlet-mapping>
+
+
+Q. I have a bean with a property whose second letter is capitalized.
+   Why won't my JSP page that uses this bean compile?
+
+A. This may not happen often, but can be difficult to determine why.
+   The reason is found in the Java Beans specification, where in section
+   "8.8 Capitalization of inferred names" it states:
+
+       Thus when we extract a property or event name from the middle of an
+       existing Java name, we normally convert the first character to lower
+       case. However to support the occasional use of all upper-case names,
+       we check if the first two characters of the name are both upper case
+       and if so leave it alone.
+
+   This means that if you have a bean with a setter method of "setXLoc",
+   then the inferred property is "XLoc", not "xLoc".  If you used this
+   bean in a JSP page and you tried to use "xLoc" as the property, it
+   would not compile. Using "XLoc" as the property would succeed.
+
+   If you insist on using "xLoc" on the JSP page, you can make this possible
+   by creating a BeanInfo class for the bean.  The following is an example
+   of such a BeanInfo class for a simple bean called Coordinate.  It
+   explicitly defines the properties of the bean to be "xLoc" and "yLoc".
+
+   import java.beans.*;
+   public class CoordinateBeanInfo extends SimpleBeanInfo
+   {
+      private final static Class beanClass = Coordinate.class;
+
+      public PropertyDescriptor[] getPropertyDescriptors()
+      {
+         try {
+            PropertyDescriptor xLocDesc =
+               new PropertyDescriptor("xLoc",beanClass,"getXLoc","setXLoc");
+            PropertyDescriptor yLocDesc =
+               new PropertyDescriptor("yLoc",beanClass,"getYLoc","setYLoc");
+
+            PropertyDescriptor [] pdv = { xLocDesc, yLocDesc };
+            return pdv; 
+         } catch (IntrospectionException e) {
+            throw new Error(e.toString());
+         }
+      }
+   }
