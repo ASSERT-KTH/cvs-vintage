@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.10 2005/01/09 21:10:44 linus Exp $
+// $Id: Section.java,v 1.11 2005/01/20 21:52:56 euluis Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.language.cpp.generator;
+
+import org.argouml.uml.generator.AbstractSection;
 
 /**
  * Reading and writing preserved sections from the code.
