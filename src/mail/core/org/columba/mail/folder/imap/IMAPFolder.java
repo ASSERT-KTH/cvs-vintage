@@ -52,6 +52,7 @@ import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.parser.PassiveHeaderParserInputStream;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.imap.IMAPFlags;
@@ -623,11 +624,11 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public Object addMessage(InputStream in, Attributes attributes, Flags flags)
 			throws Exception {
-		CloneStreamMaster master = new CloneStreamMaster(in);
+		PassiveHeaderParserInputStream withHeaderInputStream = new PassiveHeaderParserInputStream(in);
 
 		IMAPFlags imapFlags = new IMAPFlags(flags.getFlags());
 
-		Integer uid = getServer().append(getImapPath(), master.getClone(),
+		Integer uid = getServer().append(getImapPath(), withHeaderInputStream,
 				imapFlags);
 
 		// Since JUNK is a non-system Flag we have to set it with
@@ -639,7 +640,7 @@ public class IMAPFolder extends RemoteFolder {
 		}
 
 		// Parser the header
-		Header header = readAndParseHeader(master.getClone());
+		Header header = withHeaderInputStream.getHeader();
 
 		fireMessageAdded(uid);
 
@@ -647,33 +648,6 @@ public class IMAPFolder extends RemoteFolder {
 		getHeaderListStorage().addMessage(uid, header, attributes, imapFlags);
 
 		return uid;
-	}
-
-	/**
-	 * @param master
-	 * @return @throws
-	 *         IOException
-	 * @throws ParserException
-	 */
-	private Header readAndParseHeader(InputStream headerStream)
-			throws IOException, ParserException {
-		StringBuffer store = new StringBuffer();
-		int linebreaks = 0;
-
-		int read = headerStream.read();
-		while (linebreaks != 2 && read != -1) {
-			if (read == '\n')
-				linebreaks++;
-			else if (read != '\r')
-				linebreaks = 0;
-
-			store.append((char) read);
-			read = headerStream.read();
-		}
-		headerStream.close();
-
-		Header header = HeaderParser.parse(new CharSequenceSource(store));
-		return header;
 	}
 
 	/*
@@ -784,14 +758,14 @@ public class IMAPFolder extends RemoteFolder {
 	 *      org.columba.ristretto.message.Attributes)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
-		CloneStreamMaster master = new CloneStreamMaster(in);
-
-		Integer uid = getServer().append(getImapPath(), master.getClone());
+		PassiveHeaderParserInputStream withHeaderInputStream = new PassiveHeaderParserInputStream(in);
+		
+		Integer uid = getServer().append(getImapPath(), withHeaderInputStream);
 
 		fireMessageAdded(uid);
 
 		// update the HeaderList
-		Header header = readAndParseHeader(master.getClone());
+		Header header = withHeaderInputStream.getHeader();
 		ColumbaHeader h = new ColumbaHeader(header);
 		getHeaderListStorage().addMessage(uid, header, h.getAttributes(),
 				h.getFlags());

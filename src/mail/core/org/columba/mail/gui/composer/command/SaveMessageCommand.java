@@ -18,8 +18,9 @@ package org.columba.mail.gui.composer.command;
 import java.io.InputStream;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ProgressObservedInputStream;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -31,6 +32,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**
@@ -75,10 +77,13 @@ public class SaveMessageCommand extends FolderCommand {
         if (message == null) {
             message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
         }
-
         folder = (MessageFolder) r[0].getFolder();
+        
+        worker.setDisplayText(MailResourceLoader.getString("statusbar",
+				"message", "save_message"));
+        
 
-        InputStream sourceStream = message.getSourceStream();
+        InputStream sourceStream = new ProgressObservedInputStream( message.getSourceStream(), worker );
         folder.addMessage(sourceStream,
             message.getHeader().getAttributes(), message.getHeader().getFlags());
         sourceStream.close();
