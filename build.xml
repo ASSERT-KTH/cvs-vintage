@@ -79,6 +79,8 @@
   <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
 
+  <property name="jmx.jar" location="../jakarta-tomcat-connectors/lib/mx4j.jar"/>
+
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
@@ -102,6 +104,8 @@
                classname="java.security.PrivilegedAction"/>
     <available property="jaxp-present"
                file="${jaxp.home}/jaxp.jar" />
+    <available property="jmx-present"
+               file="${jmx.jar}" />
     <available property="jaxp10-present"
                file="${jaxp.home}/parser.jar" />
     <available property="jaxp11-present"
@@ -494,6 +498,7 @@
            deprecation="off">
       <classpath>
         <pathelement location="${tomcat-util.jar}"/>
+        <pathelement location="${jmx.jar}"/>
         <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
         <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
         <fileset dir="${tomcat.build}/lib/container">
@@ -504,6 +509,9 @@
       <exclude
           name="org/apache/tomcat/modules/config/LoaderInterceptor12.java"
           unless="jdk12.present"/>
+      <exclude
+          name="org/apache/tomcat/modules/config/MxInterceptor.java"
+          unless="jmx.present"/>
 
       <exclude
           name="org/apache/tomcat/modules/aaa/PooledJDBCRealm.java"
