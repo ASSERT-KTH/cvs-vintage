@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.example.PythonHelloWorldAction" name="My Hello World Plugin" description="Simple Example" version="1.0" >
+ <extension name="org.columba.core.action">
+  <action name="PythonHelloWorld" class="PythonHelloWorldAction.py" />
+ </extension>
+ <extension name="org.columba.mail.menu">
+  <menu name="menu_utilities" extensionpoint="top">
+   <menu name="python">
+  	<menuitem action="org.columba.example.PythonHelloWorldAction$PythonHelloWorld"/>
+  	<separator/>
+  	</menu>
+  </menu>
+ </extension>
+ <runtime type="python"/>
+</plugin>
