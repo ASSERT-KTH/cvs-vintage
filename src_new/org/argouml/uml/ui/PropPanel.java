@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.62 2003/06/09 23:46:29 bobtarling Exp $
+// $Id: PropPanel.java,v 1.63 2003/06/16 00:19:01 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -147,7 +147,7 @@ abstract public class PropPanel extends TabSpawnable implements TabModelTarget, 
         super(title);
         setOrientation(orientation);
 
-        setLayout(new LabelledLayout(orientation));
+        setLayout(new LabelledLayout(orientation == Vertical.getInstance()));
 
         if (icon != null) {
             _titleLabel = new JLabel(localize(title), icon, SwingConstants.LEFT);
