@@ -255,12 +255,6 @@ public  class MITList
     public List getCommonAttributes()
         throws Exception
     {
-        if (size() < 2) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " a list of one or less items.");
-        }
-        
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
         
@@ -271,7 +265,7 @@ public  class MITList
         {
             RModuleAttribute rma = (RModuleAttribute)i.next();
             Attribute att = rma.getAttribute();
-            if (rma.getActive() && isCommon(att))
+            if (rma.getActive() && (size() == 1 || isCommon(att)))
             {
                 matchingAttributes.add(att);
             }
