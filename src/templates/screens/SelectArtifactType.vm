@@ -4,13 +4,16 @@
 
         <h3>$page.Title</h3>
         
+#set ($module = $scarabR.CurrentModule)
+#set ($activeIssueTypes = $module.IssueTypes)
+#if ($activeIssueTypes && $activeIssueTypes.size() > 0)
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
           <th>Name</th>
           <th>Description</th>
         </tr>
 
-#foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
+#foreach ($issueType in $activeIssueTypes)
    #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
    #if ($scarabR.CurrentModule.allowsNewIssues()) 
       #if ($rmit.Dedupe)
@@ -29,4 +32,12 @@
         </tr>
 #end        
         </table>
+#else
+  ## If there are no active issue types 
+  #if ( $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
+    <p><strong class="alert">There are no active issue types for this module. Please go to <a href="$link.setPage("admin,ManageArtifactTypes.vm")"> the admin screens</a> to create some.</strong><p>
+  #else
+    <p><strong class="alert">There are no active issue types for this module. Please contact an administrator to create some.</strong></p>
+  #end
+#end
      </div>
