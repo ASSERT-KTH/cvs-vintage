@@ -1,4 +1,4 @@
-// $Id: AbstractTestActionAddDiagram.java,v 1.7 2004/08/26 20:02:34 mvw Exp $
+// $Id: AbstractTestActionAddDiagram.java,v 1.8 2004/10/13 19:08:50 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
@@ -131,7 +132,12 @@ public abstract class AbstractTestActionAddDiagram extends TestCase {
      */
     public void testDifferentNames() {
 	UMLDiagram diagram1 = action.createDiagram(ns);
-	UMLDiagram diagram2 = action.createDiagram(ns);
+	// This next line is needed to register the diagram in the project, 
+        // since creating a next diagram will need the new name to be compared 
+        // with existing diagrams in the project, to validate 
+        // there are no duplicates.
+	ProjectManager.getManager().getCurrentProject().addMember(diagram1);
+        UMLDiagram diagram2 = action.createDiagram(ns);
 	assertTrue(
 		   "The created diagrams have the same name",
 		   !(diagram1.getName().equals(diagram2.getName())));
