@@ -33,6 +33,7 @@ import javax.naming.Reference;
 import javax.naming.NamingEnumeration;
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
+import javax.naming.StringRefAddr;
 import javax.naming.RefAddr;
 import javax.naming.NameNotFoundException;
 import javax.naming.spi.ObjectFactory;
@@ -46,6 +47,7 @@ import org.jboss.security.RealmMapping;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.EjbRefMetaData;
+import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
 
@@ -69,7 +71,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.41 $
+ *   @version $Revision: 1.42 $
  */
 public abstract class Container
 {
@@ -488,6 +490,40 @@ public abstract class Container
             }
          }
         
+         // Bind Local EJB references
+         {
+            Iterator enum = getBeanMetaData().getEjbLocalReferences();
+            // unique key name
+            String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
+            while(enum.hasNext())
+            {
+
+               EjbLocalRefMetaData ref = (EjbLocalRefMetaData)enum.next();
+               Logger.debug("Binding an EJBLocalReference "+ref.getName());
+
+               if (ref.getLink() != null)
+               {
+                  // Internal link
+                  Logger.debug("Binding "+ref.getName()+" to bean source: "+ref.getLink());
+                  if (getApplication().getContainer(ref.getLink()) == null)
+                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
+                  // get local home
+                  // bind it into the local namespace
+                  LocalHomeObjectFactory.rebind( uniqueKey + ref.getName(), 
+                     getApplication(), getApplication().getContainer(ref.getLink()) );
+                  StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey+ref.getName() );
+                  Reference jndiRef = new Reference(ref.getLocalHome(),
+                     refAddr, LocalHomeObjectFactory.class.getName(), null );
+                  bind(ctx, ref.getName(), jndiRef );
+
+               }
+               else
+               {
+                  throw new DeploymentException( "Local references currently require ejb-link" );
+               }
+            }
+         }
+
          // Bind resource references
          {
             Iterator enum = getBeanMetaData().getResourceReferences();

@@ -22,7 +22,7 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class Application
 	implements Service
@@ -79,6 +79,11 @@ public class Application
    public void removeLocalHome( Container con )
    {
       localHomes.remove( con.getBeanMetaData().getEjbName() );
+   }
+   
+   public EJBLocalHome getLocalHome( Container con )
+   {
+      return (EJBLocalHome) localHomes.get( con.getBeanMetaData().getEjbName() );
    }
    
 
