@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.73 $
+ * @version $Revision: 1.74 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -1287,6 +1287,8 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          Object fk = realValue.isEmpty() ? null : realValue.get(0);
          setForeignKey(myCtx, fk);
       }
+
+      JDBCEntityBridge.setCreated(myCtx);
    }
 
    /**

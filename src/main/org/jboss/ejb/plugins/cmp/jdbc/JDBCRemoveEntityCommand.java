@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public final class JDBCRemoveEntityCommand
 {
@@ -171,7 +171,7 @@ public final class JDBCRemoveEntityCommand
          throw new RemoveException("Could not remove entity");
       }
 
-      if(log.isDebugEnabled())
-         log.debug("Remove: Rows affected = " + rowsAffected);
+      if(log.isTraceEnabled())
+         log.trace("Remove: Rows affected = " + rowsAffected);
    }
 }

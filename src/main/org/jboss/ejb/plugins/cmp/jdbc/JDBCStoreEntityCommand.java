@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCStoreEntityCommand
 {
@@ -155,10 +155,6 @@ public final class JDBCStoreEntityCommand
          throw new EJBException("Update failed. Expected one " +
             "affected row: rowsAffected=" + rowsAffected +
             "id=" + ctx.getId());
-      }
-      if(log.isDebugEnabled())
-      {
-         log.debug("Rows affected = " + rowsAffected);
       }
 
       // Mark the updated fields as clean.

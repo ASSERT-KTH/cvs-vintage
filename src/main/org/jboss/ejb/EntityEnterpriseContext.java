@@ -28,7 +28,7 @@ import javax.ejb.EntityContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -176,7 +176,12 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       return readOnly;
    }
-	
+
+   public String toString()
+   {
+      return getContainer().getBeanMetaData().getEjbName() + '#' + getId();
+   }
+
    protected class EntityContextImpl
       extends EJBContextImpl
       implements EntityContext
