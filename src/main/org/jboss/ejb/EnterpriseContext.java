@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public abstract class EnterpriseContext
 {
@@ -78,8 +78,6 @@ public abstract class EnterpriseContext
       throws RemoteException;
       
    public void setId(Object id) { 
-	   Exception e = new Exception();
-	   e.printStackTrace();
 		this.id = id; 
 	}
 	
