@@ -151,6 +151,13 @@ public class ApacheConfig  extends BaseInterceptor {
                 mod_jk.println();                
                 mod_jk.println("JkWorkersFile \"" + new File(tomcatHome, WORKERS_CONFIG).toString().replace('\\', '/') + "\"");
                 mod_jk.println("JkLogFile \"" + new File(tomcatHome, JK_LOG_LOCATION).toString().replace('\\', '/') + "\"");
+	    } else if( System.getProperty( "os.name" ).startsWith("NetWare")) {
+		// NetWare is a special case
+		pw.println("LoadModule jserv_module modules/JServ.nlm");
+                   mod_jk.println("LoadModule jk_module modules/mod_jk.nlm");
+                   mod_jk.println();                
+                   mod_jk.println("JkWorkersFile \"" + new File(tomcatHome, WORKERS_CONFIG).toString().replace('\\', '/') + "\"");
+                   mod_jk.println("JkLogFile \"" + new File(tomcatHome, JK_LOG_LOCATION).toString().replace('\\', '/') + "\"");
 	    } else {
 		// XXX XXX change it to mod_jserv_${os.name}.so, put all so in tomcat
 		// home
