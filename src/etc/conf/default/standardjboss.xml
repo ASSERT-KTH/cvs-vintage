@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.87 2004/08/17 12:29:00 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.88 2004/09/10 12:57:59 loubyansky Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -434,12 +434,16 @@
       <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc2.JDBCStoreManager2</persistence-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy> 
       <container-cache-conf>
-         <min-capacity>500</min-capacity>
-         <max-capacity>10000</max-capacity>
-         <partitions>10</partitions>
-         <!-- uncomment to use JDBC java.sql.Statement.executeBatch()
-         <batch-commit-strategy/>
-         -->
+         <cache-policy-conf>
+            <min-capacity>500</min-capacity>
+            <max-capacity>10000</max-capacity>
+         </cache-policy-conf>
+         <cache-policy-conf-other>
+            <partitions>10</partitions>
+            <!-- uncomment to use JDBC java.sql.Statement.executeBatch()
+            <batch-commit-strategy/>
+            -->
+         </cache-policy-conf-other>
       </container-cache-conf>
       <container-pool-conf>
          <MaximumSize>100</MaximumSize>
