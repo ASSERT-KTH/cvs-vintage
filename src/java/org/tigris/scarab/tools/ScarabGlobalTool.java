@@ -102,7 +102,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.69 2005/01/10 21:29:46 dabbous Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.70 2005/01/11 22:55:01 dabbous Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
@@ -720,53 +720,18 @@ public class ScarabGlobalTool
 
     /**
      * Provides the flag, wether issue store needs valid reason.
-     *
-     * @return the configured site logo
+     * Note: This method returns true, when the global variable
+     * was not defined. This may be the case when you migrate from an
+     * older version of scarab to b20++ where this parameter was not
+     * used. Thus per default Scarab makes the field required.
+     * 
+     * @return true: yes, valid reason field needed; false: reason field may stay empty.
      */
     public boolean isIssueReasonRequired(Module module)
     {
-        boolean result=false;
-        try
-        {
-            Module me = module;
-            String gp = GlobalParameterManager.getString(
-                                     GlobalParameter.ISSUE_REASON_REQUIRED,
-                                     me); 
-            try
-            {
-                while (gp==null || gp.equals(""))
-                {
-                    Module parent = me.getParent();
-                    if(parent==me)
-                    {
-                        break;
-                    }
-
-                    gp = GlobalParameterManager.getString(
-                         GlobalParameter.ISSUE_REASON_REQUIRED,
-                         parent);
-                    me = parent;
-                }
-            }
-            catch (Exception e)
-            {
-                LOG.warn("Internal error while retrieving data from GLOBAL_PRAMETER_TABLE: ["+e.getMessage()+"]");
-            }
-
-            
-            if(gp==null || gp.equals(""))
-            {
-                result = Turbine.getConfiguration().getBoolean("scarab.issue.edit.reason.required",false);
-            }
-            else
-            {
-                result = gp.equalsIgnoreCase("T")? true:false;
-            }
-        }
-        catch (TorqueException e)
-        {
-            // swallow silently
-        }
+        String key = GlobalParameter.ISSUE_REASON_REQUIRED;
+        boolean result = GlobalParameterManager.
+                             getBooleanFromHierarchy(key, module, true); 
         return result;
     }
 

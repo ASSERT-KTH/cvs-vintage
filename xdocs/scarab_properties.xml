@@ -67,7 +67,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.8 2005/01/09 22:37:12 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.9 2005/01/11 22:55:02 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -702,25 +702,6 @@
         <name>searchindex.path</name>
         <default>WEB-INF/index</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">advanced</customization>
-        <file/>
-      </property>
-
-      <property>
-        <name>scarab.issue.edit.reason.required</name>
-        <default>true</default>
-        <comment>
-          If this property is set to false, then Issues can be
-          saved without given Reason-String.
-        </comment>
-        <details>
-          Normally Scarab insists to receive a manually entered Reason-String 
-          whenver an attempt to save an Issue ocurs. In some environments 
-          this fixed behaviour of Scarab is not wanted. 
-          If this property is set to false (default=true), then issues are 
-          stored even if the reason-string is empty.
-        </details>
         <type>Runtime</type>
          <customization modification="optional">advanced</customization>
         <file/>

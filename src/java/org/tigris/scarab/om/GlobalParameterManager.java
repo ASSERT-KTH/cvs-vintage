@@ -48,10 +48,15 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.Turbine;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.util.ScarabRuntimeException;
 
 
 /** 
@@ -61,15 +66,16 @@ import org.apache.turbine.Turbine;
  * module does not provide alternatives.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameterManager.java,v 1.9 2005/01/11 08:40:06 dabbous Exp $
+ * @version $Id: GlobalParameterManager.java,v 1.10 2005/01/11 22:55:01 dabbous Exp $
  */
 public class GlobalParameterManager
     extends BaseGlobalParameterManager
 {
-    private static final String MANAGER_KEY = 
-        DEFAULT_MANAGER_CLASS;
-    private static final String GET_STRING = "getString";
+    private static final String MANAGER_KEY = DEFAULT_MANAGER_CLASS;
+    private static final String GET_STRING  = "getString";
     private static final String GET_BOOLEAN = "getBoolean";
+
+    private static final Logger LOG = Logger.getLogger("org.tigris.scarab");
 
     /**
      * Creates a new <code>GlobalParameterManager</code> instance.
@@ -310,6 +316,99 @@ public class GlobalParameterManager
             }   
         }
         return b;
+    }
+    
+    /**
+     * Recursively look up for the existence of the key.
+     * Further details, @see #getBooleanFromHierarchy(String key, Module module, boolean def)
+     * 
+     * If no value was not found, return "def" instead.
+     * 
+     * @param key
+     * @param module
+     * @param def
+     * @return
+     */
+    public static boolean getBooleanFromHierarchy(String key, Module module, boolean def)
+    {
+        String defAsString = (def)? "T":"F";
+        String bp = getStringFromHierarchy(key,module, defAsString );
+
+        // bp is "[T|F] when it comes from the database, 
+        // or [true|false] when it comes from Turbine
+        boolean result = (bp.equals("T") || bp.equals("true"))? true:false;
+
+        return result;
+    }
+
+    /**
+     * Recursively look up for the existence of the key in the
+     * module hierarchy. Backtrack towards the module root.
+     * If no value was found, check for the existence of a 
+     * module-independent global parameter. 
+     * If still no value found, check for the Turbine
+     * configuration property with the same key. 
+     * If still no definition found, return the parameter 
+     * "def" instead.
+     * 
+     * @param key
+     * @param module
+     * @param def
+     * @return
+     */
+    public static String getStringFromHierarchy(String key, Module module, String def)
+    {
+        String result = null; 
+        Module me = module;
+        try
+        {
+            do 
+            {
+                Object obj = getMethodResult().get(MANAGER_KEY, key, GET_STRING, me); 
+                if (obj == null) 
+                {
+                    GlobalParameter p = getInstance(key, me);
+                    if(p != null)
+                    {
+                        result = p.getValue();
+                        getMethodResult()
+                            .put(result, MANAGER_KEY, key, GET_STRING, me); 
+                    }
+                }
+                else 
+                {
+                    result = (String)obj;
+                }
+                Module parent = me.getParent();
+                if(parent==me)
+                {
+                    break;
+                }
+                me = parent;
+            } while (result==null || result.equals(""));
+
+            if(result==null || result.equals(""))
+            {
+                // here try to retrieve the module independent parameter,
+                // or as last resort get it from the Turbine config.
+                result = getString(key);
+                
+                // ok, give up and use the hard coded default value.
+                if(result == null || result.equals(""))
+                {
+                    result = def;
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            LOG.warn("Internal error while retrieving data from GLOBAL_PRAMETER_TABLE: ["+e.getMessage()+"]");
+            L10NMessage msg = new L10NMessage(L10NKeySet.ExceptionTorqueGeneric,e.getMessage());
+            throw new ScarabRuntimeException(msg);
+        }
+            
+        return result;        
     }
 
     public static void setBoolean(String name, boolean value)
