@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.301 2003/05/15 21:08:23 elicia Exp $
+ * @version $Id: Issue.java,v 1.302 2003/05/19 23:25:15 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2188,8 +2188,6 @@ public class Issue
         {
             newIssue = this;
             newIssue.setIssueType(newIssueType);
-            // FIXME! the logic below will never be true, correct?
-            // if moved to new module, delete original issue
             if (!newModule.getModuleId().equals(getModule().getModuleId()))
             {
                 delete(user);
@@ -2219,6 +2217,8 @@ public class Issue
                 ActivitySet activitySet = ActivitySetManager.getInstance(
                     ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
                 activitySet.save();
+                newIssue.setCreatedTransId(activitySet.getActivitySetId());
+                newIssue.save();
 
                 for (Iterator i = matchingAttributes.iterator(); i.hasNext();)
                 {
@@ -2286,10 +2286,8 @@ public class Issue
                 }
             }
 
-            // FIXME! the comment below mentions 'copy issue transactions'
-            // but ActivitySetTypePeer.MOVE_ISSUE__PK is not used, what is
-            // meant by that phrase?
-            // Copy over activity sets for edit and copy issue transactions
+            // Copy over activity sets for the source issue's previous
+            // Transactions
             List activitySets = getActivitySets();
             for (Iterator i = activitySets.iterator(); i.hasNext();)
             {

@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.58 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.59 2003/05/19 23:25:15 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -344,7 +344,7 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         else
         {
-                setTarget(data, "IssueList.vm");
+            setTarget(data, "IssueList.vm");
         }
 
         scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
