@@ -92,28 +92,32 @@
                     <description>Resolution set to <xsl:value-of select="resolution"/></description>
                 </activity>
                 </xsl:if>
+            
+            	<xsl:for-each select="dependson">
+                <activity>
+            		<dependency>
+        		        <type>blocking</type>
+    		            <child>TBNS<xsl:value-of select="."/></child>
+		            </dependency>
+                </activity>
+            	</xsl:for-each>
+        	    
+    	        <xsl:for-each select="blocks">
+                <activity>
+	        	    <dependency>
+        	    	    <type>blocking</type>
+    	    	        <parent>TBNS<xsl:value-of select="."/></parent>
+	    	        </dependency>
+                </activity>
+	            </xsl:for-each>
             </transaction>
-            
-            <xsl:for-each select="dependson">
-            <dependency>
-                <type>blocking</type>
-                <child>TBNS<xsl:value-of select="."/></child>
-            </dependency>
-            </xsl:for-each>
-            
-            <xsl:for-each select="blocks">
-            <dependency>
-                <type>blocking</type>
-                <parent>TBNS<xsl:value-of select="."/></parent>
-            </dependency>
-            </xsl:for-each>
             
             <xsl:for-each select="attachment">
             <attachment>
                 <name>Bugzilla Attachment</name>
                 <type>ATTACHMENT</type>
                 <path>file://server/path/to/file.txt</path>
-                <data>Data here!</data>
+                <data></data>
                 <mimetype>text/plain</mimetype>
                 <created-date format="MM/dd/yy HH:mm"><xsl:value-of select="date"/></created-date>
                 <modified-date format="MM/dd/yy HH:mm"><xsl:value-of select="date"/></modified-date>

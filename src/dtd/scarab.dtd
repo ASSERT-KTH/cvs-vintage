@@ -6,10 +6,8 @@
 <!ATTLIST module id CDATA #REQUIRED>
 <!ATTLIST module parent CDATA #REQUIRED>
 
-<!ELEMENT issue (artifact-type, transaction+, dependency*, attachment*)>
+<!ELEMENT issue (artifact-type, transaction+, attachment*)>
 <!ATTLIST issue id CDATA #REQUIRED>
-
-<!ELEMENT dependency (type, (child | parent))>
 
 <!ELEMENT attachment (name, type, path?, data, mimetype, created-date, modified-date, created-by, modified-by)>
 
@@ -22,7 +20,9 @@
 <!ELEMENT transaction (type, committed-by, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
-<!ELEMENT activity (attribute, description)>
+<!ELEMENT activity ((attribute, description) | dependency)>
+
+<!ELEMENT dependency (type, (child | parent))>
 
 <!ELEMENT attribute (name, value, old-value?, type)>
 
