@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server>
+<!-- $Id: cache-invalidation-service.xml,v 1.1 2002/09/30 13:09:35 slaboure Exp $ -->
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Cache Invalidation Service                                           -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<server>
+
+  <mbean code="org.jboss.cache.invalidation.InvalidationManager" 
+         name="jboss.cache:service=InvalidationManager">
+  </mbean>
+
+
+<!--
+	Uncomment if you want to activate the cache invalidation mechanism accross
+	nodes using the JMS bridge -->
+<!--
+  <mbean code="org.jboss.mq.server.jmx.Topic"
+	 name="jboss.mq.destination:service=Topic,name=JMSCacheInvalidationBridge">
+    <depends optional-attribute-name="DestinationManager">jboss.mq:service=DestinationManager</depends>
+    <depends optional-attribute-name="SecurityManager">jboss.mq:service=SecurityManager</depends>
+  </mbean>
+
+  <mbean code="org.jboss.cache.invalidation.bridges.JMSCacheInvalidationBridgeMBean" 
+         name="jboss.cache:service=InvalidationBridge,type=JavaGroups">
+     <depends>jboss.cache:service=InvalidationManager</depends>
+     <depends>jboss.mq.destination:service=Topic,name=JMSCacheInvalidationBridge</depends>
+     <attribute name="InvalidationManager">jboss.cache:service=InvalidationManager</attribute>
+     <attribute name="ConnectionFactoryName">java:/ConnectionFactory</attribute>
+     <attribute name="TopicName">topic/JMSCacheInvalidationBridge</attribute>
+     <attribute name="PropagationMode">1</attribute> <!-- IN_OUT = 1, IN_ONLY = 2, OUT_ONLY = 3 -->
+
+  </mbean>
+-->
+     
+</server>
