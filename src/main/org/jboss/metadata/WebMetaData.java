@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class WebMetaData extends MetaData
 {
@@ -931,7 +931,7 @@ public class WebMetaData extends MetaData
          Element batchModeElement = MetaData.getOptionalChild(sessionReplicationRootElement, "replication-field-batch-mode");
          if (batchModeElement != null)
          {
-            Boolean flag = Boolean.valueOf(batchModeElement.getAttribute("replication-field-batch-mode"));
+            Boolean flag = Boolean.valueOf(MetaData.getElementContent(batchModeElement));
             replicationFieldBatchMode = flag.booleanValue();
          }
       }
