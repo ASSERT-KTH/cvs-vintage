@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.10 2003/10/31 15:24:49 jjones Exp $
+// $Id: CmdCreateNode.java,v 1.11 2003/12/06 18:12:54 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
@@ -47,6 +49,9 @@ import org.argouml.model.uml.UmlFactory;
  */
 public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
 
+    
+    protected static Logger cat = Logger.getLogger(CmdCreateNode.class);
+    
     private static Vector factoryMethods = new Vector();
     static {
         Method[] methodArray = UmlFactory.class.getMethods();
@@ -177,7 +182,9 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
 
             }
         } catch (IllegalAccessException e2) {
+            cat.error(e2);
         } catch (InvocationTargetException e3) {
+            cat.error(e3);
         }
 
         return super.makeNode();

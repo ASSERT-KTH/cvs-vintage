@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.89 2003/12/05 18:55:07 alexb Exp $
+// $Id: Project.java,v 1.90 2003/12/06 18:12:51 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -353,7 +353,13 @@ public class Project implements java.io.Serializable, TargetListener {
                     try {
                         pm.load(sub);
                     } catch (IOException ioe) {
+                        cat.error("exception whilst loading todo"+
+                        " list project member",
+                        ioe);
                     } catch (org.xml.sax.SAXException se) {
+                        cat.error("exception whilst loading todo"+
+                        " list project member",
+                        se);
                     }
                     addMember(pm);
                 }

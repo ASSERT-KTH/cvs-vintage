@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.5 2003/11/10 12:18:37 jhraigniac Exp $
+// $Id: StartBrowser.java,v 1.6 2003/12/06 18:12:57 alexb Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,6 +85,7 @@ public class StartBrowser {
 	}
 	catch (IOException ioe) {
 	    // Didn't work.
+            cat.error(ioe);
 	}	    
 
 	cat.error("Could not open url: " + url);

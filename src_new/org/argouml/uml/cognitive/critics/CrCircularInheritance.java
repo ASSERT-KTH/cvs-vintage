@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: CrCircularInheritance.java,v 1.11 2003/12/06 18:12:55 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: CrCircularInheritance.java,v 1.11 2003/12/06 18:12:55 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -65,6 +65,7 @@ public class CrCircularInheritance extends CrUML {
 	    }
 	    catch (IllegalStateException ex) {
 		problem = PROBLEM_FOUND;
+                cat.info("problem found for: "+this);
 	    }
 	}
 	return problem;

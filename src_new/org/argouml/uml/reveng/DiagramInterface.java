@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.20 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: DiagramInterface.java,v 1.21 2003/12/06 18:12:56 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.uml.reveng;
 import java.beans.PropertyVetoException;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
@@ -53,6 +55,9 @@ import org.argouml.model.ModelFacade;
  */
 public class DiagramInterface {
 
+    protected static Logger cat =
+        Logger.getLogger(DiagramInterface.class);
+    
     Editor _currentEditor = null;
 
     /** To know what diagrams we have to layout after the import,
@@ -295,7 +300,7 @@ public class DiagramInterface {
 	    try {
 		d.setName(diagramName);
 	    } catch (Exception e) {
-		e.printStackTrace();
+		cat.error("Failed to set diagram name.");
 	    }
 	    p.addMember(d);
 	    setCurrentDiagram(d);

@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.17 2003/11/13 20:02:37 jjones Exp $
+// $Id: ModuleLoader.java,v 1.18 2003/12/06 18:12:51 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,7 +118,9 @@ public class ModuleLoader {
 		 */
 	        argoHome = java.net.URLDecoder.decode(argoHome);
 	    }
-	    catch (Exception e) { }
+	    catch (Exception e) {
+             cat.warn(e);
+            }
 
 	    ArgoModule.cat.info("argoHome is " + argoHome);
 	}

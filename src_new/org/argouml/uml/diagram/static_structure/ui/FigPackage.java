@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.39 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: FigPackage.java,v 1.40 2003/12/06 18:12:56 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.39 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: FigPackage.java,v 1.40 2003/12/06 18:12:56 alexb Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -191,6 +191,7 @@ public class FigPackage extends FigNodeModelElement {
 					lNew.setName(diagramName);
 				    }
 				} catch (Exception ex) {
+                                    cat.error(ex);
 				}
 
 				return;

@@ -1,5 +1,5 @@
 
-// $Id: UmlHelper.java,v 1.16 2003/11/10 12:35:45 jhraigniac Exp $
+// $Id: UmlHelper.java,v 1.17 2003/12/06 18:12:54 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
- 
+
+import org.apache.log4j.Logger;
+
 import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsHelper;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
@@ -53,6 +55,9 @@ import ru.novosoft.uml.MBase;
  */
 public class UmlHelper {
 	
+    
+    protected static Logger cat = Logger.getLogger(UmlHelper.class);
+    
     /** Singleton instance.
      */
     private static UmlHelper SINGLETON =
@@ -202,7 +207,9 @@ public class UmlHelper {
 		    try {
 			return methods[i].invoke(this, new Object[] {});
 		    } catch (IllegalAccessException e) {
+                        cat.warn(e);
 		    } catch (InvocationTargetException e) {
+                        cat.warn(e);
 		    }
 		}
 	    }

@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.2 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.3 2003/12/06 18:12:56 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,7 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
             Vector figs = ce.getSelectionManager().getFigs();
             size = figs.size();
         } catch (Exception e) {
+            cat.error("could not determine number of figs",e);
         }
         return size > 0;
     }

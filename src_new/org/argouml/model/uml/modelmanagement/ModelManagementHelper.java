@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.39 2003/12/05 18:55:59 alexb Exp $
+// $Id: ModelManagementHelper.java,v 1.40 2003/12/06 18:12:54 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,7 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MModel;
 import ru.novosoft.uml.model_management.MSubsystem;
 
+import org.apache.log4j.Logger;
 /**
  * Helper class for UML ModelManagement Package.
  *
@@ -54,6 +55,9 @@ import ru.novosoft.uml.model_management.MSubsystem;
  */
 public class ModelManagementHelper {
 
+    
+    protected static Logger cat = Logger.getLogger(ModelManagementHelper.class);
+    
     /** Don't allow instantiation.
      */
     private ModelManagementHelper() {
@@ -261,6 +265,7 @@ public class ModelManagementHelper {
             // TODO This assumes we are working with MThings
             col = getAllModelElementsOfKind(nsa, Class.forName("M" + kind));
         } catch (ClassNotFoundException cnfe) {
+            cat.error(cnfe);
             return Collections.EMPTY_LIST;
         }
         return col;

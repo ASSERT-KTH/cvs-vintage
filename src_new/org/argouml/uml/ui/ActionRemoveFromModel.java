@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.35 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionRemoveFromModel.java,v 1.36 2003/12/06 18:12:57 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Vector;
+
+import org.apache.log4j.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -63,6 +65,9 @@ public class ActionRemoveFromModel extends UMLChangeAction {
 
     public static ActionRemoveFromModel SINGLETON = new ActionRemoveFromModel();
 
+    protected static Logger cat =
+        Logger.getLogger(ActionRemoveFromModel.class);
+    
     ////////////////////////////////////////////////////////////////
     // constructors
 
@@ -87,7 +92,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             Editor ce = Globals.curEditor();
             Vector figs = ce.getSelectionManager().getFigs();
             size = figs.size();
-        } catch (Exception e) { }
+        } catch (Exception e) { //cat.error("Error getting number of figs.");
+        }
         if (size > 0)
             return true;
         Object target = TargetManager.getInstance().getTarget();

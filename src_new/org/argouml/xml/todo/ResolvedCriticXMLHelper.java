@@ -1,4 +1,4 @@
-// $Id: ResolvedCriticXMLHelper.java,v 1.3 2003/06/29 23:53:45 linus Exp $
+// $Id: ResolvedCriticXMLHelper.java,v 1.4 2003/12/06 18:12:57 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,8 @@ import java.util.Vector;
 import java.util.Enumeration;
 import org.argouml.cognitive.ResolvedCritic;
 
+import org.apache.log4j.Logger;
+
 /**
  * A helper class to provide a view of a ResolvedCritic that is particularly
  * suited for saving to an XML file.
@@ -37,6 +39,9 @@ import org.argouml.cognitive.ResolvedCritic;
  */
 public class ResolvedCriticXMLHelper
 {
+    
+	private static Logger cat = Logger.getLogger(ResolvedCriticXMLHelper.class);
+    
     /** The ResolvedCritic this instance helps. */
     protected final ResolvedCritic _item;
 

@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.83 2003/11/13 20:02:37 jjones Exp $
+// $Id: GeneratorJava.java,v 1.84 2003/12/06 18:12:52 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.83 2003/11/13 20:02:37 jjones Exp $
+// $Id: GeneratorJava.java,v 1.84 2003/12/06 18:12:52 alexb Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -214,6 +214,7 @@ public class GeneratorJava
             fos.write(header);
             fos.write(src);
         } catch (IOException exp) {
+            cat.error("IO Exception: "+exp+", for file: "+f.getPath());
         } finally {
             _isFileGeneration = false;
             try {

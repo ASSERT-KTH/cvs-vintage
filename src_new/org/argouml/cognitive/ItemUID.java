@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.9 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: ItemUID.java,v 1.10 2003/12/06 18:12:51 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,10 +147,16 @@ public class ItemUID
 	}
 	catch (NoSuchMethodException nsme)
 	{
+	    cat.error("getItemUID for " + obj.getClass() +
+		      " threw: ",
+		      nsme);
 	    return null;
 	}
 	catch (SecurityException se)
 	{
+	    cat.error("getItemUID for " + obj.getClass() +
+		      " threw: ",
+		      se);
 	    return null;
 	}
 	catch (InvocationTargetException tie)
@@ -162,6 +168,9 @@ public class ItemUID
 	}
 	catch (IllegalAccessException iace)
 	{
+	    cat.error("getItemUID for " + obj.getClass() +
+		      " threw: ",
+		      iace);
 	    return null;
 	}
 	catch (IllegalArgumentException iare)
@@ -173,6 +182,9 @@ public class ItemUID
 	}
 	catch (ExceptionInInitializerError eiie)
 	{
+	    cat.error("getItemUID for " + obj.getClass() +
+		      " exception: ",
+		      eiie);
 	    return null;
 	}
 
@@ -229,10 +241,16 @@ public class ItemUID
 	}
 	catch (NoSuchMethodException nsme)
 	{
+	    cat.error("setItemUID for " + obj.getClass() +
+		      " threw",
+		      nsme);
 	    return null;
 	}
 	catch (SecurityException se)
 	{
+	    cat.error("setItemUID for " + obj.getClass() +
+		      " threw",
+		      se);
 	    return null;
 	}
 	catch (InvocationTargetException tie)
@@ -244,6 +262,9 @@ public class ItemUID
 	}
 	catch (IllegalAccessException iace)
 	{
+	    cat.error("setItemUID for " + obj.getClass() +
+		      " threw",
+		      iace);
 	    return null;
 	}
 	catch (IllegalArgumentException iare)
@@ -255,6 +276,9 @@ public class ItemUID
 	}
 	catch (ExceptionInInitializerError eiie)
 	{
+	    cat.error("setItemUID for " + obj.getClass() +
+		      " threw",
+		      eiie);
 	    return null;
 	}
 

@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.20 2003/12/06 18:12:56 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.20 2003/12/06 18:12:56 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -211,8 +211,10 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
                 newNode = nodeClass.newInstance();
                 
             } catch (java.lang.IllegalAccessException ignore) {
+                cat.error(ignore);
                 return;
             } catch (java.lang.InstantiationException ignore) {
+                cat.error(ignore);
                 return;
             }
 

@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.37 2003/11/10 12:35:45 jhraigniac Exp $
+// $Id: UmlFactory.java,v 1.38 2003/12/06 18:12:53 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.model.UmlModelEntity;
@@ -150,6 +152,9 @@ import ru.novosoft.uml.model_management.MSubsystem;
  */
 public class UmlFactory extends AbstractUmlModelFactory {
 
+    protected static Logger cat =
+        Logger.getLogger(UmlFactory.class);
+    
     /**
      * A map of valid connections keyed by the connection type.
      * The constructor builds this from the data in the VALID_CONNECTIONS array
@@ -1077,6 +1082,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
                                                           new Class[] {} );
         }
         catch (Exception e) {
+            cat.error("Failed to invoke create method on factory.");
             return null;
             // TODO decide if we want to throw an exception instead
             // throw new InvalidObjectRequestException
@@ -1091,6 +1097,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
             // TODO decide if we want to throw an exception instead
             // throw new InvalidObjectRequestException
             //("Cannot execute creator method", entity, e);
+            cat.error("Failed to invoke create method on factory.");
             return null;
         }
         UmlFactory.getFactory().initialize(obj);

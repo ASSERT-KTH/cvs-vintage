@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.25 2003/11/28 15:55:05 jhraigniac Exp $
+// $Id: ClassGenerationDialog.java,v 1.26 2003/12/06 18:12:56 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -351,6 +351,7 @@ public class ClassGenerationDialog extends ArgoDialog implements ActionListener 
             } // else ignore
         }
         catch (Exception userPressedCancel) {
+            cat.info("user pressed cancel");
         }
     }
     

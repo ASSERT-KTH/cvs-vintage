@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.43 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: TabProps.java,v 1.44 2003/12/06 18:12:57 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -276,8 +276,10 @@ public class TabProps
             }
             // doubtfull if the next ones must be ignored.
             catch (IllegalAccessException ignore) {
+                cat.error(ignore);
                 return null;
             } catch (InstantiationException ignore) {
+                cat.error(ignore);
                 return null;
             }
 

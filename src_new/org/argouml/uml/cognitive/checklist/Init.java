@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.7 2003/08/30 23:23:49 alexb Exp $
+// $Id: Init.java,v 1.8 2003/12/06 18:12:54 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.uml.cognitive.checklist;
 
+import org.apache.log4j.Logger;
+
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -37,6 +39,8 @@ import org.argouml.model.ModelFacade;
 
 public class Init {
 
+    protected static Logger cat =
+	Logger.getLogger(Init.class);
 
     /** static initializer, register all appropriate critics */
     public static void init(Locale locale) {
@@ -63,6 +67,7 @@ public class Init {
             CheckManager.register(cls, checklist);
         }
         catch (MissingResourceException e) {
+            cat.error(e);
             e.printStackTrace();
         }
     }

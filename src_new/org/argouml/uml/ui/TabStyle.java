@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.19 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: TabStyle.java,v 1.20 2003/12/06 18:12:57 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.19 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: TabStyle.java,v 1.20 2003/12/06 18:12:57 alexb Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -235,8 +235,10 @@ public class TabStyle
             try {
                 p = (TabFigTarget) panelClass.newInstance();
             } catch (IllegalAccessException ignore) {
+                _cat.error(ignore);
                 return null;
             } catch (InstantiationException ignore) {
+                _cat.error(ignore);
                 return null;
             }
             _panels.put(targetClass, p);
