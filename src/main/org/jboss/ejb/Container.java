@@ -76,7 +76,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.133 $
+ * @version $Revision: 1.134 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -309,9 +309,22 @@ public abstract class Container
 
    public EJBProxyFactory getProxyFactory()
    {
-      return (EJBProxyFactory) proxyFactoryTL.get();
+      EJBProxyFactory factory = (EJBProxyFactory)proxyFactoryTL.get();
+      // There's no factory thread local which means this is probably
+      // a local invocation. Just use the first (usually only)
+      // proxy factory.
+      // TODO: define a default factory in the meta data or 
+      //       even better, let the return over the original transport
+      //       plugin the transport layer for the generated proxy
+      if (factory == null)
+      {
+         Iterator i = proxyFactories.values().iterator();
+         if (i.hasNext())
+            factory = (EJBProxyFactory) i.next();
+      }
+      return factory;
    }
-
+   
    public void setProxyFactory(Object factory)
    {
       proxyFactoryTL.set(factory);
