@@ -50,16 +50,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.torque.TorqueException;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 import org.tigris.scarab.util.ScarabException;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.16 2004/02/01 18:05:13 dep4b Exp $
+ * @version $Id: QueryTest.java,v 1.17 2004/04/07 20:12:22 dep4b Exp $
  */
-public class QueryTest extends BaseTestCase
+public class QueryTest extends BaseScarabOMTestCase
 {
     private Query query = null;
     private Query query1 = null;

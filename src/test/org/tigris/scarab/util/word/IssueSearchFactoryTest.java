@@ -49,7 +49,7 @@ package org.tigris.scarab.util.word;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 /**
  * A Testing Suite for the util.word.IssueSearchFactory class.  This class
@@ -62,9 +62,9 @@ import org.tigris.scarab.test.BaseTestCase;
  * given in millis.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchFactoryTest.java,v 1.4 2004/02/01 14:08:39 dep4b Exp $
+ * @version $Id: IssueSearchFactoryTest.java,v 1.5 2004/04/07 20:12:22 dep4b Exp $
  */
-public class IssueSearchFactoryTest extends BaseTestCase
+public class IssueSearchFactoryTest extends BaseScarabOMTestCase
 {
     private IssueSearch search;
 

@@ -46,15 +46,15 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleIssueTypeTest.java,v 1.5 2004/02/01 18:05:13 dep4b Exp $
+ * @version $Id: RModuleIssueTypeTest.java,v 1.6 2004/04/07 20:12:22 dep4b Exp $
  */
-public class RModuleIssueTypeTest extends BaseTestCase
+public class RModuleIssueTypeTest extends BaseScarabOMTestCase
 {
     private RModuleIssueType rmit = null;
 

@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.turbine.Turbine;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 /**
  * Tests the AttributeAccess implementation.
@@ -59,7 +59,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  */
 public class AttributeAccessTest
-    extends BaseTestCase
+    extends BaseScarabOMTestCase
 {    
     public void setUp() throws Exception{
         super.setUp();

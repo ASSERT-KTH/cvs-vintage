@@ -47,15 +47,15 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 /**
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.11 2004/01/31 18:15:38 dep4b Exp $
+ * @version $Id: ActivityTest.java,v 1.12 2004/04/07 20:12:22 dep4b Exp $
  */
-public class ActivityTest extends BaseTestCase
+public class ActivityTest extends BaseScarabOMTestCase
 {
 
     public void testCreateLong() throws Exception

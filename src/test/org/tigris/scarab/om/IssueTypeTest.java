@@ -46,16 +46,16 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTypeTest.java,v 1.11 2004/02/09 08:55:28 dep4b Exp $
+ * @version $Id: IssueTypeTest.java,v 1.12 2004/04/07 20:12:22 dep4b Exp $
  */
-public class IssueTypeTest extends BaseTestCase
+public class IssueTypeTest extends BaseScarabOMTestCase
 {
 
     private IssueType issueType = null;

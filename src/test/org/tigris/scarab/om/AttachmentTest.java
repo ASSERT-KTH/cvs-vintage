@@ -51,16 +51,16 @@ import java.io.File;
 import org.apache.commons.fileupload.DefaultFileItem;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 
 /**
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.14 2004/02/09 08:55:28 dep4b Exp $
+ * @version $Id: AttachmentTest.java,v 1.15 2004/04/07 20:12:22 dep4b Exp $
  */
-public class AttachmentTest extends BaseTestCase
+public class AttachmentTest extends BaseScarabOMTestCase
 {
     private Attachment comment = null;
     private Attachment fileAttachment = null;

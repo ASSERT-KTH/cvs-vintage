@@ -58,7 +58,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 import org.apache.torque.util.Criteria;
 
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 //import org.tigris.scarab.om.Module;
 //import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.ActivityPeer;
@@ -69,9 +69,9 @@ import org.tigris.scarab.om.ActivityPeer;
  * A Testing Suite for the ImportIssues class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ImportIssuesTest.java,v 1.4 2004/02/01 18:05:13 dep4b Exp $
+ * @version $Id: ImportIssuesTest.java,v 1.5 2004/04/07 20:12:22 dep4b Exp $
  */
-public class ImportIssuesTest extends BaseTestCase
+public class ImportIssuesTest extends BaseScarabOMTestCase
 {
     private static final File INPUT_FILE = new File("src/test/org/tigris/scarab/util/xmlissues/test-issues.xml").getAbsoluteFile();
     private static final String INPUT_FILENAME = INPUT_FILE.toString();

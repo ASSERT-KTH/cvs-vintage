@@ -47,15 +47,15 @@ package org.tigris.scarab.util;
  */
 
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 /**
  * Used for testing the ScarabUtil.java class.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: EmailLinkTest.java,v 1.6 2004/01/31 18:15:39 dep4b Exp $
+ * @version $Id: EmailLinkTest.java,v 1.7 2004/04/07 20:12:22 dep4b Exp $
  */
-public class EmailLinkTest extends BaseTestCase
+public class EmailLinkTest extends BaseScarabOMTestCase
 {
    
 

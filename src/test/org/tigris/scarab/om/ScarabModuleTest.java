@@ -53,15 +53,15 @@ import java.util.Map;
 
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.test.BaseScarabOMTestCase;
 
 /**
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.22 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.23 2004/04/07 20:12:22 dep4b Exp $
  */
-public class ScarabModuleTest extends BaseTestCase
+public class ScarabModuleTest extends BaseScarabOMTestCase
 {
     ScarabModule newModule;
     public void setUp() throws Exception{
