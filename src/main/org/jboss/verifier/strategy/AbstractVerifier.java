@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.35 2002/09/11 14:38:01 lqd Exp $
+ * $Id: AbstractVerifier.java,v 1.36 2002/09/17 15:30:39 lqd Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -83,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -1042,10 +1042,20 @@ public abstract class AbstractVerifier
       context.fireSpecViolation(event);
    }
 
-   protected void fireBeanVerifiedEvent( BeanMetaData bean )
+   protected final void fireBeanVerifiedEvent( BeanMetaData bean )
+   {
+      fireBeanVerifiedEvent( bean, null );
+   }
+
+   protected final void fireBeanVerifiedEvent( BeanMetaData bean, String msg )
    {
       VerificationEvent event = factory.createBeanVerifiedEvent(context);
       event.setName(bean.getEjbName());
+
+      if( msg != null )
+      {
+         event.setMessage( msg );
+      }
 
       context.fireBeanChecked(event);
    }
