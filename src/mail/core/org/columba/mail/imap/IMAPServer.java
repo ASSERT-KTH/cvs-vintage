@@ -1138,6 +1138,27 @@ public class IMAPServer {
 			return getHeaders(uid, keys, path);
 		}
 	}
+	
+	/**
+	 * Get complete headers.
+	 * 
+	 * @param uid		message uid	
+	 * @param path		mailbox path
+	 * @return
+	 * @throws Exception
+	 */
+	public Header getAllHeaders(Object uid, String path) throws Exception {
+		try {
+			ensureSelectedState(path);
+
+			IMAPHeader[] headers = protocol.uidFetchHeader(
+					new SequenceSet(((Integer) uid).intValue()));
+
+			return headers[0].getHeader();
+		} catch (IMAPDisconnectedException e) {
+			return getAllHeaders(uid, path);
+		}
+	}
 
 	/**
 	 * Get {@link MimePart}.

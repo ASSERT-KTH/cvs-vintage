@@ -382,4 +382,13 @@ public class TempFolder extends MessageFolder {
 		//super.removeFolder();
 		// do nothing
 	}
+
+	/**
+	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 */
+	public Header getAllHeaderFields(Object uid) throws Exception {
+		ColumbaHeader header = ((ColumbaMessage) messageList.get(uid)).getHeader();
+		
+		return header.getHeader();
+	}
 }

@@ -839,4 +839,15 @@ public class VirtualFolder extends MessageFolder {
 		return true;
 	}
 
+	/**
+	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 */
+	public Header getAllHeaderFields(Object uid) throws Exception {
+		VirtualHeader h = (VirtualHeader) headerList.get(uid);
+		MessageFolder sourceFolder = h.getSrcFolder();
+		Object sourceUid = h.getSrcUid();
+
+		return sourceFolder.getAllHeaderFields(sourceUid);
+	}
+
 }

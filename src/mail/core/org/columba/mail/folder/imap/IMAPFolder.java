@@ -787,4 +787,11 @@ public class IMAPFolder extends RemoteFolder {
 
 		return searchEngine;
 	}
+
+	/**
+	 * @see org.columba.mail.folder.MailboxInterface#getAllHeaderFields(java.lang.Object)
+	 */
+	public Header getAllHeaderFields(Object uid) throws Exception {
+		return getServer().getAllHeaders(uid, getImapPath() );
+	}
 }

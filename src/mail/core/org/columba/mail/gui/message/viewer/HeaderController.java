@@ -69,6 +69,7 @@ public class HeaderController implements Viewer {
 		DefaultItem item = new DefaultItem(headerviewerElement);
 		int style = item.getInteger("style", 0);
 
+		Header header = null;
 		String[] headers = null;
 		switch (style) {
 		case 0:
@@ -76,6 +77,7 @@ public class HeaderController implements Viewer {
 			headers = new String[] { "Subject", "Date", "From", "To", "Cc",
 					"Bcc", "Reply-To" };
 
+			header = folder.getHeaderFields(uid, headers);
 			break;
 		case 1:
 			// custom headers
@@ -88,16 +90,17 @@ public class HeaderController implements Viewer {
 				headers[i] = tok.nextToken();
 			}
 			
+			header = folder.getHeaderFields(uid, headers);
+			
 			break;
 		case 2:
-			// show all headers
-			// TODO: add show all headers, currently this functionality is missing in 
-			//       in the folder package
-			//
+			// show all headers	
+			header = folder.getAllHeaderFields(uid);
+			
 			break;
 		}
 
-		Header header = folder.getHeaderFields(uid, headers);
+		
 
 		keys = initHeaderFields(header);
 		boolean hasAttachment = ((Boolean) folder.getAttribute(uid,

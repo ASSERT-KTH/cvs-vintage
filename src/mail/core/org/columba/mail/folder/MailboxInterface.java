@@ -289,4 +289,13 @@ public interface MailboxInterface {
      */
     public Object[] getUids() throws Exception;
    
+    
+    /**
+     * Get all email headers.
+     * 
+     * @param uid				message uid
+     * @return					complete email headers
+     * @throws Exception
+     */
+    public Header getAllHeaderFields(Object uid) throws Exception;
 }
