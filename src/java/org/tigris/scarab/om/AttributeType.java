@@ -61,7 +61,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class represents an AttributeType
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeType.java,v 1.11 2002/08/09 01:12:39 jon Exp $
+ * @version $Id: AttributeType.java,v 1.12 2002/08/09 01:40:48 jon Exp $
  */
 public class AttributeType 
     extends BaseAttributeType
@@ -124,11 +124,11 @@ public class AttributeType
         throws TorqueException
     {
         AttributeClass result = null;
-        Object obj = ScarabCache.get(ATTRIBUTETYPE, GET_ATTRIBUTE_CLASS);
+        Object obj = ScarabCache.get(ATTRIBUTETYPE, GET_ATTRIBUTE_CLASS, this);
         if ( obj == null ) 
         {
             result = super.getAttributeClass();
-            ScarabCache.put(result, ATTRIBUTETYPE, GET_ATTRIBUTE_CLASS);
+            ScarabCache.put(result, ATTRIBUTETYPE, GET_ATTRIBUTE_CLASS, this);
         }
         else
         {
