@@ -1340,10 +1340,12 @@ try{
 
         // If they have entered users to search on, and that returns no results
         // Don't bother running search
-        String[] userList = data.getParameters().getStrings("user_list");
+        StringValueParser parser = new StringValueParser();
+        parser.parse(currentQueryString, '&', '=', true);
+        String[] userList = parser.getStrings("user_list");
         if ( userList != null && userList.length > 0)
         {
-            List issueIdsFromUserSearch = getIssueIdsFromUserSearch();
+            List issueIdsFromUserSearch = getIssueIdsFromUserSearch(parser);
             if (issueIdsFromUserSearch.size() > 0)
             {
                 search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
@@ -1458,12 +1460,12 @@ try{
     /**
      * Searches on user attributes.
     */
-    private List getIssueIdsFromUserSearch()
+    private List getIssueIdsFromUserSearch(ValueParser vp)
         throws Exception
     {
         Criteria userCrit = new Criteria();
         boolean atLeastOneMatch = false;
-        Object[] keys =  data.getParameters().getKeys();
+        Object[] keys =  vp.getKeys();
         for (int i =0; i<keys.length; i++)
         {
             String key = keys[i].toString();
@@ -1474,7 +1476,7 @@ try{
                   .add(IssuePeer.TYPE_ID, getCurrentIssueType().getIssueTypeId());
 
                String userId = key.substring(10);
-               String attrId = data.getParameters().getString(key);
+               String attrId = vp.getString(key);
 
                if (attrId == null)
                {
