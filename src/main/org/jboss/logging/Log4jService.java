@@ -34,6 +34,7 @@ import org.jboss.util.NullArgumentException;
 import org.jboss.util.Strings;
 
 import org.jboss.logging.util.LoggerStream;
+import org.jboss.logging.util.OnlyOnceErrorHandler;
 
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -51,7 +52,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss.system:type=Log4jService,service=Logging"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.25 $</tt>
+ * @version <tt>$Revision: 1.26 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
@@ -379,6 +380,7 @@ public class Log4jService
       {
          logger = org.apache.log4j.Logger.getLogger("STDERR");
          err = System.err;
+         OnlyOnceErrorHandler.setOutput(err);
          System.setErr(new LoggerStream(logger, Level.ERROR, err));
          log.debug("Installed System.err adapter");
       }

@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.16 2002/12/14 06:28:41 stormy_sky Exp $ -->
+<!-- $Id: log4j.xml,v 1.17 2003/05/13 12:32:11 ejort Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -22,6 +22,7 @@
 
   <!-- A time/date based rolling appender -->
   <appender name="FILE" class="org.jboss.logging.appender.DailyRollingFileAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="File" value="${jboss.server.home.dir}/log/server.log"/>
     <param name="Append" value="false"/>
 
@@ -44,6 +45,7 @@
 
   <!-- A size based file rolling appender
   <appender name="FILE" class="org.jboss.logging.appender.RollingFileAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="File" value="${jboss.server.home.dir}/log/server.log"/>
     <param name="Append" value="false"/>
     <param name="MaxFileSize" value="500KB"/>
@@ -60,6 +62,7 @@
   <!-- ============================== -->
 
   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="Target" value="System.out"/>
     <param name="Threshold" value="@jboss.server.log.console.threshold@"/>
 
@@ -76,6 +79,7 @@
 
   <!-- Buffer events and log them asynchronously
   <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <appender-ref ref="FILE"/>
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="SMTP"/>
@@ -84,6 +88,7 @@
 
   <!-- EMail events to an administrator
   <appender name="SMTP" class="org.apache.log4j.net.SMTPAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="Threshold" value="ERROR"/>
     <param name="To" value="admin@myhost.domain.com"/>
     <param name="From" value="nobody@myhost.domain.com"/>
@@ -98,6 +103,7 @@
 
   <!-- Syslog events
   <appender name="SYSLOG" class="org.apache.log4j.net.SyslogAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="Facility" value="LOCAL7"/>
     <param name="FacilityPrinting" value="true"/>
     <param name="SyslogHost" value="localhost"/>
@@ -106,6 +112,7 @@
 
   <!-- Log events to JMS (requires a topic to be created)
   <appender name="JMS" class="org.apache.log4j.net.JMSAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="Threshold" value="ERROR"/>
     <param name="TopicConnectionFactoryBindingName" value="java:/ConnectionFactory"/>
     <param name="TopicBindingName" value="topic/MyErrorsTopic"/>
@@ -118,6 +125,7 @@
    !   spot errors / fatals.
    ! - ->
   <appender name="LF5Appender" class="org.apache.log4j.lf5.LF5Appender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="MaxNumberOfRecords" value="5000"/>
   </appender>
   <!- - -->
@@ -166,6 +174,7 @@
      org.jboss.ha categories to a cluster.log file.
 
   <appender name="CLUSTER" class="org.jboss.logging.appender.RollingFileAppender">
+    <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
     <param name="File" value="${jboss.server.home.dir}/log/cluster.log"/>
     <param name="Append" value="false"/>
     <param name="MaxFileSize" value="500KB"/>
