@@ -128,7 +128,6 @@
         <filter token="ADMIN_FIRSTNAME" value="${scarab.user.firstname}"/>
         <filter token="ADMIN_LASTNAME" value="${scarab.user.lastname}"/>
         <filter token="ADMIN_EMAIL" value="${scarab.user.email}"/>
-        <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
@@ -547,9 +546,9 @@
 
         <javac srcdir="${src.java.dir.scarab}"
             destdir="${build.dest.scarab}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}">
+            debug="on"
+            deprecation="off"
+            optimize="off">
       <classpath refid="classpath"/>
             <classpath>
                 <fileset dir="${build.project.webinf.lib}">
