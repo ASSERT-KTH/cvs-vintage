@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.21 2004/04/19 21:17:54 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.22 2004/07/30 07:25:02 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -116,7 +116,9 @@ class VFSFileNameField extends HistoryTextField
 		else if(evt.getID() == KeyEvent.KEY_TYPED)
 		{
 			char ch = evt.getKeyChar();
-			if(ch == '/' || ch == File.separatorChar)
+			if((ch == '/' || ch == File.separatorChar)
+				&& getCaretPosition()
+				== getDocument().getLength())
 			{
 				super.processKeyEvent(evt);
 				String path = getText();
