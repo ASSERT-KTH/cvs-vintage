@@ -154,6 +154,7 @@ public class EmbededTomcat {
     
     boolean serverXml=true;
     boolean help;
+    boolean blocking=false;
 
     // prevent tomcat from starting.
     boolean nostart=false;
@@ -182,6 +183,12 @@ public class EmbededTomcat {
 	debug( "Debugging enabled ");
     }
 
+    /**
+     * set if we need to block.
+     */
+    public void setStartb(boolean b) {
+	blocking = b;
+    }
 
     boolean noClassLoaders=false;
     
@@ -611,6 +618,25 @@ public class EmbededTomcat {
 	contextM.start();
 	long time4=System.currentTimeMillis();
 	debug("Startup time " + ( time4-time3 ));
+	if(blocking) {
+	    await();
+	}
+    }
+
+    /**
+     * Wait for a shutdown.
+     */
+    void await() {
+	while(blocking) {
+	    synchronized(this) {
+		try{
+		    wait();
+		    blocking = false;
+		}catch(Exception ex) {
+		    contextM.log("Error in await",ex);
+		}
+	    }
+	}
     }
 
     /** Shutdown contextM - <em>may</em> exit the VM.
@@ -621,12 +647,18 @@ public class EmbededTomcat {
      */
     public void shutdown() throws TomcatException {
 	contextM.shutdown();
+	if(blocking) {
+	    notify();
+	}
     }
 
     /** Stop contextM - will not exit the VM.
      */
     public void stop() throws TomcatException {
 	contextM.stop();
+	if(blocking) {
+	    notify();
+	}
     }
 
     // -------------------- Helpers and shortcuts --------------------

@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.43 2003/09/22 09:18:58 hgomez Exp $
+/* $Id: Main.java,v 1.44 2004/02/12 08:24:03 billbarker Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -231,6 +231,7 @@ public class Main{
 	tasks.put("stop", "org.apache.tomcat.startup.StopTomcat");
 	tasks.put("enableAdmin", "org.apache.tomcat.startup.EnableAdmin");
 	tasks.put("start", "org.apache.tomcat.startup.EmbededTomcat");
+        tasks.put("startb", "org.apache.tomcat.startup.EmbededTomcat"); 
 	tasks.put("run", "org.apache.tomcat.startup.EmbededTomcat");
 	tasks.put("jspc", "org.apache.tomcat.startup.Jspc");
 	tasks.put("estart", "org.apache.tomcat.startup.EmbededTomcat");
