@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.15 2004/07/17 13:10:30 kataka Exp $
+// $Id: PropPanelActionState.java,v 1.16 2004/07/25 16:14:59 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,11 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.15 2004/07/17 13:10:30 kataka Exp $
+// $Id: PropPanelActionState.java,v 1.16 2004/07/25 16:14:59 mkl Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
 import org.argouml.i18n.Translator;
-
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
 import org.argouml.util.ConfigLoader;
 
