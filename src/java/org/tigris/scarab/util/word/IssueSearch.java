@@ -48,19 +48,19 @@ package org.tigris.scarab.util.word;
 
 // JDK classes
 import java.util.AbstractList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import com.workingdogs.village.Record;
 import org.apache.torque.Torque;
@@ -384,6 +384,10 @@ public class IssueSearch
         return result;
     }
 
+    /**
+     * @return The list of attributes of type "user" for the module(s)
+     * to search in.
+     */
     public List getUserAttributes()
         throws Exception
     {
@@ -422,8 +426,9 @@ public class IssueSearch
     }
 
     /**
-     * Get the value of searchWords.
-     * @return value of searchWords.
+     * Get the words for which to search.
+     *
+     * @return Value of {@link searchWords}.
      */
     public String getSearchWords() 
     {
@@ -431,8 +436,9 @@ public class IssueSearch
     }
     
     /**
-     * Set the value of searchWords.
-     * @param v  Value to assign to searchWords.
+     * Set the words for which to search.
+     *
+     * @param v Value to assign to {@link searchWords}.
      */
     public void setSearchWords(String  v) 
     {
@@ -481,9 +487,9 @@ public class IssueSearch
         }
         else
         {
-            for (int i=textScope.length-1; i>=0; i--) 
+            for (int i = textScope.length - 1; i >= 0; i--)
             {
-                if (textScope[i].equals(ALL_TEXT)) 
+                if (ALL_TEXT.equals(textScope[i])) 
                 {
                     textScope = getTextScopeForAll();
                     break;
@@ -1903,6 +1909,16 @@ public class IssueSearch
         return count;
     }
 
+    /**
+     * FIXME: If we are sorting on an attribute column (determined by
+     * <code>sortAttrPos >= 0</code>) and some rows have null
+     * (non-existent) values for that attribute, we'd like to separate
+     * them for presentation at the end of the list.  Otherwise, for
+     * certain polarity (such as when sorting in ascending order) they
+     * will be shown first.  The
+     * <code>java.sql.DatabaseMetaData.nullsAreSortedAtEnd()</code>
+     * method may be able to help us here.
+     */
     private List sortResults(StringBuffer select, 
                              StringBuffer from, StringBuffer where)
         throws Exception
@@ -2044,7 +2060,7 @@ public class IssueSearch
             close();
             throw e;
         }
-        return new QueryResultList(resultSet, sortAttrPos, valueListSize);
+        return new QueryResultList(resultSet, valueListSize);
     }
 
     /**
@@ -2052,22 +2068,11 @@ public class IssueSearch
      * single {@link QueryResult} object.  Assumes that rows in the
      * <code>ResultSet</code> are grouped by issue.
      *
-     * FIXME: If we are sorting on an attribute column (determined by
-     * <code>sortAttrPos >= 0</code>) and some rows have null
-     * (non-existent) values for that attribute, we'd like to separate
-     * them for presentation at the end of the list.  Otherwise, for
-     * certain polarity (such as when sorting in ascending order) they
-     * will be shown first.  The
-     * <code>java.sql.DatabaseMetaData.nullsAreSortedAtEnd()</code>
-     * method may be able to help us here.
-     *
      * @param resultSet The database cursor.
-     * @param sortAttrPos The column position into the ResultSet
-     * columns which indicates which column you'd like to sort on.
      * @return A single {@link QueryResult} object.
      * @exception SQLException If a database error occurs.
      */
-    private QueryResult buildQueryResult(ResultSet resultSet, int sortAttrPos,
+    private QueryResult buildQueryResult(ResultSet resultSet,
                                          int valueListSize)
         throws SQLException
     {
@@ -2075,7 +2080,11 @@ public class IssueSearch
         Logger scarabLog = Log.get("org.tigris.scarab");
 
         boolean buildingResult = true;
-        if (resultSet.isBeforeFirst())
+        int fetchDirection = resultSet.getFetchDirection();
+        if ((fetchDirection == ResultSet.FETCH_FORWARD
+             && resultSet.isBeforeFirst())
+            || (fetchDirection == ResultSet.FETCH_REVERSE
+                && resultSet.isAfterLast()))
         {
             // Ready, steady...
             buildingResult = resultSet.next();
@@ -2250,6 +2259,9 @@ public class IssueSearch
     }
 
     /**
+     * Prefer sequential access of uncached QueryResult objects, as
+     * non-sequential access does not scale.
+     *
      * FIXME: This should be an Iterator or Collection, not a List, as
      * it does not support true random access.
      */
@@ -2262,7 +2274,6 @@ public class IssueSearch
         private static final int CACHE_SIZE = 5;
 
         private ResultSet issues;
-        private int sortAttrPos;
         private int valueListSize;
 
         // A LRU-ish cache of indices -> QueryResult
@@ -2278,18 +2289,31 @@ public class IssueSearch
          */
         private int lastListIndex = -1;
 
-        public QueryResultList(ResultSet issues, int sortAttrPos,
-                               int valueListSize)
+        /**
+         * @param issues The issue query results.
+         */
+        public QueryResultList(ResultSet issues, int valueListSize)
+            throws SQLException
         {
+            int type = issues.getType();
+            if (type != ResultSet.TYPE_SCROLL_INSENSITIVE
+                && type != ResultSet.TYPE_SCROLL_SENSITIVE)
+            {
+                throw new IllegalArgumentException
+                    ("ResultSet type must be TYPE_SCROLL_INSENSITIVE");
+            }
             this.issues = issues;
-            this.sortAttrPos = sortAttrPos;
             this.valueListSize = valueListSize;
         }
 
         /**
          * Delegates to {@link #buildQueryResult(ResultSet, int,
          * int)}, and performs caching of most recently created {@link
-         * QueryResult} objects.  Only sequential access is supported!
+         * QueryResult} objects.  Since the number of rows in our
+         * ResultSet is usually greater than the number of
+         * QueryResults, we can only random access the beginning
+         * (TODO: or end) of the list.  Because of this, only
+         * sequential access is supported!
          *
          * @see #buildQueryResult(ResultSet, int, int)
          */
@@ -2305,20 +2329,16 @@ public class IssueSearch
             {
                 try
                 {
-                    if (index == 0 &&
-                        issues.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE)
+                    int fetchDirection = issues.getFetchDirection();
+                    if ((fetchDirection == ResultSet.FETCH_FORWARD
+                         && index - 1 != lastListIndex)
+                        || (fetchDirection == ResultSet.FETCH_REVERSE
+                            && index + 1 != lastListIndex))
                     {
-                        issues.first();
-                        lastListIndex = -1;
-                    }
-                    else if (index - 1 != lastListIndex)
-                    {
-                        throw new IllegalArgumentException
-                            ("Non-sequential access of uncached QueryResults "+
-                             "not permitted");
+                        scrollResultSet(index);
                     }
 
-                    qr = buildQueryResult(issues, sortAttrPos, valueListSize);
+                    qr = buildQueryResult(issues, valueListSize);
                 }
                 catch (SQLException e)
                 {
@@ -2328,21 +2348,45 @@ public class IssueSearch
                         ("Error processing query results: " + e.getMessage());
                 }
 
-                if (qr != null)
-                {
-                    // Write newly created QueryResult to our cache.
-                    recentlyCreatedIndices[nextCreatedIndex] = index;
-                    recentlyCreatedValues[nextCreatedIndex] = qr;
-                    if (++nextCreatedIndex >= CACHE_SIZE)
-                    {
-                        nextCreatedIndex = 0;
-                    }
-
-                    lastListIndex++;
-                }
+                cacheRecentlyCreated(index, qr);
             }
 
             return qr;
+        }
+
+        /**
+         * Since the query result list index differs from the
+         * ResultSet list index, we must walk the ResultSet until we
+         * hit just before the desired query result list index.
+         *
+         * @param listIndex The new list index to scroll to
+         * immediately before.
+         */
+        private void scrollResultSet(int index)
+            throws SQLException
+        {
+            if (lastListIndex == -1 || index > lastListIndex)
+            {
+                issues.setFetchDirection(ResultSet.FETCH_FORWARD);
+            }
+            else if (index < lastListIndex)
+            {
+                issues.setFetchDirection(ResultSet.FETCH_REVERSE);
+            }
+            else  // index == lastListIndex
+            {
+                throw new IllegalArgumentException
+                    ("Request for lastListIndex should be handled by cache");
+            }
+
+            int i = (lastListIndex == -1 ? 0 : index);
+            while (Math.abs(index - lastListIndex) != 1)
+            {
+                // TODO: Use cheaper form of cursoring over ResultSet
+                // than buildQueryResult()
+                cacheRecentlyCreated(i++,
+                                     buildQueryResult(issues, valueListSize));
+            }
         }
 
         private QueryResult findRecentlyCreated(int index)
@@ -2355,6 +2399,25 @@ public class IssueSearch
                 }
             }
             return null;
+        }
+
+        /**
+         * A no-op if <code>qr</code> is <code>null</code>.
+         */
+        private void cacheRecentlyCreated(int index, QueryResult qr)
+        {
+            if (qr != null)
+            {
+                // Write newly created QueryResult to our cache.
+                recentlyCreatedIndices[nextCreatedIndex] = index;
+                recentlyCreatedValues[nextCreatedIndex] = qr;
+                if (++nextCreatedIndex >= CACHE_SIZE)
+                {
+                    nextCreatedIndex = 0;
+                }
+
+                lastListIndex = index;
+            }
         }
 
         /**
