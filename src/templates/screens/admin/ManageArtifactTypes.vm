@@ -56,9 +56,8 @@
 <input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
 ##<input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;
-<input type="submit" value="Resort" name="eventSubmit_doSave" />&#160;
-<small>artifact type(s)</small>
-</div>
+<input type="submit" value="Resort" name="eventSubmit_doSave" />
+      &#160; <small>issue type(s)</small> </div>
 
 <p>* Maximum of five Issue types in left hand navigation.</p>
 
