@@ -116,4 +116,17 @@
     </java>
   </target>
 
+  <target name="test-scarabuser" depends="compile">
+    <echo>Running ScarabUser tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.ScarabUserTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
 </project>
