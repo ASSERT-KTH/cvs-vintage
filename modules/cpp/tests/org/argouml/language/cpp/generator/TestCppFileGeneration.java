@@ -1,4 +1,4 @@
-// $Id: TestCppFileGeneration.java,v 1.2 2004/12/16 18:03:44 euluis Exp $
+// $Id: TestCppFileGeneration.java,v 1.3 2004/12/28 19:07:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,8 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-
-import org.argouml.uml.UUIDManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.UUIDManager;
 import org.argouml.model.uml.ModelManagementFactory;
 
 /**
