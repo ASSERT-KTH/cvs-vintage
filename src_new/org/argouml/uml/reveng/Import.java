@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.53 2004/06/24 06:25:45 linus Exp $
+// $Id: Import.java,v 1.54 2004/06/29 23:38:46 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -589,16 +589,14 @@ public class Import {
                     if (e1 instanceof RuntimeException) {
                         cat.error("program bug encountered "
 				  + "in reverese engineering, "
-				  + "the project file will be corrupted\n"
-				  + e1);
-                        
-                        e1.printStackTrace();
+				  + "the project file will be corrupted",
+				  e1);
                     }
                     else
                         cat.warn("exception encountered "
 				 + "in reverese engineering, "
-				 + "the project file will be corrupted\n"
-				 + e1);
+				 + "the project file will be corrupted",
+				 e1);
                 }
                 
                 if (!isCancelled()) {
