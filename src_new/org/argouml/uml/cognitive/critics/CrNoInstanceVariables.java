@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.10 2003/01/29 05:42:16 mkl Exp $
+// $Id: CrNoInstanceVariables.java,v 1.11 2003/02/02 20:47:42 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class CrNoInstanceVariables extends CrUML {
     private boolean findChangeableInstanceAttributeInInherited(Object dm,
 							       int depth) {
 
-	Iterator enum = ModelFacade.getAttributes(dm);
+	Iterator enum = ModelFacade.getAttributes(dm).iterator();
 
 	while (enum.hasNext()) {
 	    Object attr = enum.next();

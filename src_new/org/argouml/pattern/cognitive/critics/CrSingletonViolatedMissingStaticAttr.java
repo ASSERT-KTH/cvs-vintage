@@ -1,4 +1,4 @@
-// $Id: CrSingletonViolatedMissingStaticAttr.java,v 1.2 2003/01/22 04:17:12 linus Exp $
+// $Id: CrSingletonViolatedMissingStaticAttr.java,v 1.3 2003/02/02 20:47:42 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,7 @@ public class CrSingletonViolatedMissingStaticAttr extends CrUML {
             return NO_PROBLEM;
         }
 
-	Iterator attrs = ModelFacade.getAttributes(dm);
+	Iterator attrs = ModelFacade.getAttributes(dm).iterator();
 
 	while (attrs.hasNext()) {
 	    Object attr = attrs.next();

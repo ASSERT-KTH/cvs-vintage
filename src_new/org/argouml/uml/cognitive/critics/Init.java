@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.21 2003/02/02 18:40:27 alexb Exp $
+// $Id: Init.java,v 1.22 2003/02/02 20:47:42 kataka Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -378,6 +378,7 @@ public class Init {
       Agency.register(new CrMultiComposite(), assocEndCls);
       Agency.register(new CrNameConflict(), namespaceCls);
       Agency.register(crAlreadyRealizes, classCls);
+      Agency.register(new CrUtilityViolated(), classifierCls);
 
       // under testing
       // Agency.register(crConsiderFacade, packageCls);

@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.12 2003/02/02 14:53:18 kataka Exp $
+// $Id: CrConsiderSingleton.java,v 1.13 2003/02/02 20:47:42 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,7 @@ public class CrConsiderSingleton extends CrUML {
 	}
 
 	// If there is an attribute with instance scope => no problem
-	Iterator iter = ModelFacade.getAttributes(dm);
+	Iterator iter = ModelFacade.getAttributes(dm).iterator();
 
 	while (iter.hasNext()) {
 	    if (ModelFacade.isInstanceScope(iter.next()))
