@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.22 2002/02/01 00:46:08 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.23 2002/02/01 03:13:48 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1267,8 +1267,8 @@ try{
         ModuleEntity parentModule = ModuleManager.getInstance(getParentId());
         AttributeGroup ag1;
         AttributeGroup ag2;
-        RModuleAttribute rma1;
-        RModuleAttribute rma2;
+        RModuleAttribute rma1 = null;
+        RModuleAttribute rma2 = null;
             
         // create enter issue template types
         List templateTypes = parentModule.getTemplateTypes();
@@ -1328,38 +1328,42 @@ try{
                     raag2.setAttributeId(raag1.getAttributeId());
                     raag2.setOrder(raag1.getOrder());
                     raag2.save();
-                    
-                    // set module-attribute defaults
-                    rma1 = parentModule
-                        .getRModuleAttribute(attribute, issueType);
-                    rma2 = rma1.copy();
-                    rma2.setModuleId(newModuleId);
-                    rma2.setAttributeId(rma1.getAttributeId());
-                    rma2.setIssueTypeId(rma1.getIssueTypeId());
-                    rma2.save();
+                 }
+             }        
+
+            // set module-attribute defaults
+            List rmas = parentModule.getRModuleAttributes(issueType);
+            for (int j=0; j<rmas.size(); j++)
+            {
+                rma1 = (RModuleAttribute)rmas.get(j);
+                rma2 = rma1.copy();
+                rma2.setModuleId(newModuleId);
+                rma2.setAttributeId(rma1.getAttributeId());
+                rma2.setIssueTypeId(rma1.getIssueTypeId());
+                rma2.save();
+            }
                         
-                    // set module-option mappings
-                    if (attribute.isOptionAttribute())
-                    {
-                        List rmos = parentModule.getRModuleOptions(attribute,
-                                                                   issueType);
-                        for (int m=0; m<rmos.size(); m++)
-                        {
-                            RModuleOption rmo1 = (RModuleOption)rmos.get(m);
-                            RModuleOption rmo2 = rmo1.copy();
-                            rmo2.setOptionId(rmo1.getOptionId());
-                            rmo2.setModuleId(newModuleId);
-                            rmo2.setIssueTypeId(issueType.getIssueTypeId());
-                            rmo2.save();
- 
-                            // Save module-option mappings for template types
-                            RModuleOption rmo3 = rmo1.copy();
-                            rmo3.setOptionId(rmo1.getOptionId());
-                            rmo3.setModuleId(newModuleId);
-                            rmo3.setIssueTypeId(issueType.getTemplateId());
-                               rmo3.save();
-                        }
-                    }
+            // set module-option mappings
+            Attribute attribute = rma1.getAttribute();
+            if (attribute.isOptionAttribute())
+            {
+                List rmos = parentModule.getRModuleOptions(attribute,
+                                                           issueType);
+                for (int m=0; m<rmos.size(); m++)
+                {
+                    RModuleOption rmo1 = (RModuleOption)rmos.get(m);
+                    RModuleOption rmo2 = rmo1.copy();
+                    rmo2.setOptionId(rmo1.getOptionId());
+                    rmo2.setModuleId(newModuleId);
+                    rmo2.setIssueTypeId(issueType.getIssueTypeId());
+                    rmo2.save();
+
+                    // Save module-option mappings for template types
+                    RModuleOption rmo3 = rmo1.copy();
+                    rmo3.setOptionId(rmo1.getOptionId());
+                    rmo3.setModuleId(newModuleId);
+                    rmo3.setIssueTypeId(issueType.getTemplateId());
+                   rmo3.save();
                 }
             }
         }
