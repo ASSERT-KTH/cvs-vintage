@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.140 2003/04/28 01:35:25 spestov Exp $
+ * @version $Id: jEdit.java,v 1.141 2003/04/28 03:48:48 spestov Exp $
  */
 public class jEdit
 {

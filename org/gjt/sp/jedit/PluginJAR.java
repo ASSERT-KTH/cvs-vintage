@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * A JAR file.
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.2 2003/04/26 20:51:48 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.3 2003/04/28 03:48:48 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -102,18 +102,21 @@ public class PluginJAR
 	 * Loads the plugin core class if it is not already loaded.
 	 * @since jEdit 4.2pre1
 	 */
-	public synchronized void activatePlugin()
+	public void activatePlugin()
 	{
-		if(activated)
+		synchronized(this)
 		{
-			// recursive call
-			return;
+			if(activated)
+			{
+				// recursive call
+				return;
+			}
+
+			activated = true;
+
+			if(!(plugin instanceof EditPlugin.Deferred && plugin != null))
+				return;
 		}
-
-		activated = true;
-
-		if(!(plugin instanceof EditPlugin.Deferred && plugin != null))
-			return;
 
 		String className = plugin.getClassName();
 
