@@ -1,4 +1,4 @@
-// $Id: PersistenceManager.java,v 1.6 2005/01/20 22:33:12 bobtarling Exp $
+// $Id: PersistenceManager.java,v 1.7 2005/02/07 16:31:37 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,7 +208,8 @@ public class PersistenceManager {
      * Set an alternative file persister for diagrams
      * @param persister the persister to use instead of the default
      */
-    public void setDiagramMemberFilePersister(DiagramMemberFilePersister persister) {
+    public void setDiagramMemberFilePersister(
+            DiagramMemberFilePersister persister) {
     	diagramMemberFilePersister = persister;
     }
 }
