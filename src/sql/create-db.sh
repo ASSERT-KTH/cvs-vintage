@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.22 2003/09/16 22:26:06 tenersen Exp $
+# $Id: create-db.sh,v 1.23 2003/09/16 22:35:40 tenersen Exp $
 #
 
 CMDNAME=`basename "$0"`
