@@ -74,7 +74,10 @@
 
         <!-- things to go into the project directory -->
         <copy todir="${build.project}" filtering="no">
-            <fileset dir="${src.html.dir}"/>
+            <fileset dir="${src.html.dir}">
+                <include name="**/*.html"/>
+                <include name="**/*.css"/>
+            </fileset>
         </copy>
         <copy todir="${build.project}/images" filtering="no">
             <fileset dir="${src.images.dir}"/>
