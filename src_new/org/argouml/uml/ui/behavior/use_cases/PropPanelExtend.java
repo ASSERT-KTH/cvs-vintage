@@ -1,3 +1,4 @@
+// $Id: PropPanelExtend.java,v 1.10 2002/12/27 10:08:02 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +25,6 @@
 // File: PropPanelExtend.java
 // Classes: PropPanelExtend
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelExtend.java,v 1.9 2002/11/23 22:04:46 kataka Exp $
-
-// 22 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
-// proper Extend implementation with Use Cases
-
-// 11 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Condition field added.
-
 
 package org.argouml.uml.ui.behavior.use_cases;
 
@@ -209,29 +203,5 @@ public class PropPanelExtend extends PropPanelModelElement {
             }
         }
     }
-
-
-    /**
-     * <p>Check if a given name is our metaclass name, or that of one of our
-     *   parents. Used to determine which stereotypes to show.</p>
-     *
-     * <p>Since we ignore Relationship, we effectively have no parents.</p>
-     *
-     * @param baseClass  the string representation of the base class to test.
-     *
-     * @return           <code>true</code> if baseClass is our metaclass name
-     *                   of that of one of our parents.
-     */
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-
-        return baseClass.equals("Extend");
-    }
-
-
-
-
-
-
 
 } /* end class PropPanelExtend */

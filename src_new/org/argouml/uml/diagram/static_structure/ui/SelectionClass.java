@@ -1,3 +1,4 @@
+// $Id: SelectionClass.java,v 1.12 2002/12/27 10:08:01 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: SelectionClass.java
 // Classes: SelectionClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionClass.java,v 1.11 2002/12/12 22:54:59 kataka Exp $
+// $Id: SelectionClass.java,v 1.12 2002/12/27 10:08:01 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -242,7 +243,7 @@ public class SelectionClass extends SelectionWButtons {
         
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode()
+     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
         return UmlFactory.getFactory().getCore().createClass();

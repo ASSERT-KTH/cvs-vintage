@@ -1,3 +1,4 @@
+// $Id: SelectionState.java,v 1.12 2002/12/27 10:08:01 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.11 2002/12/24 23:05:39 kataka Exp $
+// $Id: SelectionState.java,v 1.12 2002/12/27 10:08:01 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -177,7 +178,7 @@ public class SelectionState extends SelectionWButtons {
 	}
 
 	/**
-	   * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode()
+	   * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
 	   */
 	protected Object getNewNode(int buttonCode) {
 		return UmlFactory.getFactory().getStateMachines().createState();

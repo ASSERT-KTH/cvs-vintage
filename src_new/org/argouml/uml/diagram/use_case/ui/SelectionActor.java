@@ -1,3 +1,4 @@
+// $Id: SelectionActor.java,v 1.11 2002/12/27 10:08:02 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.10 2002/12/12 22:55:00 kataka Exp $
+// $Id: SelectionActor.java,v 1.11 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -154,7 +155,7 @@ public class SelectionActor extends SelectionWButtons {
 
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode()
+     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
         return UmlFactory.getFactory().getUseCases().createUseCase();

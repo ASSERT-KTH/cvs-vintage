@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelStimulus.java,v 1.16 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.15 2002/11/24 15:21:59 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.16 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -128,15 +129,6 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public void removed(MElementEvent mee) {
     }
 
-
-    public boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("Stimulus");
-    }
-
-    public boolean isAcceptibleSender(MModelElement classifier) {
-        return classifier instanceof MClassifier;
-    }
-
     public MInstance getSender() {
         MInstance sender = null;
         Object target = getTarget();
@@ -153,12 +145,6 @@ public class PropPanelStimulus extends PropPanelModelElement {
         }
     }
 
-
-
-
-    public boolean isAcceptibleReceiver(MModelElement classifier) {
-        return classifier instanceof MClassifier;
-    }
 
     public MInstance getReceiver() {
         MInstance receiver = null;

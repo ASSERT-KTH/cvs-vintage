@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelCallAction.java,v 1.4 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -63,11 +64,6 @@ public class PropPanelCallAction extends PropPanelModelElement {
 	new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
 	new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
     }
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-	return baseClass.equals("CallAction");
-    }
-
 
 } /* end class PropPanelCallAction */
 

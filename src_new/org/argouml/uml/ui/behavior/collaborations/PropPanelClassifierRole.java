@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelClassifierRole.java,v 1.20 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.19 2002/12/15 10:47:36 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.20 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -99,10 +100,6 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete"),"removeElement",null);
   }
 
-
-    public boolean isAcceptibleBase(MModelElement classifier) {
-        return classifier instanceof MClassifier && !(classifier instanceof MClassifierRole);
-    }
 
      public MClassifier getClassifier() {
         MClassifier classifier = null;

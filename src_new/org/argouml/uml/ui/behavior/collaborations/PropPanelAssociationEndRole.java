@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelAssociationEndRole.java,v 1.5 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -72,10 +73,6 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
     protected void makeFields(Class mclass) {
         super.makeFields(mclass);
         associationsLabel.setText("AssociationRole:");
-    }
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("AssociationEndRole");
     }
 
 } /* end class PropPanelAssociationEndRole */

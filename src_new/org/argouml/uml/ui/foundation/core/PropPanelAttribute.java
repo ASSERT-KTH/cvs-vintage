@@ -1,4 +1,5 @@
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: PropPanelAttribute.java,v 1.22 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +27,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.21 2002/11/24 00:59:48 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.22 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -167,12 +168,6 @@ public class PropPanelAttribute extends PropPanelModelElement {
                 navigateTo(owner);
             }
         }
-    }
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("Attribute") ||
-            baseClass.equals("StructuralFeature") ||
-            baseClass.equals("Feature");
     }
 
     /**

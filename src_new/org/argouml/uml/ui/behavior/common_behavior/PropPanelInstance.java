@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelInstance.java,v 1.12 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +27,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.11 2002/10/10 21:34:31 kataka Exp $
+// $Id: PropPanelInstance.java,v 1.12 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -83,11 +84,6 @@ public class PropPanelInstance extends PropPanelModelElement {
   }
 
     
-
-    public boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("Instance");
-    }
-
     public boolean isAcceptibleClassifier(MModelElement classifier) {
         return classifier instanceof MClassifier;
     }

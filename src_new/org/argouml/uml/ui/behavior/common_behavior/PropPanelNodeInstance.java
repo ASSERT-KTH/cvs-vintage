@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelNodeInstance.java,v 1.9 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +25,7 @@
 // File: PropPanelNodeInstance.java
 // Classes: PropPanelNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNodeInstance.java,v 1.8 2002/10/10 21:34:31 kataka Exp $
+// $Id: PropPanelNodeInstance.java,v 1.9 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -69,11 +70,6 @@ public class PropPanelNodeInstance extends PropPanelModelElement {
 	new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete"),"removeElement",null);
 
 
-    }
-
-    public boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("NodeInstance") ||
-            baseClass.equals("Instance");
     }
 
     public boolean isAcceptibleClassifier(MModelElement classifier) {

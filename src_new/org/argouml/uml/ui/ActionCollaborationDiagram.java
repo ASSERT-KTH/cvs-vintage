@@ -1,3 +1,4 @@
+// $Id: ActionCollaborationDiagram.java,v 1.12 2002/12/27 10:08:02 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +56,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace)
+     * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,Object)
      */
     public ArgoDiagram createDiagram(MNamespace ns, Object target) {
         MCollaboration c = null;

@@ -1,3 +1,4 @@
+// $Id: SelectionComponent.java,v 1.10 2002/12/27 10:08:01 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 // File: SelectionComponent.java
 // Classes: SelectionComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponent.java,v 1.9 2002/12/12 22:54:59 kataka Exp $
+// $Id: SelectionComponent.java,v 1.10 2002/12/27 10:08:01 linus Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -195,7 +196,7 @@ public class SelectionComponent extends SelectionWButtons {
 
 
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode()
+     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
         return UmlFactory.getFactory().getCore().createComponent();

@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelLink.java,v 1.14 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +27,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.13 2002/11/23 22:04:45 kataka Exp $
+// $Id: PropPanelLink.java,v 1.14 2002/12/27 10:08:02 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -79,10 +80,6 @@ public class PropPanelLink extends PropPanelModelElement {
                 navigateTo(ns);
             }
         }
-    }
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("Link");
     }
 
     public void removeElement() {

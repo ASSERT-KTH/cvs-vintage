@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelExtensionPoint.java,v 1.7 2002/12/27 10:08:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,11 +25,6 @@
 // File: PropPanelExtensionPoint.java
 // Classes: PropPanelExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelExtensionPoint.java,v 1.6 2002/10/11 20:51:18 kataka Exp $
-
-// 27 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
-// proper Extend implementation with Use Cases
-
 
 package org.argouml.uml.ui.behavior.use_cases;
 
@@ -149,28 +145,5 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
             navigateTo(owner);
         }
     }
-
-
-    /**
-     * <p>Check if a given name is our metaclass name, or that of one of our
-     *   parents. Used to determine which stereotypes to show. Only handles
-     *   metaclasses below ModelElement.</p>
-     *
-     * <p>Since we are a child of ModelElement, we effectively have no
-     *   parents.</p>
-     *
-     * @param baseClass  the string representation of the base class to test.
-     *
-     * @return           <code>true</code> if baseClass is our metaclass name
-     *                   of that of one of our parents.
-     */
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-
-        return baseClass.equals("ExtensionPoint");
-    }
-
-
-   
 
 } /* end class PropPanelExtend */
