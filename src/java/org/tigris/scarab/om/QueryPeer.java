@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Module;
  * This is the QueryPeer class
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: QueryPeer.java,v 1.24 2003/10/17 09:46:35 dep4b Exp $
+ * @version $Id: QueryPeer.java,v 1.25 2005/01/16 01:56:11 dabbous Exp $
  */
 public class QueryPeer 
     extends org.tigris.scarab.om.BaseQueryPeer
@@ -74,6 +74,7 @@ public class QueryPeer
         "QueryPeer";
 
     // query types
+    public static final String TYPE_ALL_USER = "allPrivate";
     public static final String TYPE_PRIVATE = "private";
     public static final String TYPE_GLOBAL = "global";
     public static final String TYPE_ALL = "all";
@@ -109,12 +110,17 @@ public class QueryPeer
             Object obj = QueryManager.getMethodResult().get(key);
             if (obj == null) 
             {
-            Criteria crit = new Criteria()
+
+                Criteria crit = new Criteria()
                 .add(QueryPeer.DELETED, 0);
 
-            Criteria.Criterion moduleCrit = crit.getNewCriterion(
-                QueryPeer.MODULE_ID, module.getModuleId(), Criteria.EQUAL);
-            if (issueType != null) 
+                Criteria.Criterion moduleCrit = crit.getNewCriterion(
+                        QueryPeer.MODULE_ID, module.getModuleId(), Criteria.EQUAL);
+                Criteria.Criterion crossModule = crit.getNewCriterion(
+                        QueryPeer.MODULE_ID, null, Criteria.EQUAL);
+                moduleCrit.or(crossModule);
+
+                if (issueType != null) 
             {
                 Criteria.Criterion issueTypeCrit = crit.getNewCriterion(
                     QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId(), 
@@ -124,37 +130,30 @@ public class QueryPeer
                 moduleCrit.and(issueTypeCrit.or(nullIssueTypeCrit));
             }
             
-            Criteria.Criterion notNullListCrit = crit.getNewCriterion(
-                QueryPeer.LIST_ID, null, Criteria.NOT_EQUAL);
 
-            Criteria.Criterion cGlob = crit.getNewCriterion(
-                QueryPeer.SCOPE_ID, Scope.MODULE__PK, 
-                Criteria.EQUAL);
-            cGlob.and(crit.getNewCriterion(QueryPeer.APPROVED, 
-                                           Boolean.TRUE, Criteria.EQUAL));
-            cGlob.and(moduleCrit);
 
-            Criteria.Criterion cPriv = crit.getNewCriterion(
-                QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
-            cPriv.and(crit.getNewCriterion(
-                QueryPeer.SCOPE_ID, Scope.PERSONAL__PK, 
-                Criteria.EQUAL));
-            // need to be careful here, we are adding moduleCrit to 
-            // two different criterion.  if we switched the order of
-            // the OR below we would screw up cGlob.
-            cPriv.and(notNullListCrit.or(moduleCrit));
 
+            
             if (TYPE_PRIVATE.equals(type))
             {
-                crit.add(cPriv);                    
+                crit.add(userPrivateQueriesCrits(user, crit, moduleCrit));                    
             }
             else if (TYPE_GLOBAL.equals(type))
             {
-                crit.add(cGlob);
+                crit.add(allGlobalQueriesCrit(crit, moduleCrit));
+            }
+            else if (TYPE_ALL_USER.equals(type))
+            {
+                Criteria.Criterion cuGlob = userUnapprovedQueriesCrits(user, crit, moduleCrit);
+                Criteria.Criterion cPriv  = userPrivateQueriesCrits(user, crit, moduleCrit);
+                cuGlob.or(cPriv);
+                crit.add(cuGlob);
             }
             else
             {
                 // All queries
+                Criteria.Criterion cGlob  = allGlobalQueriesCrit(crit, moduleCrit);
+                Criteria.Criterion cPriv  = userPrivateQueriesCrits(user, crit, moduleCrit);
                 cGlob.or(cPriv);
                 crit.add(cGlob);
             }
@@ -180,6 +179,7 @@ public class QueryPeer
                 // sort by name
                 addSortOrder(crit, QueryPeer.NAME, sortPolarity);
             }
+            String tmp = crit.toString();
             queries = QueryPeer.doSelect(crit);
             QueryManager.getMethodResult().put(queries, key);
         }
@@ -191,6 +191,97 @@ public class QueryPeer
         return queries;
     }
 
+    /**
+     * Return all user private queries.
+     * @param user
+     * @param crit
+     * @param moduleCrit
+     * @return
+     */
+    private static Criteria.Criterion userPrivateQueriesCrits(ScarabUser user, Criteria crit, Criteria.Criterion moduleCrit)
+    {
+        Criteria.Criterion cPriv = crit.getNewCriterion(
+                QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
+        cPriv.and(crit.getNewCriterion(
+                QueryPeer.SCOPE_ID, Scope.PERSONAL__PK, 
+                Criteria.EQUAL));
+        // need to be careful here, we are adding moduleCrit to 
+        // two different criterion.  if we switched the order of
+        // the OR below we would screw up cGlob.
+
+        // [HD] I think the following lines do not make sense, 
+        //      because as fas as i can see, every Query has a 
+        //      LIST_ID attached to it. Hence the OR below is
+        //      always true and we get all user queries of the
+        //      current user here.
+
+        //Criteria.Criterion notNullListCrit = crit.getNewCriterion(
+        //        QueryPeer.LIST_ID, null, Criteria.NOT_EQUAL);
+        //cPriv.and(notNullListCrit.or(moduleCrit));
+
+        cPriv.and(moduleCrit);
+        return cPriv;
+    }
+
+    /**
+     * Return the user's private queries AND all queries, which
+     * have scope "module", but have not yet been approved by the
+     * module owner (thus they are still in scope private).
+     * @param user
+     * @param crit
+     * @param moduleCrit
+     * @return
+     */
+    private static Criteria.Criterion userUnapprovedQueriesCrits(ScarabUser user, Criteria crit, Criteria.Criterion moduleCrit)
+    {
+        Criteria.Criterion cUserPendingCrit = crit.getNewCriterion(
+                QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
+        cUserPendingCrit.and(crit.getNewCriterion(
+                QueryPeer.SCOPE_ID, Scope.MODULE__PK, 
+                Criteria.EQUAL));
+        cUserPendingCrit.and(crit.getNewCriterion(QueryPeer.APPROVED, 
+                Boolean.FALSE, Criteria.EQUAL));
+
+        // need to be careful here, we are adding moduleCrit to 
+        // two different criterion.  if we switched the order of
+        // the OR below we would screw up cGlob.
+        
+        // [HD] I think the following lines do not make sense, 
+        //      because as fas as i can see, every Query has a 
+        //      LIST_ID attached to it. Hence the OR below is
+        //      always true and we get all user queries of the
+        //      current user here.
+        
+        //Criteria.Criterion notNullListCrit = crit.getNewCriterion(
+        //        QueryPeer.LIST_ID, null, Criteria.NOT_EQUAL);
+        //cUserPendingCrit.and(notNullListCrit.or(moduleCrit));
+
+        cUserPendingCrit.and(moduleCrit);
+        
+        return cUserPendingCrit;
+    }
+
+    /**
+     * Return all queries, whith scope "module"
+     * @param crit
+     * @param moduleCrit
+     * @return
+     */
+    private static Criteria.Criterion allGlobalQueriesCrit(Criteria crit, Criteria.Criterion moduleCrit)
+    {
+        Criteria.Criterion cGlob = crit.getNewCriterion(
+                QueryPeer.SCOPE_ID, 
+                Scope.MODULE__PK, 
+                Criteria.EQUAL);
+
+        cGlob.and(crit.getNewCriterion(QueryPeer.APPROVED, 
+                                           Boolean.TRUE, Criteria.EQUAL));
+        cGlob.and(moduleCrit);
+        return cGlob;
+    }
+
+    
+    
     public static List getUserQueries(ScarabUser user)
         throws Exception
     {

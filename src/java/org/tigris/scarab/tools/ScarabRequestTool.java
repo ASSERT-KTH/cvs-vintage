@@ -2135,7 +2135,18 @@ e.printStackTrace();
     {
         return QueryPeer.getQueries(getCurrentModule(),
                null, (ScarabUser)data.getUser(), 
-               "name", "asc", IssueTemplateInfoPeer.TYPE_PRIVATE);
+               "name", "asc", QueryPeer.TYPE_PRIVATE);
+    }
+
+    /**
+     * Returns queries that are personal and created by logged-in user.
+    */
+    public List getUserQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               null, (ScarabUser)data.getUser(), 
+               "name", "asc", QueryPeer.TYPE_ALL_USER);
     }
 
     /**
@@ -2146,7 +2157,18 @@ e.printStackTrace();
     {
         return QueryPeer.getQueries(getCurrentModule(),
                null, (ScarabUser)data.getUser(), 
-               "name", "asc", IssueTemplateInfoPeer.TYPE_GLOBAL);
+               "name", "asc", QueryPeer.TYPE_GLOBAL);
+    }
+
+    /**
+     * Returns all queries that are global.
+    */
+    public List getUserAllQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               null, (ScarabUser)data.getUser(), 
+               "name", "asc", QueryPeer.TYPE_ALL_USER);
     }
 
     /**

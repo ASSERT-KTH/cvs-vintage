@@ -4,6 +4,7 @@
 #set ($user = $data.User)
 #set ($canDeleteAtLeastOne = false)
 
+
 <form method="post" action="$link.setPage("QueryList.vm").setAction("QueryList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
@@ -17,10 +18,15 @@
    #set ($sortPolarity = "desc")
 #end
 
-#if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
-   #set ($queries = $scarabR.AllQueries)
+#set ($queryType = $data.Parameters.getString("go"))
+#if ($queryType.equals("publicQueries"))
+   #set ($queryType = "PublicQueries")
+   #set ($queries = $scarabR.GlobalQueries)
+   #set ($privateQueries = false)
 #else
-   #set ($queries = $scarabR.PrivateQueries)
+   #set ($queryType = "PrivateQueries")
+   #set ($queries = $scarabR.UserAllQueries)
+   #set ($privateQueries = true)
 #end
 
 ## PAGINATION
@@ -35,7 +41,8 @@
  #end
 #end
 
-<h3>$l10n.SavedQueries</h3>
+
+<h3>$l10n.format($queryType, $module.Name)</h3>
 
 #if ($queries.size() < 1)
  <p><em>$l10n.NoSavedQueries</em></p>
@@ -60,15 +67,22 @@ $l10n.Click
   <th>#sort ("name" "$l10n.Name")</th>
   <th>#sort ("desc" "$l10n.Description")</th>
   <th>#sort ("avail" "$l10n.Availability")</th>
+  #if ($privateQueries)
+  <th>#sort ("module" "$l10n.Module")</th>
+  #end
+  #if (!$privateQueries)
   <th>#sort ("user" "$l10n.CreatedBy")</th>
+  #end
  </tr>
  
  #foreach ($query in $queries)
   #set ($rqu = $query.getRQueryUser($user))
   #set ($rquGroup = $intake.RQueryUser.mapTo($rqu))
   #set ($canDelete = $query.canDelete($user))
+  #set ($canEdit   = $query.canEdit($user))
   #if ($canDelete) #set ($canDeleteAtLeastOne = true) #end
   #indexedRows($velocityCount)
+
   <td>
   #if ($canDelete)
     <input type="checkbox" name="action_$query.QueryId" />
@@ -76,6 +90,7 @@ $l10n.Click
     &#160;
   #end
   </td>
+
 ##  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
 ##  <td>#fieldErrorMsg ($rquGroup.Frequency "")
 ##    <select name="$rquGroup.Frequency.Key">
@@ -84,17 +99,34 @@ $l10n.Click
 ##  </td>
                
   <td>
+    #if ($canEdit)
       <a href="$scarabR.getEditLink($link.setPage("EditQuery.vm").toString(),$query)">$query.Name</a></td>
+    #else
+      $query.Name
+    #end
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
+
   <td>
   #if (!$query.Approved)
    <a href="$scarabR.getExecuteLink($link.setPage("IssueList.vm").toString(), $query)">$l10n.Personal ($l10n.UntilApproved)</a>
   #else
   <a href="$scarabR.getExecuteLink($link.setPage("IssueList.vm").toString(), $query)">$query.Scope.Name</a>
-#end
+  #end
   </td>
+
+  #if ($privateQueries)
+  <td>
+      #if ($query.Module) $query.Module.Name
+      #else cross module
+      #end
+  </td>
+  #end
+  
+  #if (!$privateQueries)
   #set ($createdUser = $scarabR.getUser($query.UserId.toString()))
   <td><a href="mailto:$createdUser.Email">$!createdUser.Name</a></td>
+  #end
+  
   </tr>
  #end
 </table>

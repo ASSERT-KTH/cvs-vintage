@@ -132,3 +132,9 @@ div.textDisabled
 {
 color: rgb(208, 208, 208);
 }
+
+.optionGroup
+{
+ font-weight: bold;
+ color:#036;
+}

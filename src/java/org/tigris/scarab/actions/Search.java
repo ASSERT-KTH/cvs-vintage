@@ -78,10 +78,10 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabRuntimeException;
 import org.tigris.scarab.util.ScarabUtil;
 import org.tigris.scarab.util.export.ExportFormat;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -92,7 +92,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.154 2005/01/09 19:56:13 dabbous Exp $
+ * @version $Id: Search.java,v 1.155 2005/01/16 01:56:10 dabbous Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -164,8 +164,12 @@ public class Search extends RequireLoginFirstAction
                         }
                         else
                         {
-                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
-                                 String.valueOf(ScarabConstants.ISSUE_MAX_ASSIGN)));
+                            L10NMessage msg = new L10NMessage
+                            (
+                                L10NKeySet.IssueLimitExceeded,
+                                String.valueOf(ScarabConstants.ISSUE_MAX_ASSIGN)
+                            );
+                            scarabR.setAlertMessage(msg);
                             return;
                         }
                     }
@@ -185,8 +189,12 @@ public class Search extends RequireLoginFirstAction
                         }
                         else
                         {
-                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
-                                 String.valueOf(ScarabConstants.ISSUE_MAX_VIEW)));
+                            L10NMessage msg = new L10NMessage
+                            (
+                                L10NKeySet.IssueLimitExceeded,
+                                String.valueOf(ScarabConstants.ISSUE_MAX_VIEW)
+                            );
+                            scarabR.setAlertMessage(msg);
                             return;
                         }
                     }
@@ -207,8 +215,12 @@ public class Search extends RequireLoginFirstAction
                         }
                         else
                         {
-                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
-                                 String.valueOf(ScarabConstants.ISSUE_MAX_COPY)));
+                            L10NMessage msg = new L10NMessage
+                            (
+                                L10NKeySet.IssueLimitExceeded,
+                                String.valueOf(ScarabConstants.ISSUE_MAX_COPY)
+                            );
+                            scarabR.setAlertMessage(msg);
                             return;
                         }
                     }
@@ -228,8 +240,12 @@ public class Search extends RequireLoginFirstAction
                         }
                         else
                         {
-                            scarabR.setAlertMessage(l10n.format("IssueLimitExceeded",
-                                 String.valueOf(ScarabConstants.ISSUE_MAX_MOVE)));
+                            L10NMessage msg = new L10NMessage
+                            (
+                                L10NKeySet.IssueLimitExceeded,
+                                String.valueOf(ScarabConstants.ISSUE_MAX_MOVE)
+                            );
+                            scarabR.setAlertMessage(msg);
                             return;
                         }
                     }
@@ -391,12 +407,20 @@ public class Search extends RequireLoginFirstAction
                  && user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
                  && (userList == null || userList.length == 0))
             {
-                scarabR.setAlertMessage(
-                    l10n.format("NoApproverAvailable", module.getName()));
+                L10NMessage msg = new L10NMessage(L10NKeySet.NoApproverAvailable, module.getName());
+                scarabR.setAlertMessage(msg);
             }
             else
             {
-                query.saveAndSendEmail(user, module, context);
+                try
+                {
+                    query.saveAndSendEmail(user, module, context);
+                }
+                catch(Exception e)
+                {
+                    L10NMessage msg = new L10NMessage(L10NKeySet.ExceptionGeneral,e);
+                    scarabR.setAlertMessage(msg);
+                }
                 scarabR.resetSelectedUsers();
                 if (query.canEdit(user))
                 {
@@ -404,9 +428,11 @@ public class Search extends RequireLoginFirstAction
                 }
                 else
                 {
-                    scarabR.setInfoMessage(
-                                    l10n.format("NotifyPendingApproval",
-                                    l10n.get("Query").toLowerCase()));
+                    L10NMessage msg = new L10NMessage(L10NKeySet.NotifyPendingApproval,L10NKeySet.Query);
+                    scarabR.setInfoMessage(msg);
+                    //scarabR.setInfoMessage(
+                    //        l10n.format("NotifyPendingApproval",
+                    //        l10n.get("Query").toLowerCase()));
                 }
                 setTarget(data, "QueryList.vm");
             }
@@ -445,9 +471,11 @@ public class Search extends RequireLoginFirstAction
                 }
                 else
                 {
-                    scarabR.setInfoMessage(
-                                    l10n.format("NotifyPendingApproval",
-                                    l10n.get("Query").toLowerCase()));
+                    L10NMessage msg = new L10NMessage(L10NKeySet.NotifyPendingApproval,L10NKeySet.Query);
+                    scarabR.setInfoMessage(msg);
+                    //scarabR.setInfoMessage(
+                    //                l10n.format("NotifyPendingApproval",
+                    //                l10n.get("Query").toLowerCase()));
                     setTarget(data, data.getParameters().getString(
                                     ScarabConstants.CANCEL_TEMPLATE));
                 }
@@ -636,6 +664,11 @@ public class Search extends RequireLoginFirstAction
                     quickSearch(searchString, attributeMap, user, context);                
                 }
                 setTarget(data, "IssueList.vm");
+            }
+            else if (go.equals("privateQueries")
+                   ||go.equals("publicQueries"))
+            {
+                setTarget(data,"QueryList.vm");
             }
             else
             {

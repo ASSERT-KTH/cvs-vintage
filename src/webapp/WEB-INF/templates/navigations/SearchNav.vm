@@ -24,28 +24,28 @@
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
   <select name="go" tabindex="3" onchange="this.form.submit();">
-    <option value="newQuery">$l10n.SelectQuery</option>
-    <option value="newQuery">&#160;$l10n.NewQuery</option>
-    <option value="newQueryIT">&#160;$l10n.NewQueryWithNewIssueTypes</option>
-    <option value="myIssues">&#160;$l10n.MyIssues</option>
+    <option value="newQuery" class="optionGroup">$l10n.SelectQuery</option>
+    <option value="newQuery">&#160;&#160;$l10n.NewQuery</option>
+    <option value="newQueryIT">&#160;&#160;$l10n.NewQueryWithNewIssueTypes</option>
+    <option value="myIssues">&#160;&#160;$l10n.MyIssues</option>
     #if ($user.hasMostRecentQuery())
-        <option value="mostRecent">&#160;$l10n.MostRecent</option>
+        <option value="mostRecent">&#160;&#160;$l10n.MostRecent</option>
     #end
 
-#set ($privateQueries = $scarabR.PrivateQueries)
+#set ($privateQueries = $scarabR.UserAllQueries)
 #set ($globalQueries = $scarabR.GlobalQueries)
 
 #if ($privateQueries && !$privateQueries.isEmpty())
-    <option value="QueryList.vm">$l10n.SavedPersonalQueries</option>
+    <option value="privateQueries" class="optionGroup">$l10n.SavedPersonalQueries</option>
    #foreach ($query in $privateQueries)
-    <option value="$query.QueryId">&#160;$query.Name</option>
+    <option value="$query.QueryId">&#160;&#160;$query.Name</option>
    #end
 #end
 
 #if ($globalQueries && !$globalQueries.isEmpty())
-    <option value="QueryList.vm">$l10n.SavedProjectQueries</option>
+    <option value="publicQueries" class="optionGroup">$l10n.SavedProjectQueries</option>
    #foreach ($query in $globalQueries)
-    <option value="$query.QueryId">&#160;$query.Name</option>
+    <option value="$query.QueryId">&#160;&#160;$query.Name</option>
    #end
 #end
   </select>
