@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.47 2001/12/15 02:19:58 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.48 2001/12/18 21:40:21 mnf999 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -406,8 +406,8 @@
       <include name="org/jboss/tm/usertx/server/UserTransactionSessionImpl.class"/>
       <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptorImpl.class"/>
       <include name="org/jboss/jmx/connector/notification/RMIClientNotificationListener.class"/>
+      <include name="org/jboss/invocation/jrmp/server/JRMPInvoker.class"/>
       <include name="org/jboss/management/mejb/RMIClientNotificationListener.class"/>
-      <include name="org/jboss/ejb/plugins/jrmp/server/JRMPContainerInvoker.class"/>
     </rmic>
   </target>
 
@@ -522,9 +522,11 @@
         <include name="org/jboss/system/Info.class"/>
         <include name="org/jboss/system/InfoMBean.class"/>
         <include name="org/jboss/system/Shutdown*.class"/>
+        <include name="org/jboss/system/ServiceContext.class"/>
         <include name="org/jboss/deployment/ServiceDeployer.class"/>
         <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
         <include name="org/jboss/deployment/ServiceDeployer**.class"/>
+        <include name="org/jboss/deployment/ServiceDeploymentInfo.class"/>
         <include name="org/jboss/deployment/DeployerMBean.class"/>
         <include name="org/jboss/deployment/DeployerMBeanSupport.class"/>
         <include name="org/jboss/deployment/DeployerMBeanSupport**.class"/>
@@ -538,10 +540,11 @@
       <fileset dir="${build.classes}">
         <include name="org/jboss/ejb/DeploymentException.class"/>
         <include name="org/jboss/proxy/**"/>
-        <include name="org/jboss/ejb/plugins/jrmp/server/*Stub.class"/>
-        <include name="org/jboss/ejb/plugins/jrmp/interfaces/**"/>
-        <include name="org/jboss/ejb/plugins/jrmp12/interfaces/**"/>
-        <include name="org/jboss/ejb/plugins/jrmp13/interfaces/**"/>
+        <include name="org/jboss/invocation/Invoker.class"/>
+        <include name="org/jboss/invocation/Invocation.class"/>
+        <include name="org/jboss/invocation/MarshalledInvocation.class"/>
+        <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
+        <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
         <include name="org/jboss/ejb/FastKey.class"/>
