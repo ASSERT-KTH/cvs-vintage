@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.4 2001/06/18 09:28:16 toby Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.5 2001/12/12 04:03:40 mkl Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -37,6 +37,8 @@ import ru.novosoft.uml.model_management.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.collaborations.*;
 
+import org.apache.log4j.*;
+
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.ui.*;
@@ -47,6 +49,10 @@ import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.collaboration.*;
 
 public class UMLCollaborationDiagram extends UMLDiagram {
+
+  /** for logging */
+  private final static Category cat = 
+      Category.getInstance("org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram");
 
   ////////////////
   // actions for toolbar
@@ -144,6 +150,10 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
     Collection messages;
     Iterator msgIterator;
+    if (getNamespace() == null) {
+        cat.error("Collaboration Diagram does not belong to a namespace");
+        return;
+    }
     Collection ownedElements = getNamespace().getOwnedElements();
     Iterator oeIterator = ownedElements.iterator();   
     Layer lay = getLayer();
