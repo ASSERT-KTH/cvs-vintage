@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.124 2002/05/21 23:20:51 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.125 2002/05/28 00:34:22 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2952,7 +2952,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 
 		// so that end followed by up arrow will always put caret at
 		// the end of the previous line, for example
-		setMagicCaretPosition(Integer.MAX_VALUE);
+		//setMagicCaretPosition(Integer.MAX_VALUE);
 	} //}}}
 
 	//{{{ goToStartOfWhiteSpace() method

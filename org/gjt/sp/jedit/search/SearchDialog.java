@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.24 2002/05/27 09:02:39 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.25 2002/05/28 00:34:22 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -164,6 +164,10 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 				path = MiscUtilities.getParentOfPath(path);
 			else
 				path = System.getProperty("user.dir");
+
+			if(path.endsWith(File.separator))
+				path = path.substring(0,path.length() - 1);
+
 			directory.setText(path);
 
 			if(fileset instanceof AllBufferSet)
