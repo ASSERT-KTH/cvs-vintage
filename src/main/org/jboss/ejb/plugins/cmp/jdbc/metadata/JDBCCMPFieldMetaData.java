@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -567,7 +567,8 @@ public final class JDBCCMPFieldMetaData {
             return entity.getEntityClass().getField(fieldName).getType();
          } catch(NoSuchFieldException e) {
             throw new DeploymentException("No field named '" + fieldName + 
-                  "' found in entity class.");
+                  "' found in entity class." +
+                  entity.getEntityClass().getName());
          }
       } else {
          
@@ -601,7 +602,8 @@ public final class JDBCCMPFieldMetaData {
             }
          }
          throw new DeploymentException("No abstract accessors for field " +
-               "named '" + fieldName + "' found in entity class.");
+               "named '" + fieldName + "' found in entity class " +
+               entity.getEntityClass().getName());
       }
    }
 }
