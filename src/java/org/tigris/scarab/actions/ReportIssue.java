@@ -47,6 +47,7 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -88,6 +89,7 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentType;
 import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -99,7 +101,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.136 2002/08/02 01:48:51 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.137 2002/08/29 00:08:05 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -375,31 +377,46 @@ public class ReportIssue extends RequireLoginFirstAction
                 // Been provided, proceed.
                 if (commentField.isValid() || saveIssue)
                 {
-                    // Save activitySet record
-                    ActivitySet activitySet = ActivitySetManager
-                        .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
-                    activitySet.save();
-                    
-                    // enter the values into the activitySet
-                    SequencedHashMap avMap = 
-                        issue.getModuleAttributeValuesMap(); 
-                    Iterator i = avMap.iterator();
-                    while (i.hasNext()) 
+                    HashMap newValues = new HashMap();
+                    AttributeValue aval = null;
+                    AttributeValue aval2 = null;
+                    List modAttrs = issue.getModule().getRModuleAttributes(issue.getIssueType(), true, "all");
+
+                    for (int i = 0; i<modAttrs.size(); i++)
                     {
-                        AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                        try
-                        {
-                            aval.startActivitySet(activitySet);
-                        }
-                        catch (ScarabException se)
-                        {
-                            scarabR.setAlertMessage("Fatal Error: " + se.getMessage() 
-                                             + " Please start over.");    
-                        return;
+                        Attribute attr = ((RModuleAttribute)modAttrs.get(i)).getAttribute();
+                        String queryKey = "__" + attr.getAttributeId().toString();
+                        Group group = intake.get("AttributeValue", queryKey, false);
+                        String newValue = "";
+
+                        if (group != null) 
+                        {            
+                            if (attr.isOptionAttribute())
+                            {
+                                newValue = group.get("OptionId").toString();
+                            }
+                            else 
+                            {
+                                newValue = group.get("Value").toString();
+                            }
+                            if (newValue.length() != 0)
+                            {
+                                newValues.put(attr.getAttributeId(), newValue);
+                            }
                         }
                     }
         
-                    issue.save();                
+                    ActivitySet activitySet = null;
+                    try
+                    {
+                        activitySet = issue.setInitialAttributeValues(newValues, user);
+                    }
+                    catch (Exception se)
+                    {
+                        scarabR.setAlertMessage(se.getMessage());
+                        return;
+                    }
+                 
             
                     // save the comment
                     Attachment comment = new Attachment();

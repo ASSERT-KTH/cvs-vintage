@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.187 2002/08/23 01:30:08 jon Exp $
+ * @version $Id: Issue.java,v 1.188 2002/08/29 00:08:05 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -603,7 +603,7 @@ public class Issue
         throws Exception
     {
         SequencedHashMap result = null;
-        Object obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP); 
+        Object obj = null;
         if ( obj == null ) 
         {        
             Attribute[] attributes = null;
@@ -2679,6 +2679,128 @@ public class Issue
     }
 
     /**
+     * Sets original AttributeValues for an new issue based on a hashmap of values
+     * This is data is saved to the database and the proper ActivitySet is 
+     * also recorded.
+     *
+     * @throws Exception when the workflow has an error to report
+     */
+    public ActivitySet setInitialAttributeValues(HashMap newValues, ScarabUser user)
+        throws Exception
+    {
+        // Check new values for workflow
+        String msg = doCheckInitialAttributeValueWorkflow(newValues, user);
+        if (msg != null)
+        {
+            throw new Exception(msg);
+        }
+        
+        // Save activitySet record
+        ActivitySet activitySet = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+        activitySet.save();
+
+        // enter the values into the activitySet
+        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
+        Iterator iter = avMap.iterator();
+        while (iter.hasNext()) 
+        {
+            AttributeValue aval = (AttributeValue)avMap.get(iter.next());
+            try
+            {
+                aval.startActivitySet(activitySet);
+            }
+            catch (ScarabException se)
+            {
+                throw new Exception("Fatal Error: " + se.getMessage() + " Please start over.");    
+            }
+        }
+
+        save();                
+        return activitySet;
+    }
+
+    /**
+     * Sets AttributeValues for an issue based on a hashmap of attribute values
+     * This is data is saved to the database and the proper ActivitySet is 
+     * also recorded.
+     *
+     * @throws Exception when the workflow has an error to report
+     */
+    public ActivitySet setAttributeValues(HashMap newAttVals, Attachment attachment,
+                                          ScarabUser user)
+        throws Exception
+    {
+        String msg = doCheckAttributeValueWorkflow(newAttVals, attachment, user);
+        if (msg != null)
+        {
+            throw new Exception(msg);
+        }
+
+        // Save explanatory comment
+        attachment.setTextFields(user, this, 
+                                 Attachment.MODIFICATION__PK);
+        attachment.save();
+
+        // Create the ActivitySet
+        ActivitySet activitySet = getActivitySet(user, attachment,
+                                  ActivitySetTypePeer.EDIT_ISSUE__PK);
+        activitySet.save();
+
+        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
+        AttributeValue oldAttVal = null;
+        AttributeValue newAttVal = null;
+        Iterator iter = avMap.iterator();
+        while (iter.hasNext())
+        {
+            oldAttVal = (AttributeValue)avMap.get(iter.next());
+            newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
+            if (newAttVal != null)
+            {
+                if (newAttVal.getAttribute().isOptionAttribute())
+                {
+                    oldAttVal.startActivitySet(activitySet);
+                    oldAttVal.setProperties(newAttVal);
+                    oldAttVal.save();
+                }
+            }
+        }
+        return activitySet;
+    }
+
+    /**
+     * This method is used with the setInitialAttributeValues() method to 
+     * Make sure that workflow is valid for the initial values of a new issue. 
+     * It will return a non-null String
+     * which is the workflow error message otherwise it will return null.
+     */
+    public String doCheckInitialAttributeValueWorkflow(HashMap newValues, ScarabUser user)
+        throws Exception
+    {
+        Object[] keys = newValues.keySet().toArray();
+        String msg = null;
+
+        for (int i=0; i < keys.length; i++)
+        {
+            NumberKey attrId = (NumberKey)keys[i];
+            Attribute attr = AttributeManager.getInstance(new NumberKey(attrId));
+
+            if (attr.isOptionAttribute())
+            {
+                AttributeOption toOption = AttributeOptionManager
+                     .getInstance(new NumberKey((String)newValues.get(attrId)));
+                msg = WorkflowFactory.getInstance().checkInitialTransition(toOption, 
+                                                  this, newValues, user);
+            }
+            if (msg != null)
+            {
+                break;
+            }
+        }
+        return msg;
+    }
+
+    /**
      * This method is used with the setAttributeValues() method to 
      * Make sure that workflow is valid. It will return a non-null String
      * which is the workflow error message otherwise it will return null.
@@ -2697,14 +2819,16 @@ public class Issue
         {
             oldAttVal = (AttributeValue)avMap.get(iter.next());
             newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
+            AttributeOption fromOption = null;
+            AttributeOption toOption = null;
 
             if (newAttVal != null)
             {
                 if (oldAttVal.getOptionId() != null 
                     && newAttVal.getAttribute().isOptionAttribute())
                 {
-                    AttributeOption fromOption = oldAttVal.getAttributeOption();
-                    AttributeOption toOption = newAttVal.getAttributeOption();
+                    fromOption = oldAttVal.getAttributeOption();
+                    toOption = newAttVal.getAttributeOption();
                     msg = WorkflowFactory.getInstance().checkTransition(fromOption, 
                                                         toOption, this, 
                                                         newAttVals, user);
@@ -2717,6 +2841,8 @@ public class Issue
         }
         return msg;
     }
+
+
 
     /**
      * If the comment hasn't changed, it will return a valid ActivitySet
@@ -2824,51 +2950,5 @@ public class Issue
         return activitySet;
     }
     
-    /**
-     * Sets AttributeValues for an issue based on a hashmap of attribute values
-     * This is data is saved to the database and the proper ActivitySet is 
-     * also recorded.
-     *
-     * @throws Exception when the workflow has an error to report
-     */
-    public ActivitySet setAttributeValues(HashMap newAttVals, Attachment attachment,
-                                ScarabUser user)
-        throws Exception
-    {
-        String msg = doCheckAttributeValueWorkflow(newAttVals, attachment, user);
-        if (msg != null)
-        {
-            throw new Exception(msg);
-        }
 
-        // Save explanatory comment
-        attachment.setTextFields(user, this, 
-                                 Attachment.MODIFICATION__PK);
-        attachment.save();
-
-        // Create the ActivitySet
-        ActivitySet activitySet = getActivitySet(user, attachment,
-                                  ActivitySetTypePeer.EDIT_ISSUE__PK);
-        activitySet.save();
-
-        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
-        AttributeValue oldAttVal = null;
-        AttributeValue newAttVal = null;
-        Iterator iter = avMap.iterator();
-        while (iter.hasNext())
-        {
-            oldAttVal = (AttributeValue)avMap.get(iter.next());
-            newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
-            if (newAttVal != null)
-            {
-                if (newAttVal.getAttribute().isOptionAttribute())
-                {
-                    oldAttVal.startActivitySet(activitySet);
-                    oldAttVal.setProperties(newAttVal);
-                    oldAttVal.save();
-                }
-            }
-        }
-        return activitySet;
-    }
 }
