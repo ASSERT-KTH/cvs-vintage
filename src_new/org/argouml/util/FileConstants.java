@@ -1,4 +1,4 @@
-// $Id: FileConstants.java,v 1.3 2004/08/25 20:12:34 mvw Exp $
+// $Id: FileConstants.java,v 1.4 2004/12/11 18:27:31 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,14 @@
 
 package org.argouml.util;
 
-/** Utility class to store file constants, such as file extensions 
- *  frequently used across ArgoUML.
+/** 
+ * Utility class to store file extensions frequently used across ArgoUML. <p>
+ * These extensions are only to be used to distinguish between parts 
+ * (i.e. the contents) of a project file, 
+ * and NOT for filnamens for loading and saving projects. 
+ * Filename extensions are handled by the Persisters themselves. 
+ * See AbstractFilePersister.
+ * 
  * @stereotype utility
  */
 public class FileConstants {

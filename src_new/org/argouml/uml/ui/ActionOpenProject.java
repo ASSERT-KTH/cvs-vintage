@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.45 2004/12/11 12:15:50 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.46 2004/12/11 18:27:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,6 +114,15 @@ public class ActionOpenProject extends ActionFileOperations
             int retval = chooser.showOpenDialog(pb);
             if (retval == 0) {
                 File theFile = chooser.getSelectedFile();
+                if (!theFile.canRead()) {
+                    /* Try adding the default extension. */
+                    File n = new File(theFile.getPath() + "." 
+                            + pm.getDefaultExtension());
+                    /* The above could have been the selected extension 
+                     * in the chooser, but I have no direct means 
+                     * of getting the extension of a FileFilter... */
+                    if (n.canRead()) theFile = n;
+                }
                 if (theFile != null) {
                     String path = theFile.getParent();
                     // TODO: Use something other than Globals to
@@ -122,11 +131,12 @@ public class ActionOpenProject extends ActionFileOperations
                     Globals.setLastDirectory(path);
                     URL url = theFile.toURL();
                     if (url != null) {
-                        loadProject(url);
-                        // notification of menu bar
-                        GenericArgoMenuBar menuBar =
-                            (GenericArgoMenuBar) pb.getJMenuBar();
-                        menuBar.addFileSaved(theFile.getCanonicalPath());
+                        if (loadProject(url)) {
+                            // notification of menu bar
+                            GenericArgoMenuBar menuBar =
+                                (GenericArgoMenuBar) pb.getJMenuBar();
+                            menuBar.addFileSaved(theFile.getCanonicalPath());
+                        }
                     }
                 }
             }
@@ -151,8 +161,7 @@ public class ActionOpenProject extends ActionFileOperations
             LOG.error("Incorrectly formatted URL.", e);
             return false;
         }
-        loadProject(url);
-        return true;
+        return loadProject(url);
     }
 
 } /* end class ActionOpenProject */
