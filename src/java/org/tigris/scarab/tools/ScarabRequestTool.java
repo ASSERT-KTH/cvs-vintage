@@ -931,9 +931,12 @@ try{
                 .get("Issue", IntakeTool.DEFAULT_KEY, false);
             if ( issueGroup != null ) 
             {            
-                issueId =  issueGroup.get("id").toString();
+                issueId =  issueGroup.get("Id").toString();
             }
-
+            else
+            {
+                issueId = data.getParameters().getString("id");
+            }
             if ( issueId == null || issueId.length() == 0 )
             {
                 issue = getCurrentModule()
