@@ -6,7 +6,9 @@
             
             options are :
             
-            port : http adaptor will listen to this port
+            type : HTTP or JRMP adaptor (default http)
+            
+            port : http/jrmp adaptor will listen to this port
             
             If you're using the MX4J HTTP Adaptor, you could also 
             set host and authentication :
