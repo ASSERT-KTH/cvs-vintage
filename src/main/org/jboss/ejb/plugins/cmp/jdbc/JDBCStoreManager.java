@@ -58,7 +58,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -94,6 +94,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
    private JDBCFindEntityCommand findEntityCommand;
    private JDBCFindEntitiesCommand findEntitiesCommand;
    private JDBCCreateEntityCommand createEntityCommand;
+   private JDBCPostCreateEntityCommand postCreateEntityCommand;
    private JDBCRemoveEntityCommand removeEntityCommand;
    private JDBCLoadEntityCommand loadEntityCommand;
    private JDBCIsModifiedCommand isModifiedCommand;
@@ -410,6 +411,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       findEntityCommand = commandFactory.createFindEntityCommand();
       findEntitiesCommand = commandFactory.createFindEntitiesCommand();
       createEntityCommand = commandFactory.createCreateEntityCommand();
+      postCreateEntityCommand = commandFactory.createPostCreateEntityCommand();
       removeEntityCommand = commandFactory.createRemoveEntityCommand();
       loadEntityCommand = commandFactory.createLoadEntityCommand();
       isModifiedCommand = commandFactory.createIsModifiedCommand();
@@ -495,6 +497,15 @@ public class JDBCStoreManager implements EntityPersistenceStore
       entityBridge.setCreated(ctx);
       
       return pk;
+   }
+
+   public Object postCreateEntity(
+         Method createMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws CreateException
+   {
+      
+      return postCreateEntityCommand.execute(createMethod, args, ctx);
    }
    
    public Object findEntity(
