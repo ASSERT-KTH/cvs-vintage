@@ -39,13 +39,13 @@ public class Validator {
     private final HashSet _ignoreAllSet = new HashSet();
 
     /**
-     * Validate a line of words that have the <code>results</code> of a spell
-     * check.
-     *<p>
-     * @param line String with a line of words that are to be corrected
-     * @param results List of {@link Result} of a spell check
-     * @return new line with all corrected words validated
-     */
+ * Validate a line of words that have the <code>results</code> of a spell
+ * check.
+ *<p>
+ * @param line String with a line of words that are to be corrected
+ * @param results List of {@link Result} of a spell check
+ * @return new line with all corrected words validated
+ */
     public String validate(String line, List results) {
         String checkedLine = line;
 
@@ -81,16 +81,16 @@ public class Validator {
     }
 
     /**
-     * Validates a single correction
-     *<p>
-     *
-     *<p>
-     * @param result A {@link Result} of spell checking one word
-     * @return validated correction (this is the replacement word). <i>null</i>
-     *         is returned if the operation is cancelled. The replacement word
-     *         maybe the same or different from the original word in
-     *         <code>result</code>.
-     */
+ * Validates a single correction
+ *<p>
+ *
+ *<p>
+ * @param result A {@link Result} of spell checking one word
+ * @return validated correction (this is the replacement word). <i>null</i>
+ *         is returned if the operation is cancelled. The replacement word
+ *         maybe the same or different from the original word in
+ *         <code>result</code>.
+ */
     public String validate(Result result) {
         String replacementWord = null;
 
@@ -132,8 +132,8 @@ public class Validator {
     }
 
     /**
-     * Helper method to replace the original word with the correction in the line
-     */
+ * Helper method to replace the original word with the correction in the line
+ */
     protected String replaceWord(String originalLine, String originalWord,
         int originalIndex, String replacementWord) {
         String leftText = originalLine.substring(0, originalIndex - 1);

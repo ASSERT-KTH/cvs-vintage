@@ -51,52 +51,52 @@ public class SpellException extends Exception {
     protected Throwable rootCause;
 
     /**
-     * <p>
-     * This will create an <code>Exception</code>.
-     * </p>
-     */
+ * <p>
+ * This will create an <code>Exception</code>.
+ * </p>
+ */
     public SpellException() {
         super("Error occurred in spell application.");
     }
 
     /**
-     * <p>
-     * This will create an <code>Exception</code> with the given message.
-     * </p>
-     *
-     * @param message <code>String</code> message indicating
-     *                the problem that occurred.
-     */
+ * <p>
+ * This will create an <code>Exception</code> with the given message.
+ * </p>
+ *
+ * @param message <code>String</code> message indicating
+ *                the problem that occurred.
+ */
     public SpellException(String message) {
         super(message);
     }
 
     /**
-     * <p>
-     * This will create an <code>Exception</code> with the given message
-     *   and wrap another <code>Exception</code>.  This is useful when
-     *   the originating <code>Exception</code> should be held on to.
-     * </p>
-     *
-     * @param message <code>String</code> message indicating
-     *                the problem that occurred.
-     * @param exception <code>Exception</code> that caused this
-     *                  to be thrown.
-     */
+ * <p>
+ * This will create an <code>Exception</code> with the given message
+ *   and wrap another <code>Exception</code>.  This is useful when
+ *   the originating <code>Exception</code> should be held on to.
+ * </p>
+ *
+ * @param message <code>String</code> message indicating
+ *                the problem that occurred.
+ * @param exception <code>Exception</code> that caused this
+ *                  to be thrown.
+ */
     public SpellException(String message, Throwable rootCause) {
         super(message);
         this.rootCause = rootCause;
     }
 
     /**
-     * <p>
-     * This returns the message for the <code>Exception</code>. If
-     *   there is a root cause, the message associated with the root
-     *   <code>Exception</code> is appended.
-     * </p>
-     *
-     * @return <code>String</code> - message for <code>Exception</code>.
-     */
+ * <p>
+ * This returns the message for the <code>Exception</code>. If
+ *   there is a root cause, the message associated with the root
+ *   <code>Exception</code> is appended.
+ * </p>
+ *
+ * @return <code>String</code> - message for <code>Exception</code>.
+ */
     public String getMessage() {
         if (rootCause != null) {
             return super.getMessage() + ": " + rootCause.getMessage();
@@ -106,12 +106,12 @@ public class SpellException extends Exception {
     }
 
     /**
-     * <p>
-     * This prints the stack trace of the <code>Exception</code>. If
-     *   there is a root cause, the stack trace of the root
-     *   <code>Exception</code> is printed right after.
-     * </p>
-     */
+ * <p>
+ * This prints the stack trace of the <code>Exception</code>. If
+ *   there is a root cause, the stack trace of the root
+ *   <code>Exception</code> is printed right after.
+ * </p>
+ */
     public void printStackTrace() {
         super.printStackTrace();
 
@@ -122,12 +122,12 @@ public class SpellException extends Exception {
     }
 
     /**
-     * <p>
-     * This prints the stack trace of the <code>Exception</code> to the given
-     *   PrintStream. If there is a root cause, the stack trace of the root
-     *   <code>Exception</code> is printed right after.
-     * </p>
-     */
+ * <p>
+ * This prints the stack trace of the <code>Exception</code> to the given
+ *   PrintStream. If there is a root cause, the stack trace of the root
+ *   <code>Exception</code> is printed right after.
+ * </p>
+ */
     public void printStackTrace(PrintStream s) {
         super.printStackTrace(s);
 
@@ -138,12 +138,12 @@ public class SpellException extends Exception {
     }
 
     /**
-     * <p>
-     * This prints the stack trace of the <code>Exception</code> to the given
-     *   PrintWriter. If there is a root cause, the stack trace of the root
-     *   <code>Exception</code> is printed right after.
-     * </p>
-     */
+ * <p>
+ * This prints the stack trace of the <code>Exception</code> to the given
+ *   PrintWriter. If there is a root cause, the stack trace of the root
+ *   <code>Exception</code> is printed right after.
+ * </p>
+ */
     public void printStackTrace(PrintWriter w) {
         super.printStackTrace(w);
 
@@ -154,13 +154,13 @@ public class SpellException extends Exception {
     }
 
     /**
-     * <p>
-     * This will return the root cause <code>Throwable</code>, or null
-     *   if one does not exist.
-     * </p>
-     *
-     * @return <code>Throwable</code> - the wrapped <code>Throwable</code>.
-     */
+ * <p>
+ * This will return the root cause <code>Throwable</code>, or null
+ *   if one does not exist.
+ * </p>
+ *
+ * @return <code>Throwable</code> - the wrapped <code>Throwable</code>.
+ */
     public Throwable getRootCause() {
         return rootCause;
     }

@@ -31,15 +31,15 @@ import java.util.List;
  */
 public interface Engine {
     /**
-     * Spell check a list of words
-     *<p>
-     * Spell checks the list of works in <code>words</code> and returns a list of
-     * {@link Result}s. There is one {@link Result} for each word in
-     * <code>words</code>.
-     *<p>
-     * @param words {@link String} with list of works to be spell checked.
-     * @return List of {@link Result}
-     */
+ * Spell check a list of words
+ *<p>
+ * Spell checks the list of works in <code>words</code> and returns a list of
+ * {@link Result}s. There is one {@link Result} for each word in
+ * <code>words</code>.
+ *<p>
+ * @param words {@link String} with list of works to be spell checked.
+ * @return List of {@link Result}
+ */
     public List checkLine(String line) throws SpellException;
 
     // to be defined

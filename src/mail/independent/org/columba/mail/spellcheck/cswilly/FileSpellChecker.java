@@ -74,9 +74,9 @@ public class FileSpellChecker {
     }
 
     /**
-     * @return <i>true</i> if file completely checked and <i>false</i> if the user
-     * interupted the checking.
-     */
+ * @return <i>true</i> if file completely checked and <i>false</i> if the user
+ * interupted the checking.
+ */
     public boolean checkFile(BufferedReader input, BufferedWriter output)
         throws SpellException {
         try {

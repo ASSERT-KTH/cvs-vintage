@@ -13,19 +13,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.util;
 
 import org.columba.core.util.GlobalResourceLoader;
+
 
 public class MailResourceLoader extends GlobalResourceLoader {
     protected static final String MAIL_RESOURCE_PATH = "org.columba.mail.i18n";
 
     /**
-     * No need for creating instances of this class.
-     */
-    private MailResourceLoader() {}
-    
+ * No need for creating instances of this class.
+ */
+    private MailResourceLoader() {
+    }
+
     //This is used when package name and file name are different.
     //Example: getString("dialog", "composer", "statusbar_label");
     public static String getString(String sPath, String sName, String sID) {

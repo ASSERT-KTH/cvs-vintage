@@ -120,21 +120,21 @@ public class ValidationDialog extends JDialog {
     }
 
     /**
-     * Returns the replacement word selected by the user
-     *<p>
-     * The returned value only makes sense if the user action is either CHANGE
-     * or CHANGE_ALL. Should be ignored for any other action.
-     *<p>
-     * @return the replacement word selected by the user as a String
-     */
+ * Returns the replacement word selected by the user
+ *<p>
+ * The returned value only makes sense if the user action is either CHANGE
+ * or CHANGE_ALL. Should be ignored for any other action.
+ *<p>
+ * @return the replacement word selected by the user as a String
+ */
     public String getSelectedWord() {
         return _changeToTextField.getText();
     }
 
     /**
-     * Overriden to register {@link CloseDialogActionListener} to be called when
-     * the escape key is pressed.
-     */
+ * Overriden to register {@link CloseDialogActionListener} to be called when
+ * the escape key is pressed.
+ */
     protected JRootPane createRootPane() {
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         JRootPane rootPane = new JRootPane();
@@ -146,8 +146,8 @@ public class ValidationDialog extends JDialog {
     }
 
     /**
-     * Convenience method add lableled component
-     */
+ * Convenience method add lableled component
+ */
     private void _addRow(Box mainBox, JComponent labelComponent,
         Component component) {
         Box hBox = Box.createHorizontalBox();
@@ -166,14 +166,14 @@ public class ValidationDialog extends JDialog {
     }
 
     /**
-     * Convenience method to create and config buttons from an action
-     *<p>
-     * After creating the JButton, sets the Mnemonic and ToolTipText by looking
-     * for the AbstractFilterAction.MNEMONIC_KEY and AbstractFilterAction.SHORT_DESCRIPTION
-     * keys in <code>action</code>.
-     *<p>
-     * @return a new, freshly configured JButton
-     */
+ * Convenience method to create and config buttons from an action
+ *<p>
+ * After creating the JButton, sets the Mnemonic and ToolTipText by looking
+ * for the AbstractFilterAction.MNEMONIC_KEY and AbstractFilterAction.SHORT_DESCRIPTION
+ * keys in <code>action</code>.
+ *<p>
+ * @return a new, freshly configured JButton
+ */
     private static JButton _configButton(AbstractAction action) {
         JButton retButton = new JButton(action);
 
@@ -197,8 +197,8 @@ public class ValidationDialog extends JDialog {
     }
 
     /**
-     * Initializes the dialog box
-     */
+ * Initializes the dialog box
+ */
     private void _init() {
         setModal(true);
         setTitle(_title);
@@ -300,8 +300,8 @@ public class ValidationDialog extends JDialog {
     }
 
     /**
-     * Models a enum of UserActions
-     */
+ * Models a enum of UserActions
+ */
     public static class UserAction {
         private final String _name;
 
