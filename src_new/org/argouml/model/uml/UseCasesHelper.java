@@ -1,4 +1,4 @@
-// $Id: UseCasesHelper.java,v 1.1 2004/11/01 19:55:07 mvw Exp $
+// $Id: UseCasesHelper.java,v 1.2 2004/12/27 21:06:58 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.kernel.ProjectManager;
 import ru.novosoft.uml.behavior.use_cases.MActor;
 import ru.novosoft.uml.behavior.use_cases.MExtend;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
@@ -40,7 +39,6 @@ import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MSubsystem;
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * Helper class for UML BehavioralElements::UseCases Package.
@@ -90,21 +88,6 @@ public class UseCasesHelper {
     }
     
     /**
-     * Returns all usecases in the current project model.
-     * @return Collection
-     * 
-     * @deprecated by MVW in V0.17.2. Use #getAllUseCases(MNamespace ns) 
-     * instead.
-     * Reason: See issue 1814 - and it is never used.
-     */
-    public Collection getAllUseCases() {
-    	MNamespace model =
-	    (MModel) ProjectManager.getManager().getCurrentProject()
-	        .getModel();
-	return getAllUseCases(model);
-    }
-	
-    /**
      * Returns all usecases in some namespace ns.
      *
      * @param ns is the namespace
@@ -124,20 +107,6 @@ public class UseCasesHelper {
 			
 	}
 	return list;
-    }
-	
-    /**
-     * Returns all actors in the current project model.
-     * @return Collection
-     * 
-     * @deprecated by MVW in V0.17.2. Use #getAllActors(MNamespace ns) instead.
-     * Reason: See issue 1814 - and it is never used.
-     */
-    public Collection getAllActors() {
-    	MNamespace model =
-	    (MModel) ProjectManager.getManager().getCurrentProject()
-	        .getModel();
-	return getAllActors(model);
     }
 	
     /**
