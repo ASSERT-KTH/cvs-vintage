@@ -71,6 +71,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.*;
+import org.apache.tomcat.util.io.FileUtil;
 
 /* 
  */
@@ -78,6 +79,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler{
     private boolean tomcatAuthentication=true;
     String secret;
+    File ajpidFile=null;
     
     public Ajp12Interceptor() {
 	super();
@@ -100,6 +102,12 @@ public class Ajp12Interceptor extends PoolTcpConnector
     public void setSecret( String s ) {
 	secret=s;
     }
+
+    /** Specify ajpid file used when shutting down tomcat
+     */
+    public void setAjpidFile( String path ) {
+        ajpidFile=( path==null?null:new File(path));
+    }
     
     public void engineState(ContextManager cm, int state )
 	throws TomcatException
@@ -112,9 +120,13 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	Ajp12Interceptor tcpCon=this;
 	int portInt=tcpCon.getPort();
 	InetAddress address=tcpCon.getAddress();
+        File sf=FileUtil.getConfigFile(ajpidFile, new File(cm.getHome()),
+                        "conf/ajp12.id");
+        if( ajpidFile != null || debug > 0)
+            log( "Using stop file: "+sf);
 	try {
 	    PrintWriter stopF=new PrintWriter
-		(new FileWriter(cm.getHome() + "/conf/ajp12.id"));
+		(new FileWriter(sf));
 	    stopF.println( portInt );
 	    if( address==null )
 		stopF.println( "" );
@@ -126,7 +138,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
 		stopF.println();
 	    stopF.close();
 	} catch( IOException ex ) {
-	    log( "Can't create ajp12.id " + ex );
+	    log( "Can't create stop file: "+sf, ex );
 	}
     }
 
