@@ -8,6 +8,9 @@ package org.jboss.management.j2ee;
 
 import java.security.InvalidParameterException;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.IpAddress;
 import javax.management.j2ee.JVM;
 
@@ -40,8 +43,12 @@ public class Node
    *
    * @throws InvalidParameterException If list of IPAddresses or Java VMs is null or empty
    **/
-   public Node( String pName, String pHardwareType, String pOsType, JVM[] pJavaVMs, IpAddress[] pIpAddresses ) {
-      super( pName );
+   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType, JVM[] pJavaVMs, IpAddress[] pIpAddresses )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "Node", pName, pServer );
       hardwareType = pHardwareType;
       if( pIpAddresses == null || pIpAddresses.length == 0 ) {
          throw new InvalidParameterException( "There must always be at least one IpAddress defined" );

@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.JDBCDataSource;
 
 /**
@@ -29,8 +32,12 @@ public class JDBCConnectionPool
    *
    * @throws InvalidParameterException If given driver is null
    **/
-   public JDBCConnectionPool( String pName, JDBCDataSource pDriver ) {
-      super( pName, pDriver );
+   public JDBCConnectionPool( String pName, ObjectName pServer, JDBCDataSource pDriver )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "J2EEConnectionPool", pName, pServer, pDriver );
    }
 
    // -------------------------------------------------------------------------

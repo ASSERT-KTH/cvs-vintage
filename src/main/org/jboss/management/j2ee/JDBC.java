@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.JDBCConnection;
 
 /**
@@ -30,8 +33,12 @@ public class JDBC
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JDBC( String pName, JDBCConnection[] pConnections ) {
-      super( pName );
+   public JDBC( String pName, ObjectName pServer, JDBCConnection[] pConnections )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "JDBC", pName, pServer );
       if( pConnections == null ) {
          mConnections = new JDBCConnection[ 0 ];
       }

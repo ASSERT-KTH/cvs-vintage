@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.EJB;
 import javax.management.j2ee.J2EEApplication;
 import javax.management.j2ee.J2EEServer;
@@ -22,7 +25,7 @@ import java.security.InvalidParameterException;
 * JBoss specific implementation.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class EjbModule
   extends J2EEModule
@@ -46,12 +49,18 @@ public class EjbModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public EjbModule( String pName, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM, EJB[] pEJBs ) {
-      super( pName, pDeploymentDescriptor, pApplications, pServer, pJVM );
+   public EjbModule( String pName, ObjectName pApplication, String pDeploymentDescriptor )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "EjbModule", pName, pApplication, pDeploymentDescriptor );
+/*
       if( pEJBs == null || pEJBs.length == 0 ) {
          throw new InvalidParameterException( "EJB list may not be null or empty" );
       }
       mEJBs = new ArrayList( Arrays.asList( pEJBs ) );
+*/
    }
 
    // -------------------------------------------------------------------------

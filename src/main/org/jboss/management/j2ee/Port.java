@@ -9,6 +9,9 @@ package org.jboss.management.j2ee;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.IpAddress;
 
 public class Port
@@ -29,8 +32,12 @@ public class Port
    /**
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public Port( String pName, int pPort, IpAddress[] pIpAddresses ) {
-      super( pName );
+   public Port( String pName, ObjectName pIpAddress, int pPort, IpAddress[] pIpAddresses )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "IpAddress", pName, pIpAddress );
       mPort = pPort;
       if( pIpAddresses == null || pIpAddresses.length == 0 ) {
          throw new InvalidParameterException( "At least one IP Addresses must be defined" );

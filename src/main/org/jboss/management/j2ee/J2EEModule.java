@@ -11,18 +11,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.J2EEApplication;
 import javax.management.j2ee.J2EEServer;
 import javax.management.j2ee.JVM;
+
 
 /**
 * This class is the connection between the JSR and the
 * JBoss specific implementation.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
-public class J2EEModule
+public abstract class J2EEModule
    extends J2EEDeployedObject
    implements javax.management.j2ee.J2EEModule
 {
@@ -42,8 +46,18 @@ public class J2EEModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public J2EEModule( String pName, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM ) {
-      super( pName, pDeploymentDescriptor );
+   public J2EEModule(
+      String pType,
+      String pName,
+      ObjectName pApplication,
+      String pDeploymentDescriptor
+   )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( pType, pName, pApplication, pDeploymentDescriptor );
+/*
       if( pApplications == null || pApplications.length == 0 ) {
          throw new InvalidParameterException( "At least one applications must be set at the module" );
       }
@@ -52,6 +66,7 @@ public class J2EEModule
          mServers = new ArrayList( Arrays.asList( pServer ) );
       }
       mJVM = pJVM;
+*/
    }
 
    // Public --------------------------------------------------------

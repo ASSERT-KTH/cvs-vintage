@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.J2EEApplication;
 import javax.management.j2ee.J2EEServer;
 import javax.management.j2ee.JVM;
@@ -22,7 +25,7 @@ import java.security.InvalidParameterException;
 * JBoss specific implementation.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class ConnectorModule
   extends J2EEModule
@@ -46,12 +49,18 @@ public class ConnectorModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public ConnectorModule( String pName, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM, ResourceAdapter[] pAdapters ) {
-      super( pName, pDeploymentDescriptor, pApplications, pServer, pJVM );
+   public ConnectorModule( String pName, ObjectName pApplication, String pDeploymentDescriptor )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "ConnectorModule", pName, pApplication, pDeploymentDescriptor );
+/*
       if( pAdapters == null || pAdapters.length == 0 ) {
          throw new InvalidParameterException( "Resource Adapters may not be null or empty" );
       }
       mResourceAdapters = new ArrayList( Arrays.asList( pAdapters ) );
+*/
    }
 
    // -------------------------------------------------------------------------

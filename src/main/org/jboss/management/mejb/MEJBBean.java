@@ -11,6 +11,7 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -18,7 +19,6 @@ import javax.naming.NamingException;
 import javax.management.j2ee.MEJBServer;
 import javax.management.j2ee.Attribute;
 import javax.management.j2ee.AttributeList;
-import javax.management.j2ee.J2EEObjectName;
 /*
 import javax.management.j2ee.;
 import javax.management.j2ee.;
@@ -34,7 +34,7 @@ import javax.management.j2ee.;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * @ejb:bean name="MEJB"
 *           display-name="JBoss Management EJB (MEJB)"
@@ -66,7 +66,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public Object getAttribute( J2EEObjectName pName, String pAttribute )
+   public Object getAttribute( ObjectName pName, String pAttribute )
       throws RemoteException
    {
       return null;
@@ -77,7 +77,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public AttributeList getAttributes( J2EEObjectName pName, String pAttributes )
+   public AttributeList getAttributes( ObjectName pName, String pAttributes )
       throws RemoteException
    {
       return null;
@@ -110,7 +110,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public Object invoke( J2EEObjectName pName, String pOperationName, Object[] pParams, String[] pSignature )
+   public Object invoke( ObjectName pName, String pOperationName, Object[] pParams, String[] pSignature )
       throws RemoteException
    {
       return null;
@@ -121,7 +121,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public boolean isRegistered( J2EEObjectName pName )
+   public boolean isRegistered( ObjectName pName )
       throws RemoteException
    {
       return false;
@@ -132,7 +132,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public Set queryNames( J2EEObjectName pName )
+   public Set queryNames( ObjectName pName )
       throws RemoteException
    {
       return null;
@@ -143,7 +143,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public Attribute setAttribute( J2EEObjectName pName, Attribute pAttribute )
+   public Attribute setAttribute( ObjectName pName, Attribute pAttribute )
       throws RemoteException
    {
       return null;
@@ -154,7 +154,7 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public AttributeList setAttributes( J2EEObjectName pName, AttributeList pAttributes )
+   public AttributeList setAttributes( ObjectName pName, AttributeList pAttributes )
       throws RemoteException
    {
       return null;

@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.EJB;
 
 /**
@@ -28,8 +31,12 @@ public class MessageDrivenBean
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public MessageDrivenBean( String pName ) {
-      super( pName );
+   public MessageDrivenBean( String pName, ObjectName pApplication )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "MessageDrivenBean", pName, pApplication );
    }
 
    // -------------------------------------------------------------------------

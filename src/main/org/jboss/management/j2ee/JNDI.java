@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 /**
  * @author Marc Fleury
  **/
@@ -26,8 +29,12 @@ public class JNDI
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JNDI( String pName ) {
-      super( pName );
+   public JNDI( String pName, ObjectName pServer )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "JNDI", pName, pServer );
    }
 
    // -------------------------------------------------------------------------

@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 /**
 * @author Marc Fleury
 **/
@@ -26,8 +29,12 @@ public abstract class J2EEResource
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public J2EEResource( String pName ) {
-      super( pName );
+   public J2EEResource( String pType, String pName, ObjectName pServer )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( pType, pName, pServer );
    }
 
    // -------------------------------------------------------------------------

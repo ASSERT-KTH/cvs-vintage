@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.J2EEApplication;
 import javax.management.j2ee.J2EEServer;
 import javax.management.j2ee.JVM;
@@ -22,7 +25,7 @@ import java.security.InvalidParameterException;
 * JBoss specific implementation.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class WebModule
   extends J2EEModule
@@ -46,8 +49,12 @@ public class WebModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public WebModule( String pName, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM, Servlet[] pServlets ) {
-      super( pName, pDeploymentDescriptor, pApplications, pServer, pJVM );
+   public WebModule( String pName, ObjectName pApplication, String pDeploymentDescriptor, J2EEApplication[] pApplications, J2EEServer[] pServer, JVM pJVM, Servlet[] pServlets )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "WebModule", pName, pApplication, pDeploymentDescriptor );
       if( pServlets == null || pServlets.length == 0 ) {
          throw new InvalidParameterException( "Servlet list may not be null or empty" );
       }

@@ -8,12 +8,15 @@ package org.jboss.management.j2ee;
 
 import java.security.InvalidParameterException;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import javax.management.j2ee.JDBCDataSource;
 
 /**
  * @author Marc Fleury
  **/
-public class JDBCConnection
+public abstract class JDBCConnection
    extends J2EEManagedObject
    implements javax.management.j2ee.JDBCConnection
 {
@@ -33,8 +36,12 @@ public class JDBCConnection
     *
     * @throws InvalidParameterException If given driver is null
     **/
-   public JDBCConnection( String pName, JDBCDataSource pDriver ) {
-      super( pName );
+   public JDBCConnection( String pType, String pName, ObjectName pServer, JDBCDataSource pDriver )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( pType, pName, pServer );
       if( pDriver == null ) {
          throw new InvalidParameterException( "There driver must always be defined" );
       }

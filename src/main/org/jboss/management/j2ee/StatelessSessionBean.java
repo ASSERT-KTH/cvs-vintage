@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 /**
  * @author Marc Fleury
  **/
@@ -26,8 +29,12 @@ public class StatelessSessionBean
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public StatelessSessionBean( String pName ) {
-      super( pName );
+   public StatelessSessionBean( String pName, ObjectName pEjbModule )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "StatelessSessionBean", pName, pEjbModule );
    }
 
    // -------------------------------------------------------------------------

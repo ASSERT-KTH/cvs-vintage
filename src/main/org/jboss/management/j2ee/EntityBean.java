@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 /**
  * @author Marc Fleury
  **/
@@ -26,8 +29,12 @@ public class EntityBean
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public EntityBean( String pName ) {
-      super( pName );
+   public EntityBean( String pName, ObjectName pEJBModule )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "EntityBean", pName, pEJBModule );
    }
 
    // -------------------------------------------------------------------------

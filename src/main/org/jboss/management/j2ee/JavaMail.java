@@ -6,6 +6,9 @@
 */
 package org.jboss.management.j2ee;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 /**
  * @author Marc Fleury
  **/
@@ -26,8 +29,12 @@ public class JavaMail
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JavaMail( String pName ) {
-      super( pName );
+   public JavaMail( String pName, ObjectName pServer )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( "JavaMail", pName, pServer );
    }
 
    // -------------------------------------------------------------------------

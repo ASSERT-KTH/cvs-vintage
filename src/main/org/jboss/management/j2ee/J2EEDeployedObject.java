@@ -1,6 +1,9 @@
 package org.jboss.management.j2ee;
 
-public class J2EEDeployedObject
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
+public abstract class J2EEDeployedObject
    extends J2EEManagedObject
    implements javax.management.j2ee.J2EEDeployedObject
 {
@@ -22,8 +25,17 @@ public class J2EEDeployedObject
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public J2EEDeployedObject( String pName, String pDeploymentDescriptor ) {
-      super( pName );
+   public J2EEDeployedObject(
+      String pType,
+      String pName,
+      ObjectName pParent,
+      String pDeploymentDescriptor
+   )
+      throws
+         MalformedObjectNameException,
+         InvalidParentException
+   {
+      super( pType, pName, pParent );
       mDeploymentDescriptor = pDeploymentDescriptor;
    }
 
@@ -34,5 +46,11 @@ public class J2EEDeployedObject
    public String getDeploymentDescriptor() {
       return mDeploymentDescriptor;
    }
-  
+   
+   public String toString() {
+      return "J2EEDeployedObject { " + super.toString() + " } [ " +
+         "deployment descriptor: " + mDeploymentDescriptor +
+         " ]";
+   }
+   
 }
