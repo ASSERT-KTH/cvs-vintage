@@ -91,7 +91,7 @@ public class HtmlParser {
             "<a( |\\n)*?href=(\\\")?" + urlStr + "(.|\\n)*?</a>",
             Pattern.CASE_INSENSITIVE);
 
-    // TODO: Add more special entities - e.g. accenture chars such as é
+    // TODO: Add more special entities - e.g. accenture chars such as ?
 
     /** Special entities recognized by restore special entities */
     private static String[] SPECIAL_ENTITIES = {
@@ -102,8 +102,8 @@ public class HtmlParser {
 
     /** Normal chars corresponding to the defined special entities */
     private static char[] ENTITY_CHARS = {
-        '<', '>', '&', ' ', ' ', '"', '\'', 'æ', 'æ', 'ø', 'ø', 'å', 'å', 'Æ',
-        'Æ', 'Ø', 'Ø', 'Å', 'Å'
+        '<', '>', '&', ' ', ' ', '"', '\'', '?', '?', '?', '?', '?', '?', '?',
+        '?', '?', '?', '?', '?'
     };
 
     /**
@@ -199,7 +199,7 @@ public class HtmlParser {
      * amp, nbsp etc. to their real counter parts: &, space etc.
      * <br>
      * This includes transformation of special (language specific) chars
-     * such as the Danish æ ø å Æ Ø Å.
+     * such as the Danish ? ? ? ? ? ?.
      *
      * @param        s        input string
      * @return        output with special entities replaced with their
@@ -243,6 +243,15 @@ public class HtmlParser {
                                     found = true;
 
                                     break;
+                                }
+                            }
+                            
+                            if( !found ) {
+                                if( ss.charAt(pos+1) == '#') {
+                                    char converted = (char) Integer.parseInt(ss.substring(pos+2,pos+5));
+                                    sb.append(converted);
+                                    pos = pos + 6;
+                                    found =true;
                                 }
                             }
 
