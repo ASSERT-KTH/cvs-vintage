@@ -121,7 +121,7 @@ public class GlobalResourceLoader {
                         } catch (MalformedURLException mue) {} //does not occur
                 } else {
                         if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.warning("No language pack found for " + Locale.getDefault().toString());
+                                ColumbaLogger.log.error("No language pack found for " + Locale.getDefault().toString());
                         }
                         classLoader = ClassLoader.getSystemClassLoader();
                 }
