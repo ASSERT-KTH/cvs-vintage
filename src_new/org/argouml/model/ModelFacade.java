@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.201 2004/07/25 11:04:21 mvw Exp $
+// $Id: ModelFacade.java,v 1.202 2004/08/02 21:10:39 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4176,16 +4176,16 @@ public class ModelFacade {
     }
 
     /**
-     * Return the tag of a tagged value
+     * Return the tag of a tagged value.
      *
      * @param handle The tagged value belongs to this.
-     * @return The found tag, null if not found
+     * @return The found tag as a String.
      */
-    public static Object getTag(Object handle) {
+    public static String getTag(Object handle) {
         if (handle instanceof MTaggedValue) {
             return ((MTaggedValue) handle).getTag();
         }
-	return illegalArgumentObject(handle);
+	return illegalArgumentString(handle);
     }
 
     /**
@@ -4217,8 +4217,8 @@ public class ModelFacade {
     /**
      * Return the tagged value with a specific tag.
      *
-     * @param handle The tagged value belongs to this.
-     * @param name The tag.
+     * @param handle The model element the tagged value belongs to.
+     * @param name The tag name.
      * @return The found tag, null if not found
      */
     public static Object getTaggedValue(Object handle, String name) {
@@ -4235,26 +4235,42 @@ public class ModelFacade {
         }
 	return illegalArgumentObject(handle);
     }
+    
+    /**
+     * Return the value of a tagged value with a specific tag.
+     *
+     * @param handle The model element that the tagged value belongs to.
+     * @param name The tag name.
+     * @return The value of the found tag. "" if not found.
+     */
+    public static String getTaggedValueValue(Object handle, String name) {
+        Object taggedValue = getTaggedValue(handle, name);
+        if (taggedValue == null) {
+            return "";
+        }
+        return getValueOfTag(taggedValue);
+    }
 
     /**
      * Return the key (tag) of some tagged value.
+     * 
+     * TODO: This does exactly the same as getTag(Object). Remove one of them.
      *
      * @param handle The tagged value.
-     * @return The found value, null if not found
+     * @return The found value as String.
      */
     public static String getTagOfTag(Object handle) {
         if (handle instanceof MTaggedValue) {
             return ((MTaggedValue) handle).getTag();
         }
-	illegalArgument(handle);
-	return "";
+	return illegalArgumentString(handle);
     }
 
     /**
      * Returns the Value of some UML Object
      * @param handle Object
      * @return Object the exact type depends on the handle type
-     * (String, Expression, Instance,...)
+     * (String, Expression, Instance, TaggedValue...)
      */
     public static Object getValue(Object handle) {
         if (handle instanceof MTaggedValue) {
@@ -4303,7 +4319,7 @@ public class ModelFacade {
      * Return the value of some tagged value.
      *
      * @param handle The tagged value.
-     * @return The found value, null if not found
+     * @return The found value as String.
      */
     public static String getValueOfTag(Object handle) {
         if (handle instanceof MTaggedValue) {
