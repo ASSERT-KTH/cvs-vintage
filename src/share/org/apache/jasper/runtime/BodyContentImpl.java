@@ -107,19 +107,19 @@ public class BodyContentImpl extends BodyContent {
         //Need to re-allocate the buffer since it is to be
 	//unbounded according to the updated spec..
 
-        char[] tmp = new char [bufferSize];
-	System.arraycopy(cb, 0, tmp, 0, cb.length);
+        char[] tmp = null;
 
 	//XXX Should it be multiple of DEFAULT_BUFFER_SIZE??
 
 	if (len <= Constants.DEFAULT_BUFFER_SIZE) {
-	    cb = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
+	    tmp = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
 	    bufferSize += Constants.DEFAULT_BUFFER_SIZE;
 	} else {
-	    cb = new char [bufferSize + len];
+	    tmp = new char [bufferSize + len];
 	    bufferSize += len;
 	}
-	System.arraycopy(tmp, 0, cb, 0, tmp.length);
+	System.arraycopy(cb, 0, tmp, 0, cb.length);
+	cb = tmp;
 	tmp = null;
     }
 
@@ -499,8 +499,6 @@ public class BodyContentImpl extends BodyContent {
 
     public void clear() throws IOException {
         synchronized (lock) {
-            cb = new char [Constants.DEFAULT_BUFFER_SIZE];
-	    bufferSize = Constants.DEFAULT_BUFFER_SIZE;
 	    nextChar = 0;
 	}
     }
