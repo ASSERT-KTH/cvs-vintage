@@ -165,6 +165,7 @@ saveCButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer
             viewer = viewerName.getText();
             dispose();
         } else if (command == CMD_CANCEL) {
+            viewer = null;
             dispose();
         }
     }

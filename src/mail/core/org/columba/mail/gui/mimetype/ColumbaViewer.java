@@ -40,6 +40,10 @@ public class ColumbaViewer extends AbstractViewer {
 		boolean save = false;
 		
 		String viewer = promptForViewer(header);
+		// in case of cancel in the ChooseViewer
+		if (viewer == null) {
+		  return null;
+		}
 
 		String cmd = new String(viewer + " " + tempFile.toString());
 
