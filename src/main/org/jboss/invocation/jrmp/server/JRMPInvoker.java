@@ -61,7 +61,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -107,9 +107,6 @@ public class JRMPInvoker
       
       // adapt the support delegate to invoke our state methods
       support = new ServiceMBeanSupport(getClass()) {
-            protected void createService() throws Exception {
-               delegate.createService();
-            }
    
             protected void startService() throws Exception {
                delegate.startService();
@@ -218,7 +215,7 @@ public class JRMPInvoker
       return this.invokerStub;
    }
    
-   protected void createService() throws Exception
+   protected void startService() throws Exception
    {
       loadCustomSocketFactories();
 
@@ -243,10 +240,7 @@ public class JRMPInvoker
                    (sslDomain == null ? "Default" : 
                     sslDomain)+"'");
       }
-   }
-   
-   protected void startService() throws Exception
-   {
+
       InitialContext ctx = new InitialContext();
          
       // Get the transaction propagation context factory
@@ -439,9 +433,11 @@ public class JRMPInvoker
             {
                try
                {
+                  InitialContext ctx = new InitialContext();
+                  SecurityDomain domain = (SecurityDomain) ctx.lookup(sslDomain);
                   Class[] parameterTypes = {SecurityDomain.class};
                   Method m = ssfClass.getMethod("setSecurityDomain", parameterTypes);
-                  Object[] args = {sslDomain};
+                  Object[] args = {domain};
                   m.invoke(serverSocketFactory, args);
                }
                catch(NoSuchMethodException e)
