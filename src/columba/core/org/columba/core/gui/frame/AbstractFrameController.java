@@ -31,11 +31,9 @@ import org.columba.mail.gui.frame.TooltipMouseHandler;
  * The Controller is responsible for creating a view.
  * 
  * It provides a selection handler facility through a 
- * SelectionManager.
+ * {@link SelectionManager}.
  * 
  * @see org.columba.core.gui.selection.SelectionManager
- * 
- * 
  * 
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 

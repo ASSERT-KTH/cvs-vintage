@@ -43,14 +43,7 @@ public class FolderTreeCellRenderer
 	boolean bool;
 	//TreeController treeController;
 
-	private ImageIcon image1, image2,
-	//		image3,
-	//		image4,
-	//		image5,
-	//		image6,
-	//		image7,
-	//		image8,
-	image9, image10;
+	private ImageIcon defaultIcon, localhostIcon, remotehostIcon, virtualfolderIcon;
 
 	private Font plainFont, boldFont, italicFont;
 
@@ -72,11 +65,11 @@ public class FolderTreeCellRenderer
 		italicFont = italicFont.deriveFont(Font.ITALIC);
 		plainFont = UIManager.getFont("Tree.font");
 
-		image1 = ImageLoader.getSmallImageIcon("folder.png");
-		image2 = ImageLoader.getSmallImageIcon("localhost.png");
+		defaultIcon = ImageLoader.getSmallImageIcon("folder.png");
+		localhostIcon = ImageLoader.getSmallImageIcon("localhost.png");
 
-		image9 = ImageLoader.getSmallImageIcon("remotehost.png");
-		image10 = ImageLoader.getSmallImageIcon("virtualfolder.png");
+		remotehostIcon = ImageLoader.getSmallImageIcon("remotehost.png");
+		virtualfolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
 
 	}
 

@@ -16,15 +16,17 @@
 package org.columba.mail.gui.table.selection;
 
 /**
- * @author freddy
+ * Listener for table events.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz, tstich
  */
-public interface MessageSelectionListener {
+public interface TableSelectionListener {
 	
-	void messageSelectionChanged( Object[] newUidList );
+	/**
+	 * Called when the selection has changed.
+	 * 
+	 * @param e	changed event
+	 */
+	void tableSelectionChanged( Object[] newUidList );
 
 }

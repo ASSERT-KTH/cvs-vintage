@@ -157,7 +157,8 @@ public class TreeController
 		view.expandPath(path);
 
 		//view.setSelectionRow( view.getRowForPath(path) );
-		treeSelectionManager.fireFolderSelectionEvent(selectedFolder, folder);
+		// FIXME
+		//treeSelectionManager.fireFolderSelectionEvent(selectedFolder, folder);
 
 		this.selectedFolder = folder;
 
@@ -247,7 +248,8 @@ public class TreeController
 		if (path != null) {
 			FolderTreeNode node = (FolderTreeNode) path.getLastPathComponent();
 
-			getTreeSelectionManager().fireFolderSelectionEvent(null, node);
+			// FIXME
+			//getTreeSelectionManager().fireFolderSelectionEvent(null, node);
 		}
 
 	}

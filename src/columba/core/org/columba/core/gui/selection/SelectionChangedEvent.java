@@ -16,6 +16,16 @@
 
 package org.columba.core.gui.selection;
 
+
+
+/**
+ * Selection changed events implementations should add 
+ * their selection component specific attributes here.
+ * <p>
+ * For example: TreePath for a JTree
+ *
+ * @author fdietz, tstich
+ */
 public class SelectionChangedEvent {
 
 }

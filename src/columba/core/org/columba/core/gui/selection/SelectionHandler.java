@@ -22,37 +22,82 @@ import java.util.Vector;
 
 import org.columba.core.command.DefaultCommandReference;
 
+/**
+ * Handles the selection of a component identified with an id.
+ * <p>
+ * We need the id for the {@link SelectionManager} which keeps
+ * a map of selection handlers.
+ * <p>
+ * 
+ *
+ * @author fdietz, tstich
+ */
 public abstract class SelectionHandler {
 
+	/**
+	 * id of component for later identification
+	 */
 	protected String id;
+	
+	/**
+	 * list of selection listeners
+	 */
 	protected List selectionListener;
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param id		id of component
+	 */
 	public SelectionHandler(String id) {
 		this.id = id;
 		
 		selectionListener = new Vector();
 	}
 
+	
 	/**
-	 * @return String
+	 * Get id of component.
+	 * 
+	 * @return String		id of component
 	 */
 	public String getId() {
 		return id;
 	}
 	
+	/**
+	 * Add selection listener.
+	 * 
+	 * @param l		selectionlistener
+	 */
 	public void addSelectionListener(SelectionListener l) {
 		selectionListener.add(l);
 	}
 	
+	/**
+	 * Fire a selection has changed event.
+	 * <p>
+	 * Notify all listeners for a change.
+	 * 
+	 * @param e		change event
+	 */
 	protected void fireSelectionChanged(SelectionChangedEvent e) {
 		for (Iterator it = selectionListener.iterator(); it.hasNext();) {
 			((SelectionListener) it.next()).selectionChanged( e );
-		// for( int i=0; i<selectionListener.size(); i++) {
-			// ((SelectionListener) selectionListener.get(i)).selectionChanged( e );
 		}
 	}
 	
+	/**
+	 * Get current selection.
+	 * 
+	 * @return		current selection
+	 */
 	public abstract DefaultCommandReference[] getSelection();
 
+	/**
+	 * Set new selection.
+	 * 
+	 * @param selection		new selection
+	 */
 	public abstract void setSelection(DefaultCommandReference[] selection);
 }

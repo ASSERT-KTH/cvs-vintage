@@ -53,7 +53,7 @@ import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.selection.MessageSelectionListener;
+import org.columba.mail.gui.table.selection.TableSelectionListener;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
@@ -65,7 +65,7 @@ import org.columba.mail.message.MimePartTree;
 
 public class MessageController
 	implements
-		MessageSelectionListener,
+		TableSelectionListener,
 		HyperlinkListener,
 		MouseListener,
 		CharsetListener,
@@ -118,7 +118,7 @@ public class MessageController
 
 	}
 
-	public void messageSelectionChanged(Object[] newUidList) {
+	public void tableSelectionChanged(Object[] newUidList) {
 
 	}
 

@@ -290,7 +290,8 @@ public class TableController implements FocusOwner, ListSelectionListener{
 
 		view.getTree().setSelectionPaths(paths);
 
-		getTableSelectionManager().fireMessageSelectionEvent(null, uids);
+		// FIXME
+		//getTableSelectionManager().fireMessageSelectionEvent(null, uids);
 	}
 
 	/************************** actions ********************************/

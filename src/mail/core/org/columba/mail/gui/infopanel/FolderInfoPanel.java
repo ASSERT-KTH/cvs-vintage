@@ -26,16 +26,15 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.CInfoPanel;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.MessageFolderInfo;
-import org.columba.mail.gui.tree.selection.TreeSelectionListener;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
-public class FolderInfoPanel
-	extends CInfoPanel
-	implements TreeSelectionListener {
+public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
 	private JLabel leftLabel, readLabel, unreadLabel, recentLabel;
 	private JPanel rightPanel;
 
@@ -154,15 +153,28 @@ public class FolderInfoPanel
 		}
 
 	}
+
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.tree.selection.TreeSelectionListener#folderSelectionChanged(org.columba.mail.folder.FolderTreeNode)
 	 */
+	/*
 	public void folderSelectionChanged(FolderTreeNode newFolder) {
 		if (newFolder == null)
 			return;
-
+	
 		setFolder((Folder) newFolder);
+	
+	}
+	*/
 
+	public void selectionChanged(SelectionChangedEvent e) {
+		TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
+
+		// we are only interested in folders containing messages 
+		// meaning of instance Folder and not of instance FolderTreeNode
+		// -> casting here to Folder
+		if ( treeEvent.getSelected()[0] != null) 
+			setFolder( (Folder) treeEvent.getSelected()[0] );
 	}
 
 }

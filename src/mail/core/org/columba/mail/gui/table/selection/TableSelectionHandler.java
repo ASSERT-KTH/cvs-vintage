@@ -31,6 +31,15 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.model.MessageNode;
 
+/**
+ * TableSelectionHandler adds another abstraction layer to the 
+ * swing JTable selection model.
+ * 
+ * It is responsible for providing a mapping between swing
+ * table rows or tree nodes into message UIDs and back. 
+ *
+ * @author fdietz
+ */
 public class TableSelectionHandler
 	extends SelectionHandler
 	implements ListSelectionListener {

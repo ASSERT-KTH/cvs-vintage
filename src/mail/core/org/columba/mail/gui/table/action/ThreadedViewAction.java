@@ -18,9 +18,11 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -94,7 +96,7 @@ public class ThreadedViewAction
 					.getTreeSelection();
 
 			Folder folder = (Folder) r[0].getFolder();
-			boolean enableThreadedView =
+			final boolean enableThreadedView =
 				folder.getFolderItem().getBoolean(
 					"property",
 					"enable_threaded_view",
@@ -102,8 +104,22 @@ public class ThreadedViewAction
 
 			updateTable(enableThreadedView);
 
-			getCheckBoxMenuItem().setSelected(enableThreadedView);
-
+			
+			
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					public void run() {
+						getCheckBoxMenuItem().setSelected(enableThreadedView);
+					}
+				});
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InvocationTargetException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
 		}
 
 	}
@@ -130,11 +146,6 @@ public class ThreadedViewAction
 
 		updateTable(getState());
 
-		((TableOwnerInterface) frameController)
-			.getTableController()
-			.getHeaderTableModel()
-			.update();
-
 	}
 
 	protected void updateTable(boolean enableThreadedView) {
@@ -152,6 +163,10 @@ public class ThreadedViewAction
 			.getTableModelThreadedView()
 			.toggleView(enableThreadedView);
 
+		((TableOwnerInterface) frameController)
+			.getTableController()
+			.getUpdateManager()
+			.update();
 	}
 
 	/* (non-Javadoc)

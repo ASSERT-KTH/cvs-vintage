@@ -15,10 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.selection;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.logging.ColumbaLogger;
@@ -36,42 +32,22 @@ import org.columba.mail.folder.FolderTreeNode;
 public class TreeSelectionManager extends SelectionManager {
 
 	protected FolderTreeNode folder;
-	
-	protected List treeListenerList;
-	
+
 	/**
 	 * Constructor for TreeSelectionManager.
 	 */
 	public TreeSelectionManager() {
 		super();
-		treeListenerList = new Vector();
+
 	}
-	
+
 	public FolderTreeNode getFolder() {
 		return folder;
 	}
-	
-	public void addFolderSelectionListener(TreeSelectionListener listener) {
-		treeListenerList.add(listener);
-	}
-	
-	public void fireFolderSelectionEvent(
-		FolderTreeNode oldFolder,
-		FolderTreeNode newFolder) {
-		folder = newFolder;
-		for (Iterator it = treeListenerList.iterator(); it.hasNext();) {
-			TreeSelectionListener l = (TreeSelectionListener) it.next();
-		// for (int i = 0; i < treeListenerList.size(); i++) {
-			// TreeSelectionListener l =
-				// (TreeSelectionListener) treeListenerList.get(i);
-			l.folderSelectionChanged(newFolder);
-		}
-	}
-	
-	public DefaultCommandReference[] getSelection()
-	{
-		ColumbaLogger.log.info("folder="+folder);
-		
+
+	public DefaultCommandReference[] getSelection() {
+		ColumbaLogger.log.info("folder=" + folder);
+
 		FolderCommandReference[] references = new FolderCommandReference[1];
 		references[0] = new FolderCommandReference(folder);
 

@@ -69,18 +69,7 @@ public class TreeSelectionHandler
 		// BUGFIX but don't know why that bug occurs 
 		if (e.getPath() == null)
 			return;
-		/*
-		if (view.getLastSelectedPathComponent() == null)
-			return;
 		
-		newSelection = (FolderTreeNode) view.getLastSelectedPathComponent();
-		
-		if( selectedFolder != newSelection ) {
-			selectedFolder = newSelection;
-			ColumbaLogger.log.debug("Selected Folder = "+selectedFolder.getName());
-			fireSelectionChanged(new FolderSelectionChangedEvent(selectedFolder));
-		}
-		*/
 
 		for (int i = 0; i < e.getPaths().length; i++) {
 			if (e.getPaths()[i].getLastPathComponent() instanceof Folder) {

@@ -15,82 +15,70 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.selection;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.selection.SelectionManager;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.tree.selection.TreeSelectionListener;
-import org.columba.mail.gui.tree.selection.TreeSelectionManager;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
 /**
- * @author freddy
+ * Manager of table selection.
+ * <p>
+ * Note: TableSelectionManager listens for TreeSelectionChanges for itself
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
-public class TableSelectionManager extends TreeSelectionManager implements TreeSelectionListener{
+public class TableSelectionManager
+	extends SelectionManager
+	implements SelectionListener {
 
 	// these uids are MessageNode[] !!!!!
-	protected Object[] uids;
-	protected Object[] oldUids;
+	private Object[] uids;
+	private Object[] oldUids;
 	
-	protected List messageListenerList;
-	
+	private Folder folder;
+
 	/**
 	 * Constructor for TableSelectionManager.
 	 */
 	public TableSelectionManager() {
 		super();
-		messageListenerList = new Vector();
-	}
-	
-	public void addMessageSelectionListener(MessageSelectionListener listener) {
-		messageListenerList.add(listener);
+
 	}
 
-	
-
-	public void fireMessageSelectionEvent(
-		Object[] oldUidList,
-		Object[] newUidList) {
-		oldUids = oldUidList;
-		uids = newUidList;
-		for (Iterator it = messageListenerList.iterator(); it.hasNext();) {
-			MessageSelectionListener l =
-				(MessageSelectionListener) it.next();
-		// for (int i = 0; i < messageListenerList.size(); i++) {
-			// MessageSelectionListener l =
-				// (MessageSelectionListener) messageListenerList.get(i);
-			l.messageSelectionChanged(uids);
-		}
-	}
-	
 	public Object[] getUids() {
 		return uids;
 	}
-	
-	public DefaultCommandReference[] getSelection()
-	{
+
+	public DefaultCommandReference[] getSelection() {
 		FolderCommandReference[] references = new FolderCommandReference[1];
-		references[0] = new FolderCommandReference((Folder) getFolder(), uids);
+		references[0] = new FolderCommandReference((Folder) folder, uids);
 
 		return references;
 	}
+
+	/*
+	public void folderSelectionChanged(FolderTreeNode treeNode) {
+		ColumbaLogger.log.debug("new folder selection:" + treeNode.toString());
 	
-	public void folderSelectionChanged( FolderTreeNode treeNode )
-	{
-		ColumbaLogger.log.debug("new folder selection:"+treeNode.toString());
-		
-		fireFolderSelectionEvent( folder, treeNode );
-		
+		// FIXME
+		//fireFolderSelectionEvent( folder, treeNode );
+	
 		folder = treeNode;
+	}
+	*/
+
+
+	public void selectionChanged(SelectionChangedEvent e) {
+		TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
+
+		// we are only interested in folders containing messages 
+		// meaning of instance Folder and not of instance FolderTreeNode
+		// -> casting here to Folder
+		if (treeEvent.getSelected()[0] != null)
+			folder = (Folder) treeEvent.getSelected()[0];
 	}
 
 	/**

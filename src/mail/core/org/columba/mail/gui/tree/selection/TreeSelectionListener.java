@@ -15,16 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.selection;
 
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.folder.FolderTreeNode;
 
 /**
- * @author freddy
+ * Listener for tree events.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz, tstich
  */
-public interface TreeSelectionListener {
-	public void folderSelectionChanged( FolderTreeNode newFolder );
+public interface TreeSelectionListener extends SelectionListener {
+
+	/**
+	 * Called when the selection has changed.
+	 * 
+	 * @param e	changed event
+	 */
+	public void folderSelectionChanged(FolderTreeNode newFolder);
 }
