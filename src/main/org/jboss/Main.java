@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss;
 
 import java.io.BufferedReader;
@@ -40,9 +41,9 @@ import org.jboss.system.URLClassLoader;
 /**
  * The main entry point for the JBoss server.
  *
- * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.46 $
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.47 $
  *
  * <b>Revisions:</b>
  * <p>
@@ -61,11 +62,11 @@ public class Main
    /**
     * Constructor for the Main object
     *
-    * @param installURL  Description of Parameter
-    * @param confDir     Description of Parameter
-    * @param patchDir    Description of Parameter
-    * @param libDir      Description of Parameter
-    * @param spineDir    Description of Parameter
+    * @param installURL    The install URL.
+    * @param confDir       The configuration directory.
+    * @param patchDir      The patch directory.
+    * @param libDir        The library directory.
+    * @param spineDir      The spine directory.
     */
    public Main(String installURL,
                String confDir,
@@ -90,15 +91,20 @@ public class Main
          URL jndiLocation = this.getClass().getResource("/jndi.properties");
          if (jndiLocation instanceof URL)
          {
-            System.out.println("Please make sure the following is intended (check your CLASSPATH):");
-            System.out.println(" jndi.properties is read from " + jndiLocation);
+            System.out.println("Please make sure the following is intended " +
+                               "(check your CLASSPATH): jndi.properties is " +
+                               "read from " + jndiLocation);
          }
 
          // Create MBeanServer
-         final MBeanServer server = MBeanServerFactory.createMBeanServer("JBOSS-SYSTEM");
+         final MBeanServer server =
+            MBeanServerFactory.createMBeanServer("JBOSS-SYSTEM");
 
          // Initialize the MBean libraries repository
-         server.registerMBean(ServiceLibraries.getLibraries(), new ObjectName(server.getDefaultDomain(), "spine", "ServiceLibraries"));
+         server.registerMBean(ServiceLibraries.getLibraries(),
+                              new ObjectName(server.getDefaultDomain(),
+                                             "spine",
+                                             "ServiceLibraries"));
 
          // Build the list of URL for the spine to boot
          ArrayList urls = new ArrayList();
@@ -113,11 +119,10 @@ public class Main
          urls.add(new URL(libDir + "log4j.jar"));
          urls.add(new URL(libDir + "jboss-spine.jar"));
 
-         // Crimson and jaxp are fucked up right now, cl usage fixed in new version of jaxp
-         // according to the developers.
+         // Crimson and jaxp are fucked up right now, cl usage fixed in new
+         // version of jaxp according to the developers.
          //urls.add(new URL(libDir+"jaxp.jar"));
          //urls.add(new URL(libDir+"crimson.jar"));
-
 
          Iterator bootURLs = urls.iterator();
          while (bootURLs.hasNext())
@@ -127,27 +132,31 @@ public class Main
          }
 
          // Create MBeanClassLoader for the base system
-         ObjectName loader = new ObjectName(server.getDefaultDomain(), "spine", "ServiceClassLoader");
+         ObjectName loader = new ObjectName(server.getDefaultDomain(),
+                                            "spine",
+                                            "ServiceClassLoader");
          MBeanClassLoader mcl = new MBeanClassLoader(loader);
 
          try
          {
-            server.registerMBean(mcl, new ObjectName(server.getDefaultDomain(), "spine", "ServiceClassLoader"));
-            // Set ServiceClassLoader as classloader for the construction of the basic JBoss-System
+            server.registerMBean(mcl, loader);
+            
+            // Set ServiceClassLoader as classloader for the construction of
+            // the basic JBoss-System
             Thread.currentThread().setContextClassLoader(mcl);
 
             System.out.println("Looking for the docuemnt");
             try
             {
                mcl.loadClass("javax.xml.parsers.DocumentBuilderFactory");
-               System.out.println("I am ok, go figure ");
+               System.out.println("I am ok, go figure");
             }
-            catch (ClassNotFoundException ed)
+            catch (ClassNotFoundException e)
             {
-               ed.printStackTrace();
+               e.printStackTrace();
             }
 
-            //Create the Loggers
+            // Create the Loggers
             server.createMBean("org.jboss.logging.Logger", null, loader);
             server.createMBean("org.jboss.logging.Log4jService", null, loader);
 
@@ -156,20 +165,28 @@ public class Main
 
             // Shutdown stuff
             server.createMBean("org.jboss.system.Shutdown", null, loader);
+            
+            // Properties for the JAXP configuration
+            if (System.getProperty("javax.xml.parsers.DocumentBuilderFactory") == null) {
+               System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+                                  "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl");
+            }
+            if (System.getProperty("javax.xml.parsers.SAXParserFactory") == null) {
+               System.setProperty("javax.xml.parsers.SAXParserFactory",
+                                  "org.apache.crimson.jaxp.SAXParserFactoryImpl");
+            }
 
-            /*
-             * Service Deployment
-             */
-            //Properties for the JAXPconfiguration
-            System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl");
-            System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.crimson.jaxp.SAXParserFactoryImpl");
+            //
+            // Service Deployment
+            //
 
             // Controller
-            server.createMBean("org.jboss.system.ServiceController", null, loader);
+            server.createMBean("org.jboss.system.ServiceController",
+                               null, loader);
 
             // Deployer
-            server.createMBean("org.jboss.deployment.ServiceDeployer", null, loader);
-
+            server.createMBean("org.jboss.deployment.ServiceDeployer",
+                               null, loader);
          }
          catch (RuntimeOperationsException roe)
          {
@@ -238,25 +255,39 @@ public class Main
     */
    public static void main(final String[] args) throws Exception
    {
-      /*
-       * Set a jboss.home property from the location of the Main.class jar
-       * if the property does not exist.
-       * marcf: we don't use this property at all for now
-       * it should be used for all the modules that need a file "anchor"
-       * it should be moved to an "FileSystemAnchor" MBean
-       */
+      //
+      // Set a jboss.home property from the location of the Main.class jar
+      // if the property does not exist.
+      // 
+      // marcf: we don't use this property at all for now
+      // it should be used for all the modules that need a file "anchor"
+      // it should be moved to an "FileSystemAnchor" MBean
+      //
       if (System.getProperty("jboss.home") == null)
       {
          String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
          File runJar = new File(path);
          // Home dir should be the parent of the dir containing run.jar
          File homeDir = new File(runJar.getParent(), "..");
-         System.setProperty("jboss.system.home", homeDir.getCanonicalPath());
+         System.setProperty("jboss.home", homeDir.getCanonicalPath());
       }
+      String home = System.getProperty("jboss.home");
+      
+      if (System.getProperty("jboss.system.home") == null)
+      {
+         // default to jboss.home if jboss.system.home is not set
+         System.setProperty("jboss.system.home", home);
+      }
+      String systemHome = System.getProperty("jboss.system.home");
 
-      String installURL = new File(System.getProperty("jboss.system.home")).toURL().toString() + File.separatorChar;
+      String installURL = new File(systemHome).toURL().toString();
+      if (!installURL.endsWith(File.separator)) {
+         installURL += File.separator;
+      }
+      
+      // Default configuration name is "default",
+      // i.e. all conf files are in "/conf/default"
       String configDir = "default";
-      // Default configuration name is "default", i.e. all conf files are in "/conf/default"
       String patchDir = "";
 
       // Given conf name
@@ -268,7 +299,6 @@ public class Main
             System.out.println("Usage: run --patch-dir --net-install --configuration");
             System.out.println("For example: run.sh --net-install http://www.jboss.org/jboss --configuration jboxx");
             System.out.println(" will download from the webserver and run the the configuration called jboxx");
-
          }
          if (args[a].startsWith("--patch-dir") ||
              args[a].startsWith("-p"))
@@ -321,22 +351,14 @@ public class Main
       {
          // The string must be a local file
          File dir = new File(directory);
-         File[] jars = dir.listFiles(
-            new java.io.FileFilter()
+         File[] jars = dir.listFiles(new java.io.FileFilter()
             {
-               /**
-                * #Description of the Method
-                *
-                * @param pathname  Description of Parameter
-                * @return          Description of the Returned Value
-                */
                public boolean accept(File pathname)
                {
                   String name = pathname.getName();
                   return name.endsWith(".jar") || name.endsWith(".zip");
                }
-            }
-               );
+            });
 
          // Add the local file patch directory
          urls.add(directory);
