@@ -37,7 +37,7 @@
   #end
   #if ($canEdit)
      <tr>
-      <th>$attVal.RModuleAttribute.DisplayValue</th>
+      <th>$attVal.getRModuleAttribute($scarabR.CurrentIssueType).DisplayValue</th>
       <td>
     #if ($attVal.Attribute.isOptionAttribute())
         #attrValueLeafSelect ($attVal $field "")
