@@ -32,6 +32,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLLabel;
 
 /**
@@ -52,8 +53,14 @@ public class DescriptionStep extends AbstractStep {
 	 * @param arg1
 	 */
 	public DescriptionStep(DataModel data) {
-		// TODO: i18n
-		super("Description", "Tool Description");
+		super(GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "DescriptionStep.title"),
+                        GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "DescriptionStep.description"));
 
 		this.data = data;
 	}

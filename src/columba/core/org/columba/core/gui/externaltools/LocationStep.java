@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
@@ -39,6 +40,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Asks the user about the location of an executable file.
@@ -59,8 +61,14 @@ class LocationStep extends AbstractStep implements ActionListener {
 	 * @param arg1
 	 */
 	public LocationStep(DataModel data) {
-		// TODO: i18n
-		super("Determine location", "Specify the location of the tool's executable");
+		super(GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "LocationStep.title"),
+                        GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "LocationStep.description"));
 
 		this.data = data;
 
@@ -85,7 +93,10 @@ class LocationStep extends AbstractStep implements ActionListener {
 		sourceFile = plugin.locate();
 		if (sourceFile == null) {
 			MultiLineLabel label =
-				new MultiLineLabel("Columba wasn't able to automatically locate the executable of this external tool. Please, specifiy the location manually.");
+				new MultiLineLabel(GlobalResourceLoader.getString(
+                                        "dialog",
+                                        "externaltools",
+                                        "LocationStep.noauto"));
 			panel.add(label, BorderLayout.NORTH);
 
 			WizardTextField middlePanel = new WizardTextField();
@@ -102,7 +113,10 @@ class LocationStep extends AbstractStep implements ActionListener {
 		} else {
 			JPanel northPanel = new JPanel(new GridLayout(2, 1, 0, 15));
 			MultiLineLabel label =
-				new MultiLineLabel("Successfully detected external tool. Just press the finish button to end the configuration.");
+				new MultiLineLabel(GlobalResourceLoader.getString(
+                                        "dialog",
+                                        "externaltools",
+                                        "LocationStep.auto"));
 			northPanel.add(label);
 
 			JPanel sourceFilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));

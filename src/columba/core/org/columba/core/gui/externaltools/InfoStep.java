@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
@@ -23,6 +24,7 @@ import javax.swing.JPanel;
 import net.javaprog.ui.wizard.AbstractStep;
 
 import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Shows a little info page which explains to the user
@@ -33,8 +35,14 @@ import org.columba.core.gui.util.MultiLineLabel;
 public class InfoStep extends AbstractStep {
 
 	public InfoStep() {
-		// TODO: i18n
-		super("Info", "Info Description");
+		super(GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "InfoStep.title"),
+                        GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "InfoStep.description"));
 	}
 
 	/* (non-Javadoc)
@@ -44,7 +52,10 @@ public class InfoStep extends AbstractStep {
 		JPanel panel = new JPanel(new BorderLayout());
 
 		MultiLineLabel label =
-			new MultiLineLabel("This is the configuration wizard of an external tool Columba needs in order to offer you certain functionality.");
+			new MultiLineLabel(GlobalResourceLoader.getString(
+                                "dialog",
+                                "externaltools",
+                                "InfoStep.text"));
 
 		panel.add(label, BorderLayout.CENTER);
 
