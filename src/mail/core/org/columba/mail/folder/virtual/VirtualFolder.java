@@ -268,9 +268,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 	}
 
 	protected void applySearch() throws Exception {
-		int uid = getConfiguration().getInteger("property", "source_uid");
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) FolderTreeModel
-				.getInstance().getFolder(uid);
+		AbstractMessageFolder srcFolder = getSourceFolder();
 
 		XmlElement filter = getConfiguration().getRoot().getElement("filter");
 
@@ -298,6 +296,16 @@ public class VirtualFolder extends AbstractMessageFolder {
 
 		VirtualFolder folder = (VirtualFolder) FolderTreeModel.getInstance()
 				.getFolder(106);
+	}
+
+	/**
+	 * @return
+	 */
+	private AbstractMessageFolder getSourceFolder() {
+		int uid = getConfiguration().getInteger("property", "source_uid");
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) FolderTreeModel
+				.getInstance().getFolder(uid);
+		return srcFolder;
 	}
 
 	protected void applySearch(AbstractMessageFolder parent, Filter filter)
@@ -829,4 +837,38 @@ public class VirtualFolder extends AbstractMessageFolder {
 		return sourceFolder.getAllHeaderFields(sourceUid);
 	}
 
+	/**
+	 * @see org.columba.mail.folder.IMailbox#expungeFolder()
+	 */
+	public void expungeFolder() throws Exception {
+		AbstractMessageFolder srcFolder = getSourceFolder();
+		
+		boolean isInclude = Boolean.valueOf(
+				getConfiguration().get("property", "include_subfolders"))
+				.booleanValue();
+
+		
+		if( isInclude ) {
+			recursiveExpunge(srcFolder);			
+		} else {
+			srcFolder.expungeFolder();
+		}
+	}
+	
+	private void recursiveExpunge(AbstractMessageFolder srcFolder) throws Exception {
+		AbstractMessageFolder folder;
+
+		srcFolder.expungeFolder();
+		
+		for (Enumeration e = srcFolder.children(); e.hasMoreElements();) {
+			folder = (AbstractMessageFolder) e.nextElement();
+
+			if (folder instanceof VirtualFolder) {
+				continue;
+			}
+			
+			recursiveExpunge(folder);
+		}
+		
+	}
 }
