@@ -54,7 +54,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Select</th>
-<th>Attribute name</th>
+<th>Name</th>
 <th>Per project name</th>
 <th>Active</th>
 <th>Required</th>
