@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -63,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.14 2002/02/18 23:29:25 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.15 2002/03/05 03:12:56 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -164,5 +165,24 @@ public  class IssueType
             result = (IssueType)obj;
         }
         return result;
+    }
+
+    /**
+     * Get the IssueType using a issue type name
+     */
+    public IssueType copyIssueType()
+        throws Exception
+    {
+        IssueType newIssueType = new IssueType();
+        newIssueType.setName(getName() + " (copy)");
+        newIssueType.setDescription(getDescription());
+        newIssueType.setParentId(new NumberKey(0));
+        newIssueType.save();
+        IssueType template = (IssueType)IssueTypePeer.retrieveByPK(getTemplateId());
+        IssueType newTemplate = new IssueType();
+        newTemplate.setName(template.getName());
+        newTemplate.setParentId(template.getParentId());
+        newTemplate.save();
+        return newIssueType;
     }
 }

@@ -59,13 +59,15 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.10 2002/02/15 00:20:29 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.11 2002/03/05 03:12:56 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -122,5 +124,57 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         template.setParentId(issueType.getIssueTypeId());
         template.save();
     }
+        
+    public void doCopy( RunData data, TemplateContext context )
+        throws Exception
+    {
+        Object[] keys = data.getParameters().getKeys();
+        String key;
+        String id;
+        IssueType issueType;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("action_"))
+            {
+               id = key.substring(7);
+               issueType = (IssueType) IssueTypePeer
+                      .retrieveByPK(new NumberKey(id));
+               IssueType issueType2 = issueType.copyIssueType();
+             }
+         }
+     }
+
+    public void doDelete( RunData data, TemplateContext context )
+        throws Exception
+    {
+        if (((ScarabUser)data.getUser()).hasPermission(ScarabSecurity.DOMAIN__ADMIN,
+            getScarabRequestTool(context).getCurrentModule()))
+        {
+            Object[] keys = data.getParameters().getKeys();
+            String key;
+            String id;
+            IssueType issueType;
+
+            for (int i =0; i<keys.length; i++)
+            {
+                key = keys[i].toString();
+                if (key.startsWith("action_"))
+                {
+                   id = key.substring(7);
+                   issueType = (IssueType) IssueTypePeer
+                      .retrieveByPK(new NumberKey(id));
+                   issueType.setDeleted(true);
+                   issueType.save();
+                 }
+             }
+         }
+         else
+         {
+             data.setMessage("You do not have permission to perform this action.");
+         }
+     }
+
     
 }

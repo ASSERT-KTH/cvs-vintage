@@ -83,7 +83,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.25 2002/02/28 01:43:10 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.26 2002/03/05 03:12:56 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -199,7 +199,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public List getAllIssueTypes()
         throws Exception
     {
-        return IssueTypePeer.getAllIssueTypes(true, "name", "asc");
+        return IssueTypePeer.getAllIssueTypes(false, "name", "asc");
     }
     
     /**
@@ -208,7 +208,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public List getAllIssueTypes(String sortColumn, String sortPolarity)
         throws Exception
     {
-        return IssueTypePeer.getAllIssueTypes(true, sortColumn, sortPolarity);
+        return IssueTypePeer.getAllIssueTypes(false, sortColumn, sortPolarity);
     }
     
     /** 
