@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.41 2004/02/23 00:15:21 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.42 2004/03/05 17:26:36 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -149,7 +149,7 @@ public class PluginJAR
 	 * Returns the plugin's JAR file, opening it if necessary.
 	 * @since jEdit 4.2pre1
 	 */
-	public ZipFile getZipFile() throws IOException
+	public synchronized ZipFile getZipFile() throws IOException
 	{
 		if(zipFile == null)
 		{
