@@ -126,7 +126,16 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   <td>
   ## Setting value to "" first so it doesn't use value from last attribute
   #set ($value = "")
-  #set ($value = $issue.getAttributeValue($userAttribute).getValue())
+#if ($userAttribute.isUserAttribute())
+  #set ($values = $issue.getAttributeValues($userAttribute))
+  #set ($comma = "")
+  #foreach ($av in $values)
+    #set($value = "$value$comma$av.Value")
+  #set ($comma = ", ")
+  #end
+#else
+  #set ($value = $issue.getAttributeValue($userAttribute).Value)
+#end
   #if (!$value.equals(""))
    $value
   #else
