@@ -26,7 +26,7 @@
 // File: CrOperNameConflict.java
 // Classes: CrOperNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOperNameConflict.java,v 1.3 2002/03/01 09:55:38 mkl Exp $
+// $Id: CrOperNameConflict.java,v 1.4 2002/03/01 10:38:12 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,6 +37,7 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
 import org.argouml.cognitive.*;
+import org.argouml.cognitive.critics.*;
 
 public class CrOperNameConflict extends CrUML {
 
@@ -44,6 +45,7 @@ public class CrOperNameConflict extends CrUML {
         setHeadline("Change Names or Signatures in <ocl>self</ocl>");
         addSupportedDecision(CrUML.decMETHODS);
         addSupportedDecision(CrUML.decNAMING);
+        setKnowledgeTypes(Critic.KT_SYNTAX);
         addTrigger("behavioralFeature");
         addTrigger("feature_name");
     }

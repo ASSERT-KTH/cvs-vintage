@@ -23,10 +23,10 @@
 
 
 
-// File: CrSignatureConflict.java
+// File: CrAttrNameConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.3 2002/02/25 08:37:50 linus Exp $
+// $Id: CrAttrNameConflict.java,v 1.4 2002/03/01 10:38:12 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
