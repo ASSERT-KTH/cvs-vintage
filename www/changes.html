@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.112 2002/04/09 23:50:00 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.113 2002/04/09 23:54:48 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -32,6 +32,9 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b6</h3>
             <ul>
+                <li>Several problems stemmed from a duplicate macro name
+                    in AssignIssue.vm. Mostly exhibited in sort links on 
+                    templates with lists. PCN#9011 (JDM)</li>
                 <li>When adding new attribute group it is added to the end
                     of the list by default, but was being assigned as a dedupe
                     group.  A new group now defaults to after dedupe. 
