@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.97 2003/04/04 18:28:52 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.98 2003/04/09 18:04:22 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -1007,7 +1007,7 @@ public class ScarabUserImpl
         if (locale == null)
         {
             UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
-            String header = up.getAcceptLanguage();
+            String header = up.getLanguage();
             locale = Localization.getLocale(header);
         }
         return locale;

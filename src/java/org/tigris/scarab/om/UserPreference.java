@@ -55,7 +55,7 @@ import org.apache.torque.TorqueException;
  * to come up with a real system for dealing with this.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserPreference.java,v 1.7 2003/04/04 02:51:47 jon Exp $
+ * @version $Id: UserPreference.java,v 1.8 2003/04/09 18:04:22 elicia Exp $
  */
 public class UserPreference 
     extends org.tigris.scarab.om.BaseUserPreference
@@ -93,6 +93,6 @@ public class UserPreference
     {
         String newLang = (lang != null && lang.length() > 255) ? 
                          lang.substring(0,254) : lang;
-        super.setAcceptLanguage(newLang);
+        super.setLanguage(newLang);
     }
 }
