@@ -67,7 +67,7 @@ import org.apache.commons.lang.StringUtils;
  * in upgraded databases.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: SetModuleDomainInfoValve.java,v 1.1 2003/04/17 22:50:25 jon Exp $
+ * @version $Id: SetModuleDomainInfoValve.java,v 1.2 2003/04/21 20:08:59 jon Exp $
  */
 public class SetModuleDomainInfoValve
     extends AbstractValve
@@ -108,17 +108,25 @@ public class SetModuleDomainInfoValve
     private void setModuleDomainInfo(RunData data, Module module)
         throws Exception
     {
+        boolean hasChanges = false;
         if (StringUtils.isEmpty(module.getDomain()))
         {
             module.setDomain(data.getServerName());
+            hasChanges = true;
         }
         if (StringUtils.isEmpty(module.getPort()))
         {
             module.setPort(String.valueOf(data.getServerPort()));
+            hasChanges = true;
         }
         if (StringUtils.isEmpty(module.getScheme()))
         {
             module.setScheme(data.getServerScheme());
+            hasChanges = true;
+        }
+        if (hasChanges)
+        {
+            module.save();
         }
     }
 }
