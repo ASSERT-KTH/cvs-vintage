@@ -118,7 +118,8 @@ public class HeaderTableModel extends AbstractTableModel {
 				MessageNode node = (MessageNode) uidList.get(uids[i]);
 				if (node != null) {
 					uidList.remove(node);
-					getTreeModel().removeNodeFromParent(node);
+					if ( node.getParent() != null)
+						getTreeModel().removeNodeFromParent(node);
 				}
 			}
 			fireTableDataChanged();
