@@ -130,7 +130,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.52 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.53 2002/09/18 20:24:54 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1744,20 +1744,36 @@ try{
         rma2.save();
     }
 
+    public void setRmoBasedOnIssueType(RIssueTypeOption rio)
+        throws Exception
+    {
+        RModuleOption rmo = new RModuleOption(); 
+        rmo.setModuleId(getModuleId());
+        rmo.setIssueTypeId(rio.getIssueTypeId());
+        rmo.setOptionId(rio.getOptionId());
+        rmo.setActive(rio.getActive());
+        rmo.setOrder(rio.getOrder());
+        rmo.setWeight(rio.getWeight());
+        rmo.save();
+        RModuleOption rmo2 = rmo.copy();
+        rmo2.setModuleId(getModuleId());
+        rmo2.setIssueTypeId(rio.getIssueType().getTemplateId());
+        rmo2.setOptionId(rio.getOptionId());
+        rmo2.setActive(rio.getActive());
+        rmo2.setOrder(rio.getOrder());
+        rmo2.setWeight(rio.getWeight());
+        rmo2.save();
+    }
+
     public void addIssueType(IssueType issueType)
         throws Exception
     {
-        //IssueType templateType = IssueTypeManager
-        //    .getInstance(issueType.getTemplateId(), false);
-
         // add user attributes
         List userRIAs = issueType.getRIssueTypeAttributes(false, "user");
         for (int m=0; m<userRIAs.size(); m++)
         {
             RIssueTypeAttribute userRia = (RIssueTypeAttribute)userRIAs.get(m);
             setRmaBasedOnIssueType(userRia);
-            //RIssueTypeAttribute userRia2 = templateType.getRIssueTypeAttribute(userRia.getAttribute());
-            //setRmaBasedOnIssueType(userRia2);
         }
 
         // add attribute groups
@@ -1783,15 +1799,10 @@ try{
             for (int i=0; i<groups.size(); i++)
             {
                 AttributeGroup group = (AttributeGroup)groups.get(i);
-                AttributeGroup moduleGroup = new AttributeGroup();
+                AttributeGroup moduleGroup = group.copyGroup();
                 moduleGroup.setModuleId(getModuleId());
                 moduleGroup.setIssueTypeId(issueType.getIssueTypeId());
-                moduleGroup.setName(group.getName());
-                moduleGroup.setDescription(group.getDescription());
-                moduleGroup.setDedupe(group.getDedupe());
-                moduleGroup.setActive(group.getActive());
-                moduleGroup.setOrder(group.getOrder());
-                moduleGroup.save(); 
+                moduleGroup.save();
 
                 // add attributes
                 List attrs = group.getAttributes();
@@ -1819,14 +1830,7 @@ try{
                             for (int k=0; k<rios.size(); k++)
                             {
                                 RIssueTypeOption rio = (RIssueTypeOption)rios.get(k);
-                                RModuleOption rmo = new RModuleOption();
-                                rmo.setModuleId(getModuleId());
-                                rmo.setIssueTypeId(issueType.getIssueTypeId());
-                                rmo.setOptionId(rio.getOptionId());
-                                rmo.setActive(rio.getActive());
-                                rmo.setOrder(rio.getOrder());
-                                rmo.setWeight(rio.getWeight());
-                                rmo.save();
+                                setRmoBasedOnIssueType(rio);
                             }
                         }
                     }
