@@ -61,47 +61,7 @@ public class BounceAction extends FrameAction implements SelectionListener {
 
 	}
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public BounceAction(
-		AbstractFrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_bounce"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_bounce_tooltip"),
-			"BOUNCE",
-			null,
-			null,
-			'B',
-		// we must see if the Key not alrady used
-		KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
-		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
-			this);
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
