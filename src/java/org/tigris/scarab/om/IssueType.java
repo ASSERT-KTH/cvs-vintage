@@ -67,7 +67,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.47 2003/04/21 19:39:14 jackrepenning Exp $
+ * @version $Id: IssueType.java,v 1.48 2003/04/21 22:15:13 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -803,7 +803,7 @@ public  class IssueType
             }
         }
 
-        List allOptions = attribute.getAttributeOptions(true);
+        List allOptions = attribute.getAttributeOptions(false);
         List availOptions = new ArrayList();
 
         for (int i=0; i<allOptions.size(); i++)
