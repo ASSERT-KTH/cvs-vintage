@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.4 2000/05/30 06:16:47 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/30 06:16:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.5 2000/06/10 19:05:10 craigmcc Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/10 19:05:10 $
  *
  * ====================================================================
  *
@@ -200,7 +200,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    throw new IllegalStateException(sm.getString("hsrf.error.ise"));
 
 	else if (sc != HttpServletResponse.SC_UNAUTHORIZED)	// CRM: FIXME
-	    reset();
+	    response.resetBuffer(); // Keep headers and cookies that are set
 
 	setStatus( sc );
 	Request request=response.getRequest();
