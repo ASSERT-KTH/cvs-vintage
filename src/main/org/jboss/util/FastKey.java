@@ -16,7 +16,7 @@ package org.jboss.util;
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 */
 public class FastKey
 {
@@ -45,7 +45,7 @@ public class FastKey
     
     public FastKey(Object id) {
         
-        fastKey = nextFaskKey();
+        fastKey = nextFastKey();
         
         this.id = id;
     }
