@@ -153,15 +153,15 @@ $issue.Module.Name
  <h3>Attributes that do not exist in destination Module (saved as comment)</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-   <th>Include</th>
+   ##<th>Include</th>
    <th>Attribute name</th>
    <th>Option name</th>
   </tr>
   #foreach($attr in $orphanAttributes)
    #indexedRows($velocityCount)
-   <td><input type="checkbox" name="x" value="x" checked="checked" /></td>
-   <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>
-   <td><input type="text" name="x" value="$attr.Value" /></td>
+   ##<td><input type="checkbox" name="x" value="x" checked="checked" /></td>
+   <td>$attr.Attribute.Name</td>
+   <td>$attr.Value</td>
   </tr>
   #end
  </table>
