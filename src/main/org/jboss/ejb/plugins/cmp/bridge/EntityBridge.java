@@ -24,7 +24,7 @@ import java.util.List;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public interface EntityBridge {
    public String getEntityName();
@@ -34,4 +34,7 @@ public interface EntityBridge {
    public FieldBridge getFieldByName(String fieldName);
 
    public Collection getSelectors();
+
+   public Class getRemoteInterface();
+   public Class getLocalInterface();
 }
