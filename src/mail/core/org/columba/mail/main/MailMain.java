@@ -56,9 +56,11 @@ public class MailMain extends DefaultMain {
      * @see org.columba.core.main.DefaultMain#initConfiguration()
      */
     public void initConfiguration() {
+    	/*
         System.setProperty("java.protocol.handler.pkgs",
             System.getProperty("java.protocol.handler.pkgs", "") +
             "|org.columba.mail.url");
+            */
         MailInterface.config = new MailConfig(MainInterface.config);
     }
 
