@@ -20,7 +20,7 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Next_Char.bsh,v 1.1 2001/11/24 03:33:01 jgellene Exp $
+ * $Id: Next_Char.bsh,v 1.2 2004/03/08 04:29:12 spestov Exp $
  *
  * Checked for jEdit 4.0 API
  *
@@ -32,7 +32,7 @@ void nextChar()
 	script.append( "start = textArea.getCaretPosition();"        );
 	script.append( "line = textArea.getCaretLine();"             );
 	script.append( "end = textArea.getLineEndOffset(line) + 1;"  );
-	script.append( "text = buffer.getText(start, end - start)"   );
+	script.append( "text = buffer.getText(start, end - start);"  );
 	script.append( "match = text.indexOf(__char__, 1);"          );
 	script.append( "if(match != -1) {"                           );
 	script.append( "if(__char__ != '\\n') ++match;"              );
