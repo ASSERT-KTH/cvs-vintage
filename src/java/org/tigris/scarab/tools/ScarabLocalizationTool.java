@@ -254,7 +254,7 @@ public class ScarabLocalizationTool
 
         try
         {
-            value =super.format(key, args);
+            value = super.format(key, args);
         }
         catch (MissingResourceException tryAgain)
         {
