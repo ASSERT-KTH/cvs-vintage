@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
+import org.jboss.ejb.LocalHomeObjectFactory;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
@@ -33,11 +34,15 @@ import javax.ejb.TransactionRequiredLocalException;
 import javax.transaction.TransactionRequiredException;
 import javax.ejb.TransactionRolledbackLocalException;
 import javax.transaction.TransactionRolledbackException;
+
 import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -129,14 +134,52 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    }
 
    public void start()
-   throws Exception
+      throws Exception
    {
-      // put in the static hashmap
+		Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
+	   if(localHome == null) {
+			Logger.debug(container.getBeanMetaData().getEjbName() + " cannot be Bound, doesn't have local home.");
+			return;
+		}
+		
+		InitialContext context = new InitialContext();
+		String jndiName = container.getBeanMetaData().getLocalJndiName();
+		String beanName = container.getBeanMetaData().getEjbName();
+		
+		// unique key name
+		String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
+
+		// setup local home object factory, which is used for non-serializable objects such as local home
+		
+		// create link from unique name to application and container
+		LocalHomeObjectFactory.rebind( uniqueKey + jndiName, container.getApplication(), container);
+		
+		// address used to lookup referance in LocalHomeObjectFactory
+		StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey + jndiName );
+		
+		// create a jndi referance to LocalHomeObjectFactory 
+		Reference jndiRef = new Reference(container.getBeanMetaData().getLocalHome(),
+			refAddr, LocalHomeObjectFactory.class.getName(), null );
+			
+		// bind that referance to my name
+		rebind(context, jndiName, jndiRef);
+
+		Logger.debug("Bound Local " + beanName + " to " + jndiName);
    }
 
    public void stop()
    {
-      // remove from the static hashmap
+		Class localHome = ((ContainerInvokerContainer)container).getLocalHomeClass();
+	   if(localHome == null) {
+			return;
+		}
+		
+      try {
+         InitialContext ctx = new InitialContext();
+         ctx.unbind(container.getBeanMetaData().getLocalJndiName());
+      } catch (Exception e) {
+         // ignore.
+      }
    }
 
    public void destroy()
@@ -290,6 +333,27 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       }
    }
    
+	/**
+	 * Rebinds the object into the jndi context are the specified name.
+	 */
+   protected void rebind(Context ctx, String name, Object val)
+      throws NamingException
+   {
+      // Bind val to name in ctx, and make sure that all intermediate contexts exist
+
+      Name n = ctx.getNameParser("").parse(name);
+      while (n.size() > 1) {
+         String ctxName = n.get(0);
+         try {
+            ctx = (Context)ctx.lookup(ctxName);
+         } catch (NameNotFoundException e) {
+            ctx = ctx.createSubcontext(ctxName);
+         }
+         n = n.getSuffix(1);
+      }
+
+      ctx.rebind(n.get(0), val);
+   }
     
    class HomeProxy extends LocalHomeProxy
       implements InvocationHandler
