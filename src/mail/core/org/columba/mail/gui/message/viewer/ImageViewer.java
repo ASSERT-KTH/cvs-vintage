@@ -32,7 +32,6 @@ import javax.swing.UIManager;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -112,8 +111,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		image = new ImageIcon(Toolkit.getDefaultToolkit().createImage(data));
 		//image = new ImageIcon(data);
 
-		//Container parent = getParent();
-		Container parent = ((MessageController)((MessageViewOwner)mediator).getMessageController()).getViewport();
+		Container parent = mediator.getViewport();
 		int cwidth = (int) parent.getWidth();
 
 		// if image is bigger than message viewer size
