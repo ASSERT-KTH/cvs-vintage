@@ -44,7 +44,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -305,7 +305,26 @@ public class EntitySynchronizationInterceptor
             }
          }
          //Invoke down the chain
-         return getNext().invoke(mi);  
+         Object retVal = getNext().invoke(mi);  
+
+         // Register again as a finder in the middle of a method
+         // will de-register this entity, and then the rest of the method can
+         // change fields which will never be stored
+         if(!container.isReadOnly()) 
+         {
+            Method method = mi.getMethod();
+            if(method == null ||
+               !container.getBeanMetaData().isMethodReadOnly(method.getName()))
+            {
+               // register the wrapper with the transaction monitor (but only 
+               // register once). The transaction demarcation will trigger the 
+               // storage operations
+               register(ctx,tx);
+            }
+         }
+
+         // return the return value
+         return retVal;
       }
       //
       else
