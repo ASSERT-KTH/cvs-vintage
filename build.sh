@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.12 2002/06/01 06:05:38 user57 Exp $
+# $Id: build.sh,v 1.13 2002/09/10 22:07:57 d_jencks Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -175,6 +175,9 @@ main() {
 
     # setup some build properties
     ANT_OPTS="$ANT_OPTS -Dbuild.script=$0"
+
+    # setup some build properties
+    ANT_OPTS="$ANT_OPTS -Xmx640m"
 
     # change to the directory where the script lives so users are not forced
     # to be in the same directory as build.xml
