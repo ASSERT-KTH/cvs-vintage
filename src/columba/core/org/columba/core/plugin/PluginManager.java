@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.plugin;
 
 import java.io.File;
@@ -29,7 +30,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
@@ -59,7 +59,7 @@ public class PluginManager {
     private static final Logger LOG = Logger
             .getLogger("org.columba.core.plugin");
 
-    Map elements;
+    protected Map elements;
 
     /**
      * 
@@ -67,16 +67,16 @@ public class PluginManager {
      * plugin id as key, <class>File </class> storing the directory as value.
      *  
      */
-    Map folders;
+    protected Map folders;
 
     /**
      * 
      * Save all plugin id's in this <interface>List </interface>.
      *  
      */
-    List ids;
+    protected List ids;
 
-    Map jarFiles;
+    protected Map jarFiles;
 
     /**
      * 
@@ -84,7 +84,7 @@ public class PluginManager {
      * handler id as key, <interface>PluginHandler </interface> as value
      *  
      */
-    Hashtable pluginHandlers;
+    protected Hashtable pluginHandlers;
 
     /**
      * Constructor for PluginManager.
@@ -97,27 +97,23 @@ public class PluginManager {
     }
 
     public String addPlugin(File folder) {
-
         LOG.fine("registering plugin: " + folder);
 
         // load plugin.xml file
         // skip if it doesn't exist
         File xmlFile = new File(folder, "plugin.xml");
 
-        if (xmlFile == null) { return null; }
-
-        if (!xmlFile.exists()) { return null; }
+        if (xmlFile == null || !xmlFile.exists()) {
+            return null; 
+        }
 
         XmlIO config = new XmlIO();
 
         try {
             config.setURL(xmlFile.toURL());
-        } catch (MalformedURLException mue) {
-        }
-
+        } catch (MalformedURLException mue) {}
        
         config.load();
-       
 
         // determine plugin ID
         XmlElement element = config.getRoot().getElement("/plugin");
@@ -125,8 +121,7 @@ public class PluginManager {
         String enabled = element.getAttribute("enabled");
         
         // if plugin is disabled
-        if ( ( enabled != null) && (enabled.equals("false")) )
-        {
+        if ((enabled != null) && enabled.equals("false")) {
         	// don't add plugin
         	return "";
         }
@@ -146,7 +141,6 @@ public class PluginManager {
         }
 
         LOG.fine("id: " + id);
-
         LOG.fine("jar: " + jar);
 
         XmlElement extension;
@@ -233,7 +227,6 @@ public class PluginManager {
             return (AbstractPluginHandler) pluginHandlers.get(id);
         } else {
             LOG.severe("PluginHandler not found: " + id);
-
             throw new PluginHandlerNotFoundException(id);
         }
     }
@@ -252,7 +245,9 @@ public class PluginManager {
     public URL getInfoURL(String id) {
         File pluginDirectory = getFolder(id);
 
-        if (pluginDirectory == null) { return null; }
+        if (pluginDirectory == null) {
+            return null; 
+        }
 
         try {
             // try all possible version of readme files...
@@ -275,10 +270,7 @@ public class PluginManager {
 
                 return infoFile.toURL();
             }
-        } catch (MalformedURLException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
+        } catch (MalformedURLException ex) {} //does not occur
 
         return null;
     }
@@ -311,10 +303,12 @@ public class PluginManager {
         return (XmlElement) elements.get(id);
     }
 
+    /**
+     * Returns a string describing the plugin's type.
+     */
     public String getPluginType(String id) {
         XmlElement e = getPluginElement(id);
         XmlElement runtime = e.getElement("runtime");
-
         return runtime.getAttribute("type");
     }
 
@@ -328,7 +322,9 @@ public class PluginManager {
         ids = new Vector();
 
         // if no plugin directory exists -> return
-        if (pluginFolders == null) { return; }
+        if (pluginFolders == null) { 
+            return; 
+        }
 
         // try to load all plugins
         for (int i = 0; i < pluginFolders.length; i++) {
@@ -343,7 +339,6 @@ public class PluginManager {
                     .get(id);
 
             pluginHandlers.remove(id);
-
         }
     }
 
@@ -367,9 +362,7 @@ public class PluginManager {
             AbstractPluginHandler handler = null;
             try {
                 Class c = Class.forName(clazz);
-
                 handler = (AbstractPluginHandler) c.newInstance();
-
                 registerHandler(handler);
             } catch (ClassNotFoundException e) {
                 if (MainInterface.DEBUG) e.printStackTrace();
@@ -378,12 +371,11 @@ public class PluginManager {
             } catch (IllegalAccessException e1) {
                 if (MainInterface.DEBUG) e1.printStackTrace();
             }
-
         }
     }
 
     /**
-     * register plugin handler at plugin manager
+     * Register plugin handler with plugin manager.
      * 
      * @param handler
      */
@@ -393,7 +385,7 @@ public class PluginManager {
     }
 
     /**
-     * enable/disable plugin -> save changes in plugin.xml
+     * Enable/disable plugin and save changes in plugin.xml
      * 
      * @param b
      */
