@@ -11,22 +11,24 @@ package org.jboss.cmp.ejbql;
 
 import java.io.StringReader;
 
+import org.jboss.cmp.query.CollectionRelation;
+import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.NamedRelation;
+import org.jboss.cmp.query.Path;
+import org.jboss.cmp.query.Projection;
+import org.jboss.cmp.query.Query;
+import org.jboss.cmp.query.RangeRelation;
+import org.jboss.cmp.query.Relation;
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractAttribute;
 import org.jboss.cmp.schema.AbstractClass;
-import org.jboss.cmp.schema.Query;
-import org.jboss.cmp.schema.AbstractType;
-import org.jboss.cmp.schema.CollectionRelation;
-import org.jboss.cmp.schema.Path;
-import org.jboss.cmp.schema.RangeRelation;
-import org.jboss.cmp.schema.Relation;
 import org.jboss.cmp.schema.AbstractSchema;
+import org.jboss.cmp.schema.AbstractType;
 
 public class EJBQL20Compiler implements ParserVisitor
 {
    private final AbstractSchema schema;
    private final EJBQL20Parser parser;
-   private Query query;
 
    public EJBQL20Compiler(AbstractSchema schema)
    {
@@ -39,9 +41,7 @@ public class EJBQL20Compiler implements ParserVisitor
       parser.ReInit(new StringReader(ejbql));
       ASTEJBQL rootNode = parser.EJBQL();
 
-      query = new Query();
-      rootNode.jjtAccept(this, query);
-      return query;
+      return (Query) rootNode.jjtAccept(this, null);
    }
 
    public Object visit(SimpleNode node, Object data)
@@ -51,48 +51,52 @@ public class EJBQL20Compiler implements ParserVisitor
 
    public Object visit(ASTEJBQL node, Object data) throws CompileException
    {
+      Query query = new Query();
       // visit FROM first to define all the identification_variables
-      ((VisitableNode) node.jjtGetChild(1)).jjtAccept(this, data);
+      ((VisitableNode) node.jjtGetChild(1)).jjtAccept(this, query);
 
       // now we can get the SELECT list
-      ((VisitableNode) node.jjtGetChild(0)).jjtAccept(this, data);
+      ((VisitableNode) node.jjtGetChild(0)).jjtAccept(this, query);
 
       // and finally the WHERE clause
       if (node.jjtGetNumChildren() > 2)
       {
-         ((VisitableNode) node.jjtGetChild(2)).jjtAccept(this, data);
+         ((VisitableNode) node.jjtGetChild(2)).jjtAccept(this, query);
       }
-      return data;
+      return query;
    }
 
    public Object visit(ASTSelect node, Object data) throws CompileException
    {
-      Path nav;
+      Query query = (Query) data;
+      Projection projection = new Projection();
+      projection.setDistinct(node.distinct);
+
       VisitableNode n = (VisitableNode) node.jjtGetChild(0);
       if (n instanceof ASTPath)
       {
-         nav = (Path) n.jjtAccept(this, data);
+         Path nav = (Path) n.jjtAccept(this, query);
          if (nav.isCollection())
          {
             throw new CompileException("Cannot SELECT collection, path is:" + nav);
          }
+         projection.addChild(nav);
       }
       else if (n instanceof ASTIdentifier)
       {
          ASTIdentifier idNode = (ASTIdentifier) n;
-         Relation relation = query.getRelation(idNode.getName());
+         NamedRelation relation = query.getRelation(idNode.getName());
          if (relation == null)
          {
             throw new CompileException("Unknown identification variable: " + idNode.getName());
          }
-         nav = new Path(relation);
+         projection.addChild(new Path(relation));
       }
       else
       {
          throw new IllegalStateException();
       }
-      query.addProjection(nav);
-      query.setDistinct(node.distinct);
+      query.setProjection(projection);
       return data;
    }
 
@@ -103,6 +107,7 @@ public class EJBQL20Compiler implements ParserVisitor
 
    public Object visit(ASTIdDeclaration node, Object data) throws CompileException
    {
+      Query query = (Query) data;
       ASTIdentifier idNode = (ASTIdentifier) node.jjtGetChild(1);
       String id = idNode.getName();
       if (schema.isClassNameInUse(id))
@@ -114,7 +119,7 @@ public class EJBQL20Compiler implements ParserVisitor
          throw new CompileException("IdentificationVariable " + id + " already used");
       }
 
-      Relation relation;
+      NamedRelation relation;
       Node n = node.jjtGetChild(0);
       if (n instanceof ASTIdentifier)
       {
@@ -141,7 +146,16 @@ public class EJBQL20Compiler implements ParserVisitor
          throw new IllegalStateException();
       }
 
-      query.addRelation(relation);
+      query.addAlias(relation);
+      Relation left = query.getRelation();
+      if (left != null)
+      {
+         query.setRelation(new CrossJoin(left, relation));
+      }
+      else
+      {
+         query.setRelation(relation);
+      }
       return data;
    }
 
@@ -172,8 +186,9 @@ public class EJBQL20Compiler implements ParserVisitor
 
    public Object visit(ASTPath node, Object data) throws CompileException
    {
+      Query query = (Query) data;
       ASTIdentifier idVarNode = (ASTIdentifier) node.jjtGetChild(0);
-      Relation relation = query.getRelation(idVarNode.getName());
+      NamedRelation relation = query.getRelation(idVarNode.getName());
       if (relation == null)
       {
          throw new CompileException("Unknown identification-variable: " + idVarNode.getName());

@@ -7,21 +7,24 @@
  *                                     *
  ***************************************/
 
-package org.jboss.cmp.schema;
+package org.jboss.cmp.query;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-public class Path
+import org.jboss.cmp.schema.AbstractAssociationEnd;
+import org.jboss.cmp.schema.AbstractAttribute;
+import org.jboss.cmp.schema.AbstractType;
+
+public class Path extends BaseNode
 {
-   private final Relation root;
+   private final NamedRelation root;
    private final List steps;
    private AbstractType type;
    private boolean collection;
 
-   public Path(Relation root)
+   public Path(NamedRelation root)
    {
       this.root = root;
       steps = new ArrayList();
@@ -29,19 +32,7 @@ public class Path
       collection = true;
    }
 
-   private Path(Path oldNav, Map schemaMap, Map relationMap)
-   {
-      this.root = (Relation) relationMap.get(oldNav.root);
-      this.steps = new ArrayList(oldNav.steps.size());
-      for (Iterator i = oldNav.steps.iterator(); i.hasNext();)
-      {
-         steps.add(schemaMap.get(i.next()));
-      }
-      this.type = (AbstractType) schemaMap.get(oldNav.type);
-      this.collection = oldNav.collection;
-   }
-
-   public Relation getRoot()
+   public NamedRelation getRoot()
    {
       return root;
    }
@@ -78,7 +69,7 @@ public class Path
    public String toString()
    {
       StringBuffer buf = new StringBuffer();
-      buf.append(root.getName());
+      buf.append(root.getAlias());
       for (Iterator i = steps.iterator(); i.hasNext();)
       {
          buf.append(".").append(i.next());
@@ -86,8 +77,8 @@ public class Path
       return buf.toString();
    }
 
-   public Path mapSchema(Map schemaMap, Map relationMap)
+   public Object accept(QueryVisitor visitor, Object param)
    {
-      return new Path(this, schemaMap, relationMap);
+      return visitor.visit(this, param);
    }
 }

@@ -12,8 +12,8 @@ package org.jboss.cmp.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.cmp.schema.AbstractSchema;
 import org.jboss.cmp.schema.AbstractClass;
+import org.jboss.cmp.schema.AbstractSchema;
 
 /**
  * Implementaion of an AbstractSchema for SQL92 based systems.

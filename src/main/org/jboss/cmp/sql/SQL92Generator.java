@@ -11,84 +11,117 @@ package org.jboss.cmp.sql;
 
 import java.util.Iterator;
 
-import org.jboss.cmp.schema.Query;
-import org.jboss.cmp.schema.AbstractType;
-import org.jboss.cmp.schema.JoinRelation;
-import org.jboss.cmp.schema.Path;
-import org.jboss.cmp.schema.RangeRelation;
-import org.jboss.cmp.schema.Relation;
+import org.jboss.cmp.query.CollectionRelation;
+import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.NamedRelation;
+import org.jboss.cmp.query.Path;
+import org.jboss.cmp.query.Projection;
+import org.jboss.cmp.query.Query;
+import org.jboss.cmp.query.QueryNode;
+import org.jboss.cmp.query.QueryVisitor;
+import org.jboss.cmp.query.RangeRelation;
+import org.jboss.cmp.query.InnerJoin;
 
-public class SQL92Generator
+/**
+ * Transformer that produces (pure) SQL92 text from a Query
+ */
+public class SQL92Generator implements QueryVisitor
 {
+   /**
+    * Generate SQL92 text for the supplied query. This uses standard SQL92
+    * syntax without regard to a specific database's extensions or limitations.
+    * @param query the Query to generate text from
+    * @return SQL92 text for the query
+    */
    public String generate(Query query)
    {
-      boolean first;
-
       StringBuffer buf = new StringBuffer(1000);
+      query.accept(this, buf);
+      return buf.toString();
+   }
+
+   public Object visit(Query query, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
       buf.append("SELECT");
-      if (query.isDistinct())
-      {
+      query.getProjection().accept(this, buf);
+      buf.append(" FROM");
+      query.getRelation().accept(this, buf);
+      return buf;
+   }
+
+   public Object visit(Projection projection, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      if (projection.isDistinct()) {
          buf.append(" DISTINCT");
       }
-      first = true;
-      for (Iterator i = query.getProjections().iterator(); i.hasNext();)
+      for (Iterator i = projection.getChildren().iterator(); i.hasNext();)
       {
-         if (first)
+         QueryNode node = (QueryNode) i.next();
+         node.accept(this, buf);
+         if (i.hasNext())
          {
-            buf.append(" ");
-            first = false;
-         }
-         else
-         {
-            buf.append(", ");
-         }
-         Path nav = (Path) i.next();
-         AbstractType type = nav.getType();
-         if (type instanceof Table)
-         {
-            Table table = (Table) type;
-            String[] columnNames = table.getPkFields();
-            for (int j = 0; j < columnNames.length; j++)
-            {
-               if (j > 0)
-               {
-                  buf.append(", ");
-               }
-               String columnName = columnNames[j];
-               buf.append(nav.getRoot().getName()).append(".").append(columnName);
-            }
-         }
-         else
-         {
-            buf.append(nav);
+            buf.append(",");
          }
       }
-      buf.append(" FROM ");
-      first = true;
-      for (Iterator i = query.getAliases().iterator(); i.hasNext();)
+      return buf;
+   }
+
+   public Object visit(Path path, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      if (path.isCollection())
       {
-         String alias = (String) i.next();
-         Relation rel = query.getRelation(alias);
-         if (rel instanceof RangeRelation)
+         NamedRelation root = path.getRoot();
+         String alias = root.getAlias();
+         String[] pkColumns = ((Table)root.getType()).getPkFields();
+         for (int i = 0; i < pkColumns.length; i++)
          {
-            if (!first)
+            if (i != 0)
             {
-               buf.append(" CROSS JOIN ");
+               buf.append(",");
             }
-            else
-            {
-               first = false;
-            }
-            buf.append(rel.getType().getName());
-            buf.append(" ").append(alias);
-         }
-         else if (rel instanceof JoinRelation)
-         {
-            buf.append(" INNER JOIN ").append(rel.getType().getName());
-            buf.append(" ").append(alias);
-            buf.append(" ON ").append(((JoinRelation) rel).getCondition());
+            String pkColumn = pkColumns[i];
+            buf.append(" ").append(alias).append(".").append(pkColumn);
          }
       }
-      return buf.toString();
+      else
+      {
+         buf.append(" ").append(path);
+      }
+      return buf;
+   }
+
+   public Object visit(RangeRelation relation, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      buf.append(" ").append(relation.getType().getName());
+      buf.append(" ").append(relation.getAlias());
+      return buf;
+   }
+
+   public Object visit(CollectionRelation relation, Object param)
+   {
+      throw new UnsupportedOperationException("SQL92 does not support CollectionRelations");
+   }
+
+   public Object visit(CrossJoin join, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      join.getLeft().accept(this, buf);
+      buf.append(" CROSS JOIN");
+      join.getRight().accept(this, buf);
+      return buf;
+   }
+
+   public Object visit(InnerJoin join, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      join.getLeft().accept(this, buf);
+      buf.append(" INNER JOIN");
+      join.getRight().accept(this, buf);
+      buf.append(" ON (...)");
+      return buf;
    }
 }

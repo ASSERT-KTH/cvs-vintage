@@ -11,60 +11,103 @@ package org.jboss.cmp.ejb;
 
 import java.util.Iterator;
 
-import org.jboss.cmp.schema.Query;
-import org.jboss.cmp.schema.CollectionRelation;
-import org.jboss.cmp.schema.Path;
-import org.jboss.cmp.schema.RangeRelation;
-import org.jboss.cmp.schema.Relation;
+import org.jboss.cmp.query.CollectionRelation;
+import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.Path;
+import org.jboss.cmp.query.Projection;
+import org.jboss.cmp.query.Query;
+import org.jboss.cmp.query.QueryNode;
+import org.jboss.cmp.query.QueryVisitor;
+import org.jboss.cmp.query.RangeRelation;
+import org.jboss.cmp.query.InnerJoin;
 
-public class EJBQLGenerator
+/**
+ * Transformer that produces EJB-QL text of a query against a EJB schema.
+ */
+public class EJBQLGenerator implements QueryVisitor
 {
+   /**
+    * Generate the EJB-QL text for the supplied query.
+    * @param query the query to generate into EJB-QL
+    * @return EJB-QL text of the query
+    */
    public String generate(Query query)
    {
-      boolean first;
       StringBuffer buf = new StringBuffer(1000);
+      query.accept(this, buf);
+      return buf.toString();
+   }
+
+   public Object visit(Query query, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
       buf.append("SELECT");
-      if (query.isDistinct())
-      {
+      query.getProjection().accept(this, buf);
+      buf.append(" FROM");
+      query.getRelation().accept(this, buf);
+      return buf;
+   }
+
+   public Object visit(Projection projection, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      if (projection.isDistinct()) {
          buf.append(" DISTINCT");
       }
-      first = true;
-      for (Iterator i = query.getProjections().iterator(); i.hasNext();)
+      for (Iterator i = projection.getChildren().iterator(); i.hasNext();)
       {
-         buf.append(first ? " " : ", ");
-         first = false;
-         Path nav = (Path) i.next();
-         if (nav.isCollection())
+         QueryNode node = (QueryNode) i.next();
+         node.accept(this, buf);
+         if (i.hasNext())
          {
-            buf.append("OBJECT(").append(nav).append(")");
-         }
-         else
-         {
-            buf.append(nav);
+            buf.append(",");
          }
       }
-      buf.append(" FROM");
-      first = true;
-      for (Iterator i = query.getAliases().iterator(); i.hasNext();)
+      return buf;
+   }
+
+   public Object visit(Path path, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      if (path.isCollection())
       {
-         buf.append(first ? " " : ", ");
-         first = false;
-         String alias = (String) i.next();
-         Relation relation = query.getRelation(alias);
-         if (relation instanceof RangeRelation)
-         {
-            CMPEntity entity = (CMPEntity) relation.getType();
-            buf.append(entity.getSchemaName());
-         }
-         else if (relation instanceof CollectionRelation)
-         {
-            buf.append("IN(");
-            buf.append(((CollectionRelation) relation).getPath());
-            buf.append(")");
-         }
-         buf.append(" ");
-         buf.append(alias);
+         buf.append(" OBJECT(").append(path.getRoot().getAlias()).append(")");
       }
-      return buf.toString();
+      else
+      {
+         buf.append(" ").append(path);
+      }
+      return buf;
+   }
+
+   public Object visit(RangeRelation relation, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      CMPEntity type = (CMPEntity) relation.getType();
+      buf.append(" ").append(type.getSchemaName());
+      buf.append(" ").append(relation.getAlias());
+      return buf;
+   }
+
+   public Object visit(CollectionRelation relation, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      buf.append(" IN(").append(relation.getPath());
+      buf.append(") ").append(relation.getAlias());
+      return buf;
+   }
+
+   public Object visit(CrossJoin join, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      join.getLeft().accept(this, buf);
+      buf.append(",");
+      join.getRight().accept(this, buf);
+      return buf;
+   }
+
+   public Object visit(InnerJoin join, Object param)
+   {
+      throw new UnsupportedOperationException("EJB-QL does not support inner joins");
    }
 }

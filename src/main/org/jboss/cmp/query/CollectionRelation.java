@@ -7,15 +7,15 @@
  *                                     *
  ***************************************/
 
-package org.jboss.cmp.schema;
+package org.jboss.cmp.query;
 
-import java.util.Map;
+import org.jboss.cmp.schema.AbstractClass;
 
 /**
  * Relation representing a set of tuples obtained by following a Path.
  * Used to unnest collection members of a class.
  */
-public class CollectionRelation extends Relation
+public class CollectionRelation extends NamedRelation
 {
    private final Path path;
 
@@ -26,13 +26,8 @@ public class CollectionRelation extends Relation
     */
    public CollectionRelation(String name, Path path)
    {
-      super(name);
+      super(name, (AbstractClass) path.getType());
       this.path = path;
-   }
-
-   public AbstractClass getType()
-   {
-      return (AbstractClass) path.getType();
    }
 
    /**
@@ -44,10 +39,8 @@ public class CollectionRelation extends Relation
       return path;
    }
 
-   public Relation mapSchema(Map schemaMap, Map relationMap)
+   public Object accept(QueryVisitor visitor, Object param)
    {
-      CollectionRelation newRelation = new CollectionRelation(getName(), path.mapSchema(schemaMap, relationMap));
-      relationMap.put(this, newRelation);
-      return newRelation;
+      return visitor.visit(this, param);
    }
 }
