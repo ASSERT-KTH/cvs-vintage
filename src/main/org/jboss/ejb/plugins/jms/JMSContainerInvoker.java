@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -285,23 +285,26 @@ public class JMSContainerInvoker
          MBeanServer server = (MBeanServer)
             MBeanServerFactory.findMBeanServer(null).iterator().next();
 
+         String methodName;
          if (type == Topic.class) {
-            server.invoke(new ObjectName("JMS","service","JMSServer"),
-                          "newTopic", new Object[]{ jndiSuffix },
-                          new String[] {"java.lang.String"});
+            methodName = "newTopic";
          }
          else if (type == Queue.class) {
-            server.invoke(new ObjectName("JMS","service","JMSServer"),
-                          "newQueue", new Object[]{ jndiSuffix },
-                          new String[] {"java.lang.String"});
+            methodName = "newQueue";
          }
          else {
             // type was not a Topic or Queue, bad user
             throw new IllegalArgumentException
-               ("expected javax.jms.Queue or javax.jms.Topic for type: " +
-                type);
+               ("expected javax.jms.Queue or javax.jms.Topic: " + type);
          }
-         
+
+         // invoke the server to create the destination
+         server.invoke(new ObjectName("JMS", "service", "JMSServer"),
+                       methodName,
+                       new Object[] { jndiSuffix },
+                       new String[] { "java.lang.String" });
+
+         // try to look it up again
          return (Destination)ctx.lookup(jndiName);
       }
    }
@@ -469,15 +472,18 @@ public class JMSContainerInvoker
                                   true, // tx
                                   acknowledgeMode,
                                   new MessageListenerImpl(this));
-
+         log.debug("server session pool: " + pool);
+         
+         // create the connection consumer
          connectionConsumer = qConnection.
             createConnectionConsumer(queue, 
                                      messageSelector, 
                                      pool, 
                                      maxMessagesNr); 
-
-         log.debug("Queue connectionConsumer set up");
+         log.debug("connection consumer: " + connectionConsumer);
       }
+
+      log.debug("initialized");
    }
 
    /**
@@ -614,14 +620,29 @@ public class JMSContainerInvoker
    class MessageListenerImpl
       implements MessageListener
    {
-      JMSContainerInvoker invoker = null;
-	
+      /** The container invoker. */
+      JMSContainerInvoker invoker; // = null;
+
+      /**
+       * Construct a <tt>MessageListenerImpl</tt>.
+       *
+       * @param invoker   The container invoker.  Must not be null.
+       */
       MessageListenerImpl(final JMSContainerInvoker invoker) {
+         // assert invoker != null;
+         
          this.invoker = invoker;
       }
-        
-      public void onMessage(Message message)
+
+      /**
+       * Process a message.
+       *
+       * @param message    The message to process.
+       */
+      public void onMessage(final Message message)
       {
+         // assert message != null;
+         
          if (log.isDebugEnabled()) {
             log.debug("processing message: " + message);
          }
@@ -629,7 +650,8 @@ public class JMSContainerInvoker
          Object id;
          try {
             id = message.getJMSMessageID();
-         } catch(javax.jms.JMSException e) {
+         } catch (JMSException e) {
+            // what ?
             id = "JMSContainerInvoke";
          }
             
