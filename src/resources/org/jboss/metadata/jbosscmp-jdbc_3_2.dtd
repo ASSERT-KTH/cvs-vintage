@@ -22,7 +22,7 @@ entities, and relationships.
          alter-table?, remove-table?, post-table-create?, read-only?, read-time-out?,
          row-locking?, pk-constraint?, fk-constraint?,
          preferred-relation-mapping?, read-ahead?, list-cache-max?,
-         fetch-size?, unknown-pk?, entity-command?)>
+         fetch-size?, unknown-pk?, entity-command?, ql-compiler?)>
 
 <!--
 The optional datasource element contains the jndi-name used to lookup
