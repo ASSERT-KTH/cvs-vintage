@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -566,4 +566,34 @@ char **jk_parse_sysprops(jk_pool_t *p,
     }
 
     return rc;
+}
+
+void jk_append_libpath(jk_pool_t *p, 
+                       const char *libpath)
+{
+    char *env = NULL;
+    char *current = getenv(PATH_ENV_VARIABLE);
+
+    if(current) {
+        env = jk_pool_alloc(p, strlen(PATH_ENV_VARIABLE) + 
+                               strlen(current) + 
+                               strlen(libpath) + 5);
+        if(env) {
+            sprintf(env, "%s=%s%c%s", 
+                    PATH_ENV_VARIABLE, 
+                    libpath, 
+                    PATH_SEPERATOR, 
+                    current);
+        }
+    } else {
+        env = jk_pool_alloc(p, strlen(PATH_ENV_VARIABLE) +                               
+                               strlen(libpath) + 5);
+        if(env) {
+            sprintf(env, "%s=%s", PATH_ENV_VARIABLE, libpath);
+        }
+    }
+
+    if(env) {
+        putenv(env);
+    }
 }

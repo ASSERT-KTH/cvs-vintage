@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -76,9 +76,12 @@ jint (JNICALL *jni_create_java_vm)(JavaVM **, JNIEnv **, void *) = NULL;
 
 #define JAVA_BRIDGE_CLASS_NAME ("org/apache/tomcat/service/JNIEndpoint")
  
-static int jni_instance_created = JK_FALSE;
+static jk_worker_t *the_singleton_jni_worker = NULL;
 
 struct jni_worker {
+
+    int was_verified;
+    int was_initialized;
 
     jk_pool_t p;
     jk_pool_atom_t buf[TINY_POOL_SIZE];
@@ -170,9 +173,6 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p);
 
 static void detach_from_jvm(jni_worker_t *p);
 
-static void append_libpath(jk_pool_t *p, 
-                           const char *libpath);
-  
 static int JK_METHOD service(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
                              jk_logger_t *l,
@@ -235,6 +235,10 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         char *str_config = NULL;
         JNIEnv *env;
 
+        if(p->was_verified) {
+            return JK_TRUE;
+        }
+
         if(jk_get_worker_mx(props, p->name, &mem_config)) {
             p->tomcat_mx = mem_config;
         }
@@ -277,7 +281,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         }
         
         if(jk_get_worker_libpath(props, p->name, &str_config)) {
-            append_libpath(&p->p, str_config);
+            jk_append_libpath(&p->p, str_config);
         }
 
 
@@ -285,6 +289,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
             if(open_jvm(p, &env, l)) {
                 if(get_bridge_object(p, env, l)) {
                     if(get_method_ids(p, env, l)) {
+                        p->was_verified = JK_TRUE;
                         return JK_TRUE;
                     }
                 }
@@ -306,6 +311,10 @@ static int JK_METHOD init(jk_worker_t *pThis,
     if(pThis && pThis->worker_private) {        
         jni_worker_t *p = pThis->worker_private;
         JNIEnv *env;
+
+        if(p->was_initialized) {
+            return JK_TRUE;
+        }
 
         if(!p->jvm ||
            !p->jk_java_bridge_object ||
@@ -339,7 +348,12 @@ static int JK_METHOD init(jk_worker_t *pThis,
                                        stderr_name);
 
             detach_from_jvm(p);
-            return rc == 0 ? JK_FALSE : JK_TRUE;
+
+            if(rc) {
+                p->was_initialized = JK_TRUE; 
+                return JK_TRUE;
+            }
+            return JK_FALSE;
         }
     }
     return JK_FALSE;
@@ -409,9 +423,9 @@ int JK_METHOD jni_worker_factory(jk_worker_t **w,
 {
 
     if(NULL != name && NULL != w) {
-        if(jni_instance_created) {
-            *w = NULL;
-            return JK_FALSE;
+        if(the_singleton_jni_worker) {
+            *w = the_singleton_jni_worker;
+            return JK_TRUE;
         } else {
             jni_worker_t *private_data = 
                 (jni_worker_t *)malloc(sizeof(jni_worker_t ));
@@ -425,6 +439,8 @@ int JK_METHOD jni_worker_factory(jk_worker_t **w,
                 private_data->name = jk_pool_strdup(&private_data->p, name);          
 
                 if(private_data->name) {
+                    private_data->was_verified          = JK_FALSE;
+                    private_data->was_initialized       = JK_FALSE;
                     private_data->jvm                   = NULL; 
                     private_data->jk_java_bridge_object = NULL;
                     private_data->jk_java_bridge_class  = NULL;
@@ -447,6 +463,7 @@ int JK_METHOD jni_worker_factory(jk_worker_t **w,
                     private_data->worker.destroy        = destroy;
 
                     *w = &private_data->worker;
+                    the_singleton_jni_worker = &private_data->worker; 
                     return JK_TRUE;
                 }
 
@@ -624,34 +641,4 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p)
 static void detach_from_jvm(jni_worker_t *p)
 {
     (*(p->jvm))->DetachCurrentThread(p->jvm);
-}
-
-static void append_libpath(jk_pool_t *p, 
-                           const char *libpath)
-{
-    char *env = NULL;
-    char *current = getenv(PATH_ENV_VARIABLE);
-
-    if(current) {
-        env = jk_pool_alloc(p, strlen(PATH_ENV_VARIABLE) + 
-                               strlen(current) + 
-                               strlen(libpath) + 5);
-        if(env) {
-            sprintf(env, "%s=%s%c%s", 
-                    PATH_ENV_VARIABLE, 
-                    libpath, 
-                    PATH_SEPERATOR, 
-                    current);
-        }
-    } else {
-        env = jk_pool_alloc(p, strlen(PATH_ENV_VARIABLE) +                               
-                               strlen(libpath) + 5);
-        if(env) {
-            sprintf(env, "%s=%s", PATH_ENV_VARIABLE, libpath);
-        }
-    }
-
-    if(env) {
-        putenv(env);
-    }
 }

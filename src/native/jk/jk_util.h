@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Various utility functions                                  *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 #ifndef _JK_UTIL_H
 #define _JK_UTIL_H
@@ -155,6 +155,9 @@ int jk_get_worker_libpath(jk_map_t *m,
 char **jk_parse_sysprops(jk_pool_t *p, 
                          const char *sysprops);
         
+
+void jk_append_libpath(jk_pool_t *p, 
+                       const char *libpath);
 
 #ifdef __cplusplus
 extern "C" {

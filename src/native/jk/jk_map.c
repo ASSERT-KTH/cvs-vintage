@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: General purpose map object                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -82,6 +82,7 @@ struct jk_map {
 static void trim_prp_comment(char *prp);
 static int trim(char *s);
 static int map_realloc(jk_map_t *m);
+static char *update_env_variables(char *value, jk_map_t *m);
 
 int map_alloc(jk_map_t **m)
 {
@@ -288,7 +289,7 @@ int map_read_properties(jk_map_t *m,
         FILE *fp = fopen(f, "r");
         
         if(fp) {
-            char buf[LENGTH_OF_LINE + 1];
+            char buf[LENGTH_OF_LINE + 1];            
             char *prp;
             
             rc = JK_TRUE;
@@ -302,6 +303,7 @@ int map_read_properties(jk_map_t *m,
                         v++;                        
                         if(strlen(v) && strlen(prp)) {
                             char *oldv = map_get_string(m, prp, NULL);
+                            v = update_env_variables(v, m);
                             if(oldv) {
                                 char *tmpv = jk_pool_alloc(&m->p, 
                                                            strlen(v) + strlen(oldv) + 3);
@@ -419,4 +421,43 @@ static int map_realloc(jk_map_t *m)
     }
 
     return JK_FALSE;
+}
+
+static char *update_env_variables(char *value, jk_map_t *m)
+{
+    char *rc = value;
+    char *env_start = value;
+
+    while(env_start = strstr(env_start, "$(")) {
+        char *env_end = strstr(env_start, ")");
+        if(env_end) {
+            char env_name[LENGTH_OF_LINE + 1] = ""; 
+            char *env_value;
+
+            *env_end = '\0';
+            strcpy(env_name, env_start + 2);
+            *env_end = ')';
+
+            env_value = map_get_string(m, env_name, NULL);
+            if(env_value) {
+                char *new_value = jk_pool_alloc(&m->p, 
+                                                (sizeof(char) * (strlen(rc) + strlen(env_value))));
+                if(!new_value) {
+                    break;
+                }
+                *env_start = '\0';
+                strcpy(new_value, rc);
+                strcat(new_value, env_value);
+                strcat(new_value, env_end + 1);
+                rc = new_value;
+                env_start = rc;
+            } else {
+                env_start = env_end;
+            }
+        } else {
+            break;
+        }
+    }
+
+    return rc;
 }
