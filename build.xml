@@ -191,8 +191,8 @@
     <copy tofile="${tomcat.build}/lib/common/servlet.jar"
           file="${servlet22.jar}"/>
 
-    <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
-    <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
+    <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" eol="lf"/>
+    <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" eol="crlf"/>
 
     <chmod perm="+x" file="${tomcat.build}/bin/tomcat.sh"/>
     <chmod perm="+x" file="${tomcat.build}/bin/jspc.sh"/>
