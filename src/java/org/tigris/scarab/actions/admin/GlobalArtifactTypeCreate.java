@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.22 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.23 2002/09/15 18:48:19 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -245,6 +245,21 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             scarabR.setAlertMessage(l10n.get(errorMsg));
             return;
         }
+    }
+
+    /**
+     * Redirects to create new user attribute screen.
+     */
+    public void doCreatenewuserattribute( RunData data, 
+                                          TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+        intake.remove(attGroup);
+        scarabR.setAttribute(null);
+        setTarget(data, getOtherTemplate(data));
     }
 
     /**

@@ -244,52 +244,59 @@ public  class AttributeGroup
 
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
-            // Delete module-attribute mapping
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);
-            Criteria crit  = new Criteria()
-                .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
-                         RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
-                .add(RAttributeAttributeGroupPeer.GROUP_ID,
-                         getAttributeGroupId())
-                .add(RModuleAttributePeer.MODULE_ID,
-                         getModuleId());
-                Criteria.Criterion critIssueType = crit.getNewCriterion(
-                        RModuleAttributePeer.ISSUE_TYPE_ID,
-                        getIssueTypeId(), Criteria.EQUAL);
-                critIssueType.or(crit.getNewCriterion(
-                        RModuleAttributePeer.ISSUE_TYPE_ID,
-                        issueType.getTemplateId(), Criteria.EQUAL));
-                crit.and(critIssueType);
-            List results = RModuleAttributePeer.doSelect(crit);
-            for (int i=0; i<results.size(); i++)
-            {
-                 RModuleAttribute rma = (RModuleAttribute)results.get(i);
-                 rma.delete(user);
-            }
-
-            // Delete attribute - attribute group mapping
-            crit = new Criteria()
-                .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
-            RAttributeAttributeGroupPeer.doDelete(crit);
-
-           // Delete the attribute group
-            crit = new Criteria()
-                .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
-            AttributeGroupPeer.doDelete(crit);
-            
-            List attrGroups = null;
-            if (isGlobal())
-            {
-                attrGroups = issueType.getAttributeGroups(false);
-            }
+            if (issueType.getLocked())
+            { 
+                throw new ScarabException("You cannot delete this group, " + 
+                                          "because this issue type is locked.");
+            }            
             else
             {
-                attrGroups = module.getAttributeGroups(getIssueType(), false);
-            }
-             attrGroups.remove(this);
+                // Delete module-attribute mapping
+                Criteria crit  = new Criteria()
+                    .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
+                             RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
+                    .add(RAttributeAttributeGroupPeer.GROUP_ID,
+                             getAttributeGroupId())
+                    .add(RModuleAttributePeer.MODULE_ID,
+                             getModuleId());
+                    Criteria.Criterion critIssueType = crit.getNewCriterion(
+                            RModuleAttributePeer.ISSUE_TYPE_ID,
+                            getIssueTypeId(), Criteria.EQUAL);
+                    critIssueType.or(crit.getNewCriterion(
+                            RModuleAttributePeer.ISSUE_TYPE_ID,
+                            issueType.getTemplateId(), Criteria.EQUAL));
+                    crit.and(critIssueType);
+                List results = RModuleAttributePeer.doSelect(crit);
+                for (int i=0; i<results.size(); i++)
+                {
+                     RModuleAttribute rma = (RModuleAttribute)results.get(i);
+                     rma.delete(user);
+                }
 
-            ScarabCache.clear();
+                // Delete attribute - attribute group mapping
+                crit = new Criteria()
+                    .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
+                RAttributeAttributeGroupPeer.doDelete(crit);
+
+               // Delete the attribute group
+                crit = new Criteria()
+                    .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
+                AttributeGroupPeer.doDelete(crit);
+                
+                List attrGroups = null;
+                if (isGlobal())
+                {
+                    attrGroups = issueType.getAttributeGroups(false);
+                }
+                else
+                {
+                    attrGroups = module.getAttributeGroups(getIssueType(), false);
+                }
+                attrGroups.remove(this);
+                ScarabCache.clear();
+            } 
         } 
         else
         {

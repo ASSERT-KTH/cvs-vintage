@@ -1532,6 +1532,7 @@ try{
         ScarabLocalizationTool l10n = getLocalizationTool();
         ScarabUser user = (ScarabUser)data.getUser();
         String currentQueryString = user.getMostRecentQuery();
+System.out.println(currentQueryString);
         IssueSearch search = getSearch();
         List matchingIssueIds = new ArrayList();
         boolean searchSuccess = true;

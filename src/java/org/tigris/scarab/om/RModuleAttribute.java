@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Connection;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -84,6 +85,33 @@ public class RModuleAttribute
         "RModuleAttribute";
     private static final String GET_RMAS = 
         "getRMAs";
+
+    public void save(Connection con) throws TorqueException
+    {
+        if (isModified())
+        {
+            RIssueTypeAttribute ria = null;
+            try
+            {
+                ria = getIssueType().getRIssueTypeAttribute(getAttribute());
+            }
+            catch (Exception e)
+            {
+            }
+            if (ria != null && ria.getLocked())
+            {
+                throw new TorqueException(getAttribute().getName() + "is locked");
+            }
+            else
+            {
+                super.save(con);
+            }
+        }
+        else
+        {
+            super.save(con);
+        }
+    }
 
     /**
      * Throws UnsupportedOperationException.  Use
@@ -171,35 +199,45 @@ public class RModuleAttribute
 
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
-            Criteria c = new Criteria()
-                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
-                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
-                .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
-            RModuleAttributePeer.doDelete(c);
-            Attribute attr = getAttribute();
-            String attributeType = null;
-            attributeType = (attr.isUserAttribute() ? Module.USER : Module.NON_USER);
-            module.getRModuleAttributes(getIssueType(), false, attributeType)
-                                        .remove(this);
-            WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                          attr, module, getIssueType());
-
-            // delete module-option mappings
-            if (attr.isOptionAttribute())
+            IssueType issueType = IssueTypeManager
+               .getInstance(getIssueTypeId(), false);
+            if (issueType.getLocked())
+            { 
+                throw new ScarabException("You cannot delete this attribute, " + 
+                                          "because this issue type is locked.");
+            }            
+            else
             {
-                List optionList = module.getRModuleOptions(attr, 
-                                  IssueTypePeer.retrieveByPK(getIssueTypeId()), 
-                                  false);
-                ArrayList optionIdList = new ArrayList(optionList.size());
-                for (int i =0; i<optionList.size(); i++)
-                { 
-                    optionIdList.add(((RModuleOption)optionList.get(i)).getOptionId());
+                Criteria c = new Criteria()
+                    .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+                    .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
+                    .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
+                RModuleAttributePeer.doDelete(c);
+                Attribute attr = getAttribute();
+                String attributeType = null;
+                attributeType = (attr.isUserAttribute() ? Module.USER : Module.NON_USER);
+                module.getRModuleAttributes(getIssueType(), false, attributeType)
+                                            .remove(this);
+                WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
+                                              attr, module, getIssueType());
+
+                // delete module-option mappings
+                if (attr.isOptionAttribute())
+                {
+                    List optionList = module.getRModuleOptions(attr, 
+                                      IssueTypePeer.retrieveByPK(getIssueTypeId()), 
+                                      false);
+                    ArrayList optionIdList = new ArrayList(optionList.size());
+                    for (int i =0; i<optionList.size(); i++)
+                    { 
+                        optionIdList.add(((RModuleOption)optionList.get(i)).getOptionId());
+                    }
+                    Criteria c2 = new Criteria()
+                        .add(RModuleOptionPeer.MODULE_ID, getModuleId())
+                        .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                        .addIn(RModuleOptionPeer.OPTION_ID, optionIdList);
+                    RModuleOptionPeer.doDelete(c2);
                 }
-                Criteria c2 = new Criteria()
-                    .add(RModuleOptionPeer.MODULE_ID, getModuleId())
-                    .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
-                    .addIn(RModuleOptionPeer.OPTION_ID, optionIdList);
-                RModuleOptionPeer.doDelete(c2);
             }
         } 
         else

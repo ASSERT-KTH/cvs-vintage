@@ -86,7 +86,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.33 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.34 2002/09/15 18:48:19 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -102,14 +102,22 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
-        if (intake.isAllValid())
+        if (issueType.getLocked())
         {
-            // Set properties for module-issue type info
-            Group rmitGroup = intake.get("RModuleIssueType", 
-                                        rmit.getQueryKey(), false);
+            scarabR.setAlertMessage("You cannot edit this issue type, " + 
+                                    "since it is locked.");
+        }
+        else
+        {
+            if (intake.isAllValid())
+            {
+                // Set properties for module-issue type info
+                Group rmitGroup = intake.get("RModuleIssueType", 
+                                            rmit.getQueryKey(), false);
 
-            rmitGroup.setProperties(rmit);
-            rmit.save();
+                rmitGroup.setProperties(rmit);
+                rmit.save();
+             }
          }
          scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
     }
@@ -247,29 +255,37 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
 
-        if (intake.isAllValid())
+        if (issueType.getLocked())
         {
-            List userAttributes = module.getUserAttributes(issueType, false);
-            for (int i=0; i < userAttributes.size(); i++)
+            scarabR.setAlertMessage("You cannot edit this issue type, " + 
+                                    "since it is locked.");
+        }
+        else
+        {
+            if (intake.isAllValid())
             {
-                // Set properties for module-attribute mapping
-                Attribute attribute = (Attribute)userAttributes.get(i);
-                RModuleAttribute rma = (RModuleAttribute)module
-                        .getRModuleAttribute(attribute, issueType);
-                Group rmaGroup = intake.get("RModuleAttribute", 
-                                 rma.getQueryKey(), false);
-                // if attribute gets set to inactive, delete dependencies
-                String newActive = rmaGroup.get("Active").toString();
-                String oldActive = String.valueOf(rma.getActive());
-                if (newActive.equals("false") && oldActive.equals("true"))
+                List userAttributes = module.getUserAttributes(issueType, false);
+                for (int i=0; i < userAttributes.size(); i++)
                 {
-                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                                  attribute, module, issueType);
+                    // Set properties for module-attribute mapping
+                    Attribute attribute = (Attribute)userAttributes.get(i);
+                    RModuleAttribute rma = (RModuleAttribute)module
+                            .getRModuleAttribute(attribute, issueType);
+                    Group rmaGroup = intake.get("RModuleAttribute", 
+                                     rma.getQueryKey(), false);
+                    // if attribute gets set to inactive, delete dependencies
+                    String newActive = rmaGroup.get("Active").toString();
+                    String oldActive = String.valueOf(rma.getActive());
+                    if (newActive.equals("false") && oldActive.equals("true"))
+                    {
+                        WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
+                                                      attribute, module, issueType);
+                    }
+                    rmaGroup.setProperties(rma);
+                    rma.save();
                 }
-                rmaGroup.setProperties(rma);
-                rma.save();
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
             }
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
         }
     }
 
@@ -294,43 +310,51 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     public void doDeletegroup ( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        String key;
-        String groupId;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        List attributeGroups = module.getAttributeGroups(issueType);
-
-        for (int i =0; i<keys.length; i++)
+        if (issueType.getLocked())
         {
-            key = keys[i].toString();
-            if (key.startsWith("group_action"))
+            scarabR.setAlertMessage("You cannot edit this issue type, " + 
+                                    "since it is locked.");
+        }
+        else
+        {
+            ScarabUser user = (ScarabUser)data.getUser();
+            ParameterParser params = data.getParameters();
+            Object[] keys = params.getKeys();
+            String key;
+            String groupId;
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            Module module = scarabR.getCurrentModule();
+            List attributeGroups = module.getAttributeGroups(issueType);
+
+            for (int i =0; i<keys.length; i++)
             {
-                try
+                key = keys[i].toString();
+                if (key.startsWith("group_action"))
                 {
-                    groupId = key.substring(13);
-                    AttributeGroup ag = AttributeGroupManager
-                       .getInstance(new NumberKey(groupId), false); 
-                    ag.delete(user);
-                }
-                catch (Exception e)
-                {
-                    scarabR.setAlertMessage(
-                        l10n.get(NO_PERMISSION_MESSAGE));
-                }
-                if (attributeGroups.size() -1 < 2)
-                {
-                    // If there are fewer than 2 attribute groups,
-                    // Turn of deduping
-                    RModuleIssueType rmit =  module.getRModuleIssueType(issueType);
-                    rmit.setDedupe(false);
-                    rmit.save();
-                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
-                    ScarabCache.clear();
+                    try
+                    {
+                        groupId = key.substring(13);
+                        AttributeGroup ag = AttributeGroupManager
+                           .getInstance(new NumberKey(groupId), false); 
+                        ag.delete(user);
+                    }
+                    catch (Exception e)
+                    {
+                        scarabR.setAlertMessage(
+                            l10n.get(NO_PERMISSION_MESSAGE));
+                    }
+                    if (attributeGroups.size() -1 < 2)
+                    {
+                        // If there are fewer than 2 attribute groups,
+                        // Turn of deduping
+                        RModuleIssueType rmit =  module.getRModuleIssueType(issueType);
+                        rmit.setDedupe(false);
+                        rmit.save();
+                        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                        ScarabCache.clear();
+                    }
                 }
             }
         }

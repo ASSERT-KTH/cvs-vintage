@@ -80,7 +80,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.26 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.27 2002/09/15 18:48:19 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -314,7 +314,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         if (lastTemplate != null && attribute.getAttributeId() != null)
         { 
             // Add attribute to group
-            if (lastTemplate.equals("admin,AttributeGroupEdit.vm"))
+            if (lastTemplate.equals("admin,AttributeGroupEdit.vm") ||
+                lastTemplate.equals("admin,GlobalAttributeGroupEdit.vm"))
             {
                 // Add attribute to group
                 String groupId = data.getParameters().getString("groupId");
@@ -330,6 +331,12 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 scarabR.getCurrentModule()
                        .addRModuleAttribute(scarabR.getIssueType(), attribute);
                 scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
+            }
+            else if (lastTemplate.equals("admin,GlobalArtifactTypeEdit.vm"))
+            {
+                // Add user attribute to issue type
+                scarabR.getIssueType().addRIssueTypeAttribute(attribute);
+                scarabR.setConfirmMessage("The attribute has been added.");
             }
             ScarabCache.clear();
             setTarget( data, lastTemplate);

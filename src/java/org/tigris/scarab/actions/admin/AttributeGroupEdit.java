@@ -48,6 +48,7 @@ package org.tigris.scarab.actions.admin;
 
 // Java Stuff
 import java.util.List;
+import java.util.ArrayList;
 
 // Turbine Stuff 
 import org.apache.turbine.RunData;
@@ -87,7 +88,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.32 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.33 2002/09/15 18:48:19 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -126,55 +127,110 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         String msg = DEFAULT_MSG;
+        boolean success = true;
+        ArrayList lockedAttrs = new ArrayList();
 
         if ( intake.isAllValid() )
         {
-            for (int i=attributes.size()-1; i>=0; i--) 
+            if (issueType.getLocked())
             {
-                // Set properties for module-attribute mapping
-                Attribute attribute = (Attribute)attributes.get(i);
-                RModuleAttribute rma = (RModuleAttribute)module
-                                       .getRModuleAttribute(attribute, 
-                                                            ag.getIssueType());
-                Group rmaGroup = intake.get("RModuleAttribute", 
-                                 rma.getQueryKey(), false);
+                msg = "Your changes cannot be saved, since this" +
+                      "issue type is locked.";
+            }
+            else
+            {
+                for (int i=attributes.size()-1; i>=0; i--) 
+                {
+                    boolean locked = false;
+                    // Set properties for module-attribute mapping
+                    Attribute attribute = (Attribute)attributes.get(i);
+                    RModuleAttribute rma = (RModuleAttribute)module
+                                           .getRModuleAttribute(attribute, 
+                                                                ag.getIssueType());
+                    Group rmaGroup = intake.get("RModuleAttribute", 
+                                     rma.getQueryKey(), false);
 
-                // if attribute gets set to inactive, delete dependencies
-                String newActive = rmaGroup.get("Active").toString();
-                String oldActive = String.valueOf(rma.getActive());
-                if (newActive.equals("false") && oldActive.equals("true"))
-                {
-                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                                  attribute, module, issueType);
-                }
-                rmaGroup.setProperties(rma);
-                String defaultTextKey = data.getParameters()
-                    .getString("default_text");
-                if ( defaultTextKey != null && 
-                     defaultTextKey.equals(rma.getAttributeId().toString()) ) 
-                {
-                    if (!rma.getRequired())
+                    // Test to see if any attributes are locked
+                    RModuleAttribute rmaTest = rma.copy();
+                    rmaTest.setModified(false);
+                    rmaGroup.setProperties(rmaTest);
+                    if (rmaTest.isModified())
                     {
-                        msg = "ChangesSavedButDefaultTextAttributeRequired";
+                        RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+                        if (ria != null &&  ria.getLocked())
+                        {
+                             lockedAttrs.add(attribute);
+                             locked = true;
+                        }
                     }
-                    rma.setIsDefaultText(true);
-                    rma.setRequired(true);
-                }
-                rma.save();
 
-                // Set properties for attribute-attribute group mapping
-                RAttributeAttributeGroup raag = 
-                    ag.getRAttributeAttributeGroup(attribute);
-                Group raagGroup = intake.get("RAttributeAttributeGroup", 
-                                 raag.getQueryKey(), false);
-                raagGroup.setProperties(raag);
-                raag.save();
+                    if (!locked)
+                    {
+                        // if attribute gets set to inactive, delete dependencies
+                        String newActive = rmaGroup.get("Active").toString();
+                        String oldActive = String.valueOf(rma.getActive());
+                        if (newActive.equals("false") && oldActive.equals("true"))
+                        {
+                            WorkflowFactory.getInstance()
+                                .deleteWorkflowsForAttribute(attribute, module, 
+                                                             issueType);
+                        }
+                        rmaGroup.setProperties(rma);
+                        String defaultTextKey = data.getParameters()
+                          .getString("default_text");
+                        if ( defaultTextKey != null && 
+                             defaultTextKey.equals(rma.getAttributeId().toString()) ) 
+                        {
+                            if (!rma.getRequired())
+                            {
+                                msg = "ChangesSavedButDefaultTextAttributeRequired";
+                            }
+                            rma.setIsDefaultText(true);
+                            rma.setRequired(true);
+                        }
+                        try
+                        {
+                            rma.save();
+                        }
+                        catch (Exception e) 
+                        {}
+
+                        // Set properties for attribute-attribute group mapping
+                        RAttributeAttributeGroup raag = 
+                            ag.getRAttributeAttributeGroup(attribute);
+                        Group raagGroup = intake.get("RAttributeAttributeGroup", 
+                                         raag.getQueryKey(), false);
+                        raagGroup.setProperties(raag);
+                        raag.save();
+                    }
+                }
+
+                // If they attempted to modify locked attributes, give message.
+                if (lockedAttrs.size() > 0)
+                {
+                    StringBuffer buf = new StringBuffer();
+                    buf.append("You cannot save the following locked attributes: ");
+                    for (int i=0; i<lockedAttrs.size(); i++)
+                    {
+                        Attribute attr = (Attribute)lockedAttrs.get(i);
+                        buf.append(attr.getName());
+                        if (i == lockedAttrs.size()-1)
+                        {
+                            buf.append(".");
+                        }
+                        else
+                        {
+                            buf.append(",");
+                        }
+                    }
+                    msg = buf.toString();
+                }
             }
             ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setConfirmMessage(l10n.get(msg));
+            intake.removeAll();
             ScarabCache.clear();
         } 
-
     }
 
 
