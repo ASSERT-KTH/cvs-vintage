@@ -82,7 +82,7 @@ public class BaseTestCase2 extends TestCase {
 	}
 	
 	private void initTurbine() throws Exception {
-		File directoryFile = new File("./src/test");
+		File directoryFile = new File("src/test");
 		String directory = directoryFile.getAbsolutePath();
 
 		tc =
