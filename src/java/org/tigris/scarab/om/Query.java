@@ -20,4 +20,11 @@ public  class Query
         return new Query();
     }
 
+    /**
+     * Generates link to Issue List page, re-running stored query.
+     */
+    public String getLink(String link) 
+    {
+       return link + "/template/Search.vm?" + getValue();
+    }
 }
