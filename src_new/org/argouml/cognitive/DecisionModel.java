@@ -26,7 +26,7 @@
 // File: DecisionModel.java
 // Classes: DecisionModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DecisionModel.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: DecisionModel.java,v 1.2 2002/08/10 14:57:44 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -116,6 +116,10 @@ implements java.io.Serializable {
     _decisions.removeElement(d);
   }
 
+    /** Finds a decision with a specific name.
+     *
+     * @return a decision or null if not found.
+     */
   protected Decision findDecision(String decName) {
     Enumeration enum = _decisions.elements();
     while (enum.hasMoreElements()) {

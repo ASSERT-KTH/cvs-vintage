@@ -25,7 +25,7 @@
 // File: Wizard.java
 // Classes: Wizard
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Wizard.java,v 1.2 2002/03/27 19:57:51 linus Exp $
+// $Id: Wizard.java,v 1.3 2002/08/10 14:57:44 linus Exp $
 
 package org.argouml.kernel;
 
@@ -104,7 +104,10 @@ public abstract class Wizard implements java.io.Serializable {
 
 
   /** Get the exising panel at step s. Step 1 is the first wizard
-   *  panel. */
+   *  panel. 
+   *
+   * @return the panel for step s or null if none.
+   */
   public JPanel getPanel(int s) {
     if (s > 0 && s <= _panels.size())
       return (JPanel) _panels.elementAt(s - 1);

@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.9 2002/07/18 19:24:36 linus Exp $
+// $Id: Critic.java,v 1.10 2002/08/10 14:57:44 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -528,8 +528,11 @@ public class Critic implements Poster, Serializable {
   }
 
   /** Return the Class of wizard that can fix the problem identifed by
-   *  this critic.  Return null if no wizard is defined.  This method
-   *  returns null, subclasses with wizards should override it. */
+   *  this critic.
+   *  This method returns null, subclasses with wizards should override it.
+   *
+   *  @return null if no wizard is defined.
+   */
   public Class getWizardClass(ToDoItem item) { return null; }
 
 

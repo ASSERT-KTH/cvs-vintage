@@ -26,7 +26,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.2 2002/08/04 17:44:18 thierrylach Exp $
+// $Id: WizOperName.java,v 1.3 2002/08/10 14:57:45 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -171,8 +171,7 @@ public class WizOperName extends WizMEName {
 	    
 	    switch (choice) {
 	    case -1:
-		System.out.println("nothing selected, should not get here");
-		return;
+		throw new Error("nothing selected, should not get here");
 
 	    case 0:
 		_stereotypePathChosen = true;

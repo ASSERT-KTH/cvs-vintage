@@ -1,4 +1,4 @@
-// $Id: SimpleTimer.java,v 1.1 2002/07/17 09:20:32 linus Exp $
+// $Id: SimpleTimer.java,v 1.2 2002/08/10 14:57:47 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,10 +33,12 @@ import java.util.*;
  * points in the code.
  */
 public class SimpleTimer {
+    String _name = null;
     Vector _points = new Vector();
     Vector _labels = new Vector();
 
-    public SimpleTimer() {
+    public SimpleTimer(String n) {
+	_name = n;
     }
 
     public void mark() {

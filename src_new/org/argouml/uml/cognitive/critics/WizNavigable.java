@@ -26,7 +26,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.1 2000/09/04 12:50:26 1sturm Exp $
+// $Id: WizNavigable.java,v 1.2 2002/08/10 14:57:45 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -119,8 +119,7 @@ public class WizNavigable extends Wizard {
       int choice = -1;
       if (_step1 != null) choice = _step1.getSelectedIndex();
       if (choice == -1) {
-	System.out.println("nothing selected, should not get here");
-	return;
+	throw new Error("nothing selected, should not get here");
       }
       try {
 	MAssociation asc = (MAssociation) getModelElement();

@@ -26,7 +26,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.4 2002/07/16 14:17:26 linus Exp $
+// $Id: ToDoItem.java,v 1.5 2002/08/10 14:57:44 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -187,7 +187,10 @@ public class ToDoItem implements java.io.Serializable {
   public String getExpertEmail() { return _poster.getExpertEmail(); }
 
   /** Return a clarifier object that can graphical highlight this
-   *  error in a design diagram. By default return a DefaultClarifier*/
+   *  error in a design diagram. By default return a DefaultClarifier
+   *
+   * @return an Icon or null if none found.
+   */
   public Icon getClarifier() {
     if (_clarifier != null) return _clarifier;
     Icon posterClarifier = _poster.getClarifier();

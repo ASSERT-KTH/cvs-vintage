@@ -24,7 +24,7 @@
 // File: CriticUtils.java
 // Classes: CriticUtils
 // Original Author: mail@jeremybennett.com
-// $Id: CriticUtils.java,v 1.3 2002/03/15 10:29:32 jeremybennett Exp $
+// $Id: CriticUtils.java,v 1.4 2002/08/10 14:57:44 linus Exp $
 
 // 4 Feb 2002: Original version by Jeremy Bennett (mail@jeremybennett.com)
 
@@ -892,8 +892,7 @@ public abstract class CriticUtils {
             }
         }
 
-        // If there was no return parameter return null
-
+        // There is no return parameter
         return null;
     }
 

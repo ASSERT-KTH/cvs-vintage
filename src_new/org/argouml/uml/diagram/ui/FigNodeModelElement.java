@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.21 2002/08/08 14:21:50 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.22 2002/08/10 14:57:47 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -552,6 +552,8 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   }
 
  /** This default implementation simply requests the default notation.
+  *
+  * @return null
   */
   public NotationName getContextNotation() { return null; }
 

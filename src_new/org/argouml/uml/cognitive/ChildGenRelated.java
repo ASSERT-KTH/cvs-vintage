@@ -24,7 +24,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.1 2000/09/04 12:50:23 1sturm Exp $
+// $Id: ChildGenRelated.java,v 1.2 2002/08/10 14:57:45 linus Exp $
 
 package org.argouml.uml.cognitive;
 
@@ -41,7 +41,10 @@ import org.tigris.gef.util.*;
 public class ChildGenRelated implements ChildGenerator {
   public static ChildGenRelated SINGLETON = new ChildGenRelated();
 
-  /** Reply a java.util.Enumeration of the children of the given Object */
+    /** Reply a java.util.Enumeration of the children of the given Object 
+     *
+     * @return an enumeration or null if not possible to get the children.
+     */
 	public Enumeration gen(Object o) {
 		
 		Vector res = new Vector();

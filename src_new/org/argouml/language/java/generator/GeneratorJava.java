@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.35 2002/07/24 08:43:45 kataka Exp $
+// $Id: GeneratorJava.java,v 1.36 2002/08/10 14:57:44 linus Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -90,7 +90,8 @@ implements PluggableNotation, FileGenerator {
     /** Generates a file for the classifier. 
      * This method could have been static if it where not for the need to
      * call it through the Generatorinterface.
-     * @returns the full path name of the the generated file.
+     * @return the full path name of the the generated file or
+     * 	       null if no file can be generated.
      */
   public String GenerateFile (MClassifier cls,
 			      String path) {

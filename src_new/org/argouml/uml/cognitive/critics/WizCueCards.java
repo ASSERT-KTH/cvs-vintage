@@ -26,7 +26,7 @@
 // File: WizCueCards.java
 // Classes: WizCueCards
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizCueCards.java,v 1.1 2000/09/04 12:50:26 1sturm Exp $
+// $Id: WizCueCards.java,v 1.2 2002/08/10 14:57:45 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -67,7 +67,10 @@ public class WizCueCards extends Wizard {
 
   public void addCue(String s) { _cues.addElement(s); }
 
-  /** Create a new panel for the given step.  */
+  /** Create a new panel for the given step.
+   *
+   * @return a newly created panel or null if there isn't that many steps.
+   */
   public JPanel makePanel(int newStep) {
     if (newStep <= getNumSteps()) {
       String c = (String) _cues.elementAt(newStep - 1);
