@@ -19,12 +19,15 @@
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" /> 
 #if ($createNew && $createNew.equals("true"))
-   <input type="submit" name="eventSubmit_doCreate" value="Create" />
+   <input type="submit" name="eventSubmit_doCreate" value="Create" /> 
 #else
-   <input type="submit" name="eventSubmit_doUpdate" value="Update" />
+   <input type="submit" name="eventSubmit_doUpdate" value="Update" /> 
 #end
+  </td>
+  <td>
+   <input type="submit" name="eventSubmit_doGotoothertemplate" value="Back" />
   </td>
  </tr>
 </table>
@@ -41,6 +44,7 @@
 <input type="hidden" name="action" value="ModifyModule" /> 
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModifyModule.vm" /> 
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageModules.vm" /> 
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ManageModules.vm" /> 
 
 #ModifyModuleBar("")
 
