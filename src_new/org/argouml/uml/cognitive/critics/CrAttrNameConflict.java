@@ -26,7 +26,7 @@
 // File: CrSignatureConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrAttrNameConflict.java,v 1.2 2000/09/21 05:48:45 carnold Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -75,7 +75,7 @@ public class CrAttrNameConflict extends CrUML {
         continue;
       MStructuralFeature sf = (MStructuralFeature) f;
       String sfName = sf.getName();
-      if ("".equals(sfName)) continue;
+      if (sfName == null || sfName.length() == 0) continue;
       String nameStr = sfName;
       if (nameStr.length() == 0) continue;
       if (namesSeen.contains(nameStr)) return PROBLEM_FOUND;
