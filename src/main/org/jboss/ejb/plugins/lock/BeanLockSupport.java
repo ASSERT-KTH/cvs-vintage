@@ -29,7 +29,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -54,7 +54,7 @@ public abstract class BeanLockSupport
     * (0 means removing)
     */ 
    protected int refs = 0;
- 
+   
    /** The Cachekey corresponding to this Bean */
    protected Object id = null;
  
@@ -147,11 +147,11 @@ public abstract class BeanLockSupport
    
    // Private --------------------------------------------------------
    
-   private static Method getEJBHome;
-   private static Method getHandle;
-   private static Method getPrimaryKey;
-   private static Method isIdentical;
-   private static Method remove;
+   private static final Method getEJBHome;
+   private static final Method getHandle;
+   private static final Method getPrimaryKey;
+   private static final Method isIdentical;
+   private static final Method remove;
    
    static
    {
@@ -164,7 +164,10 @@ public abstract class BeanLockSupport
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
       }
-      catch (Exception x) {x.printStackTrace();}
+      catch (Exception e) {
+         e.printStackTrace();
+         throw new ExceptionInInitializerError(e);
+      }
    }
    
    protected boolean isCallAllowed(MethodInvocation mi)
