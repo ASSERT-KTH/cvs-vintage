@@ -12,16 +12,17 @@ import java.util.*;
 
 import javax.management.*;
 
-import org.jboss.logging.Log;
+import org.apache.log4j.Category;
 
-
-/** ServiceControl manages the JBoss services lifecycle.
+/**
+ * ServiceControl manages the JBoss services lifecycle.
  * 
- *   @see org.jboss.util.Service
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @author <a href="mailto:hugo@hugopinto.com">Hugo Pinto</a>
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.10 $
+ * @see org.jboss.util.Service
+ *  
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author <a href="mailto:hugo@hugopinto.com">Hugo Pinto</a>
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @version $Revision: 1.11 $
  */
 public class ServiceControl
    implements ServiceControlMBean, MBeanRegistration
@@ -31,7 +32,9 @@ public class ServiceControl
 
     
    // Attributes ----------------------------------------------------
-   Log log = Log.createLog("Service Control");
+
+   /** Instance logger. */
+   private final Category log = Category.getInstance(this.getClass());
    
    List mbeans = new ArrayList();
    // Static --------------------------------------------------------
@@ -42,7 +45,7 @@ public class ServiceControl
    public void init()
       throws Exception
    {
-      log.log("Initializing "+mbeans.size()+" MBeans");
+      log.info("Initializing "+mbeans.size()+" MBeans");
       
       List mbeansCopy = new ArrayList(mbeans);
       Iterator enum = mbeansCopy.iterator();
@@ -57,17 +60,16 @@ public class ServiceControl
          }
          catch(Throwable e)
          {
-            log.error("Could not initialize "+service);
-            log.exception(e);
+            log.error("Could not initialize "+service, e);
          }
       }
-      log.log("Initialized "+mbeansCopy.size()+" services");
+      log.info("Initialized "+mbeansCopy.size()+" services");
    }
    
    public void start()
       throws Exception
    { 
-      log.log("Starting "+mbeans.size()+" MBeans");
+      log.info("Starting "+mbeans.size()+" MBeans");
       
       List mbeansCopy = new ArrayList(mbeans);
       Iterator enum = mbeansCopy.iterator();
@@ -83,16 +85,15 @@ public class ServiceControl
          }
          catch(Throwable e)
          {
-            log.error("Could not start "+service);
-            log.exception(e);
+            log.error("Could not start "+service, e);
          }
       }
-      log.log("Started "+mbeansCopy.size()+" services");
+      log.info("Started "+mbeansCopy.size()+" services");
    }
    
    public void stop()
    {
-      log.log("Stopping "+mbeans.size()+" MBeans");
+      log.info("Stopping "+mbeans.size()+" MBeans");
       
       List mbeansCopy = new ArrayList(mbeans);
       ListIterator enum = mbeansCopy.listIterator();
@@ -109,16 +110,15 @@ public class ServiceControl
          }
          catch (Throwable e)
          {
-            log.error("Could not stop "+service);           
-            log.exception(e);
+            log.error("Could not stop "+service, e);
          }
       }
-      log.log("Stopped "+mbeansCopy.size()+" services");
+      log.info("Stopped "+mbeansCopy.size()+" services");
    }
    
    public void destroy()
    {
-      log.log("Destroying "+mbeans.size()+" MBeans");
+      log.info("Destroying "+mbeans.size()+" MBeans");
       
       List mbeansCopy = new ArrayList(mbeans);
       ListIterator enum = mbeansCopy.listIterator();
@@ -135,11 +135,10 @@ public class ServiceControl
          }
          catch (Throwable e)
          {
-            log.error("Could not destroy"+service);           
-            log.exception(e);
+            log.error("Could not destroy"+service, e);           
          }
       }
-      log.log("Destroyed "+mbeansCopy.size()+" services");
+      log.info("Destroyed "+mbeansCopy.size()+" services");
    }
 
    public void register(Service service)
@@ -153,17 +152,17 @@ public class ServiceControl
 
    // MBeanRegistration implementation ------------------------------
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws java.lang.Exception
+      throws Exception
    {
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
    
-   public void postRegister(java.lang.Boolean registrationDone)
+   public void postRegister(Boolean registrationDone)
    {
    }
    
    public void preDeregister()
-      throws java.lang.Exception
+      throws Exception
    {
    }
    
