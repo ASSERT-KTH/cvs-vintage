@@ -22,7 +22,7 @@ rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.33 2001/01/11 19:13:18 larryi Exp $
+rem $Id: tomcat.bat,v 1.34 2001/02/06 17:58:21 nacho Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -34,7 +34,7 @@ set _CLASSPATH=%CLASSPATH%
 
 rem ----- Internal Environment Vars used somewhere --------------------------
 
-set TEST_JAR=tomcat.jar
+set TEST_JAR=lib\tomcat.jar
 
 rem ----- Verify and Set Required Environment Variables ---------------------
 
@@ -46,7 +46,7 @@ goto cleanup
 if not "%TOMCAT_HOME%" == "" goto gotTomcatHome
 set TOMCAT_HOME=.
 :gotTomcatHome
-if exist "%TOMCAT_HOME%\lib\%TEST_JAR%" goto okTomcatHome
+if exist "%TOMCAT_HOME%\%TEST_JAR%" goto okTomcatHome
 echo Unable to locate %TEST_JAR%, check the value of TOMCAT_HOME.
 goto cleanup
 :okTomcatHome
@@ -65,63 +65,13 @@ set _SECSTARTJAVA=start "%JAVA_HOME%\bin\java"
 set _STARTJAVA=start "%JAVA_HOME%\bin\java"
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 
-
-rem ----- Set Up The Runtime Classpath --------------------------------------
-
 :setClasspath
-set CP=%TOMCAT_HOME%\classes
 
-rem Try to determine if TOMCAT_HOME contains spaces
-if exist %TOMCAT_HOME%\lib\%TEST_JAR% goto dynClasspath
-echo Your TOMCAT_HOME appears to contain spaces.
-echo Unable to set CLASSPATH dynamically.
-goto staticClasspath
-
-:dynClasspath
-set _LIBJARS=
-for %%i in (%TOMCAT_HOME%\lib\*.jar) do call %TOMCAT_HOME%\bin\cpappend.bat %%i
-if not "%_LIBJARS%" == "" goto gotLibJars
-echo Unable to set CLASSPATH dynamically.
-if "%OS%" == "Windows_NT" goto staticClasspath
-echo Note: To set the CLASSPATH dynamically on Win9x systems
-echo       only DOS 8.3 names may be used in TOMCAT_HOME!
-goto staticClasspath
-
-:gotLibJars
-echo Including all jars in %TOMCAT_HOME%\lib in your CLASSPATH.
-rem Note: _LIBJARS already contains a leading semicolon
-set CP=%CP%%_LIBJARS%
-goto chkClasspath
-
-:staticClasspath
-echo Setting your CLASSPATH statically.
-set CP=%CP%;%TOMCAT_HOME%\lib\ant.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\jasper.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\jaxp.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\parser.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\servlet.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\tomcat.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_core.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_modules.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\tomcat_util.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\tomcat-startup.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\stop-tomcat.jar
-set CP=%CP%;%TOMCAT_HOME%\lib\facade22.jar
-
-:chkClasspath
-if "%CLASSPATH%" == "" goto noClasspath
-set CP=%CP%;%CLASSPATH%
-:noClasspath
-if not exist "%JAVA_HOME%\lib\tools.jar" goto installClasspath
-set CP=%CP%;%JAVA_HOME%\lib\tools.jar
-:installClasspath
-echo.
-echo Using CLASSPATH: %CP%
-echo.
-set CLASSPATH=%CP%
-
+set CLASSPATH=%TOMCAT_HOME%\lib\tomcat.jar
 
 rem ----- Execute The Requested Command -------------------------------------
+
+:execute
 
 if "%1" == "start" goto startServer
 if "%1" == "stop" goto stopServer
@@ -147,28 +97,28 @@ goto finish
 :startServer
 echo Starting Tomcat in new window
 if "%2" == "-security" goto startSecure
-%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
+%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
 rem Running Tomcat in this window
 if "%2" == "-security" goto runSecure
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runSecure
 rem Running Tomcat with a SecurityManager
-%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stopping the Tomcat Server
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main -stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runAnt
