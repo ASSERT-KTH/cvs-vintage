@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -56,7 +57,9 @@ public class MarkMessageCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
-		ColumbaLogger.log.info("update Gui");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("update Gui");
+                }
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
@@ -112,7 +115,5 @@ public class MarkMessageCommand extends FolderCommand {
 			srcFolder.setLastSelection(uids[0]);
 			srcFolder.markMessage(uids, markVariant, worker);
 		}
-
 	}
-
 }
