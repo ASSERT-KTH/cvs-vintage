@@ -68,7 +68,9 @@ public class HeaderfieldFilter extends AbstractFilter {
         }
 
         String headerItem = (String) header.get(headerfield);
-
+        // cancel if headerfield doesn't exist
+        if ( headerItem == null) return false;
+        
         // decode headerfield
         headerItem = EncodedWord.decode( headerItem ).toString();
         
