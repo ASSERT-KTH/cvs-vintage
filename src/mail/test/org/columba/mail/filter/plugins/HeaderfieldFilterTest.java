@@ -36,7 +36,12 @@ public class HeaderfieldFilterTest extends AbstractFilterTestCase {
         super(arg0);
     }
 
-    public void testSubjectFilter() throws Exception {
+    /**
+     * Check if Subject: contains "test"
+     * 
+     * @throws Exception
+     */
+    public void testSubjectContainsFilter() throws Exception {
         // add message to folder
         Object uid = addMessage();
 
@@ -59,7 +64,69 @@ public class HeaderfieldFilterTest extends AbstractFilterTestCase {
         boolean result = filter.process(getSourceFolder(), uid);
         assertEquals("filter result", true, result);
     }
+    
+    /**
+     * Check if Subject: contains "pudding" fails as expected
+     * 
+     * @throws Exception
+     */
+    public void testSubjectContainsFailedFilter() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
 
+        // !!! Subject: test
+        // create filter configuration
+        // -> check if <Subject> <contains> pattern <test>
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Subject");
+        criteria.setPattern("pudding");
+        criteria.setHeaderItem("Subject");
+        criteria.setCriteria("contains");
+
+        // create filter
+        HeaderfieldFilter filter = new HeaderfieldFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", false, result);
+    }
+    
+    /**
+     * Check if Subject: contains not "pudding" works
+     * 
+     * @throws Exception
+     */
+    public void testSubjectContainsNotFilter() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        // !!! Subject: test
+        // create filter configuration
+        // -> check if <Subject> <contains> pattern <test>
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Subject");
+        criteria.setPattern("pudding");
+        criteria.setHeaderItem("Subject");
+        criteria.setCriteria("contains not");
+
+        // create filter
+        HeaderfieldFilter filter = new HeaderfieldFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
+
+    /**
+     * Check if From: contains "alice@mail.org"
+     * @throws Exception
+     */
     public void testFromFilter() throws Exception {
         // add message to folder
         Object uid = addMessage();
@@ -72,6 +139,35 @@ public class HeaderfieldFilterTest extends AbstractFilterTestCase {
         criteria.setType("From");
         criteria.setPattern("alice@mail.org");
         criteria.setHeaderItem("From");
+        criteria.setCriteria("contains");
+
+        // create filter
+        HeaderfieldFilter filter = new HeaderfieldFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
+    
+    /**
+     * Check if X-Mailer contains "Columba" using the custom headerfield filter.
+     * 
+     * @throws Exception
+     */
+    public void testCustomHeaderFilter() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        // !!! From: alice@mail.org
+        // create filter configuration
+        // -> check if <From> <contains> pattern <alice@mail.org>
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Custom Headerfield");
+        criteria.setPattern("Columba");
+        criteria.setHeaderItem("X-Mailer");
         criteria.setCriteria("contains");
 
         // create filter
