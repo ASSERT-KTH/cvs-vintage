@@ -23,7 +23,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.9 $
+$Revision: 1.10 $
 -->
 
 <policy>
@@ -93,7 +93,10 @@ $Revision: 1.9 $
     <application-policy name = "jmx-console">
        <authentication>
           <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
-             flag = "required" />
+             flag = "required">
+             <module-option name="usersProperties">jmx-console-users.properties</module-option>
+             <module-option name="rolesProperties">jmx-console-roles.properties</module-option>
+          </login-module>
        </authentication>
     </application-policy>
 
