@@ -21,10 +21,10 @@
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
 #if (!$sortColumn || $sortColumn.length() == 0)
-   #set ($sortColumn = "name")
+   #set ($sortColumn = "avail")
 #end
 #if (!$sortPolarity || $sortPolarity.length() == 0)
-   #set ($sortPolarity = "asc")
+   #set ($sortPolarity = "desc")
 #end
 #set ($allQueries = $scarabR.Queries)
 
