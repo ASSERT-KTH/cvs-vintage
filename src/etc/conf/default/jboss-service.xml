@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.67 2002/10/03 17:50:41 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.68 2002/10/07 15:10:10 slaboure Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -51,6 +51,9 @@
   <!-- ==================================================================== -->
   <!-- Service Binding                                                      -->
   <!-- ==================================================================== -->
+
+  <!-- Automatically activated when generatting the clustering environment -->
+  <!-- @TESTSUITE_CLUSTER_CONFIG@ -->
 
   <!-- 
      | Binding service manager for port/host mapping. This is a sample
