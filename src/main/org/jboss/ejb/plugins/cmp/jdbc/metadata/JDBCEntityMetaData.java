@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -71,9 +71,19 @@ public final class JDBCEntityMetaData {
    private final Class homeClass;
    
    /**
+    * the remote class of this entity
+    */
+   private final Class remoteClass;
+   
+   /**
     * the local home class of this entity
     */
    private final Class localHomeClass;
+   
+    /**
+    * the local class of this entity
+    */
+   private final Class localClass;
    
    /**
     * Does this entity use cmp 1.x?
@@ -202,8 +212,15 @@ public final class JDBCEntityMetaData {
          } catch (ClassNotFoundException e) {
             throw new DeploymentException("home class not found: " + home);
          }
+         try {
+            remoteClass = getClassLoader().loadClass(entity.getRemote());
+         } catch (ClassNotFoundException e) {
+            throw new DeploymentException("remote class not found: " + 
+                  entity.getRemote());
+         }
       } else {
          homeClass = null;
+         remoteClass = null;
       }
 
       String localHome = entity.getLocalHome();
@@ -214,6 +231,12 @@ public final class JDBCEntityMetaData {
             throw new DeploymentException("local home class not found: " +
                   localHome);
          }
+         try {
+            localClass = getClassLoader().loadClass(entity.getLocal());
+         } catch (ClassNotFoundException e) {
+            throw new DeploymentException("local class not found: " +
+                  entity.getLocal());
+         }
       } else {
          // we must have a home or local home
          if(home == null) {
@@ -222,6 +245,7 @@ public final class JDBCEntityMetaData {
          }
 
          localHomeClass = null;
+         localClass = null;
       }
 
       // we replace the . by _ because some dbs die on it...
@@ -303,7 +327,9 @@ public final class JDBCEntityMetaData {
       isCMP1x = defaultValues.isCMP1x;
       primaryKeyFieldName = defaultValues.getPrimaryKeyFieldName();
       homeClass = defaultValues.getHomeClass();
+      remoteClass = defaultValues.getRemoteClass();
       localHomeClass = defaultValues.getLocalHomeClass();
+      localClass = defaultValues.getLocalClass();
       queryFactory = new JDBCQueryMetaDataFactory(this);
 
       // datasource name
@@ -642,11 +668,27 @@ public final class JDBCEntityMetaData {
    }
    
    /**
+    * Gets the remote class of this entity
+    * @return the remote class of this entity
+    */
+   public Class getRemoteClass() {
+      return remoteClass;
+   }
+   
+   /**
     * Gets the local home class of this entity
     * @return the local home class of this entity
     */
    public Class getLocalHomeClass() {
       return localHomeClass;
+   }
+   
+   /**
+    * Gets the local class of this entity
+    * @return the local class of this entity
+    */
+   public Class getLocalClass() {
+      return localClass;
    }
    
    /**
