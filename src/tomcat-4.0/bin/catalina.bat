@@ -20,7 +20,7 @@ rem   JSSE_HOME     (Optional) May point at your Java Secure Sockets Extension
 rem                 (JSSE) installation, whose JAR files will be added to the
 rem                 system class path used to start Tomcat.
 rem
-rem $Id: catalina.bat,v 1.12 2001/09/21 19:35:59 jon Exp $
+rem $Id: catalina.bat,v 1.13 2001/09/26 00:57:57 jon Exp $
 rem ---------------------------------------------------------------------------
 
 
