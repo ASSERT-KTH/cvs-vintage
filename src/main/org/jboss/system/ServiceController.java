@@ -5,226 +5,297 @@
  * See terms of license at gnu.org.
  */
 package org.jboss.system;
-
-import java.util.Map;
-import java.util.List;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationHandler;
+import java.util.Map;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
+import javax.management.JMRuntimeException;
+import javax.management.MBeanException;
 
 import javax.management.MBeanInfo;
-import javax.management.ObjectName;
-import javax.management.MBeanServer;
-import javax.management.JMException;
-import javax.management.MBeanException;
-import javax.management.MBeanRegistration;
-import javax.management.JMRuntimeException;
 import javax.management.MBeanOperationInfo;
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
-import javax.management.InstanceNotFoundException;
 import javax.management.RuntimeOperationsException;
-import javax.management.MalformedObjectNameException;
+
+import org.jboss.logging.log4j.JBossCategory;
 
 import org.w3c.dom.Element;
 
-import org.jboss.logging.Log;
-
-/** 
- * This is the main Service Controller.
- * 
- * <p>A controller can deploy a service to a JBOSS-SYSTEM
- *    It installs by delegating, it configures by delegating
- *    
- * @see Service
- *   
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+/**
+ * This is the main Service Controller. A controller can deploy a service to a
+ * JBOSS-SYSTEM It installs by delegating, it configures by delegating
  *
- * <p><b>Revisions:</b>
- * <p><b>20010830 marcf </b>
- * <ul>
- *   <li>Initial version checked in
- * </ul>
+ * @see org.jboss.system.Service
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.4 $ <p>
+ *
+ *      <b>Revisions:</b> <p>
+ *
+ *      <b>20010830 marcf</b>
+ *      <ol>
+ *        <li> Initial version checked in
+ *      </ol>
+ *      <b>20010908 david jencks</b>
+ *      <ol>
+ *        <li> fixed tabs to spaces and log4j logging. Made it report the number
+ *        of successes on init etc.  Modified to support undeploy and work with
+ *        .sar dependency management and recursive sar deployment.
+ *      </ol>
+ *
  */
+
 public class ServiceController
-   extends ServiceMBeanSupport
-   implements ServiceControllerMBean, MBeanRegistration
+       extends ServiceMBeanSupport
+       implements ServiceControllerMBean, MBeanRegistration
 {
-   // Attributes ----------------------------------------------------
-	
-   /** A callback to the JMX MBeanServer. */
-   MBeanServer server;
-	
-   /** The array list keeps the order of deployment. */
-   List services = new ArrayList();
-   
-   /** The map keeps the list of objectNames to services. */
-   Map nameToServiceMap = new HashMap();
-	
-   /** JBoss logger version move to log4j if needed. */
-   Log log = Log.createLog("Service Controller");
-	
-   /** The service creator helper. */ 
+
+   /**
+    * A mapping from the Service interface method names to the corresponding
+    * index into the ServiceProxy.hasOp array.
+    */
+   private static HashMap serviceOpMap = new HashMap();
+
+   /**
+    * Helper classes to create and configure the classes
+    */
    protected ServiceCreator creator;
-   
-   /** The service configuration helper. */
+   /**
+    * Description of the Field
+    */
    protected ServiceConfigurator configurator;
-	
+
+   // Attributes ----------------------------------------------------
+
+   // A callback to the JMX MBeanServer
+   MBeanServer server;
+
+   // The array list keeps the order of deployment
+   List services = new ArrayList();
+   // The map keeps the list of objectNames to services
+   Map nameToServiceMap = new HashMap();
+
+   JBossCategory category = (JBossCategory)JBossCategory.getInstance(getClass().getName());
+
    // Static --------------------------------------------------------
-	
-   // Constructors --------------------------------------------------    
-	
+
+   // Constructors --------------------------------------------------
+
    // Public --------------------------------------------------------
-	
-   public String getName() {
+
+   /**
+    * Gets the Name attribute of the ServiceController object
+    *
+    * @return The Name value
+    */
+   public String getName()
+   {
       return "Service Controller";
    }
-	
+
+
    /**
-    * Deploy the beans 
+    * Gets the Deployed attribute of the ServiceController object
     *
-    * @throws Exception    ???
+    * @return The Deployed value
     */
-   public ObjectName deploy(Element mbeanElement) 
-      throws Exception 
+   public ObjectName[] getDeployed()
    {
-      // The ObjectName of the bean
-      ObjectName objectName = parseObjectName(mbeanElement);
-		
-      undeploy(objectName);
-		
-      // It is not there so really create the component now
-      try {
-         creator.create(mbeanElement);
-      }
-      catch (MBeanException mbe) {
-         mbe.getTargetException().printStackTrace();
-         throw mbe.getTargetException();
-      }
-      catch (RuntimeMBeanException mbe) {
-         mbe.getTargetException().printStackTrace();
-         throw mbe.getTargetException();
-      }
-      catch (RuntimeErrorException ree) {
-         ree.getTargetError().printStackTrace();
-         throw ree.getTargetError();
-      }
-      // catch (MalformedObjectNameException mone) {} 
-      // catch (ReflectionException re) {} 
-      // catch (InstanceNotFoundException re) {} 
-      catch (Throwable ex)
-      {
-         // move to a real log in debug mode
-         ex.printStackTrace();
-         log.error("Could not create MBean: " + objectName);
-         // pffff...
-         throw (Exception)ex;
-      }
-		
-      // Configure the MBean
-      try {
-         configurator.configure(mbeanElement);
-      }
-      catch (ConfigurationException ce) 
-      {
-         log.error("Could not configure MBean: " + objectName);
-         throw ce;
-      }
-		
-      String serviceFactory = mbeanElement.getAttribute("serviceFactory");
-		
-      MBeanInfo info = server.getMBeanInfo(objectName);
-		
-      Service service =
-         getServiceInstance(objectName, 
-                            server.getMBeanInfo(objectName), 
-                            mbeanElement.getAttribute("serviceFactory"));
-      
-      //These are now called by the ServiceDeployer code.
-      //service.init();
-      //service.start();
-		
-      // we need to keep an order on the MBean it encapsulates dependencies
-      services.add(objectName);
-      // Keep track 
-      nameToServiceMap.put(objectName, service);
-		
-      // You are done
-      return objectName;
-   }
-	
-   public void undeploy(Element mbeanElement) throws Exception
-   {
-      undeploy(parseObjectName(mbeanElement));
-   }
-	
-   public ObjectName[] getDeployed() 
-   {
+
       ObjectName[] deployed = new ObjectName[services.size()];
-      services.toArray(deployed);	
-		
+      services.toArray(deployed);
+
       return deployed;
    }
-	
-   public void undeploy(ObjectName objectName) throws Exception
-   {
-      // Do we have a deployed MBean?
-      if (server.isRegistered(objectName))
-      {
-         //Remove from local maps
-         services.remove(objectName);
-         Service service = (Service) nameToServiceMap.remove(objectName);
-	
-         // Remove the MBean from the MBeanServer
-         server.unregisterMBean(objectName);
-			
-         // Remove the MBeanClassLoader used by the MBean
-         ObjectName loader =
-            new ObjectName("ZClassLoaders:id=" + objectName.hashCode());
-         if (server.isRegistered(loader)) {
-            server.unregisterMBean(loader);
-         }
-      }
-   }
-	
+
+   /**
+    * Gets the Configuration attribute of the ServiceController object
+    *
+    * @param objectNames Description of Parameter
+    * @return The Configuration value
+    * @exception Exception Description of Exception
+    */
    public String getConfiguration(ObjectName[] objectNames) throws Exception
    {
       return configurator.getConfiguration(objectNames);
    }
-   
-   // MBeanRegistration implementation ----------------------------------------
-	
-   public ObjectName preRegister(final MBeanServer server, ObjectName name)
-      throws Exception
+
+   /**
+    * Deploy the beans
+    *
+    * @param mbeanElement Description of Parameter
+    * @return Description of the Returned Value
+    * @throws Exception ???
+    */
+   public ObjectName deploy(Element mbeanElement)
+          throws Exception
    {
+      // The ObjectName of the bean
+      ObjectName objectName = parseObjectName(mbeanElement);
+
+      undeploy(objectName);
+
+      // It is not there so really create the component now
+      try
+      {
+         creator.create(mbeanElement);
+      }
+
+      catch (MBeanException mbe)
+      {
+         mbe.getTargetException().printStackTrace();
+         throw mbe.getTargetException();
+      }
+      catch (RuntimeMBeanException mbe)
+      {
+         mbe.getTargetException().printStackTrace();
+         throw mbe.getTargetException();
+      }
+      catch (RuntimeErrorException ree)
+      {
+         ree.getTargetError().printStackTrace();
+         throw ree.getTargetError();
+      }
+      /*
+       * catch (MalformedObjectNameException mone) {}
+       * catch (ReflectionException re) {}
+       * catch (InstanceNotFoundException re) {}
+       */
+      catch (Throwable ex)
+      {
+         category.error("Could not create MBean " + objectName);
+         category.debug("Error creating MBean " + objectName, ex);
+         //pffff...
+         throw (Exception)ex;
+      }
+
+      // Configure the MBean
+      try
+      {
+         configurator.configure(mbeanElement);
+      }
+
+      catch (ConfigurationException ce)
+      {
+
+         category.error("Could not configure MBean " + objectName);
+         category.debug("Error configuring MBean " + objectName, ce);
+         throw ce;
+      }
+
+      String serviceFactory = mbeanElement.getAttribute("serviceFactory");
+
+      MBeanInfo info = server.getMBeanInfo(objectName);
+
+      Service service = getServiceInstance(objectName,
+            server.getMBeanInfo(objectName),
+            mbeanElement.getAttribute("serviceFactory"));
+
+      //Mbeans are init'ed and started by ServiceDeployer now.
+
+      // we need to keep an order on the MBean it encapsulates dependencies
+      services.add(objectName);
+      // Keep track
+      nameToServiceMap.put(objectName, service);
+
+      //You are done
+      return objectName;
+   }
+
+   /**
+    * #Description of the Method
+    *
+    * @param mbeanElement Description of Parameter
+    * @exception Exception Description of Exception
+    */
+   public void undeploy(Element mbeanElement) throws Exception
+   {
+
+      undeploy(parseObjectName(mbeanElement));
+   }
+
+
+   /**
+    * #Description of the Method
+    *
+    * @param objectName Description of Parameter
+    * @exception Exception Description of Exception
+    */
+   public void undeploy(ObjectName objectName) throws Exception
+   {
+      category.debug("undeploying " + objectName + "from server");
+      // Do we have a deployed MBean?
+      if (server.isRegistered(objectName))
+      {
+         category.debug("undeploying " + objectName + "from server");
+         //Remove from local maps
+         services.remove(objectName);
+         Service service = (Service)nameToServiceMap.remove(objectName);
+
+         // Remove the MBean from the MBeanServer
+         server.unregisterMBean(objectName);
+
+         // Remove the MBeanClassLoader used by the MBean
+         ObjectName loader = new ObjectName("ZClassLoaders:id=" + objectName.hashCode());
+         server.unregisterMBean(loader);
+
+      }
+   }
+
+   // MBeanRegistration implementation ----------------------------------------
+
+   /**
+    * #Description of the Method
+    *
+    * @param server Description of Parameter
+    * @param name Description of Parameter
+    * @return Description of the Returned Value
+    * @exception java.lang.Exception Description of Exception
+    */
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
+          throws java.lang.Exception
+   {
+
       this.server = server;
-		
+
       creator = new ServiceCreator(server);
       configurator = new ServiceConfigurator(server);
 
-      log.log("Controller MBean online");
+      category.info("Controller MBean online");
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
-	
+
    // Service implementation ----------------------------------------
-   
+   /**
+    * #Description of the Method
+    *
+    * @exception Exception Description of Exception
+    */
    public void init()
-      throws Exception
+          throws Exception
    {
-      log.log("Initializing "+services.size()+" services");
-		
+
+      category.info("Initializing " + services.size() + " services");
+
       List servicesCopy = new ArrayList(services);
       Iterator enum = servicesCopy.iterator();
       int serviceCounter = 0;
       ObjectName name = null;
-		
+
       while (enum.hasNext())
       {
          name = (ObjectName)enum.next();
@@ -233,85 +304,101 @@ public class ServiceController
             ((Service)nameToServiceMap.get(name)).init();
             serviceCounter++;
          }
-         catch(Throwable e)
+         catch (Throwable e)
          {
-            log.error("Could not initialize "+name);
-            log.exception(e);
+            category.error("Could not initialize " + name, e);
          }
       }
-      log.log("Initialized "+servicesCopy.size()+" services");
+      category.info("Initialized " + serviceCounter + " services");
    }
-	
+
+   /**
+    * #Description of the Method
+    *
+    * @exception Exception Description of Exception
+    */
    public void start()
-      throws Exception
-   { 
-      log.log("Starting "+services.size()+" services");
-		
+          throws Exception
+   {
+      category.info("Starting " + services.size() + " services");
+
       List servicesCopy = new ArrayList(services);
       Iterator enum = servicesCopy.iterator();
       int serviceCounter = 0;
       ObjectName name = null;
-		
+
       while (enum.hasNext())
       {
          name = (ObjectName)enum.next();
-			
+
          try
          {
             ((Service)nameToServiceMap.get(name)).start();
             serviceCounter++;
          }
-         catch(Throwable e)
+         catch (Throwable e)
          {
-            log.error("Could not start "+name);
-            log.exception(e);
+            category.error("Could not start " + name, e);
          }
       }
-      log.log("Started "+servicesCopy.size()+" services");
+      category.info("Started " + serviceCounter + " services");
    }
-	
+
+   /**
+    * #Description of the Method
+    */
    public void stop()
    {
-      log.log("Stopping "+services.size()+" services");
-		
+      category.info("Stopping " + services.size() + " services");
+
       List servicesCopy = new ArrayList(services);
       ListIterator enum = servicesCopy.listIterator();
       int serviceCounter = 0;
       ObjectName name = null;
-		
-      while (enum.hasNext()) enum.next(); // pass them all
+
+      while (enum.hasNext())
+      {
+         enum.next();
+      }
+      // pass them all
       while (enum.hasPrevious())
       {
-         name = (ObjectName) enum.previous();
-			
+         name = (ObjectName)enum.previous();
+
          try
          {
-            ((Service) nameToServiceMap.get(name)).stop();
+            ((Service)nameToServiceMap.get(name)).stop();
             serviceCounter++;
          }
          catch (Throwable e)
          {
-            log.error("Could not stop "+ name);           
-            log.exception(e);
+            category.error("Could not stop " + name, e);
          }
       }
-      log.log("Stopped "+servicesCopy.size()+" services");
+      category.info("Stopped " + serviceCounter + " services");
    }
-	
+
+   /**
+    * #Description of the Method
+    */
    public void destroy()
    {
-      log.log("Destroying "+services.size()+" services");
-		
+      category.info("Destroying " + services.size() + " services");
+
       List servicesCopy = new ArrayList(services);
       ListIterator enum = servicesCopy.listIterator();
       int serviceCounter = 0;
       ObjectName name = null;
-		
-      while (enum.hasNext()) enum.next(); // pass them all
+
+      while (enum.hasNext())
+      {
+         enum.next();
+      }
+      // pass them all
       while (enum.hasPrevious())
       {
-         name = (ObjectName) enum.previous();
-			
+         name = (ObjectName)enum.previous();
+
          try
          {
             ((Service)nameToServiceMap.get(name)).destroy();
@@ -319,139 +406,181 @@ public class ServiceController
          }
          catch (Throwable e)
          {
-            log.error("Could not destroy " + name);           
-            log.exception(e);
+            category.error("Could not destroy" + name, e);
          }
       }
-      log.log("Destroyed "+servicesCopy.size()+" services");
-   }	
-	
+      category.info("Destroyed " + serviceCounter + " services");
+   }
+
+   /**
+    * #Description of the Method
+    *
+    * @param serviceName Description of Parameter
+    * @exception Exception Description of Exception
+    */
    public void init(ObjectName serviceName) throws Exception
    {
-      if (nameToServiceMap.containsKey(serviceName)) {
-         ((Service) nameToServiceMap.get(serviceName)).init();
+      if (nameToServiceMap.containsKey(serviceName))
+      {
+
+         ((Service)nameToServiceMap.get(serviceName)).init();
       }
-      else {
-         throw new InstanceNotFoundException
-            ("Could not find "+serviceName.toString());
+      else
+      {
+         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
       }
    }
-	
+
+   /**
+    * #Description of the Method
+    *
+    * @param serviceName Description of Parameter
+    * @exception Exception Description of Exception
+    */
    public void start(ObjectName serviceName) throws Exception
    {
-      if (nameToServiceMap.containsKey(serviceName)) {
-			
-         ((Service) nameToServiceMap.get(serviceName)).start();
+      if (nameToServiceMap.containsKey(serviceName))
+      {
+
+         ((Service)nameToServiceMap.get(serviceName)).start();
       }
-      else {
-         throw new InstanceNotFoundException
-            ("Could not find "+serviceName.toString());
+      else
+      {
+         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
       }
    }
-   
+
+   /**
+    * #Description of the Method
+    *
+    * @param serviceName Description of Parameter
+    * @exception Exception Description of Exception
+    */
    public void stop(ObjectName serviceName) throws Exception
    {
-      if (nameToServiceMap.containsKey(serviceName)) {
-			
-         ((Service) nameToServiceMap.get(serviceName)).stop();
+      if (nameToServiceMap.containsKey(serviceName))
+      {
+
+         ((Service)nameToServiceMap.get(serviceName)).stop();
       }
-      else {
-         throw new InstanceNotFoundException
-            ("Could not find "+serviceName.toString());
+      else
+      {
+         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
       }
    }
-	
+
+   /**
+    * #Description of the Method
+    *
+    * @param serviceName Description of Parameter
+    * @exception Exception Description of Exception
+    */
    public void destroy(ObjectName serviceName) throws Exception
    {
-      if (nameToServiceMap.containsKey(serviceName)) {
-         ((Service) nameToServiceMap.get(serviceName)).destroy();
+      if (nameToServiceMap.containsKey(serviceName))
+      {
+
+         ((Service)nameToServiceMap.get(serviceName)).destroy();
       }
-      else {
-         throw new InstanceNotFoundException
-            ("Could not find "+serviceName.toString());
+      else
+      {
+         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
       }
    }
-	
-   // Protected -----------------------------------------------------
-	
+
    /**
-    * Parse an object name from the given element attribute 'name'.
-    *
-    * @param element    Element to parse name from.
-    * @return           Object name.
-    *
-    * @throws ConfigurationException        Missing attribute 'name'
-    *                                       (thrown if 'name' is null or "").
-    * @throws MalformedObjectNameException
-    */
-   private ObjectName parseObjectName(final Element element)
-      throws ConfigurationException, MalformedObjectNameException
-   {
-      String name = element.getAttribute("name");
-      if (name == null || name.trim().equals("")) {
-         throw new ConfigurationException
-            ("MBean attribute 'name' must be given.");
-      }
-      return new ObjectName(name);
-   }
-	
-   /**
-    * Get the Service interface through which the mbean given by
-    * objectName will be managed.
+    * Get the Service interface through which the mbean given by objectName will
+    * be managed.
     *
     * @param objectName
     * @param info
     * @param serviceFactory
-    *
+    * @return The ServiceInstance value
     * @throws ClassNotFoundException
     * @throws InstantiationException
     * @throws IllegalAccessException
     */
    private Service getServiceInstance(ObjectName objectName,
-                                      MBeanInfo info,
-                                      String serviceFactory)
-      throws ClassNotFoundException, InstantiationException, IllegalAccessException
+         MBeanInfo info,
+         String serviceFactory)
+          throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
       Service service = null;
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
-      if (serviceFactory != null && serviceFactory.length() > 0) {
+      if (serviceFactory != null && serviceFactory.length() > 0)
+      {
          Class clazz = loader.loadClass(serviceFactory);
-         ServiceFactory factory = (ServiceFactory) clazz.newInstance();
+         ServiceFactory factory = (ServiceFactory)clazz.newInstance();
          service = factory.createService(server, objectName);
-      } else {
-         MBeanOperationInfo[] opInfo = info.getOperations();
-         Class[] interfaces = { org.jboss.system.Service.class };
-         InvocationHandler handler = new ServiceProxy(objectName, opInfo);
-         service = (Service) Proxy.newProxyInstance(loader, interfaces, handler);
       }
-		
+      else
+      {
+         MBeanOperationInfo[] opInfo = info.getOperations();
+         Class[] interfaces = {org.jboss.system.Service.class};
+         InvocationHandler handler = new ServiceProxy(objectName, opInfo);
+         service = (Service)Proxy.newProxyInstance(loader, interfaces, handler);
+      }
+
       return service;
    }
-	
+
+   // Protected -----------------------------------------------------
+
    /**
-    * Go through the myriad of nested JMX exception to pull out the
-    * true exception if possible and log it.
+    * Parse an object name from the given element attribute 'name'.
     *
-    * @param e     The exception to be logged.
+    * @param element Element to parse name from.
+    * @return Object name.
+    * @throws ConfigurationException Missing attribute 'name' (thrown if 'name'
+    *      is null or "").
+    * @throws MalformedObjectNameException
     */
-   private void logException(Throwable e) {
-      if (e instanceof RuntimeErrorException) {
+   private ObjectName parseObjectName(final Element element)
+          throws ConfigurationException, MalformedObjectNameException
+   {
+      String name = element.getAttribute("name");
+      if (name == null || name.trim().equals(""))
+      {
+         throw new ConfigurationException
+               ("MBean attribute 'name' must be given.");
+      }
+      return new ObjectName(name);
+   }
+
+   /**
+    * Go through the myriad of nested JMX exception to pull out the true
+    * exception if possible and log it.
+    *
+    * @param e The exception to be logged.
+    */
+   private void logException(Throwable e)
+   {
+      if (e instanceof RuntimeErrorException)
+      {
          e = ((RuntimeErrorException)e).getTargetError();
-      } else if (e instanceof RuntimeMBeanException) {
+      }
+      else if (e instanceof RuntimeMBeanException)
+      {
          e = ((RuntimeMBeanException)e).getTargetException();
-      } else if (e instanceof RuntimeOperationsException) {
+      }
+      else if (e instanceof RuntimeOperationsException)
+      {
          e = ((RuntimeOperationsException)e).getTargetException();
-      } else if (e instanceof MBeanException) {
+      }
+      else if (e instanceof MBeanException)
+      {
          e = ((MBeanException)e).getTargetException();
-      } else if (e instanceof ReflectionException) {
+      }
+      else if (e instanceof ReflectionException)
+      {
          e = ((ReflectionException)e).getTargetException();
       }
-		
-      log.exception(e);
+
+      category.error(e);
    }
-	
+
    // Inner classes -------------------------------------------------
-	
+
    /**
     * An implementation of InvocationHandler used to proxy of the Service
     * interface for mbeans. It determines which of the init/start/stop/destroy
@@ -462,97 +591,104 @@ public class ServiceController
     */
    private class ServiceProxy implements InvocationHandler
    {
-      private boolean[] hasOp = { false, false, false, false };
+      private boolean[] hasOp = {false, false, false, false};
       private ObjectName objectName;
-		
+
       /**
-       * Go through the opInfo array and for each operation that
-       * matches on of the Service interface methods set the corresponding
-       * hasOp array value to true.
+       * Go through the opInfo array and for each operation that matches on of
+       * the Service interface methods set the corresponding hasOp array value
+       * to true.
        *
        * @param objectName
        * @param opInfo
        */
       public ServiceProxy(ObjectName objectName,
-                          MBeanOperationInfo[] opInfo)
+            MBeanOperationInfo[] opInfo)
       {
          this.objectName = objectName;
          int opCount = 0;
-			
-         for (int op = 0; op < opInfo.length; op ++) {
+
+         for (int op = 0; op < opInfo.length; op++)
+         {
             MBeanOperationInfo info = opInfo[op];
             String name = info.getName();
-            Integer opID = (Integer) serviceOpMap.get(name);
-            if (opID == null) {
+            Integer opID = (Integer)serviceOpMap.get(name);
+            if (opID == null)
+            {
                continue;
             }
-				
+
             // Validate that is a no-arg void return type method
             if (info.getReturnType().equals("void") == false)
+            {
                continue;
+            }
             if (info.getSignature().length != 0)
+            {
                continue;
-				
+            }
+
             hasOp[opID.intValue()] = true;
             opCount++;
          }
-			
+
          // Log a warning if the mbean does not implement
          // any Service methods
-         if (opCount == 0) {
-            log.warning(objectName +
-                        " does not implement any Service methods");
+         if (opCount == 0)
+         {
+            category.warn(objectName +
+                  " does not implement any Service methods");
          }
       }
-		
+
       /**
-       * Map the method name to a Service interface method index and
-       * if the corresponding hasOp array element is true, dispatch the
-       * method to the mbean we are proxying.
+       * Map the method name to a Service interface method index and if the
+       * corresponding hasOp array element is true, dispatch the method to the
+       * mbean we are proxying.
        *
-       * @param proxy     ???
-       * @param method    ???
-       * @param args      ???
-       * @return          Always null.
-       *
+       * @param proxy
+       * @param method
+       * @param args
+       * @return Always null.
        * @throws Throwable
        */
+
       public Object invoke(Object proxy, Method method, Object[] args)
-         throws Throwable
+             throws Throwable
       {
          String name = method.getName();
-         Integer opID = (Integer) serviceOpMap.get(name);
-			
-         if (opID != null && hasOp[opID.intValue()] == true ) {
-            try {
-               String[] sig = {}
-               ;
+         Integer opID = (Integer)serviceOpMap.get(name);
+
+         if (opID != null && hasOp[opID.intValue()] == true)
+         {
+            try
+            {
+               String[] sig = {};
                server.invoke(objectName, name, args, sig);
-            } catch (JMRuntimeException e) {
+            }
+            catch (JMRuntimeException e)
+            {
                logException(e);
             }
-            catch (JMException e) {
+            catch (JMException e)
+            {
                logException(e);
             }
          }
-			
+
          return null;
       }
    }
-	
-   /**
-    * A mapping from the Service interface method names to the
-    * corresponding index into the ServiceProxy.hasOp array.
-    */
-   private static HashMap serviceOpMap = new HashMap();
-	
+
    /**
     * Initialize the service operation map.
     */
-   static {
+   static
+   {
       serviceOpMap.put("init", new Integer(0));
       serviceOpMap.put("start", new Integer(1));
       serviceOpMap.put("destroy", new Integer(2));
       serviceOpMap.put("stop", new Integer(3));
    }
 }
+

@@ -7,286 +7,384 @@
 package org.jboss.system;
 
 import java.io.File;
-import java.util.Set;
 import java.net.URL;
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
-import javax.management.ObjectName;
-import javax.management.MBeanServer;
 import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import org.jboss.system.URLClassLoader;
 
-// import org.jboss.logging.Log;
+//import org.jboss.logging.log4j.JBossCategory;
 
 /**
- * The service libraries is a central repository of all classes
- * loaded by the ClassLoaders.
- * 
- * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * Service Libraries. The service libraries is a central repository of all
+ * classes loaded by the ClassLoaders
  *
- * <p><b>20010830 marc fleury:</b>
- * <ul>
- *   <li>Initial import
- * </ul>
+ * @see <related>
+ * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
+ * @version $Revision: 1.3 $ <p>
+ *
+ *      <b>20010830 marc fleury:</b>
+ *      <ul>initial import
+ *        <li>
+ *      </ul>
+ *      <b>20010908 david jencks:</b>
+ *      <ul>Modified to make undeploy work better.
+ *        <li>
+ *      </ul>
+ *
  */
+
 public class ServiceLibraries
-   implements ServiceLibrariesMBean, MBeanRegistration
+       implements ServiceLibrariesMBean, MBeanRegistration
 {
-   // Constants -----------------------------------------------------
-	
-   // Attributes ----------------------------------------------------
-	
-   // The classloaders
-   private Set classLoaders;
-	
-   // The classes kept in this library
-   private Map classes, resources,
-      // A given classloader loads a set of class
-      clToClassSetMap, clToResourceSetMap;
-	
+
    // JBoss logger version move to log4j if needed
    //Log log = Log.createLog("VM-ClassLoader");
-	
-   // Static --------------------------------------------------------
 
+   // Static --------------------------------------------------------
    private static ServiceLibraries libraries;
+   // Constants -----------------------------------------------------
+
+   // Attributes ----------------------------------------------------
+
+
+   // The classloaders
+   private Set classLoaders;
+
+   // The classes kept in this library
+   private Map classes, resources,
+   // A given classloader loads a set of class
+         clToClassSetMap, clToResourceSetMap;
 
    // Constructors --------------------------------------------------
-	
+
    // Public --------------------------------------------------------
-	
-   public static ServiceLibraries getLibraries() 
+
+   /**
+    * Gets the Libraries attribute of the ServiceLibraries class
+    *
+    * @return The Libraries value
+    */
+   public static ServiceLibraries getLibraries()
    {
-      if (libraries == null) {
+      if (libraries == null)
+      {
          libraries = new ServiceLibraries();
       }
-			
+
       return libraries;
    }
-	
+
    // ServiceClassLoaderMBean implementation ------------------------
-	
+
+   /**
+    * Gets the Name attribute of the ServiceLibraries object
+    *
+    * @return The Name value
+    */
    public String getName()
    {
       return "Service Libraries";
    }
-	
-   public void addClassLoader(URLClassLoader cl) 
-   { 
-      synchronized(classLoaders) {
-			
-         // we allow for duplicate class loader definitions in the
-         // services.xml files
-         // we should however only keep the first classloader declared
-			
-         if (!classLoaders.contains(cl))
-         {
-            classLoaders.add(cl);
-            System.out.println("Libraries adding URLClassLoader " +
-                               cl.hashCode() + " URL " +
-                               ((URLClassLoader) cl).getURL().toString()); 
-         }
-         else 
-         {
-            System.out.println("Libraries skipping duplicate URLClassLoader " +
-                               "for URL " +
-                               ((URLClassLoader)cl).getURL().toString());
-         }
-      }
-   }
-	
-   public void removeClassLoader(URLClassLoader cl)
+
+
+   /**
+    * Gets the Resource attribute of the ServiceLibraries object
+    *
+    * @param name Description of Parameter
+    * @param scl Description of Parameter
+    * @return The Resource value
+    */
+   public URL getResource(String name, ClassLoader scl)
    {
-      synchronized(classLoaders) {
-         classLoaders.remove(cl);
-			
-         Set classes = (Set) clToClassSetMap.remove(cl);
-         Iterator iterator = classes.iterator();
-         while( iterator.hasNext()) 
-         {
-            classes.remove(iterator.next());
-         }
-			
-         Set resources = (Set) clToResourceSetMap.remove(cl);
-         Iterator iterator2 = resources.iterator();
-         while( iterator2.hasNext())
-         {
-            resources.remove(iterator2.next());
-         }
-      }
-   }
-	
-	
-   public Class loadClass(String name, boolean resolve, ClassLoader scl) 
-      throws ClassNotFoundException
-   {
-      // Try the local map already 
-      Class foundClass = (Class) classes.get(name);	
-		
-      if (foundClass != null) return foundClass;
-			
-      // If not start asking around to URL classloaders for it
-		
-      // who will find it?
-      URLClassLoader cl = null;
-		
-      if (scl instanceof URLClassLoader) 
-      {
-         // First ask the asking classloader chances are the dependent
-         // class is in there
-         try { 
-            foundClass = ((URLClassLoader) scl).loadClassLocally(name,resolve);
-				
-            // If we get here we know the scl is the right one
-            cl = (URLClassLoader) scl;
-         }
-         catch (ClassNotFoundException ignored) {}
-      }
-		
-      synchronized(classLoaders) 
-      {
-         Iterator allLoaders = classLoaders.iterator();
-         while (allLoaders.hasNext() && (foundClass == null)) 
-         {
-            // next!
-            cl = (URLClassLoader) allLoaders.next();
-				
-            if (!scl.equals(cl))
-            {
-               try {
-						
-                  foundClass = cl.loadClassLocally(name, resolve);
-               }
-               catch (ClassNotFoundException ignored2) {
-                  // try next loader 
-               }
-            }
-         } // allLoaders 
-			
-         if (foundClass != null) 
-         {
-            // We can keep track  
-            classes.put(name, foundClass);
-				
-            // When we cycle the cl we also need to remove the classes it
-            // loaded
-            Set set = (Set) clToClassSetMap.get(cl);
-            if (set == null) {
-               set = new HashSet();
-               clToClassSetMap.put(cl, set);
-            }
-            set.add(foundClass);
-				
-            return foundClass; 
-         }
-      } // Synchronization
-		
-      // If we reach here, all of the classloaders currently in
-      // the VM don't know about the class
-      throw new ClassNotFoundException(name);
-   }
-	
-   public URL getResource(String name, ClassLoader scl) 
-   {
+
       // Is it in the global map?
-      if (resources.containsKey(name)) 
+      if (resources.containsKey(name))
       {
-         return (URL) resources.get(name);	
+
+         return (URL)resources.get(name);
       }
-		
+
       URL resource = null;
-		
-      // First ask for the class to the asking class loader  
-      if (scl instanceof URLClassLoader) 
+
+      // First ask for the class to the asking class loader
+      if (scl instanceof URLClassLoader)
       {
-         resource = ((URLClassLoader) scl).getResourceLocally(name);
+         resource = ((URLClassLoader)scl).getResourceLocally(name);
       }
-		
+
       if (resource == null)
       {
          // If not start asking around to URL classloaders for it
-         int i=1;
-         synchronized(classLoaders) 
+         int i = 1;
+         synchronized (classLoaders)
          {
             Iterator allLoaders = classLoaders.iterator();
-            while (allLoaders.hasNext()) 
+            while (allLoaders.hasNext())
             {
-               URLClassLoader cl = (URLClassLoader) allLoaders.next();
-					
+               URLClassLoader cl = (URLClassLoader)allLoaders.next();
+
                if (!cl.equals(scl))
                {
+
                   resource = cl.getResourceLocally(name);
-						
-                  if (resource != null) 
+
+                  if (resource != null)
                   {
-                     // We can keep track  
+
+                     // We can keep track
                      resources.put(name, resource);
-							
-                     // When we cycle the cl we also need to remove the
-                     // classes it loaded
-                     Set set = (Set) clToResourceSetMap.get(cl);
-                     if (set == null) {
+
+                     // When we cycle the cl we also need to remove the classes it loaded
+                     Set set = (Set)clToResourceSetMap.get(cl);
+                     if (set == null)
+                     {
                         set = new HashSet();
                         clToResourceSetMap.put(cl, set);
                      }
-                     set.add(resource);
+
+                     //set.add(resource);
+                     set.add(name);
+
                      return resource;
                   }
-                  
-                  // Just cycle through the class loaders until you find it 
+                  //Just cycle through the class loaders until you find it
                }
-            } // allLoaders 
-         } // Synchronization
+            }
+            //allLoaders
+         }
+         //Synchronization
       }
-      
-      // If we reach here, all of the classloaders currently in the
-      // VM don't know about the resource
+      // If we reach here, all of the classloaders currently in the VM don't know about the resource
       return resource;
    }
-	
-   // The name of the system MLet 
-   //   ObjectName mlet = new ObjectName(server.getDefaultDomain(), "service", "MLet");
-	
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws Exception
+
+
+   /**
+    * Adds a feature to the ClassLoader attribute of the ServiceLibraries object
+    *
+    * @param cl The feature to be added to the ClassLoader attribute
+    */
+   public void addClassLoader(URLClassLoader cl)
    {
+      synchronized (classLoaders)
+      {
+
+         // we allow for duplicate class loader definitions in the services.xml files
+         // we should however only keep the first classloader declared
+
+         if (!classLoaders.contains(cl))
+         {
+            classLoaders.add(cl);
+            System.out.println("Libraries adding URLClassLoader " + cl.hashCode() + " URL " + ((URLClassLoader)cl).getURL().toString());
+         }
+         else
+         {
+            System.out.println("Libraries skipping duplicate URLClassLoader for URL " + ((URLClassLoader)cl).getURL().toString());
+         }
+      }
+   }
+
+   /**
+    * #Description of the Method
+    *
+    * @param cl Description of Parameter
+    */
+   public void removeClassLoader(URLClassLoader cl)
+   {
+      synchronized (classLoaders)
+      {
+         System.out.println("removing classloader " + cl);
+
+         classLoaders.remove(cl);
+
+         Set clClasses = (Set)clToClassSetMap.remove(cl);
+         if (clClasses != null)
+         {
+            Iterator iterator = clClasses.iterator();
+            while (iterator.hasNext())
+            {
+               Object o = iterator.next();
+               Object o1 = classes.remove(o);
+               System.out.println("removing class " + o + ", removed: " + o1);
+            }
+         }
+
+         Set clResources = (Set)clToResourceSetMap.remove(cl);
+         if (clResources != null)
+         {
+            Iterator iterator2 = clResources.iterator();
+            while (iterator2.hasNext())
+            {
+               Object o = iterator2.next();
+               Object o1 = resources.remove(o);
+               System.out.println("removing resource " + o + ", removed: " + o1);
+            }
+         }
+      }
+      ;
+   }
+
+
+   /**
+    * #Description of the Method
+    *
+    * @param name Description of Parameter
+    * @param resolve Description of Parameter
+    * @param scl Description of Parameter
+    * @return Description of the Returned Value
+    * @exception ClassNotFoundException Description of Exception
+    */
+   public Class loadClass(String name, boolean resolve, ClassLoader scl)
+          throws ClassNotFoundException
+   {
+      // Try the local map already
+      Class foundClass = (Class)classes.get(name);
+
+      if (foundClass != null)
+      {
+         return foundClass;
+      }
+
+      // If not start asking around to URL classloaders for it
+
+      // who will find it?
+      URLClassLoader cl = null;
+
+      if (scl instanceof URLClassLoader)
+      {
+         // First ask the asking classloader chances are the dependent class is in there
+         try
+         {
+
+            foundClass = ((URLClassLoader)scl).loadClassLocally(name, resolve);
+
+            //If we get here we know the scl is the right one
+            cl = (URLClassLoader)scl;
+         }
+         catch (ClassNotFoundException ignored)
+         {
+         }
+      }
+
+      synchronized (classLoaders)
+      {
+
+         Iterator allLoaders = classLoaders.iterator();
+         while (allLoaders.hasNext() && (foundClass == null))
+         {
+            // next!
+            cl = (URLClassLoader)allLoaders.next();
+
+            if (!scl.equals(cl))
+            {
+               try
+               {
+
+                  foundClass = cl.loadClassLocally(name, resolve);
+               }
+               catch (ClassNotFoundException ignored2)
+               {
+                  //try next loader
+               }
+            }
+         }
+         //allLoaders
+
+         if (foundClass != null)
+         {
+            // We can keep track
+            classes.put(name, foundClass);
+
+            // When we cycle the cl we also need to remove the classes it loaded
+            Set set = (Set)clToClassSetMap.get(cl);
+            if (set == null)
+            {
+               set = new HashSet();
+               clToClassSetMap.put(cl, set);
+            }
+
+            //set.add(foundClass);
+            set.add(name);
+
+            return foundClass;
+         }
+      }
+      //Synchronization
+
+      // If we reach here, all of the classloaders currently in the VM don't know about the class
+      throw new ClassNotFoundException(name);
+   }
+
+   // The name of the system MLet
+   //   ObjectName mlet = new ObjectName(server.getDefaultDomain(), "service", "MLet");
+
+   /**
+    * #Description of the Method
+    *
+    * @param server Description of Parameter
+    * @param name Description of Parameter
+    * @return Description of the Returned Value
+    * @exception java.lang.Exception Description of Exception
+    */
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
+          throws java.lang.Exception
+   {
+
       //this.server = server;
-		
+
       classLoaders = Collections.synchronizedSet(new HashSet());
       classes = Collections.synchronizedMap(new HashMap());
       resources = Collections.synchronizedMap(new HashMap());
       clToResourceSetMap = Collections.synchronizedMap(new HashMap());
       clToClassSetMap = Collections.synchronizedMap(new HashMap());
 
-      System.out.println
-         ("[GPA] Microkernel ClassLoaders and Libraries initialized");
-      
-      return name==null ? new ObjectName(OBJECT_NAME) : name;
+      System.out.println("[GPA] Microkernel ClassLoaders and Libraries initialized");
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
-	
-	
+
+
+   /**
+    * #Description of the Method
+    *
+    * @exception java.lang.Exception Description of Exception
+    */
    public void preDeregister()
-      throws Exception
+          throws java.lang.Exception
    {
    }
-	
-   public void postRegister(Boolean b) {}
 
+   /**
+    * #Description of the Method
+    *
+    * @param b Description of Parameter
+    */
+   public void postRegister(Boolean b)
+   {
+   }
+
+   /**
+    * #Description of the Method
+    */
    public void postDeregister()
    {
    }
-	
+   // Y overrides ---------------------------------------------------
+
    // Package protected ---------------------------------------------
-	
+
    // Protected -----------------------------------------------------
-	
+
    // Private -------------------------------------------------------
-	
+
    // Inner classes -------------------------------------------------
-}                  
+}
+
