@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
@@ -37,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 public class TxManager
 implements TransactionManager
@@ -70,16 +71,18 @@ implements TransactionManager
                                          "cannot nest transactions.");
 
       TxCapsule txCapsule = null;
-      while (inactiveCapsules.size() > 0) {
-         SoftReference ref = (SoftReference)inactiveCapsules.removeFirst();
-         txCapsule = (TxCapsule)ref.get();
-         if (txCapsule != null) {
-           txCapsule.reUse(timeOut);
-           break;
+      synchronized (inactiveCapsules) {
+         while (inactiveCapsules.size() > 0) {
+            SoftReference ref = (SoftReference)inactiveCapsules.removeFirst();
+            txCapsule = (TxCapsule)ref.get();
+            if (txCapsule != null)
+              break;
          }
       }
       if (txCapsule == null)
          txCapsule = new TxCapsule(this, timeOut);
+      else
+         txCapsule.reUse(timeOut);
       TransactionImpl tx = txCapsule.createTransactionImpl();
       threadTx.set(tx);
       activeCapsules.put(tx.xid, txCapsule);
@@ -265,7 +268,11 @@ implements TransactionManager
    void releaseTxCapsule(TxCapsule txCapsule)
    {
       activeCapsules.remove(txCapsule);
-      inactiveCapsules.add(new SoftReference(txCapsule));
+
+      SoftReference ref = new SoftReference(txCapsule);
+      synchronized (inactiveCapsules) {
+         inactiveCapsules.add(ref);
+      }
    }
 
 
@@ -283,7 +290,7 @@ implements TransactionManager
     *  This map contains the active txCapsules as values.
     *  The keys are the <code>Xid</code> of the txCapsules.
     */
-   private Map activeCapsules = new HashMap();
+   private Map activeCapsules = Collections.synchronizedMap(new HashMap());
 
    /**
     *  This collection contains the inactive txCapsules.
