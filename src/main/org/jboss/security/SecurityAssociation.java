@@ -9,6 +9,7 @@ package org.jboss.security;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.security.auth.Subject;
 
 import org.jboss.logging.Logger;
@@ -35,7 +36,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.18 $
+@version $Revision: 1.19 $
  */
 public final class SecurityAssociation
 {
@@ -57,6 +58,8 @@ public final class SecurityAssociation
    private static ThreadLocal threadCredential;
    /** The SecurityAssociation Subject used when the server flag is true */
    private static ThreadLocal threadSubject;
+   /** The SecurityAssociation HashMap<String, Object> */
+   private static ThreadLocal threadContextMap;
 
    /** Thread local stacks of run-as principal roles used to implement J2EE
     run-as identity propagation */
@@ -75,7 +78,13 @@ public final class SecurityAssociation
       new RuntimePermission("org.jboss.security.SecurityAssociation.setServer");
    /** The permission required to access pushRunAsIdentity/popRunAsIdentity */
    private static final RuntimePermission setRunAsIdentity =
-      new RuntimePermission("org.jboss.security.SecurityAssociation.setRunAsIdentity");
+      new RuntimePermission("org.jboss.security.SecurityAssociation.setRunAsRole");
+   /** The permission required to get the current security context info */
+   private static final RuntimePermission getContextInfo =
+      new RuntimePermission("org.jboss.security.SecurityAssociation.accessContextInfo", "get");
+   /** The permission required to set the current security context info */
+   private static final RuntimePermission setContextInfo =
+      new RuntimePermission("org.jboss.security.SecurityAssociation.accessContextInfo", "set");
 
    static
    {
@@ -88,19 +97,33 @@ public final class SecurityAssociation
       {
          // Ignore and use the default
       }
-      
+
       trace = log.isTraceEnabled();
       if( useThreadLocal )
       {
          threadPrincipal = new ThreadLocal();
          threadCredential = new ThreadLocal();
          threadSubject = new ThreadLocal();
+         threadContextMap = new ThreadLocal()
+         {
+            protected Object initialValue()
+            {
+               return new HashMap();
+            }
+         };
       }
       else
       {
          threadPrincipal = new InheritableThreadLocal();
          threadCredential = new InheritableThreadLocal();
          threadSubject = new InheritableThreadLocal();
+         threadContextMap = new InheritableThreadLocal()
+         {
+            protected Object initialValue()
+            {
+               return new HashMap();
+            }
+         };
       }
    }
 
@@ -251,6 +274,49 @@ public final class SecurityAssociation
          threadSubject.set( subject );
       else
          SecurityAssociation.subject = subject;
+   }
+
+   /** Get the current thread context info.
+    If a security manager is present, then this method calls the security
+    manager's <code>checkPermission</code> method with a
+    <code>
+    RuntimePermission("org.jboss.security.SecurityAssociation.accessContextInfo", "get")
+    </code>
+    permission to ensure it's ok to access context information.
+    If not, a <code>SecurityException</code> will be thrown.
+    @param key - the context key
+    @return the mapping for the key in the current thread context
+    */
+   public static Object getContextInfo(Object key)
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(getContextInfo);
+
+      HashMap contextInfo = (HashMap) threadContextMap.get();
+      return contextInfo.get(key);
+   }
+
+   /** Set the current thread context info.
+    If a security manager is present, then this method calls the security
+    manager's <code>checkPermission</code> method with a
+    <code>
+    RuntimePermission("org.jboss.security.SecurityAssociation.accessContextInfo", "set")
+    </code>
+    permission to ensure it's ok to access context information.
+    If not, a <code>SecurityException</code> will be thrown.
+    @param key - the context key
+    @param value - the context value to associate under key
+    @return the previous mapping for the key if one exists
+    */
+   public static Object setContextInfo(Object key, Object value)
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(setContextInfo);
+
+      HashMap contextInfo = (HashMap) threadContextMap.get();
+      return contextInfo.put(key, value);
    }
 
    /** Clear all principal information.
