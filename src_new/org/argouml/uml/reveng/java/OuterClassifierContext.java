@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.12 2003/06/29 23:53:01 linus Exp $
+// $Id: OuterClassifierContext.java,v 1.13 2003/06/30 21:59:34 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -84,7 +84,9 @@ class OuterClassifierContext extends Context
 				      namePrefix + name);
 		}
 		if (classifier.isInterface()) {
-		    mInterface = UmlFactory.getFactory().getCore().buildInterface(name, mClassifier);
+		    mInterface =
+			UmlFactory.getFactory().getCore()
+			.buildInterface(name, mClassifier);
 		}
 		else {
 		    // Only interfaces will do
@@ -131,10 +133,13 @@ class OuterClassifierContext extends Context
 				      namePrefix + name);
 		}
 		if (classifier.isInterface()) {
-		    iClassifier = UmlFactory.getFactory().getCore().buildInterface(name, mClassifier);
+		    iClassifier =
+			UmlFactory.getFactory().getCore()
+			.buildInterface(name, mClassifier);
 		}
 		else {
-		    iClassifier = UmlFactory.getFactory().getCore().buildClass(name, mClassifier);
+		    iClassifier =
+			UmlFactory.getFactory().getCore().buildClass(name, mClassifier);
 		}
 	    }
 	    catch (ClassNotFoundException e) {

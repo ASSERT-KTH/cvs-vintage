@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.2 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionMultiplicity.java,v 1.3 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,17 +42,25 @@ public class ActionMultiplicity extends UMLAction {
     // static variables
 
     // multiplicity
-    public static UMLAction SrcMultOne = new ActionMultiplicity(MMultiplicity.M1_1, "src");
-    public static UMLAction DestMultOne = new ActionMultiplicity(MMultiplicity.M1_1, "dest");
+    public static UMLAction SrcMultOne =
+	new ActionMultiplicity(MMultiplicity.M1_1, "src");
+    public static UMLAction DestMultOne =
+	new ActionMultiplicity(MMultiplicity.M1_1, "dest");
 
-    public static UMLAction SrcMultZeroToOne = new ActionMultiplicity(MMultiplicity.M0_1, "src");
-    public static UMLAction DestMultZeroToOne = new ActionMultiplicity(MMultiplicity.M0_1, "dest");
+    public static UMLAction SrcMultZeroToOne =
+	new ActionMultiplicity(MMultiplicity.M0_1, "src");
+    public static UMLAction DestMultZeroToOne =
+	new ActionMultiplicity(MMultiplicity.M0_1, "dest");
 
-    public static UMLAction SrcMultZeroToMany = new ActionMultiplicity(MMultiplicity.M0_N, "src");
-    public static UMLAction DestMultZeroToMany = new ActionMultiplicity(MMultiplicity.M0_N, "dest");
+    public static UMLAction SrcMultZeroToMany =
+	new ActionMultiplicity(MMultiplicity.M0_N, "src");
+    public static UMLAction DestMultZeroToMany =
+	new ActionMultiplicity(MMultiplicity.M0_N, "dest");
 
-    public static UMLAction SrcMultOneToMany = new ActionMultiplicity(MMultiplicity.M1_N, "src");
-    public static UMLAction DestMultOneToMany = new ActionMultiplicity(MMultiplicity.M1_N, "dest");
+    public static UMLAction SrcMultOneToMany =
+	new ActionMultiplicity(MMultiplicity.M1_N, "src");
+    public static UMLAction DestMultOneToMany =
+	new ActionMultiplicity(MMultiplicity.M1_N, "dest");
 
 
     ////////////////////////////////////////////////////////////////

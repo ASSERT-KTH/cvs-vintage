@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.15 2003/06/29 23:52:19 linus Exp $
+// $Id: SelectionInterface.java,v 1.16 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.15 2003/06/29 23:52:19 linus Exp $
+// $Id: SelectionInterface.java,v 1.16 2003/06/30 21:59:33 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -60,7 +60,8 @@ public class SelectionInterface extends SelectionWButtons {
         Category.getInstance(SelectionInterface.class);
     ////////////////////////////////////////////////////////////////
     // constants
-    public static Icon realiz = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Realization");
+    public static Icon realiz =
+	ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Realization");
 
 
     ////////////////////////////////////////////////////////////////
@@ -162,7 +163,9 @@ public class SelectionInterface extends SelectionWButtons {
     }
 	
     /**
-     * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
+     * @see
+     * org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel,
+     * java.lang.Object)
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(), (Class) ModelFacade.ABSTRACTION);

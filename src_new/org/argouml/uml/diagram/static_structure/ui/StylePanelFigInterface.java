@@ -1,4 +1,4 @@
-// $Id: StylePanelFigInterface.java,v 1.3 2003/06/29 23:52:19 linus Exp $
+// $Id: StylePanelFigInterface.java,v 1.4 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,8 @@ public class StylePanelFigInterface extends StylePanelFig {
 
     public void refresh() {
 	super.refresh();
-	org.argouml.uml.diagram.static_structure.ui.FigInterface ti = (org.argouml.uml.diagram.static_structure.ui.FigInterface) _target;
+	org.argouml.uml.diagram.static_structure.ui.FigInterface ti =
+	    (org.argouml.uml.diagram.static_structure.ui.FigInterface) _target;
 	_operCheckBox.setSelected(ti.isOperationVisible());
     }
 

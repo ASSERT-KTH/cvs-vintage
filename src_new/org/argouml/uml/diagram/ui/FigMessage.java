@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.16 2003/06/29 23:52:20 linus Exp $
+// $Id: FigMessage.java,v 1.17 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.16 2003/06/29 23:52:20 linus Exp $
+// $Id: FigMessage.java,v 1.17 2003/06/30 21:59:33 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -217,7 +217,10 @@ public class FigMessage extends FigNodeModelElement {
 		ParserDisplay.SINGLETON.parseMessage(mes, s);
 		ProjectBrowser.getInstance().getStatusBar().showStatus("");
 	    } catch (ParseException pe) {
-		ProjectBrowser.getInstance().getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+		ProjectBrowser.getInstance().getStatusBar().showStatus("Error: "
+								       + pe
+								       + " at "
+								       + pe.getErrorOffset());
 	    }
 	}
 	else
@@ -255,9 +258,11 @@ public class FigMessage extends FigNodeModelElement {
     /** add the FigMessage to the Path Items of its FigAssociationRole */
     public void addPathItemToFigAssociationRole(Layer lay) {
 
-	MAssociationRole ar = ((MMessage) getOwner()).getCommunicationConnection();
+	MAssociationRole ar =
+	    ((MMessage) getOwner()).getCommunicationConnection();
 	if (ar != null && lay != null) {
-	    FigAssociationRole figAssocRole = (FigAssociationRole) lay.presentationFor(ar);
+	    FigAssociationRole figAssocRole =
+		(FigAssociationRole) lay.presentationFor(ar);
 	    if (figAssocRole != null) {
 		figAssocRole.addMessage(this);
 		figAssocRole.updatePathItemLocations();

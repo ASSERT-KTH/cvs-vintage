@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.17 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAddDiagram.java,v 1.18 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.17 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAddDiagram.java,v 1.18 2003/06/30 21:59:34 linus Exp $
 
 package org.argouml.uml.ui;
 
@@ -81,17 +81,17 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
             UMLDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
             TargetManager.getInstance().setTarget(diagram);
-            //TODO make the explorer listen to project member property changes...
-            // to eliminate coupling on gui.
+            //TODO make the explorer listen to project member property
+            //changes...  to eliminate coupling on gui.
             ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
             super.actionPerformed(e);
         } else {
             log.error("No valid namespace found");
             throw new IllegalStateException("No valid namespace found");
         }
-        // Issue 1722
-        // Removed following code so we allways get the correct namespace of the 
-        // diagram (via the getContainer method). 
+        // Issue 1722 Removed following code so we allways get the
+        // correct namespace of the diagram (via the getContainer
+        // method).
         /*    
         if (ModelFacade.isABase(target)) {
             MBase base = (MBase)target;

@@ -1,4 +1,4 @@
-// $Id: MMUtil.java,v 1.23 2003/06/30 18:00:26 linus Exp $
+// $Id: MMUtil.java,v 1.24 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,11 +67,13 @@ public class MMUtil {
     static {
 	STANDARDS = UmlFactory.getFactory().getModelManagement().createModel();
 	STANDARDS.setName("standard Elements");
-	MStereotype realizationStereo = UmlFactory.getFactory().getExtensionMechanisms().createStereotype();
+	MStereotype realizationStereo =
+	    UmlFactory.getFactory().getExtensionMechanisms().createStereotype();
 	realizationStereo.setName("realize");
 	STANDARDS.addOwnedElement(realizationStereo);
 
-	MStereotype interfaceStereo = UmlFactory.getFactory().getExtensionMechanisms().createStereotype();
+	MStereotype interfaceStereo =
+	    UmlFactory.getFactory().getExtensionMechanisms().createStereotype();
 	interfaceStereo.setName("interface");
 	STANDARDS.addOwnedElement(interfaceStereo);
     }

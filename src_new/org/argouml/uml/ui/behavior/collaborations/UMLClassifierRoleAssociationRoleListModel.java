@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.5 2003/06/29 23:50:10 linus Exp $
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.6 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,8 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.5 2003/06/29 23:50:10 linus Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -49,10 +47,9 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  * 
  * @author jaap.branderhorst@xs4all.nl
  *
- * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
- *             replaced by ?,
- *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
- *             that used reflection a lot.
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003), replaced by ?, this
+ * class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ * that used reflection a lot.
  */
 public class UMLClassifierRoleAssociationRoleListModel
 	extends UMLConnectionListModel {
@@ -66,7 +63,8 @@ public class UMLClassifierRoleAssociationRoleListModel
     public UMLClassifierRoleAssociationRoleListModel(
 						     UMLUserInterfaceContainer container,
 						     String property,
-						     boolean showNone) {
+						     boolean showNone)
+    {
 	super(container, property, showNone);
     }
 
@@ -92,11 +90,14 @@ public class UMLClassifierRoleAssociationRoleListModel
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getAddDialogTitle()
      */
     protected String getAddDialogTitle() {
-	return Argo.localize("UMLMenu", "dialog.add-associated-classifierroles");
+	return Argo.localize("UMLMenu",
+			     "dialog.add-associated-classifierroles");
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLBinaryRelationListModel#connect(MutableGraphModel, MModelElement, MModelElement)
+     * @see
+     * org.argouml.uml.ui.UMLBinaryRelationListModel#connect(MutableGraphModel,
+     * MModelElement, MModelElement)
      */
     protected void connect(
 			   MutableGraphModel gm,
@@ -106,7 +107,9 @@ public class UMLClassifierRoleAssociationRoleListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLBinaryRelationListModel#build(MModelElement, MModelElement)
+     * @see
+     * org.argouml.uml.ui.UMLBinaryRelationListModel#build(MModelElement,
+     * MModelElement)
      */
     protected void build(MModelElement from, MModelElement to) {
 	if (from != null && to != null && from instanceof MClassifierRole && to instanceof MClassifierRole) { 
@@ -115,7 +118,9 @@ public class UMLClassifierRoleAssociationRoleListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(MModelElement, MModelElement)
+     * @see
+     * org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(MModelElement,
+     * MModelElement)
      */
     protected MModelElement getRelation(MModelElement from, MModelElement to) {
 	if (from != null && to != null && from instanceof MClassifierRole && to instanceof MClassifierRole) { 

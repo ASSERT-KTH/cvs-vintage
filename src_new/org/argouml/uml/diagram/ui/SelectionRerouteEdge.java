@@ -1,4 +1,4 @@
-// $Id: SelectionRerouteEdge.java,v 1.4 2003/06/30 18:00:35 linus Exp $
+// $Id: SelectionRerouteEdge.java,v 1.5 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,10 +100,12 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
     public void mousePressed(MouseEvent me) {
         
         // calculate the source and dest figs for to self assoc
-        sourceFig = (FigNodeModelElement) ((FigEdge) _content).getSourceFigNode();
+        sourceFig =
+	    (FigNodeModelElement) ((FigEdge) _content).getSourceFigNode();
         destFig = (FigNodeModelElement) ((FigEdge) _content).getDestFigNode();
         
-        Rectangle mousePosition = new Rectangle(me.getX() - 5, me.getY() - 5, 10, 10);
+        Rectangle mousePosition =
+	    new Rectangle(me.getX() - 5, me.getY() - 5, 10, 10);
         //reset the pointIndex
         pointIndex = -1;
         int npoints = _content.getNumPoints();
@@ -181,7 +183,8 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
             return;
         }
         
-        UMLMutableGraphSupport mgm = (UMLMutableGraphSupport) editor.getGraphModel();
+        UMLMutableGraphSupport mgm =
+	    (UMLMutableGraphSupport) editor.getGraphModel();
         FigNodeModelElement oldFig = null;
         boolean isSource = false;
         if (pointIndex == 0) {

@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.26 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.27 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         for (int i = 0; i < targets.length; i++) {
             target = targets[i];
             if (sureRemove(target)) {
-                // Argo.log.info("deleting "+target+"+ "+(((MModelElement)target).getMElementListeners()).size());
+                // Argo.log.info("deleting "+target+"+
+                // "+(((MModelElement)target).getMElementListeners()).size());
                 // remove from the model
                 if (target instanceof Fig) {
                     target = ((Fig) target).getOwner();
@@ -148,7 +149,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
 
             }
         }
-        //      move the pointer to the target in the NavPane to some other target
+        //      move the pointer to the target in the NavPane to some
+        //      other target
         Object newTarget = null;
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (ModelFacade.isABase(target)) {
@@ -178,7 +180,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * @return boolean
      */
     public static boolean sureRemove(Object target) {
-        // usage of other sureRemove method is legacy. They should be integrated.
+        // usage of other sureRemove method is legacy. They should be
+        // integrated.
         boolean sure = false;
         if (target instanceof MModelElement) {
             sure = sureRemove((MModelElement) target);
@@ -188,7 +191,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             Vector nodes = diagram.getNodes();
             Vector edges = diagram.getNodes();
             if ((nodes.size() + edges.size()) > 0) {
-                // the diagram contains figs so lets ask the user if he/she is sure
+                // the diagram contains figs so lets ask the user if
+                // he/she is sure
                 String confirmStr =
                     MessageFormat.format(
 					 Argo.localize(
@@ -285,13 +289,10 @@ public class ActionRemoveFromModel extends UMLChangeAction {
 
     protected Object[] getTargets() {
         /*
-	  Vector figs = null;
-	  try {
-	  Editor ce = Globals.curEditor();
-	  figs = ce.getSelectionManager().getFigs();
-	  } catch (Exception e) {
-	  }
-	  return figs.size() > 0 ? figs.toArray() : new Object[] {TargetManager.getInstance().getTarget()};
+	  Vector figs = null; try { Editor ce = Globals.curEditor();
+	  figs = ce.getSelectionManager().getFigs(); } catch
+	  (Exception e) { } return figs.size() > 0 ? figs.toArray() :
+	  new Object[] {TargetManager.getInstance().getTarget()};
         */
         return TargetManager.getInstance().getTargets().toArray();
     }

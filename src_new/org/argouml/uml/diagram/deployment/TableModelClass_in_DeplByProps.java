@@ -1,4 +1,4 @@
-// $Id: TableModelClass_in_DeplByProps.java,v 1.5 2003/06/30 18:00:30 linus Exp $
+// $Id: TableModelClass_in_DeplByProps.java,v 1.6 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,9 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
 // File: TableModelClass_in_DeplByProps.java
 // Classes: TableModelClass_in_DeplByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelClass_in_DeplByProps.java,v 1.5 2003/06/30 18:00:30 linus Exp $
 
 package org.argouml.uml.diagram.deployment;
 

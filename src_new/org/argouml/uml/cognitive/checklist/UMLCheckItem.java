@@ -1,4 +1,4 @@
-// $Id: UMLCheckItem.java,v 1.7 2003/06/30 18:00:26 linus Exp $
+// $Id: UMLCheckItem.java,v 1.8 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,8 +62,9 @@ public class UMLCheckItem extends CheckItem {
 	// first offender
 	while (matchPos != -1) {
 	    int endExpr = res.indexOf(OCLEvaluator.OCL_END, matchPos + 1);
-	    String expr = res.substring(matchPos + OCLEvaluator.OCL_START.length(),
-					endExpr);
+	    String expr =
+		res.substring(matchPos + OCLEvaluator.OCL_START.length(),
+			      endExpr);
 	    String evalStr = OCLEvaluator.SINGLETON.evalToString(dm, expr);
 	    cat.debug("expr='" + expr + "' = '" + evalStr + "'");
 	    res = res.substring(0, matchPos) +

@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.3 2003/06/30 18:00:35 linus Exp $
+// $Id: ActionAddAssociationRole.java,v 1.4 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,9 +37,9 @@ import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.ModeCreatePolyEdge;
 
 /** 
- * The ActionAddAssociation class is for creating a dummy link with a stimulus and 
- * a given action type. This is done in one step when a new edge between
- * two nodes is instanciated
+ * The ActionAddAssociation class is for creating a dummy link with a
+ * stimulus and a given action type. This is done in one step when a
+ * new edge between two nodes is instanciated
  *
  * @author Bob Tarling
  */

@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.16 2003/06/29 23:52:57 linus Exp $
+// $Id: ProfileJava.java,v 1.17 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,7 +212,8 @@ public class ProfileJava extends Profile {
 		obj = iter.next();
 		if (obj instanceof MModelElement) {
 		    buffer.append(
-				  formatElement((MModelElement) obj, namespace));
+				  formatElement((MModelElement) obj,
+						namespace));
 		} else {
 		    buffer.append(obj.toString());
 		}
@@ -252,7 +253,8 @@ public class ProfileJava extends Profile {
 	    //   no file found, try looking in the resources
 	    //
 	    catch (FileNotFoundException ex) {
-		is = new Object().getClass().getResourceAsStream(defaultModelFileName);
+		is =
+		    new Object().getClass().getResourceAsStream(defaultModelFileName);
 		if (is == null) {
 		    cat.error(
 			      "Value of property argo.defaultModel ("
@@ -267,7 +269,8 @@ public class ProfileJava extends Profile {
 	//        load the default
 	if (is == null) {
 	    defaultModelFileName = "/org/argouml/default.xmi";
-	    is = new Object().getClass().getResourceAsStream(defaultModelFileName);
+	    is =
+		new Object().getClass().getResourceAsStream(defaultModelFileName);
 	    if (is == null) {
 		try {
 		    is =
@@ -288,11 +291,10 @@ public class ProfileJava extends Profile {
 		//   would really like to turn validation off to save
 		//      a lot of scary messages
 		MModel model = xmiReader.parseToModel(new InputSource(is));
-		// 2002-07-18
-		// Jaap Branderhorst
-		// changed the loading of the projectfiles to solve hanging 
-		// of argouml if a project is corrupted. Issue 913
-		// Created xmireader with method getErrors to check if parsing went well
+		// 2002-07-18 Jaap Branderhorst changed the loading of
+		// the projectfiles to solve hanging of argouml if a
+		// project is corrupted. Issue 913 Created xmireader
+		// with method getErrors to check if parsing went well
 		if (xmiReader.getErrors()) {
 		    throw new IOException(
 					  "XMI file "

@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.7 2003/06/29 23:52:22 linus Exp $
+// $Id: FigActor.java,v 1.8 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.7 2003/06/29 23:52:22 linus Exp $
+// $Id: FigActor.java,v 1.8 2003/06/30 21:59:33 linus Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -189,7 +189,10 @@ public class FigActor extends FigNodeModelElement {
         _rightLeg.setLocation(x + middle, y + h - 35);
 
         Dimension minTextSize = _name.getMinimumSize();
-        _name.setBounds(x + middle - minTextSize.width / 2, y + h - minTextSize.height, minTextSize.width, minTextSize.height);
+        _name.setBounds(x + middle - minTextSize.width / 2,
+			y + h - minTextSize.height,
+			minTextSize.width,
+			minTextSize.height);
 
         updateEdges();
         _x = x;
@@ -224,7 +227,8 @@ public class FigActor extends FigNodeModelElement {
         int MAXPOINTS = 20;
         Point point = null;
         for (int i = 0; i < MAXPOINTS; i++) {
-            point = new Point((int) (cx + Math.cos(2 * Math.PI / MAXPOINTS * i) * radiusx), (int) (cy + Math.sin(2 * Math.PI / MAXPOINTS * i) * radiusy));
+            point = new Point((int) (cx + Math.cos(2 * Math.PI / MAXPOINTS * i) * radiusx),
+			      (int) (cy + Math.sin(2 * Math.PI / MAXPOINTS * i) * radiusy));
             ret.add(point);
         }
         return ret;

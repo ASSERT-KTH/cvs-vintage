@@ -1,4 +1,4 @@
-// $Id: TableModelComposite.java,v 1.5 2003/06/29 23:52:57 linus Exp $
+// $Id: TableModelComposite.java,v 1.6 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,7 +123,8 @@ public class TableModelComposite extends AbstractTableModel
 	if (row >= 0 && row < _rowObjects.size()) {
 	    if (col >= 0 && col < _colDescs.size()) {
 		Object rowObj = _rowObjects.elementAt(row);
-		ColumnDescriptor cd = (ColumnDescriptor) _colDescs.elementAt(col);
+		ColumnDescriptor cd =
+		    (ColumnDescriptor) _colDescs.elementAt(col);
 		return cd.getValueFor(rowObj);
 	    }
 	}
@@ -134,7 +135,8 @@ public class TableModelComposite extends AbstractTableModel
 	if (row >= 0 && row < _rowObjects.size()) {
 	    if (col >= 0 && col < _colDescs.size()) {
 		Object rowObj = _rowObjects.elementAt(row);
-		ColumnDescriptor cd = (ColumnDescriptor) _colDescs.elementAt(col);
+		ColumnDescriptor cd =
+		    (ColumnDescriptor) _colDescs.elementAt(col);
 		cd.setValueFor(rowObj, val);
 		return;
 	    }

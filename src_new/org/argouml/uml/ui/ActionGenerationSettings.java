@@ -1,4 +1,4 @@
-// $Id: ActionGenerationSettings.java,v 1.4 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionGenerationSettings.java,v 1.5 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,8 @@ public class ActionGenerationSettings extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    public static ActionGenerationSettings SINGLETON = new ActionGenerationSettings();
+    public static ActionGenerationSettings SINGLETON =
+	new ActionGenerationSettings();
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -54,7 +55,8 @@ public class ActionGenerationSettings extends UMLAction {
     }
 
     public boolean shouldBeEnabled() {
-	org.argouml.ui.ArgoDiagram activeDiagram = ProjectManager.getManager().getCurrentProject().getActiveDiagram();
+	org.argouml.ui.ArgoDiagram activeDiagram =
+	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();
 	return super.shouldBeEnabled() &&
 	    (activeDiagram instanceof UMLDiagram);
     }

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.21 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionSaveProject.java,v 1.22 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,9 @@ public class ActionSaveProject extends UMLAction {
 
     public boolean trySave (boolean overwrite) {
 	URL url = ProjectManager.getManager().getCurrentProject().getURL();
-	return url == null ? false : trySave(overwrite, new File(url.getFile()));
+	return url == null
+	    ? false
+	    : trySave(overwrite, new File(url.getFile()));
     }
 
     public boolean trySave(boolean overwrite, File file) {
@@ -91,7 +93,8 @@ public class ActionSaveProject extends UMLAction {
 	try {
 
 	    if (file.exists() && !overwrite) {
-		//Argo.log.info ("Are you sure you want to overwrite " + fullpath + "?");
+		//Argo.log.info ("Are you sure you want to overwrite "
+		//+ fullpath + "?");
 		String sConfirm = 
 		    MessageFormat.format(Argo.localize("Actions",
 						       "optionpane.save-project-confirm-overwrite"),

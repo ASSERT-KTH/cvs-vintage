@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.21 2003/06/29 23:53:01 linus Exp $
+// $Id: JavaImport.java,v 1.22 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: JavaImport.java,v 1.21 2003/06/29 23:53:01 linus Exp $
+//$Id: JavaImport.java,v 1.22 2003/06/30 21:59:34 linus Exp $
 
 package org.argouml.uml.reveng.java;
 
@@ -38,8 +38,8 @@ import java.io.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.21 $
- * $Date: 2003/06/29 23:53:01 $
+ * $Revision: 1.22 $
+ * $Date: 2003/06/30 21:59:34 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -51,12 +51,14 @@ public class JavaImport extends FileImportSupport {
      * @param f The input file for the parser.
      * @exception Exception Parser exception.
      */
-    public void parseFile( Project p, Object o, DiagramInterface diagram, Import _import)
+    public void parseFile( Project p, Object o, DiagramInterface diagram,
+			   Import _import)
 	throws Exception {
 	if (o instanceof File ) {
 	    File f = (File) o;
 	    // Create a scanner that reads from the input stream passed to us
-	    JavaLexer lexer = new JavaLexer(new BufferedReader(new FileReader(f)));
+	    JavaLexer lexer =
+		new JavaLexer(new BufferedReader(new FileReader(f)));
 
 	    // We use a special Argo token, that stores the preceding
 	    // whitespaces.

@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.11 2003/06/29 23:52:57 linus Exp $
+// $Id: DocumentationManager.java,v 1.12 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,8 @@ public class DocumentationManager {
 		    String tag = tv.getTag();
 		    if (tag.equals("documentation") || tag.equals("javadocs")) {
 			sResult = tv.getValue();
-			if (tag.equals("documentation")) break; // give priority to "documentation"
+			// give priority to "documentation"
+			if (tag.equals("documentation")) break;
 		    }
 		}
 	    }
@@ -91,9 +92,11 @@ public class DocumentationManager {
     }
 
     /**
-     * Determine whether documentation is associated with the given element or not.
+     * Determine whether documentation is associated with the given
+     * element or not.
      *
-     * Added 2001-10-05 STEFFEN ZSCHALER for use by org.argouml.language.java.generator.CodeGenerator
+     * Added 2001-10-05 STEFFEN ZSCHALER for use by
+     * org.argouml.language.java.generator.CodeGenerator
      *
      */
     public static boolean hasDocs (Object o) {
@@ -225,7 +228,8 @@ public class DocumentationManager {
 	    if (!comments.isEmpty()) {
 		for (Iterator iter = comments.iterator(); iter.hasNext(); ) {
 		    MComment c = (MComment) iter.next();
-		    String s = (c.getName() != null) ? c.getName().trim() : null;
+		    String s =
+			(c.getName() != null) ? c.getName().trim() : null;
 		    if (s != null && s.length() > 0) {
 			if (result.length() > 0) {
 			    result.append("\n");

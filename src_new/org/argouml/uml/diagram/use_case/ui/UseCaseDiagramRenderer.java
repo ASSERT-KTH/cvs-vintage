@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.8 2003/06/29 23:52:22 linus Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.9 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.8 2003/06/29 23:52:22 linus Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.9 2003/06/30 21:59:33 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -78,7 +78,8 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 public class UseCaseDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer 
 {
-    protected static Category cat = Category.getInstance(UseCaseDiagramRenderer.class);
+    protected static Category cat =
+	Category.getInstance(UseCaseDiagramRenderer.class);
 
 
     /**

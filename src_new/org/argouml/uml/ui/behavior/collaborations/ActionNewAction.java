@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.5 2003/06/29 23:50:10 linus Exp $
+// $Id: ActionNewAction.java,v 1.6 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,8 @@ public class ActionNewAction extends AbstractActionNewModelElement {
     }    
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);

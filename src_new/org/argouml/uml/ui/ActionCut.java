@@ -1,4 +1,4 @@
-// $Id: ActionCut.java,v 1.8 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionCut.java,v 1.9 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,8 @@ public class ActionCut extends AbstractAction implements CaretListener {
     }
 
     /**
-     * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
+     * @see
+     * javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
      */
     public void caretUpdate(CaretEvent e) {
         if (e.getMark() != e.getDot()) { // there is a selection        

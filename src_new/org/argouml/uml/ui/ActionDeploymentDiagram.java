@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.12 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.13 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,13 +56,15 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,Object)
      */
     public UMLDiagram createDiagram(Object handle) {
-        // a deployment diagram shows something about the whole model according to the uml spec
+        // a deployment diagram shows something about the whole model
+        // according to the uml spec
 	handle = ProjectManager.getManager().getCurrentProject().getRoot();   
         if (!ModelFacade.isANamespace(handle)) {
             cat.error("No namespace as argument");
             cat.error(handle);
             throw new IllegalArgumentException(
-					       "The argument " + handle + "is not a namespace.");
+					       "The argument " + handle
+					       + "is not a namespace.");
         }
         MNamespace ns = (MNamespace) handle;
         return new UMLDeploymentDiagram(ns);
@@ -72,13 +74,15 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)
      */
     public boolean isValidNamespace(Object handle) {
-        // a deployment diagram shows something about the whole model according to the uml spec
-        handle = ProjectManager.getManager().getCurrentProject().getRoot();        
+        // a deployment diagram shows something about the whole model
+        // according to the uml spec
+        handle = ProjectManager.getManager().getCurrentProject().getRoot(); 
         if (!ModelFacade.isANamespace(handle)) {
             cat.error("No namespace as argument");
             cat.error(handle);
             throw new IllegalArgumentException(
-					       "The argument " + handle + "is not a namespace.");
+					       "The argument " + handle
+					       + "is not a namespace.");
         }
         MNamespace ns = (MNamespace) handle;
         // may only occur as child of the model or in a package

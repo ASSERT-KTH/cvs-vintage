@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.14 2003/06/30 18:00:36 linus Exp $
+// $Id: ActionSequenceDiagram.java,v 1.15 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,9 @@ public class ActionSequenceDiagram extends ActionAddDiagram {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace, Object)
+     * @see
+     * org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,
+     * Object)
      */
     public UMLDiagram createDiagram(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {

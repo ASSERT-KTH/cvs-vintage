@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleMessageListModel.java,v 1.6 2003/06/29 23:50:10 linus Exp $
+// $Id: UMLAssociationRoleMessageListModel.java,v 1.7 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,9 @@ import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 
-public class UMLAssociationRoleMessageListModel extends UMLModelElementListModel2 {
+public class UMLAssociationRoleMessageListModel
+    extends UMLModelElementListModel2
+{
 
     /**
      * Constructor for UMLAssociationRoleMessageListModel.

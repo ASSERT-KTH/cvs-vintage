@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.13 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAddNote.java,v 1.14 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,7 +122,8 @@ public class ActionAddNote extends UMLChangeAction {
                 }
             }
         } else if (elemFig instanceof FigEdge) {
-            // we cannot do this yet since we have to modify all our edges probably
+            // we cannot do this yet since we have to modify all our
+            // edges probably
             /*
 	      Point startPoint = new Point(elemFig.getX(), elemFig.getY());
 	      Point endPoint = new Point(elemFig.getX() + elemFig.getWidth(), 

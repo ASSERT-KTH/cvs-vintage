@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.32 2003/06/29 23:50:10 linus Exp $
+// $Id: PropPanelMessage.java,v 1.33 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.32 2003/06/29 23:50:10 linus Exp $
+// $Id: PropPanelMessage.java,v 1.33 2003/06/30 21:59:35 linus Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -74,39 +74,60 @@ public class PropPanelMessage extends PropPanelModelElement {
 	setNameEventListening(namesToWatch);
 
 	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+	addField(Argo.localize("UMLMenu", "label.stereotype"),
+		 getStereotypeBox());
 	// a message does not have a namespace. removed therefore
-	// addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
-	JList interactionList = new UMLLinkedList(new UMLMessageInteractionListModel());
+	// addField(Argo.localize("UMLMenu", "label.namespace"),
+	// getNamespaceScroll());
+	JList interactionList =
+	    new UMLLinkedList(new UMLMessageInteractionListModel());
 	interactionList.setVisibleRowCount(1);
-	addField(Argo.localize("UMLMenu", "label.interaction"), new JScrollPane(interactionList));
+	addField(Argo.localize("UMLMenu", "label.interaction"),
+		 new JScrollPane(interactionList));
 
 	JList senderList = new UMLLinkedList(new UMLMessageSenderListModel());
 	senderList.setVisibleRowCount(1);
 	JScrollPane senderScroll = new JScrollPane(senderList);
 	addField(Argo.localize("UMLMenu", "label.sender"), senderScroll);
 
-	JList receiverList = new UMLLinkedList(new UMLMessageReceiverListModel());
+	JList receiverList =
+	    new UMLLinkedList(new UMLMessageReceiverListModel());
 	receiverList.setVisibleRowCount(1);
 	JScrollPane receiverScroll = new JScrollPane(receiverList);
 	addField(Argo.localize("UMLMenu", "label.receiver"), receiverScroll);
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.activator"), new UMLMessageActivatorComboBox(this, new UMLMessageActivatorComboBoxModel()));
+	addField(Argo.localize("UMLMenu", "label.activator"
+		 new UMLMessageActivatorComboBox(this,
+			 new UMLMessageActivatorComboBoxModel()));
 
-	JList actionList = new UMLMutableLinkedList(new UMLMessageActionListModel(), null, ActionNewAction.SINGLETON);
+	JList actionList =
+		 new UMLMutableLinkedList(new UMLMessageActionListModel(),
+					  null,
+					  ActionNewAction.SINGLETON);
 	actionList.setVisibleRowCount(1);
 	JScrollPane actionScroll = new JScrollPane(actionList);
 	addField(Argo.localize("UMLMenu", "label.action"), actionScroll);
 
-	JScrollPane predecessorScroll = new JScrollPane(new UMLMutableLinkedList(new UMLMessagePredecessorListModel(), ActionAddMessagePredecessor.SINGLETON, null));
-	addField(Argo.localize("UMLMenu", "label.predecessor"), predecessorScroll);
+	JScrollPane predecessorScroll =
+		 new JScrollPane(new UMLMutableLinkedList(new UMLMessagePredecessorListModel(),
+							  ActionAddMessagePredecessor.SINGLETON,
+							  null));
+	addField(Argo.localize("UMLMenu", "label.predecessor"),
+		 predecessorScroll);
 
-	new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateInteraction", null);
-	new PropPanelButton(this, buttonPanel, _actionIcon, Argo.localize("UMLMenu", "button.add-action"), "addAction", "isAddActionEnabled");
+	new PropPanelButton(this, buttonPanel, _navUpIcon,
+			    Argo.localize("UMLMenu", "button.go-up"),
+			    "navigateInteraction",
+			    null);
+	new PropPanelButton(this, buttonPanel, _actionIcon,
+			    Argo.localize("UMLMenu", "button.add-action"),
+			    "addAction",
+			    "isAddActionEnabled");
 	// ActionNewAction.SINGLETON.setTarget((MModelElement)getTarget());
-	// buttonPanel.add(new PropPanelButton2(this, ActionNewAction.SINGLETON));
+	// buttonPanel.add(new PropPanelButton2(this,
+	// ActionNewAction.SINGLETON));
 	new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), "removeElement", null);
     }
 
@@ -116,7 +137,8 @@ public class PropPanelMessage extends PropPanelModelElement {
     	MCallAction action = null;
         Object target = getTarget();
         if (target instanceof MMessage) {
-            action = (MCallAction) CommonBehaviorFactory.getFactory().buildAction((MMessage) target);
+            action =
+		(MCallAction) CommonBehaviorFactory.getFactory().buildAction((MMessage) target);
         }
         return action;
     }

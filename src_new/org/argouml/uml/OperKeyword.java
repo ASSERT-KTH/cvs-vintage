@@ -1,4 +1,4 @@
-// $Id: OperKeyword.java,v 1.3 2003/06/29 23:52:57 linus Exp $
+// $Id: OperKeyword.java,v 1.4 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,8 @@ public class OperKeyword implements java.io.Serializable {
     public static final OperKeyword SYNC = new OperKeyword("synchronized");
     public static final OperKeyword STSYNC = new OperKeyword("static sync"); 
     public static final OperKeyword FINSYNC = new OperKeyword("final sync"); 
-    public static final OperKeyword SFSYNC = new OperKeyword("static final sync");
+    public static final OperKeyword SFSYNC =
+	new OperKeyword("static final sync");
 
 
     public static final OperKeyword[] POSSIBLES = {

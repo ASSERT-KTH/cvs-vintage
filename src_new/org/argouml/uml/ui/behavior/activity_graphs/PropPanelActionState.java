@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.12 2003/06/30 18:00:36 linus Exp $
+// $Id: PropPanelActionState.java,v 1.13 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.12 2003/06/30 18:00:36 linus Exp $
+// $Id: PropPanelActionState.java,v 1.13 2003/06/30 21:59:35 linus Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -45,11 +45,17 @@ public class PropPanelActionState extends PropPanelState {
     // contructors
     public PropPanelActionState() {
 
-        super("Action State", _actionStateIcon, ConfigLoader.getTabPropsOrientation());
+        super("Action State", _actionStateIcon,
+	      ConfigLoader.getTabPropsOrientation());
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
+        addField(Argo.localize("UMLMenu", "label.stereotype"),
+		 new UMLComboBoxNavigator(this,
+					  Argo.localize("UMLMenu",
+							"tooltip.nav-stereo"),
+					  getStereotypeBox()));
+        addField(Argo.localize("UMLMenu", "label.namespace"),
+		 getNamespaceScroll());
 
         addField(Argo.localize("UMLMenu", "label.entry"), entryScroll);
         addField(Argo.localize("UMLMenu", "label.exit"), exitScroll);
@@ -59,7 +65,8 @@ public class PropPanelActionState extends PropPanelState {
 
         addField(Argo.localize("UMLMenu", "label.incoming"), incomingScroll);
         addField(Argo.localize("UMLMenu", "label.outgoing"), outgoingScroll);
-        addField(Argo.localize("UMLMenu", "label.internal-transitions"), internalTransitionsScroll);
+        addField(Argo.localize("UMLMenu", "label.internal-transitions"),
+		 internalTransitionsScroll);
 
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.19 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionStateDiagram.java,v 1.20 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,9 @@ public class ActionStateDiagram extends ActionAddDiagram {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace, Object)
+     * @see
+     * org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,
+     * Object)
      */
     public UMLDiagram createDiagram(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {

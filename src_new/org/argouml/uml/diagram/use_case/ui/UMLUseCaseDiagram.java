@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.26 2003/06/30 18:00:35 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.27 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.26 2003/06/30 18:00:35 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.27 2003/06/30 21:59:33 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -96,7 +96,9 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      * <p>Tool to create an association between UML artifacts using a
      *   polyedge.</p>
      */
-    //protected static Action _actionAssoc = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MAssociation.class, "Association");
+    //protected static Action _actionAssoc = new
+    //CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+    //MAssociation.class, "Association");
     protected static Action _actionAssociation =
         new ActionAddAssociation(MAggregationKind.NONE, false, "Association");
     protected static Action _actionAggregation =
@@ -244,9 +246,12 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     public void setNamespace(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
             cat.error(
-		      "Illegal argument. Object " + handle + " is not a namespace");
+		      "Illegal argument. Object " + handle
+		      + " is not a namespace");
             throw new IllegalArgumentException(
-					       "Illegal argument. Object " + handle + " is not a namespace");
+					       "Illegal argument. Object "
+					       + handle
+					       + " is not a namespace");
         }
         MNamespace m = (MNamespace) handle;
         super.setNamespace(m);
@@ -267,7 +272,8 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     }
 
     /**
-     * Get the actions from which to create a toolbar or equivilent graphic triggers
+     * Get the actions from which to create a toolbar or equivilent
+     * graphic triggers
      */
     protected Object[] getUmlActions() {
         Object actions[] = {

@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.16 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionNew.java,v 1.17 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,11 +83,12 @@ public class ActionNew extends UMLAction {
 		if (!safe) return;
 	    }
 	    //TODO: if you cancel the save it should cancel open
-	    // Steffen Zschaler 01/10/2002 - Well, it does, doesn't it? trySave will
-	    // return false in that case...
+	    //Steffen Zschaler 01/10/2002 - Well, it does, doesn't it?
+	    //trySave will return false in that case...
 	}
 
-	// we should remove all open dialogs. They have as parent the ProjectBrowser
+	// we should remove all open dialogs. They have as parent the
+	// ProjectBrowser
 	Window[] windows = ProjectBrowser.getInstance().getOwnedWindows();
 	for (int i = 0; i < windows.length; i++) {
 	    windows[i].dispose();

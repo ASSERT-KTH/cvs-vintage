@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.24 2003/05/10 15:22:41 bobtarling Exp $
+// $Id: PropPanelAssociationRole.java,v 1.25 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,23 +48,38 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
         super("Association Role", ConfigLoader.getTabPropsOrientation());
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
-        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
+        addField(Argo.localize("UMLMenu", "label.stereotype"),
+		 getStereotypeBox());
+        addField(Argo.localize("UMLMenu", "label.namespace"),
+		 getNamespaceScroll());
 
-        JComboBox baseComboBox = new UMLComboBox2(new UMLAssociationRoleBaseComboBoxModel(), ActionSetAssociationRoleBase.SINGLETON);
+        JComboBox baseComboBox =
+	    new UMLComboBox2(new UMLAssociationRoleBaseComboBoxModel(), ActionSetAssociationRoleBase.SINGLETON);
         addField(Argo.localize("UMLMenu", "label.base"), baseComboBox);
 
         addSeperator();
 
-        JList assocEndList = new UMLLinkedList(new UMLAssociationRoleAssociationEndRoleListModel());
-        assocEndList.setVisibleRowCount(2); // only binary associationroles are allowed
-        addField(Argo.localize("UMLMenu", "label.associationrole-ends"), new JScrollPane(assocEndList));
+        JList assocEndList =
+	    new UMLLinkedList(new UMLAssociationRoleAssociationEndRoleListModel());
+	// only binary associationroles are allowed
+        assocEndList.setVisibleRowCount(2);
+        addField(Argo.localize("UMLMenu", "label.associationrole-ends"),
+		 new JScrollPane(assocEndList));
 
-        JList messageList = new UMLLinkedList(new UMLAssociationRoleMessageListModel());
-        addField(Argo.localize("UMLMenu", "label.messages"), new JScrollPane(messageList));
+        JList messageList =
+	    new UMLLinkedList(new UMLAssociationRoleMessageListModel());
+        addField(Argo.localize("UMLMenu", "label.messages"),
+		 new JScrollPane(messageList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), "removeElement", null);
+        new PropPanelButton(this, buttonPanel, _navUpIcon,
+			    Argo.localize("UMLMenu",
+					  "button.go-up"),
+			    "navigateUp",
+			    null);
+        new PropPanelButton(this, buttonPanel, _deleteIcon,
+			    localize("Delete"),
+			    "removeElement",
+			    null);
 
     }
 

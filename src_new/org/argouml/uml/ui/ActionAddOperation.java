@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.21 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAddOperation.java,v 1.22 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,10 +70,13 @@ public class ActionAddOperation extends UMLChangeAction {
 	MClassifier cls = (MClassifier) target;
 	MOperation oper = UmlFactory.getFactory().getCore().buildOperation(cls);
         TargetManager.getInstance().setTarget(oper);
-        Iterator it = pb.getEditorPane().findPresentationsFor(cls, p.getDiagrams()).iterator();
+        Iterator it =
+	    pb.getEditorPane().findPresentationsFor(cls,
+						    p.getDiagrams()).iterator();
         while (it.hasNext()) {
             MElementListener listener = (MElementListener) it.next();
-            UmlModelEventPump.getPump().removeModelEventListener(listener, oper);
+            UmlModelEventPump.getPump().removeModelEventListener(listener,
+								 oper);
             UmlModelEventPump.getPump().addModelEventListener(listener, oper);
         }
 	super.actionPerformed(ae);

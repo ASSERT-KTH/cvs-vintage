@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.5 2003/06/29 23:50:10 linus Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.6 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddClassifierRoleBase.java,v 1.5 2003/06/29 23:50:10 linus Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.6 2003/06/30 21:59:35 linus Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.util.Vector;
@@ -40,7 +40,8 @@ import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
  */
 public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
 
-    public final static ActionAddClassifierRoleBase SINGLETON = new ActionAddClassifierRoleBase();
+    public final static ActionAddClassifierRoleBase SINGLETON =
+	new ActionAddClassifierRoleBase();
     /**
      * Constructor for ActionAddClassifierRoleBase.
      */
@@ -74,7 +75,8 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
+     * @see
+     * org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */
     protected void doIt(Vector selected) {
         MClassifierRole role = (MClassifierRole) getTarget();

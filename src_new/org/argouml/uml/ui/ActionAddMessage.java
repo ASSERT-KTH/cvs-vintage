@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.13 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAddMessage.java,v 1.14 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,21 +65,26 @@ public class ActionAddMessage extends UMLChangeAction {
     	Object target =  TargetManager.getInstance().getModelTarget();
     
     	
-    	if (!(target instanceof MAssociationRole) && ((MAssociationRole) target).getNamespace() instanceof MCollaboration) return;
+    	if (!(target instanceof MAssociationRole)
+	    && ((MAssociationRole) target).getNamespace() instanceof MCollaboration)
+	    return;
     	MAssociationRole ar = (MAssociationRole) target;
         this.addMessage(ar);
         super.actionPerformed(ae);
     }
     
     /**
-     * <p> add a message to an associationRole: it builds it using the Factory method
-     * and then it creates the Fig and adds it to the diagram </p>
+     * <p> add a message to an associationRole: it builds it using the
+     * Factory method and then it creates the Fig and adds it to the
+     * diagram </p>
      * @param ar the associationRole to which the new message must be added
      **/
     public MMessage addMessage(MAssociationRole ar) {
         MCollaboration collab = (MCollaboration) ar.getNamespace();
-        MMessage msg = UmlFactory.getFactory().getCollaborations().buildMessage(collab, ar);
-        String nextStr = "" + ((MInteraction) (collab.getInteractions().toArray())[0]).getMessages().size();	
+        MMessage msg =
+	    UmlFactory.getFactory().getCollaborations().buildMessage(collab, ar);
+        String nextStr =
+	    "" + ((MInteraction) (collab.getInteractions().toArray())[0]).getMessages().size();	
         Editor e = Globals.curEditor();
         GraphModel gm = e.getGraphModel();
         Layer lay = e.getLayerManager().getActiveLayer();

@@ -1,4 +1,4 @@
-// $Id: SPFigEdgeModelElement.java,v 1.4 2003/06/29 23:52:20 linus Exp $
+// $Id: SPFigEdgeModelElement.java,v 1.5 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -171,7 +171,8 @@ public class SPFigEdgeModelElement extends StylePanel
 	String bboxStr = _bboxField.getText();
 	if (bboxStr.length() == 0) return;
 	_target.startTrans();
-	java.util.StringTokenizer st = new java.util.StringTokenizer(bboxStr, ", ");
+	java.util.StringTokenizer st =
+	    new java.util.StringTokenizer(bboxStr, ", ");
 	try {
 	    int x = Integer.parseInt(st.nextToken());
 	    int y = Integer.parseInt(st.nextToken());

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.36 2003/06/30 18:00:33 linus Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.37 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.36 2003/06/30 18:00:33 linus Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.37 2003/06/30 21:59:32 linus Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -560,7 +560,9 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
      * helper method for changeConnectedNode
      * <p>empty at the moment
      */
-    private void rerouteDependency(Object newNode, Object oldNode, Object edge, boolean isSource) {
+    private void rerouteDependency(Object newNode, Object oldNode,
+				   Object edge, boolean isSource)
+    {
 
     }
 

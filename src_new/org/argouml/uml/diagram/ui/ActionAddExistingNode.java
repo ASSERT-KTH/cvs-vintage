@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingNode.java,v 1.11 2003/06/29 23:52:20 linus Exp $
+// $Id: ActionAddExistingNode.java,v 1.12 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,8 @@ public class ActionAddExistingNode extends UMLAction
 
         String instructions = null;
         if (_object != null) {
-            instructions =  Argo.localize ("Tree", "misc.message.click-on-diagram-to-add") + _object.toString();
+            instructions =
+		Argo.localize ("Tree", "misc.message.click-on-diagram-to-add") + _object.toString();
             Globals.showStatus(instructions);
         }
         ModePlace placeMode = new ModePlace(this, instructions);

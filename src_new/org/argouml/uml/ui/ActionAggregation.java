@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.2 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionAggregation.java,v 1.3 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,14 +42,20 @@ public class ActionAggregation extends UMLAction {
     // static variables
 
     // aggregation
-    public static UMLAction SrcAgg = new ActionAggregation(MAggregationKind.AGGREGATE, "src");
-    public static UMLAction DestAgg = new ActionAggregation(MAggregationKind.AGGREGATE, "dest");
+    public static UMLAction SrcAgg =
+	new ActionAggregation(MAggregationKind.AGGREGATE, "src");
+    public static UMLAction DestAgg =
+	new ActionAggregation(MAggregationKind.AGGREGATE, "dest");
 
-    public static UMLAction SrcAggComposite = new ActionAggregation(MAggregationKind.COMPOSITE, "src");
-    public static UMLAction DestAggComposite = new ActionAggregation(MAggregationKind.COMPOSITE, "dest");
+    public static UMLAction SrcAggComposite =
+	new ActionAggregation(MAggregationKind.COMPOSITE, "src");
+    public static UMLAction DestAggComposite =
+	new ActionAggregation(MAggregationKind.COMPOSITE, "dest");
 
-    public static UMLAction SrcAggNone = new ActionAggregation(MAggregationKind.NONE, "src");
-    public static UMLAction DestAggNone = new ActionAggregation(MAggregationKind.NONE, "dest");
+    public static UMLAction SrcAggNone =
+	new ActionAggregation(MAggregationKind.NONE, "src");
+    public static UMLAction DestAggNone =
+	new ActionAggregation(MAggregationKind.NONE, "dest");
 
 
     ////////////////////////////////////////////////////////////////

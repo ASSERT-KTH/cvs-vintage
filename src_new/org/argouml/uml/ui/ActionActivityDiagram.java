@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.19 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionActivityDiagram.java,v 1.20 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
 
     public static ActionActivityDiagram SINGLETON = new ActionActivityDiagram();
 
-    protected static Category cat = Category.getInstance(org.argouml.uml.ui.ActionActivityDiagram.class);
+    protected static Category cat =
+	Category.getInstance(org.argouml.uml.ui.ActionActivityDiagram.class);
 
     private ActionActivityDiagram() {
         super("action.activity-diagram");
@@ -55,7 +56,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
      */
     public UMLDiagram createDiagram(Object ns) {
         Object target = TargetManager.getInstance().getModelTarget();
-        MActivityGraph graph = ActivityGraphsFactory.getFactory().buildActivityGraph((MModelElement) target);
+        MActivityGraph graph =
+	    ActivityGraphsFactory.getFactory().buildActivityGraph((MModelElement) target);
         if (target instanceof MBehavioralFeature) {
             ns = ((MBehavioralFeature) target).getNamespace();
         }
@@ -67,7 +69,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
-        return super.shouldBeEnabled() || TargetManager.getInstance().getModelTarget() instanceof MPackage;
+        return super.shouldBeEnabled()
+	    || TargetManager.getInstance().getModelTarget() instanceof MPackage;
     }
     /**
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)

@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.3 2003/06/29 23:52:19 linus Exp $
+// $Id: StylePanelFigClass.java,v 1.4 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,7 +106,8 @@ public class StylePanelFigClass extends StylePanelFig {
     public void refresh() {
 	_refreshTransaction = true;
 	super.refresh();
-	org.argouml.uml.diagram.static_structure.ui.FigClass tc = (org.argouml.uml.diagram.static_structure.ui.FigClass) _target;
+	org.argouml.uml.diagram.static_structure.ui.FigClass tc =
+	    (org.argouml.uml.diagram.static_structure.ui.FigClass) _target;
 	_attrCheckBox.setSelected(tc.isAttributeVisible());
 	_operCheckBox.setSelected(tc.isOperationVisible());
 	_refreshTransaction = false;

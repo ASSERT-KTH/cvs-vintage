@@ -1,4 +1,4 @@
-// $Id: FigSeqLink.java,v 1.20 2003/06/30 18:00:31 linus Exp $
+// $Id: FigSeqLink.java,v 1.21 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -919,7 +919,7 @@ public class FigSeqLink
     }
   
 
-    ///////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
     // EventListener
 
     public void mouseClicked(MouseEvent me) {

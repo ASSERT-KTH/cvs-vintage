@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.9 2003/06/30 18:00:23 linus Exp $
+// $Id: LookAndFeelMgr.java,v 1.10 2003/06/30 21:59:31 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -253,7 +253,8 @@ public class LookAndFeelMgr {
         } else {
             String name = null;
 
-            UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
+            UIManager.LookAndFeelInfo[] lafs =
+		UIManager.getInstalledLookAndFeels();
             for (int i = 0; i < lafs.length; ++i) {
                 if (lafs[i].getClassName().equals(currentLookAndFeel)) {
 		    name = lafs[i].getName();

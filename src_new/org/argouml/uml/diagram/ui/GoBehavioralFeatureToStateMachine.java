@@ -1,4 +1,4 @@
-// $Id: GoBehavioralFeatureToStateMachine.java,v 1.4 2003/06/29 23:52:20 linus Exp $
+// $Id: GoBehavioralFeatureToStateMachine.java,v 1.5 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,9 @@ import org.argouml.ui.AbstractGoRule;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 
 /**
- * Navigation rule for navperspective to navigate from behavioral feature to statemachine.
- * Causes statemachine to be shown as child of behavioral feature.
+ * Navigation rule for navperspective to navigate from behavioral
+ * feature to statemachine.  Causes statemachine to be shown as child
+ * of behavioral feature.
  * 
  * @author jaap.branderhorst@xs4all.nl
  */

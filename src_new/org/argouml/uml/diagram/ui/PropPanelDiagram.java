@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.14 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelDiagram.java,v 1.15 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,11 @@ public class PropPanelDiagram extends PropPanel {
     protected PropPanelDiagram(String diagramName) {
         super(diagramName, ConfigLoader.getTabPropsOrientation());
         
-        JTextField field = new UMLTextField(this, new UMLTextProperty(ArgoDiagram.class, "name", "getName", "setName"));
+        JTextField field =
+	    new UMLTextField(this, new UMLTextProperty(ArgoDiagram.class,
+						       "name",
+						       "getName",
+						       "setName"));
         
 
         addField(Argo.localize("UMLMenu", "label.name"), field);
@@ -65,7 +69,8 @@ public class PropPanelDiagram extends PropPanel {
         if (target instanceof ArgoDiagram) {
             try {
                 ArgoDiagram diagram = (ArgoDiagram) target;
-                Project project = ProjectManager.getManager().getCurrentProject();
+                Project project =
+		    ProjectManager.getManager().getCurrentProject();
                 //
                 //  can't easily find owner of diagram
                 //    set new target to the model

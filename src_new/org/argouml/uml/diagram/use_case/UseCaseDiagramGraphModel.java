@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.21 2003/06/30 18:00:35 linus Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.22 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.21 2003/06/30 18:00:35 linus Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.22 2003/06/30 21:59:33 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -69,9 +69,12 @@ import ru.novosoft.uml.model_management.MElementImport;
  * <p>This class handles only UML Use Case Diagrams.</p>
  */
 
-public class UseCaseDiagramGraphModel extends UMLMutableGraphSupport
-    implements VetoableChangeListener {
-    protected static Category cat = Category.getInstance(UseCaseDiagramGraphModel.class);
+public class UseCaseDiagramGraphModel
+    extends UMLMutableGraphSupport
+    implements VetoableChangeListener
+{
+    protected static Category cat =
+	Category.getInstance(UseCaseDiagramGraphModel.class);
 
     ///////////////////////////////////////////////////////////////////////////
     //

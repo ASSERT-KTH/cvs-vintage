@@ -1,4 +1,4 @@
-// $Id: FigSeqObject.java,v 1.14 2003/06/30 18:00:31 linus Exp $
+// $Id: FigSeqObject.java,v 1.15 2003/06/30 21:59:32 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.14 2003/06/30 18:00:31 linus Exp $
+// $Id: FigSeqObject.java,v 1.15 2003/06/30 21:59:32 linus Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -928,7 +928,8 @@ public class FigSeqObject extends FigNodeModelElement
 	 */
       
 	Fig f = hitFig( new Rectangle(me.getX(), me.getY(), 1, 1) );
-	if ( (f == _lifeline ||  f instanceof FigActivation) && (me.getY() != _yPos)) {
+	if ((f == _lifeline ||  f instanceof FigActivation)
+	    && (me.getY() != _yPos)) {
 	    _yPos = me.getY();
 	    Editor ce = Globals.curEditor();
 	    SelectionManager selManager = ce.getSelectionManager();

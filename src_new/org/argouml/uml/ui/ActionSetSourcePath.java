@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.5 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionSetSourcePath.java,v 1.6 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,8 @@ public class ActionSetSourcePath extends UMLAction {
 
     public static ActionSetSourcePath SINGLETON = new ActionSetSourcePath();
 
-    public static final String separator = "/"; //System.getProperty("file.separator");
+    public static final String separator = "/";
+    //System.getProperty("file.separator");
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -109,7 +110,8 @@ public class ActionSetSourcePath extends UMLAction {
 	    chooser.setSelectedFile(f);
 	}
 
-	String sChooserTitle = Translator.localize("CoreMenu", "action.set-source-path");
+	String sChooserTitle =
+	    Translator.localize("CoreMenu", "action.set-source-path");
 	if (type != null)
 	    sChooserTitle += ' ' + type;
 	if (name != null)

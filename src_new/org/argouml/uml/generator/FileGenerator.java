@@ -1,4 +1,4 @@
-// $Id: FileGenerator.java,v 1.6 2003/06/29 23:48:33 linus Exp $
+// $Id: FileGenerator.java,v 1.7 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,9 @@ public interface FileGenerator {
     /**
      * The fileseperation for this operating system.
      */
-    public final static String FILE_SEPARATOR = System.getProperty("file.separator");
+    public final static String FILE_SEPARATOR =
+	System.getProperty("file.separator");
+    
     /** Generates a file for this classifier.
      * TODO:
      * This will only work for languages that have each node

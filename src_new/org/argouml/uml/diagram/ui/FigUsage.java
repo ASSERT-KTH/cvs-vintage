@@ -1,4 +1,4 @@
-// $Id: FigUsage.java,v 1.5 2003/06/29 23:52:20 linus Exp $
+// $Id: FigUsage.java,v 1.6 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigUsage.java
 // Classes: FigUsage
 // Original Author: Markus Klink
-// $Id: FigUsage.java,v 1.5 2003/06/29 23:52:20 linus Exp $
+// $Id: FigUsage.java,v 1.6 2003/06/30 21:59:33 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -64,7 +64,8 @@ public class FigUsage extends FigDependency {
 	String stereoTypeStr = _stereo.getText();
 
 	if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
-	    _stereo.setText(NotationHelper.getLeftGuillemot() + "use" + NotationHelper.getRightGuillemot());
+	    _stereo.setText(NotationHelper.getLeftGuillemot() + "use"
+			    + NotationHelper.getRightGuillemot());
 	}
     } 
 

@@ -1,4 +1,4 @@
-// $Id: GoSummaryToInheritance.java,v 1.5 2003/06/30 18:00:34 linus Exp $
+// $Id: GoSummaryToInheritance.java,v 1.6 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  *
  * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
@@ -52,8 +52,9 @@ public class GoSummaryToInheritance extends AbstractGoRule {
           
 	    List list = new ArrayList();
           
-	    Iterator it = ModelFacade.getSupplierDependencies(
-							      ((InheritanceNode) parent).getParent()).iterator();
+	    Iterator it =
+		ModelFacade.getSupplierDependencies(
+						    ((InheritanceNode) parent).getParent()).iterator();
           
 	    while (it.hasNext()) {
               
@@ -62,8 +63,10 @@ public class GoSummaryToInheritance extends AbstractGoRule {
 		    list.add(next);
 	    }
           
-	    it = ModelFacade.getClientDependencies(
-						   ((InheritanceNode) parent).getParent()).iterator();
+	    it =
+		ModelFacade.getClientDependencies(((InheritanceNode) parent)
+						  .getParent())
+		.iterator();
           
 	    while (it.hasNext()) {
               
@@ -72,10 +75,10 @@ public class GoSummaryToInheritance extends AbstractGoRule {
 		    list.add(next);
 	    }
           
-	    Iterator generalizationsIt = ModelFacade.getGeneralizations(
-									((InheritanceNode) parent).getParent());
-	    Iterator specializationsIt = ModelFacade.getSpecializations(
-									((InheritanceNode) parent).getParent());
+	    Iterator generalizationsIt =
+		ModelFacade.getGeneralizations(((InheritanceNode) parent).getParent());
+	    Iterator specializationsIt =
+		ModelFacade.getSpecializations(((InheritanceNode) parent).getParent());
           
 	    while (generalizationsIt.hasNext())
 		list.add(generalizationsIt.next());

@@ -1,4 +1,4 @@
-// $Id: FigTextGroup.java,v 1.5 2003/06/30 18:00:35 linus Exp $
+// $Id: FigTextGroup.java,v 1.6 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,9 @@ import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigText;
 
 /**
- * Custom class to group FigTexts in such a way that they don't overlap and that 
- * the group is shrinked to fit (no whitespace in group).
+ * Custom class to group FigTexts in such a way that they don't
+ * overlap and that the group is shrinked to fit (no whitespace in
+ * group).
  * 
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -42,7 +43,8 @@ public class FigTextGroup extends FigGroup {
     protected boolean supressCalcBounds = false;
 
     /**
-     * Adds a FigText to the list with figs. Makes sure that the figtexts do not overlap.
+     * Adds a FigText to the list with figs. Makes sure that the
+     * figtexts do not overlap.
      * @see org.tigris.gef.presentation.FigGroup#addFig(Fig)
      */
     public void addFig(Fig f) {

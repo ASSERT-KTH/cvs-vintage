@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.35 2003/06/29 23:52:19 linus Exp $
+// $Id: UMLClassDiagram.java,v 1.36 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.35 2003/06/29 23:52:19 linus Exp $
+// $Id: UMLClassDiagram.java,v 1.36 2003/06/30 21:59:33 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -65,36 +65,54 @@ public class UMLClassDiagram extends UMLDiagram {
     // actions for toolbar
     // TODO: should these be static?
 
-    protected static Action _actionClass = new CmdCreateNode(MClass.class, "Class");
+    protected static Action _actionClass =
+	new CmdCreateNode(MClass.class, "Class");
 
-    protected static Action _actionObject = new CmdCreateNode(MInstance.class, "Instance");
+    protected static Action _actionObject =
+	new CmdCreateNode(MInstance.class, "Instance");
 
-    protected static Action _actionInterface = new CmdCreateNode(MInterface.class, "Interface");
+    protected static Action _actionInterface =
+	new CmdCreateNode(MInterface.class, "Interface");
 
-    protected static Action _actionDepend = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MDependency.class, "Dependency");
+    protected static Action _actionDepend =
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MDependency.class, "Dependency");
 
-    protected static Action _actionPermission = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MPermission.class, "Permission");
+    protected static Action _actionPermission =
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MPermission.class, "Permission");
 
-    protected static Action _actionUsage = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MUsage.class, "Usage");
+    protected static Action _actionUsage =
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MUsage.class, "Usage");
 
-    protected static Action _actionLink = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MLink.class, "Link");
+    protected static Action _actionLink =
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MLink.class, "Link");
 
-    protected static Action _actionGeneralize = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MGeneralization.class, "Generalization");
+    protected static Action _actionGeneralize =
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", MGeneralization.class, "Generalization");
 
-    protected static Action _actionRealize = new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", ModelFacade.ABSTRACTION, "Realization");
+    protected static Action _actionRealize =
+	new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", ModelFacade.ABSTRACTION, "Realization");
 
-    protected static Action _actionPackage = new CmdCreateNode(MPackage.class, "Package");
+    protected static Action _actionPackage =
+	new CmdCreateNode(MPackage.class, "Package");
 
-    protected static Action _actionModel = new CmdCreateNode(MModel.class, "Model");
+    protected static Action _actionModel =
+	new CmdCreateNode(MModel.class, "Model");
 
-    protected static Action _actionSubsystem = new CmdCreateNode(MSubsystem.class, "Subsystem");
+    protected static Action _actionSubsystem =
+	new CmdCreateNode(MSubsystem.class, "Subsystem");
 
-    protected static Action _actionAssociation = new ActionAddAssociation(MAggregationKind.NONE, false, "Association");
-    protected static Action _actionAggregation = new ActionAddAssociation(MAggregationKind.AGGREGATE, false, "Aggregation");
-    protected static Action _actionComposition = new ActionAddAssociation(MAggregationKind.COMPOSITE, false, "Composition");
-    protected static Action _actionUniAssociation = new ActionAddAssociation(MAggregationKind.NONE, true, "UniAssociation");
-    protected static Action _actionUniAggregation = new ActionAddAssociation(MAggregationKind.AGGREGATE, true, "UniAggregation");
-    protected static Action _actionUniComposition = new ActionAddAssociation(MAggregationKind.COMPOSITE, true, "UniComposition");
+    protected static Action _actionAssociation =
+	new ActionAddAssociation(MAggregationKind.NONE, false, "Association");
+    protected static Action _actionAggregation =
+	new ActionAddAssociation(MAggregationKind.AGGREGATE, false, "Aggregation");
+    protected static Action _actionComposition =
+	new ActionAddAssociation(MAggregationKind.COMPOSITE, false, "Composition");
+    protected static Action _actionUniAssociation =
+	new ActionAddAssociation(MAggregationKind.NONE, true, "UniAssociation");
+    protected static Action _actionUniAggregation =
+	new ActionAddAssociation(MAggregationKind.AGGREGATE, true, "UniAggregation");
+    protected static Action _actionUniComposition =
+	new ActionAddAssociation(MAggregationKind.COMPOSITE, true, "UniComposition");
 
     ////////////////////////////////////////////////////////////////
     // contructors
@@ -130,7 +148,8 @@ public class UMLClassDiagram extends UMLDiagram {
     }
 
     /**
-     * Get the actions from which to create a toolbar or equivilent graphic trigger
+     * Get the actions from which to create a toolbar or equivilent
+     * graphic trigger
      */
     protected Object[] getUmlActions() {
         Object actions[] = {

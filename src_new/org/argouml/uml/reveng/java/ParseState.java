@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.10 2003/06/29 23:53:01 linus Exp $
+// $Id: ParseState.java,v 1.11 2003/06/30 21:59:34 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -83,9 +83,12 @@ class ParseState
                       Object currentPackage)
     {
 	classnamePrefix =
-	    previousState.classnamePrefix + ModelFacade.getName(mClassifier) + "$";
+	    previousState.classnamePrefix
+	    + ModelFacade.getName(mClassifier)
+	    + "$";
 	obsoleteFeatures = new Vector(ModelFacade.getFeatures(mClassifier));
-	obsoleteInnerClasses = new Vector(ModelFacade.getOwnedElements(mClassifier));
+	obsoleteInnerClasses =
+	    new Vector(ModelFacade.getOwnedElements(mClassifier));
 	context = new OuterClassifierContext(previousState.context,
 						     mClassifier,
 						     currentPackage,
@@ -254,7 +257,9 @@ class ParseState
     {
 	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
 	    Object mFeature = i.next();
-	    if (ModelFacade.isAMethod(mFeature) && name.equals(ModelFacade.getName(mFeature))) {
+	    if (ModelFacade.isAMethod(mFeature)
+		&& name.equals(ModelFacade.getName(mFeature)))
+	    {
 		return mFeature;
 	    }
 	}
@@ -271,7 +276,9 @@ class ParseState
     {
 	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
 	    Object mFeature = i.next();
-	    if (ModelFacade.isAOperation(mFeature) && name.equals(ModelFacade.getName(mFeature))) {
+	    if (ModelFacade.isAOperation(mFeature)
+		&& name.equals(ModelFacade.getName(mFeature)))
+	    {
 		return mFeature;
 	    }
 	}

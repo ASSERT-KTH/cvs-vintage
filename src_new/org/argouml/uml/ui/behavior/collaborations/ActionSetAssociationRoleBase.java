@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.5 2003/06/29 23:50:10 linus Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.6 2003/06/30 21:59:35 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,8 @@ import ru.novosoft.uml.foundation.core.MAssociation;
  */
 public class ActionSetAssociationRoleBase extends UMLChangeAction {
 
-    public static final ActionSetAssociationRoleBase SINGLETON = new ActionSetAssociationRoleBase();
+    public static final ActionSetAssociationRoleBase SINGLETON =
+	new ActionSetAssociationRoleBase();
     
     /**
      * Constructor for ActionSetAssociationRoleBase.
@@ -53,7 +54,8 @@ public class ActionSetAssociationRoleBase extends UMLChangeAction {
     }   
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);

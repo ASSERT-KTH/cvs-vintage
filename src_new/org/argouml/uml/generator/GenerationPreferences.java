@@ -1,4 +1,4 @@
-// $Id: GenerationPreferences.java,v 1.3 2003/06/29 23:48:33 linus Exp $
+// $Id: GenerationPreferences.java,v 1.4 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,8 @@ import java.io.*;
 public class GenerationPreferences implements java.io.Serializable {
     ////////////////////////////////////////////////////////////////
     // instance variables
-    protected String _headerComment = "Your copyright and other header comments";
+    protected String _headerComment =
+	"Your copyright and other header comments";
     protected String _outputDir = "/home/jrobbins/vtmp/";
 
     public GenerationPreferences() {

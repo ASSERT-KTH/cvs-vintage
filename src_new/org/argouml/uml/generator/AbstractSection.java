@@ -1,4 +1,4 @@
-// $Id: AbstractSection.java,v 1.3 2003/06/29 23:48:33 linus Exp $
+// $Id: AbstractSection.java,v 1.4 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,9 @@ abstract public class AbstractSection
     // hint: use a second Map to compare with the used keys
     // =======================================================================
 
-    public void write(String filename, String INDENT, boolean OutputLostSections) {
+    public void write(String filename, String INDENT,
+		      boolean OutputLostSections)
+    {
         try {           
             FileReader f = new FileReader(filename);
             BufferedReader fr = new BufferedReader(f);
@@ -90,9 +92,11 @@ abstract public class AbstractSection
                 Iterator itr = map_entries.iterator();
                 while (itr.hasNext()) {
                     Map.Entry entry = (Map.Entry) itr.next();
-                    fw.write(INDENT + "// section " + entry.getKey() + " begin\n");
+                    fw.write(INDENT + "// section " + entry.getKey()
+			     + " begin\n");
                     fw.write((String) entry.getValue());
-                    fw.write(INDENT + "// section " + entry.getKey() + " end\n");
+                    fw.write(INDENT + "// section " + entry.getKey()
+			     + " end\n");
                 }
             }
             fr.close();

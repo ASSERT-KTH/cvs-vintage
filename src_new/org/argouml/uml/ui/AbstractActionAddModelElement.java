@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.5 2003/06/29 23:50:02 linus Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.6 2003/06/30 21:59:34 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.5 2003/06/29 23:50:02 linus Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.6 2003/06/30 21:59:34 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -36,8 +36,8 @@ import org.argouml.ui.ProjectBrowser;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
- * Abstract action that is the parent to all add actions that add the modelelements
- * via the UMLAddDialog.
+ * Abstract action that is the parent to all add actions that add the
+ * modelelements via the UMLAddDialog.
  * @since Oct 2, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -69,11 +69,15 @@ public abstract class AbstractActionAddModelElement extends UMLChangeAction {
     }
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        UMLAddDialog dialog = new UMLAddDialog(getChoices(), getSelected(), getDialogTitle(), isMultiSelect(), isExclusive());
+        UMLAddDialog dialog =
+	    new UMLAddDialog(getChoices(), getSelected(), getDialogTitle(),
+			     isMultiSelect(),
+			     isExclusive());
         int result = dialog.showDialog(ProjectBrowser.getInstance());
         if (result == JOptionPane.OK_OPTION) {
             doIt(dialog.getSelected());

@@ -1,4 +1,4 @@
-// $Id: StylePanelFigMessage.java,v 1.4 2003/06/29 23:52:20 linus Exp $
+// $Id: StylePanelFigMessage.java,v 1.5 2003/06/30 21:59:33 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,8 @@ public class StylePanelFigMessage extends StylePanelFig {
     ////////////////////////////////////////////////////////////////
     // instance vars
     JLabel _arrowLabel = new JLabel("Arrow: ");
-    JComboBox _arrowField = new JComboBox(Converter.convert(((FigMessage) _target).ARROW_DIRECTIONS));
+    JComboBox _arrowField =
+	new JComboBox(Converter.convert(((FigMessage) _target).ARROW_DIRECTIONS));
 
     ////////////////////////////////////////////////////////////////
     // contructors
@@ -79,7 +80,8 @@ public class StylePanelFigMessage extends StylePanelFig {
 
     public void setTargetArrow() {
 	String ad = (String) _arrowField.getSelectedItem();
-	int arrowDirection = ((FigMessage) _target).ARROW_DIRECTIONS.indexOf(ad);
+	int arrowDirection =
+	    ((FigMessage) _target).ARROW_DIRECTIONS.indexOf(ad);
 	if (_target == null || arrowDirection == -1) return;
 	_target.startTrans();
 	((FigMessage) _target).setArrow(arrowDirection);
