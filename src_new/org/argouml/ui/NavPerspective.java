@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.9 2002/09/02 23:12:47 kataka Exp $
+// $Id: NavPerspective.java,v 1.10 2002/09/04 12:30:49 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -54,6 +54,7 @@ import org.argouml.uml.diagram.state.*;
 import org.argouml.uml.diagram.state.ui.*;
 import org.argouml.uml.diagram.collaboration.ui.*;
 import org.argouml.uml.diagram.use_case.ui.*;
+import org.argouml.uml.ui.behavior.common_behavior.GoSignalToReception;
 import org.argouml.uml.diagram.sequence.ui.*;
 
 import org.argouml.uml.cognitive.*;
@@ -182,6 +183,7 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(new GoCollaborationInteraction());
     packageCentric.addSubTreeModel(new GoInteractionMessage());
     packageCentric.addSubTreeModel(new GoMessageAction());
+    packageCentric.addSubTreeModel(new GoSignalToReception());
 
     packageCentric.addSubTreeModel(new GoLinkStimuli());
     packageCentric.addSubTreeModel(new GoStimulusAction());

@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.26 2002/08/20 22:48:45 kataka Exp $
+// $Id: PropPanel.java,v 1.27 2002/09/04 12:30:49 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -563,7 +563,7 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
      * @param  targetList  A list of pairs, {metaclass, property, ...} to which
      *                     we are listening.  */
 
-    protected void addThirdPartyEventListening(Object[] targetArray) {
+    public void addThirdPartyEventListening(Object[] targetArray) {
 
         // Create a target list if we don't have one
 
