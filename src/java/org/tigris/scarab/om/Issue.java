@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.224 2002/12/05 23:42:33 elicia Exp $
+ * @version $Id: Issue.java,v 1.225 2002/12/08 21:24:17 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1696,8 +1696,9 @@ public class Issue
         if (prevDepend != null && prevDepend.getDeleted())
         {
             prevDepend.setDefaultModule(depend.getDefaultModule());
+            prevDepend.setDescription(depend.getDescription());
+            prevDepend.setDeleted(false);
             depend = prevDepend;
-            depend.setDeleted(false);
         }
         else if (prevDepend != null)
         {
@@ -1705,18 +1706,18 @@ public class Issue
                                   + " on the issue id you entered.");
         }
 
+        depend.save();
+
         if (activitySet == null)
         {
+            // deal with user comments
+            Attachment comment = depend.getDescriptionAsAttachment(user, this);
             // Save activitySet record
-            activitySet = getActivitySet(user, null,
-                                        ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet = getActivitySet(user, comment,
+                              ActivitySetTypePeer.EDIT_ISSUE__PK);
             activitySet.save();
         }
 
-//        depend.setActivitySet(activitySet);
-        depend.save();
-
-        
         // Save activitySet record for parent
         Object[] args = {
             depend.getDependType().getName(),
@@ -1730,8 +1731,7 @@ public class Issue
 
         // Save activity record
         Activity activity = ActivityManager
-            .createAddDependencyActivity(this, activitySet,
-                                desc, childIssue.getUniqueId());
+            .createAddDependencyActivity(this, activitySet, depend, desc);
 
         // Save activitySet record for child
         Object[] args2 = {
@@ -1745,8 +1745,8 @@ public class Issue
 
         // Save activity record
         ActivityManager
-            .createAddDependencyActivity(childIssue, activitySet,
-                                desc, this.getUniqueId());
+            .createAddDependencyActivity(childIssue, activitySet, depend, desc);
+
         return activitySet;
     }
 
@@ -1759,7 +1759,7 @@ public class Issue
         Depend result = null;
         Object obj = ScarabCache.get(this, GET_DEPENDENCY, childIssue); 
         if ( obj == null ) 
-        {        
+        {
             Criteria crit = new Criteria(2)
                 .add(DependPeer.OBSERVED_ID, getIssueId() )        
                 .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );
@@ -2817,31 +2817,31 @@ public class Issue
             .append("Deleted '")
             .append(depend.getDependType().getName())
             .append("' dependency that ")
-            .append(otherIssue.getUniqueId())
-            .append(" had on ")
             .append(this.getUniqueId())
+            .append(" had on ")
+            .append(otherIssue.getUniqueId())
             .toString();
 
-        if (activitySet == null)
-        {
-            // Save activitySet record
-            activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, user);
-            activitySet.save();
-        }
-
-//        depend.setActivitySet(activitySet);
         depend.setDeleted(true);
         depend.save();
 
+        if (activitySet == null)
+        {
+            // deal with user comments
+            Attachment comment = depend.getDescriptionAsAttachment(user, this);
+
+            activitySet = getActivitySet(user, comment,
+                              ActivitySetTypePeer.EDIT_ISSUE__PK);
+            // Save activitySet record
+            activitySet.save();
+        }
+
         ActivityManager
-            .createTextActivity(this, null, activitySet,
-                                description, null,
-                                "true", "false");
+            .createDeleteDependencyActivity(this, activitySet, depend,
+                                description);
         ActivityManager
-            .createTextActivity(otherIssue, null, activitySet,
-                                description, null,
-                                "true", "false");
+            .createDeleteDependencyActivity(otherIssue, activitySet, depend,
+                                description);
         return activitySet;
     }
 
@@ -2862,6 +2862,8 @@ public class Issue
             Issue otherIssue = IssueManager
                             .getInstance(depend.getObserverId(), false);
 
+            depend.save();
+
             String description = new StringBuffer()
                 .append("On issue ")
                 .append(this.getUniqueId())
@@ -2875,23 +2877,21 @@ public class Issue
 
             if (activitySet == null)
             {
+                // deal with user comments
+                Attachment comment = depend.getDescriptionAsAttachment(user, this);
+    
+                activitySet = getActivitySet(user, comment,
+                                  ActivitySetTypePeer.EDIT_ISSUE__PK);
                 // Save activitySet record
-                activitySet = ActivitySetManager
-                    .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, user);
                 activitySet.save();
             }
             
-//            depend.setActivitySet(activitySet);
-            depend.save();
-
             ActivityManager
-                .createTextActivity(this, null, activitySet,
-                                    description, null,
-                                    oldName, newName);
+                .createChangeDependencyActivity(this, activitySet, depend,
+                                    description, oldName, newName);
             ActivityManager
-                .createTextActivity(otherIssue, null, activitySet,
-                                    description, null,
-                                    oldName, newName);
+                .createChangeDependencyActivity(otherIssue, activitySet, depend,
+                                    description, oldName, newName);
         }
         return activitySet;
     }
