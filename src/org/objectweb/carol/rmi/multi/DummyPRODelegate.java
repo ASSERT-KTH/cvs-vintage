@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: LmiPRODelegate.java,v 1.3 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: DummyPRODelegate.java,v 1.1 2005/03/10 16:58:30 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
 
-// rmi import
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -35,15 +34,15 @@ import java.rmi.RemoteException;
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 /**
- * Class <code>LmiPRODelegate</code> is a fake PortableRemoteObject for local
+ * Class <code>DummyPRODelegate</code> is a fake PortableRemoteObject for local
  * methods call
  */
-public class LmiPRODelegate implements PortableRemoteObjectDelegate {
+public class DummyPRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Export a Remote Object
-     * @param Remote object to export
-     * @exception RemoteException exporting remote object problem
+     * @param obj to export
+     * @throws RemoteException exporting remote object problem
      */
     public void exportObject(Remote obj) throws RemoteException {
 
@@ -51,8 +50,8 @@ public class LmiPRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Method for unexport object
-     * @param Remote obj object to unexport
-     * @exception NoSuchObjectException if the object is not currently exported
+     * @param obj object to unexport
+     * @throws NoSuchObjectException if the object is not currently exported
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
 
@@ -62,7 +61,7 @@ public class LmiPRODelegate implements PortableRemoteObjectDelegate {
      * Connection method
      * @param target a remote object;
      * @param source another remote object;
-     * @exception RemoteException if the connection fail
+     * @throws RemoteException if the connection fail
      */
     public void connect(Remote target, Remote source) throws RemoteException {
 
@@ -70,10 +69,10 @@ public class LmiPRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Narrow method
-     * @param Remote obj the object to narrow
-     * @param Class newClass the expected type of the result
+     * @param obj the object to narrow
+     * @param newClass the expected type of the result
      * @return an object of type newClass
-     * @exception ClassCastException if the obj class is not compatible with a
+     * @throws ClassCastException if the obj class is not compatible with a
      *            newClass cast
      */
     public Object narrow(Object obj, Class newClass) throws ClassCastException {
@@ -87,8 +86,8 @@ public class LmiPRODelegate implements PortableRemoteObjectDelegate {
     /**
      * To stub method
      * @return the stub object
-     * @param Remote object to unexport
-     * @exception NoSuchObjectException if the object is not currently exported
+     * @param obj to unexport
+     * @throws NoSuchObjectException if the object is not currently exported
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
         return obj;
