@@ -71,8 +71,16 @@ import java.io.*;
  * 
  */
 public class DecodeInterceptor extends  BaseInterceptor  {
-    String defaultEncoding=null;
-    private int encodingInfo;
+    private String defaultEncoding=null;
+    // debug, default will be false, null, null
+    private boolean useSessionEncoding=true; 
+    private String charsetAttribute="charset";
+    private String charsetURIAttribute=";charset=";
+
+    // Note ids
+    private int encodingInfoNote;
+    private int sessionEncodingNote;
+
     
     public DecodeInterceptor() {
     }
@@ -86,26 +94,37 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     public void setDefaultEncoding( String s ) {
 	defaultEncoding=s;
     }
+
+    public void setUseSessionEncoding( boolean b ) {
+	useSessionEncoding=b;
+    }
+
+    public void setCharsetAttribute( String s ) {
+	charsetAttribute=s;
+	charsetURIAttribute=";" + charsetAttribute + "=";
+    }
     
     /* -------------------- Initialization -------------------- */
     
     public void engineInit( ContextManager cm )
 	throws TomcatException
     {
-	encodingInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
+	encodingInfoNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				  "req.encoding" );
+	sessionEncodingNote=cm.getNoteId(ContextManager.SESSION_NOTE,
+				  "session.encoding" );
     }
     /* -------------------- Request mapping -------------------- */
 
     public int postReadRequest( Request req ) {
 	MessageBytes pathMB = req.requestURI();
 	// copy the request 
-
+	
 	if( pathMB.isNull())
 	    throw new RuntimeException("ASSERT: null path in request URI");
 
-	// 	if( path.indexOf("?") >=0 )
-	// 	    throw new RuntimeException("ASSERT: ? in requestURI");
+	//if( path.indexOf("?") >=0 )
+	//   throw new RuntimeException("ASSERT: ? in requestURI");
 	
 	// Set the char encoding first
 	String charEncoding=null;	
@@ -121,18 +140,44 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 				 charEncoding + " " + contentTypeString  );
 	}
 
-	if( debug > 11 ) dumpHeaders(headers);
+	if( debug > 99 ) dumpHeaders(headers);
 	
 	// No explicit encoding - try to guess it from Accept-Language
 	//MessageBytes acceptC= headers.getValue( "Accept-Charset" );
 
 	// No explicit encoding - try to guess it from Accept-Language
 	// MessageBytes acceptL= headers.getValue( "Accept-Language" );
-	
-	// Try per context default
-	
 
-	// Global Default
+	// Special trick: ;charset= attribute ( similar with sessionId )
+	// That's perfect for multibyte chars in URLs
+	if(charEncoding==null && charsetURIAttribute != null ) {
+	    int idxCharset=req.requestURI().indexOf( charsetURIAttribute );
+	    if( idxCharset >= 0 ) {
+		String uri=req.requestURI().toString();
+		int nextAtt=uri.indexOf( ';', idxCharset + 1 );
+		String next=null;
+		if( nextAtt > 0 ) {
+		    next=uri.substring( nextAtt );
+		    charEncoding=
+			uri.substring(idxCharset+
+				      charsetURIAttribute.length(),nextAtt);
+		    req.requestURI().
+			setString(uri.substring(0, idxCharset) + next);
+		} else {
+		    charEncoding=uri.substring(idxCharset+
+					       charsetURIAttribute.length());
+		    req.requestURI().
+			setString(uri.substring(0, idxCharset));
+		}
+		
+		if( debug > 0 )
+		    log("ReqAtt= " + charEncoding + " " +
+			req.requestURI() );
+	    }
+	}
+	
+	
+	// Global Default 
 	if( charEncoding==null ) {
 	    if( debug > 0 ) log( "Default encoding " + defaultEncoding );
 	    if( defaultEncoding != null )
@@ -160,18 +205,56 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	return 0;
     }
 
+    /** Hook - before the response is sent, get the response encoding
+     *  and save it per session ( if we are in a session ). All browsers
+     *  I know will use the same encoding in the next request.
+     *  Since this is not part of the spec, it's disabled by default.
+     *  
+     */
+    public int beforeBody( Request req, Response res ) {
+	if( useSessionEncoding ) {
+	    ServerSession sess=req.getSession( false );
+	    if( sess!=null ) {
+		String charset=res.getCharacterEncoding();
+		if( charset!=null ) {
+		    sess.setNote( sessionEncodingNote, charset );
+		    if( debug > 0 )
+			log( "Setting per session encoding " + charset);
+		}
+	    }
+	}
+	return DECLINED;
+    }
+
+    
     public Object getInfo( Context ctx, Request req, int info, String k ) {
 	// Try to get the encoding info ( this is called later )
-	if( info == encodingInfo ) {
+	if( info == encodingInfoNote ) {
 	    // Second attempt to guess the encoding, the request is processed
-
+	    String charset=null;
 
 	    // Use request attributes
-
+	    if( charset==null && charsetAttribute != null ) {
+		charset=(String)req.getAttribute( charsetAttribute );
+		if( debug>0 && charset != null )
+		    log( "Charset from attribute " + charsetAttribute + " "
+			 + charset );
+	    }
 	    
 	    // Use session attributes
+	    if( charset==null && useSessionEncoding ) {
+		ServerSession sess=req.getSession( false );
+		if( sess!=null ) {
+		    charset=(String)sess.getNote( sessionEncodingNote );
+		    if( debug>0 && charset!=null )
+			log("Charset from session " + charset );
+		}
+	    }
 
-
+	    // Per context default
+	    
+	    if( charset != null ) return charset;
+	    
 	    log( "Default getInfo UTF-8" );
 	    // Use per context default
 	    return "UTF-8";
