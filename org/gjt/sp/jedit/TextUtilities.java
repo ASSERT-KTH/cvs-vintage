@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.24 2002/02/19 06:51:11 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.25 2002/03/24 06:11:16 spestov Exp $
  */
 public class TextUtilities
 {
@@ -113,6 +113,12 @@ public class TextUtilities
 
 		Segment lineText = new Segment();
 		buffer.getLineText(line,lineText);
+
+		if(offset < 0 || offset >= lineText.count)
+		{
+			throw new ArrayIndexOutOfBoundsException(offset + ":"
+				+ lineText.count);
+		}
 
 		char c = lineText.array[lineText.offset + offset];
 		char cprime; // corresponding character
