@@ -252,7 +252,7 @@
 #if ($searchResults.size() > $resultsPerPage)
   #set ($pagList = $scarabR.getPaginatedList($searchResults, $pageNum.toString(), $resultsPerPage.toString()))
   #set ($paginated = "true")
-  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
 #end
 
 #if ($paginated)
