@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectInvoker.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: TimedObjectInvoker.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
 
 import javax.ejb.Timer;
 
@@ -20,8 +20,8 @@ public interface TimedObjectInvoker
 {
    /**
     * Invokes the ejbTimeout method on the TimedObject with the given id.
-    * @param timedObjectId The id of the TimedObject
+    * @param id The combined TimedObjectId
     * @param timer the Timer that is passed to ejbTimeout
     */
-   void invokeTimedObject(String timedObjectId, Timer timer) throws Exception;
+   void invokeTimedObject(TimedObjectId id, Timer timer) throws Exception;
 }

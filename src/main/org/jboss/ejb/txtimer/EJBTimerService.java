@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerService.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: EJBTimerService.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
 
 import javax.ejb.TimerService;
 
@@ -21,23 +21,23 @@ public interface EJBTimerService extends TimedObjectInvoker
 {
    /**
     * Create a TimerService for a given TimedObjectId
-    * @param timedObjectId the id of the TimedObject
+    * @param id The combined TimedObjectId
     * @param timedObjectInvoker a TimedObjectInvoker
     * @return the TimerService
     */
-   TimerService createTimerService(String timedObjectId, TimedObjectInvoker timedObjectInvoker) throws IllegalStateException;
+   TimerService createTimerService(TimedObjectId id, TimedObjectInvoker timedObjectInvoker) throws IllegalStateException;
 
    /**
     * Get the TimerService for a given TimedObjectId
-    * @param timedObjectId The id of the TimedObject
+    * @param id The combined TimedObjectId
     * @return The TimerService, or null if it does not exist
     */
-   TimerService getTimerService(String timedObjectId) throws IllegalStateException;
+   TimerService getTimerService(TimedObjectId id) throws IllegalStateException;
 
    /**
     * Remove the TimerService for a given TimedObjectId
-    * @param timedObjectId the id of the TimedObject
+    * @param id The combined TimedObjectId
     */
-   void removeTimerService(String timedObjectId) throws IllegalStateException;
+   void removeTimerService(TimedObjectId id) throws IllegalStateException;
 
 }

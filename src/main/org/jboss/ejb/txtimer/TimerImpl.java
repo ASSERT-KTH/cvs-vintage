@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -34,7 +34,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    private static Logger log = Logger.getLogger(TimerImpl.class);
 
    // The initial txtimer properties
-   private String timedObjectId;
+   private TimedObjectId timedObjectId;
    private Date firstTime;
    private Date createDate;
    private long periode;
@@ -52,7 +52,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    /**
     * Schedules the txtimer for execution at the specified time with a specified periode.
     */
-   TimerImpl(String timedObjectId, Date firstTime, long periode, Serializable info)
+   TimerImpl(TimedObjectId timedObjectId, Date firstTime, long periode, Serializable info)
    {
       this.timedObjectId = timedObjectId;
       this.firstTime = firstTime;
@@ -62,13 +62,13 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
 
       nextExpire = firstTime.getTime();
 
-      TimerServiceImpl timerService = getTimerService(timedObjectId);
+      TimerServiceImpl timerService = getTimerService();
       timerService.addTimer(this);
       registerTimerWithTx();
       startInTx();
    }
 
-   public String getTimedObjectId()
+   public TimedObjectId getTimedObjectId()
    {
       return timedObjectId;
    }
@@ -93,7 +93,8 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       return nextExpire;
    }
 
-   public Serializable getInfoInternal() {
+   public Serializable getInfoInternal()
+   {
       return info;
    }
 
@@ -111,6 +112,18 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       assertTimedOut();
       registerTimerWithTx();
       cancelInTx();
+   }
+
+   /**
+    * Kill the timer, and remove it from the timer service
+    */
+   public void killTimer()
+   {
+      log.debug("killTimer: " + this);
+      TimerServiceImpl timerService = getTimerService();
+      timerService.removeTimer(this);
+      utilTimer.cancel();
+      canceled = true;
    }
 
    /**
@@ -194,7 +207,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    }
 
    /**
-    * Hash code based on objectId, createDate, periode
+    * Hash code based on the Timers invariant properties
     */
    public int hashCode()
    {
@@ -212,7 +225,10 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public String toString()
    {
       long remaining = nextExpire - System.currentTimeMillis();
-      return "[id=" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode + "]";
+      String retStr = "[id=" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode;
+      if (isExpired()) retStr += ",expired";
+      if (isCanceledInTx()) retStr += ",canceled";
+      return retStr + "]";
    }
 
    /**
@@ -220,7 +236,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
     */
    private void registerTimerWithTx()
    {
-      TimerServiceImpl timerService = getTimerService(timedObjectId);
+      TimerServiceImpl timerService = getTimerService();
       Transaction tx = timerService.getTransaction();
       if (tx != null)
       {
@@ -237,7 +253,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
 
    private void startInTx()
    {
-      TimerServiceImpl timerService = getTimerService(timedObjectId);
+      TimerServiceImpl timerService = getTimerService();
 
       utilTimer = new Timer();
       if (periode > 0)
@@ -263,7 +279,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
 
    private void cancelInTx()
    {
-      TimerServiceImpl timerService = getTimerService(timedObjectId);
+      TimerServiceImpl timerService = getTimerService();
       if (timerService.getTransaction() != null)
       {
          log.debug("cancelInTx: " + this);
@@ -271,20 +287,8 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       }
       else
       {
-         setCancel(true);
+         killTimer();
       }
-   }
-
-   private void setCancel(boolean cancel)
-   {
-      if (cancel)
-      {
-         log.debug("cancel: " + this);
-         TimerServiceImpl timerService = getTimerService(timedObjectId);
-         timerService.removeTimer(this);
-         utilTimer.cancel();
-      }
-      canceled = cancel;
    }
 
    private boolean isCanceledInTx()
@@ -297,13 +301,18 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       return canceled;
    }
 
+   public boolean isExpired()
+   {
+      return expired;
+   }
+
    /**
     * Get the TimerService accociated with this Timer
     */
-   private TimerServiceImpl getTimerService(String timedObjectId)
+   private TimerServiceImpl getTimerService()
    {
       EJBTimerService ejbTimerService = EJBTimerServiceTxLocator.getEjbTimerService();
-      TimerServiceImpl timerService = (TimerServiceImpl)ejbTimerService.getTimerService(timedObjectId);
+      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(timedObjectId);
       if (timerService == null)
          throw new NoSuchObjectLocalException("Cannot find TimerService: " + timedObjectId);
 
@@ -343,7 +352,8 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       if (status == Status.STATUS_COMMITTED)
       {
          log.debug("commit: " + this);
-         setCancel(isCanceledInTx());
+         if (isCanceledInTx())
+            killTimer();
          started = isStartedInTx();
       }
 
@@ -358,7 +368,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
             startedTx = false;
 
          if (isStartedInTx() == false)
-            setCancel(true);
+            killTimer();
       }
    }
    // TimerTask ********************************************************************************************************
@@ -401,7 +411,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
          if (periode == 0)
          {
             expired = true;
-            setCancel(true);
+            killTimer();
          }
       }
    }

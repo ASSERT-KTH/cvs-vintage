@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
@@ -38,7 +38,7 @@ public class TimerServiceImpl implements TimerService
 
    private TransactionManager transactionManager;
 
-   private String timedObjectId;
+   private TimedObjectId timedObjectId;
 
    // maps TimerHandles to Timer objects
    private Map timers = new HashMap();
@@ -46,7 +46,7 @@ public class TimerServiceImpl implements TimerService
    /**
     * Create a Timer service for the given TimedObject
     */
-   public TimerServiceImpl(String timedObjectId)
+   public TimerServiceImpl(TimedObjectId timedObjectId)
    {
       this.timedObjectId = timedObjectId;
       try
@@ -203,6 +203,14 @@ public class TimerServiceImpl implements TimerService
    }
 
    /**
+    * Get the list of all registerd timers, both active and inactive
+    */
+   public Collection getAllTimers()
+   {
+      return new ArrayList(timers.values());
+   }
+
+   /**
     * Get the Timer for the given timedObjectId
     */
    public Timer getTimer(TimerHandle handle)
@@ -212,6 +220,16 @@ public class TimerServiceImpl implements TimerService
          return timer;
       else
          return null;
+   }
+
+   /**
+    * Kill the timer for the given handle
+    */ 
+   public void killTimer(TimerHandle handle)
+   {
+      TimerImpl timer = (TimerImpl)timers.get(handle);
+      if (timer != null)
+         timer.killTimer();
    }
 
    /**

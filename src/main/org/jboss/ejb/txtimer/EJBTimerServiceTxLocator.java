@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceTxLocator.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: EJBTimerServiceTxLocator.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
@@ -70,19 +70,19 @@ public class EJBTimerServiceTxLocator
       /**
        * Create a TimerService for a given TimedObjectId
        *
-       * @param timedObjectId      the id of the TimedObject
+       * @param id The combined TimedObjectId
        * @param timedObjectInvoker a TimedObjectInvoker
        * @return the TimerService
        */
-      public TimerService createTimerService(String timedObjectId, TimedObjectInvoker timedObjectInvoker)
+      public TimerService createTimerService(TimedObjectId id, TimedObjectInvoker timedObjectInvoker)
               throws IllegalStateException
       {
          try
          {
             TimerService timerService = (TimerService) server.invoke(EJBTimerServiceTxMBean.OBJECT_NAME,
                     "createTimerService",
-                    new Object[]{timedObjectId, timedObjectInvoker},
-                    new String[]{"java.lang.String", "org.jboss.ejb.txtimer.TimedObjectInvoker"});
+                    new Object[]{id, timedObjectInvoker},
+                    new String[]{TimedObjectId.class.getName(), TimedObjectInvoker.class.getName()});
             return timerService;
          }
          catch (Exception e)
@@ -95,18 +95,18 @@ public class EJBTimerServiceTxLocator
       /**
        * Get the TimerService for a given TimedObjectId
        *
-       * @param timedObjectId The id of the TimedObject
+       * @param id The combined TimedObjectId
        * @return The TimerService, or null if it does not exist
        */
-      public TimerService getTimerService(String timedObjectId)
+      public TimerService getTimerService(TimedObjectId id)
               throws IllegalStateException
       {
          try
          {
             TimerService timerService = (TimerService) server.invoke(EJBTimerServiceTxMBean.OBJECT_NAME,
                     "getTimerService",
-                    new Object[]{timedObjectId},
-                    new String[]{"java.lang.String"});
+                    new Object[]{id},
+                    new String[]{TimedObjectId.class.getName()});
             return timerService;
          }
          catch (Exception e)
@@ -119,17 +119,17 @@ public class EJBTimerServiceTxLocator
       /**
        * Remove the TimerService for a given TimedObjectId
        *
-       * @param timedObjectId the id of the TimedObject
+       * @param id The combined TimedObjectId
        */
-      public void removeTimerService(String timedObjectId)
+      public void removeTimerService(TimedObjectId id)
               throws IllegalStateException
       {
          try
          {
             server.invoke(EJBTimerServiceTxMBean.OBJECT_NAME,
                     "removeTimerService",
-                    new Object[]{timedObjectId},
-                    new String[]{"java.lang.String"});
+                    new Object[]{id},
+                    new String[]{TimedObjectId.class.getName()});
          }
          catch (Exception e)
          {
@@ -140,16 +140,16 @@ public class EJBTimerServiceTxLocator
       /**
        * Invokes the ejbTimeout method on the TimedObject with the given id.
        *
-       * @param timedObjectId The id of the TimedObject
+       * @param id The combined TimedObjectId
        * @param timer         the Timer that is passed to ejbTimeout
        */
-      public void invokeTimedObject(String timedObjectId, Timer timer)
+      public void invokeTimedObject(TimedObjectId id, Timer timer)
               throws Exception
       {
          server.invoke(EJBTimerServiceTxMBean.OBJECT_NAME,
                  "invokeTimedObject",
-                 new Object[]{timedObjectId, timer},
-                 new String[]{"java.lang.String", "javax.ejb.Timer"});
+                 new Object[]{id, timer},
+                 new String[]{TimedObjectId.class.getName(), Timer.class.getName()});
       }
    }
 

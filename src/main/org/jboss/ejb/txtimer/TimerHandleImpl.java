@@ -6,14 +6,17 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.2 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.3 2004/04/09 22:47:01 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 /**
  * An implementation of the TimerHandle
@@ -23,8 +26,11 @@ import java.util.Date;
  */
 public class TimerHandleImpl implements TimerHandle
 {
+   /** The date pattern used by this handle */
+   public static final String DATE_PATTERN = "dd-MMM-yyy HH:mm:ss";
+
    // The initial txtimer properties
-   private String timedObjectId;
+   private TimedObjectId timedObjectId;
    private Date firstTime;
    private Date createDate;
    private long periode;
@@ -32,6 +38,9 @@ public class TimerHandleImpl implements TimerHandle
    private Serializable info;
    private int hashCode;
 
+   /**
+    * Construct a handle from a timer
+    */
    TimerHandleImpl (TimerImpl timer)
    {
       timedObjectId = timer.getTimedObjectId();
@@ -42,7 +51,59 @@ public class TimerHandleImpl implements TimerHandle
       info = timer.getInfoInternal();
    }
 
-   String getTimedObjectId()
+   /**
+    * Construct a handle from external form
+    */
+   public TimerHandleImpl(String externalForm) throws ParseException
+   {
+      StringTokenizer st = new StringTokenizer(externalForm, "[,=]");
+      if (st.countTokens() % 2 != 0)
+         throw new IllegalArgumentException("Cannot parse: " + externalForm);
+
+      SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+
+      periode = -1;
+
+      String id = null;
+      String pk = null;
+
+      while(st.hasMoreTokens())
+      {
+         String key = st.nextToken();
+         String value = st.nextToken();
+         if (key.equals("id"))
+            id = value;
+         if (key.equals("pk"))
+            pk = value;
+         if (key.equals("created"))
+            createDate = sdf.parse(value);
+         if (key.equals("first"))
+            firstTime = sdf.parse(value);
+         if (key.equals("periode"))
+            periode = new Integer(value).intValue();
+      }
+
+      if (id == null || createDate == null || firstTime == null || periode < 0)
+         throw new IllegalArgumentException("Cannot parse: " + externalForm);
+
+      timedObjectId = new TimedObjectId(id, pk);
+   }
+
+   /**
+    * Returns the external representation of the handle.
+    * "[id=timedObjectId,created=createDate,first=firstTime,periode=periode]"
+    */
+   public String toExternalForm()
+   {
+      SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+      String created = sdf.format(createDate);
+      String firstEvent = sdf.format(firstTime);
+      String id = timedObjectId.getTimedObjectId();
+      Object pk = timedObjectId.getInstancePk();
+      return "[id=" + id + "pk=" + pk + ",created=" + created + ",first=" + firstEvent  + ",periode=" + periode + "]";
+   }
+
+   TimedObjectId getTimedObjectId()
    {
       return timedObjectId;
    }
@@ -111,8 +172,7 @@ public class TimerHandleImpl implements TimerHandle
    {
       if (hashCode == 0)
       {
-         String hash = "[" + timedObjectId + "," + createDate + "," + firstTime + "," + periode + "]";
-         hashCode = hash.hashCode();
+         hashCode = toExternalForm().hashCode();
       }
       return hashCode;
    }
@@ -122,7 +182,6 @@ public class TimerHandleImpl implements TimerHandle
     */
    public String toString()
    {
-      long remaining = nextExpire - System.currentTimeMillis();
-      return "[id=" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode + "]";
+      return toExternalForm();
    }
 }
