@@ -23,7 +23,7 @@ import java.net.URL;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.core.gui.mimetype.MimeTypeViewer;
 
 public class URLController implements ActionListener {
     private String address;

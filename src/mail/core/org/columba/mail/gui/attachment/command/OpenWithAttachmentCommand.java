@@ -19,8 +19,8 @@ import java.io.File;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
+import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.io.TempFileStore;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.ristretto.message.MimeHeader;
 
 /**

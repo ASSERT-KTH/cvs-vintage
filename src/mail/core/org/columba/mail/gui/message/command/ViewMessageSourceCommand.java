@@ -28,12 +28,12 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.ristretto.message.MimeHeader;
 
 
