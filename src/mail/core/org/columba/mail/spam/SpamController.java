@@ -234,7 +234,8 @@ public class SpamController {
 		load();
 
 		float score = filter.scoreMessage(new Message(istream), map);
-		return score >= 0.9;
+		
+		return score >= 0.9f;
 	}
 
 	public void printDebug() {
