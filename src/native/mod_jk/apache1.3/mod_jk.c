@@ -894,6 +894,7 @@ static void jk_init(server_rec *s, ap_pool *p)
 #endif
 
                 if(wc_open(init_map, conf->log)) {
+		    map_free(&init_map);  /* we don't need this any more so free it */
                     return;
                 }            
         }
@@ -927,6 +928,18 @@ static int jk_translate(request_rec *r)
     return DECLINED;
 }
 
+static void exit_handler (server_rec *s, ap_pool *p)
+{
+   jk_server_conf_t *conf =
+       (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+   wc_close(conf->log);
+   uri_worker_map_free(&(conf->uw_map), conf->log);
+   map_free(&(conf->uri_to_context));
+   if (conf->log)
+      jk_close_file_logger(&(conf->log));
+}
+
 static const handler_rec jk_handlers[] =
 {
     { JK_MAGIC_TYPE, jk_handler },
@@ -952,7 +965,7 @@ module MODULE_VAR_EXPORT jk_module = {
     NULL,                       /* [10] logger */
     NULL,                       /* [3] header parser */
     NULL,                       /* apache child process initializer */
-    NULL,                       /* apache child process exit/cleanup */
+    exit_handler,               /* apache child process exit/cleanup */
     NULL                        /* [1] post read_request handling */
 #ifdef EAPI
     /*
