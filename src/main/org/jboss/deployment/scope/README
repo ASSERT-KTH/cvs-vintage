@@ -1,0 +1,2 @@
+The old scope deployer has been removed from the 3.x series.  It is replaced by the UnifiedClassLoader and the MainDeployer stuff.
+The "scoping" is not present in the first versions of the unified classloader.
