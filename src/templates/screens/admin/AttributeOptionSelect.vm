@@ -26,7 +26,6 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 #if ($canEditDomain)
 <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
 #end
-<input type="submit" value="Back"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 #if ($availOptions.size() == 0)
@@ -60,7 +59,6 @@ associated with this attribute in this module.</strong></p>
 #if ($canEditDomain)
 <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
 #end
-<input type="submit" value="Back"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 </form>

@@ -17,7 +17,6 @@
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
 
     <h3>Issue types</h3>
@@ -29,7 +28,6 @@
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
 
 #else
@@ -39,7 +37,6 @@
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
         
     <h3>Issue Types</h3>
@@ -65,7 +62,6 @@
     #if ($canEditDomain)
        <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
-    <input type="submit" value="Back" name="eventSubmit_doCancel" />
 </div>
         
 #end

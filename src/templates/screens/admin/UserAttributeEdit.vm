@@ -5,11 +5,11 @@
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
-   #set ($createNew = "false")
+   #set ($createNew = false)
    $page.setTitle("Edit global attribute '$attribute.Name'")
 #else
    #set ($attgroup = $intake.Attribute.Default )
-   #set ($createNew = "true")
+   #set ($createNew = true)
    $page.setTitle("Create new global user attribute")
 #end
 
@@ -20,7 +20,7 @@
 <form action="$link.setPage("admin,UserAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 <input type="hidden" name="$attgroup.TypeId.Key" value="8" />
-#if ($createNew.equals("false"))
+#if (!$createNew)
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
 #end
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
@@ -28,9 +28,11 @@
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalUserAttributes.vm"))
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
+#if (!$createNew)
 <div class="functnbar">
-<input type="submit" value="Back" name="eventSubmit_doCancel"/>
+<input type="submit" value="Done" name="eventSubmit_doDone"/>
 </div>
+#end
 
 <h3>User attribute information</h3>
 <div class="axial">
@@ -93,9 +95,11 @@
 <input type="submit" value="Save" name="eventSubmit_doSaveattributedata" />
 </div>
 
+#if (!$createNew)
 <div class="functnbar2">
-<input type="submit" value="Back" name="eventSubmit_doCancel" />
+<input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
+#end
 
 $intake.declareGroups()
 </form>

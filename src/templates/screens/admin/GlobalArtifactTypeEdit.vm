@@ -5,11 +5,18 @@
 #macro (GlobalArtifactTypeEdit $var)
 <div class="functnbar$var">
       <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
-      <input type="submit" value="Back" name="eventSubmit_doCancel"  />&#160;
 </div>
 #end
 
 <div class="app" id="div2-1-4-0">
+
+#if ($issueType.IssueTypeId)
+   #set ($createNew = false)
+   $page.setTitle("Edit global issue type '$issueType.Name'")
+#else
+   #set ($createNew = true)
+   $page.setTitle("Create new issue type")
+#end
 
 <h2>$page.Title</h2>
 
@@ -17,7 +24,7 @@
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalArtifactTypeShow.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
-#if ($issueType.IssueTypeId)
+#if (!$createNew)
   <input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" />
 #end
   
@@ -44,6 +51,12 @@
 </div>
 
 #GlobalArtifactTypeEdit("2")
+
+#if (!$createNew)
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+</div>
+#end
 
 $intake.declareGroups()
 </form>

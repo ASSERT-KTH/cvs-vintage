@@ -26,7 +26,7 @@ On this screen, one can modify a module's Attribute information.
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" /> 
 
 <div class="functnbar">
-<input type="submit" value="Back"  name="eventSubmit_doCancel" />
+<input type="submit" value="Done"  name="eventSubmit_doDone" />
 </div>
 
 <h3>Attribute Info</h3>
@@ -128,7 +128,7 @@ On this screen, one can modify a module's Attribute information.
 
 #end
 <div class="functnbar2">
-<input type="submit" value="Back"  name="eventSubmit_doCancel" />
+<input type="submit" value="Done"  name="eventSubmit_doDone" />
 </div>
 
 $intake.declareGroups()
