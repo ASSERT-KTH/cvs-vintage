@@ -18,6 +18,7 @@ public class ThinSplitPaneUI extends MetalSplitPaneUI {
 
 	public static ComponentUI createUI(JComponent c) {
 		return new ThinSplitPaneUI();
+		
 	}
 
 	public void paint(Graphics g, JComponent c) {
