@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.13 2001/05/31 16:55:32 marcus Exp $
+// $Id: Modeller.java,v 1.14 2001/06/11 20:21:14 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -219,8 +219,8 @@ public class Modeller
     */
     public void addAnonymousClass(String type)
     {
+	String name = parseState.anonymousClass();
 	try {
-	    String name = parseState.anonymousClass();
 	    MClassifier mClassifier =
 		getContext(type).get(getClassifierName(type));
 	    Vector interfaces = new Vector();
@@ -235,6 +235,8 @@ public class Modeller
 	}
 	catch(ClassifierNotFoundException e) {
 	    _exception = e;
+	    // Must add it anyway, or the class poping will mismatch.
+	    addClass(name, (short)0, null, new Vector(), "");
 	}
     }
 
