@@ -68,6 +68,7 @@ import java.net.*;
 import java.util.*;
 import java.security.*;
 
+
 import org.apache.tomcat.util.log.*;
 
 // don't extend - replace !
@@ -575,14 +576,14 @@ class RedirectHandler extends Handler {
 	String scheme = req.scheme().toString();
 	int port = req.getServerPort ();
 	String urlPath = req.requestURI().toString();
-	
+
 	url.append (scheme);		// http, https
 	url.append ("://");
-	url.append (req.getServerName ());
+	url.append (req.getServerName());
 	if ((scheme.equals ("http") && port != 80)
 		|| (scheme.equals ("https") && port != 443)) {
 	    url.append (':');
-	    url.append (req.getServerPort ());
+	    url.append (port);
 	}
 	url.append(urlPath);
 	return url.toString();

@@ -299,9 +299,7 @@ public class Request {
      *
      */
     public String getServerName() {
-	if(serverName==null) 
-	    serverName=findServerName();
-	return serverName;
+        return serverName;
     }
 
     /** Virtual host */
@@ -788,26 +786,6 @@ public class Request {
 
     // -------------------- Computed fields --------------------
     
-    protected String findServerName() {
-	String hostHeader = this.getHeader("host");
-	if (hostHeader != null) {
-	    int i = hostHeader.indexOf(':');
-	    if (i > -1) {
-		hostHeader = hostHeader.substring(0,i);
-	    }
-	    serverName=hostHeader;
-	    return serverName;
-	}
-	if( localHost != null ) {
-	    serverName = localHost;
-	    return serverName;
-	}
-	// default to localhost - and warn
-	//	log("No server name, defaulting to localhost");
-	localHost=getLocalHost();
-        serverName=localHost;
-	return serverName;
-    }
 
     // -------------------- For adapters --------------------
     
@@ -885,7 +863,7 @@ public class Request {
         jvmRoute = null;
         headers.clear(); // XXX use recycle pattern
         serverName=null;
-        serverPort=8080;
+        serverPort=-1;
         sessionIdSource = null;
 	sessionId=null;
 	

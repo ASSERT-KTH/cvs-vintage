@@ -230,27 +230,59 @@ class HttpRequest extends Request {
 
 	// XXX detect for real whether or not we have more requests
 	// coming
-	moreRequests = false;	
+	moreRequests = false;
     }
 
     // -------------------- override special methods
-    
-    public int getServerPort() {
-        return socket.getLocalPort();
-    }
+
 
     public String getRemoteAddr() {
         return socket.getInetAddress().getHostAddress();
     }
-    
+
     public String getRemoteHost() {
 	return socket.getInetAddress().getHostName();
-    }    
+    }
 
     public String getLocalHost() {
 	InetAddress localAddress = socket.getLocalAddress();
 	localHost = localAddress.getHostName();
 	return localHost;
+    }
+
+    public String getServerName(){
+        if(serverName!=null) return serverName;
+        parseHostHeader();
+        return serverName;
+    }
+
+    public int getServerPort(){
+        if(serverPort!=-1) return serverPort;
+        parseHostHeader();
+        return serverPort;
+    }
+
+    protected void parseHostHeader() {
+	String hostHeader = this.getHeader("host");
+        serverPort = socket.getLocalPort();
+	if (hostHeader != null) {
+	    int i = hostHeader.indexOf(':');
+	    if (i > -1) {
+		serverName = hostHeader.substring(0,i);
+                hostHeader = hostHeader.substring(i+1);
+                try{
+                    serverPort=Integer.parseInt(hostHeader);
+                }catch(NumberFormatException  nfe){
+                }
+	    }
+            return;
+	}
+	if( localHost != null ) {
+	    serverName = localHost;
+	}
+	// default to localhost - and warn
+	//	log("No server name, defaulting to localhost");
+        serverName=getLocalHost();
     }
 }
 
