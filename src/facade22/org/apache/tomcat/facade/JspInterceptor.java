@@ -960,7 +960,8 @@ final class JspMangler implements Mangler{
 		baseClassN=jspFile.substring( 1, extIdx );
 	}
 
-	System.out.println("XXXMangler: " + jspFile + " " + pkgDir + " " + baseClassN);
+	//	System.out.println("XXXMangler: " + jspFile + " " +
+	// pkgDir + " " + baseClassN);
 
 	// extract version from the .class dir, using the base name
 	version=JavaGeneratorTool.readVersion(classDir,

@@ -235,7 +235,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 		throw (ServletException) ex;
 	    else
 		throw new ServletException
-		    (sm.getString("dispatcher.forwardException", ex));
+		    (sm.getString("dispatcher.forwardException"), ex );
 	}
 
 	// close the response - output after this point will be discarded.
