@@ -81,6 +81,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
     // Note ids
     private int encodingInfoNote;
+    private int encodingSourceNote;
     private int sessionEncodingNote;
 
     private boolean normalize=true;
@@ -134,6 +135,8 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     {
 	encodingInfoNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				  "req.encoding" );
+	encodingSourceNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				  "req.encodingSource" );
 	sessionEncodingNote=cm.getNoteId(ContextManager.SESSION_NOTE,
 				  "session.encoding" );
     }
@@ -318,6 +321,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 		getCharsetFromContentType(contentTypeString);
 	    if( debug > 0 ) log( "Got encoding from content-type " +
 				 charEncoding + " " + contentTypeString  );
+	    req.setNote( encodingSourceNote, "Content-Type" );
 	}
 
 	if( debug > 99 ) dumpHeaders(headers);
@@ -343,11 +347,13 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 				      charsetURIAttribute.length(),nextAtt);
 		    req.requestURI().
 			setString(uri.substring(0, idxCharset) + next);
+		    req.setNote( encodingSourceNote, "Request-Attribute" );
 		} else {
 		    charEncoding=uri.substring(idxCharset+
 					       charsetURIAttribute.length());
 		    req.requestURI().
 			setString(uri.substring(0, idxCharset));
+		    req.setNote( encodingSourceNote, "Request-Attribute" );
 		}
 		
 		if( debug > 0 )
