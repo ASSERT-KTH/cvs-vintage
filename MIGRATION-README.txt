@@ -1,3 +1,28 @@
+This document outlines data migration between versions of Scarab.
+It's organized from most recent version to old version.  Before
+performing any of the operations outlined by this document,
+
+		    ******************************
+		    **** BACKUP YOUR DATABASE ****
+		    ******************************
+
+
+------------------------------------------------------------------------
+Upgrading from b15 to b16
+------------------------------------------------------------------------
+
+Use the Ant data migration task:
+
+$ ant migrate-b15-b16
+
+http://scarab.tigris.org/servlets/ReadMsg?list=users&msgNo=2098
+
+
+
+------------------------------------------------------------------------
+Upgrading from b13 to b14
+------------------------------------------------------------------------
+
 With the latest release of Scarab b14, we have added new functionality
 which associates a DNS domain with each issue so that globally unique
 issues can be created. At some point in the far future, we would like
@@ -15,12 +40,6 @@ You will need to decide on is the domain name for your server. Let's
 assume it is something like: 'issuetracker.domain.com'. Of course you
 would replace that string with your own domain in the SQL commands
 below.
-
-          BACKUP YOUR DATABASE FIRST BEFORE MAKING CHANGES!
-
-------------------------------------------------------------------------
-Upgrading from b13 to b14 only
-------------------------------------------------------------------------
 
 You need to execute the following SQL in your database (replacing the
 domain with your own):
