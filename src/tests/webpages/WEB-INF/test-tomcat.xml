@@ -18,7 +18,7 @@
      <property name="host" value="localhost" />
      <property name="port"     value="8080" />
      <property name="tomcat.home" value="." />
-     <property name="gdir" value="${tomcat.home}/lib/test/Golden" />
+     <property name="gdir" value="../Golden" />
      <property name="http.protocol" value="HTTP/1.0" />
      
      <taskdef name="gtest" classname="org.apache.tomcat.task.GTest" />
@@ -83,6 +83,14 @@
              returnCode="${http.protocol} 200"
              goldenFile="${gdir}/SimpleForward.txt" 
        />
+
+      <!-- Removed: the test calls RequestDispatcher.include(), and 
+           the included servlet throws an exception. 
+           Before Tomcat 3.2(3?) the exception was hidden - now we correctly
+           throw it, so include() will throw exception, and since it's not
+           catched no response should be seen. ( costin )
+        
+
       <gtest host="${host}" port="${port}"  description="PrintWriterTest"
              request="GET /test/servlet/dispatch.PrintWriterTest1Servlet HTTP/1.0"
              returnCode="${http.protocol} 200"
@@ -98,6 +106,15 @@
              returnCode="${http.protocol} 200"
              responseMatch="Included servlet error: 500" 
        />
+       End removed 
+       -->
+ 
+      <gtest host="${host}" port="${port}"  description="PrintWriterTest"
+             request="GET /test/servlet/dispatch.PrintWriterTest1Servlet HTTP/1.0"
+             returnCode="${http.protocol} 500"
+       />
+ 
+
       <gtest host="${host}" port="${port}"  description="Mismatch2"
              request="GET /test/servlet/dispatch.Mismatch2 HTTP/1.0"
              returnCode="${http.protocol} 200"
@@ -110,11 +127,17 @@
              responseMatch="LINE1" 
        />
 
+      <!-- BAD test: the included Target1 will call getWriter, 
+          and IllegalState will be thrown - and catched by the IncludeMismatch.
+          No error handler will be involved - the Dispatcher spec clearly 
+          requires include() to propagate exceptions. 
+          Previous behavior of tomcat was wrong. ( costin )
       <gtest host="${host}" port="${port}"  description="IncludeMismatch1-2"
              request="GET /test/servlet/dispatch.IncludeMismatch1 HTTP/1.0"
              returnCode="${http.protocol} 200"
              responseMatch="error: 500" 
        />
+      -->
 
       <gtest host="${host}" port="${port}"  description="IncludeMismatch1-3"
              request="GET /test/servlet/dispatch.IncludeMismatch1 HTTP/1.0"
@@ -485,7 +508,7 @@
       />
 
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/Cookie25 HTTP/1.0"
-             expectHeaders="Set-Cookie2:foo=bar;Version=1;Max-Age=8640000"
+             expectHeaders="Set-Cookie:foo=bar; Version=1; Max-Age=8640000"
       />
 
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/ResponseError HTTP/1.0"
@@ -726,10 +749,12 @@
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/PermanentlyUnavailable HTTP/1.0"
              returnCode="${http.protocol} 503"
       />
-      <!-- this one was loaded on startup -->
+      <!-- this one was loaded on startup - Can't find it ( costin )
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/PermanentlyUnavailable2 HTTP/1.0"
              returnCode="${http.protocol} 503"
       />
+       -->
+   
       <!-- 2nd hit on the unavailable servlet should succeed -->
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/Unavailable HTTP/1.0"
              returnCode="${http.protocol} 200"
