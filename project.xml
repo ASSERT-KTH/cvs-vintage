@@ -117,7 +117,7 @@
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
-      <version>0.8.1</version>
+      <version>20040130.152659</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -261,7 +261,7 @@
     <dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum</artifactId>
-      <version>3.0-b2-dev-20031125</version>
+      <version>20040131.153518</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -396,7 +396,7 @@
     <dependency>
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
-      <version>3.0-alpha-1-20031125</version>
+      <version>20040131.015715</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
