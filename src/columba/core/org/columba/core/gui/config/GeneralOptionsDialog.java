@@ -16,14 +16,40 @@
 
 package org.columba.core.gui.config;
 
-import com.jgoodies.forms.layout.FormLayout;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.Locale;
+import java.util.Properties;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.GuiItem;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.*;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.gui.util.FontSelectionDialog;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ConfigPluginHandler;
@@ -31,17 +57,7 @@ import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-
-import java.util.Locale;
-import java.util.Properties;
-
-import javax.swing.*;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Shows a dialog for managing general options such as font settings.
@@ -452,7 +468,12 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             ThemeSwitcher.setTheme();
 
             // notify frame to update
-            ThemeSwitcher.updateFrame(frame);
+            FrameMediator[] m = MainInterface.frameModel.getOpenFrames();
+            for ( int i=0; i<m.length; i++) {
+                JFrame frame = (JFrame) m[i].getBaseView();
+                ThemeSwitcher.updateFrame(frame);
+            }
+            
 
             // set fonts
             FontProperties.setFont();
