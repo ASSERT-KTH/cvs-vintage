@@ -294,9 +294,15 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    Container container =(Container)map.
 		getLongestPrefixMatch(  hostMB, pathMB);
 	    
-	    if( container == null )
-		throw new RuntimeException( "Assertion failed: " +
-					    "container==null");
+	    if( container == null ) {
+		// It is too easy to configure Tomcat w/o a default context
+		// Add this back in when we do better checking
+		//throw new RuntimeException( "Assertion failed: " +
+		//			    "container==null");
+		cm.log("Assertion failed: " +
+		       "container==null (no Default Context?)");
+		return 404;
+	    }
 
 	    if(debug>0)
 		cm.log("SM: Prefix match " + pathMB.toString() + " -> " +

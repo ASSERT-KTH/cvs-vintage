@@ -90,6 +90,26 @@ public final class ErrorHandler extends BaseInterceptor {
 
     public void engineInit(ContextManager cm ) {
     }
+
+    /** Check that we are in a stable state.
+     */
+    public  void engineStart(ContextManager cm )
+	throws TomcatException
+    {
+	/* It is very possible to configure Tomcat without a rootContext.
+	   We make certain here that the rootContext is set.  Note that we
+	   can't add the context, since we don't have a docRoot.  This one is 
+	   only used for error handling.  If somebody subsequently adds a
+	   default context, then this one just harmlessly goes to gc 
+	   (since it's not part of the app, we don't have to follow Life Cycle)
+	*/
+	if(rootContext == null){
+	    rootContext = cm.createContext();
+	    rootContext.setContextManager(cm);
+	    rootContext.setPath("");
+	    contextInit(rootContext);
+	}
+    }
     
     /** Add default error handlers
      */
