@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.6 2000/01/07 19:14:12 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/07 19:14:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.7 2000/01/08 15:09:26 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/08 15:09:26 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ public class ServletWrapper {
 
     private StringManager sm =
         StringManager.getManager(Constants.Package);
-    private Container container;
+    private Context context;
     private String description = null;
     private String servletClassName;
     private Class servletClass;
@@ -100,10 +100,10 @@ public class ServletWrapper {
     private long classFileLastMod = 0;
     private int serviceCount = 0;
 
-    ServletWrapper(Container container) {
-        this.container = container;
+    ServletWrapper(Context context) {
+        this.context = context;
 
-        config = new ServletConfigImpl(container.getContext());
+        config = new ServletConfigImpl(context);
     }
 
     void setReloadable(boolean reloadable) {
@@ -181,7 +181,6 @@ public class ServletWrapper {
 		
 		try {
 		    final Servlet sinstance = servlet;
-		    Context context = getContext();
 
 		    handleInvocation(
 		        context.getDestroyInterceptors().elements(), 
@@ -228,11 +227,11 @@ public class ServletWrapper {
                 Constants.JSP.Directive.Compile.Name + "=" +
                 Constants.JSP.Directive.Compile.Value;
 
-            reqA.setRequestURI(getContext().getPath() + path);
+            reqA.setRequestURI(context.getPath() + path);
 	    reqA.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
 				 Constants.JSP.Directive.Compile.Value );
 
-            request.setContext(getContext());
+            request.setContext(context);
 	    request.updatePaths();
             request.getSession(true);
 
@@ -252,7 +251,7 @@ public class ServletWrapper {
 		    throw new IllegalStateException(msg);
 	        }
 
-	        servletClass = container.getLoader().loadServlet(this,
+	        servletClass = context.getLoader().loadServlet(this,
                     servletClassName);
 	    }
 
@@ -261,7 +260,7 @@ public class ServletWrapper {
             //    String msg = sm.getString("wrapper.load.noclassname");
             //    throw new IllegalStateException(msg);
 	    // }
-	    //Class c = container.getLoader().loadServlet(this,
+	    //Class c = context.getLoader().loadServlet(this,
 	    //servletClassName);
 
 	    servlet = (Servlet)servletClass.newInstance();
@@ -271,7 +270,6 @@ public class ServletWrapper {
 	    try {
 	        final Servlet sinstance = servlet;
 	        final ServletConfigImpl servletConfig = config;
-	        Context context = getContext();
 
 	        handleInvocation(context.getInitInterceptors().elements(), 
 	            new LifecycleInvocationHandler(context, servlet) {
@@ -286,7 +284,7 @@ public class ServletWrapper {
     }
 
     private Context getContext() {
-	return this.container.getContext();
+	return context;
     } 
 
     void handleRequest(final HttpServletRequestFacade request,
@@ -295,7 +293,7 @@ public class ServletWrapper {
 	//  if (isReloadable) {
 //  	    long lm = servletClassFile.lastModified();
 //  	    if (lm > classFileLastMod) {
-//  		//container.recycle();
+//  		//context.recycle();
 //  	    }
 //  	}
 	// make sure that only one thread goes through

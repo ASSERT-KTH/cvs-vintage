@@ -90,7 +90,6 @@ public class Context {
     private String description = null;
     private boolean isDistributable = false;
     private String engineHeader = null;
-    private Container container = new Container(this);
     private ClassLoader classLoader = null;
     private String classPath = ""; // classpath used by the classloader.
     //private Hashtable sessions = new Hashtable();
@@ -120,6 +119,18 @@ public class Context {
     private Vector destroyInterceptors = new Vector();
     private RequestSecurityProvider rsProvider =
         DefaultRequestSecurityProvider.getInstance();
+
+    // from Container
+    private ServletClassLoader servletLoader;
+    private Hashtable servlets = new Hashtable();
+    private Hashtable prefixMappedServlets = new Hashtable();
+    private Hashtable extensionMappedServlets = new Hashtable();
+    private Hashtable pathMappedServlets = new Hashtable();
+    private ServletWrapper defaultServlet = null;
+    private URL servletBase = null;
+    private Vector classPaths = new Vector();
+    private Vector libPaths = new Vector();
+
     
     public Context() {
     }
@@ -252,7 +263,7 @@ public class Context {
     public String getClassPath() {
         String cp = this.classPath.trim();
         String servletLoaderClassPath =
-            this.container.getLoader().getClassPath();
+            this.getLoader().getClassPath();
 
         if (servletLoaderClassPath != null &&
             servletLoaderClassPath.trim().length() > 0) {
@@ -409,14 +420,14 @@ public class Context {
 	    }
 	}
 
-        this.container.setServletBase(servletBase);
+        this.setServletBase(servletBase);
 
         for (int i = 0; i < Constants.Context.CLASS_PATHS.length; i++) {
-            this.container.addClassPath(Constants.Context.CLASS_PATHS[i]);
+            this.addClassPath(Constants.Context.CLASS_PATHS[i]);
 	}
 
         for (int i = 0; i < Constants.Context.LIB_PATHS.length; i++) {
-            this.container.addLibPath(Constants.Context.LIB_PATHS[i]);
+            this.addLibPath(Constants.Context.LIB_PATHS[i]);
 	}
 
 	// process base configuration
@@ -476,9 +487,9 @@ public class Context {
 	    // /servlet requests and explains why no servlet
 	    // is being invoked
 
-	    this.container.addServlet(Constants.Servlet.NoInvoker.Name,
+	    this.addServlet(Constants.Servlet.NoInvoker.Name,
 	        Constants.Servlet.NoInvoker.Class);
-	    this.container.addMapping(Constants.Servlet.NoInvoker.Name,
+	    this.addMapping(Constants.Servlet.NoInvoker.Name,
 	        Constants.Servlet.NoInvoker.Map);
 	}
 
@@ -503,9 +514,15 @@ public class Context {
     
     public void shutdown() {
 	// shut down container
+	Enumeration enum = servlets.keys();
 
-	container.shutdown();
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper wrapper = (ServletWrapper)servlets.get(key);
 
+	    servlets.remove(key);
+	    wrapper.destroy();
+	}
 	// shut down any sessions
 
 	getSessionManager().removeSessions(this);
@@ -533,7 +550,7 @@ public class Context {
         if (name.equals("org.apache.tomcat.jsp_classpath"))
 	  return getClassPath();
 	else if(name.equals("org.apache.tomcat.classloader")) {
-	  return this.container.getLoader();
+	  return this.getLoader();
         }else {
             Object o = attributes.get(name);
             return attributes.get(name);
@@ -606,10 +623,6 @@ public class Context {
 
     public String getErrorPage(String errorCode) {
         return (String)errorPages.get(errorCode);
-    }
-
-    public Container getContainer() {
-	return container;
     }
 
     ServletContextFacade getFacade() {
@@ -720,17 +733,17 @@ public class Context {
 		resourceName =
 		    ((ServletDescriptor)webComponentDescriptor).getClassName();
 
-		if (container.containsServletByName(name)) {
+		if (containsServletByName(name)) {
 		    String msg = sm.getString("context.dd.dropServlet",
 		        name + "(" + resourceName + ")" );
 
 		    System.out.println(msg);
 		    
 		    removeResource = true;
-		    container.removeServletByName(name);
+		    removeServletByName(name);
 		}
 
-		container.addServlet(name, resourceName, description);
+		addServlet(name, resourceName, description);
 	    } else if (webComponentDescriptor instanceof JspDescriptor) {
 		resourceName =
 		    ((JspDescriptor)webComponentDescriptor).getJspFileName();
@@ -739,17 +752,17 @@ public class Context {
 		    resourceName = "/" + resourceName;
 		}
 
-		if (container.containsJSP(resourceName)) {
+		if (containsJSP(resourceName)) {
 		    String msg = sm.getString("context.dd.dropServlet",
 		        resourceName);
 
 		    System.out.println(msg);
 
 		    removeResource = true;
-		    container.removeJSP(resourceName);
+		    removeJSP(resourceName);
 		}
 
-		container.addJSP(name, resourceName, description);
+		addJSP(name, resourceName, description);
 	    }
 
 	    if (removeResource) {
@@ -765,7 +778,7 @@ public class Context {
 		    while (e.hasMoreElements()) {
 		        String servletName = (String)e.nextElement();
 
-			if (container.containsServletByName(servletName)) {
+			if (containsServletByName(servletName)) {
 			    buf.addElement(servletName);
 			}
 		    }
@@ -798,9 +811,8 @@ public class Context {
 		    initializationParameter.getValue());
 	    }
 
-	    container.setServletInitParams(
-	        webComponentDescriptor.getCanonicalName(),
-		initializationParameters);
+	    setServletInitParams(webComponentDescriptor.getCanonicalName(),
+				 initializationParameters);
 
 	    enum = webComponentDescriptor.getUrlPatterns();
 
@@ -812,18 +824,18 @@ public class Context {
 		    mapping = "/" + mapping;
 		}
 
-		if (! container.containsServlet(mapping) &&
-		    ! container.containsJSP(mapping)) {
-		    if (container.containsMapping(mapping)) {
+		if (! containsServlet(mapping) &&
+		    ! containsJSP(mapping)) {
+		    if (containsMapping(mapping)) {
 		        String msg = sm.getString("context.dd.dropMapping",
 			    mapping);
 
 			System.out.println(msg);
 
-			container.removeMapping(mapping);
+			removeMapping(mapping);
 		    }
 
-                    container.addMapping(name, mapping);
+                    addMapping(name, mapping);
 		} else {
 		    String msg = sm.getString("context.dd.ignoreMapping",
 		        mapping);
@@ -916,7 +928,7 @@ public class Context {
 
 	    while (e.hasMoreElements()) {
 		String servletName = (String)e.nextElement();
-		ServletWrapper  result = container.getServletByName(servletName);
+		ServletWrapper  result = getServletByName(servletName);
 		
 		if(result==null)
 		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
@@ -933,4 +945,389 @@ public class Context {
 	    }
 	}
     }
+
+
+    // -------------------- From Container
+    ServletClassLoader getLoader() {
+	if(servletLoader == null) {
+	    servletLoader = new ServletClassLoader(this);
+	}
+
+	return servletLoader;
+    }
+
+    public URL getServletBase() {
+        return this.servletBase;
+    }
+
+    public void setServletBase(URL servletBase) {
+        this.servletBase = servletBase;
+    }
+
+    public Enumeration getClassPaths() {
+        return this.classPaths.elements();
+    }
+
+    public void addClassPath(String path) {
+        this.classPaths.addElement(path);
+    }
+
+    public Enumeration getLibPaths() {
+        return this.libPaths.elements();
+    }
+
+    public void addLibPath(String path) {
+        this.libPaths.addElement(path);
+    }
+
+    /**
+     * Add a servlet with the given name to the container. The
+     * servlet will be loaded by the container's class loader
+     * and instantiated using the given class name.
+     */
+    
+    public void addServlet(String name, String className) {
+        addServlet(name, null, className, null);
+    }
+ 
+    public void addServlet(String name, String className,
+        String description) {
+        addServlet(name, description, className, null);
+    }
+
+    public void addServlet(String name, Class clazz) {
+        addServlet(name, null, null, clazz);
+    }
+
+    public void addServlet(String name, Class clazz,
+	String description) {
+        addServlet(name, description, null, clazz);
+    }
+
+    public void addJSP(String name, String path) {
+        addJSP(name, null, path);
+    }
+
+    public void addJSP(String name, String path, String description) {
+        // XXX
+        // check for duplicates!
+
+        ServletWrapper wrapper = new ServletWrapper(this);
+
+	wrapper.setServletName(name);
+	wrapper.setServletDescription(description);
+	wrapper.setPath(path);
+
+	servlets.put(name, wrapper);
+    }
+
+    /** True if we have a servlet with className.
+     */
+    boolean containsServlet(String className) {
+        ServletWrapper[] sw = getServlets(className);
+
+        return (sw != null &&
+	    sw.length > 0);
+    }
+
+    /** Check if we have a servlet with the specified name
+     */
+    boolean containsServletByName(String name) {
+	return (servlets.containsKey(name));
+    }
+
+    /** Remove all servlets with a specific class name
+     */
+    void removeServlet(String className) {
+        removeServlets(getServlets(className));
+    }
+
+    /** Remove the servlet with a specific name
+     */
+    void removeServletByName(String servletName) {
+	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
+	if( wrapper != null ) {
+	    removeServlet( wrapper );
+	}
+    }
+
+    boolean containsJSP(String path) {
+        ServletWrapper[] sw = getServletsByPath(path);
+
+        return (sw != null &&
+	    sw.length > 0);
+    }
+
+    void removeJSP(String path) {
+	Enumeration enum = servlets.keys();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+
+	    if (sw.getPath() != null &&
+	        sw.getPath().equals(path)) {
+	        removeServlet( sw );
+	    }
+	}
+    }
+
+    public void setServletInitParams(String name, Hashtable initParams) {
+	ServletWrapper wrapper = (ServletWrapper)servlets.get(name);
+
+	if (wrapper != null) {
+	    wrapper.setInitArgs(initParams);
+	}
+    }
+    
+    /**
+     * Maps a named servlet to a particular path or extension.
+     * If the named servlet is unregistered, it will be added
+     * and subsequently mapped.
+     *
+     * Note that the order of resolution to handle a request is:
+     *
+     *    exact mapped servlet (eg /catalog)
+     *    prefix mapped servlets (eg /foo/bar/*)
+     *    extension mapped servlets (eg *jsp)
+     *    default servlet
+     *
+     */
+
+    public void addMapping(String servletName, String path) {
+        ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
+
+	if (sw == null) {
+	    // XXX
+	    // this might be a bit aggressive
+
+	    if (! servletName.startsWith("/")) {
+	        addServlet(servletName, null, servletName, null);
+	    } else {
+	        addJSP(servletName, servletName);
+	    }
+
+	    sw = (ServletWrapper)servlets.get(servletName);
+	}
+
+	path = path.trim();
+
+	if (sw != null &&
+	    (path.length() > 0)) {
+	    if (path.startsWith("/") &&
+                path.endsWith("/*")){
+	        prefixMappedServlets.put(path, sw);
+	    } else if (path.startsWith("*.")) {
+	        extensionMappedServlets.put(path, sw);
+	    } else if (! path.equals("/")) {
+	        pathMappedServlets.put(path, sw);
+	    } else {
+	        defaultServlet = sw;
+	    }
+	}
+    }
+
+    public ServletWrapper getDefaultServlet() {
+	return defaultServlet;
+    }
+    
+    public Hashtable getPathMap() {
+	return pathMappedServlets;
+    }
+
+    public Hashtable getPrefixMap() {
+	return prefixMappedServlets;
+    }
+
+    public Hashtable getExtensionMap() {
+	return extensionMappedServlets;
+    }
+    
+    boolean containsMapping(String mapping) {
+        mapping = mapping.trim();
+
+        return (prefixMappedServlets.containsKey(mapping) ||
+	    extensionMappedServlets.containsKey(mapping) ||
+	    pathMappedServlets.containsKey(mapping));
+    }
+
+    void removeMapping(String mapping) {
+        mapping = mapping.trim();
+
+	prefixMappedServlets.remove(mapping);
+	extensionMappedServlets.remove(mapping);
+	pathMappedServlets.remove(mapping);
+    }
+
+    Request lookupServletByName(String servletName) {
+        Request lookupResult = null;
+
+	ServletWrapper wrapper = (ServletWrapper)servlets.get(servletName);
+
+	if (wrapper != null) {
+	    lookupResult = new Request();
+	    lookupResult.setWrapper( wrapper );
+	    lookupResult.setPathInfo("");
+	}
+
+        return lookupResult;
+    }
+
+    public ServletWrapper getServletByName(String servletName) {
+	return (ServletWrapper)servlets.get(servletName);
+    }
+
+    ServletWrapper getServletAndLoadByName(String servletName) {
+	// XXX
+	// make sure that we aren't tramping over ourselves!
+	ServletWrapper wrapper = new ServletWrapper(this);
+
+	wrapper.setServletClass(servletName);
+
+	servlets.put(servletName, wrapper);
+
+	return wrapper;
+    }
+
+    ServletWrapper loadServlet(String servletClassName) {
+        // XXX
+        // check for duplicates!
+
+        // XXX
+        // maybe dispatch to addServlet?
+        
+        ServletWrapper wrapper = new ServletWrapper(this);
+
+        wrapper.setServletClass(servletClassName);
+
+        servlets.put(servletClassName, wrapper);
+
+        return wrapper;
+    }
+
+    private void addServlet(String name, String description,
+        String className, Class clazz) {
+        // XXX
+        // check for duplicates!
+
+        if (servlets.get(name) != null) {
+            removeServlet(name);
+            removeServletByName(name);
+        }
+
+        ServletWrapper wrapper = new ServletWrapper(this);
+
+	wrapper.setServletName(name);
+	wrapper.setServletDescription(description);
+
+	if (className != null) {
+	    wrapper.setServletClass(className);
+	}
+
+	if (clazz != null) {
+	    wrapper.setServletClass(clazz);
+	}
+
+	servlets.put(name, wrapper);
+    }
+
+    private void removeServlet(ServletWrapper sw) {
+	if (prefixMappedServlets.contains(sw)) {
+	    Enumeration enum = prefixMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+		
+		if (prefixMappedServlets.get(key).equals(sw)) {
+		    prefixMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	if (extensionMappedServlets.contains(sw)) {
+	    Enumeration enum = extensionMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+
+		if (extensionMappedServlets.get(key).equals(sw)) {
+		    extensionMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	if (pathMappedServlets.contains(sw)) {
+	    Enumeration enum = pathMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+
+		if (pathMappedServlets.get(key).equals(sw)) {
+		    pathMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	servlets.remove(sw.getServletName());
+    }
+    
+    private void removeServlets(ServletWrapper[] sw) {
+	if (sw != null) {
+	    for (int i = 0; i < sw.length; i++) {
+		removeServlet( sw[i] );
+	    }
+	}
+    }
+
+    /** Return servlets with a specified class name
+     */
+    private ServletWrapper[] getServlets(String name) {
+        Vector servletWrappers = new Vector();
+	Enumeration enum = servlets.keys();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+
+
+            if (sw.getServletClass() != null &&
+                sw.getServletClass().equals(name)) {
+	        servletWrappers.addElement(sw);
+	    }
+	}
+
+	ServletWrapper[] wrappers =
+	    new ServletWrapper[servletWrappers.size()];
+
+	servletWrappers.copyInto((ServletWrapper[])wrappers);
+
+        return wrappers;
+    }
+
+    // XXX
+    // made package protected so that RequestMapper can have access
+
+    public ServletWrapper[] getServletsByPath(String path) {
+        Vector servletWrappers = new Vector();
+	Enumeration enum = servlets.keys();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+
+	    if (sw.getPath() != null &&
+	        sw.getPath().equals(path)) {
+	        servletWrappers.addElement(sw);
+	    }
+	}
+
+	ServletWrapper[] wrappers =
+	    new ServletWrapper[servletWrappers.size()];
+
+	servletWrappers.copyInto((ServletWrapper[])wrappers);
+
+        return wrappers;
+    }
+
+    
 }

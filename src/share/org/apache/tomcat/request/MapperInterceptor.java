@@ -84,16 +84,16 @@ public class MapperInterceptor  implements  RequestInterceptor {
     // no configuration 
     
     public int handleRequest(Request req) {
-	Container container=req.getContext().getContainer();
+	Context context=req.getContext();
 	String path=req.getLookupPath();
         ServletWrapper wrapper = null;
 
-	wrapper = getMatch(container, path, req);
+	wrapper = getMatch(context, path, req);
 
 	if (wrapper == null) {
-	    wrapper = container.getDefaultServlet();
+	    wrapper = context.getDefaultServlet();
 	    if (wrapper == null) {
-	        wrapper = container.getServletByName(Constants.Servlet.Default.Name);
+	        wrapper = context.getServletByName(Constants.Servlet.Default.Name);
 	    }
 
 	    String servletPath = Constants.Servlet.Default.Map;
@@ -104,7 +104,7 @@ public class MapperInterceptor  implements  RequestInterceptor {
 	    req.setPathInfo( pathInfo );
 	} else {
 	    getMapPath(wrapper, req);
-	    String resolvedServlet = getResolvedServlet(container, req.getMappedPath());
+	    String resolvedServlet = getResolvedServlet(context, req.getMappedPath());
 	    
 	    req.setWrapper( wrapper );
 	    req.setResolvedServlet( resolvedServlet );
@@ -123,36 +123,36 @@ public class MapperInterceptor  implements  RequestInterceptor {
 	return OK;
     }
 
-    private ServletWrapper getMatch(Container container, String path, Request req) {
+    private ServletWrapper getMatch(Context context, String path, Request req) {
         ServletWrapper wrapper = null;
 	// try an exact match
 
-        wrapper = getPathMatch(container, path, req);
+        wrapper = getPathMatch(context, path, req);
 
 	// try a prefix match
 
 	if (wrapper == null) {
-	    wrapper = getPrefixMatch(container, path, req);
+	    wrapper = getPrefixMatch(context, path, req);
 	}
 
 	// try an extension match
 
 	if (wrapper == null) {
-	    wrapper = getExtensionMatch(container, path, req);
+	    wrapper = getExtensionMatch(context, path, req);
 	}
 
 	// lookup real servlet if what we're actually
 	// dealing with a jsp file
 
-        wrapper = getServletForJsp(container, wrapper, req);
+        wrapper = getServletForJsp(context, wrapper, req);
 
 	return wrapper;
     }
 
-    private ServletWrapper getPathMatch(Container container, String path, Request req) {
+    private ServletWrapper getPathMatch(Context context, String path, Request req) {
         ServletWrapper wrapper = null;
 
-	wrapper = (ServletWrapper)container.getPathMap().get(path);
+	wrapper = (ServletWrapper)context.getPathMap().get(path);
 
 	if (wrapper != null) {
 	    req.setServletPath( path );
@@ -162,14 +162,14 @@ public class MapperInterceptor  implements  RequestInterceptor {
         return wrapper;
     }
 
-    private ServletWrapper getPrefixMatch(Container container, String path, Request req) {
+    private ServletWrapper getPrefixMatch(Context context, String path, Request req) {
 	ServletWrapper wrapper = null;
         String s = path;
 
 	while (s.length() > 0) {
 	    String suffix = (s.endsWith("/")) ? "*" : "/*";
  
-	    wrapper = (ServletWrapper)container.getPrefixMap().get(s + suffix);
+	    wrapper = (ServletWrapper)context.getPrefixMap().get(s + suffix);
 
 	    if (wrapper != null) {
 	        if (s.endsWith("/")) {
@@ -204,7 +204,7 @@ public class MapperInterceptor  implements  RequestInterceptor {
 	return wrapper;
     }
 
-    private ServletWrapper getExtensionMatch(Container container, String path, Request req) {
+    private ServletWrapper getExtensionMatch(Context context, String path, Request req) {
         ServletWrapper wrapper = null;
         int i = path.lastIndexOf(".");
 	int j = path.lastIndexOf("/");
@@ -219,7 +219,7 @@ public class MapperInterceptor  implements  RequestInterceptor {
 		extension = extension.substring(0, k);
 	    }
 
-	    wrapper = (ServletWrapper)container.getExtensionMap().get(
+	    wrapper = (ServletWrapper)context.getExtensionMap().get(
 	        "*" + extension);
 
 	    if (wrapper != null) {
@@ -240,7 +240,7 @@ public class MapperInterceptor  implements  RequestInterceptor {
     }
 
     // XXX XXX XXX eliminate recursivity (costin )
-    private ServletWrapper getServletForJsp(Container container, ServletWrapper wrapper, Request req) {
+    private ServletWrapper getServletForJsp(Context context, ServletWrapper wrapper, Request req) {
         if (wrapper != null) {
             String servletPath = req.getServletPath();
             String pathInfo = req.getPathInfo();
@@ -255,7 +255,7 @@ public class MapperInterceptor  implements  RequestInterceptor {
                     wrapper.getPath() != null &&
                     wrapper.getServletClass() == null) {
                         req.setResourceName( wrapper.getPath() );
-                        wrapper = getMatch(container,
+                        wrapper = getMatch(context,
 					   wrapper.getPath() + (pathInfo == null ? "" : pathInfo),
 					   req);
                         req.setMappedPath(  req.getServletPath() );
@@ -306,9 +306,9 @@ public class MapperInterceptor  implements  RequestInterceptor {
         req.setMappedPath( mapPath );
     }
 
-    private String getResolvedServlet(Container container, String path) {
+    private String getResolvedServlet(Context context, String path) {
         String resolvedServlet = null;
-        ServletWrapper[] sw = container.getServletsByPath(path);
+        ServletWrapper[] sw = context.getServletsByPath(path);
 
         if (sw.length > 0) {
             // assume one

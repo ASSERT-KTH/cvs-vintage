@@ -231,7 +231,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     void setName(String name) {
         this.name = name;
 	this.lookupResult =
-	    context.getContainer().lookupServletByName(this.name);
+	    context.lookupServletByName(this.name);
     }
 
     void setPath(String urlPath) {

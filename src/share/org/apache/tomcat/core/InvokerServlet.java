@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.3 1999/11/06 00:19:52 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/06 00:19:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.4 2000/01/08 15:09:26 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/08 15:09:26 $
  *
  * ====================================================================
  *
@@ -87,13 +87,11 @@ public class InvokerServlet extends HttpServlet {
     private StringManager sm =
 	StringManager.getManager(Constants.Package);
     private Context context;
-    private Container container;
     
     public void init() throws ServletException {
 	ServletContextFacade facade =
 	    (ServletContextFacade)getServletContext();
         context = facade.getRealContext();
-        container = context.getContainer();
     }
     
     public void service(HttpServletRequest request,
@@ -181,12 +179,12 @@ public class InvokerServlet extends HttpServlet {
 
         // try the easy one -- lookup by name
         
-        ServletWrapper wrapper = container.getServletByName(servletName);
+        ServletWrapper wrapper = context.getServletByName(servletName);
 
         if (wrapper == null) {
             // try the more forceful approach
 
-            wrapper = container.getServletAndLoadByName(servletName);
+            wrapper = context.getServletAndLoadByName(servletName);
         }
 
         if (wrapper == null) {
