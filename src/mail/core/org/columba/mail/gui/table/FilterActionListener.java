@@ -54,7 +54,7 @@ public class FilterActionListener implements ActionListener {
 				model.setPatternString("");
 
 				model.setDataFiltering(false);
-				tableController.getHeaderTableModel().update();
+				tableController.getUpdateManager().update();
 
 				FilterToolbar toolbar = tableController.getFilterToolbar();
 
@@ -76,7 +76,8 @@ public class FilterActionListener implements ActionListener {
 				model.setPatternString("");
 
 				model.setDataFiltering(true);
-				tableController.getHeaderTableModel().update();
+				
+				tableController.getUpdateManager().update();
 
 				FilterToolbar toolbar = tableController.getFilterToolbar();
 

@@ -69,7 +69,10 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 
 		for (int i = 0; i < items.length; i++) {
 			String item = (String) items[i];
-			String i18n = MailResourceLoader.getString("header", item);
+			
+			// all headerfields are lowercase in property file
+			String i18n = MailResourceLoader.getString("header", item.toLowerCase());
+			
 			headerMenuItem = new JRadioButtonMenuItem(i18n);
 			headerMenuItem.setActionCommand(item);
 			headerMenuItem.addActionListener(this);
@@ -108,16 +111,16 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 		if (action.equals("Ascending")) {
 			table.getTableController().getTableModelSorter().setSortingOrder(
 				true);
-			table.getTableController().getTableModelSorter().sort();
+			table.getTableController().getUpdateManager().update();
 		} else if (action.equals("Descending")) {
 			table.getTableController().getTableModelSorter().setSortingOrder(
 				false);
-			table.getTableController().getTableModelSorter().sort();
+			table.getTableController().getUpdateManager().update();
 		} else {
 
 			table.getTableController().getTableModelSorter().setSortingColumn(
 				action);
-			table.getTableController().getTableModelSorter().sort();
+			table.getTableController().getUpdateManager().update();
 		}
 	}
 

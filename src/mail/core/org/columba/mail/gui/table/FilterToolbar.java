@@ -76,7 +76,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
 
 		//addSeparator();
-		newButton = new ToolbarToggleButton(
+		newButton =
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("mail-new.png"));
 		newButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -108,7 +109,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		*/
 		//addSeparator();
 
-		answeredButton = new ToolbarToggleButton(
+		answeredButton =
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("reply_small.png"));
 		answeredButton.addActionListener(this);
 		answeredButton.setToolTipText(
@@ -123,7 +125,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		layout.setConstraints(answeredButton, c);
 		add(answeredButton);
 
-		flaggedButton = new ToolbarToggleButton(
+		flaggedButton =
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
 		flaggedButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -138,7 +141,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		layout.setConstraints(flaggedButton, c);
 		add(flaggedButton);
 
-		expungedButton = new ToolbarToggleButton(
+		expungedButton =
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		expungedButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -152,7 +156,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		layout.setConstraints(expungedButton, c);
 		add(expungedButton);
 
-		attachmentButton = new ToolbarToggleButton(
+		attachmentButton =
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("attachment.png"));
 		attachmentButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -204,10 +209,12 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		
 		*/
 
-		JLabel label = new JLabel(MailResourceLoader.getString(
-                                "menu",
-                                "mainframe",
-                                "filtertoolbar_header"));
+		JLabel label =
+			new JLabel(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"filtertoolbar_header"));
 		c.insets = new Insets(0, 10, 0, 0);
 		layout.setConstraints(label, c);
 		add(label);
@@ -218,7 +225,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		textField.addActionListener(this);
 		textField.setActionCommand("TEXTFIELD");
 		textField.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {}
+			public void focusGained(FocusEvent e) {
+			}
 
 			public void focusLost(FocusEvent e) {
 				TableModelFilter model =
@@ -239,10 +247,12 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 		//addSeparator();
 
-		clearButton = new JButton(MailResourceLoader.getString(
-                                "menu",
-                                "mainframe",
-                                "filtertoolbar_clear"));
+		clearButton =
+			new JButton(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"filtertoolbar_clear"));
 		clearButton.setToolTipText(
 			MailResourceLoader.getString(
 				"menu",
@@ -259,10 +269,12 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		layout.setConstraints(clearButton, c);
 		add(clearButton);
 
-		advancedButton = new JButton(MailResourceLoader.getString(
-                                "menu",
-                                "mainframe",
-                                "filtertoolbar_advanced"));
+		advancedButton =
+			new JButton(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"filtertoolbar_advanced"));
 		advancedButton.setToolTipText(
 			MailResourceLoader.getString(
 				"menu",
@@ -300,13 +312,11 @@ public class FilterToolbar extends JPanel implements ActionListener {
 	}
 
 	public void update() throws Exception {
-	
-		tableController
-			.getTableModelFilteredView()
-			.setDataFiltering(true);
-		tableController.updateManager.update();
-		
-		
+
+		tableController.getTableModelFilteredView().setDataFiltering(true);
+
+		tableController.getUpdateManager().update();
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -380,11 +390,9 @@ public class FilterToolbar extends JPanel implements ActionListener {
 				expungedButton.setSelected(false);
 				attachmentButton.setSelected(false);
 
-				tableController
-					
-					.getTableModelFilteredView()
-					.setDataFiltering(true);
-
+				tableController.getTableModelFilteredView().setDataFiltering(
+					true);
+				update();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

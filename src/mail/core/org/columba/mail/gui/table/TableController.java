@@ -526,4 +526,11 @@ public class TableController {
 	}
 	
 
+	/**
+	 * @return
+	 */
+	public TableModelUpdateManager getUpdateManager() {
+		return updateManager;
+	}
+
 }
