@@ -1,4 +1,4 @@
-package org.tigris.scarab.screens;
+package org.tigris.scarab.system;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -46,43 +46,32 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Velocity Stuff 
-import org.apache.turbine.services.velocity.*; 
-import org.apache.velocity.*; 
-// Turbine Stuff 
-import org.apache.turbine.modules.*; 
-import org.apache.turbine.modules.screens.*; 
-import org.apache.turbine.util.*; 
-
+import org.apache.turbine.om.security.User;
+import org.tigris.scarab.om.ScarabUser;
 /**
-    This class is responsible for building the Context up
-    for the Register Screen.
-
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.1 2000/12/18 05:03:33 jon Exp $
-*/
-public class Register extends VelocityScreen
+ * This class is used by the Scarab API
+ */
+public class ScarabSystem
 {
     /**
-        builds up the context for display of variables on the page.
-    */
-    public void doBuildTemplate( RunData data, Context context ) throws Exception 
+     * A User object for use within the Scarab API.
+     */
+    private User user = null;
+    
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public void setUser (User user)
     {
-        // make information appear if it exists in the GET/POST info
-        context.put ("email", data.getParameters().getString("email",""));
-        context.put ("firstname", data.getParameters().getString("firstname",""));
-        context.put ("lastname", data.getParameters().getString("lastname",""));
-        context.put ("companyname", data.getParameters().getString("companyname",""));
-        context.put ("address1", data.getParameters().getString("address1",""));
-        context.put ("address2", data.getParameters().getString("address2",""));
-        context.put ("city", data.getParameters().getString("city",""));
-        context.put ("state", data.getParameters().getString("state",""));
-        context.put ("country", data.getParameters().getString("country",""));
-        context.put ("postalcode", data.getParameters().getString("postalcode",""));
-        context.put ("phone", data.getParameters().getString("phone",""));
-        context.put ("altphone", data.getParameters().getString("altphone",""));
-        context.put ("fax", data.getParameters().getString("fax",""));
-        context.put ("cell", data.getParameters().getString("cell",""));
-        context.put ("pager", data.getParameters().getString("pager",""));
+        this.user = user;
+    }
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public User getUser()
+    {
+        if (user == null)
+            this.user = new ScarabUser();
+        return this.user;
     }
 }
