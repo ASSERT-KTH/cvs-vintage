@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.131 2003/05/03 00:58:37 elicia Exp $
+ * @version $Id: Search.java,v 1.132 2003/05/08 05:46:51 dlr Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -508,9 +508,10 @@ public class Search extends RequireLoginFirstAction
             for (int i =0; i<keys.length; i++)
             {
                 String key = keys[i].toString();
-                if (key.startsWith("attv") || key.startsWith("search") ||
-                    key.startsWith("intake") || key.startsWith("user_attr")
-                    || key.startsWith("user_list") || key.startsWith("results"))
+                if (key.startsWith("attv") || key.startsWith("search")
+                    || key.startsWith("intake") || key.startsWith("user_attr")
+                    || key.startsWith("user_list") || key.startsWith("results")
+                    || "format".equalsIgnoreCase(key))
                 {
                     String[] values = data.getParameters().getStrings(key);
                     for (int j=0; j<values.length; j++)
@@ -520,12 +521,10 @@ public class Search extends RequireLoginFirstAction
                     }
                 }
             }
-            queryString = buf.toString();
-            if (queryString.length() == 0) 
-            {
-                queryString = 
-                    ((ScarabUser)data.getUser()).getMostRecentQuery();
-            }
+
+            queryString = (buf.length() == 0
+                           ? ((ScarabUser)data.getUser()).getMostRecentQuery()
+                           : buf.toString());
         }
         return queryString;
     }

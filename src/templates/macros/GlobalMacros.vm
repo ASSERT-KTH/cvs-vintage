@@ -484,9 +484,14 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <tr>
 <th>$l10n.Format</th>
 <td>
- <input type="radio" name="format" value="" checked="checked" />$l10n.Web
- <input type="radio" name="format" value="excel" />$l10n.Excel
- <input type="radio" name="format" value="tsv" />$l10n.TabSeparatedValues
+#set ($format = $data.Parameters.getString('format', ''))
+ <input type="radio" name="format" value=""
+ #if ($format == '')checked="checked"#end />$l10n.Web
+ <input type="radio" name="format" value="excel"
+ #if ($format.equalsIgnoreCase('excel'))checked="checked"#end />$l10n.Excel
+ <input type="radio" name="format" value="tsv"
+ #if ($format.equalsIgnoreCase('tsv'))checked="checked"#end
+ />$l10n.TabSeparatedValues
 </td>
 </tr>
 #end
