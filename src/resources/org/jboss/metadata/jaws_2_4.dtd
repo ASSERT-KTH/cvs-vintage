@@ -14,7 +14,10 @@ This is the XML DTD for the JAWS deployment descriptor.
 <!-- the datasource element is used to indicate to JAWS which datasource
  should be used for persistence of the CMP entities in this ejb-jar. It 
  should be the datasource named as it appears in jboss' global naming 
- context. The default is java:/DefaultDS -->
+ context. The default is java:/DefaultDS 
+ 
+ Beans are also allowed to specify datasources at bean level and will override this datasource if specified.
+ -->
 <!ELEMENT datasource (#PCDATA)>
 
 <!-- the type-mapping element is used to indicate to JAWS which set of mappings
@@ -55,13 +58,15 @@ This is the XML DTD for the JAWS deployment descriptor.
  pk-constraint: If create-table is on, create it with a primary key.
  time-out: For read-only only, re-load entity after time-out
 -->
-<!ELEMENT entity (ejb-name,cmp-field*,finder*,read-ahead?,read-only?,
+<!ELEMENT entity (ejb-name,datasource?,cmp-field*,finder*,read-ahead?,read-only?,
                   table-name?,tuned-updates?,create-table?,remove-table?,select-for-update?,time-out?,pk-constraint?)>
 
 <!-- ejb-name within an entity element must contain the ejb-name as specified
  in ejb-jar.xml. -->
 <!ELEMENT ejb-name (#PCDATA)>
-
+<!-- The datasource at bean level. If specified the bean will use this datasource instead of the global one. 
+Else the global one is used -->
+<!ELEMENT datasource (#PCDATA)>
 <!ELEMENT cmp-field (field-name, column-name)>
 <!ELEMENT field-name (#PCDATA)>
 <!ELEMENT column-name (#PCDATA)>
