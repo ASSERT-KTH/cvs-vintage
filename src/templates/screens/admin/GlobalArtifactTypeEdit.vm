@@ -107,7 +107,7 @@
   <td>$link.setPage("admin,GlobalAttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$group.Name")</td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
   <td>
-  #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
+  #numericSelect($agGroup.Order.Key 1 $maxNum $group.Order 1)</td> </tr>
 #end
 #else
 <p class="alert">$l10n.NoAttributeGroups</p>
