@@ -59,7 +59,7 @@ import org.tigris.scarab.screens.Default;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Wizard1.java,v 1.2 2002/10/24 22:59:29 jon Exp $
+ * @version $Id: Wizard1.java,v 1.3 2003/02/20 01:52:14 dlr Exp $
  */
 public class Wizard1 extends Default
 {
@@ -70,9 +70,6 @@ public class Wizard1 extends Default
     {
         String name = scarabR.getCurrentIssueType().getName();
         String enterNew = l10n.get("EnterNew");
-        StringBuffer sb = new StringBuffer(name.length() + 
-                                           enterNew.length() + 4);
-        sb.append(enterNew).append(" '").append(name).append('\'');
-        return sb.toString();
+        return (enterNew + " '" + name + '\'');
     }
 }
