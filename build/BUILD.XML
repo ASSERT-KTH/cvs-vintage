@@ -15,6 +15,7 @@
 
   <property name="javac.deprecation" value="off"/>
   <property name="javac.includes" value="**/*.java"/>
+  <property name="javac.excludes" value="CH/ifa/draw/util/JDOStorageFormat.java"/>
 
   <property name="manifest.name" value="JHotdraw.mf"/>
 
@@ -43,6 +44,7 @@
            debug="${javac.debug}"
            deprecation="${javac.deprecation}"
 		   includes="${javac.includes}"
+		   excludes="${javac.excludes}"
            optimize="${javac.optimize}" >
     </javac>
   </target>
