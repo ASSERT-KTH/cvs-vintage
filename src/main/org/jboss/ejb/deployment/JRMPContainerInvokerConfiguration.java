@@ -14,8 +14,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.dreambean.ejx.xml.XMLManager;
-import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.awt.GenericCustomizer;
    
 /**
@@ -23,17 +21,17 @@ import com.dreambean.awt.GenericCustomizer;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JRMPContainerInvokerConfiguration
-   implements XmlExternalizable, BeanContextChildComponentProxy
+   implements BeanContextChildComponentProxy
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
    boolean optimize = false;
    
-   GenericCustomizer customizer;
+   Component customizer;
     
    // Static --------------------------------------------------------
    
@@ -54,34 +52,9 @@ public class JRMPContainerInvokerConfiguration
    {
       if (customizer == null)
           customizer = new GenericCustomizer(this);
-      return (Component)customizer;
+      return customizer;
    }
 
-   // XmlExternalizable implementation ------------------------------
-   public Element exportXml(Document doc)
-   {
-      Element coninvconf = doc.createElement("container-invoker-conf");
-      
-      XMLManager.addElement(coninvconf,"optimized",isOptimized()+"");
-      
-      return coninvconf;
-   }
-   
-   public void importXml(Element elt)
-   {
-      NodeList nl = elt.getChildNodes();
-      for (int i = 0; i < nl.getLength(); i++)
-      {
-         Node n = nl.item(i);
-         String name = n.getNodeName();
-         
-         if (name.equals("optimized"))
-         {
-            setOptimized(new Boolean(n.hasChildNodes() ? XMLManager.getString(n) : "").booleanValue());
-         } 
-      }
-   }
-   
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------

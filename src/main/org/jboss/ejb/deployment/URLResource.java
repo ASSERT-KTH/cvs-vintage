@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class URLResource
    implements BeanContextChildComponentProxy, XmlExternalizable, ResourceManager
@@ -39,7 +39,7 @@ public class URLResource
    
    String url= "";
 
-   Customizer c;
+   Component c;
    
    // Static --------------------------------------------------------
 
@@ -59,7 +59,7 @@ public class URLResource
    {
       if (c == null)
           c = new GenericCustomizer(this);
-      return (Component)c;
+      return c;
    }
    
    // XmlExternalizable implementation ------------------------------

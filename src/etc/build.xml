@@ -79,7 +79,7 @@
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss.mf"
          includes="org/jboss/**"
-         excludes="org/jboss/Main*"
+         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/ejb/plugins/jaws/deployment/**"
     />
   </target>
 

@@ -30,7 +30,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -61,11 +61,17 @@ public class LogInterceptor
    {
       Log.setLog(log);
       
-      String str = method.getName()+"(";
+      StringBuffer str = new StringBuffer();
+		str.append(method.getName());
+		str.append("(");
       if (args != null)
          for (int i = 0; i < args.length; i++)
-            str += (i==0?"":",")+args[i];
-      log.log(str+")");
+			{
+            str.append(i==0?"":",");
+				str.append(args[i]);
+			}
+		str.append(")");
+      log.log(str.toString());
       
       try
       {
@@ -105,11 +111,18 @@ public class LogInterceptor
       
       try
       {
-         String str = (id == null ? "" : "["+id.toString()+"] ") + method.getName()+"(";
+			StringBuffer str = new StringBuffer();
+         str.append(id == null ? "" : "["+id.toString()+"] ");
+			str.append(method.getName());
+			str.append("(");
          if (args != null)
             for (int i = 0; i < args.length; i++)
-               str += (i==0?"":",")+args[i];
-         log.log(str+")");
+				{
+               str.append(i==0?"":",");
+					str.append(args[i]);
+				}
+			str.append(")");
+         log.log(str.toString());
          
          return getNext().invoke(id, method, args, ctx);
       } catch (Exception e)

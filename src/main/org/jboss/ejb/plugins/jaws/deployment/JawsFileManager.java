@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class JawsFileManager
    extends BeanContextServicesSupport
@@ -90,7 +90,7 @@ public class JawsFileManager
          ejbJar.importXml(doc.getDocumentElement());
          
          // Load default JAWS XML
-         InputStream jawsXml = getClass().getResourceAsStream("/defaultjaws.xml");
+         InputStream jawsXml = getClass().getResourceAsStream("defaultjaws.xml");
          if (jawsXml != null)
          {
             in = new BufferedReader(new InputStreamReader(jawsXml));
@@ -135,7 +135,7 @@ public class JawsFileManager
          {
             // We want to use this file, but it doesn't contain the XML file yet (i.e. it's a JAR without the jboss.xml file)
             // Load default Jaws XML
-            jbossXml = getClass().getResourceAsStream("/defaultjaws.xml");
+            jbossXml = getClass().getResourceAsStream("defaultjaws.xml");
             if (jbossXml == null)
             {
                // No default found
@@ -168,7 +168,7 @@ public class JawsFileManager
          {
             // We want to use this file, but it doesn't contain the XML file yet (i.e. it's a JAR without the jboss.xml file)
             // Load default jBoss XML
-            jbossXml = getClass().getResourceAsStream("/defaultjaws.xml");
+            jbossXml = getClass().getResourceAsStream("defaultjaws.xml");
             if (jbossXml == null)
             {
                // No default found
@@ -203,7 +203,7 @@ public class JawsFileManager
       add(ejbJar);
       
       // Load default Jaws XML
-      InputStream jawsXml = getClass().getResourceAsStream("/defaultjaws.xml");
+      InputStream jawsXml = getClass().getResourceAsStream("defaultjaws.xml");
       System.out.println("Loading default XML");
       if (jawsXml != null)
       {

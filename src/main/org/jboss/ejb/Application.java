@@ -15,7 +15,7 @@ import java.util.HashMap;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Application
 {
@@ -67,6 +67,9 @@ public class Application
    
    public void setURL(URL url)
    {
+		if (url == null)
+			throw new IllegalArgumentException("Null URL");
+	
       this.url = url;
       if (name.equals(""))
          name = url.toString();

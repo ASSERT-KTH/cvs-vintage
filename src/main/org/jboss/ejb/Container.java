@@ -47,7 +47,7 @@ import org.jnp.server.NamingServer;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public abstract class Container
 {
@@ -75,6 +75,9 @@ public abstract class Container
    // Container implementation --------------------------------------
    public void setApplication(Application app) 
    { 
+		if (app == null)
+			throw new IllegalArgumentException("Null application");
+			
       application = app; 
       app.addContainer(this);
    }
@@ -96,11 +99,17 @@ public abstract class Container
    
    public void setContainerInvoker(ContainerInvoker ci) 
    { 
+      if (ci == null)
+      	throw new IllegalArgumentException("Null invoker");
+			
       this.containerInvoker = ci; 
       ci.setContainer(this);
    }
    public void setInstancePool(InstancePool ip) 
    { 
+      if (ip == null)
+      	throw new IllegalArgumentException("Null pool");
+			
       this.instancePool = ip; 
       ip.setContainer(this);
    }

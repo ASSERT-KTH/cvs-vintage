@@ -78,7 +78,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -114,7 +114,7 @@ public class JAWSPersistenceManager
    
    String createSql;
    String insertSql;
-//   String updateSql; Calculated dynamically (=tuned updates)
+	//   String updateSql; Calculated dynamically (=tuned updates)
    String selectSql;
    String removeSql;
    String dropSql;
@@ -730,7 +730,7 @@ public class JAWSPersistenceManager
             return;
          } else
          {
-            updateSql = updateSql+" WHERE "+pkColumnWhereList;
+            updateSql += " WHERE "+pkColumnWhereList;
          }
          
          // Update database

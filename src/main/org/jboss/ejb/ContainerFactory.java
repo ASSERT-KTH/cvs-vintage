@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -160,7 +160,8 @@ public class ContainerFactory
                   
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
                   con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-                  con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+//                  con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+                  con.setTransactionManager(new org.jboss.tm.TxManager());
                   
                   containers.add(con);
                } else // Stateful
@@ -185,7 +186,9 @@ public class ContainerFactory
                   ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
                   con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
                   ((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-                  con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+
+//                  con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+				  con.setTransactionManager(new org.jboss.tm.TxManager());
                   
                   containers.add(con);
             }

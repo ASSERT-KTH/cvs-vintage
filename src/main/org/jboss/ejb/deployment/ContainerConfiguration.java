@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -52,7 +52,7 @@ public abstract class ContainerConfiguration
    
    ArrayList interceptors = new ArrayList();
    
-   Customizer c;
+   Component c;
    
    // Static --------------------------------------------------------
 
@@ -79,16 +79,15 @@ public abstract class ContainerConfiguration
       {
          Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getConfigurationClassName(ci));
          Object obj = clazz.newInstance();
-         if (obj instanceof XmlExternalizable &&
-             (obj instanceof BeanContextChildComponentProxy ||
-              obj instanceof BeanContextContainerProxy))
+         if (obj instanceof BeanContextChildComponentProxy ||
+             obj instanceof BeanContextContainerProxy)
          {
             containerInvokerConfiguration = obj;
             add(containerInvokerConfiguration);
          }
       } catch (Throwable e)
       {
-//         System.out.println(e);
+         System.out.println(e);
       }
    }
    
@@ -170,7 +169,7 @@ public abstract class ContainerConfiguration
    {
       if (c == null)
           c = new GenericCustomizer(this);
-      return (Component)c;
+      return c;
    }
    
    // XmlExternalizable implementation ------------------------------
@@ -187,13 +186,40 @@ public abstract class ContainerConfiguration
       XMLManager.addElement(containerconfiguration,"transaction-manager",getTransactionManager());
       
       if (containerInvokerConfiguration != null)
-         containerconfiguration.appendChild(((XmlExternalizable)containerInvokerConfiguration).exportXml(doc));
+		{
+			if (containerInvokerConfiguration instanceof XmlExternalizable)
+			{
+				containerconfiguration.appendChild(((XmlExternalizable)containerInvokerConfiguration).exportXml(doc));
+			}
+			else
+			{
+				containerconfiguration.appendChild(XMLManager.exportBean(doc, containerInvokerConfiguration, "container-invoker-conf"));	
+			}
+		}
       
       if (instanceCacheConfiguration != null)
-         containerconfiguration.appendChild(((XmlExternalizable)instanceCacheConfiguration).exportXml(doc));
-         
+ 	   {
+		   if (instanceCacheConfiguration instanceof XmlExternalizable)
+		   {
+		   	containerconfiguration.appendChild(((XmlExternalizable)instanceCacheConfiguration).exportXml(doc));
+		   }
+		   else
+		   {
+		   	containerconfiguration.appendChild(XMLManager.exportBean(doc, instanceCacheConfiguration, "container-cache-conf"));	
+		   }
+	   }
+
       if (instancePoolConfiguration != null)
-         containerconfiguration.appendChild(((XmlExternalizable)instancePoolConfiguration).exportXml(doc));
+      {
+         if (instancePoolConfiguration instanceof XmlExternalizable)
+         {
+         	containerconfiguration.appendChild(((XmlExternalizable)instancePoolConfiguration).exportXml(doc));
+         }
+         else
+         {
+         	containerconfiguration.appendChild(XMLManager.exportBean(doc, instancePoolConfiguration, "container-pool-conf"));	
+         }
+      }
          
       return containerconfiguration;
    }
@@ -229,13 +255,22 @@ public abstract class ContainerConfiguration
                setTransactionManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } else if (name.equals("container-invoker-conf"))
             {
-               ((XmlExternalizable)containerInvokerConfiguration).importXml((Element)n);
+					if (containerInvokerConfiguration instanceof XmlExternalizable)
+	               ((XmlExternalizable)containerInvokerConfiguration).importXml((Element)n);
+					else
+						XMLManager.importBean((Element)n, containerInvokerConfiguration);
             } else if (name.equals("container-cache-conf"))
             {
-               ((XmlExternalizable)instanceCacheConfiguration).importXml((Element)n);
+               if (instanceCacheConfiguration instanceof XmlExternalizable)
+                  ((XmlExternalizable)instanceCacheConfiguration).importXml((Element)n);
+               else
+               	XMLManager.importBean((Element)n, instanceCacheConfiguration);
             } else if (name.equals("container-pool-conf"))
             {
-               ((XmlExternalizable)instancePoolConfiguration).importXml((Element)n);
+               if (instancePoolConfiguration instanceof XmlExternalizable)
+                  ((XmlExternalizable)instancePoolConfiguration).importXml((Element)n);
+               else
+               	XMLManager.importBean((Element)n, instancePoolConfiguration);
             }
 	      }
    	}

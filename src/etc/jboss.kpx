@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Mon Apr 24 09:14:04 2000">
+<kawaproject timestamp="Wed Apr 26 06:25:22 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -9,7 +9,7 @@
 <value>"121"</value>
 </productversion>
 </versioninfo>
-<path>"H:\projects\jboss2\jboss\src\etc\"</path>
+<path>"H:\projects\jboss\jboss\src\etc\"</path>
 <classpaths>
 <classpath enabled="1">
 <value>"&lt;Project Directory&gt;\..\..\dist\bin\run.jar"</value>
@@ -24,7 +24,7 @@
 <items>
 <folder>
 <name>"jboss"</name>
-<relativepath>"jboss2\jboss\src\etc\jboss.kpx"</relativepath>
+<relativepath>"jboss\jboss\src\etc\jboss.kpx"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>

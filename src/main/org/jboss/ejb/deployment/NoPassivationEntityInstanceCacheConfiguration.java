@@ -14,8 +14,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.dreambean.ejx.xml.XMLManager;
-import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.awt.GenericCustomizer;
    
 /**
@@ -23,10 +21,10 @@ import com.dreambean.awt.GenericCustomizer;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class NoPassivationEntityInstanceCacheConfiguration
-   implements XmlExternalizable, BeanContextChildComponentProxy
+   implements BeanContextChildComponentProxy
 {
    // Constants -----------------------------------------------------
     
@@ -34,7 +32,7 @@ public class NoPassivationEntityInstanceCacheConfiguration
    int minSize = 10;
    int maxSize = 100;
    
-   GenericCustomizer customizer;
+   Component customizer;
     
    // Static --------------------------------------------------------
    
@@ -51,39 +49,9 @@ public class NoPassivationEntityInstanceCacheConfiguration
    {
       if (customizer == null)
           customizer = new GenericCustomizer(this);
-      return (Component)customizer;
+      return customizer;
    }
 
-   // XmlExternalizable implementation ------------------------------
-   public Element exportXml(Document doc)
-   {
-      Element cacheconf = doc.createElement("container-cache-conf");
-      
-      XMLManager.addElement(cacheconf,"min-size",getMinimumSize()+"");
-      XMLManager.addElement(cacheconf,"max-size",getMaximumSize()+"");
-      
-      return cacheconf;
-   }
-   
-   public void importXml(Element elt)
-   {
-      NodeList nl = elt.getChildNodes();
-      for (int i = 0; i < nl.getLength(); i++)
-      {
-         Node n = nl.item(i);
-         String name = n.getNodeName();
-         
-         if (name.equals("min-size"))
-         {
-            setMinimumSize(new Integer(n.hasChildNodes() ? XMLManager.getString(n) : "").intValue());
-         } else if (name.equals("max-size"))
-         {
-            setMaximumSize(new Integer(n.hasChildNodes() ? XMLManager.getString(n) : "").intValue());
-         } 
-
-      }
-   }
-   
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
