@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.13 2004/07/18 18:56:02 kataka Exp $
+// $Id: GeneratorCpp.java,v 1.14 2004/07/22 15:42:47 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2574,9 +2574,9 @@ public class GeneratorCpp extends Generator2
 	if (generalizations == null) return "";
 	StringBuffer sb = new StringBuffer(80);
 	Collection classes = new ArrayList();
-	Iterator enum = generalizations.iterator();
-	while (enum.hasNext()) {
-	    MGeneralization g = (MGeneralization) enum.next();
+	Iterator genEnum = generalizations.iterator();
+	while (genEnum.hasNext()) {
+	    MGeneralization g = (MGeneralization) genEnum.next();
 	    MGeneralizableElement ge = g.getParent();
 	    // assert ge != null
 	    if (ge != null) {
@@ -2584,7 +2584,7 @@ public class GeneratorCpp extends Generator2
 		if (visibilityTag != null && visibilityTag != "")
 		    sb.append(visibilityTag).append(" ");
 		sb.append(generateNameWithPkgSelection(ge));
-		if (enum.hasNext()) sb.append(", ");
+		if (genEnum.hasNext()) sb.append(", ");
 	    }
 	}
 	return sb.toString();
@@ -2593,9 +2593,9 @@ public class GeneratorCpp extends Generator2
     public Collection getGeneralizationClassList(Collection generalizations) {
 	if (generalizations == null) return null;
 	Collection classes = new ArrayList();
-	Iterator enum = generalizations.iterator();
-	while (enum.hasNext()) {
-	    MGeneralization g = (MGeneralization) enum.next();
+	Iterator genEnum = generalizations.iterator();
+	while (genEnum.hasNext()) {
+	    MGeneralization g = (MGeneralization) genEnum.next();
 	    MGeneralizableElement ge = g.getParent();
 	    // assert ge != null
 	    if (ge != null) classes.add(ge);

@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.9 2004/07/18 18:56:02 kataka Exp $
+// $Id: GeneratorCSharp.java,v 1.10 2004/07/22 15:44:10 d00mst Exp $
 // Copyright (c) 1996-2002, 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1075,9 +1075,9 @@ public class GeneratorCSharp extends Generator2
     public String generateGeneralzation(Collection generalizations) {
 	if (generalizations == null) return "";
 	Collection classes = new ArrayList();
-	Iterator enum = generalizations.iterator();
-	while (enum.hasNext()) {
-	    MGeneralization g = (MGeneralization) enum.next();
+	Iterator genEnum = generalizations.iterator();
+	while (genEnum.hasNext()) {
+	    MGeneralization g = (MGeneralization) genEnum.next();
 	    MGeneralizableElement ge = g.getParent();
 	    // assert ge != null
 	    if (ge != null) classes.add(ge);
