@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.69 2003/02/11 20:57:31 jon Exp $
+ * @version $Id: Default.java,v 1.70 2003/02/13 20:54:09 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -193,6 +193,13 @@ public class Default extends TemplateSecureScreen
                 setTargetSelectModule(data);
                 return false;
             }
+/* FIXME
+   Breaks the ability to request roles because the permission is null and
+   the module is null, but we are logged in. John, we should assign default
+   permissions to each screen so that we can make it so that someone can be
+   logged in, but not select a module yet and be shown the select module
+   screen. (JSS)
+   
             else if (currentModule == null && 
                      user != null && 
                      user.hasLoggedIn())
@@ -200,6 +207,7 @@ public class Default extends TemplateSecureScreen
                 setTargetSelectModule(data);
                 return true;
             }
+*/
         }
         return true;
     }
