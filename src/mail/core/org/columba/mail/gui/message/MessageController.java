@@ -178,7 +178,8 @@ public class MessageController
 		// Shall we use the HTML-Viewer?
 
 		boolean htmlViewer =
-			bodyPart.getHeader().getContentSubtype().equals("html");
+			bodyPart.getHeader().
+				getMimeType().getSubtype().equals("html");
 
 		InputStream bodyStream =
 			((StreamableMimePart) bodyPart).getInputStream();
@@ -206,7 +207,8 @@ public class MessageController
 		boolean hasAttachments = false;
 
 		if ((mimePartTree.count() > 1)
-			|| (!mimePartTree.get(0).getHeader().getContentType().equals("text")))
+			|| (!mimePartTree.get(0).getHeader().
+						getMimeType().getType().equals("text")))
 			hasAttachments = true;
 
 		attachmentController.setMimePartTree(mimePartTree);

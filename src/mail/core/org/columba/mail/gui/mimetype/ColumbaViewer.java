@@ -32,8 +32,8 @@ public class ColumbaViewer extends AbstractViewer {
 		boolean save = false;
 		ChooseViewerDialog viewerDialog =
 			new ChooseViewerDialog(
-				header.getContentType(),
-				header.getContentSubtype(),
+				header.getMimeType().getType(),
+				header.getMimeType().getSubtype(),
 				save);
 		String viewer = viewerDialog.getViewer();
 		if (viewer == null)
@@ -64,8 +64,8 @@ public class ColumbaViewer extends AbstractViewer {
 			boolean save = false;
 			ChooseViewerDialog viewerDialog =
 				new ChooseViewerDialog(
-					header.getContentType(),
-					header.getContentSubtype(),
+					header.getMimeType().getType(),
+					header.getMimeType().getSubtype(),
 					save);
 			viewer = viewerDialog.getViewer();
 			if (viewer == null)
