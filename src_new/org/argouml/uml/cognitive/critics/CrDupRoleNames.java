@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.4 2003/01/18 20:40:11 linus Exp $
+// $Id: CrDupRoleNames.java,v 1.5 2003/01/23 05:50:42 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,9 +43,6 @@ import org.argouml.model.ModelFacade;
  *
  * <p>This is the first well-formedness rule for associations in the UML 1.3
  *   standard (see section 2.5.3 of the standard).</p>
- *
- * <p>Internally we use some of the static utility methods of the {@link
- * org.argouml.cognitive.critics.CriticUtils CriticUtils} class.</p>
  *
  * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_dup_role_names">ArgoUML User Manual: Duplicate end (role) names for &lt;association&gt;</a>
  */
