@@ -24,7 +24,7 @@
     <property file="${user.home}/.ant.properties" />
 
     <mkdir dir="${ws.dir}" />
-   </target>
+  </target>
 
    <!-- ******************** Creating source snapshots  ******************** -->
   <target name="cvsget" depends="init">
@@ -55,8 +55,10 @@
     <deltree dir="${ws.dir}/${package.name}.src.zip" />
     <cvs cvsRoot="${cvs.root}" 
          package="${package.name}"   dest="${ws.dir}"  />
+    <echo message="CVS done ${nightly.dir}/src/${package.name}.src.zip ${ws.dir} ${package.name}" />
     <zip zipfile="${nightly.dir}/src/${package.name}.src.zip" 
          basedir="${ws.dir}" items="${package.name}"/>
+    <echo message="ZIP done " />
     <copyfile src="${nightly.dir}/src/${package.name}.src.zip"
               dest="${nightly.dir}/src/${package.name}-${DSTAMP}.src.zip" />
   </target>
@@ -70,63 +72,63 @@
   </target>
 
    <!-- ******************** Getting binaries from build machines  ******************** -->
-   <target name="binaries.get"  depends="init">
-    <get src="ftp://tokyo.javasoft.com/pub/tomcat/tomcat.zip" 
-         dest="${nightly.dir}/tomcat.zip" ignoreErrors="true" />
-    <get src="ftp://tokyo.javasoft.com/pub/ant/ant.zip" 
-         dest="${nightly.dir}/ant.zip"  ignoreErrors="true" />
-    <get src="ftp://tokyo.javasoft.com/pub/tomcat/ASFtomcat.pkg.tar.Z" 
-         dest="${nightly.dir}/ASFtomcat.pkg.tar.Z" ignoreErrors="true" />
-    <get src="ftp://tokyo.javasoft.com/pub/ant/ASFant.pkg.tar.Z" 
-         dest="${nightly.dir}/ASFant.pkg.tar.Z" ignoreErrors="true" />
+    <target name="binaries.get"  depends="init">
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-Solaris-${DSTAMP}.zip" 
+             dest="${nightly.dir}/tomcat.zip" ignoreErrors="true" />
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/ant-Solaris-${DSTAMP}.zip" 
+             dest="${nightly.dir}/ant.zip"  ignoreErrors="true" />
+        <copyfile src="${nightly.dir}/tomcat.zip" dest="${nightly.dir}/tomcat-${DSTAMP}.zip" />
+        <copyfile src="${nightly.dir}/ant.zip" dest="${nightly.dir}/ant-${DSTAMP}.zip" />
+    </target>
+  
+    <!-- logs -->
+    <target name="logs.get"  depends="init">
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-test.log" 
+             dest="${nightly.dir}/log/tomcat-test-SunOS-${DSTAMP}.log" ignoreErrors="true" />
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/watchdog-test.log" 
+             dest="${nightly.dir}/log/watchdog-test-SunOS-${DSTAMP}.log" ignoreErrors="true" />
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/watchdog-test.log" 
+             dest="${nightly.dir}/log/watchdog-test-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/tomcat-test.log" 
+             dest="${nightly.dir}/log/tomcat-test-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
+    </target>
 
-    <get src="ftp://tokyo.javasoft.com/pub/tomcat/tomcat-test.log" 
-         dest="${nightly.dir}/log/tomcat-test-SunOS-${DSTAMP}.log" ignoreErrors="true" />
-    <get src="ftp://tokyo.javasoft.com/pub/tomcat/watchdog-test.log" 
-         dest="${nightly.dir}/log/watchdog-test-SunOS-${DSTAMP}.log" ignoreErrors="true" />
-
-    <get src="ftp://osaka.javasoft.com/pub/ant/ant-1.0-0.noarch.rpm" 
-         dest="${nightly.dir}/ant-1.0-0.noarch.rpm  " ignoreErrors="true"  />
-    <get src="ftp://osaka.javasoft.com/pub/ant/ant-1.0-0.src.rpm" 
-         dest="${nightly.dir}/ant-1.0-0.src.rpm  " ignoreErrors="true" />
-    <get src="ftp://osaka.javasoft.com/pub/tomcat/tomcat-3.0-0.noarch.rpm" 
-         dest="${nightly.dir}/tomcat-3.0-0.noarch.rpm  " ignoreErrors="true" />
-    <get src="ftp://osaka.javasoft.com/pub/tomcat/tomcat-3.0-0.src.rpm" 
-         dest="${nightly.dir}/tomcat-3.0-0.src.rpm  " ignoreErrors="true" />
-
-    <get src="ftp://osaka.javasoft.com/pub/tomcat/watchdog-test.log" 
-         dest="${nightly.dir}/log/watchdog-test-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
-    <get src="ftp://osaka.javasoft.com/pub/tomcat/tomcat-test.log" 
-         dest="${nightly.dir}/log/tomcat-test-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
-
-    <copyfile src="${nightly.dir}/tomcat.zip" dest="${nightly.dir}/tomcat-${DSTAMP}.zip" />
-    <copyfile src="${nightly.dir}/ant.zip" dest="${nightly.dir}/ant-${DSTAMP}.zip" />
+    <!-- native packages -->
+    <target name="packages.get"  depends="init">
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/ASFtomcat.pkg.tar.Z" 
+             dest="${nightly.dir}/ASFtomcat.pkg.tar.Z" ignoreErrors="true" />
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/ASFant.pkg.tar.Z" 
+             dest="${nightly.dir}/ASFant.pkg.tar.Z" ignoreErrors="true" />
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/ant-1.0-0.noarch.rpm" 
+             dest="${nightly.dir}/ant-1.0-0.noarch.rpm  " ignoreErrors="true"  />
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/ant-1.0-0.src.rpm" 
+             dest="${nightly.dir}/ant-1.0-0.src.rpm  " ignoreErrors="true" />
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/tomcat-3.0-0.noarch.rpm" 
+             dest="${nightly.dir}/tomcat-3.0-0.noarch.rpm  " ignoreErrors="true" />
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/tomcat-3.0-0.src.rpm" 
+             dest="${nightly.dir}/tomcat-3.0-0.src.rpm  " ignoreErrors="true" />
    </target>
 
-
-
-   <target name="tomcat.zip2tar"  depends="init">
+   <!-- Zip2Tar  -->
+   <target name="zip2tar"  depends="init">
      <deltree dir="${ws.dir}/tmp" />
      <mkdir dir="${ws.dir}/tmp" />
-     <expand src="${nightly.dir}/tomcat.zip" dest="${ws.dir}/tmp" />
-     <exec dir="${ws.dir}/tmp"  command="tar cf tomcat.tar tomcat" />
-     <exec dir="${ws.dir}/tmp"  command="compress tomcat.tar "/>
-     <exec dir="${ws.dir}/tmp"  command="tar cf tomcat.tar tomcat" />
-     <exec dir="${ws.dir}/tmp"  command="bzip2 tomcat.tar "/>
-     <copyfile src="${ws.dir}/tmp/tomcat.tar.Z" dest="${nightly.dir}/tomcat.tar.Z" />
-     <copyfile src="${ws.dir}/tmp/tomcat.tar.bz2" dest="${nightly.dir}/tomcat.tar.bz2" />
+     <expand src="${nightly.dir}/${zip2tar.src}.zip" dest="${ws.dir}/tmp" />
+     <exec dir="${ws.dir}/tmp"  command="tar cf ${zip2tar.src}.tar *" />
+     <exec dir="${ws.dir}/tmp"  command="compress ${zip2tar.src}.tar "/>
+     <exec dir="${ws.dir}/tmp"  command="tar cf ${zip2tar.src}.tar *" />
+     <exec dir="${ws.dir}/tmp"  command="bzip2 ${zip2tar.src}.tar "/>
+     <copyfile src="${ws.dir}/tmp/${zip2tar.src}.tar.Z" dest="${nightly.dir}/${zip2tar.src}.tar.Z" />
+     <copyfile src="${ws.dir}/tmp/${zip2tar.src}.tar.bz2" dest="${nightly.dir}/${zip2tar.src}.tar.bz2" />
    </target>
 
-   <target name="ant.zip2tar"  depends="init">
-     <deltree dir="${ws.dir}/tmp" />
-     <mkdir dir="${ws.dir}/tmp" />
-     <expand src="${nightly.dir}/ant.zip" dest="${ws.dir}/tmp" />
-     <exec dir="${ws.dir}/tmp"  command="tar cf ant.tar ant" />
-     <exec dir="${ws.dir}/tmp"  command="compress ant.tar "/>
-     <exec dir="${ws.dir}/tmp"  command="tar cf ant.tar ant" />
-     <exec dir="${ws.dir}/tmp"  command="bzip2 ant.tar "/>
-     <copyfile src="${ws.dir}/tmp/ant.tar.Z" dest="${nightly.dir}/ant.tar.Z" />
-     <copyfile src="${ws.dir}/tmp/ant.tar.bz2" dest="${nightly.dir}/ant.tar.bz2" />
+   <target name="tar"  depends="init">
+     <ant antfile="${ant.file}" target="zip2tar" >
+        <property name="zip2tar.src" value="tomcat" />
+     </ant>    
+     <ant antfile="${ant.file}" target="zip2tar" >
+        <property name="zip2tar.src" value="ant" />
+     </ant>    
    </target>
 
    <target name="remove-old"  depends="init">
@@ -135,16 +137,16 @@
       <exec command="find ${nightly.dir}/src -atime +3  -type f  -print -exec rm {} \;" />
    </target>
 
-   <!-- ******************** Getting sources from Jakarta to ws.dir ******************** -->
-   <!-- Generic (customizable) target to build a project -->
-   <!-- Parameters:  package.name -->
-   <target name="package.get" depends="init" >
-    <deltree dir="${ws.dir}/${package.name}.src.zip" />
-    <get src="${nightly.url}/src/${package.name}.src.zip" dest="${ws.dir}/${package.name}.src.zip" />
+    <!-- ******************** Getting sources from Jakarta to ws.dir ******************** -->
+    <!-- Generic (customizable) target to build a project -->
+    <!-- Parameters:  package.name -->
+    <target name="package.get" depends="init" >
+        <deltree dir="${ws.dir}/${package.name}.src.zip" />
+        <get src="${nightly.url}/src/${package.name}.src.zip" dest="${ws.dir}/${package.name}.src.zip" />
     
-    <deltree dir="${ws.dir}/${package.name}" />
-    <expand src="${ws.dir}/${package.name}.src.zip" dest="${ws.dir}" />
-  </target>
+        <deltree dir="${ws.dir}/${package.name}" />
+        <expand src="${ws.dir}/${package.name}.src.zip" dest="${ws.dir}" />
+    </target>
 
   <target name="src.get" depends="init">    
      <ant antfile="${ant.file}" target="package.get" >
@@ -172,7 +174,7 @@
   <target name="src.snap" depends="init,remove-old,cvsget" >
   </target>
 
-  <target name="bin.snap" depends="init,binaries.get,tomcat.zip2tar,ant.zip2tar" >
+  <target name="bin.snap" depends="init,binaries.get,tar" >
   </target>
   
 </project>
