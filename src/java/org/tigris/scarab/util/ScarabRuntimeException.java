@@ -60,7 +60,7 @@ import org.tigris.scarab.tools.localization.Localizable;
     ScarabRuntimeException adds a new type of message, the L10NMessage.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ScarabRuntimeException.java,v 1.1 2004/12/02 21:13:20 dabbous Exp $
+    @version $Id: ScarabRuntimeException.java,v 1.2 2004/12/02 21:32:50 dabbous Exp $
 */
 public class ScarabRuntimeException extends RuntimeException implements Localizable
 {
@@ -70,6 +70,10 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
      */
     Localizable l10nMessage;
     
+    /**
+     * Placeholder for a nested exception (may be null)
+     */
+    Throwable nested;
 
     /**
      * Constructs a new <code>ScarabRuntimeException</code> with specified 
@@ -79,18 +83,20 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
     public ScarabRuntimeException(LocalizationKey theKey)
     {
          l10nMessage = new L10NMessage(theKey);
+         nested      = null;
     }
 
     /**
      * Constructs a new <code>ScarabRuntimeException</code> with specified 
      * resource and a nested Throwable.
      * @param theKey the l10n error key.
-     * @param nested
+     * @param aNested
      */
-    public ScarabRuntimeException(LocalizationKey theKey, Throwable nested)
+    public ScarabRuntimeException(LocalizationKey theKey, Throwable aNested)
     {
-        super(nested);
+        super();
         l10nMessage = new L10NMessage(theKey, nested);
+        nested      = aNested;
     }
 
 
@@ -102,18 +108,20 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
     public ScarabRuntimeException(Localizable theL10nInstance)
     {
          l10nMessage = theL10nInstance;
+         nested      = null;
     }
  
     /**
      * Constructs a new <code>ScarabRuntimeException</code> with specified 
      * Localizable and a nested Throwable.
      * @param theL10nInstance the l10n error key.
-     * @param nested
+     * @param aNested
      */
-    public ScarabRuntimeException(Localizable theL10nInstance, Throwable nested)
+    public ScarabRuntimeException(Localizable theL10nInstance, Throwable aNested)
     {
-        super(nested);
+        super();
         l10nMessage = theL10nInstance;
+        nested      = aNested;
     }
 
     
@@ -126,6 +134,7 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
     public ScarabRuntimeException (LocalizationKey theKey, Object[] theParams)
     {
         l10nMessage = new L10NMessage(theKey, theParams);
+        nested      = null;
     }
  
     /**
@@ -239,7 +248,25 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
         String result;
         if (l10nMessage == null)
         {
-            result = super.getMessage();
+            if (nested == null)
+            {
+                result = super.getMessage();
+            }
+            else
+            {
+                if (  nested instanceof ScarabRuntimeException )
+                {
+                    result = ((ScarabRuntimeException)nested).getMessage(l10n);
+                }
+                else if (  nested instanceof ScarabException )
+                {
+                    result = ((ScarabException)nested).getMessage(l10n);
+                }
+                else
+                {
+                    result = nested.getMessage();
+                }
+            }
         }
         else
         {
@@ -252,13 +279,6 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
      * return the localized message in english.
      * Note: It is preferrable to use 
      * {@link #getMessage(ScarabLocalizationTool) getMessage }
-     * Currently it is possible, that a ScarabRuntimeException
-     * contains NO L10NInstance. This is due to the deprecated
-     * constructors {@link #ScarabRuntimeException() ScarabRuntimeException }
-     * and {@link #ScarabRuntimeException(String) ScarabRuntimeException }
-     * Eventually (after these constructors have been deleted
-     * from the code base) we guarantee, that ScarabRuntimeException 
-     * is fully localized.
      *
      * @return localized english text
      */
@@ -267,7 +287,14 @@ public class ScarabRuntimeException extends RuntimeException implements Localiza
         String result;
         if (l10nMessage == null)
         {
-            result = super.getMessage();
+            if (nested == null)
+            {
+                result = super.getMessage();
+            }
+            else
+            {
+                result = nested.getMessage();
+            }
         }
         else
         {
