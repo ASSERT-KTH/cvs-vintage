@@ -219,15 +219,13 @@ public class TableView extends TreeTable {
 				registerRenderer(
 					"Status",
 					new StatusRenderer(getTree()),
-					/*
+					
 					new BooleanHeaderRenderer(
-						ImageLoader.getSmallImageIcon("mail-new.png"),
-						name,
-						getTableModelSorter()),*/
-				new CommonHeaderRenderer(),
+						ImageLoader.getSmallImageIcon("mail-new.png")),
 					23,
 					true,
 					position);
+					
 			} else if (name.equalsIgnoreCase("Flagged")) {
 				registerRenderer(
 					"Flagged",

@@ -24,6 +24,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -134,7 +135,7 @@ public class TableController {
 			new TableModelThreadedView(tableModelFilteredView);
 
 		tableModelSorter = new TableModelSorter(tableModelThreadedView);
-		
+
 		updateManager = new TableModelUpdateManager(tableModelSorter);
 
 		view = new TableView(headerTableModel);
@@ -161,6 +162,23 @@ public class TableController {
 
 		addMouseListenerToHeaderInTable();
 
+		loadColumnConfig();
+	}
+
+	protected void loadColumnConfig() {
+		String column = getTableModelSorter().getSortingColumn();
+		int columnNumber = getTableModelSorter().getSortInt();
+		ImageIcon icon = null;
+		if (getTableModelSorter().getSortingOrder() == true)
+			icon = new AscendingIcon();
+		else
+			icon = new DescendingIcon();
+
+		TableColumnModel columnModel = getView().getColumnModel();
+		JLabel renderer =
+			(JLabel) columnModel.getColumn(columnNumber).getHeaderRenderer();
+		
+		renderer.setIcon(icon);
 	}
 
 	/**
@@ -194,7 +212,12 @@ public class TableController {
 							renderer.setIcon(null);
 					}
 
-					getView().getTableHeader().repaint();
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							getView().getTableHeader().repaint();
+
+						}
+					});
 
 					getTableModelSorter().sort(column);
 
@@ -418,13 +441,12 @@ public class TableController {
 
 					updateManager.modify(event.getUids());
 
-
 					try {
 
 						ColumbaLogger.log.debug("tableChangedEvent.Mark");
 						// fixme: i don't know if this is the right point to do this
 						// here we reselect the current marked message
-						
+
 						// getting the last selected uid
 						Object[] lastSelUids = new Object[1];
 						lastSelUids[0] = ((Folder) folder).getLastSelection();
@@ -446,7 +468,6 @@ public class TableController {
 				}
 		}
 
-		
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
 
 			((ThreePaneMailFrameController) getMailFrameController())
@@ -486,7 +507,6 @@ public class TableController {
 		 */
 	public void showHeaderList(Folder folder, HeaderList headerList)
 		throws Exception {
-
 
 		boolean enableThreadedView =
 			folder.getFolderItem().getBoolean(
