@@ -3,8 +3,9 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
-  #set ($values = "")
   #set ($issueType = $attrValue.Issue.IssueType)
+  ## initialize in case the second #set has null RHS
+  #set ($values = "")
   #set ($values = $attrInput.get($optionFieldName).Value)
 
 <select name="$attrInput.get($optionFieldName).Key"
@@ -16,7 +17,7 @@
   #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
     #set ($selected = false)
     #set ($canMakeTransition = "true")
-    #if ($values && !$values.equals(""))   
+    #if ($values && !$values.toString().equals(""))   
        #if ($multiple.equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
@@ -106,6 +107,8 @@
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
 #set ($module = $attrValue.Issue.Module)
+## initialize in case the second #set has null RHS
+#set ($values = "")
 #set ($values = $attrInput.get($optionFieldName).Value)
 
 <select name="$attrInput.get($optionFieldName).Key"
@@ -115,7 +118,7 @@
   #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = false)
-    #if ($values)   
+    #if ($values && !$values.toString().equals(""))   
        #if ($multiple.toString().equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
