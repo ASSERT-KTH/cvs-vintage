@@ -233,12 +233,15 @@ class AJP12RequestAdapter extends Request {
 		case 1: //beginning of request
 		    methodMB.setString( readString(ajpin, null));              //Method
 		    
-		    contextPath = readString(ajpin, null);               //Zone
+		    //Zone
+		    contextMB.setString(readString(ajpin, null));
+
 		    // GS, the following commented line causes the Apache + Jserv + Tomcat
 		    // combination to hang with a 404!!!
 		    // if("ROOT".equals( contextPath ) ) contextPath="";
-		    if("ROOT".equalsIgnoreCase( contextPath ) ) contextPath=null;
-		    if( doLog ) d("AJP: CP=" + contextPath);
+		    if(contextMB.equalsIgnoreCase( "ROOT" ) )
+			contextMB.setString(null);
+		    if( doLog ) d("AJP: CP=" + contextMB.toString());
 
 		    // XXX That wasn't used afaik, need to do something in ajp13
 		    // 		    if( contextPath!= null )
@@ -252,12 +255,11 @@ class AJP12RequestAdapter extends Request {
 		    
 		    dummy = readString(ajpin, null);               //Apache document root
 		    
-		    pathInfo = readString(ajpin, null);               //Apache parsed path-info
-		    if( doLog ) d("AJP: PI=" + pathInfo );
+		    pathInfoMB.setString( readString(ajpin, null));               //Apache parsed path-info
+		    if( doLog ) d("AJP: PI=" + pathInfoMB.toString() );
 		    
 		    // XXX Bug in mod_jserv !!!!!
-		    pathTranslated = readString(ajpin, null);               //Apache parsed path-translated
-		    if( doLog ) d("AJP: PT=" + pathTranslated );
+		    dummy = readString(ajpin, null);               //Apache parsed path-translated
 		    
 		    queryMB.setString( readString(ajpin, null));         //query string
 		    if( doLog ) d("AJP: QS=" + queryMB.toString() );
@@ -280,7 +282,7 @@ class AJP12RequestAdapter extends Request {
 		    if( doLog ) d("AJP: Meth=" + methodMB.toString() );
 		    
 		    uriMB.setString( readString(ajpin, ""));             //request uri
-		    if( doLog ) d("AJP: URI: " + uriMB.toString() + " CP:" + contextPath );
+		    if( doLog ) d("AJP: URI: " + uriMB + " CP:" + contextMB );
 
 		    // XXX don't set lookup path - problems with URL rewriting.
 		    // need to be fixed.

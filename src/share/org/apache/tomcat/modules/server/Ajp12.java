@@ -141,7 +141,7 @@ class Ajp12 {
 		    dummy = readString(ajpin, null);               
 		    req.setPathInfo( readString(ajpin, null));               
 		    //Apache parsed path-translated XXX Bug in mod_jserv !!!!!
-		    req.setPathTranslated( readString(ajpin, null));
+		    dummy = readString(ajpin, null);
 		    req.setQueryString( readString(ajpin, null));         
 		    req.setRemoteAddr(readString(ajpin, ""));
 		    req.setRemoteHost( readString(ajpin, ""));

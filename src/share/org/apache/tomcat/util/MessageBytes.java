@@ -147,6 +147,7 @@ public final class MessageBytes implements Cloneable, Serializable {
      * Resets the message bytes to an uninitialized state.
      */
     public void recycle() {
+	type=T_NULL;
 	bytes = null;
 	strValue=null;
 	//	chars=null;

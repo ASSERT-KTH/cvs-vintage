@@ -255,7 +255,16 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getPathTranslated() {
-        return request.getPathTranslated();
+	// Servlet 2.2 spec differs from what Apache and
+	// all other web servers consider to be PATH_TRANSLATED.
+	// It's important not to use CGI PATH_TRANSLATED - this
+	// code is specific to servlet 2.2 ( or more )
+	String path=getPathInfo();
+	if(path==null || "".equals( path ) ) return null;
+	String pathTranslated=
+	    FileUtil.safePath( request.getContext().getAbsolutePath(),
+			       path);
+	return pathTranslated;
     }
     
     public String getProtocol() {

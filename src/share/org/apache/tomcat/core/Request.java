@@ -165,21 +165,14 @@ public class Request {
     protected Handler handler = null;
     Container container;
 
-    //protected ServletInputStream in;
+    ServerCookie scookies[]=new ServerCookie[4];
+    // -1 = cookies not processed yet
+    int cookieCount=-1;
 
     // sub-request support 
     Request top;
     Request parent;
     Request child;
-
-    protected String contextPath;
-    protected String servletPath;
-    protected String pathInfo;
-    protected String pathTranslated;
-    protected boolean pathTranslatedIsSet=false;
-
-    protected Vector cookies = new Vector();
-    protected boolean didCookies;
 
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
     // Accounting
@@ -312,7 +305,7 @@ public class Request {
     }
 
     public void setPathInfo(String pathInfo) {
-        this.pathInfo = pathInfo;
+        pathInfoMB.setString( pathInfo );
     }
 
 //     // What's between context path and servlet name ( /servlet )
@@ -410,42 +403,11 @@ public class Request {
 	this.contentType=type;
     }
 
-
-    /** All adapters that know the PT needs to call this method,
-	in order to set pathTranslatedIsSet, otherwise tomcat
-	will try to compute it again
-    */
-    public void setPathTranslated(String s ) {
-	pathTranslated=s;
-	pathTranslatedIsSet=true;
-    }
-
-    /** Not so usefull - it return the path translated for a
-	URL relative the the context, i.e. different from
-	what PATH_TRANSLATED does. Avoid using it.
-    */
-    public String getPathTranslated() {
-	if( pathTranslatedIsSet ) return pathTranslated;
-
-	// not set yet - we'll compute it
-	pathTranslatedIsSet=true;
-	String path=getPathInfo();
-	// In CGI spec, PATH_TRANSLATED shouldn't be set if no path
-	// info is present
-	pathTranslated=null;
-	if(path==null || "".equals( path ) ) return null;
-
-	pathTranslated=FileUtil.safePath( context.getAbsolutePath(),
-					  path);
-	return pathTranslated;
-    }
-
-
     // XXX XXX Servlet API conflicts with the CGI specs -
     // PathInfo should be "" if no path info is requested ( as it is in CGI ).
     // We are following the spec, but IMHO it's a bug ( in the spec )
     public String getPathInfo() {
-        return pathInfo;
+        return pathInfoMB.toString();
     }
 
     public void setRemoteUser(String s) {
@@ -529,11 +491,11 @@ public class Request {
     }
 
     public String getServletPath() {
-        return servletPath;
+        return servletPathMB.toString();
     }
 
     public void setServletPath(String servletPath) {
-	this.servletPath = servletPath;
+	servletPathMB.setString( servletPath );
     }
 
 
@@ -617,35 +579,35 @@ public class Request {
     }
 
     // -------------------- Cookies --------------------
+    
     public int getCookieCount() {
-	if( ! didCookies ) {
-	    didCookies=true;
-	    RequestUtil.processCookies( this );
+	if( cookieCount == -1 ) {
+	    cookieCount=0;
+	    // compute cookies
+	    CookieTools.processCookies( this );
 	}
-	return cookies.size();
+	return cookieCount;
     }
 
     public ServerCookie getCookie( int idx ) {
-	if( ! didCookies ) {
+	if( cookieCount == -1 ) {
 	    getCookieCount(); // will also update the cookies
 	}
-	return (ServerCookie)cookies.elementAt(idx);
+	return scookies[idx];
     }
 
     public void addCookie( ServerCookie c ) {
-	cookies.addElement( c );
-    }
-
-    private ServerCookie[] getCookies() {
-	int count=getCookieCount();
-	ServerCookie[] cookieArray = new ServerCookie[ count ];
-
-	for (int i = 0; i < count; i ++) {
-	    cookieArray[i] = getCookie( i );
+	// not really needed - happen in 1 thread
+	synchronized ( this ) {
+	    if( cookieCount >= scookies.length  ) {
+		ServerCookie scookiesTmp[]=new ServerCookie[2*cookieCount];
+		System.arraycopy( scookies, 0, scookiesTmp, 0, cookieCount);
+		scookies=scookiesTmp;
+	    }
+	    scookies[cookieCount++]=c;
 	}
-
-	return cookieArray;
     }
+
     // -------------------- LookupResult
     public Handler getWrapper() {
 	return handler;
@@ -861,8 +823,7 @@ public class Request {
         context = null;
         attributes.clear();
         parameters.clear();
-        cookies.removeAllElements();
-        contentLength = -1;
+	contentLength = -1;
         contentType = null;
         charEncoding = null;
         authType = null;
@@ -871,18 +832,20 @@ public class Request {
         serverSession = null;
         didParameters = false;
         didReadFormData = false;
-        didCookies = false;
         container=null;
         handler=null;
         jvmRoute = null;
         headers.clear(); // XXX use recycle pattern
         serverName=null;
         serverPort=8080;
-        pathTranslated=null;
-        pathInfo=null;
-        pathTranslatedIsSet=false;
         sessionIdSource = null;
 	sessionId=null;
+	
+	for( int i=0; i< cookieCount; i++ ) {
+	    if( scookies[i]!=null )
+		scookies[i].recycle();
+	}
+	cookieCount=-1;
 
 	// counters and notes
         cntr.recycle();

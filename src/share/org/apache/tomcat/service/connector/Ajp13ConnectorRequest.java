@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.13 2000/10/06 05:19:12 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/10/06 05:19:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.14 2000/10/08 21:28:58 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/10/08 21:28:58 $
  *
  * ====================================================================
  *
@@ -173,7 +173,7 @@ public class Ajp13ConnectorRequest extends Request
             bsc = msg.getByte()) {
             switch(bsc) {
                 case SC_A_CONTEXT      :
-                    contextPath = msg.getString();
+                    contextMB.setString( msg.getString());
                 break;
 
                 case SC_A_SERVLET_PATH :
