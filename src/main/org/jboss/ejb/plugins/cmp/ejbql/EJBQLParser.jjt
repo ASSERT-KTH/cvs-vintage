@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class EJBQLParser {
    private Catalog catalog;
@@ -66,14 +66,14 @@ public class EJBQLParser {
       token_source.idManager = idManager;
 
       String lowerCase = ejbql.toLowerCase();
-      int fromBeginIndex = lowerCase.indexOf(" from ");
+      int fromBeginIndex = indexOf(lowerCase, "from");
       if(fromBeginIndex < 0) {
          throw new ParseException("FROM not found");
       }
 
-      int fromEndIndex = lowerCase.indexOf(" where ");
+      int fromEndIndex = indexOf(lowerCase, "where");
       if(fromEndIndex < 0) {
-         fromEndIndex = lowerCase.indexOf("order by");
+         fromEndIndex = indexOf(lowerCase, "order by");
       }
       if(fromEndIndex < 0) {
          fromEndIndex = ejbql.length();
@@ -86,7 +86,7 @@ public class EJBQLParser {
 
       // everything except for the from clause
       char[] sansFrom = ejbql.toCharArray();
-      clear(sansFrom, fromBeginIndex + 6, fromEndIndex);
+      clear(sansFrom, fromBeginIndex + 4, fromEndIndex);
 
       // From clause
       ReInit(new CharArrayReader(from));
@@ -103,6 +103,16 @@ public class EJBQLParser {
       return ejbqlNode;
    }
 
+   private static final int indexOf(String ql, String word)
+   {
+      int i = ql.indexOf(word);
+      while(i > 0 && (ql.charAt(i - 1) == '.'))
+      {
+         i = ql.indexOf(word, i + 1);
+      }
+      return i;
+   }
+   
    private final void clear(char[] c, int beginIndex, int endIndex) {
       for(int i=beginIndex; i < endIndex; i++) {
          if(c[i]!='\r' && c[i]!='\n' && c[i]!='\t') {
