@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.190 2003/07/03 21:06:33 spestov Exp $
+ * @version $Id: Buffer.java,v 1.191 2003/07/16 21:55:23 spestov Exp $
  */
 public class Buffer
 {
@@ -488,6 +488,7 @@ public class Buffer
 		EditBus.send(new BufferUpdate(this,view,BufferUpdate.SAVING));
 
 		final String oldPath = this.path;
+		final String oldSymlinkPath = this.symlinkPath;
 		final String newPath = (path == null ? this.path : path);
 
 		VFS vfs = VFSManager.getVFSForPath(newPath);
@@ -510,9 +511,9 @@ public class Buffer
 			public void run()
 			{
 				setFlag(IO,false);
-				finishSaving(view,oldPath,newPath,rename,
-					getBooleanProperty(BufferIORequest
-					.ERROR_OCCURRED));
+				finishSaving(view,oldPath,oldSymlinkPath,
+					newPath,rename,getBooleanProperty(
+					BufferIORequest.ERROR_OCCURRED));
 			}
 		});
 
@@ -2066,7 +2067,9 @@ public class Buffer
 
 		String firstLine = getLineText(0);
 
-		for(int i = 0; i < modes.length; i++)
+		// this must be in reverse order so that modes from the user
+		// catalog get checked first!
+		for(int i = modes.length - 1; i >= 0; i--)
 		{
 			if(modes[i].accept(nogzName,firstLine))
 			{
@@ -3835,7 +3838,8 @@ loop:		for(int i = 0; i < seg.count; i++)
 	} //}}}
 
 	//{{{ finishSaving() method
-	private void finishSaving(View view, String oldPath, String path,
+	private void finishSaving(View view, String oldPath,
+		String oldSymlinkPath, String path,
 		boolean rename, boolean error)
 	{
 		//{{{ Set the buffer's path
@@ -3914,7 +3918,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 				if(!getPath().equals(oldPath))
 				{
-					jEdit.updatePosition(oldPath,Buffer.this);
+					jEdit.updatePosition(oldSymlinkPath,this);
 					setMode();
 				}
 				else
