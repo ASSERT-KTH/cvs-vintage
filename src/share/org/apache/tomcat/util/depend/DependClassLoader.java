@@ -145,10 +145,13 @@ public class DependClassLoader extends ClassLoader {
     protected synchronized Class loadClass(String name, boolean resolve)
         throws ClassNotFoundException
     {
-	return loadClassInternal( name, resolve );
+	return loadClassInternal1( name, resolve );
     }
 
-    protected Class loadClassInternal( String name, boolean resolve )
+    /** Actual class loading. The name 'loadClassInternal' generates a warning,
+     *  as a private method with the same name exists int ClassLoader in JDK1.1 ( Sun impl ).
+     */
+    protected Class loadClassInternal1( String name, boolean resolve )
 	throws ClassNotFoundException
     {
 	if( debug>0) log( "loadClass() " + name + " " + resolve);
@@ -212,6 +215,9 @@ public class DependClassLoader extends ClassLoader {
 	return c;
     }
 
+    /** This method must be overriden to provide additional functionality,
+	like associating a protection domain
+    */
     protected Class defineClassCompat( String name, byte data[], int s, int end, URL res )
 	throws ClassNotFoundException
     {

@@ -85,7 +85,7 @@ public class DependClassLoader12 extends DependClassLoader {
 	try {
 	    return (Class)AccessController.doPrivileged( new PrivilegedExceptionAction() {
 		    public Object run() throws Exception {
-			return loadClassInternal( lname, lresolve );
+			return loadClassInternal1( lname, lresolve );
 		    }
 		});
 	} catch( PrivilegedActionException pex ) {
