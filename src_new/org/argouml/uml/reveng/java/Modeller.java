@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.15 2001/06/19 20:39:45 marcus Exp $
+// $Id: Modeller.java,v 1.16 2001/06/20 20:58:43 andreas Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -455,12 +455,16 @@ public class Modeller
 	MOperation operation = (MOperation)op;
 	MMethod method = new MMethodImpl();
 	method.setBody(new MProcedureExpression("Java", body));
-	method.setSpecification(operation);
-	method.setName(operation.getName() + ".java");
+
+	// Mirror the operation properties to get the method in sync with it.
+	method.setName(operation.getName());
 	method.setVisibility(operation.getVisibility());
 	method.setOwnerScope(operation.getOwnerScope());
-	method.setNamespace(parseState.getClassifier());
-	operation.addMethod(method);
+
+	operation.addMethod(method);  // Add the method to it's specification.
+
+	// Add this method as a feature to the classifier that owns the operation.
+	operation.getOwner().addFeature(method);
     }
 
     /**
