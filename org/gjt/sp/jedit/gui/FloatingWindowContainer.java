@@ -29,7 +29,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.1 2001/09/25 07:04:05 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.2 2001/09/27 09:23:00 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
@@ -41,7 +41,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
-	public void add(DockableWindowManager.Entry entry)
+	public void register(DockableWindowManager.Entry entry)
 	{
 		this.entry = entry;
 		setTitle(entry.title);
@@ -51,6 +51,10 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		pack();
 		GUIUtilities.loadGeometry(this,entry.name);
 		show();
+	}
+
+	public void add(DockableWindowManager.Entry entry)
+	{
 	}
 
 	public void save(DockableWindowManager.Entry entry)
