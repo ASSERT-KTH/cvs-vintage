@@ -14,8 +14,9 @@
 
 package org.columba.mail.util;
 
-import java.util.*;
-import java.text.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class RFC822Date
 {

@@ -14,14 +14,15 @@
 
 package org.columba.mail.gui.mimetype;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import javax.swing.*;
 
+import javax.swing.JOptionPane;
+
+import org.columba.mail.message.MimeHeader;
+import org.columba.mail.parser.MimeRouter;
 import org.columba.main.MainInterface;
-import org.columba.mail.parser.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.message.*;
 
 public class ColumbaViewer extends DefaultViewer
 {

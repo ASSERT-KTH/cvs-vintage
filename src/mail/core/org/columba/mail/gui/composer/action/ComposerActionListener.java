@@ -20,11 +20,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.core.config.WindowItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.SwingWorker;
-import org.columba.main.MainInterface;
-import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -38,6 +37,7 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.smtp.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 public class ComposerActionListener implements ActionListener {
 	private ComposerInterface composerInterface;
@@ -897,13 +897,12 @@ public class ComposerActionListener implements ActionListener {
 
 			SelectAddressDialog dialog =
 				new SelectAddressDialog(
-					composerInterface.mainInterface.addressbookInterface,
+					MainInterface.addressbookInterface,
 					composerInterface.composerFrame,
 					composerInterface.headerController.getHeaderItemLists());
 
 			org.columba.addressbook.folder.Folder folder =
-				composerInterface
-					.mainInterface
+				MainInterface
 					.addressbookInterface
 					.tree
 					.getFolder(

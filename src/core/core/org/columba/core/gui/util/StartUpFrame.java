@@ -14,13 +14,18 @@
 
 package org.columba.core.gui.util;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import org.columba.core.gui.util.*;
-
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+
+import javax.swing.ImageIcon;
 
 public class StartUpFrame extends Frame
 {

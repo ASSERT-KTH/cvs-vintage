@@ -14,8 +14,7 @@
 
 package org.columba.mail.message;
 
-import java.util.*;
-import java.net.*;
+import java.net.InetAddress;
 
 public class MessageIDGenerator
 {

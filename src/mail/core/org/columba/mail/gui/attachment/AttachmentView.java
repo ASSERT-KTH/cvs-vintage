@@ -4,15 +4,10 @@ import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.action.BasicAction;
-import org.columba.mail.gui.attachment.action.AttachmentActionListener;
 import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
 import org.columba.mail.gui.attachment.util.IconPanel;
-import org.columba.mail.gui.frame.MailMenu;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author freddy

@@ -14,17 +14,28 @@
 
 package org.columba.mail.gui.tree.util;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-import org.columba.mail.message.*;
-import org.columba.mail.gui.tree.*;
-import org.columba.main.*;
-import org.columba.mail.config.*;
-import org.columba.mail.folder.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.tree.TreeController;
+import org.columba.main.MainInterface;
 
 public class SelectFolderDialog extends JDialog
 implements ActionListener, TreeSelectionListener

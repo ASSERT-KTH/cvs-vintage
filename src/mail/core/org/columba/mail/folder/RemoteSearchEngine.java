@@ -1,6 +1,5 @@
 package org.columba.mail.folder;
 
-import java.util.Date;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
@@ -10,7 +9,6 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.imap.parser.MessageSet;
 
 /**
  * @author freddy

@@ -20,9 +20,13 @@
 
 package org.columba.mail.coder;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.util.StringTokenizer;
 
 public class Base64Decoder extends Decoder {
 

@@ -14,7 +14,8 @@
 
 package org.columba.mail.pop3.parser;
 
-import java.util.*;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class UIDListParser
 {

@@ -14,10 +14,6 @@
 
 package org.columba.core.gui.util;
 
-import java.awt.Component;
-import java.awt.Graphics;
-
-import javax.swing.Icon;
 import javax.swing.JMenu;
 
 /**

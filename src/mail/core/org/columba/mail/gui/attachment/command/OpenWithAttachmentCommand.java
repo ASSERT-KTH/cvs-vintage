@@ -9,7 +9,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
 import org.columba.core.util.TempFileStore;
-import org.columba.main.MainInterface;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
@@ -17,6 +16,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy

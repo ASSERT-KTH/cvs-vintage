@@ -14,12 +14,6 @@
 
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.core.config.HeaderTableItem;
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.util.SwingWorker;
-import org.columba.addressbook.parser.*;
 
 public abstract interface DataStorage
 {

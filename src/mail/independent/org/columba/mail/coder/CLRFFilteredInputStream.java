@@ -14,7 +14,9 @@
 
 package org.columba.mail.coder;
 
-import java.io.*;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CLRFFilteredInputStream extends FilterInputStream {
 

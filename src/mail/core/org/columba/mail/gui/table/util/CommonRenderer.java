@@ -14,11 +14,13 @@
 
 package org.columba.mail.gui.table.util;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import org.columba.mail.gui.util.*;
+import java.awt.Component;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
 
 public class CommonRenderer extends JLabel implements TableCellRenderer
 {

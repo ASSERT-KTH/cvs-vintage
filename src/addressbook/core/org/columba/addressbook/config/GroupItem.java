@@ -18,10 +18,10 @@ package org.columba.addressbook.config;
 
 import java.util.Vector;
 
-import org.columba.core.config.*;
-import org.columba.mail.folder.*;
-
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 public class GroupItem extends DefaultItem

@@ -32,14 +32,16 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.columba.core.gui.util.CTabbedPane;
+
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.core.gui.util.CTabbedPane;
 import org.columba.mail.gui.composer.ComposerInterface;
+import org.columba.main.MainInterface;
 
 
 /**
@@ -165,7 +167,7 @@ public class AddressbookPanel
 		panel.add(topPanel, BorderLayout.NORTH);
 
 		Folder folder =
-			composerInterface.mainInterface.addressbookInterface.tree.getFolder(uid);
+			MainInterface.addressbookInterface.tree.getFolder(uid);
 
 		setHeaderList(folder.getHeaderItemList());
 
@@ -186,8 +188,7 @@ public class AddressbookPanel
 		if (action.equals("CHOOSE"))
 		{
 			SelectAddressbookFolderDialog dialog =
-				composerInterface
-					.mainInterface
+				MainInterface
 					.addressbookInterface
 					.tree
 					.getSelectAddressbookFolderDialog();

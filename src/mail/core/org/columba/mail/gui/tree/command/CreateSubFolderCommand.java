@@ -6,10 +6,9 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.tree.util.EditFolderDialog;
+import org.columba.main.MainInterface;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)

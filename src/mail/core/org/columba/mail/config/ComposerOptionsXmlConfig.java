@@ -14,17 +14,12 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.*;
-import org.columba.mail.message.*;
+import java.io.File;
 
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-
-//import com.sun.xml.tree.XmlDocument;
-
-import java.io.*;
-import java.util.Vector;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultXmlConfig;
+import org.columba.core.config.WindowItem;
+import org.w3c.dom.Element;
 
 public class ComposerOptionsXmlConfig extends DefaultXmlConfig
 {

@@ -14,24 +14,18 @@
 
 package org.columba.mail.gui.composer.util;
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
 
-import java.awt.dnd.*;
-import java.awt.datatransfer.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
-import java.io.*;
-import javax.swing.JTree;
-
-import org.columba.core.gui.util.*;
+import org.columba.core.gui.util.CInfoPanel;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.*;
-import org.columba.mail.config.*;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
 
 public class IdentityInfoPanel extends CInfoPanel {
 	private JLabel label;

@@ -2,8 +2,8 @@ package org.columba.mail.smtp;
 
 import java.net.UnknownHostException;
 
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;

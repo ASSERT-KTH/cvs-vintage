@@ -14,10 +14,7 @@
 
 package org.columba.core.command;
 
-import java.lang.reflect.Array;
-
 import org.columba.core.util.Lock;
-import org.columba.mail.folder.FolderTreeNode;
 
 public class DefaultCommandReference {
 

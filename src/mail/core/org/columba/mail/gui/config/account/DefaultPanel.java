@@ -14,14 +14,7 @@
 
 package org.columba.mail.gui.config.account;
 
-import javax.swing.*;
-import javax.swing.border.*;
-
-import javax.swing.Box;
-import java.awt.*;
-
-import org.columba.mail.config.*;
-import org.columba.mail.gui.util.*;
+import javax.swing.JPanel;
 
 public class DefaultPanel extends JPanel {
 

@@ -14,10 +14,10 @@
 
 package org.columba.mail.gui.message.action;
 
-import org.columba.mail.gui.message.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import java.awt.*;
-import java.awt.event.*;
+import org.columba.mail.gui.message.MessageController;
 
 /**
  * Title:

@@ -19,7 +19,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
-import org.columba.main.MainInterface;
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.mail.coder.CoderRouter;
@@ -33,6 +32,7 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.parser.BodyTextParser;
 import org.columba.mail.parser.Rfc822Parser;
+import org.columba.main.MainInterface;
 
 /**
  * 

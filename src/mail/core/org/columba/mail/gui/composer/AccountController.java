@@ -5,9 +5,9 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 
 /**

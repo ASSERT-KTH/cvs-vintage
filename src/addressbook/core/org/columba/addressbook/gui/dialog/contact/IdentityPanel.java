@@ -14,17 +14,19 @@
 
 package org.columba.addressbook.gui.dialog.contact;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import org.columba.main.MainInterface;
-import org.columba.core.config.AdapterNode;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.util.*;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
 
 public class IdentityPanel extends JPanel
 implements ActionListener

@@ -22,7 +22,6 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
@@ -43,11 +42,12 @@ import org.columba.mail.gui.composer.command.ReplyCommand;
 import org.columba.mail.gui.composer.command.ReplyToAllCommand;
 import org.columba.mail.gui.composer.command.ReplyToMailingListCommand;
 import org.columba.mail.gui.config.filter.FilterDialog;
+import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.message.Message;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.mail.gui.message.command.*;
+import org.columba.main.MainInterface;
 
 public class HeaderTableActionListener implements ActionListener {
 

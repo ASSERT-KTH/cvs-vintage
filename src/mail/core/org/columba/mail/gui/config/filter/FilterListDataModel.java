@@ -15,12 +15,10 @@
 
 package org.columba.mail.gui.config.filter;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
 
-import org.columba.main.MainInterface;
-import org.columba.mail.config.*;
-import org.columba.mail.filter.*;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
 
 
 class FilterListDataModel extends AbstractTableModel

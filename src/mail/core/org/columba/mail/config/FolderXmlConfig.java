@@ -14,17 +14,14 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.*;
-import org.columba.mail.message.*;
-
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-
-//import com.sun.xml.tree.XmlDocument;
-
-import java.io.*;
+import java.io.File;
 import java.util.Vector;
+
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultXmlConfig;
+import org.columba.core.config.DomToTreeModelAdapter;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class FolderXmlConfig extends DefaultXmlConfig {
 	private File file;

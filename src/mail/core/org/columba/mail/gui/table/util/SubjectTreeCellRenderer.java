@@ -14,14 +14,18 @@
 
 package org.columba.mail.gui.table.util;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.tree.*;
+import java.awt.Component;
+import java.awt.Font;
 
-import org.columba.core.gui.util.*;
-import org.columba.mail.gui.table.*;
-import org.columba.mail.gui.util.*;
-import org.columba.mail.message.*;
+import javax.swing.ImageIcon;
+import javax.swing.JTree;
+import javax.swing.UIManager;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.table.TableView;
+import org.columba.mail.message.HeaderInterface;
 
 /**
  * TITLE:
@@ -47,7 +51,7 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer
 		super();
 		this.tree1 = tree;
 
-		this.headerTable = headerTable;
+		
 
 		image1 = ImageLoader.getSmallImageIcon("folder.png");
 

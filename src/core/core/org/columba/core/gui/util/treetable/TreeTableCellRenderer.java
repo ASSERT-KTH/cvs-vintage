@@ -2,13 +2,10 @@ package org.columba.core.gui.util.treetable;
 
 import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.util.EventObject;
 
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;

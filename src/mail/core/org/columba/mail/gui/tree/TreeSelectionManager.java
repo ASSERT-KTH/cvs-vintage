@@ -6,7 +6,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.util.SelectionManager;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 
 /**

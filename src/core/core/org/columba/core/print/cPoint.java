@@ -14,8 +14,8 @@
 
 package org.columba.core.print;
 
-import java.awt.geom.*;
-import java.awt.*;
+import java.awt.Point;
+import java.awt.geom.Point2D;
 
 public class cPoint {
 	

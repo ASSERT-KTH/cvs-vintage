@@ -14,21 +14,15 @@
 
 package org.columba.mail.gui.table.util;
 
-import org.columba.mail.message.*;
-import org.columba.mail.config.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.table.*;
-import javax.swing.JTable;
-
-import javax.swing.table.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-import java.util.*;
-
-import java.awt.event.*;
-
 import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Vector;
+
+import org.columba.mail.gui.table.HeaderTableModel;
+import org.columba.mail.message.Flags;
+import org.columba.mail.message.HeaderInterface;
 
 public class TableModelSorter extends TableModelPlugin {
 

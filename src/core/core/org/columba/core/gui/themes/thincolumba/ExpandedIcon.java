@@ -16,10 +16,16 @@
 package org.columba.core.gui.themes.thincolumba;
 
 
-import java.awt.*;
-import java.awt.image.*;
-import javax.swing.*;
-import javax.swing.plaf.metal.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.swing.Icon;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 public class ExpandedIcon implements Icon
 {

@@ -14,10 +14,17 @@
 
 package org.columba.mail.gui.table.action;
 
-import java.awt.*;
-import java.awt.dnd.*;
-import java.awt.event.*;
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
+import java.awt.dnd.DragSourceEvent;
+import java.awt.dnd.DragSourceListener;
+import java.awt.event.InputEvent;
+
 import javax.swing.JTable;
 
 /**

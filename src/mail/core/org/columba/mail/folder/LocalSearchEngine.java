@@ -4,8 +4,6 @@ import java.util.Date;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 
 /**

@@ -15,11 +15,7 @@
 
 package org.columba.addressbook.gui.tree;
 
-import javax.swing.*;
-import javax.swing.tree.*;
-
-import org.columba.main.MainInterface;
-import org.columba.mail.config.*;
+import javax.swing.tree.DefaultTreeModel;
 
 class AddressbookTreeModel extends DefaultTreeModel
 {

@@ -103,7 +103,7 @@ public class FrameView extends JFrame {
 		StatusBar statusBar) {
 
 		this.filterToolbar = filterToolbar;
-		this.header = header;
+	
 		
 		this.getContentPane().setLayout(new BorderLayout());
 		JPanel panel = (JPanel) this.getContentPane();

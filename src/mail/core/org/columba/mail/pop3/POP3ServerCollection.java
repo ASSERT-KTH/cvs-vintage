@@ -16,7 +16,6 @@ package org.columba.mail.pop3;
 
 import java.util.Vector;
 
-import org.columba.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;

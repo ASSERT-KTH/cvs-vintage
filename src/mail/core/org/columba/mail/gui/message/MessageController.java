@@ -15,24 +15,18 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Font;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.plaf.TextUI;
 import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
-import javax.swing.text.Position;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
@@ -171,7 +165,7 @@ public class MessageController
 	}
 
 	public void setFolder(Folder f) {
-		this.folder = folder;
+		this.folder = f;
 	}
 
 	public void setUid(Object o) {

@@ -18,12 +18,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeWillExpandListener;
-import javax.swing.tree.ExpandVetoException;
 
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**

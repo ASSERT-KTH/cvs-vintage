@@ -14,14 +14,13 @@
 
 package org.columba.mail.gui.message;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
 
-import org.columba.mail.gui.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.message.util.*;
-import org.columba.core.gui.util.*;
-import org.columba.main.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import org.columba.core.gui.util.ImageLoader;
 
 
 public class SecurityIndicator extends JPanel

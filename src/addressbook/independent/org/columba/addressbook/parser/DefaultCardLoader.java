@@ -15,12 +15,12 @@
 package org.columba.addressbook.parser;
 
 
-import org.columba.addressbook.folder.*;
-import org.columba.core.config.DefaultXmlConfig;
+import java.io.File;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.GroupListCard;
 import org.columba.core.config.AdapterNode;
-
-
-import java.io.*;
+import org.columba.core.config.DefaultXmlConfig;
 
 /**
  * @version 	1.0

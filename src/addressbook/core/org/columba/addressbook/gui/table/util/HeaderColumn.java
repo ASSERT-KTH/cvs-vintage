@@ -14,13 +14,15 @@
 
 package org.columba.addressbook.gui.table.util;
 
-import org.columba.addressbook.folder.*;
+import java.awt.Component;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
+
+import org.columba.addressbook.folder.HeaderItem;
 
 public class HeaderColumn extends JLabel implements HeaderColumnInterface, TableCellRenderer
 {

@@ -14,9 +14,9 @@
 
 package org.columba.addressbook.parser;
 
-import org.columba.addressbook.folder.*;
-
 import java.util.Vector;
+
+import org.columba.addressbook.folder.ContactCard;
 
 /**
  * @version 	1.0

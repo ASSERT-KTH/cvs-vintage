@@ -15,7 +15,7 @@
 
 package org.columba.mail.folder;
 
-import org.columba.mail.message.*;
+import org.columba.mail.message.Message;
 
 public class FolderOp
 {
@@ -74,7 +74,7 @@ public class FolderOp
     {
         this.mode = mode;
         this.source = source;
-        this.target = target;
+      
         this.op1 = op1;
     }
 
@@ -104,7 +104,7 @@ public class FolderOp
     {
         this.mode = mode;
         this.source = source;
-        this.target = target;
+       
         this.op1 = op1;
         this.variant = variant;
     }

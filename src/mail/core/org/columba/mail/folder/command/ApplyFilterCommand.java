@@ -10,7 +10,6 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.main.MainInterface;
 
 /**

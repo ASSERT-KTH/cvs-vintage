@@ -15,7 +15,7 @@
 
 package org.columba.mail.folder;
 
-import java.util.*;
+import java.util.EventObject;
 
 public class TreeNodeEvent extends EventObject
 {

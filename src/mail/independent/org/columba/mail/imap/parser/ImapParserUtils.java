@@ -1,8 +1,5 @@
 package org.columba.mail.imap.parser;
 
-import java.util.Vector;
-
-import org.columba.mail.imap.IMAPResponse;
 
 /**
  * @author freddy

@@ -16,7 +16,6 @@ package org.columba.core.gui.button;
 
 import javax.swing.JButton;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

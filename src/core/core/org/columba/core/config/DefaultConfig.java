@@ -14,12 +14,10 @@
 
 package org.columba.core.config;
 
-import org.columba.core.io.*;
+import java.io.File;
+import java.io.IOException;
 
-import java.net.*;
-import java.util.*;
-import java.util.zip.*;
-import java.io.*;
+import org.columba.core.io.DiskIO;
 
 public class DefaultConfig {
 

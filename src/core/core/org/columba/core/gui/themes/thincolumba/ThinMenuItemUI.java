@@ -1,6 +1,5 @@
 package org.columba.core.gui.themes.thincolumba;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 

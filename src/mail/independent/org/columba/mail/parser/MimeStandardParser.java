@@ -14,8 +14,8 @@
 
 package org.columba.mail.parser;
 
-import java.io.*;
-import org.columba.mail.message.*;
+import org.columba.mail.message.MimeHeader;
+import org.columba.mail.message.MimePart;
 
 public class MimeStandardParser extends MimeTypeParser
 {

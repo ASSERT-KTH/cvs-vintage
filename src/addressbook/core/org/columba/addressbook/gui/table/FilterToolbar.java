@@ -14,17 +14,20 @@
 
 package org.columba.addressbook.gui.table;
 
-import org.columba.core.config.*;
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.ImageLoader;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.ResourceBundle;
 
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.core.gui.util.ImageLoader;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import org.columba.addressbook.gui.table.util.TableModelFilteredView;
+import org.columba.core.config.HeaderTableItem;
 
 public class FilterToolbar extends JToolBar implements ActionListener
 {

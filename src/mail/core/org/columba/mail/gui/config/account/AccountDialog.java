@@ -34,7 +34,6 @@ import org.columba.core.gui.button.OkButton;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
-import org.columba.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
@@ -43,6 +42,7 @@ import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 /**
  * Title:

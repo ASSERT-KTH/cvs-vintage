@@ -21,13 +21,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Vector;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderTableItem;
-import org.columba.core.util.SwingWorker;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.DefaultCardLoader;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.HeaderTableItem;
 
 /**
  * 

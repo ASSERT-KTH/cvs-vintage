@@ -14,12 +14,13 @@
 
 package org.columba.addressbook.gui.util;
 
-import javax.swing.*;
 import java.util.Vector;
 
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.table.util.*;
+import javax.swing.AbstractListModel;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.table.util.TableModelPlugin;
 
 /**
  * @version 	1.0

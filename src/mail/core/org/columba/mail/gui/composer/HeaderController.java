@@ -28,12 +28,12 @@ import java.util.Vector;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
 import org.columba.addressbook.gui.util.HeaderItemDNDManager;
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

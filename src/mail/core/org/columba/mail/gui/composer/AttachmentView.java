@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;

@@ -14,17 +14,30 @@
 
 package org.columba.core.gui.util;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 
-import org.columba.mail.message.*;
-import org.columba.main.*;
-import org.columba.mail.gui.util.*;
+import org.columba.mail.gui.util.AddressLabel;
+import org.columba.mail.gui.util.URLLabel;
 
 public class AboutDialog implements ActionListener
 {

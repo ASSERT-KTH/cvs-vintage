@@ -14,19 +14,10 @@
 
 package org.columba.mail.filter;
 
-import java.util.Enumeration;
-
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.columba.main.MainInterface;
-import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.Message;
 
 public class Search extends DefaultItem {
 	private AdapterNode vFolderNode;

@@ -1,12 +1,11 @@
 package org.columba.mail.gui.tree.menu;
 
-import org.columba.mail.gui.tree.*;
-import org.columba.mail.gui.tree.action.*;
-import org.columba.core.gui.statusbar.*;
+import java.awt.event.MouseAdapter;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JPopupMenu;
+
+import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 
 /**
  * Title:

@@ -14,13 +14,18 @@
 
 package org.columba.mail.smtp;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.Socket;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import org.columba.main.*;
-
-import org.columba.mail.coder.*;
+import org.columba.mail.coder.Base64Decoder;
+import org.columba.mail.coder.Base64Encoder;
+import org.columba.main.MainInterface;
 
 public class SMTPProtocol {
 	public final static int SMTP = 0;

@@ -8,7 +8,6 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 
 /**

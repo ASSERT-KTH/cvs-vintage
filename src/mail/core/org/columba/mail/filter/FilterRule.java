@@ -14,14 +14,12 @@
 
 package org.columba.mail.filter;
 
-import java.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.config.*;
-import org.columba.core.config.*;
-import org.columba.main.*;
-import org.columba.mail.folder.*;
+import java.util.Vector;
 
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.columba.mail.config.MailConfig;
+import org.w3c.dom.Document;
 
 public class FilterRule extends DefaultItem {
 	

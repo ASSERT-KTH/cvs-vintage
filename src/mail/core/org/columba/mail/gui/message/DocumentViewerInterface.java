@@ -14,7 +14,6 @@
 
 package org.columba.mail.gui.message;
 
-import java.awt.Component;
 
 interface DocumentViewerInterface
 {

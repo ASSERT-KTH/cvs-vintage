@@ -14,15 +14,12 @@
 
 package org.columba.mail.gui.message.action;
 
-import org.columba.mail.gui.message.*;
-import org.columba.main.*;
-import org.columba.mail.gui.action.*;
-import org.columba.core.dict.*;
-import org.columba.core.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.text.*;
+import org.columba.mail.gui.action.BasicAction;
+import org.columba.mail.gui.message.MessageController;
+import org.columba.main.MainInterface;
 
 /**
  * Title:

@@ -14,20 +14,16 @@
 
 package org.columba.addressbook.gui.tree.util;
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import java.awt.*;
-import javax.swing.border.*;
+import java.awt.Component;
 
-//import org.columba.modules.mail.config.*;
-import org.columba.core.config.*;
-import org.columba.core.gui.util.*;
+import javax.swing.ImageIcon;
+import javax.swing.JTree;
+import javax.swing.border.Border;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.Folder;
 import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.addressbook.gui.*;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.config.*;
 
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer
 {

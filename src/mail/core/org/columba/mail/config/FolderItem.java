@@ -16,12 +16,9 @@
 
 package org.columba.mail.config;
 
-import java.util.Vector;
-
-import org.columba.core.config.*;
-import org.columba.mail.folder.*;
-
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
 
 
 public class FolderItem extends DefaultItem

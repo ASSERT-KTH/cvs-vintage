@@ -14,20 +14,16 @@
 
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.main.*;
-import org.columba.mail.filter.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+
+import org.columba.mail.filter.FilterCriteria;
 
 public class DefaultCriteriaRow extends JPanel {
 	protected FilterCriteria criteria;

@@ -29,11 +29,11 @@ import javax.swing.KeyStroke;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 public class MailMenu extends JMenuBar {
 

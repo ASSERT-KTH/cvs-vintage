@@ -14,22 +14,28 @@
 
 package org.columba.mail.gui.config.account;
 
-import javax.swing.*;
-import javax.swing.border.*;
-
-import javax.swing.Box;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
-import org.columba.mail.config.*;
-import org.columba.mail.util.*;
-import org.columba.mail.gui.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.tree.*;
-import org.columba.main.MainInterface;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.util.MailResourceLoader;
 
 public class SecurityPanel extends DefaultPanel implements ActionListener {
 

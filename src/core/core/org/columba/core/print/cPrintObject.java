@@ -14,9 +14,8 @@
 
 package org.columba.core.print;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 public abstract class cPrintObject {
 

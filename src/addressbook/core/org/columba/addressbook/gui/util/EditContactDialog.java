@@ -14,20 +14,30 @@
 
 package org.columba.addressbook.gui.util;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-import org.columba.mail.gui.util.*;
-import org.columba.core.config.*;
-import org.columba.core.gui.util.*;
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.gui.*;
-import org.columba.addressbook.main.*;
-import org.columba.mail.config.*;
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.config.AddressbookXmlConfig;
+import org.columba.addressbook.config.ContactItem;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.gui.util.CPanel;
+import org.columba.core.gui.util.DialogStore;
 
 public class EditContactDialog implements ActionListener, DocumentListener
 {

@@ -40,7 +40,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 	public Worker(DefaultProcessor parent) {
 		super();
-		this.op = op;
+		
 		this.boss = parent;
 
 		displayText = "";

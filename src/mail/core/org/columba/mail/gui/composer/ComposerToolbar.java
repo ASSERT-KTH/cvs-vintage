@@ -14,8 +14,6 @@
 
 package org.columba.mail.gui.composer;
 
-import java.awt.Insets;
-
 import javax.swing.JToolBar;
 
 import org.columba.core.gui.util.ToolbarButton;

@@ -15,10 +15,7 @@
 
 package org.columba.mail.gui.config.filter;
 
-import javax.swing.*;
-
-import org.columba.main.MainInterface;
-import org.columba.mail.config.*;
+import javax.swing.DefaultListModel;
 
 class CriteriaListDataModel extends DefaultListModel
 {

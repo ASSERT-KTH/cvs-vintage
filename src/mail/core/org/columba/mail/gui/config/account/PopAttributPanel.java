@@ -20,19 +20,21 @@ package org.columba.mail.gui.config.account;
  * Created on 2. November 2000, 00:12
  */
 
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.event.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import org.columba.mail.config.*;
-import org.columba.mail.util.*;
-import org.columba.mail.gui.util.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.main.*;
-import org.columba.mail.folder.*;
-import org.columba.main.MainInterface;
+import org.columba.mail.config.PopItem;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  *

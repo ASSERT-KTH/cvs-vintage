@@ -14,19 +14,9 @@
 
 package org.columba.addressbook.gui.table.util;
 
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.table.*;
-
-import javax.swing.JTable;
-
-import javax.swing.table.*;
-import javax.swing.event.*;
-
-import java.util.*;
-
-import java.awt.event.*;
-
-import java.text.Collator;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.table.AddressbookTableModel;
 
 public class TableModelFilteredView extends TableModelPlugin
 {

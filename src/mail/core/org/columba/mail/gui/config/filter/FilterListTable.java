@@ -20,11 +20,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumn;
 
 import org.columba.core.config.Config;
-import org.columba.main.MainInterface;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.util.FilterHeaderRenderer;
 import org.columba.mail.gui.config.filter.util.StringFilterRenderer;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 class FilterListTable extends JTable
 {

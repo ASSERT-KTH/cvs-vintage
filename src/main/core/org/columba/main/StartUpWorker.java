@@ -14,11 +14,9 @@
 
 package org.columba.main;
 
-import org.columba.mail.gui.util.*;
-
-import javax.swing.*;
-
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 /**
  * This is the 3rd version of SwingWorker (also known as

@@ -15,8 +15,9 @@
 package org.columba.core.util;
 
 import java.io.File;
+
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.*;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * @version 	1.0

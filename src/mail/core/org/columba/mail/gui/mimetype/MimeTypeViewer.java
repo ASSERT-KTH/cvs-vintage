@@ -14,14 +14,10 @@
 
 package org.columba.mail.gui.mimetype;
 
-import java.io.*;
+import java.io.File;
 import java.net.URL;
-import javax.swing.*;
 
-import org.columba.main.MainInterface;
-import org.columba.mail.parser.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.message.*;
+import org.columba.mail.message.MimeHeader;
 
 public class MimeTypeViewer
 {

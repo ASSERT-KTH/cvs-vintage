@@ -14,12 +14,13 @@
 
 package org.columba.mail.gui.action;
 
+import java.awt.Component;
+import java.awt.Graphics;
+
 import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
-//import javax.swing.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.*;
 
 public class BasicAction extends JAbstractAction {
 	boolean showToolbarText = true;

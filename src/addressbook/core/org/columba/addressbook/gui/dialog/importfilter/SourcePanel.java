@@ -14,15 +14,22 @@
 
 package org.columba.addressbook.gui.dialog.importfilter;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.wizard.*;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.wizard.DefaultWizardPanel;
+import org.columba.core.gui.util.wizard.WizardTextField;
 
 public class SourcePanel extends DefaultWizardPanel
 {

@@ -29,9 +29,7 @@ package org.columba.core.util;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-//Informations on the OS
-import org.columba.core.util.OSInfo;
-//logger
+
 import org.columba.core.logging.ColumbaLogger;
 
 public class WindowMaximizer {

@@ -85,7 +85,7 @@ public abstract class Folder extends FolderTreeNode {
 		if (item != null)
 			this.uid = item.getUid();
 
-		this.uid = uid;
+		
 
 		init();
 		

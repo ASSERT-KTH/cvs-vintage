@@ -24,9 +24,6 @@
 
 package org.columba.addressbook.util;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.columba.core.util.GlobalResourceLoader;
 
 public class AddressbookResourceLoader extends GlobalResourceLoader {

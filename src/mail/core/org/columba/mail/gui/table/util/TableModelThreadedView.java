@@ -14,12 +14,17 @@
 
 package org.columba.mail.gui.table.util;
 
-import org.columba.mail.gui.table.*;
-import org.columba.mail.message.*;
-
-import javax.swing.JTree;
-import java.util.*;
 import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import org.columba.mail.gui.table.HeaderTableModel;
+import org.columba.mail.message.HeaderInterface;
 
 
 /**
@@ -44,7 +49,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 		enabled = false;
 
-		collator = collator.getInstance();
+		collator = Collator.getInstance();
 	}
 
 	public void toggleView() {

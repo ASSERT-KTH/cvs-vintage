@@ -14,7 +14,7 @@
 
 package org.columba.addressbook.gui.table.util;
 
-import org.columba.addressbook.gui.table.*;
+import org.columba.addressbook.gui.table.AddressbookTableModel;
 
 public abstract class TableModelPlugin
 {

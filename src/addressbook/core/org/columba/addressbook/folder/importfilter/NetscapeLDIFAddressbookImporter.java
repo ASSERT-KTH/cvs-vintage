@@ -14,12 +14,11 @@
 
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.addressbook.config.*;
-import org.columba.core.config.AdapterNode;
-import org.columba.addressbook.folder.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
-import java.io.*;
-import java.util.*;
+import org.columba.addressbook.folder.ContactCard;
 
 /**
  * @version 	1.0

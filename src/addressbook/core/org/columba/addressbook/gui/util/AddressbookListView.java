@@ -14,15 +14,11 @@
 
 package org.columba.addressbook.gui.util;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JList;
 
-import java.util.Vector;
-
-import org.columba.addressbook.config.*;
-import org.columba.mail.config.*;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.table.util.*;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
 
 public class AddressbookListView extends JList
 {

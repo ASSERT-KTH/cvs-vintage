@@ -14,7 +14,7 @@
 
 package org.columba.addressbook.gui.table.util;
 
-import org.columba.addressbook.folder.*;
+import org.columba.addressbook.folder.HeaderItem;
 
 /**
  * @author frd

@@ -20,6 +20,7 @@ import java.util.Vector;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
 import org.columba.mail.util.AddressCollector;
 
 /**

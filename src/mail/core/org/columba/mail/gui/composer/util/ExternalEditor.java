@@ -23,7 +23,6 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.config.Config;
 import org.columba.core.util.TempFileStore;
-import org.columba.main.MainInterface;
 import org.columba.mail.gui.composer.EditorView;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.MimeHeader;
@@ -43,7 +42,7 @@ public class ExternalEditor {
 		MimeHeader myHeader = new MimeHeader("text", "plain");
 		MimeTypeViewer viewer = new MimeTypeViewer();
 		TempFileStore tmpFileStore = new TempFileStore();
-		File TmpFile = tmpFileStore.createTempFileWithSuffix("extern_edit");
+		File TmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
 		FileWriter FO;
 		FileReader FI;
 

@@ -1,9 +1,6 @@
 package org.columba.core.xml;
-import java.util.*;
-import java.io.*;
-
-import org.columba.core.xml.XmlIO;
-import org.columba.core.xml.XmlElement;
+import java.io.IOException;
+import java.util.Vector;
 
 public class XmlTest{
   public XmlTest(){

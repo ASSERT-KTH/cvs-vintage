@@ -24,9 +24,6 @@
 
 package org.columba.mail.util;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.columba.core.util.GlobalResourceLoader;
 
 public class MailResourceLoader extends GlobalResourceLoader {

@@ -14,14 +14,9 @@
 
 package org.columba.mail.gui.message.menu;
 
-import org.columba.core.gui.util.*;
-import org.columba.main.*;
-import org.columba.mail.gui.message.*;
-import org.columba.core.gui.statusbar.*;
-import org.columba.mail.gui.util.*;
+import javax.swing.JPopupMenu;
 
-import javax.swing.*;
-import java.awt.event.*;
+import org.columba.mail.gui.message.MessageController;
 
 public class MessageMenu {
 	private MessageController messageViewer;

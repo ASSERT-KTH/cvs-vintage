@@ -14,25 +14,29 @@
 
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.core.config.*;
-import org.columba.core.gui.util.*;
-import org.columba.main.*;
-import org.columba.mail.gui.util.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.mail.filter.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
-import javax.swing.tree.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import org.columba.core.config.Config;
+import org.columba.core.config.HeaderTableItem;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterAction;
+import org.columba.main.MainInterface;
 
 class ActionList extends JPanel implements ActionListener {
 

@@ -20,7 +20,6 @@ import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.AdapterNode;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
@@ -33,6 +32,7 @@ import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import org.columba.main.MainInterface;
 
 public class VirtualFolder extends Folder {
 

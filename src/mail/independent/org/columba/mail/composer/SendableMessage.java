@@ -14,9 +14,11 @@
 
 package org.columba.mail.composer;
 
-import org.columba.mail.message.*;
+import java.util.Vector;
 
-import java.util.*;
+import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.SendableHeader;
 
 public class SendableMessage extends AbstractMessage {
 	SendableHeader header;

@@ -14,11 +14,21 @@
 
 package org.columba.mail.gui.attachment.util;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
+
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.event.MouseInputListener;
 
 public class IconPanel extends JPanel implements MouseInputListener {
 	int count;
@@ -181,7 +191,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	}
 
 	public void mousePressed(MouseEvent e) {
-		if ((e.getModifiers() & e.BUTTON1_MASK) != 0) {
+		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 
 			if (e.isControlDown()) {
 				select(e.getPoint(), 1);

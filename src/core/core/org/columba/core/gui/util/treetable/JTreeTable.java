@@ -14,18 +14,16 @@
 
 package org.columba.core.gui.util.treetable;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-import javax.swing.table.*;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.EventObject;
-import java.awt.image.*;
-
-import org.columba.mail.gui.util.*;
+import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.LookAndFeel;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * This example shows how to create a simple JTreeTable component,

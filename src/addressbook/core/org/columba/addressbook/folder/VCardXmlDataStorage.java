@@ -14,27 +14,16 @@
 
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.core.config.HeaderTableItem;
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.util.SwingWorker;
-import org.columba.addressbook.parser.*;
+import java.io.File;
 
-import org.columba.core.config.DefaultXmlConfig;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import java.io.*;
-
-import java.util.*;
-
-import org.apache.crimson.tree.*;
-
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
+import org.columba.addressbook.parser.DefaultCardLoader;
+import org.w3c.dom.Document;
 
 /**
  * 

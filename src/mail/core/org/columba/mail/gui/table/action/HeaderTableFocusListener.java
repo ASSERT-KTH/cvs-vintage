@@ -14,7 +14,8 @@
 
 package org.columba.mail.gui.table.action;
 
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 /**
  * Title:

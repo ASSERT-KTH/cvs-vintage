@@ -1,6 +1,5 @@
 package org.columba.mail.folder;
 
-import java.util.Vector;
 
 /**
  * @author freddy

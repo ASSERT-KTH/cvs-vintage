@@ -14,7 +14,6 @@
 
 package org.columba.core.util;
 
-import org.columba.mail.folder.Folder;
 
 /**
  * @author timo

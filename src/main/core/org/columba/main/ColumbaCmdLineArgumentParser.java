@@ -14,9 +14,7 @@
 
 package org.columba.main;
 
-import org.columba.core.util.*;
-
-import java.util.*;
+import org.columba.core.util.CmdLineArgumentParser;
 
 public class ColumbaCmdLineArgumentParser extends CmdLineArgumentParser
 {

@@ -14,10 +14,8 @@
 
 package org.columba.mail.gui.composer;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.columba.addressbook.folder.HeaderItem;

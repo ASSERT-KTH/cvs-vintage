@@ -14,7 +14,9 @@
 
 package org.columba.core.util;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * Thanks go to Steve Purcell who wrote the basic parser

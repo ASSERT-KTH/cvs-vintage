@@ -14,16 +14,17 @@
 
 package org.columba.addressbook.gui.dialog.contact;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.util.Vector;
 
-import java.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-import javax.swing.*;
-
-import org.columba.core.config.AdapterNode;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.util.*;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
 
 public class AddressPanel extends JPanel
 {

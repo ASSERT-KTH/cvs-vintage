@@ -16,9 +16,9 @@ package org.columba.core.gui;
 
 import java.awt.event.MouseAdapter;
 
-import org.columba.main.MainInterface;
-import org.columba.mail.gui.frame.TooltipMouseHandler;
 import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.mail.gui.frame.TooltipMouseHandler;
+import org.columba.main.MainInterface;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)

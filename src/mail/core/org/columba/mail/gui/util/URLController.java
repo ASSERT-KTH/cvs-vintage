@@ -14,23 +14,18 @@
 
 package org.columba.mail.gui.util;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
-import javax.swing.*;
 
-import org.columba.core.config.*;
-import org.columba.main.*;
-import org.columba.addressbook.gui.util.*;
-import org.columba.mail.gui.composer.*;
-import org.columba.mail.config.*;
-import org.columba.mail.parser.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
-import org.columba.mail.gui.message.*;
-import org.columba.mail.gui.mimetype.*;
-
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.tree.util.*;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.main.MainInterface;
 
 public class URLController implements ActionListener {
 

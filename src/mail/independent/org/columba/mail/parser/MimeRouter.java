@@ -15,14 +15,11 @@
 package org.columba.mail.parser;
 
 import java.lang.reflect.Array;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Hashtable;
 
 import org.columba.core.config.AdapterNode;
+import org.columba.core.config.Config;
 import org.columba.core.config.OptionsXmlConfig;
-import org.columba.core.io.DiskIO;
-import org.columba.main.MainInterface;
 import org.columba.mail.message.MimeHeader;
 
 public class MimeRouter {
@@ -41,7 +38,7 @@ public class MimeRouter {
 	static private MimeRouter myInstance;
 
 	private MimeRouter() {
-		this.config = MainInterface.config.getOptionsConfig();
+		this.config = Config.getOptionsConfig();
 		standardParser = new MimeStandardParser();
 
 		parserTable = new Hashtable();

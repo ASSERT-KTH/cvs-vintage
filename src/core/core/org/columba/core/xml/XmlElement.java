@@ -32,8 +32,12 @@ package org.columba.core.xml;
 //                          IMPORT STATEMENTS                              //
 /////////////////////////////////////////////////////////////////////////////
 
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 /////////////////////////////////////////////////////////////////////////////
 //                                 CODE                                    //
 /////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,5 @@
 package org.columba.mail.gui.attachment;
 
-import org.columba.mail.message.MimePart;
 
 /**
  * @author freddy

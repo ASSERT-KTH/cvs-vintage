@@ -19,7 +19,6 @@ import java.awt.Dimension;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.JTextComponent;
 

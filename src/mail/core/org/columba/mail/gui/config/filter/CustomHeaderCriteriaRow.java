@@ -15,21 +15,10 @@
 
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.main.*;
-import org.columba.mail.filter.*;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-
-import java.util.Vector;
+import org.columba.mail.filter.FilterCriteria;
 
 public class CustomHeaderCriteriaRow extends DefaultCriteriaRow
 {

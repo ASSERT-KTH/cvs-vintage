@@ -2,12 +2,12 @@ package org.columba.mail.filter.action;
 
 import org.columba.core.command.Command;
 import org.columba.core.gui.FrameController;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy

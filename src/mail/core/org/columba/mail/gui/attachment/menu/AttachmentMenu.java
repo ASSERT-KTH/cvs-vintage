@@ -19,7 +19,6 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
-import org.columba.main.MainInterface;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.action.AttachmentActionListener;
 

@@ -14,13 +14,18 @@
 
 package org.columba.mail.gui.table.util;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import java.text.*;
-import java.util.*;
-import org.columba.mail.gui.util.*;
+import java.awt.Component;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
 
 
 public class DateRenderer extends JLabel implements TableCellRenderer

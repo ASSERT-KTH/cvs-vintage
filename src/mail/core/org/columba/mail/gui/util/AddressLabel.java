@@ -14,17 +14,19 @@
 
 package org.columba.mail.gui.util;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Vector;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.gui.*;
-import org.columba.mail.config.*;
-import org.columba.main.*;
-import org.columba.mail.gui.composer.*;
-import org.columba.mail.folder.*;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+
+import org.columba.main.MainInterface;
 
 public class AddressLabel extends JPanel implements MouseListener//, ActionListener
 {

@@ -14,19 +14,27 @@
 
 package org.columba.addressbook.gui.dialog.contact;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import javax.swing.event.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.text.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
-import org.columba.core.config.AdapterNode;
-
-import org.columba.addressbook.folder.*;
-import org.columba.core.gui.util.*;
-
-import java.util.*;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @version 	1.0

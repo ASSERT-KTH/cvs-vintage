@@ -15,8 +15,9 @@
 
 package org.columba.mail.folder.outbox;
 
-import java.util.*;
-import org.columba.mail.composer.*;
+import java.util.Vector;
+
+import org.columba.mail.composer.SendableMessage;
 
 
 public class SendListManager

@@ -14,8 +14,14 @@
 
 package org.columba.core.gui.util.wizard;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class WizardTextField extends JPanel {
 	private JTextField textField;

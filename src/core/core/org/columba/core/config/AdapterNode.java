@@ -14,9 +14,8 @@
 
 package org.columba.core.config;
 
-import org.w3c.dom.*;
-
-import javax.swing.tree.TreeNode;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 // This class wraps a DOM node
 public class AdapterNode //implements TreeNode

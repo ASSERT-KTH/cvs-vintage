@@ -26,7 +26,6 @@ import org.columba.core.config.HeaderTableItem;
 import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
 import org.columba.core.gui.util.treetable.TreeTableModel;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelPlugin;

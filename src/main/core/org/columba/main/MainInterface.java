@@ -16,17 +16,12 @@ package org.columba.main;
 
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.columba.core.command.DefaultProcessor;
-import org.columba.core.command.TaskManager;
-import org.columba.core.config.Config;
-import org.columba.core.gui.FocusManager;
-import org.columba.core.util.CharsetManager;
 import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.command.DefaultProcessor;
+import org.columba.core.config.Config;
+import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MimeTypeLookup;
-import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.core.gui.statusbar.ImageSequenceTimer;
-import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;

@@ -18,8 +18,6 @@ import java.io.File;
 
 import org.columba.core.config.DefaultConfig;
 import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.scripting.Python;
-import org.columba.main.MainInterface;
 
 /**
  * @author frd

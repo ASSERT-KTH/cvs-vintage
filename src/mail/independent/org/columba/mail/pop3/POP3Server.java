@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
@@ -51,7 +52,7 @@ public class POP3Server {
 
 		file =
 			new File(
-				MainInterface.config.pop3Directory,
+				Config.pop3Directory,
 				(new Integer(uid)).toString());
 
 		PopItem item = accountItem.getPopItem();

@@ -27,10 +27,12 @@ import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
-import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
@@ -38,9 +40,6 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.CharsetManager;
 import org.columba.core.util.CmdLineArgumentParser;
 import org.columba.core.util.TempFileStore;
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.main.AddressbookMain;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.coder.CoderRouter;
@@ -98,11 +97,11 @@ public class Main {
 			cmdLineParser.parse(args);
 		} catch (CmdLineArgumentParser.UnknownOptionException e) {
 			System.err.println(e.getMessage());
-			cmdLineParser.printUsage();
+			ColumbaCmdLineArgumentParser.printUsage();
 			System.exit(2);
 		} catch (CmdLineArgumentParser.IllegalOptionValueException e) {
 			System.err.println(e.getMessage());
-			cmdLineParser.printUsage();
+			ColumbaCmdLineArgumentParser.printUsage();
 			System.exit(2);
 		}
 

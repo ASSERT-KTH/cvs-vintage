@@ -25,23 +25,20 @@
 package org.columba.core.util;
 
 //GlobalResourceBundle
-import java.util.Hashtable;
-import java.util.ResourceBundle;
-import java.util.Locale;
-//reload()
-import java.util.Enumeration;
-//loadResourceBundle()
-import java.io.File;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
-import java.util.PropertyResourceBundle;
-//logger
-import org.columba.core.logging.ColumbaLogger;
-//Exceptions
-import java.util.MissingResourceException;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import org.columba.core.logging.ColumbaLogger;
 
 /*
 	Behaviour.

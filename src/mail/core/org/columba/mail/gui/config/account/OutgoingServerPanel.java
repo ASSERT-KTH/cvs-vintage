@@ -40,7 +40,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-import org.columba.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SmtpItem;
@@ -115,7 +114,7 @@ public class OutgoingServerPanel
 
 			hostTextField.setText(item.getHost());
 
-			portTextField.setText(new Integer(0).toString(item.getPort()));
+			portTextField.setText( new Integer(item.getPort()).toString() );
 
 			loginTextField.setText(item.getUser());
 

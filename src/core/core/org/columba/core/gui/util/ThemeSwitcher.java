@@ -14,18 +14,16 @@
 
 package org.columba.core.gui.util;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.plaf.metal.*;
-import javax.swing.plaf.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.columba.core.gui.themes.thincolumba.*;
-import org.columba.core.config.*;
-import org.columba.mail.config.*;
-import org.columba.main.*;
+import org.columba.core.config.Config;
+import org.columba.core.config.ThemeItem;
+import org.columba.core.gui.themes.thincolumba.ThinColumbaTheme;
+import org.columba.main.MainInterface;
 
 public class ThemeSwitcher {
 	public ThemeSwitcher() {
@@ -52,7 +50,7 @@ public class ThemeSwitcher {
 						
 						
 						MainInterface.lookAndFeel = new MetalLookAndFeel();
-						MainInterface.lookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getThemeItem())
+						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getThemeItem())
 							);
 						UIManager.setLookAndFeel(MainInterface.lookAndFeel);
 						

@@ -14,13 +14,10 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.*;
-import org.columba.mail.gui.tree.util.TreeNodeList;
-
-import java.util.StringTokenizer;
-
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
 import org.columba.mail.spellcheck.ASpellInterface;
+import org.w3c.dom.Document;
 
 /**
  * @version 	1.0

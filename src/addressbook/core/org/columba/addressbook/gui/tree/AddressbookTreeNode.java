@@ -16,12 +16,7 @@
 package org.columba.addressbook.gui.tree;
 
 
-import javax.swing.tree.*;
-
-import org.columba.core.config.*;
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.mail.folder.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 
 

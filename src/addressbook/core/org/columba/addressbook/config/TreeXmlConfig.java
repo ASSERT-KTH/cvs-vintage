@@ -14,18 +14,14 @@
 
 package org.columba.addressbook.config;
 
-import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.config.AdapterNode;
-
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.main.*;
-
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-
-import java.io.*;
+import java.io.File;
 import java.util.Vector;
+
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultXmlConfig;
 
 /**
  * @version 	1.0

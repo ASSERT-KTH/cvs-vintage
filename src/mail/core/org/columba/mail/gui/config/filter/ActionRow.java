@@ -15,23 +15,17 @@
 
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.main.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.filter.*;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
+import javax.swing.JButton;
 
-import java.awt.*;
-import java.awt.event.*;
-
-
-import java.util.Vector;
+import org.columba.mail.filter.FilterAction;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.main.MainInterface;
 
 public class ActionRow extends DefaultActionRow implements ActionListener
 {

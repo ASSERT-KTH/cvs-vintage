@@ -17,7 +17,6 @@ package org.columba.mail.config;
 
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.columba.main.MainInterface;
 import org.w3c.dom.Document;
 
 

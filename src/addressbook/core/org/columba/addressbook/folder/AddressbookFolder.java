@@ -14,17 +14,9 @@
 
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.main.*;
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.addressbook.parser.*;
-
-import org.columba.core.config.Config;
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.config.HeaderTableItem;
-import org.columba.core.util.*;
-
-import java.io.*;
-import java.util.*;
 
 public class AddressbookFolder extends LocalHeaderCacheFolder
 {

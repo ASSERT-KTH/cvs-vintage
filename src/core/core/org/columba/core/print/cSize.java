@@ -14,8 +14,8 @@
 
 package org.columba.core.print;
 
-import java.awt.geom.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.geom.Dimension2D;
 
 public class cSize implements Cloneable {
 	

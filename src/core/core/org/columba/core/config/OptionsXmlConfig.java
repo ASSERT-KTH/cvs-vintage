@@ -14,18 +14,9 @@
 
 package org.columba.core.config;
 
-import org.columba.core.config.*;
+import java.io.File;
+
 import org.columba.mail.config.PGPItem;
-import org.columba.mail.message.*;
-
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-
-//import com.sun.xml.tree.XmlDocument;
-
-import java.io.*;
-import java.util.Vector;
 
 public class OptionsXmlConfig extends DefaultXmlConfig
 {

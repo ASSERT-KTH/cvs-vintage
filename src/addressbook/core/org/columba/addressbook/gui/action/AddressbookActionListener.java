@@ -24,7 +24,6 @@ import java.io.FileReader;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.AddressbookXmlConfig;
 import org.columba.addressbook.config.FolderItem;
@@ -41,6 +40,7 @@ import org.columba.addressbook.gui.util.AddAddressbookDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.action.BasicAction;
 
 //import org.columba.modules.mail.config.*;

@@ -14,10 +14,11 @@
 
 package org.columba.core.gui.util;
 
-import org.columba.core.util.Compatibility;
-
-import javax.swing.*;
 import java.awt.Component;
+
+import javax.swing.JScrollPane;
+
+import org.columba.core.util.Compatibility;
 
 public class CScrollPane extends JScrollPane
 {

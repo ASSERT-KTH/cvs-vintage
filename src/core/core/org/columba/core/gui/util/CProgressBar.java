@@ -16,6 +16,7 @@ package org.columba.core.gui.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import javax.swing.JProgressBar;
 
 public class CProgressBar extends JProgressBar

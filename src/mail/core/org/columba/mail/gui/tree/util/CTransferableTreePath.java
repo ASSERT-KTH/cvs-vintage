@@ -8,7 +8,10 @@ package org.columba.mail.gui.tree.util;
  * @author
  */
 
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+
 import javax.swing.tree.TreePath;
 
 /**

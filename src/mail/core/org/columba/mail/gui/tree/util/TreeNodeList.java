@@ -14,12 +14,11 @@
 
 package org.columba.mail.gui.tree.util;
 
-import java.util.Vector;
-import java.util.StringTokenizer;
-import javax.swing.tree.TreePath;
 import java.io.File;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import org.columba.mail.config.*;
+import javax.swing.tree.TreePath;
 
 public class TreeNodeList {
 	Vector list;

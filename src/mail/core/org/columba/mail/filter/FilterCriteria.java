@@ -14,14 +14,9 @@
 
 package org.columba.mail.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.core.config.*;
-import org.columba.main.*;
-import org.columba.mail.folder.*;
-
-import org.w3c.dom.*;
-import java.util.Vector;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
 
 public class FilterCriteria extends DefaultItem {
 	

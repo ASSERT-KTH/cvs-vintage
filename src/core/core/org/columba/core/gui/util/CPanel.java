@@ -14,10 +14,12 @@
 
 package org.columba.core.gui.util;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Component;
+import java.awt.LayoutManager;
 
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 
 public class CPanel extends JPanel
 {

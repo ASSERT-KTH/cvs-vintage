@@ -14,24 +14,23 @@
 
 package org.columba.mail.gui.tree.util;
 
-import java.awt.*;
-import java.awt.dnd.*;
-import java.awt.datatransfer.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import org.columba.core.gui.util.*;
-import org.columba.main.*;
-import org.columba.mail.config.*;
-import org.columba.mail.util.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.util.*;
+import org.columba.core.gui.util.CInfoPanel;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.mail.util.MailResourceLoader;
 
 public class FolderInfoPanel extends CInfoPanel
 {

@@ -14,23 +14,28 @@
 
 package org.columba.addressbook.gui.tree.util;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-/*
-import org.columba.modules.mail.message.*;
-import org.columba.modules.mail.gui.tree.*;
-import org.columba.main.*;
-import org.columba.modules.mail.config.*;
-import org.columba.modules.mail.folder.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeModel;
 
-*/
-
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.config.*;
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.Folder;
 
 public class SelectAddressbookFolderDialog
 	extends JDialog

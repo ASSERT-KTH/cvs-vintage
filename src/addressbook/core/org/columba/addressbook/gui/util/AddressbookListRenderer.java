@@ -14,16 +14,15 @@
 
 package org.columba.addressbook.gui.util;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Component;
 
-import org.columba.core.config.*;
-import org.columba.core.gui.util.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+import org.columba.addressbook.folder.HeaderItem;
 import org.columba.core.gui.util.ImageLoader;
-
-
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.table.util.*;
 
 
 

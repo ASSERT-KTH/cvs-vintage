@@ -14,29 +14,19 @@
 
 package org.columba.addressbook.gui.menu;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 
-import org.columba.mail.gui.frame.action.*;
-import org.columba.core.gui.statusbar.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.mail.gui.frame.*;
-import org.columba.core.gui.util.*;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.CMenuItem;
-import org.columba.main.*;
-import org.columba.mail.message.*;
-import org.columba.addressbook.gui.*;
-import org.columba.addressbook.main.*;
-import org.columba.mail.pop3.*;
-import org.columba.mail.config.*;
-import org.columba.addressbook.util.*;
-import org.columba.mail.gui.action.*;
-import org.columba.mail.gui.util.*;
-
-import org.columba.addressbook.gui.*;
+import org.columba.core.gui.util.ImageLoader;
 
 public class AddressbookMenu
 {

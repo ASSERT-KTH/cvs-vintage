@@ -15,7 +15,7 @@
 
 package org.columba.mail.folder;
 
-import java.util.*;
+import java.util.EventListener;
 
 public interface FolderChangeListener extends EventListener
 {    

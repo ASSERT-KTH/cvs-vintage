@@ -14,15 +14,17 @@
 
 package org.columba.mail.gui.table.util;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import java.awt.Component;
 
-import org.columba.mail.message.Flags;
-import org.columba.core.gui.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
+
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.util.*;
 
 public class FlaggedRenderer extends JLabel
                         implements TableCellRenderer {
@@ -36,7 +38,7 @@ public class FlaggedRenderer extends JLabel
 
         public FlaggedRenderer() {
             super();
-	    this.bool = bool;
+	
                 //this.str = str;
                 //this.image = image;
             setHorizontalAlignment( SwingConstants.CENTER );

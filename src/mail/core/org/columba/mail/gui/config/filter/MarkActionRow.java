@@ -15,23 +15,7 @@
 
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.main.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.filter.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-
-import java.util.Vector;
+import org.columba.mail.filter.FilterAction;
 
 public class MarkActionRow extends DefaultActionRow
 {

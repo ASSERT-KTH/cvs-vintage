@@ -14,8 +14,9 @@
 
 package org.columba.mail.parser;
 
-import java.util.*;
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 public class MailUrlParser {
 	

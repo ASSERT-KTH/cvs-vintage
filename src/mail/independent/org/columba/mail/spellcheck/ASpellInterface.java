@@ -14,9 +14,14 @@
 
 package org.columba.mail.spellcheck;
 
-import org.columba.mail.spellcheck.cswilly.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
-import java.io.*;
+import org.columba.mail.spellcheck.cswilly.FileSpellChecker;
+import org.columba.mail.spellcheck.cswilly.SpellException;
 
 public class ASpellInterface
 {

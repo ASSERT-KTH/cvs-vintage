@@ -15,22 +15,8 @@
 
 package org.columba.mail.gui.table;
 
-import org.columba.mail.message.*;
-import org.columba.core.config.*;
-import org.columba.mail.config.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.table.util.*;
-import javax.swing.JTable;
-
-import javax.swing.table.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-import java.util.*;
-
-import java.awt.event.*;
-
-import java.text.Collator;
+import org.columba.core.config.WindowItem;
+import org.columba.mail.gui.table.util.TableModelSorter;
 
 
 public class HeaderTableModelSorter extends TableModelSorter

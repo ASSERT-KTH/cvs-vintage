@@ -17,17 +17,12 @@ package org.columba.mail.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-
-import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-
-import javax.swing.event.EventListenerList;
-
 import javax.swing.KeyStroke;
+import javax.swing.event.EventListenerList;
 
 public abstract class JAbstractAction extends AbstractAction
 {

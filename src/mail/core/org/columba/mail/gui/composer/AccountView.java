@@ -15,18 +15,15 @@
 package org.columba.mail.gui.composer;
 
 import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
 import org.columba.mail.config.IdentityItem;
 
 /**

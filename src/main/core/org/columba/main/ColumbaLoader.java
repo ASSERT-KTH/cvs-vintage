@@ -14,11 +14,12 @@
 
 package org.columba.main;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
-import org.columba.core.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * ideas taken from www.jext.org (author Roman Guy)

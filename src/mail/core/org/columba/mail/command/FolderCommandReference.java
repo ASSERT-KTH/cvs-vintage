@@ -4,7 +4,6 @@ import java.lang.reflect.Array;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.Lock;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.Message;

@@ -14,12 +14,10 @@
 
 package org.columba.mail.pgp;
 
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
-import org.columba.mail.config.*;
-import org.columba.mail.gui.util.*;
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.gui.util.PGPPassphraseDialog;
 import org.columba.main.MainInterface;
 
 public class PGPController {

@@ -14,17 +14,12 @@
 
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.core.gui.util.*;
-import org.columba.core.util.*;
-import org.columba.main.*;
+import java.io.File;
 
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.main.*;
-
-
-
-import java.util.Date;
-import java.io.*;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.util.SwingWorker;
 
 /**
  * @version 	1.0

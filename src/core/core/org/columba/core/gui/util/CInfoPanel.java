@@ -14,10 +14,14 @@
 
 package org.columba.core.gui.util;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 public class CInfoPanel extends JPanel
 {
@@ -34,9 +38,9 @@ public class CInfoPanel extends JPanel
 		
 		font = UIManager.getFont("Label.font");
 	
-        font = font.deriveFont( font.BOLD );
+        font = font.deriveFont( Font.BOLD );
         int size = font.getSize();
-        font = font.deriveFont( font.BOLD, size+2 );
+        font = font.deriveFont( Font.BOLD, size+2 );
 	
 	
 		setBorder( BorderFactory.createEmptyBorder(1,1,1,1) );

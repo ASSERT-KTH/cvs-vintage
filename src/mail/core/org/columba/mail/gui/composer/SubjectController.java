@@ -17,7 +17,6 @@ package org.columba.mail.gui.composer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.columba.main.MainInterface;
 import org.columba.mail.gui.composer.util.SubjectDialog;
 import org.columba.mail.util.MailResourceLoader;
 

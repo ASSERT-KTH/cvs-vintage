@@ -14,15 +14,12 @@
 
 package org.columba.addressbook.parser;
 
-import org.columba.mail.config.*;
-import org.columba.core.config.*;
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.gui.util.*;
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.addressbook.gui.util.AddressbookListModel;
-import org.columba.addressbook.folder.*;
-
 import java.util.Vector;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.folder.HeaderItem;
 
 /**
  * @version 	1.0

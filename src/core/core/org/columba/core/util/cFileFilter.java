@@ -15,7 +15,6 @@
 package org.columba.core.util;
 
 import java.io.File;
-import java.util.Vector;
 
 import javax.swing.filechooser.FileFilter;
 

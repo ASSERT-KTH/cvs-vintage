@@ -15,11 +15,8 @@
 package org.columba.mail.composer;
 
 import java.lang.reflect.Array;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Hashtable;
 
-import org.columba.core.io.DiskIO;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;

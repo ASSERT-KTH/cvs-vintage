@@ -14,13 +14,14 @@
 
 package org.columba.mail.gui.mimetype;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import javax.swing.*;
 
-import org.columba.mail.parser.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.message.*;
+import org.columba.mail.message.MimeHeader;
 
 public class WindowsViewer extends DefaultViewer
 {

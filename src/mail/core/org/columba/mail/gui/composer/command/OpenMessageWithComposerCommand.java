@@ -61,7 +61,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 
 		controller = new ComposerController(frameController);
 
-		MessageBuilder.getInstance().openMessage(
+		MessageBuilder.openMessage(
 			message,
 			controller.getModel());
 	}

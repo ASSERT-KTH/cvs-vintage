@@ -15,21 +15,15 @@
 
 package org.columba.mail.gui.action;
 
-import javax.swing.Action;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-import org.columba.core.gui.util.*;
-import org.columba.main.MainInterface;
-import org.columba.mail.util.*;
-import org.columba.mail.gui.frame.*;
-import org.columba.mail.gui.frame.action.*;
-import org.columba.mail.gui.util.*;
+import javax.swing.KeyStroke;
 
-import org.columba.mail.util.*;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.action.FrameActionListener;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class GlobalActionCollection

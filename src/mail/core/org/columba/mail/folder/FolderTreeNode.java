@@ -8,8 +8,8 @@ import javax.swing.tree.TreeNode;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.AdapterNode;
 import org.columba.core.util.Lock;
-import org.columba.main.MainInterface;
 import org.columba.mail.config.FolderItem;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy

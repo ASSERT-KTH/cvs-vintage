@@ -14,16 +14,18 @@
 
 package org.columba.mail.gui.table.util;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import java.awt.Component;
 
-import org.columba.core.gui.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
+
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.util.*;
 import org.columba.mail.message.Flags;
-import org.columba.core.gui.util.ImageLoader;
 
 public class StatusRenderer extends JLabel implements TableCellRenderer
 {
@@ -42,7 +44,7 @@ public class StatusRenderer extends JLabel implements TableCellRenderer
 	public StatusRenderer()
 	{
 		super();
-		this.bool = bool;
+	
 
 		setHorizontalAlignment(SwingConstants.CENTER);
 		setOpaque(true);

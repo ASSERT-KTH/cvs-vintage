@@ -2,7 +2,6 @@ package org.columba.mail.imap.parser;
 
 import java.util.Vector;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.imap.IMAPResponse;
 

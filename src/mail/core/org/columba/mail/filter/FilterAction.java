@@ -14,15 +14,9 @@
 
 package org.columba.mail.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.mail.folder.*;
-import org.columba.core.config.*;
-import org.columba.main.*;
-
-import javax.swing.*;
-import java.util.Vector;
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
 
 public class FilterAction extends DefaultItem {
 	// move = 0, copy = 1, delete = 2, markasread = 3, ...

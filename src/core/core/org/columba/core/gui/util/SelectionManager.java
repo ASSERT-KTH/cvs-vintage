@@ -1,11 +1,6 @@
 package org.columba.core.gui.util;
 
-import java.util.Vector;
-
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.message.Message;
 
 /**
  * @author freddy

@@ -14,9 +14,12 @@
 
 package org.columba.core.gui.util;
 
-import java.awt.*;
-import java.awt.image.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.ImageIcon;
 
 public class AscendingIcon extends ImageIcon
     {

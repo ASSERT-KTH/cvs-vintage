@@ -14,7 +14,6 @@
 
 package org.columba.mail.message;
 
-import java.util.Date;
 
 public class Message extends AbstractMessage {
 	protected ColumbaHeader header;

@@ -22,21 +22,21 @@ import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.columba.core.gui.FrameController;
-import org.columba.core.util.CharsetEvent;
-import org.columba.core.util.CharsetListener;
-import org.columba.core.util.CharsetManager;
-import org.columba.main.MainInterface;
 import org.columba.addressbook.AddressBookIC;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
+import org.columba.core.gui.FrameController;
+import org.columba.core.util.CharsetEvent;
+import org.columba.core.util.CharsetListener;
+import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.ComposerActionListener;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.AddressCollector;
+import org.columba.main.MainInterface;
 
 /**
  * @author frd

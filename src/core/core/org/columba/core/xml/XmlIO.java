@@ -31,18 +31,22 @@
 
 package org.columba.core.xml;
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import java.util.*;
-import java.io.*;
-import javax.swing.JOptionPane;
-import org.columba.main.MainInterface;
-//import common.*;
+import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Vector;
 
-import org.columba.core.xml.XmlElement;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 
 public class XmlIO extends DefaultHandler {

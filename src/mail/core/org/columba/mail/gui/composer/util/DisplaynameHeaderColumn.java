@@ -22,9 +22,10 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
-import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
+import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author frd

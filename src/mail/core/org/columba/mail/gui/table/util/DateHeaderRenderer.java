@@ -14,15 +14,17 @@
 
 package org.columba.mail.gui.table.util;
 
+import java.awt.Component;
+
 import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
 
-import org.columba.core.gui.util.*;
-import org.columba.mail.gui.util.*;
-
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
 /**
  * Title:
  * Description:

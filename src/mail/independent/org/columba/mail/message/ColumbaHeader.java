@@ -14,7 +14,8 @@
 
 package org.columba.mail.message;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * represents a Rfc822-compliant header

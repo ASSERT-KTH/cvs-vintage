@@ -14,11 +14,8 @@
 
 package org.columba.mail.gui.frame.util;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.*;
-
-import org.columba.mail.gui.frame.*;
+import javax.swing.JComponent;
+import javax.swing.JSplitPane;
 
 public class SplitPane extends JSplitPane {
 	public JSplitPane splitPane = new JSplitPane();

@@ -14,7 +14,6 @@
 
 package org.columba.core.gui.util;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 

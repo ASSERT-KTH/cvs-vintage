@@ -14,20 +14,15 @@
 
 package org.columba.addressbook.gui.table.util;
 
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.gui.table.*;
-
-import javax.swing.JTable;
-
-import javax.swing.table.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-import java.util.*;
-
-import java.awt.event.*;
-
 import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Vector;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.table.AddressbookTableModel;
 
 public class TableModelSorter extends TableModelPlugin
 {

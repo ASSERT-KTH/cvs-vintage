@@ -14,11 +14,12 @@
 
 package org.columba.addressbook.folder;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.core.config.DefaultItem;
+import java.util.Hashtable;
 
-import java.util.*;
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * @version 	1.0

@@ -16,7 +16,6 @@ package org.columba.mail.gui.composer.util;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.border.Border;

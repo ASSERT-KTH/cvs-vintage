@@ -24,7 +24,6 @@ import javax.swing.KeyStroke;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
 import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.util.MailResourceLoader;
 

@@ -22,9 +22,6 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
-import org.columba.core.command.TaskManager;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
 import org.columba.addressbook.gui.action.AddressbookActionListener;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
@@ -32,6 +29,8 @@ import org.columba.addressbook.gui.toolbar.AddressbookToolBar;
 import org.columba.addressbook.gui.tree.AddressbookTree;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.main.MainInterface;
 
 
 public class AddressbookView extends JFrame

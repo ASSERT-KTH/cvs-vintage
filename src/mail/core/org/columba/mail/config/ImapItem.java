@@ -15,8 +15,9 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.*;
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
 
 public class ImapItem extends DefaultItem implements MailCheckInterface
 {

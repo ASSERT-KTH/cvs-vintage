@@ -17,13 +17,12 @@ package org.columba.mail.gui.composer;
 
 import javax.swing.JFrame;
 
+import org.columba.addressbook.gui.AddressbookPanel;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.Config;
 import org.columba.core.config.WindowItem;
 import org.columba.core.gui.FrameController;
 import org.columba.core.util.CharsetManager;
-import org.columba.main.MainInterface;
-import org.columba.addressbook.gui.AddressbookPanel;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.action.ComposerActionListener;
@@ -31,6 +30,7 @@ import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.gui.composer.util.UndoDocument;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.pgp.PGPController;
+import org.columba.main.MainInterface;
 
 public class ComposerInterface
 {

@@ -66,7 +66,7 @@ public class IMAPStore {
 	public IMAPStore(ImapItem item, IMAPRootFolder root) {
 
 		this.item = item;
-		this.parent = parent;
+	
 
 		imap = new IMAPProtocol();
 
@@ -682,8 +682,7 @@ public class IMAPStore {
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
 
-			} else
-				shortFrom = shortFrom;
+			} 
 
 			h.set("columba.from", shortFrom);
 			//message.setShortFrom( shortFrom );

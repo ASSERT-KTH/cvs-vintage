@@ -16,12 +16,14 @@
 package org.columba.mail.gui.config.filter.util;
 
 
-import org.columba.mail.gui.util.*;
+import java.awt.Component;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
 
 public class FilterHeaderRenderer extends JButton implements TableCellRenderer
     {

@@ -22,16 +22,13 @@ import java.util.Enumeration;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
+import org.columba.addressbook.main.AddressbookExitWorker;
 import org.columba.core.config.Config;
 import org.columba.core.util.SwingWorker;
-import org.columba.addressbook.main.AddressbookExitWorker;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.mail.message.Flags;
-import org.columba.mail.message.Message;
-import org.columba.mail.pop3.POP3Server;
 
 public class ExitWorker extends SwingWorker {
 	private JProgressBar bar;

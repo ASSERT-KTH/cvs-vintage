@@ -14,7 +14,7 @@
 
 package org.columba.mail.util;
 
-import java.util.*;
+import java.util.Vector;
 
 public class Bucket extends Vector
 {

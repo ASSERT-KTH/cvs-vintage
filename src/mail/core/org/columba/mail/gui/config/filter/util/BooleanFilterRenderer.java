@@ -15,16 +15,15 @@
 
 package org.columba.mail.gui.config.filter.util;
 
-import org.columba.mail.gui.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.table.util.*;
+import java.awt.Component;
+import java.awt.Font;
 
-
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import javax.swing.tree.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
 
 
 public class BooleanFilterRenderer extends JLabel implements TableCellRenderer

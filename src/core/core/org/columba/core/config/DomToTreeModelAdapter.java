@@ -14,13 +14,14 @@
 
 package org.columba.core.config;
 
-import javax.swing.tree.*;
-import javax.swing.event.*;
-
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.columba.core.config.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+
 import org.w3c.dom.Document;
 
 public class DomToTreeModelAdapter implements TreeModel 

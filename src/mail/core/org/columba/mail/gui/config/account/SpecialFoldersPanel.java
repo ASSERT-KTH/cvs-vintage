@@ -14,21 +14,29 @@
 
 package org.columba.mail.gui.config.account;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
-import org.columba.mail.config.*;
-import org.columba.mail.util.*;
-import org.columba.mail.gui.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.tree.*;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.SpecialFoldersItem;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.main.MainInterface;
 
 public class SpecialFoldersPanel

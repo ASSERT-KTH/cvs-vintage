@@ -14,11 +14,11 @@
 
 package org.columba.core.gui.util;
 
-import org.columba.core.util.Compatibility;
-
-import javax.swing.*;
-import java.awt.Component;
 import java.lang.reflect.Field;
+
+import javax.swing.JTabbedPane;
+
+import org.columba.core.util.Compatibility;
 
 public class CTabbedPane extends JTabbedPane
 {

@@ -1,7 +1,6 @@
 package org.columba.mail.imap.parser;
 
 import org.columba.mail.imap.IMAPResponse;
-import org.columba.mail.imap.parser.*;
 import org.columba.mail.message.MimePartTree;
 
 /**

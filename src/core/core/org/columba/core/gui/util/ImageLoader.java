@@ -14,18 +14,25 @@
 
 package org.columba.core.gui.util;
 
-import java.util.zip.*;
-import java.io.*;
-import java.awt.*;
-import java.net.*;
-import javax.swing.*;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
-import java.util.*;
+import javax.swing.ImageIcon;
 
-import org.columba.mail.config.*;
-import org.columba.main.*;
-import org.columba.core.util.*;
-import org.columba.core.io.*;
+import org.columba.core.io.DiskIO;
 
 public class ImageLoader
 {
@@ -41,7 +48,7 @@ public class ImageLoader
 
 	public ImageLoader()
 	{
-		this.currentLocale = Locale.getDefault();
+		currentLocale = Locale.getDefault();
 		
 		
 		/*

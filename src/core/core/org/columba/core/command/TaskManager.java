@@ -14,21 +14,12 @@
 
 package org.columba.core.command;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.Collator;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.Timer;
-import org.columba.core.util.Mutex;
-import org.columba.core.util.SwingWorker.ThreadVar;
-import org.columba.main.MainInterface;
-import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
+import org.columba.core.util.Mutex;
+import org.columba.core.util.SwingWorker.ThreadVar;
 
 public class TaskManager {
 	private Vector workerList;

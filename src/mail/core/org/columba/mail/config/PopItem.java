@@ -16,12 +16,9 @@
 /* -*-mode: java; compile-command:"javac PopItem.java -classpath ../"; -*- */
 package org.columba.mail.config;
 
-import org.columba.core.config.*;
-import org.columba.mail.gui.tree.util.TreeNodeList;
-
-import java.util.StringTokenizer;
-
-import org.w3c.dom.*;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
 
 
 public class PopItem extends DefaultItem implements MailCheckInterface

@@ -14,18 +14,27 @@
 
 package org.columba.addressbook.gui.util;
 
-import org.columba.addressbook.util.*;
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.addressbook.folder.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+
+import org.columba.addressbook.folder.ContactCard;
 import org.columba.core.config.AdapterNode;
-
-import java.util.*;
-
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
 
 /**
  * @version 	1.0

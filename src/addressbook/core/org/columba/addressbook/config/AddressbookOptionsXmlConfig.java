@@ -16,22 +16,12 @@
 package org.columba.addressbook.config;
 
 
-import org.columba.core.config.*;
+import java.io.File;
+
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.config.HeaderTableItem;
 import org.columba.core.config.WindowItem;
-import org.columba.mail.message.*;
-
-
-
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-
-//import com.sun.xml.tree.XmlDocument;
-
-
-import java.io.*;
-import java.util.Vector;
 
 
 public class AddressbookOptionsXmlConfig extends DefaultXmlConfig

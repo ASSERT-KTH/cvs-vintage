@@ -14,19 +14,30 @@
 
 package org.columba.mail.gui.config.account;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 
-import org.columba.mail.gui.util.*;
-import org.columba.mail.config.*;
-import org.columba.mail.util.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.message.*;
-import org.columba.mail.gui.tree.util.*;
-import org.columba.main.MainInterface;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.PopItem;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  *

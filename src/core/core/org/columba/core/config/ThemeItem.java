@@ -14,16 +14,10 @@
 
 package org.columba.core.config;
 
-import java.util.Vector;
-import java.awt.*;
-import java.math.*;
+import java.awt.Color;
+import java.awt.Font;
 
-import org.columba.mail.folder.*;
-
-import org.w3c.dom.*;
-
-import org.columba.core.config.*;
-import org.columba.core.gui.themes.*;
+import org.w3c.dom.Document;
 
 public class ThemeItem extends DefaultItem
 {

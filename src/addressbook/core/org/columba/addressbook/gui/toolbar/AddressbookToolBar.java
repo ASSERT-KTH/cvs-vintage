@@ -16,20 +16,12 @@
 package org.columba.addressbook.gui.toolbar;
 
 
-import javax.swing.*;
+import java.util.ResourceBundle;
 
-import org.columba.main.MainInterface;
+import javax.swing.JToolBar;
 
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.config.WindowItem;
-
-//import org.columba.modules.mail.gui.util.*;
-import java.util.*;
-
-//import org.columba.core.gui.themes.*;
-import org.columba.core.gui.util.*;
-
-import java.awt.event.*;
+import org.columba.core.gui.util.ToolbarButton;
 
 
 

@@ -15,14 +15,11 @@
 package org.columba.mail.gui.table.action;
 
 
-import org.columba.core.config.*;
-import org.columba.mail.config.*;
-import org.columba.mail.gui.table.*;
-import org.columba.mail.gui.table.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
-
-import java.awt.event.*;
+import org.columba.core.config.HeaderTableItem;
+import org.columba.mail.gui.table.TableController;
 
 
 public class HeaderItemActionListener implements ActionListener

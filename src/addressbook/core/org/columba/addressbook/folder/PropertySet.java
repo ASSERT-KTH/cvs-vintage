@@ -14,7 +14,7 @@
 
 package org.columba.addressbook.folder;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  * @version 	1.0

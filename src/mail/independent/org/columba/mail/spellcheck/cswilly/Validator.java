@@ -56,7 +56,7 @@ public
         for (int ii = results.size() - 1; ii >= 0; ii--)
         {
             Result result = (Result) results.get(ii);
-            if (result.getType() != result.OK)
+            if (result.getType() != Result.OK)
             {
                 String replacementWord;
 
@@ -114,11 +114,11 @@ public
         validationDialog.show();
 
         ValidationDialog.UserAction userAction = validationDialog.getUserAction();
-        if (userAction == validationDialog.CANCEL)
+        if (userAction == ValidationDialog.CANCEL)
         {
             replacementWord = null;
         }
-        else if (userAction == validationDialog.CHANGE_ALL)
+        else if (userAction == ValidationDialog.CHANGE_ALL)
         {
             if (_changeAllMap.containsKey(result.getOriginalWord()))
             {
@@ -129,11 +129,11 @@ public
                     validationDialog.getSelectedWord());
             replacementWord = validationDialog.getSelectedWord();
         }
-        else if (userAction == validationDialog.CHANGE)
+        else if (userAction == ValidationDialog.CHANGE)
         {
             replacementWord = validationDialog.getSelectedWord();
         }
-        else if (userAction == validationDialog.IGNORE_ALL)
+        else if (userAction == ValidationDialog.IGNORE_ALL)
         {
             if (_ignoreAllSet.contains(result.getOriginalWord()))
             {
@@ -143,7 +143,7 @@ public
             _ignoreAllSet.add(result.getOriginalWord());
             replacementWord = result.getOriginalWord();
         }
-        else if (userAction == validationDialog.IGNORE)
+        else if (userAction == ValidationDialog.IGNORE)
         {
             replacementWord = result.getOriginalWord();
         }

@@ -14,14 +14,22 @@
 
 package org.columba.addressbook.gui.dialog.contact;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.util.AddressbookResourceLoader;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
+
+import org.columba.addressbook.folder.ContactCard;
 
 public class ContactDialog extends JDialog implements ActionListener
 {

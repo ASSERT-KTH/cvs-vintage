@@ -19,7 +19,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Vector;
 
 public class cPrintVariable extends cParagraph {
 

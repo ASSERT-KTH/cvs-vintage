@@ -14,14 +14,22 @@
 
 package org.columba.mail.gui.config.mailboximport;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.border.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
 
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.wizard.*;
-import org.columba.mail.gui.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.columba.core.gui.util.CProgressBar;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 
 /**
  * @version 	1.0

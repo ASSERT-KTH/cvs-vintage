@@ -4,7 +4,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.FrameController;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.virtual.VirtualFolder;
 
 /**
  * @author freddy

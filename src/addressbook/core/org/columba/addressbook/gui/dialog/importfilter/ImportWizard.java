@@ -14,23 +14,21 @@
 
 package org.columba.addressbook.gui.dialog.importfilter;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 
-import org.columba.main.*;
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.wizard.*;
-import org.columba.addressbook.folder.*;
-import org.columba.addressbook.main.*;
-import org.columba.addressbook.gui.*;
-import org.columba.addressbook.gui.tree.util.*;
-import org.columba.addressbook.folder.importfilter.*;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 
 public class ImportWizard implements ActionListener
 {

@@ -14,17 +14,25 @@
 
 package org.columba.addressbook.gui.dialog.importfilter;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.wizard.*;
-import org.columba.addressbook.util.*;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 
 public class ListPanel extends DefaultWizardPanel
 implements ListSelectionListener {

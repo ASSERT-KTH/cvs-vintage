@@ -14,10 +14,7 @@
 
 package org.columba.mail.folder;
 
-import java.io.File;
-
 import org.columba.core.config.AdapterNode;
-import org.columba.core.config.ConfigPath;
 import org.columba.mail.config.FolderItem;
 
 public abstract class RemoteFolder extends Folder {

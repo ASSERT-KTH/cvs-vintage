@@ -15,7 +15,6 @@
 package org.columba.mail.gui.composer;
 
 import java.util.Observable;
-import java.util.Properties;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;

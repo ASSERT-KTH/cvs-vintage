@@ -14,8 +14,12 @@
 
 package org.columba.mail.parser;
 
-import java.util.*;
-import java.text.*;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class DateParser
 {

@@ -5,14 +5,12 @@ import java.util.Hashtable;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.AdapterNode;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalHeaderCache;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.parser.Rfc822Parser;

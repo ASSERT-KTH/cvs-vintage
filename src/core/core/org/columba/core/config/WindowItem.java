@@ -14,15 +14,10 @@
 
 package org.columba.core.config;
 
-import java.util.Vector;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
 
-import org.columba.mail.folder.*;
-
-import org.w3c.dom.*;
-
-import org.columba.core.config.*;
-import org.columba.core.gui.themes.*;
+import org.w3c.dom.Document;
 
 public class WindowItem extends DefaultItem
 {

@@ -15,22 +15,17 @@
 
 package org.columba.mail.gui.config.account;
 
-import org.columba.mail.config.*;
-import org.columba.mail.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.folder.*;
-import org.columba.core.config.*;
-import org.columba.main.*;
-import org.columba.mail.gui.table.util.*;
-import org.columba.mail.gui.table.*;
-import org.columba.mail.gui.config.account.util.*;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumn;
 
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import java.util.Vector;
-import org.columba.mail.gui.util.*;
+import org.columba.core.config.Config;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.gui.config.account.util.AccountHeaderRenderer;
+import org.columba.mail.gui.config.account.util.NameRenderer;
+import org.columba.mail.gui.config.account.util.StringAccountRenderer;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 class AccountListTable extends JTable
 {

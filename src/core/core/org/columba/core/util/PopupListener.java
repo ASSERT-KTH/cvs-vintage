@@ -14,8 +14,10 @@
 
 package org.columba.core.util;
 
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JPopupMenu;
 
 public class PopupListener extends MouseAdapter
 {

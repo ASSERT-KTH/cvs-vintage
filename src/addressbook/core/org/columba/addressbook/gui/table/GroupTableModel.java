@@ -14,14 +14,13 @@
 
 package org.columba.addressbook.gui.table;
 
-import javax.swing.*;
-import javax.swing.table.*;
 import java.util.Vector;
 
-import org.columba.mail.config.*;
-import org.columba.core.config.*;
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.gui.*;
+import javax.swing.table.AbstractTableModel;
+
+import org.columba.addressbook.config.AddressbookXmlConfig;
+import org.columba.addressbook.config.GroupItem;
+import org.columba.core.config.AdapterNode;
 
 
 public class GroupTableModel extends AbstractTableModel

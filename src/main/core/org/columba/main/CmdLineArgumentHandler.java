@@ -19,10 +19,10 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.parser.MailUrlParser;
 
 public class CmdLineArgumentHandler {
-	private MainInterface mainInterface;
+	//private MainInterface mainInterface;
 
 	public CmdLineArgumentHandler(String[] args) {
-		this.mainInterface = mainInterface;
+		//this.mainInterface = mainInterface;
 
 		ColumbaCmdLineArgumentParser cmdLineParser =
 			new ColumbaCmdLineArgumentParser();
@@ -31,11 +31,11 @@ public class CmdLineArgumentHandler {
 			cmdLineParser.parse(args);
 		} catch (CmdLineArgumentParser.UnknownOptionException e) {
 			System.err.println(e.getMessage());
-			cmdLineParser.printUsage();
+			ColumbaCmdLineArgumentParser.printUsage();
 
 		} catch (CmdLineArgumentParser.IllegalOptionValueException e) {
 			System.err.println(e.getMessage());
-			cmdLineParser.printUsage();
+			ColumbaCmdLineArgumentParser.printUsage();
 
 		}
 

@@ -23,9 +23,6 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -37,6 +34,7 @@ import org.columba.mail.gui.tree.menu.FolderTreeMenu;
 import org.columba.mail.gui.tree.util.EditFolderDialog;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.main.MainInterface;
 
 /**
  * this class shows the the folder hierarchy

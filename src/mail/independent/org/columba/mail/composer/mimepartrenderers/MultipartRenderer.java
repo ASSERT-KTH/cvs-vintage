@@ -1,9 +1,5 @@
 package org.columba.mail.composer.mimepartrenderers;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Random;
-
-import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Encoder;
 import org.columba.mail.composer.MimePartRenderer;

@@ -14,7 +14,6 @@
 
 package org.columba.core.print;
 
-import java.awt.geom.*;
 
 public abstract class cUnit implements Cloneable {
 

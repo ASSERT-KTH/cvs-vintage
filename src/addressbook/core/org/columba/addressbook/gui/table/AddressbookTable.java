@@ -30,8 +30,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.core.config.HeaderTableItem;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.AddressbookXmlConfig;
 import org.columba.addressbook.config.FolderItem;
@@ -46,6 +44,8 @@ import org.columba.addressbook.gui.table.util.TableModelSorter;
 import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.HeaderTableItem;
 
 public class AddressbookTable extends JPanel implements ListSelectionListener
 {
@@ -81,7 +81,7 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 		table = new JTable(addressbookModel);
 		table.setIntercellSpacing(new Dimension(0, 0));
 		table.setShowGrid(false);
-		table.setAutoResizeMode(table.AUTO_RESIZE_ALL_COLUMNS);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getSelectionModel().addListSelectionListener(this);
 		
 		addMouseListenerToHeaderInTable();

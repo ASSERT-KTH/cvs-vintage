@@ -14,16 +14,13 @@
 
 package org.columba.core.gui.themes;
 
-import javax.swing.plaf.*;
-import javax.swing.plaf.basic.*;
-import javax.swing.plaf.metal.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
+import java.awt.Font;
 
-import org.columba.mail.message.*;
-import org.columba.core.config.*;
-import org.columba.mail.config.*;
+import javax.swing.UIDefaults;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+
+import org.columba.core.config.ThemeItem;
 
 public class DefaultCTheme extends DefaultMetalTheme
 {

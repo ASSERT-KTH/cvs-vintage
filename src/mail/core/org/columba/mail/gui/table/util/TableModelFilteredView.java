@@ -14,20 +14,13 @@
 
 package org.columba.mail.gui.table.util;
 
-import org.columba.mail.message.*;
-import org.columba.mail.config.*;
-import org.columba.mail.folder.*;
-import org.columba.mail.gui.table.*;
-import javax.swing.JTable;
+import java.util.Enumeration;
 
-import javax.swing.table.*;
-import javax.swing.event.*;
-
-import java.util.*;
-
-import java.awt.event.*;
-
-import java.text.Collator;
+import org.columba.mail.gui.table.HeaderTableModel;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.Flags;
+import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.HeaderList;
 
 public class TableModelFilteredView extends TableModelPlugin {
 

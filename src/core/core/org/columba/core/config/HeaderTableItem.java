@@ -16,8 +16,6 @@ package org.columba.core.config;
 
 import java.util.Vector;
 
-import org.columba.core.config.*;
-
 public class HeaderTableItem
     {
 

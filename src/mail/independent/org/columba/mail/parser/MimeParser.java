@@ -14,12 +14,13 @@
 
 package org.columba.mail.parser;
 
-import org.columba.mail.gui.message.*;
+import java.io.StringWriter;
+import java.util.StringTokenizer;
 
-import java.io.*;
-import java.util.*;
-import org.columba.mail.message.*;
-import org.columba.mail.coder.*;
+import org.columba.mail.coder.EncodedWordDecoder;
+import org.columba.mail.message.MimeHeader;
+import org.columba.mail.message.MimePart;
+import org.columba.mail.message.Rfc822Header;
 
 
 public class MimeParser extends AbstractParser {

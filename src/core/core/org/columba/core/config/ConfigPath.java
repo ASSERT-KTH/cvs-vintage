@@ -17,8 +17,6 @@ package org.columba.core.config;
 import java.io.File;
 import java.io.IOException;
 
-import org.columba.core.io.DiskIO;
-
 /**
  * @author frd
  *
@@ -45,7 +43,7 @@ public class ConfigPath {
 
 	public ConfigPath(String configPath) {
 		
-		this.configDirectory = new File(configPath);
+		configDirectory = new File(configPath);
 		
 		configDirectory.mkdir();
 	}

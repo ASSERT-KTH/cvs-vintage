@@ -28,7 +28,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.MessageIDGenerator;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
@@ -128,8 +127,7 @@ public class MessageComposer {
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
 
-			} else
-				shortFrom = shortFrom;
+			} 
 
 			header.set("columba.from", shortFrom);
 		} else {

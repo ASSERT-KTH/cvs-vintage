@@ -14,9 +14,12 @@
 
 package org.columba.core.print;
 
-import java.awt.print.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.print.Book;
+import java.awt.print.Paper;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.util.Enumeration;
+import java.util.Vector;
 
 public class cDocument{
 

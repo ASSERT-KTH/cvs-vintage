@@ -14,27 +14,47 @@
 
 package org.columba.addressbook.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.util.Vector;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-import org.columba.mail.config.*;
-import org.columba.mail.gui.util.*;
-import org.columba.core.config.*;
-import org.columba.core.gui.util.*;
-import org.columba.addressbook.config.*;
-import org.columba.addressbook.gui.util.*;
-import org.columba.addressbook.main.*;
-import org.columba.addressbook.gui.table.util.*;
-import org.columba.addressbook.gui.table.*;
-import org.columba.addressbook.gui.tree.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
-import org.columba.addressbook.util.*;
-//import org.columba.modules.addressbook.gui.tree.util.*;
-
-import org.columba.addressbook.folder.*;
+import org.columba.addressbook.config.AddressbookXmlConfig;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.gui.util.AddressbookDNDListView;
+import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.addressbook.gui.util.AddressbookListRenderer;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.config.AdapterNode;
 
 public class EditGroupDialog extends JDialog implements ActionListener
 {

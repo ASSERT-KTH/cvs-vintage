@@ -15,7 +15,7 @@
 
 package org.columba.mail.folder;
 
-import org.columba.mail.message.*;
+import org.columba.mail.message.Flags;
 
 
 public class MessageFolderInfo

@@ -21,7 +21,6 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
 
 /**
  * @author frd

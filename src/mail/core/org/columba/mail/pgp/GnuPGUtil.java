@@ -14,13 +14,6 @@
 
 package org.columba.mail.pgp;
 
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-
-import org.columba.core.io.*;
-import org.columba.mail.config.*;
-import org.columba.mail.gui.util.*;
 
 
 public class GnuPGUtil extends DefaultUtil

@@ -14,15 +14,18 @@
 
 package org.columba.mail.gui.util;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
-import javax.swing.*;
 
-import org.columba.mail.parser.*;
-import org.columba.main.MainInterface;
-import org.columba.mail.gui.message.*;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 public class URLLabel extends JLabel implements MouseListener
 {

@@ -21,13 +21,10 @@ import java.awt.Rectangle;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
-import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**

@@ -15,12 +15,12 @@
 
 package org.columba.mail.filter;
 
-import org.columba.mail.message.Rfc822Header;
-import org.columba.core.config.*;
-import org.columba.main.*;
-import org.columba.mail.config.*;
 import java.util.Vector;
-import org.columba.mail.folder.*;
+
+import org.columba.core.config.AdapterNode;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.Folder;
 
 
 public class FilterList

@@ -14,7 +14,9 @@
 
 package org.columba.mail.message;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Vector;
 
 public class MessageCollection
 {

@@ -14,9 +14,10 @@
 
 package org.columba.mail.folder;
 
-import org.columba.mail.gui.table.util.*;
-import org.columba.mail.message.*;
-import java.util.*;
+import java.util.EventObject;
+
+import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.message.Message;
 
 public class FolderEvent extends EventObject
 {

@@ -14,13 +14,9 @@
 
 package org.columba.addressbook.config;
 
-import org.columba.core.config.DefaultItem;
 import org.columba.core.config.AdapterNode;
-
-import java.util.Vector;
-import org.w3c.dom.*;
-
-import org.columba.core.config.*;
+import org.columba.core.config.DefaultItem;
+import org.w3c.dom.Document;
 
 /**
  * @version 	1.0

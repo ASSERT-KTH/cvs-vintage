@@ -14,13 +14,13 @@
 
 package org.columba.addressbook.folder;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.columba.core.config.AdapterNode;
-
-import java.util.*;
-
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import org.xml.sax.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class ContactCard extends DefaultCard
 {

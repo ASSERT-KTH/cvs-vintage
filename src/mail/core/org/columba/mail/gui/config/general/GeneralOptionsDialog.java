@@ -14,14 +14,22 @@
 
 package org.columba.mail.gui.config.general;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 
-import org.columba.main.*;
-import org.columba.core.gui.config.themes.*;
+import org.columba.core.gui.config.themes.ThemePanel;
 
 public class GeneralOptionsDialog extends JDialog implements ActionListener
 {

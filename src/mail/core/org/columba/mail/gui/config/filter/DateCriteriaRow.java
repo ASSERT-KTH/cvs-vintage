@@ -14,24 +14,17 @@
 
 package org.columba.mail.gui.config.filter;
 
-import org.columba.mail.config.*;
-import org.columba.mail.message.*;
-import org.columba.main.*;
-import org.columba.mail.filter.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.util.Date;
 
-import org.columba.mail.gui.util.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
-
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-import java.text.*;
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.util.DateChooserDialog;
+import org.columba.main.MainInterface;
 
 public class DateCriteriaRow extends DefaultCriteriaRow implements ActionListener
 {

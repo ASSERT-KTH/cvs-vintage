@@ -14,11 +14,11 @@
 
 package org.columba.core.util;
 
-import org.columba.core.io.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.net.URL;
 
-import java.applet.*;
-import java.net.*;
-import java.io.*;
+import org.columba.core.io.DiskIO;
 
 public class PlaySound
 {

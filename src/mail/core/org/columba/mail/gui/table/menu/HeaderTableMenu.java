@@ -14,17 +14,20 @@
 
 package org.columba.mail.gui.table.menu;
 
-import org.columba.mail.gui.util.*;
-import org.columba.core.gui.util.*;
-import org.columba.mail.gui.table.*;
-import org.columba.mail.gui.table.action.*;
-import org.columba.core.gui.statusbar.*;
-import org.columba.mail.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 
-import javax.swing.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
+
+import org.columba.core.gui.util.CMenu;
+import org.columba.core.gui.util.CMenuItem;
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.action.HeaderTableActionListener;
+import org.columba.mail.gui.table.action.HeaderTableMouseListener;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * menu for the tableviewer

@@ -14,8 +14,6 @@
 
 package org.columba.mail.parser;
 
-import java.io.*;
-import org.columba.mail.message.*;
 
 abstract class AbstractParser {
 

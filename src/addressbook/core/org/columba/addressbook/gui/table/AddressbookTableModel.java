@@ -21,7 +21,6 @@ import javax.swing.table.AbstractTableModel;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.table.util.HeaderColumn;
 import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 import org.columba.addressbook.gui.table.util.TableModelPlugin;

@@ -16,12 +16,12 @@ package org.columba.addressbook.folder;
 
 import java.io.File;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
-import org.columba.core.config.ConfigPath;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.AdapterNode;
+import org.columba.core.config.ConfigPath;
 
 public abstract class Folder extends AddressbookTreeNode
 {
