@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.6 2001/02/09 03:11:28 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.7 2001/08/06 20:40:59 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href="style.css">
@@ -272,48 +272,55 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 <h4><a name="file_placement">File placement and environment setup</a></h4>
 
 <blockquote>
+
+    In the following steps, <i>&lt;version&gt;</i> will be "3.3" for the initial
+    Tomcat 3.3 release, and "3.3.<i>x</i>" for subsequent maintenance releases.
     
     <ul>
       <li><a href="http://jakarta.apache.org/site/binindex.html">Download</a> the
-        appropriate jakarta-tomcat [.zip | .gz | .Z] file.
+        appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary file.
     
       <li>Unzip the file into some directory (say /usr/local or C:\). This
-    should create a new subdirectory named "tomcat". [Does it still create "jakarta-tomcat" instead? If so, just rename it "tomcat".]</li>
+          should create a new subdirectory named <tt>"jakarta-tomcat-<i>&lt;version&gt;</i>"<tt>.
     
-    <li>Change directory to "tomcat" and set a new environment
-        variable (<a name="tomcat_home_env">TOMCAT_HOME</a>) to point to the root directory of your 
-        Tomcat hierarchy. The exact directory may change from system to system; check your local filesystem to be sure where Tomcat is installed.
+    <li>Change to the <tt>"jakarta-tomcat-<i>&lt;version&gt;</i>"<tt> directory
+        and set a new environment variable (<a name="tomcat_home_env">TOMCAT_HOME</a>)
+        to point to the root directory of your Tomcat hierarchy. The exact directory may
+        change from system to system; check your local filesystem to be sure where Tomcat
+        is installed.
         <ol>
             <li>On Win32 systems you should type: <br>
-              <tt><big>set TOMCAT_HOME=c:\tomcat 	
+              <tt><big>set TOMCAT_HOME=c:\jakarta-tomcat-<i>&lt;version&gt;</i>
 	      </big></tt></li>
             <li>On UNIX (using bash/sh) you should type: <br>
-              <tt><big>TOMCAT_HOME=/usr/local/tomcat ; export TOMCAT_HOME
+              <tt><big>TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i> ; export TOMCAT_HOME
 	      </big></tt></li>
             <li>On UNIX (using tcsh) you should type: <br>
-              <tt><big>setenv TOMCAT_HOME=/usr/local/tomcat
+              <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
 	      </big></tt></li>
         </ol>
       </li>
 
       <li>Set the environment variable JAVA_HOME to point to the root
-        directory of your JDK hierarchy, then add the Java interpreter to your PATH environment variable. The exact directory may change from system to system; check your local filesystem to be sure where Java is installed.
+        directory of your JDK hierarchy, then add the Java interpreter to your PATH
+        environment variable. The exact directory may change from system to system;
+        check your local filesystem to be sure where Java is installed.
 	<ol>
 	<li>Win32:<br>
 	<tt><big>
-	set JAVA_HOME=c:/jdk1.2<br>
+	set JAVA_HOME=c:/jdk1.3.1<br>
 	set PATH=%PATH%;%JAVA_HOME%\bin
 	</big></tt>
 	</li>
 	<li>Unix (bash/sh):<br>
 	<tt><big>
-	set JAVA_HOME=/user/local/java/jdk1.2; export JAVA_HOME<br>
+	set JAVA_HOME=/user/local/java/jdk1.3.1; export JAVA_HOME<br>
 	set PATH=$PATH:$JAVA_HOME/bin; export PATH<br>
 	</big></tt>
 	</li>
 	<li>Unix (tcsh):<br>
 	<tt><big>
-	setenv JAVA_HOME=/user/local/java/jdk1.2<br>
+	setenv JAVA_HOME=/user/local/java/jdk1.3.1<br>
 	setenv PATH=$PATH:$JAVA_HOME/bin <br>
 	</big></tt>
 	</li>
@@ -336,12 +343,12 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
     <blockquote>
       <p>You start and stop Tomcat using the scripts in
       the bin subdirectory of <a href="#tomcat_home_env">TOMCAT_HOME</a>.</p>
-    <P>To start Tomcat execute:</P>
+    <P>To start Tomcat, execute:</P>
     <blockquote style="margin-right: 0px">
       <p>On UNIX: bin/startup.sh</p>
       <p>On Win32: bin\startup</p>
     </blockquote>
-    <p>To stop Tomcat execute:</p>
+    <p>To stop Tomcat, execute:</p>
     <blockquote style="margin-right: 0px">
       <p>On UNIX: bin/shutdown.sh</p>
       <p>On Win32: bin\shutdown</p>
