@@ -65,7 +65,11 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 		defaultElement.addElement(new XmlElement("property"));
 
 		setConfiguration(new FolderItem(defaultElement));
-		setName(name);
+		try {
+			setName(name);
+		} catch (Exception e) {
+			LOG.severe(e.getMessage());
+		}
 
 		// register interest on tree node changes
 		addFolderListener(FolderEventDelegator.getInstance());
@@ -214,7 +218,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 	/**
 	 * Sets the folder's name. This method notifies registered FolderListeners.
 	 */
-	public void setName(String newName) {
+	public void setName(String newName) throws Exception {
 		FolderItem item = getConfiguration();
 		item.set("property", "name", newName);
 		fireFolderPropertyChanged();

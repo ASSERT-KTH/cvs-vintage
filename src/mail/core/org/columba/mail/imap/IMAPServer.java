@@ -783,6 +783,8 @@ public class IMAPServer {
 			// make sure we are already logged in
 			ensureLoginState();
 			protocol.rename(oldMailboxName, newMailboxName);
+			protocol.unsubscribe(oldMailboxName);
+			protocol.subscribe(newMailboxName);
 		} catch (IMAPDisconnectedException e) {
 			renameFolder(oldMailboxName, newMailboxName);
 		}

@@ -149,31 +149,26 @@ public class IMAPFolder extends RemoteFolder {
 		}
 	}
 
-	public void setName(String name) {
+	public void setName(String name) throws Exception {
 		if (getName() == null) { // if creating new folder
 			super.setName(name);
 			return;
 		}
 
-		try {
-			String oldPath = getImapPath();
-			LOG.info("old path=" + oldPath);
+		String oldPath = getImapPath();
+		LOG.info("old path=" + oldPath);
 
-			String newPath = null;
+		String newPath = null;
 
-			if (getParent() instanceof IMAPFolder) {
-				newPath = ((IMAPFolder) getParent()).getImapPath();
-			}
-
-			newPath += (getServer().getDelimiter() + name);
-			LOG.info("new path=" + newPath);
-
-			getServer().renameFolder(oldPath, newPath);
-			super.setName(name);
-
-		} catch (Exception e) {
-			LOG.severe(e.getMessage());
+		if (getParent() instanceof IMAPFolder) {
+			newPath = ((IMAPFolder) getParent()).getImapPath();
 		}
+
+		newPath += (getServer().getDelimiter() + name);
+		LOG.info("new path=" + newPath);
+
+		getServer().renameFolder(oldPath, newPath);
+		super.setName(name);
 	}
 
 	/**
