@@ -4,28 +4,23 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
-#if (!$user.UserId)
-   <P>If you wish to see your personal templates, please log in.
-   #if ( $module.GlobalTemplates.isEmpty() )
-     #set ($noTemplates = "true")
-   #end
-#elseif ( ($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty())) 
+#if ( ($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty())) 
    #set ($noTemplates = "true")
 #end
 
 <P>
 
-#if ($noTemplates.equals("true"))
-    <div class="alert">There are no stored templates.</div>
-#else
 
 <form method="post" action="$action" >
 
 <p class="functnbar">
-   #if ($user.UserId)
-        <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
-   #end
+   <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
+   <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
       &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+
+#if ($noTemplates.equals("true"))
+    <div class="alert">There are no stored templates.</div>
+#else
 
 <h3>Enter Issue Templates</h3>
 
