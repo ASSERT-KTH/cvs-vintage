@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+	"http://java.sun.com/j2ee/dtds/jsptaglibrary_1_2.dtd">
+
+<!-- a tab library descriptor -->
+
+<taglib>
+  <!-- after this the default space is
+	"http://java.sun.com/j2ee/dtds/jsptaglibrary_1_2.dtd"
+   -->
+
+  <tlibversion>1.0</tlibversion>
+  <jspversion>1.1</jspversion>
+  <prefix>simple</prefix>
+  <urn></urn>
+  <info>
+	A simple tab library for the examples
+  </info>
+
+  <!-- A simple Tag -->
+  <!-- foo tag -->
+  <tag>
+    <name>foo</name>
+    <tagclass>examples.FooTag</tagclass>
+    <teiclass>examples.FooTagExtraInfo</teiclass>
+    <bodycontent>JSP</bodycontent>
+    <info>
+	Perform a server side action; uses 3 mandatory attributes
+    </info>
+
+    <attribute>
+      <name>att1</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>att2</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>att3</name>
+      <required>true</required>
+    </attribute>
+  </tag>
+
+  <!-- Another simple tag -->
+  <!-- log tag -->
+  <tag>
+    <name>log</name>
+    <tagclass>examples.LogTag</tagclass>
+    <bodycontent>TAGDEPENDENT</bodycontent>
+    <info>
+	Perform a server side action; Log the message.
+    </info>
+    <attribute>
+	<name>tobrowser</name>
+	<required>false</required>
+    </attribute>
+  </tag>
+  
+</taglib>
