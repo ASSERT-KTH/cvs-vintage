@@ -654,9 +654,6 @@ selected the radio button.
 #set ($userAttrs = $mitList.getCommonUserAttributes($activeOnly))
 #set ($modules = $mitList.Modules)
 
-#if ($userAttrs.isEmpty())
-blah
-#end
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
