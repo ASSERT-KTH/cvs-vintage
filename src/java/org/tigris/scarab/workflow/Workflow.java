@@ -67,29 +67,29 @@ import org.tigris.scarab.util.ScarabException;
  * from the Scarab.properties file.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: Workflow.java,v 1.11 2003/01/13 21:18:04 elicia Exp $
+ * @version $Id: Workflow.java,v 1.12 2003/03/15 21:56:59 jon Exp $
  */
 public interface Workflow
 {
-    public boolean canMakeTransition(ScarabUser user,
+    boolean canMakeTransition(ScarabUser user,
                                      AttributeOption fromOption, 
                                      AttributeOption toOption,
                                      Issue issue)
         throws ScarabException;
 
 
-    public String checkTransition(AttributeOption fromOption, 
+    String checkTransition(AttributeOption fromOption, 
                                   AttributeOption toOption,
                                   Issue issue, Map newAttVals,
                                   ScarabUser user)
         throws ScarabException;
         
-    public String checkInitialTransition(AttributeOption toOption,
+    String checkInitialTransition(AttributeOption toOption,
                                          Issue issue, Map newAttVals,
                                          ScarabUser user)
         throws ScarabException;
 
-    public OptionWorkflow getWorkflowForRole(AttributeOption fromOption, 
+    OptionWorkflow getWorkflowForRole(AttributeOption fromOption, 
                                              AttributeOption toOption,
                                              String roleName,
                                              Module module,
@@ -97,51 +97,51 @@ public interface Workflow
         throws ScarabException;
 
 
-    public List getWorkflowsForRoleList(AttributeOption fromOption, 
+    List getWorkflowsForRoleList(AttributeOption fromOption, 
                                         AttributeOption toOption,
                                         List roleNames, Module module,
                                         IssueType issueType)
         throws ScarabException;
 
-    public List getWorkflowsForIssueType(IssueType issueType)
+    List getWorkflowsForIssueType(IssueType issueType)
         throws ScarabException;
 
-    public void saveWorkflow(AttributeOption fromOption, 
+    void saveWorkflow(AttributeOption fromOption, 
                              AttributeOption toOption,
                              String roleName, Module module,
                              IssueType issueType, WorkflowRules workflowRule)
         throws ScarabException;
 
-    public OptionWorkflow inherit(AttributeOption fromOption, 
+    OptionWorkflow inherit(AttributeOption fromOption, 
                                    AttributeOption toOption,
                                    String roleName, Module module,
                                    IssueType issueType)
         throws ScarabException;
 
-    public void resetWorkflow(AttributeOption fromOption, 
+    void resetWorkflow(AttributeOption fromOption, 
                               AttributeOption toOption,
                               String roleName, Module module,
                               IssueType issueType)
         throws ScarabException;
 
-    public void resetWorkflows(String roleName, Module module, IssueType issueType,
+    void resetWorkflows(String roleName, Module module, IssueType issueType,
                                boolean initial)
         throws ScarabException;
 
 
-    public void deleteWorkflowsForOption(AttributeOption option,
+    void deleteWorkflowsForOption(AttributeOption option,
                                          Module module, IssueType issueType)
         throws ScarabException;
 
-    public void deleteWorkflowsForAttribute(Attribute attr, Module module, 
+    void deleteWorkflowsForAttribute(Attribute attr, Module module, 
                                             IssueType issueType)
         throws ScarabException;
 
-    public void addIssueTypeWorkflowToModule(Module module, 
+    void addIssueTypeWorkflowToModule(Module module, 
                                             IssueType issueType)
         throws ScarabException;
 
-    public void resetAllWorkflowsForIssueType(Module module, 
+    void resetAllWorkflowsForIssueType(Module module, 
                                               IssueType issueType)
         throws ScarabException;
 

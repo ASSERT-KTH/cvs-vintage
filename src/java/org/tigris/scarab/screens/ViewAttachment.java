@@ -46,13 +46,11 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-
 // Turbine Stuff 
 import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -60,7 +58,6 @@ import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 
@@ -68,7 +65,7 @@ import org.tigris.scarab.om.AttachmentManager;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.11 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: ViewAttachment.java,v 1.12 2003/03/15 21:56:58 jon Exp $
  */
 public class ViewAttachment extends Default
 {

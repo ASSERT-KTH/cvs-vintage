@@ -79,78 +79,78 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.31 2003/01/15 20:10:57 elicia Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.32 2003/03/15 21:56:59 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
     /**
      * Sets the <code>Alert!</code> message for this request.
      */
-    public void setAlert(Object message);
+    void setAlert(Object message);
 
     /**
      * Retrieves any <code>Alert!</code> message which has been set.
      */
-    public Object getAlert();
+    Object getAlert();
 
     /**
      * A Attachment object for use within the Scarab API
      */
-    public void setAttachment(Attachment attachment);
+    void setAttachment(Attachment attachment);
 
     /**
      * A Attachment object for use within the Scarab API.
      */
-    public Attachment getAttachment() throws Exception;
+    Attachment getAttachment() throws Exception;
 
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public void setAttribute (Attribute attribute);
+    void setAttribute (Attribute attribute);
 
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public Attribute getAttribute() throws Exception;
+    Attribute getAttribute() throws Exception;
 
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public void setAttributeOption (AttributeOption option) throws Exception;
+    void setAttributeOption (AttributeOption option) throws Exception;
 
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public AttributeOption getAttributeOption() throws Exception;
+    AttributeOption getAttributeOption() throws Exception;
 
     /**
      * Gets results of current query and puts them in context.
      */
-    public List getCurrentSearchResults() throws Exception;
+    List getCurrentSearchResults() throws Exception;
 
     /**
      * Gets the Module associated with the information
      * passed around in the query string. Returns null if
      * the Module could not be found.
      */
-    public Module getCurrentModule();
+    Module getCurrentModule();
 
     /**
      * A Depend object for use within the Scarab API.
      */
-    public void setDepend (Depend depend);
+    void setDepend (Depend depend);
 
     /**
      * A Depend object for use within the Scarab API.
      */
-    public Depend getDepend() throws Exception;
+    Depend getDepend() throws Exception;
 
     /**
      * Get an RModuleAttribute object. 
      *
      * @return a <code>Module</code> value
      */
-    public RModuleAttribute getRModuleAttribute() throws Exception;
+    RModuleAttribute getRModuleAttribute() throws Exception;
 
     /**
      * A <code>User</code> object for use within the Scarab API,
@@ -158,7 +158,7 @@ public interface ScarabRequestScope extends ApplicationTool
      *
      * @param user A user used during this request.
      */
-    public void setUser (ScarabUser user);
+    void setUser (ScarabUser user);
 
     /**
      * A <code>User</code> object for use within the Scarab API. This
@@ -172,7 +172,7 @@ public interface ScarabRequestScope extends ApplicationTool
      * @return A user used during this request.
      * @see org.tigris.scarab.tools.ScarabRequestTool#setUser(ScarabUser)
      */
-    public ScarabUser getUser();
+    ScarabUser getUser();
 
     /**
      * Return a specific User by ID from within the system.  You can
@@ -180,12 +180,12 @@ public interface ScarabRequestScope extends ApplicationTool
      * String object as id.toString() is called on everything that
      * isn't a <code>NumberKey</code>.
      */
-    public ScarabUser getUser(Object id) throws Exception;
+    ScarabUser getUser(Object id) throws Exception;
 
     /**
      * A Issue object for use within the Scarab API.
      */
-    public void setIssue(Issue issue);
+    void setIssue(Issue issue);
 
     /**
      * Get an Issue object. If it is the first time calling,
@@ -193,19 +193,19 @@ public interface ScarabRequestScope extends ApplicationTool
      *
      * @return a <code>Issue</code> value
      */
-    public Issue getIssue() throws Exception;
+    Issue getIssue() throws Exception;
 
     /**
      * Get an Module object. 
      *
      * @return a <code>Module</code> value
      */
-    public Module getModule() throws Exception;
+    Module getModule() throws Exception;
 
     /**
      * A Module object for use within the Scarab API.
      */
-    public void setModule(Module module);
+    void setModule(Module module);
 
     /**
      * Get a specific module by key value.
@@ -213,7 +213,7 @@ public interface ScarabRequestScope extends ApplicationTool
      * @param key a <code>String</code> value
      * @return a <code>Module</code> value
      */
-    public Module getModule(String key) throws Exception;
+    Module getModule(String key) throws Exception;
 
     /**
      * Get a specific issue by key value.
@@ -221,60 +221,60 @@ public interface ScarabRequestScope extends ApplicationTool
      * @param key a <code>String</code> value
      * @return a <code>Issue</code> value
      */
-    public Issue getIssue(String key) throws Exception;
+    Issue getIssue(String key) throws Exception;
 
     /**
      * Get a list of Issue objects.
      *
      * @return a <code>Issue</code> value
      */
-    public List getIssues() throws Exception;
+    List getIssues() throws Exception;
 
     /**
      * Return the number of paginated pages.
      *
      */
-    public int getNbrPages();
+    int getNbrPages();
 
     /**
      * Return the next page in the paginated list.
      *
      */
-    public int getNextPage();
+    int getNextPage();
 
     /**
      * A Query object for use within the Scarab API.
      */
-    public Query getQuery() throws Exception;
+    Query getQuery() throws Exception;
 
     /**
      * Return a subset of the passed-in list.
      */
-    public List getPaginatedList(List fullList, int pgNbr, int nbrItmsPerPage);
+    List getPaginatedList(List fullList, int pgNbr, int nbrItmsPerPage);
 
     /**
      * Return the previous page in the paginated list.
      *
      */
-    public int getPrevPage();
+    int getPrevPage();
 
     /**
      * A Query object for use within the Scarab API.
      */
-    public void setQuery (Query query);
+    void setQuery (Query query);
 
     /**
      * Get a new SearchIssue object. 
      *
      * @return a <code>Issue</code> value
      */
-    public IssueSearch getNewSearch() throws Exception;
+    IssueSearch getNewSearch() throws Exception;
 
     /**
      * This is used to get the format for a date in the 
      * Locale sent by the browser.
      */
-    public DateFormat getDateFormat();
+    DateFormat getDateFormat();
 
     /**
      * Determine if the user currently interacting with the scarab
@@ -286,7 +286,7 @@ public interface ScarabRequestScope extends ApplicationTool
      * @return true if the permission exists for the user within the
      * current module, false otherwise
      */
-    public boolean hasPermission(String permission);
+    boolean hasPermission(String permission);
 
     /**
      * Determine if the user currently interacting with the scarab
@@ -298,5 +298,5 @@ public interface ScarabRequestScope extends ApplicationTool
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, Module module);
+    boolean hasPermission(String permission, Module module);
 }

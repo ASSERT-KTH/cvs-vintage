@@ -46,7 +46,6 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */
 
-import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -54,11 +53,9 @@ import java.util.ArrayList;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.tool.IntakeTool;
 
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.ParameterParser;
 import org.apache.torque.om.NumberKey;
 
@@ -86,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.48 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.49 2003/03/15 21:56:57 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {

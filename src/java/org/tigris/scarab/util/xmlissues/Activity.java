@@ -46,9 +46,6 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import java.util.ArrayList;
-
 public class Activity implements java.io.Serializable
 {
     private String id = null;

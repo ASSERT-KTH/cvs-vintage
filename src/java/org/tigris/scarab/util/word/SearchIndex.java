@@ -59,56 +59,56 @@ import org.tigris.scarab.om.Attachment;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.10 2002/10/17 00:16:13 jmcnally Exp $
+ * @version $Id: SearchIndex.java,v 1.11 2003/03/15 21:56:59 jon Exp $
  */
 public interface SearchIndex
 {
-    public static final String PARSE_ERROR = 
+    static final String PARSE_ERROR = 
         "Search engine could not parse the query: ";
-    public static final String INDEX_PATH = "searchindex.path";
-    public static final String CLASS_NAME = "searchindex.class";
-    public static final String VALUE_ID = "valid";
-    public static final String ISSUE_ID = "issid";
-    public static final String ATTRIBUTE_ID = "attid";
-    public static final String ATTACHMENT_ID = "atchid";
-    public static final String ATTACHMENT_TYPE_ID = "atchtypeid";
-    public static final String TEXT = "text";
-    public static final NumberKey[] EMPTY_LIST = new NumberKey[0];
+    static final String INDEX_PATH = "searchindex.path";
+    static final String CLASS_NAME = "searchindex.class";
+    static final String VALUE_ID = "valid";
+    static final String ISSUE_ID = "issid";
+    static final String ATTRIBUTE_ID = "attid";
+    static final String ATTACHMENT_ID = "atchid";
+    static final String ATTACHMENT_TYPE_ID = "atchtypeid";
+    static final String TEXT = "text";
+    static final NumberKey[] EMPTY_LIST = new NumberKey[0];
 
     /**
      *  Specify search criteria. This is incremental.
      */
-    public void addQuery(NumberKey[] attributeIds, String text) 
+    void addQuery(NumberKey[] attributeIds, String text) 
         throws Exception;
 
     /**
      *  Specify search criteria for attachments
      */
-    public void addAttachmentQuery(NumberKey[] ids, String text) 
+    void addAttachmentQuery(NumberKey[] ids, String text) 
         throws Exception;
 
     /**
      *  returns a list of related issue IDs sorted by relevance descending.
      *  Should return an empty/length=0 array if search returns no results.
      */
-    public NumberKey[] getRelatedIssues() 
+    NumberKey[] getRelatedIssues() 
         throws Exception;
 
     /**
      * Store index information for an AttributeValue
      */
-    public void index(AttributeValue attributeValue)
+    void index(AttributeValue attributeValue)
         throws Exception;
 
     /**
      * Store index information for an Attachment
      */
-    public void index(Attachment attachment)
+    void index(Attachment attachment)
         throws Exception;
 
     /**
      * update the index for all entities that currently exist
      */
-    public void updateIndex()
+    void updateIndex()
         throws Exception;
 }

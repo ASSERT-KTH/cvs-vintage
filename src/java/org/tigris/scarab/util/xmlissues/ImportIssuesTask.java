@@ -46,9 +46,6 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */
 
-import java.util.List;
-import java.util.Iterator;
-
 import java.io.File;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -59,7 +56,7 @@ import org.apache.tools.ant.BuildException;
  * to make it possible to call this from Ant.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssuesTask.java,v 1.1 2003/01/28 11:41:31 jon Exp $
+ * @version $Id: ImportIssuesTask.java,v 1.2 2003/03/15 21:56:59 jon Exp $
  */
 public class ImportIssuesTask extends MatchingTask
 {

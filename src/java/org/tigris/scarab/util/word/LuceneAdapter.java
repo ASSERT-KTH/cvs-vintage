@@ -84,7 +84,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.23 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: LuceneAdapter.java,v 1.24 2003/03/15 21:56:59 jon Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -348,7 +348,8 @@ public class LuceneAdapter
                 }
             }
         }
-        catch (NullPointerException npe)        {
+        catch (NullPointerException npe)
+        {
             /* Lucene is throwing npe in reader.delete, so have to explicitely
                search.  Not sure if the npe will be thrown in the 
                case where the attribute has previously been indexed, so

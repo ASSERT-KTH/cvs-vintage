@@ -47,11 +47,8 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.Arrays;
-import java.util.Locale;
 
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
-import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 import org.apache.torque.om.Persistent;
@@ -66,9 +63,10 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
- * You should add additional methods to this class to meet the
- * application requirements.  This class will only be generated as
- * long as it does not already exist in the output directory.
+ * This class represents the IssueTemplateInfo object.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: IssueTemplateInfo.java,v 1.20 2003/03/15 21:56:58 jon Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo

@@ -64,7 +64,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.16 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.17 2003/03/15 21:56:59 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -72,50 +72,50 @@ public interface ScarabGlobalScope extends ApplicationTool
      * holds the Scarab constants. it will be available to the template system
      * as $scarabG.Constant.CONSTANT_NAME.
      */
-    public FieldMethodizer getConstant();
+    FieldMethodizer getConstant();
 
     /**
      * holds the Scarab permission constants.  It will be available to 
      * the template system as $scarabG.PERMISSION_NAME.
      */
-    public FieldMethodizer getPermission();
+    FieldMethodizer getPermission();
         
     /**
      * Gets a List of all of user objects
      * By attribute Type : either user, or non-user.
      */
-    public List getUserAttributes()
+    List getUserAttributes()
         throws Exception;
 
     /**
      * Gets a List of all of user Attribute objects.
      */
-    public List getAttributes(String attributeType)
+    List getAttributes(String attributeType)
         throws Exception;
 
     /**
      * gets a list of all Issue Types 
      */
-    public List getAllIssueTypes()
+    List getAllIssueTypes()
         throws Exception;
     
     /**
      * Gets a List of all of the Attribute objects.
      */
-    public List getAllAttributes() 
+    List getAllAttributes() 
         throws Exception;
     
     /**
      * Gets a List of users based on the specified search criteria.
      */
-    public List getSearchUsers(String searchField, String searchCriteria)
+    List getSearchUsers(String searchField, String searchCriteria)
         throws Exception;
     
     /**
      * Gets a List of users based on the specified search criteria and
      * orders the list on the specified field.
      */
-    public List getSearchUsers(String searchField, String searchCriteria, 
+    List getSearchUsers(String searchField, String searchCriteria, 
                                String orderByField, String ascOrDesc)
         throws Exception;
 
@@ -126,7 +126,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @return a new <code>Object[]</code> with values reversed from the 
      * original
      */
-    public Object[] reverse(Object[] a);
+    Object[] reverse(Object[] a);
 
     /**
      * Creates a new List with elements reversed from the given List.
@@ -135,7 +135,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @return a new <code>List</code> with values reversed from the 
      * original
      */
-    public List reverse(List a);
+    List reverse(List a);
 
     /**
      * Creates  a view of the portion of the given
@@ -148,7 +148,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @param toIndex the end index of the returned subset
      * @return a derived <code>List</code> with a view of the original
      */
-    public List subset(List a, Integer fromIndex, Integer toIndex);
+    List subset(List a, Integer fromIndex, Integer toIndex);
 
     /**
      * Creates a new array with a view of the portion of the given array
@@ -159,7 +159,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @param toIndex the end index of the returned subset
      * @return a new <code>Object[]</code> with a view of the original
      */
-    public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex);
+    Object[] subset(Object[] a, Integer fromIndex, Integer toIndex);
 
     /**
      * Velocity has no way of getting the size of an <code>Object[]</code>
@@ -168,7 +168,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @param obj the <code>Object[]</code>
      * @return the number of objects in the <code>Object[]</code>  or -1 if obj is null
      */
-    public int sizeOfArray(Object[] obj);
+    int sizeOfArray(Object[] obj);
 
     /**
      * Logs a message at the debug level.  Useful for "I am here" type 
@@ -176,7 +176,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      *
      * @param s message to log
      */
-    public void log(String s);
+    void log(String s);
 
     /**
      * Logs a message at the debug level.  Useful for "I am here" type 
@@ -185,7 +185,7 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @param category log4j Category
      * @param s message to log
      */
-    public void log(String category, String s);
+    void log(String category, String s);
 
     /**
      * Prints a message to standard out.  Useful for "I am here" type 
@@ -193,14 +193,14 @@ public interface ScarabGlobalScope extends ApplicationTool
      *
      * @param s message to log
      */
-    public void print(String s);
+    void print(String s);
 
     /**
      * Provides the site name for the top banner.
      *
      * @return the configured site name
      */
-    public String getSiteName();
+    String getSiteName();
 
     /**
      * Returns an <code>int</code> representation of the given
@@ -210,5 +210,5 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @return the <code>int</code> representation of the <code>Object</code>
      *  if possible or <code>0</code>.
      */
-    public int getInt(Object obj);
+    int getInt(Object obj);
 }

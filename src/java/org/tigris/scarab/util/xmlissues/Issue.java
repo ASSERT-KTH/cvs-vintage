@@ -54,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class Issue implements java.io.Serializable
 {
-    private final static Log log = LogFactory.getLog(Issue.class);
+    private static final Log log = LogFactory.getLog(Issue.class);
 
     private Integer id = null;
     private String artifactType = null;

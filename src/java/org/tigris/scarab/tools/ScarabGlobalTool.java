@@ -55,13 +55,7 @@ import java.util.Enumeration;
 
 import org.apache.log4j.Category;
 import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.fulcrum.security.entity.Group;
-import org.apache.fulcrum.security.entity.Permission;
-import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
-import org.apache.fulcrum.security.util.AccessControlList;
-import org.apache.fulcrum.security.util.DataBackendException;
-import org.apache.fulcrum.security.util.UnknownEntityException;
 
 import org.apache.velocity.app.FieldMethodizer;
 
@@ -70,7 +64,6 @@ import org.tigris.scarab.om.IssueTypePeer;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
@@ -103,7 +96,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.54 2003/03/04 17:27:19 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.55 2003/03/15 21:56:59 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {

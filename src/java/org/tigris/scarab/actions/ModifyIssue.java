@@ -52,7 +52,6 @@ import java.util.HashMap;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey; 
@@ -94,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.151 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.152 2003/03/15 21:56:57 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -969,7 +968,7 @@ public class ModifyIssue extends BaseModifyIssue
             newDepend.setDescription(reasonForChange);
 
             // make the changes
-            if (doDelete && newDepend.getDeleted() == true)
+            if (doDelete && newDepend.getDeleted())
             {
                 try
                 {

@@ -59,7 +59,6 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
-import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.Log;
@@ -70,7 +69,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.10 2003/01/15 20:10:57 elicia Exp $
+ * @version $Id: ModuleQuery.java,v 1.11 2003/03/15 21:56:57 jon Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {

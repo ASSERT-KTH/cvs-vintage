@@ -50,15 +50,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
 import org.apache.torque.util.Criteria;
-import org.tigris.scarab.services.cache.ScarabCache;
 
 // Local classes
 import org.tigris.scarab.om.Module;
 
 /** 
- *  You should add additional methods to this class to meet the
- *  application requirements.  This class will only be generated as
- *  long as it does not already exist in the output directory.
+ * This is the QueryPeer class
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: QueryPeer.java,v 1.17 2003/03/15 21:56:58 jon Exp $
  */
 public class QueryPeer 
     extends org.tigris.scarab.om.BaseQueryPeer

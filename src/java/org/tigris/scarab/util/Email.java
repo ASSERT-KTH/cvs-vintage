@@ -48,13 +48,11 @@ package org.tigris.scarab.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Iterator;
 import javax.mail.SendFailedException;
 
 import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
-import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 
 import org.apache.fulcrum.TurbineServices;
@@ -71,7 +69,7 @@ import org.tigris.scarab.om.GlobalParameterManager;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.20 2003/03/12 18:52:17 jmcnally Exp $
+ * @version $Id: Email.java,v 1.21 2003/03/15 21:56:59 jon Exp $
  */
 public class Email
 {

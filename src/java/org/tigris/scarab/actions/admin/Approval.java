@@ -48,20 +48,16 @@ package org.tigris.scarab.actions.admin;
 
 import java.util.List;
 import java.util.Iterator;
-import java.util.Locale;
 
 // Turbine Stuff 
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.ParameterParser;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.DataBackendException;
-import org.apache.fulcrum.localization.Localization;
-
 
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
@@ -86,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.33 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.34 2003/03/15 21:56:57 jon Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {

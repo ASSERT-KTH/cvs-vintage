@@ -49,17 +49,14 @@ package org.tigris.scarab.actions;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.modules.ContextAdapter;
 
 import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.util.parser.ValueParser;
-import org.apache.fulcrum.localization.Localization;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.BaseModifyIssue;
@@ -71,23 +68,18 @@ import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.services.cache.ScarabCache;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.84 2003/03/07 16:39:52 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.85 2003/03/15 21:56:57 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {

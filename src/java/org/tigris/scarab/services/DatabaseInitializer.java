@@ -59,14 +59,12 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.om.GlobalParameterManager;
-import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.util.Log;
-
 
 /**
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.8 2003/03/04 17:27:19 jmcnally Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.9 2003/03/15 21:56:59 jon Exp $
  */
 public class DatabaseInitializer
     extends BaseService

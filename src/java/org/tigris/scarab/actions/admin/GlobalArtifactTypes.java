@@ -61,7 +61,6 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.IssueTypePeer;
-import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
@@ -69,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.34 2003/02/03 07:20:13 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.35 2003/03/15 21:56:57 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {

@@ -69,53 +69,49 @@ import org.tigris.scarab.om.ScarabUser;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminScope.java,v 1.3 2002/01/18 22:26:13 jon Exp $
+ * @version $Id: SecurityAdminScope.java,v 1.4 2003/03/15 21:56:59 jon Exp $
  */
 public interface SecurityAdminScope extends ApplicationTool
 {
-
     /**
      * Get a user based on the given username.
      */
-    public ScarabUser getUserByUsername(String username)
+    ScarabUser getUserByUsername(String username)
         throws Exception;
 
     /**
      * Get a permission based on the given name.
      */
-    public Permission getPermissionByName(String name)
+    Permission getPermissionByName(String name)
         throws Exception;
         
     /**
      * Get a role based on the given name.
      */
-    public Role getRoleByName(String name)
+    Role getRoleByName(String name)
         throws Exception;
         
     /** 
      * Gets a list of all Groups
      */
-    public Group[] getGroups()
+    Group[] getGroups()
         throws Exception;
 
     /** 
      * Gets a list of all Permissions
      */
-    public Permission[] getPermissions()
+    Permission[] getPermissions()
         throws Exception;
 
     /** 
      * Gets a list of all Roles
      */
-    public Role[] getRoles()
+    Role[] getRoles()
         throws Exception;
 
     /**
      * Gets an ACL object for a user
      */
-    public AccessControlList getACL(ScarabUser user)
-        throws Exception;
-
-    
+    AccessControlList getACL(ScarabUser user)
+        throws Exception;    
 }
-

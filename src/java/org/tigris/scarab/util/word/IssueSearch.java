@@ -80,7 +80,6 @@ import org.apache.log4j.Logger;
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;

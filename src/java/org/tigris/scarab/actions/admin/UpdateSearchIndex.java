@@ -52,8 +52,6 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 // Scarab Stuff
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -69,7 +67,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.12 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.13 2003/03/15 21:56:57 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {

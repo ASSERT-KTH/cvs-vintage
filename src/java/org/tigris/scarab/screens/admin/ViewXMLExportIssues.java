@@ -50,7 +50,6 @@ package org.tigris.scarab.screens.admin;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
 
 // Turbine Stuff 
 import org.apache.turbine.RunData;
@@ -62,13 +61,12 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.12 2003/02/13 21:56:56 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.13 2003/03/15 21:56:58 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {

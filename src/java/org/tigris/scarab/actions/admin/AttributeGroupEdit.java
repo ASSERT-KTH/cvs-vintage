@@ -58,7 +58,6 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -83,7 +82,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.45 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.46 2003/03/15 21:56:57 jon Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {

@@ -54,7 +54,6 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.fulcrum.security.entity.Group;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;

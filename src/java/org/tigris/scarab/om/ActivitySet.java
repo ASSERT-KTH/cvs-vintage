@@ -49,23 +49,17 @@ package org.tigris.scarab.om;
 import java.util.Collection;
 import java.util.List;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria; 
 
-import org.apache.fulcrum.template.TemplateContext;
-import org.apache.fulcrum.template.DefaultTemplateContext;
-import org.apache.fulcrum.localization.Localization;
-
 import org.apache.turbine.Turbine;
 import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
@@ -74,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.10 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: ActivitySet.java,v 1.11 2003/03/15 21:56:58 jon Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet

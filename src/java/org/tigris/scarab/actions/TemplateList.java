@@ -54,12 +54,10 @@ import org.apache.commons.collections.SequencedHashMap;
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.modules.ContextAdapter;
-import org.apache.torque.om.NumberKey; 
+import org.apache.torque.om.NumberKey;
 
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -87,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.41 2003/03/07 16:39:53 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.42 2003/03/15 21:56:57 jon Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {

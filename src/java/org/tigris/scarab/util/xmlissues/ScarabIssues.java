@@ -46,15 +46,12 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.File;
-
-import java.text.SimpleDateFormat;
 
 import org.apache.commons.collections.SequencedHashMap;
 
@@ -65,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.24 2003/03/04 17:27:20 jmcnally Exp $
+ * @version $Id: ScarabIssues.java,v 1.25 2003/03/15 21:56:59 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {

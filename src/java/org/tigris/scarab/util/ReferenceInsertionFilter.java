@@ -49,10 +49,6 @@ package org.tigris.scarab.util;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 import org.apache.velocity.app.event.NullSetEventHandler;
 
-import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.screens.SelectModule;
-
 /**
  * This is a Velocity EventCartridge Filter which is responsible
  * for processing $ variables when they are rendered in a template.
@@ -69,13 +65,11 @@ import org.tigris.scarab.screens.SelectModule;
  * showing up in the log files.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.16 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.17 2003/03/15 21:56:59 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler, NullSetEventHandler
 {
-
-
     public boolean shouldLogOnNullSet(String lhs, String rhs)
     {
         return false;

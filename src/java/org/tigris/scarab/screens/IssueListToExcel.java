@@ -46,7 +46,8 @@ package org.tigris.scarab.screens;
  * individuals on behalf of CollabNet.
  */ 
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Iterator;
 
@@ -61,7 +62,6 @@ import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;

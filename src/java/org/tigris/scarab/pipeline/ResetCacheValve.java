@@ -49,7 +49,6 @@ package org.tigris.scarab.pipeline;
 import java.io.IOException;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TurbineException;
-import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
 
@@ -60,7 +59,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * multiple, duplicate db queries.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ResetCacheValve.java,v 1.6 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: ResetCacheValve.java,v 1.7 2003/03/15 21:56:58 jon Exp $
  */
 public final class ResetCacheValve 
     extends AbstractValve

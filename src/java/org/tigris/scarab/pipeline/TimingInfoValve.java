@@ -49,7 +49,6 @@ package org.tigris.scarab.pipeline;
 import java.io.IOException;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TurbineException;
-import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
 import org.apache.log4j.Logger;
@@ -66,7 +65,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * with DEBUG=true for it to be functional.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TimingInfoValve.java,v 1.2 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: TimingInfoValve.java,v 1.3 2003/03/15 21:56:58 jon Exp $
  */
 public class TimingInfoValve 
     extends AbstractValve

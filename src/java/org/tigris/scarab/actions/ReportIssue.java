@@ -46,7 +46,6 @@ package org.tigris.scarab.actions;
  * individuals on behalf of CollabNet.
  */ 
 
-import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -55,7 +54,6 @@ import java.util.StringTokenizer;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
 
@@ -81,7 +79,6 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.QueryResult;
@@ -94,7 +91,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.162 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.163 2003/03/15 21:56:57 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {

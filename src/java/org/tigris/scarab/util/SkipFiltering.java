@@ -58,5 +58,5 @@ public interface SkipFiltering
      * Contract requires any html in the String to be returned is known
      * to be safe of cross-site-scripting vunerabilities.
      */
-    public String toString();
+    String toString();
 }

@@ -56,7 +56,6 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ReferenceInsertionFilter;
-import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.SkipFiltering;
 
 /**

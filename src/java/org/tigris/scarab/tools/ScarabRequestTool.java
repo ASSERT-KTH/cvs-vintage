@@ -48,7 +48,6 @@ package org.tigris.scarab.tools;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -118,7 +117,6 @@ import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;

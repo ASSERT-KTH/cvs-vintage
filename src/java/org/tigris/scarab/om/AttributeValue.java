@@ -59,7 +59,6 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.util.ScarabConstants;
@@ -74,7 +73,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.89 2003/02/12 02:13:07 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.90 2003/03/15 21:56:58 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue

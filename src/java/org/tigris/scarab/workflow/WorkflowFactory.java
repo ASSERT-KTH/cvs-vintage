@@ -58,12 +58,12 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: WorkflowFactory.java,v 1.9 2003/01/30 22:25:24 jon Exp $
+ * @version $Id: WorkflowFactory.java,v 1.10 2003/03/15 21:56:59 jon Exp $
  */
 public class WorkflowFactory 
 {
     /** the default is false */
-    public static boolean forceUseDefault = false;
+    private static boolean forceUseDefault = false;
 
     /**
      * This is used when you want to force the workflow to 

@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.79 2003/01/24 20:00:47 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.80 2003/03/15 21:56:58 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -73,7 +73,7 @@ public interface ScarabUser extends User
      * Visitor.CONFIRM_VALUE key. It will use the current instance of this
      * object as the basis to create the new User.
      */
-    public void createNewUser() throws Exception;
+    void createNewUser() throws Exception;
 
     /**
      * Gets all modules the user has permissions to edit.
@@ -81,13 +81,13 @@ public interface ScarabUser extends User
      * the permission to edit it.
      * @see #getEditableModules(Module)
      */
-    public List getEditableModules() throws Exception;
+    List getEditableModules() throws Exception;
 
     /**
      * Gets all modules the user has permissions to edit.
      * @param currEditModule the module we are currently editing
      */
-    public List getEditableModules(Module currEditModule) throws Exception;
+    List getEditableModules(Module currEditModule) throws Exception;
 
     /**
      * Gets an issue stored in the temp hash under key.
@@ -96,7 +96,7 @@ public interface ScarabUser extends User
      * @return an <code>Issue</code> value
      * @exception Exception if an error occurs
      */
-    public Issue getReportingIssue(String key)
+    Issue getReportingIssue(String key)
         throws Exception;
 
     /**
@@ -109,7 +109,7 @@ public interface ScarabUser extends User
      * the issue
      * @exception ScarabException if issue is null.
      */
-    public String setReportingIssue(Issue issue)
+    String setReportingIssue(Issue issue)
         throws ScarabException;
 
     /**
@@ -123,7 +123,7 @@ public interface ScarabUser extends User
      * @param issue an <code>Issue</code> value to store, null removes any 
      * issue already stored under key.
      */
-    public void setReportingIssue(String key, Issue issue);
+    void setReportingIssue(String key, Issue issue);
 
     /**
      * Gets an report stored in the temp hash under key.
@@ -132,7 +132,7 @@ public interface ScarabUser extends User
      * @return an <code>Report</code> value
      * @exception Exception if an error occurs
      */
-    public ReportBridge getCurrentReport(String key)
+    ReportBridge getCurrentReport(String key)
         throws Exception;
 
     /**
@@ -145,7 +145,7 @@ public interface ScarabUser extends User
      * the report
      * @exception ScarabException if report is null.
      */
-    public String setCurrentReport(ReportBridge report)
+    String setCurrentReport(ReportBridge report)
         throws ScarabException;
 
     /**
@@ -159,38 +159,38 @@ public interface ScarabUser extends User
      * @param report an <code>ReportBridge</code> value to store, null removes any 
      * report already stored under key.
      */
-    public void setCurrentReport(String key, ReportBridge report);
+    void setCurrentReport(String key, ReportBridge report);
 
     /**
      * Gets default query-user map for this module/issue type.
      */
-    public RQueryUser getDefaultQueryUser(Module me, IssueType issueType)
+    RQueryUser getDefaultQueryUser(Module me, IssueType issueType)
         throws Exception;
 
     /**
      * Gets default query for this module/issuetype.
      */
-    public Query getDefaultQuery(Module me, IssueType issueType)
+    Query getDefaultQuery(Module me, IssueType issueType)
         throws Exception;
 
     /**
      * Clears default query for this module/issuetype.
      */
-    public void resetDefaultQuery(Module me, IssueType issueType)
+    void resetDefaultQuery(Module me, IssueType issueType)
         throws Exception;
 
 
     /** Used for the password management features */
-    public boolean isPasswordExpired() throws Exception;
+    boolean isPasswordExpired() throws Exception;
     /** Used for the password management features */
-    public void setPasswordExpire() throws Exception;
+    void setPasswordExpire() throws Exception;
     /** Used for the password management features */
-    public void setPasswordExpire(Calendar expire) throws Exception;
+    void setPasswordExpire(Calendar expire) throws Exception;
     
-    public NumberKey getUserId();
-    public void setUserId(NumberKey v) throws Exception;
-    public ObjectKey getPrimaryKey();
-    public void setPrimaryKey(ObjectKey v) throws Exception;
+    NumberKey getUserId();
+    void setUserId(NumberKey v) throws Exception;
+    ObjectKey getPrimaryKey();
+    void setPrimaryKey(ObjectKey v) throws Exception;
 
 
     /**
@@ -198,14 +198,14 @@ public interface ScarabUser extends User
      * User and Module -- the attributes the user has selected
      * To appear on the IssueList for this module.
      */
-    public List getRModuleUserAttributes(Module module, 
+    List getRModuleUserAttributes(Module module, 
                                          IssueType issueType)
             throws Exception;
 
     /**
      * Returns an RModuleUserAttribute object.
      */
-    public RModuleUserAttribute getRModuleUserAttribute(Module module, 
+    RModuleUserAttribute getRModuleUserAttribute(Module module, 
                                                         Attribute attribute,
                                                         IssueType issueType)
             throws Exception;
@@ -214,13 +214,13 @@ public interface ScarabUser extends User
      * Implementation of the Retrievable interface because this object
      * is used with Intake
      */
-    public String getQueryKey();
+    String getQueryKey();
 
     /**
      * Implementation of the Retrievable interface because this object
      * is used with Intake
      */
-    public void setQueryKey(String key) throws Exception;
+    void setQueryKey(String key) throws Exception;
 
     /**
      * Returns true if this user has the given permission within the given
@@ -232,25 +232,25 @@ public interface ScarabUser extends User
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, Module module);
+    boolean hasPermission(String permission, Module module);
 
     /**
      * Returns true if this user has the given permission within all the given
      * modules, false otherwise.  If the list is null or empty
      */
-    public boolean hasPermission(String permission, List modules);
+    boolean hasPermission(String permission, List modules);
 
     /**
      * Gets all modules which are currently associated with this user 
      * (relationship has not been deleted.)
      */
-    public List getModules() throws Exception;
+    List getModules() throws Exception;
 
     /**
      * Gets all modules which are currently associated with this user.
      * @param showDeletedModules show modules which have been marked as deleted
      */
-    public List getModules(boolean showDeletedModules) throws Exception;
+    List getModules(boolean showDeletedModules) throws Exception;
 
     /**
      * Get a list of <code>Module</code>'s that where a user has
@@ -259,7 +259,7 @@ public interface ScarabUser extends User
      * @param permission a <code>String</code> value
      * @return a <code>Module[]</code> value
      */
-    public Module[] getModules(String permission) 
+    Module[] getModules(String permission) 
         throws Exception;
 
     /**
@@ -269,7 +269,7 @@ public interface ScarabUser extends User
      * @param permissions a <code>String[]</code> value
      * @return a <code>Module[]</code> value
      */
-    public Module[] getModules(String[] permissions) 
+    Module[] getModules(String[] permissions) 
         throws Exception;
 
     /**
@@ -280,13 +280,13 @@ public interface ScarabUser extends User
      * @param showDeleted a <code>boolean</code> value
      * @return a <code>Module[]</code> value
      */
-    public Module[] getModules(String[] permissions, boolean showDeleted) 
+    Module[] getModules(String[] permissions, boolean showDeleted) 
         throws Exception;
 
-    public List getCopyToModules(Module currentModule)
+    List getCopyToModules(Module currentModule)
         throws Exception;
 
-    public List getMoveToModules(Module currentModule)
+    List getMoveToModules(Module currentModule)
         throws Exception;
 
     /**
@@ -297,48 +297,48 @@ public interface ScarabUser extends User
      * @param module a <code>Module</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean hasAnyRoleIn(Module module)
+    boolean hasAnyRoleIn(Module module)
         throws Exception;
 
     /**
      * The user's full name.
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets integer representing user preference for
      * Which screen to return to after entering an issue.
      */
-    public void setEnterIssueRedirect(int templateCode)
+    void setEnterIssueRedirect(int templateCode)
         throws Exception;
 
     /**
      * Returns integer representing user preference for
      * Which screen to return to after entering an issue.
      */
-    public int getEnterIssueRedirect()
+    int getEnterIssueRedirect()
         throws Exception;
 
     /**
      * The template/tab to show for the home page using the current module.
      */
-    public String getHomePage()
+    String getHomePage()
         throws Exception;
     
     /**
      * The template/tab to show for the home page in the given module.
      */
-    public String getHomePage(Module module)
+    String getHomePage(Module module)
         throws Exception;
 
     /**
      * The template/tab to show for the home page.
      */
-    public void setHomePage(String homePage)
+    void setHomePage(String homePage)
         throws Exception;
 
 
-    public List getMITLists()
+    List getMITLists()
         throws TorqueException;
 
     /**
@@ -348,16 +348,16 @@ public interface ScarabUser extends User
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getSearchableRMITs(String searchField, String searchString, 
+    List getSearchableRMITs(String searchField, String searchString, 
                                    String sortColumn, String sortPolarity)
         throws Exception;
 
-    public void addRMITsToCurrentMITList(List rmits)
+    void addRMITsToCurrentMITList(List rmits)
         throws TorqueException;
 
-    public MITList getCurrentMITList();
-    public void setCurrentMITList(MITList list);
-    public void removeItemsFromCurrentMITList(String[] ids);
+    MITList getCurrentMITList();
+    void setCurrentMITList(MITList list);
+    void removeItemsFromCurrentMITList(String[] ids);
 
     /**
      * The most recent query entered.  This method has the effect of loading
@@ -365,74 +365,74 @@ public interface ScarabUser extends User
      * so it should only be called if the query is to be used.  
      * Use @see #hasMostRecentQuery() to determine existence.
      */
-    public String getMostRecentQuery();
+    String getMostRecentQuery();
 
     /**
      * The most recent query entered.
      */
-    public void setMostRecentQuery(String queryString);
+    void setMostRecentQuery(String queryString);
 
     /**
      * Check if the user has a previous query
      */
-    public boolean hasMostRecentQuery();
+    boolean hasMostRecentQuery();
 
     /**
      * key used to keep concurrent activities by the same
      * user from overwriting each others state.
      */
-    public Object getThreadKey();
+    Object getThreadKey();
 
     /**
      * key used to keep concurrent activities by the same
      * user from overwriting each others state.
      */
-    public void setThreadKey(Integer key);
+    void setThreadKey(Integer key);
 
     /**
      * Get the working list of associated users
      * For the AssignIssue screen
      */
-    public HashMap getAssociatedUsersMap()
+    HashMap getAssociatedUsersMap()
         throws Exception;
 
     /**
      * Set the working list of associated users
      * For the AssignIssue screen
      */
-    public void setAssociatedUsersMap(HashMap associatedUsers)
+    void setAssociatedUsersMap(HashMap associatedUsers)
         throws Exception;
     
     /**
      * The current module which represents the module
      * selected by the user within a request.
      */
-    public Module getCurrentModule();
+    Module getCurrentModule();
     
     /**
      * The current module which represents the module
      * selected by the user within a request.
      */
-    public void setCurrentModule(Module  v);
+    void setCurrentModule(Module  v);
      
     /**
      * The current issue type which represents the issue type
      * selected by the user within a request.
      */
-    public IssueType getCurrentIssueType()
+    IssueType getCurrentIssueType()
         throws Exception;
 
     /**
      * The current issue type which represents the issue type
      * selected by the user within a request.
      */
-    public void setCurrentIssueType(IssueType  v);
+    void setCurrentIssueType(IssueType  v);
 
     /**
      * The current RModuleIssueType which represents the module and issue type
      * selected by the user within a request.
      */
-    public RModuleIssueType getCurrentRModuleIssueType()
+    RModuleIssueType getCurrentRModuleIssueType()
         throws Exception;
 
     /**
@@ -441,10 +441,10 @@ public interface ScarabUser extends User
      * and issue type.  And replaces them with the attributes given.
      * The order of the attributes is preserved.
      */
-    public void updateIssueListAttributes(List attributes)
+    void updateIssueListAttributes(List attributes)
         throws Exception;
 
-    public List getRoleNames(Module module)
+    List getRoleNames(Module module)
        throws Exception;
 }
 

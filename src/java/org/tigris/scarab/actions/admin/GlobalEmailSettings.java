@@ -54,19 +54,17 @@ import org.apache.turbine.ParameterParser;
 // Scarab Stuff
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.GlobalParameterPeer;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
  * Action for the GlobalEmailSettings form
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: GlobalEmailSettings.java,v 1.2 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: GlobalEmailSettings.java,v 1.3 2003/03/15 21:56:57 jon Exp $
 */
 public class GlobalEmailSettings 
     extends RequireLoginFirstAction
 {
-    private static final String[] names = 
+    private static final String[] NAMES = 
         {GlobalParameterManager.EMAIL_ENABLED, 
          GlobalParameterManager.EMAIL_INCLUDE_ISSUE_DETAILS,
          GlobalParameterManager.EMAIL_ALLOW_MODULE_OVERRIDE};
@@ -76,9 +74,9 @@ public class GlobalEmailSettings
     {
         ParameterParser pp = data.getParameters();
         String name = null;
-        for (int i=0; i<names.length; i++) 
+        for (int i=0; i < NAMES.length; i++) 
         {
-            name = names[i];
+            name = NAMES[i];
             GlobalParameterManager.setBoolean(name, pp.getBoolean(name));
         }
         // Note: name = GlobalParameterManager.EMAIL_ALLOW_MODULE_OVERRIDE

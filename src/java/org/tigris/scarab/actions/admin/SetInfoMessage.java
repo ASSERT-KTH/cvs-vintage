@@ -46,16 +46,9 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.Locale;
-
 // Turbine Stuff 
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -67,7 +60,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * that lasts until the server is restarted or it is revoked.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SetInfoMessage.java,v 1.2 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: SetInfoMessage.java,v 1.3 2003/03/15 21:56:57 jon Exp $
  */
 public class SetInfoMessage extends RequireLoginFirstAction
 {
