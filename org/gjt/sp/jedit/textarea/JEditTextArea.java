@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.286 2003/09/08 01:24:11 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.287 2003/09/09 23:40:44 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6566,8 +6566,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 					focusedComponent.requestFocus();
 				}
 			}
-			else if(isQuickCopyEnabled()
-				&& GUIUtilities.isMiddleButton(evt.getModifiers()))
+			else if(!dragged && isQuickCopyEnabled() &&
+				GUIUtilities.isMiddleButton(evt.getModifiers()))
 			{
 				JEditTextArea.this.requestFocus();
 				focusedComponent = JEditTextArea.this;

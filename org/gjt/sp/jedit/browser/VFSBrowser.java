@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.96 2003/09/08 01:24:11 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.97 2003/09/09 23:40:44 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -980,7 +980,17 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 					global.setVariable("files",
 						browser.getSelectedFiles());
 
-					action.invoke(browser.getView());
+					View view = browser.getView();
+					// I guess ideally all browsers
+					// should have views, but since they
+					// don't, we just use the active view
+					// in that case, since some actions
+					// depend on a view being there and
+					// I don't want to add checks to
+					// them all
+					if(view == null)
+						view = jEdit.getActiveView();
+					action.invoke(view);
 				}
 				catch(UtilEvalError err)
 				{

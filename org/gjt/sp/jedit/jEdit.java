@@ -22,6 +22,7 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
+import bsh.UtilEvalError;
 import com.microstar.xml.*;
 import javax.swing.plaf.metal.*;
 import javax.swing.*;
@@ -46,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.194 2003/09/08 01:24:11 spestov Exp $
+ * @version $Id: jEdit.java,v 1.195 2003/09/09 23:40:43 spestov Exp $
  */
 public class jEdit
 {
@@ -459,6 +460,14 @@ public class jEdit
 		if(scriptFile != null)
 		{
 			scriptFile = MiscUtilities.constructPath(userDir,scriptFile);
+			try
+			{
+				BeanShell.getNameSpace().setVariable("args",args);
+			}
+			catch(UtilEvalError e)
+			{
+				Log.log(Log.ERROR,jEdit.class,e);
+			}
 			BeanShell.runScript(null,scriptFile,null,false);
 		} //}}}
 
@@ -2816,9 +2825,9 @@ public class jEdit
 		if(scriptFile != null)
 		{
 			scriptFile = MiscUtilities.constructPath(userDir,scriptFile);
-			script.append("BeanShell.runScript(null,\""
+			script.append("BeanShell.runScript(view,\""
 				+ MiscUtilities.charsToEscapes(scriptFile)
-				+ "\",null,false);\n");
+				+ "\",null,this.namespace);\n");
 		}
 
 		return script.toString();
