@@ -1,0 +1,42 @@
+<!-- 
+    Intake XML input constraints DTD 
+    $Id: intake.dtd,v 1.1 2001/04/06 00:36:57 jon Exp $
+-->
+
+<!ELEMENT input-data (group+)>
+<!ATTLIST input-data 
+  basePackage CDATA #IMPLIED
+>
+
+<!ELEMENT group (field+)>
+<!ATTLIST group 
+  key CDATA #REQUIRED
+  class CDATA #REQUIRED
+  mapToObject CDATA #IMPLIED
+>
+
+<!ELEMENT field (rule*)>
+<!ATTLIST field 
+  key CDATA #REQUIRED
+  name CDATA #REQUIRED
+  type ( boolean | BigDecimal | short | int  | long   | float 
+       | double  | BigInteger | byte  | char | String | Date  
+       | StringKey | NumberKey | DateKey | ComboKey ) "String"      
+  onError CDATA #IMPLIED
+  multiValued ( true | false ) "false"
+  mapToObject CDATA #IMPLIED
+  mapToProperty CDATA #IMPLIED
+>
+
+                  
+<!ELEMENT rule (#PCDATA)>
+<!ATTLIST rule 
+  mask CDATA #IMPLIED
+  minLength CDATA #IMPLIED
+  maxLength CDATA #IMPLIED
+  minValue CDATA #IMPLIED
+  maxValue CDATA #IMPLIED
+  action ( invalidate | force ) "invalidate"
+>
+  
+
