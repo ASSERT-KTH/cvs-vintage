@@ -21,57 +21,68 @@ import org.columba.core.util.WindowMaximizer;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FrameView extends JFrame implements WindowListener{
+public class FrameView extends JFrame implements WindowListener {
 	FrameController frameController;
-	
-	public FrameView( FrameController frameController ) {
+
+	public FrameView(FrameController frameController) {
 		this.frameController = frameController;
-		
+
 		this.setIconImage(
 			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
-			
+
 		setTitle("Columba v" + org.columba.core.main.MainInterface.version);
-		
+
 		JPanel panel = (JPanel) this.getContentPane();
 		panel.setLayout(new BorderLayout());
 		panel.add(frameController.getStatusBar(), BorderLayout.SOUTH);
-		
+
 		addWindowListener(this);
 	}
-	
+
 	public void maximize() {
 		WindowMaximizer.maximize(this);
-		
+
 		/*
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize);
 		*/
-		
+
 		// FIXME: this works only with JDK1.4
 		// has to be added with org.columba.core.util.Compatibility-class
 		//setExtendedState(MAXIMIZED_BOTH);
 	}
-	
+
 	public void saveWindowPosition(ViewItem viewItem) {
 
-			java.awt.Dimension d = getSize();
+		java.awt.Dimension d = getSize();
 
-			WindowItem item = viewItem.getWindowItem();
+		WindowItem item = viewItem.getWindowItem();
 
-			item.set("x", 0);
-			item.set("y", 0);
-			item.set("width", d.width);
-			item.set("height", d.height);
+		item.set("x", 0);
+		item.set("y", 0);
+		item.set("width", d.width);
+		item.set("height", d.height);
+		
+		boolean isMaximized = WindowMaximizer.isWindowMaximized(this);
+		
+		item.set("maximized", isMaximized );
 	}
-	
+
 	public void loadWindowPosition(ViewItem viewItem) {
-			int x = viewItem.getInteger("window", "width");
-			int y = viewItem.getInteger("window", "height");
+		int x = viewItem.getInteger("window", "width");
+		int y = viewItem.getInteger("window", "height");
+		boolean maximized = viewItem.getBoolean("window", "maximized");
+		
+		if (maximized)
+			maximize();
+		else {
+
 			Dimension dim = new Dimension(x, y);
 			setSize(dim);
-		
+
 			validate();
 		}
+	}
 	/**
 	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
 	 */
@@ -82,7 +93,7 @@ public class FrameView extends JFrame implements WindowListener{
 	 * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
 	 */
 	public void windowClosed(WindowEvent arg0) {
-		
+
 	}
 
 	/**

@@ -35,6 +35,7 @@ public abstract class FrameModel {
 
 			FrameController c = createInstance(new Integer(id).toString());
 
+			
 			c.getView().loadWindowPosition(new ViewItem(view));
 			c.getView().setVisible(true);
 			register(id, c);
