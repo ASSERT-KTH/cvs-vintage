@@ -853,13 +853,17 @@ try{
     public ModuleEntity getModule(String key)
     {
         ModuleEntity me = null;
-        try
+        if ( key != null && key.length() > 0 ) 
         {
-            me = ModuleManager.getInstance(new NumberKey(key));
-        }
-        catch (Exception e)
-        {
-            Log.debug("Unable to retrieve Module: " + e);
+            try
+            {
+                me = ModuleManager.getInstance(new NumberKey(key));
+            }
+            catch (Exception e)
+            {
+                Log.info("[ScarabRequestTool] Unable to retrieve Module: " +
+                         key, e);
+            }
         }
         return me;
     }
