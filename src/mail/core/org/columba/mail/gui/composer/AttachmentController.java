@@ -104,7 +104,7 @@ public class AttachmentController implements KeyListener {
 		int returnValue;
 		File[] files;
 
-		fileChooser.setDialogTitle(MailResourceLoader.getString("menu","mainframe","composer_attach_file")); //$NON-NLS-1$
+		fileChooser.setDialogTitle(MailResourceLoader.getString("menu","composer","menu_message_attachFile")); //$NON-NLS-1$
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setMultiSelectionEnabled(true);
 		returnValue = fileChooser.showOpenDialog(view);

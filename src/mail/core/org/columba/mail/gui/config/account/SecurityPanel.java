@@ -105,7 +105,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		mainMiddle.setLayout(new BorderLayout());
 
 		JPanel middle = new JPanel();
-		middle.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), MailResourceLoader.getString("dialog", "account", "_PGP_(Pretty_Good_Privacy)_Options"))); //$NON-NLS-1$
+		middle.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), MailResourceLoader.getString("dialog", "account", "pgp_options"))); //$NON-NLS-1$
 		middle.setLayout(new BorderLayout());
 
 		JPanel enablePanel = new JPanel();
