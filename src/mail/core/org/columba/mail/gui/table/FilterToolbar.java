@@ -28,6 +28,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -37,6 +38,7 @@ import org.columba.core.folder.IFolder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CTextField;
 import org.columba.core.gui.util.ComboMenu;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -98,8 +100,26 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			if (strs[i].equals("separator"))
 				c.addSeparator();
 			else {
-				c.addMenuItem(strs[i], MailResourceLoader.getString("filter",
-						"filter", strs[i]));
+				JRadioButtonMenuItem m = c.addMenuItem(strs[i],
+						MailResourceLoader.getString("filter", "filter",
+								strs[i]));
+
+				switch (i) {
+				case 7:
+					m.setIcon(ImageLoader.getSmallImageIcon("mail-new.png"));
+					break;
+				case 8:
+					m.setIcon(ImageLoader
+							.getSmallImageIcon("mark-as-important-16.png"));
+					break;
+				case 9:
+					m.setIcon(ImageLoader
+							.getSmallImageIcon("priority-high.png"));
+					break;
+				case 10:
+					m.setIcon(ImageLoader.getSmallImageIcon("spam-16.png"));
+					break;
+				}
 			}
 		}
 
@@ -369,6 +389,12 @@ public class FilterToolbar extends JPanel implements ActionListener,
 	public void itemStateChanged(ItemEvent event) {
 		selectedItem = (String) event.getItem();
 
+		// execute custom search
+		if (selectedItem.equals("custom_search")) {
+			executeCustomSearch();
+			return;
+		}
+
 		// enable/disable textfield in-dependency of selected criteria
 		int selectedIndex = getIndex(selectedItem);
 		if (selectedIndex >= 0 && selectedIndex <= 5) {
@@ -376,12 +402,11 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			textField.requestFocus();
 		} else {
 			textField.setEnabled(false);
+
+			// directly execute search
+			executeSearch();
 		}
 
-		// execute custom search
-		if (selectedItem.equals("custom_search")) {
-			executeCustomSearch();
-		}
 	}
 
 	/**

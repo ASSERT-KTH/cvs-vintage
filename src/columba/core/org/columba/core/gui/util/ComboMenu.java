@@ -93,7 +93,7 @@ public class ComboMenu extends JButton implements ActionListener {
 
 	}
 
-	public void addMenuItem(String name, String localizedName) {
+	public JRadioButtonMenuItem addMenuItem(String name, String localizedName) {
 
 		JRadioButtonMenuItem m = new JRadioButtonMenuItem(localizedName);
 
@@ -109,6 +109,8 @@ public class ComboMenu extends JButton implements ActionListener {
 			setText(localizedName);
 			m.setSelected(true);
 		}
+		
+		return m;
 	}
 
 	public void addSeparator() {
