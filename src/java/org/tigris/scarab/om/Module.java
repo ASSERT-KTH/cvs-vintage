@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.regexp.REProgram;
 
@@ -72,7 +73,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.70 2003/04/09 22:55:30 jmcnally Exp $
+ * @version $Id: Module.java,v 1.71 2003/04/14 23:37:31 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -552,5 +553,15 @@ public interface Module
     String toString();
  
     List getRoles() throws Exception;
+
+    /**
+     * The default locale for this module will be used in cases
+     * where a response is going to no particular user (a mailing
+     * list) or can also be used as a default in cases where
+     * a user does not have a preference.
+     *
+     * @return a <code>Locale</code> value
+     */
+    Locale getLocale();
 }
 

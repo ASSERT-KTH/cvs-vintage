@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.288 2003/04/09 19:50:37 elicia Exp $
+ * @version $Id: Issue.java,v 1.289 2003/04/14 23:37:31 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -549,14 +549,10 @@ public class Issue
         return activitySet;
     }
 
-    // note this could be more efficient and cache the one locale, but
-    // we will want to find a way to alter this by user or some other
-    // criteria, so keeping the implementation simple/flexible
     private Locale getLocale()
+        throws TorqueException
     {
-        return new Locale(
-            Localization.getDefaultLanguage(), 
-            Localization.getDefaultCountry());
+        return getModule().getLocale();
     }
 
     /**

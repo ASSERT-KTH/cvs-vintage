@@ -47,6 +47,7 @@ package org.tigris.scarab.tools;
  */
 
 import java.util.List;
+import java.util.Locale;
 import java.util.MissingResourceException;
 
 import org.apache.commons.configuration.Configuration;
@@ -106,8 +107,13 @@ public class ScarabLocalizationTool
     private String bundlePrefix;
     private String oldBundlePrefix;
 
+    // store a locale which is useful for creating a tool outside of a request
+    private Locale locale;
+
     /**
-     * Creates a new instance.
+     * Creates a new instance.  The object should have init(Object) called
+     * being instantiated in this way, where Object is either a RunData 
+     * or Locale.
      */
     public ScarabLocalizationTool()
     {
@@ -141,7 +147,6 @@ public class ScarabLocalizationTool
 
         return value;
     }
-
 
    /**
      * Formats a localized value using the provided object.
@@ -317,15 +322,8 @@ public class ScarabLocalizationTool
         String value = null;
         if (properties != null)
         {
-            // $l10n.get($props.get($template, "title"))
-
-            String templateName =
-                (useDefaultScope ? DEFAULT_SCOPE : 
-                 data.getTarget().replace(',', '/'));
-            if (templateName == null)
-            {
-                templateName = DEFAULT_SCOPE;
-            }
+            String templateName = (useDefaultScope || data == null) ? 
+                DEFAULT_SCOPE : data.getTarget().replace(',', '/');
             String propName = "template." + templateName + '.' + property;
             String l10nKey = properties.getString(propName);
             Log.get().debug("ScarabLocalizationTool: Property name '" + propName +
@@ -366,21 +364,35 @@ public class ScarabLocalizationTool
         return name;
     }
 
+    /**
+     * Gets the current locale.
+     *
+     * @return The locale currently in use.
+     */
+    public Locale getLocale()
+    {
+        return (locale == null) ? super.getLocale() : locale;
+    }
 
     // ---- ApplicationTool implementation  ----------------------------------
 
     /**
-     * Sets the localization prefix to the name of the target for the
-     * current request plus dot (i.e. <code>Prefix.vm.</code>).
+     * Initialize the tool.  Within the turbine pull service this tool
+     * is initialized with a RunData.  However, the tool can also be
+     * initialized with a Locale.
      */
-    public void init(Object runData)
+    public void init(Object obj)
     {
-        super.init(runData);
-        if (runData instanceof RunData)
+        super.init(obj);
+        if (obj instanceof RunData)
         {
-            data = (RunData) runData;
-            properties = Turbine.getConfiguration();
+            data = (RunData) obj;
         }
+        else if (obj instanceof Locale)
+        {
+            locale = (Locale)obj;
+        }
+        properties = Turbine.getConfiguration();
     }
 
     public void refresh()
@@ -390,5 +402,6 @@ public class ScarabLocalizationTool
         properties = null;
         bundlePrefix = null;
         oldBundlePrefix = null;
+        locale = null;
     }
 }
