@@ -227,7 +227,7 @@ public class ComposerActionListener implements ActionListener {
 				MailResourceLoader.getMnemonic(
 					"menu",
 					"composer",
-					"menu_message_attachfile"),
+					"menu_message_attachFile"),
 				null);
 		attachFileAction.addActionListener(this);
 		attachFileAction.setEnabled(true);
@@ -252,7 +252,7 @@ public class ComposerActionListener implements ActionListener {
 				MailResourceLoader.getMnemonic(
 					"menu",
 					"composer",
-					"menu_message_spellcheck"),
+					"menu_message_spellCheck"),
 				null,
 				false);
 		spellCheckAction.addActionListener(this);
@@ -278,7 +278,7 @@ public class ComposerActionListener implements ActionListener {
 				MailResourceLoader.getMnemonic(
 					"menu",
 					"composer",
-					"menu_message_attachmessage"),
+					"menu_message_attachMessage"),
 				null);
 		attachMessageAction.addActionListener(this);
 		attachMessageAction.setEnabled(true);
