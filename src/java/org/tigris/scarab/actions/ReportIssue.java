@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.60 2001/10/23 17:04:04 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.61 2001/10/26 22:52:12 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -107,7 +107,7 @@ public class ReportIssue extends RequireLoginFirstAction
         catch (Exception e)
         {
             data.setMessage("Error: " + e.getMessage());
-            setTarget(data, "entry, Wizard1.vm");
+            setTarget(data, "entry,Wizard1.vm");
             return;
         }
         if ( intake.isAllValid() ) 
