@@ -17,25 +17,17 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
-import org.columba.mail.spam.command.CommandHelper;
-import org.columba.mail.spam.command.LearnMessageAsHamCommand;
-import org.columba.mail.spam.command.LearnMessageAsSpamCommand;
 
 /**
  * Mark selected messages with specific variant.
@@ -147,110 +139,10 @@ public class MarkMessageCommand extends FolderCommand {
             // mark message
             srcFolder.markMessage(uids, markVariant);
 
-            if ((markVariant == MARK_AS_SPAM)
-                    || (markVariant == MARK_AS_NOTSPAM)) {
-                processSpamFilter(uids, srcFolder, markVariant);
-            }
+           
 
         }
     }
 
-    /**
-     * Train spam filter.
-     * <p>
-     * Move message to specified folder or delete message immediately based on
-     * account configuration.
-     * 
-     * @param uids
-     *            message uid
-     * @param srcFolder
-     *            source folder
-     * @param markVariant
-     *            mark variant (spam/not spam)
-     * @throws Exception
-     */
-    private void processSpamFilter(Object[] uids, MessageFolder srcFolder,
-            int markVariant) throws Exception {
-
-        // update status message
-        worker.setDisplayText("Training messages...");
-        worker.setProgressBarMaximum(uids.length);
-
-        // mark as/as not spam
-        // for each message
-        for (int j = 0; j < uids.length; j++) {
-
-            worker.setDisplayText("Training messages...");
-            worker.setProgressBarMaximum(uids.length);
-            // increase progressbar value
-            worker.setProgressBarValue(j);
-
-            // cancel here if user requests
-            if (worker.cancelled()) {
-                break;
-            }
-
-            // message belongs to which account?
-            AccountItem item = CommandHelper.retrieveAccountItem(srcFolder,
-                    uids[j]);
-            // skip if account information is not available
-            if (item == null) continue;
-
-            // if spam filter is not enabled -> return
-            if (item.getSpamItem().isEnabled() == false) continue;
-
-            System.out.println("learning uid=" + uids[j]);
-
-            // create reference
-            FolderCommandReference[] ref = new FolderCommandReference[1];
-            ref[0] = new FolderCommandReference(srcFolder,
-                    new Object[] { uids[j]});
-
-            // create command
-            Command c = null;
-            if (markVariant == MARK_AS_SPAM)
-                c = new LearnMessageAsSpamCommand(ref);
-            else
-                c = new LearnMessageAsHamCommand(ref);
-
-            // execute command
-            c.execute(worker);
-
-            // skip if message is *not* marked as spam
-            if (markVariant == MARK_AS_NOTSPAM) continue;
-
-            // skip if user didn't enable this option
-            if (item.getSpamItem().isMoveMessageWhenMarkingEnabled() == false)
-                    continue;
-
-            if (item.getSpamItem().isMoveTrashSelected() == false) {
-                // move message to user-configured folder (generally "Junk"
-                // folder)
-                AbstractFolder destFolder = MailInterface.treeModel
-                        .getFolder(item.getSpamItem().getMoveCustomFolder());
-
-                // create reference
-                FolderCommandReference[] ref2 = new FolderCommandReference[2];
-                ref2[0] = new FolderCommandReference(srcFolder,
-                        new Object[] { uids[j]});
-                ref2[1] = new FolderCommandReference(destFolder);
-                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
-
-            } else {
-                // move message to trash
-                MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder
-                        .getRootFolder()).getTrashFolder();
-
-                // create reference
-                FolderCommandReference[] ref2 = new FolderCommandReference[2];
-                ref2[0] = new FolderCommandReference(srcFolder,
-                        new Object[] { uids[j]});
-                ref2[1] = new FolderCommandReference(trash);
-
-                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
-
-            }
-
-        }
-    }
+    
 }

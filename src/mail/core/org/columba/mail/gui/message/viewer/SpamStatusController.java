@@ -27,6 +27,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
 
 /**
@@ -86,13 +87,9 @@ public class SpamStatusController implements Viewer, ActionListener {
     public void actionPerformed(ActionEvent arg0) {
         // get selected message
         FolderCommandReference[] r = mediator.getTableSelection();
-        
-        // commented
-        // this is already done by MarkMessageCommand
-        /*
-        // learn message as ham
-        MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));
-        */
+               
+        // learn message as non spam
+        MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));        
         
         // mark as not spam
         r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);

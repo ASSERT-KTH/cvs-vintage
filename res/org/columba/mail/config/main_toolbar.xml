@@ -10,7 +10,7 @@
 	<button action="Forward"/>
 	<separator/>
 	<button action="DeleteMessage"/>
-	<button action="MarkAsSpam"/>
+	<button action="ToggleSpamFlag"/>
 	<separator/>
 	<button action="OpenNewAddressbookWindow"/>
 	<separator/>
