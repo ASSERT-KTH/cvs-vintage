@@ -65,7 +65,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.59 $</tt>
+ * @version <tt>$Revision: 1.60 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -511,7 +511,7 @@ public class JMSContainerInvoker
       // jason: The following is highly redundant code...
       //
       
-      if (destinationType.equals("javax.jms.Topic"))
+      if ("javax.jms.Topic".equals(destinationType))
       {
          log.debug("Got destination type Topic for " + config.getEjbName());
          
@@ -592,7 +592,7 @@ public class JMSContainerInvoker
          }
          log.debug("Topic connectionConsumer set up");
       }
-      else if (destinationType.equals("javax.jms.Queue"))
+      else if ("javax.jms.Queue".equals(destinationType))
       {
          log.debug("Got destination type Queue for " + config.getEjbName());
          
@@ -656,6 +656,8 @@ public class JMSContainerInvoker
                                                  maxMessagesNr);
          log.debug("Connection consumer: " + connectionConsumer);
       }
+      else
+         throw new DeploymentException("Unknown destination-type " + destinationType);
       
       log.debug("Initialized with config " + toString());
 
