@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.45 2002/02/05 22:14:04 spestov Exp $
+ * @version $Id: jEdit.java,v 1.46 2002/02/07 08:17:06 spestov Exp $
  */
 public class jEdit
 {
@@ -292,7 +292,8 @@ public class jEdit
 		initUserProperties();
 		initPLAF();
 
-		if(OperatingSystem.hasJava14())
+		if(OperatingSystem.hasJava14()
+			&& System.getProperty("jedit.nojava14") == null)
 		{
 			try
 			{
@@ -349,7 +350,6 @@ public class jEdit
 		GUIUtilities.advanceSplashProgress();
 
 		SearchAndReplace.load();
-		Macros.loadMacros();
 
 		GUIUtilities.advanceSplashProgress();
 		//}}}
@@ -361,7 +361,9 @@ public class jEdit
 				.startAllPlugins();
 		} //}}}
 
-		//{{{ Run startup scripts, after plugins and settings are loaded
+		//{{{ Load macros and run startup scripts, after plugins and settings are loaded
+		Macros.loadMacros();
+
 		if(!noStartupScripts && jEditHome != null)
 		{
 			String path = MiscUtilities.constructPath(jEditHome,"startup");

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.5 2002/01/06 09:32:25 spestov Exp $
+ * @version $Id: Java14.java,v 1.6 2002/02/07 08:17:06 spestov Exp $
  */
 public class Java14
 {
@@ -87,6 +87,9 @@ public class Java14
 			if(!evt.isConsumed())
 			{
 				Component comp = (Component)evt.getSource();
+				if(!comp.isShowing())
+					return true;
+
 				for(;;)
 				{
 					if(comp instanceof View)
@@ -109,7 +112,7 @@ public class Java14
 	} //}}}
 
 	//{{{ MyFocusTraversalPolicy class
-	static class MyFocusTraversalPolicy extends DefaultFocusTraversalPolicy
+	static class MyFocusTraversalPolicy extends LayoutFocusTraversalPolicy
 	{
 		public Component getDefaultComponent(Container focusCycleRoot)
 		{
