@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.17 2000/05/01 15:46:48 craigmcc Exp $
- * $Revision: 1.17 $
- * $Date: 2000/05/01 15:46:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.18 2000/05/19 00:39:06 mandar Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/05/19 00:39:06 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -82,8 +82,6 @@ import javax.servlet.jsp.tagext.TagExtraInfo;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;
-import com.sun.xml.tree.*;
-import com.sun.xml.parser.*;
 
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JasperException;
@@ -102,7 +100,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
     static private final String TLD = "META-INF/taglib.tld";
     static private final String WEBAPP_INF = "/WEB-INF/web.xml";
 
-    XmlDocument tld;
+    Document tld;
 
     Hashtable jarEntries;
     Hashtable tagCaches = new Hashtable();
@@ -169,52 +167,52 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    
 	    if (is != null) {
                 URL dtdURL =  this.getClass().getResource(Constants.WEBAPP_DTD_RESOURCE);
-                XmlDocument webtld = JspUtil.parseXMLDoc(is, dtdURL,
+                Document webtld = JspUtil.parseXMLDoc(is, dtdURL,
                                                          Constants.WEBAPP_DTD_PUBLIC_ID);
                 NodeList nList =  webtld.getElementsByTagName("taglib");
 	    
                 if (nList.getLength() != 0) {
 		    for(int i = 0; i < nList.getLength(); i++) {
-			Element e = (Element) nList.item(i);
-			NodeList list = e.getChildNodes();
 			String tagLoc = null;
 			boolean match = false;
-			for(int j = 0; j < list.getLength(); j++) {
-			    Element em = (Element) list.item(j);
-			    String tname = em.getNodeName();
-			    if (tname.equals("taglib-location")) {
-				Text t = (Text) em.getFirstChild();
-				if (t != null) {
-				    tagLoc = t.getData();
-				    if (tagLoc != null)
-					tagLoc = tagLoc.trim();
-				}
-			    }
-			    if (tname.equals("taglib-uri")) {
-				Text t = (Text) em.getFirstChild();
-				if (t != null) {
-				    String tmpUri =  t.getData();
-				    if (tmpUri != null) {
-					tmpUri = tmpUri.trim();
-					if (tmpUri.equals(uriIn))
-					    match = true;
+			Element e =  (Element) nList.item(i);
+			
+			// Assume only one entry for location and uri.
+			NodeList uriList = e.getElementsByTagName("taglib-uri");
+			Element uriElem = (Element) uriList.item(0);
+			Text t = (Text) uriElem.getFirstChild();
+			
+			if (t != null) {
+			    String tmpUri = t.getData();
+			    if (tmpUri != null) {
+				tmpUri = tmpUri.trim();
+				if (tmpUri.equals(uriIn)) {
+				    match = true;
+				    NodeList locList = e.getElementsByTagName
+					("taglib-location");
+				    Element locElem = (Element) locList.item(0);
+				    Text tl = (Text) locElem.getFirstChild();
+				    if (tl != null) {
+					tagLoc = tl.getData();
+					if (tagLoc != null)
+					    tagLoc = tagLoc.trim();
 				    }
 				}
 			    }
 			}
 			if (match == true && tagLoc != null) {
-                            this.uri = tagLoc;
-
-                            // If this is a relative path, then it has to be
-                            // relative to where web.xml is.
-
-                            // I'm taking the simple way out. Since web.xml 
-                            // has to be directly under WEB-INF, I'm making 
-                            // an absolute URI out of it by prepending WEB-INF
-
-                            if (!uri.startsWith("/"))
-                                uri = "/WEB-INF/"+uri;
-                        }
+			    this.uri = tagLoc;
+			    
+			    // If this is a relative path, then it has to be
+			    // relative to where web.xml is.
+			    
+			    // I'm taking the simple way out. Since web.xml 
+			    // has to be directly under WEB-INF, I'm making 
+			    // an absolute URI out of it by prepending WEB-INF
+			    
+			    if (!uri.startsWith("/"))
+				uri = "/WEB-INF/"+uri;
+			}
 		    }
 		}
 	    }
@@ -348,7 +346,9 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         list = elem.getChildNodes();
 
         for(int i = 0; i < list.getLength(); i++) {
-            Element e = (Element) list.item(i);
+	    Node tmp = list.item(i);
+	    if (! (tmp instanceof Element)) continue;
+            Element e = (Element) tmp;
             String tname = e.getTagName();
             if (tname.equals("tlibversion")) {
                 Text t = (Text) e.getFirstChild();
@@ -393,7 +393,9 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         Vector attributeVector = new Vector();
         NodeList list = elem.getChildNodes();
         for(int i = 0; i < list.getLength(); i++) {
-            Element e = (Element) list.item(i);
+            Node tmp  =  list.item(i);
+	    if (! (tmp instanceof Element)) continue;
+	    Element e = (Element) tmp;
             String tname = e.getTagName();
             if (tname.equals("name")) {
                 Text t = (Text) e.getFirstChild();
@@ -457,7 +459,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   Logger.WARNING
                                   );
             }
-        
+
         TagInfo taginfo = new TagInfo(name, tagclass, bodycontent,
                                       info, this, 
                                       tei,
@@ -472,7 +474,9 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         
         NodeList list = elem.getChildNodes();
         for(int i = 0; i < list.getLength(); i++) {
-            Element e = (Element) list.item(i);
+            Node tmp  = list.item(i);
+	    if (! (tmp instanceof Element)) continue;
+	    Element e = (Element) tmp;
             String tname = e.getTagName();
             if (tname.equals("name"))  {
                 Text t = (Text) e.getFirstChild();

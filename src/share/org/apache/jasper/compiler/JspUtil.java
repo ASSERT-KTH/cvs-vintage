@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.11 2000/04/05 18:49:27 akv Exp $
- * $Revision: 1.11 $
- * $Date: 2000/04/05 18:49:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.12 2000/05/19 00:39:06 mandar Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/05/19 00:39:06 $
  *
  * ====================================================================
  * 
@@ -65,6 +65,7 @@ import java.net.URL;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
@@ -73,9 +74,12 @@ import org.apache.jasper.JasperException;
 
 
 import org.w3c.dom.*;
-import org.xml.sax.*;
-import com.sun.xml.tree.*;
-import com.sun.xml.parser.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
 
 /** 
  * This class has all the utility method(s).
@@ -128,30 +132,29 @@ public class JspUtil {
     }
 
     // Parses the XML document contained in the InputStream.
-    public static XmlDocument parseXMLDoc(InputStream in, URL dtdURL, 
+    public static Document parseXMLDoc(InputStream in, URL dtdURL, 
     					  String dtdId) throws JasperException 
     {
-	XmlDocument tld;
-	XmlDocumentBuilder builder = new XmlDocumentBuilder();
-	builder.setIgnoringLexicalInfo(true);
-	
-        com.sun.xml.parser.ValidatingParser 
-            parser = new com.sun.xml.parser.ValidatingParser(true);
-
-        /***
-         * These lines make sure that we have an internal catalog entry for 
-         * the taglib.dtdfile; this is so that jasper can run standalone 
-         * without running out to the net to pick up the taglib.dtd file.
-         */
-        Resolver resolver = new Resolver();
-        resolver.registerCatalogEntry(dtdId, 
-                                      dtdURL.toString());
-        
-        try {
-            parser.setEntityResolver(resolver);
-            builder.setParser(parser);
-            builder.setDisableNamespaces(false);
-            parser.parse(new InputSource(in));
+	try {
+	    Document tld;
+	    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+	    docFactory.setValidating(true);
+	    docFactory.setNamespaceAware(true);
+	    DocumentBuilder builder = docFactory.newDocumentBuilder();
+	    
+	    /***
+	     * These lines make sure that we have an internal catalog entry for 
+	     * the taglib.dtdfile; this is so that jasper can run standalone 
+	     * without running out to the net to pick up the taglib.dtd file.
+	     */
+	    MyEntityResolver resolver = new MyEntityResolver(dtdId, dtdURL.toString());
+            builder.setEntityResolver(resolver);
+	    tld = builder.parse(in);
+	    return tld;
+	} catch (ParserConfigurationException pcfe) {
+	    throw new JasperException(Constants.getString(
+		"jsp.error.parse.error.in.TLD", new Object[] {
+		pcfe.getMessage() }));  
         } catch (SAXException sx) {
             throw new JasperException(Constants.getString(
 	    	"jsp.error.parse.error.in.TLD", new Object[] {
@@ -162,9 +165,6 @@ public class JspUtil {
 	    		"jsp.error.unable.to.open.TLD", new Object[] {
 							    io.getMessage() }));
         }
-        
-        tld = builder.getDocument();
-	return tld;
     }
 
     public static void checkAttributes (String typeOfTag, Hashtable attrs,
@@ -265,3 +265,41 @@ public class JspUtil {
 	}
     }
 }
+
+class MyEntityResolver implements EntityResolver {
+
+    String dtdId;
+    String dtdURL;
+    
+    public MyEntityResolver(String id, String url) {
+	this.dtdId = id;
+	this.dtdURL = url;
+    }
+    
+    public InputSource resolveEntity(String publicId, String systemId)
+	throws SAXException, IOException
+    {
+	//System.out.println ("publicId = " + publicId);
+	//System.out.println ("dtdId = " + dtdId);
+	//System.out.println ("systemId is " + systemId);
+	if (publicId.equals(dtdId)) {
+	    //System.out.println ("dtdURL is " + dtdURL);
+	    String fileName = dtdURL.substring(dtdURL.indexOf("/"),dtdURL.length());
+	    //System.out.println ("fileName is " + fileName);
+	    InputSource isrc = 
+		new InputSource(new FileInputStream (fileName));
+	    //InputStream istr = new FileInputStream (fileName);
+	    //if (istr == null) System.out.println ("Stream is null");
+	    //System.out.println ("isrc = " + isrc);
+	    return isrc;
+	}
+	else {
+	    //System.out.println ("returning null though dtdURL is " + dtdURL);
+	    return null;
+	}
+    }
+}
+
+
+
+
