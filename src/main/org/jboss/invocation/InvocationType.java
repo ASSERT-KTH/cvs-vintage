@@ -20,23 +20,37 @@ public final class InvocationType implements Serializable {
    private static final ArrayList values = new ArrayList(4);
 
    public static final InvocationType REMOTE = 
-         new InvocationType("REMOTE");
+         new InvocationType("REMOTE", false, false);
    public static final InvocationType LOCAL = 
-         new InvocationType("LOCAL");
+         new InvocationType("LOCAL", false, true);
    public static final InvocationType HOME = 
-         new InvocationType("HOME");
+         new InvocationType("HOME", true, false);
    public static final InvocationType LOCALHOME = 
-         new InvocationType("LOCALHOME");
+         new InvocationType("LOCALHOME", true, true);
 
    private final transient String name;
+   private final transient boolean isLocal;
+   private final transient boolean isHome;
 
    // this is the only value serialized
    private final int ordinal;
  
-   private InvocationType(String name) {
+   private InvocationType(String name, boolean isHome, boolean isLocal) {
       this.name = name;
+      this.isLocal = isLocal;
+      this.isHome = isHome;
       this.ordinal = nextOrdinal++;
       values.add(this);
+   }
+
+   public boolean isLocal()
+   {
+      return isLocal;
+   }
+
+   public boolean isHome()
+   {
+      return isHome;
    }
 
    public String toString() {
