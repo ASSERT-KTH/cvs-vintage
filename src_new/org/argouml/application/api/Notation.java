@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.16 2002/08/12 14:05:44 thierrylach Exp $
+// $Id: Notation.java,v 1.17 2002/08/12 18:50:43 linus Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -55,6 +55,7 @@ import org.apache.log4j.*;
 
 /** Provides centralized methods dealing with notation.
  *
+ *  @stereotype singleton
  *  @author Thierry Lach
  *  @since 0.9.4
  */
