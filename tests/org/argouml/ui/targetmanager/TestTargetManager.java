@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.11 2004/09/25 08:04:50 mvw Exp $
+// $Id: TestTargetManager.java,v 1.12 2004/10/04 20:30:04 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -644,8 +644,8 @@ public class TestTargetManager extends TestCase {
      */
     public void testTransaction() {
 	class Listener implements TargetListener {
-	    int counter = 0;
-	    List list = new ArrayList();
+	    private int counter = 0;
+	    private List list = new ArrayList();
 
 	    /**
 	     * @see TargetListener#targetAdded(TargetEvent)

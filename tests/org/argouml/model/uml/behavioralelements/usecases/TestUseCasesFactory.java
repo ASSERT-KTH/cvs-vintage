@@ -1,4 +1,4 @@
-// $Id: TestUseCasesFactory.java,v 1.6 2004/09/25 08:04:52 mvw Exp $
+// $Id: TestUseCasesFactory.java,v 1.7 2004/10/04 20:30:03 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,16 +49,27 @@ public class TestUseCasesFactory extends TestCase {
         "UseCaseInstance",
     }; 
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name of the test
+     */
     public TestUseCasesFactory(String n) { super(n); }
 
 
 
+    /**
+     * Test if the UseCasesFactory is really a singleton.
+     */
     public void testSingleton() {
 	Object o1 = UseCasesFactory.getFactory();
 	Object o2 = UseCasesFactory.getFactory();
 	assertTrue("Different singletons", o1 == o2);
     }
 
+    /**
+     * Test creation.
+     */
     public void testCreates() {
 	String [] objs = {
 	    "Actor",
@@ -75,12 +86,18 @@ public class TestUseCasesFactory extends TestCase {
 					     objs);
     }
     
+    /**
+     * Test deleteComplete().
+     */
     public void testDeleteComplete() {
         CheckUMLModelHelper.deleteComplete(this, 
 					   UseCasesFactory.getFactory(), 
 					   allModelElements);
     }
     
+    /**
+     * Test building extensions.
+     */
     public void testBuildExtend1() {
         MUseCase base = UseCasesFactory.getFactory().createUseCase();
         MUseCase extension = UseCasesFactory.getFactory().createUseCase();

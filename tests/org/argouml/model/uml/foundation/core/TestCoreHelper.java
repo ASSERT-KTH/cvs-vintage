@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.8 2004/09/25 08:04:52 mvw Exp $
+// $Id: TestCoreHelper.java,v 1.9 2004/10/04 20:30:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,9 @@ public class TestCoreHelper extends TestCase {
 	super(arg0);
     }
 
+    /**
+     * Test getting the metamodel name.
+     */
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
@@ -55,6 +58,9 @@ public class TestCoreHelper extends TestCase {
 			 TestCoreFactory.getAllModelElements());
     }
 
+    /**
+     * Test stereotypes.
+     */
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,
@@ -62,6 +68,9 @@ public class TestCoreHelper extends TestCase {
 		      TestCoreFactory.getAllModelElements());
     }
 
+    /**
+     * Test getting children.
+     */
     public void testGetChildren() {
 	// Create an element with an element without children.
 	MGeneralizableElement ge = new MClassifierImpl();

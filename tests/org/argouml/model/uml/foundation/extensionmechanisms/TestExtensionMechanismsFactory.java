@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.7 2004/09/25 08:04:52 mvw Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.8 2004/10/04 20:30:05 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,16 +39,27 @@ public class TestExtensionMechanismsFactory extends TestCase {
 	"TaggedValue",
     };
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name of the test
+     */
     public TestExtensionMechanismsFactory(String n) {
 	super(n);
     }
 
+    /**
+     * Test if the ExtensionMechanismsFactory is really a singleton.
+     */
     public void testSingleton() {
 	Object o1 = ExtensionMechanismsFactory.getFactory();
 	Object o2 = ExtensionMechanismsFactory.getFactory();
 	assertTrue("Different singletons", o1 == o2);
     }
 
+    /**
+     * Test creation.
+     */
     public void testCreates() {
 
 	String[] objs = {
@@ -62,6 +73,9 @@ public class TestExtensionMechanismsFactory extends TestCase {
 
     }
 
+    /**
+     * Test complete deletion.
+     */
     public void testDeleteComplete() {
 	CheckUMLModelHelper.deleteComplete(
 		   this,
