@@ -59,9 +59,10 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @author <a href="bill@burkecentral.com">Bill Burke</a>
+* @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.76 $
+* @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+* @version $Revision: 1.77 $
 *
 * <p><b>Revisions:</b>
 *
@@ -83,6 +84,12 @@ import org.jboss.metadata.EntityMetaData;
 * <ul>
 * <li> Moved to new invoker scheme, using Invocation and MBean invokers.
 * </ul>
+* <p><b>20020413 dain sundstrom:</b>
+* <ul>
+* <li> Broke cretion into 2 invocations.  The first is through the invokeHome
+* chain, and calls the normal createEntity.  The second is throught the invoke
+* chain, and this call the new postCreateEntity method.  
+* </ul>
 */
 public class EntityContainer
 extends Container
@@ -98,13 +105,13 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    * These are the mappings between the home interface methods and the
    * container methods.
    */
-   protected Map homeMapping;
+   protected Map homeMapping = new HashMap();
    
    /**
-   * These are the mappings between the remote interface methods and the
+   * These are the mappings between the remote/local interface methods and the
    * bean methods.
    */
-   protected Map beanMapping;
+   protected Map beanMapping = new HashMap();
    
    
    /** This is the container invoker for this container */
@@ -576,7 +583,17 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       createCount++;
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
    }
-   
+     
+   /**
+   * Delegates to the persistence manager postCreateEntityMethod.
+   */
+   public void postCreateLocalHome(Invocation mi) throws Exception
+   {
+      // The persistence manager takes care of the post create step
+      getPersistenceManager().postCreateEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+   }
+  
    public Object findLocal(Invocation mi)
    throws Exception
    {
@@ -691,6 +708,16 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    }
    
    /**
+   * Delegates to the persistence manager postCreateEntityMethod.
+   */
+   public void postCreateHome(Invocation mi) throws Exception
+   {
+      // The persistence manager takes care of the post create step
+      getPersistenceManager().postCreateEntity(mi.getMethod(),mi.getArguments(),
+         (EntityEnterpriseContext) mi.getEnterpriseContext());
+   }
+ 
+   /**
    * This method takes care of the wiring of the "EJBObject" trio
    * (target, context, proxy).  It delegates to the persistence manager.
    */
@@ -760,7 +787,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    
    // Private -------------------------------------------------------
    
-   private void setupHomeMappingImpl( Map map,
+   private void setupHomeMappingImpl( 
       Method[] m,
       String finderName,
       String append )
@@ -777,7 +804,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             try // Try home method
             {
                String ejbHomeMethodName = "ejbHome" + methodName.substring(0,1).toUpperCase() + methodName.substring(1);
-               map.put(m[i], beanClass.getMethod(ejbHomeMethodName, m[i].getParameterTypes()));
+               homeMapping.put(m[i], beanClass.getMethod(ejbHomeMethodName, m[i].getParameterTypes()));
                
                continue;
             } catch (NoSuchMethodException e)
@@ -788,15 +815,17 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             // Implemented by container (in both cases)
             if (methodName.startsWith("find"))
             {
-               map.put(m[i], this.getClass().getMethod(finderName, new Class[] { Invocation.class }));
+               homeMapping.put(m[i], this.getClass().getMethod(finderName, new Class[] { Invocation.class }));
             }
-            else if (isEJB1x == false && methodName.startsWith("create"))
+            else if (methodName.equals("create") ||
+                  (isEJB1x == false && methodName.startsWith("create")))
             {
-               map.put(m[i], this.getClass().getMethod("create"+append, new Class[] { Invocation.class }));
+               homeMapping.put(m[i], this.getClass().getMethod("create"+append, new Class[] { Invocation.class }));
+               beanMapping.put(m[i], this.getClass().getMethod("postCreate"+append, new Class[] { Invocation.class }));
             }
             else
             {
-               map.put(m[i], this.getClass().getMethod(methodName+append, new Class[] { Invocation.class }));
+               homeMapping.put(m[i], this.getClass().getMethod(methodName+append, new Class[] { Invocation.class }));
             }
          } catch (NoSuchMethodException e)
          {
@@ -808,23 +837,20 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    protected void setupHomeMapping()
    throws DeploymentException
    {
-      Map map = new HashMap();
-      
-      if (homeInterface != null)
-      {
-         Method[] m = homeInterface.getMethods();
-         setupHomeMappingImpl( map, m, "find", "Home" );
-      }
-      if (localHomeInterface != null)
-      {
-         Method[] m = localHomeInterface.getMethods();
-         setupHomeMappingImpl( map, m, "findLocal", "LocalHome" );
-      }
-      
-      // Special methods
-      
       try {
-         
+         if (homeInterface != null)
+         {
+            Method[] m = homeInterface.getMethods();
+            setupHomeMappingImpl( m, "find", "Home" );
+         }
+         if (localHomeInterface != null)
+         {
+            Method[] m = localHomeInterface.getMethods();
+            setupHomeMappingImpl( m, "findLocal", "LocalHome" );
+         }
+      
+         // Special methods
+      
          // Get the One on Handle (getEJBObject), get the class
          Class handleClass = Class.forName("javax.ejb.Handle");
          
@@ -843,7 +869,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
                {
                   
                   //Map it in the home stuff
-                  map.put(handleMethods[j], this.getClass().getMethod("getEJBObject", new Class[]
+                  homeMapping.put(handleMethods[j], this.getClass().getMethod("getEJBObject", new Class[]
                         {Invocation.class
                         }));
                }
@@ -856,14 +882,20 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       }
       catch (Exception e)
       {
+         // ditch the half built mappings
+         homeMapping.clear();
+         beanMapping.clear();
+
          // DEBUG Logger.exception(e);
+
+         if(e instanceof DeploymentException) {
+            throw (DeploymentException)e;
+         }
+         throw new DeploymentException("Error setting up home mapping", e);
       }
-      
-      // We are done keep the home map
-      homeMapping = map;
    }
    
-   private void setupBeanMappingImpl( Map map, Method[] m, String intfName )
+   private void setupBeanMappingImpl( Method[] m, String intfName )
    throws DeploymentException
    {
       for (int i = 0; i < m.length; i++)
@@ -873,12 +905,12 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             if (!m[i].getDeclaringClass().getName().equals(intfName))
             {
                // Implemented by bean
-               map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+               beanMapping.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
             }
             else
             {
                // Implemented by container
-               map.put(m[i], getClass().getMethod(m[i].getName(), new Class[]
+               beanMapping.put(m[i], getClass().getMethod(m[i].getName(), new Class[]
                      { Invocation.class
                      }));
             }
@@ -892,21 +924,29 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    protected void setupBeanMapping()
    throws DeploymentException
    {
-      Map map = new HashMap();
-      
-      if (remoteInterface != null)
-      {
-         Method[] m = remoteInterface.getMethods();
-         setupBeanMappingImpl( map, m, "javax.ejb.EJBObject" );
+      try {
+         if (remoteInterface != null)
+         {
+            Method[] m = remoteInterface.getMethods();
+            setupBeanMappingImpl( m, "javax.ejb.EJBObject" );
+         }
+         if (localInterface != null)
+         {
+            Method[] m = localInterface.getMethods();
+            setupBeanMappingImpl( m, "javax.ejb.EJBLocalObject" );
+         }
       }
-      if (localInterface != null)
+      catch (Exception e)
       {
-         Method[] m = localInterface.getMethods();
-         setupBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
+         // ditch the half built mappings
+         homeMapping.clear();
+         beanMapping.clear();
+
+         if(e instanceof DeploymentException) {
+            throw (DeploymentException)e;
+         }
+         throw new DeploymentException("Error setting up bean mapping", e);
       }
-      
-      beanMapping = map;
-   
    }
    
    protected void setupMarshalledInvocationMapping() 
