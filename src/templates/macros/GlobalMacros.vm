@@ -64,6 +64,17 @@
 <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
 #end
 
+#macro ( templateAttrValueText $attrValue $size $value)
+#set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
+#set ($currentValue = "")
+#if ($attrInput.Value.toString().length() > 0)
+     #set ($currentValue = $attrInput.Value)
+#elseif ($templAttrInput.Value.toString().length() > 0)
+     #set ($currentValue = $templAttrInput.Value)
+#end
+<input type="text" name="$attrInput.Value.Key" value="$!currentValue"#if($size.length()) size="$size"#end />
+#end
+
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
