@@ -39,8 +39,8 @@ import java.awt.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.14 $
- * $Date: 2003/02/20 10:18:23 $
+ * $Revision: 1.15 $
+ * $Date: 2003/02/23 17:47:14 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -177,12 +177,6 @@ public class JavaImport {
 
 	// start parsing at the compilationUnit rule
 	parser.compilationUnit(modeller, lexer);
-
-	// Was there an exception thrown during modelling?
-	Exception e = modeller.getException();
-	if(e != null) {
-	    throw e;
-	}
     }
 }
 
