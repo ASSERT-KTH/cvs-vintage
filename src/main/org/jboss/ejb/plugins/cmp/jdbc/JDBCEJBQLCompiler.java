@@ -16,70 +16,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
-
 import org.jboss.ejb.plugins.cmp.ejbql.ASTAbs;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTAbstractSchema;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTAnd;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTApproximateNumericLiteral;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTArithmeticComparison;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTArithmeticParenthetical;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTBetween;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTBooleanComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTBooleanLiteral;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTCollectionMemberDeclaration;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTConcat;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTConditionalParenthetical;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTDatetimeComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTEJBQL;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTEntityComparison;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTExactNumericLiteral;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTFrom;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTIdentifier;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTIn;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTIsEmpty;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTLCase;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTLength;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTLike;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTLocate;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTMemberOf;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTMultDiv;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTNegation;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTNot;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTNullComparison;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTOr;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTOrderBy;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTOrderByPath;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTParameter;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTPath;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTPlusMinus;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTRangeVariableDeclaration;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTSelect;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTSqrt;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTStringComparison;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTStringLiteral;
-import org.jboss.ejb.plugins.cmp.ejbql.ASTStringParenthetical;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTSubstring;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTUCase;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTValueClassComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTWhere;
-import org.jboss.ejb.plugins.cmp.ejbql.Node;
-import org.jboss.ejb.plugins.cmp.ejbql.SimpleNode;
-
 import org.jboss.ejb.plugins.cmp.ejbql.BasicVisitor;
 import org.jboss.ejb.plugins.cmp.ejbql.BlockStringBuffer;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.ejbql.EJBQLParser;
-import org.jboss.ejb.plugins.cmp.ejbql.JBossQLParser;
-import org.jboss.ejb.plugins.cmp.ejbql.JBossQLParserVisitor;
 import org.jboss.ejb.plugins.cmp.ejbql.EJBQLTypes;
+import org.jboss.ejb.plugins.cmp.ejbql.JBossQLParser;
 import org.jboss.ejb.plugins.cmp.ejbql.Node;
-
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.ejbql.SimpleNode;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
@@ -88,7 +61,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -113,6 +86,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    private boolean subquerySupported = false;
 
    // output objects
+   private boolean forceDistinct = false;
    private String sql;
    private Object selectObject;
    private List inputParameters = new ArrayList();
@@ -205,6 +179,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       typeMapping = null;
       aliasManager = null;
       subquerySupported = true;
+      forceDistinct = false;
    }
 
    public String getSQL() {
@@ -331,15 +306,13 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       buf.append(")");
    }
 
-   public void notExistsClause(ASTPath path, BlockStringBuffer buf) {
+   public void existsClause(ASTPath path, BlockStringBuffer buf, boolean not) {
       if(!path.isCMRField()) {
          throw new IllegalArgumentException("path must be a cmr field");
       }
 
       JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
-      JDBCEntityBridge parentEntity = cmrField.getEntity();
-      String parentAlias = aliasManager.getAlias(
-            (String)path.getPath(path.size()-2));
+      String parentAlias = aliasManager.getAlias(path.getPath(path.size()-2));
 
       // if exists is not supported we use a left join and is null
       if(!subquerySupported) {
@@ -351,6 +324,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
             leftJoinPaths.put(path.getPath(path.size()-2), joins);
          }
          joins.add(path);
+         forceDistinct = true;
 
          if(cmrField.getRelationMetaData().isForeignKeyMappingStyle()) {
             JDBCEntityBridge childEntity =
@@ -358,7 +332,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
             String childAlias = aliasManager.getAlias(path.getPath());
 
             buf.append(SQLUtil.getIsNullClause(
-                  false, childEntity.getPrimaryKeyFields(), childAlias));
+                  !not, childEntity.getPrimaryKeyFields(), childAlias));
 
          } else {
 
@@ -366,12 +340,15 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                   aliasManager.getRelationTableAlias(path.getPath());
 
             buf.append(SQLUtil.getIsNullClause(
-                  false, cmrField.getTableKeyFields(), relationTableAlias));
+                  !not, cmrField.getTableKeyFields(), relationTableAlias));
          }
          return;
       }
 
-      buf.append("NOT EXISTS (");
+      if (not) {
+         buf.append("NOT ");
+      }
+      buf.append("EXISTS (");
 
       if(cmrField.getRelationMetaData().isForeignKeyMappingStyle()) {
          JDBCEntityBridge childEntity =
@@ -432,7 +409,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       }
 
       // translate select and add it to the buffer
-      selectNode.jjtAccept(this, buf);
+      BlockStringBuffer select = new BlockStringBuffer();
+      selectNode.jjtAccept(this, select);
 
       // translate where and save results to append later
       BlockStringBuffer where = new BlockStringBuffer();
@@ -445,6 +423,12 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       if(orderByNode != null)  {
          orderByNode.jjtAccept(this, orderBy);
       }
+
+      buf.append("SELECT ");
+      if(((ASTSelect)selectNode).distinct || returnType.equals(Set.class) || forceDistinct) {
+         buf.append("DISTINCT ");
+      }
+      buf.append(select);
 
       // translate from and add it to the buffer
       buf.append(" ");
@@ -556,7 +540,6 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          ASTPath path = (ASTPath)iter.next();
 
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
-         JDBCEntityBridge parentEntity = cmrField.getEntity();
          String parentAlias = aliasManager.getAlias(parentPath);
 
          if(cmrField.getRelationMetaData().isForeignKeyMappingStyle()) {
@@ -755,11 +738,6 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    public Object visit(ASTSelect node, Object data) {
       BlockStringBuffer buf = (BlockStringBuffer)data;
 
-      buf.append("SELECT ");
-      if(node.distinct || returnType.equals(Set.class)) {
-         buf.append("DISTINCT ");
-      }
-
       ASTPath path = (ASTPath)node.jjtGetChild(0);
       if(path.isCMPField()) {
 
@@ -770,8 +748,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          selectObject = selectField;
 
          joinPaths.add(path);
-         String alias = aliasManager.getAlias(
-               (String)path.getPath(path.size()-2));
+         String alias = aliasManager.getAlias(path.getPath(path.size()-2));
          buf.append(SQLUtil.getColumnNamesClause(selectField, alias));
       } else {
          JDBCEntityBridge selectEntity = (JDBCEntityBridge)path.getEntity();
@@ -798,8 +775,6 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
    /** Generates where clause without the "WHERE" keyword. */
    public Object visit(ASTWhere node, Object data) {
-      BlockStringBuffer buf = (BlockStringBuffer)data;
-
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
    }
@@ -811,12 +786,12 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       if(path.isCMRField()) {
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
          if(cmrField.getRelationMetaData().isTableMappingStyle()) {
-            notExistsClause(path, buf);
+            existsClause(path, buf, true);
             return buf;
          }
       }
 
-      String alias = aliasManager.getAlias((String)path.getPath(path.size()-2));
+      String alias = aliasManager.getAlias(path.getPath(path.size()-2));
       JDBCFieldBridge field = (JDBCFieldBridge)path.getField();
 
       // if jdbc type is null then it should be a cmr field in
@@ -824,7 +799,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       // handle it the way the IS EMPTY on the one side of one-to-many
       // relationship is handled
       if(field.getJDBCType() == null) {
-         notExistsClause(path, buf);
+         existsClause(path, buf, true);
          return buf;
       }
 
@@ -845,13 +820,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       BlockStringBuffer buf = (BlockStringBuffer)data;
       ASTPath path = (ASTPath)node.jjtGetChild(0);
 
-      // IS NOT EMPTY is handled automatically by the from clause
-      if(node.not) {
-         joinPaths.add(path);
-         buf.append("(1=1)");
-      } else {
-         notExistsClause(path, buf);
-      }
+      existsClause(path, buf, !node.not);
       return buf;
    }
 
@@ -876,12 +845,10 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCCMRFieldBridge toCMRField = (JDBCCMRFieldBridge)toPath.getCMRField();
 
-      JDBCEntityBridge toParentEntity =
-            (JDBCEntityBridge)toPath.getEntity(toPath.size()-2);
       JDBCEntityBridge toChildEntity = (JDBCEntityBridge)toPath.getEntity();
 
       String toParentAlias = aliasManager.getAlias(
-            (String)toPath.getPath(toPath.size()-2));
+            toPath.getPath(toPath.size()-2));
       String toChildAlias = aliasManager.getAlias(toPath.getPath());
       String relationTableAlias = null;
       if(toCMRField.getRelationMetaData().isTableMappingStyle()) {
@@ -903,7 +870,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          ASTPath fromPath = (ASTPath)node.jjtGetChild(0);
 
          JDBCEntityBridge fromEntity = (JDBCEntityBridge)fromPath.getEntity();
-         fromAlias = aliasManager.getAlias((String)fromPath.getPath());
+         fromAlias = aliasManager.getAlias(fromPath.getPath());
 
          // can only compare like kind entities
          if(!fromEntity.equals(toChildEntity)) {
@@ -975,9 +942,6 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       // second part makes fromNode equal toChild
       if(fromAlias != null) {
-         JDBCCMPFieldBridge toChildField;
-         JDBCCMPFieldBridge fromField;
-
          // compre pk to pk
          if(relationTableAlias == null) {
             buf.append(SQLUtil.getSelfCompareWhereClause(
@@ -1026,7 +990,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       ASTPath fromPath = (ASTPath)node.jjtGetChild(0);
       joinPaths.add(fromPath);
       String fromAlias = aliasManager.getAlias(
-            (String)fromPath.getPath(fromPath.size()-2));
+            fromPath.getPath(fromPath.size()-2));
       JDBCCMPFieldBridge fromCMPField =
             (JDBCCMPFieldBridge)fromPath.getCMPField();
 
@@ -1053,7 +1017,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
          joinPaths.add(toPath);
          String toAlias = aliasManager.getAlias(
-               (String)toPath.getPath(toPath.size()-2));
+               toPath.getPath(toPath.size()-2));
          JDBCCMPFieldBridge toCMPField =
                (JDBCCMPFieldBridge)toPath.getCMPField();
 
@@ -1234,7 +1198,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       joinPaths.add(node);
       JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge)node.getCMPField();
-      String alias = aliasManager.getAlias((String)node.getPath(node.size()-2));
+      String alias = aliasManager.getAlias(node.getPath(node.size()-2));
       buf.append(SQLUtil.getColumnNamesClause(cmpField, alias));
       return buf;
    }
