@@ -35,7 +35,7 @@
 </div>
 </form>
 
-#if ($issueListSize > 0)
+#if ($issueListSize > 1)
   #set ($thisIssue = "these issues")
 #else
   #set ($thisIssue = "this issue")
