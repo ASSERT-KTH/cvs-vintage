@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public final class JDBCTypeMappingMetaData {
    
@@ -38,6 +38,9 @@ public final class JDBCTypeMappingMetaData {
    private final String aliasHeaderPrefix;
    private final String aliasHeaderSuffix;
    private final int aliasMaxLength;
+
+   private final boolean subquerySupported;
+
    private JDBCFunctionMappingMetaData rowLocking = null;
    private JDBCFunctionMappingMetaData fkConstraint = null;
    private JDBCFunctionMappingMetaData pkConstraint = null;
@@ -108,26 +111,18 @@ public final class JDBCTypeMappingMetaData {
                functionMapping);
       }
       
-      String prefix = 
-            MetaData.getOptionalChildContent(element, "alias-header-prefix");
-      if(prefix == null) {
-         prefix = "t";
-      }
-      aliasHeaderPrefix = prefix;
+      aliasHeaderPrefix = 
+            MetaData.getUniqueChildContent(element, "alias-header-prefix");
       
-      String suffix = 
-            MetaData.getOptionalChildContent(element, "alias-header-suffix");
-      if(suffix == null) {
-         suffix = "_";
-      }
-      aliasHeaderSuffix = suffix;
+      aliasHeaderSuffix = 
+            MetaData.getUniqueChildContent(element, "alias-header-suffix");
       
-      String max = 
-            MetaData.getOptionalChildContent(element, "alias-max-length");
-      if(max == null) {
-         max = "32";
-      }
-      aliasMaxLength = Integer.parseInt(max);
+      aliasMaxLength = Integer.parseInt(
+            MetaData.getUniqueChildContent(element, "alias-max-length"));
+
+      String subquerySupportedStr = 
+            MetaData.getUniqueChildContent(element, "subquery-supported");
+      subquerySupported = Boolean.valueOf(subquerySupportedStr).booleanValue();
    }
        
    /**
@@ -173,6 +168,13 @@ public final class JDBCTypeMappingMetaData {
       return aliasMaxLength;
    }
       
+   /**
+    * Does this type mapping support subqueries?
+    */
+   public boolean isSubquerySupported() {
+      return subquerySupported;
+   }
+
    /**
     * Gets the jdbc type which this class has mapped to the specified java 
     * class. The jdbc type is used to retrieve data from a result set and to 
