@@ -20,7 +20,7 @@
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="lib.ext.dir" value="${lib.dir}/ext"/>
     <property name="etc.dir" value="${basedir}/src/etc"/>
-    <property name="docs.dir" value="${basedir}/docs"/>
+    <property name="docs.dir" value="${basedir}/src/docs"/>
     <property name="build.dir" value="${basedir}/build"/>
     <property name="build.bin.dir" value="${build.dir}/bin"/>
     <property name="build.lib.dir" value="${build.dir}/lib"/>
@@ -156,13 +156,13 @@
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
   <target name="dist" depends="main,jar,javadocs">
+     <mkdir dir="${dist.dir}/docs"/>
      <mkdir dir="${dist.dir}/docs/api"/>
      <copydir src="${docs.dir}" dest="${dist.dir}/docs"/>
      <copydir src="${build.javadocs.dir}" dest="${dist.dir}/docs/api"/>
      
      <mkdir dir="${dist.dir}/src"/>
-     <copydir src="${src.dir}" dest="${dist.dir}/src"
-/>
+     <copydir src="${src.dir}" dest="${dist.dir}/src"/>
   </target>
 
   <!-- =================================================================== -->
