@@ -16,7 +16,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an DynamicQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -38,9 +38,11 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData {
    public JDBCDynamicQLQueryMetaData(
          JDBCQueryMetaData jdbcQueryMetaData,
          Element element,
-         Method method) throws DeploymentException {
+         Method method,
+		 JDBCReadAheadMetaData readAhead) throws DeploymentException {
       
       this.method = method;
+      this.readAhead = readAhead;
       resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
 
       Class[] parameterTypes = method.getParameterTypes();
@@ -50,11 +52,6 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData {
          throw new DeploymentException("Dynamic-ql method must have two " +
                "parameters of type String and Object[].");
       }
-
-      readAhead = new JDBCReadAheadMetaData(
-            "on-find",
-            255,
-            "*");
    }
 
    // javadoc in parent class

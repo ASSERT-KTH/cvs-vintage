@@ -26,7 +26,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -112,7 +112,8 @@ public class JDBCQueryMetaDataFactory {
          return new JDBCDynamicQLQueryMetaData(
                jdbcQueryMetaData,
                dynamicQL,
-               method);
+               method,
+               readAhead);
       }
 
       // DECLARED-SQL
