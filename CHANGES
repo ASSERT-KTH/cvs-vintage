@@ -1,3 +1,15 @@
+Columba v1.0 RC2
+
+New features:
+- international IMAP mailbox naming (tstich)
+
+
+Fixed bugs:
+- #773118 é in name of Directory (tstich)
+- #1014346 IMAP rename problems (tstich)
+- #1014345 IMAP Subscribe problems (tstich)
+ 
+
 Columba v1.0 RC1-final
 
 New features:
