@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.9 2003/01/25 16:25:27 linus Exp $
+// $Id: CrNoInstanceVariables.java,v 1.10 2003/01/29 05:42:16 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,12 @@ public class CrNoInstanceVariables extends CrUML {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;
 
 	if (!(ModelFacade.isPrimaryObject(dm))) return NO_PROBLEM;
+
+        // if the object does not have a name,
+        // than no problem
+        if ((ModelFacade.getName(dm) == null) ||
+            ("".equals(ModelFacade.getName(dm))))
+            return NO_PROBLEM;
 
 	// types can probably have variables, but we should not nag at them
 	// not having any.

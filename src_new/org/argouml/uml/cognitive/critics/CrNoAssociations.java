@@ -1,4 +1,4 @@
-// $Id: CrNoAssociations.java,v 1.9 2003/01/23 05:50:57 linus Exp $
+// $Id: CrNoAssociations.java,v 1.10 2003/01/29 05:42:16 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,12 @@ public class CrNoAssociations extends CrUML {
 	if (!(ModelFacade.isAClassifier(dm)))
 	    return NO_PROBLEM;
 	if (!(ModelFacade.isPrimaryObject(dm)))
+	    return NO_PROBLEM;
+
+	// if the object does not have a name,
+	// than no problem
+	if ((ModelFacade.getName(dm) == null) ||
+	    ("".equals(ModelFacade.getName(dm))))
 	    return NO_PROBLEM;
 
 	// types can probably have associations, but we should not nag at them
