@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.8 2000/03/07 00:03:27 shemnon Exp $
- * $Revision: 1.8 $
- * $Date: 2000/03/07 00:03:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.9 2000/03/17 07:26:10 shemnon Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/03/17 07:26:10 $
  *
  * ====================================================================
  * 
@@ -426,6 +426,14 @@ public class JspC implements Options { //, JspCompilationContext {
 
 
         String file = nextFile();
+        File froot = new File(uriRoot);
+        String ubase = null;
+        try {
+            ubase = froot.getCanonicalPath();
+        } catch (IOException ioe) {
+            // if we cannot get the base, leave it null
+        };
+
         while (file != null) {
             if (SWITCH_FILE_WEBAPP.equals(file)) {
                 String base = nextFile();
@@ -475,8 +483,10 @@ public class JspC implements Options { //, JspCompilationContext {
                     };
                 };
 
-                File froot = new File(uriRoot);
-                String ubase = null;
+                String ubaseOld = ubase;
+                File frootOld = froot;
+                froot = new File(uriRoot);
+
                 try {
                     ubase = froot.getCanonicalPath();
                 } catch (IOException ioe) {
@@ -525,6 +535,9 @@ public class JspC implements Options { //, JspCompilationContext {
                     parseFile(log, nextjsp, mapout);
                 };
                 uriRoot = oldRoot;
+                ubase = ubaseOld;
+                froot = frootOld;
+
                 if (mapout != null) {
                     try {
                         if (webxmlLevel >= ALL_WEBXML) {
@@ -536,6 +549,18 @@ public class JspC implements Options { //, JspCompilationContext {
                     }
                 }
             } else {
+                try {
+                    if (ubase != null) {
+                        File fjsp = new File(file);
+                        String s = fjsp.getCanonicalPath();
+                        if (s.startsWith(ubase)) {
+                            file = s.substring(ubase.length());
+                        };
+                    }
+                } catch (IOException ioe) {
+                     // if we got problems dont change the file name
+                };
+
                 parseFile(log, file, null);
             };
             file = nextFile();
