@@ -27,9 +27,11 @@ import org.jboss.ejb.plugins.cmp.jdbc.QueryParameter;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 
 public class SQLTarget implements DeepCloneable {
    private final Method method;
@@ -38,6 +40,7 @@ public class SQLTarget implements DeepCloneable {
    private final Application application;
    private final Map managerByAbstractSchemaName = new Hashtable();
    private final List inputParameters = new ArrayList();
+   private final JDBCReadAheadMetaData readAhead;
    
    private boolean isSelectDistinct;
    private String selectPath;
@@ -53,11 +56,13 @@ public class SQLTarget implements DeepCloneable {
     */
    public SQLTarget(Method method, 
          JDBCTypeFactory typeFactory,
-         Application application) {
+         Application application,
+         JDBCReadAheadMetaData readAhead) {
 
       this.method = method;
       this.typeFactory = typeFactory;
       this.application = application;
+      this.readAhead = readAhead;
 
       if(method.getReturnType().equals(Set.class)) {
          isSelectDistinct = true;
@@ -90,6 +95,7 @@ public class SQLTarget implements DeepCloneable {
       method = target.method;
       typeFactory = target.typeFactory;
       application = target.application;
+      readAhead = target.readAhead;
       idManager = new IdentifierManager(target.idManager);
       managerByAbstractSchemaName.putAll(target.managerByAbstractSchemaName);
       inputParameters.addAll(target.inputParameters);
@@ -464,10 +470,16 @@ public class SQLTarget implements DeepCloneable {
          return null;
       }
       
+      inputParameters.addAll(QueryParameter.createParameters(
+            compareToParameter.getNumber() - 1,
+            entity));
+/*
       // create the parameter objects
-      JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
-      for(int i=0; i<pkFields.length; i++) {
-         JDBCType type = pkFields[i].getJDBCType();
+      List pkFields = entity.getPrimaryKeyFields();
+      for(Iterator iter = pkFields.iterator(); iter.hasNext();) {
+         JDBCFieldBridge pkField = (JDBCFieldBridge)iter.next();
+
+         JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex) {
             JDBCTypeComplexProperty[] props = 
                   ((JDBCTypeComplex)type).getProperties();
@@ -475,7 +487,7 @@ public class SQLTarget implements DeepCloneable {
                QueryParameter param = new QueryParameter(
                         compareToParameter.getNumber() - 1,
                         false, // isPrimaryKeyParameter
-                        pkFields[i],
+                        pkField,
                         props[j],
                         props[j].getJDBCType());
                inputParameters.add(param);
@@ -484,13 +496,13 @@ public class SQLTarget implements DeepCloneable {
             QueryParameter param = new QueryParameter(
                      compareToParameter.getNumber() - 1,
                      false, // isPrimaryKeyParameter
-                     pkFields[i],
+                     pkField,
                      null,
                      type.getJDBCTypes()[0]);
             inputParameters.add(param);
          }
       }
-      
+*/    
       // generate the sql
       StringBuffer buf = new StringBuffer();
       buf.append("(");
@@ -498,7 +510,8 @@ public class SQLTarget implements DeepCloneable {
          buf.append("NOT(");
       }
       
-      buf.append(SQLUtil.getWhereClause(pkFields, identifier));   
+      buf.append(SQLUtil.getWhereClause(
+               entity.getPrimaryKeyFields(), identifier));   
 
       if(compareSymbol.equals("<>")) {
          buf.append(")");
@@ -528,7 +541,7 @@ public class SQLTarget implements DeepCloneable {
       }   
       
       buf.append(SQLUtil.getSelfCompareWhereClause(
-            fromEntity.getJDBCPrimaryKeyFields(), 
+            fromEntity.getPrimaryKeyFields(), 
             fromIdentifier, 
             toIdentifier));   
 
@@ -557,6 +570,10 @@ public class SQLTarget implements DeepCloneable {
          return null;
       }
       
+      inputParameters.addAll(QueryParameter.createParameters(
+            compareToParameter.getNumber() - 1,
+            cmpFieldBridge));
+/*
       // create the parameter objects
       JDBCType type = cmpFieldBridge.getJDBCType();
       if(type instanceof JDBCTypeComplex) {
@@ -580,7 +597,7 @@ public class SQLTarget implements DeepCloneable {
                   type.getJDBCTypes()[0]);
          inputParameters.add(param);
       }
-      
+*/    
       // generate the sql
       StringBuffer buf = new StringBuffer();
       buf.append("(");
@@ -643,7 +660,7 @@ public class SQLTarget implements DeepCloneable {
       buf.append("NOT EXISTS (");
          buf.append("SELECT ");
             buf.append(SQLUtil.getColumnNamesClause(
-                  entity.getJDBCPrimaryKeyFields(), tableAlias));
+                  entity.getPrimaryKeyFields(), tableAlias));
          buf.append(" FROM ");
             buf.append(entity.getMetaData().getTableName());
             buf.append(" ");
@@ -658,16 +675,15 @@ public class SQLTarget implements DeepCloneable {
    public String getNullComparison(String path, boolean not) {
       PathElement pathElement = idManager.getExistingPathElement(path);
 
-      JDBCCMPFieldBridge[] fields;
+      List fields;
       String identifier;
       if(pathElement instanceof CMPField) {
          CMPField cmpField = (CMPField)pathElement;
-         fields = new JDBCCMPFieldBridge[1];
-         fields[0] = cmpField.getCMPFieldBridge();
+         fields = Collections.singletonList(cmpField.getCMPFieldBridge());
          identifier = idManager.getTableAlias(cmpField.getParent());
       } else {
          EntityPathElement entityPathElement = (EntityPathElement)pathElement;
-         fields = entityPathElement.getEntityBridge().getJDBCPrimaryKeyFields();
+         fields = entityPathElement.getEntityBridge().getPrimaryKeyFields();
          identifier = idManager.getTableAlias(entityPathElement);
       }
          
@@ -677,18 +693,20 @@ public class SQLTarget implements DeepCloneable {
          buf.append(" NOT(");
       }
       
-      for(int i=0; i<fields.length; i++) {
-         if(i > 0) {
-            buf.append(" AND ");
-         }
-         JDBCType type = fields[i].getJDBCType();
+      for(Iterator iter = fields.iterator(); iter.hasNext();) {
+         JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+
+         JDBCType type = field.getJDBCType();
          String[] columnNames = type.getColumnNames();
          for(int j=0; j<columnNames.length; j++) {
             if(j > 0) {
                buf.append(" AND ");
             }
-            buf.append(identifier).append(".").append(columnNames[i]);
+            buf.append(identifier).append(".").append(columnNames[j]);
             buf.append(" IS NULL");
+         }
+         if(iter.hasNext()) {
+            buf.append(" AND ");
          }
       }
 
@@ -747,7 +765,11 @@ public class SQLTarget implements DeepCloneable {
    public String toSQL() {
       if(sql == null) {
          SQLGenerator sqlGen = new SQLGenerator(idManager);
-         sql = sqlGen.getSQL(isSelectDistinct, selectPath, whereClause);
+         sql = sqlGen.getSQL(
+               isSelectDistinct,
+               selectPath,
+               whereClause,
+               readAhead);
       }
       return sql;
    }
