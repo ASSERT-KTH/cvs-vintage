@@ -162,6 +162,7 @@ public class CharsetManager implements ActionListener {
 		// default should be 0
 		// -> charsets[0] == "auto"
 		if ( name == null ) return -1;
+		if( name.equals("auto")) return defaultId;
 		int charsetId = 0;
 		String charsetCanonicalName = Charset.forName( name ).name();
 		//System.out.println( name + " -> " + charsetCanonicalName);
