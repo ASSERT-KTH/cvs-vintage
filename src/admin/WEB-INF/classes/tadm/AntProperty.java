@@ -40,6 +40,10 @@ public class AntProperty extends TagSupport {
 		getServletContext();
 	    ServletContext targetCtx=(webapp==null) ? thisCtx:
 		thisCtx.getContext( webapp );
+	    ServletContext rootCtx= thisCtx.getContext("/");
+	    if( webapp!=null && !"/".equals( webapp) &&
+		! "".equals(webapp ) && rootCtx == targetCtx )
+		throw new JspException( "Can't find context " + webapp );
 	    value=targetCtx.getRealPath(location);
 	}
 
