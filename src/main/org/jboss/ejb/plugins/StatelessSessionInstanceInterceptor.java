@@ -13,16 +13,13 @@ import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionContainer;
 
-import org.jboss.security.SecurityAssociation;
-
-
 /**
  * This container acquires the given instance. This must be used after
  * the EnvironmentInterceptor, since acquiring instances requires a proper
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -63,7 +60,7 @@ public class StatelessSessionInstanceInterceptor
       EnterpriseContext ctx = container.getInstancePool().get();
 
       // Set the current security information
-      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+      ctx.setPrincipal(mi.getPrincipal());
 
       // Use this context
       mi.setEnterpriseContext(ctx);

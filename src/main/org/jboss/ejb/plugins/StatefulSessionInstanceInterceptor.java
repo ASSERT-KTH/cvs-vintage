@@ -37,7 +37,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -120,7 +120,7 @@ public class StatefulSessionInstanceInterceptor
       ctx.lock();
       
       // Set the current security information
-      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+      ctx.setPrincipal(mi.getPrincipal());
       
       try
       {
