@@ -1,0 +1,70 @@
+## USER SEARCH
+<form action="$link.setPage("UserList.vm")" method="post">
+<input type="hidden" name="action" value="AssignIssue" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="AdvancedQuery.vm" />
+
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+
+<h3>Users</h3>
+
+<div class="functnbar">
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+</div>
+
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>Filter string</th>
+   <td><input type="text" name="searchString" />&nbsp;
+     <select name="searchField" >
+      <option value="First Name">First Name</option>
+      <option value="Last Name">Last Name</option>
+      <option value="Email">Email</option>
+     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="filter" /></td>
+  </tr>
+</table>
+</div>
+
+
+#if ($searchString && $searchString.length() > 0)
+   #set ($searchResults = $scarabR.UserSearchResults) 
+#else
+   #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+#end
+   
+#if ( $searchResults.isEmpty() && $searchString)
+  <p class="alert">No users match your criteria. Displaying full user list.</p>
+  #set ($searchResults = $module.getUsers("Issue | Enter"))
+#end
+
+<div class="axial">
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>
+	<th nowrap="nowrap">&#160;</th>
+	<th>Name</th>
+	<th>Email</th>
+	</tr>
+        ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+		
+       #foreach ($user in $searchResults)
+		<tr class="a">
+		<td><input type="checkbox" name="user_list" value="$user.UserId" /></td>
+		<td><strong>$user.FirstName $user.LastName</strong></td>
+		<td><a href="mailTo:$user.Email">$user.UserName</a></td>
+		</tr>
+       #end
+   </table>  
+</div>
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doGotoothertemplate" value="Add selected to assignee list" />
+</div>
+
+<div class="functnbar2">
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+</div>
+		
+$intake.declareGroups()
+</form>
+
+
