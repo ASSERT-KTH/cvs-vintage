@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.2 2004/08/12 20:16:33 mvw Exp $
+// $Id: CommentEdge.java,v 1.3 2004/12/21 22:30:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,16 @@
 
 package org.argouml.uml.diagram.static_structure.ui;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.UUIDManager;
 
 
 /**
  * An object tagged as being the owner of a FigEdgeNote. Has knowledge
- * about the source and destination of the FigEdgeNote.
+ * about the source and destination of the FigEdgeNote. <p>
  * 
+ * The source and destination are ModelElements. 
+ * At least one of them is a Comment - but they may be both Comments.
  *
  * @since Jul 17, 2004
  * @author jaap.branderhorst@xs4all.nl
@@ -86,5 +89,17 @@ public class CommentEdge {
      */
     public void setSource(Object s) {
         source = s;
+    }
+    
+    /**
+     * Commit suicide. Adapt the UML model.
+     */
+    public void delete() {
+        if (ModelFacade.isAComment(source)) {
+            ModelFacade.removeAnnotatedElement(source, dest);
+        } else {
+            // save to presume the destination is the comment
+            ModelFacade.removeAnnotatedElement(dest, source);
+        }
     }
 }

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.226 2004/12/21 19:32:54 mvw Exp $
+// $Id: ModelFacade.java,v 1.227 2004/12/21 22:30:41 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5049,6 +5049,20 @@ public class ModelFacade {
 	illegalArgument(handle, argument);
     }
 
+    /**
+     * Remove the given modelelement from a given comment
+     * @param handle MComment
+     * @param me MModelElement
+     */
+    public static void removeAnnotatedElement(Object handle, Object me) {
+        if (handle instanceof MComment && me instanceof MModelElement) {
+            ((MComment) handle).removeAnnotatedElement((MModelElement) me);
+            return;
+        }
+        illegalArgument(handle, me);
+    }
+
+    
     /**
      * This method removes a classifier from a classifier role.
      *
