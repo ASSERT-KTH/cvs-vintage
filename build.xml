@@ -106,6 +106,7 @@
     <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
      dest="${tomcat.home}/etc/web.dtd"/>
 
+    <copyfile src="src/etc/tomcat.conf" dest="${tomcat.home}/etc/tomcat.conf"/>
     <copyfile src="src/etc/license.txt" dest="${tomcat.home}/LICENSE"/>
     <copyfile src="src/etc/readme" dest="${tomcat.home}/README"/>
     <copyfile src="src/etc/faq" dest="${tomcat.home}/FAQ"/>
