@@ -296,9 +296,10 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	//   throw new RuntimeException("ASSERT: ? in requestURI");
 
         // If path is unsafe, return forbidden
-        if( safe && !isSafeURI(pathMB) )
+        if( safe && !isSafeURI(pathMB) ){
+            req.setAttribute("javax.servlet.error.message","Unsafe URL");
             return 403;
-	
+	}
 	if( normalize &&
 	    ( pathMB.indexOf("//") >= 0 ||
 	      pathMB.indexOf("/." ) >=0

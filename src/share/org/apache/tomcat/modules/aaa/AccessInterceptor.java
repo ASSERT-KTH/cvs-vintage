@@ -258,10 +258,10 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	int ctxPathLen=ctxPath.length();
 	
 	// quick test
-	if( reqURIMB.startsWithIgnoreCase( "/META-INF", ctxPathLen) ) {
-	    return 403;
-	}
-	if( reqURIMB.startsWithIgnoreCase( "/WEB-INF", ctxPathLen) ) {
+	if( reqURIMB.startsWithIgnoreCase( "/META-INF", ctxPathLen) ||
+                  reqURIMB.startsWithIgnoreCase( "/WEB-INF", ctxPathLen) ) {
+            req.setAttribute("javax.servlet.error.message",
+                             "Forbidden directory");
 	    return 403;
 	}
 
