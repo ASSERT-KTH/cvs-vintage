@@ -102,13 +102,13 @@ public class SecurityIndicator extends JPanel {
 						MailResourceLoader.getString(
 							"menu",
 							"mainframe",
-							"security_encrypt_success"));
+							"security_decrypt_success"));
 					text.setText(
 						transformToHTML(
 							MailResourceLoader.getString(
 								"menu",
 								"mainframe",
-								"security_encrypt_success"),
+								"security_decrypt_success"),
 							message));
 					break;
 				}
