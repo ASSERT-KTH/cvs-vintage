@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateConcurentCheckBox.java,v 1.3 2003/06/29 23:50:12 linus Exp $
+// $Id: UMLCompositeStateConcurentCheckBox.java,v 1.4 2003/09/06 01:43:56 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,9 @@
 // $header$
 package org.argouml.uml.ui.behavior.state_machines;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLCheckBox2;
-
-import ru.novosoft.uml.behavior.state_machines.MCompositeState;
 
 /**
  * @since Dec 14, 2002
@@ -53,7 +52,7 @@ public class UMLCompositeStateConcurentCheckBox extends UMLCheckBox2 {
      * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
      */
     public void buildModel() {
-        setSelected(((MCompositeState) getTarget()).isConcurent());
+        setSelected(ModelFacade.isConcurent(getTarget()));
     }
 
 }

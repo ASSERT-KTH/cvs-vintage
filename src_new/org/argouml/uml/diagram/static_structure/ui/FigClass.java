@@ -1,7 +1,4 @@
-
-
-
-// $Id: FigClass.java,v 1.71 2003/09/04 20:18:11 thierrylach Exp $
+// $Id: FigClass.java,v 1.72 2003/09/06 01:43:57 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +26,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.71 2003/09/04 20:18:11 thierrylach Exp $
+// $Id: FigClass.java,v 1.72 2003/09/06 01:43:57 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -1163,7 +1160,7 @@ public class FigClass extends FigNodeModelElement {
                 // italics, if abstract
                 //oper.setItalic(((MOperation)bf).isAbstract()); //
                 //does not properly work (GEF bug?)
-                if (((MOperation) bf).isAbstract())
+                if (ModelFacade.isAbstract(bf))
                     oper.setFont(ITALIC_LABEL_FONT);
                 else
                     oper.setFont(LABEL_FONT);
