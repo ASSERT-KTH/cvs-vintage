@@ -16,12 +16,12 @@
 package org.columba.mail.gui.frame;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.frame.FrameView;
 import org.columba.core.gui.frame.MultiViewFrameModel;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.gui.util.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;

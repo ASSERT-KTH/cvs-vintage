@@ -13,10 +13,14 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -25,7 +29,9 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MarkAsReadAction extends FrameAction {
+public class MarkAsReadAction
+	extends FrameAction
+	implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -53,6 +59,9 @@ public class MarkAsReadAction extends FrameAction {
 			ImageLoader.getImageIcon("mail-read.png"),
 			'R',
 			KeyStroke.getKeyStroke("M"));
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 
 	}
 
@@ -92,7 +101,9 @@ public class MarkAsReadAction extends FrameAction {
 			ImageLoader.getImageIcon("mail-read.png"),
 			'R',
 			KeyStroke.getKeyStroke("M"));
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -100,7 +111,7 @@ public class MarkAsReadAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.table");				
+			((MailFrameController) getFrameController()).getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);
@@ -108,5 +119,15 @@ public class MarkAsReadAction extends FrameAction {
 		MainInterface.processor.addOp(c);
 
 	}
+	/* (non-Javadoc)
+			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+			 */
+	public void selectionChanged(SelectionChangedEvent e) {
 
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

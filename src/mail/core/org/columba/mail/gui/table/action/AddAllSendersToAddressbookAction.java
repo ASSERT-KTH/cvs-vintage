@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.util.SelectionChangedEvent;
-import org.columba.core.gui.util.SelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.AddAllSendersToAddressbookCommand;
@@ -57,7 +57,7 @@ public class AddAllSendersToAddressbookAction
 			null);
 
 		
-		
+		setEnabled(false);
 		((MailFrameController)frameController).registerTableSelectionListener(this);
 
 	}

@@ -13,6 +13,10 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -21,7 +25,9 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PrevMessageAction extends FrameAction {
+public class PrevMessageAction
+	extends FrameAction
+	implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -33,8 +39,7 @@ public class PrevMessageAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public PrevMessageAction(
-		FrameController frameController) {
+	public PrevMessageAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -50,7 +55,9 @@ public class PrevMessageAction extends FrameAction {
 			null,
 			'M',
 			KeyStroke.getKeyStroke("B"));
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/**
@@ -89,7 +96,9 @@ public class PrevMessageAction extends FrameAction {
 			null,
 			'M',
 			KeyStroke.getKeyStroke("B"));
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -99,5 +108,15 @@ public class PrevMessageAction extends FrameAction {
 		// TODO Auto-generated method stub
 		super.actionPerformed(evt);
 	}
+	/* (non-Javadoc)
+			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+			 */
+	public void selectionChanged(SelectionChangedEvent e) {
 
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

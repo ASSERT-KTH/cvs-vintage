@@ -13,10 +13,14 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ForwardCommand;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -25,7 +29,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ForwardAction extends FrameAction {
+public class ForwardAction extends FrameAction implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -37,8 +41,7 @@ public class ForwardAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ForwardAction(
-		FrameController frameController) {
+	public ForwardAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -54,7 +57,9 @@ public class ForwardAction extends FrameAction {
 			ImageLoader.getImageIcon("forward.png"),
 			'F',
 			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -62,10 +67,18 @@ public class ForwardAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-				(FolderCommandReference[]) getFrameController()
-					.getSelectionManager()
-					.getSelection("mail.table");
-			MainInterface.processor.addOp(new ForwardCommand(r));
+			((MailFrameController) getFrameController()).getTableSelection();
+		MainInterface.processor.addOp(new ForwardCommand(r));
 	}
+	/* (non-Javadoc)
+			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+			 */
+	public void selectionChanged(SelectionChangedEvent e) {
 
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

@@ -14,10 +14,14 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyCommand;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -26,7 +30,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ReplyAction extends FrameAction {
+public class ReplyAction extends FrameAction implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -54,6 +58,10 @@ public class ReplyAction extends FrameAction {
 			ImageLoader.getImageIcon("reply.png"),
 			'R',
 			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 
 	}
 
@@ -94,6 +102,9 @@ public class ReplyAction extends FrameAction {
 			'R',
 			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -102,10 +113,21 @@ public class ReplyAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) getFrameController()
-				.getSelectionManager()
-				.getSelection("mail.table");
+			((MailFrameController) getFrameController()).getTableSelection();
 		MainInterface.processor.addOp(new ReplyCommand(r));
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		TableSelectionChangedEvent tableEvent = (TableSelectionChangedEvent) e;
+
+		if (tableEvent.getUids().length == 0)
+			setEnabled(false);
+		else
+			setEnabled(true);
 
 	}
 

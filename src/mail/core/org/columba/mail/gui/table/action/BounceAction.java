@@ -14,6 +14,10 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -22,7 +26,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BounceAction extends FrameAction {
+public class BounceAction extends FrameAction implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -51,6 +55,9 @@ public class BounceAction extends FrameAction {
 			'B',
 		// we must see if the Key not alrady used
 		KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 
 	}
 
@@ -91,7 +98,9 @@ public class BounceAction extends FrameAction {
 			'B',
 		// we must see if the Key not alrady used
 		KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -100,6 +109,18 @@ public class BounceAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
 		super.actionPerformed(evt);
+	}
+
+	/* (non-Javadoc)
+		 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+		 */
+	public void selectionChanged(SelectionChangedEvent e) {
+
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
 	}
 
 }

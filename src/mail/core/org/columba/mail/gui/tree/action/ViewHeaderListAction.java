@@ -18,8 +18,8 @@ package org.columba.mail.gui.tree.action;
 
 import org.columba.core.action.InternAction;
 import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.util.SelectionChangedEvent;
-import org.columba.core.gui.util.SelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;

@@ -23,12 +23,18 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-public class ViewMessageSourceAction extends FrameAction {
+public class ViewMessageSourceAction
+	extends FrameAction
+	implements SelectionListener {
 
 	public ViewMessageSourceAction(FrameController controller) {
 		super(
@@ -47,6 +53,9 @@ public class ViewMessageSourceAction extends FrameAction {
 			null,
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -54,14 +63,22 @@ public class ViewMessageSourceAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) getFrameController()
-				.getSelectionManager()
-				.getSelection("mail.table");
+			((MailFrameController) getFrameController()).getTableSelection();
 
 		ViewMessageSourceCommand c =
 			new ViewMessageSourceCommand(getFrameController(), r);
 
 		MainInterface.processor.addOp(c);
 	}
+	/* (non-Javadoc)
+			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+			 */
+	public void selectionChanged(SelectionChangedEvent e) {
 
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

@@ -13,10 +13,14 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyToAllCommand;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -25,7 +29,9 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ReplyToAllAction extends FrameAction {
+public class ReplyToAllAction
+	extends FrameAction
+	implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -37,8 +43,7 @@ public class ReplyToAllAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ReplyToAllAction(
-		FrameController frameController) {
+	public ReplyToAllAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -54,7 +59,9 @@ public class ReplyToAllAction extends FrameAction {
 			ImageLoader.getImageIcon("reply-to-all.png"),
 			'0',
 			null);
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/**
@@ -93,7 +100,9 @@ public class ReplyToAllAction extends FrameAction {
 			ImageLoader.getImageIcon("reply-to-all.png"),
 			'0',
 			null);
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTableSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -101,10 +110,18 @@ public class ReplyToAllAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-				(FolderCommandReference[]) getFrameController()
-					.getSelectionManager()
-					.getSelection("mail.table");
-			MainInterface.processor.addOp(new ReplyToAllCommand(r));
+			((MailFrameController) getFrameController()).getTableSelection();
+		MainInterface.processor.addOp(new ReplyToAllCommand(r));
 	}
+	/* (non-Javadoc)
+			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+			 */
+	public void selectionChanged(SelectionChangedEvent e) {
 
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

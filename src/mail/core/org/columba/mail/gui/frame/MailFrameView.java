@@ -24,11 +24,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.frame.FrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.HeaderView;
 import org.columba.mail.gui.menu.MailMenu;

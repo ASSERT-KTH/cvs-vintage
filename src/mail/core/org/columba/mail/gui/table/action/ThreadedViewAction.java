@@ -22,8 +22,8 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.util.SelectionChangedEvent;
-import org.columba.core.gui.util.SelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
