@@ -156,6 +156,7 @@ public class CarolDefaultValues {
     static {	
 	mapping.setProperty("rmi","jrmp");
 	mapping.setProperty("iiop","iiop");
+	mapping.setProperty("corbaloc","openorb");
 	mapping.setProperty("jrmi","jeremie");
 	mapping.setProperty("cmi","cmi");
 	mapping.setProperty("lmi","lmi");
@@ -168,7 +169,7 @@ public class CarolDefaultValues {
      */
     public static String getRMIProtocol(String url) {
 	if (url != null) {
-	    StringTokenizer st = new StringTokenizer(url, "://");
+	    StringTokenizer st = new StringTokenizer(url, ":");
 	    String pref = st.nextToken().trim();
 	    return mapping.getProperty(pref,pref);
 	} else {
