@@ -6,10 +6,7 @@
 </head>
 <body bgcolor="#FFFFFF">
 
-<h3>Below are some notes for doing development with Scarab.</h3>
-<p>$Id: development.html,v 1.3 2003/04/30 16:53:01 dlr Exp $</p>
-
-<hr noshade="true" size="1"/>
+<h2>Scarab hacking and You</h2>
 
 <p>Unless otherwise noted, we use the <a
 href="http://jakarta.apache.org/site/guidelines.html">general project
@@ -17,7 +14,6 @@ guidelines from the Jakarta project</a>, and the <a
 href="http://jakarta.apache.org/turbine/common/code-standards.html">coding
 standards from the Turbine project</a>.</p>
 
-<hr noshade="true" size="1"/>
 
 <h3>Change log messages</h3>
 
@@ -107,14 +103,8 @@ reload it. Currently, if you are logged in, it will probably log you back out
 when this happens. We are working to resolve the issue.
 </p>
 
-<hr noshade="true" size="1"/>
 
-<p>
-To use Jikes as your compiler, add the following to your ~/build.properties 
-file: build.compiler=jikes
-</p>
-
-<hr noshade="true" size="1"/>
+<h3>Code organization</h3>
 
 <p>
 "business logic should not be coded into actions".  In the best
@@ -123,15 +113,10 @@ on the available input data and pass them to the appropriate business
 classes to carry out the requested action.
 </p>
 
-<hr noshade="true" size="1"/>
-
 <p>
 Data which resides in the logged-in user's temp Hashtable should be
 keyed by a constant of the ScarabConstants interface, and have its
-name prefixed with "scarab.".
-</p>
-
-<p>For example:
+name prefixed with "scarab.".  For example:
 
 <pre>
 YourAction.java:
@@ -147,6 +132,20 @@ YourAction.java:
 List issueIdList = (List) user.getTemp(ScarabConstants.ISSUE_ID_LIST);
 </pre></p>
 
+
+<h3>Build options</h3>
+
+<p>To use Jikes as your compiler, add the following to your
+<code>~/scarab.build.properties</code> or
+<code>~/build.properties</code> file:
+
+<div><code>build.compiler=jikes</code></div>
+</p>
+
+
+<hr noshade="true" size="1"/>
+
+<p>$Id: development.html,v 1.4 2003/04/30 17:02:04 dlr Exp $</p>
 
 </body>
 </html>
