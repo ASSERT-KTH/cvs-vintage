@@ -302,8 +302,9 @@ try{
         {
             if (query == null)
             {
-                String queryId = getIntakeTool()
-                    .get("Query", IntakeTool.DEFAULT_KEY).get("Id").toString();
+                String queryId = data.getParameters()
+                    .getString("queryId"); 
+
                 if ( queryId == null || queryId.length() == 0 )
                 {
                     query = Query.getInstance();
