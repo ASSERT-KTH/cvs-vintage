@@ -119,7 +119,7 @@ public class MultiOrbInitialContext implements Context {
     
     public void bind(String name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -137,7 +137,7 @@ public class MultiOrbInitialContext implements Context {
     
     public void bind(Name name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -155,7 +155,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void rebind(String name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rebind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rebind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -173,7 +173,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void rebind(Name name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rebind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rebind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -191,7 +191,7 @@ public class MultiOrbInitialContext implements Context {
     
     public void unbind(String name) throws NamingException  {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.unbind(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.unbind(\""+name+"\")");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -209,7 +209,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void unbind(Name name) throws NamingException  {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.unbind(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.unbind(\""+name+"\")");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -227,7 +227,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void rename(String oldName, String newName) throws NamingException {	
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rename(\""+oldName+"\",\""+newName+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rename(\""+oldName+"\",\""+newName+"\")");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -245,7 +245,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void rename(Name oldName, Name newName) throws NamingException  {	
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rename(\""+oldName+"\",\""+newName+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.rename(\""+oldName+"\",\""+newName+"\")");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -317,7 +317,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void destroySubcontext(String name) throws NamingException  {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.destroySubcontext(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.destroySubcontext(\""+name+"\")");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -335,7 +335,7 @@ public class MultiOrbInitialContext implements Context {
 
     public void destroySubcontext(Name name) throws NamingException  {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.destroySubcontext(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.destroySubcontext(\""+name+"\")");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -354,7 +354,7 @@ public class MultiOrbInitialContext implements Context {
     
     public Context createSubcontext(String name) throws NamingException  {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.createSubcontext(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.createSubcontext(\""+name+"\")");
         }
 	try {
 	    return pcur.getCurrentInitialContext().createSubcontext(name);
@@ -367,7 +367,7 @@ public class MultiOrbInitialContext implements Context {
     
     public Context createSubcontext(Name name) throws NamingException  {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.createSubcontext(\""+name+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.createSubcontext(\""+name+"\")");
         }
 	try {
 	    return pcur.getCurrentInitialContext().createSubcontext(name);
@@ -456,7 +456,7 @@ public class MultiOrbInitialContext implements Context {
 	throws NamingException {
 	try {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.addToEnvironment(\""+propName+"\","+simpleClass(propVal.getClass().getName())+" object)/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.addToEnvironment(\""+propName+"\","+simpleClass(propVal.getClass().getName())+" object)");
         }
 	    return pcur.getCurrentInitialContext().addToEnvironment(propName, propVal);
 	} catch (Exception e) {
@@ -469,7 +469,7 @@ public class MultiOrbInitialContext implements Context {
     public Object removeFromEnvironment(String propName) 
 	throws NamingException {	
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.removeFromEnvironment(\""+propName+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.removeFromEnvironment(\""+propName+"\")");
         }
 	try {
 	    return pcur.getCurrentInitialContext().removeFromEnvironment(propName);
@@ -495,7 +495,7 @@ public class MultiOrbInitialContext implements Context {
     
     public void close() throws NamingException {	
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiOrbInitialContext.close()/rmi name="+pcur.getCurrentRMIName()+"\"");
+            TraceCarol.debugJndiCarol("MultiOrbInitialContext.close()");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
