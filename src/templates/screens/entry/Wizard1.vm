@@ -38,8 +38,8 @@ $page.setTitle("Enter New Issue")
         </tr> -->
 *#
 
-#foreach ( $attVal in $attrValues )
-
+#foreach ( $attKey in $attrValues.sequence() )
+  #set ( $attVal = $attrValues.get($attKey) )
   #if ($attVal.isDedupeAttribute())
     <tr>
         <td width="120" class="a">

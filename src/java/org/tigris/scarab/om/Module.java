@@ -115,7 +115,9 @@ public abstract class Module
         {
             Criteria dedupeCriteria = new Criteria(3)
                 .add(RModuleAttributePeer.DEDUPE, true)        
-                .add(RModuleAttributePeer.ACTIVE, true);        
+                .add(RModuleAttributePeer.ACTIVE, true)
+                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
+                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
             dedupeAttributes = getAttributes(dedupeCriteria);
         }
         
@@ -134,7 +136,9 @@ public abstract class Module
         {
             Criteria quicksearchCriteria = new Criteria(3)
                 .add(RModuleAttributePeer.QUICK_SEARCH, true)        
-                .add(RModuleAttributePeer.ACTIVE, true);        
+                .add(RModuleAttributePeer.ACTIVE, true)
+                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
+                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
             quicksearchAttributes = getAttributes(quicksearchCriteria);
         }
 
@@ -152,7 +156,9 @@ public abstract class Module
         if ( activeAttributes == null ) 
         {
             Criteria activeCriteria = new Criteria(2)
-                .add(RModuleAttributePeer.ACTIVE, true);        
+                .add(RModuleAttributePeer.ACTIVE, true)        
+                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
+                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
             activeAttributes = getAttributes(activeCriteria);
         }
 
