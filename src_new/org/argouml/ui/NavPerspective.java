@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.5 2002/06/26 15:18:39 jhraigniac Exp $
+// $Id: NavPerspective.java,v 1.6 2002/07/14 14:06:54 linus Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -55,6 +55,11 @@ import org.argouml.uml.diagram.state.ui.*;
 import org.argouml.uml.diagram.collaboration.ui.*;
 import org.argouml.uml.diagram.use_case.ui.*;
 import org.argouml.uml.diagram.sequence.ui.*;
+
+import org.argouml.uml.cognitive.*;
+import org.argouml.uml.cognitive.critics.*;
+
+
 
 /** This defines a NavPerspective as a kind of TreeModel that is made
  *  up of rules from the files whose names begin with "Go".  It also
@@ -332,7 +337,12 @@ implements Serializable, TreeModel, Cloneable {
     registerRule(new GoModelToUseCase());
     registerRule(new GoAssocToTarget());
     registerRule(new GoAssocToSource());
-    registerRule(new GoAssocToSource());
+    registerRule(new GoChildGenerator(new ChildGenDMElements(), 
+				      "ChildGenDMElements"));
+    registerRule(new GoChildGenerator(new ChildGenFind(), "ChildGenFind"));
+    registerRule(new GoChildGenerator(new ChildGenRelated(),
+				      "ChildGenRelated"));
+    registerRule(new GoChildGenerator(new ChildGenUML(), "ChildGenUML"));
     // needs-more-work: this list is not updated
   }
 
@@ -351,7 +361,7 @@ implements Serializable, TreeModel, Cloneable {
     return _registeredPerspectives;
   }
 
-  public static void registerRule(TreeModelPrereqs rule) {
+  public static void registerRule(TreeModel rule) {
     _rules.addElement(rule);
   }
 

@@ -24,7 +24,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.1 2002/05/03 19:17:04 jeremybennett Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.2 2002/07/14 14:06:55 linus Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -52,7 +52,7 @@ import org.argouml.uml.MMUtil;
  * @author  16 Apr 2002. Jeremy Bennett (mail@jeremybennett.com).
  */
 
-public class GoUseCaseToExtensionPoint implements TreeModelPrereqs {
+public class GoUseCaseToExtensionPoint implements TreeModel {
 
 
     /**
@@ -259,37 +259,4 @@ public class GoUseCaseToExtensionPoint implements TreeModelPrereqs {
 
     public void removeTreeModelListener(TreeModelListener l) { }
 
-
-    /**
-     * <p>Provide a list of the pre-requisite classes which will contain
-     *   objects we can handle. We only support use cases (which will generate
-     *   the extension point). These derive from model elements.</p>
-     *
-     * @return  A vector of classes that we can generate the nodes of interest
-     *          to us.
-     */
-
-    public Vector getPrereqs() {
-        Vector pros = new Vector();
-        pros.addElement(MModelElement.class);
-
-        return pros;
-    }
-
-
-    /**
-     * <p>Provide a list of the classes which we can have as children. We only
-     *   support extension points.</p>
-     *
-     * @return  A vector of classes that we can generate as children.
-     */
-
-    public Vector getProvidedTypes() {
-        Vector pros = new Vector();
-        pros.addElement(MExtensionPoint.class);
-
-        return pros;
-    }
-
 }  /* End of class GoUseCaseToExtensionPoint */
-
