@@ -40,12 +40,13 @@ import javax.management.AttributeChangeNotification;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.proxy.ejb.GenericProxy;
 
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
 import org.jboss.logging.Logger;
@@ -56,7 +57,7 @@ import org.jboss.system.Registry;
  * from RMI/JRMP into the JMX base.
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/13: Sacha Labourey</b>
@@ -229,8 +230,8 @@ public class JRMPInvoker
 
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
-      GenericProxy.setTransactionManager
-	 ((TransactionManager)ctx.lookup("java:/TransactionManager"));
+      // FIXME marcf: This should not be here
+      TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       Invoker delegateInvoker = createDelegateInvoker();
@@ -356,8 +357,8 @@ public class JRMPInvoker
          
          // This is bad it should at least be using a sub set of the Registry 
          // store a map of these names under a specific entry (lookup("ObjecNames")) and look on 
-         // that subset FIXME
-         ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getContainer());
+         // that subset FIXME it will speed up lookup times
+         ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getObjectName());
          
          // The cl on the thread should be set in another interceptor
          Object obj = server.invoke(mbean,
