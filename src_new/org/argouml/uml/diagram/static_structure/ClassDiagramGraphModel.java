@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.16 2002/10/10 13:25:43 kataka Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.17 2002/10/18 11:46:36 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -476,7 +476,18 @@ implements VetoableChangeListener  {
               return link;
           }
       }
-    
+      else if ((fromPort instanceof MModelElement) && 
+               (toPort instanceof MModelElement)) {
+          if (edgeClass == MPermission.class) {
+              MModelElement fromMMElem = (MModelElement) fromPort;
+              MModelElement toMMElem = (MModelElement) toPort;
+              MPermission per = 
+                  UmlFactory.getFactory().getCore().
+                  buildPermission(fromMMElem, toMMElem);
+              addEdge(per);
+              return per;
+          }
+      }
       throw new UnsupportedOperationException("should not enter here!");
   }
 
