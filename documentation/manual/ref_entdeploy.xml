@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entdeploy.xml,v 1.17 2004/01/04 14:46:52 mvw Exp $ -->
+<!-- $Id: ref_entdeploy.xml,v 1.18 2004/01/19 17:17:20 mvw Exp $ -->
 
 <!--
 
@@ -1392,7 +1392,7 @@ How do I create a generalisation between nodes? See issue ... -->
 
     <para>A key part of any component or deployment diagram is to show
       dependencies. For details see
-      <xref linkend="s1.ref.dependency_use_case"/>.</para>
+      <xref linkend="s1.ref.dependency_class"/>.</para>
 
     <caution><para>UML relies on stereotyping of dependencies on component and
       deployment diagrams to characterize the types of relationship. In the
