@@ -28,7 +28,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public class ApplicationMetaData extends MetaData
 {
@@ -125,23 +125,28 @@ public class ApplicationMetaData extends MetaData
         return enforceEjbRestrictions;
     }
 
-    public void importEjbJarXml (Element element) throws DeploymentException {
-       
-       // EJB version is determined by the doc type that
-       // was used to verify the ejb-jar.xml.
-       DocumentType docType = element.getOwnerDocument().getDoctype(); 
-       if(docType!=null && docType.getPublicId().startsWith(
-              "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0")) {
+   public void importEjbJarXml (Element element) throws DeploymentException
+   {   
+      // EJB version is determined by the doc type that
+      // was used to verify the ejb-jar.xml.
+      DocumentType docType = element.getOwnerDocument().getDoctype();
+      String publicID = null;
+      if( docType != null )
+         publicID = docType.getPublicId();
+      if( publicID != null && publicID.startsWith("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0") )
+      {         
          // 2.0 dtd
          ejbVersion = 2;
-       } else {
+      }
+      else
+      {
          // default is 1.x DTD
          ejbVersion = 1;
-       }
+      }
 
-       // find the beans		
+       // find the beans
        Element enterpriseBeans = getUniqueChild(element, "enterprise-beans");
-       
+
        // entities
        Iterator iterator = getChildrenByTagName(enterpriseBeans, "entity");
        while (iterator.hasNext()) {
