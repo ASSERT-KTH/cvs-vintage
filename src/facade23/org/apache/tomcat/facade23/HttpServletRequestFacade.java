@@ -233,7 +233,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public String getMethod() {
-        return request.getMethod();
+        return request.method().toString();
     }
 
     /** Adapter: Request doesn't deal with this servlet convention
@@ -272,7 +272,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getQueryString() {
-        return request.getQueryString();
+        return request.queryString().toString();
     }
 
     public String getRemoteUser() {
@@ -280,7 +280,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getScheme() {
-        return request.getScheme();
+        return request.scheme().toString();
     }
 
     public String getServerName() {
@@ -328,7 +328,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getRequestURI() {
-        return request.getRequestURI();
+        return request.requestURI().toString();
     }
 
     /** Facade: we delegate to the right object ( the context )

@@ -166,7 +166,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// set the context - no need to fire context parsing again
 	realRequest.setContext( context );
 
-	realRequest.setRequestURI( context.getPath() + path );
+	realRequest.requestURI().setString( context.getPath() + path );
 
 	// merge query string as specified in specs - before, it may affect
 	// the way the request is handled by special interceptors
@@ -185,7 +185,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 
 	// CM should have set the wrapper - call it
-	Handler wr=realRequest.getWrapper();
+	Handler wr=realRequest.getHandler();
 	if( wr!=null ) wr.service(realRequest, realResponse);
 
 	// close the response - output after this point will be discarded.
@@ -302,7 +302,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
-	Handler wr=subRequest.getWrapper();
+	Handler wr=subRequest.getHandler();
 	if( wr!=null ) wr.service(realRequest, realResponse);
 
 	// After request, we want to restore the include attributes - for

@@ -249,7 +249,8 @@ public class ServletWrapper extends Handler {
 
 	    try {
 		if( servlet!=null) {
-		    BaseInterceptor cI[]=contextM.getInterceptors(context.getContainer());
+		    BaseInterceptor cI[]=context.
+			getContainer().getInterceptors();
 		    for( int i=0; i< cI.length; i++ ) {
 			try {
 			    cI[i].preServletDestroy( context, this );
@@ -320,7 +321,7 @@ public class ServletWrapper extends Handler {
 	//}
 
 	// Call pre, doInit and post
-	BaseInterceptor cI[]=contextM.getInterceptors(context.getContainer());
+	BaseInterceptor cI[]=context.getContainer().getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].preServletInit( context, this );

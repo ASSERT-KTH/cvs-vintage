@@ -364,7 +364,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	}
 
 	// Does this URL match down to (and including) the context path?
-	if (!request.getScheme().equalsIgnoreCase(url.getProtocol()))
+	if (!request.scheme().equalsIgnoreCase(url.getProtocol()))
 	    return (false);
 	if (!request.getServerName().equalsIgnoreCase(url.getHost()))
 	    return (false);

@@ -84,6 +84,21 @@ import org.apache.tomcat.facade.ServletWrapper;
  */
 public class JspInterceptor extends BaseInterceptor {
     int jspInfoNOTE;
+    TomcatOptions options=new TomcatOptions();
+
+    static final String JIKES="org.apache.jasper.compiler.JikesJavaCompiler";
+    
+    public void setJavaCompiler( String type ) {
+	// shortcut
+	if( "jikes".equals( type ) )
+	    type=JIKES;
+	
+	try {
+	    options.jspCompilerPlugin=Class.forName(type);
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	}
+    }
 
     public void engineInit(ContextManager cm )
 	throws TomcatException
@@ -92,6 +107,7 @@ public class JspInterceptor extends BaseInterceptor {
 	jspInfoNOTE=cm.getNoteId( ContextManager.HANDLER_NOTE,
 				  "tomcat.jspInfoNote");
     }
+
     
     public void addContext(ContextManager cm, Context ctx)
 	throws TomcatException 
@@ -119,7 +135,7 @@ public class JspInterceptor extends BaseInterceptor {
     }
 
     public int requestMap( Request req ) {
-	Handler wrapper=(Handler)req.getWrapper();
+	Handler wrapper=(Handler)req.getHandler();
 
 	//	log( "Try: " + req );
 	
@@ -208,7 +224,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);
 	    return ;
 	}
-	req.setWrapper( wrapper );
+	req.setHandler( wrapper );
 	if( debug>0) log("Wrapper " + wrapper);
     }
 
@@ -225,7 +241,6 @@ public class JspInterceptor extends BaseInterceptor {
     	    dir=new File( jspInfo.outputDir);
 	    dir.mkdirs();
 	    JspMangler mangler= new JspMangler(jspInfo);
-	    TomcatOptions options=new TomcatOptions();
 	    JspEngineContext1 ctxt = new JspEngineContext1(req, mangler);
 	    ctxt.setOptions( options );
 	    

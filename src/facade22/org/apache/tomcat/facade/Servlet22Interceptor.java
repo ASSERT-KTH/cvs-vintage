@@ -105,7 +105,26 @@ public final class Servlet22Interceptor
 	ctx.setEngineHeader( engineHeader );
     }
 
-
+    /** Call servlet.destroy() for all servlets, as required
+	by the spec
+    */
+    public void contextShutdown( Context ctx )
+	throws TomcatException
+    {
+	// shut down and servlets
+	Enumeration enum = ctx.getServletNames();
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    Handler wrapper = ctx.getServletByName( key );
+	    ctx.removeServletByName( key );
+	    try {
+		wrapper.destroy();
+	    } catch(Exception ex ) {
+		ctx.log( "Error in destroy ", ex);
+	    }
+	}
+    }
+    
     public void addContext( ContextManager cm, Context ctx )
 	throws TomcatException
     {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/HttpServletResponseFacade.java,v 1.5 2000/09/25 17:17:52 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/09/25 17:17:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/HttpServletResponseFacade.java,v 1.6 2000/11/02 21:51:45 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/11/02 21:51:45 $
  *
  * ====================================================================
  *
@@ -365,7 +365,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	}
 
 	// Does this URL match down to (and including) the context path?
-	if (!request.getScheme().equalsIgnoreCase(url.getProtocol()))
+	if (!request.scheme().equalsIgnoreCase(url.getProtocol()))
 	    return (false);
 	if (!request.getServerName().equalsIgnoreCase(url.getHost()))
 	    return (false);
