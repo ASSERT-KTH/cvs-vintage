@@ -440,17 +440,17 @@ public class VirtualFolder extends Folder {
 			newReference[i].setMessage(r[0].getMessage());
 			
 			
-
+			i++;
 		}
 
 		if (r.length > 1)
-			newReference[i + 1] =
+			newReference[i] =
 				new FolderCommandReference((Folder) r[1].getFolder());
 		else
-			newReference[i + 1] = null;
+			newReference[i] = null;
 
 	
-		newReference[i + 2] = r[0];
+		newReference[i + 1] = r[0];
 		
 		
 		return newReference;
