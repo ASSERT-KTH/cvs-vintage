@@ -17,7 +17,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.SaveMessageAsCommand;
+import org.columba.mail.folder.command.SaveMessageBodyAsCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -28,7 +28,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SaveMessageAsAction
+public class SaveMessageBodyAsAction
 	extends FrameAction
 	implements SelectionListener {
 
@@ -42,7 +42,7 @@ public class SaveMessageAsAction
 	 * 		@param mnemonic
 	 * 		@param keyStroke
 	 */
-	public SaveMessageAsAction(AbstractFrameController frameController) {
+	public SaveMessageBodyAsAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -58,13 +58,20 @@ public class SaveMessageAsAction
 			ImageLoader.getImageIcon("stock_save.png"),
 			'0',
 			null);
-		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
-			this);
+		// *20030614, karlpeder* In main view only enabled when 
+		// message(s) selected
+		if (frameController instanceof AbstractMailFrameController) {
+			setEnabled(false);
+			((AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(this);
+		} else {
+			setEnabled(false); // disables it in other views
+		}
+
 	}
 
 	/**
-	 * Called for activation of the SaveMessageAsAction
+	 * Called for activation of the SaveMessageBodyAsAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
@@ -85,7 +92,7 @@ public class SaveMessageAsAction
 							.getSelectedCharset();
 
 		// add command for execution
-		SaveMessageAsCommand c = new SaveMessageAsCommand(r, charset);
+		SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
 		MainInterface.processor.addOp(c);
 
 	}

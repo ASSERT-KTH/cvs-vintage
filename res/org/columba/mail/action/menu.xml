@@ -16,7 +16,7 @@
 		<separator/>
 		<menuitem imenu="ManageServerMenu" />
 		<separator/>
-		<menuitem action="SaveMessageAs" />
+		<menuitem action="SaveMessageBodyAs" />
 	</menu>
 
 	<menu name="menu_edit" extensionpoint="bottom">

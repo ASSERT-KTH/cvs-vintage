@@ -24,6 +24,7 @@ import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
+import org.apache.oro.text.regex.Perl5Pattern;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
 
@@ -202,7 +203,7 @@ public class DocumentParser {
 		return sb.toString();
 
 	}
-
+	
 	/*	
 		 * 
 		 * substitute special characters like:
@@ -256,6 +257,125 @@ public class DocumentParser {
 
 	}
 
+	/**
+	 * Performs in large terms the reverse of
+	 * substituteSpecialCharacters (though br tags are not 
+	 * converted to newlines, this should be handled separately).
+	 * More preciesly it changes special entities like
+	 * amp, nbsp etc. to their real counter parts: &, space etc. 
+	 * 	 
+	 * @param	s	input string
+	 * @return	output with special entities with their real counter parts
+	 * @author  karlpeder, 20030615
+	 */
+	public String restoreSpecialCharacters(String s) {
+
+		StringBuffer sb = new StringBuffer(s.length());
+		StringReader sr = new StringReader(s);
+		BufferedReader br = new BufferedReader(sr);
+		String ss = null;
+
+		try {
+
+			while ((ss = br.readLine()) != null) {
+				int pos = 0;
+				while (pos < ss.length()) {
+					char c = ss.charAt(pos);
+					if (c == '&') {
+						if 		  (ss.substring(pos).startsWith("&lt;")) {
+							sb.append('<');
+							pos = pos + 4;
+						} else if (ss.substring(pos).startsWith("&gt;")) {
+							sb.append('>');
+							pos = pos + 4;
+						} else if (ss.substring(pos).startsWith("&amp;")) {
+							sb.append('&');
+							pos = pos + 5;
+						} else if (ss.substring(pos).startsWith("&quot;")) {
+							sb.append('"');
+							pos = pos + 6;
+						} else if (ss.substring(pos).startsWith(
+									"&nbsp;&nbsp;&nbsp;&nbsp;")) {
+							sb.append('\t');
+							pos = pos + 24;
+						} else if (ss.substring(pos).startsWith("&nbsp;")) {
+							sb.append(' ');
+							pos = pos + 6;
+						} else {
+							// unknown special entity - just keep it as-is
+							sb.append(c);
+							pos++;
+						}
+					} else {
+						sb.append(c);
+						pos++;
+					}
+				}
+				sb.append('\n');
+			}
+
+		} catch (Exception e) {
+			System.out.print("Parsing Exception: " + e.getMessage());
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Strips html tags. The method used is very simple:
+	 * Everything between tag-start (&lt) and tag-end (&gt) is removed.
+	 * Optionaly br tags are replaced by newline and ending p tags with
+	 * double newline.
+	 * 
+	 * @param	s				input string
+	 * @param	insertNewlines	if true, newlines are inserted for br and p tags
+	 * @return	output without html tags
+	 * @throws  Exception
+	 * @author	karlpeder, 20030615
+	 */
+	public String stripHTMLTags(String s, boolean insertNewlines) {
+
+		PatternMatcher matcher   = new Perl5Matcher();
+		PatternCompiler compiler = new Perl5Compiler();
+		Pattern pattern;
+		String pat;
+		
+		try {
+			if (insertNewlines) {
+				// replace <br> and </br> with newline
+				pat = "\\<[/]?br\\>";
+				pattern = compiler.compile(
+						pat,
+						Perl5Compiler.CASE_INSENSITIVE_MASK);
+				s = Util.substitute(matcher, pattern,
+						new Perl5Substitution("\n"), s, 
+						Util.SUBSTITUTE_ALL);
+				// replace </p> with double newline
+				pat = "\\</p\\>";
+				pattern = compiler.compile(
+						pat,
+						Perl5Compiler.CASE_INSENSITIVE_MASK);
+				s = Util.substitute(matcher, pattern,
+						new Perl5Substitution("\n\n"), s, 
+						Util.SUBSTITUTE_ALL);
+			}
+			
+			// strip tags
+			pat = "\\<(.|\\n)*?\\>";
+			pattern = compiler.compile(
+					pat,
+					Perl5Compiler.CASE_INSENSITIVE_MASK);
+			s = Util.substitute(matcher, pattern,
+					new Perl5Substitution(""), s, 
+					Util.SUBSTITUTE_ALL);
+
+		} catch (MalformedPatternException e) {
+			System.out.print("Parsing Exception: " + e.getMessage());
+		}
+
+		return s;
+	}
+	
 	/*
 	 * 
 	 * try to fix broken html-strings

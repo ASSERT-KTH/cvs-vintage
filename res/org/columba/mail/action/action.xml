@@ -26,7 +26,7 @@
  <!-- message menu -->
  <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
  <action name="OpenMessageWithMessageFrame" class="org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction"/>
- <action name="SaveMessageAs" class="org.columba.mail.gui.table.action.SaveMessageAsAction"/>
+ <action name="SaveMessageBodyAs" class="org.columba.mail.gui.table.action.SaveMessageBodyAsAction"/>
  <action name="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
  <action name="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>
  <action name="ReplyToAll" class="org.columba.mail.gui.table.action.ReplyToAllAction"/>
