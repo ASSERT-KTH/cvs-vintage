@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -287,10 +287,10 @@ public class JMSContainerInvoker
 
          String methodName;
          if (type == Topic.class) {
-            methodName = "newTopic";
+            methodName = "createTopic";
          }
          else if (type == Queue.class) {
-            methodName = "newQueue";
+            methodName = "createQueue";
          }
          else {
             // type was not a Topic or Queue, bad user
@@ -299,7 +299,7 @@ public class JMSContainerInvoker
          }
 
          // invoke the server to create the destination
-         server.invoke(new ObjectName("JMS", "service", "JMSServer"),
+         server.invoke(new ObjectName("JBossMQ", "service", "Server"),
                        methodName,
                        new Object[] { jndiSuffix },
                        new String[] { "java.lang.String" });

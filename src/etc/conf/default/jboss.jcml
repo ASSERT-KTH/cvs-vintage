@@ -164,13 +164,72 @@
   </mbean>
    -->
 
-  <!-- For Message Driven Beans -->
-  <mbean code="org.jbossmq.server.JBossMQService" name="DefaultDomain:service=JBossMQ" />
+  <!-- ==================================================================== -->
+  <!-- JBossMQ                                                              -->
+  <!-- ==================================================================== -->
+  <mbean code="org.jbossmq.server.JBossMQService" name="JBossMQ:service=Server"/>
+
+  <!-- The StateManager is used to keep JMS perisitent state data. -->
+  <!-- For example: what durable subscriptions are active. -->
+  <mbean code="org.jbossmq.server.StateManager" name="JBossMQ:service=StateManager">
+  	<attribute name="StateFile">jbossmq-state.xml</attribute>
+  </mbean>
+
+  <!-- The PersistenceManager is used to store messages to disk. -->
+  <mbean code="org.jbossmq.pm.file.PersistenceManager" name="JBossMQ:service=PersistenceManager">
+    <attribute name="DataDirectory">../../db/jbossmq/</attribute>
+  </mbean>
+
+  <!-- InvocationLayers are the different transport methods that can be used to access the server -->
+  <!-- The most stable transports are enabled by default -->
+  <mbean code="org.jbossmq.il.jvm.JVMServerILService" name="JBossMQ:service=InvocationLayer,type=JVM">
+    <attribute name="ConnectionFactoryJNDIRef">java:/ConnectionFactory</attribute>
+    <attribute name="XAConnectionFactoryJNDIRef">java:/XAConnectionFactory</attribute>
+  </mbean>
+  <mbean code="org.jbossmq.il.rmi.RMIServerILService" name="JBossMQ:service=InvocationLayer,type=RMI"> 
+    <attribute name="ConnectionFactoryJNDIRef">ConnectionFactory</attribute>
+    <attribute name="XAConnectionFactoryJNDIRef">XAConnectionFactory</attribute>
+  </mbean>
+
+  <!-- Uncomment the following section to enable the OIL and UIL Invocation Layers. -->
+  <!-- They provided better performance and features, but may not be as stable. -->
+  <!--
+  <mbean code="org.jbossmq.il.oil.OILServerILService" name="JBossMQ:service=InvocationLayer,type=OIL">
+    <attribute name="ConnectionFactoryJNDIRef">OILConnectionFactory</attribute>
+    <attribute name="XAConnectionFactoryJNDIRef">OILXAConnectionFactory</attribute>
+  </mbean>
+  <mbean code="org.jbossmq.il.uil.UILServerILService" name="JBossMQ:service=InvocationLayer,type=UIL">
+    <attribute name="ConnectionFactoryJNDIRef">UILConnectionFactory</attribute>
+    <attribute name="XAConnectionFactoryJNDIRef">UILXAConnectionFactory</attribute>
+  </mbean>
+  -->
+
+  <!-- The following three line create 3 topics named: testTopic, example, and bob -->
+  <mbean code="org.jbossmq.server.TopicManager" name="JBossMQ:service=Topic,name=testTopic"/>
+  <mbean code="org.jbossmq.server.TopicManager" name="JBossMQ:service=Topic,name=example"/>
+  <mbean code="org.jbossmq.server.TopicManager" name="JBossMQ:service=Topic,name=bob"/>
+
+  <!-- The following 9 line create 9 topics named: testQueue, controlQueue, A, B, -->
+  <!-- C, D, E, F, and ex --> 
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=testQueue"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=controlQueue"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=A"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=B"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=C"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=D"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=E"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=F"/>
+  <mbean code="org.jbossmq.server.QueueManager" name="JBossMQ:service=Queue,name=ex"/>
+
+
+  <!-- ==================================================================== -->
+  <!-- For Message Dirven Beans                                             -->
+  <!-- ==================================================================== -->
   <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=JBossMQProvider">
     <attribute name="ProviderName">DefaultJMSProvider</attribute>
     <attribute name="ProviderAdapterClass">org.jboss.jms.jndi.JBossMQProvider</attribute>
-    <attribute name="QueueFactoryRef">java:/INVMXAQueueConnectionFactory</attribute>
-    <attribute name="TopicFactoryRef">java:/INVMXATopicConnectionFactory</attribute>
+    <attribute name="QueueFactoryRef">java:/ConnectionFactory</attribute>
+    <attribute name="TopicFactoryRef">java:/ConnectionFactory</attribute>
   </mbean>
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader" name=":service=ServerSessionPoolMBean,name=StdJMSPool">
     <attribute name="PoolName">StdJMSPool</attribute>
