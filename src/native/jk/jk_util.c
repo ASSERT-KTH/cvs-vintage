@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.6 $                                               *
+ * Version:     $Revision: 1.7 $                                               *
  ***************************************************************************/
 
 
@@ -107,7 +107,9 @@ static int JK_METHOD log_to_file(jk_logger_t *l,
 	    /* [V] Flush the dam' thing! */
 	    fflush(p->logfile);
 #ifndef WIN32
+#ifndef FREEBSD
 	    fdatasync(fileno(p->logfile));
+#endif
 #endif
         }
 

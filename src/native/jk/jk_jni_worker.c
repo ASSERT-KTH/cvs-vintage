@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.7 $                                           *
+ * Version:     $Revision: 1.8 $                                           *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -1076,9 +1076,6 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p)
 {
     JNIEnv *rc = NULL;
 
-    /* It's needed only once per thread, but there is no
-       generic/good way to keep per/thread data. 
-    
 #ifdef LINUX
     linux_signal_hack();
 #endif    
