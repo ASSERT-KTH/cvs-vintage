@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.12 2004/07/20 15:19:02 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.13 2004/08/10 13:56:45 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -99,7 +99,7 @@ public class WSDLDefinitionFactory
          }
          catch (IOException e)
          {
-            throw new RuntimeException("Cannot access wsdl from: " + wsdlURL);
+            throw new RuntimeException("Cannot access wsdl: " + e.getMessage());
          }
       }
 
@@ -170,7 +170,7 @@ public class WSDLDefinitionFactory
          }
          catch (IOException e)
          {
-            throw new RuntimeException("Cannot access imported wsdl from: " + wsdlImport);
+            throw new RuntimeException("Cannot access imported wsdl: " + e.getMessage());
          }
       }
 
