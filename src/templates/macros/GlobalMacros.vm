@@ -581,10 +581,10 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
    #set ($searchResults = $scarabR.UserSearchResults) 
    #if ( $searchResults.isEmpty())
       <p class="alert">$l10n.NoUsersMatch</p>
-      #set ($searchResults = $mitList.PotentialAssignees)
+      #set ($searchResults = $scarabR.sortUsers($mitList.PotentialAssignees))
    #end
 #else
-      #set ($searchResults = $mitList.PotentialAssignees)
+      #set ($searchResults = $scarabR.sortUsers($mitList.PotentialAssignees))
 #end
 
 ## PAGINATION

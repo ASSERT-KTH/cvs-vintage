@@ -2270,10 +2270,10 @@ try{
             public int compare(Object o1, Object o2) 
             {
                 int i = 0;
-                if (sortColumn != null && sortColumn.equals("email"))
+                if ("username".equals(sortColumn))
                 {
-                    i =  polarity * ((ScarabUser)o1).getEmail()
-                         .compareTo(((ScarabUser)o2).getEmail());
+                    i =  polarity * ((ScarabUser)o1).getUserName()
+                         .compareTo(((ScarabUser)o2).getUserName());
                 }
                 else
                 {
