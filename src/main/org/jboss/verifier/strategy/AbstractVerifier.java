@@ -19,10 +19,11 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.9 2000/08/20 20:29:16 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.10 2000/09/12 01:51:48 mulder Exp $
  */
 
 // standard imports
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -49,26 +50,26 @@ import org.jboss.metadata.SessionMetaData;
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
 
 
     public boolean hasLegalRMIIIOPReturnType(Method method) {
-        
+
         // [TODO]
-        
-        
+
+
         return true;
     }
 
     public boolean hasLegalRMIIIOPArguments(Method method) {
 
-        
+
         // [TODO]
-        
-        
+
+
         return true;
 
 
@@ -124,8 +125,8 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return false;
     }
 
-    
-    
+
+
     /*
      * checks if a class's member (method, constructor or field) has a 'static'
      * modifier.
@@ -141,7 +142,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean isFinal(Member member) {
         return (Modifier.isFinal(member.getModifiers()));
     }
-    
+
     /*
      * checks if the given class is declared as final
      */
@@ -162,6 +163,21 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     public boolean isPublic(Class c) {
         return (Modifier.isPublic(c.getModifiers()));
+    }
+
+    /**
+     * Checks whether all the fields in the class are declared as public.
+     */
+    public static boolean isAllFieldsPublic(Class c) {
+        try {
+            Field list[] = c.getFields();
+            for(int i=0; i<list.length; i++)
+                if(!Modifier.isPublic(list[i].getModifiers()))
+                    return false;
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /*
@@ -199,7 +215,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean hasRemoteReturnType(BeanMetaData bean, Method m) {
         return (m.getReturnType().getName().equals(bean.getRemote()));
     }
-    
+
     /*
      * checks if a method has a void return type
      */
@@ -220,7 +236,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      public boolean hasEntityBeanInterface(Class c) {
          return hasInterface(c, ENTITY_BEAN_INTERFACE);
      }
-     
+
     /*
      * Finds java.ejb.EJBObject interface from the class
      */
@@ -284,14 +300,14 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * check if a class has one or more finder methods
      */
     public boolean hasFinderMethod(Class c) {
-        
+
         try {
             Method[] method = c.getMethods();
 
             for (int i = 0; i <  method.length; ++i) {
-                
+
                 String name = method[i].getName();
-                
+
                 if (name.startsWith("ejbFind"))
                     return true;
             }
@@ -299,10 +315,24 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         catch (SecurityException e) {
             System.err.println(e);
         }
-        
+
         return false;
     }
-    
+
+    /**
+     * Checks for at least one non-static field.
+     */
+    public static boolean hasANonStaticField(Class c) {
+        try {
+            Field list[] = c.getFields();
+            for(int i=0; i<list.length; i++)
+                if(!Modifier.isStatic(list[i].getModifiers()))
+                    return true;
+        } catch(Exception e) {
+        }
+        return false;
+    }
+
     /*
      * Searches for an instance of a public create method from the class
      */
@@ -329,7 +359,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     /*
      * Searches for an instance of a public ejbCreate method from the class
      */
-    public boolean hasEJBCreateMethod(Class c) {
+    public boolean hasEJBCreateMethod(Class c, boolean isSession) {
 
         try {
             Method[] method = c.getMethods();
@@ -341,7 +371,10 @@ public abstract class AbstractVerifier implements VerificationStrategy {
                 if (name.equals(EJB_CREATE_METHOD))
                     if (!isStatic(method[i])
                             && !isFinal(method[i])
-                            && hasVoidReturnType(method[i]))
+                            && ((isSession && hasVoidReturnType(method[i]))
+                                || (!isSession)
+                               )
+                       )
 
                         return true;
             }
@@ -386,14 +419,14 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * checks if the class has an ejbFindByPrimaryKey method
      */
     public boolean hasEJBFindByPrimaryKey(Class c) {
-        
+
         try {
             Method[] method = c.getMethods();
-            
+
             for (int i = 0; i < method.length; ++i) {
-                
+
                 String name = method[i].getName();
-                
+
                 if (name.equals(EJB_FIND_BY_PRIMARY_KEY))
                     return true;
             }
@@ -401,18 +434,18 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         catch (SecurityException e) {
             System.err.println(e);
         }
-        
+
         return false;
     }
-    
+
     /*
      * checks the return type of method matches the entity's primary key class
      */
     public boolean hasPrimaryKeyReturnType(EntityMetaData entity, Method m) {
         return (m.getReturnType().getName().equals(entity.getPrimaryKeyClass()));
     }
-    
-    
+
+
 
 
     /*
@@ -421,7 +454,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public Method getDefaultCreateMethod(Class c) {
 
         Method method = null;
-        
+
         try {
 
             method = c.getMethod(CREATE_METHOD, null);
@@ -431,7 +464,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             System.err.println(e);
         }
         catch (NoSuchMethodException ignored) {}
-        
+
         return method;
     }
 
@@ -454,37 +487,37 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * Returns the ejbFindByPrimaryKey method
      */
     public Method getEJBFindByPrimaryKey(Class c) {
-        
+
         try {
             Method[] method = c.getMethods();
-            
+
             for (int i = 0; i < method.length; ++i) {
-                
+
                 String name = method[i].getName();
-                
+
                 if (name.equals(EJB_FIND_BY_PRIMARY_KEY))
                     return method[i];
             }
         }
         catch (SecurityException e) {
             System.err.println(e);
-        }           
-        
+        }
+
         return null;
     }
-    
+
     /*
      * returns the ejbFind<METHOD> methods of a bean
      */
     public Iterator getFinderMethods(Class c) {
-        
+
         List finders = new LinkedList();
-        
+
         try {
             Method[] method = c.getMethods();
-            
-            for (int i = 0; i < method.length; ++i) { 
-        
+
+            for (int i = 0; i < method.length; ++i) {
+
                 if (method[i].getName().startsWith("ejbFind"))
                     finders.add(method[i]);
             }
@@ -492,11 +525,11 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         catch (SecurityException e) {
             System.err.println(e);
         }
-        
+
         return finders.iterator();
     }
-    
-    
+
+
     /*
      * Returns the ejbCreate(...) methods of a bean
      */
@@ -536,7 +569,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return null;
         }
     }
-    
+
 
     public boolean hasMoreThanOneCreateMethods(Class c) {
 
@@ -564,39 +597,39 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean hasMatchingMethodNames(Class a, Class b) {
 
         // [TODO]
-        
-        
+
+
         return true;
     }
 
     public boolean hasMatchingMethodArgs(Class a, Class b) {
 
         // [TODO]
-        
-        
+
+
         return true;
     }
 
     public boolean hasMatchingMethodExceptions(Class a, Class b) {
 
         // [TODO]
-        
-        
+
+
         return true;
     }
 
     public boolean hasMatchingEJBPostCreate(Class bean, Method ejbCreate) {
         try {
-            return (bean.getMethod(EJB_POST_CREATE, ejbCreate.getParameterTypes()) != null);        
+            return (bean.getMethod(EJB_POST_CREATE, ejbCreate.getParameterTypes()) != null);
         }
         catch (NoSuchMethodException e) {
             return false;
         }
     }
-    
-    
+
+
     public Method getMatchingEJBPostCreate(Class bean, Method ejbCreate) {
-        
+
         try {
             return bean.getMethod(EJB_POST_CREATE, ejbCreate.getParameterTypes());
         }
@@ -605,7 +638,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         }
     }
 
-    
+
 /*
  *************************************************************************
  *
@@ -622,7 +655,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     public void checkMessageBean(BeanMetaData bean) {}
 
-    
+
 /*
  *************************************************************************
  *
@@ -630,7 +663,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
  *
  *************************************************************************
  */
- 
+
     private boolean hasInterface(Class c, String name) {
         try {
             Class intClass = Class.forName(name);
@@ -648,7 +681,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
  *
  *************************************************************************
  */
- 
+
     /*
      * Ejb-jar DTD
      */
@@ -683,16 +716,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     private final static String ENTITY_BEAN_INTERFACE =
         "javax.ejb.EntityBean";
-        
+
     private final static String SERIALIZATION_INTERFACE =
         "java.io.Serializable";
 
     private final static String COLLECTION_INTERFACE  =
         "java.util.Collection";
-        
+
     private final static String ENUMERATION_INTERFACE =
         "java.util.Enumeration";
-        
+
     private final static String REMOTE_EXCEPTION      =
         "java.rmi.RemoteException";
 
@@ -709,13 +742,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     private final static String EJB_FIND_BY_PRIMARY_KEY =
         "ejbFindByPrimaryKey";
-        
+
     private final static String EJB_CREATE_METHOD     =
         "ejbCreate";
 
     private final static String EJB_POST_CREATE       =
         "ejbPostCreate";
-        
+
     private final static String CREATE_METHOD         =
         "create";
 
