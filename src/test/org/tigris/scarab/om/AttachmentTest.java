@@ -46,20 +46,19 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 
+import java.io.File;
+
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.om.IssueManager;
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttachmentManager;
 import org.apache.commons.fileupload.DefaultFileItem;    
-import org.apache.commons.fileupload.FileItem;    
+import org.apache.commons.fileupload.FileItem;
 
 
 /**
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.9 2003/01/06 16:57:45 jon Exp $
+ * @version $Id: AttachmentTest.java,v 1.10 2003/09/11 15:56:51 thierrylach Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
@@ -131,27 +130,31 @@ public class AttachmentTest extends BaseTestCase
     private void testGetRepositoryDirectory() throws Exception
     {
         System.out.println("\ntestGetRepositoryDirectory()");
-        assertEquals("../target/webapps/scarab/WEB-INF/attachments",
-                     Attachment.getRepositoryDirectory());
+		File control = new File("../target/webapps/scarab/WEB-INF/attachments");
+        File testPath = new File(Attachment.getRepositoryDirectory());
+        assertEquals(control.getPath(),
+                     testPath.getPath());
     }
 
     private void testGetRelativePath() throws Exception
     {
         System.out.println("\ngetRelativePath()");
-        String path = "mod" + issue.getModuleId().toString() 
+        File control = new File("mod" + issue.getModuleId().toString() 
                       + "/" + issue.getIdCount()/1000 + "/" 
                       + issue.getUniqueId() + "_" 
                       + fileAttachment.getQueryKey() 
-                      + "_" + fileAttachment.getFileName();
-        assertEquals(path, fileAttachment.getRelativePath());
+                      + "_" + fileAttachment.getFileName());
+        File testPath = new File(fileAttachment.getRelativePath());
+        assertEquals(control.getPath(), testPath.getPath());
     }
 
     private void testGetFullPath() throws Exception
     {
         System.out.println("\ngetFullPath()");
-        String path = fileAttachment.getFullPath();
-        assertEquals(fileAttachment.getRepositoryDirectory() 
-                     + "/" + fileAttachment.getRelativePath(), path);
+        File control = new File(fileAttachment.getFullPath());
+		File testPath = new File(fileAttachment.getRepositoryDirectory() 
+		    + "/" + fileAttachment.getRelativePath());
+        assertEquals(control.getPath(), testPath.getPath());
     }
 
     private void testSaveUrl() throws Exception
