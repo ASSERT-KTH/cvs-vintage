@@ -48,6 +48,8 @@ package org.tigris.scarab.screens;
 
 // Java Stuff 
 import java.util.Stack;
+import java.util.HashMap;
+import java.util.Enumeration;
 
 // Turbine Stuff 
 import org.apache.turbine.RunData;
@@ -72,7 +74,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.40 2002/01/18 22:26:12 jon Exp $
+ * @version $Id: Default.java,v 1.41 2002/01/19 01:07:51 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -95,12 +97,47 @@ public class Default extends TemplateSecureScreen
         {
             lastTarget = (String)cancelTargets.peek();
         }
+
+        // Don't save cancel target if it is an Error page,
+        // Or one of the entry wizard pages.
         if (!currentTemplate.equals(lastTarget) && 
-            !currentTemplate.equals("Error.vm"))
+            !currentTemplate.equals("Error.vm") &&
+            (!(currentTemplate.indexOf("entry") > -1)) )
         {
             cancelTargets.push(data.getTarget());
+            saveContext( data ); 
         }
         user.setTemp("cancelTargets", cancelTargets);
+    }
+
+    /**
+     * Saves context so it will be there when user cancels back.
+     */
+    public void saveContext( RunData data)
+        throws Exception 
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        String currentTemplate = data.getTarget();
+        HashMap contextMap = (HashMap)user.getTemp("contextMap");
+
+        if (contextMap == null) 
+        {
+            contextMap = new HashMap();
+        }
+
+        HashMap params = new HashMap();
+        // Save parameters that are id's.
+        Enumeration e = data.getParameters().keys();
+        while ( e.hasMoreElements() )
+        {
+            String key = (String)e.nextElement();
+            if (key.indexOf("id") > -1)
+            {
+               params.put(key, data.getParameters().get(key));
+               contextMap.put(currentTemplate, params); 
+            }
+        }
+        user.setTemp("contextMap", contextMap);
     }
 
     /**
