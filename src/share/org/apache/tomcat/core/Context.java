@@ -398,7 +398,9 @@ public class Context {
     public SessionManager getSessionManager() {
 	if( sessionManager==null ) {
 	    // default - will change when a better one exists
-	    sessionManager = org.apache.tomcat.session.ServerSessionManager.getManager();
+	    //	    sessionManager = org.apache.tomcat.session.ServerSessionManager.getManager();
+	    sessionManager =
+		new org.apache.tomcat.session.StandardSessionManager();
 	}
 	return sessionManager;
     }
