@@ -6,7 +6,7 @@
 # modules that Tomcat depends on.  Copy this file to "build.properties"
 # in the top-level source directory, and customize it as needed.
 #
-# $Id: build.properties.sample,v 1.4 2004/01/01 23:20:46 billbarker Exp $
+# $Id: build.properties.sample,v 1.5 2004/04/06 07:29:48 hgomez Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -48,7 +48,7 @@ commons-logging.jar=${commons-logging.lib}/commons-logging.jar
 jmx.home=../mx4j-1.1.1
 jmx.lib=${jmx.home}/lib
 jmx.jar=${jmx.lib}/mx4j-jmx.jar
-jmx-tools.jar=${jmx.lib}/mx4j-tools.jar
+jmxtools.jar=${jmx.lib}/mx4j-tools.jar
 
 # ----- Commons Modeler, version 1.1 or later -----
 commons-modeler.home=../commons-modeler-1.1
