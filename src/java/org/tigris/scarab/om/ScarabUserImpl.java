@@ -51,7 +51,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.turbine.RunData;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -71,7 +70,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.15 2001/08/28 02:55:56 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.16 2001/08/31 01:29:55 jmcnally Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -91,46 +90,6 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
     public ScarabUserImpl()
     {
         super();
-    }
-
-
-    /**
-        Attempt to populate the following form fields into the
-        superclass. If there is an error with any of the 
-        data that needs to be checked/present, throw an exception.
-
-        <pre>
-        firstname
-        lastname
-        email
-        password
-        password_confirm
-        </pre>
-    */
-    public void doPopulate(RunData data)
-        throws Exception
-    {
-        // form validation routines
-        data.getParameters().setProperties(this);
-
-        String password_confirm = data.getParameters().getString("password_confirm", null);
-        setUserName(data.getParameters().getString("Email"));
-
-        // FIXME: add better email address checking to catch stupid mistakes up front
-        // FIXME: add better form validation all around, make sure we don't have
-        //        bad data as well as the right length.
-        if (getFirstName() == null || getFirstName().length() == 0)
-            throw new Exception ("The first name you entered is empty!");
-        if (getLastName() == null || getLastName().length() == 0)
-            throw new Exception ("The last name you entered is empty!");
-        if (getUserName() == null || getUserName().length() == 0)
-            throw new Exception ("The email address you entered is empty!");
-        if (getPassword() == null || getPassword().length() == 0)
-            throw new Exception ("The password you entered is empty!");
-        if (password_confirm == null)
-            throw new Exception ("The password confirm you entered is empty!");
-        if (!getPassword().equals(password_confirm))
-            throw new Exception ("The password's you entered do not match!");
     }
     
     /**

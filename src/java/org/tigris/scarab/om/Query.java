@@ -1,7 +1,6 @@
 package org.tigris.scarab.om;
 
 import java.util.Vector;
-import org.apache.turbine.RunData;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;

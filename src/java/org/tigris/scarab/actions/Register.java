@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.10 2001/08/09 02:14:30 jon Exp $
+    @version $Id: Register.java,v 1.11 2001/08/31 01:29:55 jmcnally Exp $
 */
 public class Register extends TemplateAction
 {
@@ -71,7 +71,8 @@ public class Register extends TemplateAction
         This manages clicking the Register button which will end up sending
         the user to the RegisterConfirm screen.
     */
-    public void doRegister( RunData data, TemplateContext context ) throws Exception
+    public void doRegister( RunData data, TemplateContext context ) 
+        throws Exception
     {
         String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
         String nextTemplate = data.getParameters().getString(
@@ -82,12 +83,36 @@ public class Register extends TemplateAction
         try
         {
             // populate it with form data and do validation
-            su.doPopulate(data);
+            // FIXME: this should use intake 
+            data.getParameters().setProperties(su);
 
+            String password_confirm = data.getParameters()
+                .getString("password_confirm", null);
+            su.setUserName(data.getParameters().getString("Email"));
+            
+            // FIXME: add better email address checking to catch stupid 
+            // mistakes up front
+            // FIXME: add better form validation all around, make sure we 
+            // don't have bad data as well as the right length.
+            if (su.getFirstName() == null || su.getFirstName().length() == 0)
+                throw new Exception("The first name you entered is empty!");
+            if (su.getLastName() == null || su.getLastName().length() == 0)
+                throw new Exception("The last name you entered is empty!");
+            if (su.getUserName() == null || su.getUserName().length() == 0)
+                throw new Exception("The email address you entered is empty!");
+            if (su.getPassword() == null || su.getPassword().length() == 0)
+                throw new Exception("The password you entered is empty!");
+            if (password_confirm == null)
+                throw new Exception( 
+                    "The password confirm you entered is empty!");
+            if (!su.getPassword().equals(password_confirm))
+                throw new Exception("The password's you entered do not match!");
+            
             // check to see if the user already exists
             if(ScarabUserImplPeer.checkExists(su))
             {
-                throw new Exception ( "Sorry, a user with that loginid already exists!" );
+                throw new Exception(
+                    "Sorry, a user with that loginid already exists!" );
             }
 
             // stick the user object into the session so that it can

@@ -50,7 +50,6 @@ import java.util.List;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.RunData;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
@@ -59,11 +58,10 @@ import org.tigris.scarab.om.Issue;
     This is an interface which describes what a ScarabUser is...
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.34 2001/08/28 02:55:56 jon Exp $
+    @version $Id: ScarabUser.java,v 1.35 2001/08/31 01:29:55 jmcnally Exp $
 */
 public interface ScarabUser extends User
 {
-    public void doPopulate(RunData data) throws Exception;
     public void createNewUser() throws Exception;
     public List getModules() throws Exception;
     public List getModules(Role role) throws Exception;
