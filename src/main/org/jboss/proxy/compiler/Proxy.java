@@ -4,37 +4,53 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.proxy.compiler;
 
 import java.io.Serializable;
 
+import org.jboss.util.NestedRuntimeException;
+
 /**
  * A factory for creating proxy objects.
  *      
+ * @version <tt>$Revision: 1.2 $</tt>
  * @author Unknown
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Proxy
 {
    /**
-    * Create a new proxy instance.
+    * Create a new proxy instance.  
+    * 
+    * <p>Proxy instances will also implement {@link Serializable}.
+    *
+    * <p>Delegates the actual creation of the proxy to
+    *    {@link Proxies#newTarget}.
+    *
+    * @param loader       The class loader for the new proxy instance.
+    * @param interfaces   A list of classes which the proxy will implement.
+    * @param h            The handler for method invocations.
+    * @return             A new proxy instance.
+    *
+    * @throws RuntimeException    Failed to create new proxy target.
     */
    public static Object newProxyInstance(final ClassLoader loader,
                                          final Class[] interfaces,
                                          final InvocationHandler h)
    {
-      Class[] interfaces2 = new Class[interfaces.length + 2];
+      // Make all proxy instances implement Serializable
+      Class[] interfaces2 = new Class[interfaces.length + 1];
+      System.arraycopy(interfaces, 0, interfaces2, 0, interfaces.length);
+      interfaces2[interfaces2.length - 1] = Serializable.class;
 
-      // why ???
-      interfaces2[interfaces2.length - 2] = Serializable.class;
-      interfaces2[interfaces2.length - 1] = Replaceable.class;
-      
-      for (int iter=0; iter<interfaces.length; iter++) {
-         interfaces2[iter] = interfaces[iter];
+      try {
+         // create a new proxy
+         return Proxies.newTarget(loader, h, interfaces2);
       }
-
-      // create a new proxy
-      return Proxies.newTarget(loader, h, interfaces2);
+      catch (Exception e) {
+         throw new NestedRuntimeException("Failed to create new proxy target", e);
+      }
    }
 }
 
