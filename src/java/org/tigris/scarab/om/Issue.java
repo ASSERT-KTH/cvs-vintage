@@ -507,20 +507,38 @@ public class Issue
      */
     public Vector getActivity() throws Exception  
     {
-        return getActivity(false);
+        return getActivity(false, 10);
+    }
+
+    /**
+     * Returns limited list of Activity objects associated with this Issue.
+     */
+    public Vector getActivity(int limit) throws Exception  
+    {
+        return getActivity(false, limit);
+    }
+
+    /**
+     * Returns limited list of Activity objects associated with this Issue.
+     * If fullHistory is false, it limits it to 10 history items 
+     * (this is the default)
+     */
+    public Vector getActivity(boolean fullHistory) throws Exception  
+    {
+        return getActivity(fullHistory, 10);
     }
 
     /**
      * Returns full list of Activity objects associated with this Issue.
      */
-    public Vector getActivity(boolean fullHistory) throws Exception  
+    private Vector getActivity(boolean fullHistory, int limit) throws Exception  
     {
         Criteria crit = new Criteria()
             .add(ActivityPeer.ISSUE_ID, getIssueId())
             .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
         if (!fullHistory)
         {
-            crit.setLimit(10);
+            crit.setLimit(limit);
         }
         return ActivityPeer.doSelect(crit);
     }
