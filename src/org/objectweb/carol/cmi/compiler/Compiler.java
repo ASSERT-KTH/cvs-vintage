@@ -50,6 +50,7 @@ public class Compiler {
     private ArrayList classes = new ArrayList();
     private String srcDir = null;
     private String destDir = ".";
+    private boolean invokeCmd = false;
     private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     public void configure(String[] args) throws CompilerException {
@@ -60,6 +61,8 @@ public class Compiler {
                 keep = true;
             } else if (arg.equals("-noc")) {
                 noc = true;
+            } else if (arg.equals("-invokecmd")) {
+                invokeCmd = true;
             } else if (arg.equals("-c")) {
                 if (i == args.length) {
                     throw new CompilerException("-c : missing argument");
@@ -385,5 +388,9 @@ public class Compiler {
 
     public String getClassPath() {
         return classPath;
+    }
+    
+    public boolean isInvokeCmd() {
+        return invokeCmd;
     }
 }
