@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: GenericArgoMenuBar.java,v 1.19 2003/03/17 11:46:19 lepekhine Exp $
+//$Id: GenericArgoMenuBar.java,v 1.20 2003/04/13 09:14:04 jhraigniac Exp $
 
 package org.argouml.ui.menubar;
 
@@ -283,7 +283,7 @@ public class GenericArgoMenuBar extends JMenuBar
         setMnemonic(saveProjectAsItem,"SaveAs",'A');
         _file.addSeparator();
 
-        //_import = new JMenu(menuLocalize("Import"));
+        //_import = new JMenu(menuLocalize("action.import"));
         //JMenuItem importProjectAsItem = _import.add(ActionImportFromSources.SINGLETON);
         //appendPluggableMenus(_import, PluggableMenu.KEY_FILE_IMPORT);
         _file.add(ActionImportFromSources.SINGLETON);
