@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.22 2003/06/18 19:36:17 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.23 2003/06/19 19:19:45 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -159,12 +159,6 @@ public class KeyEventWorkaround
 						^ (modifiers & InputEvent.ALT_MASK) != 0
 						|| (modifiers & InputEvent.META_MASK) != 0)
 						return null;
-					System.err.println(evt.getModifiers()
-						+ "::" + modifiers);
-					if((modifiers & InputEvent.SHIFT_MASK) != 0)
-					{
-						System.err.println("do i know");
-					}
 				}
 
 				// if the last key was a numeric keypad key
@@ -192,7 +186,6 @@ public class KeyEventWorkaround
 						return null;
 					}
 				}
-				System.err.println("too long");
 				modifiers = 0;
 			}
 

@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.6 2003/06/19 02:22:26 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.7 2003/06/19 19:19:45 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -70,7 +70,7 @@ public class PositionManager
 			{
 				bh = new PosBottomHalf(offset);
 				bh.red = true;
-				root.insert(bh);
+				//root.insert(bh);
 			}
 			else
 				bh.ref++;
