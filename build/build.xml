@@ -148,12 +148,12 @@
 
     <target name="prepare-turbine" depends="check-for-turbine,prepare" 
             if="turbine.cvs.available">
+
         <echo message="checking: ${src.lib.dir}/${turbine.latest.jar}"/>
         <uptodate property="turbine.jar.uptodate"
             targetfile="${src.lib.dir}/${turbine.latest.jar}">
             <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
         </uptodate>
-        <echo message="Turbine UpToDate: ${turbine.jar.uptodate}"/>
 
         <echo message="checking: ${src.lib.dir}/${torque.zip}"/>
         <uptodate property="torque.uptodate"
@@ -161,15 +161,15 @@
             <srcfiles dir="${turbine.dir}/conf/torque" includes="**/*"/>
             <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
         </uptodate>
-        <echo message="Torque UpToDate: ${torque.uptodate}"/>
     </target>
+
     <target name="skip-turbine" depends="check-for-turbine,prepare" 
             unless="turbine.cvs.available">
         <property name="turbine.jar.uptodate" value="true"/>
         <property name="torque.uptodate" value="true"/>
     </target>
 
-    <target name="build-turbine" depends="prepare-turbine,skip-turbine"
+    <target name="build-turbine" depends="skip-turbine"
             unless="turbine.jar.uptodate">
         <echo message="+------------------------------------------+"/>
         <echo message="|                                          |"/>
@@ -195,9 +195,10 @@
         <echo message="|           Rebuilding Torque              |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
-        <ant antfile="build-turbine.xml" 
-                dir="${turbine.dir}/build" target="torque">
+        <ant antfile="build-torque.xml" 
+                dir="${turbine.dir}/build" target="main">
             <property name="build.dir" value="../bin"/>
+            <property name="build.dest" value="../bin/classes"/>
         </ant>
         <copy file="${turbine.dir}/bin/torque.zip" todir="${src.lib.dir}"/>
     </target>
@@ -237,7 +238,7 @@
     <!-- ================================================================== -->
     <!-- Generate OM/Peer classes from Torque                               -->
     <!-- ================================================================== -->
-    <target name="generated-check" depends="schema-check">
+    <target name="generated-check" depends="sql">
         <echo message="checking: ${build.src.scarab}/torque/output/report.scarab.om.generation"/>
         <available property="gen.uptodate"
             file="${build.src.scarab}/torque/output/report.scarab.om.generation"/>
@@ -250,7 +251,7 @@
         <property name="gen.uptodate" value="${schema.uptodate}"/>
     </target>
 -->
-    <target name="om-peer" depends="generated-check,torque-init" 
+    <target name="om-peer" depends="generated-check" 
             unless="gen.uptodate">
 
         <echo message="+------------------------------------------+"/>
