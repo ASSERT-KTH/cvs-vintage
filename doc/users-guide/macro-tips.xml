@@ -5,7 +5,7 @@
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:        -->
 <!--                                                          -->
 <!-- This file covers the chapter "Macro tips and techniques" -->
-<!-- $Id: macro-tips.xml,v 1.13 2003/02/08 20:13:26 spestov Exp $
+<!-- $Id: macro-tips.xml,v 1.14 2003/02/09 05:16:56 spestov Exp $
  -->
 
 <chapter id="macro-tips"><title>Macro Tips and Techniques</title>
@@ -800,17 +800,6 @@ bottom</screen>
 
 <informalexample><programlisting>invoke(method, args) {}</programlisting>
 </informalexample>
-
-</sect2>
-
-<sect2 id="macro-tips-beanshell-commands"><title>BeanShell Commands</title>
-
-<para>
-  BeanShell comes with a large number of built-in scripted
-  <quote>commands</quote> that are useful in many circumstances.
-  Documentation for commands that are helpful when
-  writing macros can be found in <xref linkend="beanshell-commands"/>.
-</para>
 
 </sect2>
 

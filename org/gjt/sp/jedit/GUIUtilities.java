@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.55 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.56 2003/02/09 05:16:57 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -164,7 +164,11 @@ public class GUIUtilities
 
 	//{{{ loadMenu() method
 	/**
-	 * Creates a menu.
+	 * Creates a menu. The menu label is set from the
+	 * <code><i>name</i>.label</code> property. The menu contents is taken
+	 * from the <code><i>name</i></code> property, which is a whitespace
+	 * separated list of action names. An action name of <code>-</code>
+	 * inserts a separator in the menu.
 	 * @param view The view to load the menu for
 	 * @param name The menu name
 	 * @since jEdit 2.6pre2

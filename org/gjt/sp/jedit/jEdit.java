@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.103 2003/02/07 23:23:39 spestov Exp $
+ * @version $Id: jEdit.java,v 1.104 2003/02/09 05:16:57 spestov Exp $
  */
 public class jEdit
 {
@@ -449,8 +449,17 @@ public class jEdit
 
 	//{{{ getProperty() method
 	/**
-	 * Returns the property with the specified name, formatting it with
-	 * the <code>java.text.MessageFormat.format()</code> method.
+	 * Returns the property with the specified name.<p>
+	 *
+	 * The elements of the <code>args</code> array are substituted
+	 * into the value of the property in place of strings of the
+	 * form <code>{<i>n</i>}</code>, where <code><i>n</i></code> is an index
+	 * in the array.<p>
+	 *
+	 * You can find out more about this feature by reading the
+	 * documentation for the <code>format</code> method of the
+	 * <code>java.text.MessageFormat</code> class.
+	 *
 	 * @param name The property
 	 * @param args The positional parameters
 	 */
