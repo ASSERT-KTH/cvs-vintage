@@ -8,11 +8,11 @@ package test.jboss.jmx;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.sun.management.jmx.MBeanServerImpl;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
 import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
@@ -61,7 +61,7 @@ public class TestClient {
 				"=> hit any key to proceed"
 			);
 			// First create a MBeanServer and let it start
-			final MBeanServer lLocalServer = new MBeanServerImpl();
+			final MBeanServer lLocalServer = MBeanServerFactory.createMBeanServer();
 			// Then register the logger
 			lLocalServer.createMBean(
 				"org.jboss.logging.Logger",
