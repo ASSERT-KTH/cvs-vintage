@@ -6,6 +6,9 @@
 	-->
 
 <server>
+
+  <depends>JBOSS-SYSTEM:service=Naming</depends>
+
   <mbean code="org.jboss.jmx.server.JMXAdaptorService"
 	 name="JMX:name=Adaptor,type=RMI"/>
 

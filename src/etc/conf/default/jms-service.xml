@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server>
+
+  <depends>JBOSS-SYSTEM:service=Naming</depends>
+  <depends>JBossMQ:service=Server</depends>
+  <depends>JBOSS-SYSTEM:service=TransactionManager</depends>
+
+  <classpath archives="jbosscx.sar"/>
+
+  <!-- ==================================================================== -->
+  <!-- JMS Stuff                                                       -->
+  <!-- ==================================================================== -->
+
+  <!-- The JMS provider loader -->
+  <mbean code="org.jboss.jms.jndi.JMSProviderLoader"
+	 name=":service=JMSProviderLoader,name=JBossMQProvider">
+    <attribute name="ProviderName">DefaultJMSProvider</attribute>
+    <attribute name="ProviderAdapterClass">
+      org.jboss.jms.jndi.JBossMQProvider
+    </attribute>
+    <attribute name="QueueFactoryRef">java:/XAConnectionFactory</attribute>
+    <attribute name="TopicFactoryRef">java:/XAConnectionFactory</attribute>
+  </mbean>
+
+  <!-- The server session pool for Message Driven Beans -->
+  <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader"
+	 name=":service=ServerSessionPoolMBean,name=StdJMSPool">
+    <attribute name="PoolName">StdJMSPool</attribute>
+    <attribute name="PoolFactoryClass">
+      org.jboss.jms.asf.StdServerSessionPoolFactory
+    </attribute>
+  </mbean>
+
+  <!-- JMS XA Resource adapter, use this to get transacted JMS in beans -->
+  <mbean code="org.jboss.resource.ConnectionFactoryLoader"
+         name="JCA:service=ConnectionFactoryLoader,name=JmsXA">
+    <attribute name="JndiName">JmsXA</attribute>
+    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
+    <attribute name="ResourceAdapterName">JMS Adapter</attribute>
+    <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
+    <attribute name="ConnectionManagerProperties">
+      # Pool type - uncomment to force, otherwise it is the default
+      #PoolConfiguration=per-factory
+
+      # Connection pooling properties - see
+      # org.jboss.resource.connectionmanager.PoolParameters
+      MinSize=0
+      MaxSize=10
+      BlockingTimeoutMillis=5000
+      CleanupEnabled=false
+      IdleTimeoutEnabled=false
+      InvalidateOnError=false
+      TrackLastUsed=false
+      GCIntervalMillis=120000
+      GCMinIdleMillis=1200000
+      IdleTimeoutMillis=1800000
+      MaxIdleTimeoutPercent=1.0
+    </attribute>
+
+    <attribute name="PrincipalMappingClass">
+      org.jboss.resource.security.ManyToOnePrincipalMapping
+    </attribute>
+    <attribute name="PrincipalMappingProperties">
+    </attribute>
+  </mbean>
+
+</server>

@@ -9,9 +9,10 @@
 
 <server>
 
-
   <classpath archives="mail.jar"/>
-  
+
+  <depends>JBOSS-SYSTEM:service=Naming</depends>
+
   <!-- ==================================================================== -->
   <!-- Mail Connection Factory                                              -->
   <!-- ==================================================================== -->

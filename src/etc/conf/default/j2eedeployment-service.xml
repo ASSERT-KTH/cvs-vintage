@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server>
+
+  <depends>JBOSS-SYSTEM:service=Naming</depends>
+  <depends>:service=Jetty</depends>
+
+  <!-- ==================================================================== -->
+  <!-- J2EE deployment                                                      -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.ejb.ContainerFactory"
+	 name=":service=ContainerFactory">
+    <attribute name="VerifyDeployments">true</attribute>
+    <attribute name="ValidateDTDs">false</attribute>
+    <attribute name="MetricsEnabled">false</attribute>
+    <attribute name="VerifierVerbose">true</attribute>
+    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
+  </mbean>
+
+  <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
+  <mbean code="org.jboss.deployment.J2eeDeployer"
+	 name="J2EE:service=J2eeDeployer">
+    <attribute name="DeployerName">Default</attribute>
+    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
+    <attribute name="WarDeployerName">:service=Jetty</attribute>
+  </mbean>
+
+  <!-- 
+     | Uncomment this and disable previous J2eeDeployer 
+     | entry to enable an alternative "scoped" deployment
+     |   
+  <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer"
+         name="J2EE:service=J2eeDeployer">
+    <attribute name="DeployerName">Default</attribute>
+    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
+    <attribute name="WarDeployerName">:service=Jetty</attribute>
+  </mbean>
+  -->
+
+</server>

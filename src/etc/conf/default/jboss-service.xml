@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.9 2001/09/08 19:32:23 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.10 2001/09/11 02:48:05 dmaplesden Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -20,9 +20,7 @@
    |  the MBeans it depends on.
   -->
 
-
 <server>
-
 
 <!--
 
@@ -47,6 +45,7 @@
 	 hsql.jar, 
 	 hsql-plugin.jar,
 	 jaas.jar,
+	 javac.jar,
 	 JavaGroups.jar,
 	 javax.servlet.jar,
 	 javax-sasl.jar,
@@ -73,183 +72,7 @@
 	 tyrex.jar,
 	 tyrex-tm-plugin.jar,
 	 xalan.jar"/>
-  <!-- ==================================================================== -->
-  <!-- Class Loading                                                        -->
-  <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.web.WebService"
-	 name="JBOSS-SYSTEM:service=Webserver">
-    <attribute name="Port">8083</attribute>
-  </mbean>
-
-
-  <!-- ==================================================================== -->
-  <!-- JNDI                                                                 -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.naming.NamingService"
-	 name="JBOSS-SYSTEM:service=Naming">
-    <attribute name="Port">1099</attribute>
-  </mbean>
-  <mbean code="org.jboss.naming.JNDIView" 
-	 name="JBOSS-SYSTEM:service=JNDIView"/>
-
-
-  <!-- ==================================================================== -->
-  <!-- Transactions                                                         -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.tm.TransactionManagerService" 
-	 name="JBOSS-SYSTEM:service=TransactionManager">
-    <attribute name="TransactionTimeout">300</attribute>
-
-    <!-- Use this attribute if you need to use a specific Xid
-         implementation
-    <attribute name="XidClassName">oracle.jdbc.xa.OracleXid</attribute>
-    -->
-  </mbean>
-
-  <!-- 
-     | Uncomment to use Tyrex (tyrex.exolab.org) transaction manager plugin
-     | instead of the org.jboss.tm.TransactionManagerService and comment out
-     | the TransactionManagerService above.
-     |
-  <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService"
-         name="JBOSS-SYSTEM:service=TransactionManager">
-        <attribute name="ConfigFileName">../conf/default/domain.xml</attribute>
-  </mbean>
-  -->
-
-  <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
-	 name="JBOSS-SYSTEM:service=ClientUserTransaction">
-  </mbean>
-
-
-  <!-- ==================================================================== -->
-  <!-- Security                                                             -->
-  <!-- ==================================================================== -->
-
-  <!-- Uncomment to enable the sample SRPVerifierStore service
-  <mbean code="org.jboss.security.srp.SRPVerifierStoreService" 
-         name="Security:name=SRPVerifierStoreService">
-    <attribute name="JndiName">SRPDefaultVerifierSource</attribute>
-    <attribute name="StoreFile">SRPVerifierStore.ser</attribute>
-  </mbean>
-  -->
-
-  <!-- Uncomment to enable the SRP login service
-  <mbean code="org.jboss.security.srp.SRPService"
-         name="service:name=SRPService">
-    <attribute name="JndiName">SRPServerInterface</attribute>
-    <attribute name="VerifierSourceJndiName">SRPDefaultVerifierSource</attribute>
-    <attribute name="AuthenticationCacheJndiName">SRPAuthenticationCache</attribute>
-    <attribute name="ServerPort">10099</attribute>
-  </mbean>
-  -->
-
-  <!-- JAAS security manager and realm mapping -->
-  <mbean code="org.jboss.security.plugins.JaasSecurityManagerService"
-	 name="Security:name=JaasSecurityManager">
-    <attribute name="SecurityManagerClassName">
-      org.jboss.security.plugins.JaasSecurityManager
-    </attribute>
-  </mbean>
-
-  <!-- Uncomment to enable the XML implementation of the JAAS policy
-  <mbean code="org.jboss.security.plugins.SecurityPolicyService"
-         name="Security:name=SecurityPolicyService">
-    <attribute name="JndiName">DefaultSecurityPolicy</attribute>
-    <attribute name="PolicyFile">sample_policy.xml</attribute>
-  </mbean>
-  -->
-
-  <!-- ==================================================================== -->
-  <!-- JDBC - Initialize the databases                                      -->
-  <!-- to ConnectionFactoryLoader                                           -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.jdbc.HypersonicDatabase" 
-	 name="JBOSS-SYSTEM:service=Hypersonic">
-    <attribute name="Port">1476</attribute>
-    <attribute name="Silent">true</attribute>
-    <attribute name="Database">default</attribute>
-    <attribute name="Trace">false</attribute>
-  </mbean>
-
-
-
-
-  <!-- ==================================================================== -->
-  <!-- JBoss Server Management                                              -->
-  <!-- ==================================================================== -->
-
-  <!-- AS Temporary not available
-  <mbean code="org.jboss.management.ServerDataCollector"
-         name="Management:service=Collector">
-    <attribute name="RefreshSleep">5000</attribute>
-  </mbean>
-  -->
-
-
-  <!-- ==================================================================== -->
-  <!-- Web Container                                                        -->
-  <!-- ==================================================================== -->
-
-  <!-- Uncomment to add embedded tomcat service
-  <mbean code="org.jboss.tomcat.EmbeddedTomcatServiceSX"
-         name="JBOSS-SYSTEM:service=EmbeddedTomcat">
-  </mbean>
-  -->
-
-  <!-- 
-     | Uncomment to enable the Jetty service.
-     |
-     | Besure to check that the configuration values are valid for your
-     | environment.
-     |
-   -->
-  <mbean code="org.jboss.jetty.JettyService"
-	 name=":service=Jetty">
-    <attribute name="JettyHome">../</attribute>
-    <attribute name="Configuration">../conf/default/jetty.xml</attribute>
-    <attribute name="WebDefault">../conf/default/webdefault.xml</attribute>
-    <attribute name="UnpackWars">true</attribute>
-    <attribute name="PublishMBeans">true</attribute>
-  </mbean>
-
-
-  <!-- ==================================================================== -->
-  <!-- J2EE deployment                                                      -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.ejb.ContainerFactory"
-	 name=":service=ContainerFactory">
-    <attribute name="VerifyDeployments">true</attribute>
-    <attribute name="ValidateDTDs">false</attribute>
-    <attribute name="MetricsEnabled">false</attribute>
-    <attribute name="VerifierVerbose">true</attribute>
-    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
-  </mbean>
-
-  <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
-  <mbean code="org.jboss.deployment.J2eeDeployer"
-	 name="J2EE:service=J2eeDeployer">
-    <attribute name="DeployerName">Default</attribute>
-    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">:service=Jetty</attribute>
-  </mbean>
-
-  <!-- 
-     | Uncomment this and disable previous J2eeDeployer 
-     | entry to enable an alternative "scoped" deployment
-     |   
-  <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer"
-         name="J2EE:service=J2eeDeployer">
-    <attribute name="DeployerName">Default</attribute>
-    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
-  </mbean>
-  -->
   <!-- ==================================================================== -->
   <!-- Auto deployment                                                      -->
   <!-- ==================================================================== -->
@@ -257,6 +80,7 @@
   <mbean code="org.jboss.deployment.AutoDeployer" name="JBOSS-SYSTEM:service=AutoDeployer">
     <attribute name="Deployers">
       JBOSS-SYSTEM:service=ServiceDeployer;
+      JCA:service=RARDeployer;
       J2EE:service=J2eeDeployer
     </attribute>
     <attribute name="URLs">
@@ -267,82 +91,5 @@
       3000
     </attribute>
   </mbean>
-
-
-  <!-- ==================================================================== -->
-  <!-- JMX adaptors                                                         -->
-  <!-- ==================================================================== -->
-<!-- Moved to a JSR format, look for adaptors.jsr in deploy/lib
-
-  <mbean code="org.jboss.jmx.server.JMXAdaptorService"
-	 name="Adaptor:name=RMI"/>
-
-  <mbean code="org.jboss.jmx.server.RMIConnectorService" 
-	 name="Connector:name=RMI"/>
-
-  <mbean code="com.sun.jdmk.comm.HtmlAdaptorServer" name="Adaptor:name=html">
-    <attribute name="MaxActiveClientCount">10</attribute>
-    <attribute name="Parser" />
-    <attribute name="Port">8082</attribute>
-  </mbean>
--->
-
-  <!-- ==================================================================== -->
-  <!-- Mail Connection Factory                                              -->
-  <!-- ==================================================================== -->
-<!-- moved to a snippet format under deploy/lib
-  <mbean code="org.jboss.mail.MailService" name=":service=Mail">
-    <attribute name="JNDIName">Mail</attribute>
-    <attribute name="ConfigurationFile">mail.properties</attribute>
-    <attribute name="User">user_id</attribute>
-    <attribute name="Password">password</attribute>
-  </mbean>
-
--->
-  <!-- ==================================================================== -->
-  <!-- Monitoring and Management                                            -->
-  <!-- ==================================================================== -->
-
-  <!-- Uncomment to enable JMX monitoring of the bean cache
-  <mbean code="org.jboss.monitor.BeanCacheMonitor" 
-         name="Monitor:name=BeanCacheMonitor"/>
-  -->
-
-
-  <!-- ==================================================================== -->
-  <!-- Scheduler Service                                                    -->
-  <!-- ==================================================================== -->
-
-  <!-- Uncomment this to enable Scheduling
-  <mbean code="org.jboss.util.Scheduler" name=":service=Scheduler">
-    <constructor>
-      <arg type="java.lang.String" value=":server=Scheduler"/>
-      <arg type="java.lang.String" value="org.jboss.util.Scheduler$SchedulableExample"/>
-      <arg type="java.lang.String" value="Schedulabe Test,12345"/>
-      <arg type="java.lang.String" value="java.lang.String,int"/>
-      <arg type="long" value="0"/>
-      <arg type="long" value="10000"/>
-      <arg type="long" value="-1"/>
-    </constructor>
-  </mbean>
-  -->
-
-  <!-- Uncomment this and set up according to manual to add Castor JDO service
-  <mbean code="org.jboss.jdo.castor.CastorJDOImpl"
-         name="JBOSS-SYSTEM:service=CastorJDO,name=someName">
-    <attribute name="Configuration">
-      file:../conf/default/database.xml
-    </attribute>
-    <attribute name="JndiName">jdo/someName</attribute>
-    <attribute name="LockTimeout">0</attribute>
-    <attribute name="LoggingEnabled">false</attribute>
-    <attribute name="CommonClassPath">false</attribute>
-  </mbean>
-  -->
-
-
-  <!-- ==================================================================== -->
-  <!-- Add your custom MBeans here                                          -->
-  <!-- ==================================================================== -->
 
 </server>
