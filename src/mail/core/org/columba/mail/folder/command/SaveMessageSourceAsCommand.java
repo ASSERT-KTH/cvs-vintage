@@ -80,14 +80,11 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
             LOG.info("Saving UID=" + uid);
 
             //setup save dialog
-//			@TODO dont use deprecated method
-            String subject = (String) srcFolder.getMessageHeader(uid).get("Subject");
+            String subject = (String) srcFolder.getHeaderFields(uid, new String[] { "Subject" }).get("Subject");
             String defaultName = getValidFilename(subject, false);
 
             if (defaultName.length() == 0) {
-                //TODO: use org.columba.ristretto.message.Address
-                // to parse "From" headerfield and use getDisplayName()
-                // as defaultName
+            	defaultName = srcFolder.getHeaderList().get(uid).get("columba.from").toString();
             }
 
             fileChooser.setSelectedFile(new File(defaultName));

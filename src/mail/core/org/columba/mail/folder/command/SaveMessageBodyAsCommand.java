@@ -387,7 +387,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 // get charset from message
                 charset = Charset.forName(bodyPart.getHeader()
                                                   .getContentParameter("charset"));
-            } catch (UnsupportedCharsetException ex) {
+            } catch (Exception ex) {
                 // decode using default charset
                 charset = Charset.forName(System.getProperty("file.encoding"));
             }

@@ -471,11 +471,8 @@ public class PrintMessageCommand extends FolderCommand {
             try {
                 charset = Charset.forName(bodyPart.getHeader()
                                                   .getContentParameter("charset"));
-            } catch (UnsupportedCharsetException ex) {
+            } catch (Exception ex) {
                 // decode using default charset
-                LOG.warning("The charset " + ex.getCharsetName()
-                        + " is not supported. "
-                        + "System default encoding will be used.");
                 charset = Charset.forName(System.getProperty("file.encoding"));
             }
         }
