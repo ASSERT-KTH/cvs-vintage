@@ -1,6 +1,6 @@
 #! /bin/ksh
 #
-# $Id: runtest.sh,v 1.6 1999/12/15 00:30:23 costin Exp $
+# $Id: runtest.sh,v 1.7 1999/12/15 20:31:13 costin Exp $
 
 # Shell script to run test harness
 
@@ -51,7 +51,7 @@ echo
 
 #$JAVACMD org.apache.tomcat.shell.Startup "$@" &
 $TOMCAT_HOME/tomcat.sh start &
-sleep 15
+sleep 25
 $JAVACMD -Dtest.hostname=$host -Dtest.port=$port org.apache.tools.moo.Main -testfile $test -debug
 $TOMCAT_HOME/tomcat.sh stop
 #$JAVACMD org.apache.tomcat.shell.Shutdown "$@"
