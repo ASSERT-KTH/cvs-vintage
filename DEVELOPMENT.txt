@@ -1,0 +1,26 @@
+
+------------------------------------------------------------------------------
+| D E V E L O P E M E N T  N O T E S                                         |
+------------------------------------------------------------------------------
+
+            Below are some notes for doing development with Scarab.
+
+------------------------------------------------------------------------------
+
+Because Scarab uses a build->compile->run development framework, you should 
+remember to always edit only the files in the src directory and not the 
+target build directory.
+
+Once you have edited a file in the src directory, you need to make sure to 
+execute the build.sh script again. If you edit a .java source file, then you 
+should execute [./build.sh compile]. If you edit any other file, then you 
+only need to execute [./build.sh prepare].
+
+If, you make a change to a source file and you don't see that change 
+reflected in what you are doing, make sure to read the note above. :-)
+
+At any point, you should be able to build a fresh target tree. This means 
+that you should be able to kill Tomcat, remove the target directory and 
+re-execute the build.sh script.
+
+------------------------------------------------------------------------------
