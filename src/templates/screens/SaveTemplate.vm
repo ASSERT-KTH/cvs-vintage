@@ -10,7 +10,7 @@ $page.setTitle("Save/edit template")
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
 <input type="submit" value="Done" name="eventSubmit_doSubmit" />&#160;
-<input type="submit" value="Use template" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="Use template" name="eventSubmit_doUsetemplate" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
 <input type="submit" value="Reset" name="eventSubmit_doReset"  />
 </div>
