@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.2 2003/12/23 23:48:28 alexb Exp $
+// $Id: PerspectiveConfigurator.java,v 1.3 2004/01/04 19:43:51 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,13 +131,28 @@ public class PerspectiveConfigurator extends JDialog{
     private void loadData(){
         
         Vector perspectives = new Vector();
+        Vector perspectivesBackup = new Vector();
         Vector rulesLib = new Vector();
         
         perspectives.addAll(PerspectiveManager.getInstance().getPerspectives());
         rulesLib.addAll(PerspectiveManager.getInstance().getRules());
         
+        // must add an editable list of new ExplorerPerspective's
+        // to the list model so that the orginal ones are not changed
+        // in the case of a cancel action by the user.
         for(int i = 0;i<perspectives.size();i++){
-            _perspectiveListModel.addElement(perspectives.get(i));
+            
+            ExplorerPerspective perspective =  
+                (ExplorerPerspective)perspectives.get(i);
+            Object[] ruleArray = perspective.getRulesArray();
+            
+            ExplorerPerspective editablePerspective = 
+                new ExplorerPerspective(perspective.toString());
+            for(int r = 0;r<ruleArray.length;r++){
+                editablePerspective.addRule((PerspectiveRule)ruleArray[r]);
+            }
+            
+            _perspectiveListModel.addElement(editablePerspective);
         }
         for(int i = 0;i<rulesLib.size();i++){
             _ruleLibraryListModel.addElement(rulesLib.get(i));
