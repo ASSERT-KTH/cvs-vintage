@@ -52,7 +52,7 @@ public class Rfc822Header implements HeaderInterface {
 
 	// standard constructor
 	public Rfc822Header() {
-		hashTable = new Hashtable();
+		hashTable = new Hashtable(20);
 
 	}
 

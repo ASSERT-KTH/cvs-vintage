@@ -13,27 +13,23 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.util;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+public class BooleanCompressor {
 
-/**
- * @author timo
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
-public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.columba.core.util");
-		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(ListToolsTest.class));
-		suite.addTest(new TestSuite(BooleanCompressorTest.class));
-		//$JUnit-END$
-		return suite;
+	public static int compress(Boolean[] input) {
+		int result = 0;
+		
+		for( int i=0; i<input.length; i++) {
+			if( input[i].booleanValue() )
+				result |= 1 << i;
+		}
+		
+		return result;
+	}
+	
+	public static Boolean decompress(int input, int index) {
+		return new Boolean( ((input >> index ) & 1) == 1 );
 	}
 }

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,6 +28,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.Mutex;
+import org.columba.core.util.StopWatch;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
@@ -147,17 +149,18 @@ public abstract class AbstractHeaderCache {
 							worker);
 					headerCacheLoaded = true;
 				}
-			} catch (Exception ex) { // Infinite Loop Danger if we retry
+			} catch (Exception ex) { // Infinite Loop Danger if we retry -> shouldn't happen here
+				/*
 				System.out.println(
 					"Exception in org.columba.mail.folder.headercache.getHeaderList(WorkerStatusController worker)");
 				//ex.printStackTrace();
 				throw new RuntimeException(
 					"Exception in org.columba.mail.folder.headercache.getHeaderList(WorkerStatusController worker)",
-					ex);
-				//headerList =
-				//	folder.getDataStorageInstance().recreateHeaderList(worker);
+					ex);*/
+				headerList =
+				folder.getDataStorageInstance().recreateHeaderList(worker);
 
-				//headerCacheLoaded = true;
+				headerCacheLoaded = true;
 
 			} finally {
 				if (needToRelease) {
@@ -173,13 +176,15 @@ public abstract class AbstractHeaderCache {
 	}
 
 	public void load(WorkerStatusController worker) throws Exception {
+		
+		StopWatch stopWatch = new StopWatch();
 
 		if (MainInterface.DEBUG) {
 			ColumbaLogger.log.info("loading header-cache=" + headerFile);
 		}
 
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
-		ObjectInputStream ois = new ObjectInputStream(istream);
+		ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(istream));
 
 		int capacity = ois.readInt();
 		if (MainInterface.DEBUG) {
@@ -211,7 +216,7 @@ public abstract class AbstractHeaderCache {
 		}
 
 		headerList = new HeaderList(capacity);
-
+		
 		//System.out.println("Number of Messages : " + capacity);
 
 		if (worker != null)
@@ -220,10 +225,13 @@ public abstract class AbstractHeaderCache {
 		if (worker != null)
 			worker.setProgressBarMaximum(capacity);
 
+		worker.setProgressBarValue(0);
+
 		int nextUid = -1;
 
-		for (int i = 1; i <= capacity; i++) {
-			if (worker != null)
+		for (int i = 0; i < capacity; i++) {
+			
+			if ( (worker != null) && (i % 500 == 0) )
 				worker.setProgressBarValue(i);
 
 			//ColumbaHeader h = message.getHeader();
@@ -257,9 +265,10 @@ public abstract class AbstractHeaderCache {
 			ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
 		}
 		folder.setNextMessageUid(nextUid);
-                worker.setDisplayText(null);
+                //worker.setDisplayText(null);
 		// close stream
 		ois.close();
+		worker.setProgressBarValue(capacity);
 	}
 
 	public void save(WorkerStatusController worker) throws Exception {

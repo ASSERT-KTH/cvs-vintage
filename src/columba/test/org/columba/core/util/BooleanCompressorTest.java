@@ -13,27 +13,35 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.util;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
-/**
- * @author timo
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
-public class AllTests {
+public class BooleanCompressorTest extends TestCase {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.columba.core.util");
-		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(ListToolsTest.class));
-		suite.addTest(new TestSuite(BooleanCompressorTest.class));
-		//$JUnit-END$
-		return suite;
+	private Boolean[] test = { new Boolean(true), new Boolean(false), new Boolean(false),
+		new Boolean(true), new Boolean(true)};
+
+	/**
+	 * Constructor for BooleanCompressorTest.
+	 * @param arg0
+	 */
+	public BooleanCompressorTest(String arg0) {
+		super(arg0);
 	}
+
+	public void test() {
+		int testInt = BooleanCompressor.compress(test);
+		
+		assertTrue(testInt == 25);
+		
+		Boolean[] result = new Boolean[test.length];
+		for( int i=0; i<test.length; i++) {
+			result[i] = BooleanCompressor.decompress(testInt, i);
+			assertTrue( result[i].equals(test[i]));
+		}
+
+	}
+
 }

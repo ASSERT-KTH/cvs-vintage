@@ -16,6 +16,7 @@
 
 package org.columba.mail.message;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -52,6 +53,11 @@ public class ColumbaHeader extends Rfc822Header implements HeaderInterface{
 		set("columba.flags.flagged", new Boolean(false));
 		set("columba.flags.expunged", new Boolean(false));
 		set("columba.flags.draft", new Boolean(false));
+		
+		set("columba.priority", new Integer(3));
+		set("columba.from", new String());
+		set("columba.host", new String());
+		set("columba.date", new Date());
 	}
 
 	/*

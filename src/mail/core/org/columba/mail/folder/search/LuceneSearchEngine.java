@@ -507,9 +507,10 @@ public class LuceneSearchEngine
 					((LocalFolder) folder).getMessage(
 						uids[i],
 						NullWorkerStatusController.getInstance()));
-				wc.incProgressBarValue();
+				if( i % 500 == 0 )
+					wc.setProgressBarValue(i);
 			}
-
+			wc.setProgressBarValue(uids.length);
 		} catch (Exception e) {
 		}
 	}
