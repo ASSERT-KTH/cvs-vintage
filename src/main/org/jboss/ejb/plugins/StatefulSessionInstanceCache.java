@@ -7,23 +7,32 @@
  
 package org.jboss.ejb.plugins;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 
+import javax.jms.Message;
+import javax.jms.JMSException;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
+import org.jboss.ejb.StatefulSessionPersistenceManager;
+import org.jboss.logging.Logger;
 
 /**
  * Cache for stateful session beans. 
  *      
  * @author Simone Bordet (simone.bordet@compaq.com)
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class StatefulSessionInstanceCache 
 	extends AbstractInstanceCache
@@ -33,6 +42,10 @@ public class StatefulSessionInstanceCache
 	// Attributes ----------------------------------------------------
 	/* The container */
 	private StatefulSessionContainer m_container;
+	/* The map that holds passivated beans that will be removed */
+	private HashMap m_passivated = new HashMap();
+	/* Used for logging */
+	private StringBuffer m_buffer = new StringBuffer();
     
 	// Static --------------------------------------------------------
    
@@ -52,10 +65,12 @@ public class StatefulSessionInstanceCache
 	protected void passivate(EnterpriseContext ctx) throws RemoteException
 	{
 		m_container.getPersistenceManager().passivateSession((StatefulSessionEnterpriseContext)ctx);
+		m_passivated.put(ctx.getId(), new Long(System.currentTimeMillis()));
 	}
 	protected void activate(EnterpriseContext ctx) throws RemoteException
 	{
 		m_container.getPersistenceManager().activateSession((StatefulSessionEnterpriseContext)ctx);
+		m_passivated.remove(ctx.getId());
 	}
 	protected EnterpriseContext acquireContext() throws Exception
 	{
@@ -99,10 +114,57 @@ public class StatefulSessionInstanceCache
 	}
    
 	// Package protected ---------------------------------------------
+	void removePassivated(long maxLifeAfterPassivation)
+	{
+		StatefulSessionPersistenceManager store = (StatefulSessionPersistenceManager)m_container.getPersistenceManager();
+		long now = System.currentTimeMillis();
+		Iterator entries = m_passivated.entrySet().iterator();
+		while (entries.hasNext())
+		{
+			Map.Entry entry = (Map.Entry)entries.next();
+			Object key = entry.getKey();
+			long passivationTime = ((Long)entry.getValue()).longValue();
+			if (now - passivationTime > maxLifeAfterPassivation) 
+			{
+				store.removePassivated(key);
+				log(key);
+				// Must use the iterator to remove, otherwise 
+				// ConcurrentModificationException is thrown
+				entries.remove();
+				removeLock(key);
+			}
+		}
+	}
     
 	// Protected -----------------------------------------------------
 
 	// Private -------------------------------------------------------
+	private void log(Object key)
+	{
+		m_buffer.setLength(0);
+		m_buffer.append("Removing from storage bean '");
+		m_buffer.append(m_container.getBeanMetaData().getEjbName());
+		m_buffer.append("' with id = ");
+		m_buffer.append(key);
+		Logger.debug(m_buffer.toString());
+
+		if (isJMSMonitoringEnabled())
+		{
+			// Prepare JMS message
+			Message message = createMessage(key);
+			try
+			{
+				message.setStringProperty(TYPE, "REMOVER");
+			}
+			catch (JMSException x)
+			{
+				Logger.exception(x);
+			}
+
+			// Send JMS Message
+			sendMessage(message);
+		}
+	}
 
 	// Inner classes -------------------------------------------------
 
