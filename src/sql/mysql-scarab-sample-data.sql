@@ -125,8 +125,8 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALU
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 4, 6, 'verified');
 /* platform is SGI */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 5, 21, 'SGI');
-/* os is OpenVMS */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 6, 48, 'OpenVMS');
+/* os is Linux */
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 6, 38, 'Linux');
 /* priority is p3 */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 7, 56, 'Low');
 /* severity is major */
