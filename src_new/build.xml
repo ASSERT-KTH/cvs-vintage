@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.141 2003/12/17 20:36:04 linus Exp $
+<!-- $Id: build.xml,v 1.142 2003/12/18 10:01:10 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -291,6 +291,21 @@ Property files to be searched:
        properties file will be operational.
    -->
 
+  <target name="copy-i18n-de" if="has.i18n.de">
+    <copy todir="${argo.build.classes}/org/argouml/i18n">
+      <fileset dir="${argo.src.dir}/../src/i18n/de/src/org/argouml/i18n" includes="*.properties"/>
+    </copy>
+  </target>
+
+  <target name="copy-i18n">
+    <!-- Go through all languages: -->
+    <available file="${argo.src.dir}/../src/i18n/de/src/org/argouml/i18n"
+               type="dir" 
+               property="has.i18n.de"/>
+    <antcall target="copy-i18n-de"/>
+  </target>
+
+
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
@@ -320,9 +335,7 @@ Property files to be searched:
     </copy>
 
     <!-- Go through all languages: -->
-    <copy todir="${argo.build.classes}/org/argouml/i18n">
-      <fileset dir="${argo.src.dir}/../src/i18n/de/src/org/argouml/i18n" includes="*.properties"/>
-    </copy>
+    <antcall target="copy-i18n"/>
 
     <copy todir="${argo.build.classes}/org/argouml/resource">
       <fileset dir="${argo.src.dir}/org/argouml/resource" excludes="CVS/**" includes="**/**"/>
