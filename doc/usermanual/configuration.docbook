@@ -173,7 +173,6 @@
 		<entry>No, there is a default for JRMP based on the registry</entry>
 	      </row>
 	      <row>
-	      <row>
 		<entry>carol.jvm.jrmp. server.portnumber</entry>
 		<entry>'jrmp port number'</entry>
 		<entry>All jndi properties needed for XXX name service configuration. This is equivalent to put 'property-name'='property-value' in the jndi.properties file</entry>
