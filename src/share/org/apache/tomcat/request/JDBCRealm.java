@@ -73,7 +73,6 @@ import java.util.Vector;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 import java.sql.*;
 
@@ -457,7 +456,7 @@ public final class JDBCRealm extends BaseInterceptor {
 
 	String user=req.getRemoteUser();
 	if( user==null ) 
-            return HttpServletResponse.SC_UNAUTHORIZED;
+            return 401; //HttpServletResponse.SC_UNAUTHORIZED
 	
 	if( debug > 0 )
             log( "Controled access for " + user + " " + req + " "
@@ -472,7 +471,7 @@ public final class JDBCRealm extends BaseInterceptor {
             return 0;
 
         if( debug > 0 ) log( "UnAuthorized " + roles[0] );
-	return HttpServletResponse.SC_UNAUTHORIZED;
+	return 401; //HttpServletResponse.SC_UNAUTHORIZED
         // XXX check transport
     }
 

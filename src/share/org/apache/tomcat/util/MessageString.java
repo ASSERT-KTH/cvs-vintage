@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.4 2000/05/24 18:57:10 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/24 18:57:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.5 2000/06/23 02:16:29 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/23 02:16:29 $
  *
  * ====================================================================
  *
@@ -66,8 +66,6 @@ package org.apache.tomcat.util;
 
 import java.io.OutputStream;
 import java.io.IOException;
-
-import javax.servlet.ServletOutputStream;
 
 /**
  * This class is used to represent a string in an HTTP message.

@@ -63,7 +63,6 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
-import javax.servlet.http.*;
 import java.util.*;
 
 /**
@@ -286,7 +285,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
-	    return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+	    return 500;
 	}
 	return OK;
     }

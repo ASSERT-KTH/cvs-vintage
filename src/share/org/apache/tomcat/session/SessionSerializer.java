@@ -61,7 +61,7 @@ package org.apache.tomcat.session;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpSession;
 import org.apache.tomcat.core.Request;
 
 /**

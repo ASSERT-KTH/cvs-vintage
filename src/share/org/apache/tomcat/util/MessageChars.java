@@ -63,8 +63,6 @@ package org.apache.tomcat.util;
 import java.io.OutputStream;
 import java.io.IOException;
 
-import javax.servlet.ServletOutputStream;
-
 /**
  * This class is used to represent a char region in an HTTP message.
  *

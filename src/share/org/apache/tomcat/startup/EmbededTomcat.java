@@ -10,7 +10,7 @@ import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.session.StandardSessionInterceptor;
 import org.apache.tomcat.context.*;
 import java.security.*;
-import javax.servlet.*;
+import javax.servlet.ServletContext;
 import java.util.*;
 
 /**

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.6 2000/05/30 06:16:54 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/30 06:16:54 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -67,7 +63,6 @@ package org.apache.tomcat.util;
 import org.apache.tomcat.util.StringManager;
 import org.apache.tomcat.core.Constants;
 import java.io.*;
-import javax.servlet.ServletOutputStream;
 
 /**
  *

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/adapter/Attic/AdapterHandler.java,v 1.1 2000/05/30 06:16:45 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/30 06:16:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/adapter/Attic/AdapterHandler.java,v 1.2 2000/06/23 02:16:13 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/06/23 02:16:13 $
  *
  * ====================================================================
  *
@@ -68,9 +68,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 
 public class AdapterHandler  implements  TcpConnectionHandler {
     

@@ -66,8 +66,6 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
-
 
 /**
  * Handles work dir setup/removal

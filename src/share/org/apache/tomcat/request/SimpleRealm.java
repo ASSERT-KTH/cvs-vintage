@@ -66,7 +66,6 @@ import org.apache.tomcat.util.xml.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
 import org.xml.sax.*;
 
 /**
@@ -150,7 +149,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	String userRoles[]=null;
 	String user=req.getRemoteUser(); 
 	if( user==null )
-	    return HttpServletResponse.SC_UNAUTHORIZED;
+	    return 401;
 
 	if( debug > 0 ) log( "Controled access for " + user + " " +
 			     req + " " + req.getContainer() );
@@ -162,7 +161,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	    return 0;
 	
 	if( debug > 0 ) log( "UnAuthorized " + roles[0] );
- 	return HttpServletResponse.SC_UNAUTHORIZED;
+ 	return 401;
     }
 }
 

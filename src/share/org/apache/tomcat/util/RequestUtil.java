@@ -65,8 +65,10 @@ import org.apache.tomcat.core.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpUtils;
+import javax.servlet.http.Cookie;
 import java.text.*;
 
 /**

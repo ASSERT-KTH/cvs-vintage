@@ -66,9 +66,6 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
-
 
 /**
  * Interceptor that loads the "load-on-startup" servlets
@@ -76,7 +73,8 @@ import javax.servlet.*;
  * @author costin@dnt.ro
  */
 public class LoadOnStartupInterceptor extends BaseInterceptor {
-    private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
+    private static StringManager sm =
+	StringManager.getManager("org.apache.tomcat.context");
     
     public LoadOnStartupInterceptor() {
     }
@@ -149,11 +147,11 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	System.out.println("Initializing JSP with JspWrapper");
 	
 	// Ugly code to trick JSPServlet into loading this.
-
+	ContextManager cm=context.getContextManager();
 	String path=result.getPath();
 	RequestImpl request = new RequestImpl();
 	ResponseImpl response = new ResponseImpl();
-	request.setContextManager( context.getContextManager());
+	request.setContextManager( cm );
 	request.recycle();
 	response.recycle();
 	
@@ -167,14 +165,13 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	
 	request.setContext(context);
 	request.getSession(true);
+
+	cm.service( request, response );
+// 	    RequestDispatcher rd = context.getFacade().getRequestDispatcher(requestURI);
 	
-	RequestDispatcher rd = context.getFacade().getRequestDispatcher(requestURI);
-	
-	try {
-	    rd.forward(request.getFacade(), response.getFacade());
-	} catch (ServletException se) {
-	} catch (IOException ioe) {
-	}
+// 	    rd.forward(request.getFacade(), response.getFacade());
+// 	} catch (IOException ioe) {
+// 	}
     }
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.

@@ -65,7 +65,7 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
 
 /**
  * Will process the request and determine the session Id, and set it
@@ -76,7 +76,8 @@ import javax.servlet.http.*;
  * add new interceptors for other methods.
  *
  */
-public class SessionInterceptor extends  BaseInterceptor implements RequestInterceptor {
+public class SessionInterceptor extends  BaseInterceptor
+{
 
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
@@ -116,7 +117,8 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	String sessionId;
 	
 	if ((foundAt=uri.indexOf(sig))!=-1){
-	    sessionId=uri.substring(foundAt+sig.length()); // I hope the optimizer does it's job:-)
+	    sessionId=uri.substring(foundAt+sig.length());
+	    // I hope the optimizer does it's job:-)
 	    sessionId = fixSessionId( request, sessionId );
 	    
 	    // rewrite URL, do I need to do anything more?

@@ -68,7 +68,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.security.*;
-import javax.servlet.http.*;
 
 import org.apache.tomcat.logging.*;
 import org.apache.tomcat.loader.*;

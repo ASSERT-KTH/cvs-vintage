@@ -63,8 +63,8 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
+
 
 // We implement Response part of the adapter first, Request will be next
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.9 2000/05/24 18:57:10 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/05/24 18:57:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.10 2000/06/23 02:16:29 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/06/23 02:16:29 $
  *
  * ====================================================================
  *
@@ -64,7 +64,6 @@
 
 package org.apache.tomcat.util;
 
-import javax.servlet.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;

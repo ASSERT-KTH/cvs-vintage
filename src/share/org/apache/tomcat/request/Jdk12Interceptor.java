@@ -65,7 +65,6 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 /**
  *  JDK1.2 specific options. Fix the class loader, etc.

@@ -65,8 +65,6 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
 
 /**
  * A group of resources, with some common properties.
