@@ -83,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.18 2002/03/20 00:28:10 jon Exp $
+ * @version $Id: Register.java,v 1.19 2002/03/27 18:10:28 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -367,8 +367,7 @@ public class Register extends ScarabTemplateAction
                             (org.apache.fulcrum.security.entity.Group) itr.next();
                         // only give access to the non-global modules
                         if (!group.getName()
-                            .startsWith(ScarabConstants.GLOBAL_MODULE_NAME + 
-                                Module.NAME_DELIMINATOR))
+                            .equals(ScarabConstants.GLOBAL_MODULE_NAME))
                         {
                             group.grant((User)confirmedUser, role);
                             ((Module)group).save();
