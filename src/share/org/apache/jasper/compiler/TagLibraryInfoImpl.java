@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.18 2000/05/19 00:39:06 mandar Exp $
- * $Revision: 1.18 $
- * $Date: 2000/05/19 00:39:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.19 2000/05/20 00:26:56 craigmcc Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/05/20 00:26:56 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -166,9 +166,10 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    InputStream is = getResourceAsStream(WEBAPP_INF);
 	    
 	    if (is != null) {
-                URL dtdURL =  this.getClass().getResource(Constants.WEBAPP_DTD_RESOURCE);
-                Document webtld = JspUtil.parseXMLDoc(is, dtdURL,
-                                                         Constants.WEBAPP_DTD_PUBLIC_ID);
+                Document webtld =
+		    JspUtil.parseXMLDoc(is,
+					Constants.WEBAPP_DTD_RESOURCE,
+					Constants.WEBAPP_DTD_PUBLIC_ID);
                 NodeList nList =  webtld.getElementsByTagName("taglib");
 	    
                 if (nList.getLength() != 0) {
@@ -332,8 +333,8 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
     private void parseTLD(InputStream in) 
         throws JasperException
     {
-	URL tagUrl = this.getClass().getResource(Constants.TAGLIB_DTD_RESOURCE);
-	tld = JspUtil.parseXMLDoc(in, tagUrl,
+	tld = JspUtil.parseXMLDoc(in,
+				  Constants.TAGLIB_DTD_RESOURCE,
 				  Constants.TAGLIB_DTD_PUBLIC_ID);
 	
         Vector tagVector = new Vector();
