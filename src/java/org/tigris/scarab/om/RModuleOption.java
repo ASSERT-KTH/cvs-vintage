@@ -156,15 +156,14 @@ public class RModuleOption
         this.level = v;
     }
 
-    /*
-    public RModuleAttribute getRModuleAttribute()
+    
+    public RModuleAttribute getRModuleAttribute(IssueType issueType)
         throws Exception
     {
         ModuleEntity module = ModuleManager.getInstance(getModuleId());
         Attribute attribute = getAttributeOption().getAttribute();
-        return module.getRModuleAttribute(attribute);
+        return module.getRModuleAttribute(attribute, issueType);
     }
-    */
 
     /* *
      * The AttributeOption that is the parent of this moduleOption.
