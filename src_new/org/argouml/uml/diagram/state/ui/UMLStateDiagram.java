@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.15 2002/09/15 06:55:26 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.16 2002/09/22 10:28:20 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -49,7 +49,7 @@ import org.argouml.uml.diagram.state.*;
 import org.argouml.application.api.*;
 // get the note from the class diagram
 import org.argouml.uml.ui.*;
-import org.argouml.uml.diagram.static_structure.ui.FigNote;
+import org.argouml.uml.diagram.static_structure.ui.FigComment;
 
 public class UMLStateDiagram extends UMLDiagram {
 
