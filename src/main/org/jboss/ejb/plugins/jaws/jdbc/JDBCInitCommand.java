@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.jaws.JPMInitCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * JAWSPersistenceManager JDBCInitCommand
@@ -33,7 +33,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
  * 
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * 
  *   <p><b>Revisions:</b>
  *
@@ -56,7 +56,7 @@ public class JDBCInitCommand
    implements JPMInitCommand
 {
    // Attributes ----------------------------------------------------
-   private Category log = Category.getInstance(JDBCInitCommand.class);
+   private Logger log = Logger.getLogger(JDBCInitCommand.class);
 
    // Constructors --------------------------------------------------
 

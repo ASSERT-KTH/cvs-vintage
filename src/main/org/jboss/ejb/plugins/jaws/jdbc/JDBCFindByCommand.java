@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.util.Iterator;
 
-import org.apache.log4j.Category;
-
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
+
+import org.jboss.logging.Logger;
 
 /**
  * JAWSPersistenceManager JDBCFindByCommand
@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:jaeger@oio.de">Torben Jäger</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCFindByCommand
    extends JDBCFinderCommand
@@ -35,7 +35,7 @@ public class JDBCFindByCommand
    
    // The meta-info for the field we are finding by
    private CMPFieldMetaData cmpField;
-   private Category log = Category.getInstance(JDBCFindByCommand.class);
+   private Logger log = Logger.getLogger(JDBCFindByCommand.class);
 
    // Constructors --------------------------------------------------
    

@@ -17,7 +17,7 @@ import java.sql.PreparedStatement;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * JAWSPersistenceManager JDBCDefinedFinderCommand
@@ -32,7 +32,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:lennart.petersson@benefit.se">Lennart Petersson</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -51,7 +51,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
 
-   private Category log = Category.getInstance(JDBCDefinedFinderCommand.class);
+   private Logger log = Logger.getLogger(JDBCDefinedFinderCommand.class);
    private int[] parameterArray;
    private TypeMappingMetaData typeMapping;
 

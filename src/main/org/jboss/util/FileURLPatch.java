@@ -12,24 +12,24 @@ import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.apache.log4j.Category;
-
 import java.net.URLStreamHandlerFactory;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLConnection;
+
+import org.jboss.logging.Logger;
 
 /** A MBean that patches the file URL handing implementation so that JBoss
  * can be run in directories with a space in it.  Has the weird side-effect that
  * all file based URLs when externalized with have spaces replaced with pluses.
  *      
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 
    public static final String OBJECT_NAME= ":service=FileURLPatch";
-   Category log= Category.getInstance(FileURLPatch.class);
+   Logger log = Logger.getLogger(FileURLPatch.class);
    private CustomURLStreamHandlerFactory customURLStreamHandlerFactory= new CustomURLStreamHandlerFactory();
    private boolean enabled= false;
    private FileHandler fileHander= new FileHandler();

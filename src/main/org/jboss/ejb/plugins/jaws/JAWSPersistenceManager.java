@@ -17,14 +17,14 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
 
-import org.apache.log4j.Category;
-
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.jaws.jdbc.JDBCCommandFactory;
+
+import org.jboss.logging.Logger;
 
 import org.jboss.metadata.EntityMetaData;
 
@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -78,7 +78,7 @@ public class JAWSPersistenceManager
    JPMActivateEntityCommand activateEntityCommand;
    JPMPassivateEntityCommand passivateEntityCommand;
 
-   Category log = Category.getInstance(this.getClass().getName());
+   Logger log = Logger.getLogger(this.getClass());
 
    /**
     *  Optional isModified method used by storeEntity

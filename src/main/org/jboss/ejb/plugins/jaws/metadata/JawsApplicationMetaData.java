@@ -18,21 +18,20 @@ import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
 
+import org.jboss.logging.Logger;
+
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.ApplicationMetaData;
 
-import org.apache.log4j.Category;
-
-
 /**
  * <description>
  *
  * @see <related>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -71,7 +70,7 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
    /** The type mapping to use with the specified database. */
    private TypeMappingMetaData typeMapping;
 
-   private Category log = Category.getInstance(JawsApplicationMetaData.class);
+   private Logger log = Logger.getLogger(JawsApplicationMetaData.class);
 
    // Static --------------------------------------------------------
 

@@ -38,7 +38,6 @@ import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.XmlFileLoader;
 
-import org.apache.log4j.Category;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,7 +50,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 
 public class Installer
@@ -74,7 +73,7 @@ public class Installer
    // the resulting Deployment
    Deployment d;
    
-   // the log4j category for output
+   // the logger for output
    Logger log = Logger.getLogger(Installer.class);
 
    // to get the Log and the temprary deployment dir

@@ -25,7 +25,7 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.util.FinderResults;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * Implementation of the LoadEntitiesCommand added in JBoss 2.3. This preloads
@@ -38,7 +38,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -53,7 +53,7 @@ public class JDBCLoadEntitiesCommand
    implements JPMLoadEntitiesCommand
 {
    // Attributes ----------------------------------------------------
-   private Category log = Category.getInstance(JDBCLoadEntitiesCommand.class);
+   private Logger log = Logger.getLogger(JDBCLoadEntitiesCommand.class);
 
    String selectClause;
    // Constructors --------------------------------------------------

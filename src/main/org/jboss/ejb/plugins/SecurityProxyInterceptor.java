@@ -11,12 +11,11 @@ import java.security.Principal;
 import javax.ejb.EJBContext;
 import javax.naming.InitialContext;
 
-import org.apache.log4j.Category;
-
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
+import org.jboss.logging.Logger;
 
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.SecurityProxy;
@@ -30,7 +29,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -43,7 +42,7 @@ public class SecurityProxyInterceptor
       "java:/SecurityProxyFactory";
 
    /** Instance logger. */
-   protected Category log = Category.getInstance(this.getClass());
+   protected Logger log = Logger.getLogger(this.getClass());
    
    /**
     * @clientCardinality 0..1

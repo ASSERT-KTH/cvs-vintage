@@ -30,7 +30,7 @@ import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 import org.jboss.util.timeout.Timeout;
 import org.jboss.util.timeout.TimeoutTarget;
@@ -49,7 +49,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 class TxCapsule
    implements TimeoutTarget
@@ -65,7 +65,7 @@ class TxCapsule
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private Category log = Category.getInstance(this.getClass());
+   private Logger log = Logger.getLogger(this.getClass());
 
    /** True if debug messages should be logged. */
    private boolean debug = log.isDebugEnabled();

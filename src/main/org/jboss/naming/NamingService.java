@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -62,16 +62,15 @@ public class NamingService
    // Constructors --------------------------------------------------
    public NamingService()
    {
-      String categoryName = log.getCategory().getName();
-      naming = new Main(categoryName);
+      naming = new Main(this.getClass().getName());
    }
-   
+
    // Public --------------------------------------------------------
    public void setPort(int port)
    {
       naming.setPort(port);
    }
-   
+
    public int getPort()
    {
       return naming.getPort();

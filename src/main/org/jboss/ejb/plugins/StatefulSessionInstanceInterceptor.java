@@ -17,8 +17,6 @@ import javax.transaction.Synchronization;
 import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
 
-import org.apache.log4j.Category;
-
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
@@ -27,6 +25,7 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
+import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
 
 import org.jboss.security.SecurityAssociation;
@@ -37,7 +36,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -57,7 +56,7 @@ public class StatefulSessionInstanceInterceptor
    // Attributes ---------------------------------------------------
 
    /** Instance logger. */
-   protected Category log = Category.getInstance(this.getClass());
+   protected Logger log = Logger.getLogger(this.getClass());
    
    protected StatefulSessionContainer container;
 	

@@ -14,21 +14,21 @@ import org.jboss.logging.Logger;
 
 /**
  * An abstract base class for container interceptors.
- *      
+ *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
 
    /** The next interceptor in the chain. */
    protected Interceptor nextInterceptor;
-   /** Use a JBoss custom log4j category for trace level logging */
+   /** Logging instance */
    protected Logger log = Logger.getLogger(this.getClass());
 
    // Static --------------------------------------------------------

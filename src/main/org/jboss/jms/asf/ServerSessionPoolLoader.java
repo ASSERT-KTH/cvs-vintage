@@ -27,8 +27,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 
-import org.apache.log4j.Category;
-
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -38,15 +36,12 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-public class ServerSessionPoolLoader 
+public class ServerSessionPoolLoader
    extends ServiceMBeanSupport
    implements ServerSessionPoolLoaderMBean
 {
-   /** Instance logger. */
-   private final Category log = Category.getInstance(this.getClass());
-
    /** The factory used to create server session pools. */
    private ServerSessionPoolFactory poolFactory;
 

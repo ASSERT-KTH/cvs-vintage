@@ -25,9 +25,8 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
+import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
-
-import org.apache.log4j.Category;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -38,7 +37,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -59,7 +58,7 @@ public abstract class JDBCFinderCommand
 {
 
    // Attributes ----------------------------------------------------
-   private Category log = Category.getInstance(JDBCFinderCommand.class);
+   private Logger log = Logger.getLogger(JDBCFinderCommand.class);
 
    protected FinderMetaData finderMetaData = null;
 

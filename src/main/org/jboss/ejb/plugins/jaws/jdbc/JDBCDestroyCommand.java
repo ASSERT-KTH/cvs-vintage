@@ -10,7 +10,7 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 
 import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * JAWSPersistenceManager JDBCDestroyCommand
@@ -20,7 +20,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -36,7 +36,7 @@ public class JDBCDestroyCommand
 {
    // Attributes ----------------------------------------------------
 
-   private Category log = Category.getInstance(JDBCDestroyCommand.class);
+   private Logger log = Logger.getLogger(JDBCDestroyCommand.class);
 
    // Constructors --------------------------------------------------
    

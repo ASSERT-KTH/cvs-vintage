@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import java.rmi.MarshalledObject;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * CacheKey is an encapsulation of both the PrimaryKey and a
@@ -29,7 +29,7 @@ import org.apache.log4j.Category;
  * 
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class CacheKey
    implements Externalizable
@@ -102,7 +102,7 @@ public class CacheKey
          // should probably throw a nested exception here, but
          // for now instead of printStackTrace, lets log it
          //
-         Category log = Category.getInstance(this.getClass());
+         Logger log = Logger.getLogger(this.getClass());
          log.error("failed to initialize", e);
       }
    }

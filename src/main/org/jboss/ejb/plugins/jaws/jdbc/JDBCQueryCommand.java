@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * Abstract superclass for all JAWS Commands that issue JDBC queries
@@ -20,14 +20,14 @@ import org.apache.log4j.Category;
  * <code>executeStatementAndHandleResult</code>.
  * 
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class JDBCQueryCommand
    extends JDBCCommand
 {
    // Constructors --------------------------------------------------
 
-   private Category log = Category.getInstance(JDBCFindByCommand.class);
+   private Logger log = Logger.getLogger(JDBCFindByCommand.class);
    
    /**
     * Pass the arguments on to the superclass constructor.

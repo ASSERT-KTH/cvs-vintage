@@ -15,19 +15,18 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.XATopicConnectionFactory;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * A helper for creating connections from jms connection factories.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ConnectionFactoryHelper
 {
    /** Class logger. */
-   private static Category log =
-      Category.getInstance(ConnectionFactoryHelper.class);
+   private static Logger log = Logger.getLogger(ConnectionFactoryHelper.class);
    
    /**
     * Create a queue connection from the given factory.  An XA connection will

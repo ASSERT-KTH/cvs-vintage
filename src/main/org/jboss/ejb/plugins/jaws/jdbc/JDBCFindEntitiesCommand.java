@@ -18,9 +18,9 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
 
-import org.jboss.util.FinderResults;
+import org.jboss.logging.Logger;
 
-import org.apache.log4j.Category;
+import org.jboss.util.FinderResults;
 
 /**
  * Keeps a map from finder name to specific finder command, and
@@ -31,7 +31,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -49,7 +49,7 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
    private JDBCCommandFactory factory;
    private HashMap knownFinderCommands = new HashMap();
 
-   private Category log = Category.getInstance(this.getClass());
+   private Logger log = Logger.getLogger(this.getClass());
 
    // Constructors --------------------------------------------------
 

@@ -35,7 +35,7 @@ import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
-         
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -45,8 +45,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
-import org.apache.log4j.Category;
-
+import org.jboss.logging.Logger;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceFactory;
 import org.jboss.system.ServiceMBeanSupport;
@@ -67,7 +66,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -78,13 +77,13 @@ implements ConfigurationServiceMBean
 {
    /** The name of the file initial configuration is read from. */
    public static final String CONFIGURATION_FILE = "jboss.jcml";
-   
+
    /** The name of the file that running state will be written into. */
    public static final String RUNNING_STATE_FILE = "jboss-auto.jcml";
-   
+
    /** Primitive type name -> class map. */
    private static Hashtable primitives = new Hashtable();
-   
+
    /** Setup the primitives map. */
    static
    {
@@ -100,7 +99,7 @@ implements ConfigurationServiceMBean
     * corresponding index into the ServiceProxy.hasOp array.
     */
    private static HashMap serviceOpMap = new HashMap();
-   
+
    /**
     * Initialize the service operation map.
     */
@@ -111,20 +110,20 @@ implements ConfigurationServiceMBean
       serviceOpMap.put("destroy", new Integer(2));
       serviceOpMap.put("stop", new Integer(3));
    }
-   
-   
+
+
    /** Instance logger. */
-   private final Category log = Category.getInstance(this.getClass());
-   
+   private Logger log = Logger.getLogger(getClass());
+
    /** The MBean server which this service is registered in. */
    private MBeanServer server;
-   
+
    /** The name of the ServiceControl service. */
    private ObjectName serviceControl;
-   
+
    /** Flag to indicate if attribute values should be automatically trimmed. */
    private boolean autoTrim;
-   
+
    // Constructors --------------------------------------------------
    
    /**

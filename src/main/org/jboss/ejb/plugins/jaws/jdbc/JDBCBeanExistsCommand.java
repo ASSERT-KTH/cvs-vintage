@@ -11,8 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCBeanExistsCommand
@@ -20,7 +19,7 @@ import org.apache.log4j.Category;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -34,7 +33,7 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
    // Attributes ----------------------------------------------------
 
-   private Category log = Category.getInstance(JDBCBeanExistsCommand.class);
+   private final Logger log = Logger.getLogger(JDBCBeanExistsCommand.class);
 
    // Constructors --------------------------------------------------
 

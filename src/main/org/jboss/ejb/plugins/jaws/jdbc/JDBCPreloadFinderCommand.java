@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * Preloads data for all entities in where clause
@@ -30,7 +30,7 @@ import org.apache.log4j.Category;
  * @see <related>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * 
  *   <p><b>Revisions:</b>
  *
@@ -55,7 +55,7 @@ public class JDBCPreloadFinderCommand
    /** The load command we delegate to for our column list */
    protected JDBCLoadEntityCommand loadCommand;
 
-   private Category log = Category.getInstance(JDBCPreloadFinderCommand.class);
+   private Logger log = Logger.getLogger(JDBCPreloadFinderCommand.class);
 
    // Constructors --------------------------------------------------
 

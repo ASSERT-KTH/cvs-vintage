@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * JAWSPersistenceManager JDBCCreateEntityCommand
@@ -37,7 +37,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -54,7 +54,7 @@ public class JDBCCreateEntityCommand
    // Attributes ----------------------------------------------------
    
    private JDBCBeanExistsCommand beanExistsCommand;
-   private Category log = Category.getInstance(JDBCCreateEntityCommand.class);
+   private Logger log = Logger.getLogger(JDBCCreateEntityCommand.class);
 
    // Constructors --------------------------------------------------
    

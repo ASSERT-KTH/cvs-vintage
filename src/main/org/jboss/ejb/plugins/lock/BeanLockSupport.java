@@ -24,7 +24,7 @@ import java.util.HashSet;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -53,7 +53,7 @@ public abstract class BeanLockSupport
    /** Are reentrant calls allowed? */
    protected boolean reentrant;
  
-   /** Use a JBoss custom log4j category for trace level logging */
+   /** Logger instance */
    static Logger log = Logger.getLogger(BeanLock.class);
  
    protected Transaction tx = null;

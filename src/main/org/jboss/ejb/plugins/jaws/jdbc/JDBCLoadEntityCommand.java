@@ -25,7 +25,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * JAWSPersistenceManager JDBCLoadEntityCommand
@@ -37,7 +37,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -66,7 +66,7 @@ public class JDBCLoadEntityCommand
     *  damn thing in the languase starts at 0, the way God intended!
     */
    private static final int JDBC_WART_OFFSET = 1;
-   private Category log = Category.getInstance(JDBCLoadEntityCommand.class);
+   private Logger log = Logger.getLogger(JDBCLoadEntityCommand.class);
 
    // Constructors --------------------------------------------------
 

@@ -29,9 +29,9 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 
+import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.CountStatistic;
 import org.jboss.management.j2ee.TimeStatistic;
-import org.apache.log4j.Category;
 
 /**
 *   <description>
@@ -40,7 +40,7 @@ import org.apache.log4j.Category;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.34 $
+*  @version $Revision: 1.35 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -58,7 +58,7 @@ implements EntityPersistenceManager
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   Category log = Category.getInstance(BMPPersistenceManager.class);
+   Logger log = Logger.getLogger(BMPPersistenceManager.class);
 
    EntityContainer con;
 

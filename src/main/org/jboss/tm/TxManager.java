@@ -26,7 +26,7 @@ import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * Our TransactionManager implementation.
@@ -35,7 +35,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class TxManager
    implements TransactionManager,
@@ -47,7 +47,7 @@ public class TxManager
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private Category log = Category.getInstance(this.getClass());
+   private Logger log = Logger.getLogger(this.getClass());
 
    /** True if debug messages should be logged. */
    private boolean debug = log.isDebugEnabled();

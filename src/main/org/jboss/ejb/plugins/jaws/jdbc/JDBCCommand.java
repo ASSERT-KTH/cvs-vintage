@@ -45,8 +45,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
-
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * Abstract superclass for all JAWS Commands that use JDBC directly.
@@ -57,7 +56,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.40 $ 
+ * @version $Revision: 1.41 $ 
  * 
  *   <p><b>Revisions:</b>
  *
@@ -105,7 +104,7 @@ public abstract class JDBCCommand
             rsTypes.put(java.lang.Short.class.getName(),      ResultSet.class.getMethod("getShort", arg));
             rsTypes.put(Short.TYPE.getName(),                 ResultSet.class.getMethod("getShort", arg));
         } catch(NoSuchMethodException e) {
-            Category.getInstance(JDBCCommand.class).error("NoSuchMethodException", e);
+            Logger.getLogger(JDBCCommand.class).error("NoSuchMethodException", e);
         }
     }
 
@@ -115,7 +114,7 @@ public abstract class JDBCCommand
    protected JawsEntityMetaData jawsEntity;
    protected String name;    // Command name, used for debug trace
 
-   private Category log = Category.getInstance(JDBCCommand.class);
+   private Logger log = Logger.getLogger(JDBCCommand.class);
    private String sql;
    private static Map jdbcTypeNames;
 

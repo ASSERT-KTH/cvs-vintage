@@ -23,7 +23,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * A JMS provider adapter for <em>JBossMQ</em>.
@@ -31,12 +31,12 @@ import org.apache.log4j.Category;
  * Created: Fri Dec 22 09:34:04 2000
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.8 $</pre>
+ * @version <pre>$Revision: 1.9 $</pre>
  * @author  <a href="mailto:peter.antman@dn.se">Peter Antman</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class JBossMQProvider 
+public class JBossMQProvider
    extends AbstractJMSProviderAdapter
 {
    /** The initial context factory to use. */
@@ -52,8 +52,8 @@ public class JBossMQProvider
       "java.naming.rmi.security.manager";
 
    /** Instance logger. */
-   private transient Category log = Category.getInstance(this.getClass());
-    
+   private transient Logger log = Logger.getLogger(this.getClass());
+
    /** Flag to enable JNDI security manager. */
    private String hasJndiSecurityManager = "yes";
 
@@ -70,7 +70,7 @@ public class JBossMQProvider
       throws java.io.IOException, ClassNotFoundException
    {
       in.defaultReadObject();
-      this.log = Category.getInstance(this.getClass());
+      this.log = Logger.getLogger(this.getClass());
    }
 
    /**

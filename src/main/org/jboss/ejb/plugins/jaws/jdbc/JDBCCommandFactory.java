@@ -34,18 +34,14 @@ import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.JPMStoreEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMActivateEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMPassivateEntityCommand;
-
-import org.jboss.metadata.ApplicationMetaData;
-
 import org.jboss.ejb.plugins.jaws.metadata.JawsXmlFileLoader;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsApplicationMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
-
+import org.jboss.logging.Logger;
+import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.util.TimerTask;
 import org.jboss.util.TimerQueue;
-
-import org.apache.log4j.Category;
 
 /**
  * Command factory for the JAWS JDBC layer. This class is primarily responsible
@@ -63,7 +59,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -92,50 +88,50 @@ public class JDBCCommandFactory implements JPMCommandFactory
    private EntityContainer container;
    private Context javaCtx;
    private JawsEntityMetaData metadata;
-   private Category log;
+   private final Logger log = Logger.getLogger(this.getClass());
 
-   /** Timer queue used to time polls on the preloadRefQueue on all JAWS 
+   /** Timer queue used to time polls on the preloadRefQueue on all JAWS
     *  handled entities
     */
    private static TimerQueue softRefHandler;
-   
+
    /** Timer queue used to get references to preload data who've been GC'ed */
    private ReferenceQueue preloadRefQueue = new ReferenceQueue();
-   
+
    /** a map of data preloaded within some transaction for some entity. This map
     *  is keyed by Transaction and the data are hashmaps with key = entityKey and
     *  data = Object[] containing the entity data.  */
    private Map preloadedData = new HashMap();
-   /** A map of data preloaded without a transaction context. key=entityKey, 
+   /** A map of data preloaded without a transaction context. key=entityKey,
     *  data = Object[] containing entity data
     */
    private Map nonTransactionalPreloadData = new HashMap();
-   
+
    /** a Transaction manager so that we can link preloaded data to a transaction */
    private TransactionManager tm;
-   
+
    // These support singletons (within the scope of this factory)
    private JDBCBeanExistsCommand beanExistsCommand;
    private JPMFindEntitiesCommand findEntitiesCommand;
 
-   //static initializer to kick off our softRefhandler 
+   //static initializer to kick off our softRefhandler
    static {
       softRefHandler = new TimerQueue("JAWS Preload reference handler");
       softRefHandler.start();
    }
-      
+
    // Constructors --------------------------------------------------
-   
+
    public JDBCCommandFactory(EntityContainer container)
       throws Exception
    {
       this.container = container;
       this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
-      
+
       String ejbName = container.getBeanMetaData().getEjbName();
       ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
       JawsApplicationMetaData jamd = (JawsApplicationMetaData)amd.getPluginData("JAWS");
-           
+
       if (jamd == null) {
          // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
          JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader());
@@ -147,19 +143,19 @@ public class JDBCCommandFactory implements JPMCommandFactory
       if (metadata == null) {
          throw new DeploymentException("No metadata found for bean " + ejbName);
       }
-      
+
       tm = (TransactionManager) container.getTransactionManager();
-      
+
       softRefHandler.schedule(new PreloadRefQueueHandlerTask());
    }
-   
+
    // Public --------------------------------------------------------
-   
+
    public EntityContainer getContainer()
    {
       return container;
    }
-   
+
    public Context getJavaCtx()
    {
       return javaCtx;

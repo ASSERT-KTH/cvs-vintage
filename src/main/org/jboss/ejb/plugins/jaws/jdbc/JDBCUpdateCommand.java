@@ -7,9 +7,9 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
-import org.apache.log4j.Category;
-
 import java.sql.PreparedStatement;
+
+import org.jboss.logging.Logger;
 
 /**
  * Abstract superclass for all JAWS Commands that issue JDBC updates
@@ -17,7 +17,7 @@ import java.sql.PreparedStatement;
  * Provides a Template Method implementation for
  * <code>executeStatementAndHandleResult</code>.
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -30,7 +30,7 @@ import java.sql.PreparedStatement;
 public abstract class JDBCUpdateCommand extends JDBCCommand
 {
    // Attributes ----------------------------------------------------
-   private Category log = Category.getInstance(JDBCUpdateCommand.class);
+   private Logger log = Logger.getLogger(JDBCUpdateCommand.class);
 
   // Constructors --------------------------------------------------
    

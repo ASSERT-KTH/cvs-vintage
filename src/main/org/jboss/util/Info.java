@@ -12,7 +12,7 @@ import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.apache.log4j.Category;
+import org.jboss.logging.Logger;
 
 /**
  * A simple mbean that dumps out info like the system properties, etc.
@@ -21,7 +21,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -33,7 +33,7 @@ public class Info
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private Category log = Category.getInstance(this.getClass());
+   private Logger log = Logger.getLogger(this.getClass());
 
    // Static --------------------------------------------------------
 
