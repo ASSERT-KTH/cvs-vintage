@@ -182,7 +182,8 @@ public class AttachmentController {
 				if (getView().countSelected() <= 1) {
 					getView().select(e.getPoint(), 0);
 				}
-				getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+				if ( getView().countSelected() >= 1 )
+					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
 			}
 		}
 	}

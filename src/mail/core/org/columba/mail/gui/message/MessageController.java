@@ -409,6 +409,8 @@ public class MessageController
 
 	protected void processPopup(MouseEvent event) {
 		URL url = extractURL(event);
+		if ( url == null ) return;
+		
 		URLController c = new URLController();
 		JPopupMenu menu = c.createMenu(url);
 		menu.show(getView(), event.getX(), event.getY());
