@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.12 2003/08/26 17:42:22 linus Exp $
+// $Id: ParseState.java,v 1.13 2003/12/09 09:34:55 lepekhine Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -250,6 +250,24 @@ class ParseState
 	    }
 	}
 	return null;
+    }
+
+    /**
+       Get a features from the current classifier not yet modeled.
+
+       @param name The name of the feature.
+       @return The collection of found features
+     */
+    public Collection getFeatures(String name)
+    {
+    	ArrayList list = new ArrayList();
+	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
+	    Object mFeature = i.next();
+	    if (name.equals(ModelFacade.getName(mFeature))) {
+		list.add(mFeature);
+	    }
+	}
+	return list;
     }
 
     /**

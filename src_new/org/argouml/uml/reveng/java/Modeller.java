@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.81 2003/12/08 14:57:20 lepekhine Exp $
+// $Id: Modeller.java,v 1.82 2003/12/09 09:34:55 lepekhine Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1024,7 +1024,15 @@ public class Modeller
                                 String initializer,
                                 Object mClassifier)
     {
-        Object mAttribute = parseState.getFeature(name);
+    	Collection list = parseState.getFeatures(name);
+        Object mAttribute = null;
+	for (Iterator it = list.iterator(); it.hasNext();) {
+		Object o = it.next();
+		if ( ModelFacade.isAAttribute(o) ) {
+			mAttribute = o;
+			break;
+		}
+	}
         if (mAttribute == null) {
             mAttribute = UmlFactory.getFactory().getCore().buildAttribute(name);
             ModelFacade.addFeature(parseState.getClassifier(), mAttribute);
