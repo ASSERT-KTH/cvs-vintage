@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.84 2004/08/08 11:26:02 loubyansky Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.85 2004/08/11 20:33:25 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -195,6 +195,48 @@
       </proxy-factory-config>
     </invoker-proxy-binding>
 
+    <!-- Uncomment to use JMS message inflow from jmsra.rar
+    <invoker-proxy-binding>
+      <name>message-driven-bean</name>
+      <invoker-mbean>default</invoker-mbean>
+      <proxy-factory>org.jboss.ejb.plugins.inflow.JBossJMSMessageEndpointFactory</proxy-factory>
+      <proxy-factory-config>
+        <activation-config>
+           <activation-config-property>
+              <activation-config-property-name>providerAdapterJNDI</activation-config-property-name>
+              <activation-config-property-value>DefaultJMSProvider</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>minSession</activation-config-property-name>
+              <activation-config-property-value>1</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>maxSession</activation-config-property-name>
+              <activation-config-property-value>15</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>keepAlive</activation-config-property-name>
+              <activation-config-property-value>60000</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>maxMessages</activation-config-property-name>
+              <activation-config-property-value>1</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>reconnectInterval</activation-config-property-name>
+              <activation-config-property-value>10</activation-config-property-value>
+           </activation-config-property>
+        </activation-config>
+        <endpoint-interceptors>
+          <interceptor>org.jboss.proxy.ClientMethodInterceptor</interceptor>
+          <interceptor>org.jboss.ejb.plugins.inflow.MessageEndpointInterceptor</interceptor>
+          <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+          <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+        </endpoint-interceptors>
+      </proxy-factory-config>
+    </invoker-proxy-binding>
+    -->
+    
     <invoker-proxy-binding>
       <name>singleton-message-driven-bean</name>
       <invoker-mbean>default</invoker-mbean>
