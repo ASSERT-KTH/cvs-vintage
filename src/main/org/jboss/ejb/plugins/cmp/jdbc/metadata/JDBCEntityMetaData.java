@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -603,7 +603,6 @@ public final class JDBCEntityMetaData {
       }
 
       // queries
-      System.out.println("&&&&&&&&&&&&&Updating READAHEAD to " + readAhead);
 
       // update all existing queries with the new read ahead value
       for(Iterator queriesIterator = defaultValues.queries.values().iterator();
