@@ -46,12 +46,15 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Collection;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.DefaultFileItem;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 import org.apache.torque.util.Criteria;
 
@@ -66,28 +69,36 @@ import org.tigris.scarab.om.ActivityPeer;
  * A Testing Suite for the ImportIssues class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ImportIssuesTest.java,v 1.3 2004/01/31 18:15:39 dep4b Exp $
+ * @version $Id: ImportIssuesTest.java,v 1.4 2004/02/01 18:05:13 dep4b Exp $
  */
 public class ImportIssuesTest extends BaseTestCase
 {
-    private static final String INPUT_FILENAME = "test-issues.xml";
-
+    private static final File INPUT_FILE = new File("src/test/org/tigris/scarab/util/xmlissues/test-issues.xml").getAbsoluteFile();
+    private static final String INPUT_FILENAME = INPUT_FILE.toString();
 
     public void testImportIssuesViaXMLFile()
         throws Exception
     {
+        
+        assertTrue("Make sure input file exists at:" + INPUT_FILE,INPUT_FILE.exists());
+        
         // this is quite a hack, need to modify ImportIssues to work with an
         // InputStream
         FileItem issuesToImport = new DefaultFileItem()
             {
-                public InputStream getInputStream()
+                public InputStream getInputStream() throws RuntimeException
                 {
-                    return getClass().getResourceAsStream(INPUT_FILENAME);
+                    try {
+                    return new FileInputStream(INPUT_FILENAME);
+                    }
+                    catch(Exception e){
+                        throw new NestableRuntimeException("Problem reading in file " + INPUT_FILENAME,e);
+                    }
                 }
                 
                 public String getName()
                 {
-                    return INPUT_FILENAME;
+                    return INPUT_FILE.getName();
                 }
             };
         assertTrue("Could not locate input file", 

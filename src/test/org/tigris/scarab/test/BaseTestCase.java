@@ -4,6 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.TurbineConfig;
 import org.tigris.scarab.om.ActivitySet;
@@ -67,7 +68,8 @@ public class BaseTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (tc != null) {
-			//  tc.dispose();
+			TurbineServices.getInstance().shutdownServices();
+			tc=null;
 		}
 	}
 

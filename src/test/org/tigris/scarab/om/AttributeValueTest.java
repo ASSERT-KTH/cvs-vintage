@@ -54,7 +54,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.12 2004/02/01 14:08:38 dep4b Exp $
+ * @version $Id: AttributeValueTest.java,v 1.13 2004/02/01 18:05:13 dep4b Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
@@ -77,7 +77,11 @@ public class AttributeValueTest extends BaseTestCase
     
 
 
-    public void testSaveAndDelete() throws Exception
+    /**
+     * May be screwing up data
+     * @throws Exception
+     */
+    public void OFFtestSaveAndDelete() throws Exception
     {
         System.out.println("\ntestSave()");
         Attachment attachment = AttachmentManager.getInstance();
