@@ -31,7 +31,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: billb</b>
@@ -83,7 +83,7 @@ public class SimplePessimisticEJBLock
       {
          
          Transaction miTx = mi.getTransaction();
-         boolean trace = true;//log.isTraceEnabled();
+         boolean trace = log.isTraceEnabled();
   
          if( trace ) log.trace("Begin schedule, key="+mi.getId());
   
@@ -131,8 +131,8 @@ public class SimplePessimisticEJBLock
                   releaseSync(); 
 						
                   //Wait a thread coming out will wake you up
-                  //lock.wait(txTimeout);
-                  lock.wait(5000);
+                  lock.wait(txTimeout);
+                  //lock.wait(5000);
               
                }
                if( trace ) log.trace("End wait on TxLock="+tx);
@@ -177,8 +177,8 @@ public class SimplePessimisticEJBLock
                      syncAlreadyReleased = true;
                      releaseSync();
 							
-                     //lock.wait(txTimeout);
-                     lock.wait(5000);
+                     lock.wait(txTimeout);
+                     //lock.wait(5000);
                   }
                }
     
