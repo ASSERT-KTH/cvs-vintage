@@ -397,7 +397,6 @@ deployment descriptor. -->
 <!ATTLIST servlet-name id ID #IMPLIED>
 <!ATTLIST servlet-class id ID #IMPLIED>
 <!ATTLIST jsp-file id ID #IMPLIED>
-<!ATTLIST ser-file id ID #IMPLIED>
 <!ATTLIST init-param id ID #IMPLIED>
 <!ATTLIST load-on-startup id ID #IMPLIED>
 <!ATTLIST servlet-mapping id ID #IMPLIED>
