@@ -50,7 +50,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.File;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -67,7 +66,6 @@ import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.upload.FileItem;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.upload.TurbineUploadService;
 import org.apache.fulcrum.upload.UploadService;
@@ -98,7 +96,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.117 2002/03/14 01:13:09 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.118 2002/03/25 19:29:01 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
