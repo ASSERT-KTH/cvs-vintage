@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class JDBCCommand
 {
@@ -98,7 +98,7 @@ public abstract class JDBCCommand
    /**
     * Gives compile-time control of tracing.
     */
-   public static boolean debug = true;
+   public static boolean debug = false;
 
    // Constructors --------------------------------------------------
 
