@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.27 2001/08/30 02:50:57 mnf999 Exp $ ###
+### $Id: run.sh,v 1.28 2001/09/07 22:30:47 starksm Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -93,7 +93,7 @@ echo ""
 cd $JBOSS_HOME/bin
 
 # Execute the JVM
-exec java \
+exec $JAVA \
     $JAVA_OPTS \
     -classpath $JBOSS_CLASSPATH \
     org.jboss.Main "$@"
