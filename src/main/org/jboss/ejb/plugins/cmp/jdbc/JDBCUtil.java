@@ -46,7 +46,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCUtil
 {
@@ -395,8 +395,11 @@ public final class JDBCUtil
                
                // Timestamp returns whole seconds from getTime and partial 
                // seconds are retrieved from getNanos()
-               return new java.util.Date(
-                     ts.getTime() + (ts.getNanos()/1000000) );
+               // Adrian Brock: Not in 1.4 it doesn't
+               long temp = ts.getTime();
+               if (temp % 1000 == 0)
+                  temp += ts.getNanos()/1000000;
+               return new java.util.Date(temp);
             } else 
             {
                return new java.util.Date(((java.util.Date)value).getTime());
