@@ -338,12 +338,18 @@
   #end
 #end
 
-#if (!$currentIssue.Comments.isEmpty() || $canEdit)
 ## COMMENTS
+#if ($fullComments.equals("true"))
+  #set ($comments = $currentIssue.getComments(true))
+#else
+  #set ($comments = $currentIssue.getComments(false))
+#end
+
+#if (!$comments || $canEdit)
 <h3>Comments</h3>
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
-    #foreach ($comment in $currentIssue.Comments)
+    #foreach ($comment in $comments)
      <tr>
        <th>$format.getDate($scarabG.DateFormat, $comment.CreatedDate)
        #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
@@ -387,6 +393,19 @@
     #end
 #end
 
+#if ($currentIssue.isCommentsLong())
+  #if ($fullComments.equals("true"))
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "false"))
+    <p><a href="$commentsLink">Hide complete comment list</a></p>
+  #else
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true"))
+    <p><a href="$commentsLink">Show complete comment list</a></p>
+  #end
+#end
+
+
+
+## ISSUE HISTORY
 #if ($fullHistory.equals("true"))
   #set ($activity = $currentIssue.getActivity(true))
 #else
@@ -394,7 +413,6 @@
 #end
 
 #if (!$activity.isEmpty())
-## ISSUE HISTORY
 <h3>Issue history (up to first ten)</h3>
   <table width="100%" cellpadding="3" cellspacing="2" border="1">
   <tr>
@@ -411,15 +429,8 @@
      #end
      </td>
      <td>$act.Description
-#*
-     #if (!$act.OldValue.equals(""))
-          from '$act.OldValue'
-     #end
-     #if (!$act.NewValue.equals(""))
-          to '$act.NewValue'
-     #end
-*#
      </td>
+
      <td>
      #if ($act.Transaction.Attachment)
        $act.Transaction.Attachment.DataAsString
