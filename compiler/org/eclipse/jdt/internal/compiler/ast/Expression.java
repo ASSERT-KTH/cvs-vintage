@@ -483,7 +483,7 @@ public abstract class Expression extends Statement {
 			if (!isNarrowing) tagAsUnnecessaryCast(scope, castType);
 			return true;
 		}
-		if (match != null && (castType.isBoundParameterizedType() || castType.isGenericType() || expressionType.isBoundParameterizedType() || expressionType.isGenericType())) {
+		if (castType.isBoundParameterizedType() || castType.isGenericType()) {
 			if (match.isProvablyDistinctFrom(isNarrowing ? expressionType : castType, 0)) {
 				return false; 
 			}
