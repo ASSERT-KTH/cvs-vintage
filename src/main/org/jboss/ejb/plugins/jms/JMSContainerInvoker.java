@@ -54,7 +54,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.49 $</tt>
+ * @version <tt>$Revision: 1.50 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -370,20 +370,6 @@ public class JMSContainerInvoker
       //
       
       exListener = new ExceptionListenerImpl(this);
-      try {
-          innerCreate();
-      }
-      catch (final JMSException e) {
-      	 //
-      	 // start a thread up to handle recovering the connection. so we can
-         // attach to the jms resources once they become available
-         //
-      	 new Thread("JMSContainerInvoker Create Recovery Thread") {
-            public void run() {
-               exListener.onException(e);
-            }
-      	 }.start();
-      }
    }
 
    /**
@@ -562,6 +548,25 @@ public class JMSContainerInvoker
    
    protected void startService() throws Exception
    {
+      try
+      {
+          innerCreate();
+      }
+      catch (final JMSException e)
+      {
+      	 //
+      	 // start a thread up to handle recovering the connection. so we can
+         // attach to the jms resources once they become available
+         //
+      	 new Thread("JMSContainerInvoker Create Recovery Thread")
+         {
+            public void run()
+            {
+               exListener.onException(e);
+            }
+      	 }.start();
+      }
+
       if (dlqHandler != null)
       {
          dlqHandler.start();
@@ -623,14 +628,14 @@ public class JMSContainerInvoker
       }
    }
    
-   protected void destoryService() throws Exception
+   protected void destroyService() throws Exception
    {
       // Take down DLQ
       if (dlqHandler != null)
       {
          dlqHandler.destroy();
       }
-      
+
       // close the connection consumer
       try
       {
