@@ -391,7 +391,7 @@ public abstract class AttributeValue
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
-            if ( !isNew() && !oldOptionIdIsSet ) 
+            if ( !isNew() && !oldOptionIdIsSet && getOptionId() != null) 
             {
                 oldOptionId = new NumberKey(getOptionId());
                 oldOptionIdIsSet = true;
