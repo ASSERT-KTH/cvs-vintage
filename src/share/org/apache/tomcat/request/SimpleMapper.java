@@ -105,14 +105,13 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	String path = rrequest.getRequestURI();
 	
 	Context ctx= this.getContextByPath(path);
+	rrequest.setContext(ctx);
 	
 	// final fix on response & request
 	//		rresponse.setServerHeader(server.getServerHeader());
-	
 	String ctxPath = ctx.getPath();
 	String pathInfo =path.substring(ctxPath.length(),
 					    path.length());
-	rrequest.setContext(ctx);
 
 	String lookupPath=rrequest.getLookupPath();
 

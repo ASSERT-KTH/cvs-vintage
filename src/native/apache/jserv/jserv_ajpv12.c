@@ -57,7 +57,7 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
  * Author:      Michal Mosiewicz <mimo@interdata.pl>                         *
- * Version:     $Revision: 1.3 $                                            *
+ * Version:     $Revision: 1.4 $                                            *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -486,6 +486,8 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
 	 * To get PATH_TRANSLATED, treat PATH_INFO as a URI path.
 	 * Need to re-escape it for this, since the entire URI was
 	 * un-escaped before we determined where the PATH_INFO began.
+	 */
+	/* XXX In 2.2 we need to add "contextPath" or zone to the path_info !!!!!
 	 */
 	request_rec *pa_req;
 

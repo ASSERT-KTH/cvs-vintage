@@ -148,6 +148,10 @@ public class ContextManager {
             Context context = getContext((String)enum.nextElement());
             context.init();
 	}
+
+	// After all context are configured, we can generate Apache configs
+	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
+	apacheConfig.execute( this );     
     }
     
     /** Will start the connectors and begin serving requests

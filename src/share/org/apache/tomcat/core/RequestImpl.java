@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.13 2000/02/03 07:11:52 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/02/03 07:11:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.14 2000/02/03 23:05:27 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/02/03 23:05:27 $
  *
  * ====================================================================
  *
@@ -95,6 +95,7 @@ public class RequestImpl  implements Request {
     protected String lookupPath; // everything after contextPath before ?
     protected String servletPath;
     protected String pathInfo;
+    protected String pathTranslated;
 
     protected Hashtable parameters = new Hashtable();
     protected int contentLength = -1;
@@ -117,16 +118,18 @@ public class RequestImpl  implements Request {
     // Session
     // set by interceptors - the session id
     protected String reqSessionId;
-    boolean sessionIdFromCookie=true;
-    boolean sessionIdFromURL=false;
+    protected boolean sessionIdFromCookie=true;
+    protected boolean sessionIdFromURL=false;
     // cache- avoid calling SessionManager for each getSession()
     protected HttpSession serverSession;
 
 
     // LookupResult - used by sub-requests and
     // set by interceptors
-    ServletWrapper handler = null;
-    String mappedPath = null;
+    protected String servletName;
+    protected ServletWrapper handler = null;
+    
+    protected String mappedPath = null;
 
     protected String scheme;
     protected String method;
@@ -240,7 +243,9 @@ public class RequestImpl  implements Request {
 	// the real path for this ( i.e. the URI ).
 
 	// Check the PATH_TRANSLATED specs before changing!
-	return context.getRealPath( getPathInfo() );
+	if( pathTranslated==null)
+	    pathTranslated=context.getRealPath( getPathInfo() );
+	return pathTranslated;
     }
 
 
@@ -249,6 +254,9 @@ public class RequestImpl  implements Request {
     }
 
     public String getRemoteUser() {
+	if( remoteUser!=null)
+	    return remoteUser;
+	
 	// Using the Servlet 2.2 semantics ...
 	//  return request.getRemoteUser();
 	java.security.Principal p = getUserPrincipal();

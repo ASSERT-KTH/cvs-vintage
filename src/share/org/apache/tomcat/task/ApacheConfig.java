@@ -73,18 +73,49 @@ import javax.servlet.http.*;
  */
 public class ApacheConfig  { // implements XXX
     // XXX maybe conf/
-    public static final String APACHE_CONFIG="/etc/tomcat-apache.conf";
+    public static final String APACHE_CONFIG="/conf/tomcat-apache.conf";
     
     public ApacheConfig() {
     }
 
+    String findApache() {
+	return null;
+    }
+    
     public void execute(ContextManager cm) throws TomcatException {
 	try {
 	    String tomcatHome= cm.getHome();
+	    String apacheHome=findApache();
+	    
 	    System.out.println("Tomcat home= " + tomcatHome);
 	    
 	    FileWriter configW=new FileWriter( tomcatHome + APACHE_CONFIG);
 	    PrintWriter pw=new PrintWriter( configW );
+
+	    if( System.getProperty( "os.name" ).equalsIgnoreCase("windows") ) {
+		pw.println("LoadModule jserv_module modules/ApacheModuleJServ.dll");
+	    } else {
+		// XXX XXX change it to mod_jserv_${os.name}.so, put all so in tomcat
+		// home
+		pw.println("LoadModule jserv_module libexec/mod_jserv.so");
+	    }
+
+	    pw.println("ApJServManual on");
+	    pw.println("ApJServDefaultProtocol ajpv12");
+	    pw.println("ApJServSecretKey DISABLED");
+	    pw.println("ApJServMountCopy on");
+	    pw.println("ApJServLogLevel notice");
+	    pw.println();
+	    
+	    // XXX read it from ContextManager
+	    pw.println("ApJServDefaultPort 8007");
+
+	    pw.println();
+	    pw.println("AddType test/jsp .jsp");
+	    pw.println("AddHandler jserv-servlet .jsp");
+
+	    
+	    // Set up contexts 
 	    
 	    Enumeration enum = cm.getContextNames();
 	    while (enum.hasMoreElements()) {
@@ -93,23 +124,44 @@ public class ApacheConfig  { // implements XXX
 		if( path.length() > 1) {
 		    // It's not the root context
 		    // assert path.startsWith( "/" )
+
+		    // Static files will be served by Apache
 		    pw.println("Alias " + path + " " + tomcatHome + "/webapps" + path);
+
+		    // Dynamic /servet pages go to tomcat
 		    pw.println("ApJServMount " + path +"/servlet" + " " + path);
+
+		    // Deny WEB-INF
 		    pw.println("<Location " + path + "/WEB-INF/ >");
 		    pw.println("    AllowOverride None");
 		    pw.println("    deny from all");
 		    pw.println("</Location>");
 		    pw.println();
-		    pw.println("<Location " + path + "/servlet/ >");
-		    pw.println("    AllowOverride None");
-		    pw.println("    SetHandler jserv-servlet");
-		    pw.println("</Location>");
-		    pw.println();
-		    pw.println("<Location " + path + " >");
-		    pw.println("    AllowOverride None");
-		    pw.println("    AddHandler jserv-servlet .jsp");
-		    pw.println("    Options Indexes");
-		    pw.println("</Location>");
+
+		    // SetHandler broken in jserv ( no zone is sent )
+		    // 		    pw.println("<Location " + path + "/servlet/ >");
+		    // 		    pw.println("    AllowOverride None");
+		    // 		    pw.println("    SetHandler jserv-servlet");
+		    // 		    pw.println("</Location>");
+		    // 		    pw.println();
+
+		    // XXX check security
+		    if( false ) {
+			pw.println("<Location " + path + "/servlet/ >");
+			pw.println("    AllowOverride None");
+			pw.println("   AuthName \"restricted \"");
+			pw.println("    AuthType Basic");
+			pw.println("    AuthUserFile conf/users");	    
+			pw.println("    require valid-user");
+			pw.println("</Location>");
+		    }
+				    
+		    // SetHandler broken in jserv ( no zone is sent )
+		    // 		    pw.println("<Location " + path + " >");
+		    // 		    pw.println("    AllowOverride None");
+		    // 		    pw.println("    AddHandler jserv-servlet .jsp");
+		    // 		    pw.println("    Options Indexes");
+		    // 		    pw.println("</Location>");
 
 		    // XXX ErrorDocument
 
@@ -126,8 +178,9 @@ public class ApacheConfig  { // implements XXX
 
 	    pw.close();
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
-	    throw new TomcatException( "Error generating Apache config", ex );
+	    //	    ex.printStackTrace();
+	    //throw new TomcatException( "Error generating Apache config", ex );
+	    System.out.println("Failed to generate automactic apache confiugration " + ex.toString());
 	}
 	    
     }
