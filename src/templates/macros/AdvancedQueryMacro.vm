@@ -109,6 +109,7 @@ from:&#160;<input type="text" size="20"
 
 ## Determine what the previous value of the selected user attribute
 ## In case page has been reloaded
+  #set ($selectedAttr = "")
 #if ($user.UserName.equals($data.Parameters.getString("add_user")))
   #set ($selectedAttr = $data.Parameters.getString("add_user_attr"))
 #else
