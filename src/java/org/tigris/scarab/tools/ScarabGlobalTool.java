@@ -81,7 +81,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.17 2002/01/15 21:07:05 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.18 2002/01/18 17:23:45 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -125,7 +125,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     
     /**
      * holds the Scarab permission constants.  It will be available to 
-     * the template system as $scarabG..PERMISSION_NAME.
+     * the template system as $scarabG.PERMISSION_NAME.
      */
     public FieldMethodizer getPermission()
     {
@@ -197,6 +197,16 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * @param ascOrDesc either "ASC" of "DESC" specifying the order to sort in
      * @returns a List of users matching the specifed criteria
      * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     */
+    /**
+     * Describe <code>getSearchUsers</code> method here.
+     *
+     * @param searchField a <code>String</code> value
+     * @param searchCriteria a <code>String</code> value
+     * @param orderByField a <code>String</code> value
+     * @param ascOrDesc a <code>String</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
      */
     public List getSearchUsers(String searchField, String searchCriteria, 
                                String orderByField, String ascOrDesc)
@@ -277,7 +287,79 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         }
         return (userSearchList);
     }
-    
-    
+
+    /**
+     * Creates a new array with elements reversed from the given array.
+     *
+     * @param the orginal <code>Object[]</code> 
+     * @return a new <code>Object[]</code> with values reversed from the 
+     * original
+     */
+    public Object[] reverse(Object[] a)
+    {
+        Object[] b = new Object[a.length];
+        for ( int i=a.length-1; i>=0; i--) 
+        {
+            b[a.length-1-i] = a[i];
+        }
+        return b;
+    }
+
+    /**
+     * Creates a new List with elements reversed from the given List.
+     *
+     * @param the orginal <code>List</code> 
+     * @return a new <code>List</code> with values reversed from the 
+     * original
+     */
+    public List reverse(List a)
+    {
+        int size = a.size();
+        List b = new ArrayList(size);
+        for ( int i=size-1; i>=0; i--) 
+        {
+            b.add(a.get(i));
+        }
+        return b;
+    }
+
+    /**
+     * Creates  a view of the portion of the given
+     * List between the specified fromIndex, inclusive, and toIndex, exclusive
+     * The list returned by this method is backed by the original, so changes
+     * to either affect the other.
+     *
+     * @param the orginal <code>List</code> 
+     * @return a derived <code>List</code> with a view of the original
+     */
+    public List subset(List a, Integer fromIndex, Integer toIndex)
+    {
+        int from = Math.min(fromIndex.intValue(), a.size());         
+        from = Math.max(from, 0);
+        int to = Math.min(toIndex.intValue(), a.size()); 
+        to = Math.max(to, from); 
+        return a.subList(from, to);
+    }
+
+    /**
+     * Creates a new array with a view of the portion of the given array
+     * between the specified fromIndex, inclusive, and toIndex, exclusive
+     *
+     * @param the orginal <code>Object[]</code> 
+     * @return a new <code>Object[]</code> with a view of the original
+     */
+    public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex)
+    {
+        int from = Math.min(fromIndex.intValue(), a.length);
+        from = Math.max(from, 0);
+        int to = Math.min(toIndex.intValue(), a.length); 
+        to = Math.max(to, from); 
+        Object[] b = new Object[from-to];
+        for ( int i=from-1; i>=to; i--) 
+        {
+            b[i-to] = a[i];
+        }
+        return b;
+    }
 }
 

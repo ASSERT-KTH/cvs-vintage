@@ -69,7 +69,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.10 2001/12/04 15:55:03 dr Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.11 2002/01/18 17:23:45 jmcnally Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -79,6 +79,31 @@ public interface ScarabGlobalScope extends ApplicationTool
      */
     public FieldMethodizer getConstant();
 
+    /**
+     * holds the Scarab permission constants.  It will be available to 
+     * the template system as $scarabG.PERMISSION_NAME.
+     */
+    public FieldMethodizer getPermission();
+        
+    /**
+     * Gets a List of all of user objects
+     * By attribute Type : either user, or non-user.
+     */
+    public List getUserAttributes()
+        throws Exception;
+
+    /**
+     * Gets a List of all of user Attribute objects.
+     */
+    public List getAttributes(String attributeType)
+        throws Exception;
+
+    /**
+     * gets a list of all Issue Types 
+     */
+    public List getAllIssueTypes()
+        throws Exception;
+    
     /**
      * Gets a List of all of the Attribute objects.
      */
@@ -98,4 +123,42 @@ public interface ScarabGlobalScope extends ApplicationTool
     public List getSearchUsers(String searchField, String searchCriteria, 
                                String orderByField, String ascOrDesc)
         throws Exception;
+
+    /**
+     * Creates a new array with elements reversed from the given array.
+     *
+     * @param the orginal <code>Object[]</code> 
+     * @return a new <code>Object[]</code> with values reversed from the 
+     * original
+     */
+    public Object[] reverse(Object[] a);
+
+    /**
+     * Creates a new List with elements reversed from the given List.
+     *
+     * @param the orginal <code>List</code> 
+     * @return a new <code>List</code> with values reversed from the 
+     * original
+     */
+    public List reverse(List a);
+
+    /**
+     * Creates  a view of the portion of the given
+     * List between the specified fromIndex, inclusive, and toIndex, exclusive
+     * The list returned by this method is backed by the original, so changes
+     * to either affect the other.
+     *
+     * @param the orginal <code>List</code> 
+     * @return a derived <code>List</code> with a view of the original
+     */
+    public List subset(List a, Integer fromIndex, Integer toIndex);
+
+    /**
+     * Creates a new array with a view of the portion of the given array
+     * between the specified fromIndex, inclusive, and toIndex, exclusive
+     *
+     * @param the orginal <code>Object[]</code> 
+     * @return a new <code>Object[]</code> with a view of the original
+     */
+    public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex);
 }

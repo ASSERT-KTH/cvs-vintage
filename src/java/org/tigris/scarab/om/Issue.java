@@ -882,7 +882,7 @@ public class Issue
     /**
      * Gets default history limit for this module-issue type.
      */
-    private int getHistoryLimit() throws Exception
+    public int getHistoryLimit() throws Exception
     {
         int limit=0;
         try

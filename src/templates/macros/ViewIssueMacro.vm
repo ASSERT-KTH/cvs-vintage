@@ -115,7 +115,13 @@
       #indexedRows($velocityCount)
       #set ($userId = $attVal.UserId)
       #set ($assignedUser = $scarabR.getUser($userId))
-      <td>$assignedUser.FirstName $assignedUser.LastName</td>
+
+      <td>
+        $assignedUser.FirstName $assignedUser.LastName
+        #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $scarabR.CurrentModule))
+            <strong>(disabled)</strong>
+        #end
+      </td>
       <td><a href="mailto:$assignedUser.Email">$assignedUser.Email</td>
       <td>$scarabR.getAttribute($attVal.AttributeId).Name </td>
       </tr>
@@ -419,10 +425,9 @@
     
 
 ## ISSUE HISTORY
-#if ($fullHistory.equals("true"))
-  #set ($activity = $currentIssue.getActivity(true))
-#else
-  #set ($activity = $currentIssue.getActivity(false))
+#set ($activity = $scarabG.reverse($currentIssue.getActivity(true)))
+#if (!$fullHistory.equals("true"))
+  #set ($activity = $scarabG.subset($activity, 0, $currentIssue.HistoryLimit))
 #end
 
 #if (!$activity.isEmpty())
