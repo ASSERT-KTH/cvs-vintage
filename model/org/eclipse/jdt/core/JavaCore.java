@@ -19,7 +19,6 @@
  *     IBM Corporation - added the following constants:
  *                                 CORE_JAVA_BUILD_CLEAN_OUTPUT_FOLDER
  *                                 CLEAN
- *     IBM Corporation - added getClasspathContainerInitializer(String)
  ******************************************************************************/
 package org.eclipse.jdt.core;
 
