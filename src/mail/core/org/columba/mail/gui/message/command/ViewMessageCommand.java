@@ -25,9 +25,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MessageViewOwner;
@@ -75,21 +73,6 @@ public class ViewMessageCommand extends Command {
 		// display changes
 		messageController.updateGUI();
 
-		// FIXME
-		/*
-		if (flags == null)
-			return;
-
-		// if the message it not yet seen
-		if (!flags.getSeen() && !srcFolder.isReadOnly()) {
-			// restart timer which marks the message as read
-			// after a user configurable time interval
-			((TableViewOwner) frameMediator).getTableController()
-					.restartMarkAsReadTimer(
-							(MailFolderCommandReference) getReference());
-		}
-		*/
-		
 	}
 
 	/**
@@ -135,8 +118,23 @@ public class ViewMessageCommand extends Command {
 		IMessageController messageController = ((MessageViewOwner) frameMediator)
 				.getMessageController();
 
-		
 		messageController.showMessage(srcFolder, uid);
 
+		restartMarkAsReadTimer(flags);
+	}
+
+	private void restartMarkAsReadTimer(Flags flags) throws Exception {
+
+		if (flags == null)
+			return;
+
+		// if the message it not yet seen
+		if (!flags.getSeen() && !srcFolder.isReadOnly()) {
+			// restart timer which marks the message as read
+			// after a user configurable time interval
+			((TableViewOwner) frameMediator).getTableController()
+					.restartMarkAsReadTimer(
+							(MailFolderCommandReference) getReference());
+		}
 	}
 }
