@@ -50,34 +50,20 @@ package org.tigris.scarab.reports;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.sql.Connection;
 import com.workingdogs.village.Record;
 
 // Turbine classes
-import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.om.RModuleAttribute;
-import org.tigris.scarab.om.RModuleAttributeManager;
-import org.tigris.scarab.om.RModuleOption;
-import org.tigris.scarab.om.RModuleOptionManager;
-import org.tigris.scarab.om.AttributeOptionManager;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.ActivitySetPeer;
 import org.tigris.scarab.om.ActivitySetTypePeer;
-import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.IssuePeer;
-import org.tigris.scarab.util.OptionModel;
 import org.tigris.scarab.util.TableModel;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 public class ReportTableModel 
     extends TableModel
@@ -253,7 +239,7 @@ public class ReportTableModel
 
     private Object[] getColumnDataArray(int column)
     {
-        Object[] dataArray = null;
+        Object[] dataArray;
         if (columnHeadings == null) 
         {
             dataArray = new Object[0];
@@ -275,7 +261,7 @@ public class ReportTableModel
 
     private Object[] getRowDataArray(int row)
     {
-        Object[] dataArray = null;
+        Object[] dataArray;
         if (rowHeadings == null) 
         {
             dataArray = new Object[0];
@@ -297,8 +283,7 @@ public class ReportTableModel
     public Object getValueAt(int row, int column)
         throws Exception
     {
-        Object contents = null;
-        if (row < 0 || row >= getRowCount()) 
+        if (row < 0 || row >= getRowCount())
         {
             throw new IndexOutOfBoundsException("Row index was " + row);
         }
@@ -308,6 +293,7 @@ public class ReportTableModel
             throw new IndexOutOfBoundsException("Column index was " + column);
         }
 
+        Object contents = null;
         // could use a categories list to make this simpler
         if (columnHeadings != null && columnHeadings.size() == 1 && 
             ((ReportHeading)columnHeadings.get(0)).get(0) instanceof ReportDate) 

@@ -389,13 +389,10 @@ public  class ReportBridge
         {
             // if no date was set just set this 
             // date to the current time
-            if (getDefaultDate() == null) 
+            generatedDate = getDefaultDate();
+            if (generatedDate == null)
             {
                 generatedDate = new Date();
-            }
-            else 
-            {
-                generatedDate = getDefaultDate();
             }
         }
         

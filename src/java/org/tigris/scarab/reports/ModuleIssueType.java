@@ -100,12 +100,8 @@ public class ModuleIssueType
 
     public int hashCode()
     {
-        int result = 0;
-        if (moduleId != null) 
-        {
-            result = moduleId.intValue();
-        }
-        if (issueTypeId != null) 
+        int result = moduleId == null ? 0 : moduleId.intValue();
+        if (issueTypeId != null)
         {
             result += issueTypeId.intValue();
         }
@@ -121,11 +117,7 @@ public class ModuleIssueType
      */ 
     public String getQueryKey()
     {
-        if (queryKey == null) 
-        {
-            return "";
-        }
-        return queryKey;
+        return queryKey = null ? "" : queryKey;
     }
     
     /**

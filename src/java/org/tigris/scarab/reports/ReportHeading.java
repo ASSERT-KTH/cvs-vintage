@@ -540,11 +540,7 @@ public class ReportHeading
      */ 
     public String getQueryKey()
     {
-        if (queryKey == null) 
-        {
-            return "";
-        }
-        return queryKey;
+        return queryKey == null ? "" : queryKey;
     }
     
     /**
