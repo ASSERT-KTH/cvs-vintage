@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.27 2001/03/04 03:36:52 costin Exp $
+/* $Id: Main.java,v 1.28 2001/03/04 22:38:14 melaquias Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -81,30 +81,35 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	<ol>
 	<li>a 'common' loader to be the parent of both the server
 	    container and also webapp loaders.</li>
-	<li>a 'shared' loader to load classes used by all webapps, but
+	<li>an 'applications' loader to load classes used by all webapps, but
 	    not the servlet engine.</i>
-	<li>a 'server' loader exclusively for the tomcat servlet engine.</li>
+	<li>a 'container' loader exclusively for the tomcat servlet engine.</li>
 	</ol>
-	Both the 'shared' loader and 'server' loader have the common loader as
+	Both the 'apps' loader and 'container' loader have the common loader as
 	the parent class loader.  The class path for each is assembled like so:
 	<ul>
-	<li>common - all elements of the <code>org.apache.tomcat.common.classpath</code>
-	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/common/.</li>
-	<li>shared - all elements of the <code>org.apache.tomcat.shared.classpath</code>
-	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/shared/.</i>
-	<li>server - all jar files found in ${TOMCAT_HOME}/lib, plus the class
-	      folder ${TOMCAT_HOME}/classes and finally also the utility jar
-	      file ${JAVA_HOME}/lib/tools.jar.</li>
-	</ol>
+	<li>common - all elements of the 
+	      <code>org.apache.tomcat.common.classpath</code>
+	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/common/.
+	      </li>
+	<li>apps - all elements of the 
+	      <code>org.apache.tomcat.apps.classpath</code>
+	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/apps/.
+	      In addition, all classes loaded via the 'common' loader.</i>
+	<li>container - all jar files found in ${TOMCAT_HOME}/lib/container/ plus 
+	      the class folder ${TOMCAT_HOME}/classes and finally also the utility 
+	      jar file ${JAVA_HOME}/lib/tools.jar.  In addition, all classes loaded
+	      via the common loader.</li>
+	</ul>
 	After creating the above class loaders, this class instantiates, initializes
 	and starts an instance of the class <code>org.apache.tomcat.startup.Tomcat</code>.
 	<p>
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.27 $ $Date: 2001/03/04 03:36:52 $
+	@version $Revision: 1.28 $ $Date: 2001/03/04 22:38:14 $
  */
-public class Main {
+public class Main{
 
     /**
             name of configuration property to set (using the -D option at
@@ -114,18 +119,18 @@ public class Main {
             normal file paths separated by the path.seperator delimiter for
             the host platform.  Example (unix):
             <pre><code>
-            * org.apache.tomcat.shared.classpath = /home/mypath/lib/mylib.jar: \
+            * org.apache.tomcat.apps.classpath = /home/mypath/lib/mylib.jar: \
             *                                      /home/mypath/classes/
             </code></pre>
     */
-    public static final String TOMCAT_SHARED_CLASSPATH_PROPERTY =
-            "org.apache.tomcat.shared.classpath";
+    public static final String TOMCAT_APPS_CLASSPATH_PROPERTY =
+            "org.apache.tomcat.apps.classpath";
 
     /**
             the classpath shared among all web apps (in addition to any
-            jar files placed directly in $TOMCAT_HOME/lib/shared/).
+            jar files placed directly in $TOMCAT_HOME/lib/apps/).
     */
-    public static final String TOMCAT_SHARED_CLASSPATH;
+    public static final String TOMCAT_APPS_CLASSPATH;
 
     /**
             name of configuration property to set (using the -D option at
@@ -151,11 +156,11 @@ public class Main {
 
     static{
         String s=null;
-        s = System.getProperty(TOMCAT_SHARED_CLASSPATH_PROPERTY);
+        s = System.getProperty(TOMCAT_APPS_CLASSPATH_PROPERTY);
         if(s==null){
             s="";
         }
-        TOMCAT_SHARED_CLASSPATH=s;
+        TOMCAT_APPS_CLASSPATH=s;
         s=null;
         s = System.getProperty(TOMCAT_COMMON_CLASSPATH_PROPERTY);
         if(s==null){
@@ -234,7 +239,7 @@ public class Main {
         return libBase;
     }
 
-    public String getSharedDir() {
+    public String getAppsDir() {
         if( serverBase!=null ){
             return serverBase;
         }
@@ -288,21 +293,21 @@ public class Main {
                     commonJars.addElement(url);
                 }
             }
-            Vector sharedDirJars = getClassPathV(getSharedDir());
-            Vector sharedJars = getJarsFromClassPath(TOMCAT_SHARED_CLASSPATH);
-            jars = sharedDirJars.elements();
+            Vector appsDirJars = getClassPathV(getAppsDir());
+            Vector appsJars = getJarsFromClassPath(TOMCAT_APPS_CLASSPATH);
+            jars = appsDirJars.elements();
             while(jars.hasMoreElements()){
                 URL url = (URL)jars.nextElement();
-                if(!sharedJars.contains(url)){
-                    sharedJars.addElement(url);
+                if(!appsJars.contains(url)){
+                    appsJars.addElement(url);
                 }
             }
             URL[] commonClassPath=getURLs(commonJars);
             ClassLoader commonCl=
                     jdk11Compat.newClassLoaderInstance(commonClassPath ,parentL);
-            URL[] sharedClassPath=getURLs(sharedJars);
-            ClassLoader sharedCl=
-                    jdk11Compat.newClassLoaderInstance(sharedClassPath ,commonCl);
+            URL[] appsClassPath=getURLs(appsJars);
+            ClassLoader appsCl=
+                    jdk11Compat.newClassLoaderInstance(appsClassPath ,commonCl);
             URL[] serverClassPath=getURLs(serverJars);
             ClassLoader serverCl=
                     jdk11Compat.newClassLoaderInstance(serverClassPath ,commonCl);
@@ -313,7 +318,7 @@ public class Main {
 
             IntrospectionUtils.setAttribute(proxy,"args", args );
             IntrospectionUtils.setAttribute(proxy,"home", homeDir );
-            IntrospectionUtils.setAttribute(proxy,"parentClassLoader",sharedCl);
+            IntrospectionUtils.setAttribute(proxy,"parentClassLoader",appsCl);
             IntrospectionUtils.execute(  proxy, "execute" );
             return;
         } catch( Exception ex ) {
