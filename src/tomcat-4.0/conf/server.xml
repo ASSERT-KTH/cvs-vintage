@@ -51,16 +51,17 @@
          supposed to be faster and less buggy than the old one. If 
          this one doesn't work, then comment this one out and uncomment
          the one below.
+    -->
     <Connector className="org.apache.coyote.tomcat4.CoyoteConnector"
                port="@TOMCAT_HTTP_PORT@" minProcessors="5" maxProcessors="75"
                enableLookups="true" redirectPort="8443"
                acceptCount="10" debug="0" connectionTimeout="60000"/>
-    -->
+
     <!-- Define a non-SSL HTTP/1.1 Connector on port 8080
-     -->
     <Connector className="org.apache.catalina.connector.http.HttpConnector"
                port="@TOMCAT_HTTP_PORT@" minProcessors="5" maxProcessors="75"
                acceptCount="10" debug="0" connectionTimeout="60000"/>
+     -->
 
     <!-- Note : To disable connection timeouts, set connectionTimeout value 
      to -1 -->
