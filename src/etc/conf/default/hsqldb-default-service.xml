@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: hsqldb-default-service.xml,v 1.3 2001/11/12 18:35:18 d_jencks Exp $ -->
+<!-- $Id: hsqldb-default-service.xml,v 1.4 2001/11/15 06:27:28 d_jencks Exp $ -->
 
 
 <server>
@@ -22,14 +22,6 @@
   <!-- to ConnectionFactoryLoader                                           -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.jdbc.HypersonicDatabase" 
-	 name="JBOSS-SYSTEM:service=Hypersonic">
-    <attribute name="Port">1476</attribute>
-    <attribute name="Silent">true</attribute>
-    <attribute name="Database">default</attribute>
-    <attribute name="Trace">false</attribute>
-  </mbean>
-
   <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
 	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
     <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:hsqldb:hsql://localhost:1476
@@ -37,6 +29,10 @@
   UserName=sa</attribute>
     <attribute name="JndiName">DefaultDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
+
+    <!--Anonymous mbean-ref to database being started -->
+    <mbean-ref>JBOSS-SYSTEM:service=Hypersonic</mbean-ref>
+
     <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</mbean-ref>
     <mbean-ref name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory</mbean-ref>
     <attribute name="ConnectionManagerProperties">#
@@ -62,6 +58,10 @@
   AutoCommit=true</attribute>
     <attribute name="JndiName">NoTransDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
+
+    <!--Anonymous mbean-ref to database being started -->
+    <mbean-ref>JBOSS-SYSTEM:service=Hypersonic</mbean-ref>
+
     <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</mbean-ref>
     <mbean-ref name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory</mbean-ref>
     <attribute name="ConnectionManagerProperties">#
@@ -77,6 +77,16 @@
       org.jboss.resource.security.ManyToOnePrincipalMapping
    </attribute>
     <attribute name="PrincipalMappingProperties">UserName=sa</attribute>
+  </mbean>
+
+  <!-- Moved to end to test anonymous mbean-refs -->
+
+  <mbean code="org.jboss.jdbc.HypersonicDatabase" 
+	 name="JBOSS-SYSTEM:service=Hypersonic">
+    <attribute name="Port">1476</attribute>
+    <attribute name="Silent">true</attribute>
+    <attribute name="Database">default</attribute>
+    <attribute name="Trace">false</attribute>
   </mbean>
 
 </server>
