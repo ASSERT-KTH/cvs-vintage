@@ -37,8 +37,12 @@ $page.setTitle("Assign users to artifact")
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_TEMPLATE" value="ViewIssue.vm" />
+#if ($multiple)
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssueLong.vm" />
+#else
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+#end
 
 #set ($issueGroup = $intake.Issue.Default)
 #if ($multiple)
