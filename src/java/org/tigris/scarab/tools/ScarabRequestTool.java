@@ -1521,7 +1521,6 @@ try{
             String[] userList = parser.getStrings("user_list");
             if ( userList != null && userList.length > 0)
             {
-
                 List issueIdsFromUserSearch = 
                     getIssueIdsFromUserSearch(user, parser);
                 if (issueIdsFromUserSearch.size() > 0)
@@ -1530,7 +1529,8 @@ try{
                 }
                 else
                 {
-                   searchSuccess = false;
+                    searchSuccess = false;
+                    setInfoMessage("No matching issues.");
                 }
             }
         }
@@ -1746,7 +1746,21 @@ try{
                // If attribute is "committed by", search for creating user
                if (attrId.equals("created_by"))
                {
-                   tempIssueList = IssuePeer.doSelect(createdByCrit);
+                   List createdList = IssuePeer.doSelect(createdByCrit);
+                   if (createdList.size() > 0)
+                   {
+                       List createdIdList = new ArrayList();
+                       for (int j=0; j < createdList.size(); j++)
+                       {
+                           createdIdList
+                               .add(((Issue)createdList.get(j)).getIssueId());
+                       }
+                       Criteria.Criterion cCreated = tempCrit
+                           .getNewCriterion(IssuePeer.ISSUE_ID, 
+                               createdIdList, Criteria.IN); 
+                       tempCrit.add(cCreated);
+                       tempIssueList = IssuePeer.doSelect(tempCrit);
+                   }
                }
                // If attribute is "any", search across user attributes
                else if (attrId.equals("any"))
@@ -1775,6 +1789,8 @@ try{
                    }
 
                    // Combine the two searches with an OR
+                   if (createdIdList.size() > 0 || attrIdList.size() > 0)
+                   {
                    if (createdIdList.size() > 0)
                    {
                        cCreated = attrCrit.getNewCriterion(IssuePeer.ISSUE_ID, 
@@ -1799,6 +1815,7 @@ try{
                        tempCrit.add(cAttr);
                    }
                    tempIssueList = IssuePeer.doSelect(tempCrit);
+                   }
                }
                else
                {
@@ -1809,7 +1826,7 @@ try{
                      .add(AttributeValuePeer.DELETED, false);
                    tempIssueList = IssuePeer.doSelect(tempCrit);
                }
-               if (tempIssueList.size() > 0)
+               if (tempIssueList != null && !tempIssueList.isEmpty())
                {
                    atLeastOneMatch = true;
                    // Get issue id list from issue result set
