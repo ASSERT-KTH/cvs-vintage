@@ -9,6 +9,8 @@ package org.jboss.web;
 import java.net.URL;
 import java.util.Iterator;
 
+import javax.management.ObjectName;
+
 import org.jboss.metadata.WebMetaData;
 
 /** A WebApplication represents the information for a war deployment.
@@ -16,7 +18,7 @@ import org.jboss.metadata.WebMetaData;
 @see AbstractWebContainer
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public class WebApplication
 {
@@ -30,6 +32,23 @@ public class WebApplication
     WebMetaData metaData;
     /** Arbitary data object for storing application specific data */
     Object data;
+    /**
+     * Object Name of the JSR-77 parent to which the WebModule has to be added or removed.
+     * Mandatory Steps for ADD:
+     * - Take the property list and migrate them according to getParentKeys() of
+     *   org.jboss.management.j2ee.EJBModule
+     * - Create JSR-77 MBean according to org.jboss.management.j2ee.WebModule
+     *   you have to provide all the attribute this class does but you can add
+     *   attributes and operations as you like
+     * - Create JSR-77 MBeans representing Servlets like org.jboss.managment.j2ee.Servlet
+     * - Add every Servlet MBean in the list of Servlets in the WebModule
+     * - Finally call addChild() on this given MBean
+     * Mandatory Steps for REMOVE:
+     * - Call removeChild() of this given MBean
+     * - unregister WebModule and its Servlets MBean
+     **/
+    ObjectName managementParent;
+        
 
     /** Create an empty WebApplication instance
      */
@@ -133,6 +152,15 @@ public class WebApplication
         this.data = data;
     }
 
+    public ObjectName getManagementParent()
+    {
+       return managementParent;
+    }
+    
+    public void setManagementParent( ObjectName parent ) {
+       managementParent = parent;
+    }
+    
     public String toString()
     {
         StringBuffer buffer = new StringBuffer("{WebApplication: ");

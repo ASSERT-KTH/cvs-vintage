@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.management.JMException;
 import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -52,6 +53,9 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
+import org.jboss.management.j2ee.J2EEApplication;
+import org.jboss.management.j2ee.J2EEManagedObject;
+import org.jboss.management.j2ee.J2EEServer;
 import org.jboss.naming.ENCFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
@@ -155,7 +159,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.49 $
+@version $Revision: 1.50 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -401,6 +405,53 @@ public abstract class AbstractWebContainer
          // Parse the web.xml and jboss-web.xml descriptors
          WebMetaData metaData = parseMetaData(webContext, warURL);
          WebApplication warInfo = new WebApplication(metaData);
+         //AS Lookup the parent management Object and set it in the WebApplication
+         try {
+            ObjectName lServerQuery = new ObjectName(
+               J2EEManagedObject.getDomainName() + ":" +
+               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
+               "*"
+            );
+            Set lServers = server.queryNames( lServerQuery, null );
+            if( lServers.size() == 1 )
+            {
+               ObjectName lServer = (ObjectName) lServers.iterator().next();
+               String lServerName = lServer.getKeyPropertyList().get( J2EEManagedObject.TYPE ) + "=" +
+                                    lServer.getKeyPropertyList().get( "name" );
+               String lApplicationName = di.parent == null ? null : di.parent.shortName;
+               // if pName is null then this is a standalone module
+               if( lApplicationName == null )
+               {
+                  warInfo.setManagementParent( lServer );
+               } else {
+                  ObjectName lApplicationQuery =  new ObjectName(
+                     J2EEManagedObject.getDomainName() + ":" +
+                     J2EEManagedObject.TYPE + "=" + J2EEApplication.J2EE_TYPE + "," +
+                     "name=" + lApplicationName + "," +
+                     lServerName + "," +
+                     "*"
+                  );
+                  Set lApplications = server.queryNames( lApplicationQuery, null );
+                  if( lApplications.isEmpty() ) {
+                     warInfo.setManagementParent( lServer );
+                  } else
+                  if( lApplications.size() == 1 ) {
+                     warInfo.setManagementParent( (ObjectName) lApplications.iterator().next() );
+                  } else
+                  {
+                     log.error( "Wrong number of applications found, should be 1: " + lApplications.size() );
+                  }
+               }
+            }
+            else
+            {
+               log.error( "Wrong number of servers found, should be 1: " + lServers.size() );
+            }
+         }
+         catch( JMException jme ) {
+            log.error( "Could not find server or applications", jme );
+         }
+         //AS End
          performDeploy(warInfo, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
       }
