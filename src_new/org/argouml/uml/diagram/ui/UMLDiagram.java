@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.51 2004/09/19 09:46:10 mvw Exp $
+// $Id: UMLDiagram.java,v 1.52 2004/10/06 20:03:46 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -526,6 +526,50 @@ public abstract class UMLDiagram
                 tb.setBorderPainted(false);
             }
         }
+    }
+
+    /**
+     * Factory method to build an Action for creating a node in the
+     * diagram.
+     * 
+     * @param modelElement identifies the model element type to make
+     * @param descr the description to give this action.
+     * @return The action to create a new node.
+     */
+    protected Action makeCreateNodeAction(Object modelElement, String descr) {
+        return new RadioAction(new CmdCreateNode(modelElement, descr));
+    }
+
+    /**
+     * Factory method to build an Action for creating an edge in the
+     * diagram.
+     * 
+     * @param modelElement identifies the model element type to make
+     * @param descr the description to give this action.
+     * @return The action to create a new node.
+     */
+    protected Action makeCreateEdgeAction(Object modelElement, String descr) {
+        return new RadioAction(
+            new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
+            modelElement, descr));
+    }
+    
+    /**
+     * Factory method to build an Action for creating an association edge in
+     * the diagram.
+     * 
+     * @param aggregationKind the type of aggregation for this association
+     * @param unidirectional true if this is a one way association.
+     * @param descr the description to give this action.
+     * @return The action to create a new association.
+     */
+    protected Action makeCreateAssociationAction(
+            Object aggregationKind,
+            boolean unidirectional,
+            String descr) {
+        
+        return new RadioAction(
+            new ActionAddAssociation(aggregationKind, unidirectional, descr));
     }
 } /* end class UMLDiagram */
 
