@@ -116,7 +116,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
                 bodytextViewer, securityInformationController,
                 attachmentController.getView());
         //view.addHyperlinkListener(this);
-        view.addMouseListener(this);
+        view.getViewport().getView().addMouseListener(this);
 
         ((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
