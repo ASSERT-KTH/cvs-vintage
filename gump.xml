@@ -10,7 +10,7 @@
   <project name="jakarta-tomcat">
     <package>org.apache.tomcat</package>
 
-    <ant target="dist">
+    <ant target="dist-gump">
       <property name="jaxp.home" reference="home" project="jaxp"/>
       <property name="ant.home" reference="home" project="jakarta-ant"/>
       <property name="jsse.home" reference="home" project="jsse"/>

@@ -257,12 +257,24 @@
     <chmod perm="+x" file="${tomcat.build}/bin/shutdown.sh"/>
   </target>
 
+  <target name="deps" description="Build repositoried that depends on. To be called before main" >
+        <ant dir="${jakarta-tomcat-connectors}/util" />
+        <ant dir="${jakarta-tomcat-connectors}/coyote">
+            <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+        </ant>
+        
+        <ant dir="${jakarta-tomcat-connectors}/http11" />
+            
+        <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
+            <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+        </ant>
+  </target>
+
+
   <!-- ==================== Tomcat util ==================== -->
   <!-- Local Tomcat utilities -->
 
   <target name="tomcat_util" depends="prepare">
-    <ant dir="${jakarta-tomcat-connectors}/util" />
-
     <javac destdir="${tomcat.build}/classes"
            debug="${debug}"
            optimize="${optimize}"
@@ -512,14 +524,10 @@
 
   <target name="coyote" depends="prepare,tomcat_core,tomcat_modules"  >
     <echo message="Building Coyote"/>
-    <!-- By now we have built the modules coyote needs -->
-    <ant dir="${jakarta-tomcat-connectors}/coyote">
-        <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
-    </ant>
 
-    <ant dir="${jakarta-tomcat-connectors}/http11" />
-
-    <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
+    <!-- This can't be compiled while j-t-c is built - tomcat is built
+         after, so files depending on 3.3 are ignored -->
+    <ant dir="${jakarta-tomcat-connectors}/coyote" target="compile.tomcat33" >
         <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
     </ant>
 
@@ -786,10 +794,13 @@
 
 
   <!-- ==================== Copy the files to distribution format ======== -->
-  <target name="dist" depends="dist.prepare,javadoc,dist.war">
+  <target name="dist" depends="main,webapps,tomcat-jars,dist.prepare,javadoc,dist.war">
   </target>
 
-  <target name="dist.prepare" depends="main,webapps,tomcat-jars">
+  <target name="dist-gump" depends="main-gump,webapps,tomcat-jars,dist.prepare,javadoc,dist.war">
+  </target>
+
+  <target name="dist.prepare" >
 
     <mkdir dir="${tomcat.dist}"/>
     <mkdir dir="${tomcat.dist}/webapps"/>
@@ -955,7 +966,12 @@
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
 
-  <target name="main" depends="tomcat,webapps">
+  <target name="main" depends="deps,tomcat,webapps"
+          description="Built tomcat in build/, without packaging. Include all dependent code" >
+  </target>
+
+  <target name="main-gump" depends="tomcat,webapps" 
+          description="Build tomcat but not the code it depends on. For gump use">
   </target>
 
 
