@@ -68,6 +68,8 @@ public class AttributePeer
     public static final NumberKey STATUS__PK = new NumberKey("3");
     public static final NumberKey RESOLUTION__PK = new NumberKey("4");
     public static final NumberKey TOTAL_VOTES__PK = new NumberKey("13");
+    public static final String EMAIL_TO = "to";
+    public static final String CC_TO = "cc";
 
     /**
      *  Gets a List of all of the Attribute objects in the database.
