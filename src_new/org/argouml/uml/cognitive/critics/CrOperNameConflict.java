@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.6 2003/01/25 16:25:27 linus Exp $
+// $Id: CrOperNameConflict.java,v 1.7 2003/02/02 12:39:27 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,7 @@ public class CrOperNameConflict extends CrUML {
             return NO_PROBLEM;
         }
 
-	Iterator enum = ModelFacade.getOperations(dm);
+	Iterator enum = ModelFacade.getOperations(dm).iterator();
 
         // Get all the features (giving up if there are none). Then loop
         // through finding all operations. Each time we find one, we compare

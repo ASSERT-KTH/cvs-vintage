@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.12 2003/01/29 05:42:16 mkl Exp $
+// $Id: CrNoOperations.java,v 1.13 2003/02/02 12:39:27 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class CrNoOperations extends CrUML {
 
     private boolean findInstanceOperationInInherited(Object dm, int depth)
     {
-	Iterator enum = ModelFacade.getOperations(dm);
+	Iterator enum = ModelFacade.getOperations(dm).iterator();
 
 	while (enum.hasNext()) {
 	    if (ModelFacade.isInstanceScope(enum.next()))

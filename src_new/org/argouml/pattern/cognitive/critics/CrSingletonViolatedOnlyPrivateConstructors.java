@@ -1,4 +1,4 @@
-// $Id: CrSingletonViolatedOnlyPrivateConstructors.java,v 1.2 2003/01/22 04:17:12 linus Exp $
+// $Id: CrSingletonViolatedOnlyPrivateConstructors.java,v 1.3 2003/02/02 12:39:27 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,7 @@ public class CrSingletonViolatedOnlyPrivateConstructors extends CrUML {
             return NO_PROBLEM;
         }
 
-	Iterator operations = ModelFacade.getOperations(dm);
+	Iterator operations = ModelFacade.getOperations(dm).iterator();
 
 	while (operations.hasNext()) {
 	    Object o = operations.next();
