@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.233 2002/09/24 20:02:31 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.234 2002/09/24 21:05:51 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -25,9 +25,6 @@
                      and options; these are then all added to a module when the issue type
                      is associated with it. PCN #11329 (EWD)</li>
                  <li>When copying a global issue type, all its attribute groups and attributes are added with it. (EWD) </li>
-                 <li>Can now delete and undelete global issue types.(EWD)</li>
-                 <li>Email notifications for an issue are now sent out to associated users
-                     for dependant issues. PCN #11710 (EWD) </li>
             </ul>
         </td>
     </tr>
@@ -35,6 +32,10 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b11</h3>
             <ul>
+                <li>Building Tomcat is now optional.
+                    For more information, see Bug Report
+                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB219">
+                    SCB219</a>. (JSS)</li>
                 <li>Problem with Torque and Postgresql and boolean values
                     has now been resolved.
                     For more information, see Bug Report
@@ -50,9 +51,6 @@
                     For more information, see Bug Report
                     #<a href="http://scarab.whichever.com:8081/issues/id/SCB186">
                     SCB186</a>. (JDM)</li>
-                <li>Sorting the issue list on an attribute should work now. 
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB136">
-                    SCB136</a>.(EWD)</li>
             </ul>
         </td>
     </tr>
@@ -129,9 +127,6 @@
                     For more information, see Bug Report
                     #<a href="http://scarab.whichever.com:8081/issues/id/SCB174">
                     SCB174</a>. (JDM)</li>
-                <li>When an attribute is added to an issue type, it should now 
-                    inherit the preferred order of the options for the global attribute.
-                    (EWD)</li>
 
             </ul>
         </td>
