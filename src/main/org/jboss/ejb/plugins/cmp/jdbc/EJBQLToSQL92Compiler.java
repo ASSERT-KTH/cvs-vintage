@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -133,8 +133,11 @@ public final class EJBQLToSQL92Compiler
          // translate to sql
          sql = ejbqlNode.jjtAccept(this, new StringBuffer()).toString();
 
-         log.debug("ejbql: " + ejbql);
-         log.debug("sql: " + sql);
+         if(log.isTraceEnabled())
+         {
+            log.trace("ejbql: " + ejbql);
+            log.trace("sql: " + sql);
+         }
       }
       catch(Exception e)
       {
@@ -280,22 +283,44 @@ public final class EJBQLToSQL92Compiler
 
       // assemble sql
       StringBuffer sql = (StringBuffer) data;
-      sql.append(SQLUtil.SELECT);
-      if(((ASTSelect) selectNode).distinct || returnType == Set.class || forceDistinct)
+      if(selectManager.getMetaData().hasRowLocking() && !(selectObject instanceof SelectFunction))
       {
-         sql.append(SQLUtil.DISTINCT);
-      }
-      sql.append(selectClause)
-         .append(fromClause);
+         JDBCFunctionMappingMetaData rowLockingTemplate = typeMapping.getRowLockingTemplate();
+         if(rowLockingTemplate == null)
+         {
+            throw new IllegalStateException("Row locking template is not defined for given mapping: " + typeMapping.getName());
+         }
 
-      if(whereClause != null && whereClause.length() > 0)
-      {
-         sql.append(SQLUtil.WHERE).append(whereClause);
-      }
+         boolean distinct = ((ASTSelect) selectNode).distinct || returnType == Set.class || forceDistinct;
 
-      if(orderByClause != null && orderByClause.length() > 0)
+         Object args[] = new Object[]{
+            distinct ? SQLUtil.DISTINCT + selectClause : selectClause.toString(),
+            fromClause,
+            whereClause == null || whereClause.length() == 0 ? null : whereClause,
+            orderByClause == null || orderByClause.length() == 0 ? null : orderByClause
+         };
+         rowLockingTemplate.getFunctionSql(args, sql);
+      }
+      else
       {
-         sql.append(SQLUtil.ORDERBY).append(orderByClause);
+         sql.append(SQLUtil.SELECT);
+         if(((ASTSelect) selectNode).distinct || returnType == Set.class || forceDistinct)
+         {
+            sql.append(SQLUtil.DISTINCT);
+         }
+         sql.append(selectClause)
+            .append(SQLUtil.FROM)
+            .append(fromClause);
+
+         if(whereClause != null && whereClause.length() > 0)
+         {
+            sql.append(SQLUtil.WHERE).append(whereClause);
+         }
+
+         if(orderByClause != null && orderByClause.length() > 0)
+         {
+            sql.append(SQLUtil.ORDERBY).append(orderByClause);
+         }
       }
 
       if(countCompositePk)
@@ -734,13 +759,17 @@ public final class EJBQLToSQL92Compiler
          }
          else
          {
-            throw new IllegalStateException("There should be collection valued path expression, not identification variable.");
+            throw new IllegalStateException(
+               "There should be collection valued path expression, not identification variable.");
          }
 
          sql.append(SQLUtil.WHERE);
          if(memberPath.size() > 1)
          {
-            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(), memberAlias + "_local", colAlias + "_local", sql);
+            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(),
+               memberAlias + "_local",
+               colAlias + "_local",
+               sql);
             String memberParent = aliasManager.getAlias(memberPath.getPath(0));
             sql.append(SQLUtil.AND);
             SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(),
@@ -1205,8 +1234,6 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTFrom from, Object data)
    {
       StringBuffer sql = (StringBuffer) data;
-      sql.append(SQLUtil.FROM);
-
       from.jjtGetChild(0).jjtAccept(this, data);
       for(int i = 1; i < from.jjtGetNumChildren(); ++i)
       {
