@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public abstract class MetaData
    implements XmlLoadable
@@ -216,6 +216,18 @@ public abstract class MetaData
       return getElementContent(getOptionalChild(element, tagName));
    }
    
+   public static boolean getOptionalChildBooleanContent(Element element, String name) throws DeploymentException
+   {
+      Element child = getOptionalChild(element, name);
+      if(child != null)
+      {
+         String value = getElementContent(child).toLowerCase();
+         return value.equals("true") || value.equals("yes");
+      }
+      
+      return false;
+   }
+
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------

@@ -31,7 +31,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -98,6 +98,9 @@ public abstract class BeanMetaData
    private HashMap resourceReferences = new HashMap();
    /** The resource-env-ref element(s) info */
    private HashMap resourceEnvReferences = new HashMap();
+   /** The method attributes */
+   private ArrayList methodAttributes = new ArrayList();
+   private HashMap cachedMethodAttributes = new HashMap();
    /** The assembly-descriptor/method-permission element(s) info */
    private ArrayList permissionMethods = new ArrayList();
    /** The assembly-descriptor/container-transaction element(s) info */
@@ -285,6 +288,40 @@ public abstract class BeanMetaData
       }
 
       return result;
+   }
+
+
+   /**
+    * Checks meta data to obtain the Method Attributes of a bean's method:
+    * method attributes are read-only, idempotent and potentially other ones as well.
+    * These jboss-specific method attributes are described in jboss.xml
+    */
+   private MethodAttributes methodAttributesForMethod(String methodName)
+   {
+      MethodAttributes ma = (MethodAttributes)cachedMethodAttributes.get(methodName);
+      if(ma == null)
+      {
+         Iterator iterator = methodAttributes.iterator();
+         while(iterator.hasNext() && ma == null)
+         {
+            ma = (MethodAttributes)iterator.next();
+            if(!ma.patternMatches(methodName))
+               ma = null;
+         }
+         if(ma == null) ma = MethodAttributes.kDefaultMethodAttributes;
+         if (ma.readOnly) System.out.println("*****" + methodName + " is readonly");
+         if (!ma.readOnly) System.out.println("!!!!!" + methodName + " is write");
+         cachedMethodAttributes.put(methodName, ma);
+      }
+      return ma;
+   }
+
+   /**
+    * Is this method a read-only method described in jboss.xml?
+    */
+   public boolean isMethodReadOnly(String methodName)
+   {
+      return methodAttributesForMethod(methodName).readOnly;
    }
 
    /**
@@ -504,6 +541,24 @@ public abstract class BeanMetaData
          }
          ejbRefMetaData.importJbossXml(ejbRef);
       }
+
+      // Method attributes of the bean
+      Element mas = getOptionalChild(element, "method-attributes");
+      if(mas != null)
+      {
+	  // read in the read-only methods
+	  iterator = getChildrenByTagName(mas, "method");
+	  while (iterator.hasNext())
+	  {
+	      MethodAttributes ma = new MethodAttributes();
+	      Element maNode = (Element)iterator.next();
+	      ma.pattern = getElementContent(getUniqueChild(maNode, "method-name"));
+	      ma.readOnly = getOptionalChildBooleanContent(maNode, "read-only");
+	      ma.idempotent = getOptionalChildBooleanContent(maNode, "idempotent");
+	      methodAttributes.add(ma);
+	  }
+      }
+
 
       // Has a custom invoker been defined?
       //
