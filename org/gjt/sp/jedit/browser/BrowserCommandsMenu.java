@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.6 2002/01/28 11:40:33 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.7 2002/02/11 03:15:30 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -61,10 +61,10 @@ public class BrowserCommandsMenu extends JPopupMenu
 					add(createMenuItem("open"));
 					add(createMenuItem("open-view"));
 					add(createMenuItem("insert"));
-					add(createMenuItem("close"));
 				}
 				else
 					add(createMenuItem("choose"));
+				add(createMenuItem("close"));
 			}
 			else
 			{

@@ -29,7 +29,7 @@ import org.gjt.sp.util.Log;
  * A named location in a buffer.
  *
  * @author Slava Pestov
- * @version $Id: Marker.java,v 1.3 2002/01/28 11:40:33 spestov Exp $
+ * @version $Id: Marker.java,v 1.4 2002/02/11 03:15:30 spestov Exp $
  */
 public class Marker
 {
@@ -84,7 +84,11 @@ public class Marker
 	void removePosition()
 	{
 		// forget the cached Position instance
-		position = null;
+		if(position != null)
+		{
+			pos = position.getOffset();
+			position = null;
+		}
 	} //}}}
 
 	//{{{ setPosition() method

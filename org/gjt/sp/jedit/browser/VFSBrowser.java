@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.32 2002/02/08 02:37:17 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.33 2002/02/11 03:15:30 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -430,6 +430,12 @@ public class VFSBrowser extends JPanel implements EBComponent
 			filterCheckbox.setSelected(true);
 			filterField.setText(filter);
 		}
+	} //}}}
+
+	//{{{ getDirectoryField() method
+	public HistoryTextField getDirectoryField()
+	{
+		return pathField;
 	} //}}}
 
 	//{{{ getDirectory() method

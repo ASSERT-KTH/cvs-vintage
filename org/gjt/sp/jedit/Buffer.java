@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.66 2002/02/10 04:47:16 spestov Exp $
+ * @version $Id: Buffer.java,v 1.67 2002/02/11 03:15:29 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3307,10 +3307,11 @@ public class Buffer implements EBComponent
 		this.tokenMarker = tokenMarker;
 
 		// don't do this on initial token marker
-		if(oldTokenMarker != null)
+		if(oldTokenMarker != null && tokenMarker != oldTokenMarker)
+		{
 			offsetMgr.linesChanged(0,offsetMgr.getLineCount());
-
-		lastTokenizedLine = -1;
+			lastTokenizedLine = -1;
+		}
 	} //}}}
 
 	//{{{ setFoldHandler() method

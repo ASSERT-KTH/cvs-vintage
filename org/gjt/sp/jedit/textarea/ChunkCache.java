@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.22 2002/02/10 04:47:17 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.23 2002/02/11 03:15:30 spestov Exp $
  */
 public class ChunkCache
 {
@@ -226,15 +226,11 @@ public class ChunkCache
 	 * background color hack
 	 * @param background The background color of the painting area,
 	 * used for background color hack
-	 * @param glyphVector This should be true when painting on screen,
-	 * false when painting in a print context; since using the glyph vector
-	 * in printed output results in huge spool files.
 	 * @return The width of the painted text
-	 * @since jEdit 4.0pre4
+	 * @since jEdit 4.0pre6
 	 */
 	public static float paintChunkList(Chunk chunks, Graphics2D gfx,
-		float x, float y, float width, Color background,
-		boolean glyphVector)
+		float x, float y, Color background, boolean glyphVector)
 	{
 		FontMetrics forBackground = gfx.getFontMetrics();
 
@@ -253,9 +249,7 @@ public class ChunkCache
 				Color bgColor = chunks.style.getBackgroundColor();
 				if(bgColor != null)
 				{
-					float x2 = (chunks.next == null
-						&& chunks == first ? width
-						: _x + chunks.width);
+					float x2 = _x + chunks.width;
 
 					//LineMetrics lm = font.getLineMetrics(
 					//	chunks.text,gfx.getFontRenderContext());
