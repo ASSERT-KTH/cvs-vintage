@@ -1,5 +1,5 @@
 
-package org.apache.tomcat.modules.logging;
+package org.apache.tomcat.modules.loggers;
 
 
 import java.io.*;
