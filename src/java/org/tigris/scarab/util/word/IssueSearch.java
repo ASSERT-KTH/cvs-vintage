@@ -951,6 +951,52 @@ public class IssueSearch
         }
     }
 
+    private void addInitialSortCriteria(Criteria crit)
+        throws Exception
+    {
+        NumberKey attId = getInitialSortAttributeId();
+        if ( attId != null ) 
+        {
+            AttributeValue sortAttribute = 
+                AttributeValue.getNewInstance(attId, this);
+            String sortColumn = null;
+            if ( sortAttribute instanceof OptionAttribute ) 
+            {            
+                // we need to join with the r_module_option table, so first 
+                // add the issue columns
+                IssuePeer.addSelectColumns(crit);
+                crit.addSelectColumn(RModuleOptionPeer.PREFERRED_ORDER);
+                crit.add(AttributeValuePeer.ATTRIBUTE_ID, attId );
+                crit.addJoin(IssuePeer.ISSUE_ID, AttributeValuePeer.ISSUE_ID);
+                crit.addJoin(RModuleOptionPeer.OPTION_ID, 
+                             AttributeValuePeer.OPTION_ID);
+                crit.addJoin(IssuePeer.MODULE_ID, RModuleOptionPeer.MODULE_ID);
+                sortColumn = RModuleOptionPeer.PREFERRED_ORDER;
+            }
+            else 
+            {
+                // we need to join with the r_module_option table, so first 
+                // add the issue columns
+                IssuePeer.addSelectColumns(crit);
+                // there can be duplicate issues returned because attributes
+                // may have multiple values.
+                crit.setDistinct();
+                crit.addSelectColumn(AttributeValuePeer.VALUE);
+                crit.add(AttributeValuePeer.ATTRIBUTE_ID, attId );
+                crit.addJoin(IssuePeer.ISSUE_ID, AttributeValuePeer.ISSUE_ID);
+                sortColumn = AttributeValuePeer.VALUE;
+            }            
+            if ( getInitialSortPolarity().equals(ASC)) 
+            {
+                crit.addAscendingOrderByColumn(sortColumn);
+            }
+            else 
+            {
+                crit.addDescendingOrderByColumn(sortColumn);
+            }
+        }
+    }
+
 
     /**
      * Get a List of Issues that match the criteria given by this
@@ -982,20 +1028,8 @@ public class IssueSearch
         // state change query
         addStateChangeQuery(crit);
 
-        /* not ready yet
         // Add any order by clause
-        if ( getInitialSortAttributeId() != null ) 
-        {
-            // we need to join with the option table, so first add the issue
-            // columns
-            IssuePeer.addSelectColumns(crit);
-            crit.addSelectColumn(RModuleOptionPeer.PREFERRED_ORDER);
-            
-            option_id = 
-            attribute_id= getInitialSortAttributeId()
-            
-        }
-        */
+        addInitialSortCriteria(crit);
 
         // get matching issues
         List matchingIssues = IssuePeer.doSelect(crit);
@@ -1003,8 +1037,7 @@ public class IssueSearch
         // text search can lead to an ordered list according to search engine's
         // ranking mechanism, so sort the results according to this list
         // unless another sorting criteria has been specified.
-        if ( getInitialSortAttributeId() == null 
-             && matchingIssueIds != null ) 
+        if ( getInitialSortAttributeId() == null && matchingIssueIds != null ) 
         {
             matchingIssues = 
                 sortByIssueIdList(matchingIssueIds, matchingIssues, 
