@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.188 2004/06/27 17:23:12 d00mst Exp $
+// $Id: ModelFacade.java,v 1.189 2004/06/30 00:22:08 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,7 @@ import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
 import ru.novosoft.uml.behavior.common_behavior.MCreateAction;
 import ru.novosoft.uml.behavior.common_behavior.MDataValue;
 import ru.novosoft.uml.behavior.common_behavior.MDestroyAction;
+import ru.novosoft.uml.behavior.common_behavior.MException;
 import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
@@ -788,6 +789,16 @@ public class ModelFacade {
      */
     public static boolean isAEvent(Object handle) {
         return handle instanceof MEvent;
+    }
+
+    /**
+     * Recognizer for Exception
+     *
+     * @param handle candidate
+     * @return true if handle is an Exception
+     */
+    public static boolean isAException(Object handle) {
+        return handle instanceof MException;
     }
 
     /**
