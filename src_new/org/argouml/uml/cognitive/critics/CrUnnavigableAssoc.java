@@ -1,4 +1,4 @@
-// $Id: CrUnnavigableAssoc.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.11 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.11 2004/08/29 16:29:13 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,10 +35,14 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.ModelFacade;
 /** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
-
+ *  itself of any subclasses). 
+ */
 public class CrUnnavigableAssoc extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrUnnavigableAssoc() {
 	setHeadline("Make <ocl>self</ocl> Navigable");
 
@@ -46,6 +50,10 @@ public class CrUnnavigableAssoc extends CrUML {
 	addTrigger("end_navigable");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAAssociation(dm))) return NO_PROBLEM;
 	Object asc = /*(MAssociation)*/ dm;
@@ -59,6 +67,9 @@ public class CrUnnavigableAssoc extends CrUML {
 	return PROBLEM_FOUND;
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
+     */
     public Class getWizardClass(ToDoItem item) { return WizNavigable.class; }
 
 } /* end class CrUnnavigableAssoc */

@@ -1,4 +1,4 @@
-// $Id: CrTooManyClasses.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrTooManyClasses.java,v 1.7 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrTooManyClasses.java,v 1.7 2004/08/29 16:29:13 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,16 +34,16 @@ import org.argouml.cognitive.Designer;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 
 /** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
-
+ *  itself of any subclasses). 
+ */
 public class CrTooManyClasses extends CrUML {
 
-    ////////////////////////////////////////////////////////////////
-    // constants
-    public static String THRESHOLD = "Threshold";
+    private static final String THRESHOLD = "Threshold";
 
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * The constructor.
+     * 
+     */
     public CrTooManyClasses() {
 	// TODO: <ocl>self.name</ocl> is not expanded for diagram objects
 	setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
@@ -51,8 +51,10 @@ public class CrTooManyClasses extends CrUML {
 	setArg(THRESHOLD, new Integer(20));
     }
 
-    ////////////////////////////////////////////////////////////////
-    // critiquing API
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLClassDiagram)) return NO_PROBLEM;
 	UMLClassDiagram d = (UMLClassDiagram) dm;

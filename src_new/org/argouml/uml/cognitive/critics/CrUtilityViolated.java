@@ -1,4 +1,4 @@
-// $Id: CrUtilityViolated.java,v 1.9 2003/06/01 06:57:25 linus Exp $
+// $Id: CrUtilityViolated.java,v 1.10 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,10 @@ import org.argouml.model.uml.foundation.core.CoreHelper;
  */
 public class CrUtilityViolated extends CrUML {
     
+    /**
+     * The constructor.
+     * 
+     */
     public CrUtilityViolated() {
         setHeadline("Remove instance variables from Utility Class");
         addSupportedDecision(CrUML.decSTORAGE);
@@ -51,6 +55,10 @@ public class CrUtilityViolated extends CrUML {
         addTrigger("behavioralFeature");
     }
     
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
         // we could check for base class of the stereotype but the 
 	// condition normally covers it all.

@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.29 2004/08/03 00:56:16 bobtarling Exp $
+// $Id: CrUML.java,v 1.30 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.29 2004/08/03 00:56:16 bobtarling Exp $
+// $Id: CrUML.java,v 1.30 2004/08/29 16:29:13 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,7 +49,6 @@ import org.tigris.gef.util.VectorSet;
  * @see org.argouml.cognitive.Designer
  * @see org.argouml.cognitive.DecisionModel
  */
-
 public class CrUML extends Critic {
     private static final Logger LOG = Logger.getLogger(CrUML.class);
     
@@ -124,9 +123,6 @@ public class CrUML extends Critic {
     }
 
 
-
-    ////////////////////////////////////////////////////////////////
-    // constructor
     /**
      * The constructor for this class. 
      */
@@ -166,6 +162,10 @@ public class CrUML extends Critic {
 	setResource(className.substring(className.lastIndexOf('.') + 1));
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#predicate(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate(Object dm, Designer dsgr) {
 	Project p = ProjectManager.getManager().getCurrentProject();
 	if (p.isInTrash(dm)) {

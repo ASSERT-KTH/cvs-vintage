@@ -1,4 +1,4 @@
-// $Id: CrUselessInterface.java,v 1.8 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUselessInterface.java,v 1.9 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,10 @@ import org.argouml.model.ModelFacade;
 
 public class CrUselessInterface extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrUselessInterface() {
 	setHeadline("Define Class to Implement <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -49,6 +53,10 @@ public class CrUselessInterface extends CrUML {
 	addTrigger("realization");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!ModelFacade.isAInterface(dm))
 	    return NO_PROBLEM;

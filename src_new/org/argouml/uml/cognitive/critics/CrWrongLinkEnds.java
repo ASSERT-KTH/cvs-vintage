@@ -1,4 +1,4 @@
-// $Id: CrWrongLinkEnds.java,v 1.13 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrWrongLinkEnds.java,v 1.14 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongLinkEnds.java,v 1.13 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrWrongLinkEnds.java,v 1.14 2004/08/29 16:29:13 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,11 +47,19 @@ import org.tigris.gef.util.VectorSet;
 
 public class CrWrongLinkEnds extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrWrongLinkEnds() {
 	setHeadline("LinkEnds have not the same locations");
 	addSupportedDecision(CrUML.decPATTERNS);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
@@ -60,12 +68,20 @@ public class CrWrongLinkEnds extends CrUML {
 	return PROBLEM_FOUND;
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
 	VectorSet offs = computeOffenders(dd);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 
+    /**
+     * @see org.argouml.cognitive.Poster#stillValid(
+     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
+     */
     public boolean stillValid(ToDoItem i, Designer dsgr) {
 	if (!isActive()) return false;
 	VectorSet offs = i.getOffenders();
@@ -82,7 +98,10 @@ public class CrWrongLinkEnds extends CrUML {
      * null.  Then in the vector-set are the UMLDeploymentDiagram and
      * all FigLinks with this characteristic and their FigObjects
      * described over the links MLinkEnds
-     **/
+     *
+     * @param deploymentDiagram the diagram to check
+     * @return the set of offenders
+     */
     public VectorSet computeOffenders(UMLDeploymentDiagram deploymentDiagram) { 
 	Collection figs = deploymentDiagram.getLayer().getContents(null);
 	VectorSet offs = null;
@@ -106,7 +125,8 @@ public class CrWrongLinkEnds extends CrUML {
 			&& (residencies.size() > 0))
 			count = count + 2;
                     
-                    Object component =ModelFacade.getComponentInstance(instance);
+                    Object component = 
+                        ModelFacade.getComponentInstance(instance);
 		    if (component != null)
 			count = count + 1;
 		}

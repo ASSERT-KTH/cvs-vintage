@@ -1,4 +1,4 @@
-// $Id: CrTooManyAttr.java,v 1.9 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: CrTooManyAttr.java,v 1.10 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyAttr.java
 // Classes: CrTooManyAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAttr.java,v 1.9 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: CrTooManyAttr.java,v 1.10 2004/08/29 16:29:13 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -40,10 +40,12 @@ public class CrTooManyAttr extends CrUML {
 
     ////////////////////////////////////////////////////////////////
     // constants
-    public static String THRESHOLD = "Threshold";
+    private static final String THRESHOLD = "Threshold";
 
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * The constructor.
+     * 
+     */
     public CrTooManyAttr() {
 	setHeadline("Reduce Attributes on <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decSTORAGE);
@@ -51,8 +53,10 @@ public class CrTooManyAttr extends CrUML {
 	addTrigger("structuralFeature");
     }
 
-    ////////////////////////////////////////////////////////////////
-    // critiquing API
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;

@@ -1,4 +1,4 @@
-// $Id: CrTooManyAssoc.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrTooManyAssoc.java,v 1.9 2004/08/29 16:29:13 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyAssoc.java
 // Classes: CrTooManyAssoc
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAssoc.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrTooManyAssoc.java,v 1.9 2004/08/29 16:29:13 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,16 +33,18 @@ import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
 /** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
-
+ *  itself of any subclasses). 
+ */
 public class CrTooManyAssoc extends CrUML {
 
     ////////////////////////////////////////////////////////////////
     // constants
-    public static String THRESHOLD = "Threshold";
+    private static final String THRESHOLD = "Threshold";
 
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * The constructor.
+     * 
+     */
     public CrTooManyAssoc() {
 	setHeadline("Reduce Associations on <ocl>self</ocl>");
 
@@ -51,8 +53,10 @@ public class CrTooManyAssoc extends CrUML {
 	addTrigger("associationEnd");
     }
 
-    ////////////////////////////////////////////////////////////////
-    // critiquing API
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;
