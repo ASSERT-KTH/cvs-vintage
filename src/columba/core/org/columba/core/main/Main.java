@@ -75,7 +75,7 @@ public class Main {
 		registerCommandLineArguments();
 
 		// handle commandline parameters
-		if (handleCommandLineParameters(args)) {
+		if (handleCoreCommandLineParameters(args)) {
 			System.exit(0);
 		}
 
@@ -157,7 +157,7 @@ public class Main {
 	/**
 	 *  
 	 */
-	public void registerCommandLineArguments() {
+	private void registerCommandLineArguments() {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
 
 		parser.addOption(new Option("version", GlobalResourceLoader.getString(
@@ -192,7 +192,7 @@ public class Main {
 	 * Uses the command line parser to validate the passed arguments and invokes
 	 * handlers to process the detected options.
 	 */
-	public boolean handleCommandLineParameters(String[] args) {
+	private boolean handleCoreCommandLineParameters(String[] args) {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
 		CommandLine commandLine;
 

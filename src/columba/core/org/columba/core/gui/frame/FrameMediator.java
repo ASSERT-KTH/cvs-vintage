@@ -79,4 +79,5 @@ public interface FrameMediator {
 	public ContentPane getContentPane();
 	
 	public void close();
+
 }

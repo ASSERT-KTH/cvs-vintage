@@ -50,6 +50,7 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
@@ -123,25 +124,22 @@ public class ComposerController extends DefaultFrameController implements
 	private HtmlToolbar htmlToolbar;
 
 	public ComposerController() {
-		this(new ComposerModel(), new ViewItem(MailConfig.getInstance()
-				.get("composer_options").getElement("/options/gui/view")));
+		this(new ComposerModel(), new ViewItem(MailConfig.getInstance().get(
+				"composer_options").getElement("/options/gui/view")));
 	}
-	
 
-	public ComposerController(
-			ComposerModel model) {
-		this( model, new ViewItem(MailConfig.getInstance()
-				.get("composer_options").getElement("/options/gui/view")));
+	public ComposerController(ComposerModel model) {
+		this(model, new ViewItem(MailConfig.getInstance().get(
+				"composer_options").getElement("/options/gui/view")));
 	}
-	
+
 	public ComposerController(ViewItem viewItem) {
 		this(new ComposerModel(), viewItem);
-		
+
 	}
-	
-	public ComposerController(ComposerModel model,
-			ViewItem viewItem) {
-		super( viewItem);
+
+	public ComposerController(ComposerModel model, ViewItem viewItem) {
+		super(viewItem);
 
 		// init model (defaults to empty plain text message)
 		composerModel = model;
@@ -151,16 +149,17 @@ public class ComposerController extends DefaultFrameController implements
 		attachmentController = new AttachmentController(this);
 		headerController = new HeaderController(this);
 		subjectController = new SubjectController(this);
-		getSubjectController().getView().getDocument().addDocumentListener(this);
-		
+		getSubjectController().getView().getDocument()
+				.addDocumentListener(this);
+
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
 
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
-		XmlElement optionsElement = MailConfig.getInstance()
-				.get("composer_options").getElement("/options");
+		XmlElement optionsElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
 
 		// create default element if not available
@@ -248,9 +247,6 @@ public class ComposerController extends DefaultFrameController implements
 			containerListenerBuffer = null; // done, the buffer has been emptied
 		}
 
-		
-
-		
 	}
 
 	public IdentityInfoPanel getAccountInfoPanel() {
@@ -305,7 +301,7 @@ public class ComposerController extends DefaultFrameController implements
 
 		//re-paint composer-view
 		// FIXME showAttachmentPanel validate
-		if ( getContainer() != null )
+		if (getContainer() != null)
 			getContainer().getFrame().validate();
 
 	}
@@ -405,8 +401,8 @@ public class ComposerController extends DefaultFrameController implements
 
 		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
-		XmlElement viewElement = MailConfig.getInstance().get("composer_options")
-				.getElement("/options/gui/view");
+		XmlElement viewElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options/gui/view");
 		ViewItem viewItem = new ViewItem(viewElement);
 		int pos = viewItem.getInteger("splitpanes", "attachment", 200);
 		attachmentSplitPane.setDividerLocation(pos);
@@ -654,8 +650,8 @@ public class ComposerController extends DefaultFrameController implements
 	public void setCharset(Charset charset) {
 		this.charset = charset;
 
-		XmlElement optionsElement = MailConfig.getInstance()
-				.get("composer_options").getElement("/options");
+		XmlElement optionsElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options");
 		XmlElement charsetElement = optionsElement.getElement("charset");
 
 		if (charset == null) {
@@ -738,8 +734,8 @@ public class ComposerController extends DefaultFrameController implements
 	public void savePositions(ViewItem viewItem) {
 		super.savePositions(viewItem);
 
-		XmlElement viewElement = MailConfig.getInstance().get("composer_options")
-				.getElement("/options/gui/view");
+		XmlElement viewElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options/gui/view");
 		viewItem = new ViewItem(viewElement);
 
 		// splitpanes
@@ -793,23 +789,22 @@ public class ComposerController extends DefaultFrameController implements
 	 * @see org.columba.core.gui.frame.FrameMediator#close()
 	 */
 	public void close() {
-//		 only prompt user, if composer contains some text
-		if (editorController.getViewText().length() == 0)
-		{
+		//	only prompt user, if composer contains some text
+		if (editorController.getViewText().length() == 0) {
 			getContainer().getFrame().setVisible(false);
-		
+
+			//			 close Columba, if composer is only visible frame
+			FrameModel.getInstance().close(null);
+
 			return;
 		}
 
 		Object[] options = { "Close", "Cancel", "Save" };
-		int n = JOptionPane
-				.showOptionDialog(
-						getContainer().getFrame(),
-						"Message wasn't sent. Would you like to save your changes?",
-						"Warning: Message was modified",
-						JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options,
-						options[2]); //default button title
+		int n = JOptionPane.showOptionDialog(getContainer().getFrame(),
+				"Message wasn't sent. Would you like to save your changes?",
+				"Warning: Message was modified",
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+				null, options, options[2]); //default button title
 
 		if (n == 2) {
 			// save changes
@@ -818,13 +813,19 @@ public class ComposerController extends DefaultFrameController implements
 
 			// close composer
 			getContainer().getFrame().setVisible(false);
+
+			// close Columba, if composer is only visible frame
+			FrameModel.getInstance().close(null);
 		} else if (n == 1) {
 			// cancel question dialog and don't close composer
 		} else {
 			// close composer
 			getContainer().getFrame().setVisible(false);
+
+			//			 close Columba, if composer is only visible frame
+			FrameModel.getInstance().close(null);
 		}
-	
+
 	}
 
 	public class ComposerFocusTraversalPolicy extends FocusTraversalPolicy {
@@ -908,14 +909,14 @@ public class ComposerController extends DefaultFrameController implements
 						"toolbar"));
 
 		getContainer().setInfoPanel(getIdentityInfoPanel());
-		
+
 		getContainer().getFrame().setFocusTraversalPolicy(
 				new ComposerFocusTraversalPolicy());
-	
+
 		// make sure that JFrame is not closed automatically
 		// -> we want to prompt the user to save his work
 		getContainer().setCloseOperation(false);
-		
+
 		return panel;
 	}
 
@@ -941,7 +942,7 @@ public class ComposerController extends DefaultFrameController implements
 		Document doc = arg0.getDocument();
 		try {
 			String subject = doc.getText(0, doc.getLength());
-			
+
 			getContainer().getFrame().setTitle(subject);
 		} catch (BadLocationException e) {
 		}
@@ -954,7 +955,7 @@ public class ComposerController extends DefaultFrameController implements
 		Document doc = arg0.getDocument();
 		try {
 			String subject = doc.getText(0, doc.getLength());
-			
+
 			getContainer().getFrame().setTitle(subject);
 		} catch (BadLocationException e) {
 		}
@@ -967,7 +968,7 @@ public class ComposerController extends DefaultFrameController implements
 		Document doc = arg0.getDocument();
 		try {
 			String subject = doc.getText(0, doc.getLength());
-			
+
 			getContainer().getFrame().setTitle(subject);
 		} catch (BadLocationException e) {
 		}

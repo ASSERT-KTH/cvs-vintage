@@ -35,6 +35,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.main.ColumbaCmdLineParser;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ComponentPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
@@ -222,9 +225,14 @@ public class ColumbaServer {
             try {
 				CommandLine commandLine = ColumbaCmdLineParser.getInstance().parse((String[]) list.toArray(new String[0]));
 				
-				// FIXME: we don't need this - isn't it?
-				//MailMain.getInstance().handleCommandLineParameters(commandLine);
-				//AddressbookMain.getInstance().handleCommandLineParameters(commandLine);
+				ComponentPluginHandler handler = null;
+				try {
+					handler = (ComponentPluginHandler) PluginManager.getInstance()
+							.getHandler("org.columba.core.component");
+					handler.handleCommandLineParameters(commandLine);
+				} catch (PluginHandlerNotFoundException e) {
+					e.printStackTrace();
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

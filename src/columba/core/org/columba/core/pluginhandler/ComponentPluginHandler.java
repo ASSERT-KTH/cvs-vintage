@@ -83,10 +83,6 @@ public class ComponentPluginHandler extends AbstractPluginHandler implements
 	 * @see org.columba.core.main.IComponentPlugin#init()
 	 */
 	public void init() {
-		
-		// init mail/addressbook internal components
-		initDefaultPlugins();
-		
 		Iterator it = map.values().iterator();
 		while (it.hasNext()) {
 			IComponentPlugin p = (IComponentPlugin) it.next();
@@ -109,6 +105,9 @@ public class ComponentPluginHandler extends AbstractPluginHandler implements
 	 * @see org.columba.core.main.IComponentPlugin#registerCommandLineArguments()
 	 */
 	public void registerCommandLineArguments() {
+//		 init mail/addressbook internal components
+		initDefaultPlugins();
+		
 		Iterator it = map.values().iterator();
 		while (it.hasNext()) {
 			IComponentPlugin p = (IComponentPlugin) it.next();

@@ -226,10 +226,7 @@ public class SendMessageCommand extends FolderCommand {
 
 			// send message
 			server.sendMessage(message, worker);
-
-			// close composer frame
-			composerController.getContainer().close();
-
+			
 			// mark as read
 			Flags flags = new Flags();
 			flags.setSeen(true);

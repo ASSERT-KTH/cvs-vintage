@@ -532,7 +532,10 @@ public class DefaultContainer extends JFrame implements Container,
 	 * frame model that this window/frame is closing, so it can be
 	 * "unregistered" correctly
 	 */
-	public void close() {
+	public void close() {	
+		
+//		 save window position
+		savePositions(getViewItem());
 		
 		getFrameMediator().close();
 		
@@ -541,9 +544,6 @@ public class DefaultContainer extends JFrame implements Container,
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.fine("Closing DefaultContainer: " + this.getClass().getName());
 		}
-
-		// save window position
-		savePositions(getViewItem());
 
 		// hide window
 		setVisible(false);

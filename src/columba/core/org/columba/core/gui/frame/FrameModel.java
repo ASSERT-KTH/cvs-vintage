@@ -434,7 +434,6 @@ public class FrameModel {
 	 *            Reference to frame controller for the view which is closed
 	 */
 	public void close(Container c) {
-		LOG.fine("Closing container: " + c.getClass().getName());
 
 		// Check if the frame controller has been registered, else do nothing
 		if (activeFrameCtrls.contains(c)) {
@@ -450,12 +449,14 @@ public class FrameModel {
 				//this is the last frame so store its data in the viewList
 				viewList.removeAllElements();
 				viewList.addElement(v.getRoot());
+			}
+		}
+		
+		if (activeFrameCtrls.size() == 0) {
+			// shutdown Columba if no frame exists anymore
+			if (getOpenFrames().length == 0) {
 
-				// shutdown Columba if no frame exists anymore
-				if (getOpenFrames().length == 0) {
-
-					ShutdownManager.getShutdownManager().shutdown(0);
-				}
+				ShutdownManager.getShutdownManager().shutdown(0);
 			}
 		}
 	}
