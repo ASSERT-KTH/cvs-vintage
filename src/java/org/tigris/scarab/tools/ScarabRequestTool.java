@@ -1345,8 +1345,8 @@ e.printStackTrace();
     }
 
     /**
-     * Get an Issue object from unique id.
-     * If first time calling, returns a new blank issue object.
+     * Get an Issue object from unique id given either as an intake
+     * field or a request parameter keyed with "id".
      *
      * @return a <code>Issue</code> value
      */
