@@ -70,22 +70,25 @@ import java.util.*;
  * A group of resources, with some common properties.
  * Container is similar with Apache "dir_conf" structue.
  *
- * A container will be selected by best-matching using the
- * alghoritms described in the servlet API.
-
- * The matching container will determine the handler and the
- * security properties associated with the request.
- * It will also have a chance to add a number of per/container
- * interceptors.
+ * Each Context has a default Container and one container for
+ * each URL property ( mapping handlers and  security constraints ).
  *
- * In Servlet terminology there are many types of containers:
- * virtual host, context, prefix map, extension map, security
- * prefix and extension maps.
+ * The ContextManager has a defaultContainer containing global
+ * properties.
  *
- * It is possible to add/remove containers at runtime (usefull
- * for Invoker or Jsp servlet - if they want to avoid double
- * servlet call overhead ). To make this possible for Jsps we
- * also need to factor out the dependency check and reloading.
+ * Each time a container is added to a Context, addContainer() hook is
+ * called to notify all modules of a new URL property.
+ *
+ * Modules that implement contextMap/requestMap and security constraints
+ * ( authenticate/authorize hooks ) will construct specialized data
+ * structures. 
+ * You can associate trees, hashtables or other data types with the
+ * context using notes - no application/module should assume any
+ * particular structure is in used, the user can choose any mapper.
+ * See SimpleMapper1 for an example of such structures.
+ *
+ * A container will be selected by best-matching a request using the
+ * alghoritms described in the servlet API. 
  */
 public class Container implements Cloneable{
     /* It is not yet finalized - it is possible to use more
@@ -338,6 +341,7 @@ public class Container implements Cloneable{
     public String toString() {
 	StringBuffer sb=new StringBuffer();
 	sb.append( "Ct (" );
+	sb.append(path ).append( " " );
 	if( handler!= null) sb.append( handler.toString() );
 	if( roles!=null) {
 	    	sb.append(" Roles: ");
@@ -427,16 +431,30 @@ public class Container implements Cloneable{
 		    interceptors[i]=new Vector();
 		if( dL > 0 ) debug( "Adding " + PREDEFINED_I[i] + " " +bi );
 		interceptors[i].addElement( bi );
+		resetInterceptorCache( i );
 	    }
 	}
 	// last position just gets all interceptors
 	// ( to be used for context-level hooks )
 	if( interceptors[H_engineInit]==null )
 	    interceptors[H_engineInit]=new Vector();
+	resetInterceptorCache( H_engineInit );
 	
 	interceptors[ H_engineInit ].addElement( bi );
     }
 
+
+    public void removeInterceptor( BaseInterceptor bi ) {
+	for( int i=0; i<PREDEFINED_I.length-1; i++ ) {
+	    if( interceptors[i].contains( bi )) {
+		interceptors[i].removeElement( bi );
+		resetInterceptorCache( i );
+	    }
+	}
+	interceptors[H_engineInit].removeElement( bi );
+	resetInterceptorCache( H_engineInit );
+    }
+    
     // make sure we reset the cache.
     // dynamic addition of interceptors is not implemented,
     // but this is a start
