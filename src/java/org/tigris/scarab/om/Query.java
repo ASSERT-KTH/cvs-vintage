@@ -59,17 +59,19 @@ public class Query
             setTypeId(USER__PK);
 
             // Send Email to module owner to approve new query
-            context.put("user", user);
-            context.put("module", module);
+            if (context != null) {
+                context.put("user", user);
+                context.put("module", module);
 
-            String subject = "New query requires approval";
-            String template = Turbine.getConfiguration().
-                getString("scarab.email.requireapproval.template",
-                          "email/RequireApproval.vm");
-            ScarabUser toUser = (ScarabUser) ScarabUserImplPeer
-                              .retrieveByPK((NumberKey)module.getOwnerId());
-            Email.sendEmail(context, null, toUser,
-                            subject, template);
+                String subject = "New query requires approval";
+                String template = Turbine.getConfiguration().
+                    getString("scarab.email.requireapproval.template",
+                              "email/RequireApproval.vm");
+                ScarabUser toUser = (ScarabUser) ScarabUserImplPeer
+                                  .retrieveByPK((NumberKey)module.getOwnerId());
+                Email.sendEmail(context, null, toUser,
+                                subject, template);
+            }
         }
         save();
     }

@@ -11,6 +11,11 @@ if [ "$2" != "" ] ; then
 else
     PASS=
 fi
+if [ "$3" != "" ] ; then
+    DB_NAME=$3
+else
+    DB_NAME=scarab
+fi
 
 MYSQL=`which mysql`
 MYSQLSHOW=`which mysqlshow`
@@ -27,16 +32,16 @@ fi
 
 # testing if the base already exists and removing it if needed.
 base_exists=1
-${MYSQLSHOW} -u ${USER} ${PASSCMD} scarab > /dev/null 2>&1 || base_exists=0
+${MYSQLSHOW} -u ${USER} ${PASSCMD} ${DB_NAME} > /dev/null 2>&1 || base_exists=0
 if [ $base_exists -eq 1 ] ; then
 	echo "Removing existing database. All data will be lost."
-        echo y | ${MYSQLADMIN} -u ${USER} ${PASSCMD} drop scarab > /dev/null
+        echo y | ${MYSQLADMIN} -u ${USER} ${PASSCMD} drop ${DB_NAME} > /dev/null
 fi
 
 # Creating new base and inputting default data
 
 echo "Creating Database..."        
-${MYSQLADMIN} -u ${USER} ${PASSCMD} create scarab
+${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
 
 FILES="mysql-scarab.sql \
        mysql-turbine.sql \
@@ -51,5 +56,5 @@ FILES="mysql-scarab.sql \
 
 for i in ${FILES} ; do
     echo "Importing $i..."
-    ${MYSQL} -u ${USER} ${PASSCMD} scarab < $i
+    ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < $i
 done

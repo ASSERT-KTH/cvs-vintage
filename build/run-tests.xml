@@ -37,7 +37,8 @@
   </target>
 
   <target name="test-all" depends="test-issue,
-                                   test-attribute">
+                                   test-attribute,
+                                   test-query">
   </target>
 
   <target name="test-issue" depends="compile">
@@ -73,6 +74,19 @@
             failonerror="${testbed.failonerror}">
       <jvmarg value="${config.dir}"/>
       <arg value="org.tigris.scarab.om.AttributeOptionTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-query" depends="compile">
+    <echo>Running Query tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.QueryTest"/>
       <classpath>
         <path refid="classpath"/>
       </classpath>

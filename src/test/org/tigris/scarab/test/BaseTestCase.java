@@ -48,7 +48,7 @@ package org.tigris.scarab.test;
 
 import java.io.File;
 
-import org.apache.turbine.util.TurbineConfig;
+import org.apache.turbine.TurbineConfig;
 import org.apache.torque.om.NumberKey;
 
 import junit.framework.TestCase;
@@ -62,12 +62,12 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.2 2001/08/21 05:09:02 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.3 2001/09/22 17:29:06 mumbly Exp $
  */
 public class BaseTestCase extends TestCase
 {
     /** name of the TR.props file */
-    private static final String TR_PROPS = "/WEB-INF/conf/TurbineResources.properties";
+    private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     private ModuleEntity module = null;
     
