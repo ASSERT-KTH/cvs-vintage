@@ -57,6 +57,8 @@ import org.apache.turbine.util.db.*;
 import org.apache.turbine.services.uniqueid.*;
 // Scarab
 import org.tigris.scarab.om.peer.ScarabUserPeer;
+import org.tigris.scarab.baseom.*;
+import org.tigris.scarab.baseom.peer.*;
 
 /**
     This class is an abstraction that is currently based around
@@ -65,10 +67,11 @@ import org.tigris.scarab.om.peer.ScarabUserPeer;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.4 2001/01/03 01:41:21 jon Exp $
+    @version $Id: ScarabUser.java,v 1.5 2001/01/03 07:03:26 jmcnally Exp $
 */
-public class ScarabUser extends TurbineUser
+public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
+    private static final String CURRENT_MODULE = "CURRENT_MODULE";
     /**
         Call the superclass constructor to initialize this object.
     */
@@ -203,8 +206,11 @@ public class ScarabUser extends TurbineUser
                 throw new Exception ("Username does not exist!");
                 
             Criteria criteria = new Criteria();            
-            criteria.add (ScarabUserPeer.getColumnName(ScarabUserPeer.USER_ID), ((TurbineUser)user).getIdAsLong() );
-            criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), ScarabUserPeer.CONFIRM_DATA);
+            criteria.add (ScarabUserPeer.getColumnName(ScarabUserPeer.USER_ID),
+                          ((org.apache.turbine.om.security.TurbineUser)user)
+                          .getIdAsLong() );
+            criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), 
+                          ScarabUserPeer.CONFIRM_DATA);
             ScarabUserPeer.doUpdate(criteria);
             return true;
         }
@@ -267,4 +273,37 @@ public class ScarabUser extends TurbineUser
         criteria.add (ScarabUserPeer.getColumnName(User.EMAIL), this.getUserName());
         return criteria;
     }
+
+
+    /**
+     * 
+     */
+    public Vector getModules() throws Exception
+    {
+        Criteria crit = new Criteria(3)
+            .add(ScarabRModuleUserPeer.USER_ID, getId())
+            .add(ScarabRModuleUserPeer.DELETED, false);
+        Vector srmvs = ScarabRModuleUserPeer.doSelectJoinScarabModule(crit);
+        // each srmvs represents a unique ScarabModule, so we do not 
+        // need to check for duplicates.  Just stuff into the new Vector.
+        Vector modules = new Vector(srmvs.size());
+        for ( int i=0; i<srmvs.size(); i++ ) 
+        {
+            ScarabRModuleUser srmv = (ScarabRModuleUser)srmvs.get(i);
+            modules.add( new Module(srmv.getScarabModule()) );
+        }
+        
+        return modules;
+    }
+
+    public Module getCurrentModule()
+    {
+        return (Module) getTemp(CURRENT_MODULE);
+    }
+
+    public void setCurrentModule(Module m)
+    {
+        setTemp(CURRENT_MODULE, m);
+    }
+
 }    
