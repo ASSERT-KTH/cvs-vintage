@@ -92,4 +92,17 @@
     </java>
   </target>
 
+  <target name="test-scarabmodule" depends="compile">
+    <echo>Running ScarabModule tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.ScarabModuleTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
 </project>
