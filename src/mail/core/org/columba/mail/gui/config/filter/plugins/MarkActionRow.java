@@ -66,7 +66,7 @@ public class MarkActionRow extends DefaultActionRow {
 
         variantComboBox = new JComboBox(items);
         variantComboBox.setRenderer(new ComboBoxRenderer());
-
+		variantComboBox.setSelectedItem("read");
         addComponent(variantComboBox);
     }
 

@@ -44,7 +44,7 @@ public class FilterActionList extends DefaultItem {
         XmlElement action = new XmlElement("action");
 
         //action.addAttribute("class", "org.columba.mail.filter.action.MarkMessageAsReadFilterAction");
-        action.addAttribute("type", "Mark as Read");
+        action.addAttribute("type", "Mark Message");
 
         getRoot().addElement(action);
     }

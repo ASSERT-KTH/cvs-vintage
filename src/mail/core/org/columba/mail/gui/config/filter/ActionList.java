@@ -161,6 +161,13 @@ public class ActionList extends JPanel implements ActionListener {
                         args);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                
+                // this probably means that the configuration 
+                // is wrong
+                // -> change this to a sane default value
+                action.setAction("Mark Message");
+                action.setMarkVariant("read");
+                row=null;
             }
 
             if (row == null) {
