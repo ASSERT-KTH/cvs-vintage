@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.16 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: IssueTest.java,v 1.17 2002/11/04 23:41:56 elicia Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -85,7 +85,7 @@ public class IssueTest extends BaseTestCase
     {
         createTestIssues(); 
         loopThruTestIssues();
-        testAssignIssue();
+        testAssignUser();
         testGetUserAttributeValues();
         testGetEligibleUsers();
         testGetUsersToEmail();
@@ -134,37 +134,71 @@ public class IssueTest extends BaseTestCase
         System.out.println ("testGetAllAttributeValuesMap()");
         HashMap map = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " + map.size());
-        int expectedSize = 11;
+        int expectedSize = 12;
         switch (Integer.parseInt(issue.getTypeId().toString()))
         {
-            case 1: expectedSize = 11;break;
-            case 2: expectedSize = 11;break;
-            case 3: expectedSize = 10;break;
-            case 4: expectedSize = 10;break;
-            case 5: expectedSize = 8;break;
-            case 6: expectedSize = 8;break;
-            case 7: expectedSize = 8;break;
-            case 8: expectedSize = 8;break;
-            case 9: expectedSize = 8;break;
-            case 10: expectedSize = 8;
+            case 1: expectedSize = 12;break;
+            case 2: expectedSize = 12;break;
+            case 3: expectedSize = 11;break;
+            case 4: expectedSize = 11;break;
+            case 5: expectedSize = 9;break;
+            case 6: expectedSize = 9;break;
+            case 7: expectedSize = 9;break;
+            case 8: expectedSize = 9;break;
+            case 9: expectedSize = 9;break;
+            case 10: expectedSize = 9;
         }
         assertEquals (expectedSize, map.size());
     }
 
-    private void testAssignIssue() throws Exception
+    private void testAssignUser() throws Exception
     {
         System.out.println ("testAssignUser()");
-        Attribute attribute = getAssignAttribute();
+        Attribute assignAttr = getAssignAttribute();
+        Attribute ccAttr = getCcAttribute();
         ScarabUser assignee = getUser2();
         ScarabUser assigner = getUser1();
-        String attachmentText =  "User " + assigner.getUserName()
-                              + " has added user "
-                              + assignee.getUserName() + " to "
-                              + attribute.getName() + ".";
-        getIssue0().assignUser(getUser1(),getUser2(), attachmentText, 
-                               attribute, "test reason");
+        ActivitySet activitySet = new ActivitySet();
+        getIssue0().assignUser(activitySet, getUser1(), getUser2(), 
+                               assignAttr, "assign reason");
     }
                
+    private void testGetAssociatedUsers() throws Exception
+    {
+        System.out.println ("testAssociatedUsers()");
+        assertEquals(getIssue0().getAssociatedUsers().size(), 1);
+        List pair = (List)getIssue0().getAssociatedUsers().get(0);
+        assertEquals(((ScarabUser)pair.get(1)),getUser2());
+    }
+
+    private void testChangeUserAttributeValue() throws Exception
+    {
+        System.out.println ("testChangeUserAttributeValue()");
+        Attribute assignAttr = getAssignAttribute();
+        Attribute ccAttr = getCcAttribute();
+        ScarabUser assignee = getUser2();
+        ScarabUser assigner = getUser1();
+        ActivitySet activitySet = new ActivitySet();
+        AttributeValue attVal = getIssue0().getAttributeValue(assignAttr);
+        getIssue0().changeUserAttributeValue(activitySet, getUser1(), getUser2(), 
+                               attVal, ccAttr, "change reason");
+        List pair = (List)getIssue0().getAssociatedUsers().get(0);
+        assertEquals(((Attribute)pair.get(0)),ccAttr);
+    }
+               
+    private void testDeleteUser() throws Exception
+    {
+        System.out.println ("testDeleteUser()");
+        Attribute assignAttr = getAssignAttribute();
+        ScarabUser assignee = getUser2();
+        ScarabUser assigner = getUser1();
+        ActivitySet activitySet = new ActivitySet();
+        AttributeValue attVal = getIssue0().getAttributeValue(assignAttr);
+        getIssue0().deleteUser(activitySet, getUser1(), getUser2(), 
+                               attVal, "delete reason");
+        assertEquals(getIssue0().getAssociatedUsers().size(), 0);
+    }
+
     private void testGetUserAttributeValues() throws Exception
     {
         System.out.println ("testAssociatedUsers()");
