@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.3 1999/10/29 23:40:48 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/29 23:40:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.4 1999/10/30 00:46:46 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/30 00:46:46 $
  *
  * ====================================================================
  *
@@ -188,7 +188,7 @@ class ConnectionHandler extends Thread {
 		if (contentLength != -1) {
 		    BufferedServletInputStream sis =
 			(BufferedServletInputStream)request.getInputStream();
-		    sis.setLimit(contentLength+2);
+		    sis.setLimit(contentLength);
 		}
 
 		HttpServer server = manager.resolveServer(endpoint,hostHeader);
@@ -228,24 +228,44 @@ class ConnectionHandler extends Thread {
 	    // connection after sending a correct POST, we'll hang.. 
 	    // it is a bug in the browser that the final CRLF is sent anyway
 
-	try{
-	    InputStream is=socket.getInputStream();
-	    if(is.available() >1 ) {
-		// read the bogus 2 bytes
-		is.read();
-		is.read();
-	    }
-	    socket.close();
+	    // NOTE interactions with connection keepalive
+
+           try {
+               InputStream is = socket.getInputStream();
+               int available = is.available ();
+	       
+               // XXX on JDK 1.3 just socket.shutdownInput () which
+               // was added just to deal with such issues.
+
+               // skip any unread (bogus) bytes
+               if (available > 1) {
+                   is.skip (available);
+               }
 	   }catch(NullPointerException npe) {
-	   // Added to make the Thread quite on Solaris.. - Costin talk to me 
-	   // before you change this code - Harish/AKV
+	       // do nothing - we are just cleaning up, this is
+	       // a workaround for Netscape \n\r in POST - it is supposed
+	       // to be ignored
+	   } catch(java.net.SocketException ex) {
+	       // do nothing - same
 	   }
+	} catch (SocketException e) {
+	    // XXX is this the right exception for abort by client?
+	    System.out.println("Connection aborted by client");
 	} catch (Exception e) {
             // XXX
 	    // this isn't what we want, we want to log the problem somehow
+	    //
+	    // ... unless it's out of our hands and routine, like a broken
+	    // pipe IOException.  That is routine, caused by a client going
+	    // away before the response is completely written ... too bad
+	    // there's nothing like an error code we can switch on !!
 	    System.out.println("HANDLER THREAD PROBLEM: " + e);
 	    e.printStackTrace();
-	}
+	} finally {
+	    // recycle kernel sockets ASAP
+	    try { socket.close (); }
+	    catch (IOException e) { /* ignore */ }
+        }
 
 	// recycle ourselves
 	manager.returnHandler(this);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.4 1999/10/28 16:57:51 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/28 16:57:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.5 1999/10/30 00:46:49 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/30 00:46:49 $
  *
  * ====================================================================
  *
@@ -101,7 +101,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
     //    "Shortcuts" to be added here ( Vhost and context set by Apache, etc)
     // XXX handleEndpoint( Endpoint x )
     public void processConnection(TcpConnection connection, Object thData[]) {
-	Socket socket;
+	Socket socket=null;
 
 	//	System.out.println("New Connection");
 	try {
@@ -123,11 +123,31 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
 	    contextM.service( request, response );
 
-	    //	    System.out.println("Closing connection");
-	    socket.close();
+	    try {
+               InputStream is = socket.getInputStream();
+               int available = is.available ();
+	       
+               // XXX on JDK 1.3 just socket.shutdownInput () which
+               // was added just to deal with such issues.
+
+               // skip any unread (bogus) bytes
+               if (available > 1) {
+                   is.skip (available);
+               }
+	   }catch(NullPointerException npe) {
+	       // do nothing - we are just cleaning up, this is
+	       // a workaround for Netscape \n\r in POST - it is supposed
+	       // to be ignored
+	   } catch(java.net.SocketException ex) {
+	       // do nothing - same
+	   }
 	} catch (Exception e) {
 	    e.printStackTrace();
-	}
+	} finally {
+	    // recycle kernel sockets ASAP
+	    try { socket.close (); }
+	    catch (IOException e) { /* ignore */ }
+        }
     }
 
 
