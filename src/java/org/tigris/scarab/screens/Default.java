@@ -56,7 +56,6 @@ import org.apache.turbine.TemplateSecureScreen;
 import org.apache.turbine.Turbine;
 
 // Scarab Stuff
-import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
@@ -73,7 +72,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.37 2002/01/11 18:10:07 jmcnally Exp $
+ * @version $Id: Default.java,v 1.38 2002/01/11 22:51:47 dlr Exp $
  */
 public class Default extends TemplateSecureScreen
 {

@@ -58,7 +58,6 @@ import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.pool.InitableRecyclable;
 
 // Scarab
-import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -71,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.27 2002/01/11 17:29:49 dlr Exp $
+    @version $Id: ScarabLink.java,v 1.28 2002/01/11 22:51:19 dlr Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
