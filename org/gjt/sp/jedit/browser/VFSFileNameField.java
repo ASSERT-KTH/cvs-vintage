@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.19 2004/03/06 21:33:53 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.20 2004/04/19 05:59:30 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -283,11 +283,19 @@ class VFSFileNameField extends HistoryTextField
 
 				String path = getText();
 
-				BrowserView view = browser.getBrowserView();
 				view.selectNone();
+
+				int mode = browser.getMode();
+				// fix for bug #765507
+				// we don't type complete in save dialog
+				// boxes. Press TAB to do an explicit
+				// complete
 				view.getTable().doTypeSelect(path,
-					browser.getMode() == VFSBrowser
-					.CHOOSE_DIRECTORY_DIALOG);
+					mode == VFSBrowser
+					.CHOOSE_DIRECTORY_DIALOG
+					||
+					mode == VFSBrowser
+					.SAVE_DIALOG);
 			}
 		}
 	} //}}}

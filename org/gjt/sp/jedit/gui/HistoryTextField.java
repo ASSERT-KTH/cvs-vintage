@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text field with an arrow-key accessable history.
  * @author Slava Pestov
- * @version $Id: HistoryTextField.java,v 1.12 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: HistoryTextField.java,v 1.13 2004/04/19 05:59:31 spestov Exp $
  */
 public class HistoryTextField extends JTextField
 {
@@ -249,8 +249,9 @@ public class HistoryTextField extends JTextField
 
 		if(evt.getID() == KeyEvent.KEY_PRESSED)
 		{
-			if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+			switch(evt.getKeyCode())
 			{
+			case KeyEvent.VK_ENTER:
 				if(enterAddsToHistory)
 					addCurrentToHistory();
 
@@ -259,28 +260,30 @@ public class HistoryTextField extends JTextField
 					fireActionPerformed();
 					evt.consume();
 				}
-			}
-			else if(evt.getKeyCode() == KeyEvent.VK_UP)
-			{
+				break;
+			case KeyEvent.VK_UP:
 				if(evt.isShiftDown())
 					doBackwardSearch();
 				else
 					historyPrevious();
 				evt.consume();
-			}
-			else if(evt.getKeyCode() == KeyEvent.VK_DOWN)
-			{
+				break;
+			case KeyEvent.VK_DOWN:
 				if(evt.isShiftDown())
 					doForwardSearch();
+				else if(evt.isAltDown())
+					showPopupMenu(evt.isShiftDown());
 				else
 					historyNext();
 				evt.consume();
-			}
-			else if(evt.getKeyCode() == KeyEvent.VK_TAB
-				&& evt.isControlDown())
-			{
-				doBackwardSearch();
-				evt.consume();
+				break;
+			case KeyEvent.VK_TAB:
+				if(evt.isControlDown())
+				{
+					doBackwardSearch();
+					evt.consume();
+				}
+				break;
 			}
 		}
 
@@ -303,11 +306,7 @@ public class HistoryTextField extends JTextField
 			if(evt.getX() >= getWidth() - insets.right
 				|| GUIUtilities.isPopupTrigger(evt))
 			{
-				if(evt.isShiftDown())
-					showPopupMenu(getText().substring(0,
-						getSelectionStart()),0,getHeight());
-				else
-					showPopupMenu("",0,getHeight());
+				showPopupMenu(evt.isShiftDown());
 			}
 			else
 				super.processMouseEvent(evt);
@@ -481,6 +480,16 @@ public class HistoryTextField extends JTextField
 		}
 
 		GUIUtilities.showPopupMenu(popup,this,x,y,false);
+	} //}}}
+
+	//{{{ showPopupMenu() method
+	private void showPopupMenu(boolean search)
+	{
+		if(search)
+			showPopupMenu(getText().substring(0,
+				getSelectionStart()),0,getHeight());
+		else
+			showPopupMenu("",0,getHeight());
 	} //}}}
 
 	//}}}
