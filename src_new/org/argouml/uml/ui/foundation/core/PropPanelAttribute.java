@@ -25,13 +25,14 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.31 2003/04/29 19:25:09 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.32 2003/05/02 08:33:42 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.ui.ProjectBrowser;
@@ -109,7 +110,12 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 	}	
 
 	public void newAttribute() {
-        ProjectBrowser.getInstance().setTarget(UmlFactory.getFactory().getCore().buildAttribute(getTarget()));
+        Object target = getTarget();
+        if (ModelFacade.isAStructuralFeature(target)) {
+            Object owner = ModelFacade.getOwner(target);
+            ProjectBrowser.getInstance().setTarget(UmlFactory.getFactory().getCore().buildAttribute(owner));
+        }
+        
 	}
 
 } /* end class PropPanelAttribute */

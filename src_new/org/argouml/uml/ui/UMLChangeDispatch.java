@@ -25,7 +25,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.12 2003/05/01 14:19:03 kataka Exp $
+// $Id: UMLChangeDispatch.java,v 1.13 2003/05/02 08:33:42 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 
@@ -37,12 +37,16 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.uml.ui.behavior.common_behavior.*;
+import java.awt.Component;
+import java.awt.Container;
 
-import javax.swing.event.*;
-import java.awt.*;
+import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.uml.ui.behavior.common_behavior.PropPanelComponentInstance;
+import org.argouml.uml.ui.behavior.common_behavior.PropPanelNodeInstance;
+import org.argouml.uml.ui.behavior.common_behavior.PropPanelObject;
 
-import ru.novosoft.uml.*;
+import ru.novosoft.uml.MBase;
+import ru.novosoft.uml.MElementEvent;
 
 /**
  *  This class is used to dispatch a NSUML change event (which may occur on a non-UI)
@@ -140,11 +144,14 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
      *      
      */
     public UMLChangeDispatch(Container container,int eventType) {
+        synchronized (container) {
         _container = container;
         _eventType = eventType;
         if (container instanceof PropPanel) {
-            _target = ((PropPanel)container).getTarget();
+            _target = ((PropPanel)container).getTarget();            
         }
+        
+    }
     }
     
     /**
@@ -221,6 +228,9 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
      *    new target on completion of dispatch.
      */
     public void run() {
+        if (_target != null) {
+            synchronizedDispatch(_container);
+        } else
         dispatch(_container); 
         //
         //   now that we have finished all the UI updating
@@ -235,9 +245,10 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
            PropPanel propPanel = (PropPanel) _container;
             Object target = propPanel.getTarget();
 
-            if(target instanceof MBase) {            	            	// 2002-07-15            	// Jaap Branderhorst            	// added next statement to prevent PropPanel getting added again and again to the target's listeners      		propPanel.removeMElementListener((MBase) target);
-                propPanel.addMElementListener((MBase) target);
+            if(target instanceof MBase) {            	            	// 2002-07-15            	// Jaap Branderhorst            	// added next statement to prevent PropPanel getting added again and again to the target's listeners
+                UmlModelEventPump.getPump().addModelEventListener(propPanel, target);      	
             }
+            
         }
     }
     
@@ -249,6 +260,7 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
      *    @param container AWT container
      */
     private void dispatch(Container container) {
+       
         int count = container.getComponentCount();
         Component component;
         UMLUserInterfaceComponent uiComp;
@@ -309,6 +321,14 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
                    }
                 }
             }
+        }
+       
+    }
+    
+    private void synchronizedDispatch(Container cont) {
+        if (_target == null)  throw new IllegalStateException("Target may not be null in synchronized dispatch");
+        synchronized(_target) {
+            dispatch(cont);
         }
     }
 }
