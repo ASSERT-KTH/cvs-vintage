@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.16 2005/01/30 20:47:53 linus Exp $
+// $Id: ActionAddNote.java,v 1.17 2005/02/03 21:43:05 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,8 +94,10 @@ public class ActionAddNote extends UMLAction {
                     && (!(Model.getFacade().isAComment(obj)))) {
                 if (firstTarget == null) firstTarget = obj;
                 /* Prevent e.g. AssociationClasses from being added trice: */
-                if (!Model.getFacade().getAnnotatedElements(comment).contains(obj))
+                if (!Model.getFacade().getAnnotatedElements(comment)
+                        .contains(obj)) {
                     Model.getCoreHelper().addAnnotatedElement(comment, obj);
+                }
             }
         }
 
