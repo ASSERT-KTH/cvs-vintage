@@ -23,8 +23,7 @@
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="Search" />
-<input type="hidden" name="refine" value="$data.Parameters.getString("refine","")"/>
-<input type="hidden" name="queryString" value="$data.Parameters.getString("queryString")"/>
+<input type="hidden" name="refine" value="true"/>
 <input type="hidden" name="sortPolarity" value="$data.Parameters.getString("sortPolarity","")"/>
 <input type="hidden" name="sortColumn" value="$data.Parameters.getString("sortColumn","")"/>
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />

@@ -88,7 +88,7 @@ import org.tigris.scarab.util.Log;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.122 2003/04/03 23:18:24 jmcnally Exp $
+ * @version $Id: Search.java,v 1.123 2003/04/07 19:46:51 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -333,6 +333,9 @@ public class Search extends RequireLoginFirstAction
             }
             else if (go.equals("AdvancedQuery.vm"))
             {
+                // reset current query
+                ((ScarabUser)data.getUser()).setMostRecentQuery(null);
+
                 // reset selected users map
                 scarabR.resetSelectedUsers();
                 setTarget(data, go);
@@ -604,7 +607,7 @@ public class Search extends RequireLoginFirstAction
         }
         data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
                                        getCurrentTemplate(data));
-        data.getParameters().setString("queryString", getQueryString(data));
+        ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
         setTarget(data, "UserList.vm");            
     } 
 

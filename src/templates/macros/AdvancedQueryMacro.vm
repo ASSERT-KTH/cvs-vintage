@@ -8,7 +8,9 @@
 #end
 
 #macro( advancedQuery )
-#set ($refine = $data.Parameters.getString("refine", ""))
+#if (!$refine)
+    #set ($refine = $data.Parameters.getString("refine", ""))
+#end
 <input type="hidden" name="refine" value="$refine"/>
 #if ($refine.equals("true"))
   #set ($search = $scarabR.PopulatedSearch)
@@ -37,9 +39,9 @@
 </th>
 <td>
 from:&#160;<input type="text" size="20"
-    name="$searchGroup.MinId.Key" value="$searchGroup.MinId" />
+    name="$searchGroup.MinId.Key" value="$!searchGroup.MinId.Value" />
 &#160;&#160;to:&#160;<input type="text" size="20"
-    name="$searchGroup.MaxId.Key" value="$searchGroup.MaxId" />
+    name="$searchGroup.MaxId.Key" value="$!searchGroup.MaxId.Value" />
 </td>
 </tr>
 <tr>
