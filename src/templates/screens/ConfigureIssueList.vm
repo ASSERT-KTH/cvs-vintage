@@ -15,6 +15,7 @@ $page.setTitle("Add/remove attributes from view")
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId" />
 <input type="hidden" name="module_id" value="$module.ModuleId" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
 
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
@@ -23,7 +24,6 @@ $page.setTitle("Add/remove attributes from view")
   <input type="submit" value="Save" name="eventSubmit_doSelectattributes" />&#160; 
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
   <input type="submit" value="Reset to default"  name="eventSubmit_doCancel" />&#160;
-  <input type="submit" value="Go to issue list"  name="eventSubmit_doGoissuelist" />
   </td>
  </tr>
 </table>
