@@ -320,7 +320,7 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
 
     s->remote_addr  = NULL_FOR_EMPTY(r->connection->remote_ip);
-    s->server_name  = (r->hostname ? r->server->server_hostname : r->hostname);
+    s->server_name  = (char *)(r->hostname ? r->server->server_hostname : r->hostname);
     s->server_port  = r->server->port;
     s->server_software = (char *)ap_get_server_version();
 
@@ -393,7 +393,7 @@ static const char *jk_mount_context(cmd_parms *cmd,
      * Add the new worker to the alias map.
      */
     char *old;
-    map_put(conf->uri_to_context, context, worker, &old);
+    map_put(conf->uri_to_context, context, worker, (void **)&old);
     return NULL;
 }
 

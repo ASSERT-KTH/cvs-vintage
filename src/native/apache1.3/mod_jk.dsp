@@ -104,10 +104,6 @@ SOURCE=..\jk\jk_ajp13_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp23_worker.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\jk\jk_connect.c
 # End Source File
 # Begin Source File
@@ -221,6 +217,10 @@ SOURCE=..\jk\jk_util.h
 # Begin Source File
 
 SOURCE=..\jk\jk_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_worker_list.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
