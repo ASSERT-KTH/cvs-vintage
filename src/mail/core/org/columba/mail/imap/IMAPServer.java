@@ -849,7 +849,7 @@ public class IMAPServer {
 	 * @param destFolder
 	 *            destination mailbox
 	 * @param uids
-	 *            UIDs of messages
+	 *            UIDs of messages -> this array will get sorted!
 	 * @param path
 	 *            source mailbox
 	 * @throws Exception
@@ -858,9 +858,16 @@ public class IMAPServer {
 			throws Exception {
 		try {
 			ensureSelectedState(path);
+			
+			// We need to sort the uids in order
+			// to have the correct association
+			// between the new and old uid
+			List sortedUids = Arrays.asList(uids);
+			Collections.sort(sortedUids);
 
 			protocol.uidCopy(new SequenceSet(Arrays.asList(uids)), destFolder);
 
+			
 			MailboxStatus status = protocol.status(destFolder ,new String[] {"UIDNEXT"});
 
 			// the UIDS start UIDNext - uids.length() - 1 till UIDNext - 1
