@@ -491,7 +491,6 @@
     </dependency>        
     
     <!-- Microsoft SQL Server -->
-    <!-- -->
 	 <dependency>
       <groupId>mssqlserver</groupId>
       <artifactId>msbase</artifactId>
@@ -521,7 +520,6 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>	     
-	<!-- -->
 	
 	<!-- End Database Dependencies -->    
   </dependencies>
