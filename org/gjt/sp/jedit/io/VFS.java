@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Swing UI calls directly.
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.16 2002/05/28 03:01:22 spestov Exp $
+ * @author $Id: VFS.java,v 1.17 2002/06/23 01:23:16 spestov Exp $
  */
 public abstract class VFS
 {
@@ -388,7 +388,8 @@ public abstract class VFS
 		RE filter;
 		try
 		{
-			filter = new RE(MiscUtilities.globToRE(glob));
+			filter = new RE(MiscUtilities.globToRE(glob),
+				RE.REG_ICASE);
 		}
 		catch(REException e)
 		{

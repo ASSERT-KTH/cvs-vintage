@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.31 2002/06/22 08:33:00 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.32 2002/06/23 01:23:16 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -678,10 +678,13 @@ public class DockableWindowManager extends JPanel
 	 */
 	public void close()
 	{
-		top.save();
-		left.save();
-		bottom.save();
-		right.save();
+		if(!view.isPlainView())
+		{
+			top.save();
+			left.save();
+			bottom.save();
+			right.save();
+		}
 
 		Enumeration enum = windows.elements();
 		while(enum.hasMoreElements())
