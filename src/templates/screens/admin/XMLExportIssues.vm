@@ -3,7 +3,7 @@
 <h3>$page.Title</h3>
 
 <form action="$link.setPage("admin,ViewXMLExportIssues.vm")" method="post" name="xmlexportissues">
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Index.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.User.HomePage" />
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
@@ -11,8 +11,9 @@
  <th>$l10n.Issues</th>
  <td>
   <input name="exportissues" value="$!exportissues" type="text" size="50" />
-  <p><small>
-  $l10n.SpecifyACommaSepparatedList</small></p>
+  <div class="colbar">
+  $l10n.SpecifyACommaSepparatedList
+  </div>
  </td>
 </tr>
 <tr>
@@ -39,7 +40,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doXmlissues" value="$l10n.Export" />&#160;
+  <input type="submit" name="eventSubmit_doXmlissues" value="$l10n.Export" />
 </div>
 
 <script>
