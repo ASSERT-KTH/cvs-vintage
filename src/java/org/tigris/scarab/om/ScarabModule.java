@@ -100,16 +100,105 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.132 2003/04/17 16:21:21 dlr Exp $
+ * @version $Id: ScarabModule.java,v 1.133 2003/04/17 23:02:58 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
     implements Persistent, Module, Group
 {
-    private static final String GET_USERS = 
-        "getUsers";
+    private static final String GET_USERS = "getUsers";
 
     protected static final Integer ROOT_ID = new Integer(0);
+
+    private String domain = null;
+
+    /**
+     * Get the value of domain.
+     * @return value of domain.
+     */
+    public String getDomain()
+    {
+        if (domain == null)
+        {
+            try
+            {
+                domain = GlobalParameterManager
+                    .getString(GlobalParameter.MODULE_DOMAIN, this);
+            }
+            catch (Exception e)
+            {
+                // Nothing here
+            }
+        }
+        return domain;
+    }
+    
+    /**
+     * Set the value of domain.
+     * @param v  Value to assign to domain.
+     */
+    public void setDomain(String  v) 
+    {
+        // need to do this because setDomain is called a lot (unknown reason)
+        // and is passed in a null value. this way, we only set it if it isn't
+        // null.
+        if (v != null)
+        {
+            try
+            {
+                GlobalParameterManager
+                    .setString(GlobalParameter.MODULE_DOMAIN, this, v);
+            }
+            catch (Exception e)
+            {
+                // Nothing here
+            }
+        }
+    }
+
+    /**
+     * Get the value of port.
+     * @return value of port.
+     */
+    public String getPort() 
+        throws Exception
+    {
+        return GlobalParameterManager
+                .getString(GlobalParameter.MODULE_PORT, this);
+    }
+    
+    /**
+     * Set the value of port.
+     * @param v  Value to assign to port.
+     */
+    public void setPort(String  v) 
+        throws Exception
+    {
+        GlobalParameterManager
+            .setString(GlobalParameter.MODULE_PORT, this, v);
+    }
+
+    /**
+     * Get the value of scheme.
+     * @return value of scheme.
+     */
+    public String getScheme() 
+        throws Exception
+    {
+        return GlobalParameterManager
+                .getString(GlobalParameter.MODULE_SCHEME, this);
+    }
+    
+    /**
+     * Set the value of scheme.
+     * @param v  Value to assign to scheme.
+     */
+    public void setScheme(String  v) 
+        throws Exception
+    {
+        GlobalParameterManager
+            .setString(GlobalParameter.MODULE_SCHEME, this, v);
+    }
 
     /**
      * @see org.tigris.scarab.om.Module#getUsers(String)
