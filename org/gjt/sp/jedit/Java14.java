@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.30 2003/10/15 01:08:52 spestov Exp $
+ * @version $Id: Java14.java,v 1.31 2003/10/26 05:50:41 spestov Exp $
  */
 public class Java14
 {
@@ -342,6 +342,8 @@ public class Java14
 				JEditTextArea textArea = (JEditTextArea)c;
 				if(action == MOVE)
 					textArea.setSelectedText(null,false);
+				else
+					textArea.selectNone();
 			}
 		}
 

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.44 2003/10/22 04:38:22 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.45 2003/10/26 05:50:41 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -746,7 +746,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
 		SearchFileSet fileset = SearchAndReplace.getSearchFileSet();
 
-		if(fileset instanceof DirectoryListSet)
+		/* if(fileset instanceof DirectoryListSet)
 		{
 			filter.setText(((DirectoryListSet)fileset)
 				.getFileFilter());
@@ -755,7 +755,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			searchSubDirectories.setSelected(((DirectoryListSet)fileset)
 				.isRecursive());
 		}
-		else
+		else */
 		{
 			directory.setText(view.getBuffer().getDirectory());
 

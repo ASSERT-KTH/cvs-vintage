@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.89 2003/10/22 04:38:23 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.90 2003/10/26 05:50:41 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -704,14 +704,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 		if(textArea.updateMaxHorizontalScrollWidth)
 			textArea.updateMaxHorizontalScrollWidth();
-
-		// done with a buffer event now.
-		if(buffer.isNextLineRequested())
-		{
-			int h = clipRect.y + clipRect.height;
-			textArea.chunkCache.invalidateChunksFrom(lastInvalid + 1);
-			repaint(0,h,getWidth(),getHeight() - h);
-		}
 
 		textArea.displayManager._notifyScreenLineChanges();
 	} //}}}
