@@ -113,11 +113,11 @@ public class ClusterStubCompiler {
         }
         Utils.trace("stub file: writing imports", cmpCtx);
         // imports
-        stubFile.write("import org.objectweb.carol.cmi.ClusterStub;\n");
         stubFile.write("import java.rmi.Remote;\n");
-        stubFile.write("import java.rmi.RemoteException;\n");
+        stubFile.write("import java.rmi.RemoteException;\n\n");
+        stubFile.write("import org.objectweb.carol.cmi.ClusterId;\n");
+        stubFile.write("import org.objectweb.carol.cmi.ClusterStub;\n\n");
 
-        stubFile.write("\n");
         String itfStr = "";
         for (int i = 0; i < remItfs.size(); i++) {
             if (((Class) remItfs.elementAt(i)).equals(java.rmi.Remote.class))
@@ -149,7 +149,7 @@ public class ClusterStubCompiler {
             pre1
                 + "public "
                 + stubClassName
-                + "(byte[] serverId, Remote stub) throws RemoteException {\n");
+                + "(ClusterId serverId, Remote stub) throws RemoteException {\n");
         stubFile.write(pre2 + "super(serverId, stub);\n");
         stubFile.write(pre1 + "}\n\n");
     }

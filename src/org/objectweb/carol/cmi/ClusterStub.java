@@ -73,7 +73,7 @@ public class ClusterStub implements Externalizable {
 
     /**
      * for Externalizable
-     *
+     * TODO check where it is used
      */
     public ClusterStub() {
     }
@@ -84,7 +84,7 @@ public class ClusterStub implements Externalizable {
      * running.
      * @param stub the regular stub.
      */
-    protected ClusterStub(byte[] serverId, Remote stub) {
+    protected ClusterStub(ClusterId serverId, Remote stub) {
         stubMap = new HashMap();
         stubMap.put(serverId, stub);
         randomSeed = SecureRandom.getLong();
@@ -112,8 +112,8 @@ public class ClusterStub implements Externalizable {
      * @return false if the class of the stub is not the same the other objects
      * in the stub.
      */
-    protected boolean setStub(byte[] serverId, Remote stub) {
-        //XXX getName()... bof.
+    protected boolean setStub(ClusterId serverId, Remote stub) {
+        //TODO is it right ? Should not check classes instead ?
         if (!stub.getClass().getName().equals(regularStubClass.getName())) {
             return false;
         }
@@ -146,15 +146,14 @@ public class ClusterStub implements Externalizable {
         System.out.println("Stub inside : ");
         java.util.Iterator i = stubMap.keySet().iterator();
         while (i.hasNext()) {
-            System.out.println(
-                DistributedEquivSystem.idToString((byte[]) i.next()));
+            System.out.println(i.next());
         }
     }
 
     /**
      * This function fails if and only if the stub to remove is the last one.
      */
-    public boolean removeStub(byte[] serverId) {
+    public boolean removeStub(ClusterId serverId) {
         synchronized (this) {
             Object o = stubMap.remove(serverId);
             if (stubMap.size() == 0) {
@@ -189,6 +188,7 @@ public class ClusterStub implements Externalizable {
     /**
      * Called when a StubList is deserialized.
      * Setup the transient fields.
+     * TODO remove, and merge in readObject.
      */
     private Object readResolve() throws ObjectStreamException {
         try {
@@ -264,13 +264,11 @@ public class ClusterStub implements Externalizable {
             out.writeInt(l);
             for (int i=0; i<l; i++) {
                 Map.Entry e = (Entry) it.next();
-                ClusterId id = new ClusterId((byte[])e.getKey());
+                ClusterId id = (ClusterId) e.getKey();
                 id.write(out);
-//                out.writeObject(id);
                 out.writeObject(e.getValue());
             }
         }
-//        out.writeObject(stubMap);
         out.writeLong(randomSeed);
     }
 
@@ -285,7 +283,7 @@ public class ClusterStub implements Externalizable {
             for (int i=0; i<l; i++) {
                 ClusterId k = ClusterId.read(in);
                 Object o = in.readObject();
-                m.put(k.toByteArray(), o);
+                m.put(k, o);
             }
             stubMap = m;
             randomSeed = in.readLong();

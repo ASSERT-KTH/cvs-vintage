@@ -93,13 +93,13 @@ public class ClusterId implements Serializable {
         return s;
     }
 
-    /**
-     * @return a copy of the byte array of this Cluster Id
-     */
-    public byte[] toByteArray() {
-        return (byte[]) id.clone();
-    }
-
+//    /**
+//     * @return a copy of the byte array of this Cluster Id
+//     */
+//    public byte[] toByteArray() {
+//        return (byte[]) id.clone();
+//    }
+//
     public void write(DataOutput out) throws IOException {
         out.writeShort(id.length);
         out.write(id);

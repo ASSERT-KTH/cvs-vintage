@@ -21,7 +21,6 @@ package org.objectweb.carol.cmi;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -41,36 +40,28 @@ import org.javagroups.View;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 class ExportMsg implements Serializable {
-    public byte[] i;
-    public Serializable k;
-    public byte[] b;
+    public transient ClusterId i;
+    public transient Serializable k;
+    public transient Remote stub;
 
-    public ExportMsg(byte[] serverId, Serializable key, Remote stub) {
+    public ExportMsg(ClusterId serverId, Serializable key, Remote stub) {
         i = serverId;
         k = key;
-        try {
-            ByteArrayOutputStream outs = new ByteArrayOutputStream();
-            MulticastOutputStream out = new MulticastOutputStream(outs);
-            out.writeObject(stub);
-            b = outs.toByteArray();
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-            return; //XXX throw the exception !!!
-        }
+        this.stub = stub;
     }
 
-    public Remote getStub() {
-        try {
-            ByteArrayInputStream ins = new ByteArrayInputStream(b);
-            MulticastInputStream in = new MulticastInputStream(ins);
-            Object o = in.readObject();
-            if (o instanceof Remote)
-                return (Remote) o;
-        } catch (Exception e) {
-        }
-        if (TraceCarol.isInfoCmiCarol())
-            TraceCarol.infoCmiCarol("Invalid stub in ExportMsg");
-        return null;
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException {
+        i.write(out);
+        out.writeObject(k);
+        out.writeObject(stub);
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException {
+        i = ClusterId.read(in);
+        k = (Serializable) in.readObject();
+        stub = (Remote) in.readObject();
     }
 }
 
@@ -78,49 +69,62 @@ class RequestExportsMsg implements Serializable {
 }
 
 class UnexportMsg implements Serializable {
-    public byte[] i;
-    public Serializable k;
-    public UnexportMsg(byte[] serverId, Serializable key) {
+    public transient ClusterId i;
+    public transient Serializable k;
+
+    public UnexportMsg(ClusterId serverId, Serializable key) {
         i = serverId;
         k = key;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out)
+        throws IOException {
+        i.write(out);
+        out.writeObject(k);
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+        throws IOException, ClassNotFoundException {
+        i = ClusterId.read(in);
+        k = (Serializable) in.readObject();
     }
 }
 
 /**
- * XXX Should be used instead of the loop on localExports. To debug. 
+ * TODO Should be used instead of the loop on localExports. To rewrite and test. 
  * @author nieuviar
  */
-class ExportsMsg implements Serializable {
-    public byte[] i;
-    public byte[] b;
-
-    public ExportsMsg(byte[] serverId, LocalExports reg) throws IOException {
-        i = serverId;
-        b = reg.serialized();
-    }
-
-    public HashMap getMap() {
-        ByteArrayInputStream ins = new ByteArrayInputStream(b);
-        try {
-            MulticastInputStream in = new MulticastInputStream(ins);
-            HashMap h = new HashMap();
-            Object o = in.readObject();
-            if (o instanceof Integer) {
-                return h;
-            } else if (o instanceof String) {
-                Object o2 = in.readObject();
-                if (o2 instanceof Remote) {
-                    h.put(o, o2);
-                    return h;
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}
+//class ExportsMsg implements Serializable {
+//    public byte[] i;
+//    public byte[] b;
+//
+//    public ExportsMsg(byte[] serverId, LocalExports reg) throws IOException {
+//        i = serverId;
+//        b = reg.serialized();
+//    }
+//
+//    public HashMap getMap() {
+//        ByteArrayInputStream ins = new ByteArrayInputStream(b);
+//        try {
+//            MulticastInputStream in = new MulticastInputStream(ins);
+//            HashMap h = new HashMap();
+//            Object o = in.readObject();
+//            if (o instanceof Integer) {
+//                return h;
+//            } else if (o instanceof String) {
+//                Object o2 = in.readObject();
+//                if (o2 instanceof Remote) {
+//                    h.put(o, o2);
+//                    return h;
+//                }
+//            }
+//            return null;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+//}
 
 class GlobalExports {
     private HashMap table = new HashMap();
@@ -129,10 +133,10 @@ class GlobalExports {
     }
 
     private static Class[] cnstr_params =
-        new Class[] { byte[].class, Remote.class };
+        new Class[] { ClusterId.class, Remote.class };
 
     public synchronized void put(
-        byte[] serverId,
+        ClusterId serverId,
         Serializable key,
         Remote stub)
         throws RemoteException {
@@ -150,7 +154,9 @@ class GlobalExports {
                     (ClusterStub) cnstr.newInstance(
                         new Object[] { serverId, stub });
             } catch (Exception e) {
-                throw new RemoteException(e.toString());
+                throw new RemoteException(
+                    "Can not instanciate cluster stub",
+                    e);
             }
             table.put(key, cs);
         } else if (!cs.setStub(serverId, stub))
@@ -164,7 +170,7 @@ class GlobalExports {
                         + cs.getRegularStubClass().getName());
     }
 
-    public synchronized void remove(byte[] serverId, Serializable key) {
+    public synchronized void remove(ClusterId serverId, Serializable key) {
         ClusterStub cs = (ClusterStub) table.get(key);
         if (cs == null)
             return;
@@ -173,19 +179,19 @@ class GlobalExports {
         table.remove(key);
     }
 
-    public synchronized void addExports(byte[] serverId, HashMap reg) {
-        Iterator i = reg.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry e = (Map.Entry) i.next();
-            try {
-                put(serverId, (Serializable) e.getKey(), (Remote) e.getValue());
-            } catch (RemoteException ex) { //XXX
-                ex.printStackTrace();
-            }
-        }
-    }
+    //    public synchronized void addExports(ClusterId serverId, HashMap reg) {
+    //        Iterator i = reg.entrySet().iterator();
+    //        while (i.hasNext()) {
+    //            Map.Entry e = (Map.Entry) i.next();
+    //            try {
+    //                put(serverId, (Serializable) e.getKey(), (Remote) e.getValue());
+    //            } catch (RemoteException ex) {
+    //                ex.printStackTrace();
+    //            }
+    //        }
+    //    }
 
-    public synchronized void zapExports(byte[] serverId) {
+    public synchronized void zapExports(ClusterId serverId) {
         Iterator i = table.values().iterator();
         while (i.hasNext()) {
             ClusterStub cs = (ClusterStub) i.next();
@@ -194,9 +200,9 @@ class GlobalExports {
         }
     }
 
-    public ClusterStub getClusterStub(Serializable id) {
+    public ClusterStub getClusterStub(Serializable key) {
         synchronized (this) {
-            return (ClusterStub) table.get(id);
+            return (ClusterStub) table.get(key);
         }
     }
 
@@ -213,7 +219,7 @@ class GlobalExports {
 
 class LocalExports {
     private HashMap map = new HashMap();
-    private ByteArrayOutputStream outs = new ByteArrayOutputStream();
+    //    private ByteArrayOutputStream outs = new ByteArrayOutputStream();
     private byte[] buf = null;
 
     public synchronized void put(Serializable key, Remote obj) {
@@ -238,22 +244,22 @@ class LocalExports {
         return map;
     }
 
-    public synchronized byte[] serialized() throws java.io.IOException {
-        if (buf != null) {
-            return buf;
-        }
-        MulticastOutputStream out = new MulticastOutputStream(outs);
-        Iterator i = map.entrySet().iterator();
-        if (i.hasNext()) {
-            Map.Entry e = (Map.Entry) i.next();
-            out.writeObject((String) e.getKey());
-            out.writeObject((Remote) e.getValue());
-        }
-        out.writeObject(new Integer(1));
-        out.flush();
-        buf = outs.toByteArray();
-        return buf;
-    }
+    //    public synchronized byte[] serialized() throws java.io.IOException {
+    //        if (buf != null) {
+    //            return buf;
+    //        }
+    //        MulticastOutputStream out = new MulticastOutputStream(outs);
+    //        Iterator i = map.entrySet().iterator();
+    //        if (i.hasNext()) {
+    //            Map.Entry e = (Map.Entry) i.next();
+    //            out.writeObject((String) e.getKey());
+    //            out.writeObject((Remote) e.getValue());
+    //        }
+    //        out.writeObject(new Integer(1));
+    //        out.flush();
+    //        buf = outs.toByteArray();
+    //        return buf;
+    //    }
 }
 
 class DistributedEquivSystem {
@@ -263,7 +269,7 @@ class DistributedEquivSystem {
     private MessageDequeuer mdq;
     private View view;
     private Address my_addr;
-    private byte my_id[];
+    private ClusterId my_id;
     private LocalExports localExports = new LocalExports();
     private GlobalExports globalExports = new GlobalExports();
     private HashMap idmap = new HashMap();
@@ -337,7 +343,7 @@ class DistributedEquivSystem {
         chan.connect(groupname);
         my_addr = chan.getLocalAddress();
 
-        my_id = ClusterIdFactory.getLocalId().toByteArray();
+        my_id = ClusterIdFactory.getLocalId();
         if (Trace.DES)
             Trace.out("DES: Cluster ID: " + my_id);
         idmap.put(my_addr, my_id);
@@ -363,19 +369,24 @@ class DistributedEquivSystem {
                     + Config.getMulticastGroupName()
                     + ", cluster Id "
                     + ClusterIdFactory.getLocalId());
-            }
-
-    private void broadcast(Serializable msg) {
-        Message m = new Message(null, my_addr, msg);
-        try {
-            chan.send(m);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (Trace.DES)
-            Trace.out("DES: broadcast sent");
     }
 
+    private void broadcast(Serializable msg) {
+        ByteArrayOutputStream outs = new ByteArrayOutputStream();
+        try {
+            MulticastOutputStream out = new MulticastOutputStream(outs);
+            out.writeObject(msg);
+            Message m = new Message(null, my_addr, outs.toByteArray());
+            chan.send(m);
+            if (Trace.DES)
+                Trace.out("DES: broadcast sent");
+        } catch (Exception e) {
+            //TODO
+            e.printStackTrace();
+        }
+    }
+
+    //TODO remove
     public static String idToString(byte id[]) {
         String s = "";
         int i;
@@ -435,7 +446,7 @@ class DistributedEquivSystem {
 
         while (oldMembers.size() > 0) {
             Address a = (Address) oldMembers.removeFirst();
-            byte[] id = (byte[]) idmap.get(a);
+            ClusterId id = (ClusterId) idmap.get(a);
             if (id != null)
                 globalExports.zapExports(id);
             idmap.remove(a);
@@ -447,13 +458,14 @@ class DistributedEquivSystem {
                         "DES: Member "
                             + a
                             + " removed (server id : "
-                            + idToString(id)
+                            + id
                             + ")");
             }
         }
 
         if (newMembers.size() > 0) {
-            /* Now done when receiving RequestExportsMsg
+            // Now done when receiving RequestExportsMsg
+            /*
                 	    if (Trace.DES) Trace.out("sending local exports");
             	    try {
             	    	Thread.sleep(3000);
@@ -472,14 +484,14 @@ class DistributedEquivSystem {
         }
     }
 
-    private byte[] checkServer(byte[] ar, Address ad) {
+    private ClusterId checkServer(ClusterId id, Address ad) {
         // Check if this server is allowed in the group ?
-        byte id[] = (byte[]) idmap.get(ad);
-        if (id == null) {
-            id = ar;
+        ClusterId i = (ClusterId) idmap.get(ad);
+        if (i == null) {
+            i = id;
             idmap.put(ad, id);
             return id;
-        } else if (Arrays.equals(id, ar)) {
+        } else if (i.equals(id)) {
             return id;
         }
         if (Trace.DES)
@@ -487,47 +499,49 @@ class DistributedEquivSystem {
         return null;
     }
 
-    private boolean self(byte[] serverId) {
-        return serverId == my_id;
+    private boolean self(ClusterId id) {
+        return my_id.equals(id);
     }
 
     private void receive(Message m) {
-        //    	Object o = m.getObject();
-
         Object o;
         byte[] buf = m.getBuffer();
         if (buf == null) {
+            //TODO message
             if (Trace.DES)
                 Trace.out("buf == null");
             o = null;
-        } else
+        } else {
             try {
                 ByteArrayInputStream in_stream = new ByteArrayInputStream(buf);
-                ObjectInputStream in = new ObjectInputStream(in_stream);
+                MulticastInputStream in = new MulticastInputStream(in_stream);
                 o = in.readObject();
             } catch (Exception e) {
+                //TODO message
                 if (Trace.DES)
                     Trace.out(e.toString());
                 o = null;
             }
+        }
 
         Address from = m.getSrc();
-        if (o instanceof ExportsMsg) {
-            ExportsMsg rm = (ExportsMsg) o;
-            byte[] id = checkServer(rm.i, from);
-            if (id == null)
-                return;
-            if (Trace.DES)
-                Trace.out(
-                    "DES: Received exports from server " + from + " " + m);
-            if (!self(id)) {
-                globalExports.addExports(id, rm.getMap());
-                if (Trace.DES)
-                    Trace.out("DES: Exports added (" + from + ")");
-            }
-        } else if (o instanceof ExportMsg) {
+//        if (o instanceof ExportsMsg) {
+//            ExportsMsg rm = (ExportsMsg) o;
+//            ClusterId id = checkServer(rm.i, from);
+//            if (id == null)
+//                return;
+//            if (Trace.DES)
+//                Trace.out(
+//                    "DES: Received exports from server " + from + " " + m);
+//            if (!self(id)) {
+//                globalExports.addExports(id, rm.getMap());
+//                if (Trace.DES)
+//                    Trace.out("DES: Exports added (" + from + ")");
+//            }
+//        } else
+        if (o instanceof ExportMsg) {
             ExportMsg pm = (ExportMsg) o;
-            byte[] id = checkServer(pm.i, from);
+            ClusterId id = checkServer(pm.i, from);
             if (id == null)
                 return;
             if (Trace.DES)
@@ -538,7 +552,7 @@ class DistributedEquivSystem {
                         + pm.k);
             if (!self(id)) {
                 try {
-                    Remote stub = pm.getStub();
+                    Remote stub = pm.stub;
                     if (stub != null)
                         globalExports.put(id, pm.k, stub);
                 } catch (RemoteException e) {
@@ -546,7 +560,7 @@ class DistributedEquivSystem {
             }
         } else if (o instanceof UnexportMsg) {
             UnexportMsg rm = (UnexportMsg) o;
-            byte[] id = checkServer(rm.i, from);
+            ClusterId id = checkServer(rm.i, from);
             if (id == null)
                 return;
             if (Trace.DES)
