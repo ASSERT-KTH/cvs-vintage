@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIConfigurationException.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: RMIConfigurationException.java,v 1.3 2005/03/11 13:57:53 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -30,16 +30,25 @@ package org.objectweb.carol.util.configuration;
 /**
  * Class <code>RmiConfigurationException</code> throw when there is a problem
  * in the carol configuration
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
+ * @author Guillaume Riviere
  */
 public class RMIConfigurationException extends Exception {
 
     /**
      * constructor with a the detail message
+     * @param s message of exception
      */
     public RMIConfigurationException(String s) {
         super(s);
+    }
+
+    /**
+     * constructor with a the detail message
+     * @param s message of exception
+     * @param e original exception
+     */
+    public RMIConfigurationException(String s, Exception e) {
+        super(s, e);
     }
 
 }
