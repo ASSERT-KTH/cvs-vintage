@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public class EntityContainer
    extends Container
@@ -319,10 +319,16 @@ public class EntityContainer
    public void remove(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
+       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
+      
+      // We signify "removed" with a null id
       mi.getEnterpriseContext().setId(null);
    }
-   
+                                           
+   /**
+   * MF FIXME these are implemented on the client
+   */                                  
    public Handle getHandle(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
@@ -343,12 +349,14 @@ public class EntityContainer
       return containerInvoker.getEJBHome();
    }
    
+   
    public boolean isIdentical(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
         return ((EJBObject)mi.getArguments()[0]).getPrimaryKey().equals(mi.getEnterpriseContext().getId());
         // TODO - should also check type
    }
+   
    
    // Home interface implementation ---------------------------------
    
@@ -363,61 +371,73 @@ public class EntityContainer
       throws java.rmi.RemoteException, FinderException
    {
       
-	  // Multi-finder?
+      // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
          // Iterator finder
          Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
-		 Collection ec = containerInvoker.getEntityCollection(c);
-		 
-		 // BMP entity finder methods are allowed to return java.util.Enumeration.
-		 // We need a serializable Enumeration, so we can't use Collections.enumeration()
-		 try {
-			 if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration"))) {
-				 return new SerializableEnumeration(ec);
-			 } else {
-				 return ec;
-			 }
-		 } catch (ClassNotFoundException e) {
-		 	// shouldn't happen
-         	return ec;
-		 }
+        Collection ec = containerInvoker.getEntityCollection(c);
+        
+        // BMP entity finder methods are allowed to return java.util.Enumeration.
+        // We need a serializable Enumeration, so we can't use Collections.enumeration()
+        try {
+          if (mi.getMethod().getReturnType().equals(Class.forName("java.util.Enumeration"))) {
+           return new SerializableEnumeration(ec);
+          } else {
+           return ec;
+          }
+        } catch (ClassNotFoundException e) {
+         // shouldn't happen
+            return ec;
+        }
                             
       } else
       {
          // Single entity finder
          Object id = getPersistenceManager().findEntity(mi.getMethod(), 
-		                                                mi.getArguments(), 
-														(EntityEnterpriseContext)mi.getEnterpriseContext());
-														
-		 //First we create the EJBObject
-		 EJBObject ejbObject = (EJBObject)containerInvoker.getEntityEJBObject(id);
-	
-		 return ejbObject;
-		 
+                                                       mi.getArguments(), 
+                                     (EntityEnterpriseContext)mi.getEnterpriseContext());
+                                     
+        //create the EJBObject
+        return (EJBObject)containerInvoker.getEntityEJBObject(id);
       }
    }
    
-   /*
+   /**
    * createHome(MethodInvocation)
    *
    * This method takes care of the wiring of the "EJBObject" trio (target, context, proxy)
    * It delegates to the persistence manager.
    *
    */
-	
-	public EJBObject createHome(MethodInvocation mi)
-		throws java.rmi.RemoteException, CreateException
-	{
-		
-	    getPersistenceManager().createEntity(mi.getMethod(), 
-											 mi.getArguments(), 
-											 (EntityEnterpriseContext) mi.getEnterpriseContext());
-		return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
-	}
-	
-		
+    
+    public EJBObject createHome(MethodInvocation mi)
+       throws java.rmi.RemoteException, CreateException
+    {
+       
+        getPersistenceManager().createEntity(mi.getMethod(), 
+                              mi.getArguments(), 
+                              (EntityEnterpriseContext) mi.getEnterpriseContext());
+       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
+    }
+    
+    /**
+    * A method for the getEJBObject from the handle
+    * 
+    */
+    public EJBObject getEJBObject(MethodInvocation mi) 
+        throws java.rmi.RemoteException  {
+            
+        // All we need is an EJBObject for this Id;
+        return (EJBObject)containerInvoker.getEntityEJBObject(mi.getId());        
+    }
+        
+        
+       
    // EJBHome implementation ----------------------------------------
+   
+    // MF The following are implemented on the client
+    
    public void removeHome(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
@@ -438,30 +458,60 @@ public class EntityContainer
    }
       
    // Private -------------------------------------------------------
-   protected void setupHomeMapping()
-      throws DeploymentException
-   {
-      Map map = new HashMap();
-      
-      Method[] m = homeInterface.getMethods();
-      for (int i = 0; i < m.length; i++)
-      {
+    protected void setupHomeMapping()
+    throws DeploymentException
+    {
+        Map map = new HashMap();
+        
+        Method[] m = homeInterface.getMethods();
+        for (int i = 0; i < m.length; i++)
+        {
             try
             {
-             // Implemented by container
-             if (m[i].getName().startsWith("find"))
-                map.put(m[i], getClass().getMethod("find", new Class[] { MethodInvocation.class }));
-             else            
-                map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
+                // Implemented by container (in both cases)
+                if (m[i].getName().startsWith("find"))
+                    map.put(m[i], this.getClass().getMethod("find", new Class[] { MethodInvocation.class }));
+                else            
+                    map.put(m[i], this.getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
             } catch (NoSuchMethodException e)
             {
                 throw new DeploymentException("Could not find matching method for "+m[i]);
             }
-      }
-      
-      homeMapping = map;
-   }
-
+        }
+        
+        // Special methods
+        
+        try {
+            
+            // Get the One on Handle (getEJBObject), get the class
+            Class handleClass = Class.forName("javax.ejb.Handle");
+            
+            // Get the methods (there is only one)
+            Method[] handleMethods = handleClass.getMethods();
+            
+            //Just to make sure let's iterate
+            for (int j=0; j<handleMethods.length ;j++) {
+                
+                try {
+                    
+                    //Get only the one called handle.getEJBObject 
+                    if (handleMethods[j].getName().equals("getEJBObject")) {
+                        
+                        //Map it in the home stuff
+                        map.put(handleMethods[j], this.getClass().getMethod("getEJBObject", new Class[] {MethodInvocation.class}));
+                    }
+                }
+                catch (NoSuchMethodException e) {
+                    throw new DeploymentException("Couldn't find getEJBObject method on container");
+                }
+            }
+        }
+        catch (Exception e) { e.printStackTrace();}
+        
+        // We are done keep the home map
+        homeMapping = map;
+    }
+    
    protected void setupBeanMapping()
       throws DeploymentException
    {
@@ -489,6 +539,7 @@ public class EntityContainer
       }
       
       beanMapping = map;
+      
    }
    
    public Interceptor createContainerInterceptor()
@@ -522,7 +573,7 @@ public class EntityContainer
             return m.invoke(EntityContainer.this, new Object[] { mi });
          } catch (InvocationTargetException e)
          {
-				Throwable ex = e.getTargetException();
+          Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
             else
@@ -545,7 +596,7 @@ public class EntityContainer
                return m.invoke(EntityContainer.this, new Object[] { mi });
             } catch (InvocationTargetException e)
             {
-					Throwable ex = e.getTargetException();
+              Throwable ex = e.getTargetException();
                if (ex instanceof Exception)
                   throw (Exception)ex;
                else
