@@ -10,11 +10,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
-import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.security.Principal;
 import javax.management.InstanceNotFoundException;
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanServer;
@@ -22,14 +22,12 @@ import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
-import javax.security.auth.Subject;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.jmx.adaptor.rmi.RMINotificationListener;
 import org.jboss.jmx.connector.invoker.client.InvokerAdaptorException;
 import org.jboss.mx.server.ServerConstants;
-import org.jboss.security.SecurityAssociation;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -52,7 +50,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * @jmx:mbean name="jboss.jmx:type=adaptor,protocol=INVOKER"
  *            extends="org.jboss.system.ServiceMBean"
@@ -209,10 +207,6 @@ public class InvokerAdaptorService
          if (newCL != null && newCL != oldCL)
             SecurityActions.setContextClassLoader(newCL);
 
-         // Get the current security context
-         Subject oldSubject = SecurityActions.getActiveSubject();
-         Object oldCredential = SecurityActions.getCredential();
-         Principal oldPrincipal = SecurityActions.getPrincipal();
          try
          {
             // Set the method hash to Method mapping
@@ -227,8 +221,8 @@ public class InvokerAdaptorService
             Principal principal = invocation.getPrincipal();
             Object credential = invocation.getCredential();
             Object value = null;
-            SecurityAssociation.setPrincipal(principal);
-            SecurityAssociation.setCredential(credential);
+            // Associate the method 
+            SecurityActions.pushSubjectContext(principal, credential, null);
 
             try
             {
@@ -270,8 +264,9 @@ public class InvokerAdaptorService
          }
          finally
          {
-            // Don't leak any security context 
-            SecurityActions.setPrincipalInfo(oldPrincipal, oldCredential, oldSubject);
+            // Restore the input security context
+            SecurityActions.popSubjectContext();            
+            // Restore the input class loader
             if (newCL != null && newCL != oldCL)
                SecurityActions.setContextClassLoader(oldCL);
          }

@@ -6,66 +6,70 @@
  */
 package org.jboss.jmx.connector.invoker;
 
-import org.jboss.mx.server.Invocation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.security.Principal;
+import javax.management.ObjectName;
+import javax.security.auth.Subject;
+
 import org.jboss.mx.interceptor.AbstractInterceptor;
 import org.jboss.mx.interceptor.Interceptor;
-
-import org.jboss.security.RealmMapping;
-import org.jboss.security.SimplePrincipal;
-
-import javax.management.ObjectName;
-import javax.naming.InitialContext;
-import java.security.Principal;
-import java.lang.reflect.Method;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Collection;
+import org.jboss.mx.server.Invocation;
 
 /**
  * An Interceptor that aids in providing Authorization to JMX Invocations
- * at an MBean Operations level.
+ * at an MBean Operations level. This must be placed after the
+ * AuthenticationInterceptor to ensure a valid caller context exists
+ *
+ *          String msg = "Define your own class which has a method authorize with signature";
+         msg += "public void authorize( Principal caller, Subject subject,
+ String objectname,String opname)";
+         msg += ". And replace " + azclassname + " its name";
+ 
+ * @see AuthenticationInterceptor
  *
  * @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.3 $
  */
 public class AuthorizationInterceptor extends AbstractInterceptor
 {
-   private String azclassname = null;
+   private Object authenticator = null;
+   private Method authorize;
 
    public AuthorizationInterceptor()
    {
       super();
-   }
-
-   private RealmMapping realm;
-
-   public void setSecurityDomain(String securityDomain)
-   {
+      // Install the default
       try
       {
-         InitialContext ctx = new InitialContext();
-         realm = (RealmMapping) ctx.lookup(securityDomain);
+         setAuthorizingClass(RolesAuthorization.class);
       }
-      catch (Exception e)
+      catch(Exception e)
       {
-
+         // Can't happen
       }
-
    }
 
    /**
     * The Authorizing class must have a method called
     * public Boolean authorize( Principal caller, String mbean,String opname )
     *
-    * @param az
+    * @param clazz
     */
-   public void setAuthorizingClass(String az)
+   public void setAuthorizingClass(Class clazz)
+      throws Exception
    {
-      System.out.println("Authorizing Class=" + az);
-      azclassname = az;
+      authenticator = clazz.newInstance();
+      log.debug("Loaded authenticator: "+authenticator);
+      Class[] sig = {Principal.class, Subject.class, String.class, String.class};
+      authorize = clazz.getMethod("authorize", sig);
+      log.debug("Found authorize(Principal, Subject, String, String)");
    }
 
    /**
+    * Intercept the invoke(Invocation) operations 
     * @param invocation
     * @return
     * @throws Throwable
@@ -83,27 +87,24 @@ public class AuthorizationInterceptor extends AbstractInterceptor
             // Authenticate the caller based on the security association
             Principal caller = inv.getPrincipal();
             //Get the Method Name
-            if (inv == null) System.out.println("Invocation is null");
             Object[] obj = inv.getArguments();
             ObjectName objname = (ObjectName) obj[0];
             String opname = (String) obj[1];
 
-            boolean auth = false;
             try
             {
-               auth = checkAuthorization(caller, objname.getCanonicalName(), opname);
+               checkAuthorization(caller, objname.getCanonicalName(), opname);
             }
-            catch (Exception e)
+            catch(SecurityException e)
             {
-               e.printStackTrace();
-               auth = false;
+               throw e;
             }
-
-            if (auth == false)
+            catch(Exception e)
             {
                String msg = "Failed to authorize principal=" + caller
                   + ",MBean=" + objname + ", Operation=" + opname;
                SecurityException ex = new SecurityException(msg);
+               ex.initCause(e);
                throw ex;
             }
          }
@@ -119,48 +120,29 @@ public class AuthorizationInterceptor extends AbstractInterceptor
     * @param caller
     * @param objname
     * @param opname
-    * @return whether the caller has authorization to do the operation
-    * @throws Exception
+    * @throws Exception - A SecurityException on authorization failure
     */
-   private boolean checkAuthorization(Principal caller, String objname, String opname)
+   private void checkAuthorization(Principal caller, String objname, String opname)
       throws Exception
    {
-      if (realm == null)
-         throw new SecurityException("Security Domain not defined for Authorization Interceptor");
-      //Get the Role from the security domain
-      Set roles = realm.getUserRoles(caller);
-      boolean hasRole = realm.doesUserHaveRole(caller, roles);
-      if (hasRole == false)
-         throw new SecurityException("Caller not defined in the roles");
-
-      //Get a collection of roles that are defined for this user
-      Collection rolenames = new ArrayList();
-      Iterator iter = null;
-      if (roles != null && !roles.isEmpty()) iter = roles.iterator();
-      while (iter.hasNext())
-      {
-         SimplePrincipal rolename = (SimplePrincipal) iter.next();
-         rolenames.add(rolename.getName());
-      }
+      // Get the active Subject
+      Subject subject = SecurityActions.getActiveSubject();
+      if( subject == null )
+         throw new SecurityException("No active Subject found, add th AuthenticationInterceptor");
 
       //We will try to use the authorizing class
-      Class cl = null;
       try
       {
-         cl = Thread.currentThread().getContextClassLoader().loadClass(azclassname);
+         Object[] args = {caller, subject, objname, opname};
+         authorize.invoke(authenticator, args);
       }
-      catch (Exception e)
+      catch(InvocationTargetException e)
       {
-         String msg = "Define your own class which has a method authorize with signature";
-         msg += "public Boolean authorize( Principal caller, Collection roles,String objectname,String opname)";
-         msg += ". And replace " + azclassname + " its name";
-         throw new Exception(msg);
+         Throwable t = e.getTargetException();
+         if( t instanceof Exception )
+            throw (Exception) t;
+         else
+            throw new UndeclaredThrowableException(t);
       }
-      Object obj = cl.newInstance();
-      Method method = cl.getMethod("authorize",
-         new Class[]{Principal.class, Collection.class, String.class, String.class});
-      Boolean valid = (Boolean) method.invoke(obj, new Object[]{caller, rolenames, objname, opname});
-
-      return valid.booleanValue();
    }
 }

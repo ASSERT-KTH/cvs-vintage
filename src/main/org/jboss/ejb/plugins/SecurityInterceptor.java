@@ -17,12 +17,12 @@ import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.RunAsIdentity;
-import org.jboss.security.SecurityRolesAssociation;
 import org.jboss.system.Registry;
 
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
+import javax.security.auth.Subject;
 
 /**
  * The SecurityInterceptor is where the EJB 2.0 declarative security model
@@ -31,7 +31,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -119,6 +119,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       finally
       {
          SecurityActions.popRunAsIdentity();
+         SecurityActions.popSubjectContext();
       }
    }
 
@@ -141,6 +142,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       finally
       {
          SecurityActions.popRunAsIdentity();
+         SecurityActions.popSubjectContext();
       }
    }
 
@@ -160,7 +162,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (mi.getMethod() == null || securityManager == null || container == null)
       {
          // Allow for the progatation of caller info to other beans
-         SecurityActions.setPrincipalInfo(principal, credential);
+         SecurityActions.pushSubjectContext(principal, credential, null);
          return;
       }
 
@@ -174,8 +176,8 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (callerRunAsIdentity == null)
       {
          // Check the security info from the method invocation
-         SecurityRolesAssociation.setSecurityRoles(securityRoles);
-         if (securityManager.isValid(principal, credential) == false)
+         Subject subject = new Subject();
+         if (securityManager.isValid(principal, credential, subject) == false)
          {
             // Notify authentication observer
             if (authenticationObserver != null)
@@ -191,7 +193,7 @@ public class SecurityInterceptor extends AbstractInterceptor
          }
          else
          {
-            SecurityActions.setPrincipalInfo(principal, credential);
+            SecurityActions.pushSubjectContext(principal, credential, subject);
             if (trace)
             {
                log.trace("Authenticated  principal=" + principal);

@@ -8,6 +8,7 @@ package org.jboss.jmx.connector.invoker;
 
 import java.security.Principal;
 import javax.naming.InitialContext;
+import javax.security.auth.Subject;
 
 import org.jboss.mx.server.Invocation;
 import org.jboss.mx.interceptor.AbstractInterceptor;
@@ -23,7 +24,7 @@ import org.jboss.security.SubjectSecurityManager;
  *
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>.
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  */
 public final class AuthenticationInterceptor
@@ -32,6 +33,7 @@ public final class AuthenticationInterceptor
    private SubjectSecurityManager securityMgr;
 
    public void setSecurityDomain(String securityDomain)
+      throws Exception
    {
       try
       {
@@ -49,11 +51,12 @@ public final class AuthenticationInterceptor
     * 
     * @param invocation
     * @return
-    * @throws InvocationException
+    * @throws Throwable
     */ 
    public Object invoke(Invocation invocation) throws Throwable
    {
       String type = invocation.getType();
+      Subject subject = null;
       if( type == Invocation.OP_INVOKE && securityMgr != null )
       {
          String opName = invocation.getName();
@@ -64,17 +67,30 @@ public final class AuthenticationInterceptor
             // Authenticate the caller based on the security association
             Principal caller = inv.getPrincipal();
             Object credential = inv.getCredential();
-            boolean isValid = securityMgr.isValid(caller, credential);
+            subject = new Subject();
+            boolean isValid = securityMgr.isValid(caller, credential, subject);
             if( isValid == false )
             {
                String msg = "Failed to authenticate principal="+caller
                   +", securityDomain="+securityMgr.getSecurityDomain();
                throw new SecurityException(msg);
+            
             }
+            // Push the caller security context
+            SecurityActions.pushSubjectContext(caller, credential, subject);
          }
       }
 
-      Interceptor i = invocation.nextInterceptor();
-      return i.invoke(invocation);
+      try
+      {
+         Interceptor i = invocation.nextInterceptor();
+         return i.invoke(invocation);
+      }
+      finally
+      {
+         // Don't leak the security context
+         if( subject != null )
+            SecurityActions.popSubjectContext();
+      }
    }
 }

@@ -28,7 +28,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JaasAuthenticationInterceptor extends AbstractInterceptor
 {
@@ -76,9 +76,6 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
 
    public Object invokeHome(Invocation mi) throws Exception
    {
-      // Save the incoming authenticated identity thread association
-      Subject prevSubject = SecurityActions.getSubject();
-
       // Authenticate the subject and apply any declarative security checks
       checkSecurityAssociation(mi);
 
@@ -96,15 +93,12 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       finally
       {
          SecurityActions.popRunAsIdentity();
-         SecurityActions.setSubject(prevSubject);
+         SecurityActions.popSubjectContext();
       }
    }
 
    public Object invoke(Invocation mi) throws Exception
    {
-      // Save the incoming authenticated identity thread association
-      Subject prevSubject = SecurityActions.getSubject();
-
       // Authenticate the subject and apply any declarative security checks
       checkSecurityAssociation(mi);
 
@@ -127,7 +121,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       finally
       {
          SecurityActions.popRunAsIdentity();
-         SecurityActions.setSubject(prevSubject);
+         SecurityActions.popSubjectContext();
       }
    }
 
@@ -145,8 +139,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       if (mi.getMethod() == null || securityManager == null || container == null)
       {
          // Allow for the progatation of caller info to other beans
-         SecurityActions.setPrincipalInfo(principal, credential);
-         SecurityActions.setSubject(null);
+         SecurityActions.pushSubjectContext(principal, credential, null);
          return;
       }
 
@@ -159,7 +152,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
          login modules which combined authentication and authorization.
          */
          SecurityRolesAssociation.setSecurityRoles(securityRoles);
-         if (securityManager.isValid(principal, credential) == false)
+         Subject subject = new Subject();
+         if (securityManager.isValid(principal, credential, subject) == false)
          {
             // Check for the security association exception
             Exception ex = SecurityActions.getContextException();
@@ -172,7 +166,7 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
          }
          else
          {
-            SecurityActions.setPrincipalInfo(principal, credential);
+            SecurityActions.pushSubjectContext(principal, credential, subject);
             if (trace)
             {
                log.trace("Authenticated  principal=" + principal);

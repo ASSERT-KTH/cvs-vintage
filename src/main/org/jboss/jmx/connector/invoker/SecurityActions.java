@@ -29,55 +29,6 @@ class SecurityActions
          return subject;
       }
    }
-   private static class GetPrincipalAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-      public Object run()
-      {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
-      }
-   }
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-      public Object run()
-      {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-   }
-   private static class SetPrincipalInfoAction implements PrivilegedAction
-   {
-      Principal principal;
-      Object credential;
-      Subject subject;
-      boolean setSubject;
-      SetPrincipalInfoAction(Principal principal, Object credential)
-      {
-         this.principal = principal;
-         this.credential = credential;
-      }
-      SetPrincipalInfoAction(Principal principal, Object credential, Subject subject)
-      {
-         this.principal = principal;
-         this.credential = credential;
-         this.subject = subject;
-         this.setSubject = true;
-      }
-
-      public Object run()
-      {
-         SecurityAssociation.setCredential(credential);
-         credential = null;
-         SecurityAssociation.setPrincipal(principal);
-         principal = null;
-         if( setSubject == true )
-            SecurityAssociation.setSubject(subject);
-         subject = null;
-         return null;
-      }
-   }
    private static class GetTCLAction implements PrivilegedAction
    {
       static PrivilegedAction ACTION = new GetTCLAction();
@@ -101,26 +52,59 @@ class SecurityActions
          return null;
       }
    }
+   interface PrincipalInfoAction
+   {
+      PrincipalInfoAction PRIVILEGED = new PrincipalInfoAction()
+      {
+         public void push(final Principal principal, final Object credential,
+            final Subject subject)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     SecurityAssociation.pushSubjectContext(subject, principal, credential);
+                     return null;
+                  }
+               }
+            );
+         }
+         public void pop()
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     SecurityAssociation.popSubjectContext();
+                     return null;
+                  }
+               }
+            );
+         }
+      };
 
-   static Principal getPrincipal()
-   {
-      Principal principal = (Principal) AccessController.doPrivileged(GetPrincipalAction.ACTION);
-      return principal;
+      PrincipalInfoAction NON_PRIVILEGED = new PrincipalInfoAction()
+      {
+         public void push(Principal principal, Object credential, Subject subject)
+         {
+            SecurityAssociation.pushSubjectContext(subject, principal, credential);
+         }
+         public void pop()
+         {
+            SecurityAssociation.popSubjectContext();
+         }
+      };
+
+      void push(Principal principal, Object credential, Subject subject);
+      void pop();
    }
-   static Object getCredential()
-   {
-      Object credential = AccessController.doPrivileged(GetCredentialAction.ACTION);
-      return credential;
-   }
+
    static Subject getActiveSubject()
    {
       Subject subject = (Subject) AccessController.doPrivileged(GetSubjectAction.ACTION);
       return subject;
-   }
-   static void setPrincipalInfo(Principal principal, Object credential, Subject subject)
-   {
-      SetPrincipalInfoAction action = new SetPrincipalInfoAction(principal, credential, subject);
-      AccessController.doPrivileged(action);
    }
    static ClassLoader getContextClassLoader()
    {
@@ -131,5 +115,29 @@ class SecurityActions
    {
       PrivilegedAction action = new SetTCLAction(loader);
       AccessController.doPrivileged(action);
+   }
+
+   static void pushSubjectContext(Principal principal, Object credential,
+      Subject subject)
+   {
+      if(System.getSecurityManager() == null)
+      {
+         PrincipalInfoAction.NON_PRIVILEGED.push(principal, credential, subject);
+      }
+      else
+      {
+         PrincipalInfoAction.PRIVILEGED.push(principal, credential, subject);
+      }
+   }
+   static void popSubjectContext()
+   {
+      if(System.getSecurityManager() == null)
+      {
+         PrincipalInfoAction.NON_PRIVILEGED.pop();
+      }
+      else
+      {
+         PrincipalInfoAction.PRIVILEGED.pop();
+      }
    }
 }

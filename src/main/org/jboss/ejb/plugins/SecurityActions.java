@@ -21,69 +21,32 @@ import org.jboss.security.RunAsIdentity;
  */
 class SecurityActions
 {
-   interface SubjectActions
+   interface PrincipalInfoAction
    {
-      SubjectActions PRIVILEGED = new SubjectActions()
+      PrincipalInfoAction PRIVILEGED = new PrincipalInfoAction()
       {
-         private final PrivilegedAction getSubjectAction = new PrivilegedAction()
-         {
-            public Object run()
-            {
-               return SecurityAssociation.getSubject();
-            }
-         };
-
-         public Subject get()
-         {
-            return (Subject)AccessController.doPrivileged(getSubjectAction);
-         }
-
-         public void set(final Subject subject)
+         public void push(final Principal principal, final Object credential,
+            final Subject subject)
          {
             AccessController.doPrivileged(
                new PrivilegedAction()
                {
                   public Object run()
                   {
-                     SecurityAssociation.setSubject(subject);
+                     SecurityAssociation.pushSubjectContext(subject, principal, credential);
                      return null;
                   }
                }
             );
          }
-      };
-
-      SubjectActions NON_PRIVILEGED = new SubjectActions()
-      {
-         public Subject get()
-         {
-            return SecurityAssociation.getSubject();
-         }
-
-         public void set(Subject subject)
-         {
-            SecurityAssociation.setSubject(subject);
-         }
-      };
-
-      Subject get();
-
-      void set(Subject subject);
-   }
-
-   interface PrincipalInfoAction
-   {
-      PrincipalInfoAction PRIVILEGED = new PrincipalInfoAction()
-      {
-         public void set(final Principal principal, final Object credential)
+         public void pop()
          {
             AccessController.doPrivileged(
                new PrivilegedAction()
                {
                   public Object run()
                   {
-                     SecurityAssociation.setPrincipal(principal);
-                     SecurityAssociation.setCredential(credential);
+                     SecurityAssociation.popSubjectContext();
                      return null;
                   }
                }
@@ -93,14 +56,18 @@ class SecurityActions
 
       PrincipalInfoAction NON_PRIVILEGED = new PrincipalInfoAction()
       {
-         public void set(Principal principal, Object credential)
+         public void push(Principal principal, Object credential, Subject subject)
          {
-            SecurityAssociation.setPrincipal(principal);
-            SecurityAssociation.setCredential(credential);
+            SecurityAssociation.pushSubjectContext(subject, principal, credential);
+         }
+         public void pop()
+         {
+            SecurityAssociation.popSubjectContext();
          }
       };
 
-      void set(Principal principal, Object credential);
+      void push(Principal principal, Object credential, Subject subject);
+      void pop();
    }
 
    interface RunAsIdentityActions
@@ -220,7 +187,7 @@ class SecurityActions
          {
             try
             {
-            return (Subject) AccessController.doPrivileged(exAction);
+               return (Subject) AccessController.doPrivileged(exAction);
             }
             catch(PrivilegedActionException e)
             {
@@ -256,36 +223,30 @@ class SecurityActions
       TCLAction.UTIL.setContextClassLoader(loader);
    }
 
-   static Subject getSubject()
-   {
-      return System.getSecurityManager() == null ? SubjectActions.NON_PRIVILEGED.get() : SubjectActions.PRIVILEGED.get();
-   }
-
-   static void setSubject(Subject subject)
+   static void pushSubjectContext(Principal principal, Object credential,
+      Subject subject)
    {
       if(System.getSecurityManager() == null)
       {
-         SubjectActions.NON_PRIVILEGED.set(subject);
+         PrincipalInfoAction.NON_PRIVILEGED.push(principal, credential, subject);
       }
       else
       {
-         SubjectActions.PRIVILEGED.set(subject);
+         PrincipalInfoAction.PRIVILEGED.push(principal, credential, subject);
       }
    }
-
-   static void setPrincipalInfo(Principal principal, Object credential)
+   static void popSubjectContext()
    {
       if(System.getSecurityManager() == null)
       {
-         PrincipalInfoAction.NON_PRIVILEGED.set(principal, credential);
+         PrincipalInfoAction.NON_PRIVILEGED.pop();
       }
       else
       {
-         PrincipalInfoAction.PRIVILEGED.set(principal, credential);
+         PrincipalInfoAction.PRIVILEGED.pop();
       }
    }
 
-   
    static RunAsIdentity peekRunAsIdentity()
    {
       if(System.getSecurityManager() == null)
