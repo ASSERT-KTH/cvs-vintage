@@ -7,6 +7,7 @@
 package org.jboss.invocation;
 
 import java.rmi.Remote;
+import org.jboss.proxy.Interceptor;
 
 /**
 *   This invoker carries Invocation in the JMX target node.
@@ -16,7 +17,7 @@ import java.rmi.Remote;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
