@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.87 2004/01/03 00:20:34 bobtarling Exp $
+// $Id: FigClass.java,v 1.88 2004/01/13 19:42:28 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,9 +275,10 @@ public class FigClass extends FigNodeModelElement {
         this();
         enableSizeChecking(true);
         setOwner(node);
-        if ((org.argouml.model.ModelFacade.isAClassifier(node))
-	    && (org.argouml.model.ModelFacade.getName(node) != null))
+        if ((ModelFacade.isAClassifier(node))
+	        && (ModelFacade.getName(node) != null)) {
             _name.setText(org.argouml.model.ModelFacade.getName(node));
+        }
     }
 
     public String placeString() {

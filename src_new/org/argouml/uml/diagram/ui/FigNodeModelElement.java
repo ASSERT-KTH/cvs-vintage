@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.94 2004/01/03 00:20:33 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.95 2004/01/13 19:42:28 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -184,7 +184,13 @@ public abstract class FigNodeModelElement
     // instance variables
 
     protected FigRect _bigPort;
+    /**
+     * @deprecated 0.16 use getter/setter
+     */
     public FigText _name; // TODO - public!! Make private!
+    /**
+     * @deprecated 0.16 use getter/setter
+     */
     public FigText _stereo; // TODO - public!! Make private!
     protected Vector _enclosedFigs = new Vector();
     protected Fig _encloser = null;
