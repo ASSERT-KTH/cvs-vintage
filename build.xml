@@ -32,14 +32,20 @@
 
     <!-- include ant, it is used for testing and will be used for
          configuration and few other tasks -->
+		 <echo message="copyant ${build.compiler}"/>
+		 <echo message="copyant ${ant.home}"/>
     <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
+		 <echo message="copy xml"/>
     <copyfile src="${ant.home}/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
+		 <echo message="copy ant"/>
     <copyfile src="${ant.home}/lib/ant.jar" dest="${tomcat.build}/lib/ant.jar"/>
 
+		 <echo message="copy LICENSE"/>
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
+		 <echo message="copy done"/>
 
-    <fixcrlf srcdir="${dist.dir}" includes="*.sh" cr="remove"/>
-    <fixcrlf srcdir="${dist.dir}" includes="*.bat" cr="add"/>
+    <fixcrlf srcdir="${tomcat.build}" includes="*.sh" cr="remove"/>
+    <fixcrlf srcdir="${tomcat.build}" includes="*.bat" cr="add"/>
 
     <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
     <chmod perm="+x" src="${tomcat.build}/bin/antRun"/>
