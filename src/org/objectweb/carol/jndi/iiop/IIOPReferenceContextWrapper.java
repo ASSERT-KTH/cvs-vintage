@@ -130,7 +130,7 @@ public class IIOPReferenceContextWrapper implements Context {
 		    }
 		} 
 		return irw;
-	    } if ((!(o instanceof Remote)) && (o instanceof Reference)) {
+	    } else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
 		IIOPReferenceWrapper irw =  new IIOPReferenceWrapper((Reference)o);
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
 		IIOPReferenceWrapper oldObj = (IIOPReferenceWrapper) wrapperHash.put(name, irw);
