@@ -16,20 +16,34 @@ import org.jboss.ejb.DeploymentException;
  * expanded to include other cluster configuration parameters later on.
 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ClusterConfigMetaData extends MetaData
 {
    public final static String DEFAULT_PARTITION = "DefaultPartition";
    private String partitionName = DEFAULT_PARTITION;
+   private String homeLoadBalancePolicy = null;
+   private String beanLoadBalancePolicy = null;
 
    public String getPartitionName()
    {
       return partitionName;
    }
 
+   public String getHomeLoadBalancePolicy()
+   {
+      return homeLoadBalancePolicy;
+   }
+
+   public String getBeanLoadBalancePolicy()
+   {
+      return homeLoadBalancePolicy;
+   }
+
    public void importJbossXml(Element element) throws DeploymentException 
    {
       partitionName = getElementContent(getOptionalChild(element, "partition-name"), DEFAULT_PARTITION);
+      homeLoadBalancePolicy = getElementContent(getOptionalChild(element, "home-load-balance-policy"), null);
+      beanLoadBalancePolicy = getElementContent(getOptionalChild(element, "bean-load-balance-policy"), null);
    }
 }
