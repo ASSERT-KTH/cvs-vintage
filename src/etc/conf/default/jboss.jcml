@@ -133,31 +133,38 @@
   <mbean code="org.jboss.resource.RARDeployer" name="JCA:service=RARDeployer">
   </mbean>
 
-  <!-- Minerva connection manager factory -->
+  <!-- Minerva local transaction connection manager factory.
+  
+       Use this for resource adapters that support "local"
+       transactions. -->
   <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
-         name="JCA:service=ConnectionManagerFactoryLoader">
+         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory">
     <attribute name="FactoryName">MinervaSharedLocalCMFactory</attribute>
     <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaSharedLocalCMFactory</attribute>
     <attribute name="Properties"></attribute>
   </mbean>
 
-  <!-- This binds an XADataSource into JNDI for the example resource adapter -->
-  <mbean code="org.jboss.jdbc.RawXADataSourceLoader"
-         name="DefaultDomain:service=RawXADataSourceLoader,name=DefaultXADS">
-    <attribute name="PoolName">BlackBoxXADS</attribute>
-    <attribute name="DataSourceClass">org.opentools.minerva.jdbc.xa.wrapper.XADataSourceImpl</attribute>
-    <attribute name="Properties">
-      URL=jdbc:HypersonicSQL:hsql://localhost:1476
-    </attribute>
+  <!-- Minerva XA transaction connection manager factory
+  
+       Use this for resource adapters that support "xa"
+       transactions. -->
+  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
+         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory">
+    <attribute name="FactoryName">MinervaXACMFactory</attribute>
+    <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaXACMFactory</attribute>
+    <attribute name="Properties"></attribute>
   </mbean>
 
-  <!-- Example connection factory for the connector architecture RI adapter -->
+  <!-- Example connection factory for the example "Black Box" resource
+       adapter. This points at the same database as DefaultDS. -->
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
-         name="JCA:service=ConnectionFactoryLoader">
+         name="JCA:service=ConnectionFactoryLoader,name=BlackBoxDS">
     <attribute name="FactoryName">BlackBoxDS</attribute>
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
-    <attribute name="ResourceAdapterName">Black Box XA Adapter</attribute>
-    <attribute name="Properties">XADataSourceName=java:/BlackBoxXADS</attribute>
+    <attribute name="ResourceAdapterName">Black Box LocalTx Adapter</attribute>
+    <attribute name="Properties">
+      ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
+    </attribute>
 
     <!-- Principal mapping configuration -->
     <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
@@ -167,30 +174,78 @@
     </attribute>
 
     <attribute name="ConnectionManagerFactoryName">MinervaSharedLocalCMFactory</attribute>
-
     <!-- See the documentation for the specific connection manager
          implementation you are using for the properties you can set -->
     <attribute name="ConnectionManagerProperties">
-      # Pool strategy - uncomment to force, otherwise it is automatic
-      #PoolStrategy=Single
+      # Pool type - uncomment to force, otherwise it is the default
+      #PoolConfiguration=per-factory
 
       # Connection pooling properties - see
-      # org.opentools.minerva.pool.ObjectPool
-
+      # org.opentools.minerva.pool.PoolParameters
       MinSize=0
       MaxSize=10
-      GCMinIdleTime=1200000
-      GCEnabled=false
-      InvalidateOnError=false
-      TimestampUsed=false
       Blocking=true
-      GCInterval=120000
-      IdleTimeout=1800000
+      GCEnabled=false
       IdleTimeoutEnabled=false
-      LoggingEnabled=false
+      InvalidateOnError=false
+      TrackLastUsed=false
+      GCIntervalMillis=120000
+      GCMinIdleMillis=1200000
+      IdleTimeoutMillis=1800000
       MaxIdleTimeoutPercent=1.0
     </attribute>
   </mbean>
+
+  <!-- This is an example of using a resource adapter that supports XA
+       transactions. The Black Box XA resource adapter requires an
+       XADataSource to be in JNDI somewhere. JBoss doesn't include a
+       database with an XA-compliant JDBC driver, so this will need to
+       be configured to use whatever XADataSource implementation you
+       have.
+
+  <mbean code="org.jboss.jdbc.RawXADataSourceLoader"
+         name="DefaultDomain:service=RawXADataSourceLoader,name=BlackBoxXADS">
+    <attribute name="PoolName">BlackBoxXADS</attribute>
+    <attribute name="DataSourceClass">Put your XADataSource implementation class here</attribute>
+    <attribute name="Properties"></attribute>
+  </mbean>
+
+  <mbean code="org.jboss.resource.ConnectionFactoryLoader"
+         name="JCA:service=ConnectionFactoryLoader,name=XABlackBoxDS">
+    <attribute name="FactoryName">XABlackBoxDS</attribute>
+    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
+    <attribute name="ResourceAdapterName">Black Box XA Adapter</attribute>
+    <attribute name="Properties">
+      XADataSourceName=java:/BlackBoxXADS
+    </attribute>
+
+    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
+    <attribute name="PrincipalMappingProperties">
+      userName=sa
+      password=
+    </attribute>
+
+    <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
+    <attribute name="ConnectionManagerProperties">
+      # Pool type - uncomment to force, otherwise it is the default
+      #PoolConfiguration=per-factory
+
+      # Connection pooling properties - see
+      # org.opentools.minerva.pool.PoolParameters
+      MinSize=0
+      MaxSize=10
+      Blocking=true
+      GCEnabled=false
+      IdleTimeoutEnabled=false
+      InvalidateOnError=false
+      TrackLastUsed=false
+      GCIntervalMillis=120000
+      GCMinIdleMillis=1200000
+      IdleTimeoutMillis=1800000
+      MaxIdleTimeoutPercent=1.0
+    </attribute>
+  </mbean>
+  -->
 
   <!-- JMX adaptors -->
   <mbean code="org.jboss.jmx.server.JMXAdaptorService" name="Adaptor:name=RMI" />
