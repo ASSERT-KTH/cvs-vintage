@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -178,6 +178,8 @@ public class EARDeployer
                {
                   // The nested jar url was placed into extractedJars above
                   URL nestedURL = (URL) extractedJars.get(fileName);
+                  if( nestedURL == null )
+                     throw new DeploymentException("Failed to find module file: "+fileName);
                   sub = new DeploymentInfo(nestedURL, di, getServer());
                }
                // Set the context-root on web modules
@@ -187,11 +189,15 @@ public class EARDeployer
             }
          }
       }
+      catch (DeploymentException e)
+      {
+         throw e;
+      }
       catch (Exception e)
       {
          throw new DeploymentException("Error in accessing application metadata: ", e);
       }
-      
+ 
       // Create the appropriate JSR-77 instance, this has to be done in init
       // EAR create is called after sub-component creates that need this MBean
       ObjectName lApplication = J2EEApplication.create(
