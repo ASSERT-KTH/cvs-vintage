@@ -19,7 +19,7 @@
 // File: ClassNode.java
 // Classes: ClassNode
 // Original Author: ics125b spring 1996
-// $Id: ClassNode.java,v 1.2 1998/03/09 22:52:35 abonner Exp $
+// $Id: ClassNode.java,v 1.3 1998/03/14 01:20:00 abonner Exp $
 
 package uci.uml.visual.demo;
 
@@ -57,6 +57,7 @@ public class ClassNode extends NetNode {
     temp_list.addElement(obj1);
     FigClass fn = new FigClass(this, temp_list);
     fn.bindPort(north, obj1);
+    fn.setSize(100,70);
     return fn;
   }
 
