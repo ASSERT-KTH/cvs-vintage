@@ -28,6 +28,7 @@ package org.objectweb.carol.jndi.iiop;
 
 // java import 
 import java.io.Serializable;
+import java.util.Hashtable;
 import java.rmi.Remote;
 
 // javax import
