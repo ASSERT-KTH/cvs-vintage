@@ -177,6 +177,8 @@
         <copy todir="${build.project}/style" filtering="yes">
             <fileset dir="${src.html.dir}"
                      includes="**/*.css" defaultexcludes="no"/>
+            <fileset dir="${src.html.dir}"
+                     includes="**/*.dtd" defaultexcludes="no"/>
         </copy>
 
         <copy todir="${build.project}/images" filtering="no">
