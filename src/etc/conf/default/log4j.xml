@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.22 2004/03/04 15:44:09 remm Exp $ -->
+<!-- $Id: log4j.xml,v 1.23 2004/04/20 07:10:42 ejort Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -155,6 +155,11 @@
    <!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
    <category name="org.apache">
       <priority value="INFO"/>
+   </category>
+
+   <!-- Limit the org.jgroups category to WARN as its INFO is verbose -->
+   <category name="org.jgroups">
+      <priority value="WARN"/>
    </category>
 
    <!-- Limit apache axis to INFO as its DEBUG is even more verbose -->
