@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.5 2000/07/25 17:36:12 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.6 2000/08/02 19:18:24 juha Exp $
  */
 
 // standard imports
@@ -46,7 +46,7 @@ import com.dreambean.ejx.ejb.Session;
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -221,81 +221,37 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * Checks if class implements the java.io.Serializable interface
      */
     public boolean isSerializable(Class c) {
-    
-        Class[] interfaces = c.getInterfaces();
-            
-        for (int i = 0; i < interfaces.length; ++i) {
-                
-            if ((SERIALIZATION_INTERFACE).equals(interfaces[i].getName()))
-                return true;
-        }
-                
-        return false;
+        return hasInterface(c, SERIALIZATION_INTERFACE);
     }
+    
     
     /*
      * Finds java.ejb.SessionBean interface from the class
      */
     public boolean hasSessionBeanInterface(Class c) {
-
-        Class[] interfaces = c.getInterfaces();
-
-        for (int i = 0; i < interfaces.length; ++i) {
-
-            if ((SESSION_BEAN_INTERFACE).equals(interfaces[i].getName()))
-                return true;
-        }
-
-        return false;
+        return hasInterface(c, SESSION_BEAN_INTERFACE);
     }
+    
 
     /*
      * Finds java.ejb.EJBObject interface from the class
      */
     public boolean hasEJBObjectInterface(Class c) {
-
-        Class[] interfaces = c.getInterfaces();
-
-        for (int i = 0; i < interfaces.length; ++i) {
-
-            if ((EJB_OBJECT_INTERFACE).equals(interfaces[i].getName()))
-                return true;
-        }
-
-        return false;
+        return hasInterface(c, EJB_OBJECT_INTERFACE);
     }
-
-
+    
     /*
      * Finds javax.ejb.EJBHome interface from the class or its superclasses
      */
     public boolean hasEJBHomeInterface(Class c) {
-        
-        Class[] interfaces = c.getInterfaces();
-        
-        for (int i = 0; i < interfaces.length; ++i) {
-            
-            if ((EJB_HOME_INTERFACE).equals(interfaces[i].getName()))
-                return true;
-        }
-        
-        return false;
+        return hasInterface(c, EJB_HOME_INTERFACE);
     }
     
     /*
      * Finds javax.ejb.SessionSynchronization interface from the class
      */
     public boolean hasSessionSynchronizationInterface(Class c) {
-
-        Class[] interfaces = c.getInterfaces();
-
-        for (int i = 0; i < interfaces.length; ++i) {
-
-            if ((SESSION_SYNCHRONIZATION_INTERFACE).equals(interfaces[i].getName()))
-                return true;
-        }
-
-        return false;
+        return hasInterface(c, SESSION_SYNCHRONIZATION_INTERFACE);
     }
 
 
@@ -304,7 +260,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     public boolean hasDefaultConstructor(Class c) {
         try {
-        
             c.newInstance();
         }
         
@@ -322,9 +277,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean hasFinalizer(Class c) {
 
         try {
-
             Method finalizer = c.getDeclaredMethod(FINALIZE_METHOD, new Class[0]);
-
         }
 
         catch (NoSuchMethodException e) {
@@ -333,9 +286,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         catch (SecurityException e) {
             System.err.println(e);
-            // [TODO]   Can be thrown by the getDeclaredMethod() call if access is
-            //          denied --> createVerifierWarningEvent
-
             return false;
         }
 
@@ -553,6 +503,18 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean hasMatchingMethodExceptions(Class a, Class b) {
         
         return true;
+    }
+
+
+    private boolean hasInterface(Class c, String name) {
+        
+        Class[] interfaces = c.getInterfaces();
+        
+        for (int i = 0; i < interfaces.length; ++i) 
+            if (interfaces[i].getName().equals(name))
+                return true;
+                
+        return false;
     }
     
     
