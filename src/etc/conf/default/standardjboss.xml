@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.77 2004/05/07 14:58:46 tdiesler Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.78 2004/05/14 01:26:17 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -179,7 +179,33 @@
       <proxy-factory-config>
         <JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
         <ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
+        <!-- WARN: Don't set this to zero until a bug in the pooled executor is fixed -->
+        <MinimumSize>1</MinimumSize>
         <MaximumSize>15</MaximumSize>
+        <KeepAliveMillis>30000</KeepAliveMillis>
+        <MaxMessages>1</MaxMessages>
+        <MDBConfig>
+          <ReconnectIntervalSec>10</ReconnectIntervalSec>
+          <DLQConfig>
+            <DestinationQueue>queue/DLQ</DestinationQueue>
+            <MaxTimesRedelivered>10</MaxTimesRedelivered>
+            <TimeToLive>0</TimeToLive>
+          </DLQConfig>
+        </MDBConfig>
+      </proxy-factory-config>
+    </invoker-proxy-binding>
+
+    <invoker-proxy-binding>
+      <name>singleton-message-driven-bean</name>
+      <invoker-mbean>default</invoker-mbean>
+      <proxy-factory>org.jboss.ejb.plugins.jms.JMSContainerInvoker</proxy-factory>
+      <proxy-factory-config>
+        <JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
+        <ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
+        <!-- WARN: Don't set this to zero until a bug in the pooled executor is fixed -->
+        <MinimumSize>1</MinimumSize>
+        <MaximumSize>1</MaximumSize>
+        <KeepAliveMillis>30000</KeepAliveMillis>
         <MaxMessages>1</MaxMessages>
         <MDBConfig>
           <ReconnectIntervalSec>10</ReconnectIntervalSec>
@@ -824,6 +850,34 @@
       <container-name>Standard Message Driven Bean</container-name>
       <call-logging>false</call-logging>
       <invoker-proxy-binding-name>message-driven-bean</invoker-proxy-binding-name>
+      <container-interceptors>
+        <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.RunAsSecurityInterceptor</interceptor>
+        <!-- CMT -->
+        <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
+        <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor transaction="Container">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
+        <!-- BMT -->
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenTxInterceptorBMT</interceptor>
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
+        <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
+      </container-interceptors>
+      <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>
+      <instance-cache></instance-cache>
+      <persistence-manager></persistence-manager>
+      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
+      </container-pool-conf>
+    </container-configuration>
+
+    <container-configuration>
+      <container-name>Singleton Message Driven Bean</container-name>
+      <call-logging>false</call-logging>
+      <invoker-proxy-binding-name>singleton-message-driven-bean</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>

@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 3.2 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.4 2004/05/04 08:51:49 tdiesler Exp $
+$Id: jboss_4_0.dtd,v 1.5 2004/05/14 01:26:18 ejort Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -238,8 +238,9 @@ the ejb container configurations.
 and other configuration options to use for the various EJB proxies.
 -->
 <!ELEMENT proxy-factory-config (client-interceptors? , web-class-loader? ,
-JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? ,
-MaxMessages?, MDBConfig? , poa? , register-ejbs-in-jnp-context? , jnp-context?)>
+JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
+KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? , 
+jnp-context?)>
 
 <!--
   The jndi name of the jms provider adapter in the java:/ namespace.
@@ -1233,7 +1234,9 @@ elements corresponds to the order of the interceptor chain.
    strictMaximumSize?, strictTimeout?)>
 
 <!-- The theoretical minimum size of the pool. Currently unused by JBoss
-pools.
+EJB pools.
+
+Used in: invoker-proxy-conf for JMSContainerInvoker
 -->
 <!ELEMENT MinimumSize (#PCDATA)>
 
@@ -1261,6 +1264,14 @@ default is Long.MAX_VALUE or essentially enternity.
   Used in: container-pool-conf
 -->
 <!ELEMENT strictTimeout (#PCDATA)>
+
+<!--
+  The number of millis to keep an unused object in the pool. Currently unused by
+  JBoss EJB Pools.
+
+  Used in: invoker-proxy-conf for JMSContainerInvoker
+-->
+<!ELEMENT KeepAliveMillis (#PCDATA)>
 
 <!--
   This option is only used for entity container configurations.

@@ -38,7 +38,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.24 $
+ * @version   $Revision: 1.25 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -59,10 +59,16 @@ public class StdServerSessionPool
     */
    private final Logger log = Logger.getLogger(this.getClass());
 
+   /** The minimum size of the pool */
+   private int minSize;
+
    /**
     * The size of the pool.
     */
    private int poolSize;
+
+   /** How long to keep sessions alive */
+   private long keepAlive;
 
    /**
     * The message acknowledgment mode.
@@ -119,7 +125,9 @@ public class StdServerSessionPool
     * @param transacted transaction mode when not XA (
     * @param ack ackmode when not XA
     * @param listener the listener the sessions will call
+    * @param minSession minumum number of sessions in the pool
     * @param maxSession maximum number of sessions in the pool
+    * @param keepAlive the time to keep sessions alive
     * @param isuseLocalTX  Description of Parameter
     * @exception JMSException    Description of Exception
     */
@@ -128,7 +136,9 @@ public class StdServerSessionPool
                                final int ack,
                                final boolean useLocalTX,
                                final MessageListener listener,
+                               final int minSession,
                                final int maxSession,
+                               final long keepAlive,
                                final XidFactoryMBean xidFactory)
       throws JMSException
    {
@@ -136,14 +146,16 @@ public class StdServerSessionPool
       this.ack = ack;
       this.listener = listener;
       this.transacted = transacted;
+      this.minSize = minSession;
       this.poolSize = maxSession;
+      this.keepAlive = keepAlive;
       this.sessionPool = new ArrayList(maxSession);
       this.useLocalTX = useLocalTX;
       this.xidFactory = xidFactory;
       // setup the worker pool
-      executor = new PooledExecutor(poolSize);
-      executor.setMinimumPoolSize(0);
-      executor.setKeepAliveTime(1000 * 30);
+      executor = new MyPooledExecutor(poolSize);
+      executor.setMinimumPoolSize(minSize);
+      executor.setKeepAliveTime(keepAlive);
       executor.waitWhenBlocked();
       executor.setThreadFactory(new DefaultThreadFactory());
 
@@ -363,7 +375,40 @@ public class StdServerSessionPool
             log.debug("added server session to the pool: " + serverSession);
       }
    }
-   
+
+   /**
+    * A pooled executor where the minimum pool size
+    * threads are kept alive
+    */
+   private static class MyPooledExecutor extends PooledExecutor
+   {
+      public MyPooledExecutor(int poolSize)
+      {
+         super(poolSize);
+      }
+      
+      protected Runnable getTask() throws InterruptedException
+      {
+         Runnable task = null;
+         while ((task = super.getTask()) == null && keepRunning());
+         return task;
+      }
+      
+      /**
+       * We keep running unless we are told to shutdown
+       * or there are more than minimumPoolSize_ threads in the pool
+       * 
+       * @return whether to keep running
+       */
+      protected synchronized boolean keepRunning()
+      {
+         if (shutdown_)
+            return false;
+         
+         return poolSize_ <= minimumPoolSize_;
+      }
+   }
+
    private static class DefaultThreadFactory implements ThreadFactory
    {
       private static int count = 0;
@@ -380,7 +425,7 @@ public class StdServerSessionPool
        */
       public Thread newThread(final Runnable command)
       {
-         String name = "Thread Pool Worker-" + nextCount();
+         String name = this + " Thread Pool Worker-" + nextCount();
          return new Thread(threadGroup, command, name);
       }
    }

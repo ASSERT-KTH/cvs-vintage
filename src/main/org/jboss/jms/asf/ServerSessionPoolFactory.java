@@ -10,9 +10,8 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ServerSessionPool;
-
-
 import org.jboss.tm.XidFactoryMBean;
+
 /**
  * Defines the model for creating <tt>ServerSessionPoolFactory</tt> objects. <p>
  *
@@ -20,7 +19,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.8 $
+ * @version   $Revision: 1.9 $
  */
 public interface ServerSessionPoolFactory
 {
@@ -55,22 +54,18 @@ public interface ServerSessionPoolFactory
    XidFactoryMBean getXidFactory();
 
    /**
-    * Create a new <tt>ServerSessionPool</tt> .
-    *
-    * @param con
-    * @param maxSession
-    * @param isTransacted
-    * @param ack
-    * @param listener
-    * @param useLocalTX  
-    * @return                    A new pool.
-    * @throws JMSException
+    * Create a new <tt>ServerSessionPool</tt>.
+    * @param con the jms connection
+    * @param minSession the minimum number of sessions
+    * @param maxSession the maximum number of sessions
+    * @param keepAlive the time to keep sessions alive
+    * @param isTransacted whether the pool is transacted
+    * @param ack the acknowledegement method
+    * @param listener the listener
+    * @param useLocalTX whether to use local transactions
+    * @return A new pool.
+    * @throws JMSException for any error
     */
-   ServerSessionPool getServerSessionPool(Connection con,
-         int maxSession,
-         boolean isTransacted,
-         int ack,
-         boolean useLocalTX,
-         MessageListener listener)
-          throws JMSException;
+   ServerSessionPool getServerSessionPool(Connection con, int minSession, int maxSession, long keepAlive, boolean isTransacted, int ack,
+         boolean useLocalTX, MessageListener listener) throws JMSException;
 }

@@ -65,7 +65,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.60 $</tt>
+ * @version <tt>$Revision: 1.61 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -118,7 +118,13 @@ public class JMSContainerInvoker
 
    /** Maximum number provider is allowed to stuff into a session. */
    protected int maxMessagesNr = 1;
-
+   
+   /** Minimun pool size of server sessions. */
+   protected int minPoolSize = 1;
+   
+   /** Keep alive server sessions. */
+   protected long keepAlive = 30 * 1000;
+   
    /** Maximun pool size of server sessions. */
    protected int maxPoolSize = 15;
    
@@ -205,6 +211,70 @@ public class JMSContainerInvoker
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getMinPoolSize()
+   {
+      return minPoolSize;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setMinPoolSize(int minPoolSize)
+   {
+      this.minPoolSize = minPoolSize;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getMaxPoolSize()
+   {
+      return maxPoolSize;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setMaxPoolSize(int maxPoolSize)
+   {
+      this.maxPoolSize = maxPoolSize;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public long getKeepAliveMillis()
+   {
+      return keepAlive;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setKeepAliveMillis(long keepAlive)
+   {
+      this.keepAlive = keepAlive;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getMaxMessages()
+   {
+      return maxMessagesNr;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setMaxMessages(int maxMessages)
+   {
+      this.maxMessagesNr = maxMessages;
+   }
 
    /**
     * @jmx:managed-attribute
@@ -350,9 +420,23 @@ public class JMSContainerInvoker
       catch (Exception ignore) {}
       
       try {
+         String minSize = MetaData.getElementContent
+            (MetaData.getUniqueChild(element, "MinimumSize"));
+         minPoolSize = Integer.parseInt(minSize);
+      }
+      catch (Exception ignore) {}
+      
+      try {
          String maxSize = MetaData.getElementContent
             (MetaData.getUniqueChild(element, "MaximumSize"));
          maxPoolSize = Integer.parseInt(maxSize);
+      }
+      catch (Exception ignore) {}
+      
+      try {
+         String keepAliveMillis = MetaData.getElementContent
+            (MetaData.getUniqueChild(element, "KeepAliveMillis"));
+         keepAlive = Integer.parseInt(keepAliveMillis);
       }
       catch (Exception ignore) {}
          
@@ -563,7 +647,9 @@ public class JMSContainerInvoker
          
          // set up the server session pool
          pool = createSessionPool(tConnection,
+                                  minPoolSize,
                                   maxPoolSize,
+                                  keepAlive,
                                   true, // tx
                                   acknowledgeMode ,
                                   new MessageListenerImpl(this));
@@ -642,7 +728,9 @@ public class JMSContainerInvoker
          
          // set up the server session pool
          pool = createSessionPool(qConnection,
+                                  minPoolSize,
                                   maxPoolSize,
+                                  keepAlive,
                                   true, // tx
                                   acknowledgeMode,
                                   new MessageListenerImpl(this));
@@ -977,7 +1065,9 @@ public class JMSContainerInvoker
     * Create a server session pool for the given connection.
     *
     * @param connection           The connection to use.
+    * @param minSession           The minumum number of sessions
     * @param maxSession           The maximum number of sessions.
+    * @param keepAlive            The time to keep sessions alive
     * @param isTransacted         True if the sessions are transacted.
     * @param ack                  The session acknowledgement mode.
     * @param listener             The message listener.
@@ -988,7 +1078,9 @@ public class JMSContainerInvoker
     */
    protected ServerSessionPool
       createSessionPool(final Connection connection,
+                        final int minSession,
                         final int maxSession,
+                        final long keepAlive,
                         final boolean isTransacted,
                         final int ack,
                         final MessageListener listener)
@@ -1006,8 +1098,7 @@ public class JMSContainerInvoker
          context.lookup(serverSessionPoolFactoryJNDI);
          
          // the create the pool
-         pool = factory.getServerSessionPool
-            (connection, maxSession, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
+         pool = factory.getServerSessionPool(connection, minSession, maxSession, keepAlive, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
       }
       finally
       {
