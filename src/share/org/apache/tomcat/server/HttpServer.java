@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.2 1999/10/12 06:15:11 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/12 06:15:11 $
  *
  * ====================================================================
  *
@@ -109,14 +109,39 @@ public class HttpServer implements Server {
     
     public static final String CONNECTOR_PROP="/connector.properties";
     
+    /**
+     * The context manager with which this server is associated.
+     */
+
     ContextManager contextM;
     
     public static final int MAX_CONNECTORS=10; // XXX realocate if more 
+
+    /**
+     * The set of server connectors attached to this server.
+     */
+    // XXX This should *really* be a collection class like a Vector
+
     ServerConnector connector[]=new ServerConnector[MAX_CONNECTORS];
+
+    /**
+     * The current number of server connectors attached to this server.
+     */
+
     int connector_count=0;
     
     // set to connector before start
+    /**
+     * The IP address this server should listen on, or <code>null</code>
+     * for all IP addresses associated with this server.
+     */
+
     InetAddress address;
+
+    /**
+     * The socket factory associated with this server.
+     */
+
     ServerSocketFactory factory;
     
     Properties props;
@@ -130,6 +155,7 @@ public class HttpServer implements Server {
      * Creates a new server with the default configuration of port=80,
      * address=null, and hostname=null.
      */
+
     public HttpServer() {
         //this(80, null, null);
     }
@@ -138,20 +164,46 @@ public class HttpServer implements Server {
     /**
      * Creates a new server with the given properties
      *
-     * @param port
-     * @param address
-     * @param hostname
+     * @param port The TCP port number on which to listen for connections
+     * @param address The IP address on which to listen for connections, or
+     *  <code>null</code> to listen on all interfaces on this server
+     * @param hostname The virtual host name of this server, or
+     *  <code>null</code> for no defined host name
      */
+
     public HttpServer(int port, InetAddress address, String hostname) {
 	contextM= new ContextManager(); 
 	init(port, address, hostname, contextM);
     }
 
 
+    /**
+     * Creates a new server with the given properties
+     *
+     * @param port The TCP port number on which to listen for connections
+     * @param address The IP address on which to listen for connections, or
+     *  <code>null</code> to listen on all interfaces on this server
+     * @param hostname The virtual host name of this server, or
+     *  <code>null</code> for no defined host name
+     * @param contextM The context manager with which this server is associated
+     */
+
     public HttpServer(int port, InetAddress address, String hostname,
         ContextManager contextM) {
 	init(port, address, hostname, contextM);
     }
+
+
+    /**
+     * Initialize the properties of this server.
+     *
+     * @param port The TCP port number on which to listen for connections
+     * @param address The IP address on which to listen for connections, or
+     *  <code>null</code> to listen on all interfaces on this server
+     * @param hostname The virtual host name of this server, or
+     *  <code>null</code> for no defined host name
+     * @param contextM The context manager with which this server is associated
+     */
 
     public void init(int port, InetAddress address, String hostname,
 		     ContextManager contextM) {
@@ -189,79 +241,116 @@ public class HttpServer implements Server {
 					 Constants.Property.ServerHeader);
     }
 
+
+    /**
+     * Return the context manager with which this server is associated.
+     */
+
     public ContextManager getContextManager() {
 	return contextM;
     }
     
+
+    /**
+     * Sets the context manager with which this server is associated.
+     *
+     * @param cm The new context manager
+     */
+
     public void setContextManager(ContextManager cm) {
 	this.contextM=cm;
     }
     
+
+    /**
+     * Add the specified server connector to the those attached to this server.
+     *
+     * @param con The new server connector
+     */
+
     public synchronized void addConnector( ServerConnector con ) {
 	this.connector[connector_count]=con;
 	connector_count++;
     }
 
+
+    /**
+     * Gets the <code>i</code>th server connector attached to this server.
+     *
+     * @param i Zero-relative index of the server connector to retrieve
+     */
     // XXX enun
+
     public ServerConnector getConnector(int i) {
 	return connector[i];
     }
+
+
+    /**
+     * Gets the number of server connectors attached to this server.
+     */
 
     public int getConnectorCount() {
 	return connector_count;
     }
     
+
     /**
      * Gets the port that the server is listening to requests on.
      */
+
     public int getPort() {
 	//        Integer port=(Integer)connector.getAttribute(VHOSTPORT);
 	//return port.intValue();
 	return contextM.getPort();
     }
 
+
     /**
      * Sets the port of the server to the given port.
      *
-     * @param port
+     * @param port The TCP port number this server should listen on
      * @throws IllegalStateException if the server is running
      */
-    
+
     public void setPort(int port) {
 	contextM.setPort(port);
     }
 
+
     /**
      * Sets the SocketFactory for this server.....
      *
-     * @param ServerSocketFactory
+     * @param ServerSocketFactory The new socket factory
      * @throws IllegalStateException if the server is running
      */
+
     public void setDefaultSocketFactory(ServerSocketFactory factory) {
 	this.factory=factory;
     }
     
+
     /**
-     * Get the address, if any, that the server is listening to.
+     * Gets the address, if any, that the server is listening to.
      */
-    
+
     public InetAddress getAddress() {
         return address;
     }
 
+
     /**
      * Sets the address that the server is listening on.
      *
-     * <p>A null value for this attribute means that the server
-     * will listen to all addresses that this machine has.
-     *
-     * @param address
+     * @param address The address that this server should listen on,
+     *  or <code>null</code> to listen to all addresses for this server
      * @throws IllegalStateException if the server is running
      */
     
     public void setAddress(InetAddress address) {
 	this.address=address;
     }
+
 
     /**
      * Gets the hostname of the server.
@@ -272,11 +361,12 @@ public class HttpServer implements Server {
 	//return hostname;
     }
 
+
     /**
      * Sets the hostname of the server. This is used for HTTP/1.1
      * style virtual hosting.
      *
-     * @param hostname
+     * @param hostname The host name for this server
      * @throws IllegalStateException if the server is running
      */
     
@@ -285,8 +375,9 @@ public class HttpServer implements Server {
 	contextM.setHostName( hostname );
     }
 
+
     /**
-     * Gets the server info string for this server
+     * Gets the server info string for this server.
      */
 
     public String getServerInfo() {
@@ -302,45 +393,62 @@ public class HttpServer implements Server {
         contextM.setServerInfo( serverInfo );
     }
 
+
+    /**
+     * Gets the server header for this server.
+     */
+
     public String getServerHeader() {
         return serverHeader;
     }
 
+
     /**
-     * Gets the default Context for this server
+     * Gets the default Context for this server.
      */
+
     public Context getDefaultContext() {
         return contextM.getDefaultContext();
     }
 
+
     /**
-     * Get the names of all the contexts in the system.
+     * Gets an enumeration of the names of all the contexts in the system.
      */
     
     public Enumeration getContextNames() {
         return contextM.getContextNames();
     }
 
+
     /**
-     * Get a context by it's name
+     * Gets a context by it's name
+     *
+     * @param name The name of the requested context
      */
     
     public Context getContext(String name) {
 	return contextM.getContext( name );
     }
 
+
     /**
      * Gets the context that is responsible for requests for a
      * particular path.
+     *
+     * @param path The path for which a responsible context is desired
      */
     
     public Context getContextByPath(String path) {
 	return contextM.getContextByPath( path );
     }
 
+
     /**
-     * Creates a new context
+     * Creates a new context within this server.
      *
+     * @param path The root path to be handled by this context
+     * @param docBase The document base URL for this context
      * @throws IllegalStateException if there is already a context
      *         rooted at the path given or if the contextName is
      *         not unique.
@@ -350,16 +458,20 @@ public class HttpServer implements Server {
 	return contextM.addContext(path, docBase);
     }
 
+
     /**
-     * Removes a context from service
+     * Removes a context from service.
+     *
+     * @param name The name of the context to be removed
      */
     
     public void removeContext(String name) {
 	contextM.removeContext(name);
     }
     
+
     /**
-     * Starts the server
+     * Starts the server.
      */
 
     public void start() throws HttpServerException {
@@ -394,8 +506,9 @@ public class HttpServer implements Server {
 	}
     }
 
+
     /**
-     * Stops the server
+     * Stops the server.
      */
   
     public void stop() throws HttpServerException{
@@ -422,6 +535,14 @@ public class HttpServer implements Server {
 	}
     }
 
+    /**
+     * Load the specified Properties from the specified file.
+     *
+     * @param props Properties to be loaded
+     * @param propertyFileName Name of the file from which properties
+     *  should be loaded
+     * @return The updated properties object
+     */
     private Properties getProperties(Properties props, String propertyFileName) {
         try {
 	    InputStream is=this.getClass().getResourceAsStream(propertyFileName);
