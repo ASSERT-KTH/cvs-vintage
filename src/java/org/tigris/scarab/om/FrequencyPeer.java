@@ -4,6 +4,7 @@ import java.util.*;
 import com.workingdogs.village.*;
 import org.apache.torque.map.*;
 import org.apache.torque.pool.DBConnection;
+import org.apache.torque.util.Criteria;
 
 // Local classes
 import org.tigris.scarab.om.map.*;
@@ -16,4 +17,13 @@ import org.tigris.scarab.om.map.*;
 public class FrequencyPeer 
     extends org.tigris.scarab.om.BaseFrequencyPeer
 {
+
+    /**
+     * Returns list of all frequency values.
+     */
+    public static List getFrequencies() throws Exception
+    {
+        return doSelect(new Criteria());
+    }
+
 }
