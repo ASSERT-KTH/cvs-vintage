@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -267,6 +267,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       // We loop here until either until success or until transaction timeout
       // If we get out of the loop successfully, we can successfully
       // set the transaction on this puppy.
+      TxLock txLock = null;
       while (getTransaction() != null &&
              // And are we trying to enter with another transaction?
              !getTransaction().equals(miTx))
@@ -287,7 +288,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          // Let's put the thread to sleep the transaction demarcation will wake them up
          if( trace ) log.trace("Transactional contention on context"+id);
          
-         TxLock txLock = getTxLock(miTx);
+         if (txLock == null)
+            txLock = getTxLock(miTx);
          
          if( trace ) log.trace("Begin wait on Tx="+getTransaction());
          
