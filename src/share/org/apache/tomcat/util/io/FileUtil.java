@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.1 2001/02/20 03:12:59 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2001/02/20 03:12:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.2 2001/03/01 18:05:00 larryi Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/03/01 18:05:00 $
  *
  * ====================================================================
  *
@@ -231,7 +231,7 @@ public class FileUtil {
     }
     
     public static String patch(String path) {
-        String patchPath = path.trim();
+        String patchPath = path;
 
         // Move drive spec to the front of the path
         if (patchPath.length() >= 3 &&
