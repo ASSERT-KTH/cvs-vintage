@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.4 2002/04/18 13:57:59 keith Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.5 2002/04/30 05:06:24 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -29,6 +29,8 @@ Bug No.  Description
 
          Bug fixed in SimpleSessionStore in session attribute reloading during
          context reloads.
+
+7770	 Fixed thread race problem in accessing the Hooks.
 
 8092	 Fixed JSP source exposure proplem.
 
