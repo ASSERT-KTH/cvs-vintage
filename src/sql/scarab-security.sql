@@ -1,3 +1,11 @@
+-- Create an account for system administrator (also used for initial
+-- data population, etc.).
+-- Remember to set a good password for this user in a production system!
+
+INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE) 
+    VALUES (1, 'Administrator', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Scarab', 'Administrator', 'Administrator@scarab.example.org', 'CONFIRMED');
+
+
 -- Script to fill the tables with default roles and permissions
 
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (2, 'Partner');
@@ -47,12 +55,6 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (19, 'Issue | Move');
 
--- Create an account for system administrator (also used for initial
--- data population, etc.).
--- Remember to set a good password for this user in a production system!
-
-INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE) 
-    VALUES (1, '@ADMIN_USERNAME@', '@ADMIN_PASSWORD@', '@ADMIN_FIRSTNAME@', '@ADMIN_LASTNAME@', '@ADMIN_EMAIL@', 'CONFIRMED');
 
 
 -- create a temporary table.
