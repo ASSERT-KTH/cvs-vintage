@@ -79,16 +79,13 @@ public class ExceptionDialog implements ActionListener {
 		textArea2.append(stringWriter.toString());
                 textArea2.setEditable(false);
 		JScrollPane scrollPane2 = new JScrollPane(textArea2);
-
                 
-		JButton closeButton = new JButton(GlobalResourceLoader.getString("global", "global", "close"));
+		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString(
+					"global", "global", "close"));
 		closeButton.setActionCommand(CMD_CLOSE);
                 closeButton.addActionListener(this);
 
-		/*
-		JButton reportBugButton = new JButton(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
-                reportBugButton.setMnemonic(GlobalResourceLoader.getMnemonic(RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
-		*/
 		ButtonWithMnemonic reportBugButton = new ButtonWithMnemonic(
 				GlobalResourceLoader.getString(
 					RESOURCE_BUNDLE_PATH, "exception", "report_bug"));

@@ -58,6 +58,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
@@ -215,8 +216,9 @@ public class ExportDialog
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		JButton closeButton =
-			new JButton(MailResourceLoader.getString("global", "close"));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
