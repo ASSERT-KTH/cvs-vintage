@@ -4,29 +4,17 @@ $page.setTitle("Attribute Editor")
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 #set ($groups = $issueType.getAttributeGroups($module))
-#set ( $rmit= $module.getRModuleIssueType($issueType))
-#set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
+#set ($rmit= $module.getRModuleIssueType($issueType))
+#set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
 
-#if (!$issueType)
-Nope
-#end
-
-<div class="app" id="div2-1-4-0">
-
-<h2>Customize/create artifact type</h2>
-
-<form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
-<input type="hidden" name="issueTypeId" value="$issueTypeId" />
-
-<div class="functnbar">
+#macro (ArtifactTypeEditBar $var)
+<div class="functnbar$var">
     <table cellpadding="4" cellspacing="0" border="1">
     <tr>
     <td class="firstchild">
     <div>Screen options:</div>
       <input type="submit" value="Save" name="eventSubmit_doModifyissuetype" />&#160;
+      <input type="submit" value="Back" name="eventSubmit_doBack" />&#160;
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
     </td>
 #if (!$groups.isEmpty())
@@ -41,6 +29,21 @@ Nope
   </tr>
   </table>
 </div>
+#end
+
+<div class="app" id="div2-1-4-0">
+
+<h2>Customize/create artifact type</h2>
+
+<form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="issueTypeId" value="$issueTypeId" />
+
+#ArtifactTypeEditBar("")
+
 <h3>Artifact type details</h3>
 <div class="axial">
     <table border="0" cellspacing="2" cellpadding="3">
@@ -132,26 +135,7 @@ a seperate page).
 
 #end
 
-<div class="functnbar2">
-    <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-    <div>Screen options:</div>
-      <input type="submit" value="Save" name="eventSubmit_doModifyissuetype" />&#160;
-      <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
-    </td>
-#if (!$groups.isEmpty())
-    <td nowrap="nowrap">
-    <div>Attribute group options:</div>
-      <input type="submit" value="Add new" name="eventSubmit_doCreatenewgroup" />&#160;
-      <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-      <input type="submit" value="Delete" name="eventSubmit_doDeletegroup" />&#160;
-      <!-- FIXME: <input type="submit" value="Resort" /> -->
-    </td>
-#end
-  </tr>
-  </table>
-</div>
+#ArtifactTypeEditBar("2")
 
 $intake.declareGroups()
 </form>
