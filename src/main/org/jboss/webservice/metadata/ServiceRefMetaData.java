@@ -6,35 +6,34 @@
  */
 package org.jboss.webservice.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.1 2004/08/19 18:53:04 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.2 2005/01/04 13:30:38 tdiesler Exp $
 
+import org.jboss.deployment.DeploymentException;
+import org.jboss.metadata.MetaData;
+import org.jboss.webservice.WSDLDefinitionFactory;
+import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping;
+import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
+import org.jboss.xml.QNameBuilder;
+import org.w3c.dom.Element;
+
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.LinkedHashMap;
-import javax.wsdl.Definition;
-import javax.wsdl.WSDLException;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
-
-import org.jboss.deployment.DeploymentException;
-import org.jboss.webservice.WSDLDefinitionFactory;
-import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping;
-import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
-import org.jboss.metadata.MetaData;
-import org.jboss.xml.QNameBuilder;
-
-import org.w3c.dom.Element;
+import java.util.Properties;
 
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -189,7 +188,7 @@ public class ServiceRefMetaData implements Serializable
    }
 
    public void importStandardXml(Element element)
-           throws DeploymentException
+      throws DeploymentException
    {
       serviceRefName = MetaData.getUniqueChildContent(element, "service-ref-name");
 
@@ -199,13 +198,15 @@ public class ServiceRefMetaData implements Serializable
 
       jaxrpcMappingFile = MetaData.getOptionalChildContent(element, "jaxrpc-mapping-file");
 
-      serviceQName = QNameBuilder.buildQName(element, MetaData.getOptionalChildContent(element, "service-qname"));
-
+      Element qnameElement = MetaData.getOptionalChild(element, "service-qname");
+      if (qnameElement != null)
+         serviceQName = QNameBuilder.buildQName(qnameElement, MetaData.getElementContent(qnameElement));
+      
       // Parse the port-component-ref elements
       Iterator iterator = MetaData.getChildrenByTagName(element, "port-component-ref");
       while (iterator.hasNext())
       {
-         Element pcrefElement = (Element) iterator.next();
+         Element pcrefElement = (Element)iterator.next();
          PortComponentRefMetaData pcrefMetaData = new PortComponentRefMetaData(this);
          pcrefMetaData.importStandardXml(pcrefElement);
          portComponentRefs.put(pcrefMetaData.getServiceEndpointInterface(), pcrefMetaData);
@@ -215,7 +216,7 @@ public class ServiceRefMetaData implements Serializable
       iterator = MetaData.getChildrenByTagName(element, "handler");
       while (iterator.hasNext())
       {
-         Element handlerElement = (Element) iterator.next();
+         Element handlerElement = (Element)iterator.next();
          HandlerMetaData handlerMetaData = new HandlerMetaData();
          handlerMetaData.importStandardXml(handlerElement);
          handlers.add(handlerMetaData);
@@ -225,7 +226,7 @@ public class ServiceRefMetaData implements Serializable
    /** Parse jboss specific service-ref child elements
     * @param element
     * @throws DeploymentException
-    */ 
+    */
    public void importJBossXml(Element element) throws DeploymentException
    {
       String wsdlOverrideOption = MetaData.getOptionalChildContent(element, "wsdl-override");
@@ -264,10 +265,10 @@ public class ServiceRefMetaData implements Serializable
       iterator = MetaData.getChildrenByTagName(element, "call-property");
       while (iterator.hasNext())
       {
-         Element propElement = (Element) iterator.next();
+         Element propElement = (Element)iterator.next();
          String name = MetaData.getUniqueChildContent(propElement, "prop-name");
          String value = MetaData.getUniqueChildContent(propElement, "prop-value");
-         if( callProperties == null )
+         if (callProperties == null)
             callProperties = new Properties();
          callProperties.setProperty(name, value);
       }
