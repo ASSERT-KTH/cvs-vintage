@@ -433,8 +433,8 @@
             <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
 
-        <move todir="${build.src.scarab}/org" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org">
+        <move todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
                 <include name="**/Base*.java"/>
                 <exclude name="**/BaseScarabObject.java"/>
                 <include name="**/map/*MapBuilder.java"/>
