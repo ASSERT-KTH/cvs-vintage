@@ -160,6 +160,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
            and TURBINE_PERMISSION.PERMISSION_NAME in (
                 "Module | Edit",
                 "Item | Approve",
+                "Item | Delete",
                 "Vote | Manage")
 ;
 
