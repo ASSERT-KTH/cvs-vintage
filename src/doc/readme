@@ -1,8 +1,8 @@
-$Id: readme,v 1.20 2001/09/20 04:39:03 larryi Exp $
+$Id: readme,v 1.21 2001/10/09 17:49:14 larryi Exp $
         
                            Release Notes for:
                            =====================
-                           TOMCAT Version 3.3rc1
+                           TOMCAT Version 3.3rc2
                            =====================
 
 
@@ -54,8 +54,10 @@ include the following:
 
   Also, Tomcat 3.3 uses a much different hierarchy of class loaders from
   Tomcat 3.2.x. This allows Tomcat 3.3 to avoid imposing its XML parser
-  on all the web applications. In fact, web applications in Tomcat 3.3 don't
-  get an XML parser by default.  You must provide one if needed.
+  on all the web applications. In fact, for web applications that don't
+  contain an XML parser, Tomcat 3.3 can be configured to automatically
+  provide one or not provide one.  The default is to automatically provide
+  an XML parser.
 
   For information on configuring classes, refer to the "Configuring Classes"
   section of the Tomcat User's guide (tomcat-ug.html) in Tomcat's doc directory.
@@ -63,7 +65,7 @@ include the following:
 - Tomcat Configuration:
 
   Tomcat's configuration is still controlled by the server.xml file. But this
-  file will look a little bit different and configuration is supported by a
+  file will look a little different and configuration is supported by a
   number of new features in Tomcat 3.3. Some of these new features are:
 
   1. A modules.xml file which simplifies the syntax found in server.xml.
@@ -110,10 +112,10 @@ include the following:
   The "test" web application along with the test-tomcat.xml and associated
   support files are not part of the binary Tomcat 3.3 distribution.  The
   "test" web application is supplied separately as "test.war".  This file
-  may be downloaded from the "v3.3-rc1/apps" directory of the Tomcat 3.3rc1
+  may be downloaded from the "v3.3-rc2/apps" directory of the Tomcat 3.3rc2
   release and placed in the "webapps" directory of your installation.  Running
   the test has been integrated into the Admin web application that is part of
-  the Tomcat 3.3rc1 distribution.  A preliminary step to running the test is to
+  the Tomcat 3.3rc2 distribution.  A preliminary step to running the test is to
   "trust" the Admin web application.  It is set to "untrusted" by default. This
   change can be accomplished by executing the command from the TOMCAT_HOME
   directory with JAVA_HOME set:
@@ -121,7 +123,7 @@ include the following:
 	./bin/tomcat.sh enableAdmin    <-- Unix
 	bin\tomcat enableAdmin         <-- Windows
 
-  Start or restart Tomcat 3.3rc1 and invoke the following URL in your browser:
+  Start or restart Tomcat 3.3rc2 and invoke the following URL in your browser:
 
 	http://localhost:8080/admin/test/test.jsp
 
@@ -218,11 +220,23 @@ most important are:
 - The Tomcat documentation directory (i.e. TOMCAT_HOME/doc) is now included
   in the ROOT webapp and is available from a link in the root's index.html.
 
-- (more to be added)
+- A modules directory has been added where add-on modules may be placed.
+  An add-on module is a special War file that "deploys" a module that
+  participates in Tomcat's behavior, like the modules found in the server.xml
+  file.
+
+  Note: If an add-on module affects the behavior of Tomcat with respect to
+        the Servlet2.2/JSP1.1 specifications, it invalidates Tomcat 3.3's
+        status as a reference implementation.
+
+- Many other improvements, too numerous to list.
 
 
 In addition, numerous changes have occured since the 3.2.x release.  Among the
 primary changes are:
+
+- Your CLASSPATH environment variable is ignored by the Tomcat shell scripts
+  and batch files found int TOMCAT_HOME/bin.
 
 - The Tomcat Users Guide (i.e. tomcat-ug.html) is now in the TOMCAT_HOME/doc
   directory instead of the TOMCAT_HOME/doc/uguide directory as it Tomcat 3.2.x.
@@ -231,8 +245,6 @@ primary changes are:
   Tomcat 3.2.3 and earlier to be incompatible with Tomcat 3.3.  Only use
   connectors from the Tomcat 3.3 release or the jakarta-tomcat-connectors project
   with Tomcat 3.3.
-
-- (more to be added)
 
 
 =============================================================================
@@ -380,10 +392,12 @@ where it cause the resource not to be found.
 
 At startup time, Tomcat normally generates configuration files like
 "tomcat-apache.conf" to reflect the contexts that are defined.  However, the
-generated files do NOT reflect any configuration settings found inside the
+generated files may not reflect all configuration settings found inside the
 web application deployment descriptor file (web.xml) for your application.
-You will need to configure any such settings that are relevant directly into
-your web server's configuration files.
+The simplest solution to this is to forward all requests for a particular
+context to Tomcat.  If you do not forward all requests, you will need to
+configure any such settings that are relevant directly into your web
+server's configuration files.
 
 This is a known limitation of the design of the web connectors for Tomcat 3.2
 and later, and will be addressed by the introduction of the MOD_WARP connector
