@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.32 2002/07/02 03:38:31 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.33 2002/07/02 05:29:23 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -954,4 +954,24 @@ public abstract class AbstractScarabUser
     {
         this.currentIssueType.set(v);
     }    
+    
+    /**
+     * @see ScarabUser#getCurrentRModuleIssueType()
+     */
+    public RModuleIssueType getCurrentRModuleIssueType()
+        throws Exception
+    {
+        RModuleIssueType rmit = null;
+        Module module = getCurrentModule();
+        if (module != null) 
+        {
+            IssueType it = getCurrentIssueType();
+            if (it != null) 
+            {
+                rmit = module.getRModuleIssueType(it);
+            }
+        }
+        
+        return rmit;
+    }
 }

@@ -1,6 +1,5 @@
-#if ($scarabR.CurrentIssueType)
-  #set ($issueType = $scarabR.CurrentIssueType)
-  #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+#if ($data.User.CurrentRModuleIssueType)
+  #set ($rmit = $data.User.CurrentRModuleIssueType)
   #if ($rmit.Dedupe)
     #set ($wizardScreen = "entry,Wizard1.vm")
   #else
@@ -8,7 +7,7 @@
   #end 
 
   #if ($scarabR.CurrentModule.allowsNewIssues())
-    <div>$link.setPage("$wizardScreen").setLabel("Enter new")</div>
+    <div>$link.setPage("$wizardScreen").setLabel("Enter new $rmit.DisplayName.toLowerCase()")</div>
   #end
   <div>$link.setPage("QueryList.vm").setLabel("Queries")</div>
   <div>$link.setPage("TemplateList.vm").setLabel("Issue templates")</div>
