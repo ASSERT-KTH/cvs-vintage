@@ -1,50 +1,82 @@
 <chapter id="requirements">
   <title>CAROL requirements</title>
-  <para>This chapter describe the system requirements for CAROL.</para>
+
+  <para>This chapter describe the system requirements for CAROL.
+  </para>
+
   <index id="web-sites-index-carol-req">
     <title>Web sites index</title>
+
     <indexdiv>
       <title>General CAROL requirements</title>
       <indexentry>
-	<primaryie>Java environment</primaryie>
-	<secondaryie>A CAROL Java server need a JDK 1.2 or greater</secondaryie>
-	<secondaryie>A CAROL Java server need the <filename>carol.jar</filename> file in it's classpath</secondaryie>
+        <primaryie>Java environment</primaryie>
+        <secondaryie>A CAROL Java server need a JDK 1.2 or greater</secondaryie>
+        <secondaryie>
+          A CAROL Java server need the <filename>carol.jar</filename> file in
+          it's classpath
+        </secondaryie>
       </indexentry>
-    </indexdiv>  
+    </indexdiv>
     <indexdiv>
       <title>CAROL RMI JRMP requirements</title>
       <indexentry>
-	<primaryie>Server Environement</primaryie>
-	<secondaryie>A CAROL RMI JRMP Java server need a JDK 1.2 or greater</secondaryie>
+        <primaryie>Server Environement</primaryie>
+        <secondaryie>
+          A CAROL RMI JRMP Java server need a JDK 1.2 or greater
+        </secondaryie>
       </indexentry>
       <indexentry>
-	<primaryie>Client Environement</primaryie>
-	<secondaryie>A CAROL RMI JRMP Java client need a JDK 1.2 or greater</secondaryie>
-	<secondaryie>A CAROL RMI JRMP Java client need the <filename>carol.jar</filename> file in it's classpath</secondaryie>
+        <primaryie>Client Environement</primaryie>
+        <secondaryie>
+          A CAROL RMI JRMP Java client need a JDK 1.2 or greater
+        </secondaryie>
+        <secondaryie>
+          A CAROL RMI JRMP Java client need the <filename>carol.jar</filename>
+          file in it's classpath
+        </secondaryie>
       </indexentry>
-    </indexdiv> 
+    </indexdiv>
    <indexdiv>
       <title>CAROL RMI IIOP requirements</title>
       <indexentry>
-	<primaryie>Server Environement</primaryie>
-	<secondaryie>A CAROL RMI IIOP Java server need a JDK 1.4 or a 2.6 CORBA with RMI IIOP</secondaryie>
+        <primaryie>Server Environement</primaryie>
+        <secondaryie>
+          A CAROL RMI IIOP Java server need a JDK 1.4 or a 2.6 CORBA with RMI
+          IIOP
+        </secondaryie>
       </indexentry>
       <indexentry>
-	<primaryie>Client Environement</primaryie>
-	<secondaryie>A CAROL IIOP client need a CORBA 2.6</secondaryie>
-	<secondaryie>A CAROL RMI IIOP Java client need a JDK 1.4 or a 2.6 CORBA with RMI IIOP and the <filename>carol.jar</filename> file in it's classpath</secondaryie>
+        <primaryie>Client Environement</primaryie>
+        <secondaryie>A CAROL IIOP client need a CORBA 2.6</secondaryie>
+        <secondaryie>
+          A CAROL RMI IIOP Java client need a JDK 1.4 or a 2.6 CORBA with RMI
+          IIOP and the <filename>carol.jar</filename> file in it's classpath
+        </secondaryie>
       </indexentry>
     </indexdiv>
    <indexdiv>
       <title>CAROL JEREMIE requirements</title>
       <indexentry>
-	<primaryie>Server Environement</primaryie>
-	<secondaryie>A CAROL JEREMIE Java server need a JDK 1.2 and a Jonathan 3.0 alpha10 or greater</secondaryie>
+        <primaryie>Server Environement</primaryie>
+        <secondaryie>
+          A CAROL JEREMIE Java server need a JDK 1.2 and a Jonathan 3.0 alpha10
+          or greater
+        </secondaryie>
       </indexentry>
       <indexentry>
-	<primaryie>Client Environement</primaryie>
-	<secondaryie>A CAROL JEREMIE Java client need a JDK 1.2 and a Jonathan 3.0 alpha10 or greater </secondaryie>
+        <primaryie>Client Environement</primaryie>
+        <secondaryie>
+          A CAROL JEREMIE Java client need a JDK 1.2 and a Jonathan 3.0 alpha10
+          or greater
+        </secondaryie>
       </indexentry>
     </indexdiv>
   </index>
 </chapter>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "chapter")
+ End:
+-->

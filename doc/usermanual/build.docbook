@@ -16,7 +16,7 @@
       </imageobject>
       <textobject>
         <phrase>build.xml file</phrase>
-      </textobject> 
+      </textobject>
     </mediaobject>
   </figure>
 
@@ -30,7 +30,7 @@
       </imageobject>
       <textobject>
         <phrase>test/build.xml file</phrase>
-      </textobject> 
+      </textobject>
     </mediaobject>
   </figure>
 
@@ -46,7 +46,7 @@
       </imageobject>
       <textobject>
         <phrase>test/conform/carol_all_tests.xml</phrase>
-      </textobject> 
+      </textobject>
     </mediaobject>
   </figure>
 
@@ -62,8 +62,14 @@
       </imageobject>
       <textobject>
         <phrase>test/conform/generic/carol_double.xml</phrase>
-      </textobject> 
+      </textobject>
     </mediaobject>
   </figure>
-  
+
 </chapter>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "chapter")
+ End:
+-->

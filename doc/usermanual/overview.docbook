@@ -1,302 +1,673 @@
 <chapter id="overview">
   <title>CAROL overview</title>
+
   <sect1 id="carol-library">
     <title>Presentation of the CAROL library</title>
+
     <para>
-      This section describes the general CAROL architecture and development rules. CAROL is based on an API/SPI mechanism for export and registering RMI objects. This section  describes which API are used by CAROL and how to develop a server using this API. This section is supposed to be used with the <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI IIOP tutorial</ulink> and the <ulink url="http://java.sun.com/products/jndi/tutorial">JNDI tutorial</ulink>.  
+      This section describes the general CAROL architecture and development
+      rules. CAROL is based on an API/SPI mechanism for export and registering
+      RMI objects. This section describes which API are used by CAROL and how to
+      develop a server using this API. This section is supposed to be used with
+      the <ulink
+      url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI
+      IIOP tutorial</ulink> and the <ulink
+      url="http://java.sun.com/products/jndi/tutorial">JNDI tutorial</ulink>.
     </para>
   </sect1>
+
   <sect1 id="carol-standard-architecture">
     <title>CAROL standard architecture</title>
+
     <sect2>
       <title>CAROL architecture</title>
-      <para>CAROL is behind the standard RMI IIOP and JNDI API. A Java server using CAROL have to be a standard RMI IIOP server and use only the JNDI interfaces for name service connections (see the section <link linkend="rmidev">RMI IIOP Development rules</link> and the <link linkend="jndidev">JNDI Development rules</link> section). A standard RMI IIOP server is required to migrate to the CAROL library without any code modification. Using CAROL library, in this case, is only a configuration manipulation. CAROL simulates a standard RMI IIOP PortableRemoteObjectDelegate and a standard JNDI context factory for interceptions and manipulations of the RPC and naming mechanism. CAROL allows any RMI IIOP remote object to be manipulate by a server on different RMI architectures and different naming services, in the same time, without code modification on the server or on the client side.</para>
-      <para>CAROL uses the standard  RMI IIOP PortableRemoteObject to abstract the export mechanism. The figure 2.1 shows that the server only manipulate remote object via the RMI IIOP PortableRemoteObject and this PortableRemoteObject is a delegation to a "configured by system properties" PortableRemoteObjectDelegate class.   
+
+      <para>
+        CAROL is behind the standard RMI IIOP and JNDI API. A Java server using
+        CAROL have to be a standard RMI IIOP server and use only the JNDI
+        interfaces for name service connections (see the section <link
+        linkend="rmidev">RMI IIOP Development rules</link> and the <link
+        linkend="jndidev">JNDI Development rules</link> section). A standard RMI
+        IIOP server is required to migrate to the CAROL library without any code
+        modification. Using CAROL library, in this case, is only a configuration
+        manipulation. CAROL simulates a standard RMI IIOP
+        PortableRemoteObjectDelegate and a standard JNDI context factory for
+        interceptions and manipulations of the RPC and naming mechanism. CAROL
+        allows any RMI IIOP remote object to be manipulate by a server on
+        different RMI architectures and different naming services, in the same
+        time, without code modification on the server or on the client side.
       </para>
+
+      <para>
+        CAROL uses the standard RMI IIOP PortableRemoteObject to abstract the
+        export mechanism. The figure 2.1 shows that the server only manipulate
+        remote object via the RMI IIOP PortableRemoteObject and this
+        PortableRemoteObject is a delegation to a "configured by system
+        properties" PortableRemoteObjectDelegate class.
+      </para>
+
       <figure >
-	<title>RMI IIOP mechanism</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="img/rmi_iiop" format="eps" align="center" scale="70">
-	  </imageobject>
-	  <imageobject>
-	    <imagedata fileref="img/rmi_iiop.jpeg" format="jpg" align="center">
-	  </imageobject>
-	  <textobject>
-	    <phrase>RMI IIOP image</phrase>
-	  </textobject> 
-	</mediaobject>
+        <title>RMI IIOP mechanism</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/rmi_iiop" format="eps" align="center" scale="70">
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="img/rmi_iiop.jpeg" format="jpg" align="center">
+          </imageobject>
+          <textobject>
+            <phrase>RMI IIOP image</phrase>
+          </textobject>
+        </mediaobject>
       </figure>
+
       <para>
-	In fact, the CAROL remote object API is the standard RMI IIOP API. A Java server using CAROL is supposed to use only the java.rmi.* and the javax.rmi.* classes and never to call directly the CAROL library classes.  
+        In fact, the CAROL remote object API is the standard RMI IIOP API. A
+        Java server using CAROL is supposed to use only the java.rmi.* and the
+        javax.rmi.* classes and never to call directly the CAROL library
+        classes.
       </para>
+
       <para>
-	The same mechanism is used for objects registering through JNDI: a CAROL server is supposed to use only the JNDI interface to manipulate and contact the remote object name service. So, with JNDI, a CAROL server use the InitialContext mechanism, for (un)registering object, and this InitialContext delegate the registering to a context object build by a factory "configured by system properties". In the figure 2.2 we can see that the server only manipulates remote object registered via the JNDI InitialContext API. 
-      </para>	
+        The same mechanism is used for objects registering through JNDI: a CAROL
+        server is supposed to use only the JNDI interface to manipulate and
+        contact the remote object name service. So, with JNDI, a CAROL server
+        use the InitialContext mechanism, for (un)registering object, and this
+        InitialContext delegate the registering to a context object build by a
+        factory "configured by system properties". In the figure 2.2 we can see
+        that the server only manipulates remote object registered via the JNDI
+        InitialContext API.
+      </para>
+
       <figure>
-	<title>JNDI mechanism</title>
-	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="img/jndi" format="eps" align="center" scale="70">
-	      <indexterm>
-		<primary></primary>
-	      </indexterm>
-	  </imageobject>
-	  <imageobject>
-	    <imagedata fileref="img/jndi.jpeg" format="jpg" align="center">
-	  </imageobject>
-	  <textobject>
-	    <phrase>JNDI image</phrase>
-	  </textobject> 
-	</mediaobject> 
-      </figure> 
+        <title>JNDI mechanism</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/jndi" format="eps" align="center" scale="70">
+              <indexterm>
+                <primary></primary>
+              </indexterm>
+          </imageobject>
+          <imageobject>
+            <imagedata fileref="img/jndi.jpeg" format="jpg" align="center">
+          </imageobject>
+          <textobject>
+            <phrase>JNDI image</phrase>
+          </textobject>
+        </mediaobject>
+      </figure>
     </sect2>
+
     <sect2 id="RMI-IIOP-development-rules">
       <title id="rmidev">RMI IIOP development rules</title>
-      <para>This section describes the basic rules of RMI IIOP development. For more information, see the Sun entry for <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/index.html"><citetitle>RMI IIOP Documentation</citetitle></ulink>. This RMI IIOP quick start guide is design for a 3 step development:
-	<itemizedlist>
-	  <listitem>
-	    <para>Development of the RMI IIOP remote objects and development of the RMI server part</para>
-	  </listitem>
-	  <listitem>
-	    <para>Java and CAROL RMI IIOP objects compilation</para>
-	  </listitem>
-	  <listitem>
-	    <para>Deployment step in a distributed environment</para>
-	  </listitem>
-	</itemizedlist>
-	  The Java classes used in this section are: 	 
-	<itemizedlist>
-	  <listitem>
-	    <para><ulink url="http://java.sun.com/j2se/1.4/docs/api/java/rmi/Remote.html"><classname>java.rmi.Remote</classname></ulink></para>
-	  </listitem>
-	  <listitem>
-	    <para><ulink url="http://java.sun.com/j2se/1.4/docs/api/javax/rmi/PortableRemoteObject.html"><classname>javax.rmi.PortableRemoteObject</classname></ulink></para>
-	  </listitem>
-	</itemizedlist> 
+
+      <para>
+        This section describes the basic rules of RMI IIOP development. For more
+        information, see the Sun entry for <ulink
+        url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/index.html"><citetitle>RMI
+        IIOP Documentation</citetitle></ulink>. This RMI IIOP quick start guide
+        is design for a 3 step development:
       </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Development of the RMI IIOP remote objects and development of
+            the RMI server part
+          </para>
+        </listitem>
+        <listitem>
+          <para>Java and CAROL RMI IIOP objects compilation</para>
+        </listitem>
+        <listitem>
+          <para>Deployment step in a distributed environment</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>
+        The Java classes used in this section are:
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            <ulink url="http://java.sun.com/j2se/1.4/docs/api/java/rmi/Remote.html">
+              <classname>java.rmi.Remote</classname>
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://java.sun.com/j2se/1.4/docs/api/javax/rmi/PortableRemoteObject.html">
+              <classname>javax.rmi.PortableRemoteObject</classname>
+            </ulink>
+          </para>
+        </listitem>
+      </itemizedlist>
+
       <sect3>
-	<title>RMI IIOP remote objects development step</title>
-	<para>A RMI IIOP remote object needs only to expose its remote methods in a Java interface extending <classname>Remote</classname>. This is exactly the same development rules than in classical RMI JRMP. In the example 2-1, the remote object <classname>Foo</classname> exposes its remote method <methodname>myMethod()</methodname> in the remote interface <classname>FooRemoteInterface</classname>.
-	</para>
-	<example>
-	  <title>RMI basic example</title>
-	  <programlisting>	      
-&Foo.java;		  
-	  </programlisting>
-	  <programlisting>
+        <title>RMI IIOP remote objects development step</title>
+
+        <para>
+          A RMI IIOP remote object needs only to expose its remote methods in a
+          Java interface extending <classname>Remote</classname>. This is
+          exactly the same development rules than in classical RMI JRMP. In the
+          example 2-1, the remote object <classname>Foo</classname> exposes its
+          remote method <methodname>myMethod()</methodname> in the remote
+          interface <classname>FooRemoteInterface</classname>.
+        </para>
+
+        <example>
+          <title>RMI basic example</title>
+          <programlisting>
+&Foo.java;
+          </programlisting>
+          <programlisting>
 &FooRemoteInterface.java;
-	  </programlisting>
-	</example>
-	<note>
-	  <para>The method <methodname>myMethod()</methodname> throws a RemoteException if an exceptions occurs in the remote method call.
-	  </para>
-	</note>
-      </sect3>
-      <sect3 id="RMI-IIOP-server-development-step">
-	<title>RMI IIOP server development step</title>
-	<para>The RMI IIOP server has to manage remote objects. This section only describes the (un)export management of a RMI IIOP remote object. Please see the <link linkend="jndidev">JNDI development rules</link> section for the remote object (un)registering managment. One of the most important step in a remote object life cycle is the export step (and the opposite unexport step). To Exporte a remote object means to prepare this object to receive remote call. RMI IIOP abstracts the intricate CORBA implementation mechanism of this export with the API class <classname>PortableRemoteObject</classname>. To Export a remote object is mandatory for remote call. There is two way for this export:
-	  <itemizedlist>
-	    <listitem>
-	      <para>The implicit method: if the remote object class implements the <classname>PortableRemoteObject</classname> class, this remote object is automatically export in is creation time. In the example 2-2 the remote object is implicitly exported by inheritance. In this case, the server only needs to construct the remote object to exported it.</para>
-	      <example>
-		<title>RMI implicit export</title>
-		<programlisting>	      
-&FooImplicit.java;		  
-		</programlisting>
-		<programlisting>	      
-&FooImplicitServer.java;		  
-		</programlisting>
-	      </example>
-	    </listitem>
-	    <listitem>
-	      <para>The explicit method: if the remote object class do not implement the <classname>PortableRemoteObject</classname> class, this remote object has to be explicitly exported by the server. The <methodname>public static void exportObject(java.rmi.Remote)</methodname> method in <classname>PortableRemoteObject</classname> class allow to do that. In the example 2-3 the remote object is explicitly exported by the server.</para>
-	      <example>
-		<title>RMI explicit export</title>
-		<programlisting>	      
-&FooExplicit.java;		  
-		</programlisting>
-		<programlisting>	      
-&FooExplicitServer.java;		  
-		</programlisting>
-	      </example>
-	    </listitem>  
-	  </itemizedlist>
-	</para>
-      </sect3>
-      <sect3 id="CAROL-RMI-IIOP-compilation-step">
-	<title>CAROL RMI IIOP compilation step</title>
-	<para>The compilation step is designed by Java and RMI. There is no particular compilation step in order to use CAROL. Therefore, you need to compile Java classes and to compile stubs and skeletons with each RMI provider compiler for each RMI architecture (IIOP, JRMP, JEREMIE ...).
-	  </para>
-	</sect3>
-	<sect3 id="CAROL-RMI-IIOP-server-deployment-step">
-	  <title>CAROL RMI IIOP server deployment step</title>
-	  <para> The 3 points below are mandatory for CAROL server deploying on multi-RMI architecture:
-	    <itemizedlist>
-	      <listitem>
-		<para>There is 2 ways for carol initialization: first, the best way, is to call the org.objectweb.carol.util.configuration.CarolConfiguration.init() method. The second way is to set the 2 system property <property>javax.rmi.CORBA.PortableRemoteObjectClass =org.objectweb.carol.rmi.multi.MultiPRODelegate</property> and  <property>java.naming.factory.initial =org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</property> in the server JVM. This second method doesn't allows to switch off carol features by configuration: The properties <property>carol.start.rmi=false</property> and <property>carol.start.jndi=false</property> doesn't work with this configuration method.</para>
-	      </listitem>
-	      <listitem>
-		<para>The <filename>carol.properties</filename> file can be configured (see the <link linkend="configuration">CAROL Configuration</link> chapter) and visible in the JVM classpath.</para>
-	      </listitem>
-	      <listitem>
-		<para>For each RMI architecture all remote objects stub and skeleton have to be visible in the classpath.</para>
-	      </listitem>
-	    </itemizedlist>
-	    <note>
-	      <para>
-		For the moment, in CAROL library, there is 3 remote architectures available (CAROL SPI implementation): IIOP, JRMP and JEREMIE. There is no, in those 3 architectures, stub/skeleton class conflicts. For example, if my remote object is Foo with FooItf remote interface: 
-		<itemizedlist>
-		  <listitem>
-		    <para>The stub/skel name for IIOP are: <classname>_FooItf_Stub</classname>/<classname>_Foo_Tie</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para>The stub/skel name for JRMP are: <classname>FooItf_Stub</classname>/<classname>FooItf_Skel</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para>The stub/skel name for JEREMIE are: <classname>FooItf_OWStub</classname>/<classname>FooItf_OWSkel</classname></para>
-		  </listitem>
-		</itemizedlist>
-		And so there is no class name conflict, those 3 RMI architectures can be available in the same JVM.
-		The Java classes used in this section are: 	 
-		<itemizedlist>
-		  <listitem>
-		    <para><ulink url="http://java.sun.com/j2se/1.4/docs/api/javax/naming/InitialContext.html"><classname>javax.naming.InitialContext</classname></ulink></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JServiceContext</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JInitializer</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptorInitializer</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.jndi.iiop.IIOPContextWrapperFactory</classname></para>
-		  </listitem>
-		  <listitem>
-		    <para><classname>org.objectweb.carol.jndi.iiop.IIOPContextWrapper</classname></para>
-		  </listitem>
-		</itemizedlist>
-	      </para>
-	    </note>
-	  <warning>
-	    <para>
-	      But, be careful, there is stubs and/or skeletons class name conflicts for different providers of the same RMI architecture. For example, this is not possible, with CAROL, to deploy a remote object on two RMI provider with the same architecture (for example RMI JRMP 1.1 and RMI JRMP 1.2 or DAVID RMI IIOP and SUN  JDK 1.4 RMI IIOP) because there are a stubs and/or skeletons class name conflicts in the server JVM.</para>   
-	  </warning>
-	</para>
-      </sect3>
-    </sect2>
-    <sect2>
-      <title id="jndidev">JNDI development rules</title>
-      <para>This section describes the basic JNDI development rules. For more information, see the Sun entry for <ulink url="http://java.sun.com/products/jndi/1.2/javadoc/"><citetitle>JNDI Documentation</citetitle></ulink>. This JNDI start guide is designed for a 2 steps development:
-	<itemizedlist>
-	  <listitem>
-	    <para>Development of the JNDI server part</para>
-	  </listitem>
-	  <listitem>
-	    <para>JNDI deployment step on a distributed environment</para>
-	  </listitem>
-	</itemizedlist>
-      </para>
-      <sect3>
-	<title>Development of the JNDI server part</title>
-	<para>For remote object access with CAROL, the first part is to develop and deploy RMI IIOP remote objects (see the <link linkend="rmidev">RMI IIOP Development rules</link> chapter) on a Java server. The second part is to register those objects in one/many name service through the standard JNDI Interface. For this, the server needs to build a <classname>InitialContext</classname> object and to register all remote objects in this context like in the Example 2-4:
-	</para>
-	<example>
-	  <title>JNDI basic example</title>
-	  <programlisting>	      
-&FooJNDIServer.java;		  
-	  </programlisting>
-	</example>
-	<note>
-	  <para>In this example, the server use a default <classname>IntialContext</classname> without configuration. You may want to configure your server JNDI for each name service (registry, cosnaming ...). Please use only the CAROL configuration to setup your multi JNDI name service. For this feature, a Java server, needs the CAROL JNDI context factory (see the <link linkend="configuration">CAROL Configuration</link> chapter).</para>
+          </programlisting>
+        </example>
+
+        <note>
+          <para>
+            The method <methodname>myMethod()</methodname> throws a
+            RemoteException if an exceptions occurs in the remote method call.
+          </para>
         </note>
       </sect3>
+
+      <sect3 id="RMI-IIOP-server-development-step">
+        <title>RMI IIOP server development step</title>
+
+        <para>
+          The RMI IIOP server has to manage remote objects. This section only
+          describes the (un)export management of a RMI IIOP remote
+          object. Please see the <link linkend="jndidev">JNDI development
+          rules</link> section for the remote object (un)registering
+          managment. One of the most important step in a remote object life
+          cycle is the export step (and the opposite unexport step). To Exporte
+          a remote object means to prepare this object to receive remote
+          call. RMI IIOP abstracts the intricate CORBA implementation mechanism
+          of this export with the API class
+          <classname>PortableRemoteObject</classname>. To Export a remote object
+          is mandatory for remote call. There is two way for this export:
+        </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              The implicit method: if the remote object class implements the
+              <classname>PortableRemoteObject</classname> class, this remote
+              object is automatically export in is creation time. In the example
+              2-2 the remote object is implicitly exported by inheritance. In
+              this case, the server only needs to construct the remote object to
+              exported it.
+            </para>
+
+            <example>
+              <title>RMI implicit export</title>
+              <programlisting>
+&FooImplicit.java;
+              </programlisting>
+              <programlisting>
+&FooImplicitServer.java;
+              </programlisting>
+            </example>
+          </listitem>
+          <listitem>
+            <para>
+              The explicit method: if the remote object class do not implement
+              the <classname>PortableRemoteObject</classname> class, this remote
+              object has to be explicitly exported by the server. The
+              <methodname>public static void
+              exportObject(java.rmi.Remote)</methodname> method in
+              <classname>PortableRemoteObject</classname> class allow to do
+              that. In the example 2-3 the remote object is explicitly exported
+              by the server.
+            </para>
+
+            <example>
+              <title>RMI explicit export</title>
+              <programlisting>
+&FooExplicit.java;
+              </programlisting>
+              <programlisting>
+&FooExplicitServer.java;
+              </programlisting>
+            </example>
+          </listitem>
+        </itemizedlist>
+
+      </sect3>
+      <sect3 id="CAROL-RMI-IIOP-compilation-step">
+        <title>CAROL RMI IIOP compilation step</title>
+
+        <para>
+          The compilation step is designed by Java and RMI. There is no
+          particular compilation step in order to use CAROL. Therefore, you need
+          to compile Java classes and to compile stubs and skeletons with each
+          RMI provider compiler for each RMI architecture (IIOP, JRMP, JEREMIE
+          ...).
+        </para>
+      </sect3>
+
+      <sect3 id="CAROL-RMI-IIOP-server-deployment-step">
+        <title>CAROL RMI IIOP server deployment step</title>
+
+        <para>
+          The three points below are mandatory for CAROL server deploying on
+          multi-RMI architecture:
+        </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              There is 2 ways for carol initialization: first, the best way, is
+              to call the
+              org.objectweb.carol.util.configuration.CarolConfiguration.init()
+              method. The second way is to set the 2 system property
+              <property>javax.rmi.CORBA.PortableRemoteObjectClass
+              =org.objectweb.carol.rmi.multi.MultiPRODelegate</property> and
+              <property>java.naming.factory.initial
+              =org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</property>
+              in the server JVM. This second method doesn't allows to switch off
+              carol features by configuration: The properties
+              <property>carol.start.rmi=false</property> and
+              <property>carol.start.jndi=false</property> doesn't work with this
+              configuration method.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The <filename>carol.properties</filename> file can be configured
+              (see the <link linkend="configuration">CAROL Configuration</link>
+              chapter) and visible in the JVM classpath.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              For each RMI architecture all remote objects stub and skeleton
+              have to be visible in the classpath.
+            </para>
+          </listitem>
+        </itemizedlist>
+
+        <note>
+          <para>
+            For the moment, in CAROL library, there is 3 remote architectures
+            available (CAROL SPI implementation): IIOP, JRMP and JEREMIE. There
+            is no, in those 3 architectures, stub/skeleton class conflicts. For
+            example, if my remote object is Foo with FooItf remote interface:
+          </para>
+          <itemizedlist>
+            <listitem>
+              <para>
+                The stub/skel name for IIOP are:
+                <classname>_FooItf_Stub</classname>/<classname>_Foo_Tie</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                The stub/skel name for JRMP are:
+                <classname>FooItf_Stub</classname>/<classname>FooItf_Skel</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                The stub/skel name for JEREMIE are:
+                <classname>FooItf_OWStub</classname>/<classname>FooItf_OWSkel</classname>
+              </para>
+            </listitem>
+          </itemizedlist>
+
+          <para>
+            And so there is no class name conflict, those 3 RMI architectures
+            can be available in the same JVM.  The Java classes used in this
+            section are:
+          </para>
+
+          <itemizedlist>
+            <listitem>
+              <para>
+                <ulink url="http://java.sun.com/j2se/1.4/docs/api/javax/naming/InitialContext.html">
+                  <classname>javax.naming.InitialContext</classname>
+                </ulink>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JServiceContext</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JInitializer</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptorInitializer</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.jndi.iiop.IIOPContextWrapperFactory</classname>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                <classname>org.objectweb.carol.jndi.iiop.IIOPContextWrapper</classname>
+              </para>
+            </listitem>
+          </itemizedlist>
+        </note>
+
+        <warning>
+          <para>
+            But, be careful, there is stubs and/or skeletons class name
+            conflicts for different providers of the same RMI architecture. For
+            example, this is not possible, with CAROL, to deploy a remote object
+            on two RMI provider with the same architecture (for example RMI JRMP
+            1.1 and RMI JRMP 1.2 or DAVID RMI IIOP and SUN JDK 1.4 RMI IIOP)
+            because there are a stubs and/or skeletons class name conflicts in
+            the server JVM.
+          </para>
+        </warning>
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title id="jndidev">JNDI development rules</title>
+
+      <para>
+        This section describes the basic JNDI development rules. For more
+        information, see the Sun entry for <ulink
+        url="http://java.sun.com/products/jndi/1.2/javadoc/"><citetitle>JNDI
+        Documentation</citetitle></ulink>. This JNDI start guide is designed for
+        a 2 steps development:
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Development of the JNDI server part</para>
+        </listitem>
+        <listitem>
+          <para>JNDI deployment step on a distributed environment</para>
+        </listitem>
+      </itemizedlist>
+
       <sect3>
-	<title>JNDI deployment step on a distributed environment</title>
-	<para> The 3 points below are mandatory for CAROL server deploying on multi name service architecture:
-	  <itemizedlist>
-	    <listitem>
-	      <para>The system property <property>java.naming.factory.initial</property> need to be instantiated to <classname>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</classname> in the server JVM.</para>
-	    </listitem>
-	    <listitem>
-	      <para>The <filename>carol.properties</filename> and the <filename>jndi.properties</filename> files need to be configured (see the <link linkend="configuration">CAROL Configuration</link> chapter) and visible in the server JVM classpath.</para>
-	    </listitem>
-	    <listitem>
-	      <para>Each name service (registry, cosnaming, ...) can be launched in the distribute environment.</para>
-	    </listitem>
-	  </itemizedlist>
-	  <warning>
-	    <para>
-	      Be careful, the InitialContext need to be configured for CAROL with the system property <property>java.naming.factory.initial</property> instantiated to <classname>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</classname>. Every other properties configured directly in the server InitialContext will be lost. The important point is to understand that the <classname>IntialContext</classname> is an indirection to an other context, the CAROL one, which manage all the contexts for each name service.</para>   
-	  </warning>
-	</para>
+        <title>Development of the JNDI server part</title>
+
+        <para>
+          For remote object access with CAROL, the first part is to develop and
+          deploy RMI IIOP remote objects (see the <link linkend="rmidev">RMI
+          IIOP Development rules</link> chapter) on a Java server. The second
+          part is to register those objects in one/many name service through the
+          standard JNDI Interface. For this, the server needs to build a
+          <classname>InitialContext</classname> object and to register all
+          remote objects in this context like in the Example 2-4:
+        </para>
+
+        <example>
+          <title>JNDI basic example</title>
+          <programlisting>
+&FooJNDIServer.java;
+          </programlisting>
+        </example>
+
+        <note>
+          <para>
+            In this example, the server use a default
+            <classname>IntialContext</classname> without configuration. You may
+            want to configure your server JNDI for each name service (registry,
+            cosnaming ...). Please use only the CAROL configuration to setup
+            your multi JNDI name service. For this feature, a Java server, needs
+            the CAROL JNDI context factory (see the <link
+            linkend="configuration">CAROL Configuration</link> chapter).
+          </para>
+        </note>
+      </sect3>
+
+      <sect3>
+        <title>JNDI deployment step on a distributed environment</title>
+
+        <para>
+          The three points below are mandatory for CAROL server deploying on
+          multi name service architecture:
+        </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              The system property
+              <property>java.naming.factory.initial</property> need to be
+              instantiated to
+              <classname>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</classname>
+              in the server JVM.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The <filename>carol.properties</filename> and the
+              <filename>jndi.properties</filename> files need to be configured
+              (see the <link linkend="configuration">CAROL Configuration</link>
+              chapter) and visible in the server JVM classpath.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Each name service (registry, cosnaming, ...) can be launched in
+              the distribute environment.
+            </para>
+          </listitem>
+        </itemizedlist>
+
+        <warning>
+          <para>
+            Be careful, the InitialContext need to be configured for CAROL with
+            the system property <property>java.naming.factory.initial</property>
+            instantiated to
+            <classname>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</classname>. Every
+            other properties configured directly in the server InitialContext
+            will be lost. The important point is to understand that the
+            <classname>IntialContext</classname> is an indirection to an other
+            context, the CAROL one, which manage all the contexts for each name
+            service.
+          </para>
+        </warning>
       </sect3>
     </sect2>
   </sect1>
-    <sect1 id="non-standard-CAROL-tools-and-mechanisms">
-      <title id="non-standard">Non standards CAROL tools and mechanisms</title>
-      <sect2>
-	<title>Implicit context propagation with RMI JRMP</title>
-	<para>
-	  One of the non standard features (API) provided by CAROL is the possibility to instantiate, for a Java server, an implicit context propagation. This API is very useful for security and transaction behavior. This API is a simplification of CORBA portable interceptor concept. Therefore, this feature use a server and client interceptor with an initializer registering mechanism. This mechanism is pure Java without any CORBA classes connection (only the <filename>rt.jar</filename> classes is needed). This mechanism works with 1.1 and 1.2 RMI version. This section explain the way to build, register and use server and client interceptor through RMI JRMP. 
-	</para>
-	<sect3>
-	  <title>CAROL RMI JRMP interceptors API</title>
-	  <para>Implementing JRMP interceptors is very easy. A server interceptor only need to implements the <classname>JServerRequestInterceptor</classname> interface and use the  <classname>JServerRequestInfo</classname> interface to propagate a <classname>JServiceContext</classname>. On the client side this is the same concept with  <classname>JClientRequestInterceptor</classname> interface and <classname>JClientRequestInfo</classname> interface. For propagation, a CAROL propagation context need only to be a Serializable (or Externalizable) object and to implements the interface <classname>JServiceContext</classname>.</para>
-	</sect3>
-	<sect3>
-	  <title>CAROL RMI JRMP Client interceptor</title>
-	  <para>A JRMP client interceptor is a class implements the <classname>JClientRequestInterceptor</classname>. All the methods in this class are executed in the same Thread than the client remote call. All JServiceContext registered in the JClientRequestInfo (in the send_* methods) are send to the Server. All JServiceContext send by the server can be found in the JClientRequestInfo (in the receive_* methods).</para>
-	</sect3>
-	<sect3>
-	  <title>CAROL RMI JRMP Server interceptor</title>
-	  <para>A JRMP server interceptor is a class implements the <classname>JServerRequestInterceptor</classname>. All the methods in this class are executed in the same Thread than the server remote call. All JServiceContext registered in the JServerRequestInfo (in the send_* methods) are send to the Client. All JServiceContext send by the client can be found in the JServerRequestInfo (in the receive_* methods).</para>
-	</sect3>
-	<sect3>
-	  <title>CAROL RMI JRMP JServiceContext</title>
-	  <para>For each call,A CAROL JServiceContext can be find with is context_id. A JServiceContext is just a Serializable Object. For performance reason, it can be interesting to decrease the Context size by using a Externalizable mechanism. Carol provide a tool (org.objectweb.carol .util.perfs .CarolJRMPPerfomanceHelper) with static methods to calculate the Serializable size of a Serializable object.</para>
-	</sect3>
-	<sect3>
-	  <title>CAROL RMI JRMP interceptor registering</title>
-	  <para>To register interceptor in CAROL is very easy. A server/client initializer implements the <classname>JInitializer</classname> and use the pre_init and post_init methods for registering server and client interceptors through <classname>JInitInfo</classname> interface. For JVM CAROL JRMP initialization, use the <property>org.objectweb.PortableInterceptor.JRMPInitializerClass.XXX</property> property where XXX is the JInitializer full classname (for example pass <property>-Dorg.objectweb.PortableInterceptor.JRMPInitializerClass .org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptorInitializer</property>  register into CAROL the <classname>ProtocolInterceptorInitializer</classname> class). Register more than one JInitializer is possible with CAROL (The <classname>ProtocolInterceptorInitializer</classname> is mandatory for CAROL multi protocol management).</para>
-	</sect3>
-      </sect2>
-      <sect2>
-	<title>Referenceable an Reference binding through a RMI IIOP CosNaming</title>
-	<para>
-	  The second non standard CAROL features is a way to register Referenceable/Reference and Serializable objects in a CosNaming through JNDI. The IIOP InitialContext delivered for IIOP wrap the  Referenceable/Reference or Serializable object into a standard remote object. This remote object is exported into the JNDI context bind(or rebind) method and unexported into the JNDI context unbind method. CAROL use automatically, on the server side, this mechanism with a standard CAROL IIOP configuration (you need to call the IIOP protocol 'iiop' in the <filename>carol.properties</filename> file see the <link linkend="configuration">CAROL configuration</link> chapter).  
-	</para>
-	<para>For a JNDI java RMI IIOP client you can use the <classname>IIOPContextWrapperFactory</classname> by setting the <property>-Djava.naming.factory.initial</property> jvm properties (with the full name of the factory). This factory builds a JNDI Context based on you <filename>jndi.properties</filename> uses the wrapping mechanism. For other client (Non JNDI), you can re-build manually the Referenceable or Serializable object for the CosNaming wrapper remote object (see inside the <classname>IIOPContextWrapper</classname> class for a detailed mechanism. A CAROL server can be also an IIOP CAROL client without any extra configuration than in a classical IIOP CAROL server.</para>
-      </sect2>      
-      <sect2>
-	<title>Name Service Management</title>
-	<para>
-	  The third non standard CAROL features is a way to start and stop automatically RMI Name Services. This mechanism is based on a API/SPI system. The API is represented by the <classname>org.objectweb.carol.jndi.ns.NameServiceManager</classname>. This class provide static methods for start and stop configured name services for each protocol. A CAROL configuration property can be set inside the carol.properties for automatically start all non started and configured Name Services (see the configuration chapter). Carol provide also three Name Service SPI implementation for RMI Registry, Jeremie Registry and CosNaming management. This mechanism start those Name Services on the port defined by the jndi url property.
-	</para>
-      </sect2>
-    </sect1>
-  <sect1 id="Getting-started-conclusion"> 
+
+  <sect1 id="non-standard-CAROL-tools-and-mechanisms">
+    <title id="non-standard">Non standards CAROL tools and mechanisms</title>
+    <sect2>
+      <title>Implicit context propagation with RMI JRMP</title>
+
+      <para>
+        One of the non standard features (API) provided by CAROL is the
+        possibility to instantiate, for a Java server, an implicit context
+        propagation. This API is very useful for security and transaction
+        behavior. This API is a simplification of CORBA portable interceptor
+        concept. Therefore, this feature use a server and client interceptor
+        with an initializer registering mechanism. This mechanism is pure Java
+        without any CORBA classes connection (only the
+        <filename>rt.jar</filename> classes is needed). This mechanism works
+        with 1.1 and 1.2 RMI version. This section explain the way to build,
+        register and use server and client interceptor through RMI JRMP.
+      </para>
+
+      <sect3>
+        <title>CAROL RMI JRMP interceptors API</title>
+
+        <para>
+          Implementing JRMP interceptors is very easy. A server interceptor only
+          need to implements the
+          <classname>JServerRequestInterceptor</classname> interface and use the
+          <classname>JServerRequestInfo</classname> interface to propagate a
+          <classname>JServiceContext</classname>. On the client side this is the
+          same concept with <classname>JClientRequestInterceptor</classname>
+          interface and <classname>JClientRequestInfo</classname> interface. For
+          propagation, a CAROL propagation context need only to be a
+          Serializable (or Externalizable) object and to implements the
+          interface <classname>JServiceContext</classname>.
+        </para>
+      </sect3>
+
+      <sect3>
+        <title>CAROL RMI JRMP Client interceptor</title>
+
+        <para>
+          A JRMP client interceptor is a class implements the
+          <classname>JClientRequestInterceptor</classname>. All the methods in
+          this class are executed in the same Thread than the client remote
+          call. All JServiceContext registered in the JClientRequestInfo (in the
+          send_* methods) are send to the Server. All JServiceContext send by
+          the server can be found in the JClientRequestInfo (in the receive_*
+          methods).
+        </para>
+      </sect3>
+
+      <sect3>
+        <title>CAROL RMI JRMP Server interceptor</title>
+
+        <para>
+          A JRMP server interceptor is a class implements the
+          <classname>JServerRequestInterceptor</classname>. All the methods in
+          this class are executed in the same Thread than the server remote
+          call. All JServiceContext registered in the JServerRequestInfo (in the
+          send_* methods) are send to the Client. All JServiceContext send by
+          the client can be found in the JServerRequestInfo (in the receive_*
+          methods).
+        </para>
+      </sect3>
+
+      <sect3>
+        <title>CAROL RMI JRMP JServiceContext</title>
+
+        <para>
+          For each call,A CAROL JServiceContext can be find with is
+          context_id. A JServiceContext is just a Serializable Object. For
+          performance reason, it can be interesting to decrease the Context size
+          by using a Externalizable mechanism. Carol provide a tool
+          (org.objectweb.carol .util.perfs .CarolJRMPPerfomanceHelper) with
+          static methods to calculate the Serializable size of a Serializable
+          object.
+        </para>
+
+      </sect3>
+      <sect3>
+        <title>CAROL RMI JRMP interceptor registering</title>
+
+        <para>
+          To register interceptor in CAROL is very easy. A server/client
+          initializer implements the <classname>JInitializer</classname> and use
+          the pre_init and post_init methods for registering server and client
+          interceptors through <classname>JInitInfo</classname> interface. For
+          JVM CAROL JRMP initialization, use the
+          <property>org.objectweb.PortableInterceptor.JRMPInitializerClass.XXX</property>
+          property where XXX is the JInitializer full classname (for example
+          pass
+          <property>-Dorg.objectweb.PortableInterceptor.JRMPInitializerClass
+          .org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptorInitializer</property>
+          register into CAROL the
+          <classname>ProtocolInterceptorInitializer</classname> class). Register
+          more than one JInitializer is possible with CAROL (The
+          <classname>ProtocolInterceptorInitializer</classname> is mandatory for
+          CAROL multi protocol management).
+        </para>
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>Referenceable an Reference binding through a RMI IIOP CosNaming</title>
+
+      <para>
+        The second non standard CAROL features is a way to register
+        Referenceable/Reference and Serializable objects in a CosNaming through
+        JNDI. The IIOP InitialContext delivered for IIOP wrap the
+        Referenceable/Reference or Serializable object into a standard remote
+        object. This remote object is exported into the JNDI context bind(or
+        rebind) method and unexported into the JNDI context unbind method. CAROL
+        use automatically, on the server side, this mechanism with a standard
+        CAROL IIOP configuration (you need to call the IIOP protocol 'iiop' in
+        the <filename>carol.properties</filename> file see the <link
+        linkend="configuration">CAROL configuration</link> chapter).
+      </para>
+
+      <para>
+        For a JNDI java RMI IIOP client you can use the
+        <classname>IIOPContextWrapperFactory</classname> by setting the
+        <property>-Djava.naming.factory.initial</property> jvm properties (with
+        the full name of the factory). This factory builds a JNDI Context based
+        on you <filename>jndi.properties</filename> uses the wrapping
+        mechanism. For other client (Non JNDI), you can re-build manually the
+        Referenceable or Serializable object for the CosNaming wrapper remote
+        object (see inside the <classname>IIOPContextWrapper</classname> class
+        for a detailed mechanism. A CAROL server can be also an IIOP CAROL
+        client without any extra configuration than in a classical IIOP CAROL
+        server.
+      </para>
+
+    </sect2>
+    <sect2>
+      <title>Name Service Management</title>
+
+      <para>
+        The third non standard CAROL features is a way to start and stop
+        automatically RMI Name Services. This mechanism is based on a API/SPI
+        system. The API is represented by the
+        <classname>org.objectweb.carol.jndi.ns.NameServiceManager</classname>. This
+        class provide static methods for start and stop configured name services
+        for each protocol. A CAROL configuration property can be set inside the
+        carol.properties for automatically start all non started and configured
+        Name Services (see the configuration chapter). Carol provide also three
+        Name Service SPI implementation for RMI Registry, Jeremie Registry and
+        CosNaming management. This mechanism start those Name Services on the
+        port defined by the jndi url property.
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1 id="Getting-started-conclusion">
     <title>Getting started conclusion</title>
+
     <para>
-      CAROL is only configured by system properties and files. There is no intrusion of CAROL classes in a standard RMI IIOP server. The server is RMI architecture independent but work simultaneously on different RMI architectures. The next chapter explains the general rules for this configuration.
-    </para>      
+      CAROL is only configured by system properties and files. There is no
+      intrusion of CAROL classes in a standard RMI IIOP server. The server is
+      RMI architecture independent but work simultaneously on different RMI
+      architectures. The next chapter explains the general rules for this
+      configuration.
+    </para>
   </sect1>
 </chapter>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "chapter")
+ End:
+-->

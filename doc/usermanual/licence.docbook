@@ -1,19 +1,25 @@
 <appendix id="licence">
-<title>Licence</title>
+  <title>Licence</title>
 
-<para>
-This document is released under Free Documentation licence; the terms of this licence
-are detailed below.
-</para>
+  <para>
+    This document is released under Free Documentation licence; the terms of
+    this licence are detailed below.
+  </para>
 
-<sect1 id="fdl-licence">
-<title>Free Documentation Licence</title>
+  <sect1 id="fdl-licence">
+    <title>Free Documentation Licence</title>
 
-<para>
+    <para>
 <literallayout>
 &fdl-licence;
 </literallayout>
-</para>
+    </para>
 
-</sect1>
+  </sect1>
 </appendix>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "appendix")
+ End:
+-->

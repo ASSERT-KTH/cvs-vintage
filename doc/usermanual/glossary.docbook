@@ -3,75 +3,91 @@
 
   <glossentry><glossterm>RMI</glossterm>
     <glossdef>
-      <para>(Remote Method Invocation) This is the standard specifications of the Java RPC.  
+      <para>
+        (Remote Method Invocation) This is the standard specifications of the
+        Java RPC.
       </para>
     </glossdef>
   </glossentry>
-  
+
   <glossentry><glossterm>RPC</glossterm>
     <glossdef>
-      <para>(Remote Procedure Call) all remote method call protocol is a RPC.
+      <para>
+        (Remote Procedure Call) all remote method call protocol is a RPC.
       </para>
       </glossdef>
   </glossentry>
- 
+
 
   <glossentry><glossterm>JVM</glossterm>
     <glossdef>
       <para> (Java Virtual Machine) The Java virtual machine.
       </para>
     </glossdef>
-  </glossentry>  
+  </glossentry>
 
   <glossentry><glossterm>JDK</glossterm>
     <glossdef>
-      <para> (Java Development Kit) A set a Java tools (compiler, jvm, library ...) for Java programs development.
+      <para>
+        (Java Development Kit) A set a Java tools (compiler, jvm, library ...)
+        for Java programs development.
       </para>
     </glossdef>
-  </glossentry> 
+  </glossentry>
 
   <glossentry><glossterm>API</glossterm>
     <glossdef>
-      <para> (Application Programming Interface) Interfaces allowing to use library in programs.
+      <para>
+        (Application Programming Interface) Interfaces allowing to use library
+        in programs.
       </para>
     </glossdef>
   </glossentry>
 
   <glossentry><glossterm>SPI</glossterm>
     <glossdef>
-      <para> (Service Provider Interface) Interface for provider library plugging in an other library.
+      <para>
+        (Service Provider Interface) Interface for provider library plugging in
+        an other library.
       </para>
     </glossdef>
   </glossentry>
 
   <glossentry><glossterm>JNDI</glossterm>
     <glossdef>
-      <para>(Java Naming Directory Interface) Standard API/SPI for J2EE naming interface .
+      <para>
+        (Java Naming Directory Interface) Standard API/SPI for J2EE naming
+        interface.
       </para>
     </glossdef>
   </glossentry>
 
   <glossentry><glossterm>OMG</glossterm>
     <glossdef>
-      <para> (Object Management Group) Industrial group for computer standard specifications.
+      <para>
+        (Object Management Group) Industrial group for computer standard
+        specifications.
       </para>
     </glossdef>
   </glossentry>
 
   <glossentry><glossterm>CORBA</glossterm>
     <glossdef>
-      <para> (Common Object Request Broker Architecture) OMG RPC specification.
+      <para>
+        (Common Object Request Broker Architecture) OMG RPC specification.
       </para>
     </glossdef>
   </glossentry>
 
   <glossentry><glossterm>IIOP</glossterm>
     <glossdef>
-      <para>(Inter-operable Internet Object Protocol) CORBA RPC standard protocol on TCP/IP 
+      <para>
+        (Inter-operable Internet Object Protocol) CORBA RPC standard protocol on
+        TCP/IP
       </para>
     </glossdef>
   </glossentry>
-  
+
   <glossentry><glossterm>JRMP</glossterm>
     <glossdef>
       <para>(Java Remote Method Protocol)Java RMI standard protocol
@@ -79,3 +95,9 @@
     </glossdef>
   </glossentry>
 </glossary>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "glossary")
+ End:
+-->

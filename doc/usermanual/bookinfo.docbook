@@ -1,26 +1,27 @@
 <bookinfo>
-
   <title>CAROL Library User Manual</title>
-  <subtitle> </subtitle>
 
-  	<mediaobject>
-	  <imageobject>
-	    <imagedata fileref="img/carol" align="center"  format="eps" width="325px" depth="174px" scalefit="1" >
-	  </imageobject>
-	  <imageobject>
-	    <imagedata fileref="img/carol.jpg" format="jpg" align="center"
-	           width="325px"
-		       depth="174px"
-		       scalefit="1" >
-	  </imageobject>
-	</mediaobject>
-
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="img/carol" align="center"
+        format="eps" width="325px" depth="174px" scalefit="1">
+    </imageobject>
+    <imageobject>
+      <imagedata fileref="img/carol.jpg" format="jpg" align="center"
+        width="325px" depth="174px" scalefit="1" >
+    </imageobject>
+  </mediaobject>
 
   <date>2005-03-25</date>
 
   <abstract>
     <para>
-      CAROL is a library allowing to use different RMI implementations. Thanks to CAROL, a Java server application can be independent of RMI implementations and accessible simultaneously by RMI clients using different RMI implementations. CAROL allows to design, implement, compile, package, deploy, and execute distributed applications compliant with the RMI model.
+      CAROL is a library allowing to use different RMI implementations. Thanks
+      to CAROL, a Java server application can be independent of RMI
+      implementations and accessible simultaneously by RMI clients using
+      different RMI implementations. CAROL allows to design, implement, compile,
+      package, deploy, and execute distributed applications compliant with the
+      RMI model.
     </para>
   </abstract>
 
@@ -32,11 +33,11 @@
   <legalnotice>
     <para>
       Permission is granted to copy, distribute and/or modify this document
-      under the terms of the GNU Free Documentation License, Version 1.2
-      or any later version published by the Free Software Foundation;
-      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
-	 Texts.  A copy of the license is included in the section entitled "GNU
-      Free Documentation License".
+      under the terms of the GNU Free Documentation License, Version 1.2 or any
+      later version published by the Free Software Foundation; with no Invariant
+      Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
+      license is included in the section entitled "GNU Free Documentation
+      License".
     </para>
   </legalnotice>
 
@@ -53,3 +54,9 @@
   </keywordset>
 
 </bookinfo>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "bookinfo")
+ End:
+-->

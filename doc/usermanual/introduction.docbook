@@ -3,75 +3,131 @@
 
   <sect1 id="what-is-this-user-manual">
     <title>About this manual</title>
-    
+
     <para>
-      This manual was meant as a tutorial that can give you an introduction
-      on how to use the CAROL RMI IIOP library.  
+      This manual was meant as a tutorial that can give you an introduction on
+      how to use the CAROL RMI IIOP library.
     </para>
-    
+
     <note>
       <para>
-	Please note that this manual is designed to be used along with, not
-	instead of, the <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI IIOP Tutorial</ulink> and the <ulink url="http://java.sun.com/products/jndi/tutorial">JNDI tutorial</ulink>. There are a number of cases where it is much easier to refer to the rather RMI IIOP and JNDI tutorials than trying to rehash what it already covers.
+        Please note that this manual is designed to be used along with, not
+        instead of, the <ulink
+        url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI
+        IIOP Tutorial</ulink> and the <ulink
+        url="http://java.sun.com/products/jndi/tutorial">JNDI
+        tutorial</ulink>. There are a number of cases where it is much easier to
+        refer to the rather RMI IIOP and JNDI tutorials than trying to rehash
+        what it already covers.
       </para>
     </note>
-    
+
     <para>
-      This manual will teach you the general way to use the CAROL abstraction in order to manipulate remote object on multi-RMI architecture. You will learn in particulars:
-      <itemizedlist>
-	<listitem><para>The CAROL configuration rules for each RMI architecture,</para></listitem>
-	<listitem><para>the RMI IIOP general mechanism and programming rules,</para></listitem>
-	<listitem><para>the JNDI general mechanism and programming rules,</para></listitem>
-	<listitem><para>the Extended RMI JRMP mechanisms for implicit context propagation.</para></listitem>
-      </itemizedlist>
+      This manual will teach you the general way to use the CAROL abstraction in
+      order to manipulate remote object on multi-RMI architecture. You will
+      learn in particular:
     </para>
+
+    <itemizedlist>
+      <listitem>
+        <para>The CAROL configuration rules for each RMI architecture,</para>
+      </listitem>
+      <listitem>
+        <para>the RMI IIOP general mechanism and programming rules,</para>
+      </listitem>
+      <listitem>
+        <para>the JNDI general mechanism and programming rules,</para>
+      </listitem>
+      <listitem>
+        <para>the Extended RMI JRMP mechanisms for implicit context propagation.
+        </para>
+      </listitem>
+    </itemizedlist>
   </sect1>
 
   <sect1 id="what-is-carol">
     <title>What is CAROL?</title>
-    <para>CAROL is a library allowing to use different RMI implementations. Thanks to CAROL, a Java server application can be independent of RMI implementations and accessible simultaneously by RMI clients using different RMI implementations. CAROL allows to design, implement, compile, package, deploy, and execute distributed applications compliant with the RMI model. CAROL provide tools for accessing to a Java server, in the same time, through the ObjectWeb JEREMIE RMI like RPC, through the JAVA standard RMI RPC and through a CORBA RPC (via a RMI IIOP). Therefore, a Java server using CAROL manipulates remote object only through RMI IIOP API classes and interfaces and never through CAROL classes or interface. So, CAROL allows a Java server to be independent, by configuration, of the RMI architecture and provider.
+
+    <para>CAROL is a library allowing to use different RMI
+    implementations. Thanks to CAROL, a Java server application can be
+    independent of RMI implementations and accessible simultaneously by RMI
+    clients using different RMI implementations. CAROL allows to design,
+    implement, compile, package, deploy, and execute distributed applications
+    compliant with the RMI model. CAROL provide tools for accessing to a Java
+    server, in the same time, through the ObjectWeb JEREMIE RMI like RPC,
+    through the JAVA standard RMI RPC and through a CORBA RPC (via a RMI
+    IIOP). Therefore, a Java server using CAROL manipulates remote object only
+    through RMI IIOP API classes and interfaces and never through CAROL classes
+    or interface. So, CAROL allows a Java server to be independent, by
+    configuration, of the RMI architecture and provider.
     </para>
+
     <para>
-      The CAROL library basically provides support (CAROL basic SPIs) for the following RMI implementations:
-      <itemizedlist>
-	<listitem>
-	  <para>ObjectWeb JEREMIE (JRMP 1.1 and 1.2)</para>
-	</listitem>
-	<listitem>
-	  <para>Sun RMI JRMP (JRMP 1.1 and 1.2)</para>
-	</listitem>
-	<listitem>
-	  <para>Sun JDK 1.4 RMI IIOP</para>
-	</listitem>
-	<listitem>
-	  <para>CAROL LMI implementation</para>
-	</listitem>
-	<listitem>
-	  <para>CAROL CMI implementation</para>
-	</listitem>
-      </itemizedlist>
+      The CAROL library basically provides support (CAROL basic SPIs) for the
+      following RMI implementations:
     </para>
+
+    <itemizedlist>
+      <listitem>
+        <para>ObjectWeb JEREMIE (JRMP 1.1 and 1.2)</para>
+      </listitem>
+      <listitem>
+        <para>Sun RMI JRMP (JRMP 1.1 and 1.2)</para>
+      </listitem>
+      <listitem>
+        <para>Sun JDK 1.4 RMI IIOP</para>
+      </listitem>
+      <listitem>
+        <para>CAROL LMI implementation</para>
+      </listitem>
+      <listitem>
+        <para>CAROL CMI implementation</para>
+      </listitem>
+    </itemizedlist>
+
     <para>
-      The CAROL library provides also non standard tools for RMI and JNDI architecture:
-      <itemizedlist>
-	<listitem>
-	  <para>a set of mechanisms for implicit context propagation in RMI JRMP,</para>
-	</listitem>
-	<listitem>
-	  <para>a set of mechanisms for Referenceable and Reference objects binding in a CosNaming.</para>
-	</listitem>
-	<listitem>
-	  <para>a set of mechanisms for RMI Registry, Jeremie Registry and CosNaming management.</para>
-	</listitem>
-      </itemizedlist>
-      Please see the <link linkend="non-standard">Non standard CAROL tools and mechanisms</link> chapter for more information.  
+      The CAROL library provides also non standard tools for RMI and JNDI
+      architecture:
+    </para>
+
+    <itemizedlist>
+      <listitem>
+        <para>a set of mechanisms for implicit context propagation in RMI
+          JRMP,
+        </para>
+      </listitem>
+      <listitem>
+        <para>a set of mechanisms for Referenceable and Reference objects
+          binding in a CosNaming.
+        </para>
+      </listitem>
+      <listitem>
+        <para>a set of mechanisms for RMI Registry, Jeremie Registry and
+          CosNaming management.
+        </para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      Please see the <link linkend="non-standard">Non standard CAROL tools and
+      mechanisms</link> chapter for more information.
     </para>
   </sect1>
+
   <sect1 id="why-carol">
     <title>Why CAROL?</title>
-    <para>   
-      CAROL is basically design to be a solution for implementing J2EE specifications on interoperability and implicit context propagation. This library allows a J2EE server to be accessible, at the same time, by IIOP and JRMP clients.
-    </para>  
-  </sect1> 
 
+    <para>
+      CAROL is basically design to be a solution for implementing J2EE
+      specifications on interoperability and implicit context propagation. This
+      library allows a J2EE server to be accessible, at the same time, by IIOP
+      and JRMP clients.
+    </para>
+  </sect1>
 </chapter>
+<!--
+ Local Variables:
+ mode: sgml
+ sgml-parent-document: ("usermanual.docbook" "book" "chapter")
+ End:
+-->
