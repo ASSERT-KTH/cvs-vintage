@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.5 2005/03/03 16:23:46 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.6 2005/03/04 08:33:17 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -140,8 +140,7 @@ public class JacORBIIOPContext implements Context {
         orb = JacORBCosNaming.getOrb();
         if (rootPOA == null) {
             try {
-                rootPOA = org.omg.PortableServer.POAHelper.narrow(JacORBCosNaming.getOrb()
-                        .resolve_initial_references("RootPOA"));
+                rootPOA = org.omg.PortableServer.POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
                 rootPOA.the_POAManager().activate();
             } catch (Exception e) {
                 throw new NamingException("Cannot get a single instance" + e.getMessage());
@@ -152,7 +151,7 @@ public class JacORBIIOPContext implements Context {
             new Thread(new Runnable() {
 
                 public void run() {
-                    JacORBCosNaming.getOrb().run();
+                    orb.run();
                 }
             }).start();
             orbStarted = true;
