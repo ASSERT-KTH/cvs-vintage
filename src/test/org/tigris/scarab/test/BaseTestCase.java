@@ -74,12 +74,12 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.22 2003/12/08 00:47:26 thierrylach Exp $
+ * @version $Id: BaseTestCase.java,v 1.23 2004/01/30 21:42:14 dep4b Exp $
  */
 public class BaseTestCase extends TestCase
 {
     /** name of the TR.props file */
-    private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
+    private static final String TR_PROPS = "TurbineResourcesTest.properties";
 
     private static Module module = null;
     private static IssueType defaultIssueType = null;
