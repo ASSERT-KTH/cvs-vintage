@@ -58,6 +58,14 @@ $page.setTitle("Attribute Editor")
     </table>
 </div>
 
+#if ($groups.isEmpty())
+   #if ($issueType.IssueTypeId)
+   ## NO GROUPS YET - user must push button to create default groups
+   <p><strong class="alert">This module has no groups. Please click to create default groups.</strong></p>
+   <p><input type="submit" value="Create default attribute groups" name="eventSubmit_doCreatedefaults" /></p>
+   #end
+#else
+
 <h3>Artifact instance "history" and "Comments" display options</h3>
 
 <p>
@@ -81,14 +89,6 @@ appear leading to a seperate page).
 most recent artifact instance comments (otherwise, a link will appear to
 a seperate page).
 </p>
-
-#if ($groups.isEmpty())
-   #if ($issueType.IssueTypeId)
-   ## NO GROUPS YET - user must push button to create default groups
-   <p><strong class="alert">This module has no groups. Please click to create default groups.</strong></p>
-   <p><input type="submit" value="Create default attribute groups" name="eventSubmit_doCreatedefaults" /></p>
-   #end
-#else
 
 ## LIST GROUPS
 
@@ -117,7 +117,7 @@ a seperate page).
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_group_$group.AttributeGroupId" /></td>
-  <td><a href="$link.setPage("admin,AttributeGroup.vm").addPathInfo("groupid", $group.AttributeGroupId)">$group.Name</a></td>
+  <td><a href="$link.setPage("admin,AttributeGroup.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId)">$group.Name</a></td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
   <td>
   #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
