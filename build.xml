@@ -591,6 +591,9 @@
     <jar jarfile="${tomcat.dist}/webapps/test.war"
          basedir="${tomcat.build}/webapps/test"
          includes="**"/>
+  </target>
+
+  <target name="watchdog.dist" depends="tests" >
     <jar jarfile="${tomcat.dist}/webapps/jsp-tests.war"
          basedir="${tomcat.build}/webapps/jsp-tests"
          includes="**"/>
