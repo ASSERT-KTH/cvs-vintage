@@ -136,7 +136,7 @@ public class ManagedAspectFactory extends JMXRegistered implements ManagedAspect
    /**
     * @jmx:managed-operation
     */
-   public void configure(Document source) throws Exception
+   public void configure(org.dom4j.Document source) throws Exception
    {
       aspectFactory.configure(source);
    }
@@ -150,7 +150,10 @@ public class ManagedAspectFactory extends JMXRegistered implements ManagedAspect
    
    /**
     * todo: implement this method correctly 
-    *     * @param value    * @return String    */
+    * 
+    * @param value
+    * @return String
+    */
    public String jmxEncode( String value ) {
    	return value;
    }
