@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -42,9 +42,6 @@ public abstract class BeanLockSupport
    /** Transaction holding lock on bean */
    protected Transaction tx = null;
  
-   /** Thread holding lock on bean */
-   protected Thread holdingThread = null;
-
    protected boolean synched = false;
 
    protected int txTimeout;
@@ -102,10 +99,12 @@ public abstract class BeanLockSupport
 
    public void deadlockDetection(Transaction miTx) throws Exception
    {
+      /* Just doesn't work with UserTransactions
       if (Thread.currentThread().equals(holdingThread))
       {
          throw new ApplicationDeadlockException("Application deadlock detected: Current thread already has tx lock in different transaction.", false);
       }
+      */
       if (miTx == null) return;
 
       HashSet set = new HashSet();

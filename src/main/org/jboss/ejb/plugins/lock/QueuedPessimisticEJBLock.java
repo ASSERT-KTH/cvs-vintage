@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -148,7 +148,6 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             return false;
          }
          setTransaction(transaction);
-         this.holdingThread = Thread.currentThread();
          return true;
       }
       finally
@@ -337,7 +336,6 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    
       // If we get here, this means that we have the txlock
       if (!wasScheduled) setTransaction(miTx);
-      this.holdingThread = Thread.currentThread();
       return wasScheduled;
    }
 
@@ -357,7 +355,6 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       }
 
       setTransaction(null);
-      this.holdingThread = null;
       this.isReadOnlyTxLock = true;
       // is there a waiting list?
       if (!txWaitQueue.isEmpty())
