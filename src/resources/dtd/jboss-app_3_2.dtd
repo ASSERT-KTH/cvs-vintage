@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!-- The JBoss 3.2.x specific elements for ears.
-$Id: jboss-app_3_2.dtd,v 1.1 2004/04/17 13:28:15 tdiesler Exp $
+$Id: jboss-app_3_2.dtd,v 1.2 2004/05/21 03:38:41 ejort Exp $
 
 DOCTYPE jboss-app
     PUBLIC "-//JBoss//DTD J2EE Application 1.3V2//EN"
@@ -10,7 +10,7 @@ DOCTYPE jboss-app
 
 <!-- The jboss-app element is the root element.
 -->
-<!ELEMENT jboss-app (loader-repository?, module*)>
+<!ELEMENT jboss-app (loader-repository?, jmx-name?, module*)>
 
 <!-- The loader-repository specifies the name of the UnifiedLoaderRepository
    MBean to use for the ear to provide ear level scoping of classes deployed
@@ -44,6 +44,14 @@ org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfigParser
 implementation to use to parse the loader-repository-config content.
 -->
 <!ATTLIST loader-repository-config configParserClass CDATA #IMPLIED>
+
+<!-- The jmx-name element allows one to specify the JMX ObjectName to use
+for the MBean associated with the ejb-jar module. This must be a unique
+name and valid JMX ObjectName string.
+
+   Used in: jboss-app
+-->
+<!ELEMENT jmx-name (#PCDATA)>
 
 <!-- The module element is used to specify a jboss specific module archive.
 -->
