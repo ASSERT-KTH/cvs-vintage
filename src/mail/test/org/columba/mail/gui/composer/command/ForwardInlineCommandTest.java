@@ -96,16 +96,14 @@ public class ForwardInlineCommandTest extends AbstractComposerTestCase {
         // model should contain the data
         ComposerModel model = command.getModel();
         List attachements = model.getAttachments();
-        
-        // TODO: fix testcase
-        /*
+ 
         assertEquals("There should be one attachement", 1, attachements.size());
         Object mimePart = attachements.get(0);
         assertEquals(
             "Should be type of StreamableMimePart",
             true,
             (mimePart instanceof InputStreamMimePart));
-            */
+           
 
     }
     
