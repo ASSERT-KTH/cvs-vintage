@@ -226,6 +226,26 @@
 #if ($comments.isEmpty() && !$canAddComment)
 $l10n.NoComments
 #else
+
+  #if ($canAddComment && !$isEditComments)
+   <h4>$l10n.EnterComment</h4>
+   <table cellspacing="2" cellpadding="3" border="0">
+     <tr>
+       <td>
+          #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
+          #textAreaLarge("$commentGroup.Data.Key" "")
+          #fieldErrorMsg($commentGroup.Data "")
+          <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
+       </td>
+     </tr>
+   </table>
+   <div class="functnbar3">
+      <input type="submit" value="$l10n.Save" name="eventSubmit_doSubmitcomment" />
+   </div>
+  #end
+
+
+
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
@@ -248,23 +268,6 @@ $l10n.NoComments
          <div align="right"><small>
          $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).setLabel("Edit comments").addPathInfo("edit_comments", true)
          </small></div>
-  #end
-
-  #if ($canAddComment && !$isEditComments)
-   <h4>$l10n.EnterComment</h4>
-   <table cellspacing="2" cellpadding="3" border="0">
-     <tr>
-       <td>
-          #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
-          #textAreaLarge("$commentGroup.Data.Key" "")
-          #fieldErrorMsg($commentGroup.Data "")
-          <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
-       </td>
-     </tr>
-   </table>
-   <div class="functnbar3">
-      <input type="submit" value="$l10n.Save" name="eventSubmit_doSubmitcomment" />
-   </div>
   #end
 
 #end
@@ -657,6 +660,5 @@ $l10n.NoDependencies
     <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
-
 
 #end
