@@ -8,11 +8,6 @@
 #set ($reason = $data.Parameters.getString("reason" , ""))
 #set ($mitList = $scarabR.CurrentMITList)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
-#if ($userAttrs.isEmpty())
- <p class="infomark"><em>$l10n.NoAssignableUserAttributes</em></p>
-#elseif ($issueListSize == 0)
- <p class="warningmark"><strong>$l10n.AssociateUsersAndIssues</strong></p>
-#else
 
 #printCollisionInfo()
 
@@ -114,6 +109,5 @@
 
 $intake.declareGroups()
 
-#end
 </div>
 </form>
