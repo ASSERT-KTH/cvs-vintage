@@ -583,7 +583,7 @@ public class ContextManager {
      */
     int processRequest( Request req ) {
 	req.setContextManager( this );
-	//	if(debug>0) log("ProcessRequest: "+req.toString());
+	if(debug>9) log("ProcessRequest: "+req.toString());
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
@@ -593,7 +593,7 @@ public class ContextManager {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
 	}
 
-	// if(debug>0) log("After processing: "+req.toString());
+	if(debug>9) log("After processing: "+req.toString());
 
 	return 0;
     }
@@ -750,6 +750,28 @@ public class ContextManager {
 	// assert urlPath!=null
 
 	// deal with paths with parameters in it
+	String contextPath=ctx.getPath();
+	String origPath=urlPath;
+
+	// append context path
+	if( !"".equals(contextPath) && !"/".equals(contextPath)) {
+	    if( urlPath.startsWith("/" ) )
+		urlPath=contextPath + urlPath;
+	    else
+		urlPath=contextPath + "/" + urlPath;
+	} else {
+	    // root context
+	    if( !urlPath.startsWith("/" ) )
+		urlPath= "/" + urlPath;
+	}
+
+	if( debug >4 ) log("createRequest " + origPath + " " + urlPath  );
+	return createRequest( urlPath );
+    }
+
+    /** Create a new sub-request, deal with query string
+     */
+    Request createRequest( String urlPath ) {
 	String queryString=null;
 	int i = urlPath.indexOf("?");
 	int len=urlPath.length();
@@ -758,17 +780,18 @@ public class ContextManager {
 		queryString =urlPath.substring(i + 1, urlPath.length());
 	    urlPath = urlPath.substring(0, i);
 	}
+	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 
 	/** Creates an "internal" request
 	 */
 	RequestImpl lr = new RequestImpl();
 	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
 	//lr.setRequestAdapter( reqA);
-	lr.setLookupPath( urlPath );
+	lr.setRequestURI( urlPath );
 	lr.setQueryString( queryString );
 	//	lr.processQueryString();
 
-	lr.setContext( ctx );
+	//	lr.setContext( ctx );
 	
 	// XXX set query string too 
 	return lr;
@@ -794,6 +817,10 @@ public class ContextManager {
     Logger cmLog = null;
     
     public final void doLog(String msg) {
+	doLog( msg, null);
+    }
+    
+    public final void doLog(String msg, Throwable t) {
 	if (firstLog == true) {
 	    cmLog = Logger.getLogger("tc_log");
 	    if( cmLog!= null ) {
@@ -804,10 +831,12 @@ public class ContextManager {
 	}
 
 	if (cmLog != null) {
-	    cmLog.log(msg + "\n");
+	    cmLog.log(msg + "\n", t, Logger.INFORMATION);
 	    // XXX \n should be added to logger, portable
 	} else {
 	    System.out.println(msg);
+	    if( t!=null ) 
+		t.printStackTrace( System.out );
 	}
     }
     

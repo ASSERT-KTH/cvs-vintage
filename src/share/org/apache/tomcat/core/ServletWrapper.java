@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.33 2000/03/23 23:34:36 costin Exp $
- * $Revision: 1.33 $
- * $Date: 2000/03/23 23:34:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.34 2000/03/29 23:31:04 costin Exp $
+ * $Revision: 1.34 $
+ * $Date: 2000/03/29 23:31:04 $
  *
  * ====================================================================
  *
@@ -373,8 +373,9 @@ public class ServletWrapper {
 		    loadServlet();
 		} catch(Exception ex ) {
 		    // return not found
+		    context.log( "Class Not Found", ex );
 		    res.setStatus( 404 );
-		    contextM.handleError( req, res, ex, 404 );
+		    contextM.handleError( req, res, null,  404 );
 		    return;
 		}
 	    }

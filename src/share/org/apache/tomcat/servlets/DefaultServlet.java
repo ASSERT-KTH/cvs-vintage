@@ -157,6 +157,7 @@ public class DefaultServlet extends HttpServlet {
 
 		    int index = requestURI.indexOf(contextPath);
 
+		    // Find the path relative to the context
 		    if (index > -1 ) {
 		        path = requestURI.substring(
 			    index + contextPath.length());
@@ -167,9 +168,9 @@ public class DefaultServlet extends HttpServlet {
 		    }
 
 		    if( debug > 0 ) contextF.log( "DefaultServlet: forward: "  + path + " " + welcomeFile);
-		    ServletContext context =
-		        getServletContext().getContext(contextPath);
-		    RequestDispatcher rd = context.getRequestDispatcher(
+		    // 		    ServletContext context =
+		    // 		        getServletContext().getContext(contextPath);
+		    RequestDispatcher rd = contextF.getRequestDispatcher(
 			path + welcomeFile);
 
 		    rd.forward(request, response);

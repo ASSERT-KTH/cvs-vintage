@@ -592,16 +592,22 @@ public class Context {
     /** Internal log method
      */
     public final void log(String msg) {
+	log(msg, null);
+    }
+
+    public void log(String msg, Throwable t) {
 	// XXX \n
 	// Custom output -
 	if( contextM == null ) {
 	    System.out.println( msg );
+	    if( t!=null ) 
+		t.printStackTrace(System.out);
 	    return;
 	}
 	if( msg.startsWith( "<l:" ))
-	    contextM.doLog( msg );
+	    contextM.doLog( msg, t );
 	else
-	    contextM.doLog("<l:ctx path=\"" + path  + "\" >" + msg + "</l:ctx>");
+	    contextM.doLog("<l:ctx path=\"" + path  + "\" >" + msg + "</l:ctx>", t);
     }
 
     boolean firstLog = true;
@@ -725,14 +731,10 @@ public class Context {
 	    // if we can't  return a servlet, so it's more probable
 	    // servlets will check for null than IllegalArgument
 	}
-	Request lr=contextM.createRequest( this, path );
+	// absolute path
+	Request lr=contextM.createRequest( path );
 	getContextManager().processRequest(lr);
         return lr.getContext();
-    }
-
-    public void log(String msg, Throwable t) {
-	System.err.println(msg);
-	t.printStackTrace(System.err);
     }
 
     /**
@@ -760,7 +762,8 @@ public class Context {
 	    mappedPath = mappedPath.substring(this.getPath().length());
 	}
 
-	String realPath= this.getDocBase() + mappedPath;
+	Context targetContext=req.getContext();
+	String realPath= targetContext.getDocBase() + mappedPath;
 
 	if (!FileUtil.isAbsolute(realPath))
 	    realPath = contextM.getHome() + "/" + realPath;

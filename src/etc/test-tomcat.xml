@@ -370,21 +370,21 @@
            returnCode="HTTP/1.0 200 OK"
     />
 
-   <gtest request="GET /test/jsp/extend1.jsp HTTP/1.0"
+   <gtest request="GET /test/jsp/extends1.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
            magnitude="false" 
     />
 
-   <gtest request="GET /test/jsp/extend2.jsp HTTP/1.0"
+   <gtest request="GET /test/jsp/extends2.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
            magnitude="false" 
     />
 
-   <gtest request="GET /test/jsp/extend3.jsp HTTP/1.0"
+   <gtest request="GET /test/jsp/extends3.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
     />
 
-   <gtest request="GET /test/jsp/extend4.jsp HTTP/1.0"
+   <gtest request="GET /test/jsp/extends4.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
     />
 
@@ -618,10 +618,11 @@
              returnCode="HTTP/1.0 200 OK"
             />
 
-      <gtest request="POST /test/servlet/request.EchoServlet    HTTP/4.4"
+      <!-- Can't be OK - we don't implement HTTP/4.4 
+       gtest request="POST /test/servlet/request.EchoServlet  HTTP/4.4"
              content="name=lightness of being"
              returnCode="HTTP/1.0 200 OK"
-            />
+            / -->
    </target>
 
 
