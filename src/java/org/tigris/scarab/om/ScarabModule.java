@@ -97,7 +97,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.73 2001/11/19 22:17:07 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.74 2001/11/26 23:19:11 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -191,7 +191,7 @@ public class ScarabModule
                 // FIXME: this should be done with a method in ModuleEntity
                 // that takes the two criteria values as a argument so that other 
                 // implementations can benefit from being able to get the 
-                // list of modules.
+                // list of modules. -- do not agree - jdm
                 List result = (List) ScarabModulePeer.doSelect(crit);
                 if (result.size() > 0)
                 {
@@ -211,24 +211,6 @@ public class ScarabModule
 
                     setCode(getParent().getCode());
                 }
-
-                    // try to insert a row into the id_table just to be safe.
-                    try
-                    {
-                        // FIXME: UGLY! IDBroker doesn't have a Peer yet.
-                        String sql = "insert into " + 
-                            IDBroker.TABLE_NAME.substring(0, 
-                                IDBroker.TABLE_NAME.indexOf('.')) + 
-                            " set " +   IDBroker.TABLE_NAME + "='" + 
-                            getCode() + "'," +
-                                     IDBroker.NEXT_ID  + "=1," + 
-                                     IDBroker.QUANTITY  + "=1";
-                        BasePeer.executeStatement(sql);
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
 
                 // need to do this before the relationship save below
                 // in order to set the moduleid for the new module.

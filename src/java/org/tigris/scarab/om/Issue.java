@@ -62,6 +62,8 @@ import org.apache.torque.util.Criteria;
 import org.apache.commons.util.SequencedHashtable;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
+import org.apache.torque.oid.IDBroker;
+import org.apache.torque.util.BasePeer;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -946,29 +948,81 @@ public class Issue
             }
         }
 
-        // set the issue id
         if ( isNew() ) 
         {
-            String prefix = getModule().getCode();
-
-            /* thinking of keeping this in separate column
-            String instanceCode = TurbineResources
-                .getString(ScarabConstants.INSTANCE_NAME);
-            if ( instanceCode != null && instanceCode.length() > 0 ) 
-            {
-                prefix = instanceCode + "-" + prefix;
-            }
-            */
-
-            DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
-            Connection con = dbCon.getConnection();
-            int numId = dbMap.getIDBroker().getIdAsInt(con, prefix);
-
-            setIdPrefix(prefix);
-            setIdCount(numId);
+            // set the issue id
+            ModuleEntity module = getModule();
+            setIdDomain(module.getDomain());
+            setIdPrefix(module.getCode());
+            setIdCount(getNextIssueId(dbCon.getConnection()));
         }
-
         super.save(dbCon);
+    }
+
+
+    private int getNextIssueId(Connection con)
+        throws Exception
+    {
+        int id = -1;
+        String key = getIdTableKey();
+        DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
+        try
+        {
+            id = dbMap.getIDBroker().getIdAsInt(con, key);
+        }
+        catch (Exception e)
+        {
+            synchronized (this)
+            {
+                try
+                {
+                    id = dbMap.getIDBroker().getIdAsInt(con, key);
+                }
+                catch (Exception e3)
+                {
+                    // a module code entry in the id_table was likely not 
+                    // entered, insert a row into the id_table and try again.
+                    try
+                    {
+                        saveIdTableKey(dbMap.getName());
+                        id = dbMap.getIDBroker().getIdAsInt(con, key);
+                    }
+                    catch (Exception e2)
+                    {
+                        // throw the original
+                        throw e;
+                    }
+                }
+            }
+        }
+        return id;
+    }
+
+    private String getIdTableKey()
+        throws Exception
+    {
+        ModuleEntity module = getModule();        
+        String prefix = module.getCode();
+
+        String domain = module.getDomain();            
+        if ( domain != null && domain.length() > 0 ) 
+        { 
+            prefix = domain + "-" + prefix;
+        }
+        return prefix;
+    }
+
+    private void saveIdTableKey(String dbName)
+        throws Exception
+    {
+        String key = getIdTableKey();
+
+        // FIXME: UGLY! IDBroker doesn't have a Peer yet.
+        String sql = "insert into " + 
+            IDBroker.TABLE_NAME.substring(0, IDBroker.TABLE_NAME.indexOf('.'))
+            + " set " +   IDBroker.TABLE_NAME + "='" + key + "'," +
+            IDBroker.NEXT_ID  + "=1," + IDBroker.QUANTITY  + "=1";
+        BasePeer.executeStatement(sql, dbName);
     }
 
 
