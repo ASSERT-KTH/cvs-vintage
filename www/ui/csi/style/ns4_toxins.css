@@ -30,7 +30,7 @@ table, th, td	{
 	border: none
 	}
 .alert { 
-	border: solid 1px #ccc;
+	border: solid 1px red;
 	padding: .3em;
 	}
 #leftcol div div {
