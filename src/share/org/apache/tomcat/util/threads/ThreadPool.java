@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.11 2000/07/11 03:49:05 alex Exp $
- * $Revision: 1.11 $
- * $Date: 2000/07/11 03:49:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.1 2000/08/28 03:14:09 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/08/28 03:14:09 $
  *
  * ====================================================================
  *
@@ -61,7 +61,7 @@
  *
  */
 
-package org.apache.tomcat.util;
+package org.apache.tomcat.util.threads;
 
 import java.util.zip.*;
 import java.net.*;

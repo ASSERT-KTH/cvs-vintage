@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,80 +55,31 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
-
-
-package org.apache.tomcat.util;
-
-import org.apache.tomcat.util.*;
-
-/**
- * The reaper is a background thread with which ticks every minute
- * and calls registered objects to allow reaping of old session
- * data.
- * 
- * @author James Duncan Davidson [duncan@eng.sun.com]
- * @author Costin Manolache
  */
-public class Reaper extends Thread {
 
-    public Reaper() {
-	this.setDaemon(true);
-	this.setName("TomcatReaper");
-    }
+package org.apache.tomcat.util.threads;
 
-    private int interval = 1000 * 60; //ms
+import java.util.zip.*;
+import java.net.*;
+import java.util.*;
+import java.io.*;
+
+/** Implemented if you want to run a piece of code inside a thread pool.
+ */
+public interface ThreadPoolRunnable {
+    // XXX use notes or a hashtable-like
+    // Important: ThreadData in JDK1.2 is implemented as a Hashtable( Thread -> object ),
+    // expensive.
     
-    // XXX TODO Allow per/callback interval, find next, etc
-    // Right now the "interval" is used for all callbacks
-    // and it represent a sleep between runs.
-    
-    ThreadPoolRunnable cbacks[]=new ThreadPoolRunnable[30]; // XXX max
-    Object tdata[][]=new Object[30][]; // XXX max
-    int count=0;
-
-    /** Adding and removing callbacks is synchronized
+    /** Called when this object is first loaded in the thread pool.
+     *  Important: all workers in a pool must be of the same type,
+     *  otherwise the mechanism becomes more complex.
      */
-    Object lock=new Object();
-    static boolean running=true;
-    
-    public int addCallback( ThreadPoolRunnable c, int interval ) {
-	synchronized( lock ) {
-	    cbacks[count]=c;
-	    count++;
-	    return count-1;
-	}
-    }
+    public Object[] getInitData();
 
-    public void removeCallback( int idx ) {
-	synchronized( lock ) {
-	    count--;
-	    cbacks[idx]=cbacks[count];
-	    cbacks[count]=null;
-	}
-    }
+    /** This method will be executed in one of the pool's threads. The
+     *  thread will be returned to the pool.
+     */
+    public void runIt(Object thData[]);
 
-    public void stopReaper() {
-	running=false;
-	this.notify();
-    }
-    
-    public void run() {
-	while (running) {
-	    try {
-		this.sleep(interval);
-	    } catch (InterruptedException ie) {
-		// sometimes will happen
-	    }
-	    
-	    for( int i=0; i< count; i++ ) {
-		ThreadPoolRunnable callB=cbacks[i];
-		// it may be null if a callback is removed.
-		//  I think the code is correct
-		if( callB!= null ) {
-		    callB.runIt( tdata[i] );
-		}
-	    }
-	}
-    }
 }

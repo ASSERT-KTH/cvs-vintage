@@ -479,7 +479,7 @@ public class ContextManager implements LogAware{
 	if( context==null ) return;
 
 	log( "Removing context " + context.toString());
-
+	
 	ContextInterceptor cI[]=getContextInterceptors(context);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContext( this, context );
@@ -487,6 +487,7 @@ public class ContextManager implements LogAware{
 
 	shutdownContext( context );
 	contextsV.removeElement(context);
+	contexts.remove(context.getPath());
     }
 
     public void doReload( Request req, Context context )
@@ -1329,17 +1330,7 @@ public class ContextManager implements LogAware{
     public void removeContext(String name) throws TomcatException {
 	loghelper.log("removeContext(String) is deprecated", new Throwable("trace"), Logger.DEBUG);
 	Context context = (Context)contexts.get(name);
-	log( "Removing context " + context.toString());
-
-	ContextInterceptor cI[]=getContextInterceptors(context);
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].removeContext( this, context );
-	}
-
-	if(context != null) {
-	    shutdownContext( context );
-	    contexts.remove(name);
-	}
+	removeContext( context);
     }
 
     public void doPreServletInit(Context ctx, Handler sw)

@@ -259,7 +259,8 @@ public class Main {
 
 	    // Add tools.jar if JDK1.2
 	    String java_home=System.getProperty( "java.home" );
-	    urls[jarCount]= new URL( "file", null , java_home + "/../lib/tools.jar");
+	    urls[jarCount]= new URL( "file", null , java_home +
+				     "/../lib/tools.jar");
 	    System.out.println( "Add to CP: " + urls[jarCount] );
 	    
 	    ClassLoader parentL=this.getClass().getClassLoader();
@@ -325,13 +326,27 @@ public class Main {
     }
 
     // -------------------- Command-line args processing --------------------
+    static class Arg {
+	String name;
+	String aliases[];
+	int args;
+
+	boolean task;
+
+
+    }
+    String args0[]= { "help", "stop" };
+    String args1[]= { "f", "config", "h", "home" };
+
     /** Read command line arguments and set properties in proxy,
 	using ant-like patterns
     */
     void processArgs(Object proxy, String args[] ) {
 
 	for( int i=0; i< args.length; i++ ) {
-	    
+	    String arg=args[i];
+
+
 	    
 	}
     }

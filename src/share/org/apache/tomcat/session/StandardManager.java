@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.13 2000/08/22 06:56:55 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/08/22 06:56:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.14 2000/08/28 03:14:03 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/08/28 03:14:03 $
  *
  * ====================================================================
  *
@@ -103,7 +103,7 @@ import org.apache.tomcat.core.Request;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.13 $ $Date: 2000/08/22 06:56:55 $
+ * @version $Revision: 1.14 $ $Date: 2000/08/28 03:14:03 $
  */
 public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables
@@ -155,7 +155,7 @@ public final class StandardManager implements Runnable  {
     /**
      * The background thread completion semaphore.
      */
-    private boolean threadDone = false;
+    private transient boolean  threadDone = false;
 
     /**
      * Name to register for the background thread.
@@ -413,7 +413,6 @@ public final class StandardManager implements Runnable  {
     public void stop() {
 	// Stop the background reaper thread
 	threadStop();
-
 	// Expire all active sessions
 	HttpSession sessions[] = findSessions();
 	for (int i = 0; i < sessions.length; i++) {
@@ -422,7 +421,6 @@ public final class StandardManager implements Runnable  {
 		continue;
 	    session.expire();
 	}
-
     }
     // -------------------------------------------------------- Package Methods
 
@@ -479,6 +477,9 @@ public final class StandardManager implements Runnable  {
 	}
     }
 
+    final boolean isDone() {
+	return threadDone;
+    }
 
     /**
      * Sleep for the duration specified by the <code>checkInterval</code>
@@ -487,9 +488,11 @@ public final class StandardManager implements Runnable  {
     private void threadSleep() {
 
 	try {
+	    //	    System.out.println("s" + threadDone+ " "  + isDone());
 	    Thread.sleep(checkInterval * 1000L);
+	    //System.out.println("S");
 	} catch (InterruptedException e) {
-	    ;
+	    //System.out.println("SS " + threadDone);
 	}
 
     }
@@ -523,12 +526,21 @@ public final class StandardManager implements Runnable  {
 
 	threadDone = true;
 	thread.interrupt();
+	/* Under certain JITs ( probably as a result of
+	   over-optimization ) threadDone will not be
+	   updated for a while.
+	   It is probably a bug ( but I'm not sure about it! )
+           ( so far IBM JDK1.3 had this problem, and
+	   something similar ( a bit harder to reproduce )
+	   seems to happen under hotspot - I'm not very sure
+	   about it)
 	try {
-	    thread.join();
+	     thread.join();
 	} catch (InterruptedException e) {
 	    ;
 	}
-
+	*/
+	
 	thread = null;
 
     }
@@ -544,6 +556,7 @@ public final class StandardManager implements Runnable  {
 
 	// Loop until the termination semaphore is set
 	while (!threadDone) {
+	    //System.out.println( threadDone + " " + isDone());
 	    threadSleep();
 	    processExpires();
 	}

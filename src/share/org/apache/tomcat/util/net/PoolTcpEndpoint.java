@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.1 2000/08/14 21:54:37 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/08/14 21:54:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.2 2000/08/28 03:14:07 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/08/28 03:14:07 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@
 package org.apache.tomcat.util.net;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;

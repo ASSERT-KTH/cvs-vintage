@@ -148,7 +148,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 		    ctx1.addHostAlias( (String)e.nextElement());
 
 		cm.removeContext( ctx );
-		
+
 		cm.addContext( ctx1 );
 
 		cm.initContext( ctx1 );
