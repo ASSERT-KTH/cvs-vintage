@@ -1124,9 +1124,10 @@ public class ContextManager {
 
     // -------------------- Logging and debug --------------------
     boolean firstLog = true;
-    Logger cmLog = null;
+    LogHelper loghelper = new LogHelper("tc_log", "ContextManager");
     
-
+    // Not used, except in server.xml, and usage is unclear -- should
+    // we kill it? Looks very obsolete.
     public void addLogger(Logger l) {
 	// Will use this later once I feel more sure what I want to do here.
 	// -akv
@@ -1156,35 +1157,23 @@ public class ContextManager {
     }
     
     public final void log(String msg) {
-	doLog( msg );
+	loghelper.log(msg);
     }
 
     private final void logInt(String msg) {
-	doLog( "CM: " + msg );
+	loghelper.log(msg);
     }
 
     public final void doLog(String msg) {
-	doLog( msg, null);
+	loghelper.log(msg);
     }
     
     public final void doLog(String msg, Throwable t) {
-	if (firstLog == true) {
-	    cmLog = Logger.getLogger("tc_log");
-	    if( cmLog!= null ) {
-		cmLog.setCustomOutput("true");
-		cmLog.setVerbosityLevel(Logger.INFORMATION);
-	    }
-	    firstLog = false;
-	}
+	loghelper.log(msg, t);
+    }
 
-	if (cmLog != null) {
-	    cmLog.log(msg + "\n", t, Logger.INFORMATION);
-	    // XXX \n should be added to logger, portable
-	} else {
-	    System.out.println(msg);
-	    if( t!=null ) 
-		t.printStackTrace( System.out );
-	}
+    public final void doLog(String msg, Throwable t, int level) {
+	loghelper.log(msg, t, level);
     }
 
     // -------------------- Accounting --------------------
