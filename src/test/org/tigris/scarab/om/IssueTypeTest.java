@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTypeTest.java,v 1.2 2002/09/11 21:32:22 elicia Exp $
+ * @version $Id: IssueTypeTest.java,v 1.3 2002/09/11 21:43:08 elicia Exp $
  */
 public class IssueTypeTest extends BaseTestCase
 {
@@ -176,8 +176,8 @@ public class IssueTypeTest extends BaseTestCase
     private void testGetRIssueTypeAttribute() throws Exception
     {
         System.out.println("\ntestGetRIssueTypeAttribute()");
-        System.out.println(issueType.getRIssueTypeAttribute(platformAttribute));
-        System.out.println(issueType.getRIssueTypeAttribute(assignAttribute));
+        System.out.println(issueType.getRIssueTypeAttribute(getPlatformAttribute()));
+        System.out.println(issueType.getRIssueTypeAttribute(getAssignAttribute()));
     }
 
     private void testGetUserAttributes() throws Exception
@@ -189,7 +189,7 @@ public class IssueTypeTest extends BaseTestCase
     private void testGetRIssueTypeOptions() throws Exception
     {
         System.out.println("\ntestGetIssueTypeOptions()");
-        assertEquals(issueType.getRIssueTypeOptions(platformAttribute, false).size(), 8);
+        assertEquals(issueType.getRIssueTypeOptions(getPlatformAttribute(), false).size(), 8);
     }
 
     private void testGetAvailableAttributes() throws Exception
