@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.46 $" />  
+     <property name="revision" value="$Revision: 1.47 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -471,10 +471,17 @@
 
       <httpClient>
           <comment>Get a session and then include a JSP.</comment>
-          <httpRequest path="/test/servlet/dispatch.IncludeJspWithSession HTTP/1.0" />
+          <httpRequest path="/test/servlet/dispatch.IncludeJspWithSession" />
           <httpStatusMatch match="200" />
           <responseMatch match="This is an inner file"/>
           <headerMatch name="Set-Cookie" value="JSESSIONID=" />
+      </httpClient>
+
+      <httpClient>
+          <comment>Include a JSP which uses a taglib.</comment>
+          <httpRequest path="/test/servlet/dispatch.IncludeJspWithTaglib" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="This is a taglib test"/>
       </httpClient>
 
     </target>
@@ -1186,13 +1193,13 @@ mod_webapp into mod_jk )
           <httpStatusMatch match="200"/>
           <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
-      <httpClient >
+      <httpClient unless="not.standalone" >
           <httpRequest path="/test/jsp/ShowPathInfo.jsp/." 
 		      method="GET" />
           <httpStatusMatch match="200"/>
           <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
-      <httpClient >
+      <httpClient unless="not.standalone" >
           <httpRequest path="/test/jsp/ShowPathInfo.jsp/foo/.." 
 		      method="GET" />
           <httpStatusMatch match="200"/>
@@ -1204,26 +1211,17 @@ mod_webapp into mod_jk )
 		      method="GET" />
           <httpStatusMatch match="404"/>
       </httpClient>
-<!-- Removed: I see no valid reason for those requests to pass, Apache doesn't 
-    like this, and it's certainly too strange and on the limit 
-      <httpClient >
-          <httpRequest path="/test/jsp/ShowPathInfo.jsp;jsessionid=%25%2E%2F%5C" 
-		      method="GET" />
-          <httpStatusMatch match="200"/>
-          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
-      </httpClient>
-      <httpClient >
-          <httpRequest path="/test/js%70/ShowPathInfo.jsp;jsessionid=%25%2E%2F%5C" 
-		      method="GET" />
-          <httpStatusMatch match="200"/>
-          <responseMatch match="getRequestURI: /test/js%70/ShowPathInfo.jsp"/>
-      </httpClient>
--->
       <httpClient >
           <httpRequest path="/test/jsp/ShowPathInfo.jsp;jsessionid=123" 
 		      method="GET" />
           <httpStatusMatch match="200"/>
           <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/HelloWorld%2Ejsp" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <goldenMatch file="${gdir}/HelloWorld.txt" />
       </httpClient>
    </target>
 
@@ -1311,10 +1309,6 @@ mod_webapp into mod_jk )
 
       <gtest description="This URL should return 403 Forbidden"
            request="GET /test/jsp/HelloWorld.js%2570 HTTP/1.0"
-           returnCode="${http.protocol} 40" 
-      />
-      <gtest description="This URL should return 403 Forbidden"
-           request="GET /test/jsp/HelloWorld%2Ejsp HTTP/1.0"
            returnCode="${http.protocol} 40" 
       />
 
