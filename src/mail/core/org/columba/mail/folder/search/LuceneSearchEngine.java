@@ -58,6 +58,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author timo
@@ -132,7 +133,7 @@ public class LuceneSearchEngine
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 				null,
-				e.getMessage(),
+				e.getLocalizedMessage(),
 				"Error while creating Lucene Index",
 				JOptionPane.ERROR_MESSAGE);
 		}
@@ -283,7 +284,7 @@ public class LuceneSearchEngine
 
 		ListTools.substract(result, deleted);
 
-		if( checkResult(result, worker) == false ) {
+		if(!checkResult(result, worker)) {
 			// Search again
 			result = search(query);
 			ListTools.substract(result, deleted);
@@ -411,7 +412,9 @@ public class LuceneSearchEngine
 		IndexReader ramReader = getRAMReader();
 		IndexReader fileReader = getFileReader();
 
-		ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
+                }
 
 		/*
 		Document doc;
@@ -459,7 +462,6 @@ public class LuceneSearchEngine
 			mergeRAMtoIndex();
 			operationCounter = 0;
 		}
-
 	}
 
 	/**
@@ -513,7 +515,10 @@ public class LuceneSearchEngine
 		DataStorageInterface ds = ((LocalFolder)folder).getDataStorageInstance();
 		HeaderList hl = ((LocalFolder)folder).getHeaderList(wc);
 
-		wc.setDisplayText("Syncing Lucene Index");
+		wc.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "lucene_sync"));
 		wc.setProgressBarValue(0);
 
 		try {
@@ -550,9 +555,11 @@ public class LuceneSearchEngine
 			writer.close();
 
 		} catch (Exception e) {
-			ColumbaLogger.log.error(
-				"Creation of Lucene Index failed :" + e.getLocalizedMessage());
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.error(
+                                    "Creation of Lucene Index failed :" + e.getLocalizedMessage());
+                        }
+                        //show neat error dialog here
 		}
 	}
-
 }
