@@ -13,26 +13,21 @@ import java.net.URL;
 
 import javax.management.ObjectName;
 
-import org.jboss.util.SafeObjectNameFactory;
+import org.jboss.util.ObjectNameFactory;
 
 /**
  * The JMX MBean interface for the <tt>ServerConfig</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface ServerConfigMBean
 {
    /** The default object name. */
-   ObjectName OBJECT_NAME = SafeObjectNameFactory.create("jboss.system", 
-                                                         "service", 
-                                                         "ServerConfig");
-   /**
-    * Get the JMX domain for which the system is bound under.
-    *
-    * @return    JMX domain name.
-    */
-   String getDomain();
+   ObjectName OBJECT_NAME =
+      ObjectNameFactory.create("jboss.system", 
+                               "service", 
+                               "ServerConfig");
 
    /**
     * Get the configuration name of the server.
@@ -56,11 +51,11 @@ public interface ServerConfigMBean
    File getTempDir();
 
    /**
-    * Get the directory where local state data will be stored.
+    * Get the directory where local data will be stored.
     *
-    * @return    The directory where the server stores local state data.
+    * @return    The directory where the server stores local data.
     */
-   File getStateDataDir();
+   File getDataDir();
    
    /**
     * Get the installation URL for the server.

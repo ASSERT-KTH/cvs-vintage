@@ -7,17 +7,24 @@
 
 package org.jboss.system;
 
-import java.util.Map;
 import java.util.Date;
+
+import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
 
 /**
  * The JMX MBean interface for the <tt>Server</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface ServerMBean
 {
+   /** The default JMX object name for this MBean. */
+   ObjectName OBJECT_NAME =
+      ObjectNameFactory.create("jboss.system", "service", "Server");
+   
    //
    // Should eventually expose init, start & stop to allow admin clients
    // to manage the state of the server dynamically.

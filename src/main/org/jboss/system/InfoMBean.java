@@ -9,6 +9,10 @@ package org.jboss.system;
 
 import java.util.Map;
 
+import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
+
 /**
  * The management interface for the Info bean.
  *      
@@ -16,28 +20,42 @@ import java.util.Map;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleurY@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface InfoMBean
 {
-   String OBJECT_NAME = ":service=Info";
+   /** The default JMX object name for this MBean. */
+   ObjectName OBJECT_NAME =
+      ObjectNameFactory.create("jboss.system", "service", "Info");
 
-   /** InetAddress.getLocalHost().getHostName();
+   /**
+    * InetAddress.getLocalHost().getHostName();
     */
    String getHostName();
-   /** Returns InetAddress.getLocalHost().getHostAddress();
+   
+   /**
+    * Returns InetAddress.getLocalHost().getHostAddress();
     */
    String getHostAddress();
-   /** Return the total memory and free memory from Runtime
+   
+   /**
+    * Return the total memory and free memory from Runtime
     */
    String listMemoryUsage();
-   /** Return a listing of the active threads and thread groups.
+   
+   /**
+    * Return a listing of the active threads and thread groups.
     */
    String listThreadDump();
-   /** Display the java.lang.Package info for the pkgName */
+   
+   /**
+    * Display the java.lang.Package info for the pkgName
+    */
    String displayPackageInfo(String pkgName);
-   /** Return a Map of System.getProperties() with a toString implementation
-    *that provides an html table of the key/value pairs
+   
+   /**
+    * Return a Map of System.getProperties() with a toString implementation
+    * that provides an html table of the key/value pairs
     */
    Map showProperties();   
 }

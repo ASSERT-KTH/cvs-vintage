@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.55 2002/02/12 06:51:17 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.56 2002/02/13 04:22:31 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -531,7 +531,7 @@
         <include name="org/jboss/deployment/DeploymentException.class"/>
 
         <!-- Included as a duplicate class to allow core components to use it. -->
-        <include name="org/jboss/util/SafeObjectNameFactory.class"/>
+        <include name="org/jboss/util/ObjectNameFactory.class"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="org/jboss/version.properties"/>
