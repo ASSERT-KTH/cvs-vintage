@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.22 2000/02/12 03:38:50 costin Exp $
- * $Revision: 1.22 $
- * $Date: 2000/02/12 03:38:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.23 2000/02/13 01:43:41 costin Exp $
+ * $Revision: 1.23 $
+ * $Date: 2000/02/13 01:43:41 $
  *
  * ====================================================================
  *
@@ -210,12 +210,6 @@ public class ServletWrapper {
 	initArgs.put( name, value );
     }
     
-    /** @deprecated
-     */
-    void setInitArgs(Hashtable initArgs) {
-        config.setInitArgs(initArgs);
-    }
-
     void destroy() {
 	if (servlet != null) {
 	    synchronized (this) {

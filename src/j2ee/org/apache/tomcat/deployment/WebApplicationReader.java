@@ -777,8 +777,8 @@ public class WebApplicationReader {
 	    if (webComponentDescriptor instanceof ServletDescriptor) {
 		resourceName =
 		    ((ServletDescriptor)webComponentDescriptor).getClassName();
-
-		if ( ctx.containsServletByName(name)) {
+		
+		if ( ctx.getServletByName(name) != null) {
 // 		    String msg = sm.getString("context.dd.dropServlet",
 // 					      name + "(" + resourceName + ")" );
 		    
@@ -801,17 +801,31 @@ public class WebApplicationReader {
 		    resourceName = "/" + resourceName;
 		}
 
-		if (ctx.containsJSP(resourceName)) {
+		
+		if (containsJSP(ctx, resourceName)) {
 // 		    String msg = sm.getString("context.dd.dropServlet",
 // 					      resourceName);
 
 // 		    System.out.println(msg);
 		    
 		    removeResource = true;
-		    ctx.removeJSP(resourceName);
+		    Enumeration enum = ctx.getServletNames();
+		    while (enum.hasMoreElements()) {
+			String key = (String)enum.nextElement();
+			ServletWrapper sw = ctx.getServletByName(key);
+			if(resourceName.equals( (sw).getPath())) {
+			    ctx.removeServletByName( sw.getServletName() );
+			}
+		    }
 		}
 
-		ctx.addJSP(name, resourceName, description);
+		ServletWrapper wrapper = new ServletWrapper();
+		wrapper.setContext(ctx);
+		wrapper.setServletName(name);
+		wrapper.setServletDescription(description);
+		wrapper.setPath(resourceName);
+
+		ctx.addServlet(wrapper);
 	    }
 
 
@@ -827,19 +841,20 @@ public class WebApplicationReader {
 
 	    Enumeration enum =
 	        webComponentDescriptor.getInitializationParameters();
-	    Hashtable initializationParameters = new Hashtable();
+
+	    String cName=webComponentDescriptor.getCanonicalName();
+	    ServletWrapper sw=ctx.getServletByName( cName );
 
 	    while (enum.hasMoreElements()) {
 	        InitializationParameter initializationParameter =
 		    (InitializationParameter)enum.nextElement();
 
-		initializationParameters.put(
-		    initializationParameter.getName(),
-		    initializationParameter.getValue());
+		if (sw != null) {
+		    sw.addInitParam(initializationParameter.getName(),
+				    initializationParameter.getValue());
+		}
 	    }
 
-	    ctx.setServletInitParams( webComponentDescriptor.getCanonicalName(),
-				 initializationParameters);
 
 	    enum = webComponentDescriptor.getUrlPatterns();
 
@@ -851,9 +866,9 @@ public class WebApplicationReader {
 		    mapping = "/" + mapping;
 		}
 
-		if (! ctx.containsServlet(mapping) &&
-		    ! ctx.containsJSP(mapping)) {
-		    if (ctx.containsMapping(mapping)) {
+		if (! containsServlet(ctx, mapping) &&
+		    ! containsJSP(ctx, mapping)) {
+		    if (ctx.getServletMapping(mapping)!=null) {
 // 		        String msg = sm.getString("context.dd.dropMapping",
 // 			    mapping);
 
@@ -907,4 +922,33 @@ public class WebApplicationReader {
 	    ctx.addErrorPage(key, errorPageDescriptor.getLocation());
 	}
     }
+
+    private boolean containsJSP( Context ctx, String path) {
+	Enumeration enum = ctx.getServletNames();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = ctx.getServletByName(key);
+
+	    if( path.equals( (sw).getPath()))
+		return true;
+	}
+	return false;
+    }
+
+    
+    /** True if we have a servlet with className.
+     */
+    public boolean containsServlet(Context ctx, String className) {
+	Enumeration enum = ctx.getServletNames();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = ctx.getServletByName(key);
+            if (className.equals(sw.getServletClass()))
+	        return true;
+	}
+	return false;
+    }
+
 }

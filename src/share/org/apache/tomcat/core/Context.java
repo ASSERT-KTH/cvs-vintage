@@ -707,44 +707,6 @@ public class Context {
 
     // --------------------
 
-    
-    /** Add a jsp to the "pre-defined" list ( used by web.xml )
-     *  @deprecated Create a Wrapper and use add Servlet 
-     */
-    public void addJSP(String name, String path, String description) {
-        // XXX
-        // check for duplicates!
-
-	//        JspWrapper wrapper = new JspWrapper(this);
-	ServletWrapper wrapper = new ServletWrapper(this);
-
-	wrapper.setServletName(name);
-	wrapper.setServletDescription(description);
-	wrapper.setPath(path);
-
-	servlets.put(name, wrapper);
-    }
-
-    /** True if we have a servlet with className.
-     */
-    public boolean containsServlet(String className) {
-	Enumeration enum = servlets.keys();
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-            if (className.equals(sw.getServletClass()))
-	        return true;
-	}
-	return false;
-    }
-
-    /** Check if we have a servlet with the specified name
-     */
-    public boolean containsServletByName(String name) {
-	return (servlets.containsKey(name));
-    }
-
-    // XXX use external iterator 
     /** Remove all servlets with a specific class name
      */
     void removeServletByClassName(String className)
@@ -772,52 +734,7 @@ public class Context {
 	}
     }
 
-    /** @deprecated use getServletByPath or getJsp
-     */
-    public boolean containsJSP(String path) {
-	Enumeration enum = servlets.keys();
-
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-
-	    //	    if( (sw instanceof JspWrapper ) &&
-	    if( path.equals( (sw).getPath()))
-		return true;
-	}
-	return false;
-    }
-
-    /** Will remove a JSP from the list of "declared" jsps.
-     *  Called only by deployment descriptor - to deal with
-     *  duplicated mappings -
-     *  XXX Find out if we really need that - it can be avoided!
-     * @deprecated Use removeServlet and findServletByPath or ByName
-     */
-    public void removeJSP(String path)
-	throws TomcatException
-    {
-	Enumeration enum = servlets.keys();
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-	    //	    if( (sw instanceof JspWrapper ) &&
-	    if(path.equals( (sw).getPath())) {
-		servlets.remove( sw.getServletName() );
-		contextM.removeServlet( this, sw );
-	    }
-	}
-    }
-
-    /** @deprecated use the method of servletWrapper
-     */
-    public void setServletInitParams(String name, Hashtable initParams) {
-	ServletWrapper wrapper = (ServletWrapper)servlets.get(name);
-	if (wrapper != null) {
-	    wrapper.setInitArgs(initParams);
-	}
-    }
-
+    // -------------------- Mappings
     
     /**
      * Maps a named servlet to a particular path or extension.
@@ -866,8 +783,9 @@ public class Context {
 	return mappings.keys();
     }
 
-    public ServletWrapper getServletMapping( String path ) {
-	return (ServletWrapper)mappings.get(path);
+    public ServletWrapper getServletMapping( String mapping ) {
+        mapping = mapping.trim();
+	return (ServletWrapper)mappings.get(mapping);
     }
 
     public void removeMapping( String path ) {
@@ -887,9 +805,7 @@ public class Context {
 	    }
 	}
     }
-    
-    // -------------------- deprecated code
-    
+
     public ServletWrapper getDefaultServlet() {
 	if( defaultServlet==null)
 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
@@ -898,12 +814,9 @@ public class Context {
 	
 	return defaultServlet;
     }
-    
-    public boolean containsMapping(String mapping) {
-        mapping = mapping.trim();
-	return mappings.containsKey( mapping );
-    }
 
+    // -------------------- Servlets management --------------------
+    
     public ServletWrapper getServletByName(String servletName) {
 	return (ServletWrapper)servlets.get(servletName);
     }
