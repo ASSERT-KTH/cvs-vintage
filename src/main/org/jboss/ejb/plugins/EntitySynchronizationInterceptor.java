@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -92,6 +92,10 @@ import org.jboss.util.Sync;
  *   <li>Moved policy to pluggable framework. Work through the interface of the lock only
  *   Use of "endTransaction" and "wontSynchronize" to communicate with the lock
  * </ol>
+ * <p><b>2001/08/07: billb</b>
+ * <ol>
+ *   <li>Moved storeEntity to EntityContainer.
+ * </ol>
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -117,11 +121,6 @@ public class EntitySynchronizationInterceptor
     */
    protected EntityContainer container;
  
-   /**
-    *  Optional isModified method
-    */
-   protected Method isModified;
-   
    /**
     *  For commit option D this is the cache of valid entities
     */
@@ -156,9 +155,6 @@ public class EntitySynchronizationInterceptor
             new Thread(vcr).start();
          }
    
-         isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
-         if (!isModified.getReturnType().equals(Boolean.TYPE))
-            isModified = null; // Has to have "boolean" as return type!
       } catch (Exception e)
       {
          System.out.println(e.getMessage());
@@ -214,27 +210,6 @@ public class EntitySynchronizationInterceptor
       }
    }
   
-   private void storeEntity(EntityEnterpriseContext ctx) throws Exception
-   {
-      if (ctx.getId() != null)
-      {
-         boolean dirty = true;
-         // Check isModified bean method flag
-         if (isModified != null)
-         {
-            Object[] args = {};
-            Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
-            dirty = modified.booleanValue();
-         }
-   
-         // Store entity
-         if (dirty)
-         {
-            container.getPersistenceManager().storeEntity(ctx);
-         }
-      }
-   }
- 
    // Interceptor implementation --------------------------------------
  
    public Object invokeHome(MethodInvocation mi)
@@ -330,7 +305,7 @@ public class EntitySynchronizationInterceptor
             // And skip reads too ("get" methods)
             if (ctx.getId() != null)
             {
-               storeEntity(ctx);
+               container.storeEntity(ctx);
             }
     
             return result;
@@ -402,25 +377,13 @@ public class EntitySynchronizationInterceptor
                      log.trace("Checking ctx="+ctx+", for status of tx="+tx);
                   if (tx.getStatus() != Status.STATUS_MARKED_ROLLBACK)
                   {
-                     // Check if the bean defines the isModified method
-                     boolean dirty = true;
-                     if (isModified != null)
+                     try
                      {
-                        try
-                        {
-                           Object[] args = {};
-                           Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
-                           dirty = modified.booleanValue();
-                        }
-                        catch (Exception ignored)
-                        {
-                        }
+                        container.storeEntity(ctx);
                      }
-       
+                     catch (Exception ignored) {}
                      if( trace )
-                        log.trace("sync calling store on ctx "+ctx+", dirty="+dirty);
-                     if (dirty)
-                        container.getPersistenceManager().storeEntity(ctx);
+                        log.trace("sync calling store on ctx "+ctx);
                   }
                }
                catch (NoSuchEntityException ignored)

@@ -13,13 +13,14 @@ import javax.transaction.SystemException;
 import javax.transaction.Synchronization;
 
 /**
- * This class provides a way to find out what entities are contained in
- * what transaction.  It is used, to find which entities to call ejbStore()
- * on when a ejbFind() method is called within a transaction. EJB 2.0- 9.6.4
+ * This class provides a way to find out what entities of a certain type that are contained in
+ * within a transaction.  It is attached to a specific instance of a container.
+ * This class interfaces with the static GlobalTxEntityMap.  EntitySynchronizationInterceptor
+ * registers tx/entity pairs through this class.
  * Used in EntitySynchronizationInterceptor.
  * 
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * Revisions:
  *
@@ -27,7 +28,7 @@ import javax.transaction.Synchronization;
  * <p><b>2001/08/06: marcf</b>
  * <ol>
  *   <li>Got rid of disassociate and added a javax.transaction.Synchronization.  The sync will clean up the map now.
- *   <li>This class now interacts with ApplicationTxEntityMap available in Application
+ *   <li>This class now interacts with GlobalTxEntityMap available.
  * </ol>
  */
 public class TxEntityMap
@@ -47,7 +48,7 @@ public class TxEntityMap
          m_map.put(tx, entityMap);
          tx.registerSynchronization(new TxEntityMapCleanup(this, tx));
       }
-      entity.getContainer().getApplication().getTxEntityMap().associate(tx, entity);
+      EntityContainer.getGlobalTxEntityMap().associate(tx, entity);
       entityMap.put(entity.getCacheKey(), entity);
    }
 
@@ -58,6 +59,9 @@ public class TxEntityMap
       return (EntityEnterpriseContext)entityMap.get(key);
    }
 
+   /**
+    * Cleanup tx/entity map on tx commit/rollback
+    */
    private class TxEntityMapCleanup implements Synchronization
    {
       TxEntityMap map;

@@ -27,6 +27,7 @@ import javax.ejb.EJBException;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.transaction.Transaction;
 
 import org.jboss.logging.Logger;
 import org.jboss.monitor.StatisticsProvider;
@@ -46,7 +47,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  *
  * <p><b>Revisions:</b>
  *
@@ -57,6 +58,11 @@ import javax.management.j2ee.CountStatistic;
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
  * <li>- Added statistics gathering
+ * </ul>
+ * <p><b>20010807 bill burke:</b>
+ * <ul>
+ * <li> Moved storeEntity from EntitySynchronization to here so other classes can use it.
+ * <li> Moved synchronizeEntitiesWithinTransaction to here from Application as a static method.
  * </ul>
  */
 public class EntityContainer
@@ -109,6 +115,48 @@ public class EntityContainer
    protected long createCount = 0;
    protected long removeCount = 0;
 
+   /**
+    *  Optional isModified method used by storeEntity
+    */
+   protected Method isModified;
+
+   /**
+    * This provides a way to find the entities that are part of a given
+    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
+    * manage this instance.
+    */
+   protected static  GlobalTxEntityMap globalTxEntityMap = new GlobalTxEntityMap();
+
+
+   public static GlobalTxEntityMap getGlobalTxEntityMap() { return globalTxEntityMap; }
+
+   /**
+    * Stores all of the entities associated with the specified transaction.
+    * @param tx the transaction that associated entites will be stored
+    * @throws Exception if an problem occures while storing the entities
+    */
+   public static void synchronizeEntitiesWithinTransaction(Transaction tx) throws RemoteException 
+   {
+      // If there is no transaction, there is nothing to synchronize.
+      try
+      {
+         if(tx != null) 
+         {
+            EntityEnterpriseContext[] entities = globalTxEntityMap.getEntities(tx);
+            for (int i = 0; i < entities.length; i++) 
+            {
+               EntityEnterpriseContext ctx = entities[i];
+               EntityContainer container = (EntityContainer)ctx.getContainer();
+               container.storeEntity(ctx);
+            }
+         }
+      }
+      catch (Exception ex)
+      {
+         throw new RemoteException("synchronizeEntitiesWithTransaction failed");
+      }
+   }
+   
    // Public --------------------------------------------------------
    
    public void setContainerInvoker(ContainerInvoker ci)
@@ -270,6 +318,15 @@ public class EntityContainer
          in = in.getNext();
       }
 
+      try
+      {
+         isModified = getBeanClass().getMethod("isModified", new Class[0]);
+         if (!isModified.getReturnType().equals(Boolean.TYPE))
+            isModified = null; // Has to have "boolean" as return type!
+      }
+      catch (NoSuchMethodException ignored) {}
+      
+
       // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
@@ -394,7 +451,7 @@ public class EntityContainer
    {
       // synchronize entities with the datastore before the bean is removed
       // this will write queued updates so datastore will be consistent before removal
-      getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      synchronizeEntitiesWithinTransaction(mi.getTransaction());
 		
       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
@@ -481,11 +538,11 @@ public class EntityContainer
    public Object findLocal(MethodInvocation mi)
       throws Exception
    {
-		/**
-		 * As per the spec 9.6.4, entities must be synchronized with the datastore
-		 * when an ejbFind<METHOD> is called.
-		 */
-		getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      /**
+       * As per the spec 9.6.4, entities must be synchronized with the datastore
+       * when an ejbFind<METHOD> is called.
+       */
+      synchronizeEntitiesWithinTransaction(mi.getTransaction());
 		
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getLocalClass()))
@@ -533,11 +590,11 @@ public class EntityContainer
     */
    public Object find(MethodInvocation mi) throws Exception
    {		
-		/**
-		 * As per the spec 9.6.4, entities must be synchronized with the datastore
-		 * when an ejbFind<METHOD> is called.
-		 */
-		getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      /**
+       * As per the spec 9.6.4, entities must be synchronized with the datastore
+       * when an ejbFind<METHOD> is called.
+       */
+      synchronizeEntitiesWithinTransaction(mi.getTransaction());
 		
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
@@ -577,6 +634,31 @@ public class EntityContainer
       }
    }
 
+
+   /**
+    * store entity
+    */
+   public void storeEntity(EntityEnterpriseContext ctx) throws Exception
+   {
+      if (ctx.getId() != null)
+      {
+         boolean dirty = true;
+         // Check isModified bean method flag
+         if (isModified != null)
+         {
+            Object[] args = {};
+            Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
+            dirty = modified.booleanValue();
+         }
+   
+         // Store entity
+         if (dirty)
+         {
+            getPersistenceManager().storeEntity(ctx);
+         }
+      }
+   }
+ 
    /**
     * This method takes care of the wiring of the "EJBObject" trio
     * (target, context, proxy).  It delegates to the persistence manager.

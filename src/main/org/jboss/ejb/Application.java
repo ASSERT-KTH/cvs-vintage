@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.ejb.EJBLocalHome;
-import javax.transaction.Transaction;
 
 import org.jboss.util.Service;
 
@@ -25,13 +24,8 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  *
- * <p><b>Revisions:</b><br>
- * <p><b>2001/08/06: dain</b>
- * <ol>
- *   <li>Moved synchronizeEntitiesWithinTransaction to this class.
- * </ol>
  */
 public class Application
    implements Service
@@ -53,13 +47,6 @@ public class Application
    // url where this application was deployed from
    URL url;
    
-   /**
-    * This provides a way to find the entities that are part of a given
-    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
-    * manage this instance.
-    */
-   private ApplicationTxEntityMap txEntityMap = new ApplicationTxEntityMap();
-
    // Static --------------------------------------------------------
 
    // Public --------------------------------------------------------
@@ -200,34 +187,6 @@ public class Application
          name = url.toString();
    }
 	
-   /**
-    * Gets the transaction to entity map object, which contains a map from 
-    * a transaction to every entity used in that transaction.
-    * @return the transaction to entity map for this application
-    */
-   public ApplicationTxEntityMap getTxEntityMap() {
-      return txEntityMap;
-   }
-
-   /**
-    * Stores all of the entities associated with the specified transaction.
-    * @param tx the transaction that associated entites will be stored
-    * @throws Exception if an problem occures while storing the entities
-    */
-   public void synchronizeEntitiesWithinTransaction(Transaction tx) throws RemoteException {
-      // If there is no transaction, there is nothing to synchronize.
-      if(tx != null) 
-      {
-         EntityEnterpriseContext[] entities = getTxEntityMap().getEntities(tx);
-         for (int i = 0; i < entities.length; i++) 
-         {
-            EntityEnterpriseContext ctx = entities[i];
-            EntityContainer container = (EntityContainer)ctx.getContainer();
-            container.getPersistenceManager().storeEntity(ctx);
-         }
-      }
-   }
-   
    // Service implementation ----------------------------------------
     
     /**
