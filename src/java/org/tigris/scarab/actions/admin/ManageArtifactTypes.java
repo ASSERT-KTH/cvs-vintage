@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.19 2002/09/20 19:54:56 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.20 2002/09/23 23:58:30 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -227,7 +227,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                             }
                             catch (Exception e)
                             {
-                                scarabR.setAlertMessage(e.getMessage());
+                                scarabR.setAlertMessage(l10n.get(e.getMessage()));
                             }
                         }
 
