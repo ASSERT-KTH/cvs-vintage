@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.4 2001/12/20 15:10:19 kminshull Exp $
+ * @version $Id: XMLImport.java,v 1.5 2002/01/03 16:25:32 kminshull Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -299,7 +299,7 @@ public class XMLImport extends MatchingTask
         getDigester().addRule("scarab/module/issue/transaction", new TransactionRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/transaction/type", new TransactionTypeRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/transaction/committed-by", new TransactionCommittedByRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/module/issue/transaction/activity", new ActivityRule(getDigester(), state));
+        getDigester().addRule("scarab/module/issue/transaction/activity", new ActivityRule(getDigester(), state, userList));
         getDigester().addRule("scarab/module/issue/transaction/activity/attribute/name", new ActivityAttributeNameRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/transaction/activity/attribute/value", new ActivityAttributeValueRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/transaction/activity/attribute/old-value", new ActivityAttributeOldValueRule(getDigester(), state));

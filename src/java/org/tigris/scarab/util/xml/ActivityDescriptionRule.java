@@ -74,17 +74,8 @@ public class ActivityDescriptionRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") activity description body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-    {
         ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         activityInfo.setDescription(text);
         digester.push(activityInfo);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
     }
 }

@@ -75,27 +75,9 @@ public class ActivityAttributeTypeRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") activity attribute type body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    /**
-     * Handler for the insertion
-     */
-    protected void doInsertionAtBody(String attributeTypeName)
-        throws Exception
-    {
         AttributeType issueType = AttributeType.getInstance(attributeTypeName);
         ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         activityInfo.setType(issueType);
         digester.push(activityInfo);
-    }
-        
-    /**
-     * Handler for the validation
-     */
-    protected void doValidationAtBody(String attributeTypeName)
-        throws Exception
-    {
-        AttributeType.getInstance(attributeTypeName);
     }
 }

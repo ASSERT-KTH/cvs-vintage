@@ -45,6 +45,7 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
+import java.util.ArrayList;
 
 import org.xml.sax.Attributes;
 
@@ -67,9 +68,11 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
  */
 public class ActivityRule extends BaseRule
 {
-    public ActivityRule(Digester digester, String state)
+    public ActivityRule(Digester digester,
+                        String state, 
+                        ArrayList userList)
     {
-        super(digester, state);
+        super(digester, state, userList);
     }
     
     /**
@@ -92,6 +95,8 @@ public class ActivityRule extends BaseRule
     
     protected void doValidationAtBegin(Attributes attributes)
     {
+        ActivityInfo activityInfo = new ActivityInfo();
+        digester.push(activityInfo);
     }
     
     /**
@@ -132,7 +137,7 @@ public class ActivityRule extends BaseRule
                 // create option
                 ParentChildAttributeOption newPCAO = 
                     ParentChildAttributeOption.getInstance();
-                newPCAO.setName(activityInfo.getName());
+                newPCAO.setName(activityInfo.getValue());
                 newPCAO.setAttributeId(attribute.getAttributeId());
                 newPCAO.save();
             }
@@ -150,7 +155,7 @@ public class ActivityRule extends BaseRule
                 // create option
                 ParentChildAttributeOption newPCAO = 
                     ParentChildAttributeOption.getInstance();
-                newPCAO.setName(activityInfo.getName());
+                newPCAO.setName(activityInfo.getValue());
                 newPCAO.setAttributeId(attribute.getAttributeId());
                 newPCAO.save();
                 attributeOption = AttributeOption
@@ -180,6 +185,14 @@ public class ActivityRule extends BaseRule
     }
     
     protected void doValidationAtEnd()
+        throws Exception
     {
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        if (activityInfo.getName().equals("Assigned To")) {
+            validateUser(activityInfo.getValue());
+            if (activityInfo.getOldValue() != null) {
+                validateUser(activityInfo.getOldValue());
+            }
+        }
     }
 }

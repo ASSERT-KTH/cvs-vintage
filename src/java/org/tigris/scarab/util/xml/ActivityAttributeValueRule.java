@@ -71,17 +71,8 @@ public class ActivityAttributeValueRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") activity attribute value body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-    {
         ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         activityInfo.setValue(text);
         digester.push(activityInfo);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
     }
 }
