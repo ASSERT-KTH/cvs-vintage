@@ -27,6 +27,14 @@ public class Depend
 {
 
     /**
+     * A new Depend object
+     */
+    public static Depend getInstance() 
+    {
+        return new Depend();
+    }
+
+    /**
      * Delete the depend object.
      * @acl AccessControlList for deleting user.
      * TODO: permission
