@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb;
 
-// $Id: SessionContainer.java,v 1.6 2004/04/22 17:44:20 tdiesler Exp $
+// $Id: SessionContainer.java,v 1.7 2004/06/21 11:13:07 ejort Exp $
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
@@ -14,7 +14,9 @@ import org.jboss.metadata.SessionMetaData;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBMetaData;
 import javax.ejb.Handle;
+import javax.ejb.HomeHandle;
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
 import javax.management.ObjectName;
@@ -33,7 +35,7 @@ import java.util.Map;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 30.10.2003
  */
 public abstract class SessionContainer extends Container
@@ -272,12 +274,12 @@ public abstract class SessionContainer extends Container
             marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
          }
       }
-// Get the getEJBObjectMethod
+      // Get the getEJBObjectMethod
       Method getEJBObjectMethod =
               Class.forName("javax.ejb.Handle").getMethod("getEJBObject",
                       new Class[0]);
 
-// Hash it
+      // Hash it
       marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)), getEJBObjectMethod);
    }
 
@@ -323,7 +325,7 @@ public abstract class SessionContainer extends Container
       {
          log.debug("Failed to register pool as mbean", t);
       }
-// Initialize pool
+      // Initialize pool
       instancePool.create();
    }
 
@@ -373,7 +375,7 @@ public abstract class SessionContainer extends Container
 
       try
       {
-// Call default start
+         // Call default start
          super.startService();
 
          startInvokers();
@@ -388,7 +390,7 @@ public abstract class SessionContainer extends Container
       }
       finally
       {
-// Reset classloader
+         // Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
@@ -443,7 +445,7 @@ public abstract class SessionContainer extends Container
 
       try
       {
-// Call default stop
+         // Call default stop
          super.stopService();
 
          stopInvokers();
@@ -458,7 +460,7 @@ public abstract class SessionContainer extends Container
       }
       finally
       {
-// Reset classloader
+         // Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
@@ -521,12 +523,12 @@ public abstract class SessionContainer extends Container
 
          destroyMarshalledInvocationMapping();
 
-// Call default destroy
+         // Call default destroy
          super.destroyService();
       }
       finally
       {
-// Reset classloader
+         // Reset classloader
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
@@ -603,7 +605,7 @@ public abstract class SessionContainer extends Container
       return getInterceptor().invoke(mi);
    }
 
-// EJBObject implementation --------------------------------------
+   // EJBObject implementation --------------------------------------
 
    /**
     * While the following methods are implemented in the client in the case
@@ -614,6 +616,7 @@ public abstract class SessionContainer extends Container
     */
    public Handle getHandle(Invocation mi) throws RemoteException
    {
+      
       // TODO
       return null;
    }
@@ -623,8 +626,7 @@ public abstract class SessionContainer extends Container
     */
    public Object getPrimaryKey(Invocation mi) throws RemoteException
    {
-      // TODO
-      return null;
+      throw new RemoteException("Call to getPrimaryKey not allowed on session bean");
    }
 
    public EJBHome getEJBHome(Invocation mi) throws RemoteException
@@ -647,9 +649,44 @@ public abstract class SessionContainer extends Container
       return false; // TODO
    }
 
-// Home interface implementation ---------------------------------
+   public EJBMetaData getEJBMetaDataHome(Invocation mi) throws RemoteException
+   {
+      return getEJBMetaDataHome();
+   }
+   
+   public EJBMetaData getEJBMetaDataHome() throws RemoteException
+   {
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
 
-// local object interface implementation
+      return ci.getEJBMetaData();
+   }
+   
+   public HomeHandle getHomeHandleHome(Invocation mi) throws RemoteException
+   {
+      return getHomeHandleHome();
+   }
+   
+   public HomeHandle getHomeHandleHome() throws RemoteException
+   {
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+
+      EJBHome home = (EJBHome) ci.getEJBHome();
+      return home.getHomeHandle();
+   }
+
+   // Home interface implementation ---------------------------------
+
+   // local object interface implementation
 
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {

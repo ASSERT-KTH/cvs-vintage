@@ -9,9 +9,11 @@ package org.jboss.ejb;
 
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
+import org.jboss.proxy.ejb.EJBMetaDataImpl;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBObject;
@@ -30,7 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  */
 public class StatelessSessionContainer extends SessionContainer
         implements EJBProxyFactoryContainer, InstancePoolContainer
@@ -43,7 +45,7 @@ public class StatelessSessionContainer extends SessionContainer
    public void remove(Invocation mi)
            throws RemoteException, RemoveException
    {
-      //TODO
+      log.debug("Useless invocation of remove() for stateless session bean");
    }
 
    // EJBLocalHome implementation
@@ -65,7 +67,7 @@ public class StatelessSessionContainer extends SessionContainer
     */
    public void removeLocalHome(Object primaryKey)
    {
-      // todo
+      log.debug("Useless invocation of remove(Object) for stateless session bean");
    }
 
    // EJBHome implementation ----------------------------------------
@@ -91,7 +93,7 @@ public class StatelessSessionContainer extends SessionContainer
            throws RemoteException, RemoveException
    {
       removeCount++;
-      // TODO
+      log.debug("Useless invocation of remove(Handle) for stateless session bean");
    }
 
    /**
@@ -101,27 +103,7 @@ public class StatelessSessionContainer extends SessionContainer
            throws RemoteException, RemoveException
    {
       removeCount++;
-      // TODO
-   }
-
-   /**
-    * @return    Always null.
-    */
-   public EJBMetaData getEJBMetaDataHome()
-           throws RemoteException
-   {
-      // TODO
-      return null;
-   }
-
-   /**
-    * @return    Always null.
-    */
-   public HomeHandle getHomeHandleHome()
-           throws RemoteException
-   {
-      // TODO
-      return null;
+      log.debug("Useless invocation of remove(Object) for stateless session bean");
    }
 
    // Protected  ----------------------------------------------------

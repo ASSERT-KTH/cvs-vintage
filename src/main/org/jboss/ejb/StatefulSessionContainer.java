@@ -35,7 +35,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvoker;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.73 $</tt>
+ * @version <tt>$Revision: 1.74 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -332,28 +332,6 @@ public class StatefulSessionContainer
     */
    public void removeHome(Invocation mi)
       throws RemoteException, RemoveException
-   {
-      throw new Error("Not Yet Implemented");
-   }
-
-   public EJBMetaData getEJBMetaDataHome(Invocation mi)
-      throws RemoteException
-   {
-      EJBProxyFactory ci = getProxyFactory();
-      if (ci == null)
-      {
-         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
-         throw new IllegalStateException(msg);
-      }
-
-      return ci.getEJBMetaData();
-   }
-
-   /**
-    * @throws Error    Not yet implemented
-    */
-   public HomeHandle getHomeHandleHome(Invocation mi)
-      throws RemoteException
    {
       throw new Error("Not Yet Implemented");
    }
