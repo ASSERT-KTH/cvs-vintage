@@ -92,7 +92,7 @@ public class ApacheConfig  { // implements XXX
 	    FileWriter configW=new FileWriter( tomcatHome + APACHE_CONFIG);
 	    PrintWriter pw=new PrintWriter( configW );
 
-	    if( System.getProperty( "os.name" ).equalsIgnoreCase("windows") ) {
+	    if( System.getProperty( "os.name" ).toLowerCase().indexOf("windows") >= 0 ) {
 		pw.println("LoadModule jserv_module modules/ApacheModuleJServ.dll");
 	    } else {
 		// XXX XXX change it to mod_jserv_${os.name}.so, put all so in tomcat
@@ -126,7 +126,8 @@ public class ApacheConfig  { // implements XXX
 		    // assert path.startsWith( "/" )
 
 		    // Static files will be served by Apache
-		    pw.println("Alias " + path + " " + tomcatHome + "/webapps" + path);
+		    pw.println("Alias " + path + " " + 
+                               FileUtil.patch(tomcatHome + "/webapps" + path));
 
 		    // Dynamic /servet pages go to tomcat
 		    pw.println("ApJServMount " + path +"/servlet" + " " + path);
