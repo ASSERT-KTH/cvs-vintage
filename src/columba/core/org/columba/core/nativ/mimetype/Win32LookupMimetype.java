@@ -26,7 +26,8 @@ import com.jniwrapper.win32.registry.RegistryKeyValues;
  * @author fdietz
  * @author switt
  * 
- * If no RegistryKey for the file extension is found, mimetype text/plain is used 
+ * If no RegistryKey for the file extension is found, 
+ * mimetype Application/octet-stream is used 
  */
 public class Win32LookupMimetype implements LookupMimetype {
 
@@ -50,7 +51,7 @@ public class Win32LookupMimetype implements LookupMimetype {
 		
 		}
 		else {
-			mimetype = "text/plain";
+			mimetype = "Application/octet-stream";
 		}
 		//end Bugfix
 		
