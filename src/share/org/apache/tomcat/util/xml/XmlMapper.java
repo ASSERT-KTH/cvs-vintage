@@ -618,6 +618,17 @@ public class XmlMapper
 	return new PopStack();
     }
 
+    ClassLoader loader;
+    public ClassLoader getClassLoader() {
+	if( loader==null )
+	    loader=this.getClass().getClassLoader();
+	return loader;
+    }
+
+    public void setClassLoader( ClassLoader loader ) {
+	this.loader=loader;
+    }
+    
 }
 
 //-------------------- "Core" actions --------------------
@@ -744,19 +755,8 @@ class SetParent extends XmlAction {
 	Object obj=ctx.currentObject();
 	Object parent=ctx.previousObject();
 
-	String parentC=parent.getClass().getName();
-	if( ctx.getDebug() > 0 )
-	    ctx.log("Calling " + obj.getClass().getName() + "." + childM +
-		    " " + parentC);
-
-	Class params[]=new Class[1];
-	if( paramT==null) {
-	    params[0]=parent.getClass();
-	} else {
-	    params[0]=Class.forName( paramT );
-	}
-	Method m=obj.getClass().getMethod( childM, params );
-	m.invoke(obj, new Object[] { parent } );
+	IntrospectionUtils.callMethod1( obj, childM, parent, paramT,
+					this.getClass().getClassLoader());
     }
 }
 
@@ -775,18 +775,8 @@ class AddChild extends XmlAction {
 	Object obj=ctx.currentObject();
 	Object parent=ctx.previousObject();
 
-	String parentC=parent.getClass().getName();
-	if( ctx.getDebug() >0)
-	    ctx.log("Calling " + parentC + "." + parentM  +" " + obj  );
-
-	Class params[]=new Class[1];
-	if( paramT==null) {
-	    params[0]=obj.getClass();
-	} else {
-	    params[0]=Class.forName( paramT );
-	}
-	Method m=parent.getClass().getMethod( parentM, params );
-	m.invoke(parent, new Object[] { obj } );
+	IntrospectionUtils.callMethod1( parent, parentM, obj, paramT,
+					this.getClass().getClassLoader());
     }
 }
 
@@ -847,9 +837,8 @@ class  MethodSetter extends XmlAction {
 	}
 
 	Method m=null;
-	try {
-	    m=parent.getClass().getMethod( mName, paramT );
-	} catch( NoSuchMethodException ex ) {
+	m=IntrospectionUtils.findMethod( parent.getClass(), mName, paramT );
+	if( m== null ) {
 	    ctx.log("Can't find method " + mName + " in " +
 		    parent + " CLASS " + parent.getClass());
 	    return;

@@ -93,4 +93,9 @@ public interface SaxContext  {
     public void setVariable( String s, Object v );
 
     public Object getVariable( String s );
+
+    // -------------------- Class loader --------------------
+    // XmlMapper may be in a parent loader
+
+    public ClassLoader getClassLoader();
 }
