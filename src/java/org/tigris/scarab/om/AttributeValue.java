@@ -196,7 +196,7 @@ public abstract class AttributeValue
         super.setAttributeId(nk);
         if ( chainedValue != null ) 
         {
-            setAttributeId(nk);
+            chainedValue.setAttributeId(nk);
         }
     }
 
@@ -209,7 +209,7 @@ public abstract class AttributeValue
         super.setIssueId(nk);
         if ( chainedValue != null ) 
         {
-            setIssueId(nk);
+            chainedValue.setIssueId(nk);
         }
     }
 
@@ -433,7 +433,7 @@ public abstract class AttributeValue
         {
             for ( int i=1; i<ids.length; i++ ) 
             {            
-                AttributeValue av = AttributeValue
+                AttributeValue av = AttributeValue                
                     .getNewInstance(getAttributeId(), getIssue());
                 setChainedValue(av);
                 av.setUserId(ids[i]);
