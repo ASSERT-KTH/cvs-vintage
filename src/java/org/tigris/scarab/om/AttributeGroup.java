@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 
 
-import java.util.Vector;
 import java.util.List;
 import org.apache.torque.om.UnsecurePersistent;
 import org.apache.torque.util.Criteria;
@@ -75,14 +74,13 @@ public  class AttributeGroup
     public List getAttributes()
         throws Exception
     {
-        Vector attributes = null;
         Criteria crit = new Criteria()
             .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId())
             .addJoin(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
                                                   AttributePeer.ATTRIBUTE_ID)
-            .addAscendingOrderByColumn(RAttributeAttributeGroupPeer.PREFERRED_ORDER);
-        attributes = AttributePeer.doSelect(crit);
-        return (List)attributes;
+            .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
+                                       .PREFERRED_ORDER);
+        return (List) AttributePeer.doSelect(crit);
     }
 
     /**
