@@ -299,10 +299,7 @@ public class ReceiveOptionsPanel
 
 	protected void initComponents() {
 
-		intervalCheckingLabel = new JLabel();
-
-		intervalCheckingLabel.setText(
-			MailResourceLoader.getString(
+		intervalCheckingLabel = new JLabel(MailResourceLoader.getString(
 				"dialog",
 				"account",
 				"check_for_new_messages_every"));
@@ -315,16 +312,12 @@ public class ReceiveOptionsPanel
 		intervalCheckingTextField = new JTextField(3);
 		intervalCheckingLabel.setLabelFor(intervalCheckingTextField);
 
-		intervalCheckingTextField.setText("10");
+		intervalCheckingLabel2 = new JLabel(MailResourceLoader.getString(
+                                "dialog",
+                                "account",
+                                "minutes"));
 
-		intervalCheckingLabel2 = new JLabel();
-
-		intervalCheckingLabel2.setText(
-			MailResourceLoader.getString("dialog", "account", "minutes"));
-
-		intervalCheckingCheckBox = new JCheckBox();
-		intervalCheckingCheckBox.setText(
-			MailResourceLoader.getString(
+		intervalCheckingCheckBox = new JCheckBox(MailResourceLoader.getString(
 				"dialog",
 				"account",
 				"enable_interval_message_checking"));
@@ -337,8 +330,7 @@ public class ReceiveOptionsPanel
 		intervalCheckingCheckBox.setActionCommand("ENABLE");
 		intervalCheckingCheckBox.addActionListener(this);
 
-		autodownloadCheckBox =
-			new JCheckBox(
+		autodownloadCheckBox = new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
@@ -349,8 +341,7 @@ public class ReceiveOptionsPanel
 				"account",
 				"automatically_download_new_messages"));
 
-		playsoundCheckBox =
-			new JCheckBox(
+		playsoundCheckBox = new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
