@@ -57,8 +57,7 @@
  *
  */ 
 
-
-package org.apache.tomcat.modules.facade22;
+package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;

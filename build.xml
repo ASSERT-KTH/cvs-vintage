@@ -180,7 +180,9 @@
       <include name="org/apache/tomcat/facade/**"/>    
       <include name="org/apache/tomcat/modules/facade22/**"/>    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/facade22.jar" basedir="${tomcat.build}/classes"> 
+    <jar jarfile="${tomcat.build}/lib/facade22.jar" 
+	 basedir="${tomcat.build}/classes"
+	 manifest="src/build/manifest.facade22"> 
       <include name="org/apache/tomcat/facade/**"/> 
       <include name="org/apache/tomcat/modules/facade22/**"/>    
     </jar>

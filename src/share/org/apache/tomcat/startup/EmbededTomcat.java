@@ -6,7 +6,6 @@ import java.io.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.modules.server.*;
-import org.apache.tomcat.modules.facade22.*;
 import org.apache.tomcat.modules.session.*;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.log.*;
@@ -273,7 +272,7 @@ public class EmbededTomcat {
 	InvokerInterceptor invI=new InvokerInterceptor();
 	addInterceptor( invI );
 	
-	JspInterceptor jspI=new JspInterceptor();
+	BaseInterceptor jspI=(BaseInterceptor)newObject("org.apache.tomcat.facade.JspInterceptor");
 	addInterceptor( jspI );
 
 	StaticInterceptor staticI=new StaticInterceptor();
@@ -281,7 +280,7 @@ public class EmbededTomcat {
 
 	addInterceptor( new SimpleSessionStore());
 	
-	BaseInterceptor loadOnSI= (BaseInterceptor)newObject("org.apache.tomcat.modules.facade22.LoadOnStartupInterceptor");
+	BaseInterceptor loadOnSI= (BaseInterceptor)newObject("org.apache.tomcat.facade.LoadOnStartupInterceptor");
 	addInterceptor( loadOnSI );
 
 	BaseInterceptor s22=(BaseInterceptor)newObject("org.apache.tomcat.facade.Servlet22Interceptor");
@@ -296,8 +295,6 @@ public class EmbededTomcat {
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();
 	addInterceptor( jdk12I );
 
-	// xXXX
-	//	addInterceptor( new SimpleRealm());
     }
     
 

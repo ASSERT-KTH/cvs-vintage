@@ -73,7 +73,7 @@ import org.apache.tomcat.util.*;
  * This will also deal with the "contentLength" limit.
  * <b>Important</b> Only the methods in ServletInputStream can be public.
  */
-public class ServletInputStreamFacade extends ServletInputStream {
+final class ServletInputStreamFacade extends ServletInputStream {
     private int bytesRead = 0;
     private int limit = -1;
 

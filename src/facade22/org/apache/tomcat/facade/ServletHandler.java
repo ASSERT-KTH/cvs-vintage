@@ -85,7 +85,7 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  * @author Costin Manolache
  */
-public final class ServletHandler extends Handler {
+final class ServletHandler extends Handler {
 
     /** 
      * If init() fails or preInit() detects the handler is still

@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  *
  */ 
-package org.apache.tomcat.modules.facade22;
+package org.apache.tomcat.facade;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

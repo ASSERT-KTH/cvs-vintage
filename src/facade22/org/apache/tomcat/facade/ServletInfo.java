@@ -85,25 +85,25 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  * @author costin@dnt.ro
  */
-public class ServletInfo {
+public final class ServletInfo {
 
     // the actual tomcat handler associated with this servlet
     private ServletHandler handler;
 
     // facade
-    protected ServletConfig configF;
+    private ServletConfig configF;
 
     // optional informations
-    protected String description = null;
+    private String description = null;
 
-    Hashtable securityRoleRefs=new Hashtable();
+    private Hashtable securityRoleRefs=new Hashtable();
 
-    Hashtable initArgs=null;
+    private Hashtable initArgs=null;
 
     // should be removed from handler
     private String jspFile = null;
-    protected int loadOnStartup=-1;
-    protected boolean loadingOnStartup=false;
+    private int loadOnStartup=-1;
+    private boolean loadingOnStartup=false;
 
     public ServletInfo() {
 	handler=new ServletHandler();
@@ -154,7 +154,7 @@ public class ServletInfo {
 	return handler.getContext();
     }
 
-    public Handler getHandler() {
+    Handler getHandler() {
 	return handler;
     }
 

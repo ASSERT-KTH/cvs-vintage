@@ -78,7 +78,7 @@ import javax.servlet.ServletOutputStream;
  * @author Costin Manolache [costin@eng.sun.com]
  */
 // XXX hack - public will be removed after we add the CharBuffer and we fix the converter
-public final class ServletWriterFacade extends PrintWriter {
+final class ServletWriterFacade extends PrintWriter {
     Response resA;
     OutputBuffer ob;
     
