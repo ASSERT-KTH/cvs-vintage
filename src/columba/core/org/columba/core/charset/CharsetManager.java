@@ -163,6 +163,18 @@ public class CharsetManager implements ActionListener {
 		// -> charsets[0] == "auto"
 		if ( name == null ) return -1;
 		if( name.equals("auto")) return defaultId;
+		// looking if the given charsetname is in the charset-list, if not return default-id
+		boolean found=false;
+		for (int i=0; i < charsets.length; i++) {
+			if (charsets[i].equals(name)) {
+				found=true;
+				break;
+			}
+		}
+		// if name not found in the charset array return the defaultId
+		if (!found) {
+			return defaultId;
+		}
 		int charsetId = 0;
 		String charsetCanonicalName = Charset.forName( name ).name();
 		//System.out.println( name + " -> " + charsetCanonicalName);
