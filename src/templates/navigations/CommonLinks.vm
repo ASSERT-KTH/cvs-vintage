@@ -1,11 +1,14 @@
 #if ($data.User.CurrentRModuleIssueType)
-  #if ($scarabR.CurrentModule.allowsNewIssues())
+  #set ($module = $scarabR.CurrentModule)
+  #if ($module.allowsNewIssues())
     #set ($rmit = $data.User.CurrentRModuleIssueType)
     <div>$link.setPage("$scarabR.NextEntryTemplate").setLabel("$l10n.EnterNew: $rmit.DisplayName.toLowerCase()")</div>
   #end
   #if (!$module.isGlobalModule())
     <div>$link.setPage("QueryList.vm").setLabel("$l10n.Queries")</div>
+    #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
     <div>$link.setPage("TemplateList.vm").setLabel("$l10n.EditTemplates")</div>
+    #end
     <div>$link.setPage("reports,ReportList.vm").setLabel("$l10n.Reports")</div>
   #end
 #end
