@@ -27,7 +27,7 @@ import javax.management.ObjectName;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.system.URLClassLoader;
+import org.jboss.system.UnifiedClassLoader;
 import java.util.List;
 
 /**
@@ -36,7 +36,7 @@ import java.util.List;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  * <p><b>Revisions:</b>
  *
