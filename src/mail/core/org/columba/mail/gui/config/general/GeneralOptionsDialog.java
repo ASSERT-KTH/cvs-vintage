@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.general;
 
 import java.awt.BorderLayout;
@@ -21,16 +22,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import org.columba.core.gui.config.themes.ThemePanel;
+
+import org.columba.mail.util.MailResourceLoader;
 
 public class GeneralOptionsDialog extends JDialog implements ActionListener
 {
@@ -83,14 +79,12 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 		JPanel bottomPanel = new JPanel(new BorderLayout(0,0));
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		//LOCALIZE
-		okButton = new JButton("Ok");
+		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
 		//mnemonic
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		//LOCALIZE
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "ok"));
 		//mnemonic
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
