@@ -95,7 +95,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -895,6 +895,7 @@ public class EjbModule
                className = MetaData.getElementContent(ielement);
                Class clazz = loader.loadClass(className);
                Interceptor interceptor = (Interceptor) clazz.newInstance();
+               interceptor.setConfiguration(ielement);
                istack.add(interceptor);
             }
             catch(Exception e)
