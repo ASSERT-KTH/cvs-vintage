@@ -22,19 +22,15 @@ all of the required distributions.
   ("%JAVA_HOME%\bin" for Windows) to your PATH.  Configure the CLASSPATH
   environment variable as well, if required.
 
-* Download the Ant version 1.3 (or 1.4) binary distribution from
-  <http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin> (or
-  <http://jakarta.apache.org/builds/jakarta-ant/release/v1.4/bin>) and install
-  it in the $JAKARTA_HOME directory.  Set an "ANT_HOME" environment variable
-  to point to $JAKARTA_HOME/jakarta-ant-1.3 (or $JAKARTA_HOME/jakarta-ant-1.4).
-  If you are using Windows 9x, you should set ANT_HOME using the DOS 8.3 name,
-  In this case, you may find it convenient to rename the directory to a name
-  that is within the DOS 8.3 format, such as "ant-1.3" (or "ant-1.4").
+* Download the latest Ant binary distribution (currently version 1.4.1) from
+  <http://jakarta.apache.org/site/binindex.html> and install it in the
+  $JAKARTA_HOME directory.  Set an "ANT_HOME" environment variable
+  to point to $JAKARTA_HOME/jakarta-ant-<version> where <version> matches
+  the version of Ant downloaded ($JAKARTA_HOME/jakarta-ant-1.4.1 for
+  Ant v1.4.1).  If you are using Windows 9x, you should set ANT_HOME using
+  the DOS 8.3 name.  In this case, you may find it convenient to rename
+  the directory to a name that is within the DOS 8.3 format, such as "ant-141".
   Also, add "$ANT_HOME/bin" (%ANT_HOME%/bin for Windows) to your PATH.
-
-  Note: If you build with Ant 1.4, you will receive "deprecation" warnings for
-  the use of the "cr" attribute on the "fixcrlf" task. This is normal and
-  not an indication of an error.
 
 * If you want to include SSL support, download the Java Secure Sockets
   Extension (JSSE) implementation (current version number is 1.0.2) from
