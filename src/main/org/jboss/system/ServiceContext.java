@@ -16,8 +16,8 @@ import java.util.LinkedList;
  * @see Service
  * @see ServiceMBeanSupport
  * 
- * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:marc.fleury@jboss.org">marc fleury</a>
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
