@@ -531,11 +531,14 @@ public class MessageBuilder {
 		 * 
 		 * @param templateBody bodytext of template message
 		 * 
+		 * @param htmlTemplate true if the templateBody shall be interpreted
+		 * 					   as html
 		 */
 	public void createMessageFromTemplate(
 		ColumbaMessage message,
 		ComposerModel model,
-		String templateBody) throws IOException {
+		String templateBody,
+		boolean htmlTemplate) throws IOException {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
@@ -563,13 +566,44 @@ public class MessageBuilder {
 		AccountItem accountItem = getAccountItem(header.getHeader());
 		model.setAccountItem(accountItem);
 
+		// Initialisation of model to html or text
+		MimeHeader bodyHeader = message.getBodyPart().getHeader();
+		if (bodyHeader.getMimeType().getSubtype().equals("html")) {
+			model.setHtml(true);
+		} else {
+			model.setHtml(false);
+		}
+
 		// prepend "> " to every line of the bodytext
-		String bodyText = createQuotedBodyText(message, false);
+		String bodyText = createQuotedBodyText(message, model.isHtml());
 		if (bodyText == null) {
 			bodyText = "[Error parsing bodytext]";
 		}
-		StringBuffer buf = new StringBuffer(bodyText);
-		buf.append(templateBody);
+		
+		if (!htmlTemplate && model.isHtml()) {
+			// conversion to html necessary
+			templateBody = HtmlParser.textToHtml(templateBody, null, null);
+		} else if (htmlTemplate && !model.isHtml()) {
+			// conversion to text necessary
+			templateBody = HtmlParser.htmlToText(templateBody);
+		}
+		
+		StringBuffer buf;
+		if (model.isHtml()) {
+			// insert template just before ending body tag
+			String lcase = bodyText.toLowerCase();
+			int pos = lcase.indexOf("</body>");
+			if (pos < 0) {
+				pos = bodyText.length(); 
+			}
+			buf = new StringBuffer(bodyText.substring(0, pos));
+			buf.append(HtmlParser.getHtmlBody(templateBody));
+			buf.append("</body></html>");
+		} else {
+			// just insert template at end (text mode)
+			buf = new StringBuffer(bodyText);
+			buf.append(templateBody);
+		}
 
 		model.setBodyText(buf.toString());
 

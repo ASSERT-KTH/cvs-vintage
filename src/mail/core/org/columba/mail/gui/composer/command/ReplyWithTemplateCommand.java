@@ -120,9 +120,22 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 
 		// get bodytext of template message
 		MimeTree tree = templateFolder.getMimePartTree(uid);
-		MimePart mp = tree.getFirstTextPart("plain");
+		// *20030926, karlpeder* Added html support
+		//MimePart mp = tree.getFirstTextPart("plain");
+		MimePart mp;
+		if (viewhtml) {
+			mp = tree.getFirstTextPart("html");
+		} else {
+			mp = tree.getFirstTextPart("text");
+		}
 		LocalMimePart mimePart =
 			(LocalMimePart) templateFolder.getMimePart(uid, mp.getAddress());
+		boolean htmlTemplate;
+		if (mimePart.getHeader().getMimeType().getSubtype().equals("html")) {
+			htmlTemplate = true;
+		} else {
+			htmlTemplate = false;
+		}
 
 		String charset = bodyPart.getHeader().getContentParameter("charset");
 
@@ -134,7 +147,8 @@ public class ReplyWithTemplateCommand extends FolderCommand {
 		MessageBuilder.getInstance().createMessageFromTemplate(
 			message,
 			model,
-			templateBodytext);
+			templateBodytext,
+			htmlTemplate);
 		controller.setComposerModel(model);
 
 	}
