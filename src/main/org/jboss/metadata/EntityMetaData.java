@@ -13,24 +13,17 @@ import java.util.Iterator;
 import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
 
-/** The meta data information specific to entity beans.
+/**
+ * The meta data information specific to entity beans.
  *
- *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.21 $
- *
- *  <p><b>Revisions:</b><br>
- *  <p><b>2001/10/16: billb</b>
- *  <ol>
- *   <li>Added clustering tags
- *  </ol>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.22 $
  */
-public class EntityMetaData
-   extends BeanMetaData
+public class EntityMetaData extends BeanMetaData
 {
-   // Constants -----------------------------------------------------
    public final static int CMP_VERSION_1 = 1;
    public final static int CMP_VERSION_2 = 2;
    public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING =
@@ -38,7 +31,6 @@ public class EntityMetaData
    public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING =
       "clustered-entity-rmi-invoker";
 
-   // Attributes ----------------------------------------------------
    private boolean cmp;
    private String primaryKeyClass;
    private boolean reentrant;
@@ -51,15 +43,10 @@ public class EntityMetaData
    private boolean doDistCachInvalidations = false;
    private CacheInvalidationConfigMetaData cacheInvalidConfig = null; 
 
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
    public EntityMetaData( ApplicationMetaData app )
    {
       super( app, BeanMetaData.ENTITY_TYPE );
    }
-
-   // Public --------------------------------------------------------
 
    /**
     * Check whether the Entity Bean is a CMP Entity Bean
@@ -152,37 +139,21 @@ public class EntityMetaData
       return queries.iterator();
    }
 
-   /**
-    */
    public String getDefaultConfigurationName()
    {
       if( isCMP() )
-      {  // CMP
-         if( getApplicationMetaData().isEJB2x() )
-         {  // CMP 2.x
-            if( isClustered() )
-            {
-               return ConfigurationMetaData.CLUSTERED_CMP_2x_13;
-            }
-            else
-            {
-               return ConfigurationMetaData.CMP_2x_13;
-            }
+      { 
+         if( isClustered() )
+         {
+            return ConfigurationMetaData.CLUSTERED_CMP_13;
          }
          else
-         {  // CMP 1.x
-            if( isClustered() )
-            {
-               return ConfigurationMetaData.CLUSTERED_CMP_1x_13;
-            }
-            else
-            {
-               return ConfigurationMetaData.CMP_1x_13;
-            }
+         {
+            return ConfigurationMetaData.CMP_13;
          }
       }
       else
-      {  // BMP
+      {
          if( isClustered() )
          {
             return ConfigurationMetaData.CLUSTERED_BMP_13;
@@ -193,7 +164,7 @@ public class EntityMetaData
          }
       }
    }
-   
+
    public boolean doDistributedCacheInvalidations ()
    {
       return this.doDistCachInvalidations ;
@@ -353,15 +324,4 @@ public class EntityMetaData
 
       
    }
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
 }
-/*
-vim:ts=3:sw=3:et
-*/

@@ -17,47 +17,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/** The configuration information for an EJB container.
- *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.35 $
- *
- *  <p><b>Revisions:</b><br>
- *  <p><b>2001/08/02: marcf</b>
- *  <ol>
- *   <li>Added locking policy as optional tag in jboss.xml
- *  </ol>
- *  <p><b>2001/10/16: billb</b>
- *  <ol>
- *   <li>Added clustering tags
- *  </ol>
- *  <p><b>2002/03/08: billb</b>
- *  <ol>
- *   <li>Added client-interceptor config
- *  </ol>
- *  <p><b>2002/03/10: reverbel</b>
- *  <ol>
- *   <li>Added IIOP tags and web-class-loader element
- *  </ol>
- *  <p><b>2002/05/17: reverbel</b>
- *  <ol>
- *   <li>Removed IIOP tags (specify a invoker-proxy-binding instead)
- *  </ol>
- *
+/**
+ * The configuration information for an EJB container.
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.36 $
  */
 public class ConfigurationMetaData extends MetaData
 {
-
-   // Constants -----------------------------------------------------
-   public static final String CMP_2x_13 = "Standard CMP 2.x EntityBean";
-   public static final String CMP_1x_13 = "Standard CMP EntityBean";
+   public static final String CMP_13 = "Standard CMP EntityBean";
    public static final String BMP_13 = "Standard BMP EntityBean";
    public static final String STATELESS_13 = "Standard Stateless SessionBean";
    public static final String STATEFUL_13 = "Standard Stateful SessionBean";
    public static final String MESSAGE_DRIVEN_13 = "Standard Message Driven Bean";
 
-   public static final String CLUSTERED_CMP_2x_13 = "Clustered CMP 2.x EntityBean";
-   public static final String CLUSTERED_CMP_1x_13 = "Clustered CMP EntityBean";
+   public static final String CLUSTERED_CMP_13 = "Clustered CMP EntityBean";
    public static final String CLUSTERED_BMP_13 = "Clustered BMP EntityBean";
    public static final String CLUSTERED_STATEFUL_13 = "Clustered Stateful SessionBean"; // we do not support JDK < 1.3
    public static final String CLUSTERED_STATELESS_13 = "Clustered Stateless SessionBean"; // we do not support JDK < 1.3
