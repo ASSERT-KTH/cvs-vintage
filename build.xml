@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.123 2002/11/08 19:48:54 igorfie Exp $ -->
+<!-- $Id: build.xml,v 1.124 2002/11/11 12:38:37 ejort Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -188,6 +188,7 @@
     <jmxdoclet destdir="${build.gen-src}"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
+        <include name="org/jboss/aspect/jmx/*.java"/>
         <include name="org/jboss/deployment/EARDeployer.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
         <include name="org/jboss/ejb/EJBDeployer.java"/>
