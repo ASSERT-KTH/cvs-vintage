@@ -1,4 +1,6 @@
 #set ($user = $issue.ModifiedBy )
+#set ($module = $issue.Module )
+#set ($issueType = $issue.IssueType )
 $issue.RModuleIssueType.DisplayName report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 
 #if ($issue.DefaultTextAttributeValue)
@@ -12,7 +14,13 @@ You can view the report at the following URL:
 $issue.UniqueId Report 
 
 #set ($attrValues = $issue.AttributeValuesMap)
-#foreach ( $attKey in $attrValues.keySet().iterator() )
-  #set ($attVal = $attrValues.get($attKey))
-  $attVal.RModuleAttribute.DisplayValue: $attVal.Value
+#foreach ($group in $module.getAttributeGroups($issueType))
+#foreach ($att in $group.Attributes)
+#set ($rma = $module.getRModuleAttribute($att, $issueType))
+#if ($rma.Active)
+#set ($attVal = $attrValues.get($att.getName().toUpperCase()))
+$attVal.RModuleAttribute.DisplayValue: $attVal.Value
 #end
+#end
+#end
+
