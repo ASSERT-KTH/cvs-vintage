@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.EnterpriseContextCachePolicy;
  *
  * @see EnterpriseInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class NoPassivationCachePolicy 
 	implements EnterpriseContextCachePolicy
@@ -33,7 +33,7 @@ public class NoPassivationCachePolicy
 	 * Creates a no passivation cache policy object given the instance 
 	 * cache that use this policy object, that btw is not used. 
 	 */
-	public NoPassivationCachePolicy(EnterpriseInstanceCache eic) {}
+	public NoPassivationCachePolicy(AbstractInstanceCache eic) {}
 
 	// Public --------------------------------------------------------
 

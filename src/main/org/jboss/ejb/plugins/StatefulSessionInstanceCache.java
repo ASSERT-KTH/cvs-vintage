@@ -23,10 +23,10 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *      
  * @author Simone Bordet (simone.bordet@compaq.com)
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class StatefulSessionInstanceCache 
-	extends EnterpriseInstanceCache
+	extends AbstractInstanceCache
 {
 	// Constants -----------------------------------------------------
     
@@ -84,15 +84,15 @@ public class StatefulSessionInstanceCache
 		{
 			if (ctx.getTransaction() != null) 
 			{
-            try 
-            {
-               return (ctx.getTransaction().getStatus() == Status.STATUS_NO_TRANSACTION);
-            }
-            catch (SystemException e) 
-            {
-               // SA FIXME: not sure what to do here 
-               return false;
-            }
+				try 
+				{
+				   return (ctx.getTransaction().getStatus() == Status.STATUS_NO_TRANSACTION);
+				}
+				catch (SystemException e) 
+				{
+				   // SA FIXME: not sure what to do here 
+				   return false;
+				}
 			}
 		}
 		return true;
