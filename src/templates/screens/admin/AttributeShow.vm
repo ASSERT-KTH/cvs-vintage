@@ -8,7 +8,9 @@ Please select an attribute from the list below, then click the "Modify
 Attribute" button:
 </p>
 
-<form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+<form action="$link.setPage("admin,AttributeShow.vm")" method="GET">
+    <input type="hidden" name="action" value="admin.ModifyAttributes">
+    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
 
 #set ( $attgroup = $intake.Attribute.Default )
     <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
