@@ -364,5 +364,4 @@ public  class AttributeGroup
         raag.setOrder(getAttributes().size() +1 );
         return raag;
     }
-
 }
