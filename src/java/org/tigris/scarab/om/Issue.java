@@ -280,16 +280,15 @@ public class Issue
     
     /** 
      * Remove an attachment file
+     * @param index starts with 1 because velocityCount start from 1
+     * but Vector starts from 0
      */
     public void removeFile(String index)
         throws Exception
     {
-        //note the following code minus 1 because velocityCount start from 1
-        //but Vector start from 0
         getAttachments().remove(Integer.parseInt(index) - 1);
     }
     
-
     /**
      * Use this instead of setScarabModule.
      */
