@@ -68,24 +68,30 @@ import org.tigris.scarab.util.Log;
  * mitList.getCommonAttributes() in cases where several modules and issuetypes
  * are involved.
  *
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.33 2003/07/19 22:55:33 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.34 2003/07/30 15:30:30 dlr Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
     implements Persistent
 {
     /**
-     * a local reference to the user.
+     * A local reference to the user.
      */
     private ScarabUser aScarabUser;
 
     private List itemsScheduledForDeletion;
-    // cache the expanded list because it is used by many methods
-    // and is not likely to change after list is first initialized.
+
+    /**
+     * Cache the expanded list because it is widely used and unlikely
+     * to change after initialization.
+     */
     private List expandedList = null;
-    // keep track if this list represents everything the user can query
+
+    /**
+     * Whether this list represents everything the user can query.
+     */
     private boolean isAllMITs = false;
 
     public int size()
