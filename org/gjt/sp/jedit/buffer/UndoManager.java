@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.19 2003/06/04 04:31:04 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.20 2003/06/05 00:01:49 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -75,6 +75,8 @@ public class UndoManager
 			int caret = undosLast.undo();
 			redosFirst = undosLast;
 			undosLast = undosLast.prev;
+			if(undosLast == null)
+				undosFirst = null;
 			return caret;
 		}
 	} //}}}
@@ -93,6 +95,8 @@ public class UndoManager
 
 			int caret = redosFirst.redo();
 			undosLast = redosFirst;
+			if(undosFirst == null)
+				undosFirst = undosLast;
 			redosFirst = redosFirst.next;
 			return caret;
 		}

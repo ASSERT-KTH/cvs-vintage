@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.16 2003/05/28 22:37:19 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.17 2003/06/05 00:01:49 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -108,7 +108,14 @@ public class KeyEventWorkaround
 				if(!OperatingSystem.isMacOS())
 					handleBrokenKeys(evt,keyCode);
 				else
+				{
+					/* we don't handle key pressed A+ */
+					/* they're too troublesome */
+					if(evt.isAltDown())
+						return null;
+
 					last = LAST_NOTHING;
+				}
 				break;
 			}
 

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.55 2003/06/03 22:02:40 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.56 2003/06/05 00:01:49 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -70,6 +70,15 @@ public class TokenMarker
 	public ParserRuleSet getRuleSet(String setName)
 	{
 		return (ParserRuleSet) ruleSets.get(setName);
+	} //}}}
+
+	//{{{ getRuleSets() method
+	/**
+	 * @since jEdit 4.2pre3
+	 */
+	public ParserRuleSet[] getRuleSets()
+	{
+		return (ParserRuleSet[])ruleSets.values().toArray(new ParserRuleSet[ruleSets.size()]);
 	} //}}}
 
 	//{{{ markTokens() method
