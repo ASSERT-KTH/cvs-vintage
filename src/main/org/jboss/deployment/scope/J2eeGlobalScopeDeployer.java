@@ -11,7 +11,6 @@ import org.jboss.deployment.Deployment;
 import org.jboss.deployment.J2eeDeploymentException;
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Collection;
@@ -19,10 +18,6 @@ import java.util.Set;
 import java.util.Map;
 import java.io.IOException;
 import javax.management.ObjectName;
-import javax.management.MBeanException;
-import javax.management.RuntimeMBeanException;
-import javax.management.RuntimeErrorException;
-import javax.management.JMException;
 
 
 /**

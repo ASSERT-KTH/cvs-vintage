@@ -7,24 +7,18 @@
 package org.jboss.deployment;
 
 import java.net.URL;
-import java.net.URLConnection;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.BufferedWriter;
 import java.io.IOException;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
 
 
 
@@ -34,7 +28,7 @@ import java.util.jar.Manifest;
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
 *	@author Andreas Schaefer <andreas@jboss.org>
-*	@version $Revision: 1.9 $
+*	@version $Revision: 1.10 $
 */
 public class URLWizzard
 {

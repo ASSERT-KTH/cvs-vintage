@@ -8,7 +8,6 @@
 package org.jboss.deployment;
 
 import java.net.URL;
-import java.net.MalformedURLException;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -25,7 +24,7 @@ import java.util.jar.Manifest;
  *
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class Deployment
 implements java.io.Serializable {

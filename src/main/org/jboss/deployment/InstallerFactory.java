@@ -8,48 +8,21 @@ package org.jboss.deployment;
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.net.URLClassLoader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.Vector;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.Collection;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.util.Enumeration;
+import java.util.zip.ZipEntry;import java.util.zip.ZipInputStream;import java.util.Enumeration;
 
 
-import javax.management.MBeanServer;
-import javax.management.MBeanException;
-import javax.management.JMException;
-import javax.management.ObjectName;
 
-import org.jboss.util.MBeanProxy;
-import org.jboss.system.ServiceMBeanSupport;
 
-import org.jboss.metadata.XmlFileLoader;
-
-import org.jboss.ejb.DeploymentException;
-import org.jboss.ejb.ContainerFactoryMBean;
 
 import org.apache.log4j.Category;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 
 
@@ -59,7 +32,7 @@ import org.w3c.dom.Element;
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *  @author <a href="mailto:wburke@commercetone.com">Bill Burke</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class InstallerFactory
 {

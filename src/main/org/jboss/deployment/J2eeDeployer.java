@@ -21,17 +21,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.Collection;
 import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.util.Enumeration;
 
 
 import javax.management.MBeanServer;
@@ -44,16 +35,10 @@ import javax.management.RuntimeErrorException;
 
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.MBeanProxy;
 
-import org.jboss.ejb.DeploymentException;
-import org.jboss.ejb.ContainerFactoryMBean;
 
 import org.jboss.management.j2ee.J2EEApplication;
-import org.jboss.management.j2ee.J2EEManagedObject;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 
 /** 
@@ -75,7 +60,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 
 public class J2eeDeployer

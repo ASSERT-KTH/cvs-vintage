@@ -7,26 +7,20 @@
 package org.jboss.deployment;
 
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
@@ -36,15 +30,12 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
-import javax.management.loading.MLet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.jboss.system.MBeanClassLoader;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceLibraries;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.system.URLClassLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -58,7 +49,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.14 $ <p>
+ * @version   $Revision: 1.15 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import

@@ -6,10 +6,7 @@
 */
 package org.jboss.deployment;
 
-import javax.management.ObjectName;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
 
 import org.jboss.system.Service;
 /** 
@@ -18,7 +15,7 @@ import org.jboss.system.Service;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @see org.jboss.system.Service
 *
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 *   <p><b>20010830 marc fleury:</b>
 *   <ul>
