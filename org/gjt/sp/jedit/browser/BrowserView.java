@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.14 2001/11/30 12:07:54 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.15 2001/12/01 01:08:33 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -506,8 +506,8 @@ public class BrowserView extends JPanel
 				Rectangle cellRect = getPathBounds(path);
 				if(cellRect != null && !cellRectIsVisible(cellRect))
 				{
-					return new Point(cellRect.x + (showIcons ? 20 : 1),
-						cellRect.y + (showIcons ? 1 : -1));
+					return new Point(cellRect.x + (showIcons ? 19 : 1),
+						cellRect.y -1);
 				}
 			}
 			return null;
