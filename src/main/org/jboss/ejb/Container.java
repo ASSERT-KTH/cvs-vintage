@@ -72,7 +72,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  *
  * <p><b>Revisions:</b>
  *
@@ -149,7 +149,9 @@ public abstract class Container implements DynamicMBean
    /** ??? */   
    protected Class localInterface;
 
-   protected MBeanServer mbeanServer;
+   // We need the visibility on the MBeanServer for prototyping, it will be removed in the future FIXME marcf
+   //protected MBeanServer mbeanServer;
+   public MBeanServer mbeanServer;
 
    // Public --------------------------------------------------------
 
@@ -392,7 +394,12 @@ public abstract class Container implements DynamicMBean
    }
 
    /**
-    * A default implementation of starting the container service (no-op).
+    * A default implementation of starting the container service.
+    * The container registers it's dynamic MBean interface in the JMX base.
+    * FIXME marcf: give some more thought as to where to start and stop MBean registration.
+    * stop could be a flag in the JMX server that essentially doesn't proxy invocations but the 
+    * MBean would still be registered in the MBeanServer under the right name until undeploy
+    
     * The concrete container classes should override this method to introduce
     * implementation specific start behaviour.
     *
@@ -402,9 +409,8 @@ public abstract class Container implements DynamicMBean
       throws Exception
    {
       localContainerInvoker.start();
-      String domain = mbeanServer.getDefaultDomain();
       String jndiName = this.getBeanMetaData().getJndiName();
-      ObjectName jmxName = new ObjectName(domain+":service=Container,jndiName="+jndiName);
+      ObjectName jmxName = new ObjectName("J2EE:service=EJB,jndiName="+jndiName);
       mbeanServer.registerMBean(this, jmxName);
    }
 
@@ -418,9 +424,8 @@ public abstract class Container implements DynamicMBean
       localContainerInvoker.stop();
       try
       {
-         String domain = mbeanServer.getDefaultDomain();
          String jndiName = this.getBeanMetaData().getJndiName();
-         ObjectName jmxName = new ObjectName(domain+":service=Container,jndiName="+jndiName);
+         ObjectName jmxName = new ObjectName("J2EE:service=EJB,jndiName="+jndiName);
          mbeanServer.unregisterMBean(jmxName);
       }
       catch(Exception e)
@@ -467,8 +472,10 @@ public abstract class Container implements DynamicMBean
     */
    public abstract Object invoke(MethodInvocation mi)
       throws Exception;
+      
+      
+   // DynamicMBean interface implementation ----------------------------------------------
 
-   // Begin DynamicMBean interface implementation
    public Object getAttribute(String attribute)
       throws AttributeNotFoundException,
              MBeanException,
@@ -501,6 +508,8 @@ public abstract class Container implements DynamicMBean
    public Object invoke(String actionName, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
    {
+
+      
       if( params != null && params.length == 1 && (params[0] instanceof MethodInvocation) == false )
          throw new MBeanException(new IllegalArgumentException("Expected zero or single MethodInvocation argument"));
 
