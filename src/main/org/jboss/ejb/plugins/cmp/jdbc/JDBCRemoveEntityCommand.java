@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCRemoveEntityCommand
    extends JDBCUpdateCommand
@@ -83,8 +83,10 @@ public class JDBCRemoveEntityCommand
 						oldValue.remove();
 					}
 				} else {
-					EJBLocalObject oldValue = (EJBLocalObject)oldRelation; 
-					oldValue.remove();
+					EJBLocalObject oldValue = (EJBLocalObject)oldRelation;
+				   if(oldValue != null) {
+						oldValue.remove();
+					}
 				}
 			}
 		}
