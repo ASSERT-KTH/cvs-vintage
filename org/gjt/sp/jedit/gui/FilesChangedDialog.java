@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * Files changed on disk dialog.
  *
  * @author Slava Pestov
- * @version $Id: FilesChangedDialog.java,v 1.9 2004/01/06 20:47:22 spestov Exp $
+ * @version $Id: FilesChangedDialog.java,v 1.10 2004/05/06 20:37:19 spestov Exp $
  */
 public class FilesChangedDialog extends EnhancedDialog
 {
@@ -269,12 +269,15 @@ public class FilesChangedDialog extends EnhancedDialog
 
 		for(int i = 0; i < paths.length; i++)
 		{
-			 TreePath path = paths[i];
-			 DefaultMutableTreeNode node
-				= (DefaultMutableTreeNode)
+			TreePath path = paths[i];
+
+			// is it a header?
+			if(path.getPathCount() == 2)
+				continue;
+
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 				path.getLastPathComponent();
-			if(!(node.getUserObject() instanceof
-				String))
+			if(!(node.getUserObject() instanceof String))
 			{
 				return;
 			}
