@@ -24,7 +24,7 @@
 // File: FigUsage.java
 // Classes: FigUsage
 // Original Author: Markus Klink
-// $Id: FigUsage.java,v 1.1 2002/10/23 05:42:52 mkl Exp $
+// $Id: FigUsage.java,v 1.2 2002/10/29 09:05:51 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -43,7 +43,7 @@ public class FigUsage extends FigDependency {
     protected ArrowHeadGreater endArrow;
 
     public FigUsage() {
-        super();
+	super();
     }
 
     public FigUsage(Object edge) {
@@ -54,5 +54,15 @@ public class FigUsage extends FigDependency {
         super(edge,lay);
     }
         
+    protected void modelChanged() {
+	super.modelChanged();
+	
+	String stereoTypeStr = _stereo.getText();
+
+	if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
+	    _stereo.setText("<<usage>>");
+	}
+    } 
+
 } /* end class FigUsage */
 
