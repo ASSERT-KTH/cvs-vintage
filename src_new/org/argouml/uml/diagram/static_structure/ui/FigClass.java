@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.83 2003/12/06 16:07:18 alexb Exp $
+// $Id: FigClass.java,v 1.84 2003/12/26 16:27:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,9 +116,11 @@ public class FigClass extends FigNodeModelElement {
      * <p>Manages residency of a class within a component on a deployment
      *   diagram. Not clear why it is public, or even why it is an instance
      *   variable (rather than local to the method).</p>
+     *
+     * not currently used. should be lazily instantiated in future.
      */
-    public Object resident =
-	UmlFactory.getFactory().getCore().createElementResidence();
+//    public Object resident =
+//	UmlFactory.getFactory().getCore().createElementResidence();
 
     /**
      * <p>Text highlighted by mouse actions on the diagram.</p>
