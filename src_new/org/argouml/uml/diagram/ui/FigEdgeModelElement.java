@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.80 2005/01/23 20:41:15 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.81 2005/01/29 15:25:57 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,6 @@ import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
-import org.argouml.util.Trash;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
@@ -647,10 +646,7 @@ public abstract class FigEdgeModelElement
     public void deleteFromModel() {
         Object own = getOwner();
         if (own != null) {
-            Trash.SINGLETON.addItemFrom(getOwner(), null);
-            if (org.argouml.model.ModelFacade.isAModelElement(own)) {
-                Model.getUmlFactory().delete(own);
-            }
+            ProjectManager.getManager().getCurrentProject().moveToTrash(own);
         }
         Iterator it = getPathItemFigs().iterator();
         while (it.hasNext()) {

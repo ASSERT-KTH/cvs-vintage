@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.22 2005/01/21 21:09:46 mvw Exp $
+// $Id: FigStateVertex.java,v 1.23 2005/01/29 15:25:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,10 @@ public abstract class FigStateVertex extends FigNodeModelElement {
      */
     public void setEnclosingFig(Fig encloser) {
         super.setEnclosingFig(encloser);
+        /* If this fig is not visible, do not adapt the UML model! 
+         * This is used for deleting. See issue 3042. */
+        if  (!isVisible())
+            return; 
         if (!(ModelFacade.isAStateVertex(getOwner()))) return;
         Object stateVertex = getOwner();
         Object compositeState = null;

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.89 2005/01/27 21:42:28 linus Exp $
+// $Id: FigInterface.java,v 1.90 2005/01/29 15:25:57 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -514,6 +514,10 @@ public class FigInterface extends FigNodeModelElement
         super.setEnclosingFig(encloser);
         if (!(ModelFacade.isAModelElement(getOwner())))
             return;
+        /* If this fig is not visible, do not adapt the UML model! 
+         * This is used for deleting. See issue 3042. */
+        if  (!isVisible())
+            return; 
         Object me = /*(MModelElement)*/ getOwner();
         Object m = null;
 
