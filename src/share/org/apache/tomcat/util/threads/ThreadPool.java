@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.3 2001/03/02 04:11:52 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2001/03/02 04:11:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.4 2001/04/21 18:42:51 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/04/21 18:42:51 $
  *
  * ====================================================================
  *
@@ -79,9 +79,9 @@ public class ThreadPool  {
     /*
      * Default values ...
      */
-    public static final int MAX_THREADS = 100;
+    public static final int MAX_THREADS = 200;
     public static final int MAX_SPARE_THREADS = 50;
-    public static final int MIN_SPARE_THREADS = 10;
+    public static final int MIN_SPARE_THREADS = 4;
     public static final int WORK_WAIT_TIMEOUT = 60*1000;
 
     /*
@@ -142,6 +142,13 @@ public class ThreadPool  {
     }
 
     public synchronized void start() {
+	stopThePool=false;
+        currentThreadCount  = 0;
+        currentThreadsBusy  = 0;
+        maxThreads      = MAX_THREADS;
+        maxSpareThreads = MAX_SPARE_THREADS;
+        minSpareThreads = MIN_SPARE_THREADS;
+
         adjustLimits();
 
         openThreads(minSpareThreads);
@@ -378,6 +385,7 @@ public class ThreadPool  {
             shouldTerminate = false;
             this.p = p;
             t = new Thread(this);
+	    t.setName( "MonitorRunnable" );
             t.start();
         }
 
