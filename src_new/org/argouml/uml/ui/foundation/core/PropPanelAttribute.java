@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.27 2003/01/07 20:49:13 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.28 2003/01/26 16:51:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.27 2003/01/07 20:49:13 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.28 2003/01/26 16:51:11 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -49,7 +49,6 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox2;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.UMLTaggedBooleanProperty;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.UMLVisibilityPanel;
 
 import ru.novosoft.uml.foundation.core.MAttribute;
@@ -77,7 +76,7 @@ public class PropPanelAttribute extends PropPanelModelElement {
 
 
         addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-        addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+        addField(getNameTextField(),1,0,0);
 
 	addCaption(Argo.localize("UMLMenu", "label.multiplicity"),2,0,0);
         addField(new UMLMultiplicityComboBox2(new UMLStructuralFeatureMultiplicityComboBoxModel(), ActionSetStructuralFeatureMultiplicity.SINGLETON),2,0,0);

@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.23 2003/01/26 16:22:47 kataka Exp $
+// $Id: PropPanelActor.java,v 1.24 2003/01/26 16:51:11 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -76,7 +76,7 @@ public class PropPanelActor extends PropPanelClassifier {
 
     public PropPanelActor() {
     	super("Actor", ConfigLoader.getTabPropsOrientation());
-    	addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
+    	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
     	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
     	addField(Argo.localize("UMLMenu", "label.namespace"),getNamespaceComboBox());        
     	

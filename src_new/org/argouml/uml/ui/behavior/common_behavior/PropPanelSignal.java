@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.19 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelSignal.java,v 1.20 2003/01/26 16:51:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,7 @@ import org.argouml.uml.ui.UMLAddDialog;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLModelElementListModel;
 import org.argouml.uml.ui.UMLReflectionListModel;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
-import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 
 import ru.novosoft.uml.behavior.common_behavior.MReception;
 import ru.novosoft.uml.behavior.common_behavior.MSignal;
@@ -61,7 +59,7 @@ public class PropPanelSignal extends PropPanelModelElement {
         Class mclass = MSignal.class;
 
         addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-        addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+        addField(getNameTextField(),1,0,0);
 
 
         addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);

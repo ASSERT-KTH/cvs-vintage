@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.24 2003/01/25 19:52:14 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.25 2003/01/26 16:51:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLMutableLinkedList;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.foundation.core.MAssociation;
@@ -149,7 +148,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
      */
     public PropPanelAssociationEnd() {
         this("AssociationEnd", ConfigLoader.getTabPropsOrientation());
-        addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
+        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
         addField(Argo.localize("UMLMenu", "label.association"), _associationScroll);
         addField(Argo.localize("UMLMenu", "label.type"), _typeCombobox);

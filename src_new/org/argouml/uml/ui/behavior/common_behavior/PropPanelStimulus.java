@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.17 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.17 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -44,9 +44,7 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.UMLStimulusActionTextField;
 import org.argouml.uml.ui.UMLStimulusActionTextProperty;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
-import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.common_behavior.MAction;
@@ -70,7 +68,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     Class mclass = MStimulus.class;
 
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+    addField(getNameTextField(),1,0,0);
     
     addCaption("Action:",2,0,0);
     addField(new UMLStimulusActionTextField(this,new UMLStimulusActionTextProperty("name")),2,0,0);

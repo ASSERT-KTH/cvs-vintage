@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.15 2003/01/07 20:49:13 kataka Exp $
+// $Id: PropPanelStereotype.java,v 1.16 2003/01/26 16:51:12 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,7 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLMetaclassComboBox;
 import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 import org.argouml.uml.ui.UMLSpecializationListModel;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
-import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
@@ -59,7 +57,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         Class mclass = MStereotype.class;
 
         addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-        addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+        addField(getNameTextField(),1,0,0);
 
         addCaption(Argo.localize("UMLMenu", "label.base-class"),2,0,0);
         JComboBox baseClass = new UMLMetaclassComboBox(this,"baseClass","getBaseClass","setBaseClass");

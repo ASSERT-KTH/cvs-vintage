@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.17 2003/01/07 20:49:13 kataka Exp $
+// $Id: PropPanelGeneralization.java,v 1.18 2003/01/26 16:51:12 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLModelElementListModel;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.UMLTextField;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.UMLTextProperty;
 
 import ru.novosoft.uml.behavior.common_behavior.MSignal;
@@ -67,7 +66,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
     setNameEventListening(namesToWatch);
 
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+    addField(getNameTextField(),1,0,0);
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);
     addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()),2,0,0);

@@ -25,7 +25,7 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.17 2003/01/07 20:49:13 kataka Exp $
+// $Id: PropPanelComponent.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -45,7 +45,6 @@ import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
 import org.argouml.uml.ui.UMLReflectionBooleanProperty;
-import org.argouml.uml.ui.UMLTextField2;
 
 import ru.novosoft.uml.foundation.core.MComponent;
 
@@ -60,7 +59,7 @@ public class PropPanelComponent extends PropPanelClassifier {
     Class mclass = MComponent.class;
 
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+    addField(getNameTextField(),1,0,0);
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);
     addField(getStereotypeBox(),2,0,0);

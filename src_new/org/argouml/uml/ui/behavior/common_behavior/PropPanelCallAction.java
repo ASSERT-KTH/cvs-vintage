@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.6 2003/01/24 20:20:00 kataka Exp $
+// $Id: PropPanelCallAction.java,v 1.7 2003/01/26 16:51:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,7 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel;
-import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
-import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 
 import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.common_behavior.MCallAction;
@@ -49,7 +47,7 @@ public class PropPanelCallAction extends PropPanelModelElement {
         Class mclass = MCallAction.class;
 
         addCaption(Argo.localize("UMLMenu", "label.name"), 1, 0, 0);
-        addField(new UMLTextField2(new UMLModelElementNameDocument()), 1, 0, 0);
+        addField(getNameTextField(), 1, 0, 0);
 
         UMLExpressionModel expressionModel =
             new UMLExpressionModel(

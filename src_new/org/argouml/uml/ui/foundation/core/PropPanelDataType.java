@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.20 2003/01/07 20:49:13 kataka Exp $
+// $Id: PropPanelDataType.java,v 1.21 2003/01/26 16:51:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLAttributesListModel;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLList;
-import org.argouml.uml.ui.UMLTextField2;
 
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -57,7 +56,7 @@ public class PropPanelDataType extends PropPanelClassifier {
     Class mclass = MDataType.class;
 
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
+    addField(getNameTextField(),1,0,0);
 
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);

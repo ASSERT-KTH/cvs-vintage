@@ -24,7 +24,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.11 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelPseudostate.java,v 1.12 2003/01/26 16:51:11 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -48,8 +48,6 @@ import org.argouml.uml.diagram.state.ui.FigShallowHistoryState;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLEnumerationBooleanProperty;
 import org.argouml.uml.ui.UMLRadioButton;
-import org.argouml.uml.ui.UMLTextField2;
-import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
@@ -65,7 +63,7 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
 
         Class mclass = MPseudostate.class;
 
-        addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
+        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
         addField(Argo.localize("UMLMenu", "label.container"), containerScroll);
         
