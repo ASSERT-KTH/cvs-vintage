@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.rmi.MarshalledObject;
+import java.rmi.AccessException;
+import java.rmi.ServerException;
 
 /**
  * This represents the client side of the EJB invoker.  This invoker uses
@@ -109,6 +111,11 @@ public class UnifiedInvokerProxy implements Invoker, Externalizable
          }
          return response;
 
+      }
+      catch(AccessException aex)
+      {
+         // per Jira issue JBREM-61
+         throw new ServerException(aex.getMessage(), aex);
       }
       catch(Throwable throwable)
       {
