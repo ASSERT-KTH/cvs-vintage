@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.gui.dialog.importfilter;
 
 import net.javaprog.ui.wizard.DataLookup;
@@ -30,10 +31,11 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
-
+/**
+ * Responsible for launching the addressbook import wizard.
+ */
 public class ImportWizardLauncher {
-    public ImportWizardLauncher() {
-    }
+    public ImportWizardLauncher() {}
 
     public void launchWizard() {
         final ImportPluginHandler pluginHandler;
