@@ -406,6 +406,15 @@ public class XmlMapper
     public InputSource resolveEntity(String publicId, String systemId)
 	throws SAXException
     {
+        if(publicId == null) {
+           log("publicID is 'null'");
+           return null;
+        }
+        
+        if(systemId == null) {
+           log("systemId is 'null'");
+           return null;
+        }
 	String dtd = (String) fileDTDs.get(publicId);
 	if( dtd != null ) {
 	    File dtdF=new File( dtd );
