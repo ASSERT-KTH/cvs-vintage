@@ -22,48 +22,49 @@ import java.util.*;
 import javax.management.*;
 import javax.management.loading.*;
 
+import org.jboss.dependencies.DependencyManager;
 import org.jboss.system.SecurityAssociation;
 
 /**
- *      
+ *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
-   
+
     String versionIdentifier = "BETA-PROD-01";
    // Attributes ----------------------------------------------------
-   
+
    // Static --------------------------------------------------------
    public static void main(final String[] args)
       throws Exception
    {
       // Add shutdown hook
       final java.io.PrintStream out = System.err;
-      
+
       // Load system properties
       InputStream propertiesIn = Main.class.getClassLoader().getResourceAsStream("jboss.properties");
-      
+
       if ( propertiesIn == null ) {
-      
+
           throw new IOException("jboss.properties missing");
       }
-      
+
       System.getProperties().load(propertiesIn);
-      
+
       // Set security
-      
+
       String serverPolicy = Main.class.getClassLoader().getResource("server.policy").getFile();
-      
+
       if ( serverPolicy == null ) {
-          
+
           throw new IOException("server.policy missing");
       }
-      
+
       System.setProperty("java.security.policy", serverPolicy);
       System.setSecurityManager(new SecurityManager());
 
@@ -92,27 +93,27 @@ public class Main
     {
        this(new String[] { "jboss" });
     }
-    
+
     public Main(String[] configurations)
     {
       try
       {
          final PrintStream err = System.err;
-         
+
          com.sun.management.jmx.Trace.parseTraceProperties();
-         
+
          // Load all configurations - one MBeanServer for each configuration
          for (int i = 0; i < configurations.length; i++)
          {
              final MBeanServer server = MBeanServerFactory.createMBeanServer();
-      
+
              // Create MLet
              MLet mlet = new MLet();
              server.registerMBean(mlet, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
-             
+
              // Set MLet as classloader for this app
              Thread.currentThread().setContextClassLoader(mlet);
-             
+
              // Read configuration
              URL mletConf = getClass().getClassLoader().getResource(configurations[i]+".conf");
              Set beans = (Set)mlet.getMBeansFromURL(mletConf);
@@ -131,41 +132,35 @@ public class Main
                 else if (obj instanceof Throwable)
                     ((Throwable)obj).printStackTrace(err);
              }
-             
+
           // Load settings from XML
           InputStream conf = getClass().getClassLoader().getResourceAsStream(configurations[i]+".jcml");
           byte[] arr = new byte[conf.available()];
           conf.read(arr);
           String cfg = new String(arr);
-          
+
              // Invoke configuration loader
              server.invoke(new ObjectName(":service=Configuration"), "load", new Object[] { cfg }, new String[] { "java.lang.String" });
-    
+
              // Get configuration from service
              cfg = (String)server.invoke(new ObjectName(":service=Configuration"), "save", new Object[0] , new String[0]);
-          
+
           // Store config
           // This way, the config will always contain a complete mirror of what's in the server
-             URL confUrl = getClass().getClassLoader().getResource(configurations[i]+".jcml");
-          PrintWriter out = new PrintWriter(new FileWriter(confUrl.getFile()));
-          out.println(cfg);
-          out.close();
-          
-             // Start MBeans
-//				Iterator mbeans = server.queryNames(null, null).iterator();
-          Iterator mbeans = beans.iterator();
-          while (mbeans.hasNext())
-          {
-              ObjectName name = ((ObjectInstance)mbeans.next()).getObjectName();
-              try
-              {
-                 server.invoke(name, "start", new Object[0], new String[0]);
-              } catch (Exception e)
-              {
-                 // Ignore
-              }
-          }
-             
+            URL confUrl = getClass().getClassLoader().getResource(configurations[i]+".jcml");
+            PrintWriter out = new PrintWriter(new FileWriter(confUrl.getFile()));
+            out.println(cfg);
+            out.close();
+
+            // Start MBeans
+            InputStream depFile = getClass().getClassLoader().getResourceAsStream("jboss.dependencies");
+            byte[] depBytes = new byte[depFile.available()];
+            depFile.read(depBytes);
+            String depXML = new String(depBytes);
+            DependencyManager mgr = new DependencyManager();
+            mgr.loadXML(depXML);
+            mgr.startMBeans(server);
+
              // Add shutdown hook
              try
              {
@@ -198,17 +193,17 @@ public class Main
                 // JDK 1.2.. ignore!
              }
 
-    /*         
+    /*
              // Command tool
              // Should be replaced with a MBean?
-             
+
              BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
              String line;
              while (true)
              {
                 // Get command
                 line = reader.readLine();
-                
+
                 if (line.equals("shutdown"))
                 {
                    Set mBeans = server.queryNames(null, null);
@@ -224,7 +219,7 @@ public class Main
                          // Ignore
                       }
                    }
-                   
+
                    System.exit(0);
                 } else
                 {
@@ -243,7 +238,7 @@ public class Main
                    }
                 }
              }
-    */         
+    */
          }
       } catch (RuntimeOperationsException e)
       {
@@ -259,7 +254,7 @@ public class Main
       {
          e.printStackTrace();
       }
-       
+
        // Done
        System.out.println("jBoss 2.0 "+versionIdentifier+" Started");
     }
