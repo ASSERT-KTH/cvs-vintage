@@ -45,13 +45,14 @@ import org.jboss.deployment.DeploymentException;
 
 import org.jboss.util.jmx.JMXExceptionDecoder;
 import org.jboss.util.jmx.MBeanProxy;
+import org.jboss.util.Strings;
 
 import org.jboss.logging.Logger;
 
 /**
  * A JMX client to deploy an application into a running JBoss server via RMI.
  *
- * @version <tt>$Revision: 1.1 $</tt>
+ * @version <tt>$Revision: 1.2 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -168,33 +169,6 @@ public class RemoteDeployer
    }
 
    /**
-    * Make a URL from the given URL spec.  Will handle protocol-less strings
-    * as a file:// URL.
-    */
-   protected static URL makeURL(final String urlspec) throws MalformedURLException
-   {
-      URL url;
-      
-      try {
-         url = new URL(urlspec);
-      }
-      catch (Exception e) {
-         // make sure we have a absolute & canonical file url
-         try {
-            File file = new File(urlspec).getCanonicalFile();
-            url = file.toURL();
-         }
-         catch (IOException n) {
-            throw new MalformedURLException(n.toString());
-         }
-      }
-
-      log.debug("Using URL: " + url);
-      
-      return url;
-   }
-
-   /**
     * Deploys the given url on the remote server.
     *
     * @param url    The url of the application to deploy.
@@ -216,7 +190,7 @@ public class RemoteDeployer
     */
    public void deploy(final String url) throws MalformedURLException, DeploymentException
    {
-      deployer.deploy(makeURL(url));
+      deployer.deploy(Strings.toURL(url));
    }
    
    /**
@@ -241,7 +215,7 @@ public class RemoteDeployer
     */
    public void undeploy(final String url) throws MalformedURLException, DeploymentException
    {
-      deployer.undeploy(makeURL(url));
+      deployer.undeploy(Strings.toURL(url));
    }
    
    /**
@@ -266,7 +240,7 @@ public class RemoteDeployer
     */
    public boolean isDeployed(final String url) throws MalformedURLException
    {
-      return deployer.isDeployed(makeURL(url));
+      return deployer.isDeployed(Strings.toURL(url));
    }
    
 
@@ -285,7 +259,7 @@ public class RemoteDeployer
       protected URL url;
 
       public DeployerCommand(String url) throws Exception {
-         this.url = makeURL(url);
+         this.url = Strings.toURL(url);
       }
       
       public abstract void execute(Deployer deployer) throws Exception;
