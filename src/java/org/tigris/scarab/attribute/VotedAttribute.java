@@ -57,7 +57,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.7 $ $Date: 2001/03/03 00:07:07 $
+ * @version $Revision: 1.8 $ $Date: 2001/03/21 05:00:46 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -75,6 +75,12 @@ public abstract class VotedAttribute extends OptionAttribute
      */
     public void init() throws Exception
     {
+        // this conditional removes an Exception, it should be
+        // re-examined in more detail !!FIXME
+        if ( getIssue().getPrimaryKey() != null) 
+        {
+            
+        
         int i;
         votes = new Hashtable();
         AttributeVote vote;
@@ -99,6 +105,9 @@ public abstract class VotedAttribute extends OptionAttribute
         if (AttributeValuePeer.doSelect(crit1).size()==1)
             loaded = true;
         result = computeResult();
+
+        }
+
     }
 
     /**

@@ -163,7 +163,6 @@ public abstract class AttributeValue
             (TurbineGlobalCacheService)TurbineServices
             .getInstance().getService(GlobalCacheService.SERVICE_NAME);
 
-        boolean firstTime = false;
         Object resources = null;
         try
         {
@@ -171,14 +170,10 @@ public abstract class AttributeValue
         }
         catch (ObjectExpiredException oee)
         {
-            firstTime = true;
-        }
-
-        if (firstTime)
-        {
             resources = attv.loadResources();
             tgcs.addObject(key, new CachedObject(resources));
         }
+
         attv.setResources(resources);
         attv.init();
         return attv;

@@ -34,7 +34,7 @@ public class Issue
      * that are relevant for the module, but have not been set for
      * the issue.
      */
-    public HashMap getAllAttributes() throws Exception
+    public HashMap getModuleAttributes() throws Exception
     {
         return null;
     }
@@ -57,7 +57,7 @@ public class Issue
         return map;
     }
 
-    public HashMap getModuleAttributesMap() throws Exception
+    public HashMap getAllAttributeValuesMap() throws Exception
     {
         Criteria crit = new Criteria(2)
             .add(RModuleAttributePeer.DELETED, false);        
@@ -66,7 +66,7 @@ public class Issue
         HashMap siaValuesMap = getAttributeValuesMap();
 
         HashMap map = new HashMap( (int)(1.25*moduleAttributes.size() + 1) );
-try{
+
         for ( int i=0; i<moduleAttributes.size(); i++ ) 
         {
             Attribute att = 
@@ -79,10 +79,9 @@ try{
             }
             else 
             {
-                map.put( key, att ); 
+                map.put( key, AttributeValue.getNewInstance(att, this) ); 
             }             
         }
-}catch(Exception e){e.printStackTrace();}
         return map;
     }
 

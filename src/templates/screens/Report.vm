@@ -1,7 +1,7 @@
-#set $action = $link.setPage("Report.wm").setAction("ReportIssue").addPathInfo("nextScreen", "Report2.wm")
-#set $user = $scarab.User
-#set $module = $user.CurrentModule
-#set $issue = $user.ReportingIssue
+#set ( $action = $link.setPage("Report.vm").setAction("ReportIssue").addPathInfo("nextScreen", "Report2.vm") )
+#set ($user = $scarab.User)
+#set ($module = $user.CurrentModule)
+#set ($issue = $user.ReportingIssue)
 
 <form name="ReportForm" method="post" action="$action">
 
@@ -19,11 +19,12 @@
         <font color="red">At the top of the page, we will first want to select a project and then make it obvious what project we are reporting the bug on. The project that is initially selected should be determined from the project selected on the Start page.</font>
 <p>
 #set ($mods = $user.Modules )
+#set ($moduleIntake = $intake.Module.mapTo($module) )
         Project:
           <select 
-           name="$scarab.Intake.ModuleInput($module.PrimaryKey).ParentId.Key">
+           name="$moduleIntake.ParentId.Key">
             #foreach ($project in $user.Modules)
-              #if ($project.ParentId == 0)
+              #if ($project.ParentId.equals("0") )
                 #set ( $selected = "" )
                 #if ( $project.PrimaryKey == $user.CurrentModule.ParentId )
                   #set ( $selected = " selected" )
@@ -40,7 +41,7 @@
 <p>
 
         Component:
-          <select name="$scarab.Intake.ModuleInput($module.PrimaryKey).Id.Key">
+          <select name="$moduleIntake.Id.Key">
             #foreach ($component in $user.Modules)
               #set ( $selected = "" )
               #if ( $component.PrimaryKey == $module.PrimaryKey )
@@ -57,11 +58,11 @@
         on the next page for issues that are in the selected component and project 
         as well as other attributes that are part of the search on this page (to be discussed).</font>
 
-#set ( $attributes = $issue.ModuleAttributes )
+#set ( $attributes = $issue.AllAttributeValuesMap )
 #set ( $descAttr = $attributes.get("DESCRIPTION") )
 <p>
     Summary:
-#set ( $attrInput = $scarab.Intake.AttributeInput($descAttr.PrimaryKey) ) 
+#set ( $attrInput = $intake.AttributeValue.mapTo($descAttr) ) 
    <input name= "$attrInput.Value.Key"
         value="$!attrInput.Value.Value" size="20" type="text">
     <br>
@@ -85,34 +86,26 @@
      </TD>
       <TD>
         <SPAN CLASS="SectionHeader">Platform:<BR>
-#set ( $attr = $attributes.get("PLATFORM") )
-#set ( $attrValue = $
-#set ( $attrInput = $scarab.Intake.AttributeValueInput($attr.PrimaryKey) ) 
+#macro ( attrValueSelect $issue $attKey )
+    #set ( $attrValue = $issue.AllAttributeValuesMap.get($attKey) )
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
         <SELECT NAME="$attrInput.Id.Key">
             <option value="">Choose...</option>
-            #foreach ($option in $attr.Options)
-#set ( $optionInput = $scarab.Intake.AttributeValueInput 
+            #foreach ($option in $attr.AttributeOptions)
               #set ( $selected = "" )
-              #if ( $option.DisplayValue == $attr.Value )
+              #if ( $option.DisplayValue == $attrInput.Value )
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$option.Id">$option.DisplayValue</option>
-            #end
+            #end    
         </SELECT>
+#end
+          #attrValueSelect ($issue "PLATFORM")
       </TD>
       <TD>
         <SPAN CLASS="SectionHeader">OS:<BR>
-#set ( $attr = $attributes.get("OPERATING SYSTEM") )
-        <SELECT NAME="${attr.QueryKey}Id">
-            <option value="">Choose...</option>
-            #foreach ($option in $attr.Options)
-              #set ( $selected = "" )
-              #if ( $option.DisplayValue == $attr.Value )
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$option.Id">$option.DisplayValue</option>
-            #end
-        </SELECT>
+          #attrValueSelect ($issue "OPERATING SYSTEM")
       </TD>
   </tr>
 </table>
