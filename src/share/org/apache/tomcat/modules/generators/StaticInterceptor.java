@@ -174,6 +174,13 @@ public class StaticInterceptor extends BaseInterceptor {
 	String pathInfo=req.servletPath().toString();
 	if( pathInfo==null ) pathInfo="";
 
+	if( debug > 0 ) log("Method: " + req.method());
+	if(req.method().equalsIgnoreCase("OPTIONS") ||
+           req.method().equalsIgnoreCase("TRACE")) {
+	    req.setHandler(  ctx.getServletByName( "tomcat.fileHandler"));
+	    return 0;
+	}
+	    
 	String absPath=FileUtil.safePath( ctx.getAbsolutePath(),
 					  pathInfo);
 
@@ -409,12 +416,18 @@ final class FileHandler extends Handler  {
     public void doService(Request req, Response res)
 	throws Exception
     {
+	if(req.method().equalsIgnoreCase("OPTIONS")) {
+	    doOptions(req, res);
+	    return;
+	} else if(req.method().equalsIgnoreCase("TRACE")) {
+	    doTrace(req, res);
+	    return;
+	}
 	// if we are in include, with req==original request
 	// - just use the current sub-request
 	Request subReq=req;
 	if(req.getChild()!=null)
 	    subReq=req.getChild();
-
 	Context ctx=subReq.getContext();
 	// Use "javax.servlet.include.servlet_path" for path if defined.
 	// ErrorHandler places the path here when invoking an error page.
@@ -491,6 +504,25 @@ final class FileHandler extends Handler  {
 	    MimeHeaders headers=res.getMimeHeaders();
 	    headers.setValue( name ).setTime( value );
 	}
+    }
+    void doOptions(Request req, Response res)
+	    throws IOException {
+	res.addHeader("Allow","HEAD, GET, POST, OPTIONS, TRACE");
+    }
+    void doTrace(Request req, Response res)
+	throws IOException {
+	String CRLF = "\r\n";
+	res.setContentType("message/http");
+	StringBuffer resp = new StringBuffer();
+	Enumeration headers = req.getHeaderNames();
+	while( headers.hasMoreElements() ) {
+	    String hName = (String)headers.nextElement();
+	    String hValue = (String)req.getHeader(hName);
+	    resp.append(CRLF).append(hName).append(": ").append(hValue);
+	}
+	res.setContentLength(resp.length());
+	Writer out = res.getBuffer();
+	out.write(resp.toString());
     }
 
     /** All path checks that were part of DefaultServlet
