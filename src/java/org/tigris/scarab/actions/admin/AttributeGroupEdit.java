@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.5 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.6 2002/01/21 20:55:36 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -208,21 +208,24 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                {
                    // Remove module-option mapping
                    List rmos = module.getRModuleOptions(attribute, issueType);
-                   rmos.addAll(module.getRModuleOptions(attribute, 
-                         scarabR.getIssueType(issueType.getTemplateId()
-                                                       .toString())));
-                   for (int j = 0; j<rmos.size();j++)
+                   if (rmos != null)
                    {
-                       RModuleOption rmo = (RModuleOption)rmos.get(j);
-                       try
+                       rmos.addAll(module.getRModuleOptions(attribute, 
+                             scarabR.getIssueType(issueType.getTemplateId()
+                                                  .toString())));
+                       for (int j = 0; j<rmos.size();j++)
                        {
-                          rmo.delete(user);
+                           RModuleOption rmo = (RModuleOption)rmos.get(j);
+                           try
+                           {
+                               rmo.delete(user);
+                           }
+                           catch (Exception e)
+                           {
+                               data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                           }
                        }
-                       catch (Exception e)
-                       {
-                          data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                       }
-                   }
+                    }
                 }
             }
         }        
