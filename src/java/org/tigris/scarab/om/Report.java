@@ -1461,14 +1461,13 @@ public  class Report
             if (c >= 0) 
             {
                 Object secCrit = null;
-                int size = 1;
+                int size = columnData.size();
                 if (secondCriteria != null && secondCriteria.size() > 0) 
                 {
-                    size = secondCriteria.size();
-                    secCrit = secondCriteria.get(c%size);
+                    secCrit = secondCriteria.get(c/size);
                 }
 
-                Object cData = columnData.get(c/size);
+                Object cData = columnData.get(c%size);
                 if (r >= 0) 
                 {
                     Object rData = rowData.get(r);
