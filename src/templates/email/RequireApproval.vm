@@ -1,0 +1,4 @@
+The user $user.UserName has just submitted a project-wide query to your project $module.Name. To approve or reject it, please go to :
+
+<$link.setPage("admin,Approval.vm")>
+

@@ -1,0 +1,8 @@
+$body
+
+Comment(s):
+
+#if($comment)$comment #end
+
+
+#if($globalComment)$globalComment #end
