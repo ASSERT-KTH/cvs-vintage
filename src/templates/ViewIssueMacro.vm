@@ -377,7 +377,7 @@
 #if ($fullHistory.equals("true"))
   #set( $activity = $currentIssue.getActivity(true) )
 #else
-  #set( $activity = $currentIssue.Activity )
+  #set( $activity = $currentIssue.getActivity(false) )
 #end
 
 #if (!$activity.isEmpty() )
@@ -427,12 +427,15 @@
        </div>
       </div>
 
-#if ($fullHistory.equals("true"))
-    #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
-      <p><a href="$historyLink">hide complete history</p></a>
-#else
-    #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm").toString() )
-      <p><a href="$historyLink">show complete history</p></a>
+
+#if ($currentIssue.isHistoryLong())
+   #if ($fullHistory.equals("true"))
+        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm").toString() )
+        <p><a href="$historyLink">hide complete history</p></a>
+   #else
+        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPathInfo("fullhistory", "true").setPage("ViewIssue.vm").toString() )
+        <p><a href="$historyLink">show complete history</p></a>
+   #end
 #end
 
 
