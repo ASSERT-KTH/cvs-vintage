@@ -740,26 +740,14 @@ public abstract class HttpServlet extends GenericServlet
 		doGet(req, resp);
 	    } else {
 		long ifModifiedSince = req.getDateHeader(HEADER_IFMODSINCE);
-		if (ifModifiedSince == -1) {
-		    // if the client didn't ask for a if-modifed-since
-		    // no need to go further -- just do it.
+		if (ifModifiedSince < (lastModified / 1000 * 1000)) {
+		    // If the servlet mod time is later, call doGet()
+                    // Round down to the nearest second for a proper compare
+                    // A ifModifiedSince of -1 will always be less
+		    maybeSetLastModified(resp, lastModified);
 		    doGet(req, resp);
 		} else {
-		    // this is the most expensive path through
-		    // but we know we need to do it at this point
-		    maybeSetLastModified(resp, lastModified);
-		    long now = System.currentTimeMillis();
-		    if (now < ifModifiedSince ||
-			ifModifiedSince < lastModified) {
-			doGet(req, resp);
-		    } else {
-			// XXX
-			// this is more of a message than an error, but
-			// sendError does the job just fine. Maybe we
-			// should have a response.sendMessage or some
-			// such in a future api rev...
-			resp.sendError(HttpServletResponse.SC_NOT_MODIFIED);
-		    }
+		    resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 		}
 	    }
 
