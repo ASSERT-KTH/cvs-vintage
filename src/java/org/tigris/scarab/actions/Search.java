@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.99 2003/01/14 21:32:48 elicia Exp $
+ * @version $Id: Search.java,v 1.100 2003/01/15 20:10:57 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -359,7 +359,7 @@ public class Search extends RequireLoginFirstAction
     public void doRefinequery(RunData data, TemplateContext context)
          throws Exception
     {        
-        context.put("searchPutInContext", getScarabRequestTool(context).getPopulatedSearch());
+        context.put("refine", "true");
         setTarget(data, "AdvancedQuery.vm");            
     }
 

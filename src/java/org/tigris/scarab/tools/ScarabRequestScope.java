@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.30 2002/11/07 00:16:52 jmcnally Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.31 2003/01/15 20:10:57 elicia Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -268,7 +268,7 @@ public interface ScarabRequestScope extends ApplicationTool
      *
      * @return a <code>Issue</code> value
      */
-    public IssueSearch getSearch() throws Exception;
+    public IssueSearch getNewSearch() throws Exception;
 
     /**
      * This is used to get the format for a date in the 

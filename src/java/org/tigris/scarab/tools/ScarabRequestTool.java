@@ -1556,7 +1556,7 @@ try{
      *
      * @return a <code>Issue</code> value
      */
-    public IssueSearch getSearch()
+    public IssueSearch getNewSearch()
         throws Exception
     {
         if (issueSearch == null) 
@@ -1584,7 +1584,7 @@ try{
     public IssueSearch getPopulatedSearch(String query)
         throws Exception
     {
-        IssueSearch search = getSearch();
+        IssueSearch search = getNewSearch();
         ScarabLocalizationTool l10n = getLocalizationTool();
         search.setIssueListAttributeColumns(getRModuleUserAttributes());
 
@@ -1621,7 +1621,7 @@ try{
 
             // Set intake properties
             Group searchGroup = intake.get("SearchIssue", 
-                                           getSearch().getQueryKey() );
+                                           search.getQueryKey() );
 
             Field minDate = searchGroup.get("MinDate");
             if (minDate != null && minDate.toString().length() > 0)
@@ -1740,7 +1740,7 @@ try{
         // but SRT is not serializable.  Might want to change the interface,
         // but getSearchResults wraps an IssueSearch so we can get around it
         // that way
-        IssueSearch search = getSearch();
+        IssueSearch search = getNewSearch();
         List results = null;
         Object obj = 
             ScarabCache.get(search, "getUnprotectedCurrentSearchResults"); 
@@ -2440,12 +2440,16 @@ try{
     public List getAssignIssuesList()
         throws Exception
     {        
-        List issues = new ArrayList();
+        List issues = null;
         HashMap userMap = ((ScarabUser)data.getUser()).getAssociatedUsersMap();
-        Iterator iter = userMap.keySet().iterator();
-        while (iter.hasNext()) 
+        if (userMap != null && userMap.size() > 0)
         {
-            issues.add(IssueManager.getInstance((NumberKey)iter.next()));
+            issues = new ArrayList();
+            Iterator iter = userMap.keySet().iterator();
+            while (iter.hasNext()) 
+            {
+                issues.add(IssueManager.getInstance((NumberKey)iter.next()));
+            }
         }
         return issues;
     }

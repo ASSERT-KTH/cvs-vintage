@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.9 2003/01/08 22:39:07 jmcnally Exp $
+ * @version $Id: ModuleQuery.java,v 1.10 2003/01/15 20:10:57 elicia Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -137,8 +137,11 @@ public class ModuleQuery extends RequireLoginFirstAction
                 // instead of having to call the method yet again which would
                 // have a performance impact. kind of ugly, but it is in the 
                 // name of performance and not throwing exceptions. =) (JSS)
-                IssueSearch is = scarabR.getSearch();
+                /* Not sure we still need this. Commenting out for now,
+                 * while I investigate further
+                IssueSearch is = scarabR.getNewSearch();
                 context.put("searchPutInContext", is);
+                */
                 setTarget(data, "AdvancedQuery.vm");
             }
             catch (java.lang.IllegalArgumentException e)
