@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -890,6 +890,10 @@ public class EjbModule
                   ((XmlLoadable)interceptor).importXml(ielement);
                }
                istack.add(interceptor);
+            }
+            catch (ClassNotFoundException e)
+            {
+               log.warn("Could not load the " + className + " interceptor");
             }
             catch (Exception e)
             {
