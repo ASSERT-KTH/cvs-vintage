@@ -32,8 +32,12 @@ public interface MailFrameMediator extends FrameMediator {
 	public FolderCommandReference[] getTreeSelection();
 	public void setTreeSelection(FolderCommandReference[] r);
 	
+	public FolderCommandReference[] getAttachmentSelection();
+	public void setAttachmentSelection(FolderCommandReference[] r);
+		
 	public void registerTableSelectionListener(SelectionListener l);
 	public void registerTreeSelectionListener(SelectionListener l);
+	public void registerAttachmentSelectionListener(SelectionListener l);
 	
 	
 }

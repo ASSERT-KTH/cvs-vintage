@@ -26,6 +26,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.attachment.command.OpenAttachmentCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -37,24 +38,30 @@ import org.columba.mail.util.MailResourceLoader;
 public class OpenAction extends FrameAction implements SelectionListener {
 
 	public OpenAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "mainframe", "attachmentopen"));
-		
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"attachmentopen"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "attachmentopen_tooltip").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "attachmentopen_tooltip")
+				.replaceAll("&", ""));
+
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
 		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
-		
+
 		if (frameMediator.getSelectionManager() != null)
-		frameMediator.getSelectionManager().
-					registerSelectionListener(
-						"mail.attachment", 
-						this);
+			(
+				(
+					MailFrameMediator) frameMediator)
+						.registerAttachmentSelectionListener(
+				this);
 	}
 
 	/* (non-Javadoc)
@@ -73,7 +80,7 @@ public class OpenAction extends FrameAction implements SelectionListener {
 	 * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if(((AttachmentSelectionChangedEvent)e).getAddress() != null) {
+		if (((AttachmentSelectionChangedEvent) e).getAddress() != null) {
 			setEnabled(true);
 		} else {
 			setEnabled(false);

@@ -26,6 +26,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.attachment.command.SaveAttachmentCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -50,7 +51,12 @@ public class SaveAsAction extends FrameAction implements SelectionListener {
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save_as.png"));
 
-		frameMediator.getSelectionManager().registerSelectionListener("mail.attachment", this);
+		if (frameMediator.getSelectionManager() != null)
+			(
+				(
+					MailFrameMediator) frameMediator)
+						.registerAttachmentSelectionListener(
+				this);
 	}
 
 	/* (non-Javadoc)

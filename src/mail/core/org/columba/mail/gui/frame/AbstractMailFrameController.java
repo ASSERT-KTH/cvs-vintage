@@ -53,10 +53,13 @@ import org.columba.mail.gui.message.MessageController;
  */
 public abstract class AbstractMailFrameController
 	extends AbstractFrameController
-	implements MailFrameMediator, MessageViewOwner, AttachmentViewOwner, CharsetOwnerInterface {
+	implements
+		MailFrameMediator,
+		MessageViewOwner,
+		AttachmentViewOwner,
+		CharsetOwnerInterface {
 
 	private ToolBar toolBar;
-	
 
 	public MessageController messageController;
 	public AttachmentController attachmentController;
@@ -92,6 +95,18 @@ public abstract class AbstractMailFrameController
 		getSelectionManager().setSelection("mail.tree", r);
 	}
 
+	public FolderCommandReference[] getAttachmentSelection() {
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getSelectionManager().getSelection(
+				"mail.attachment");
+
+		return r;
+	}
+
+	public void setAttachmentSelection(FolderCommandReference[] r) {
+		getSelectionManager().setSelection("mail.attachment", r);
+	}
+
 	public void registerTableSelectionListener(SelectionListener l) {
 		getSelectionManager().registerSelectionListener("mail.table", l);
 	}
@@ -100,25 +115,25 @@ public abstract class AbstractMailFrameController
 		getSelectionManager().registerSelectionListener("mail.tree", l);
 	}
 
+	public void registerAttachmentSelectionListener(SelectionListener l) {
+		getSelectionManager().registerSelectionListener("mail.attachment", l);
+	}
+
 	public AbstractFrameView getView() {
 		return view;
 	}
 
-
-	
 	protected void registerSelectionHandlers() {
 	}
 
 	protected void initInternActions() {
-		
-	}
 
+	}
 
 	protected XmlElement createDefaultConfiguration(String id) {
 
 		XmlElement child = super.createDefaultConfiguration(id);
 
-		
 		XmlElement splitpanes = new XmlElement("splitpanes");
 		splitpanes.addAttribute("main", "200");
 		splitpanes.addAttribute("header", "200");
@@ -145,8 +160,7 @@ public abstract class AbstractMailFrameController
 	public void setCharsetManager(CharsetManager manager) {
 		charsetManager = manager;
 	}
-	
-	
+
 	public MessageController getMessageController() {
 		return messageController;
 	}
