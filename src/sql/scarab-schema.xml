@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.112 2002/10/12 23:31:00 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.113 2002/10/14 16:40:11 thierrylach Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -937,10 +937,10 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 
-    <index name="IX_REQUIRED">
+    <index name="IX_MOD_ATTR_REQUIRED">
         <index-column name="REQUIRED"/>
     </index>
-    <index name="IX_QUICKSEARCH">
+    <index name="IX_MOD_ATTR_QUICKSEARCH">
         <index-column name="QUICK_SEARCH"/>
     </index>
 </table>
@@ -994,10 +994,10 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 
-    <index name="IX_REQUIRED">
+    <index name="IX_ISSUETYPE_ATTR_REQUIRED">
         <index-column name="REQUIRED"/>
     </index>
-    <index name="IX_QUICKSEARCH">
+    <index name="IX_ISSUETYPE_ATTR_QUICKSEARCH">
         <index-column name="QUICK_SEARCH"/>
     </index>
 </table>
