@@ -8,71 +8,62 @@
   <link rel="alternate stylesheet" title="compact" type="text/css" href="/scarab/style/compact.css" />
  </head>
 <body marginwidth="0" marginheight="0">
-	<div id="banner">
-		<table border="0" cellspacing="0" cellpadding="8" width="100%">
-		<tr>
-		<td>
-		<a href="$link.setPage("Index.vm")"><img src="/scarab/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
-		</td>
-		<td>
-		<div align="right" id="login">
-		    #if ($data.User.FirstName)
-			<div>
-				Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
-			</div>
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="$link.setPage("Index.vm")"><img src="/scarab/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+      #if ($data.User.FirstName)
+   <div>
+    Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
+   </div>
             #end
 <div>
 #if ($scarabR.CurrentModule)
-   Current Module: 
+   Current Module:
    <a href="$link.setPage("SelectModule.vm")"><strong>$scarabR.CurrentModule.Name</strong></a>
 #else
    <a href="$link.setPage("SelectModule.vm")"><strong>Select Module</strong></a>
 #end
 </div>
-
-			<div>
+   <div>
     #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
     #else
     <a href="$link.setPage("Login.vm")">Login</a>
     #end
-  | <a href="$link.setPage("Links.vm")">Links</a> 
+  | <a href="$link.setPage("Links.vm")">Links</a>
   | <a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a>
   | <a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a>
-			</div>
-		</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
 <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
   <td id="leftcol" width="20%">
-	<div id="navcolumn">
-
+ <div id="navcolumn">
 <div><strong>My start page</strong></div>
-
-<div><strong>Projects &amp; categories</strong></div> 
-
+<div><strong>Projects &amp; categories</strong></div>
  <div id="tools"><strong>Project tools</strong>
       <div><small>Members</small></div>
- <div><small> Mailing lists</small></div> 
+ <div><small> Mailing lists</small></div>
 <div><small>Source code</small></div>
 <div><small>Issue tracking</small>
-
-
-			<div><small>Enter issue</small></div>
-			<div><small>Queries</small></div>
-			<div><small>Reports</small></div>
-			<div><small>Vote mgmt.</small></div>
-			<div><small>Workflow optns.</small></div>
-
+   <div><small>Enter issue</small></div>
+   <div><small>Queries</small></div>
+   <div><small>Reports</small></div>
+   <div><small>Vote mgmt.</small></div>
+   <div><small>Workflow optns.</small></div>
 </div>
      <div><small>Documents</small></div>
-      <div><small>News</small></div>  
+      <div><small>News</small></div>
    </div>
-
 </div>
   <div id="helptext">
  <table border="0" cellspacing="0" cellpadding="3" width="100%">
@@ -81,7 +72,7 @@
  </tr>
  <tr>
  <td>
-  <div>Learn 
+  <div>Learn
  more about this project? </div> <div>Print this page...</div>
 <div>Troubleshoot...
 </div>
@@ -89,46 +80,38 @@
 </tr>
 </table>
 </div>
-
-
 </td>
 <td width="100%" id="bodycol">
-
-	<!-- Scarab - App -->
-	<div id="topmodule">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-			<td nowrap="nowrap">
+ <!-- Scarab - App -->
+ <div id="topmodule">
+  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
             <form action="$link.setPage("ViewIssue.vm")" method="get">
-			<select>
-			<option>saved queries</option>
-			<option>query one</option>
-			<option>query two</option>
-			</select> 
-			<input type="submit" name="query" value="Go" />
-			&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-
+   <select>
+   <option>saved queries</option>
+   <option>query one</option>
+   <option>query two</option>
+   </select>
+   <input type="submit" name="query" value="Go" />
+   &nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
             <input type="text" name="id" size="15" maxlength="255" />
             <input type="submit" name="Submit" value="Query" />
-
-			&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<small><a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a></small>
+   &nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+   <small><a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a></small>
    </form>
-			</td>			
-		</tr>
-		</table>
-	</div>
-	<!-- Scarab - App -->
-
+   </td>
+  </tr>
+  </table>
+ </div>
+ <!-- Scarab - App -->
 #actionErrorMsg()
-$renderer.render("screens", $data, $template) 
-
+$renderer.render("screens", $data, $template)
 <!-- Structural Elements -->
 </td>
 </tr>
 </table>
 <!-- Structural Elements -->
-
-$renderer.render("navigations", $data, "/ScarabBottom.vm") 
+$renderer.render("navigations", $data, "/ScarabBottom.vm")
  </body>
 </html>
