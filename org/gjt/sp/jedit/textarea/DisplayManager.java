@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.48 2003/05/22 23:43:16 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.49 2003/05/27 21:15:33 spestov Exp $
  */
 public class DisplayManager
 {
@@ -571,7 +571,8 @@ public class DisplayManager
 		hideLineRange(end + 1,buffer.getLineCount() - 1);
 
 		// if we narrowed to a single collapsed fold
-		if(getNextVisibleLine(start) == -1)
+		if(start != buffer.getLineCount() - 1
+			&& !isLineVisible(start + 1))
 			expandFold(start,false);
 
 		// Hack... need a more direct way of obtaining a view?

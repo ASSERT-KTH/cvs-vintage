@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.87 2003/05/26 02:57:38 spestov Exp $
+ * @version $Id: View.java,v 1.88 2003/05/27 21:15:31 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -447,14 +447,16 @@ public class View extends JFrame implements EBComponent
 			{
 				if(keyEventInterceptor != null)
 					keyEventInterceptor.keyTyped(evt);
-				else if(!inputHandler.isPrefixActive())
+				else //if(!inputHandler.isPrefixActive())
 					inputHandler.keyTyped(evt);
 			}
 			else
 			{
 				if(keyEventInterceptor == null
 					&& inputHandler.isPrefixActive())
+				{
 					inputHandler.keyTyped(evt);
+				}
 			}
 
 			// we might have been closed as a result of
