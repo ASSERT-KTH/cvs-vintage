@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.29 2004/07/20 22:07:43 kataka Exp $
+// $Id: TargetManager.java,v 1.30 2004/07/21 22:01:57 d00mst Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -568,7 +568,6 @@ public final class TargetManager {
 			  + listeners[i + 1]
 			  + " an error is thrown.",
 			  e);
-		throw (e); // this should not fail silently to the user
 	    }
         }
     }
