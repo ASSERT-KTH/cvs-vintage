@@ -152,7 +152,7 @@
     <delete dir="${test.tmp.client2}"/>
     <mkdir dir="${test.tmp.client2}"/>  
 
-    <copy file="${test.ext}/${client.properties.file.name2}"
+    <copy file="${client.properties.file.name2}"
           tofile="${test.tmp.client2}/carol.properties" />
   </target>
 

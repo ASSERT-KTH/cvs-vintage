@@ -2,7 +2,7 @@
 
 # Author:  Vadim Nasardinov (vadimn@redhat.com)
 # Since:   2004-12-09
-# Version: $Id: junit-results.rb,v 1.3 2005/02/04 16:27:56 el-vadimo Exp $
+# Version: $Id: junit-results.rb,v 1.4 2005/02/09 23:16:31 el-vadimo Exp $
 
 # A quick hack for generating a summary of JUnit results for CAROL
 
@@ -111,8 +111,8 @@ File.open(RESULT_PAGE, "w") do |ff|
         path, relpath, testname, process = report
         n_tests, n_failed, n_errors = extract_results(path)
 
-        if testname == "multi_suniiop_jeremie" or \
-            (testname == "multi_suniiop_jeremie.nons" and process == "[process #1]")
+        if testname == "iiop.jeremie" or \
+            (testname == "iiop.jeremie.nons" and process == "[process #1]")
 
             style = ' style="background-color: PeachPuff;"'
         else
