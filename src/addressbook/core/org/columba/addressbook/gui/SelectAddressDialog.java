@@ -14,31 +14,13 @@
 
 package org.columba.addressbook.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListModel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -52,6 +34,8 @@ import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.AddressParser;
+
+import org.columba.core.gui.util.wizard.WizardTopBorder;
 
 public class SelectAddressDialog extends JDialog implements ActionListener
 {
@@ -103,16 +87,11 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 	
 	protected void init()
 	{
-		getContentPane().setLayout(new BorderLayout());
-
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		Border b = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-		mainPanel.setBorder(b);
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		//panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new BorderLayout());
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
@@ -120,10 +99,8 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 		leftPanel.add(Box.createVerticalGlue());
 
-		JPanel list1Panel = new JPanel();
-		list1Panel.setLayout(new BorderLayout());
-		JPanel list1TopPanel = new JPanel();
-		list1TopPanel.setLayout(new BorderLayout());
+		JPanel list1Panel = new JPanel(new BorderLayout());
+		JPanel list1TopPanel = new JPanel(new BorderLayout());
 		list1TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
 		JLabel label1 = new JLabel("To:");
@@ -154,12 +131,10 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		list1Panel.add(toPane, BorderLayout.CENTER);
 		leftPanel.add(list1Panel);
 
-		leftPanel.add(Box.createRigidArea(new java.awt.Dimension(0, 20)));
+		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		JPanel list2Panel = new JPanel();
-		list2Panel.setLayout(new BorderLayout());
-		JPanel list2TopPanel = new JPanel();
-		list2TopPanel.setLayout(new BorderLayout());
+		JPanel list2Panel = new JPanel(new BorderLayout());
+		JPanel list2TopPanel = new JPanel(new BorderLayout());
 		list2TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
 		JLabel label2 = new JLabel("Cc:");
@@ -174,16 +149,14 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		list2Panel.add(ccPane, BorderLayout.CENTER);
 		leftPanel.add(list2Panel);
 
-		leftPanel.add(Box.createRigidArea(new java.awt.Dimension(0, 20)));
+		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		JPanel list3Panel = new JPanel();
-		list3Panel.setLayout(new BorderLayout());
-		JPanel list3TopPanel = new JPanel();
+		JPanel list3Panel = new JPanel(new BorderLayout());
+		JPanel list3TopPanel = new JPanel(new BorderLayout());
 		list3TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
 		JLabel label3 = new JLabel("Bcc:");
 
-		list3TopPanel.setLayout(new BorderLayout());
 		list3TopPanel.add(label3, BorderLayout.WEST);
 		list3Panel.add(list3TopPanel, BorderLayout.NORTH);
 
@@ -211,7 +184,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 		leftPanel.add(Box.createVerticalGlue());
 
-		//panel.add( Box.createRigidArea( new java.awt.Dimension(20,0) ) );
+		//panel.add( Box.createRigidArea( new Dimension(20,0) ) );
 
 		panel.add(leftPanel, BorderLayout.CENTER);
 
@@ -231,7 +204,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		toRemoveButton.setActionCommand("TO_REMOVE");
 		middlePanel.add(toRemoveButton);
 
-		//middlePanel.add( Box.createRigidArea( new java.awt.Dimension(0,20) ) );
+		//middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
 		middlePanel.add(Box.createVerticalGlue());
 
 		ccButton = new JButton("<- Cc");
@@ -243,7 +216,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		ccRemoveButton.setActionCommand("CC_REMOVE");
 		middlePanel.add(ccRemoveButton);
 
-		//middlePanel.add( Box.createRigidArea( new java.awt.Dimension(0,20) ) );
+		//middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
 		middlePanel.add(Box.createVerticalGlue());
 
 		bccButton = new JButton("<- Bcc");
@@ -257,13 +230,12 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 		middlePanel.add(Box.createVerticalGlue());
 
-		//panel.add( Box.createRigidArea( new java.awt.Dimension(20,0) ) );
+		//panel.add( Box.createRigidArea( new Dimension(20,0) ) );
 
 		panel.add(middlePanel, BorderLayout.EAST);
 
-		JPanel rightPanel = new JPanel();
+		JPanel rightPanel = new JPanel(new BorderLayout());
 		rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-		rightPanel.setLayout(new BorderLayout());
 		JPanel rightTopPanel = new JPanel();
 		//rightTopPanel.setLayout( new GridBagLayout() );
 		chooseLabel = new JLabel("Addressbook:");
@@ -305,16 +277,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		getRootPane().registerKeyboardAction(this,"CANCEL",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
 		pack();
 		setLocationRelativeTo(null);
-
-		/*
-		java.awt.Dimension dim = new Dimension(640, 480);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-		*/
 	}
 
 	public void setHeaderList(HeaderItemList list)
@@ -376,10 +338,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		String command;
-
-		command = e.getActionCommand();
-
+		String command = e.getActionCommand();
 		if (command.equals("CANCEL"))
 		{
 			setVisible(false);
@@ -387,7 +346,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		else if (command.equals("OK"))
 		{
 			setVisible(false);
-
 			for (int i = 0; i < 3; i++)
 			{
 				Object[] array = dialogList[i].toArray();
@@ -400,7 +358,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 					HeaderItem item = (HeaderItem) array[j];
 					if (item.isContact())
 					{
-
 						String address = (String) item.get("email;internet");
 						System.out.println("old address:" + address);
 						if ( address == null ) address = "";
@@ -418,7 +375,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 					headerItemList[i].add((HeaderItem)item.clone());
 					//headerItemList[i].add(item);
 				}
-
 			}
 		}
 		else if (command.equals("TO"))
@@ -430,7 +386,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			for (int j = 0; j < array.length; j++)
 			{
 				item = (HeaderItem) model.getElementAt(array[j]);
-
 				dialogList[0].addElement((HeaderItem)item.clone());
 			}
 		}
@@ -443,7 +398,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			for (int j = 0; j < array.length; j++)
 			{
 				item = (HeaderItem) model.getElementAt(array[j]);
-
 				dialogList[1].addElement((HeaderItem)item.clone());
 			}
 		}
@@ -456,7 +410,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			for (int j = 0; j < array.length; j++)
 			{
 				item = (HeaderItem) model.getElementAt(array[j]);
-
 				dialogList[2].addElement((HeaderItem)item.clone());
 			}
 		}
@@ -483,7 +436,6 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			{
 				dialogList[2].removeElement(array[j]);
 			}
-
 		}
 		else if (command.equals("CHOOSE"))
 		{
@@ -491,14 +443,15 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 				addressbookInterface.tree.getSelectAddressbookFolderDialog();
 
 			Folder selectedFolder = dialog.getSelectedFolder();
-			HeaderItemList list = selectedFolder.getHeaderItemList();
-			setHeaderList(list);
-
-			chooseButton.setText(selectedFolder.getName());
+			if (selectedFolder != null){
+				HeaderItemList list = selectedFolder.getHeaderItemList();
+				setHeaderList(list);
+				chooseButton.setText(selectedFolder.getName());
+			}
 		}
-
 	}
 
+	/*
 	public class WizardTopBorder extends AbstractBorder
 	{
 		protected Insets borderInsets = new Insets(2, 0, 0, 0);
@@ -514,5 +467,5 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			return borderInsets;
 		}
 	}
-
+	*/
 }
