@@ -1,5 +1,5 @@
 #macro (XMLExportIssuesRender $foo)$foo#end
-#if($renderedFromScreen)#XMLExportIssues($issueIdList)#end
+#if($renderedFromScreen) #XMLExportIssues($issueIdList) #end
 
 #macro (XMLExportIssues $issueIdList)
 #set ($module = $scarabR.CurrentModule)
