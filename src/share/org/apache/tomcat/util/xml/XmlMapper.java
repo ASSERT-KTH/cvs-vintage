@@ -472,7 +472,8 @@ class SetProperties extends XmlAction {
 			try {
 			    params[0]=new Integer(value);
 			} catch( NumberFormatException ex ) {ok=false;}
-		    } else if ("java.lang.Boolean".equals( paramType.getName())) {
+		    } else if ("java.lang.Boolean".equals( paramType.getName()) || 
+			"boolean".equals( paramType.getName())) {
 			params[0]=new Boolean(value);
 		    } else {
 			ctx.log("Unknown type " + paramType.getName() );
