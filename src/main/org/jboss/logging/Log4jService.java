@@ -39,7 +39,7 @@ import org.jboss.logging.log4j.CategoryStream;
  * <p>Installs CategoryStream adapters for System.out and System.err
  *    to catch and redirect calls to Log4j.
  *
- * @version <tt>$Revision: 1.19 $</tt>
+ * @version <tt>$Revision: 1.20 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
@@ -192,13 +192,13 @@ public class Log4jService
       {
          category = Category.getInstance("STDOUT");
          System.setOut(new CategoryStream(category, Priority.INFO, out));
-         log.debug("Install System.out adapter");
+         log.debug("Installed System.out adapter");
       }
       if (CATCH_SYSTEM_ERR)
       {
          category = Category.getInstance("STDERR");
          System.setErr(new CategoryStream(category, Priority.ERROR, err));
-         log.debug("Install System.err adapter");
+         log.debug("Installed System.err adapter");
       }
 
       log.info("Started");

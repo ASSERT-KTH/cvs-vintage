@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class BootstrapLogger
 {
@@ -84,17 +84,23 @@ public class BootstrapLogger
     * <p>This should be made package private once (if) BootstrapLogger
     *    is moved to org.jboss.logging.
     */
-   public static boolean LOG4J_INITIALIZED = false;
+   public static volatile boolean LOG4J_INITIALIZED = false;
    
    // Externalize behavior using properties
    static
    {
       try
       {
-         logInitFailures = Boolean.getBoolean("org.jboss.system.BootstrapLogger.logInitFailures");
-         maxInitAttempts = Integer.getInteger("org.jboss.system.BootstrapLogger.maxInitAttempts", maxInitAttempts).intValue();
-         threshold = Integer.getInteger("org.jboss.system.BootstrapLogger.threshold", threshold).intValue();
-         verbose = Boolean.getBoolean("org.jboss.system.BootstrapLogger.verbose");
+         String basename = "org.jboss.system.BootstrapLogger";
+
+         logInitFailures = 
+            Boolean.getBoolean(basename + ".logInitFailures");
+         maxInitAttempts = 
+            Integer.getInteger(basename + ".maxInitAttempts", maxInitAttempts).intValue();
+         threshold = 
+            Integer.getInteger(basename + ".threshold", threshold).intValue();
+         verbose = 
+            Boolean.getBoolean(basename + ".verbose");
       }
       catch(Exception e)
       {
@@ -216,13 +222,13 @@ public class BootstrapLogger
 
       try
       {
-         if( category == null )
+         if (category == null || !LOG4J_INITIALIZED)
          {
             // Try to load the log4j classes
             init();
             
             // if we don't have a category the use our threshold
-            if (category == null)
+            if (category == null || !LOG4J_INITIALIZED)
             {
                return priorityIdx >= threshold;
             }
@@ -260,7 +266,7 @@ public class BootstrapLogger
          init();
          if (category == null || !LOG4J_INITIALIZED)
          {
-            // if (!isEnabledFor(idx)) return;
+            if (!isEnabledFor(idx)) return;
             
             // construct the message to print
             StringBuffer buff = new StringBuffer();
