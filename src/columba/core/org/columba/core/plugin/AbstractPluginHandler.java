@@ -19,6 +19,7 @@ package org.columba.core.plugin;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
+import java.util.ListIterator;
 
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -136,7 +137,6 @@ public abstract class AbstractPluginHandler {
 		return null;
 	}
 
-	
 	/**
 	 * @param name
 	 * @param id
@@ -159,7 +159,6 @@ public abstract class AbstractPluginHandler {
 		return null;
 	}
 
-	
 	/**
 	 * @return
 	 */
@@ -179,7 +178,6 @@ public abstract class AbstractPluginHandler {
 		return list;
 	}
 
-	
 	/**
 	 * @return
 	 */
@@ -206,15 +204,54 @@ public abstract class AbstractPluginHandler {
 		return new DefaultClassLoader().instanciate(className, args);
 	}
 
-	
 	/**
 	 * @param pluginManager
 	 */
 	public void setPluginManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 	}
-	
+
+	public String getUserVisibleName(String id) {
+		// this is no external plugin
+		//  -> just return the name
+		if (id.indexOf('$') == -1)
+			return id;
+
+		//String pluginId = id.substring(0, id.indexOf('$'));
+
+		//String name = id.substring(id.indexOf('$'), id.length() - 1);
+
+		int count = parentNode.count();
+
+		for (int i = 0; i < count; i++) {
+
+			XmlElement action = parentNode.getElement(i);
+			String s = action.getAttribute("name");
+			String s2 = action.getAttribute("uservisiblename");
+
+			if (id.equals(s))
+				return s2;
+		}
+
+		return null;
+	}
+
 	public void addExtension(String id, XmlElement extension) {
+		ListIterator iterator = extension.getElements().listIterator();
+		XmlElement action;
+		while (iterator.hasNext()) {
+			action = (XmlElement) iterator.next();
+			String newName = id + '$' + action.getAttribute("name");
+			String userVisibleName = action.getAttribute("name");
+
+			// associate id with newName for later reference
+			//transformationTable.put(id, newName);
+
+			action.addAttribute("name", newName);
+			action.addAttribute("uservisiblename", userVisibleName);
+
+			parentNode.addElement(action);
+		}
 	}
 
 }

@@ -12,12 +12,12 @@ import java.util.ListIterator;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 /**

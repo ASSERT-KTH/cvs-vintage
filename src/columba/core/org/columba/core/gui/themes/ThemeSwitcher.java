@@ -24,7 +24,6 @@ import javax.swing.plaf.FontUIResource;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.xml.XmlElement;
@@ -57,16 +56,14 @@ public class ThemeSwitcher {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(ex);
-
+			
 			try {
 
 				// fall-back
 				UIManager.setLookAndFeel(
 					UIManager.getCrossPlatformLookAndFeelClassName());
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		setFonts(Config.getOptionsConfig().getGuiItem());

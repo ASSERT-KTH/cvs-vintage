@@ -20,7 +20,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import org.columba.addressbook.main.AddressbookMain;
-import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -30,6 +29,7 @@ import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
@@ -116,7 +116,6 @@ public class Main {
     MainInterface.pluginManager.registerHandler(new FramePluginHandler());
     
     MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
-	ThemeSwitcher.setTheme();
 	
     MainInterface.shutdownManager = new ShutdownManager();
 
@@ -129,6 +128,8 @@ public class Main {
     mail.initPlugins();
 
     MainInterface.pluginManager.initPlugins();
+    
+	ThemeSwitcher.setTheme();
 
     frame.advance();
 

@@ -67,7 +67,8 @@ public class PluginManager {
 
 			File xmlFile = new File(folder, "plugin.xml");
 			if (xmlFile == null) continue;
-
+			if ( xmlFile.exists() == false ) continue;
+			
 			XmlIO config = new XmlIO();
 			try {
 				config.setURL(xmlFile.toURL());

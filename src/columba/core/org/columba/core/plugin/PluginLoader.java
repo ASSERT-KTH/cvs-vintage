@@ -17,6 +17,7 @@ package org.columba.core.plugin;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Vector;
 
 import org.columba.core.loader.ExternalClassLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -40,70 +41,90 @@ public class PluginLoader {
 		super();
 	}
 
+	/**
+	 * @param className		name of class
+	 * @param type			type of plugin (java|jar|python)
+	 * @param file			File which specifies the class/jar/py file
+	 * @param args			arguments for the plugin
+	 * @return				instance of plugin
+	 * @throws Exception
+	 */
 	public static Object loadExternalPlugin(
 		String className,
 		String type,
 		File file,
 		Object[] args)
-      throws Exception {
+		throws Exception {
 
-      if(className == null || type == null || file == null){
-        return null;
-      }
-      ColumbaLogger.log.debug("loading..");
+		if (className == null || type == null || file == null) {
+			return null;
+		}
+		
+		if (MainInterface.DEBUG )
+			ColumbaLogger.log.debug("loading.. "+className);
 
-      if (type.equals("java") || type.equals("jar") ) {
-        String path = file.getPath();
+		if (type.equals("java") || type.equals("jar")) {
+			// plugin-directory
+			String path = file.getPath();
 
-        URL[] url = new URL[1];
-        URL newURL = new File(path).toURL();
-        url[0] = newURL;
-        /*
-          if ( libs[0] != null )
-          url[1] = libs[0].toURL();
-        */
-        ColumbaLogger.log.debug("url=" + newURL);
+			Vector urlList = new Vector();
 
-        return new ExternalClassLoader(url).instanciate(className, args);
+			
+			URL newURL = new File(path).toURL();
+			urlList.add(newURL);
 
-      }
+			// we add every jar-file in /lib, too
+			
+			// plugin-directory
+			File directory = file.getParentFile();
+			
+			File lib = new File(directory, "lib");
+			if (lib.exists()) {
 
-      InterpreterHandler handler =
-        (InterpreterHandler) MainInterface.pluginManager.getHandler(
-                                                                    "org.columba.core.interpreter");
+				File[] libList = lib.listFiles();
+				for (int i = 0; i < libList.length; i++) {
+					File f = libList[i];
+					if (f.getName().endsWith(".jar")) {
+						// jar-file found
+						urlList.add(f.toURL());
+					}
+				}
+			}
 
-      Object instance = handler.getInterpreter(type);//, "org.columba.core.scripting.PythonInterpreterPlugin", null);
+			URL[] url = new URL[urlList.size()];
+			for (int i = 0; i < urlList.size(); i++) {
+				url[i] = (URL) urlList.get(i);
+			}
 
-      /*
-		if (type.equals("python")) {
+			ColumbaLogger.log.debug("url=" + newURL);
 
-
-        String pythonFile = file.toString()+"/"+className.toString();
-
-
-        String pythonClass = className.toString().substring(0,className.toString().length()-3);
-        //Class pluginClass = Class.forName(pythonClass);
-        return Python.instanciate(pythonFile, pythonClass, args,  "test");
+			return new ExternalClassLoader(url).instanciate(className, args);
 
 		}
-      */
 
-      if (instance != null) {
-        AbstractInterpreter ip = (AbstractInterpreter) instance;
+		InterpreterHandler handler =
+			(InterpreterHandler) MainInterface.pluginManager.getHandler(
+				"org.columba.core.interpreter");
 
-        String pythonFile = file.toString() + "/" + className.toString();
+		Object instance = handler.getInterpreter(type);
+		
 
-        String pythonClass =
-          className.toString().substring(
-                                         0,
-                                         className.toString().length() - 3);
+		if (instance != null) {
+			AbstractInterpreter ip = (AbstractInterpreter) instance;
 
-        Object i = ip.instanciate(pythonFile, pythonClass, args, "test");
+			String pythonFile = file.toString() + "/" + className.toString();
 
-        return i;
-      }
+			String pythonClass =
+				className.toString().substring(
+					0,
+					className.toString().length() - 3);
 
-      return null;
+			Object i = ip.instanciate(pythonFile, pythonClass, args, "test");
+
+			return i;
+		}
+
+		return null;
 	}
 
 }

@@ -6,10 +6,10 @@
  */
 package org.columba.mail.main;
 
-import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;

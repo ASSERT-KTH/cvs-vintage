@@ -97,8 +97,9 @@ public class ThemePanel extends JPanel implements ActionListener {
 		themePanel.add(Box.createHorizontalStrut(5));
 
 		String[] plugins = handler.getPluginIdList();
-		
+
 		selectorComboBox = new JComboBox(plugins);
+		selectorComboBox.setRenderer(new ThemeComboBoxRenderer());
 		selectorComboBox.setActionCommand("THEME");
 		selectorComboBox.addActionListener(this);
 		themePanel.add(selectorComboBox);
@@ -197,7 +198,9 @@ public class ThemePanel extends JPanel implements ActionListener {
 		if (b == true) {
 			selectorComboBox.setSelectedItem(theme);
 		} else {
-			themeElement.addAttribute("name", (String) selectorComboBox.getSelectedItem());
+			String selection = (String) selectorComboBox.getSelectedItem();
+
+			themeElement.addAttribute("name", selection);
 		}
 
 		// FIXME

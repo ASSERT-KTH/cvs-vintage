@@ -23,13 +23,13 @@ import java.util.ResourceBundle;
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
-import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.gui.util.ToolbarButton;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 public class ToolBar extends JToolBar {

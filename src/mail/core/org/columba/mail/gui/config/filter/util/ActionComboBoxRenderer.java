@@ -11,6 +11,7 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -58,13 +59,17 @@ public class ActionComboBoxRenderer
 		int index,
 		boolean isSelected,
 		boolean arg4) {
-		if (isSelected) {
+		if (cellHasFocus) {
 			setBackground(list.getSelectionBackground());
 			setForeground(list.getSelectionForeground());
 		} else {
 			setBackground(list.getBackground());
 			setForeground(list.getForeground());
 		}
+		setBorder(
+			(cellHasFocus)
+				? UIManager.getBorder("List.focusCellHighlightBorder")
+				: noFocusBorder);
 
 		// id = org.columba.example.HelloWorld$HelloWorldPlugin
 		String id = (String) value;

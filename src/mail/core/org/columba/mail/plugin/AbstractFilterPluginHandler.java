@@ -15,10 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
-import java.util.ListIterator;
-
 import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author freddy
@@ -31,8 +28,6 @@ import org.columba.core.xml.XmlElement;
 public abstract class AbstractFilterPluginHandler
 	extends AbstractPluginHandler {
 
-	
-
 	public AbstractFilterPluginHandler(
 		String name,
 		String configFile,
@@ -41,8 +36,6 @@ public abstract class AbstractFilterPluginHandler
 
 		parentNode = getConfig().getRoot().getElement(parent);
 	}
-
-	
 
 	public Object getGuiPlugin(String name, Object[] args) throws Exception {
 		String className = getPluginClassName(name, "gui_class");
@@ -54,49 +47,6 @@ public abstract class AbstractFilterPluginHandler
 		String className = getPluginClassName(name, "main_class");
 
 		return getPlugin(name, className, args);
-	}
-
-	public String getUserVisibleName(String id) {
-		// this is no external plugin
-		//  -> just return the name
-		if ( id.indexOf('$') == -1 ) return id;
-		
-		//String pluginId = id.substring(0, id.indexOf('$'));
-		
-		
-		//String name = id.substring(id.indexOf('$'), id.length() - 1);
-
-		int count = parentNode.count();
-
-		for (int i = 0; i < count; i++) {
-
-			XmlElement action = parentNode.getElement(i);
-			String s = action.getAttribute("name");
-			String s2 = action.getAttribute("uservisiblename");
-			
-			if ( id.equals(s) )
-				return s2;
-		}
-		
-		return null;
-	}
-
-	public void addExtension(String id, XmlElement extension) {
-		ListIterator iterator = extension.getElements().listIterator();
-		XmlElement action;
-		while (iterator.hasNext()) {
-			action = (XmlElement) iterator.next();
-			String newName = id + '$' + action.getAttribute("name");
-			String userVisibleName = action.getAttribute("name");
-
-			// associate id with newName for later reference
-			//transformationTable.put(id, newName);
-
-			action.addAttribute("name", newName);
-			action.addAttribute("uservisiblename", userVisibleName);
-
-			parentNode.addElement(action);
-		}
 	}
 
 }

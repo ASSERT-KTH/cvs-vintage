@@ -6,10 +6,7 @@
  */
 package org.columba.mail.plugin;
 
-import java.util.ListIterator;
-
 import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author frd
@@ -19,7 +16,6 @@ import org.columba.core.xml.XmlElement;
  */
 public class POP3PreProcessingFilterPluginHandler
 	extends AbstractPluginHandler {
-
 
 	/**
 	 * @param id
@@ -33,20 +29,6 @@ public class POP3PreProcessingFilterPluginHandler
 		parentNode =
 			getConfig().getRoot().getElement("pop3preprocessingfilterlist");
 
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-	 */
-	public void addExtension(String id, XmlElement extension) {
-		ListIterator iterator = extension.getElements().listIterator();
-		XmlElement action;
-		while (iterator.hasNext()) {
-			action = (XmlElement) iterator.next();
-			action.addAttribute("name", id + '$' + action.getAttribute("name"));
-			parentNode.addElement(action);
-		}
 	}
 
 }

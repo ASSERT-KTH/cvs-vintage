@@ -14,19 +14,16 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.action;
+package org.columba.core.plugin;
 
-import java.util.ListIterator;
-
+import org.columba.core.action.BasicAction;
+import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.io.DiskIO;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
-public class ActionPluginHandler extends AbstractPluginHandler{
-	
-	
+public class ActionPluginHandler extends AbstractPluginHandler {
 
 	public ActionPluginHandler() {
 		super("org.columba.core.action", "org/columba/core/action/action.xml");
@@ -34,23 +31,26 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 		parentNode = getConfig().getRoot().getElement("actionlist");
 	}
 
-	
-	public BasicAction getAction( String name, AbstractFrameController controller ) throws Exception {
-		return (BasicAction) getPlugin(name, new Object[] { controller } );
+	public BasicAction getAction(
+		String name,
+		AbstractFrameController controller)
+		throws Exception {
+		return (BasicAction) getPlugin(name, new Object[] { controller });
 	}
 
-	public IMenu getIMenu( String name, AbstractFrameController controller ) throws Exception {
-		return (IMenu) getPlugin(name, new Object[] { controller } );
+	public IMenu getIMenu(String name, AbstractFrameController controller)
+		throws Exception {
+		return (IMenu) getPlugin(name, new Object[] { controller });
 	}
 
-	public void addActionList(String actionXml) {		
+	public void addActionList(String actionXml) {
 		XmlIO actionXmlIO = new XmlIO();
 		actionXmlIO.setURL(DiskIO.getResourceURL(actionXml));
 		actionXmlIO.load();
 
 		XmlElement actionlist = actionXmlIO.getRoot().getElement("actionlist");
-		
-		for( int i=0; i<actionlist.count(); i++) {
+
+		for (int i = 0; i < actionlist.count(); i++) {
 			parentNode.addElement(actionlist.getElement(i));
 		}
 	}
@@ -61,7 +61,7 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 	/*
 	public void addPlugin(String name, File pluginFolder, XmlElement element) {
 		XmlElement extension;
-
+	
 		for( int i=0; i<element.count(); i++) {
 			extension = element.getElement(i);
 			extension.addAttribute("name",name+"$"+extension.getAttribute("name"));
@@ -70,10 +70,9 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 			parentNode.addElement(extension);
 		}
 	}
-*/
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(org.columba.core.xml.XmlElement)
-	 */
+	*/
+
+	/*
 	public void addExtension(String id, XmlElement extension) {
 		ListIterator iterator = extension.getElements().listIterator();
 		XmlElement action;
@@ -83,5 +82,5 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 			parentNode.addElement(action);
 		}
 	}
-
+	*/
 }
