@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.94 2002/03/14 01:13:11 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.95 2002/03/15 04:07:59 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -402,6 +402,9 @@ public class ScarabModule
         {
             super.save(dbCon);
         }
+        // clear out the cache beause we want to make sure that
+        // things get updated properly.
+        ScarabCache.clear();
     }
 
     // *******************************************************************

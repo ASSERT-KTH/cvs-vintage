@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.57 2002/03/14 01:13:11 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.58 2002/03/15 04:07:59 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -76,15 +76,18 @@ public interface ScarabUser extends User
     public void createNewUser() throws Exception;
 
     /**
-     * Gets all modules which are currently associated with this user 
-     * (relationship has not been deleted.)
+     * Gets all modules the user has permissions to edit.
+     * The default is to not show global modules if you have 
+     * the permission to edit it.
+     * @see #getEditableModules(boolean)
      */
-    public List getModules() throws Exception;
+    public List getEditableModules() throws Exception;
 
     /**
      * Gets all modules the user has permissions to edit.
+     * @param currEditModule the module we are currently editing
      */
-    public List getEditableModules() throws Exception;
+    public List getEditableModules(Module currEditModule) throws Exception;
 
     /**
      * Gets an issue stored in the temp hash under key.
@@ -230,6 +233,18 @@ public interface ScarabUser extends User
      * given module, false otherwise
      */
     public boolean hasPermission(String perm, Module module);
+
+    /**
+     * Gets all modules which are currently associated with this user 
+     * (relationship has not been deleted.)
+     */
+    public List getModules() throws Exception;
+
+    /**
+     * Gets all modules which are currently associated with this user.
+     * @param showDeletedModules show modules which have been marked as deleted
+     */
+    public List getModules(boolean showDeletedModules) throws Exception;
 
     /**
      * Get a list of <code>Module</code>'s that where a user has

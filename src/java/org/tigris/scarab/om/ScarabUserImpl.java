@@ -92,7 +92,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.55 2002/03/14 01:13:11 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.56 2002/03/15 04:07:59 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -166,11 +166,17 @@ public class ScarabUserImpl
             public List getModules() 
                 throws Exception
             {
+                return getModules(false);
+            }
+            
+            public List getModules(boolean showDeletedModules) 
+                throws Exception
+            {
                 List permList = ScarabSecurity.getAllPermissions();
                 String[] perms = new String[permList.size()];
                 perms = (String[])permList.toArray(perms);
                 
-                Module[] modules = getPrivateModules(perms);
+                Module[] modules = getPrivateModules(perms, showDeletedModules);
                 return Arrays.asList(modules);
             }
         };
@@ -207,6 +213,10 @@ public class ScarabUserImpl
     private Module[] getPrivateModules(String[] permissions)
     {        
         return getModules(permissions);
+    }
+    private Module[] getPrivateModules(String[] permissions, boolean showDeletedModules)
+    {        
+        return getModules(permissions, showDeletedModules);
     }
 
     /**
@@ -355,6 +365,15 @@ public class ScarabUserImpl
     }
 
     /**
+     * @see org.tigris.scarab.om.ScarabUser#getModules(boolean)
+     */
+    public List getModules(boolean showDeletedModules)
+        throws Exception
+    {
+        return internalUser.getModules(showDeletedModules);
+    }
+
+    /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String)
      */
     public Module[] getModules(String permission)
@@ -377,7 +396,7 @@ public class ScarabUserImpl
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[], boolean)
      */
-    public Module[] getModules(String[] permissions, boolean showDeleted)
+    public Module[] getModules(String[] permissions, boolean showDeletedModules)
     {        
         Module[] result = null;
         Object obj = ScarabCache.get(this, GET_MODULES, permissions); 
@@ -385,7 +404,7 @@ public class ScarabUserImpl
         {        
             Criteria crit = new Criteria();
             crit.setDistinct();
-            if (!showDeleted)
+            if (!showDeletedModules)
             {
                 crit.add(ScarabModulePeer.DELETED, 0);
             }
@@ -518,6 +537,15 @@ public class ScarabUserImpl
     public List getEditableModules() throws Exception
     {
         return internalUser.getEditableModules();
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getEditableModules(Module)
+     */
+    public List getEditableModules(Module currEditModule)
+        throws Exception
+    {
+        return internalUser.getEditableModules(currEditModule);
     }
     
     /**

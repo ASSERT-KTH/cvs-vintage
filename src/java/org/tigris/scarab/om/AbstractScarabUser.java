@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.20 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.21 2002/03/15 04:07:59 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -190,25 +190,56 @@ public abstract class AbstractScarabUser
     public abstract List getModules() throws Exception;
 
     /**
+     * @see org.tigris.scarab.om.ScarabUser#getModules(boolean)
+     */
+    public abstract List getModules(boolean showDeletedModules)
+        throws Exception;
+
+    /**
      * @see org.tigris.scarab.om.ScarabUser#getEditableModules()
      */
-    public List getEditableModules() throws Exception
+    public List getEditableModules()
+        throws Exception
     {
-        List userModules = getModules();
-        ArrayList editModules = new ArrayList();
+        return getEditableModules(null);
+    }
 
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getEditableModules(Module)
+     */
+    public List getEditableModules(Module currEditModule)
+        throws Exception
+    {
+        List userModules = getModules(true);
+        List editModules = new ArrayList();
+        
+        if (currEditModule != null)
+        {
+            editModules.add(currEditModule.getParent());
+        }
         for (int i=0; i<userModules.size(); i++)
         {
             Module module = (Module)userModules.get(i);
-            if (hasPermission(ScarabSecurity.MODULE__EDIT, module)
-               && !(module.getModuleId().equals(Module.ROOT_ID)))
+            Module parent = module.getParent();
+
+//System.out.println ("Module: " + module.getModuleId() + ": " + module.getName());
+            if (!editModules.contains(module))
             {
-                editModules.add(module);
+                if (hasPermission(ScarabSecurity.MODULE__EDIT, module))
+                {
+//System.out.println ("Added Module: " + module.getModuleId() + ": " + module.getName());
+                    editModules.add(module);
+                }
             }
         }
-        return editModules;
-     }
+        // we want to remove the module we are editing
+        if (currEditModule != null && editModules.contains(currEditModule))
+        {
+            editModules.remove(currEditModule);
+        }
 
+        return editModules;
+    }
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(Module, IssueType)
