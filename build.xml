@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.145 2003/06/16 02:01:40 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.146 2003/07/06 19:21:09 eli201 Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -409,7 +409,9 @@
 	<include name="org/jboss/invocation/trunk/client/**/*.class"/>
         <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
-        <include name="org/jboss/invocation/pooled/interfaces/*"/>
+        <include name="org/jboss/invocation/nrmi/ClientInterceptor.class"/>
+        <include name="org/jboss/invocation/nrmi/algorithm/*"/>
+	<include name="org/jboss/invocation/pooled/interfaces/*"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
 <!--SOME VERSION OF INTERCEPTOR NEEDS TO BE AVAILABLE TO THE CLIENT,
