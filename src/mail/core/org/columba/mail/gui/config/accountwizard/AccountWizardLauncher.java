@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.accountwizard;
 
 import net.javaprog.ui.wizard.DataModel;
@@ -25,21 +26,19 @@ import net.javaprog.ui.wizard.WizardModel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
 import javax.help.CSH;
-
 
 public class AccountWizardLauncher {
     public AccountWizardLauncher() {
     }
 
-    public void launchWizard() {
+    public void launchWizard(boolean firstStart) {
         DataModel data = new DataModel();
         Step[] steps;
 
-        if (MailConfig.getAccountList().count() == 0) {
+        if (firstStart) {
             steps = new Step[] {
                     new WelcomeStep(), new IdentityStep(data),
                     new IncomingServerStep(data),

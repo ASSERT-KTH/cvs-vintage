@@ -310,7 +310,7 @@ public class ConfigFrame implements ActionListener,
         } else if (action.equals("ADD")) //$NON-NLS-1$
          {
             try {
-                new AccountWizardLauncher().launchWizard();
+                new AccountWizardLauncher().launchWizard(false);
                 listView.update();
             } catch (Exception ex) {
                 ex.printStackTrace();
