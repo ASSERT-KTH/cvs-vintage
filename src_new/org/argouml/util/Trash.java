@@ -1,4 +1,4 @@
-// $Id: Trash.java,v 1.7 2002/12/27 16:59:58 linus Exp $
+// $Id: Trash.java,v 1.8 2003/01/30 17:50:38 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,14 @@
 
 package org.argouml.util;
 
+import java.util.Vector;
+
 import org.apache.log4j.Category;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
 
-import java.util.*;
-import java.beans.*;
-
-import ru.novosoft.uml.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.model_management.MModel;
 
 /** In the furture this will be a trash can icon in the project
  * browser.  Deleting an object moves it to the trash.  You can move
@@ -53,7 +52,11 @@ public class Trash {
 
 
   protected Trash() { 
+      boolean saveNeeded = ProjectManager.getManager().getCurrentProject().needsSave();      
 	  Trash_Model.setName("Trash");
+      // the last statement causes the project to think that a save is needed
+      // since it is the trash model it is not needed
+      ProjectManager.getManager().getCurrentProject().setNeedsSave(saveNeeded);
   }
 
   public void addItemFrom(Object obj, Vector places) {
