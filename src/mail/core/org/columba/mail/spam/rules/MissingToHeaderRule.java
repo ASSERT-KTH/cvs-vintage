@@ -17,29 +17,31 @@
 //All Rights Reserved.
 package org.columba.mail.spam.rules;
 
+import org.columba.mail.folder.MessageFolder;
+import org.columba.ristretto.message.Header;
+
 
 /**
+ * Check if To: header is missing.
+ * 
  * @author fdietz
  *
  */
-public abstract class AbstractRule implements Rule {
+public class MissingToHeaderRule extends AbstractRule {
 
-    /**
-     * Rule didn't find any hints that this message is spam
-     * -> use a neutral 0.5 value
-     */
-    public static float NEARLY_ZERO= 0.5f;
-    public static float MAX_PROBABILITY= 0.9f;
-    
-    private String name;
-    
-    public AbstractRule(String name) {
-        this.name = name;
+    public MissingToHeaderRule() {
+        super("MissingToHeaderRule");
     }
     /**
-     * @see org.columba.mail.spam.rules.Rule#getName()
+     * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.MessageFolder, java.lang.Object)
      */
-    public String getName() {
-       return name;
+    public float score(MessageFolder folder, Object uid) throws Exception {
+        Header header = folder.getHeaderFields(uid, new String[] { "To"});
+        String from = header.get("To");
+        if (from == null) return MAX_PROBABILITY;
+        if (from.length() == 0) return MAX_PROBABILITY;
+        
+        return NEARLY_ZERO;
     }
+
 }

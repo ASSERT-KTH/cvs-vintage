@@ -31,10 +31,10 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  *
  */
-public class SubjectWhitespace extends AbstractRule{
+public class SubjectWhitespaceRule extends AbstractRule{
     
-    public SubjectWhitespace() {
-        super("SubjectWhitespace");
+    public SubjectWhitespaceRule() {
+        super("SubjectWhitespaceRule");
     }
     /**
      * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.Folder, java.lang.Object)
@@ -42,8 +42,8 @@ public class SubjectWhitespace extends AbstractRule{
     public float score(MessageFolder folder, Object uid) throws Exception {
         Header header = folder.getHeaderFields(uid, new String[]{"Subject"});
         String subject = header.get("Subject");
-        if ( subject == null ) return 0.1f;
-        if ( subject.length() == 0 ) return 0.1f;
+        if ( subject == null ) return NEARLY_ZERO;
+        if ( subject.length() == 0 ) return NEARLY_ZERO;
         
         int count=0;
         boolean whitespace = false;
@@ -65,8 +65,8 @@ public class SubjectWhitespace extends AbstractRule{
         System.out.println("count="+count);
         
         // check for at least 10 whitespaces
-        if ( count > 10 ) return 0.9f;
+        if ( count > 10 ) return MAX_PROBABILITY;
         
-        return 0.1f;
+        return NEARLY_ZERO;
     }
 }

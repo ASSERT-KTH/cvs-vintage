@@ -44,7 +44,11 @@ public class RuleList {
     public RuleList() {
         list = new ArrayList();
 
-        addRule(new SubjectWhitespace());
+        addRule(new SubjectWhitespaceRule());
+        addRule(new OnlyHTMLMimepartRule());
+        addRule(new SubjectIsAllCapitalsRule());
+        addRule(new MixedCharactersAddressRule());
+        addRule(new MissingToHeaderRule());
     }
 
     public static RuleList getInstance() {
