@@ -435,7 +435,30 @@
        <textarea name="atchn" cols="45" rows="2"
            ></textarea>
       </td>
-     </tr>    </table>
+     </tr>    
+     
+     <tr>
+      <th>Attachment type</th>
+      <td>
+	
+	<select name="#" class="select">
+    <option value="0">Select...</option>
+           
+          <option value="1">Patch file (text/plain, diffs)</option>
+          <option value="2">Plain text (text/plain)</option> 
+          <option value="3">HTML source (text/html)</option> 
+          <option value="4">GIF Image (image/gif)</option> 
+          <option value="5">JPEG Image (image/jpeg)</option> 
+          <option value="6">PNG Image (image/png)</option> 
+          <option value="7">Binary file (application/octet-stream)</option>        
+        </select>        
+      
+      <p>Other (enter mime type:&nbsp;<input type="text" />)</p>
+      
+      </td>
+     </tr>
+          
+     </table>
 </div>  <div class="functnbar3">
      <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
