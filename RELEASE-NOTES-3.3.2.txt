@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.1 2002/04/03 18:59:46 larryi Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.2 2002/04/16 06:19:16 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -27,6 +27,8 @@ Bug No.  Description
 
          Bug fixed in SimpleSessionStore in session attribute reloading during
          context reloads.
+
+8092	 Fixed JSP source exposure proplem.
 
 Jasper:
 
