@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalAttrName.java,v 1.3 2004/11/02 08:30:55 mkl Exp $
+// $Id: TestCrUnconventionalClassName.java,v 1.1 2004/11/02 08:30:55 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,58 +29,27 @@ import junit.framework.TestCase;
 
 
 /**
- * Tests for the CrUnconventionalAttrName class.
  * 
  * @author mkl
  *
  */
-public class TestCrUnconventionalAttrName extends TestCase {
+public class TestCrUnconventionalClassName extends TestCase {
     
-
-    private CrUnconventionalAttrName cr = new CrUnconventionalAttrName();
+    private CrUnconventionalClassName cr = new CrUnconventionalClassName();
     
-    /**
-     * The constructor.
-     * 
-     * @param arg0 the name of the test
-     */
-    public TestCrUnconventionalAttrName(String arg0) {
+    public TestCrUnconventionalClassName(String arg0) {
         super(arg0);
     }
 
-    /**
-     * Not giving a name should not result in a suggestion.
-     */
     public void testNullName() {
         assertEquals("", cr.computeSuggestion(null));
     }
     
-    /**
-     * A name not starting with a capital should capitalize the first character.
-     */
-    public void testNoUnderscoreName() {
-        assertEquals("test", cr.computeSuggestion("Test"));
+    public void testLowerCaseName() {
+        assertEquals("Test", cr.computeSuggestion("test"));
     }
     
-    /**
-     * A name not starting with a capital should capitalize 
-     * the first non-underscore character.
-     */
-    public void testSmallUnderscoreName() {
-        assertEquals("_x", cr.computeSuggestion("_X"));
-    }
-    
-    /**
-     * ...and only the first character, not the 2nd.
-     */
-    public void testLongUnderscoreName() {
-        assertEquals("_xx", cr.computeSuggestion("_Xx"));
-    }
-    
-    /**
-     * A name that consists of a single underscore should remain untouched.
-     */
-    public void testOnlyUnderscoreName() {
-        assertEquals("_", cr.computeSuggestion("_"));
+    public void testSmallName() {
+        assertEquals("A", cr.computeSuggestion("a"));
     }
 }
