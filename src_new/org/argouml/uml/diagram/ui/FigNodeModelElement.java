@@ -25,7 +25,7 @@
 // Classes: FigNodeModelElement
 // Original Author: abonner
 
-// $Id: FigNodeModelElement.java,v 1.39 2002/11/30 22:01:15 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.40 2002/12/01 16:48:57 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -99,9 +99,6 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   protected FigRect _bigPort;
   protected FigText _name;
   protected FigText _stereo;
-  /**
-   * The figtext that shows the 'from [package blah]'   */
-  protected FigText _namespace; 
   protected Vector _enclosedFigs = new Vector();
   protected Fig _encloser = null;
   protected boolean _readyToEdit = true;
@@ -140,11 +137,6 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     //_stereo.setLineColor(Color.black);
     _stereo.setEditable(false);
     
-    _namespace = new FigText(10,10,90,21, true);
-    _namespace.setFont(LABEL_FONT);
-    _namespace.setTextColor(Color.black);
-    _namespace.setFilled(false);
-    _namespace.setText(getNamespaceText());
     _readyToEdit = false;
     ArgoEventPump.addListener(ArgoEvent.ANY_NOTATION_EVENT, this);
   }
