@@ -6,32 +6,43 @@
    <td nowrap="nowrap">
     <div id="navsearch">
 
-<form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
-     #set ($issuetype = $scarabR.CurrentIssueType)
-     #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
-     #set ($globalQueries = $module.getGlobalQueries($issuetype))
-     #if (($privateQueries && $privateQueries.size() > 0) || ($globalQueries && $globalQueries.size() > 0))
-        <select name="queryId">
-       #foreach ($query in $privateQueries)
-        <option value="$query.QueryId">$query.Name</option>
-       #end
-       #foreach ($query in $globalQueries)
-        <option value="$query.QueryId">$query.Name</option>
-       #end
-        </select>
-        <input type="submit"  value="Go" class="bttn" name="eventSubmit_doRunstoredquery"/>&#160;
-        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     #end
-        <input type="text" name="id" size="15" maxlength="255" tabindex="1"/>&#160;
-        <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
-        <input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />&#160;
-        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+    <input type="text" name="id" size="15" maxlength="255" tabindex="1"/>
+    &#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />&#160;
+    <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />
+</form>
 
-     <small>
-      $link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")&#160;|&#160;
-      $link.setPage("Search.vm").setLabel("Custom Query")&#160;|&#160;
-      $link.setPage("IssueList.vm").setLabel("Issue List")
-     </small>
+&#160;
+
+<form action="$link.setPage("Index.vm").setAction("Search")" method="post">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+  <select name="go" tabindex="3">
+    <option value="Index.vm">Select query...</option>
+    <option value="AdvancedQuery.vm">&#160;Advanced</option>
+    <option value="Search.vm">&#160;Custom</option>
+    <option value="IssueList.vm">&#160;Most Recent</option>
+
+#set ($issuetype = $scarabR.CurrentIssueType)
+#set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
+#set ($globalQueries = $module.getGlobalQueries($issuetype))
+
+#if ($privateQueries && $privateQueries.size() > 0)
+    <option value="Index.vm">Saved Queries (personal)...</option>
+   #foreach ($query in $privateQueries)
+    <option value="$query.QueryId">&#160;$query.Name</option>
+   #end
+#end
+
+#if ($globalQueries && $globalQueries.size() > 0)
+    <option value="Index.vm">Saved Queries (project)...</option>
+   #foreach ($query in $globalQueries)
+    <option value="$query.QueryId">&#160;$query.Name</option>
+   #end
+#end
+  </select>
+  &#160;
+  <input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" />
 </form>
 
     </div>
