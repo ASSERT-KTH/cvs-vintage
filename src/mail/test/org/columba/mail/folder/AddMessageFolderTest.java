@@ -30,13 +30,14 @@ import org.columba.ristretto.message.MessageFolderInfo;
  */
 public class AddMessageFolderTest extends AbstractFolderTest {
 
+  
     /**
      * Constructor for CachedMHFolderTest.
      * 
      * @param arg0
      */
-    public AddMessageFolderTest(String arg0) {
-        super(arg0);
+    public AddMessageFolderTest(MailboxTestFactory factory, String arg0) {
+        super(factory, arg0);
     }
 
     /**

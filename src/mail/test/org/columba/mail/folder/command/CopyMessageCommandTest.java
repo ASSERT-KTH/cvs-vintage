@@ -24,6 +24,7 @@ import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.FolderTestHelper;
+import org.columba.mail.folder.MailboxTestFactory;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -37,8 +38,8 @@ public class CopyMessageCommandTest extends AbstractFolderTest {
     /**
      * @param arg0
      */
-    public CopyMessageCommandTest(String arg0) {
-        super(arg0);
+    public CopyMessageCommandTest(MailboxTestFactory factory, String arg0) {
+        super(factory, arg0);
     }
     
     /**

@@ -24,7 +24,7 @@ import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.FolderTestHelper;
-import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.folder.MailboxTestFactory;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -40,8 +40,8 @@ public class MarkMessageTest extends AbstractFolderTest {
     /**
      * @param arg0
      */
-    public MarkMessageTest(String arg0) {
-        super(arg0);
+    public MarkMessageTest(MailboxTestFactory factory, String arg0) {
+        super(factory, arg0);
     }
 
     public void testMarkAsReadMessage() throws Exception {

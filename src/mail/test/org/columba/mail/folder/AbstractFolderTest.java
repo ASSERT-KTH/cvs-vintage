@@ -17,28 +17,27 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import junit.framework.TestCase;
-
-import org.columba.mail.folder.mh.CachedMHFolder;
-
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import junit.framework.TestCase;
 
 /**
  * Abstract testcase creates a folder in setUp and removes it in tearDown.
  * <p>
- * Create new testcases by subclassing this classes and using getFolder()
- * directly.
- *
+ * Create new testcases by subclassing this class and using getSourceFolder()
+ * and getDestFolder() directly.
+ * 
  * @author fdietz
  * @author redsolo
  */
 public abstract class AbstractFolderTest extends TestCase {
+
     /** A source folder. */
     protected Folder sourceFolder;
+
     /** A destination folder. */
     protected Folder destFolder;
 
@@ -47,20 +46,15 @@ public abstract class AbstractFolderTest extends TestCase {
 
     private static int folderId = 0;
 
+    private MailboxTestFactory factory;
 
     /**
      * Constructor for test.
      */
-    public AbstractFolderTest() {
-        super();
-    }
-    /**
-     * Constructor for CachedMHFolderTest.
-     *
-     * @param arg0 name of test.
-     */
-    public AbstractFolderTest(String arg0) {
-        super(arg0);
+    public AbstractFolderTest(MailboxTestFactory factory, String test) {
+        super(test);
+
+        this.factory = factory;
     }
 
     /**
@@ -68,10 +62,18 @@ public abstract class AbstractFolderTest extends TestCase {
      */
     protected void setUp() throws Exception {
         folders = new HashSet();
-        sourceFolder = createFolder();
-        destFolder = createFolder();
+        sourceFolder = factory.createFolder(folderId++);
+        folders.add(sourceFolder);
+        destFolder = factory.createFolder(folderId++);
+        folders.add(destFolder);
     }
 
+    public Folder createFolder() {
+        Folder folder = factory.createFolder(folderId++);
+        folders.add(folder);
+        
+        return folder;
+    }
     /**
      * @see junit.framework.TestCase#tearDown()
      */
@@ -91,17 +93,6 @@ public abstract class AbstractFolderTest extends TestCase {
             f.delete();
         }
         new File(FolderTestHelper.homeDirectory + "/folders/").delete();
-    }
-
-    /**
-     * Creates a folder and returns it.
-     * @return a folder.
-     */
-    protected Folder createFolder() {
-        Folder folder = new CachedMHFolder("test" + folderId++, "CachedMHFolder",
-                            FolderTestHelper.homeDirectory + "/folders/");
-        folders.add(folder);
-        return folder;
     }
 
     /**

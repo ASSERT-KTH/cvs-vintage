@@ -25,7 +25,7 @@ import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.FolderTestHelper;
-import org.columba.mail.folder.command.MoveMessageCommand;
+import org.columba.mail.folder.MailboxTestFactory;
 import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
@@ -35,8 +35,8 @@ public class MoveMessageTest extends AbstractFolderTest {
 	/**
 	 * @param arg0
 	 */
-	public MoveMessageTest(String arg0) {
-		super(arg0);
+	public MoveMessageTest(MailboxTestFactory factory, String arg0) {
+		super(factory, arg0);
 	}
      
 	public void testMoveMessage() throws Exception {

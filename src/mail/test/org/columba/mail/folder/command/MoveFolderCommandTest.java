@@ -18,6 +18,7 @@ package org.columba.mail.folder.command;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MailboxTestFactory;
 
 /**
  * Test cases for the MoveFolder command.
@@ -26,6 +27,9 @@ import org.columba.mail.folder.Folder;
  */
 public class MoveFolderCommandTest extends AbstractFolderTest {
 
+    public MoveFolderCommandTest(MailboxTestFactory factory, String arg0) {
+        super(factory, arg0);
+    }
     /**
      * Tests the execute() method.
      * @throws Exception thrown for any bad reason if the command goes wrong.

@@ -28,12 +28,12 @@ import org.columba.ristretto.message.Flags;
  * @author fdietz
  */
 public class CopyMessageFolderTest extends AbstractFolderTest {
-
+    
     /**
      * @param arg0
      */
-    public CopyMessageFolderTest(String arg0) {
-        super(arg0);
+    public CopyMessageFolderTest(MailboxTestFactory factory, String arg0) {
+        super(factory, arg0);
     }
 
    

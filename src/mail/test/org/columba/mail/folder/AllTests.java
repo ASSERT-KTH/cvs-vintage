@@ -17,25 +17,76 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.mail.folder.command.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
  * @author fdietz
- *
+ *  
  */
 public class AllTests {
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite("Test for org.columba.mail.folder.mh");
+    private static String[] list = { "AddMessageFolderTest",
+            "ExpungeFolderTest", "CopyMessageFolderTest"};
 
-        //$JUnit-BEGIN$
-        suite.addTestSuite(CopyMessageFolderTest.class);
-        suite.addTestSuite(AddMessageFolderTest.class);
-        suite.addTestSuite(ExpungeFolderTest.class);
-        //$JUnit-END$
+    /**
+     * Add all testcases to the passed testsuite, using a the folder type
+     * as created in the factory.
+     * 
+     * @param suite			test suite
+     * @param factory		factory which creates the folder instances
+     */
+    private static void setup(TestSuite suite, MailboxTestFactory factory) {
+        try {
+            for (int j = 0; j < list.length; j++) {
+                Class clazz = Class.forName("org.columba.mail.folder."
+                        + list[j]);
+
+                Method[] methods = clazz.getDeclaredMethods();
+                for (int i = 0; i < methods.length; i++) {
+                    if (methods[i].getName().startsWith("test")) {
+
+                        suite.addTest((TestCase) clazz.getConstructor(
+                                new Class[] { MailboxTestFactory.class,
+                                        String.class}).newInstance(
+                                new Object[] { factory, methods[i].getName()}));
+                    }
+                }
+            }
+        } catch (SecurityException e) {
+
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Test for org.columba.mail.folder");
+
+        setup(suite, new MHFolderFactory());
+        setup(suite, new TempFolderFactory());
+
         return suite;
     }
 }

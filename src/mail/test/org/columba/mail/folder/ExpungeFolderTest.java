@@ -31,8 +31,8 @@ public class ExpungeFolderTest extends AbstractFolderTest {
     /**
      * @param arg0
      */
-    public ExpungeFolderTest(String arg0) {
-        super(arg0);
+    public ExpungeFolderTest(MailboxTestFactory factory, String arg0) {
+        super(factory, arg0);
 
     }
 
@@ -57,19 +57,18 @@ public class ExpungeFolderTest extends AbstractFolderTest {
         oldFlags.setRecent(true);
         oldFlags.setFlagged(true);
         oldFlags.setExpunged(false);
-        
+
         getSourceFolder().expungeFolder();
 
         Object[] uids = getSourceFolder().getUids();
-        assertEquals("one message should be in source folder", 1,
-                uids.length);
+        assertEquals("one message should be in source folder", 1, uids.length);
         MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
         assertEquals("one message should be in source folder", 1, info
                 .getExists());
         // close streams
         inputStream.close();
     }
-    
+
     /**
      * Expunge folder, one message is marked as expunged
      * 
@@ -91,12 +90,11 @@ public class ExpungeFolderTest extends AbstractFolderTest {
         oldFlags.setRecent(true);
         oldFlags.setFlagged(true);
         oldFlags.setExpunged(true);
-        
+
         getSourceFolder().expungeFolder();
 
         Object[] uids = getSourceFolder().getUids();
-        assertEquals("null message should be in source folder", 0,
-                uids.length);
+        assertEquals("null message should be in source folder", 0, uids.length);
         MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
         assertEquals("null message should be in source folder", 0, info
                 .getExists());

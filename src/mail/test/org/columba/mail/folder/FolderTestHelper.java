@@ -17,13 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.core.io.DiskIO;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import org.columba.core.io.DiskIO;
 
 
 /**
@@ -31,7 +31,7 @@ import java.io.InputStreamReader;
  * 
  * @author fdietz
  */
-public class FolderTestHelper {
+public final class FolderTestHelper {
     /**
  * This directory is used to create mail folders
  */
