@@ -2,9 +2,8 @@
 
 <h2>$page.Title</h2>
 
-<form action="$link.setPage("Approval.vm")" method="post">
+<form action="$link.setPage("admin,Approval.vm")" method="post">
 <input type="hidden" name="action" value="admin.Approval" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Approval.vm" />
 
 <h3>Open submissions</h3>
 
