@@ -27,7 +27,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.14 1998/09/10 21:45:14 jrobbins Exp $
+// $Id: FigText.java,v 1.15 1998/09/17 18:48:16 jrobbins Exp $
 
 package uci.gef;
 
@@ -390,6 +390,32 @@ public class FigText extends Fig implements KeyListener, MouseListener {
     return cornersHit > 0;
   }
 
+  public Dimension getMinimumSize() {
+    Dimension d = new Dimension(0, 0);
+    stuffMinimumSize(d);
+    return d;
+  }
+
+  public void stuffMinimumSize(Dimension d) {
+    if (_font == null) return;
+    if (_fm == null) _fm = Toolkit.getDefaultToolkit().getFontMetrics(_font);
+    int overallW = 0;
+    int numLines = 1;
+    StringTokenizer lines = new StringTokenizer(_curText, "\n\r", true);
+    while (lines.hasMoreTokens()) {
+      String curLine = lines.nextToken();
+      int chunkW = _fm.stringWidth(curLine);
+      if (curLine.equals("\n") || curLine.equals("\r")) numLines++;
+      else overallW = Math.max(chunkW, overallW);
+    }
+    _lineHeight = _fm.getHeight();
+    int maxDescent = _fm.getMaxDescent();
+    int overallH = (_lineHeight + _lineSpacing) * numLines +
+      _topMargin + _botMargin + maxDescent;
+    overallW = Math.max(MIN_TEXT_WIDTH, overallW + _leftMargin + _rightMargin);
+    d.width = overallW;
+    d.height = overallH;
+  }
 
   ////////////////////////////////////////////////////////////////
   // event handlers: KeyListener implemtation

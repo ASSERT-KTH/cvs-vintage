@@ -27,7 +27,7 @@
 // File: FigTextEditor.java
 // Classes: FigTextEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigTextEditor.java,v 1.5 1998/08/06 21:31:40 jrobbins Exp $
+// $Id: FigTextEditor.java,v 1.6 1998/09/17 18:48:16 jrobbins Exp $
 
 package uci.gef;
 
@@ -52,7 +52,7 @@ implements PropertyChangeListener, DocumentListener, KeyListener {
   JPanel _glass;
   boolean _editing = false;
 
-  public static int EXTRA = 2;
+  public static int EXTRA = 5;
 
 
   /** Needs-more-work: does not open if I use tab to select the

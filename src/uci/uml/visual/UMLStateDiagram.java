@@ -27,7 +27,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.3 1998/07/15 18:18:15 jrobbins Exp $
+// $Id: UMLStateDiagram.java,v 1.4 1998/09/17 18:48:57 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -150,6 +150,9 @@ public class UMLStateDiagram extends UMLDiagram {
 //     _toolBar.add(_actionJoinPseudoState);
     _toolBar.addSeparator();
 
+    _toolBar.add(Actions.InternalTransition);
+    _toolBar.addSeparator();
+
     _toolBar.add(_actionRectangle);
     _toolBar.add(_actionRRectangle);
     _toolBar.add(_actionCircle);
@@ -158,5 +161,5 @@ public class UMLStateDiagram extends UMLDiagram {
     _toolBar.add(_actionPoly);
     _toolBar.add(_actionInk);
   }
-  
+
 } /* end class UMLStateDiagram */

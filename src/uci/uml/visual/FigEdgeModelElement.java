@@ -27,7 +27,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.2 1998/08/06 21:32:23 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.3 1998/09/17 18:48:52 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -71,7 +71,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     super();
     setOwner(edge);
     ModelElement me = (ModelElement) edge;
-    me.addVetoableChangeListener(this);
+    //me.addVetoableChangeListener(this);
 
     _name = new FigText(10, 30, 90, 20);
     _name.setFont(LABEL_FONT);
@@ -83,7 +83,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     _name.setMultiLine(false);
     _name.setAllowsTab(false);
 
-    //  _name.addPropertyChangeListener(this);
+    setBetweenNearestPoints(true);
   }
 
 
@@ -111,7 +111,12 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     String pName = pve.getPropertyName();
     if (pName.equals("editing") && Boolean.FALSE.equals(pve.getNewValue())) {
       //System.out.println("finished editing");
-      try { textEdited((FigText) src); }
+      try {
+	startTrans();
+	textEdited((FigText) src);
+	calcBounds();
+	endTrans();
+      }
       catch (PropertyVetoException ex) {
 	System.out.println("could not parse and use the text you entered");
       }
@@ -156,9 +161,9 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     if (ke.isConsumed()) return;
     _name.keyPressed(ke);
     //ke.consume();
-    ModelElement me = (ModelElement) getOwner();
-    try { me.setName(new Name(_name.getText())); }
-    catch (PropertyVetoException pve) { }
+//     ModelElement me = (ModelElement) getOwner();
+//     try { me.setName(new Name(_name.getText())); }
+//     catch (PropertyVetoException pve) { }
   }
 
   /** not used, do nothing. */

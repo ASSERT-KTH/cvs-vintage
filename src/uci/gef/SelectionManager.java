@@ -28,7 +28,7 @@
 // File: SelectionManager.java
 // Classes: SelectionManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionManager.java,v 1.8 1998/07/02 02:53:00 jrobbins Exp $
+// $Id: SelectionManager.java,v 1.9 1998/09/17 18:48:19 jrobbins Exp $
 
 package uci.gef;
 
@@ -423,6 +423,7 @@ implements Serializable, KeyListener, MouseListener, MouseMotionListener {
   public static Selection makeSelectionFor(Fig f) {
     //if (f.isRotatable()) return new SelectionRotate(f);
     if (f.isReshapable()) return new SelectionReshape(f);
+    else if (f.isLowerRightResizable()) return new SelectionLowerRight(f);
     else if (f.isResizable()) return new SelectionResize(f);
     else if (f.isMovable()) return new SelectionMove(f);
     else return new SelectionNoop(f);

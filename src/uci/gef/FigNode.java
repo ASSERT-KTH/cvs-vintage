@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.15 1998/08/06 21:31:38 jrobbins Exp $
+// $Id: FigNode.java,v 1.16 1998/09/17 18:48:15 jrobbins Exp $
 
 package uci.gef;
 
@@ -444,6 +444,19 @@ implements MouseListener, PropertyChangeListener, Serializable {
 
   public void translate(int dx, int dy) {
     super.translate(dx, dy);
+    Enumeration arcPers = _figEdges.elements();
+    while (arcPers.hasMoreElements()) {
+      FigEdge fe = (FigEdge) arcPers.nextElement();
+      fe.computeRoute();
+    }
+  }
+
+  public void setBounds(int x, int y, int w, int h) {
+    super.setBounds(x, y, w, h);
+    updateEdges();
+  }
+
+  public void updateEdges() {
     Enumeration arcPers = _figEdges.elements();
     while (arcPers.hasMoreElements()) {
       FigEdge fe = (FigEdge) arcPers.nextElement();

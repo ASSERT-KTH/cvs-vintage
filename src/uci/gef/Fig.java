@@ -27,7 +27,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.13 1998/08/06 21:31:32 jrobbins Exp $
+// $Id: Fig.java,v 1.14 1998/09/17 18:48:14 jrobbins Exp $
 
 package uci.gef;
 
@@ -331,6 +331,9 @@ public class Fig implements java.io.Serializable, PropertyChangeListener  {
 
   /** Returns true if this Fig can be resized by the user. */
   public boolean isResizable() { return true; }
+
+  /** Returns true if this Fig can be resized by the user. */
+  public boolean isLowerRightResizable() { return false; }
 
   /** Returns true if this Fig can be reshaped by the user. */
   public boolean isReshapable() { return false; }
