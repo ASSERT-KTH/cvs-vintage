@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.43 $
+ * @version   $Revision: 1.44 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -341,7 +341,7 @@ public class JMSContainerInvoker
     * @param element                  Description of Parameter
     * @exception DeploymentException  Description of Exception
     */
-   public void importXml(Element element) throws DeploymentException
+   public void importXml(Element element) throws Exception
    {
       try
       {
@@ -430,20 +430,15 @@ public class JMSContainerInvoker
     * @throws Exception  Failed to initalize.
     */
    public void innerCreate() throws Exception
-
    {
-      boolean debug = log.isDebugEnabled();
-      if (debug)
       log.debug("initializing");
       
-      // Set up Dead Letter Queue handler
-      
-      if (useDLQ) {
-
+      // Set up Dead Letter Queue handler  
+      if (useDLQ)
+      {
          dlqHandler = new DLQHandler();
          dlqHandler.importXml(dlqConfig);
          dlqHandler.create();
-
       }
       
       // Store TM reference locally - should we test for CMT Required
@@ -477,12 +472,10 @@ public class JMSContainerInvoker
       
       // Get the JMS provider
       JMSProviderAdapter adapter = getJMSProviderAdapter();
-      if (debug)
       log.debug("provider adapter: " + adapter);
       
       // Connect to the JNDI server and get a reference to root context
       Context context = adapter.getInitialContext();
-      if (debug)
       log.debug("context: " + context);
       
       // if we can't get the root context then exit with an exception
@@ -493,8 +486,7 @@ public class JMSContainerInvoker
       
       // Get the JNDI suffix of the destination
       String jndiSuffix = parseJndiSuffix(destinationJNDI,
-      config.getEjbName());
-      if (debug)
+         config.getEjbName());
       log.debug("jndiSuffix: " + jndiSuffix);
       
       // Unfortunately the destination is optional, so if we do not have one
@@ -508,7 +500,6 @@ public class JMSContainerInvoker
       
       if (destinationType.equals("javax.jms.Topic"))
       {
-         if (debug)
          log.debug("Got destination type Topic for " + config.getEjbName());
          
          // create a topic connection
@@ -561,13 +552,10 @@ public class JMSContainerInvoker
                pool,
                maxMessagesNr);
          }
-         
-         if (debug)
          log.debug("Topic connectionConsumer set up");
       }
       else if (destinationType.equals("javax.jms.Queue"))
       {
-         if (debug)
          log.debug("Got destination type Queue for " + config.getEjbName());
          
          // create a queue connection
@@ -590,7 +578,6 @@ public class JMSContainerInvoker
             // tx
             acknowledgeMode,
             new MessageListenerImpl(this));
-         if (debug)
          log.debug("server session pool: " + pool);
          
          // create the connection consumer
@@ -599,11 +586,9 @@ public class JMSContainerInvoker
             messageSelector,
             pool,
             maxMessagesNr);
-         if (debug)
          log.debug("connection consumer: " + connectionConsumer);
       }
       
-      if (debug)
       log.debug("initialized with config " + toString());
    }
    
@@ -652,9 +637,9 @@ public class JMSContainerInvoker
     */
    public void start() throws Exception
    {
-      if (log.isDebugEnabled())
       log.debug("Starting JMSContainerInvoker for bean " + beanName);
-      if( connection != null ) {
+      if( connection != null )
+      {
 	      connection.setExceptionListener(exListener);
 	      connection.start();
       }
@@ -665,7 +650,6 @@ public class JMSContainerInvoker
     */
    public void stop()
    {
-      if (log.isDebugEnabled())
       log.debug("Stopping JMSContainerInvoker for bean " + beanName);
       // Silence the exception listener
       if (exListener != null)
@@ -730,7 +714,6 @@ public class JMSContainerInvoker
       Context context = new InitialContext();
       try
       {
-         if (log.isDebugEnabled())
          log.debug("looking up provider adapter: " + providerAdapterJNDI);
          return (JMSProviderAdapter)context.lookup(providerAdapterJNDI);
       }
@@ -831,7 +814,6 @@ public class JMSContainerInvoker
       try
       {
          // first lookup the factory
-         if (log.isDebugEnabled())
          log.debug("looking up session pool factory: " +
          serverSessionPoolFactoryJNDI);
          ServerSessionPoolFactory factory = (ServerSessionPoolFactory)
@@ -959,10 +941,9 @@ public class JMSContainerInvoker
       public void onMessage(final Message message)
       {
          // assert message != null;
-         
-         if (log.isDebugEnabled())
+         if (log.isTraceEnabled())
          {
-            log.debug("processing message: " + message);
+            log.trace("processing message: " + message);
          }
          
          Object id;

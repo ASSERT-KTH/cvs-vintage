@@ -31,7 +31,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.41 $
+* @version $Revision: 1.42 $
 *
 * <p><b>Revisions</b>
 * <p><b>20010704</b>
@@ -675,23 +675,22 @@ implements ContainerInvokerContainer, InstancePoolContainer
       public Object invokeHome(Invocation mi)
       throws Exception
       {
-         boolean debug = log.isDebugEnabled();
-         if (debug)
+         boolean trace = log.isTraceEnabled();
+         if (trace)
          {
-            log.debug("HOMEMETHOD coming in ");
-            log.debug(""+mi.getMethod());
-            log.debug("HOMEMETHOD coming in hashcode"+mi.getMethod().hashCode());
-            log.debug("HOMEMETHOD coming in classloader"+mi.getMethod().getDeclaringClass().getClassLoader().hashCode());
-            log.debug("CONTAINS "+homeMapping.containsKey(mi.getMethod()));
+            log.trace("HOMEMETHOD coming in ");
+            log.trace(""+mi.getMethod());
+            log.trace("HOMEMETHOD coming in hashcode"+mi.getMethod().hashCode());
+            log.trace("HOMEMETHOD coming in classloader"+mi.getMethod().getDeclaringClass().getClassLoader().hashCode());
+            log.trace("CONTAINS "+homeMapping.containsKey(mi.getMethod()));
          }
          
          Method m = (Method)homeMapping.get(mi.getMethod());
          // Invoke and handle exceptions
                   
-         if (debug)
+         if (trace)
          {
-            log.debug("HOMEMETHOD m "+m);
-         
+            log.trace("HOMEMETHOD m "+m);
             java.util.Iterator iterator = homeMapping.keySet().iterator();
             while(iterator.hasNext()) 
             {
@@ -699,10 +698,10 @@ implements ContainerInvokerContainer, InstancePoolContainer
                
                if (me.getName().endsWith("create")) 
                {
-                  log.debug(me.toString());
-                  log.debug(""+me.hashCode());
-                  log.debug(""+me.getDeclaringClass().getClassLoader().hashCode());
-                  log.debug("equals "+me.equals(mi.getMethod())+ " "+mi.getMethod().equals(me));
+                  log.trace(me.toString());
+                  log.trace(""+me.hashCode());
+                  log.trace(""+me.getDeclaringClass().getClassLoader().hashCode());
+                  log.trace("equals "+me.equals(mi.getMethod())+ " "+mi.getMethod().equals(me));
                }
             }
          }

@@ -78,7 +78,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.71 $
+* @version $Revision: 1.72 $
 *
 * <p><b>Revisions:</b>
 *
@@ -543,50 +543,41 @@ public abstract class Container implements DynamicMBean
    * Handle a operation invocation.
    */
    public Object invoke(String actionName, Object[] params, String[] signature)
-   throws MBeanException, ReflectionException
-   {
-      
+      throws MBeanException, ReflectionException
+   {      
       if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
          throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
-      
+
       Object value = null;
       Invocation mi = null;
       if( params != null && params.length == 1 )
          mi = (Invocation) params[0];
-      
+
       ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
+      boolean trace = log.isTraceEnabled();
       try
       {
-         Thread.currentThread().setContextClassLoader(this.classLoader);
-         
-         
+         Thread.currentThread().setContextClassLoader(this.classLoader);        
          switch (mi.getType())  
          {
-            
             // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
             case Invocation.REMOTE:
-               
                if (mi instanceof MarshalledInvocation)
-                  
                {
                   ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
                   
-                  if (log.isDebugEnabled())
-                     // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
-               
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+                  if( trace )
+                     log.trace("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
                }
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
                {
-                  
-                  if (log.isDebugEnabled())
+                  if( trace )
                   {
                      // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                     log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
-                     
-                     // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                     log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
+                     log.trace("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
+                     log.trace("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
                   }
                   
                   // TEMP FIXME HACK This makes user transactions on the server work until
@@ -624,24 +615,22 @@ public abstract class Container implements DynamicMBean
                   
                   ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
                   
-                  if (log.isDebugEnabled())
-                     // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
+                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
+                  if( trace )
+                     log.trace("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
                
                }
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
                {
                   
-                  if (log.isDebugEnabled())
+                  if( trace )
                   {
                      // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                     log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-                     
-                     // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                     log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
+                     log.trace("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
+                     log.trace("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
                   }
-                  
+
                   // TEMP FIXME HACK This makes user transactions on the server work until
                   // local invocations stop going through Marshalled Invocation
                   Transaction hack = mi.getTransaction();
@@ -773,7 +762,7 @@ public abstract class Container implements DynamicMBean
    * and DataSource ressources.
    */
    private void setupEnvironment()
-   throws DeploymentException
+      throws DeploymentException
    {
       boolean debug = log.isDebugEnabled();
       try
@@ -813,7 +802,6 @@ public abstract class Container implements DynamicMBean
             Iterator enum = beanMetaData.getEjbReferences();
             while(enum.hasNext())
             {
-               
                EjbRefMetaData ref = (EjbRefMetaData)enum.next();
                if (debug)
                   log.debug("Binding an EJBReference "+ref.getName());

@@ -52,7 +52,7 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author
- * @version $Revision: 1.8 $ $Date: 2002/02/09 16:09:24 $
+ * @version $Revision: 1.9 $ $Date: 2002/02/12 08:15:36 $
  */
 
 public class DLQHandler
@@ -188,8 +188,7 @@ public class DLQHandler
          // if we can't get the id we are basically fucked
          if(id != null && incrementResentCount(id) > maxResent)
          {
-            if (log.isInfoEnabled())
-               log.info("Message resent too many time, sending it to DLQ. Id: " + id);
+            log.info("Message resent too many time, sending it to DLQ. Id: " + id);
             sendMessage(msg);
             deleteFromBuffer(id);
             return true;
@@ -213,11 +212,11 @@ public class DLQHandler
    protected int incrementResentCount(String id)
    {
       BufferEntry entry = null;
-      boolean debug = log.isDebugEnabled();
+      boolean trace = log.isTraceEnabled();
       if(!resentBuffer.containsKey(id))
       {
-         if (debug)
-         log.debug("Making new entry for id " + id);
+         if (trace)
+         log.trace("Making new entry for id " + id);
          entry = new BufferEntry();
          entry.id = id;
          entry.count = 1;
@@ -226,8 +225,8 @@ public class DLQHandler
       {
          entry = (BufferEntry)resentBuffer.get(id);
          entry.count++;
-         if (debug)
-         log.debug("Incremented old entry for id " + id + " count " + entry.count);
+         if (trace)
+         log.trace("Incremented old entry for id " + id + " count " + entry.count);
       }
       return entry.count;
    }
@@ -258,8 +257,8 @@ public class DLQHandler
          
          ses = connection.createQueueSession(false,Session.AUTO_ACKNOWLEDGE);
          sender = ses.createSender(dlq);
-         if (log.isDebugEnabled())
-         log.debug("Resending DLQ message to destination" + dlq);
+         if (log.isTraceEnabled())
+            log.trace("Resending DLQ message to destination" + dlq);
          sender.send(msg,deliveryMode,priority,timeToLive);
       }
       finally
@@ -283,7 +282,6 @@ public class DLQHandler
     */
    protected Message makeWritable(Message msg) throws JMSException
    {
-      
       Hashtable tmp = new Hashtable();
       // Save properties
       for(Enumeration en = msg.getPropertyNames();en.hasMoreElements();)
@@ -295,7 +293,6 @@ public class DLQHandler
       msg.clearProperties();
       
       Enumeration keys = tmp.keys();
-      
       while(keys.hasMoreElements())
       {
          String key = (String) keys.nextElement();

@@ -30,7 +30,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -125,7 +125,8 @@ public class StatefulSessionInstanceCache
             if (now - passivationTime > maxLifeAfterPassivation)
             {
                 store.removePassivated(key);
-                log(key);
+                if( log.isTraceEnabled() )
+                  log(key);
                 // Must use the iterator to remove, otherwise
                 // ConcurrentModificationException is thrown
                 entries.remove();
@@ -144,7 +145,8 @@ public class StatefulSessionInstanceCache
         m_buffer.append(m_container.getBeanMetaData().getEjbName());
         m_buffer.append("' with id = ");
         m_buffer.append(key);
-        log.debug(m_buffer.toString());
+        if( log.isTraceEnabled() )
+         log.trace(m_buffer.toString());
 
         if (isJMSMonitoringEnabled())
         {
