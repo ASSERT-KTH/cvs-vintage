@@ -29,7 +29,7 @@
 // File: CrConstructorNeeded.java
 // Classes: CrConstructorNeeded
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConstructorNeeded.java,v 1.3 1998/06/11 21:08:40 jrobbins Exp $
+// $Id: CrConstructorNeeded.java,v 1.4 1998/06/29 02:27:14 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,12 +56,12 @@ public class CrConstructorNeeded extends CrUML {
        "To fix this, press the FixIt button, or add a constructor manually "+
        "by clicking on {name} in the navigator pane and "+
        "using the Create menu to make a new constructor. ");
-       
+
     addSupportedDecision(CrUML.decSTORAGE);
   }
 
   protected void sd(String s) { setDescription(s); }
-  
+
   public boolean predicate(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;
@@ -81,10 +81,11 @@ public class CrConstructorNeeded extends CrUML {
       if (ScopeKind.INSTANCE.equals(sk) && init == null ||
 	  init.getBody() == null)
 	uninitializedIVar = true;
+      // needs-more-work: check for empty string initializer
     }
 
     if (!uninitializedIVar) return NO_PROBLEM;
-    
+
     Vector beh = cls.getInheritedBehavioralFeatures();
     if (beh == null) return PROBLEM_FOUND;
     enum = beh.elements();
