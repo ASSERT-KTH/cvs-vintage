@@ -25,10 +25,10 @@ import org.jboss.monitor.StatisticsProvider;
  * @see EntityContainer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.13 $
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @version $Revision: 1.14 $
  */
-public interface EntityPersistenceManager
-   extends ContainerPlugin//, StatisticsProvider
+public interface EntityPersistenceManager extends ContainerPlugin
 {
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
@@ -39,7 +39,7 @@ public interface EntityPersistenceManager
 
    /**
     * This method is called whenever an entity is to be created. The
-    * persistence manager is responsible for calling the ejbCreate methods
+    * persistence manager is responsible for calling the ejbCreate method
     * on the instance and to handle the results properly wrt the persistent
     * store.
     *
@@ -49,6 +49,22 @@ public interface EntityPersistenceManager
     * @param instance    the instance being used for this create call
     */
    void createEntity(Method m,
+                     Object[] args,
+                     EntityEnterpriseContext instance)
+      throws Exception;
+
+   /**
+    * This method is called whenever an entity is to be created. The
+    * persistence manager is responsible for calling the ejbPostCreate method
+    * on the instance and to handle the results properly wrt the persistent
+    * store.
+    *
+    * @param m           the create method in the home interface that was
+    *                    called
+    * @param args        any create parameters
+    * @param instance    the instance being used for this create call
+    */
+   void postCreateEntity(Method m,
                      Object[] args,
                      EntityEnterpriseContext instance)
       throws Exception;
