@@ -29,7 +29,7 @@
 // File: FigGroup.java
 // Classes: FigGroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigGroup.java,v 1.3 1998/04/18 01:26:15 jrobbins Exp $
+// $Id: FigGroup.java,v 1.4 1998/06/30 23:46:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -134,12 +134,14 @@ public class FigGroup extends Fig {
 
   /** Translate all the Fig in the list by the given offset. */
   public void translate(int dx, int dy) {
+    Rectangle oldBounds = getBounds();
     Enumeration figs = _figs.elements();
     while (figs.hasMoreElements()) {
       Fig f = (Fig) figs.nextElement();
       f.translate(dx, dy);
     }
     _x += dx; _y += dy; // no need to call calcBounds();
+    firePropChange("bounds", oldBounds, getBounds());
   }
 
   /** Set the bounding box to the given rect. Figs in the group are

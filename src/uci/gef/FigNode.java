@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.11 1998/06/28 02:55:36 jrobbins Exp $
+// $Id: FigNode.java,v 1.12 1998/06/30 23:46:11 jrobbins Exp $
 
 package uci.gef;
 
@@ -376,6 +376,16 @@ implements MouseListener, PropertyChangeListener, Serializable {
 
   /** Do nothing when mouse is clicked in FigNode. */
   public void mouseClicked(MouseEvent me) { }
+
+
+  public void translate(int dx, int dy) {
+    super.translate(dx, dy);
+    Enumeration arcPers = _figEdges.elements();
+    while (arcPers.hasMoreElements()) {
+      FigEdge fe = (FigEdge) arcPers.nextElement();
+      fe.computeRoute();
+    }
+  }
 
 } /* end class FigNode */
 
