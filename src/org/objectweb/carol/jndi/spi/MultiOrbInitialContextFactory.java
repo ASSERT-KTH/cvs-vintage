@@ -22,34 +22,35 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiOrbInitialContextFactory.java,v 1.6 2005/02/11 10:12:59 benoitf Exp $
+ * $Id: MultiOrbInitialContextFactory.java,v 1.7 2005/03/08 17:24:29 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
-//java import
 import java.util.Hashtable;
 
 import javax.naming.Context;
-import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
-import javax.naming.spi.ObjectFactory;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code> MultiOrbInitialContextFactory </code> is the CAROL JNDI SPI
  * Context Factory for multi Context management.
- * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @see javax.naming.spi.ObjectFactory
+ * @author Guillaume Riviere
  * @see javax.naming.spi.InitialContextFactory
  */
-public class MultiOrbInitialContextFactory implements ObjectFactory, InitialContextFactory {
+public class MultiOrbInitialContextFactory implements InitialContextFactory {
 
     /**
-     * Get a new multi initial context
-     * @return the new Multi Initial Context
+     * Creates an Initial Context for beginning name resolution. Special
+     * requirements of this context are supplied using <code>environment</code>.
+     * @param env The possibly null environment specifying information
+     *        to be used in the creation of the initial context.
+     * @return A non-null initial context object that implements the Context
+     *         interface.
+     * @exception NamingException If cannot create an initial context.
      */
     public Context getInitialContext(Hashtable env) throws NamingException {
         if (TraceCarol.isDebugJndiCarol()) {
@@ -58,15 +59,4 @@ public class MultiOrbInitialContextFactory implements ObjectFactory, InitialCont
         return new ContextWrapper(env);
     }
 
-    /**
-     * never use for the moment
-     */
-    public Object getObjectInstance(Object ref, Name name, Context nameCtx, Hashtable env) throws NamingException {
-        if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol
-                    .debugJndiCarol("MultiOrbInitialContextFactory.getObjectInstance(Object ref, Name name, Context nameCtx, Hashtable env)");
-        }
-        // never use
-        return null;
-    }
 }
