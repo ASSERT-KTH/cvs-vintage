@@ -47,23 +47,23 @@
 
 #set ($rmits = $scarabR.CurrentModule.RModuleIssueTypes)
 #set ($isMoreThanOne = $rmits.size() > 1)
-#if (!$isMoreThanOne)
-<p class="alert">This module has no issue types defined.</p>
-#else
+#set ($isAtLeastOne = $rmits && !$rmits.isEmpty())
+#if ($isAtLeastOne)
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th>Select</th>
     <th>Name</th>
     <th>Description</th>
   </tr>
+ #if ($isMoreThanOne)
   <tr class="a">
-#set ($checked = !$data.Parameters.getString("rmit_id"))
+  #set ($checked = !$data.Parameters.getString("rmit_id"))
     <td><input type="checkbox" name="allit" value="true"
         #checked($checked) /></td>
     <td>All issue types</td>
     <td>Query all issue types in this list</td>
   </tr>
-#end
+ #end
 #set ($checked = !$isMoreThanOne)
 #foreach ($rmit in $rmits)
   #if ($isMoreThanOne)
@@ -83,10 +83,11 @@
   </tr>
 #end
 </table>
-
-#if ($isMoreThanOne)
 <div class="functnbar3">
   <input type="submit" value="Go" name="foo" />
 </div>
+
+#else
+<p class="alert">This module has no issue types defined.</p>
 #end
-</div>
+
