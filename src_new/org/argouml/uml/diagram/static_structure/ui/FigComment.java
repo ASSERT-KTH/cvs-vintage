@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.24 2004/01/03 00:20:34 bobtarling Exp $
+// $Id: FigComment.java,v 1.25 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.24 2004/01/03 00:20:34 bobtarling Exp $
+// $Id: FigComment.java,v 1.25 2004/01/04 20:17:43 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -44,7 +44,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.util.Iterator;
-import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
@@ -298,7 +297,6 @@ public class FigComment
 
     public void delayedVetoableChange(PropertyChangeEvent pce) {
         Object src = pce.getSource();
-        startTrans();
         // update any text, colors, fonts, etc.
         renderingChanged();
         // update the relative sizes and positions of internel Figs
@@ -312,7 +310,6 @@ public class FigComment
 	    && Boolean.FALSE.equals(pve.getNewValue()))
 	{
             try {
-                startTrans();
                 //parse the text that was edited
                 textEdited((FigText) src);
                 // resize the FigNode to accomodate the new text

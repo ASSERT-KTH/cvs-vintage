@@ -1,4 +1,4 @@
-// $Id: StylePanelFigRRect.java,v 1.4 2003/06/29 23:47:02 linus Exp $
+// $Id: StylePanelFigRRect.java,v 1.5 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,6 @@ public class StylePanelFigRRect extends StylePanelFig {
 	String roundingStr = _roundingField.getText();
 	if (roundingStr.length() == 0) return;
 	int r = Integer.parseInt(roundingStr);
-	_target.startTrans();
 	((FigRRect) _target).setCornerRadius(r);
 	_target.endTrans();
     }

@@ -1,4 +1,4 @@
-// $Id: SPFigEdgeModelElement.java,v 1.7 2003/09/15 20:24:05 jjones Exp $
+// $Id: SPFigEdgeModelElement.java,v 1.8 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,7 +179,6 @@ public class SPFigEdgeModelElement extends StylePanel
 	if (_target == null) return;
 	String bboxStr = _bboxField.getText();
 	if (bboxStr.length() == 0) return;
-	_target.startTrans();
 	java.util.StringTokenizer st =
 	    new java.util.StringTokenizer(bboxStr, ", ");
 	try {
@@ -200,7 +199,6 @@ public class SPFigEdgeModelElement extends StylePanel
 	Object c =  _lineField.getSelectedItem();
 	if (_target == null || c == null) return;
     Color oldColor = _target.getLineColor();
-	_target.startTrans();
 	if (c instanceof Color) _target.setLineColor((Color) c);
 	_target.setLineWidth((c instanceof Color) ? 1 : 0);
 	_target.endTrans();

@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.19 2003/12/08 16:19:26 jhraigniac Exp $
+// $Id: StylePanelFig.java,v 1.20 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -318,7 +318,6 @@ public class StylePanelFig extends StylePanel
         }
 
         if (!_target.getBounds().equals(bounds)) {
-            _target.startTrans();
             _target.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
             _target.endTrans();
             markNeedsSave();
@@ -427,7 +426,6 @@ public class StylePanelFig extends StylePanel
         Object c =  _fillField.getSelectedItem();
         if (_target == null || c == null) return;
         Color oldColor = _target.getFillColor();
-        _target.startTrans();
         if (c instanceof Color) _target.setFillColor((Color) c);
         _target.setFilled(c instanceof Color);
         _target.endTrans();
@@ -440,7 +438,6 @@ public class StylePanelFig extends StylePanel
         Object c =  _lineField.getSelectedItem();
         if (_target == null || c == null) return;
         Color oldColor = _target.getLineColor();
-        _target.startTrans();
         if (c instanceof Color) _target.setLineColor((Color) c);
         _target.setLineWidth((c instanceof Color) ? 1 : 0);
         _target.endTrans();
@@ -455,7 +452,6 @@ public class StylePanelFig extends StylePanel
 	    return;
         FigNodeModelElement nodeTarget = (FigNodeModelElement) _target;
         int oldShadowSize = nodeTarget.getShadowSize();
-        _target.startTrans();
         nodeTarget.setShadowSize(i);
         _target.endTrans();
         if (i != oldShadowSize) {

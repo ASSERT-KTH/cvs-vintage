@@ -1,4 +1,4 @@
-// $Id: ActionLayout.java,v 1.6 2003/12/29 16:26:40 bobtarling Exp $
+// $Id: ActionLayout.java,v 1.7 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;

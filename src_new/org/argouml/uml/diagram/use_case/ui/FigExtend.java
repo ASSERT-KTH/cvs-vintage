@@ -1,4 +1,4 @@
-// $Id: FigExtend.java,v 1.11 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: FigExtend.java,v 1.12 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.11 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: FigExtend.java,v 1.12 2004/01/04 20:17:43 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -236,7 +236,6 @@ public class FigExtend extends FigEdgeModelElement {
         // to start something
 
         super.modelChanged(e);
-        startTrans();
 
         // Now sort out the condition text. Use the null string if there is no
         // condition set. We call the main generate method, which will realise

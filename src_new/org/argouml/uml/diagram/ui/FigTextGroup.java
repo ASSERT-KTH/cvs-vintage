@@ -1,4 +1,4 @@
-// $Id: FigTextGroup.java,v 1.7 2004/01/03 00:20:33 bobtarling Exp $
+// $Id: FigTextGroup.java,v 1.8 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,6 @@ public class FigTextGroup extends FigGroup {
             } else {
                 fig.setHeight(ROWHEIGHT);
             }
-            fig.startTrans();
             fig.setX(getX());
             fig.setY(getY() + height);
             fig.endTrans();

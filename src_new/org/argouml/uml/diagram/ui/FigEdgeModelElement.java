@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.50 2003/12/30 20:33:31 jjones Exp $
+// $Id: FigEdgeModelElement.java,v 1.51 2004/01/04 20:17:43 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.50 2003/12/30 20:33:31 jjones Exp $
+// $Id: FigEdgeModelElement.java,v 1.51 2004/01/04 20:17:43 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -370,7 +370,6 @@ public abstract class FigEdgeModelElement
 
     public void delayedVetoableChange(PropertyChangeEvent pce) {
         Object src = pce.getSource();
-        startTrans();
         // update any text, colors, fonts, etc.
         modelChanged(null);
         // update the relative sizes and positions of internel Figs
@@ -386,7 +385,6 @@ public abstract class FigEdgeModelElement
             && Boolean.FALSE.equals(pve.getNewValue())) {
             cat.debug("finished editing");
             try {
-                startTrans();
                 textEdited((FigText) src);
                 calcBounds();
                 endTrans();
