@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.15 2002/03/14 01:59:06 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.16 2002/03/14 02:34:07 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -285,7 +285,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 {
                     data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                 }
-                if (attributeGroups.size()  < 2)
+                if (attributeGroups.size() -1 < 2)
                 {
                     // If there are fewer than 2 attribute groups,
                     // Turn of deduping
