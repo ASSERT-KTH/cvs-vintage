@@ -26,7 +26,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Vincent Sheffer (vsheffer@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class SpyderMQService
    extends ServiceMBeanSupport
@@ -69,7 +69,6 @@ public class SpyderMQService
                 }catch(Exception e) {
                     log.log("failed");
                     log.log("SpyderMQ wasn't found. Be sure to have your CLASSPATH correctly set");
-                    log.exception(e);
                     return;
                 } 
                 
