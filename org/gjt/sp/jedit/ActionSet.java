@@ -137,7 +137,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.26 2004/02/04 00:07:21 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.27 2004/03/19 22:42:21 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -190,7 +190,7 @@ public class ActionSet
 	public ActionSet(String label)
 	{
 		this();
-		this.label = label;
+		setLabel(label);
 	} //}}}
 
 	//{{{ getLabel() method
@@ -211,6 +211,8 @@ public class ActionSet
 	 */
 	public void setLabel(String label)
 	{
+		if(label == null)
+			throw new NullPointerException();
 		this.label = label;
 	} //}}}
 

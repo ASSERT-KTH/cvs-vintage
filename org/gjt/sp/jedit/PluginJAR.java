@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.43 2004/03/19 19:16:35 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.44 2004/03/19 22:42:21 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -1205,6 +1205,8 @@ public class PluginJAR
 		// remove action sets, dockables, etc so that user doesn't
 		// see the broken plugin
 		uninit(false);
+		// but we want properties to hang around
+		jEdit.addPluginProps(properties);
 	} //}}}
 
 	//}}}
