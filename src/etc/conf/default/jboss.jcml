@@ -148,6 +148,7 @@
 
   <mbean code="org.jboss.ejb.ContainerFactory" name=":service=ContainerFactory">
     <attribute name="VerifyDeployments">true</attribute>
+    <attribute name="ValidateDTDs">false</attribute>
     <attribute name="MetricsEnabled">false</attribute>
     <attribute name="VerifierVerbose">true</attribute>
     <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
