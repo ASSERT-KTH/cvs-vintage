@@ -31,7 +31,7 @@ import javax.xml.rpc.handler.MessageContext;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -156,9 +156,16 @@ public class StatelessSessionEnterpriseContext
          if (((StatelessSessionContainer)con).getProxyFactory()==null)
             throw new IllegalStateException( "No remote interface defined." );
          
-         if (ejbObject == null) {
-               ejbObject = (EJBObject) ((StatelessSessionContainer)con).getProxyFactory().getStatelessSessionEJBObject(); 
-            
+         if (ejbObject == null)
+         {
+            EJBProxyFactory proxyFactory = con.getProxyFactory();
+            if(proxyFactory == null)
+            {
+               String defaultInvokerName = con.getBeanMetaData().
+                  getContainerConfiguration().getDefaultInvokerName();
+               proxyFactory = con.lookupProxyFactory(defaultInvokerName);
+            }
+            ejbObject = (EJBObject) proxyFactory.getStatelessSessionEJBObject(); 
          } 	
     
          return ejbObject;

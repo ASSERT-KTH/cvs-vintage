@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  *   @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- *   @version $Revision: 1.43 $
+ *   @version $Revision: 1.44 $
  */
 public class ConfigurationMetaData extends MetaData
 {
@@ -135,6 +135,13 @@ public class ConfigurationMetaData extends MetaData
       return containerCacheConf;
    }
 
+   public String getDefaultInvokerName()
+   {
+      if (invokerNames.length == 0)
+         throw new IllegalStateException("No invokers defined");
+      return invokerNames[0];
+   }
+   
    public Element getContainerInterceptorsConf()
    {
       return containerInterceptorsConf;

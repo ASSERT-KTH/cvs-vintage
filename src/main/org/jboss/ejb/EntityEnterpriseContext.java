@@ -6,20 +6,26 @@
  */
 package org.jboss.ejb;
 
-import org.jboss.ejb.plugins.lock.NonReentrantLock;
-
-import java.rmi.RemoteException;
-import java.security.Identity;
-import java.security.Principal;
-import java.util.Properties;
-import java.util.Date;
-import java.util.Collection;
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Date;
 
+import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
-import javax.ejb.*;
+import javax.ejb.EntityBean;
+import javax.ejb.EntityContext;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
 import javax.transaction.UserTransaction;
+
+import org.jboss.ejb.EnterpriseContext.EJBContextImpl;
+import org.jboss.ejb.plugins.lock.NonReentrantLock;
 
 
 /**
@@ -31,7 +37,7 @@ import javax.transaction.UserTransaction;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -284,7 +290,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
             if(proxyFactory == null)
             {
                String defaultInvokerName = con.getBeanMetaData().
-                  getContainerConfiguration().getInvokers()[0];
+                  getContainerConfiguration().getDefaultInvokerName();
                proxyFactory = con.lookupProxyFactory(defaultInvokerName);
             }
             ejbObject = (EJBObject)proxyFactory.getEntityEJBObject(cacheKey);
