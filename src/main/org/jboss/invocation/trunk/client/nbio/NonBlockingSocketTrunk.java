@@ -16,6 +16,8 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
+import javax.resource.spi.work.WorkException;
+
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.Compression;
 import org.jboss.invocation.trunk.client.ICommTrunk;
@@ -447,11 +449,15 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
                            TrunkRequest newRequest = new TrunkRequest();
                            newRequest.deserialize(data);
-                           trunkRamp.deliverTrunkRequest(newRequest);
+                              trunkRamp.deliverTrunkRequest(newRequest);
                         }
                         catch (ClassNotFoundException e)
                         {
                            log.info("Communications error:", e);
+                        } 
+                        catch (WorkException e)
+                        {
+                           log.info("Could not process request:", e);
                         }
                      }
                      else
