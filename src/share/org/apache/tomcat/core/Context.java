@@ -69,8 +69,6 @@ import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
 
 
 /* Right now we have all the properties defined in web.xml.
@@ -124,7 +122,7 @@ public class Context implements LogAware {
     private String absPath; 
     // internal state / related objects
     private ContextManager contextM;
-    private ServletContext contextFacade;
+    private Object contextFacade;
 
     boolean reloadable=true; // XXX change default to false after testing
 
@@ -190,9 +188,13 @@ public class Context implements LogAware {
 	defaultContainer.setPath( null ); // default container
     }
 
-    /** Every context is associated with a facade
+    /** Every context is associated with a facade. We don't know the exact
+	type of the facade, as a Context can be associated with a 2.2 ...
+	ServletContext.
+
+	I'm not sure if this method is good - it adds deps to upper layers.
      */
-    public ServletContext getFacade() {
+    public Object getFacade() {
         if(contextFacade==null )
 	    contextFacade = getFacadeManager().createServletContextFacade( this );
 	return contextFacade;

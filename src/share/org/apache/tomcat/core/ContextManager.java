@@ -65,8 +65,6 @@ import org.apache.tomcat.context.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;

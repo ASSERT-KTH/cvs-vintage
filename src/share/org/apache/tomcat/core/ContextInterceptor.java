@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.12 2000/08/02 02:17:10 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/02 02:17:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.13 2000/09/24 18:02:05 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/09/24 18:02:05 $
  *
  * ====================================================================
  *
@@ -63,7 +63,6 @@
 
 
 package org.apache.tomcat.core;
-import javax.servlet.Servlet;
 
 /**
  * Notifications for all context events. 

@@ -65,8 +65,6 @@ import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 // XXX Do we need this ?
 // For the webapp -> core communication we use a Context attribute to
@@ -79,23 +77,37 @@ import javax.servlet.http.*;
 // Removing it will also make things simpler.
 
 /**
- *   Control for facades - this is the only "gate" between servlets
- *   and tomcat.
+ *   Used to control for facades - and was the only "gate" between servlets
+ *   and tomcat.core - the layers of tomcat.
+ *  
+ *   DEPRECATED. This was a workaround to allow the refactoring and
+ *   separation of tomcat's layers. As this is finished this will disapear.
+ *   To get the real request in a trusted servlet it's enough to use
+ *   getAttribute(). The uppper layer will use the normal interceptor
+ *   interface to set itself up, and no calls from core to upper layer
+ *   should happen ( or we are still in a mess )
+ * 
+ *   We use Object instead of real interface to delay the binding,
+ *   and to permit multiple "versions" ( ClassLoader + interface ), and
+ *   late binding as part of the context ( where we know the servlet
+ *   facade ). This is another temporary fix to move to the next stage
+ *   without brakning functionality.
+ *
  */
 public interface FacadeManager {
     public static final String FACADE_ATTRIBUTE="org.apache.tomcat.facade";
     
-    public ServletContext createServletContextFacade(Context ctx);
+    public Object createServletContextFacade(Context ctx);
     
-    public Context getRealContext( ServletContext ctx );
+    public Context getRealContext( Object ctx );
 
-    public  Request getRealRequest( HttpServletRequest req ); 
+    public  Request getRealRequest( Object req ); 
 
 
 
-    public  HttpServletRequest createHttpServletRequestFacade(Request req);
+    public  Object createHttpServletRequestFacade(Request req);
 
-    public  HttpServletResponse createHttpServletResponseFacade(Response res);
+    public  Object createHttpServletResponseFacade(Response res);
 
     /** Create a new handler
      */

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.35 2000/09/14 00:53:59 larryi Exp $
- * $Revision: 1.35 $
- * $Date: 2000/09/14 00:53:59 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -67,11 +63,8 @@ package org.apache.tomcat.core;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
-//import org.apache.tomcat.facade.*;
 import org.apache.tomcat.logging.*;
 
 /**
@@ -92,13 +85,12 @@ public class Response {
         StringManager.getManager("org.apache.tomcat.resources");
 
     protected Request request;
-    protected HttpServletResponse responseFacade;
+    protected Object responseFacade;
 
     protected Vector userCookies = new Vector();
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
     protected String characterEncoding = DEFAULT_CHAR_ENCODING;
-    protected String sessionId;
     protected int contentLength = -1;
     protected int status = 200;
     private Locale locale = DEFAULT_LOCALE;
@@ -133,13 +125,14 @@ public class Response {
 	oBuffer=new OutputBuffer( this );
     }
     
-    public HttpServletResponse getFacade() {
+    public Object getFacade() {
         if( responseFacade==null ) {
 	    Context ctx= request.getContext();
 	    if( ctx == null ) {
 		ctx=request.getContextManager().getContext("");
 	    }
-	    responseFacade = ctx.getFacadeManager().createHttpServletResponseFacade(this);
+	    responseFacade = ctx.getFacadeManager().
+		createHttpServletResponseFacade(this);
 	}
 	return responseFacade;
     }
@@ -188,7 +181,6 @@ public class Response {
 	status = 200;
 	usingWriter = false;
 	usingStream = false;
-	sessionId=null;
 	writer=null;
 	started = false;
 	commited = false;
@@ -380,32 +372,17 @@ public class Response {
 	// No action.. 
     }
 
-    public void addCookie(Cookie cookie) {
-	addHeader( CookieTools.getCookieHeaderName(cookie),
-			    CookieTools.getCookieHeaderValue(cookie));
-	if( cookie.getVersion() == 1 ) {
-	    // add a version 0 header too.
-	    // XXX what if the user set both headers??
-	    Cookie c0 = (Cookie)cookie.clone();
-	    c0.setVersion(0);
-	    addHeader( CookieTools.getCookieHeaderName(c0),
-				CookieTools.getCookieHeaderValue(c0));
-	}
-	if( ! included ) userCookies.addElement(cookie);
-    }
+//     public void addUserCookie(Object cookie) {
+// 	if( ! included ) userCookies.addElement(cookie);
+//     }
 
-    public Enumeration getCookies() {
-	return userCookies.elements();
-    }
+//     /** All cookies set explicitely by users with addCookie()
+//      *  - I'm not sure if it's used or needed
+//      */
+//     public Enumeration getUserCookies() {
+// 	return userCookies.elements();
+//     }
 
-    public void setSessionId( String id ) {
-	if( ! included ) sessionId=id;
-    }
-
-    public String getSessionId() {
-	return sessionId;
-    }
-    
     public Locale getLocale() {
         return locale;
     }

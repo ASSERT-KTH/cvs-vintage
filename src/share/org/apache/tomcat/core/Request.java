@@ -68,9 +68,6 @@ import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 
 /**
  *
@@ -93,6 +90,7 @@ public class Request {
     // byte->char conversion so we can add the encoding
     // that is known only after header parsing. Work in progress.
     protected MessageBytes schemeMB=new MessageBytes();
+
     protected MessageBytes methodMB=new MessageBytes();
     protected MessageBytes uriMB=new MessageBytes();
     protected MessageBytes queryMB=new MessageBytes();
@@ -108,7 +106,6 @@ public class Request {
 
     protected Hashtable attributes = new Hashtable();
     protected MimeHeaders headers;
-    protected Vector cookies = new Vector();
 
     // Processed information ( redundant ! )
     protected Hashtable parameters = new Hashtable();
@@ -135,23 +132,24 @@ public class Request {
 
     protected boolean didReadFormData;
     protected boolean didParameters;
-    protected boolean didCookies;
     // end "Request" variables
 
     // @deprecated
-    protected HttpServletRequest requestFacade;
+    protected Object requestFacade;
 
     // Session
     // set by interceptors - the session id
     protected String reqSessionId;
     protected String sessionIdSource;
+    protected String sessionId;
+        
     // cache- avoid calling SessionManager for each getSession()
-    protected HttpSession serverSession;
+    protected Object serverSession;
 
     protected Handler handler = null;
     Container container;
 
-    protected ServletInputStream in;
+    //protected ServletInputStream in;
 
     // sub-request support 
     Request top;
@@ -163,8 +161,8 @@ public class Request {
     protected String requestURI;
     protected String queryString;
     protected String protocol;
-    protected String servletName;
     
+    protected String servletName;
     protected String mappedPath = null;
     protected String contextPath;
     protected String lookupPath; // everything after contextPath before ?
@@ -305,6 +303,7 @@ public class Request {
 	return contentLength;
     }
 
+    // XXX XXX POSSIBLE BUG - should trim the charset encoding ( or not ? )
     public String getContentType() {
 	if(contentType != null) return contentType;
 	contentType = getHeader("content-type");
@@ -414,7 +413,7 @@ public class Request {
     // End hints
 
     // -------------------- Request methods ( high level )
-    public HttpServletRequest getFacade() {
+    public Object getFacade() {
 	// some requests are internal, and will never need a
 	// facade - no need to create a new object unless needed.
         if( requestFacade==null ) {
@@ -445,7 +444,9 @@ public class Request {
     }
 
     public void setJvmRoute(String jvmRoute) {
-	    this.jvmRoute=jvmRoute;
+	if( jvmRoute==null || "".equals(jvmRoute))
+	    this.jvmRoute=null;
+	this.jvmRoute=jvmRoute;
     }
 
     public String getRequestedSessionId() {
@@ -464,12 +465,27 @@ public class Request {
 	sessionIdSource=s;
     }
 
-    public void setSession(HttpSession serverSession) {
-	//	context.log("Request: set session ! ");
+    public void setSessionId( String id ) {
+	if( ! response.isIncluded() ) sessionId=id;
+    }
+
+    public String getSessionId() {
+	return sessionId;
+    }
+
+    /** Set the session associated with this request. This can be
+	the current session or a new session, set by a session
+	interceptor.
+
+	Important: you also need to set the session id ( this is needed to
+	cleanly separate the layers, and will be improved soon - the
+	whole session management will follow after core is done )
+    */
+    public void setSession(Object serverSession) {
 	this.serverSession = serverSession;
     }
 
-    public HttpSession getSession(boolean create) {
+    public Object getSession(boolean create) {
 	if( serverSession!=null ) {
 	    // if not null, it is validated by the session module
 	    return serverSession;
@@ -483,32 +499,35 @@ public class Request {
 	    return null;
 	}
 
-	reqSessionId = serverSession.getId();
-	response.setSessionId( reqSessionId );
-
 	return serverSession;
     }
 
-    // --------------------
+    // -------------------- Cookies --------------------
+    protected Vector cookies = new Vector();
+    protected boolean didCookies;
+
     public int getCookieCount() {
 	if( ! didCookies ) {
 	    didCookies=true;
-	    RequestUtil.processCookies( this, cookies );
+	    RequestUtil.processCookies( this );
 	}
 	return cookies.size();
     }
 
-    public Cookie getCookie( int idx ) {
+    public ServerCookie getCookie( int idx ) {
 	if( ! didCookies ) {
-	    didCookies=true;
-	    RequestUtil.processCookies( this, cookies );
+	    getCookieCount(); // will also update the cookies
 	}
-	return (Cookie)cookies.elementAt(idx);
+	return (ServerCookie)cookies.elementAt(idx);
     }
 
-    public Cookie[] getCookies() {
+    public void addCookie( ServerCookie c ) {
+	cookies.addElement( c );
+    }
+
+    private ServerCookie[] getCookies() {
 	int count=getCookieCount();
-	Cookie[] cookieArray = new Cookie[ count ];
+	ServerCookie[] cookieArray = new ServerCookie[ count ];
 
 	for (int i = 0; i < count; i ++) {
 	    cookieArray[i] = getCookie( i );
@@ -724,6 +743,7 @@ public class Request {
         pathInfo=null;
         pathTranslatedIsSet=false;
         sessionIdSource = null;
+	sessionId=null;
 
         // XXX a request need to override those if it cares
         // about security
@@ -738,7 +758,7 @@ public class Request {
         notAuthenticated=true;
 	userRoles=null;
 	reqRoles=null;
-	in=null;
+	//	in=null;
 
 	uriMB.recycle();
 	contextMB.recycle();
@@ -763,15 +783,10 @@ public class Request {
         return headers.names();
     }
 
-    public ServletInputStream getInputStream() throws IOException {
-	// will be removed from here
-	return getFacade().getInputStream();
-	// 	if( in==null ) {
-	// 	    in=new BufferedServletInputStream( this );
-	// 	    ((BufferedServletInputStream)in).initLimit();
-	// 	}
-	//     	return in;
-    }
+    // Bad design, use upper layer. We already have doRead()
+//     public ServletInputStream getInputStream() throws IOException {
+// 	return getFacade().getInputStream();
+//     }
 
     public int getServerPort() {
         return serverPort;
