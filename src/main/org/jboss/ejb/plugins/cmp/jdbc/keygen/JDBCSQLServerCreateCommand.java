@@ -45,7 +45,7 @@ public class JDBCSQLServerCreateCommand extends JDBCIdentityColumnCreateCommand
       insertSQL = insertSQL + "; " + pkSQL;
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int index, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       ps.execute();
       ResultSet rs = null;

@@ -54,7 +54,7 @@ public class JDBCPostgreSQLCreateCommand extends JDBCIdentityColumnCreateCommand
       }
    }
 
-   protected int executeInsert(PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
+   protected int executeInsert(int index, PreparedStatement ps, EntityEnterpriseContext ctx) throws SQLException
    {
       int rows = ps.executeUpdate();
 
