@@ -103,30 +103,18 @@ public class ModuleCodeRule extends Rule
     {
         ScarabModule module;
         String moduleId = (String)digester.pop();
-        try {
-            module = (ScarabModule)ModuleManager.getInstance(new NumberKey(moduleId));
-            //make sure the existing module has the same code
-            String existingModuleCode = module.getCode();
-            if(!existingModuleCode.equals(moduleCode))
-            {
-                throw new Exception("The existing module with module id: " + moduleId + " has module code: " + existingModuleCode
-                                        + " which is not same as the import module code: " + moduleCode);
-            }
-            else
-            {
-                digester.push(moduleCode);
-            }
-        } catch (Exception e) {
-            //we can't find the module by module id, let's see if there is an existing module with the same code
-            module = ScarabModule.findModuleByCode(moduleCode);
-            if(module != null)
-            {
-                throw new Exception("Found module code: " + moduleCode + " for a non-existing module with module id = " + moduleId);
-            }
-            else
-            {
-                digester.push(moduleCode);
-            }
+        
+        module = (ScarabModule)ModuleManager.getInstance(new NumberKey(moduleId));
+        //make sure the existing module has the same code
+        String existingModuleCode = module.getCode();
+        if(!existingModuleCode.equals(moduleCode))
+        {
+            throw new Exception("The existing module with module id: " + moduleId + " has module code: " + existingModuleCode
+                                    + " which is not same as the import module code: " + moduleCode);
+        }
+        else
+        {
+            digester.push(moduleCode);
         }
     }
 }
