@@ -1,16 +1,37 @@
 Columba v1.0 RC2
 
 New features:
-- international IMAP mailbox naming (tstich)
-- added show next/previous mail actions (fdietz)
-
+- international IMAP mailbox naming using UTF-7 encoding/decoding (tstich)
+- added show next/previous message and unread message actions (fdietz)
+- show/hide message preview panel (fdietz)
+- offer three choices for viewing email headers: default, custom, all (fdietz)
+- #1000003, doubleclick From: header, displayname included (fdietz)
+- #999871, "subject or sender contains" should do filtering on typing (fdietz)
+- show recent message count in folder tree using blue font (fdietz)
+- cleanup of menu, added many new shortcuts (fdietz)
 
 Fixed bugs:
 - #773118 é in name of Directory (tstich)
 - #1014346 IMAP rename problems (tstich)
 - #1014345 IMAP Subscribe problems (tstich)
 - #1015839, incoming/move spam custom folder is mixed (fdietz)
+- #1018922, catch charset exceptions and add sane fall-back (fdietz)
+- #1018504, threading is not including all messages (fdietz)
+- #1016577, Moving messages to same folder makes no sense (fdietz)
+- #1018497, expunge on root folder causes nullpointer exception (fdietz)
+- #1018505, threaded view plus/minus button mouse error (fdietz)
+- make sure "columba.size" (message-size) is never 0 KB (fdietz)
+- #1018095, SEVERE: composer i18n strings missing (fdietz)
+- #985273, "recent" value on MouseOver-Box of Folders, fixed handling of recent 
+  flag when POP3 downloading new messages (fdietz)
+- #996491, License on Help-Menu (see followups) (fdietz)
+- #1013624, Preview not reset on switching to empty folder (fdietz)
+- #1015839, incoming/move spam custom folder is mixed (fdietz)
+- check auth methods now use whatever is configured on screen instead of 
+  using stored account settings (cliffb53)
+- #1011038, Save password security warning (cliffb53)
 
+ 
 Columba v1.0 RC1-final
 
 New features:
