@@ -23,9 +23,9 @@
 
 package org.argouml.uml.ui;
 
-import java.awt.event.*;
+import java.awt.event.*;import java.beans.PropertyVetoException;
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.*;import org.argouml.ui.ProjectBrowser;
 import java.lang.reflect.*;
 
 import ru.novosoft.uml.*;
@@ -36,7 +36,7 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
                                                             UMLUserInterfaceComponent {        
 	private class BooleanSetter implements Runnable {		JRadioButton _field = null;		boolean _newValue = false;		public BooleanSetter(JRadioButton field, boolean newValue) {			_field = field;			_newValue = newValue;		}		/**         * @see java.lang.Runnable#run()         */        public void run() {        	_field.setSelected(_newValue);        }	}			
     private UMLUserInterfaceContainer _container;
-    private UMLBooleanProperty _property;
+    private UMLBooleanProperty _property;    private ButtonGroup _group = null;
     
     /** Creates new BooleanChangeListener */
     public UMLRadioButton(String label,UMLUserInterfaceContainer container,
@@ -46,8 +46,7 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
         _property = property;
         addItemListener(this);
         update();
-    }
-    
+    }    
     public UMLRadioButton(String label,UMLUserInterfaceContainer container,
                           UMLBooleanProperty property, boolean select) {
         super(label, select);
@@ -57,8 +56,8 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
         update();
     }
     public void itemStateChanged(final ItemEvent event) {
-//		System.out.println(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());
-        _property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);        // yes we should update        update();
+//		System.out.println(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());		try {
+        	_property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);		}		catch (PropertyVetoException ve) {			ProjectBrowser.TheInstance.getStatusBar().showStatus(ve.getMessage());			setSelected(_property.getProperty(_container.getTarget()));    	}        // yes we should update        update();
     }
 
     public void targetChanged() {

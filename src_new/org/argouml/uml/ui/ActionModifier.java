@@ -24,7 +24,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.2 2002/05/03 19:17:05 jeremybennett Exp $
+// $Id: ActionModifier.java,v 1.3 2002/08/22 10:47:32 kataka Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -36,6 +36,7 @@ import org.argouml.uml.diagram.ui.*;
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import java.awt.event.*;
+import java.beans.PropertyVetoException;
 import java.util.*;
 
 import ru.novosoft.uml.model_management.*;
@@ -252,7 +253,10 @@ public class ActionModifier extends UMLAction {
 	  * To perform the action of changing a modifier
 	  */
     public void actionPerformed(ActionEvent ae) {
+    	try {
 		_property.setProperty(object, !_property.getProperty(object));
+    	}
+    	catch (PropertyVetoException ve) {}
     }
 
     /**
