@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * module does not provide alternatives.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameterManager.java,v 1.5 2003/04/17 22:56:32 jon Exp $
+ * @version $Id: GlobalParameterManager.java,v 1.6 2003/11/25 15:49:55 mpoeschl Exp $
  */
 public class GlobalParameterManager
     extends BaseGlobalParameterManager
@@ -170,8 +170,14 @@ public class GlobalParameterManager
         if (obj == null) 
         {
             result = getInstance(name).getValue();
-            getMethodResult()
-                .put(result, MANAGER_KEY, name, GET_STRING); 
+            if (result == null)
+            {
+                log.warn("GlobalParameter " + name + " does not exist!");
+            }
+            else
+            {
+                getMethodResult().put(result, MANAGER_KEY, name, GET_STRING);
+            }
         }
         else 
         {
