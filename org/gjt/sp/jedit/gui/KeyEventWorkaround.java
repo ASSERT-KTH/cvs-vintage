@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.34 2003/12/16 03:04:32 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.35 2003/12/25 01:37:25 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -46,7 +46,7 @@ public class KeyEventWorkaround
 		{
 		//{{{ KEY_PRESSED...
 		case KeyEvent.KEY_PRESSED:
-			lastKeyTime = System.currentTimeMillis();
+			lastKeyTime = evt.getWhen();
 			// get rid of keys we never need to handle
 			switch(keyCode)
 			{
@@ -156,7 +156,7 @@ public class KeyEventWorkaround
 				return null;
 			}
 
-			if(System.currentTimeMillis() - lastKeyTime < 750)
+			if(evt.getWhen() - lastKeyTime < 750)
 			{
 				if(!Debug.ALTERNATIVE_DISPATCHER)
 				{
@@ -219,7 +219,7 @@ public class KeyEventWorkaround
 			{
 			case KeyEvent.VK_ALT:
 				modifiers &= ~InputEvent.ALT_MASK;
-				lastKeyTime = System.currentTimeMillis();
+				lastKeyTime = evt.getWhen();
 				return null;
 			case KeyEvent.VK_ALT_GRAPH:
 				modifiers &= ~InputEvent.ALT_GRAPH_MASK;
