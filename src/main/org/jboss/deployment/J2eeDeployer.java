@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.14 $
+*   @version $Revision: 1.15 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -280,6 +280,8 @@ implements J2eeDeployerMBean
    throws Exception
    {
       URL tmpDirUrl = getClass().getResource("/tmp.properties");
+      if( tmpDirUrl == null )
+         throw new IOException ("Failed to get /tmp.properties URL; Temporary directory does not exist!");
       //check if the deployment dir was set meaningful
 	   File dir = new File(new File(tmpDirUrl.getFile()).getParentFile(), "deploy/"+getDeployerName());
       if (!dir.exists () &&
