@@ -14,6 +14,8 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
    #set ($templ = $scarabR.IssueTemplate)
 #end
 
+temid= $templateId
+
 <h2>$page.Title</h2>
 
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
@@ -33,7 +35,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
  <tr>
  <th>Templates</th>
  <td>
-<select name="templateId">
+<select name="select_template_id">
 #foreach ($template in $privateTemplateList)
  <option value="$template.IssueId">$template.TemplateInfo.Name</option>
 #end
