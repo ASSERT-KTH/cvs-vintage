@@ -113,7 +113,8 @@ public class BodyContentImpl extends BodyContent {
 
 	if (len <= Constants.DEFAULT_BUFFER_SIZE) {
 	    tmp = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
-	    bufferSize = bufferSize * 2;
+	    //	    bufferSize = bufferSize * 2;
+	    bufferSize += Constants.DEFAULT_BUFFER_SIZE;
 	} else {
 	    tmp = new char [bufferSize + len];
 	    bufferSize += len;
@@ -179,6 +180,8 @@ public class BodyContentImpl extends BodyContent {
 	    if (len >= bufferSize - nextChar)
 	        reAllocBuff(len);
 
+	    //System.out.println("XXX " + off + " " + (off+len) + " " +
+	    // nextChar + " " + bufferSize + " "+  cb.length);
             s.getChars(off, off + len, cb, nextChar);
 	    nextChar += len;
         }
