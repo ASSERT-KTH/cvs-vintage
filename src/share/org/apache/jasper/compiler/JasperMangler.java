@@ -169,8 +169,16 @@ public class JasperMangler implements Mangler{
     private String fixInvalidChars(String className) {
 	// Fix for invalid characters. From CommandLineCompiler
 	StringBuffer modifiedClassName = new StringBuffer();
+	char c='/';
 	for (int i = 0; i < className.length(); i++) {
-	    char c=className.charAt(i);
+	    char prev=c;
+	    c=className.charAt(i);
+	    // workaround for common "//" problem. Alternative
+	    // would be to encode the dot.
+	    if( prev=='/' && c=='/' ) {
+		continue;
+	    }
+	    
 	    if (Character.isLetterOrDigit(c) == true ||
 		c=='_' ||
 		c=='/' )
