@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -60,7 +60,7 @@ public abstract class MetaData implements XmlLoadable {
 
 		Iterator goodChildren = getChildrenByTagName(element, tagName);
 		
-		if (goodChildren.hasNext()) {
+		if (goodChildren != null && goodChildren.hasNext()) {
 			Element child = (Element)goodChildren.next();
 			if (goodChildren.hasNext()) {
 				throw new DeploymentException("expected only one " + tagName + " tag");
@@ -76,7 +76,7 @@ public abstract class MetaData implements XmlLoadable {
 
 		Iterator goodChildren = getChildrenByTagName(element, tagName);
 
-		if (goodChildren.hasNext()) {
+		if (goodChildren != null && goodChildren.hasNext()) {
 			Element child = (Element)goodChildren.next();
 			if (goodChildren.hasNext()) {
 				throw new DeploymentException("expected only one " + tagName + " tag");
