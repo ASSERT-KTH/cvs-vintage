@@ -58,13 +58,11 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
- * You should add additional methods to this class to meet the
- * application requirements.  This class will only be generated as
- * long as it does not already exist in the output directory.
+ * This class represents an IssueType.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.22 2002/06/20 22:41:57 elicia Exp $
+ * @version $Id: IssueType.java,v 1.23 2002/07/08 19:44:19 jon Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -77,35 +75,9 @@ public  class IssueType
     private static final String GET_INSTANCE = 
         "getInstance";
 
-
     public static final NumberKey ISSUE__PK = new NumberKey("1");
     public static final NumberKey USER_TEMPLATE__PK = new NumberKey("2");
     public static final NumberKey MODULE_TEMPLATE__PK = new NumberKey("3");
-
-    /**
-     * Gets the id of the template that corresponds to the issue type.
-     */
-    public String test(Module module)
-        throws Exception
-    {
-       return module.getName();
-    }
-
-    /**
-     * Gets the id of the template that corresponds to the issue type.
-    public String test(Module module, boolean b)
-        throws Exception
-    {
-        if (b)
-        {
-            return "true";
-        }
-        else
-        {
-            return "false";
-         }
-    }
-     */
 
     /**
      * Gets the IssueType template for this IssueType. The template
