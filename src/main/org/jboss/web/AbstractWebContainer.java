@@ -161,7 +161,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
    
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.51 $
+@version $Revision: 1.52 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -206,9 +206,14 @@ public abstract class AbstractWebContainer
       return warFile.endsWith("war") || warFile.endsWith("war/");
    }
 
-   public synchronized void init(DeploymentInfo di) 
+   public synchronized boolean init(DeploymentInfo di) 
       throws DeploymentException 
    {
+      if (!super.init(di)) 
+      {
+         return false;
+      } // end of if ()
+      
       log.debug("Begin init");
       try 
       {
@@ -262,6 +267,12 @@ public abstract class AbstractWebContainer
       }
       
       log.debug("End init");
+      return true;
+   }
+
+   protected void processNestedDeployments(DeploymentInfo di)
+   {
+      //presumably some of init could be moved here
    }
 
    /**

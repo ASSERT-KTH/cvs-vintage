@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.26 $</tt>
+ * @version <tt>$Revision: 1.27 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -276,7 +276,7 @@ public class EJBDeployer
       return accepts;
    }
 
-   public void init(DeploymentInfo di)
+   public boolean init(DeploymentInfo di)
       throws DeploymentException
    {
       try
@@ -310,7 +310,8 @@ public class EJBDeployer
       }
 
       // invoke super-class initialization
-      processNestedDeployments(di);
+      return super.init(di);
+      
    }
 
    public synchronized void create(DeploymentInfo di)

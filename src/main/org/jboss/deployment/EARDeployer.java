@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -64,9 +64,14 @@ public class EARDeployer
       return urlStr.endsWith("ear") || urlStr.endsWith("ear/");
    }
    
-   public void init(DeploymentInfo di)
+   public boolean init(DeploymentInfo di)
       throws DeploymentException
    {
+      if (!super.init(di)) 
+      {
+         return false;
+      } // end of if ()
+      
       try
       {
          log.info("Init J2EE application: " + di.url);
@@ -205,6 +210,12 @@ public class EARDeployer
          di.shortName,
          di.localUrl
       );
+      return true;
+   }
+
+   protected void processNestedDeployments(DeploymentInfo di)
+   {
+      //most of init should be in here...
    }
    
    /**
