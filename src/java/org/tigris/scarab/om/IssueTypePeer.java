@@ -30,7 +30,7 @@ public class IssueTypePeer
 
     /** 
      * Retrieve a single object by pk
-     *
+     * FIXME: is this method implementation (with the caching) still done this way? -jss
      * @param pk
      */
     public static IssueType retrieveByPK( ObjectKey pk )
