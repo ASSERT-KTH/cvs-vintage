@@ -17,28 +17,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.util.MailResourceLoader;
-
-/*
- * PopPanel.java
- *
- * Created on 1. November 2000, 23:39
- */
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -50,12 +40,28 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.util.ListTools;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.auth.AuthenticationFactory;
+import org.columba.ristretto.smtp.SMTPException;
+import org.columba.ristretto.smtp.SMTPProtocol;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author freddy
  * @version
  */
-public class OutgoingServerPanel extends DefaultPanel implements ActionListener {
+public class OutgoingServerPanel
+    extends DefaultPanel
+    implements ActionListener {
     private JLabel hostLabel;
     private JTextField hostTextField;
     private JLabel portLabel;
@@ -75,6 +81,9 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private JCheckBox defaultAccountCheckBox;
     private SmtpItem item;
     private AccountItem accountItem;
+    private JButton checkAuthMethods;
+    private static final Pattern authModeTokenizePattern =
+        Pattern.compile("([^;]+);?");
 
     public OutgoingServerPanel(AccountItem accountItem) {
         super();
@@ -130,12 +139,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                 authenticationComboBox.setEnabled(false);
             }
 
-            defaultAccountCheckBox.setEnabled(MailConfig.getAccountList()
-                                                        .getDefaultAccountUid() != accountItem.getInteger(
-                    "uid"));
+            defaultAccountCheckBox.setEnabled(
+                MailConfig.getAccountList().getDefaultAccountUid()
+                    != accountItem.getInteger("uid"));
 
-            if (defaultAccountCheckBox.isEnabled() &&
-                    defaultAccountCheckBox.isSelected()) {
+            if (defaultAccountCheckBox.isEnabled()
+                && defaultAccountCheckBox.isSelected()) {
                 showDefaultAccountWarning();
             } else {
                 layoutComponents();
@@ -155,22 +164,27 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
             item.set("enable_ssl", secureCheckBox.isSelected());
 
             if (needAuthCheckBox.isSelected()) {
-                String loginMethod = (String) authenticationComboBox.getSelectedItem();
+                String loginMethod =
+                    (String) authenticationComboBox.getSelectedItem();
                 item.set("login_method", loginMethod);
             } else {
                 item.set("login_method", "NONE"); //$NON-NLS-1$
             }
 
-            item.set("use_default_account", defaultAccountCheckBox.isSelected());
+            item.set(
+                "use_default_account",
+                defaultAccountCheckBox.isSelected());
         }
     }
 
     protected void layoutComponents() {
         //		Create a FormLayout instance.
-        FormLayout layout = new FormLayout("10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
-                
+        FormLayout layout =
+            new FormLayout(
+                "10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
+
             // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+    ""); // rows are added dynamically (no need to define them here)
 
         JPanel topPanel = new JPanel();
         DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
@@ -185,8 +199,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         builder.append(defaultAccountCheckBox, 5);
         builder.nextLine();
 
-        builder.appendSeparator(MailResourceLoader.getString("dialog",
-                "account", "configuration"));
+        builder.appendSeparator(
+            MailResourceLoader.getString("dialog", "account", "configuration"));
         builder.nextLine();
 
         builder.append(hostLabel, 2);
@@ -197,8 +211,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         builder.append(portTextField);
         builder.nextLine();
 
-        builder.appendSeparator(MailResourceLoader.getString("dialog",
-                "account", "security"));
+        builder.appendSeparator(
+            MailResourceLoader.getString("dialog", "account", "security"));
         builder.nextLine();
 
         builder.append(needAuthCheckBox, 4);
@@ -207,14 +221,16 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         builder.setLeadingColumnOffset(2);
 
         JPanel panel = new JPanel();
-        FormLayout l = new FormLayout("max(80dlu;default), 3dlu, fill:max(100dlu;default):grow",
-                
+        FormLayout l =
+            new FormLayout(
+                "max(80dlu;default), 3dlu, fill:max(50dlu;default), 2dlu, left:max(50dlu;default)",
+
             // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+    ""); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
-        b.append(authenticationLabel, authenticationComboBox);
+        b.append(authenticationLabel, authenticationComboBox, checkAuthMethods);
         b.nextLine();
         b.append(loginLabel, loginTextField);
         builder.append(panel, 3);
@@ -237,125 +253,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
         builder.append(secureCheckBox, 4);
         builder.nextLine();
-
-        /*
-         * setLayout(new BorderLayout()); add(builder.getPanel(),
-         * BorderLayout.CENTER);
-         */
-        /*
-         * setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-         *
-         * GridBagLayout mainLayout = new GridBagLayout(); GridBagConstraints
-         * mainConstraints = new GridBagConstraints();
-         *
-         * mainConstraints.anchor = GridBagConstraints.NORTHWEST;
-         * mainConstraints.fill = GridBagConstraints.HORIZONTAL;
-         * mainConstraints.weightx = 1.0;
-         *
-         * setLayout(mainLayout);
-         *
-         * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-         * mainConstraints.insets = new Insets(0, 10, 5, 0);
-         * mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
-         * add(defaultAccountCheckBox);
-         *
-         * JPanel configPanel = new JPanel(); Border b1 =
-         * BorderFactory.createEtchedBorder(); Border b2 =
-         * BorderFactory.createTitledBorder( b1, MailResourceLoader.getString(
-         * "dialog", "account", "configuration")); Border emptyBorder =
-         * BorderFactory.createEmptyBorder(5, 5, 5, 5); Border border =
-         * BorderFactory.createCompoundBorder(b2, emptyBorder);
-         * configPanel.setBorder(border); GridBagLayout layout = new
-         * GridBagLayout(); GridBagConstraints c = new GridBagConstraints();
-         * configPanel.setLayout(layout);
-         *
-         * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-         * mainConstraints.insets = new Insets(0, 0, 0, 0);
-         * mainLayout.setConstraints(configPanel, mainConstraints);
-         * add(configPanel);
-         *
-         * c.fill = GridBagConstraints.HORIZONTAL; c.anchor =
-         * GridBagConstraints.NORTHWEST; c.weightx = 0.1; c.gridwidth =
-         * GridBagConstraints.RELATIVE; layout.setConstraints(hostLabel, c);
-         * configPanel.add(hostLabel);
-         *
-         * c.gridwidth = GridBagConstraints.REMAINDER; c.weightx = 0.9;
-         * layout.setConstraints(hostTextField, c);
-         * configPanel.add(hostTextField);
-         *
-         * c.gridwidth = GridBagConstraints.RELATIVE; c.weightx = 0.1;
-         * layout.setConstraints(portLabel, c); configPanel.add(portLabel);
-         *
-         * c.gridwidth = GridBagConstraints.REMAINDER; c.weightx = 0.9;
-         * layout.setConstraints(portTextField, c);
-         * configPanel.add(portTextField);
-         *
-         * JPanel securityPanel = new JPanel(); b1 =
-         * BorderFactory.createEtchedBorder(); b2 =
-         * BorderFactory.createTitledBorder( b1,
-         * MailResourceLoader.getString("dialog", "account", "security"));
-         *
-         * emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5); border =
-         * BorderFactory.createCompoundBorder(b2, emptyBorder);
-         * securityPanel.setBorder(border);
-         *
-         * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-         * mainLayout.setConstraints(securityPanel, mainConstraints);
-         * add(securityPanel);
-         *
-         * layout = new GridBagLayout(); c = new GridBagConstraints();
-         * securityPanel.setLayout(layout);
-         *
-         * c.fill = GridBagConstraints.HORIZONTAL; c.anchor =
-         * GridBagConstraints.NORTHWEST; c.weightx = 1.0; c.gridwidth =
-         * GridBagConstraints.REMAINDER;
-         * layout.setConstraints(needAuthCheckBox, c);
-         * securityPanel.add(needAuthCheckBox);
-         *
-         * JPanel panel = new JPanel(); panel.setLayout(layout); c.insets = new
-         * Insets(0, 20, 0, 0); layout.setConstraints(panel, c);
-         * securityPanel.add(panel);
-         *
-         * JPanel panel2 = new JPanel(); panel2.setLayout(layout);
-         *
-         * c.insets = new Insets(0, 0, 0, 0); c.fill = GridBagConstraints.NONE;
-         * c.anchor = GridBagConstraints.WEST;
-         *
-         * layout.setConstraints(panel2, c); panel.add(panel2);
-         *
-         * c.gridwidth = GridBagConstraints.RELATIVE; c.fill =
-         * GridBagConstraints.NONE; c.anchor = GridBagConstraints.WEST;
-         * c.weightx = 0.0; c.insets = new Insets(0, 0, 0, 0);
-         * layout.setConstraints(authenticationLabel, c);
-         * panel2.add(authenticationLabel);
-         *
-         * c.gridwidth = GridBagConstraints.REMAINDER; c.weightx = 0.0;
-         * c.insets = new Insets(0, 5, 0, 0);
-         * layout.setConstraints(authenticationComboBox, c);
-         * panel2.add(authenticationComboBox);
-         *
-         * c.gridwidth = GridBagConstraints.RELATIVE; c.insets = new Insets(0, 0, 0,
-         * 0); layout.setConstraints(loginLabel, c); panel.add(loginLabel);
-         *
-         * c.gridwidth = GridBagConstraints.REMAINDER; c.insets = new Insets(0, 5, 0,
-         * 0); c.fill = GridBagConstraints.HORIZONTAL;
-         * layout.setConstraints(loginTextField, c); panel.add(loginTextField);
-         *
-         * c.gridwidth = GridBagConstraints.REMAINDER;
-         * layout.setConstraints(storePasswordCheckBox, c);
-         * securityPanel.add(storePasswordCheckBox);
-         *
-         * c.gridwidth = GridBagConstraints.REMAINDER;
-         * layout.setConstraints(secureCheckBox, c);
-         * securityPanel.add(secureCheckBox);
-         *
-         * mainConstraints.gridheight = GridBagConstraints.REMAINDER;
-         * mainConstraints.weighty = 1.0; mainConstraints.fill =
-         * GridBagConstraints.VERTICAL; Component vglue =
-         * Box.createVerticalGlue(); mainLayout.setConstraints(vglue,
-         * mainConstraints); add(vglue);
-         *
-         */
     }
 
     protected void showDefaultAccountWarning() {
@@ -377,8 +274,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         mainConstraints.weighty = 1.0;
         mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
-        JLabel label = new JLabel(MailResourceLoader.getString("dialog",
-                    "account", "using_default_account_settings"));
+        JLabel label =
+            new JLabel(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "account",
+                    "using_default_account_settings"));
         Font newFont = label.getFont().deriveFont(Font.BOLD);
         label.setFont(newFont);
         mainLayout.setConstraints(label, mainConstraints);
@@ -386,8 +287,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     }
 
     protected void initComponents() {
-        defaultAccountCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "use_default_account_settings"));
+        defaultAccountCheckBox =
+            new CheckBoxWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "account",
+                    "use_default_account_settings"));
 
         /*
          * defaultAccountCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
@@ -398,16 +303,14 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
         defaultAccountCheckBox.addActionListener(this);
 
-        hostLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "host")); //$NON-NLS-1$
+        hostLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "host")); //$NON-NLS-1$
 
         /*
          * hostLabel.setDisplayedMnemonic(
          */
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
-        portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "port")); //$NON-NLS-1$
+        portLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "port")); //$NON-NLS-1$
 
         /*
          * portLabel.setDisplayedMnemonic(
@@ -415,8 +318,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         portTextField = new JTextField();
         portLabel.setLabelFor(portTextField);
 
-        needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
+        needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
 
         /*
          * needAuthCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
@@ -425,41 +327,55 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         needAuthCheckBox.setActionCommand("AUTH"); //$NON-NLS-1$
         needAuthCheckBox.addActionListener(this);
 
-        storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "store_password_in_configuration_file"));
+        storePasswordCheckBox =
+            new CheckBoxWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "account",
+                    "store_password_in_configuration_file"));
 
         /*
          * storePasswordCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
          * "dialog", "account",
          */
-        secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "use_SSL_for_secure_connection"));
+        secureCheckBox =
+            new CheckBoxWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "account",
+                    "use_SSL_for_secure_connection"));
 
         /*
          * secureCheckBox.setMnemonic(MailResourceLoader.getMnemonic("dialog",
          * "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
          */
-        authenticationLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "authentication_type"));
+        authenticationLabel =
+            new LabelWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "account",
+                    "authentication_type"));
 
-        /*
-         * authenticationLabel.setDisplayedMnemonic(
-         * MailResourceLoader.getMnemonic( "dialog", "account",
-         * "authentication_type"));
-         */
-        authenticationComboBox = new JComboBox();
-        authenticationComboBox.addItem("PLAIN");
-        authenticationComboBox.addItem("LOGIN");
+		authenticationComboBox = new JComboBox();
+		authenticationLabel.setLabelFor(authenticationComboBox);
 
-        if (accountItem.isPopAccount()) {
-            authenticationComboBox.addItem("POP before SMTP");
-        }
+        updateAuthenticationComboBox();
 
-        authenticationComboBox.addActionListener(this);
+        checkAuthMethods =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString(
+                    "dialog",
+                    "account",
+                    "authentication_checkout_methods"));
+        checkAuthMethods.setActionCommand("CHECK_AUTHMETHODS");
+        checkAuthMethods.addActionListener(this);
+
+        //authenticationComboBox.addActionListener(this);
         authenticationLabel.setLabelFor(authenticationComboBox);
 
-        loginLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "login"));
+        loginLabel =
+            new LabelWithMnemonic(
+                MailResourceLoader.getString("dialog", "account", "login"));
 
         /*
          * loginLabel.setDisplayedMnemonic(
@@ -468,11 +384,44 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         loginLabel.setLabelFor(loginTextField);
     }
 
+    /**
+     * 
+     */
+    private void updateAuthenticationComboBox() {
+        authenticationComboBox.removeAllItems();
+        
+		authenticationComboBox.addItem(
+            MailResourceLoader.getString(
+                "dialog",
+                "account",
+                "authentication_securest"));
+
+		if (accountItem.isPopAccount()) {
+			authenticationComboBox.addItem("POP before SMTP");
+		}
+
+
+        String authMethods =
+            accountItem.get("smtpserver", "authentication_methods");
+
+        // Add previously fetch authentication modes
+        if (authMethods != null) {
+            Matcher matcher = authModeTokenizePattern.matcher(authMethods);
+
+            while (matcher.find()) {
+                authenticationComboBox.addItem(matcher.group(1));
+            }
+        }
+        
+        authenticationComboBox.setSelectedItem(accountItem.get("smtpserver", "login_method"));
+    }
+
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
         if (e.getSource().equals(authenticationComboBox)) {
-            String selection = (String) authenticationComboBox.getSelectedItem();
+            String selection =
+                (String) authenticationComboBox.getSelectedItem();
 
             loginLabel.setEnabled(true);
             loginTextField.setEnabled(true);
@@ -487,7 +436,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
             }
 
             revalidate();
-        } else {
+        } else 
             if (action.equals("AUTH")) {
                 if (needAuthCheckBox.isSelected()) {
                     loginLabel.setEnabled(true);
@@ -495,16 +444,96 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                     storePasswordCheckBox.setEnabled(true);
                     authenticationLabel.setEnabled(true);
                     authenticationComboBox.setEnabled(true);
+					checkAuthMethods.setEnabled(true);
                 } else {
                     loginLabel.setEnabled(false);
                     loginTextField.setEnabled(false);
                     storePasswordCheckBox.setEnabled(false);
                     authenticationLabel.setEnabled(false);
                     authenticationComboBox.setEnabled(false);
+					checkAuthMethods.setEnabled(false);
                 }
-            }
+            
+        } else if ( action.equals("CHECK_AUTHMETHODS")) {
+			getAuthMechanisms();
         }
     }
+    
+    
+    private void getAuthMechanisms() {
+        {
+            List list = new LinkedList();
+
+            try {
+                list = getAuthSMTP();
+                ListTools.intersect_astable(list, AuthenticationFactory.getInstance().getSupportedMechanisms());                
+            } catch (IOException e1) {
+                String name = e1.getClass().getName();
+                JOptionPane.showMessageDialog(
+                    null,
+                    e1.getLocalizedMessage(),
+                    name.substring(name.lastIndexOf(".")),
+                    JOptionPane.ERROR_MESSAGE);
+            } catch (SMTPException e1) {
+                //TODO sever does not support ehlo
+            }
+
+            // Save the authentication modes
+            if (list.size() > 0) {
+                StringBuffer authMethods = new StringBuffer();
+                Iterator it = list.iterator();
+                authMethods.append(it.next());
+
+                while (it.hasNext()) {
+                    authMethods.append(';');
+                    authMethods.append(it.next());
+                }
+
+                accountItem.set(
+                    "smtpserver",
+                    "authentication_methods",
+                    authMethods.toString());
+            }
+
+            updateAuthenticationComboBox();
+        }
+    }
+	/**
+	  * @return
+	  */
+	 private List getAuthSMTP() throws IOException, SMTPException {
+		 List result = new LinkedList();
+		 SMTPProtocol protocol =
+			 new SMTPProtocol(
+				 accountItem.get("smtpserver", "host"),
+				 accountItem.getInteger("smtpserver", "port"));
+
+		 protocol.openPort();
+		 String[] capas = protocol.ehlo("localhost");
+		 for (int i = 0; i < capas.length; i++) {
+			 if (capas[i].startsWith("AUTH")) {
+				 result = parseAuthCapas(capas[i]);
+			 }
+		 }
+
+		 return result;
+	 }
+	 /**
+	  * @param string
+	  * @return
+	  */
+	 private List parseAuthCapas(String string) {
+		 Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
+		 tokenizer.find();
+
+		 List mechanisms = new LinkedList();
+
+		 while (tokenizer.find()) {
+			 mechanisms.add(tokenizer.group());
+		 }
+
+		 return mechanisms;
+	 }
 
     public boolean isFinished() {
         boolean result = false;
@@ -512,18 +541,14 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         boolean esmtp = isESmtp();
 
         if (host.length() == 0) {
-            JOptionPane.showMessageDialog(null,
-                MailResourceLoader.getString("dialog", "account",
-                    "You_have_to_enter_a_host_name")); //$NON-NLS-1$
+            JOptionPane.showMessageDialog(null, MailResourceLoader.getString("dialog", "account", "You_have_to_enter_a_host_name")); //$NON-NLS-1$
 
             return false;
         } else if (esmtp == true) {
             String login = getLogin();
 
             if (login.length() == 0) {
-                JOptionPane.showMessageDialog(null,
-                    MailResourceLoader.getString("dialog", "account",
-                        "You_have_to_enter_a_login_name")); //$NON-NLS-1$
+                JOptionPane.showMessageDialog(null, MailResourceLoader.getString("dialog", "account", "You_have_to_enter_a_login_name")); //$NON-NLS-1$
 
                 return false;
             }

@@ -75,15 +75,6 @@ public class SendAction extends AbstractColumbaAction {
             return;
         }
 
-        /*
-        ComposerOperation op =
-                new ComposerOperation(
-                        Operation.COMPOSER_SEND,
-                        0,
-                        composerInterface.composerController);
-
-        MainInterface.crossbar.operate(op);
-        */
         OutboxFolder outboxFolder = (OutboxFolder) MailInterface.treeModel.getFolder(103);
 
         ComposerCommandReference[] r = new ComposerCommandReference[1];

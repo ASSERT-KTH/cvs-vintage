@@ -275,7 +275,7 @@ public class POP3Store {
         return m;
     }
 
-    public void logout() throws Exception {
+    public void logout() throws IOException, POP3Exception {
         protocol.quit();
 
         uidMap = null;
