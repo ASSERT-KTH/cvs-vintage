@@ -89,7 +89,7 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.45 2002/01/28 18:47:55 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.46 2002/02/01 00:43:00 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -393,38 +393,6 @@ public class ScarabUserImpl
         return roles;
     }
     
-    
-    /* *
-     * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
-     * This method is not needed yet.
-     * /
-     public List getModules(Role role) 
-     throws Exception
-     {
-     /*
-     Criteria crit = new Criteria(3)
-     .add(RModuleUserRolePeer.DELETED, false)
-     .add(RModuleUserRolePeer.ROLE_ID, 
-     ((BaseObject)role).getPrimaryKey());        
-     List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
-     
-     // rearrange so list contains Modules
-     List modules = new ArrayList(moduleRoles.size());
-     Iterator i = moduleRoles.iterator();
-     while (i.hasNext()) 
-     {
-     ModuleEntity module = 
-     (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
-     modules.add(module);
-     }
-     
-     return modules;
-     * /
-     if (true)
-     throw new Exception ("FIXME: This method doesn't belong here!");
-     return null;
-     }
-     */
     
     /**
      * @see org.tigris.scarab.om.ScarabUser#createNewUser()
