@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.9 2000/05/24 01:58:14 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/05/24 01:58:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.10 2000/06/10 01:41:20 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/06/10 01:41:20 $
  *
  * ====================================================================
  *
@@ -103,7 +103,55 @@ public class PageContextImpl extends PageContext {
         this.factory = factory;
     }
 
+    /*
+      static class InitAction implements java.security.PrivilegedAction {
+	Servlet servlet;
+	ServletRequest request;
+	ServletResponse response;
+	String errorPageURL;
+	boolean needsSession;
+	int bufferSize;
+	boolean autoFlush;
+	PageContextImpl pci;
+	    
+	InitAction(PageContextImpl pci, Servlet s, ServletRequest req,
+		   ServletResponse res, String err,
+		   boolean n, int b,
+		   boolean a) {
+	    this.pci=pci;
+	    servlet=s;
+	    request=req;
+	    response=res;
+	    errorPageURL=err;
+	    needsSession=n;;
+	    bufferSize=b;
+	    autoFlush=a;
+	}
+	
+	public Object run()  {
+	    try {
+		pci._initialize(servlet, request, response, errorPageURL, needsSession, bufferSize, autoFlush);
+	    } catch( Throwable t ) {
+		t.printStackTrace();
+	    }
+	    return null;
+	}
+    }
+    */    
     public void initialize(Servlet servlet, ServletRequest request,
+                           ServletResponse response, String errorPageURL,
+                           boolean needsSession, int bufferSize,
+                           boolean autoFlush)
+        throws IOException, IllegalStateException, IllegalArgumentException
+    {
+	// 	 	InitAction ia=new InitAction( this, servlet, request, response,
+	// 	 					  errorPageURL, needsSession, bufferSize,
+	// 	 					  autoFlush);
+	// 		java.security.AccessController.doPrivileged( ia );
+	_initialize(servlet, request, response, errorPageURL, needsSession, bufferSize, autoFlush);
+    }
+
+    void _initialize(Servlet servlet, ServletRequest request,
                            ServletResponse response, String errorPageURL,
                            boolean needsSession, int bufferSize,
                            boolean autoFlush)
@@ -123,7 +171,6 @@ public class PageContextImpl extends PageContext {
 	this.response     = response;
 
 	// setup session (if required)
-
 	if (request instanceof HttpServletRequest && needsSession)
 	    this.session = ((HttpServletRequest)request).getSession();
 
@@ -131,11 +178,11 @@ public class PageContextImpl extends PageContext {
 	    throw new IllegalStateException("Page needs a session and none is available");
 
 	// initialize the initial out ...
-	if( out == null ) 
+	if( out == null ) {
 	    out = _createOut(bufferSize, autoFlush); // throws
-	else
+	} else
 	    ((JspWriterImpl)out).init(response, bufferSize, autoFlush );
-
+	
 	if (this.out == null)
 	    throw new IllegalStateException("failed initialize JspWriter");
 
@@ -322,12 +369,16 @@ public class PageContextImpl extends PageContext {
 	attributes.remove(name);
     }
 
-    public JspWriter getOut() { return out; }
+    public JspWriter getOut() {
+	return out;
+    }
 
     public HttpSession getSession() { return session; }
     public Servlet getServlet() { return servlet; }
     public ServletConfig getServletConfig() { return config; }
-    public ServletContext getServletContext() { return config.getServletContext(); }
+    public ServletContext getServletContext() {
+	return config.getServletContext();
+    }
     public ServletRequest getRequest() { return request; }
     public ServletResponse getResponse() { return response; }
     public Exception getException() { return (Exception)request.getAttribute(EXCEPTION); }
@@ -388,6 +439,7 @@ public class PageContextImpl extends PageContext {
 	else {
 	    // Set the exception as the root cause in the ServletException
 	    // to get a stack trace for the real problem
+	    //	    e.printStackTrace();
 	    throw new ServletException(e);
 	}
 
@@ -396,7 +448,12 @@ public class PageContextImpl extends PageContext {
     protected JspWriter _createOut(int bufferSize, boolean autoFlush)
         throws IOException, IllegalArgumentException
     {
-        return new JspWriterImpl(response, bufferSize, autoFlush);
+	try {
+	    return new JspWriterImpl(response, bufferSize, autoFlush);
+	} catch( Throwable t ) {
+	    t.printStackTrace();
+	    return null;
+	}
     }
 
     /*

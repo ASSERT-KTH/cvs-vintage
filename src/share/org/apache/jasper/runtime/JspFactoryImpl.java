@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.2 2000/05/12 21:59:10 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/12 21:59:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.3 2000/06/10 01:41:19 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/10 01:41:19 $
  *
  * ====================================================================
  * 
@@ -94,10 +94,12 @@ public class JspFactoryImpl extends JspFactory {
 	    } else {
 		pc =  new PageContextImpl(this);
 	    }
-            pc.initialize(servlet, request, response, errorPageURL, 
+
+	    pc.initialize(servlet, request, response, errorPageURL, 
                           needsSession, bufferSize, autoflush);
+	    
             return pc;
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             /* FIXME: need to do something reasonable here!! */
             ex.printStackTrace();
             return null;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.7 2000/05/26 18:55:17 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/26 18:55:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.8 2000/06/10 01:41:19 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/06/10 01:41:19 $
  *
  * ====================================================================
  * 
@@ -72,6 +72,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
+import java.net.URL;
 
 import java.security.*;
 
@@ -114,27 +115,30 @@ public class JspLoader extends ClassLoader {
 	//	super(cl); // JDK 1.2 FIXME
 	super();
 	this.parent = cl;
-        this.options = options;
+        this.options = options; 
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
 	throws ClassNotFoundException
     {
+	if( debug>0) log("load " + name );
 	// First, check if the class has already been loaded
 	Class c = findLoadedClass(name);
 	if (c == null) {
 	    try {
-		//System.out.println("JspLoader: parent = " + parent);
 		if (parent != null) {
+		    if(debug>0) log("load from parent " + name );
 		    c = parent.loadClass(name);
                 }
 		else {
+		    if(debug>0) log("load from system " + name );
 		    c = findSystemClass(name);
                 }
 	    } catch (ClassNotFoundException e) {
 		// If still not found, then call findClass in order
 		// to find the class.
 		try {
+		    if(debug>0) log("local jsp loading " + name );
 		    c = findClass(name);
 		} catch (ClassNotFoundException ex) {
 		    throw ex;
@@ -146,7 +150,30 @@ public class JspLoader extends ClassLoader {
 	}
 	return c;
     }
+    public InputStream getResourceAsStream(String name) {
+	if( debug>0) log("getResourcesAsStream()" + name );
+	if( parent != null && parent instanceof org.apache.tomcat.loader.AdaptiveClassLoader )
+	    return ((org.apache.tomcat.loader.AdaptiveClassLoader)parent).getResourceAsStream(name);
+	URL url = getResource(name);
+	try {
+	    return url != null ? url.openStream() : null;
+	} catch (IOException e) {
+	    return null;
+	}
+    }
+    
+    public URL getResource(String name) {
+	if( debug>0) log( "getResource() " + name );
+	if( parent != null )
+	    return parent.getResource(name);
+	return super.getResource(name);
+    }
 
+    private static final int debug=0;
+    private void log( String s ) {
+	System.out.println("JspLoader: " + s );
+    }
+    
     protected Class findClass(String className) throws ClassNotFoundException {
 	try {
 	    int beg = className.lastIndexOf(".") == -1 ? 0 :
@@ -217,8 +244,10 @@ public class JspLoader extends ClassLoader {
         // If a SecurityManager is being used, set the ProtectionDomain
         // for this clas when it is defined.
         Object pd = options.getProtectionDomain();
-        if( pd != null )
-            return defineClass(className, classData, 0, classData.length, (ProtectionDomain)pd);
+        if( pd != null ) {
+	    //	    System.out.println("JspLoader: loading with " + pd );
+	    return defineClass(className, classData, 0, classData.length, (ProtectionDomain)pd);
+	}
         return defineClass(className, classData, 0, classData.length);
     }
 
@@ -320,5 +349,9 @@ public class JspLoader extends ClassLoader {
         }
         
         return cpath.toString();
+    }
+
+    public String toString() {
+	return "JspLoader( " +  options.getScratchDir()   + " ) / " + parent;
     }
 }

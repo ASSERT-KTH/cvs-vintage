@@ -241,8 +241,8 @@ public class JspServlet extends HttpServlet {
 				  options.getScratchDir().toString() 
 			      }, Logger.INFORMATION );
 	    Constants.message("jsp.message.dont.modify.servlets", Logger.INFORMATION);
+	    JspFactory.setDefaultFactory(new JspFactoryImpl());
 	}
-        JspFactory.setDefaultFactory(new JspFactoryImpl());
     }
 
     private void serviceJspFile(HttpServletRequest request, 
@@ -346,6 +346,7 @@ public class JspServlet extends HttpServlet {
             else
                 jspUri = includeUri;
 
+	    //	    System.out.println("JspServletWrapper: " + includeUri + " " + jspUri );
             boolean precompile = preCompile(request);
 
 	    Logger jasperLog = Constants.jasperLog;
@@ -370,6 +371,8 @@ public class JspServlet extends HttpServlet {
 	} catch (RuntimeException e) {
 	    throw e;
 	} catch (ServletException e) {
+	    throw e;
+	} catch (IOException e) {
 	    throw e;
 	} catch (Exception e) {
 	    throw new ServletException(e);
