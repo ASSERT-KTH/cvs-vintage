@@ -3,7 +3,7 @@
 <table cellpadding="3" cellspacing="2" border="0">
 #if ($currentIssue.CreatedDate)
 <tr>
-<th>$l10n.DateCommitted</th>
+<th>$l10n.DateCreated</th>
 <td>$format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate)</td>
 </tr>
 #end
