@@ -934,8 +934,13 @@ final class JasperLiaison {
         URL commonCP[];
         ClassLoader loader=ctx.getClassLoader();
         //The next will be the container classpath in trusted apps
-        appsCP=jdkProxy.getURLs(loader,2);
-        commonCP=jdkProxy.getURLs(loader,3);
+        if( jdkProxy.isJava2() ) {
+            appsCP=jdkProxy.getURLs(loader,2);
+            commonCP=jdkProxy.getURLs(loader,3);
+        } else {
+            appsCP=jdkProxy.getURLs(loader,1);
+            commonCP=jdkProxy.getURLs(loader,2);
+        }
 	if( appsCP!=null ) 
 	    cpath+=separator+extractClassPath(appsCP);
 	if( commonCP!=null ) 
