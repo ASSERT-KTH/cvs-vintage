@@ -1,0 +1,67 @@
+<table>
+<tr valign="top">
+  <td><strong>Primary Actor:</strong></td>
+  <td>Any user</tr>
+<tr valign="top">
+  <td><strong>Goal in context:</strong></td>
+  <td>Move one or more artifacts to different module.</td>
+</tr>
+<tr valign="top">
+  <td><strong>Level:</strong></td>
+  <td>User goal</td>
+</tr>
+<tr valign="top">
+  <td><strong>Scope:</strong></td>
+  <td>Cross-project</td>
+</tr>
+<tr valign="top">
+  <td><strong>Preconditions:</strong></td>
+  <td>User has Project Tracking - Move permission in source project.<br/>
+      User has Project Tracking - Enter Issue permission in at least one target project.<br/>
+      All source artifacts are of the same artifact type.<br/>
+      Artifact type is defined in target project.
+</td>
+</tr>
+<tr valign="top">
+  <td><strong>Success guarantees:</strong></td>
+  <td>Artifact is deleted from source project.<br/>
+      Artifact exists in the target.<br/>
+      The following are unchanged in target artifact: shared attributes, artifact ID, creation date, created by, history, comments, attachments, dependencies, URLs.<br/>
+      All other attributes have been mapped to target artifact attributes or entered as a comment in the target artifact.</td>
+</tr>
+<tr valign="top">
+  <td><strong>Trigger event:</strong></td>
+  <td>User selects one or more artifacts to be moved.</td>
+</tr>
+<tr valign="top">
+  <td><strong>Main Success Scenario:</strong></td>
+  <td>
+    1.	User selects target project and artifact type.<br/>
+    2.	System presents mapped attribute values from source to target.<br/>
+    3.  User confirms mapping.<br/>
+    4.  System moves artifact(s).
+  </td>
+<tr valign="top">
+  <td><strong>Scenario Extensions:</strong></td>
+  <td>1a.  No target project and artifact type selected:<br/>
+      &nbsp;&nbsp;1a1.	Request target project and artifact type.  Return to step 1.<br/>
+      3a.  No reason for change entered:<br/>
+      &nbsp;&nbsp;3a1.	Request reason for change and return to step 4.<br/>
+      3b.  Attribute exists and is set in source and does exist not target:<br/>
+      &nbsp;&nbsp;3a1.  Attribute is highlighted as not existing in target.<br/>
+      &nbsp;&nbsp;3a1.  User selects one or more highlighted attributes to appear in target comment.<br/>
+      &nbsp;&nbsp;3a2.  Use case continues.<br/>
+      *    Permissions change:<br/>
+      *.1   System informs user of permission requirement.<br/>
+      *.2   Use case ends.
+  </td>
+</tr>
+<tr valign="top">
+  <td><strong>Technology & Variations List:</strong></td>
+  <td>None</td>
+</tr>
+<tr valign="top">
+  <td><strong>Notes and Issues:</strong></td>
+  <td>Only one target project and artifact type pair may be selected.</td>
+</tr>
+</table>
