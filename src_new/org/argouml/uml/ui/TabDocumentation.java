@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.22 2003/11/18 14:45:08 linus Exp $
+// $Id: TabDocumentation.java,v 1.23 2003/11/24 16:45:13 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,3 +155,4 @@ public class TabDocumentation extends PropPanel {
     }
 
 } /* end class TabDocumentation */
+
