@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.40 2000/04/18 23:04:31 costin Exp $
- * $Revision: 1.40 $
- * $Date: 2000/04/18 23:04:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.41 2000/04/18 23:16:13 costin Exp $
+ * $Revision: 1.41 $
+ * $Date: 2000/04/18 23:16:13 $
  *
  * ====================================================================
  *
@@ -516,17 +516,6 @@ public class ServletWrapper {
 	    }
 	} 
     }
-
-    /** @deprecated
-     */
-    public void handleRequest(final HttpServletRequestFacade request,
-			      final HttpServletResponseFacade response)
-    {
-	Request rrequest=request.getRealRequest();
-	Response rresponse=rrequest.getResponse();
-	handleRequest( rrequest, rresponse );
-    }
-
     
     public String toString() {
 	String toS="Wrapper(" + config.getServletName() + " ";

@@ -293,10 +293,9 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	// We got here if name!=null, so assert it
 	ServletWrapper wrapper = context.getServletByName( name );
-
-	wrapper.handleRequest( (HttpServletRequestFacade)request,
-			       (HttpServletResponseFacade)response);
-
+	Request realR=((HttpServletRequestFacade)request).getRealRequest();
+	
+	wrapper.handleRequest( realR, realR.getResponse());
     }
 
     /** Named forward
@@ -305,8 +304,9 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	throws ServletException, IOException
     {
 	ServletWrapper wrapper = context.getServletByName( name );
-	wrapper.handleRequest( (HttpServletRequestFacade)request,
-			       (HttpServletResponseFacade)response);
+	Request realR=((HttpServletRequestFacade)request).getRealRequest();
+	
+	wrapper.handleRequest( realR, realR.getResponse());
     }    
 
     /**

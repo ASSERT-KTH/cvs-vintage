@@ -728,7 +728,7 @@ public class ContextManager {
 	} else {
 	    if( ctx.getDebug() > 0 ) ctx.log( "Error: Calling servlet " + errorServlet );
 	    req.setAttribute("tomcat.servlet.error.handler", errorServlet);
-	    errorServlet.handleRequest(req.getFacade(),res.getFacade());
+	    errorServlet.handleRequest(req,res);
 	    // will call this if any error happens
 	}
 

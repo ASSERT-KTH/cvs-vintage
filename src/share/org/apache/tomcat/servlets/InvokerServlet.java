@@ -254,7 +254,7 @@ public class InvokerServlet extends HttpServlet {
 	    }
 	}
 
-        wrapper.handleRequest(requestfacade, responsefacade);
+        wrapper.handleRequest(realRequest, realResponse);
 	
 	if (!inInclude) {
 	    realRequest.setServletPath( savedServletPath);
