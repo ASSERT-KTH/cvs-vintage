@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.10 2000/05/15 20:58:49 jon Exp $
- * $Revision: 1.10 $
- * $Date: 2000/05/15 20:58:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.11 2000/05/23 00:44:56 jon Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/05/23 00:44:56 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.10 $ $Date: 2000/05/15 20:58:49 $
+ * @version $Revision: 1.11 $ $Date: 2000/05/23 00:44:56 $
  */
 
 final class StandardSession
@@ -741,27 +741,17 @@ final class StandardSession
      * @exception IOException if an input/output error occurs
      */
     private void readObject(ObjectInputStream stream)
-	throws ClassNotFoundException, IOException {
+		throws ClassNotFoundException, IOException {
 
-	// Deserialize the scalar instance variables (except Manager)
-	creationTime = ((Long) stream.readObject()).longValue();
-	id = (String) stream.readObject();
-	lastAccessedTime = ((Long) stream.readObject()).longValue();
-	maxInactiveInterval = ((Integer) stream.readObject()).intValue();
-	isNew = ((Boolean) stream.readObject()).booleanValue();
-	isValid = ((Boolean) stream.readObject()).booleanValue();
+		// Deserialize the scalar instance variables (except Manager)
+		creationTime = ((Long) stream.readObject()).longValue();
+		id = (String) stream.readObject();
+		lastAccessedTime = ((Long) stream.readObject()).longValue();
+		maxInactiveInterval = ((Integer) stream.readObject()).intValue();
+		isNew = ((Boolean) stream.readObject()).booleanValue();
+		isValid = ((Boolean) stream.readObject()).booleanValue();
 
-	// Deserialize the attribute count and attribute values
-	int n = ((Integer) stream.readObject()).intValue();
-	if (attributes == null)
-		attributes = new Hashtable();
-	for (int i = 0; i < n; i++) {
-	    String name = (String) stream.readObject();
-	    Object value = (Object) stream.readObject();
-		if (name != null)
-		    attributes.put(name, value);
-	}
-
+		attributes = (Hashtable) stream.readObject();
     }
 
 
@@ -799,33 +789,35 @@ final class StandardSession
 		stream.writeObject(new Boolean(isNew));
 		stream.writeObject(new Boolean(isValid));
 
-		// Accumulate the names of serializable attributes
-		Vector results = new Vector();
-		Enumeration attrs = getAttributeNames();
-		while (attrs.hasMoreElements()) {
-			String attr = (String) attrs.nextElement();
-			Object value = attributes.get(attr);
-			if (value instanceof Serializable) {
-				results.addElement(attr);
-			} else if (value instanceof HttpSessionBindingListener ) {
-				try {
-				    ((HttpSessionBindingListener)value)
-						.valueUnbound(new HttpSessionBindingEvent(this, attr));
-				} catch (Exception e) {
-					// ignored
+        if (attributes.size() > 0) {
+			// Accumulate the names of serializable attributes
+			Hashtable results = new Hashtable(attributes.size());
+        
+			for (Enumeration e = attributes.keys(); e.hasMoreElements() ; ) {
+				String key = (String) e.nextElement();
+				Object value = attributes.get(key);
+				if (value instanceof Serializable) {
+					results.put(key, value);
+				}
+				// if we can't serialize the object stored in 
+				// the session, then check to see if it implements 
+				// HttpSessionBindingListener and then call its 
+				// valueUnbound method, allowing it to save its state
+				// correctly instead of just being lost into the etherworld
+				else if (value instanceof HttpSessionBindingListener ) {
+					try {
+						((HttpSessionBindingListener)value)
+						.valueUnbound(new HttpSessionBindingEvent(this, key));
+					} catch (Exception f) {
+						// ignored
+					}
 				}
 			}
+			stream.writeObject(results);
+		} else {
+			stream.writeObject(new Hashtable());
 		}
-
-		// Serialize the attribute count and the  attribute values
-		stream.writeObject(new Integer(results.size()));
-		Enumeration names = results.elements();
-		while (names.hasMoreElements()) {
-			String name = (String) names.nextElement();
-			stream.writeObject(name);
-			stream.writeObject(attributes.get(name));
-		}
-    }
+	}
 }
 
 /**
