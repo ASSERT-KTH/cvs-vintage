@@ -24,14 +24,16 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.4 2001/12/22 23:27:25 thn Exp $
+// $Id: FigPackage.java,v 1.5 2002/02/09 17:05:59 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
 import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
@@ -40,8 +42,12 @@ import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
-import org.argouml.ui.*;
+import org.argouml.application.api.*;
+import org.argouml.uml.*;
+import org.argouml.uml.ui.*;
+import org.argouml.uml.generator.*;
 import org.argouml.uml.diagram.ui.*;
+import org.argouml.ui.*;
 
 /** Class to display graphics for a UML MState in a diagram. */
 
@@ -209,6 +215,26 @@ public class FigPackage extends FigNodeModelElement {
 
     calcBounds(); //_x = x; _y = y; _w = w; _h = h;
     firePropChange("bounds", oldBounds, getBounds());
+  }
+
+  /**
+    * Build a collection of menu items relevant for a right-click popup menu on a Package.
+    *
+    * @param     me     a mouse event
+    * @returns          a collection of menu items
+    */
+  public Vector getPopUpActions(MouseEvent me) {
+    Vector popUpActions = super.getPopUpActions(me);
+    MPackage mclass = (MPackage) getOwner();
+    ArgoJMenu modifierMenu = new ArgoJMenu("Modifiers");
+
+    modifierMenu.addCheckItem(new ActionModifier("Abstract", "isAbstract", "isAbstract", "setAbstract", mclass));
+    modifierMenu.addCheckItem(new ActionModifier("Final", "isLeaf", "isLeaf", "setLeaf", mclass));
+    modifierMenu.addCheckItem(new ActionModifier("Root", "isRoot", "isRoot", "setRoot", mclass));
+
+    popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 1);
+
+    return popUpActions;
   }
 
 
