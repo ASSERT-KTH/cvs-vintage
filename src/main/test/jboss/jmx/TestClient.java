@@ -6,6 +6,7 @@
 package test.jboss.jmx;
 
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -96,16 +97,18 @@ public class TestClient {
          catch( Exception e ) {
             e.printStackTrace();
          }
+         Hashtable lProperties = lContext.getEnvironment();
+         ConnectorFactoryImpl.JBossConnectorTester lTester = new ConnectorFactoryImpl.JBossConnectorTester();
 			Iterator lConnectors = (Iterator) lLocalServer.invoke(
 				lFactoryInstance.getObjectName(),
 				"getConnectors",
 				new Object[] {
-					lContext.getEnvironment(),
-               new ConnectorFactoryImpl.JBossConnectorTester()
+					lProperties,
+               lTester
 				},
 				new String[] {
-					"java.util.Hashtable",
-               "org.jboss.jmx.client.ConnectorFactoryImpl$IConnectorTester"
+               lProperties.getClass().getName(),
+               lTester.getClass().getName()
 				}
 			);
 			int lCount = 0;
@@ -148,7 +151,7 @@ public class TestClient {
 					lConnectorName
 				},
 				new String[] {
-					"org.jboss.jmx.client.ConnectorFactoryImpl$ConnectorName"
+               lConnectorName.getClass().getName()
 				}
 			);
 			getUserInput(
@@ -183,7 +186,7 @@ public class TestClient {
 										lConnectorName
 									},
 									new String[] {
-                              "org.jboss.jmx.client.ConnectorFactoryImpl$ConnectorName"
+                              lConnectorName.getClass().getName()
 									}
 								);
 								System.err.println("Shutting done");
