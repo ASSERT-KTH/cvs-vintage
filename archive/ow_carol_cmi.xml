@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: ow_carol_cmi.xml,v 1.1 2005/03/18 10:20:40 benoitf Exp $
+ - $Id: ow_carol_cmi.xml,v 1.2 2005/04/04 08:33:09 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -33,7 +33,7 @@
     <!-- CAROL CMI JAR -->
     <jar destfile="${dist.lib}/ow_carol_cmi.jar">
       <fileset dir="${build}/classes">
-        <include name="org/objectweb/carol/cmi/**.class" />
+        <include name="org/objectweb/carol/cmi/**" />
         <exclude name="org/objectweb/carol/cmi/compiler/**" />
       </fileset>
       <manifest>
