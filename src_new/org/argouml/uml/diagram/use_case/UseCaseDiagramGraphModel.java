@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.36 2003/09/14 17:07:31 alexb Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.37 2003/09/14 18:10:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -471,8 +471,7 @@ public class UseCaseDiagramGraphModel
          
          * NEW CODE:
          */
-	if (((org.argouml.model.ModelFacade.isAActor(node)) || (org.argouml.model.ModelFacade.isAUseCase(node))) && 
-	    (ModelFacade.getNamespace(node) == null)) {
+	if (((ModelFacade.isAActor(node)) || (ModelFacade.isAUseCase(node))) && (ModelFacade.getNamespace(node) == null)) {
 	    // end NEW CODE
             cat.debug("setting namespace " + _model +
 		      " to element " + node);

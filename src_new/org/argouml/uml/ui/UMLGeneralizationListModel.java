@@ -1,5 +1,5 @@
 
-// $Id: UMLGeneralizationListModel.java,v 1.13 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLGeneralizationListModel.java,v 1.14 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,7 @@ public class UMLGeneralizationListModel
     /**
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(MModelElement, MModelElement)
      */
-    protected MModelElement getRelation(MModelElement from, MModelElement to) {
+    protected Object getRelation(Object from, Object to) {
 	return CoreHelper.getHelper().getGeneralization((MGeneralizableElement) from, (MGeneralizableElement) to);
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.37 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.38 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.37 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.38 2003/09/14 18:10:44 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -133,12 +133,12 @@ public class PropPanelMessage extends PropPanelModelElement {
 
 
 
-    public MCallAction addAction() {
-    	MCallAction action = null;
+    public Object addAction() {
+    	Object action = null;
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAMessage(target)) {
             action =
-		(MCallAction) CommonBehaviorFactory.getFactory().buildAction((MMessage) target);
+		/*(MCallAction)*/ CommonBehaviorFactory.getFactory().buildAction(/*(MMessage)*/ target);
         }
         return action;
     }

@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.11 2003/08/30 15:10:33 bobtarling Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.12 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,6 @@ import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
-import ru.novosoft.uml.foundation.core.MClassifier;
-
 /**
  * Binary relation list model for available con between classifierroles
  * 
@@ -60,7 +57,7 @@ public class UMLClassifierRoleAvailableContentsListModel
     protected void buildModelList() {
         setAllElements(
 		       CollaborationsHelper.getHelper().allAvailableContents(
-									     (MClassifierRole) getTarget()));
+									     /*(MClassifierRole)*/ getTarget()));
     }
 
     /**
@@ -69,8 +66,8 @@ public class UMLClassifierRoleAvailableContentsListModel
      */
     public void roleAdded(MElementEvent e) {
         if (e.getName().equals("base") && e.getSource() == getTarget()) {
-            MClassifier clazz = (MClassifier) getChangedElement(e);
-            addAll(clazz.getOwnedElements());
+            Object clazz = /*(MClassifier)*/ getChangedElement(e);
+            addAll(ModelFacade.getOwnedElements(clazz));
             // UmlModelEventPump.getPump().removeModelEventListener(this,
             // clazz, "ownedElement");
             UmlModelEventPump.getPump().addModelEventListener(
@@ -96,7 +93,7 @@ public class UMLClassifierRoleAvailableContentsListModel
                 Collection bases = ModelFacade.getBases(getTarget());
                 Iterator it = bases.iterator();
                 while (it.hasNext()) {
-                    MBase base = (MBase) it.next();
+                    Object base = /*(MBase)*/ it.next();
                     UmlModelEventPump.getPump().removeModelEventListener(
 									 this,
 									 base,
@@ -104,7 +101,7 @@ public class UMLClassifierRoleAvailableContentsListModel
                 }
                 UmlModelEventPump.getPump().removeModelEventListener(
 								     this,
-								     (MBase) getTarget(),
+								     /*(MBase)*/ getTarget(),
 								     "base");
             }
             _target = target;
@@ -112,7 +109,7 @@ public class UMLClassifierRoleAvailableContentsListModel
                 Collection bases = ModelFacade.getBases(_target);
                 Iterator it = bases.iterator();
                 while (it.hasNext()) {
-                    MBase base = (MBase) it.next();
+                    Object base = /*(MBase)*/ it.next();
                     UmlModelEventPump.getPump().addModelEventListener(
 								      this,
 								      base,
@@ -121,7 +118,7 @@ public class UMLClassifierRoleAvailableContentsListModel
                 // make sure we know it when a classifier is added as a base
                 UmlModelEventPump.getPump().addModelEventListener(
 								  this,
-								  (MBase) _target,
+								  /*(MBase)*/ _target,
 								  "base");
             }
             if (_target != null) {
@@ -149,7 +146,7 @@ public class UMLClassifierRoleAvailableContentsListModel
      */
     public void roleRemoved(MElementEvent e) {
         if (e.getName().equals("base") && e.getSource() == getTarget()) {
-            MClassifier clazz = (MClassifier) getChangedElement(e);
+            Object clazz = /*(MClassifier)*/ getChangedElement(e);
             UmlModelEventPump.getPump().removeModelEventListener(
 								 this,
 								 clazz,

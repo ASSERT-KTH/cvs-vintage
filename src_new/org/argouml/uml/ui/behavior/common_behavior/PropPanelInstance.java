@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.22 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.23 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.22 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.23 2003/09/14 18:10:44 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -113,21 +113,20 @@ public class PropPanelInstance extends PropPanelModelElement {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
-	    MInstance inst = (MInstance) target;
+	    Object inst = /*(MInstance)*/ target;
 //            ((MInstance) target).setClassifier((MClassifier) element);
 
 	    // delete all classifiers
-	    Collection col = inst.getClassifiers();
+	    Collection col = ModelFacade.getClassifiers(inst);
 	    if (col != null) {
 		Iterator iter = col.iterator();
 		if (iter != null && iter.hasNext()) {
-		    MClassifier classifier = (MClassifier) iter.next();
-		    inst.removeClassifier(classifier);
+		    Object classifier = /*(MClassifier)*/ iter.next();
+		    ModelFacade.removeClassifier(inst, classifier);
 		}
 	    }
 	    // add classifier
-	    inst.addClassifier( element);
+	    ModelFacade.addClassifier(inst, element);
         }
     }
 } /* end class PropPanelInstance */
-

@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.7 2003/08/30 15:10:33 bobtarling Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddClassifierRoleBase.java,v 1.7 2003/08/30 15:10:33 bobtarling Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.util.Vector;
@@ -31,8 +31,6 @@ import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
-
-import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 
 /**
  * @since Oct 3, 2002
@@ -55,7 +53,7 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      */
     protected Vector getChoices() {
         Vector vec = new Vector();
-        vec.addAll(CollaborationsHelper.getHelper().getAllPossibleBases((MClassifierRole) getTarget()));
+        vec.addAll(CollaborationsHelper.getHelper().getAllPossibleBases(getTarget()));
         return vec;
     }
 
@@ -80,7 +78,7 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      * org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */
     protected void doIt(Vector selected) {
-        MClassifierRole role = (MClassifierRole) getTarget();
+        Object role = /*(MClassifierRole)*/ getTarget();
         CollaborationsHelper.getHelper().setBases(role, selected);
     }
         

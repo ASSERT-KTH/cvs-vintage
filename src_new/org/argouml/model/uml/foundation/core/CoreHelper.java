@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.69 2003/09/14 15:04:27 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.70 2003/09/14 18:10:45 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -812,7 +812,8 @@ public class CoreHelper {
      * @param classifier
      * @return Collection
      */
-    public Collection getAssociatedClassifiers(MClassifier classifier) {
+    public Collection getAssociatedClassifiers(Object/*MClassifier*/ aclassifier) {
+        MClassifier classifier = (MClassifier)aclassifier;
         if (classifier == null)
             return new ArrayList();
         List list = new ArrayList();

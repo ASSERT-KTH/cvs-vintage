@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.25 2003/09/12 19:09:47 jjones Exp $
+// $Id: PropPanelObject.java,v 1.26 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.25 2003/09/12 19:09:47 jjones Exp $
+// $Id: PropPanelObject.java,v 1.26 2003/09/14 18:10:44 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -51,12 +51,8 @@ import org.argouml.uml.ui.UMLStimulusListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.common_behavior.MInstance;
-import ru.novosoft.uml.behavior.common_behavior.MObject;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -98,8 +94,8 @@ public class PropPanelObject extends PropPanelModelElement {
     public void navigateNamespace() {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAModelElement(target)) {
-            MModelElement elem = (MModelElement) target;
-            MNamespace ns = elem.getNamespace();
+            Object elem = /*(MModelElement)*/ target;
+            Object ns = ModelFacade.getNamespace(elem);
             if (ns != null) {
                 TargetManager.getInstance().setTarget(ns);
             }
@@ -112,8 +108,8 @@ public class PropPanelObject extends PropPanelModelElement {
         return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
-    public MClassifier getClassifier() {
-        MClassifier classifier = null;
+    public Object getClassifier() {
+        Object classifier = null;
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
 	    //    UML 1.3 apparently has this a 0..n multiplicity
@@ -124,7 +120,7 @@ public class PropPanelObject extends PropPanelModelElement {
 	    Collection col = ModelFacade.getClassifiers(target);
             Iterator iter = col.iterator();
             if (iter.hasNext()) {
-                classifier = (MClassifier) iter.next();
+                classifier = /*(MClassifier)*/ iter.next();
             }
         }
         return classifier;
@@ -134,30 +130,30 @@ public class PropPanelObject extends PropPanelModelElement {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
-	    MInstance inst = (MInstance) target;
+	    Object inst = /*(MInstance)*/ target;
 	    Vector classifiers = new Vector();
 	    if (element != null) {
 	    	classifiers.add(element);
 	    }
         
-        boolean changed = false;
-        if (inst.getClassifiers() == null 
-            || classifiers.size() != inst.getClassifiers().size()) {
-            changed = true;
-        }
-        else {
-            Iterator iter1 = classifiers.iterator();
-            Iterator iter2 = inst.getClassifiers().iterator();
-            while (!changed && iter1.hasNext()) {
-                if (!(iter1.next().equals(iter2.next()))) {
-                    changed = true;
+            boolean changed = false;
+            if (ModelFacade.getClassifiers(inst) == null 
+                    || classifiers.size() != ModelFacade.getClassifiers(inst).size()) {
+                changed = true;
+            }
+            else {
+                Iterator iter1 = classifiers.iterator();
+                Iterator iter2 = ModelFacade.getClassifiers(inst).iterator();
+                while (!changed && iter1.hasNext()) {
+                    if (!(iter1.next().equals(iter2.next()))) {
+                        changed = true;
+                    }
                 }
             }
-        }
-                        
-        if (changed) {
-            inst.setClassifiers(classifiers);
-        }
+
+            if (changed) {
+                ModelFacade.setClassifiers(inst, classifiers);
+            }
         }
 	/*
 	//            ((MInstance) target).setClassifier((MClassifier) element);
@@ -188,8 +184,8 @@ public class PropPanelObject extends PropPanelModelElement {
 
     public void removeElement() {
 
-        MObject target = (MObject) getTarget();
-	MModelElement newTarget = (MModelElement) target.getNamespace();
+        Object target = /*(MObject)*/ getTarget();
+	Object newTarget = /*(MModelElement)*/ ModelFacade.getNamespace(target);
 
         UmlFactory.getFactory().delete(target);
 	if (newTarget != null) TargetManager.getInstance().setTarget(newTarget);

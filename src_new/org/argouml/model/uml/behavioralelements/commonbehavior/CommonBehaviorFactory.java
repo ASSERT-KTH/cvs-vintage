@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.22 2003/09/14 15:04:27 bobtarling Exp $
+// $Id: CommonBehaviorFactory.java,v 1.23 2003/09/14 18:10:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -398,7 +398,8 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
     /**
      * Builds a reception belonging to some signal
      */
-    public MReception buildReception(MSignal signal) {
+    public MReception buildReception(Object asignal) {
+        MSignal signal = (MSignal)asignal;
         if (signal == null)
             return null;
         MReception reception = createReception();

@@ -1,4 +1,4 @@
-// $Id: ActionAddMessagePredecessor.java,v 1.7 2003/09/01 21:49:21 bobtarling Exp $
+// $Id: ActionAddMessagePredecessor.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@ import org.argouml.application.api.Argo;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
-import ru.novosoft.uml.behavior.collaborations.MMessage;
-
 /**
  * Action to add a predecessor to some message.
  * @since Oct 2, 2002
@@ -58,7 +56,7 @@ public class ActionAddMessagePredecessor extends AbstractActionAddModelElement {
     protected Vector getChoices() {
         if (getTarget() == null) return new Vector();
         Vector vec = new Vector();
-        vec.addAll(CollaborationsHelper.getHelper().getAllPossiblePredecessors((MMessage) getTarget()));
+        vec.addAll(CollaborationsHelper.getHelper().getAllPossiblePredecessors(getTarget()));
         return vec;
     }
 
@@ -87,8 +85,8 @@ public class ActionAddMessagePredecessor extends AbstractActionAddModelElement {
     protected void doIt(Vector selected) {
 	if (getTarget() == null)
 	    throw new IllegalStateException("doIt may not be called with null target");
-	MMessage message = (MMessage) getTarget();
-	message.setPredecessors(selected);
+	Object message = /*(MMessage)*/ getTarget();
+	ModelFacade.setPredecessors(message, selected);
     }
 
 }

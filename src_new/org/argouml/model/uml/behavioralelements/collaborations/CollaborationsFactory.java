@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.19 2003/06/30 18:00:19 linus Exp $
+// $Id: CollaborationsFactory.java,v 1.20 2003/09/14 18:10:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.behavioralelements.collaborations;
 
 import java.util.Collection;
 import java.util.Iterator;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.AbstractUmlModelFactory;
 import org.argouml.model.uml.UmlFactory;
@@ -159,7 +160,8 @@ public class CollaborationsFactory extends AbstractUmlModelFactory {
     /**
      * Builds an associationendrole based on some classifierrole
      */
-    public MAssociationEndRole buildAssociationEndRole(MClassifierRole type) {
+    public MAssociationEndRole buildAssociationEndRole(Object atype) {
+        MClassifierRole type = (MClassifierRole) atype;
     	MAssociationEndRole end = createAssociationEndRole();
     	end.setType(type);
     	return end;
@@ -168,11 +170,11 @@ public class CollaborationsFactory extends AbstractUmlModelFactory {
     /**
      * Builds a binary associationrole on basis of two classifierroles
      */
-    public MAssociationRole buildAssociationRole(MClassifierRole from,
-						 MClassifierRole to) 
+    public MAssociationRole buildAssociationRole(Object/*MClassifierRole*/ from,
+						 Object/*MClassifierRole*/ to) 
     {
-    	MCollaboration colFrom = (MCollaboration) from.getNamespace();
-    	MCollaboration colTo = (MCollaboration) to.getNamespace();
+    	MCollaboration colFrom = (MCollaboration) ModelFacade.getNamespace(from);
+    	MCollaboration colTo = (MCollaboration) ModelFacade.getNamespace(to);
     	if (colFrom != null && colFrom.equals(colTo)) {
 	    MAssociationRole role = createAssociationRole();
 	    // we do not create on basis of associations between the

@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBox.java,v 1.4 2003/06/29 23:50:11 linus Exp $
+// $Id: UMLReceptionSignalComboBox.java,v 1.5 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,11 @@
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import java.awt.event.ActionEvent;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
-
-import ru.novosoft.uml.behavior.common_behavior.MReception;
-import ru.novosoft.uml.behavior.common_behavior.MSignal;
 
 /**
  * Combobox for signals on the reception proppanel.
@@ -54,10 +52,10 @@ public class UMLReceptionSignalComboBox extends UMLComboBox2 {
      */
     protected void doIt(ActionEvent event) {
         Object o = getModel().getElementAt(getSelectedIndex());
-        MSignal signal = (MSignal) o;
-        MReception reception = (MReception) getTarget();
-        if (signal != reception.getSignal()) {
-            reception.setSignal(signal);
+        Object signal = /*(MSignal)*/ o;
+        Object reception = /*(MReception)*/ getTarget();
+        if (signal != ModelFacade.getSignal(signal)) {
+            ModelFacade.setSignal(reception, signal);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.13 2003/06/30 18:00:36 linus Exp $
+// $Id: UMLConnectionListModel.java,v 1.14 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,9 +97,9 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
     /**
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(MModelElement, MModelElement)
      */
-    protected MModelElement getRelation(MModelElement from, MModelElement to) {
+    protected Object getRelation(Object from, Object to) {
 	// this could get awkward but we assume that there is only one association
-	return (MModelElement) ((CoreHelper.getHelper().getAssociations((MClassifier) from, (MClassifier) to)).toArray())[0];
+	return ((CoreHelper.getHelper().getAssociations((MClassifier) from, (MClassifier) to)).toArray())[0];
     }
 
     /**

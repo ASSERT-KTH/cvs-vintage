@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.16 2003/08/30 23:11:50 bobtarling Exp $
+// $Id: PropPanelReception.java,v 1.17 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import org.argouml.uml.ui.UMLTextProperty;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.common_behavior.MReception;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -109,11 +108,11 @@ public class PropPanelReception extends PropPanelModelElement {
     public void setOwner(MClassifier owner) {
         Object target = getTarget();
         if (ModelFacade.isAReception(target)) {
-            MReception rec = (MReception) target;
-            if (rec.getOwner() != null) {
-                rec.setOwner(null);
+            Object rec = /*(MReception)*/ target;
+            if (ModelFacade.getOwner(rec) != null) {
+                ModelFacade.setOwner(rec, null);
             }
-            rec.setOwner(owner);
+            ModelFacade.setOwner(rec, owner);
         }
     }
 }

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel.java,v 1.22 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLModelElementListModel.java,v 1.23 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -522,9 +522,7 @@ abstract public class UMLModelElementListModel
      *  @param index index of element to move up.
      *  @return new collection
      */
-    public static java.util.List moveUpUtil(
-        Collection oldCollection,
-        int index) {
+    public static Collection moveUpUtil(Collection oldCollection, int index) {
         int size = oldCollection.size();
         ArrayList newCollection = new ArrayList(size);
         int i;

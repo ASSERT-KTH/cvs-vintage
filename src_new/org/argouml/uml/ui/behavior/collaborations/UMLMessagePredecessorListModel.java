@@ -1,4 +1,4 @@
-// $Id: UMLMessagePredecessorListModel.java,v 1.8 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UMLMessagePredecessorListModel.java,v 1.9 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.collaborations.MMessage;
-
 /**
  * @since Oct 2, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -52,9 +50,9 @@ public class UMLMessagePredecessorListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        MMessage message = (MMessage) getTarget();
+        Object message = /*(MMessage)*/ getTarget();
         removeAllElements();       
-        Iterator it = message.getPredecessors().iterator();
+        Iterator it = ModelFacade.getPredecessors(message).iterator();
         while (it.hasNext()) {
             addElement(it.next());
         }       

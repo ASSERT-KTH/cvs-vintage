@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.9 2003/09/04 08:04:55 bobtarling Exp $
+// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.10 2003/09/14 18:10:44 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-
-
 /**
  * The list of operations represented by some collaboration as shown on the 
  * collaboration proppanel
@@ -54,10 +51,10 @@ public class UMLCollaborationRepresentedOperationListModel
     protected void buildModelList() {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isACollaboration(target)) {
-            MCollaboration col = (MCollaboration) target;
+            Object col = /*(MCollaboration)*/ target;
             removeAllElements();
-            if (col.getRepresentedOperation() != null)
-                addElement(col.getRepresentedOperation());
+            if (ModelFacade.getRepresentedOperation(col) != null)
+                addElement(ModelFacade.getRepresentedOperation(col));
         }
     }
 
