@@ -213,8 +213,7 @@ public class IssueListToExcel extends Default
 
         if (mitlist != null && !mitlist.isSingleIssueType())
         {
-            printer.print(l10n.get(issue.getRModuleIssueType()
-                .getDisplayName()));
+            printer.print(issue.getRModuleIssueType().getDisplayName());
         }
 
         printer.print(issue.getUniqueId());
