@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.93 2004/06/29 01:28:01 d00mst Exp $
+// $Id: GeneratorJava.java,v 1.94 2004/06/30 00:23:17 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -263,6 +263,7 @@ public class GeneratorJava
                             importSet.add(ftype);
                         }
                     }
+
                     // check the return parameter types
                     it =
                         UmlHelper.getHelper()
@@ -278,6 +279,22 @@ public class GeneratorJava
                             importSet.add(ftype);
                         }
                     }
+
+		    // check raised signals
+		    it = ModelFacade.getRaisedSignals(mFeature).iterator();
+		    while (it.hasNext()) {
+			Object signal = it.next();
+			if (!ModelFacade.isAException(signal)) {
+			    continue;
+			}
+
+			ftype =
+			    generateImportType(ModelFacade.getType(signal),
+					       packagePath);
+			if (ftype != null) {
+			    importSet.add(ftype);
+			}
+		    }
                 }
             }
         }
@@ -464,8 +481,29 @@ public class GeneratorJava
 
         sb.append(')');
 
-        return sb.toString();
+	Collection c = ModelFacade.getRaisedSignals(op);
+	if (!c.isEmpty()) {
+	    Iterator it = c.iterator();
+	    boolean first = true;
+	    while (it.hasNext()) {
+		Object signal = it.next();
 
+		if (!ModelFacade.isAException(signal)) {
+		    continue;
+		}
+
+		if (first) {
+		    sb.append(" throws ");
+		} else {
+		    sb.append(", ");
+		}
+
+		sb.append(ModelFacade.getName(it.next()));
+		first = false;
+	    }
+	}
+
+        return sb.toString();
     }
 
     public String generateAttribute(Object attr, boolean documented) {
