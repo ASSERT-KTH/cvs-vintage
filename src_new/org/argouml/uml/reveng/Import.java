@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.65 2004/11/25 15:36:26 bobtarling Exp $
+// $Id: Import.java,v 1.66 2004/12/06 16:40:03 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,10 +177,8 @@ public class Import {
 	    throw new RuntimeException("Internal error. "
 				       + "Default import module not found");
         JComponent chooser = module.getChooser(this);
-        dialog = new JDialog(ProjectBrowser.getInstance(), "Import sources");
-
-        dialog.setModal(true);
-        dialog.getParent().setEnabled(false);
+        dialog = 
+            new JDialog(ProjectBrowser.getInstance(), "Import sources", true);
 
         dialog.getContentPane().add(chooser, BorderLayout.WEST);
         dialog.getContentPane().add(getConfigPanel(this), BorderLayout.EAST);
