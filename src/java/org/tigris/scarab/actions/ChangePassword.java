@@ -100,7 +100,12 @@ public class ChangePassword extends ScarabTemplateAction
             String password = register.get("Password").toString();
             String passwordConfirm = register.get("PasswordConfirm").toString();
             
-            if (password.equals(passwordConfirm))
+            if (oldPassword.equals(password))
+            {
+                data.setMessage("Your new password was the same as your old one. Your password has not been changed!");
+                setTarget(data, template);
+            } 
+            else if (password.equals(passwordConfirm))
             {
                 try
                 {
@@ -127,9 +132,9 @@ public class ChangePassword extends ScarabTemplateAction
                     setTarget(data, template);
                 }
             }
-            else
+            else /* !password.equals(passwordConfirm) */
             {
-                data.setMessage("The password's you entered do not match!");
+                data.setMessage("The passwords you entered do not match!");
                 setTarget(data, template);
             }
         }
