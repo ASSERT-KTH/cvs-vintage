@@ -68,7 +68,7 @@ import org.tigris.scarab.util.Log;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.31 2003/04/24 17:03:35 jackrepenning Exp $
+ * @version $Id: GlobalAttributes.java,v 1.32 2003/04/25 18:16:34 jackrepenning Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -99,7 +99,6 @@ public class GlobalAttributes extends RequireLoginFirstAction
             Group attrGroup = intake.get("Attribute", attr.getQueryKey());
             if (attrGroup != null)
             {
-                Log.get().debug("Setting property " + attr);
                 attrGroup.setProperties(attr);
                 attr.save();
             }
