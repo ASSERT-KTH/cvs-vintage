@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.183 2002/08/20 22:52:47 jon Exp $
+ * @version $Id: Issue.java,v 1.184 2002/08/20 23:46:01 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -625,6 +625,8 @@ public class Issue
                     AttributeValue aval = AttributeValue
                         .getNewInstance(attributes[i], this);
                     addAttributeValue(aval);
+                    siaValuesMap.put(
+                        aval.getAttribute().getName().toUpperCase(), aval);
                     result.put(key, aval);
                 }
             }
