@@ -214,8 +214,6 @@ public class RemoteHeaderCache {
 
       worker.setDisplayText("Loading headers from cache...");
 
-      Integer uid;
-
       //System.out.println("Number of Messages : " + capacity);
 
       if (worker != null)
