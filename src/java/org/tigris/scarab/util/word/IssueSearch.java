@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.96 2003/04/29 23:38:50 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.97 2003/05/06 23:21:54 elicia Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1162,9 +1162,9 @@ public class IssueSearch
                 // parts are equal otherwise skip the query, there are no 
                 // matches
                 if (minFid.getCount() <= maxFid.getCount() 
-                     && StringUtils.equals(minFid.getPrefix(), maxFid.getPrefix())
-                     && StringUtils
-                     .equals(minFid.getDomain(), maxFid.getDomain()))
+                  && StringUtils.equals(minFid.getPrefix().toUpperCase(), 
+                                         maxFid.getPrefix().toUpperCase()) 
+                  && StringUtils.equals(minFid.getDomain(), maxFid.getDomain()))
                 {
                     addAnd(sb);
                     sb.append(IssuePeer.ID_COUNT).append(">=")
