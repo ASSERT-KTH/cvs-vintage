@@ -43,33 +43,6 @@
          </td>
     </tr>
 
-    <tr>
-         <th width="120">state change query:<br />(not implemented)</th>
-
-         <td>
-
-         <select>
-          <option>
-           choice 1
-          </option>
-
-          <option>
-           choice 2
-          </option>
-
-          <option>
-           choice 3
-          </option>
-         </select> 
-         </td>
-        </tr>
-
-        <tr>
-         <th width="120">votes:</th>
-
-         <td><input type="text" size="25" value="" /></td>
-        </tr>
-
 
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
@@ -123,239 +96,112 @@
          <td><input type="text" size="25" value="http://" /></td>
         </tr>
 
+</table>
+</div>
+
+
+
+       <h3>State change query</h3>
+        <div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+
+
         <tr>
-         <th width="120">boolean search:</th>
+         <th width="120">attribute:</th>
 
          <td>
-          <select>
-           <option value="noop">
-            ---
-           </option>
+             <select name="$query.StateChangeAttributeId.Key">
 
-           <option value="groupset">
-            groupset
-           </option>
 
-           <option value="everconfirmed">
-            everconfirmed
-           </option>
-
-           <option value="bug_id">
-            Bug #
-           </option>
-
-           <option value="short_desc">
-            Summary
-           </option>
-
-           <option value="product">
-            Product
-           </option>
-
-           <option value="version">
-            Version
-           </option>
-
-           <option value="rep_platform">
-            Platform
-           </option>
-
-           <option value="bug_file_loc">
-            URL
-           </option>
-
-           <option value="op_sys">
-            OS/Version
-           </option>
-
-           <option value="bug_status">
-            Status
-           </option>
-
-           <option value="status_whiteboard">
-            Status Whiteboard
-           </option>
-
-           <option value="keywords">
-            Keywords
-           </option>
-
-           <option value="resolution">
-            Resolution
-           </option>
-
-           <option value="bug_severity">
-            Severity
-           </option>
-
-           <option value="priority">
-            Priority
-           </option>
-
-           <option value="component">
-            Component
-           </option>
-
-           <option value="assigned_to">
-            AssignedTo
-           </option>
-
-           <option value="reporter">
-            ReportedBy
-           </option>
-
-           <option value="votes">
-            Votes
-           </option>
-
-           <option value="qa_contact">
-            QAContact
-           </option>
-
-           <option value="cc">
-            CC
-           </option>
-
-           <option value="dependson">
-            BugsThisDependsOn
-           </option>
-
-           <option value="blocked">
-            OtherBugsDependingOnThis
-           </option>
-
-           <option value="attachments.description">
-            Attachment description
-           </option>
-
-           <option value="attachments.thedata">
-            Attachment data
-           </option>
-
-           <option value="attachments.mimetype">
-            Attachment mime type
-           </option>
-
-           <option value="attachments.ispatch">
-            Attachment is patch
-           </option>
-
-           <option value="target_milestone">
-            Target Milestone
-           </option>
-
-           <option value="delta_ts">
-            Last changed date
-           </option>
-
-           <option value="(to_days(now()) - to_days(bugs.delta_ts))">
-            Days since bug changed
-           </option>
-
-           <option value="longdesc">
-            Comment
-           </option>
-          </select> <select>
-           <option value="noop">
-            ---
-           </option>
-
-           <option value="equals">
-            equal to
-           </option>
-
-           <option value="notequals">
-            not equal to
-           </option>
-
-           <option value="casesubstring">
-            contains (case-sensitive) substring
-           </option>
-
-           <option value="substring">
-            contains (case-insensitive) substring
-           </option>
-
-           <option value="notsubstring">
-            does not contain (case-insensitive) substring
-           </option>
-
-           <option value="allwordssubstr">
-            all words as (case-insensitive) substrings
-           </option>
-
-           <option value="anywordssubstr">
-            any words as (case-insensitive) substrings
-           </option>
-
-           <option value="regexp">
-            contains regexp
-           </option>
-
-           <option value="notregexp">
-            does not contain regexp
-           </option>
-
-           <option value="lessthan">
-            less than
-           </option>
-
-           <option value="greaterthan">
-            greater than
-           </option>
-
-           <option value="anywords">
-            any words
-           </option>
-
-           <option value="allwords">
-            all words
-           </option>
-
-           <option value="nowords">
-            none of the words
-           </option>
-
-           <option value="changedbefore">
-            changed before
-           </option>
-
-           <option value="changedafter">
-            changed after
-           </option>
-
-           <option value="changedto">
-            changed to
-           </option>
-
-           <option value="changedby">
-            changed by
-           </option>
-          </select> <input type="text" size="25" value="" /> 
-
-          <p>
-           <input type="submit" value="and" />&#160;<input type="submit" value="or" />&#160;<input type="submit" value="add additional boolean search" />
-          </p>
+             </select>
          </td>
         </tr>
 
+
+        <tr>
+         <th width="120">state change query:</th>
+
+         <td>
+
+          <select name="$query.StateChangeFromOptionId.Key">
+
+#foreach ($option in $module.getLeafRModuleOptions($attr))
+    #set ( $selected = "" )
+    #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
+		#set ( $selected = ' selected="selected"' )
+	#end
+				<option$selected value="$option.OptionId">
+				    $option.DisplayValue
+                </option>
+#end
+
+             </select> to 
+
+             <select name="$query.StateChangeToOptionId.Key">
+
+#foreach ($option in $module.getLeafRModuleOptions($attr))
+    #set ( $selected = "" )
+    #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
+		#set ( $selected = ' selected="selected"' )
+	#end
+				<option$selected value="$option.OptionId">
+				    $option.DisplayValue
+                </option>
+#end
+
+             </select>
+
+           </td>
+        </tr>  
+        
+        <tr>
+           <th width="120">date range:<br />MM/DD/YYYY hh:mm</th>
+
+           <td>          
+           
+               <input type="text" size=9 name="$query.StateChangeFromDate.Key" 
+                   value="$query.StateChangeFromDate">&nbsp;
+               to
+               <input type="text" size=9 name="$query.StateChangeToDate.Key" 
+                   value="$query.StateChangeToDate">
+
+           </td>
+        </tr>
+
+       </table>
+      </div>
+
+
+      <h3>search results view prefs</h3>
+        <div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
          <th width="120">sort by:</th>
 
-         <td><select>
-          <option>
-           choice 1
-          </option>
+         <td>
+         <select name="$query.InitialSortAttributeId.Key">
 
-          <option>
-           choice 2
-          </option>
+#foreach ( $attKey in $attrValues.sequence() )
+  #set ( $attribute = $attrValues.get($attKey).Attribute )
 
-          <option>
-           choice 3
-          </option>
-         </select> </td>
-        </tr>
+            <option value="$attribute.AttributeId">
+                $attribute.Name
+            </option>
+
+#end
+         </select>&nbsp;
+
+         <select name="$query.InitialSortPolarity.Key">
+             <option value="asc">
+                 ascending
+             </option>
+
+             <option value="desc">
+                 descending
+             </option>
+         </select>
+         </td>
+    </tr>
 
     <tr>
          <th width="120">issues per page:</th>
@@ -369,8 +215,9 @@
          </td>
     </tr>
 
-</table>
+  </table>
 </div>
+
 
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;

@@ -70,6 +70,9 @@ import org.tigris.scarab.om.ROptionOptionPeer;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.ActivityPeer;
+import org.tigris.scarab.om.TransactionPeer;
+import org.tigris.scarab.om.RModuleOptionPeer;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -85,12 +88,17 @@ import org.tigris.scarab.attribute.StringAttribute;
 public class IssueSearch 
     extends Issue
 {
+    public static final String ASC = "asc";
+    public static final String DESC = "desc";
+
     private static final NumberKey ALL_TEXT = new NumberKey("0");
 
     private static final String PARENT_ID;
     private static final String CHILD_ID;
     private static final String AV_ISSUE_ID;
     private static final String AV_OPTION_ID;
+    private static final DateFormat DATETIME_FORMATTER;
+    private static final DateFormat DATE_FORMATTER;
 
     private String searchWords;
     private NumberKey[] textScope;
@@ -100,7 +108,16 @@ public class IssueSearch
     private String maxDate;
     private int minVotes;
     
+    private NumberKey stateChangeAttributeId;
+    private NumberKey stateChangeFromOptionId;
+    private NumberKey stateChangeToOptionId;
+    private String stateChangeFromDate;
+    private String stateChangeToDate;
+
+    private NumberKey initialSortAttributeId;
+    private String initialSortPolarity;
     private int resultsPerPage;
+    
 
     static 
     {
@@ -113,6 +130,8 @@ public class IssueSearch
         AV_ISSUE_ID = AttributeValuePeer.ISSUE_ID.substring(
             AttributeValuePeer.ISSUE_ID.indexOf('.')+1);
 
+        DATETIME_FORMATTER = new SimpleDateFormat("MM/dd/yy HH:mm");
+        DATE_FORMATTER = new SimpleDateFormat("MM/dd/yy");
     }
 
     /**
@@ -204,7 +223,14 @@ public class IssueSearch
      */
     public void setMinId(String  v) 
     {
-        this.minId = v;
+        if ( v != null && v.length() == 0 ) 
+        {
+            this.minId = null;
+        }
+        else 
+        {
+            this.minId = v;            
+        }
     }
 
     
@@ -223,7 +249,14 @@ public class IssueSearch
      */
     public void setMaxId(String  v) 
     {
-        this.maxId = v;
+        if ( v != null && v.length() == 0 ) 
+        {
+            this.maxId = null;
+        }
+        else 
+        {
+            this.maxId = v;
+        }
     }
     
     
@@ -242,7 +275,14 @@ public class IssueSearch
      */
     public void setMinDate(String  v) 
     {
-        this.minDate = v;
+        if ( v != null && v.length() == 0 ) 
+        {
+            this.minDate = null;
+        }
+        else 
+        {
+            this.minDate = v;            
+        }
     }
 
     
@@ -261,7 +301,14 @@ public class IssueSearch
      */
     public void setMaxDate(String  v) 
     {
-        this.maxDate = v;
+        if ( v != null && v.length() == 0 ) 
+        {
+            this.maxDate = null;
+        }
+        else 
+        {
+            this.maxDate = v;            
+        }
     }
     
     /**
@@ -300,7 +347,171 @@ public class IssueSearch
     {
         this.resultsPerPage = v;
     }
+    
+    
+    /**
+     * Get the value of stateChangeAttributeId.
+     * @return value of stateChangeAttributeId.
+     */
+    public NumberKey getStateChangeAttributeId() 
+    {
+        if ( stateChangeAttributeId == null ) 
+        {
+            stateChangeAttributeId = AttributePeer.STATUS__PK;
+        }
+        
+        return stateChangeAttributeId;
+    }
+    
+    /**
+     * Set the value of stateChangeAttributeId.
+     * @param v  Value to assign to stateChangeAttributeId.
+     */
+    public void setStateChangeAttributeId(NumberKey  v) 
+    {
+        this.stateChangeAttributeId = v;
+    }
+    
+    
+    /**
+     * Get the value of stateChangeFromOptionId.
+     * @return value of stateChangeFromOptionId.
+     */
+    public NumberKey getStateChangeFromOptionId() 
+    {
+        return stateChangeFromOptionId;
+    }
+    
+    /**
+     * Set the value of stateChangeFromOptionId.
+     * @param v  Value to assign to stateChangeFromOptionId.
+     */
+    public void setStateChangeFromOptionId(NumberKey  v) 
+    {
+        this.stateChangeFromOptionId = v;
+    }
+    
+    /**
+     * Get the value of stateChangeToOptionId.
+     * @return value of stateChangeToOptionId.
+     */
+    public NumberKey getStateChangeToOptionId() 
+    {
+        return stateChangeToOptionId;
+    }
+    
+    /**
+     * Set the value of stateChangeToOptionId.
+     * @param v  Value to assign to stateChangeToOptionId.
+     */
+    public void setStateChangeToOptionId(NumberKey  v) 
+    {
+        this.stateChangeToOptionId = v;
+    }
 
+    
+    /**
+     * Get the value of stateChangeFromDate.
+     * @return value of stateChangeFromDate.
+     */
+    public String getStateChangeFromDate() 
+    {
+        return stateChangeFromDate;
+    }
+    
+    /**
+     * Set the value of stateChangeFromDate.
+     * @param v  Value to assign to stateChangeFromDate.
+     */
+    public void setStateChangeFromDate(String  v) 
+    {
+        if ( v != null && v.length() == 0 ) 
+        {
+            this.stateChangeFromDate = null;
+        }
+        else 
+        {
+            this.stateChangeFromDate = v;
+        }
+    }
+    
+    
+    /**
+     * Get the value of stateChangeToDate.
+     * @return value of stateChangeToDate.
+     */
+    public String getStateChangeToDate() 
+    {
+        return stateChangeToDate;
+    }
+    
+    /**
+     * Set the value of stateChangeToDate.
+     * @param v  Value to assign to stateChangeToDate.
+     */
+    public void setStateChangeToDate(String  v) 
+    {
+        if ( v != null && v.length() == 0 ) 
+        {
+            this.stateChangeToDate = null;
+        }
+        else 
+        {
+            this.stateChangeToDate = v;
+        }
+    }
+    
+    
+    /**
+     * Get the value of initialSortAttributeId.
+     * @return value of initialSortAttributeId.
+     */
+    public NumberKey getInitialSortAttributeId() 
+    {
+        return initialSortAttributeId;
+    }
+    
+    /**
+     * Set the value of initialSortAttributeId.
+     * @param v  Value to assign to initialSortAttributeId.
+     */
+    public void setInitialSortAttributeId(NumberKey v) 
+    {
+        this.initialSortAttributeId = v;
+    }
+    
+
+    /**
+     * Get the value of initialSortPolarity.
+     * @return value of initialSortPolarity.
+     */
+    public String getInitialSortPolarity() 
+    {
+        String polarity = null;
+        if ( initialSortPolarity == null ) 
+        {
+            polarity = null;
+        }
+        else if ( DESC.equals(initialSortPolarity) ) 
+        {
+            polarity = DESC;
+        }        
+        else 
+        {
+            polarity = ASC;
+        }
+        return polarity;
+    }
+    
+    /**
+     * Set the value of initialSortPolarity.
+     * @param v  Value to assign to initialSortPolarity.
+     */
+    public void setInitialSortPolarity(String  v) 
+    {
+        this.initialSortPolarity = v;
+    }
+    
 
     public NumberKey getALL_TEXT()
     {
@@ -494,69 +705,72 @@ public class IssueSearch
     }
 
 
-    private void addDateRange(Criteria crit)
+    private void addCreatedDateRange(Criteria crit)
         throws ScarabException
     {
-        // DateFormat dateFormatter = DateFormat.getDateInstance();
-        DateFormat dateTimeFormatter = new SimpleDateFormat("MM/dd/yy HH:mm");
-        DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy");
-        Date minUtilDate = null;
-        Date maxUtilDate = null;
-        if ( minDate != null ) 
+        Date minUtilDate = parseDate(getMinDate(), false);
+        Date maxUtilDate = parseDate(getMaxDate(), true);
+        addDateRange(IssuePeer.CREATED_DATE, minUtilDate, maxUtilDate, crit);
+    }
+
+
+
+    /**
+     * Attempts to parse a String as a Date given in MM/DD/YYYY form or a
+     * Date and Time given in 24 hour clock MM/DD/YYYY HH:mm.  Returns null
+     * if the String did not contain a suitable format
+     *
+     * @param dateString a <code>String</code> value
+     * @param addTwentyFourHours if no time is given in the date string and
+     * this flag is true, then 24 hours - 1 msec will be added to the date.
+     * @return a <code>Date</code> value
+     */
+    private Date parseDate(String dateString, boolean addTwentyFourHours)
+    {
+        Date date = null;
+        if ( dateString != null ) 
         {
             try
             {
-                minUtilDate = dateFormatter.parse(minDate);
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    minUtilDate = dateTimeFormatter.parse(minDate);
-                }
-                catch (Exception ee)
-                {
-                    // ignore
-                    ee.printStackTrace();
-                }
-            }
-        }
-
-        if ( maxDate != null )
-        {         
-            try
-            {
-                maxUtilDate = dateFormatter.parse(maxDate);
+                date = DATE_FORMATTER.parse(dateString);
                 // add 24 hours to max date so it is inclusive
-                maxUtilDate.setTime(maxUtilDate.getTime() + 86400000);
+                if ( addTwentyFourHours ) 
+                {                
+                    date.setTime(date.getTime() + 86399999);
+                }
             }
             catch (Exception e)
             {
                 try
                 {
-                    maxUtilDate = dateTimeFormatter.parse(maxDate);
+                    date = DATETIME_FORMATTER.parse(dateString);
                 }
                 catch (Exception ee)
                 {
-                    // ignore
+                    // ignore/debug
                     ee.printStackTrace();
                 }
             }
         }
+        return date;
+    }
 
+
+    private void addDateRange(String column, Date minUtilDate,
+                              Date maxUtilDate, Criteria crit)
+        throws ScarabException
+    {
         // check limits to see which ones are present
         // if neither are present, do nothing
         if ( minUtilDate != null || maxUtilDate != null ) 
         {
             if ( minUtilDate == null ) 
             {
-                crit.add(IssuePeer.CREATED_DATE, maxUtilDate,
-                         Criteria.LESS_THAN);
+                crit.add(column, maxUtilDate, Criteria.LESS_THAN);
             }
             else if ( maxUtilDate == null ) 
             {
-                crit.add(IssuePeer.CREATED_DATE, minUtilDate,
-                         Criteria.GREATER_EQUAL);
+                crit.add(column, minUtilDate, Criteria.GREATER_EQUAL);
             }
             else 
             {
@@ -566,17 +780,15 @@ public class IssueSearch
                 if ( minUtilDate.before(maxUtilDate) )
                 {
                     Criteria.Criterion c1 = crit.getNewCriterion(
-                        IssuePeer.CREATED_DATE, minUtilDate, 
-                        Criteria.GREATER_EQUAL);
+                        column, minUtilDate,  Criteria.GREATER_EQUAL);
                     c1.and(crit.getNewCriterion(
-                        IssuePeer.CREATED_DATE, maxUtilDate, 
-                        Criteria.LESS_EQUAL) );
+                        column, maxUtilDate,  Criteria.LESS_EQUAL) );
                     crit.add(c1);
                 }
                 else 
                 {
-                    throw new ScarabException("maxDate " + maxDate + 
-                        "is before minDate " + minDate);
+                    throw new ScarabException("maxDate " + maxUtilDate + 
+                        "is before minDate " + minUtilDate);
                 }
             }
         }
@@ -681,6 +893,56 @@ public class IssueSearch
         return matchingIssueIds;
     }
 
+    private void addStateChangeQuery(Criteria crit)
+        throws Exception
+    {
+        NumberKey oldOptionId = getStateChangeFromOptionId();
+        NumberKey newOptionId = getStateChangeToOptionId();
+        if ( oldOptionId != null || newOptionId != null )
+        {
+            if ( oldOptionId == null ) 
+            {
+                crit.add(ActivityPeer.NEW_OPTION_ID, newOptionId);
+            }
+            else if ( newOptionId == null ) 
+            {
+                crit.add(ActivityPeer.OLD_OPTION_ID, oldOptionId);
+            }
+            else 
+            {
+                // make sure the old and new options are different, otherwise
+                // do not add to criteria.
+                if ( !oldOptionId.equals(newOptionId) )
+                {
+                    Criteria.Criterion c1 = crit.getNewCriterion(
+                        ActivityPeer.OLD_OPTION_ID, oldOptionId,  
+                        Criteria.EQUAL);
+                    c1.and(crit.getNewCriterion(
+                        ActivityPeer.NEW_OPTION_ID, newOptionId, 
+                        Criteria.EQUAL) );
+                    crit.add(c1);
+                }
+                else 
+                {
+                    // might want to log user error here
+                }
+            }
+            crit.add(ActivityPeer.ATTRIBUTE_ID, getStateChangeAttributeId());
+
+            // add dates, if given
+            Date minUtilDate = parseDate(getStateChangeFromDate(), false);
+            Date maxUtilDate = parseDate(getStateChangeToDate(), true);
+            if ( minUtilDate != null || maxUtilDate != null ) 
+            {
+                addDateRange(TransactionPeer.CREATED_DATE, 
+                             minUtilDate, maxUtilDate, crit);
+                crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                             ActivityPeer.TRANSACTION_ID);
+            }
+        }
+    }
+
+
     /**
      * Get a List of Issues that match the criteria given by this
      * SearchIssue's searchWords and the quick search attribute values.
@@ -696,7 +958,7 @@ public class IssueSearch
         Criteria crit = new Criteria();
 
         addIssueIdRange(crit);
-        addDateRange(crit);
+        addCreatedDateRange(crit);
         addMinimumVotes(crit);
         // add option values
         Criteria tempCrit = new Criteria(2)
@@ -708,13 +970,30 @@ public class IssueSearch
         // search for issues based on text
         NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
 
+        // state change query
+        addStateChangeQuery(crit);
+
+        // Add any order by clause
+        if ( getInitialSortAttributeId() != null ) 
+        {
+            // we need to join with the option table, so first add the issue
+            // columns
+            IssuePeer.addSelectColumns(crit);
+            crit.addSelectColumn(RModuleOptionPeer.PREFERRED_ORDER);
+            /*
+            option_id = 
+            attribute_id= getInitialSortAttributeId()
+            */
+        }
+
         // get matching issues
         List matchingIssues = IssuePeer.doSelect(crit);
         
         // text search can lead to an ordered list according to search engine's
         // ranking mechanism, so sort the results according to this list
         // unless another sorting criteria has been specified.
-        if ( matchingIssueIds != null ) 
+        if ( getInitialSortAttributeId() == null 
+             && matchingIssueIds != null ) 
         {
             matchingIssues = 
                 sortByIssueIdList(matchingIssueIds, matchingIssues, 
