@@ -180,19 +180,22 @@ public class GlobalResourceLoader {
 					try {
 						return (rbGlobal.getString(sID));
 					} catch (MissingResourceException ex) {
-						ColumbaLogger.log.error(
-							"'"
-								+ sID
-								+ "' in '"
-								+ sPath
-								+ "."
-								+ sName
-								+ "' cannot be found.");
+
 						if (/*!useEnglishFallback*/
 							org.columba.core.main.MainInterface.DEBUG.equals(
-								Boolean.TRUE))
+								Boolean.TRUE)) {
+							ColumbaLogger.log.error(
+								"'"
+									+ sID
+									+ "' in '"
+									+ sPath
+									+ "."
+									+ sName
+									+ "' cannot be found.");
 							return FIX_ME;
-						//Else fallback.
+							//Else fallback.
+						}
+
 					}
 				} //We get here if we want the english fallback; let's try the english bundles (which we will not cache).
 				sBundlePath = generateBundlePath(sPath, sName);
@@ -221,15 +224,25 @@ public class GlobalResourceLoader {
 									Locale.ENGLISH);
 							return rbEnglish.getString(sID);
 						} catch (MissingResourceException exGlobal) {
-							ColumbaLogger.log.error(
-								"'"
-									+ sID
-									+ "' in '"
-									+ sPath
-									+ "."
-									+ sName
-									+ "' cannot be found in the english langpack either.");
+							if (/*!useEnglishFallback*/
+								org
+									.columba
+									.core
+									.main
+									.MainInterface
+									.DEBUG
+									.equals(
+									Boolean.TRUE))
+								ColumbaLogger.log.error(
+									"'"
+										+ sID
+										+ "' in '"
+										+ sPath
+										+ "."
+										+ sName
+										+ "' cannot be found in the english langpack either.");
 							return FIX_ME;
+
 						}
 					}
 				}
