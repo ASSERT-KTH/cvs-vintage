@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.4 2005/01/11 11:28:33 bobtarling Exp $
+// $Id: AbstractFilePersister.java,v 1.5 2005/01/15 04:05:36 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public abstract class AbstractFilePersister extends FileFilter
      * This controls conversion of old persistence version files to be
      * converted to the current one, keeping ArgoUML backwards compatible.
      */
-    protected static final int PERSISTENCE_VERSION = 2;
+    protected static final int PERSISTENCE_VERSION = 3;
     
     /**
      * Supply the encoding to be used throughout the persistence
