@@ -87,10 +87,18 @@ public class ModuleManager
         Iterator i = issues.iterator();
         if (i.hasNext()) 
         {
-            Module module = ((Issue)i.next()).getModule();
-            if (module != null && !modules.contains(module)) 
+            Issue issue = (Issue)i.next();
+            if (issue != null)
             {
-                modules.add(module);
+                Module module = issue.getModule();
+                if (module != null && !modules.contains(module)) 
+                {
+                    modules.add(module);
+                }
+            }
+            else
+            {
+                throw new TorqueException("Null issue in list is not allowed.");
             }
         }
         return modules;
