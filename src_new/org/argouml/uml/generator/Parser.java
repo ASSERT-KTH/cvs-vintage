@@ -24,7 +24,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.6 2002/08/16 23:51:36 d00mst Exp $
+// $Id: Parser.java,v 1.7 2002/08/24 15:59:35 d00mst Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -49,7 +49,7 @@ import java.text.ParseException;
 public abstract class Parser {
 
   public abstract MExtensionPoint parseExtensionPoint(String s);
-  public abstract MOperation parseOperation(String s);
+  public abstract void parseOperation(String s, MOperation op) throws ParseException;
   public abstract void parseAttribute(String s, MAttribute attr) throws ParseException;
   public abstract MParameter parseParameter(String s);
 //   public abstract Package parsePackage(String s);

@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.29 2002/08/20 21:21:01 kataka Exp $
+// $Id: FigClass.java,v 1.30 2002/08/24 15:59:35 d00mst Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -625,7 +625,12 @@ public class FigClass extends FigNodeModelElement {
 	if (i != -1) {
 	  highlightedFigText = (CompartmentFigText)ft;
 	  highlightedFigText.setHighlighted(true);
-	  ParserDisplay.SINGLETON.parseOperationFig(cls,(MOperation)highlightedFigText.getOwner(),highlightedFigText.getText().trim());
+	  try {
+	    ParserDisplay.SINGLETON.parseOperationFig(cls,(MOperation)highlightedFigText.getOwner(),highlightedFigText.getText().trim());
+	    ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+	  } catch (ParseException pe) {
+	    ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+	  }
 	  return;
 	}
   }
