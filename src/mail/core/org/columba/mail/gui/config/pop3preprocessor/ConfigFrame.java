@@ -34,7 +34,6 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.Compatibility;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.util.URLController;

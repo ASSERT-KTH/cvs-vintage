@@ -38,7 +38,6 @@ import javax.swing.event.ListSelectionListener;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.Compatibility;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.SmtpItem;
