@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.148 2003/02/04 18:20:42 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.149 2003/02/07 00:37:35 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -775,21 +775,25 @@ public class ModifyIssue extends BaseModifyIssue
     public void doDeletedependencies(RunData data, TemplateContext context)
         throws Exception
     {
-        doUpdatedependencies(data, context, true);
-    }
-
-    public void doUpdatedependencies(RunData data, TemplateContext context)
-        throws Exception
-    {
-        doUpdatedependencies(data, context, false);
+        saveDependencyChanges(data, context, true);
     }
 
     /**
      *  Modifies the dependency type between the current issue
      *  And its parent or child issue.
      */
-    private void doUpdatedependencies(RunData data, TemplateContext context,
-                                     boolean doDelete)
+    public void doSavedependencychanges(RunData data, TemplateContext context)
+        throws Exception
+    {
+        saveDependencyChanges(data, context, false);
+    }
+
+    /**
+     *  Modifies the dependency type between the current issue
+     *  And its parent or child issue.
+     */
+    private void saveDependencyChanges(RunData data, TemplateContext context, 
+                                       boolean doDelete)
         throws Exception
     {
         if (isCollision(data, context)) 
@@ -797,124 +801,6 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        IntakeTool intake = getIntakeTool(context);
-        if (intake.isAllValid())
-        {
-            ScarabUser user = (ScarabUser)data.getUser();
-            Issue issue = null;
-            try
-            {
-                issue = getIssueFromRequest(data.getParameters());
-            }
-            catch (ScarabException se)
-            {
-                scarabR.setAlertMessage(se.getMessage());
-                return;
-            }
-
-            if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
-                                   issue.getModule()))
-            {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-                return;
-            }
-
-            // get the description of the changes
-            Group group2 = intake.get("Depend", IntakeTool.DEFAULT_KEY);
-            String reasonForChange = group2.get("Description").toString();
-            intake.remove(group2);
-
-            ActivitySet activitySet = null;
-            List dependencies = issue.getAllDependencies();            
-            for (int i=0; i < dependencies.size(); i++)
-            {
-                Depend oldDepend = (Depend)dependencies.get(i);
-                Depend newDepend = DependManager.getInstance();
-                // copy oldDepend properties to newDepend
-                newDepend.setProperties(oldDepend);
-                Group group = intake.get("Depend", oldDepend.getQueryKey(), false);
-
-                DependType oldDependType = oldDepend.getDependType();
-                // set properties on the object
-                group.setProperties(newDepend);
-                DependType newDependType = newDepend.getDependType();
-
-                // set the description of the changes
-                newDepend.setDescription(reasonForChange);
-
-                // make the changes
-                if (doDelete && newDepend.getDeleted() == true)
-                {
-                    try
-                    {
-                        activitySet = 
-                            issue.doDeleteDependency(activitySet, oldDepend, user);
-                    }
-                    catch (ScarabException se)
-                    {
-                        // FIXME: l10n this
-                        // it will error out if they attempt to delete
-                        // a dep via a child dep.
-                        scarabR.setAlertMessage(se.getMessage());
-                    }
-                    catch (Exception e)
-                    {
-                        scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
-                        log().debug("Delete error: ", e);
-                    }
-                }
-                else if (! oldDependType.equals(newDependType))
-                {
-                    // need to do this because newDepend could have the deleted
-                    // flag set to true if someone selected it as well as 
-                    // clicked the save changes button. this is why we have the 
-                    // doDeleted flag as well...issue.doChange will only do the
-                    // change if the deleted flag is false...so force it...
-                    newDepend.setDeleted(false);
-                    // make the changes
-                    activitySet = 
-                        issue.doChangeDependencyType(activitySet, oldDepend,
-                                                     newDepend, user);
-                }
-                intake.remove(group);
-            }
-
-            // something changed...
-            if (activitySet != null)
-            {
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-                
-                // FIXME: when we add a dep, we send email to both issues,
-                // but here we are not...should we? it almost seems like 
-                // to much email. We need someone to define this behavior
-                // better. (JSS)
-                sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
-            }
-            else // nothing changed
-            {
-                scarabR.setInfoMessage(l10n.get(NO_CHANGES_MADE));
-            }
-        }
-        else
-        {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
-        }
-    }
-
-    /**
-     *  Adds a dependency between this issue and another issue.
-     *  This issue will be the child issue. 
-     */
-    public void doAdddependency (RunData data, TemplateContext context)
-        throws Exception
-    {                          
-        if (isCollision(data, context)) 
-        {
-            return;
-        }
-        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
@@ -938,43 +824,94 @@ public class ModifyIssue extends BaseModifyIssue
 
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Depend", IntakeTool.DEFAULT_KEY);
-        Issue childIssue = null;
-        boolean isValid = true;
+        String reasonForChange = group.get("Description").toString();
 
-        // Check that dependency type entered is valid
-        Field type = group.get("TypeId");
-        type.setRequired(true);
-        if (!type.isValid())
+        boolean depAdded = doAdddependency(issue, intake, group, scarabR,
+                                           context, l10n, user,
+                                           reasonForChange);
+        boolean changesMade = doUpdatedependencies(issue, intake, scarabR, 
+                                                   context, l10n, user, 
+                                                   reasonForChange, doDelete);
+        if (!depAdded)
         {
-            type.setMessage("EnterValidDependencyType");
-            isValid = false;
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
-
-        // Check that child ID entered is valid
-        Field childId = group.get("ObserverUniqueId");
-        childId.setRequired(true);
-        if (!childId.isValid())
+        if (!depAdded && !changesMade)
         {
-            childId.setMessage("EnterValidIssueId");
-            isValid = false;
+            scarabR.setInfoMessage(l10n.get(NO_CHANGES_MADE));
         }
         else
         {
-            // Check that child ID entered corresponds to a valid issue
-            childIssue = scarabR.getIssue(childId.toString());
-            if (childIssue == null)
-            {
-                childId.setMessage("EnterValidIssueId");
-                isValid = false;
-            }
-            // Make sure issue is not being marked as dependant on itself.
-            else if (childIssue != null && childIssue.equals(issue))
-            {
-                childId.setMessage("CannotAddSelfDependency");
-                isValid = false;
-            }
+            intake.remove(group);
         }
-        if (intake.isAllValid() && isValid)
+    }
+
+    /**
+     *  Modifies the dependency type between the current issue
+     *  And its parent or child issue.
+     */
+    private boolean doAdddependency(Issue issue, IntakeTool intake, 
+                                 Group group, ScarabRequestTool scarabR,
+                                 TemplateContext context,
+                                 ScarabLocalizationTool l10n,
+                                 ScarabUser user,
+                                 String reasonForChange)
+        throws Exception
+    {
+        // Check that dependency type entered is valid
+        Field type = group.get("TypeId");
+        type.setRequired(true);
+        // Check that child ID entered is valid
+        Field childId = group.get("ObserverUniqueId");
+        childId.setRequired(true);
+        if (!type.isValid() && childId.isValid())
+        {
+            type.setMessage(l10n.get("EnterValidDependencyType"));
+            return false;
+        }
+        else if (type.isValid() && !childId.isValid())
+        {
+            childId.setMessage(l10n.get("EnterValidIssueId"));
+            return false;
+        }
+        String childIdStr = childId.toString();
+        // we need to struggle here because if there is no
+        // issue id, we just want to return because the person
+        // on the page could just be updating existing deps
+        // and in this case, the issue id might be empty.
+        if (childIdStr != null)
+        {
+            childIdStr.trim();
+        }
+        if (childIdStr == null || childIdStr.length() == 0)
+        {
+            return true;
+        }
+        // Check that child ID entered corresponds to a valid issue
+        // The id might not have the prefix appended so use the current
+        // module prefix as the thing to try.
+        Issue childIssue = null;
+        try
+        {
+            childIssue = scarabR.getCurrentModule()
+                                .getIssueById(childIdStr);
+        }
+        catch(Exception e)
+        {
+            // Ignore this
+        }
+        if (childIssue == null)
+        {
+            childId.setMessage(l10n.get("EnterValidIssueId"));
+            return false;
+        }
+        // Make sure issue is not being marked as dependant on itself.
+        else if (childIssue.equals(issue))
+        {
+            childId.setMessage(l10n.get("CannotAddSelfDependency"));
+            return false;
+        }
+        if (intake.isAllValid())
         {
             Depend depend = DependManager.getInstance();
             depend.setDefaultModule(scarabR.getCurrentModule());
@@ -984,12 +921,16 @@ public class ModifyIssue extends BaseModifyIssue
             {
                 activitySet = issue
                     .doAddDependency(activitySet, depend, childIssue, user);
-                intake.remove(group);
+            }
+            catch (ScarabException se)
+            {
+                scarabR.setAlertMessage(l10n.get(se.getMessage()));
+                return false;
             }
             catch (Exception e)
             {
-                scarabR.setAlertMessage(e.getMessage());
-                return;
+                log().debug("Delete error: ", e);
+                return false;
             }
 
             if (activitySet != null)
@@ -1001,10 +942,101 @@ public class ModifyIssue extends BaseModifyIssue
                           context);
             }
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            return true;
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            return false;
+        }
+    }
+
+    /**
+     *  Modifies the dependency type between the current issue
+     *  And its parent or child issue.
+     */
+    private boolean doUpdatedependencies(Issue issue, IntakeTool intake, 
+                                       ScarabRequestTool scarabR,
+                                       TemplateContext context,
+                                       ScarabLocalizationTool l10n,
+                                       ScarabUser user,
+                                       String reasonForChange,
+                                       boolean doDelete)
+        throws Exception
+    {
+        ActivitySet activitySet = null;
+        List dependencies = issue.getAllDependencies();            
+        for (int i=0; i < dependencies.size(); i++)
+        {
+            Depend oldDepend = (Depend)dependencies.get(i);
+            Depend newDepend = DependManager.getInstance();
+            // copy oldDepend properties to newDepend
+            newDepend.setProperties(oldDepend);
+            Group group = intake.get("Depend", oldDepend.getQueryKey(), false);
+            // there is nothing to doo here, so move along now kiddies.
+            if (group == null)
+            {
+                continue;
+            }
+
+            DependType oldDependType = oldDepend.getDependType();
+            // set properties on the object
+            group.setProperties(newDepend);
+            DependType newDependType = newDepend.getDependType();
+
+            // set the description of the changes
+            newDepend.setDescription(reasonForChange);
+
+            // make the changes
+            if (doDelete && newDepend.getDeleted() == true)
+            {
+                try
+                {
+                    activitySet = 
+                        issue.doDeleteDependency(activitySet, oldDepend, user);
+                }
+                catch (ScarabException se)
+                {
+                    // it will error out if they attempt to delete
+                    // a dep via a child dep.
+                    scarabR.setAlertMessage(l10n.get(se.getMessage()));
+                }
+                catch (Exception e)
+                {
+                    scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                    log().debug("Delete error: ", e);
+                }
+            }
+            else if (! oldDependType.equals(newDependType))
+            {
+                // need to do this because newDepend could have the deleted
+                // flag set to true if someone selected it as well as 
+                // clicked the save changes button. this is why we have the 
+                // doDeleted flag as well...issue.doChange will only do the
+                // change if the deleted flag is false...so force it...
+                newDepend.setDeleted(false);
+                // make the changes
+                activitySet = 
+                    issue.doChangeDependencyType(activitySet, oldDepend,
+                                                 newDepend, user);
+            }
+            intake.remove(group);
+        }
+
+        // something changed...
+        if (activitySet != null)
+        {
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            
+            // FIXME: when we add a dep, we send email to both issues,
+            // but here we are not...should we? it almost seems like 
+            // to much email. We need someone to define this behavior
+            // better. (JSS)
+            sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
+            return true;
+        }
+        else // nothing changed
+        {
+            return false;
         }
     }
 
