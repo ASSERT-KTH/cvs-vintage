@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.23 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: CrUML.java,v 1.24 2003/12/05 09:15:42 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.23 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: CrUML.java,v 1.24 2003/12/05 09:15:42 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -104,6 +104,7 @@ public class CrUML extends Critic {
     static {
 	Designer d = Designer.theDesigner();
 	d.startConsidering(decCLASS_SELECTION);
+        d.startConsidering(decBEHAVIOR);
 	d.startConsidering(decNAMING);
 	d.startConsidering(decSTORAGE);
 	d.startConsidering(decINHERITANCE);
