@@ -124,7 +124,7 @@ public abstract class Logger extends LogHandler {
     protected boolean timestampRaw = false;
 
     /**
-     * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
+     * The timestamp format string, default is "yyyy-MM-dd HH:mm:ss"
      **/
     protected String timestampFormat = "yyyy-MM-dd HH:mm:ss";
 
