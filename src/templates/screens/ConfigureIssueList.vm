@@ -10,7 +10,7 @@ $page.setTitle("Add/remove attributes from view")
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($moduleAttributes = $module.getRModuleAttributes($issueType, true))
 #set ($maxNum = $moduleAttributes.size())
-#set ($usedefaults = $data.Parameters.getString("usedefaults"))
+#set ($usedefaults = $data.Parameters.getString("usedefaults",""))
 
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId" />
