@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCTypeFactory {
    // the type mapping to use with the specified database
@@ -64,7 +64,9 @@ public class JDBCTypeFactory {
          String sqlType = typeMapping.getSqlTypeForJavaType(javaType);
          int jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
          boolean notNull = javaType.isPrimitive();
-         return new JDBCTypeSimple(null, javaType, jdbcType, sqlType, notNull);
+         boolean autoIncrement = false;
+         return new JDBCTypeSimple(
+            null, javaType, jdbcType, sqlType, notNull, autoIncrement);
       }
    }
 
@@ -115,13 +117,15 @@ public class JDBCTypeFactory {
       }
 
       boolean notNull = cmpField.isNotNull();
+      boolean autoIncrement = cmpField.isAutoIncrement();
 
       return new JDBCTypeSimple(
             columnName,
             javaType,
             jdbcType,
             sqlType,
-            notNull);
+            notNull,
+            autoIncrement);
    }      
 
    private JDBCTypeComplex createTypeComplex(JDBCCMPFieldMetaData cmpField) {
@@ -353,7 +357,7 @@ public class JDBCTypeFactory {
          }
          return false;
       }
-      
+
       public Method[] getGetters() {
          return (Method[])getters.toArray(new Method[getters.size()]);
       }
