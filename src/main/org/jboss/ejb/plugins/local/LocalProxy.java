@@ -18,7 +18,7 @@ import javax.naming.InitialContext;
 
  @author  <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.10 $
+ @version $Revision: 1.11 $
  */
 public abstract class LocalProxy implements Serializable
 {
@@ -48,7 +48,10 @@ public abstract class LocalProxy implements Serializable
    
    /** {@link EJBLocalObject#isIdentical} method reference. */
    protected static final Method IS_IDENTICAL;
-   
+
+   /** {@link EJBLocalObject#remove} method reference. */
+   protected static final Method REMOVE;
+
    protected String jndiName;
    protected transient BaseLocalProxyFactory factory;
 
@@ -65,6 +68,7 @@ public abstract class LocalProxy implements Serializable
          GET_PRIMARY_KEY = type.getMethod("getPrimaryKey", empty);
          GET_EJB_HOME = type.getMethod("getEJBLocalHome", empty);
          IS_IDENTICAL = type.getMethod("isIdentical", new Class[] { type });
+         REMOVE = type.getMethod("remove", empty);
       }
       catch (Exception e)
       {

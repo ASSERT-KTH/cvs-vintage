@@ -25,6 +25,7 @@ import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.RemoveException;
+import javax.ejb.NoSuchObjectLocalException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
@@ -71,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.78 $
+ * @version $Revision: 1.79 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -769,7 +770,17 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             EJBLocalObject ejbObject = (EJBLocalObject)newBeans.next();
             if(ejbObject == null)
                continue;
-            Object pkObject = ejbObject.getPrimaryKey();
+
+            Object pkObject;
+            try
+            {
+               pkObject = ejbObject.getPrimaryKey();
+            }
+            catch(NoSuchObjectLocalException e)
+            {
+               throw new IllegalArgumentException(e.getMessage());
+            }
+
             checkSetForeignKey(myCtx, pkObject);
             newPkValues.add(pkObject);
          }
@@ -798,11 +809,20 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             while(newBeans.hasNext())
             {
                EJBLocalObject newBean = (EJBLocalObject)newBeans.next();
-               createRelationLinks(myCtx, newBean.getPrimaryKey());
+               Object relatedId;
+               try
+               {
+                  relatedId = newBean.getPrimaryKey();
+               }
+               catch(NoSuchObjectLocalException e)
+               {
+                  throw new IllegalArgumentException(e.getMessage());
+               }
+               createRelationLinks(myCtx, relatedId);
             }
          }
       }
-      catch(EJBException e)
+      catch(RuntimeException e)
       {
          throw e;
       }
