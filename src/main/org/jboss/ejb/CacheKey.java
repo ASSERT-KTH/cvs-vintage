@@ -1,58 +1,62 @@
-
-
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb;
 
+import java.io.Externalizable;
 import java.rmi.MarshalledObject;
 
+import org.apache.log4j.Category;
+
 /**
-*   CacheKey
-* 
-*   CacheKey is an encapsulation of both the PrimaryKey and a cache specific key
-*   
-*   This implementation is a safe implementation in the sense that it doesn't rely 
-*   on the user supplied hashcode and equals.   It is also fast since the hashCode operation 
-*   is pre-calculated.
-*
-*   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
-*   @see org.jboss.ejb.plugins.EntityInstanceCache
-*   @see org.jboss.ejb.plugins.EntityProxy
-*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @author <a href="bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.13 $
-*/
+ * CacheKey is an encapsulation of both the PrimaryKey and a
+ * cache specific key.
+ *   
+ * <p>This implementation is a safe implementation in the sense that it
+ *    doesn't rely on the user supplied hashcode and equals.   It is also
+ *    fast since the hashCode operation is pre-calculated.
+ *
+ * @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
+ * @see org.jboss.ejb.plugins.EntityInstanceCache
+ * @see org.jboss.ejb.plugins.EntityProxy
+ * 
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.14 $
+ */
 public class CacheKey
-    implements java.io.Externalizable
+    implements Externalizable
 {
     // Constants -----------------------------------------------------
     
     // Attributes ----------------------------------------------------
-    
-    // The database primaryKey
-    // This primaryKey is used by
-    //
-    // org.jboss.ejb.plugins.EntityInstanceCache.setKey() - to set the EntityEnterpriseContext id
-    // org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy.invoke():
-    // - implementing Entity.toString() --> cacheKey.getId().toString()
-    // - implementing Entity.hashCode() --> cacheKey.getId().hashCode()
-    // - etc...
-    // org.jboss.ejb.plugins.local.BaseLocalContainerInvoker.EntityProxy.getId()
-    //
+
+    /**
+     * The database primaryKey.
+     * 
+     * This primaryKey is used by:
+     *
+     * org.jboss.ejb.plugins.EntityInstanceCache.setKey() - to set the EntityEnterpriseContext id
+     * org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy.invoke():
+     * - implementing Entity.toString() --> cacheKey.getId().toString()
+     * - implementing Entity.hashCode() --> cacheKey.getId().hashCode()
+     * - etc...
+     * org.jboss.ejb.plugins.local.BaseLocalContainerInvoker.EntityProxy.getId()
+     */
     protected Object id;
+   
     public Object getId()
     {
 	return id;
     }
      
-    // The Marshalled Object representing the key
+    /** The Marshalled Object representing the key */
     protected MarshalledObject mo;
     
-    // The Marshalled Object's hashcode
+    /** The Marshalled Object's hashcode */
     protected int hashCode;
     
     // Static --------------------------------------------------------  
@@ -60,10 +64,11 @@ public class CacheKey
     // Public --------------------------------------------------------
     
     public CacheKey() {
-	// For externalization only
+       // For externalization only
     }
+
     public CacheKey(Object id) {
-       
+        // why does this throw an error and not an IllegalArgumentException ?
 	if (id == null) throw new Error("id may not be null");
          
 	this.id = null;
@@ -77,7 +82,14 @@ public class CacheKey
 	    // Precompute the hashCode (speed)
 	    hashCode = mo.hashCode();
     	}
-	catch (Exception e) {e.printStackTrace();}
+	catch (Exception e) {
+           //
+           // should probably throw a nested exception here, but
+           // for now instead of printStackTrace, lets log it
+           //
+           Category log = Category.getInstance(this.getClass());
+           log.error("failed to initialize", e);
+        }
     }
     
     // Z implementation ----------------------------------------------
@@ -115,7 +127,6 @@ public class CacheKey
         // we default to the pK id
         return hashCode;
     }
-    
     
     /**
      * equals()
