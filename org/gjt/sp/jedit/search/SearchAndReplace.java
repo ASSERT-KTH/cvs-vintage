@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.33 2002/06/23 01:23:16 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.34 2002/08/12 16:55:59 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -647,6 +647,12 @@ loop:			for(;;)
 
 		record(view,"replace(view)",true,false);
 
+		// a little hack for reverse replace and find
+		int caret = textArea.getCaretPosition();
+		Selection s = textArea.getSelectionAtOffset(caret);
+		if(s != null)
+			caret = s.getStart();
+
 		try
 		{
 			buffer.beginCompoundEdit();
@@ -659,7 +665,7 @@ loop:			for(;;)
 
 			for(int i = 0; i < selection.length; i++)
 			{
-				Selection s = selection[i];
+				s = selection[i];
 
 				/* if an occurence occurs at the
 				beginning of the selection, the
@@ -690,10 +696,19 @@ loop:			for(;;)
 				}
 			}
 
-			Selection s = textArea.getSelectionAtOffset(
-				textArea.getCaretPosition());
-			if(s != null)
-				textArea.moveCaretPosition(s.getEnd());
+			if(reverse)
+			{
+				// so that Replace and Find continues from
+				// the right location
+				textArea.moveCaretPosition(caret);
+			}
+			else
+			{
+				s = textArea.getSelectionAtOffset(
+					textArea.getCaretPosition());
+				if(s != null)
+					textArea.moveCaretPosition(s.getEnd());
+			}
 
 			if(retVal == 0)
 			{
