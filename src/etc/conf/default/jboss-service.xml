@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.105 2004/04/13 10:10:39 tdiesler Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.106 2004/04/14 13:17:26 tdiesler Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -164,34 +164,35 @@
    </mbean>
 
 
-  <!-- ==================================================================== -->
-  <!-- J2EE Timer Service Source                                            -->
-  <!-- ==================================================================== -->
+   <!-- ==================================================================== -->
+   <!-- J2EE Timer Service                                                   -->
+   <!-- ==================================================================== -->
+
+   <!-- An EJB Timer Service that is Tx aware -->
+   <mbean code="org.jboss.ejb.txtimer.EJBTimerServiceImpl"
+      name="jboss:service=EJBTimerService">
+      <attribute name="RetryPolicy">jboss:service=EJBTimerServiceRetryPolicy</attribute>
+      <attribute name="TimedObjectInvokerClassName">org.jboss.ejb.txtimer.TimedObjectInvokerImpl</attribute>
+   </mbean>
+   <mbean code="org.jboss.ejb.txtimer.FixedDelayRetryPolicy"
+      name="jboss:service=EJBTimerServiceRetryPolicy">
+      <attribute name="Delay">100</attribute>
+   </mbean>
 
    <!--
     | ATTENTION: Do only replace or adjust this MBean when you have a suitable
     |            Timer Source in place extending AbstractTimerSource. The
     |            Schedule Manager is necessary for the SchedulerTimerSource.
     -->
-   <mbean code="org.jboss.varia.scheduler.ScheduleManager"
-          name="jboss:service=EJBTimerManager">
-      <attribute name="StartAtStartup">true</attribute>
-   </mbean>
+   <!--
    <mbean code="org.jboss.ejb.timer.SchedulerTimerSource"
       name="jboss:service=EJBTimerService">
       <attribute name="ScheduleManagerName">jboss:service=EJBTimerManager</attribute>
       <depends>jboss:service=EJBTimerManager</depends>
    </mbean>
-
-   <!-- An EJB Timer Service that is Tx aware -->
-   <!--
-   <mbean code="org.jboss.ejb.txtimer.EJBTimerServiceTx"
-      name="jboss:service=EJBTimerServiceTx">
-      <attribute name="RetryPolicy">jboss:service=EJBTimerServiceRetryPolicy</attribute>
-   </mbean>
-   <mbean code="org.jboss.ejb.txtimer.FixedDelayRetryPolicy"
-      name="jboss:service=EJBTimerServiceRetryPolicy">
-      <attribute name="Delay">100</attribute>
+   <mbean code="org.jboss.varia.scheduler.ScheduleManager"
+      name="jboss:service=EJBTimerManager">
+      <attribute name="StartAtStartup">true</attribute>
    </mbean>
    -->
 
