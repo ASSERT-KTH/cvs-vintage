@@ -15,7 +15,7 @@
 
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
-	<property name="version" value="0.9.8-post"/>
+	<property name="version" value="0.9.9-pre"/>
 	<!-- i'am not sure that we need this -->
 	<property name="TODAY" value="heute"/>
 
@@ -40,6 +40,7 @@
                                 <include name="README_JDK1.3"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
+                                <include name="AUTHORS"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 			</fileset>
@@ -60,9 +61,10 @@
                         <exclude name="README_JDK1.3"/>
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
+                        <exclude name="AUTHORS"/> 
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="ext/parser.jar ext/jaxp.jar"/>
+				<attribute name="Class-Path" value="ext/csWillySpell.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
@@ -74,8 +76,10 @@
 		<zip zipfile="${dest}/columba-${version}.zip" update="true">
 			<fileset dir="${dest}">
 				<include name="README"/>
+                                <include name="README_JDK1.3"/> 
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
+                                <include name="AUTHORS"/>                                
 				<include name="columba.jar"/>
 			</fileset>
 		</zip>

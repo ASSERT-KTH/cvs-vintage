@@ -1,0 +1,44 @@
+-----------------------------------------------------------------------------------------
+                                     THE COLUMBA PROJECT
+-----------------------------------------------------------------------------------------
+ Frederik Dietz - fdietz@users.sourceforge.net, Timo Stich - tstich@users.sourceforge.net
+
+  
+ Columba is a full-featured Java EMail-Client. 
+ It runs on every platform supporting Java. 
+
+ For the latest information on new releases, website or ressource changes, 
+ please visit http://columba.sourceforge.net
+
+
+
+ This is a unstable release (beta stage). That means:
+  - it will embarass you in front of your friends
+  - it will crash
+  - it won't work
+ BUT:
+  - it is simply the best mail client on this planet ;-)
+  - it will work most of the time 
+  - it is free
+
+
+
+ 
+ WINDOWS:
+  To run Columba with MS Windows doubleclick the "run.bat" file.
+  
+  
+
+ LINUX/ UNIX FLAVORS:
+  Try the run.sh script: "sh run.sh"
+
+
+ OTHERS:
+  "java -jar columba.jar"
+
+
+
+ You need the Java Runtime Environment (JRE) Version 1.4/1.3 to run Columba.
+
+ JDK1.3 users should consider taking a look in README_JDK1.3
+
