@@ -47,20 +47,26 @@ package org.tigris.scarab.workflow;
  */ 
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
+
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.OptionWorkflow;
+import org.tigris.scarab.om.Attribute;
 
 /**
- * This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
- * into the context to replace the $link that Turbine adds.
- *
- * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: Workflow.java,v 1.2 2002/08/08 17:28:42 jon Exp $
- */
+    This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
+    into the context to replace the $link that Turbine adds.
+    
+    @author <a href="mailto:elicia@tigris.org">Elicia David</a>
+    @version $Id: Workflow.java,v 1.3 2002/08/08 18:37:36 elicia Exp $
+*/
 public interface Workflow
 {
     public boolean canMakeTransition(ScarabUser user,
@@ -69,20 +75,52 @@ public interface Workflow
                                      Issue issue)
         throws Exception;
 
+
     public String checkTransition(AttributeOption fromOption, 
                                   AttributeOption toOption,
                                   Issue issue, HashMap newAttVals,
                                   ScarabUser user)
         throws Exception;
         
-    public OptionWorkflow getOptionWorkflow(AttributeOption fromOption, 
-                                    AttributeOption toOption,
-                                    String roleName, Module module,
-                                    IssueType issueType)
-         throws Exception;
+
+    public OptionWorkflow getWorkflowForRole(AttributeOption fromOption, 
+                                             AttributeOption toOption,
+                                             String roleName,
+                                             Module module,
+                                             IssueType issueType)
+        throws Exception;
+
+
+    public List getWorkflowsForRoleList(AttributeOption fromOption, 
+                                        AttributeOption toOption,
+                                        List roleNames, 
+                                        Module module,
+                                        IssueType issueType)
+        throws Exception;
+
+    public OptionWorkflow inherit(AttributeOption fromOption, 
+                                   AttributeOption toOption,
+                                   String roleName, Module module,
+                                   IssueType issueType)
+        throws Exception;
+
+    public void resetWorkflow(AttributeOption fromOption, 
+                              AttributeOption toOption,
+                              String roleName, Module module,
+                              IssueType issueType)
+        throws Exception;
+
+    public void resetWorkflows(String roleName, Module module, IssueType issueType)
+        throws Exception;
+
 
     public void deleteWorkflowsForOption(AttributeOption option,
-                                                Module module, IssueType issueType)
+                                         Module module, IssueType issueType)
+        throws Exception;
+
+    public void deleteWorkflowsForAttribute(Attribute attr, Module module, 
+                                            IssueType issueType)
         throws Exception;
 
 }
+

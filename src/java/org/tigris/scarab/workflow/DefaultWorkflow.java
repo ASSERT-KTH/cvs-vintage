@@ -46,6 +46,7 @@ package org.tigris.scarab.workflow;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
 import java.util.HashMap;
 
 import org.tigris.scarab.om.ScarabUser;
@@ -53,13 +54,15 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.OptionWorkflow;
+import org.tigris.scarab.om.Attribute;
 
 /**
  * This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
  * into the context to replace the $link that Turbine adds.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: DefaultWorkflow.java,v 1.2 2002/08/08 17:28:42 jon Exp $
+ * @version $Id: DefaultWorkflow.java,v 1.3 2002/08/08 18:37:36 elicia Exp $
  */
 public class DefaultWorkflow implements Workflow
 {
@@ -82,17 +85,59 @@ public class DefaultWorkflow implements Workflow
         return null;
     }
 
-    public OptionWorkflow getOptionWorkflow(AttributeOption fromOption, 
-                                    AttributeOption toOption,
-                                    String roleName, Module module,
-                                    IssueType issueType)
+    public OptionWorkflow getWorkflowForRole(AttributeOption fromOption, 
+                                             AttributeOption toOption,
+                                             String roleName,
+                                             Module module,
+                                             IssueType issueType)
         throws Exception
     {
         return null;
     }
-        
+
+    public List getWorkflowsForRoleList(AttributeOption fromOption, 
+                                        AttributeOption toOption,
+                                        List roleNames, 
+                                        Module module,
+                                        IssueType issueType)
+        throws Exception
+    {
+        return null;
+    }
+
+    public OptionWorkflow inherit(AttributeOption fromOption, 
+                                   AttributeOption toOption,
+                                   String roleName, Module module,
+                                   IssueType issueType)
+        throws Exception
+    {
+        return null;
+    }
+
+    public void resetWorkflow(AttributeOption fromOption, 
+                              AttributeOption toOption,
+                              String roleName, Module module,
+                              IssueType issueType)
+        throws Exception
+    {
+       // nothing
+    }
+
+    public void resetWorkflows(String roleName, Module module, IssueType issueType)
+        throws Exception
+    {
+       // nothing
+    }
+
     public void deleteWorkflowsForOption(AttributeOption option,
-                                                Module module, IssueType issueType)
+                                         Module module, IssueType issueType)
+        throws Exception
+    {
+       // nothing
+    }
+
+    public void deleteWorkflowsForAttribute(Attribute attr, Module module, 
+                                            IssueType issueType)
         throws Exception
     {
        // nothing
