@@ -297,20 +297,29 @@ BOOL ReportStatusToSCMgr(DWORD dwCurrentState,
 }
 
 void install_service(char *name, 
-                     char *prp_file)
+                     char *rel_prp_file)
 {
     SC_HANDLE   schService;
     SC_HANDLE   schSCManager;
-    TCHAR szPath[2048];
+    char        szExecPath[2048];
+    char        szPropPath[2048];
+    char        *dummy;
 
-    if(!jk_file_exists(prp_file)) {
-        printf("Unable to install %s - File [%s] does not exists\n", 
+    if(!GetFullPathName(rel_prp_file, sizeof(szPropPath) - 1, szPropPath, &dummy)) {
+        printf("Unable to install %s - %s\n", 
                name, 
-               prp_file);
+               GetLastErrorText(szErr, sizeof(szErr)));
         return;
     }
 
-    if(GetModuleFileName( NULL, szPath, sizeof(szPath) - 1) == 0) {
+    if(!jk_file_exists(szPropPath)) {
+        printf("Unable to install %s - File [%s] does not exists\n", 
+               name, 
+               szPropPath);
+        return;
+    }
+
+    if(GetModuleFileName( NULL, szExecPath, sizeof(szExecPath) - 1) == 0) {
         printf("Unable to install %s - %s\n", 
                name, 
                GetLastErrorText(szErr, sizeof(szErr)));
@@ -328,7 +337,7 @@ void install_service(char *name,
                                    SERVICE_WIN32_OWN_PROCESS,  // service type
                                    SERVICE_DEMAND_START,       // start type
                                    SERVICE_ERROR_NORMAL,       // error control type
-                                   szPath,                     // service's binary
+                                   szExecPath,                 // service's binary
                                    NULL,                       // no load ordering group
                                    NULL,                       // no tag identifier
                                    NULL,                       // dependencies
@@ -336,9 +345,9 @@ void install_service(char *name,
                                    NULL);                      // no password
 
         if(schService) {
-            printf("%s created. Now adding registry entries\n", name);
+            printf("The service named %s was created. Now adding registry entries\n", name);
             
-            if(set_registry_values(name, prp_file)) {
+            if(set_registry_values(name, szPropPath)) {
                 CloseServiceHandle(schService);
             } else {
                 printf("CreateService failed setting the private registry - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
@@ -460,9 +469,9 @@ static int set_registry_values(char *name,
                                                    value);
                 if(rc) {
                     printf("Registry values were added\n");
-                    printf("You can now start the %s service by executing \"net start %s\" from the commanf prompt\n",
-                            name,
-                            name);                    
+                    printf("If you have already updated wrapper.properties you may start the %s service by executing \"net start %s\" from the command prompt\n",
+                           name,
+                           name);                    
                 }
             }
             RegCloseKey(hk);
@@ -910,3 +919,4 @@ static int read_startup_data(jk_map_t *init_map,
 
     return JK_TRUE;
 }
+
