@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.63 2003/03/11 02:02:05 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.64 2003/03/11 02:10:30 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -803,7 +803,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 		if(antiAlias)
 		{
-			hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			//hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			hints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			hints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.115 2003/03/11 02:02:03 spestov Exp $
+ * @version $Id: jEdit.java,v 1.116 2003/03/11 02:10:29 spestov Exp $
  */
 public class jEdit
 {
@@ -2819,7 +2819,7 @@ public class jEdit
 			}
 			catch(FileNotFoundException fnf)
 			{
-				Log.log(Log.DEBUG,jEdit.class,fnf);
+				//Log.log(Log.DEBUG,jEdit.class,fnf);
 			}
 			catch(IOException e)
 			{
