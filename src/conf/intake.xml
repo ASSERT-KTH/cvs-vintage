@@ -134,6 +134,9 @@
 </group>
 
 <group name="RModuleAttribute" key="rma" mapToObject="om.RModuleAttribute">
+        <field name="AttributeId" key="attid" type="NumberKey">
+           <rule name="mask" value="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
         <field name="DisplayValue" key="name" type="String">
             <rule name="maxLength" value="255"/>
         </field>
@@ -232,8 +235,7 @@
 </group>
 
 <group name="Issue" key="issue" mapToObject="om.Issue">
-        <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
-           <rule name="mask" value="[0-9]+">badIdMessage</rule>
+        <field name="Id" key="id" type="String" mapToProperty="UniqueId">
         </field>
         <field name="Ids" key="ids" type="NumberKey" 
                mapToProperty="" multiValued="true">
@@ -488,8 +490,7 @@
     <field name="ModuleId" key="modId" type="NumberKey">
     	<rule name="mask" value="[0-9]+">Select a module from the List</rule>
     </field>
-    <field name="IssueId" key="issId" type="NumberKey">
-    	<rule name="mask" value="[0-9]+">badIdMessage</rule>
+    <field name="IssueId" key="issId" type="String">
     </field>
 </group>
 
