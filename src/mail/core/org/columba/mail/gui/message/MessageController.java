@@ -18,6 +18,7 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.JButton;
@@ -75,8 +76,6 @@ public class MessageController
 	private MessageActionListener actionListener;
 
 	protected MailFrameController mailFrameController;
-
-	protected URL url;
 
 	//private MessageSelectionManager messageSelectionManager;
 
@@ -304,46 +303,30 @@ public class MessageController
 	public void mousePressed(MouseEvent event) {
 		if (event.isPopupTrigger()) {
 			processPopup(event);
-
 		}
 	}
 
 	public void mouseReleased(MouseEvent event) {
-
 		if (event.isPopupTrigger()) {
 			processPopup(event);
-
 		}
 	}
 
-	public void mouseEntered(MouseEvent event) {
+	public void mouseEntered(MouseEvent event) {}
 
-	}
-
-	public void mouseExited(MouseEvent event) {
-
-	}
+	public void mouseExited(MouseEvent event) {}
 
 	public void mouseClicked(MouseEvent event) {
 		if (!SwingUtilities.isLeftMouseButton(event))
 			return;
 
-		String s = extractURL(event);
-
-		try {
-			url = new URL(s);
-			if (url.getProtocol().equalsIgnoreCase("mailto")) {
-
-				URLController c = new URLController();
-				c.compose(url.getFile());
-			} else {
-				URLController c = new URLController();
-				c.open(url);
-			}
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		URL url = extractURL(event);
+		if (url == null) return;
+		URLController c = new URLController();
+		if (url.getProtocol().equalsIgnoreCase("mailto"))
+			c.compose(url.getFile());
+		else
+			c.open(url);
 	}
 
 	/*
@@ -383,39 +366,31 @@ public class MessageController
 	    }
 	*/
 
-	protected String extractURL(MouseEvent event) {
+	protected URL extractURL(MouseEvent event) {
 		JEditorPane pane = (JEditorPane) event.getSource();
 		HTMLDocument doc = (HTMLDocument) pane.getDocument();
 
 		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
 		AttributeSet a = e.getAttributes();
 		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-
-		String s = null;
 		/*
 		if ( anchor == null )
 			s = getMapHREF(pane, doc, e, a, pane.viewToModel(event.getPoint()), event.getX(), event.getY() );
-		else	
 		*/
-
-		s = (String) anchor.getAttribute(HTML.Attribute.HREF);
-
-		return s;
+		if(anchor == null) return null;
+		
+		URL url = null;
+		try{
+			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
+		}catch(MalformedURLException mue){}
+		return url;
 	}
 
 	protected void processPopup(MouseEvent event) {
-		String s = extractURL(event);
-
-		try {
-			URL url = new URL(s);
-			URLController c = new URLController();
-			JPopupMenu menu = c.createMenu(url);
-			menu.show(getView(), event.getX(), event.getY());
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		URL url = extractURL(event);
+		URLController c = new URLController();
+		JPopupMenu menu = c.createMenu(url);
+		menu.show(getView(), event.getX(), event.getY());
 	}
 
 	/********************* context menu *******************************************/
