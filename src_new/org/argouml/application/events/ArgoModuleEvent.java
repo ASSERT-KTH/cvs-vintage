@@ -1,4 +1,4 @@
-// $Id: ArgoModuleEvent.java,v 1.3 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoModuleEvent.java,v 1.4 2003/09/17 00:51:07 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,11 @@ import org.argouml.application.api.*;
 
 public class ArgoModuleEvent extends ArgoEvent {
 
+    /** Instantiates a specific module event
+     * 
+     * @param eventType that occurred
+     * @param src the module that caused it to happen
+     */
     public ArgoModuleEvent(int eventType, ArgoModule src) {
         super(eventType, src);
     }

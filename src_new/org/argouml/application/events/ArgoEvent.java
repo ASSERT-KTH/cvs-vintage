@@ -1,4 +1,4 @@
-// $Id: ArgoEvent.java,v 1.5 2003/09/16 20:10:45 thierrylach Exp $
+// $Id: ArgoEvent.java,v 1.6 2003/09/17 00:49:53 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,9 @@ public abstract class ArgoEvent extends EventObject
 	       : getEventStartRange() + 99);
     }
 
+    /** Provides formatted description of the event
+     * @return the formatted information.
+     */
     public String toString() {
         return "{" + getClass().getName() + ":" + _eventType +
 	       "(" + getEventStartRange() + "-" + getEventEndRange() + ")" +
