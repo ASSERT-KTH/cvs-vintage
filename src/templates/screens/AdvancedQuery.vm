@@ -5,6 +5,7 @@
 
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="advanced" />
 <input type="hidden" name="pageNum" value="1" />

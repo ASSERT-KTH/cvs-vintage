@@ -5,9 +5,11 @@
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
 #set ($search = $scarabR.Search)
-#set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($searchType = $data.Parameters.getString("searchType",""))
-#set ($issueList = $scarabR.IssueList)
+
+#if (!$issueList)
+   #set ($issueList = $scarabR.CurrentSearchResults)
+#end
 
 #if ($issueList.size() == 0)
   <h3>$page.Title</h3>
@@ -31,11 +33,11 @@
  #end
 #end
 
-
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
+
 #if ($queryString)
-<input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
+  <input type="hidden" name="queryString" value="$queryString" />
 #end
 
 <div class="functnbar">
@@ -90,6 +92,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
  #set ($rmuas = $module.getDefaultRModuleUserAttributes($scarabR.CurrentIssueType))
 #end
 
+## ISSUE ATTRIBUTE VALUES
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
  <th>
@@ -110,16 +113,19 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #end
   </tr>
 
-#foreach ($issue in $issueList)
+#foreach ($issueId in $issueList)
+ #set ($issue = $scarabR.getIssueByPk($issueId.toString()))
  #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()))
+<input type="hidden" name="all_issue_ids" value="$issue.IssueId" />
  #indexedRows($velocityCount)
   <td><input type="checkbox" name="selected_$issue.IssueId" /></td>
   <td><a href="$issueLink">$issue.UniqueId</a></td>
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
   <td>
+  ## Setting value to "" first so it doesn't use value from last attribute
   #set ($value = "")
-  #set ($value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value)
+  #set ($value = $issue.getAttributeValue($userAttribute).getValue())
   #if (!$value.equals(""))
    $value
   #else
@@ -150,10 +156,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
     <tr>
        <th>Max items per page</td>
  <td>
- <input type="radio" value="25" name="resultsPerPage" #if ($resultsPerPage.equals("25")) checked="checked" #end /> 25
- <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked="checked" #end /> 50
- <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked="checked" #end /> 75
- <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.equals("100")) checked="checked" #end /> 100
+ <input type="radio" value="25" name="resultsPerPage" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
+ <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
+ <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
+ <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.toString().equals("100")) checked="checked" #end /> 100
  <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
  </td>
    </tr>
@@ -170,6 +176,5 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
-$intake.declareGroups()
 </form>
 </div>
