@@ -6,10 +6,11 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 
+import javax.ejb.NoSuchObjectLocalException;
 import javax.transaction.Transaction;
 
 import org.jboss.ejb.BeanLock;
@@ -41,7 +42,7 @@ import org.jboss.util.NestedRuntimeException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.68 $
+* @version $Revision: 1.69 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -130,8 +131,19 @@ public class EntityInstanceInterceptor
       Object key = mi.getId();
 
       // The context
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
-
+      EntityEnterpriseContext ctx;
+      try
+      {
+         ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
+      }
+      catch (NoSuchObjectException e)
+      {
+         if (mi.isLocal())
+            throw new NoSuchObjectLocalException(e.getMessage());
+         else
+            throw e;
+      }
+      
       if( trace ) log.trace("Begin invoke, key="+key);
 
       // Associate transaction, in the new design the lock already has the transaction from the
@@ -139,7 +151,7 @@ public class EntityInstanceInterceptor
 
       // Don't set the transction if a read-only method.  With a read-only method, the ctx can be shared
       // between multiple transactions.
-      Transaction tx = (Transaction) mi.getTransaction();
+      Transaction tx = mi.getTransaction();
       if(!container.isReadOnly()) 
       {
          Method method = mi.getMethod();

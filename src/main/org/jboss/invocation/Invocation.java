@@ -29,7 +29,7 @@ import javax.transaction.Transaction;
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class Invocation
 {
@@ -339,7 +339,19 @@ public class Invocation
    {
       return m.invoke(instance,arguments);
    }
-   
+
+   /**
+    * Helper method to determine whether an invocation is local
+    * 
+    * @return true when local, false otherwise
+    */
+   public boolean isLocal()
+   {
+      InvocationType type = getType();
+      if (type == InvocationType.LOCAL || type == InvocationType.LOCALHOME)
+         return true;
+      return false;
+   }
 }
 /*
 vim:ts=3:sw=3:et

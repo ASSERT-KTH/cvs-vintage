@@ -7,37 +7,36 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
-
-import javax.transaction.Transaction;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
 
 import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
+import javax.ejb.NoSuchObjectLocalException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.Synchronization;
+import javax.transaction.Transaction;
 
 import org.jboss.ejb.BeanLock;
-import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
+import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
-import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
-
 import org.jboss.security.SecurityAssociation;
 
 /**
  * This container acquires the given instance.
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -191,7 +190,7 @@ public class StatefulSessionInstanceInterceptor
       Object methodID = mi.getId();
       EnterpriseContext ctx = null;
       
-      BeanLock lock = (BeanLock)container.getLockManager().getLock(methodID);
+      BeanLock lock = container.getLockManager().getLock(methodID);
       try
       {
          lock.sync(); // synchronized(ctx)
@@ -207,7 +206,18 @@ public class StatefulSessionInstanceInterceptor
             SecurityAssociation.setCredential(mi.getCredential());
             
             // Get context
-            ctx = cache.get(methodID);
+            try
+            {
+               ctx = cache.get(methodID);
+            }
+            catch (NoSuchObjectException e)
+            {
+               if (mi.isLocal())
+                  throw new NoSuchObjectLocalException(e.getMessage());
+               else
+                  throw e;
+            }
+            
             // Associate it with the method invocation
             mi.setEnterpriseContext(ctx);
             
