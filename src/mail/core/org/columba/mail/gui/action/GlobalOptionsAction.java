@@ -55,12 +55,11 @@ public class GlobalOptionsAction extends FrameAction {
 		dialog.updateComponents(true);
 		dialog.setVisible(true);
 
-		if (dialog.getResult() == true) {
+		if (dialog.getResult()){
 			dialog.updateComponents(false);
 
 			ThemeSwitcher.setTheme();
 			ThemeSwitcher.updateFrame(frameController.getView());
 		}
 	}
-
 }

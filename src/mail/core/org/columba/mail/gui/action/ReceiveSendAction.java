@@ -55,8 +55,6 @@ public class ReceiveSendAction extends FrameAction {
 			KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
 	}
 
-	
-
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -69,7 +67,7 @@ public class ReceiveSendAction extends FrameAction {
 
 			boolean excludeFromCheckAll = controller.getAccountItem().getPopItem().getBoolean("exclude_from_checkall",false);
 			
-			if ( excludeFromCheckAll == true ) continue;
+			if (excludeFromCheckAll) continue;
 						
 			POP3CommandReference[] r = new POP3CommandReference[1];
 			r[0] = new POP3CommandReference(controller.getServer());
@@ -80,5 +78,4 @@ public class ReceiveSendAction extends FrameAction {
 			MainInterface.processor.addOp(c);
 		}
 	}
-
 }
