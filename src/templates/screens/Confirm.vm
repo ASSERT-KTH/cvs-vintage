@@ -17,9 +17,9 @@ $page.setTitle("Confirm Your Email Address")
     #set ($emailValue = $intake.Login.Default.Username)
  #end
 #end
-#set ($confirmValue = $data.Parameters.Confirm)
+#set ($confirmValue = $data.Parameters.getString("confirm", ""))
 
-#if ($data.Message.length() == 0)
+#if (!$data.Message || $data.Message.length() == 0)
 <p>
 Thanks for registering!
 </p>
