@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.48 2002/09/24 15:23:56 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.49 2002/10/01 21:39:52 slaboure Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -41,8 +41,9 @@
 
    </defaults>
 
-   <type-mapping>
-      <name>mckoi</name>
+   <type-mappings>
+     <type-mapping>
+      <name>McKoi</name>
       <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
       <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
       <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
@@ -50,6 +51,8 @@
       <alias-header-suffix>_</alias-header-suffix>
       <alias-max-length>32</alias-max-length>
       <subquery-supported>true</subquery-supported>
+      <true-mapping>TRUE</true-mapping>
+      <false-mapping>FALSE</false-mapping>
 
       <mapping>
          <java-type>java.lang.Boolean</java-type>
@@ -118,7 +121,6 @@
       </mapping>
    </type-mapping>
 
-   <type-mappings>
       <type-mapping>
          <name>Firebird</name>
          <!-- For use with the Firebirdsql jca-jdbc driver. 
