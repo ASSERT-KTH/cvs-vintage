@@ -26,7 +26,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.3 2000/11/17 16:23:36 carnold Exp $
+// $Id: PropPanelInstance.java,v 1.4 2001/01/09 07:16:01 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 import java.awt.*;
@@ -55,22 +55,31 @@ public class PropPanelInstance extends PropPanel {
     JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
     addField(stereotypeBox,1,0,0);
 
+    addCaption(new JLabel("Classifier:"),2,0,0);
+    UMLComboBoxModel classifierModel = new UMLComboBoxModel(this,"isAcceptibleClassifier",
+            "classifier","getClassifier","setClassifier",false,MClassifier.class,true);
+    addField(new UMLComboBox(classifierModel),2,0,0);
 
-    addCaption(new JLabel("Namespace:"),2,0,1);
+    addCaption(new JLabel("Namespace:"),3,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
-    addField(namespaceList,5,0,0);
+    addField(namespaceList,3,0,1);
 
-    addCaption(new JLabel("Arguments:"),0,1,0);
-    addCaption(new JLabel("Receives:"),1,1,0);
-    addCaption(new JLabel("Sends:"),2,1,0);
-    addCaption(new JLabel("Classifiers:"),3,1,0);
-    addCaption(new JLabel("Links:"),4,1,1);
+    //
+    //   temporary
+    //
+    addCaption(new JLabel("Related Elements"),0,1,1);
+    JTree tempTree = new JTree(new Object[] { "Slots", "Links", "Stimuli [Recieved, Sent, In Arg List]" });
+    addField(tempTree,0,1,1);
   }
 
     protected boolean isAcceptibleBaseMetaClass(String baseClass) {
         return baseClass.equals("Instance");
+    }
+
+    protected boolean isAcceptibleClassifier(MModelElement classifier) {
+        return classifier instanceof MClassifier;
     }
 
 
