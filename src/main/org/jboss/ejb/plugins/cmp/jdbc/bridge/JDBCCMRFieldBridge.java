@@ -61,7 +61,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -174,16 +174,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    }
 
    public void resolveRelationship() throws DeploymentException {
-      // Data Source
-      dataSource = metadata.getRelationMetaData().getDataSource();
-
-      // Fix table name
-      //
-      // This code doesn't work here...  The problem each side will generate
-      // the table name and this will only work for simple generation.
-      tableName = SQLUtil.fixTableName(
-            metadata.getRelationMetaData().getDefaultTableName(),
-            dataSource);
 
       //
       // Set handles to the related entity's container, 
@@ -245,6 +235,20 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       // Related Container
       EntityContainer theContainer = relatedManager.getContainer();
       relatedContainer = new WeakReference(theContainer);
+
+      // Data Source
+      if(metadata.getRelationMetaData().isTableMappingStyle())
+         dataSource = metadata.getRelationMetaData().getDataSource();
+      else
+         dataSource = hasForeignKey() ? entity.getDataSource() : relatedEntity.getDataSource();
+
+      // Fix table name
+      //
+      // This code doesn't work here...  The problem each side will generate
+      // the table name and this will only work for simple generation.
+      tableName = SQLUtil.fixTableName(
+         metadata.getRelationMetaData().getDefaultTableName(), dataSource
+      );
 
       //
       // Initialize the key fields
