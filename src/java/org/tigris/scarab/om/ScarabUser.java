@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Calendar;
 
@@ -60,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.83 2003/04/03 03:19:06 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.84 2003/04/04 02:48:43 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -439,5 +440,16 @@ public interface ScarabUser extends User
 
     List getRoleNames(Module module)
        throws Exception;
-}
 
+    /**
+     * Gets the users default locale from the users preferences.
+     */
+    Locale getLocale()
+        throws Exception;
+    
+    /**
+     * Sets the users default locale to the users preferences.
+     */
+    void setLocale(String acceptLanguage)
+        throws Exception;
+}
