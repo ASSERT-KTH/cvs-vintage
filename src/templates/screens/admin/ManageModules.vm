@@ -13,14 +13,14 @@
 #indexedRows($velocityCount)
 #set ($modDel = $module.Deleted)
 <td>
-#if ($modDel)<strike>#end
+#if ($modDel)<del>#end
 $link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId).setLabel("$module.Name")
-#if ($modDel)</strike>#end
+#if ($modDel)</del>#end
 </td>
 <td>
-#if ($modDel)<strike>#end
+#if ($modDel)<del>#end
 $module.Description
-#if ($modDel)</strike>#end
+#if ($modDel)</del>#end
 </td>
 </tr>
 #end
