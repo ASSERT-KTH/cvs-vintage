@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.7 2003/10/26 18:45:27 alexb Exp $
+// $Id: ExplorerTreeModel.java,v 1.8 2003/11/03 21:45:01 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -180,16 +180,22 @@ ItemListener{
                 
                 while(childrenIt.hasNext()){
                     Object child = childrenIt.next();
-                    ExplorerTreeNode newNode = new ExplorerTreeNode(child);
-                    newNode.setOrder(order);
-                    this.addToMap(child, newNode);
                     
-                    node.add(newNode);
+                    if(child != null){
+                        ExplorerTreeNode newNode = new ExplorerTreeNode(child);
+                        newNode.setOrder(order);
+                        this.addToMap(child, newNode);
+                        
+                        node.add(newNode);
+                    }
                 }
-                node.orderChildren();
-                this.nodeStructureChanged(node);
             }
             
+        }
+        
+        if(node.getChildCount() > 0){
+            node.orderChildren();
+            this.nodeStructureChanged(node);
         }
     }
     
