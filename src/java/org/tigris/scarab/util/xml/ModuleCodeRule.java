@@ -93,7 +93,9 @@ public class ModuleCodeRule extends Rule
     {
         ScarabModule module = (ScarabModule)digester.pop();
         module.setCode(moduleCode);
-        module.save();
+        if (module.isNew()) {
+            module.save();
+        }
         digester.push(module);
     }
     
@@ -101,9 +103,8 @@ public class ModuleCodeRule extends Rule
     {
         ScarabModule module;
         String moduleId = (String)digester.pop();
-        module = (ScarabModule)ModuleManager.getInstance(new NumberKey(moduleId));
-        if(module != null)
-        {
+        try {
+            module = (ScarabModule)ModuleManager.getInstance(new NumberKey(moduleId));
             //make sure the existing module has the same code
             String existingModuleCode = module.getCode();
             if(!existingModuleCode.equals(moduleCode))
@@ -115,9 +116,7 @@ public class ModuleCodeRule extends Rule
             {
                 digester.push(moduleCode);
             }
-        }
-        else
-        {
+        } catch (Exception e) {
             //we can't find the module by module id, let's see if there is an existing module with the same code
             module = ScarabModule.findModuleByCode(moduleCode);
             if(module != null)
