@@ -2,6 +2,35 @@
 
 <Server>
     <ContextManager port="8080" hostName="" inet="">
+
+        <!-- This is quite flexible; we can either have a log file per
+             module in Tomcat (example: ContextManager) or we can have
+	     one for Servlets and one for Jasper, or we can just have
+	     one tomcat.log for both Servlet and Jasper.
+
+	     If you omit "path" there, then stderr should be used.
+
+	     verbosityLevel values can be: 
+			    FATAL
+			    ERROR
+			    WARNING 
+			    INFORMATION
+			    DEBUG
+
+         -->
+
+	<Logger name="CTXMGR_LOG" 
+	        path="logs/tomcat.log" 
+		verbosityLevel = "DEBUG" />
+
+	<Logger name="STARTUP_LOG"
+		path="logs/tomcat.log"
+		verbosityLevel = "DEBUG" />
+
+	<Logger name="JASPER_LOG" 
+	        path="logs/jasper.log"
+		verbosityLevel = "INFORMATION" />
+
         <Connector className="org.apache.tomcat.service.http.HttpAdapter">
         </Connector>
 
@@ -10,6 +39,5 @@
             <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
             <Parameter name="port" value="8007"/>
         </Connector>
-
     </ContextManager>
 </Server>
