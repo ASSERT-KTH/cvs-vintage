@@ -330,7 +330,7 @@ public class Ajp13
 		req.setRemoteUser( msg.getString());
 		// XXX recycle ?
 		// Note that roles are not integrated with apache
-		req.setUserPrincipal( new SimplePrincipal( msg.getString()));
+		req.setUserPrincipal( new SimplePrincipal( req.getRemoteUser() ));
                 break;
 		
 	    case SC_A_AUTH_TYPE    :
