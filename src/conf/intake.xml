@@ -395,7 +395,7 @@
     <field name="Description" key="d" type="String">
         <rule name="maxLength" value="255">Please keep the description to less than 256 characters</rule>
     </field>
-    <field name="TypeId" key="tti" type="NumberKey" mapToProperty="">
+    <field name="ScopeId" key="tti" type="NumberKey" >
         <required-message>Please select an option.</required-message>
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
