@@ -77,7 +77,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.21 2002/03/14 01:13:09 jmcnally Exp $
+    @version $Id: ConfigureIssueList.java,v 1.22 2002/03/26 23:02:13 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -112,7 +112,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                 SimpleKey[] key = {key1, key2, key3, key4};
                 mua = RModuleUserAttributeManager
                        .getInstance(new ComboKey(key), false);
-                mua.delete();
+                mua.delete(user);
             }
             catch (Exception e)
             {

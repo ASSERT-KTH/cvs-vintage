@@ -60,7 +60,7 @@ import org.tigris.scarab.om.Module;
  * long as it does not already exist in the output directory.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RQueryUser.java,v 1.8 2002/03/14 01:13:11 jmcnally Exp $
+ * @version $Id: RQueryUser.java,v 1.9 2002/03/26 23:02:14 elicia Exp $
  */
 public  class RQueryUser 
     extends org.tigris.scarab.om.BaseRQueryUser
@@ -69,12 +69,15 @@ public  class RQueryUser
     /**
      * Delete the subscription.
      */
-    public void delete() throws Exception
+    public void delete(ScarabUser user) throws Exception
                                                              
     { 
-        Criteria c = new Criteria()
-            .add(RQueryUserPeer.USER_ID, getUserId())
-            .add(RQueryUserPeer.QUERY_ID, getQueryId());
-        RQueryUserPeer.doDelete(c);
+        if (user.getUserId().equals(getUserId()))
+        {
+            Criteria c = new Criteria()
+                .add(RQueryUserPeer.USER_ID, getUserId())
+                .add(RQueryUserPeer.QUERY_ID, getQueryId());
+            RQueryUserPeer.doDelete(c);
+        }
     }
 }

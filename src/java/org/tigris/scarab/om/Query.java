@@ -238,7 +238,7 @@ public class Query
         }
         else
         {
-            rqu.delete();
+            rqu.delete(user);
         }
     }
 
@@ -317,7 +317,7 @@ public class Query
             for (int i=0; i<rqus.size(); i++)
             {
                 RQueryUser rqu = (RQueryUser)rqus.get(i);
-                rqu.delete();
+                rqu.delete(user);
             }
             setDeleted(true);
             save();
