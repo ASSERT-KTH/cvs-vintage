@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.59 2003/03/14 04:40:59 spestov Exp $
+ * @version $Id: View.java,v 1.60 2003/03/14 22:27:15 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -523,6 +523,12 @@ public class View extends JFrame implements EBComponent
 		newSplitPane.setBorder(null);
 		newSplitPane.setMinimumSize(new Dimension(0,0));
 
+		int parentSize = (orientation == JSplitPane.VERTICAL_SPLIT
+			? oldEditPane.getHeight() : oldEditPane.getWidth());
+		final int dividerPosition = (int)((double)(parentSize
+			- newSplitPane.getDividerSize()) * 0.5);
+		newSplitPane.setDividerLocation(dividerPosition);
+
 		if(oldParent instanceof JSplitPane)
 		{
 			JSplitPane oldSplitPane = (JSplitPane)oldParent;
@@ -555,7 +561,7 @@ public class View extends JFrame implements EBComponent
 		{
 			public void run()
 			{
-				newSplitPane.setDividerLocation(0.5);
+				newSplitPane.setDividerLocation(dividerPosition);
 			}
 		});
 

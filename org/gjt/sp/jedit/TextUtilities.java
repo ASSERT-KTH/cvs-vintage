@@ -40,10 +40,13 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.40 2003/01/30 02:58:40 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.41 2003/03/14 22:27:15 spestov Exp $
  */
 public class TextUtilities
 {
+	// to avoid slowdown with large files; only scan 10000 lines either way
+	public static final int BRACKET_MATCH_LIMIT = 10000;
+
 	//{{{ getTokenAtOffset() method
 	/**
 	 * Returns the token that contains the specified offset.
@@ -117,6 +120,8 @@ public class TextUtilities
 
 		boolean haveTokens = true;
 
+		int startLine = line;
+
 		//{{{ Forward search
 		if(direction)
 		{
@@ -157,7 +162,7 @@ public class TextUtilities
 
 				//{{{ Go on to next line
 				line++;
-				if(line >= buffer.getLineCount())
+				if(line >= buffer.getLineCount() || (line - startLine) > BRACKET_MATCH_LIMIT)
 					break;
 				buffer.getLineText(line,lineText);
 				offset = 0;
@@ -203,9 +208,9 @@ public class TextUtilities
 					}
 				}
 
-				//{{{ Go on to next line
+				//{{{ Go on to previous line
 				line--;
-				if(line < 0)
+				if(line < 0 || (startLine - line) > BRACKET_MATCH_LIMIT)
 					break;
 				buffer.getLineText(line,lineText);
 				offset = lineText.count - 1;

@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.65 2003/03/14 02:51:25 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.66 2003/03/14 22:27:21 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -694,7 +694,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 		if(textArea.timing)
 		{
-			textArea.timing = false;
 			System.err.println(System.currentTimeMillis() - textArea.time);
 		}
 	} //}}}

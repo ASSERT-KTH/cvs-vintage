@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.131 2003/03/12 17:01:47 spestov Exp $
+ * @version $Id: Buffer.java,v 1.132 2003/03/14 22:27:14 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2137,7 +2137,7 @@ public class Buffer implements EBComponent
 			int lineCount = offsetMgr.getLineCount();
 			if(nextLineRequested && lineCount - lineIndex > 1)
 			{
-				offsetMgr.lineInfoChangedFrom(lineIndex + 1);
+				offsetMgr.lineContextInvalidFrom(lineIndex);
 			}
 		}
 		finally
@@ -3803,7 +3803,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 		// don't do this on initial token marker
 		if(oldTokenMarker != null && tokenMarker != oldTokenMarker)
 		{
-			offsetMgr.lineInfoChangedFrom(0);
+			offsetMgr.lineContextInvalidFrom(-1);
 		}
 	} //}}}
 
