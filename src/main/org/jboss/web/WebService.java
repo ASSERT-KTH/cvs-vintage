@@ -23,6 +23,7 @@ import org.jboss.system.MissingAttributeException;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.server.ServerConfigUtil;
 import org.jboss.util.ThrowableHandler;
+import org.jboss.util.threadpool.BasicThreadPoolMBean;
 
 /**
  * The WebService implementation. It configures a WebServer instance to
@@ -32,7 +33,7 @@ import org.jboss.util.ThrowableHandler;
  *      extends="org.jboss.system.ServiceMBean"
  *      name="jboss:service=WebService"
  *
- * @version <tt>$Revision: 1.20 $</tt>
+ * @version <tt>$Revision: 1.21 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -182,6 +183,15 @@ public class WebService extends ServiceMBeanSupport implements WebServiceMBean
    public void setBacklog(int backlog)
    {
       server.setBacklog(backlog);
+   }
+
+   /** Set the thread pool used for the WebServer class loading.
+    * @jmx:managed-attribute
+    * 
+    */ 
+   public void setThreadPool(BasicThreadPoolMBean threadPool)
+   {
+      server.setThreadPool(threadPool);
    }
 
    /**
