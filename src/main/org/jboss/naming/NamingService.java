@@ -26,6 +26,8 @@ import javax.naming.StringRefAddr;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.util.threadpool.ThreadPool;
+import org.jboss.util.threadpool.BasicThreadPoolMBean;
 import org.jnp.interfaces.Naming;
 import org.jnp.server.Main;
 
@@ -35,7 +37,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -50,6 +52,18 @@ public class NamingService
    public NamingService()
    {
       naming = new Main(this.getClass().getName());
+   }
+
+   /** Set the thread pool used for the bootstrap lookups
+    *
+    * @jmx:managed-attribute
+    *
+    * @param poolMBean 
+    */
+   public void setLookupPool(BasicThreadPoolMBean poolMBean)
+   {
+      ThreadPool lookupPool = poolMBean.getInstance();
+      naming.setLookupPool(lookupPool);
    }
 
    public void setPort(int port)
@@ -163,7 +177,8 @@ public class NamingService
       {
          String key = (String) keys.nextElement();
          String value = props.getProperty(key);
-         if (debug) {
+         if (debug)
+         {
             log.debug("System.setProperty, key="+key+", value="+value);
          }
          System.setProperty(key, value);
