@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.10 2002/06/23 05:49:35 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.11 2002/06/23 06:07:03 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -216,7 +216,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			encodingMenuItems.put(browser.currentEncoding,mi);
 		}
 
-		String systemEncoding = System.getProperty("file.encoding")
+		String systemEncoding = System.getProperty("file.encoding");
 		if(encodingMenuItems.get(systemEncoding) == null)
 		{
 			JRadioButtonMenuItem mi = new JRadioButtonMenuItem(
@@ -235,7 +235,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 		grp.add(otherEncoding);
 		encodingMenu.add(otherEncoding);
 
-		return;
+		return encodingMenu;
 	} //}}}
 
 	//}}}
