@@ -971,6 +971,15 @@ static void *merge_jk_config(apr_pool_t *p,
     jk_server_conf_t *base = (jk_server_conf_t *) basev;
     jk_server_conf_t *overrides = (jk_server_conf_t *)overridesv;
  
+	if(base->ssl_enable) {
+        overrides->ssl_enable       = base->ssl_enable;
+        overrides->https_indicator  = base->https_indicator;
+        overrides->certs_indicator  = base->certs_indicator;
+        overrides->cipher_indicator = base->cipher_indicator;
+        overrides->sesion_indicator = base->sesion_indicator;
+    }
+    
+
     if(overrides->mountcopy) {
         int sz = map_size(base->uri_to_context);
         int i;
@@ -987,6 +996,17 @@ static void *merge_jk_config(apr_pool_t *p,
             }
         }
     }
+
+    if(base->envvars_in_use) {
+        overrides->envvars_in_use = JK_TRUE;
+        
+        overrides->envvars = 
+                apr_table_overlay(p, 
+                                  overrides->envvars, 
+                                  base->envvars);
+
+    }
+    
     if(overrides->log_file && overrides->log_level >= 0) {
         if(!jk_open_file_logger(&(overrides->log), overrides->log_file, overrides->log_level)) {
             overrides->log = NULL;
