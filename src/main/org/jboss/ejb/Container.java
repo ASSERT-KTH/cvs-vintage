@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.37 $
+ *   @version $Revision: 1.38 $
  */
 public abstract class Container
 {
@@ -467,6 +467,10 @@ public abstract class Container
 
                String resourceName = ref.getResourceName();
                String finalName = application.getResourceByName(resourceName);
+               /* If there was no resource-manager specified then an immeadiate
+                jndi-name or res-url name should have been given */
+               if (finalName == null)
+                   finalName = ref.getJndiName();
 
                if (finalName == null)
                {
@@ -497,12 +501,7 @@ public abstract class Container
                   }
                }
 
-               if (ref.getType().equals("javax.sql.DataSource"))
-               {
-                  // Datasource bindings
-                  bind(ctx, ref.getRefName(), new LinkRef(finalName));
-               }
-               else if (ref.getType().equals("java.net.URL"))
+               if (ref.getType().equals("java.net.URL"))
                {
                   // URL bindings
                   try
