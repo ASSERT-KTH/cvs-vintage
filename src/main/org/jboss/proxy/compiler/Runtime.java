@@ -21,7 +21,7 @@ import org.jboss.util.NestedRuntimeException;
  *
  * <p>This is the only data needed at runtime.
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -83,8 +83,7 @@ public class Runtime
    public synchronized Class loadClass(String name, boolean resolve)
       throws ClassNotFoundException 
    {
-      // isn't this redundant?
-      if (name.endsWith("$Proxy") && name.equals(compiler.getProxyClassName())) {
+      if ( name.equals(compiler.getProxyClassName()) ) {
          return compiler.proxyType;
       }
 

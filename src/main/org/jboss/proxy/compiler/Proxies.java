@@ -21,7 +21,7 @@ import java.util.Hashtable;
  * Routines for converting between strongly-typed interfaces and
  * generic InvocationHandler objects.
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -580,7 +580,8 @@ public final class Proxies
             ProxyCompiler pc = new ProxyCompiler(parent, 
                                                  superclass,
                                                  targetTypes, 
-                                                 methods);
+                                                 methods,
+                                                 null);
 
             Class type[] = { InvocationHandler.class };
             proxyConstructor = pc.getProxyType().getConstructor(type);
