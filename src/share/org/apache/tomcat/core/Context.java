@@ -188,7 +188,7 @@ public class Context {
      *  and set up War interceptors.
      *
      *  "Basic" tomcat treats it is a file ( either absolute or relative to
-     *  the CM home ). 
+     *  the CM home ).
      *
      *  If docBase is relative assume it is relative  to the context manager home.
      */
@@ -196,7 +196,7 @@ public class Context {
 	this.docBase=docB;
     }
 
-    
+
     public String getDocBase() {
 	return docBase;
     }
@@ -641,7 +641,7 @@ public class Context {
 
 	if (FileUtil.isAbsolute( docBase ) )
 	    absPath=docBase;
-	else 
+	else
 	    absPath = contextM.getHome() + File.separator + docBase;
 
 	try {
@@ -676,7 +676,7 @@ public class Context {
 	try {
 	    String contextHome=new File( docBase ).getCanonicalPath();
 	    String realPath=contextHome + mappedPath;
-	    
+
 	    //   System.out.println("XXX " + realPath + " " + new File(realPath).getCanonicalPath() + " "  + contextHome );
 	    if( ! new File(realPath).getCanonicalPath().startsWith(contextHome) ) {
 		// no access to files in a different context.
@@ -685,7 +685,7 @@ public class Context {
 		return null;
 	    }
             url=new URL("file", null,
-                        0, 
+                        0,
                         absPath + mappedPath);
 	    if( debug>9) log( "getResourceURL=" + url + " request=" + lr );
 	    return url;
@@ -720,7 +720,7 @@ public class Context {
 
 	Context base=this; // contextM.getContext("");
 	String normP=FileUtil.normPath(path);
-	
+
 	Request req=contextM.createRequest( base , normP );
 	contextM.processRequest(req);
 
@@ -731,6 +731,11 @@ public class Context {
 	    mappedPath=req.getPathInfo();
 	if(mappedPath == null )
 	    mappedPath=req.getLookupPath();
+
+	// Strip off URI path that brought us to this context.
+	if (0 == mappedPath.indexOf(this.getPath())) {
+	    mappedPath = mappedPath.substring(this.getPath().length());
+	}
 
 	String realPath= this.getDocBase() + mappedPath;
 
@@ -924,7 +929,7 @@ public class Context {
 		// detect absolute path ( use the same logic in all tomcat )
 		if (FileUtil.isAbsolute( docBase ) )
 		    absPath=docBase;
-	        else 
+	        else
 		    absPath = contextM.getHome() + File.separator + docBase;
 
 		try {
