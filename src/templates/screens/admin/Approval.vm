@@ -104,7 +104,7 @@ $page.setTitle("Admin Approval")
 
          <td><a href="#">$template.Name</a></td>
          
-         <td>$template.Description</td>
+         <td>#if ($template.Description) $template.Description #else &nbsp; #end</td>
          
          <td> <textarea rows="2" cols="20" name="template_comment_$template.IssueTemplateId"></textarea></td>
          

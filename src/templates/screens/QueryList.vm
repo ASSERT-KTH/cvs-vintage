@@ -3,10 +3,9 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
-<h2>Saved query list</h2>
 
 #if (!$user.UserId)
-   If you wish to see your personal queries or to edit your subscriptions to a query, <a href="$link.setPage("Login.vm")">log in.</a>
+<P>   If you wish to see your personal queries or to edit your subscriptions to a query, please log in.
    #if ( $module.GlobalQueries.isEmpty() )
      #set ($noQueries = "true")
    #end
@@ -32,7 +31,7 @@
 
 </tr>
 <tr>
-<td>hi <input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
+<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
 
 <td><input type="submit" value="copy" class="bttn" name="eventSubmit_doCopyquery" />&nbsp;
    #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
@@ -47,8 +46,9 @@
 
 ##      <p>&#171; previous | 1 of 1 | next &#187; </p>
 
-<p>Click on location to execute</p>
+<p><b>Click on location to execute. Click query name to edit.</b></p>
 
+<h3>Saved Queries</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
         <th nowrap="nowrap">

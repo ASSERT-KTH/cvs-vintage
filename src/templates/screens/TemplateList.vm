@@ -2,44 +2,79 @@
 #set ( $action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm") )
 
 #set ($module = $scarabR.CurrentModule)
+#set ($user = $data.User)
 
-#if ( !$module.IssueTemplates.isEmpty() )
+#if (!$user.UserId)
+   <P>If you wish to see your personal templates, please log in.
+   #if ( $module.GlobalTemplates.isEmpty() )
+     #set ($noTemplates = "true")
+   #end
+#elseif ( ($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty())) 
+   #set ($noTemplates = "true")
+#end
+
+<P>
+
+#if ($noTemplates.equals("true"))
+    <div class="alert">There are no stored templates.</div>
+#else
 
 <form method="post" action="$action" >
 
-        <p class="functnbar"><input type="submit" value="create new" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
-        <h3>Templates</h3>
-        
+#if ($user.UserId)
+        <p class="functnbar"><input type="submit" value="create new" name="eventSubmit_doNewtemplate" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+#end        
+
+<h3>Enter Issue Templates</h3>
 
 ##        <p>&#171; previous | 1 of 1 | next &#187;</p>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-        <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-        <th><a href="#" title="sort">template name</a></th>
-        <th><a href="#" title="sort">template descr</a></th>
-        <th><a href="#" title="sort">project</a></th>
-        <th><a href="#" title="sort">author</a></th>
+        <th nowrap="nowrap"><a href="#"><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
+        <th><a href="#" title="sort">Template name</a></th>
+        <th><a href="#" title="sort">Template descr</a></th>
+        <th><a href="#" title="sort">Location</a></th>
+        <th><a href="#" title="sort">initiated by</a></th>
         </tr>
         
-#foreach ( $template in $module.IssueTemplates )
+#foreach ( $template in $module.getPrivateIssueTemplates($user) )
 
          #rows ()
         <td><input type="checkbox" name="delete_$template.IssueTemplateId"/></td>
         <td><a href="#">$template.Name</a></td>
-        <td>#if ($template.Description) $template.Description #end</td>
-        <td>project '$scarabR.getModule($template.ModuleId.toString()).Name'</td>
+        <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
+        <td><a href="$template.getExecuteLink($link.toString())">$template.IssueTemplateType.Name</a>
+           #if (!$template.Approved)
+             (until approved)
+           #end
+        </td>
         #set ($createdUser = $scarabR.getUser($template.UserId.toString()) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 #end
-        
+
+#foreach ( $template in $module.GlobalTemplates )
+
+         #rows ()
+        <td>&nbsp;</td>
+        <td><a href="#">$template.Name</a></td>
+        <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
+        <td><a href="$template.getExecuteLink($link.toString())">$template.IssueTemplateType.Name</a>
+           #if (!$template.Approved)
+             (until approved)
+           #end
+        </td>
+        #set ($createdUser = $scarabR.getUser($template.UserId.toString()) )
+         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+        </tr>
+#end
         </table>
         
  ##       <p>&#171; previous | 1 of 1 | next &#187;</p>
 
-        <p class="functnbar"><input type="submit" value="create new" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
-#else
-    <div class="alert">There are no stored issue templates.</div>
+   #if ($user.UserId)
+        <p class="functnbar"><input type="submit" value="create new" name="eventSubmit_doNewtemplate" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+   #end
 #end
     </div>
