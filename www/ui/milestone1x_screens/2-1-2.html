@@ -168,28 +168,77 @@
 	
 		<p><input type="submit" value="Add link" />&#160;<input type="submit" value="Delete selected link" /></p>
 	
-		<h3>Attachments</h3>
-	
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th>select</th>
-		<th>file</th>
-		<th>file description</th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td>file://xxx/xxx/xxx.xxx</td>
-		<td><input type="text" value="" size="" /></td>
-		</tr>
-		</table>
-	
-		<p><input type="submit" value="Add/edit attachment" />&#160;<input type="submit" value="Delete attachment" /></p>
-	
-
-			<p>Click add/edit attachment to browse for and select a file. If you do not see the add/edit attachment button, your browser does not support file uploads. (Windows users, set Files of Type: to be All Files (*.*) to get a complete file listing.) The File field cannot be used to rename files.</p>
 
 
+<h3>Attachments</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>File name</th>
+     <th>File description</th>
+     <th>Type</th>
+   </tr>
+     <tr class="a">
+     <td><input type="checkbox" /></td>
+     <td>
+     <a href="#">test_patch.txt</a>
+     </td>
+     <td>
+     documentation for issue #XXX
+     </td>
+     <td>
+     text
+     </td>
+   </tr>
+
+     <tr class="b">
+     <td><input type="checkbox" /></td>
+     <td>
+     <a href="#">test_patch2.txt</a>
+     </td>
+     <td>
+     documentation for issue #XXX
+     </td>
+     <td>
+     text
+     </td>
+   </tr>
+
+       </table>
+
+<div class="functnbar3">
+<input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteurl" />
+</div>
+
+<h4>Add Attachment</h4>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
+
+     <tr>
+      <th>File path</th>
+      <td>
+       <input type="file" name="atchd" size="45"
+            value="" />
+       <p>Click Browse and select a file. If you do not see a Browse
+       button, your browser does not support file uploads. Windows
+       users, set Files of Type: to be All Files (*.*) to get a
+       complete file listing. The File field cannot be used to
+       rename files.</p>
+      </td>
+     </tr>
+     
+     <tr>
+      <th>Attachment description</th>
+      <td>
+       <textarea name="atchn" cols="45" rows="2"
+           ></textarea>
+      </td>
+     </tr>    </table>
+</div>  <div class="functnbar3">
+     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
+</div>
 		<div class="axial">
 			<table width="100%" cellpadding="3" cellspacing="2" border="1">
 			<tr>

@@ -382,9 +382,36 @@
    </tr>
 
        </table>
-  <div class="functnbar3">
-     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />&#160;
-     <input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteurl" />
+<div class="functnbar3">
+<input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteurl" />
+</div>
+
+<h4>Add Attachment</h4>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
+
+     <tr>
+      <th>File path</th>
+      <td>
+       <input type="file" name="atchd" size="45"
+            value="" />
+       <p>Click Browse and select a file. If you do not see a Browse
+       button, your browser does not support file uploads. Windows
+       users, set Files of Type: to be All Files (*.*) to get a
+       complete file listing. The File field cannot be used to
+       rename files.</p>
+      </td>
+     </tr>
+     
+     <tr>
+      <th>Attachment description</th>
+      <td>
+       <textarea name="atchn" cols="45" rows="2"
+           ></textarea>
+      </td>
+     </tr>    </table>
+</div>  <div class="functnbar3">
+     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
 
 
@@ -424,13 +451,242 @@
   <div class="axial">
  <table cellspacing="2" cellpadding="3" border="0">
  <tr>
-  <th>Comment body</th>
   <td>
- 
-This is sample data. If it were a real comment, this information would be useful to others in determining what people's thoughts are on the progress of the issue. 
 
-<p>
-This field should be editable to certain folks who want to go in and change what they said; just in case they want to make themselves sound smarter, or perhaps more informed... It's sort of like an opportunity to rewrite history! Exciting, no?</p>
+<pre> 
+We try to build tomcat 4.0.1 on AIX 4.33 ML. When we run the build command (ant 
+dist), we get the following error:
+
+.....
+
+build-main:
+    [javac] Compiling 1 source file to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/build/classes
+    [javac] 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/src/share/org/apache/jasper/co
+mpiler/ParserXJspSax.java:147: Method getXMLReader() not found in class 
+javax.xml.parsers.SAXParser.
+    [javac]             XMLReader parser = saxParser.getXMLReader();
+    [javac]                                                      ^
+    [javac] 1 error
+
+BUILD FAILED
+-------------------------------------------------------------------------------
+We use the following components:
+jakarta-ant1.4.1.bin
+jakarta-regexp-1.1
+jakarta-servletapa-4-20011128
+jakarta-tomcat-4.01-src
+java_xml_pack_fall01
+xerces-jtool.1.4.4
+jsse-1.0.2
+jndi-1.2.1
+jmx-1-0-ri
+jsdk-1.3
+-------------------------------------------------------------------------------
+our environment-variables are these:
+XERCES_HOME=/usr/local/tomcat/xerces/tools
+CATALINA_HOME=/usr/local/tomcat/jakarta-tomcat-4.0.1-src/catalina
+SERVLETAPI_HOME=/usr/local/tomcat/jakarta-servletapi-4
+CLASSPATH=/usr/java130/lib/tools.jar:/usr/local/tomcat/xerces/tools/xerces.jar:/
+usr/local/tomcat/jakarta-servletapi-4/lib/servlet.jar:/usr/local/tomcat/jakarta-
+regexp-1.1/jakarta-regexp-1.1.jar:/usr/local/tomcat/jndi/lib/jndi.jar:/usr/local
+/tomcat/jakarta-tomcat-4.0.1-src/catalina/webapps
+JAVA_HOME=/usr/java130
+REGEXP_HOME=/usr/local/tomcat/jakarta-regexp-1.1
+JSSE_HOME=/usr/local/tomcat/jsse1.0.2
+ANT_HOME=/usr/local/tomcat/jakarta-ant-1.4.1
+JAXP_HOME=/usr/local/tomcat/xerces/tools
+
+-------------------------------------------------------------------------------
+
+The complete output from the ant command:
+Buildfile: build.xml
+
+deploy-prepare:
+    [mkdir] Created dir: /usr/local/tomcat/jakarta-tomcat-4.0.1-src/build
+
+deploy-static:
+
+deploy:
+     [echo] Target: Catalina - Deploy ...
+
+flags:
+
+flags.display:
+     [echo] --- Build environment for Catalina ---
+     [echo] If ${property_name} is displayed, then the property is not set)
+     [echo] --- Build options ---
+     [echo] full.dist=${full.dist}
+     [echo] build.sysclasspath=${build.sysclasspath}
+     [echo] compile.debug=on
+     [echo] compile.deprecation=off
+     [echo] compile.optimize=on
+     [echo] --- Ant Flags ---
+     [echo] task available (required)=true
+     [echo] --- JDK ---
+     [echo] jdk.1.2.present=true
+     [echo] jdk.1.3.present=true
+     [echo] jdk.1.4.present=${jdk.1.4.present}
+     [echo] --- Required Libraries ---
+     [echo] jaxp.present=true
+     [echo] jndi.present=true
+     [echo] regexp.present=true
+     [echo] servlet.present=true
+     [echo] --- Optional Libraries ---
+     [echo] javamail.present=${javamail.present}
+     [echo] jsse.present=true
+     [echo] jta.present=${jta.present}
+     [echo] junit.present=${junit.present}
+     [echo] ldap.present=true
+     [echo] tyrex.present=${tyrex.present}
+     [echo] --- Required JARs ---
+     [echo] jndi.jar.present(except JDK 1.3+)=true
+     [echo] regexp.jar.present=true
+     [echo] servlet.jar.present=true
+     [echo] xerces.jar.present(except JDK 1.4+)=true
+     [echo] --- Optional JARs ---
+     [echo] tomcat-ajp.jar.present=true
+     [echo] javamail.jar.present=${javamail.jar.present}
+     [echo] jdbc20ext.jar.present=${jdbc20ext.jar.present}
+     [echo] jta.jar.present=${jta.jar.present}
+     [echo] junit.jar.present=${junit.jar.present}
+     [echo] ldap.jar.present=${ldap.jar.present}
+     [echo] tomcat-util.jar.present=true
+     [echo] tyrex.jar.present=${tyrex.jar.present}
+     [echo] --- Conditional compilation flags ---
+     [echo] compile.javamail=${compile.javamail}
+     [echo] compile.jmx=${compile.jmx}
+     [echo] compile.jndi=true
+     [echo] compile.jsse=true
+     [echo] compile.jta=${compile.jta}
+     [echo] compile.junit=${compile.junit}
+     [echo] compile.ldap=true
+     [echo] compile.tyrex=${compile.tyrex}
+     [echo] --- Distribution flags ---
+     [echo] copy.tomcat-ajp.jar=true
+     [echo] copy.jdbc20ext.jar=${copy.jdbc20ext.jar}
+     [echo] copy.jndi.jar=${copy.jndi.jar}
+     [echo] copy.javamail.jar=${copy.javamail.jar}
+     [echo] copy.jta.jar=${copy.jta.jar}
+     [echo] copy.ldap.jar=${copy.ldap.jar}
+     [echo] copy.tyrex.jar=${copy.tyrex.jar}
+     [echo] copy.xerces.jar=true
+
+build-prepare:
+
+copy-activation.jar:
+
+copy-tomcat-ajp.jar:
+
+copy-jdbc20ext.jar:
+
+copy-jndi.jar:
+
+copy-jsse.jar:
+
+copy-jta.jar:
+
+copy-ldap.jar:
+
+copy-tomcat-util.jar:
+
+copy-tyrex.jar:
+
+copy-xerces.jar:
+
+build-static:
+
+build-main:
+    [javac] Compiling 4 source files to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/catalina/build/server/classes
+
+deploy-prepare:
+    [mkdir] Created dir: /usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/bin
+    [mkdir] Created dir: /usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/conf
+    [mkdir] Created dir: /usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/logs
+    [mkdir] Created dir: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/common/classes
+    [mkdir] Created dir: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/common/lib
+    [mkdir] Created dir: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/classes
+    [mkdir] Created dir: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib
+    [mkdir] Created dir: /usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/work
+
+deploy-static:
+     [copy] Copying 9 files to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/bin
+     [copy] Copying 2 files to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/common/lib
+     [copy] Copying 5 files to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/conf
+     [copy] Copying 3 files to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib
+     [copy] Copied 1 empty directory to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/lib
+
+deploy:
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/bin/bootstrap.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/catalina.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/common/lib/naming-common.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/lib/naming-factory.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/common/lib/naming-resources.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-common.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-cgi.renamet
+ojar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-default.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-invoker.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-manager.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-snoop.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-ssi.renamet
+ojar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/servlets-webdav.jar
+      [jar] Building jar: 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/build/server/lib/warp.jar
+     [echo] Target: Jasper - Deploy ...
+
+build-prepare:
+
+build-static:
+
+build-main:
+    [javac] Compiling 1 source file to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/build/classes
+    [javac] 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/src/share/org/apache/jasper/co
+mpiler/ParserXJspSax.java:147: Method getXMLReader() not found in class 
+javax.xml.parsers.SAXParser.
+    [javac]             XMLReader parser = saxParser.getXMLReader();
+    [javac]                                                      ^
+    [javac] 1 error
+
+BUILD FAILED
+
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/build.xml:78: Compile failed, 
+messages should have been provided.
+
+Total time: 17 seconds
+-------------------------------------------------------------------------------
+Any ideas ??? 
+
+regards 
+Peter and Udo
+</pre>
   
   </td>
   </tr>
@@ -442,7 +698,6 @@ This field should be editable to certain folks who want to go in and change what
   <div class="axial">
  <table cellspacing="2" cellpadding="3" border="0">
  <tr>
-  <th>Comment body</th>
   <td>
 
 This is sample data. If it were a real comment, this information would be useful to others in determining what people's thoughts are on the progress of the issue. 
