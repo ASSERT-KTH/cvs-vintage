@@ -9,6 +9,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AdminIndex.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 
 <div class="functnbar">
