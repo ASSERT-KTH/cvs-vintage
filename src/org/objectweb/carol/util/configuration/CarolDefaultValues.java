@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.14 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.15 2005/02/18 08:50:15 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -76,21 +76,6 @@ public class CarolDefaultValues {
      * portable remote object Prefix
      */
     public static final String PRO_PREFIX = "PortableRemoteObjectClass";
-
-    /**
-     * jndi factory Prefix
-     */
-    public static final String JNDI_FACTORY_PREFIX = "java.naming.factory.initial";
-
-    /**
-     * jndi url Prefix
-     */
-    public static final String JNDI_URL_PREFIX = "java.naming.provider.url";
-
-    /**
-     * jndi pkgs Prefix
-     */
-    public static final String JNDI_PKGS_PREFIX = "java.naming.factory.url.pkgs";
 
     /**
      * carol url Prefix

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIConfiguration.java,v 1.14 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: RMIConfiguration.java,v 1.15 2005/02/18 08:50:15 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -30,6 +30,8 @@ package org.objectweb.carol.util.configuration;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
+
+import javax.naming.Context;
 
 /**
  * Class <code> RmiConfiguration </code> implement the Properties way
@@ -144,15 +146,15 @@ public class RMIConfiguration {
 
             // jndi configuration
             if (key.startsWith(urlPref)) {
-                jndiProperties.setProperty(CarolDefaultValues.JNDI_URL_PREFIX, carolProperties.getProperty(key));
+                jndiProperties.setProperty(Context.PROVIDER_URL, carolProperties.getProperty(key));
             } else if (key.startsWith(factoryPref)) {
                 jndiProperties
-                        .setProperty(CarolDefaultValues.JNDI_FACTORY_PREFIX, carolProperties.getProperty(key));
+                        .setProperty(Context.INITIAL_CONTEXT_FACTORY, carolProperties.getProperty(key));
             }
         }
 
-        port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
-        host = getHostOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
+        port = getPortOfUrl(this.jndiProperties.getProperty(Context.PROVIDER_URL));
+        host = getHostOfUrl(this.jndiProperties.getProperty(Context.PROVIDER_URL));
     }
 
     /**

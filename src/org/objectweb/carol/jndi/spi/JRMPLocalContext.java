@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPLocalContext.java,v 1.6 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JRMPLocalContext.java,v 1.7 2005/02/18 08:50:14 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -97,7 +97,7 @@ public class JRMPLocalContext implements Context {
         registry = reg;
         wrapperHash = new Hashtable();
         environment = env;
-        environment.put("java.naming.factory.initial", "org.objectweb.carol.jndi.spi.JRMPContextWrapperFactory");
+        environment.put(Context.INITIAL_CONTEXT_FACTORY, "org.objectweb.carol.jndi.spi.JRMPContextWrapperFactory");
     }
 
     /**

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolConfiguration.java,v 1.17 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: CarolConfiguration.java,v 1.18 2005/02/18 08:50:15 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -36,6 +36,8 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+
+import javax.naming.Context;
 
 import org.objectweb.carol.jndi.ns.NameServiceManager;
 
@@ -392,7 +394,7 @@ public class CarolConfiguration {
         }
 
         if (startJNDI) {
-            jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
+            jvmProps.setProperty(Context.INITIAL_CONTEXT_FACTORY, CarolDefaultValues.MULTI_JNDI);
         }
         //        } else {
         //            // Set the system properties for only one protocol
@@ -405,7 +407,7 @@ public class CarolConfiguration {
         //            if (startJNDI) {
         //                //jvmProps.putAll(((RMIConfiguration)
         // rmiConfigurationTable.get(defaultRMI)).getJndiProperties());
-        //            jvmProps.setProperty("java.naming.factory.initial",
+        //            jvmProps.setProperty(Context.INITIAL_CONTEXT_FACTORY,
         // CarolDefaultValues.MULTI_JNDI);
         //            }
         //    }
@@ -431,7 +433,7 @@ public class CarolConfiguration {
         TraceCarol.debugCarol("map properties found in jndi.properties to CAROL ones");
         Properties result = new Properties();
         // get the rmi name
-        jndiRMIName = CarolDefaultValues.getRMIProtocol(p.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
+        jndiRMIName = CarolDefaultValues.getRMIProtocol(p.getProperty(Context.PROVIDER_URL));
         TraceCarol.debugCarol("rmi used=" + jndiRMIName);
         TraceCarol.debugCarol("initial properties = " + p);
         if (jndiRMIName == null) {
@@ -439,11 +441,11 @@ public class CarolConfiguration {
         } else {
             for (Enumeration e = p.propertyNames(); e.hasMoreElements();) {
                 String current = ((String) e.nextElement()).trim();
-                if (current.trim().equals(CarolDefaultValues.JNDI_URL_PREFIX)) {
+                if (current.trim().equals(Context.PROVIDER_URL)) {
                     // URL prefix for my context
                     result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + jndiRMIName + "."
                             + CarolDefaultValues.URL_PREFIX, p.getProperty(current));
-                } else if (current.trim().equals(CarolDefaultValues.JNDI_FACTORY_PREFIX)) {
+                } else if (current.trim().equals(Context.INITIAL_CONTEXT_FACTORY)) {
                     // CONTEXT FACTORY prefix for my
                     result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + jndiRMIName + "."
                             + CarolDefaultValues.FACTORY_PREFIX, p.getProperty(current));

@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPCosNaming.java,v 1.9 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: IIOPCosNaming.java,v 1.10 2005/02/18 08:50:15 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -30,6 +30,7 @@ package org.objectweb.carol.jndi.ns;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.omg.CORBA.ORB;
@@ -169,8 +170,8 @@ public class IIOPCosNaming implements NameService {
             return true;
         }
         Properties prop = new Properties();
-        prop.put("java.naming.factory.initial", "com.sun.jndi.cosnaming.CNCtxFactory");
-        prop.put("java.naming.provider.url", "iiop://localhost:" + port);
+        prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
+        prop.put(Context.PROVIDER_URL, "iiop://localhost:" + port);
 
         if (orb == null) {
             initORB();

@@ -20,7 +20,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryShell.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: RegistryShell.java,v 1.3 2005/02/18 08:50:15 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -32,6 +32,7 @@ import java.net.InetAddress;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.apache.commons.cli.CommandLine;
@@ -609,8 +610,8 @@ public class RegistryShell {
 
     public static RegistryManager getRegistryManager() {
         Properties iprop = new Properties();
-        iprop.put("java.naming.factory.initial", "com.sun.jndi.rmi.registry.RegistryContextFactory");
-        iprop.put("java.naming.provider.url", "rmi://" + HOST_LOCATION + ":" + PORT_NUMBER);
+        iprop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.rmi.registry.RegistryContextFactory");
+        iprop.put(Context.PROVIDER_URL, "rmi://" + HOST_LOCATION + ":" + PORT_NUMBER);
         try {
             InitialContext in = new InitialContext(iprop);
             return (RegistryManager) in.lookup(ManageableRegistry.REGISTRY_MANAGER_NAME);

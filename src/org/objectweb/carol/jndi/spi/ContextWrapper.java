@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ContextWrapper.java,v 1.6 2005/02/01 21:49:15 el-vadimo Exp $
+ * $Id: ContextWrapper.java,v 1.7 2005/02/18 08:50:14 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -85,14 +85,14 @@ public class ContextWrapper implements Context {
 
         envpar = env;
 
-        String jndiURL = (String) env.get(CarolDefaultValues.JNDI_URL_PREFIX);
+        String jndiURL = (String) env.get(Context.PROVIDER_URL);
         isSingle = ((env != null) && (jndiURL != null));
         if (isSingle) {
 
             String rmiName = CarolDefaultValues
-                .getRMIProtocol((String) env.get(CarolDefaultValues.JNDI_URL_PREFIX));
+                .getRMIProtocol((String) env.get(Context.PROVIDER_URL));
             Properties prop = CarolCurrentConfiguration.getCurrent().getRMIProperties(rmiName);
-            env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX, prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
+            env.put(Context.INITIAL_CONTEXT_FACTORY, prop.get(Context.INITIAL_CONTEXT_FACTORY));
             ac = new InitialContext(env);
         } else {
             ac = new MultiContext(env);

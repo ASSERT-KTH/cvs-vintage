@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JEREMIEContext.java,v 1.6 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JEREMIEContext.java,v 1.7 2005/02/18 08:50:14 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -91,7 +91,7 @@ public class JEREMIEContext implements Context {
         }
         Context ctx = (Context) hashMap.get(key);
         if (ctx == null) {
-            env.put("java.naming.factory.initial",
+            env.put(Context.INITIAL_CONTEXT_FACTORY,
                     "org.objectweb.jeremie.services.registry.jndi.JRMIInitialContextFactory");
             ctx = new JEREMIEContext(new InitialContext(env));
             hashMap.put(key, ctx);

@@ -85,7 +85,7 @@ class FlatCtx implements Context {
     FlatCtx(Hashtable environment) throws NamingException {
         if (environment != null) {
             myEnv = (Hashtable) (environment.clone());
-            provider = (String) myEnv.get("java.naming.provider.url");
+            provider = (String) myEnv.get(Context.PROVIDER_URL);
         }
         if (provider == null) {
             provider = "cmi:";

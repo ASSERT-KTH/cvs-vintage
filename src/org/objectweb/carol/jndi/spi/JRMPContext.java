@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPContext.java,v 1.5 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JRMPContext.java,v 1.6 2005/02/18 08:50:14 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -91,7 +91,7 @@ public class JRMPContext implements Context {
         }
         Context ctx = (Context) hashMap.get(key);
         if (ctx == null) {
-            env.put("java.naming.factory.initial", "com.sun.jndi.rmi.registry.RegistryContextFactory");
+            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.rmi.registry.RegistryContextFactory");
             ctx = new JRMPContext(new InitialContext(env));
             hashMap.put(key, ctx);
         }

@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.3 2005/02/08 09:45:57 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.4 2005/02/18 08:50:14 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -178,7 +178,7 @@ public class JacORBIIOPContext implements Context {
             if (orb != null) {
                 env.put("java.naming.corba.orb", orb);
             }
-            env.put("java.naming.factory.initial", "com.sun.jndi.cosnaming.CNCtxFactory");
+            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
             ctx = new JacORBIIOPContext(new InitialContext(env), envSasComponent);
             // Add in cache in no specific policies
             if (envSasComponent == null) {
