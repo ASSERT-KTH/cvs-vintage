@@ -1,4 +1,4 @@
-// $Id: CrIllegalName.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrIllegalName.java,v 1.10 2004/08/29 14:24:58 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrIllegalName.java
 // Classes: CrIllegalName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrIllegalName.java,v 1.10 2004/08/29 14:24:58 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,12 +38,20 @@ import org.argouml.model.ModelFacade;
  */
 public class CrIllegalName extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrIllegalName() {
 	setHeadline("Choose a Legal Name");
 	addSupportedDecision(CrUML.decNAMING);
 	addTrigger("name");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
 	Object me = /*(MModelElement)*/ dm;
@@ -56,15 +64,18 @@ public class CrIllegalName extends CrUML {
 	// but for States we make an exception
 	for (int i = 0; i < len; i++) {
 	    char c = nameStr.charAt(i);
-	    if (!(Character.isLetterOrDigit(c) || c == '_' ||
-		  (c == ' ' && ModelFacade.isAStateVertex(me))))
+	    if (!(Character.isLetterOrDigit(c) || c == '_' 
+	        || (c == ' ' && ModelFacade.isAStateVertex(me))))
 		return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;
     }
 
+    /**
+     * @see org.argouml.cognitive.Poster#getClarifier()
+     */
     public Icon getClarifier() {
-	return ClClassName.TheInstance;
+	return ClClassName.getTheInstance();
     }
 
 } /* end class CrIllegalName */

@@ -1,4 +1,4 @@
-// $Id: CrDisambigStateName.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrDisambigStateName.java,v 1.11 2004/08/29 14:24:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrDisambigStateName.java,v 1.11 2004/08/29 14:24:58 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,8 +37,16 @@ import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
+/**
+ * The critic for ambiguous names.
+ *
+ */
 public class CrDisambigStateName extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrDisambigStateName() {
 	setHeadline("Choose a Unique Name for <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decNAMING);
@@ -47,6 +55,10 @@ public class CrDisambigStateName extends CrUML {
 	addTrigger("parent");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAState(dm))) return NO_PROBLEM;
 	Object state = /*(MState)*/ dm;
@@ -77,8 +89,11 @@ public class CrDisambigStateName extends CrUML {
 	return NO_PROBLEM;
     }
 
+    /**
+     * @see org.argouml.cognitive.Poster#getClarifier()
+     */
     public Icon getClarifier() {
-	return ClClassName.TheInstance;
+	return ClClassName.getTheInstance();
     }
 
 } /* end class CrDisambigStateName */

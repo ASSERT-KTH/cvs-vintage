@@ -1,4 +1,4 @@
-// $Id: CrDisambigClassName.java,v 1.14 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrDisambigClassName.java,v 1.15 2004/08/29 14:24:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrDisambigClassName.java
 // Classes: CrDisambigClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigClassName.java,v 1.14 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrDisambigClassName.java,v 1.15 2004/08/29 14:24:58 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,6 +44,10 @@ import org.argouml.model.ModelFacade;
 
 public class CrDisambigClassName extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrDisambigClassName() {
 	setHeadline("Choose a Unique Name for <ocl>self</ocl>");
 	addSupportedDecision(CrUML.decNAMING);
@@ -52,6 +56,10 @@ public class CrDisambigClassName extends CrUML {
 	addTrigger("elementOwnership");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	Object cls = /*(MClassifier)*/ dm;
@@ -83,10 +91,16 @@ public class CrDisambigClassName extends CrUML {
 	return NO_PROBLEM;
     }
 
+    /**
+     * @see org.argouml.cognitive.Poster#getClarifier()
+     */
     public Icon getClarifier() {
-	return ClClassName.TheInstance;
+	return ClClassName.getTheInstance();
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizMEName) {
 	    ToDoItem item = w.getToDoItem();
@@ -98,6 +112,10 @@ public class CrDisambigClassName extends CrUML {
 	    ((WizMEName) w).setMustEdit(true);
 	}
     }
+    
+    /**
+     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
+     */
     public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 
