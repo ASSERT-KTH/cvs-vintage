@@ -28,7 +28,7 @@ import java.util.Collection;
  * at the IM level.
  * @see org.jboss.cache.invalidation.InvalidationManager
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b>
  *
@@ -40,6 +40,16 @@ import java.util.Collection;
 
 public interface InvalidationManagerMBean extends ServiceMBean
 {
+   /**
+    * Get the is default asynchronous replication mode flag
+    * @return
+    */ 
+   public boolean getIsAsynchByDefault();
+   /**
+    * Set the is default asynchronous replication mode flag
+    * @param flag - true for asynch by default
+    */ 
+   public void setIsAsynchByDefault(boolean flag);
    
    /**  
     * Returns a given InvalidationGroup instance that is associated with the group name.

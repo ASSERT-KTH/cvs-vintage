@@ -21,16 +21,8 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.8 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>21 septembre 2002 Sacha Labourey:</b>
- * <ul>
- * <li> First implementation </li>
- * </ul>
+ * @version $Revision: 1.9 $
  */
-
 public class InvalidationManager 
    extends org.jboss.system.ServiceMBeanSupport 
    implements InvalidationManagerMBean 
@@ -70,6 +62,14 @@ public class InvalidationManager
       org.jboss.system.Registry.unbind (this.getServiceName ().toString ());
    }
    
+   public boolean getIsAsynchByDefault()
+   {
+      return DEFAULT_TO_ASYNCHRONOUS_MODE;
+   }
+   public void setIsAsynchByDefault(boolean flag)
+   {
+      this.DEFAULT_TO_ASYNCHRONOUS_MODE = flag;
+   }
    
    public java.util.Collection getInvalidationGroups ()
    {
@@ -114,7 +114,7 @@ public class InvalidationManager
       if (log.isTraceEnabled ())
          log.trace ("Batch cache invalidation. Caches concerned: " + invalidations.length);
       
-      this.crossDomainBatchInvalidate (null, invalidations, asynchronous);
+      this.crossDomainBatchInvalidate (null, invalidations, asynchronous);      
    }
 
    public void invalidateAll(String groupName)
