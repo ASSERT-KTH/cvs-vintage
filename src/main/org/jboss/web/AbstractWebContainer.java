@@ -45,107 +45,107 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /** A template pattern class for web container integration into JBoss. This class
-should be subclasses by web container providers wishing to integrate their
-container into a JBoss server.
+ should be subclasses by web container providers wishing to integrate their
+ container into a JBoss server.
 
-It provides support for mapping the following web-app.xml/jboss-web.xml elements
-into the JBoss server JNDI namespace:
-- env-entry
-- resource-ref
-- resource-env-ref
-- ejb-ref
-- ejb-local-ref
-- security-domain
+ It provides support for mapping the following web-app.xml/jboss-web.xml elements
+ into the JBoss server JNDI namespace:
+ - env-entry
+ - resource-ref
+ - resource-env-ref
+ - ejb-ref
+ - ejb-local-ref
+ - security-domain
 
-It also caters for delegating incorporated webservices.xml to an associated
-W24EEDeployer according to the J2EE1.4, Web-App2.4 and JAXRPC1.0 specifications.
+ It also caters for delegating incorporated webservices.xml to an associated
+ W24EEDeployer according to the J2EE1.4, Web-App2.4 and JAXRPC1.0 specifications.
 
-Subclasses need to implement the {@link #performDeploy(WebApplication, String,
- WebDescriptorParser) performDeploy()}
-and {@link #performUndeploy(String) performUndeploy()} methods to perform the
-container specific steps and return the web application info required by the
-AbstractWebContainer class.
+ Subclasses need to implement the {@link #performDeploy(WebApplication, String,
+   WebDescriptorParser) performDeploy()}
+ and {@link #performUndeploy(String) performUndeploy()} methods to perform the
+ container specific steps and return the web application info required by the
+ AbstractWebContainer class.
 
-Integration with the JBossSX security framework is based on the establishment
-of a java:comp/env/security context as described in the
-{@link linkSecurityDomain(String, Context) linkSecurityDomain } comments.
-The security context provides access to the JBossSX security mgr interface
-implementations for use by subclass request interceptors. A outline of the
-steps for authenticating a user is:
-<code>
-   // Get the username & password from the request context...
-   String username = f(request);
-   String password = f(request);
-   // Get the JBoss security manager from the ENC context
-   InitialContext iniCtx = new InitialContext();
-   SecurityManager securityMgr = (SecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
-   SimplePrincipal principal = new SimplePrincipal(username);
-   if( securityMgr.isValid(principal, password) )
-   {
-   // Indicate the user is allowed access to the web content...
+ Integration with the JBossSX security framework is based on the establishment
+ of a java:comp/env/security context as described in the
+ {@link linkSecurityDomain(String, Context) linkSecurityDomain } comments.
+ The security context provides access to the JBossSX security mgr interface
+ implementations for use by subclass request interceptors. A outline of the
+ steps for authenticating a user is:
+ <code>
+ // Get the username & password from the request context...
+ String username = f(request);
+ String password = f(request);
+ // Get the JBoss security manager from the ENC context
+ InitialContext iniCtx = new InitialContext();
+ SecurityManager securityMgr = (SecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
+ SimplePrincipal principal = new SimplePrincipal(username);
+ if( securityMgr.isValid(principal, password) )
+ {
+ // Indicate the user is allowed access to the web content...
 
-   // Propagate the user info to JBoss for any calls into made by the servlet
-   SecurityAssociation.setPrincipal(principal);
-   SecurityAssociation.setCredential(password.toCharArray());
-   }
-   else
-   {
-   // Deny access...
-   }
-</code>
+ // Propagate the user info to JBoss for any calls into made by the servlet
+ SecurityAssociation.setPrincipal(principal);
+ SecurityAssociation.setCredential(password.toCharArray());
+ }
+ else
+ {
+ // Deny access...
+ }
+ </code>
 
-An outline of the steps for authorizing the user is:
-<code>
-   // Get the username & required roles from the request context...
-   String username = f(request);
-   String[] roles = f(request);
-   // Get the JBoss security manager from the ENC context
-   InitialContext iniCtx = new InitialContext();
-   RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
-   SimplePrincipal principal = new SimplePrincipal(username);
-   Set requiredRoles = new HashSet(Arrays.asList(roles));
-   if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
-   {
-   // Indicate the user has the required roles for the web content...
-   }
-   else
-   {
-   // Deny access...
-   }
-</code>
+ An outline of the steps for authorizing the user is:
+ <code>
+ // Get the username & required roles from the request context...
+ String username = f(request);
+ String[] roles = f(request);
+ // Get the JBoss security manager from the ENC context
+ InitialContext iniCtx = new InitialContext();
+ RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
+ SimplePrincipal principal = new SimplePrincipal(username);
+ Set requiredRoles = new HashSet(Arrays.asList(roles));
+ if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
+ {
+ // Indicate the user has the required roles for the web content...
+ }
+ else
+ {
+ // Deny access...
+ }
+ </code>
 
-The one thing to be aware of is the relationship between the thread context
-class loader and the JNDI ENC context. Any method that attempts to access
-the JNDI ENC context must have the ClassLoader in the WebApplication returned
-from the {@link #performDeploy(String, String) performDeploy} as its thread
-context ClassLoader or else the lookup for java:comp/env will fail with a
-name not found exception, or worse, it will receive some other web application
-ENC context. If your adapting a web container that is trying be compatible with
-both 1.1 and 1.2 Java VMs this is something you need to pay special attention
-to. For example, I have seen problems a request interceptor that was handling
-the authentication/authorization callouts in tomcat3.2.1 not having the same
-thread context ClassLoader as was used to dispatch the http service request.
+ The one thing to be aware of is the relationship between the thread context
+ class loader and the JNDI ENC context. Any method that attempts to access
+ the JNDI ENC context must have the ClassLoader in the WebApplication returned
+ from the {@link #performDeploy(String, String) performDeploy} as its thread
+ context ClassLoader or else the lookup for java:comp/env will fail with a
+ name not found exception, or worse, it will receive some other web application
+ ENC context. If your adapting a web container that is trying be compatible with
+ both 1.1 and 1.2 Java VMs this is something you need to pay special attention
+ to. For example, I have seen problems a request interceptor that was handling
+ the authentication/authorization callouts in tomcat3.2.1 not having the same
+ thread context ClassLoader as was used to dispatch the http service request.
 
-For a complete example see the
-{@link org.jboss.web.catalina.EmbeddedCatalinaServiceSX EmbeddedCatalinaServiceSX}
-in the catalina module.
+ For a complete example see the
+ {@link org.jboss.web.catalina.EmbeddedCatalinaServiceSX EmbeddedCatalinaServiceSX}
+ in the catalina module.
 
-@see #performDeploy(WebApplication webApp, String warUrl,
-        WebDescriptorParser webAppParser)
-@see #performUndeploy(String)
-@see #parseWebAppDescriptors(ClassLoader, WebMetaData)
-@see #linkSecurityDomain(String, Context)
-@see org.jboss.security.SecurityManager;
-@see org.jboss.security.RealmMapping;
-@see org.jboss.security.SimplePrincipal;
-@see org.jboss.security.SecurityAssociation;
+ @see #performDeploy(WebApplication webApp, String warUrl,
+   WebDescriptorParser webAppParser)
+ @see #performUndeploy(String)
+ @see #parseWebAppDescriptors(ClassLoader, WebMetaData)
+ @see #linkSecurityDomain(String, Context)
+ @see org.jboss.security.SecurityManager;
+ @see org.jboss.security.RealmMapping;
+ @see org.jboss.security.SimplePrincipal;
+ @see org.jboss.security.SecurityAssociation;
 
-@jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
+ @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
-@author  Scott.Stark@jboss.org
-@author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
-@version $Revision: 1.68 $
-*/
+ @author  Scott.Stark@jboss.org
+ @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ @version $Revision: 1.69 $
+ */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
    implements AbstractWebContainerMBean
@@ -160,25 +160,25 @@ public abstract class AbstractWebContainer
    public static interface WebDescriptorParser
    {
       /** This method is called as part of subclass performDeploy() method implementations
-      to parse the web-app.xml and jboss-web.xml deployment descriptors from a
-      war deployment. The method creates the ENC(java:comp/env) env-entry,
-      resource-ref, ejb-ref, etc element values. The creation of the env-entry
-      values does not require a jboss-web.xml descriptor. The creation of the
-      resource-ref and ejb-ref elements does require a jboss-web.xml descriptor
-      for the JNDI name of the deployed resources/EJBs.
+       to parse the web-app.xml and jboss-web.xml deployment descriptors from a
+       war deployment. The method creates the ENC(java:comp/env) env-entry,
+       resource-ref, ejb-ref, etc element values. The creation of the env-entry
+       values does not require a jboss-web.xml descriptor. The creation of the
+       resource-ref and ejb-ref elements does require a jboss-web.xml descriptor
+       for the JNDI name of the deployed resources/EJBs.
 
-      Because the ENC context is private to the web application, the web
-      application class loader is used to identify the ENC. The class loader
-      is used because each war typically requires a unique class loader to
-      isolate the web application classes/resources. This means that the
-      ClassLoader passed to this method must be the thread context ClassLoader
-      seen by the server/jsp pages during init/destroy/service/etc. method
-      invocations if these methods interace with the JNDI ENC context.
+       Because the ENC context is private to the web application, the web
+       application class loader is used to identify the ENC. The class loader
+       is used because each war typically requires a unique class loader to
+       isolate the web application classes/resources. This means that the
+       ClassLoader passed to this method must be the thread context ClassLoader
+       seen by the server/jsp pages during init/destroy/service/etc. method
+       invocations if these methods interace with the JNDI ENC context.
 
-      @param loader, the ClassLoader for the web application. May not be null.
-      @param metaData, the WebMetaData from the WebApplication object passed to
+       @param loader, the ClassLoader for the web application. May not be null.
+       @param metaData, the WebMetaData from the WebApplication object passed to
        the performDeploy method.
-      */
+       */
       public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception;
 
       /** Get the DeploymentInfo for the war the triggered the deployment process.
@@ -213,6 +213,7 @@ public abstract class AbstractWebContainer
    {
       return java2ClassLoadingCompliance;
    }
+
    /** Set the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @param flag true for parent first, false for the servlet 2.3 model
@@ -234,6 +235,7 @@ public abstract class AbstractWebContainer
    {
       return unpackWars;
    }
+
    /** Set the flag indicating if war archives should be unpacked. This may
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
@@ -297,45 +299,54 @@ public abstract class AbstractWebContainer
 
          // Make sure the war is unpacked
          File warFile = new File(di.localUrl.getFile());
-         if( warFile.isDirectory() == false && unpackWars == true )
+         if (warFile.isDirectory() == false && unpackWars == true)
          {
-            File tmp = new File(warFile.getAbsolutePath()+".tmp");
-            if( warFile.renameTo(tmp) == false )
-               throw new DeploymentException("Was unable to move war to: "+tmp);
-            if( warFile.mkdir() == false )
-               throw new DeploymentException("Was unable to mkdir: "+warFile);
-            log.debug("Unpacking war to: "+warFile);
+            File tmp = new File(warFile.getAbsolutePath() + ".tmp");
+            if (warFile.renameTo(tmp) == false)
+               throw new DeploymentException("Was unable to move war to: " + tmp);
+            if (warFile.mkdir() == false)
+               throw new DeploymentException("Was unable to mkdir: " + warFile);
+            log.debug("Unpacking war to: " + warFile);
             FileInputStream fis = new FileInputStream(tmp);
             JarUtils.unjar(fis, warFile);
             fis.close();
             log.debug("Replaced war with unpacked contents");
-            if( tmp.delete() == false )
+            if (tmp.delete() == false)
                log.debug("Was unable to delete war tmp file");
             else
                log.debug("Deleted war archive");
             // Reset the localUrl to end in a '/'
             di.localUrl = warFile.toURL();
             // Reset the localCl to point to the file
-            di.localCl=new URLClassLoader(new URL[] {di.localUrl});
+            di.localCl = new URLClassLoader(new URL[]{di.localUrl});
          }
 
       }
       catch (Exception e)
       {
-         log.error("Problem in init ", e); throw new DeploymentException(e);
+         log.error("Problem in init ", e);
+         throw new DeploymentException(e);
       }
 
       // if ok, and we have got a ws4ee deployer attached
-      if(ws4eeDeployer!=null) {
+      if (ws4eeDeployer != null)
+      {
          // try to find webservices info
          URL webservicesUrl = di.localCl.getResource("WEB-INF/webservices.xml");
-         if(webservicesUrl!=null) {
+         if (webservicesUrl != null)
+         {
             // if found, we delegate that part
-            try{
-               return ((Boolean) server.invoke(ws4eeDeployer,"init",new Object[] {di},new String[] {di.getClass().getName()})).booleanValue();
-            } catch(Exception e) {
+            try
+            {
+               Object[] args = {di};
+               String[] sig = {di.getClass().getName()};
+               Boolean flag = (Boolean) server.invoke(ws4eeDeployer, "init", args, sig);
+               return flag.booleanValue();
+            }
+            catch (Exception e)
+            {
                // need to convert better
-               throw new DeploymentException("failed to delegate ws4ee initialization.",e);
+               throw new DeploymentException("failed to delegate ws4ee initialization.", e);
             }
          }
       }
@@ -344,7 +355,9 @@ public abstract class AbstractWebContainer
       return true;
    }
 
-   protected void processNestedDeployments(DeploymentInfo di) {}
+   protected void processNestedDeployments(DeploymentInfo di)
+   {
+   }
 
    public void create(DeploymentInfo di) throws DeploymentException
    {
@@ -352,42 +365,48 @@ public abstract class AbstractWebContainer
 
       // since web container does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
-         try{
-            server.invoke(ws4eeDeployer,"create",new Object[] {di},new String[] {di.getClass().getName()});
-         } catch(Exception e) {
+      if (ws4eeDeployer != null && di.getDocument(WEB_SERVICES_KEY) != null)
+      {
+         try
+         {
+            Object[] args = {di};
+            String[] sig = {di.getClass().getName()};
+            server.invoke(ws4eeDeployer, "create", args, sig);
+         }
+         catch (Exception e)
+         {
             // need to convert better
-            throw new DeploymentException("could not delegate ws4ee creation.",e);
+            throw new DeploymentException("could not delegate ws4ee creation.", e);
          }
       }
    }
 
    /** A template pattern implementation of the deploy() method. This method
-   calls the {@link #performDeploy(String, String) performDeploy()} method to
-   perform the container specific deployment steps and registers the
-   returned WebApplication in the deployment map. The steps performed are:
+    calls the {@link #performDeploy(String, String) performDeploy()} method to
+    perform the container specific deployment steps and registers the
+    returned WebApplication in the deployment map. The steps performed are:
 
-      ClassLoader appClassLoader = thread.getContextClassLoader();
-      URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
-      thread.setContextClassLoader(warLoader);
-      WebDescriptorParser webAppParser = ...;
-      WebMetaData metaData = parseMetaData(ctxPath, warUrl);
-      WebApplication warInfo = new WebApplication(metaData);
-      warInfo.setDeploymentInfo(di);
-      performDeploy(warInfo, warUrl, webAppParser);
-      deploymentMap.put(warUrl, warInfo);
-      thread.setContextClassLoader(appClassLoader);
+    ClassLoader appClassLoader = thread.getContextClassLoader();
+    URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
+    thread.setContextClassLoader(warLoader);
+    WebDescriptorParser webAppParser = ...;
+    WebMetaData metaData = parseMetaData(ctxPath, warUrl);
+    WebApplication warInfo = new WebApplication(metaData);
+    warInfo.setDeploymentInfo(di);
+    performDeploy(warInfo, warUrl, webAppParser);
+    deploymentMap.put(warUrl, warInfo);
+    thread.setContextClassLoader(appClassLoader);
 
-   The subclass performDeploy() implementation needs to invoke
-   webAppParser.parseWebAppDescriptors(loader, warInfo) to have the JNDI
-   java:comp/env namespace setup before any web app component can access
-   this namespace.
+    The subclass performDeploy() implementation needs to invoke
+    webAppParser.parseWebAppDescriptors(loader, warInfo) to have the JNDI
+    java:comp/env namespace setup before any web app component can access
+    this namespace.
 
-   @param di The deployment info that contains the context-root element value
+    @param di The deployment info that contains the context-root element value
     from the J2EE application/module/web application.xml descriptor. This may
     be null if war was is not being deployed as part of an enterprise application.
     It also contains the URL of the web application war.
-   */
+    */
    public synchronized void start(DeploymentInfo di) throws DeploymentException
    {
       Thread thread = Thread.currentThread();
@@ -400,9 +419,9 @@ public abstract class AbstractWebContainer
          thread.setContextClassLoader(warLoader);
          WebDescriptorParser webAppParser = new DescriptorParser(di);
          String webContext = di.webContext;
-         if( webContext != null )
+         if (webContext != null)
          {
-            if( webContext.length() > 0 && webContext.charAt(0) != '/' )
+            if (webContext.length() > 0 && webContext.charAt(0) != '/')
                webContext = "/" + webContext;
          }
          // Get the war URL
@@ -418,17 +437,24 @@ public abstract class AbstractWebContainer
          // Parse the web.xml and jboss-web.xml descriptors
          WebMetaData metaData = parseMetaData(webContext, warURL);
          WebApplication warInfo = new WebApplication(metaData);
+         warInfo.setDeploymentInfo(di);
 
          // register metadata in the di structure
-         di.metaData=metaData;
+         di.metaData = metaData;
 
          // need to intercept here to transform webxml
-         if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
-            try{
-               server.invoke(ws4eeDeployer,"start",new Object[] {di},new String[] {di.getClass().getName()});
-            } catch(Exception e) {
+         if (ws4eeDeployer != null && di.getDocument(WEB_SERVICES_KEY) != null)
+         {
+            try
+            {
+               Object[] args = {di};
+               String[] sig = {di.getClass().getName()};
+               server.invoke(ws4eeDeployer, "start", args, sig);
+            }
+            catch (Exception e)
+            {
                // need to convert better
-               throw new DeploymentException("could not delegate ws42ee startup.",e);
+               throw new DeploymentException("could not delegate ws42ee startup.", e);
             }
          }
 
@@ -436,11 +462,11 @@ public abstract class AbstractWebContainer
          deploymentMap.put(warURL.toString(), warInfo);
          super.start(di);
       }
-      catch(DeploymentException e)
+      catch (DeploymentException e)
       {
          throw e;
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          throw new DeploymentException("Error during deploy", e);
       }
@@ -452,36 +478,42 @@ public abstract class AbstractWebContainer
    }
 
    /** This method is called by the deploy() method template and must be overriden by
-   subclasses to perform the web container specific deployment steps.
-   @param webApp, The web application information context. This contains the
+    subclasses to perform the web container specific deployment steps.
+    @param webApp, The web application information context. This contains the
     metadata such as the context-root element value from the J2EE
-   application/module/web application.xml descriptor and virtual-host.
-   @param warUrl, The string for the URL of the web application war.
-   @param webAppParser, The callback interface the web container should use to
-   setup the web app JNDI environment for use by the web app components. This
-   needs to be invoked after the web app class loader is known, but before
-   and web app components attempt to access the java:comp/env JNDI namespace.
-   @return WebApplication, the web application information required by the
-   AbstractWebContainer class to track the war deployment status.
-   */
+    application/module/web application.xml descriptor and virtual-host.
+    @param warUrl, The string for the URL of the web application war.
+    @param webAppParser, The callback interface the web container should use to
+    setup the web app JNDI environment for use by the web app components. This
+    needs to be invoked after the web app class loader is known, but before
+    and web app components attempt to access the java:comp/env JNDI namespace.
+    @return WebApplication, the web application information required by the
+    AbstractWebContainer class to track the war deployment status.
+    */
    protected abstract void performDeploy(WebApplication webApp, String warUrl,
       WebDescriptorParser webAppParser) throws Exception;
 
    /** A template pattern implementation of the undeploy() method. This method
-   calls the {@link #performUndeploy(String) performUndeploy()} method to
-   perform the container specific undeployment steps and unregisters the
-   the warUrl from the deployment map.
-   */
+    calls the {@link #performUndeploy(String) performUndeploy()} method to
+    perform the container specific undeployment steps and unregisters the
+    the warUrl from the deployment map.
+    */
    public synchronized void stop(DeploymentInfo di)
       throws DeploymentException
    {
       // since web container does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
-         try{
-            server.invoke(ws4eeDeployer,"stop",new Object[] {di},new String[] {di.getClass().getName()});
-         } catch(Exception e) {
-            log.error("could not delegate ws4ee stopping.",e);
+      if (ws4eeDeployer != null && di.getDocument(WEB_SERVICES_KEY) != null)
+      {
+         try
+         {
+            Object[] args = {di};
+            String[] sig = {di.getClass().getName()};
+            server.invoke(ws4eeDeployer, "stop", args, sig);
+         }
+         catch (Exception e)
+         {
+            log.error("could not delegate ws4ee stopping.", e);
          }
       }
 
@@ -494,11 +526,11 @@ public abstract class AbstractWebContainer
          deploymentMap.remove(warUrl);
          super.stop(di);
       }
-      catch(DeploymentException e)
+      catch (DeploymentException e)
       {
          throw e;
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          throw new DeploymentException("Error during deploy", e);
       }
@@ -509,34 +541,41 @@ public abstract class AbstractWebContainer
    {
       // since web container does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
-         try{
-            server.invoke(ws4eeDeployer,"destroy",new Object[] {di},new String[] {di.getClass().getName()});
-         } catch(Exception e) {
-            log.error("could not delegate ws4ee destruction.",e);
+      if (ws4eeDeployer != null && di.getDocument(WEB_SERVICES_KEY) != null)
+      {
+         try
+         {
+            Object[] args = {di};
+            String[] sig = {di.getClass().getName()};
+            server.invoke(ws4eeDeployer, "destroy", args, sig);
+         }
+         catch (Exception e)
+         {
+            log.error("could not delegate ws4ee destruction.", e);
          }
       }
 
       super.destroy(di);
    }
+
    /** Called as part of the undeploy() method template to ask the
-   subclass for perform the web container specific undeployment steps.
-   */
+    subclass for perform the web container specific undeployment steps.
+    */
    protected abstract void performUndeploy(String warUrl) throws Exception;
 
    /** See if a war is deployed.
-     @jmx:managed-attribute
-   */
+    @jmx:managed-attribute
+    */
    public boolean isDeployed(String warUrl)
    {
       return deploymentMap.containsKey(warUrl);
    }
 
    /** Get the WebApplication object for a deployed war.
-   @param warUrl, the war url string as originally passed to deploy().
-   @return The WebApplication created during the deploy step if the
-   warUrl is valid, null if no such deployment exists.
-   */
+    @param warUrl, the war url string as originally passed to deploy().
+    @return The WebApplication created during the deploy step if the
+    warUrl is valid, null if no such deployment exists.
+    */
    public WebApplication getDeployedApp(String warUrl)
    {
       WebApplication appInfo = (WebApplication) deploymentMap.get(warUrl);
@@ -544,39 +583,40 @@ public abstract class AbstractWebContainer
    }
 
    /** Returns the applications deployed by the web container subclasses.
-   @jmx:managed-attribute
-   @return An Iterator of WebApplication objects for the deployed wars.
-   */
+    @jmx:managed-attribute
+    @return An Iterator of WebApplication objects for the deployed wars.
+    */
    public Iterator getDeployedApplications()
    {
       return deploymentMap.values().iterator();
    }
 
    /** An accessor for any configuration element set via setConfig. This
-   method always returns null and must be overriden by subclasses to
-   return a valid value.
-   @jmx:managed-attribute
-   */
+    method always returns null and must be overriden by subclasses to
+    return a valid value.
+    @jmx:managed-attribute
+    */
    public Element getConfig()
    {
       return null;
    }
+
    /** This method is invoked to import an arbitrary XML configuration tree.
-   Subclasses should override this method if they support such a configuration
-   capability. This implementation does nothing.
-   @jmx:managed-attribute
-   */
+    Subclasses should override this method if they support such a configuration
+    capability. This implementation does nothing.
+    @jmx:managed-attribute
+    */
    public void setConfig(Element config)
    {
    }
 
    /** This method is invoked from within subclass performDeploy() method
-   implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
+    implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
 
-   @param loader, the ClassLoader for the web application. May not be null.
-   @param metaData, the WebMetaData from the WebApplication object passed to
+    @param loader, the ClassLoader for the web application. May not be null.
+    @param metaData, the WebMetaData from the WebApplication object passed to
     the performDeploy method.
-   */
+    */
    protected void parseWebAppDescriptors(DeploymentInfo di, ClassLoader loader,
       WebMetaData metaData)
       throws Exception
@@ -588,11 +628,11 @@ public abstract class AbstractWebContainer
       try
       {
          // Create a java:comp/env environment unique for the web application
-         log.debug("Creating ENC using ClassLoader: "+loader);
+         log.debug("Creating ENC using ClassLoader: " + loader);
          ClassLoader parent = loader.getParent();
-         while( parent != null )
+         while (parent != null)
          {
-            log.debug(".."+parent);
+            log.debug(".." + parent);
             parent = parent.getParent();
          }
          Thread.currentThread().setContextClassLoader(loader);
@@ -632,11 +672,11 @@ public abstract class AbstractWebContainer
    protected void addEnvEntries(Iterator envEntries, Context envCtx)
       throws ClassNotFoundException, NamingException
    {
-      while( envEntries.hasNext() )
+      while (envEntries.hasNext())
       {
          EnvEntryMetaData entry = (EnvEntryMetaData) envEntries.next();
-            log.debug("Binding env-entry: "+entry.getName()+" of type: " +
-                      entry.getType()+" to value:"+entry.getValue());
+         log.debug("Binding env-entry: " + entry.getName() + " of type: " +
+            entry.getType() + " to value:" + entry.getValue());
          EnvEntryMetaData.bindEnvEntry(envCtx, entry);
       }
    }
@@ -644,27 +684,27 @@ public abstract class AbstractWebContainer
    protected void linkResourceEnvRefs(Iterator resourceEnvRefs, Context envCtx)
       throws NamingException
    {
-      while( resourceEnvRefs.hasNext() )
+      while (resourceEnvRefs.hasNext())
       {
          ResourceEnvRefMetaData ref = (ResourceEnvRefMetaData) resourceEnvRefs.next();
          String resourceName = ref.getJndiName();
          String refName = ref.getRefName();
-         if( ref.getType().equals("java.net.URL") )
+         if (ref.getType().equals("java.net.URL"))
          {
-             try
-             {
-                 log.debug("Binding '"+refName+"' to URL: "+resourceName);
-                 URL url = new URL(resourceName);
-                 Util.bind(envCtx, refName, url);
-             }
-             catch(MalformedURLException e)
-             {
-                 throw new NamingException("Malformed URL:"+e.getMessage());
-             }
+            try
+            {
+               log.debug("Binding '" + refName + "' to URL: " + resourceName);
+               URL url = new URL(resourceName);
+               Util.bind(envCtx, refName, url);
+            }
+            catch (MalformedURLException e)
+            {
+               throw new NamingException("Malformed URL:" + e.getMessage());
+            }
          }
          else
          {
-            log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
+            log.debug("Linking '" + refName + "' to JNDI name: " + resourceName);
             Util.bind(envCtx, refName, new LinkRef(resourceName));
          }
       }
@@ -673,28 +713,28 @@ public abstract class AbstractWebContainer
    protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
       throws NamingException
    {
-      while( resourceRefs.hasNext() )
+      while (resourceRefs.hasNext())
       {
          ResourceRefMetaData ref = (ResourceRefMetaData) resourceRefs.next();
          String jndiName = ref.getJndiName();
          String refName = ref.getRefName();
-         if( ref.getType().equals("java.net.URL") )
+         if (ref.getType().equals("java.net.URL"))
          {
-             try
-             {
-                 log.debug("Binding '"+refName+"' to URL: "+jndiName);
-                 URL url = new URL(jndiName);
-                 Util.bind(envCtx, refName, url);
-             }
-             catch(MalformedURLException e)
-             {
-                 throw new NamingException("Malformed URL:"+e.getMessage());
-             }
+            try
+            {
+               log.debug("Binding '" + refName + "' to URL: " + jndiName);
+               URL url = new URL(jndiName);
+               Util.bind(envCtx, refName, url);
+            }
+            catch (MalformedURLException e)
+            {
+               throw new NamingException("Malformed URL:" + e.getMessage());
+            }
          }
          else
          {
-             log.debug("Linking '"+refName+"' to JNDI name: "+jndiName);
-             Util.bind(envCtx, refName, new LinkRef(jndiName));
+            log.debug("Linking '" + refName + "' to JNDI name: " + jndiName);
+            Util.bind(envCtx, refName, new LinkRef(jndiName));
          }
       }
    }
@@ -702,19 +742,19 @@ public abstract class AbstractWebContainer
    protected void linkEjbRefs(Iterator ejbRefs, Context envCtx, DeploymentInfo di)
       throws NamingException
    {
-      while( ejbRefs.hasNext() )
+      while (ejbRefs.hasNext())
       {
          EjbRefMetaData ejb = (EjbRefMetaData) ejbRefs.next();
          String name = ejb.getName();
          String jndiName = ejb.getJndiName();
-         if( jndiName == null )
+         if (jndiName == null)
          {
             // Search the DeploymentInfo for a match
-            jndiName = EjbUtil.findEjbLink( server, di, ejb.getLink() );
-            if( jndiName == null )
-               throw new NamingException("ejb-ref: "+name+", no ejb-link match, use jndi-name in jboss-web.xml");
+            jndiName = EjbUtil.findEjbLink(server, di, ejb.getLink());
+            if (jndiName == null)
+               throw new NamingException("ejb-ref: " + name + ", no ejb-link match, use jndi-name in jboss-web.xml");
          }
-         log.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
+         log.debug("Linking ejb-ref: " + name + " to JNDI name: " + jndiName);
          Util.bind(envCtx, name, new LinkRef(jndiName));
       }
    }
@@ -722,32 +762,32 @@ public abstract class AbstractWebContainer
    protected void linkEjbLocalRefs(Iterator ejbRefs, Context envCtx, DeploymentInfo di)
       throws NamingException
    {
-      while( ejbRefs.hasNext() )
+      while (ejbRefs.hasNext())
       {
          EjbLocalRefMetaData ejb = (EjbLocalRefMetaData) ejbRefs.next();
          String name = ejb.getName();
-         String jndiName = EjbUtil.findLocalEjbLink( server, di, ejb.getLink() );
+         String jndiName = EjbUtil.findLocalEjbLink(server, di, ejb.getLink());
 
-         if( jndiName == null )
-            throw new NamingException("ejb-local-ref: "+name+", target not found, add valid ejb-link");
-         log.debug("Linking ejb-local-ref: "+name+" to JNDI name: "+jndiName);
+         if (jndiName == null)
+            throw new NamingException("ejb-local-ref: " + name + ", target not found, add valid ejb-link");
+         log.debug("Linking ejb-local-ref: " + name + " to JNDI name: " + jndiName);
          Util.bind(envCtx, name, new LinkRef(jndiName));
       }
    }
 
    /** This creates a java:comp/env/security context that contains a
-   securityMgr binding pointing to an AuthenticationManager implementation
-   and a realmMapping binding pointing to a RealmMapping implementation.
-   If the jboss-web.xml descriptor contained a security-domain element
-   then the bindings are LinkRefs to the jndi name specified by the
-   security-domain element. If there was no security-domain element then
-   the bindings are to NullSecurityManager instance which simply allows
-   all access.
-   */
+    securityMgr binding pointing to an AuthenticationManager implementation
+    and a realmMapping binding pointing to a RealmMapping implementation.
+    If the jboss-web.xml descriptor contained a security-domain element
+    then the bindings are LinkRefs to the jndi name specified by the
+    security-domain element. If there was no security-domain element then
+    the bindings are to NullSecurityManager instance which simply allows
+    all access.
+    */
    protected void linkSecurityDomain(String securityDomain, Context envCtx)
       throws NamingException
    {
-      if( securityDomain == null )
+      if (securityDomain == null)
       {
          log.debug("Binding security/securityMgr to NullSecurityManager");
          Object securityMgr = new NullSecurityManager("java:/jaas/null");
@@ -758,11 +798,11 @@ public abstract class AbstractWebContainer
       }
       else
       {
-         log.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
+         log.debug("Linking security/securityMgr to JNDI name: " + securityDomain);
          Util.bind(envCtx, "security/securityMgr", new LinkRef(securityDomain));
          Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
          Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
-         Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
+         Util.bind(envCtx, "security/subject", new LinkRef(securityDomain + "/subject"));
       }
    }
 
@@ -780,13 +820,13 @@ public abstract class AbstractWebContainer
          "javax/ejb/EJBHome.class"
       };
       ArrayList tmp = new ArrayList();
-      for(int j = 0; j < jspResources.length; j ++)
+      for (int j = 0; j < jspResources.length; j++)
       {
          URL rsrcURL = loader.getResource(jspResources[j]);
-         if( rsrcURL != null )
+         if (rsrcURL != null)
          {
             String url = rsrcURL.toExternalForm();
-            if( rsrcURL.getProtocol().equals("jar") )
+            if (rsrcURL.getProtocol().equals("jar"))
             {
                // Parse the jar:<url>!/{entry} URL
                url = url.substring(4);
@@ -797,7 +837,7 @@ public abstract class AbstractWebContainer
          }
          else
          {
-            log.warn("Failed to fin jsp rsrc: "+jspResources[j]);
+            log.warn("Failed to fin jsp rsrc: " + jspResources[j]);
          }
       }
       log.trace("JSP StandardCompileClasspath: " + tmp);
@@ -814,7 +854,7 @@ public abstract class AbstractWebContainer
    {
       HashSet tmp = new HashSet();
       ClassLoader cl = loader;
-      while( cl != null )
+      while (cl != null)
       {
          URL[] urls = getClassLoaderURLs(cl);
          addURLs(tmp, urls);
@@ -830,8 +870,8 @@ public abstract class AbstractWebContainer
       }
       try
       {
-         URL[] globalUrls = (URL[])getServer().getAttribute(DeploymentInfo.DEFAULT_LOADER_REPOSITORY,
-                                                         "URLs");
+         URL[] globalUrls = (URL[]) getServer().getAttribute(DeploymentInfo.DEFAULT_LOADER_REPOSITORY,
+            "URLs");
          addURLs(tmp, globalUrls);
       }
       catch (Exception e)
@@ -846,7 +886,7 @@ public abstract class AbstractWebContainer
 
    private void addURLs(Set urlSet, URL[] urls)
    {
-      for(int u = 0; u < urls.length; u ++)
+      for (int u = 0; u < urls.length; u++)
       {
          URL url = urls[u];
          url = org.jboss.net.protocol.njar.Handler.njarToFile(url);
@@ -865,33 +905,33 @@ public abstract class AbstractWebContainer
          Class returnType = urls.getClass();
          Class[] parameterTypes = {};
          Method getURLs = cl.getClass().getMethod("getURLs", parameterTypes);
-         if( returnType.isAssignableFrom(getURLs.getReturnType()) )
+         if (returnType.isAssignableFrom(getURLs.getReturnType()))
          {
             Object[] args = {};
             urls = (URL[]) getURLs.invoke(cl, args);
          }
-         if( urls == null || urls.length == 0 )
+         if (urls == null || urls.length == 0)
          {
             getURLs = cl.getClass().getMethod("getAllURLs", parameterTypes);
-            if( returnType.isAssignableFrom(getURLs.getReturnType()) )
+            if (returnType.isAssignableFrom(getURLs.getReturnType()))
             {
                Object[] args = {};
                urls = (URL[]) getURLs.invoke(cl, args);
             }
          }
       }
-      catch(Exception ignore)
+      catch (Exception ignore)
       {
       }
       return urls;
    }
 
    /** This method creates a context-root string from either the
-      WEB-INF/jboss-web.xml context-root element is one exists, or the
-      filename portion of the warURL. It is called if the DeploymentInfo
-      webContext value is null which indicates a standalone war deployment.
-      A war name of ROOT.war is handled as a special case of a war that
-      should be installed as the default web context.
+    WEB-INF/jboss-web.xml context-root element is one exists, or the
+    filename portion of the warURL. It is called if the DeploymentInfo
+    webContext value is null which indicates a standalone war deployment.
+    A war name of ROOT.war is handled as a special case of a war that
+    should be installed as the default web context.
     */
    protected WebMetaData parseMetaData(String ctxPath, URL warURL)
       throws DeploymentException
@@ -905,13 +945,13 @@ public abstract class AbstractWebContainer
       {
          // See if the warUrl is a directory
          File warDir = new File(warURL.getFile());
-         if( warURL.getProtocol().equals("file") && warDir.isDirectory() == true )
+         if (warURL.getProtocol().equals("file") && warDir.isDirectory() == true)
          {
             File webDD = new File(warDir, "WEB-INF/web.xml");
-            if( webDD.exists() == true )
+            if (webDD.exists() == true)
                webIS = new FileInputStream(webDD);
             File jbossWebDD = new File(warDir, "WEB-INF/jboss-web.xml");
-            if( jbossWebDD.exists() == true )
+            if (jbossWebDD.exists() == true)
                jbossWebIS = new FileInputStream(jbossWebDD);
          }
          else
@@ -922,21 +962,21 @@ public abstract class AbstractWebContainer
             java.util.zip.ZipEntry entry;
             byte[] buffer = new byte[512];
             int bytes;
-            while( (entry = zipIS.getNextEntry()) != null )
+            while ((entry = zipIS.getNextEntry()) != null)
             {
-               if( entry.getName().equals("WEB-INF/web.xml") )
+               if (entry.getName().equals("WEB-INF/web.xml"))
                {
                   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  while( (bytes = zipIS.read(buffer)) > 0 )
+                  while ((bytes = zipIS.read(buffer)) > 0)
                   {
                      baos.write(buffer, 0, bytes);
                   }
                   webIS = new ByteArrayInputStream(baos.toByteArray());
                }
-               else if( entry.getName().equals("WEB-INF/jboss-web.xml") )
+               else if (entry.getName().equals("WEB-INF/jboss-web.xml"))
                {
                   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  while( (bytes = zipIS.read(buffer)) > 0 )
+                  while ((bytes = zipIS.read(buffer)) > 0)
                   {
                      baos.write(buffer, 0, bytes);
                   }
@@ -949,70 +989,70 @@ public abstract class AbstractWebContainer
          XmlFileLoader xmlLoader = new XmlFileLoader();
          try
          {
-            if( webIS != null )
+            if (webIS != null)
             {
                Document webDoc = xmlLoader.getDocument(webIS, "WEB-INF/web.xml");
                Element web = webDoc.getDocumentElement();
                metaData.importXml(web);
             }
          }
-         catch(Exception e)
+         catch (Exception e)
          {
             throw new DeploymentException("Failed to parse WEB-INF/web.xml", e);
          }
          try
          {
-            if( jbossWebIS != null )
+            if (jbossWebIS != null)
             {
                Document jbossWebDoc = xmlLoader.getDocument(jbossWebIS, "WEB-INF/jboss-web.xml");
                Element jbossWeb = jbossWebDoc.getDocumentElement();
                metaData.importXml(jbossWeb);
             }
          }
-         catch(Exception e)
+         catch (Exception e)
          {
             throw new DeploymentException("Failed to parse WEB-INF/jboss-web.xml", e);
          }
 
       }
-      catch(Exception e)
+      catch (Exception e)
       {
-         log.trace("Failed to parse descriptors for war("+warURL+")", e);
+         log.trace("Failed to parse descriptors for war(" + warURL + ")", e);
       }
 
       // Build a war root context from the war name if one was not specified
       String webContext = ctxPath;
-      if( webContext == null )
+      if (webContext == null)
          webContext = metaData.getContextRoot();
-      if( webContext == null )
+      if (webContext == null)
       {
          // Build the context from the war name, strip the .war suffix
          webContext = warURL.getFile();
          webContext = webContext.replace('\\', '/');
-         if( webContext.endsWith("/") )
-            webContext = webContext.substring(0, webContext.length()-1);
+         if (webContext.endsWith("/"))
+            webContext = webContext.substring(0, webContext.length() - 1);
          int prefix = webContext.lastIndexOf('/');
-         if( prefix > 0 )
-            webContext = webContext.substring(prefix+1);
+         if (prefix > 0)
+            webContext = webContext.substring(prefix + 1);
          int suffix = webContext.lastIndexOf(".war");
-         if( suffix > 0 )
+         if (suffix > 0)
             webContext = webContext.substring(0, suffix);
-          // Strip any '<int-value>.' prefix
-          int index = 0;
-          for(; index < webContext.length(); index ++)
-          {
-             char c = webContext.charAt(index);
-             if( Character.isDigit(c) == false && c != '.' )
-                break;
-          }
-          webContext = webContext.substring(index);
+         // Strip any '<int-value>.' prefix
+         int index = 0;
+         for (; index < webContext.length(); index++)
+         {
+            char c = webContext.charAt(index);
+            if (Character.isDigit(c) == false && c != '.')
+               break;
+         }
+         webContext = webContext.substring(index);
       }
 
       // Servlet containers are anal about the web context starting with '/'
-      if( webContext.length() > 0 && webContext.charAt(0) != '/' )
+      if (webContext.length() > 0 && webContext.charAt(0) != '/')
          webContext = "/" + webContext;
       // And also the default root context must be an empty string, not '/'
-      else if( webContext.equals("/") )
+      else if (webContext.equals("/"))
          webContext = "";
       metaData.setContextRoot(webContext);
 
@@ -1020,25 +1060,29 @@ public abstract class AbstractWebContainer
    }
 
    /** An inner class that maps the WebDescriptorParser.parseWebAppDescriptors()
-   onto the protected parseWebAppDescriptors() AbstractWebContainer method.
-   */
+    onto the protected parseWebAppDescriptors() AbstractWebContainer method.
+    */
    private class DescriptorParser implements WebDescriptorParser
    {
       DeploymentInfo di;
+
       DescriptorParser(DeploymentInfo di)
       {
          this.di = di;
       }
+
       public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception
       {
          AbstractWebContainer.this.parseWebAppDescriptors(di, loader, metaData);
       }
+
       public DeploymentInfo getDeploymentInfo()
       {
          return di;
       }
    }
 }
+
 /*
 vim:ts=3:sw=3:et
 */
