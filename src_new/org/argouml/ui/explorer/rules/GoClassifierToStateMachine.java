@@ -1,4 +1,4 @@
-// $Id: GoClassifierToStateMachine.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoClassifierToStateMachine.java,v 1.2 2003/10/11 11:17:41 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.AbstractGoRule;
 /**
- * Navigation rule for navperspective to navigate from behavioral
+ * PerspectiveRule to navigate from behavioral
  * feature to statemachine.  Causes statemachine to be shown as child
  * of behavioral feature.
  * 

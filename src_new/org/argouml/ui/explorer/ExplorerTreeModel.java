@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.4 2003/10/05 21:53:01 alexb Exp $
+// $Id: ExplorerTreeModel.java,v 1.5 2003/10/11 11:17:41 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import java.awt.event.ItemListener;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.NavPerspective;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
 
 /**

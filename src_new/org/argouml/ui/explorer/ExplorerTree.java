@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.8 2003/10/05 21:28:45 alexb Exp $
+// $Id: ExplorerTree.java,v 1.9 2003/10/11 11:17:41 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,6 @@ import org.argouml.application.api.Notation;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.DisplayTextTree;
-import org.argouml.ui.NavPerspective;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.generator.GeneratorDisplay;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -193,7 +192,7 @@ extends DisplayTextTree
             // changing the label in case of comments
             // this is necessary since the name of the comment is the same as
             // the content of the comment causing the total comment to be
-            // displayed in the navperspective
+            // displayed in the perspective
             else if (ModelFacade.isAComment(value)) {
                 name = ModelFacade.getName(value);
                 if (name != null && name.length() > 10) {

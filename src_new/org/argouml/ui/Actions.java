@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.61 2003/09/19 21:28:42 d00mst Exp $
+// $Id: Actions.java,v 1.62 2003/10/11 11:17:41 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class Actions implements TargetListener {
     //public static UMLAction NavBack = new ActionNavBack();
     //public static UMLAction NavForw = new ActionNavForw();
     //public static UMLAction NavFavs = new ActionNavFavs();
-    public static UMLAction NavConfig = new ActionNavConfig();
+//    public static UMLAction NavConfig = new ActionNavConfig();
 
     public static UMLAction Find = new ActionFind();
     public static UMLAction GotoDiagram = new ActionGotoDiagram();
@@ -332,17 +332,17 @@ class ActionNavForw extends UMLAction {
 //   }
 // } /* end class ActionNavFavs */
 
-class ActionNavConfig extends UMLAction {
-
-    public ActionNavConfig() { super("action.nav-config"); }
-
-    public void actionPerformed(ActionEvent ae) {
-	NavigatorConfigDialog ncd =
-            new NavigatorConfigDialog(ProjectBrowser.getInstance(),
-                                      NavigatorPane.getInstance());
-	ncd.setVisible(true);
-    }
-} /* end class ActionNavConfig */
+//class ActionNavConfig extends UMLAction {
+//
+//    public ActionNavConfig() { super("action.nav-config"); }
+//
+//    public void actionPerformed(ActionEvent ae) {
+//	NavigatorConfigDialog ncd =
+//            new NavigatorConfigDialog(ProjectBrowser.getInstance(),
+//                                      NavigatorPane.getInstance());
+//	ncd.setVisible(true);
+//    }
+//} /* end class ActionNavConfig */
 
 class ActionNextEditTab extends UMLAction {
 

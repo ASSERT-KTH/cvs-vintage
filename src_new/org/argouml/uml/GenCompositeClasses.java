@@ -1,4 +1,4 @@
-// $Id: GenCompositeClasses.java,v 1.10 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: GenCompositeClasses.java,v 1.11 2003/10/11 11:17:41 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.util.ChildGenerator;
  *  the "children" of a class are the other classes that are
  *  assocaiated with the parent class, and that MAssociation has a
  *  COMPOSITE end at the parent.  This is used in one of the
- *  NavPerspectives. 
+ *  Perspectives. 
  *  @stereotype singleton
  */
 
