@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.39 2002/03/24 21:44:32 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.40 2002/04/02 19:36:41 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -24,7 +24,7 @@
 
   <mbean code="org.jboss.deployment.scanner.URLDeploymentScanner"
 	 name="jboss.deployment:type=DeploymentScanner,flavor=URL">
-    <depends>jboss.system:service=MainDeployer</depends>
+    <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
     <attribute name="ScanPeriod">5000</attribute>
 
     <!-- 
