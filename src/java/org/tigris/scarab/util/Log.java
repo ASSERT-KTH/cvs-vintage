@@ -46,28 +46,28 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * A simple wrapper around a logger object to use to log to the
  * org.tigris.scarab category.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Log.java,v 1.3 2003/01/20 16:06:36 jmcnally Exp $
+ * @version $Id: Log.java,v 1.4 2003/01/24 19:07:07 jmcnally Exp $
  */
 public abstract class Log
 {
-    private static final Category log = 
-        Category.getInstance("org.tigris.scarab");
+    private static final Logger log = 
+        Logger.getLogger("org.tigris.scarab");
 
-    public static final Category get()
+    public static final Logger get()
     {
         return log;
     } 
 
-    public static final Category get(String s)
+    public static final Logger get(String s)
     {
-        return Category.getInstance(s);
+        return Logger.getLogger(s);
     } 
 
 
