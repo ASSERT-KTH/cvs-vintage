@@ -1,4 +1,4 @@
-// $Id: FigCallActionLink.java,v 1.1 2003/12/02 20:43:38 kataka Exp $
+// $Id: FigCallActionLink.java,v 1.2 2003/12/03 08:07:59 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,16 +62,12 @@ public class FigCallActionLink extends FigLink {
             ((ActivationNode)getSrcLinkPort()).setCutOffBottom(false);
 			((ActivationNode)getSrcLinkPort()).setCutOffTop(false);
         } else {
-        }        
-        int srcIndex = getSrcFigObject().getIndexOf((Node)getSrcLinkPort());
-        int destIndex = getDestFigObject().getIndexOf((Node)getDestLinkPort());
-        if (srcIndex != destIndex) {
-        	
-        }
+        }                
         getDestFigObject().makeActivation(
             (Node) getDestLinkPort(),
             (Node) getDestLinkPort());
         ((ActivationNode) getDestLinkPort()).setCutOffTop(true);
+        ((ActivationNode) getDestLinkPort()).setCutOffBottom(false);
 
     }
 }

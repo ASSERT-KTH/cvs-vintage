@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.2 2003/12/02 22:05:27 kataka Exp $
+// $Id: FigLink.java,v 1.3 2003/12/03 08:07:59 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,8 +41,7 @@ import org.tigris.gef.presentation.FigPoly;
  * @author : jaap.branderhorst@xs4all.nl
  */
 public abstract class FigLink
-    extends FigEdgeModelElement
-    implements Comparable {
+    extends FigEdgeModelElement {
 
     private int computeRouteNumbersOfTime = 0;
 
@@ -161,20 +160,6 @@ public abstract class FigLink
      *
      */
     protected abstract void layoutActivations();
-
-    /**
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(Object arg0) {
-        if (arg0 == null) {
-            throw new NullPointerException();
-        }
-        if (arg0 instanceof FigLink) {
-            FigLink link = (FigLink) arg0;
-            return link.getY() - this.getY();
-        } else
-            return -1;
-    }
 
     public LinkPort getDestLinkPort() {
         return (LinkPort) getDestPortFig().getOwner();
