@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.34 2004/07/17 16:21:40 mvw Exp $
+// $Id: Critic.java,v 1.35 2004/07/22 13:28:53 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.34 2004/07/17 16:21:40 mvw Exp $
+// $Id: Critic.java,v 1.35 2004/07/22 13:28:53 mkl Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -207,7 +207,7 @@ public class Critic implements Poster, Serializable {
 	}
 	addControlRec(SNOOZE_ORDER, new SnoozeOrder());
 	_criticType = "correctness";
-	_knowledgeTypes.addElement("Correctness");
+	_knowledgeTypes.addElement(KT_CORRECTNESS);
 	_decisionCategory = "Checking";
 	// TODO: make this configurable
 	_emailAddr = "users@argouml.tigris.org";
@@ -398,6 +398,7 @@ public class Critic implements Poster, Serializable {
 	_knowledgeTypes.addElement(type);
     }
 
+    public VectorSet getKnowledgeTypes() { return _knowledgeTypes; }
     public void setKnowledgeTypes(VectorSet kt) { _knowledgeTypes = kt; }
     public void setKnowledgeTypes(String t1) {
 	_knowledgeTypes = new VectorSet();
