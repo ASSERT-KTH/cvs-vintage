@@ -1,0 +1,2 @@
+Main-Class: test.jboss.jmx.TestClient
+Class-Path: ../lib/jmxri.jar ../conf/ ./jnp-client.jar
