@@ -4,7 +4,6 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +42,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCUtil
 {
@@ -130,7 +129,12 @@ public class JDBCUtil
     * @param value the value which the parameter is to be set to.
     * @throws SQLException if parameter setting fails.
     */
-   public static void setParameter(Logger log, PreparedStatement ps, int index, int jdbcType, Object value) throws SQLException
+   public static void setParameter(
+         Logger log, 
+         PreparedStatement ps, 
+         int index, 
+         int jdbcType, 
+         Object value) throws SQLException
    {
       if(log.isTraceEnabled()) {
          log.trace("Set parameter: " +
@@ -144,13 +148,13 @@ public class JDBCUtil
          ps.setNull(index, jdbcType);
       } else
       {
-         // convert to valid SQL data types (for DATE, TIME, TIMESTAMP)
-         value = convertToSQLType(jdbcType, value);
+         // convert to valid SQL date types (for DATE, TIME, TIMESTAMP)
+         value = convertToSQLDate(jdbcType, value);
          
          if(isBinaryJDBCType(jdbcType))
          {
             byte[] bytes = convertObjectToByteArray(value);
-            setBinaryParameter(ps, index, bytes);
+            setBinaryParameter(ps, index, jdbcType, bytes);
          } else
          {
             ps.setObject(index, value, jdbcType);
@@ -158,12 +162,20 @@ public class JDBCUtil
       }
    }
    
-   private static void setBinaryParameter(PreparedStatement ps, int index, byte[] bytes) throws SQLException
+   private static void setBinaryParameter(
+         PreparedStatement ps, 
+         int index,
+         int jdbcType,
+         byte[] bytes) throws SQLException
    {
       // it's more efficient to use setBinaryStream for large
       // streams, and causes problems if not done on some DBMS
       // implementations
-      if (bytes.length < 2000)
+      if(jdbcType == Types.BLOB) 
+      {
+         // if the jdbc type is blob use a blob
+         ps.setBlob(index, new ByteArrayBlob(bytes));
+      } else if (bytes.length < 2000)
       {
          ps.setBytes(index, bytes);
       } else
@@ -184,11 +196,16 @@ public class JDBCUtil
     * Used for all retrieval of results from <code>ResultSet</code>s.
     * Implements tracing, and allows some tweaking of returned types.
     *
-    * @param rs the <code>ResultSet</code> from which a result is being retrieved.
+    * @param rs the <code>ResultSet</code> from which a result is 
+    *    being retrieved.
     * @param index index of the result column.
     * @param destination The class of the variable this is going into
     */
-   public static Object getResult(Logger log, ResultSet rs, int index, Class destination) throws SQLException
+   public static Object getResult(
+         Logger log, 
+         ResultSet rs, 
+         int index, 
+         Class destination) throws SQLException
    {
       Object[] returnValue = new Object[1];
       if(getNonBinaryResult(rs, index, destination, returnValue))
@@ -198,15 +215,6 @@ public class JDBCUtil
                   ", javaType=" + destination.getName() + 
                   ", Simple, value=" + returnValue[0]);
          }
-         return returnValue[0];
-      } else if(getObjectResult(rs, index, destination, returnValue))
-      {
-         if(log.isTraceEnabled()) {
-            log.trace("Get result: index=" + index + 
-                  ", javaType=" + destination.getName() + 
-                  ", Object, value=" + returnValue[0]);
-         }
-         return returnValue[0];
       } else if(getBinaryResult(rs, index, destination, returnValue))
       {
          if(log.isTraceEnabled()) {
@@ -214,28 +222,38 @@ public class JDBCUtil
                   ", javaType=" + destination.getName() + 
                   ", Binary, value=" + returnValue[0]);
          }
-         return returnValue[0];
+      } else {
+         throw new SQLException("Unable to load a ResultSet column into " +
+               "a variable of type '" + destination.getName() + "'");
       }
-      throw new SQLException("Unable to load a ResultSet column into a variable of type '" + destination.getName() + "'");
+
+      // convert to valid from SQL date back to Java date 
+      // fixes comparisons of date types
+      returnValue[0] = convertToJavaDate(destination, returnValue[0]);
+
+      return returnValue[0];
    }
    
-   private static boolean getNonBinaryResult(ResultSet rs, int index, Class destination, Object returnValue[]) throws SQLException
+   private static boolean getNonBinaryResult(
+         ResultSet rs, 
+         int index, 
+         Class destination, 
+         Object returnValue[]) throws SQLException
    {
       Method method = (Method)rsTypes.get(destination.getName());
       if(method != null)
       {
          try
          {
-            Object value = method.invoke(rs, new Object[]
-            {new Integer(index)});
+            Object value = method.invoke(rs, new Object[]{new Integer(index)});
             if(rs.wasNull())
             {
                returnValue[0] = null;
             } else
             {
                if(value instanceof String &&
-               (destination.isAssignableFrom(Character.class) ||
-               destination.isAssignableFrom(Character.TYPE) ))
+                     (destination.isAssignableFrom(Character.class) ||
+                     destination.isAssignableFrom(Character.TYPE) ))
                {
                   value = new Character(((String)value).charAt(0));
                }
@@ -253,23 +271,11 @@ public class JDBCUtil
       return false;
    }
    
-   private static boolean getObjectResult(ResultSet rs, int index, Class destination, Object returnValue[]) throws SQLException
-   {
-      //
-      // I think this method is very dangerous, and we should consider removing it.
-      // Some lesser databases only allow you to read a column once and if the
-      // object based stratege fails, we have to read the column again with getBytes.
-      Object value = rs.getObject(index);
-      if(value == null)
-      {
-         returnValue[0] = null;
-         return true;
-      }
-      
-      return convertToJavaType(value, destination, returnValue);
-   }
-   
-   private static boolean getBinaryResult(ResultSet rs, int index, Class destination, Object returnValue[]) throws SQLException
+   private static boolean getBinaryResult(
+         ResultSet rs, 
+         int index, 
+         Class destination, 
+         Object returnValue[]) throws SQLException
    {
       byte[] bytes = rs.getBytes(index);
       if( bytes == null )
@@ -278,16 +284,20 @@ public class JDBCUtil
          return true;
       }
       
-      Object value = convertByteArrayToObject(bytes);
+      Object value = convertByteArrayToObject(bytes, destination);
       return convertToJavaType(value, destination, returnValue);
    }
    
-   private static boolean convertToJavaType(Object value, Class destination, Object returnValue[]) throws SQLException
+   private static boolean convertToJavaType(
+         Object value, 
+         Class destination, 
+         Object returnValue[]) throws SQLException
    {
       try
       {
          // Was the object double marshalled?
-         if(value instanceof MarshalledObject && !destination.equals(MarshalledObject.class))
+         if(value instanceof MarshalledObject && 
+               !destination.equals(MarshalledObject.class))
          {
             value = ((MarshalledObject)value).get();
          }
@@ -302,7 +312,9 @@ public class JDBCUtil
                return true;
             } else
             {
-               throw new SQLException("Got a " + value.getClass().getName() + ": '" + value + "' while looking for a " + destination.getName());
+               throw new SQLException("Got a " + value.getClass().getName() + 
+                     ": '" + value + "' while looking for a " + 
+                     destination.getName());
             }
          }
          
@@ -318,7 +330,8 @@ public class JDBCUtil
          {
             if((destination.equals(Byte.TYPE) && value instanceof Byte) ||
             (destination.equals(Short.TYPE) && value instanceof Short) ||
-            (destination.equals(Character.TYPE) && value instanceof Character) ||
+            (destination.equals(Character.TYPE) && 
+                  value instanceof Character) ||
             (destination.equals(Boolean.TYPE) && value instanceof Boolean) ||
             (destination.equals(Integer.TYPE) && value instanceof Integer) ||
             (destination.equals(Long.TYPE) && value instanceof Long) ||
@@ -332,7 +345,8 @@ public class JDBCUtil
          }
       } catch (RemoteException e)
       {
-         throw new SQLException("Unable to load EJBObject back from Handle: " +e);
+         throw new SQLException("Unable to load EJBObject back from Handle: "
+               + e);
       } catch(IOException e)
       {
          throw new SQLException("Unable to load to deserialize result: "+e);
@@ -362,31 +376,66 @@ public class JDBCUtil
       Types.VARBINARY == jdbcType);
    }
    
-   private static Object convertToSQLType(int jdbcType, Object value)
+   private static Object convertToSQLDate(int jdbcType, Object value)
    {
-      if(jdbcType == Types.DATE)
+      if(value.getClass() == java.util.Date.class)
       {
-         if(value.getClass().getName().equals("java.util.Date"))
+         if(jdbcType == Types.DATE)
          {
             return new java.sql.Date(((java.util.Date)value).getTime());
-         }
-      } else if(jdbcType == Types.TIME)
-      {
-         if(value.getClass().getName().equals("java.util.Date"))
+         } else if(jdbcType == Types.TIME)
          {
             return new java.sql.Time(((java.util.Date)value).getTime());
-         }
-      } else if(jdbcType == Types.TIMESTAMP)
-      {
-         if(value.getClass().getName().equals("java.util.Date"))
+         } else if(jdbcType == Types.TIMESTAMP)
          {
             return new java.sql.Timestamp(((java.util.Date)value).getTime());
          }
       }
       return value;
    }
-   
-   private static byte[] convertObjectToByteArray(Object value) throws SQLException
+
+   private static Object convertToJavaDate(Class destination, Object value)
+   {
+      // make a real java.util.Date (sub types have problems with comparions)
+      if(destination == java.util.Date.class && 
+            value instanceof java.util.Date) 
+      {
+         // handle timestamp special becauses it hoses the milisecond values
+         if(value instanceof java.sql.Timestamp) {
+            java.sql.Timestamp ts = (java.sql.Timestamp)value;
+            
+            // Timestamp returns whole seconds from getTime and partial 
+            // seconds are retrieved from getNanos()
+            return new java.util.Date(ts.getTime() + (ts.getNanos()/1000000));
+         } else 
+         {
+            return new java.util.Date(((java.util.Date)value).getTime());
+         }
+      } else if(destination == java.sql.Time.class &&
+            value instanceof java.sql.Time) {
+
+         // make a new Time object; you never know what a driver will return
+         return new java.sql.Time(((java.sql.Time)value).getTime());
+      } else if(destination == java.sql.Date.class &&
+            value instanceof java.sql.Date) {
+
+         // make a new Date object; you never know what a driver will return
+         return new java.sql.Date(((java.sql.Date)value).getTime());
+      } else if(destination == java.sql.Timestamp.class &&
+            value instanceof java.sql.Timestamp) {
+
+         // make a new Timestamp object; you never know 
+         // what a driver will return
+         java.sql.Timestamp in = (java.sql.Timestamp)value;
+         java.sql.Timestamp out = new java.sql.Timestamp(in.getTime());
+         out.setNanos(in.getNanos());
+         return out;
+      }
+      return value;
+   }
+    
+   private static byte[] convertObjectToByteArray(Object value) 
+         throws SQLException
    {
       // Do we already have a byte array?
       if (value instanceof byte[])
@@ -424,11 +473,18 @@ public class JDBCUtil
       }
    }
    
-   private static Object convertByteArrayToObject(byte[] bytes) throws SQLException
+   private static Object convertByteArrayToObject(
+         byte[] bytes, 
+         Class destination) throws SQLException
    {
+      // Are we looking for a byte array
+      if (destination == byte[].class)
+      {
+         return bytes;
+      }
+
       ByteArrayInputStream bais = null;
       ObjectInputStream ois = null;
-      
       try
       {
          Object value;
@@ -449,7 +505,8 @@ public class JDBCUtil
          return value;
       } catch (RemoteException e)
       {
-         throw new SQLException("Unable to load EJBObject back from Handle: " +e);
+         throw new SQLException("Unable to load EJBObject back from Handle: " 
+               + e);
       } catch (IOException e)
       {
          throw new SQLException("Unable to load to deserialize result: "+e);
@@ -492,31 +549,78 @@ public class JDBCUtil
       {Integer.TYPE};
       try
       {
-         rsTypes.put(java.util.Date.class.getName(),       ResultSet.class.getMethod("getTimestamp", arg));
-         rsTypes.put(java.sql.Date.class.getName(),        ResultSet.class.getMethod("getDate", arg));
-         rsTypes.put(java.sql.Time.class.getName(),        ResultSet.class.getMethod("getTime", arg));
-         rsTypes.put(java.sql.Timestamp.class.getName(),   ResultSet.class.getMethod("getTimestamp", arg));
-         rsTypes.put(java.math.BigDecimal.class.getName(), ResultSet.class.getMethod("getBigDecimal", arg));
-         rsTypes.put(java.sql.Ref.class.getName(),         ResultSet.class.getMethod("getRef", arg));
-         rsTypes.put(java.lang.String.class.getName(),     ResultSet.class.getMethod("getString", arg));
-         rsTypes.put(java.lang.Boolean.class.getName(),    ResultSet.class.getMethod("getBoolean", arg));
-         rsTypes.put(Boolean.TYPE.getName(),               ResultSet.class.getMethod("getBoolean", arg));
-         rsTypes.put(java.lang.Byte.class.getName(),       ResultSet.class.getMethod("getByte", arg));
-         rsTypes.put(Byte.TYPE.getName(),                  ResultSet.class.getMethod("getByte", arg));
-         rsTypes.put(java.lang.Character.class.getName(),  ResultSet.class.getMethod("getString", arg));
-         rsTypes.put(Character.TYPE.getName(),             ResultSet.class.getMethod("getString", arg));
-         rsTypes.put(java.lang.Short.class.getName(),      ResultSet.class.getMethod("getShort", arg));
-         rsTypes.put(Short.TYPE.getName(),                 ResultSet.class.getMethod("getShort", arg));
-         rsTypes.put(java.lang.Integer.class.getName(),    ResultSet.class.getMethod("getInt", arg));
-         rsTypes.put(Integer.TYPE.getName(),               ResultSet.class.getMethod("getInt", arg));
-         rsTypes.put(java.lang.Long.class.getName(),       ResultSet.class.getMethod("getLong", arg));
-         rsTypes.put(Long.TYPE.getName(),                  ResultSet.class.getMethod("getLong", arg));
-         rsTypes.put(java.lang.Float.class.getName(),      ResultSet.class.getMethod("getFloat", arg));
-         rsTypes.put(Float.TYPE.getName(),                 ResultSet.class.getMethod("getFloat", arg));
-         rsTypes.put(java.lang.Double.class.getName(),     ResultSet.class.getMethod("getDouble", arg));
-         rsTypes.put(Double.TYPE.getName(),                ResultSet.class.getMethod("getDouble", arg));
+         // java.util.Date
+         rsTypes.put(java.util.Date.class.getName(),
+               ResultSet.class.getMethod("getTimestamp", arg));
+         // java.sql.Date
+         rsTypes.put(java.sql.Date.class.getName(),
+               ResultSet.class.getMethod("getDate", arg));
+         // Time
+         rsTypes.put(java.sql.Time.class.getName(),
+               ResultSet.class.getMethod("getTime", arg));
+         // Timestamp
+         rsTypes.put(java.sql.Timestamp.class.getName(),
+               ResultSet.class.getMethod("getTimestamp", arg));
+         // BigDecimal
+         rsTypes.put(java.math.BigDecimal.class.getName(),
+               ResultSet.class.getMethod("getBigDecimal", arg));
+         // java.sql.Ref Does this really work?
+         rsTypes.put(java.sql.Ref.class.getName(),
+               ResultSet.class.getMethod("getRef", arg));
+         // String
+         rsTypes.put(java.lang.String.class.getName(),
+               ResultSet.class.getMethod("getString", arg));
+         // Boolean
+         rsTypes.put(java.lang.Boolean.class.getName(),
+               ResultSet.class.getMethod("getBoolean", arg));
+         // boolean
+         rsTypes.put(Boolean.TYPE.getName(),
+               ResultSet.class.getMethod("getBoolean", arg));
+         // Byte
+         rsTypes.put(java.lang.Byte.class.getName(),
+               ResultSet.class.getMethod("getByte", arg));
+         // byte
+         rsTypes.put(Byte.TYPE.getName(),
+               ResultSet.class.getMethod("getByte", arg));
+         // Character
+         rsTypes.put(java.lang.Character.class.getName(),
+               ResultSet.class.getMethod("getString", arg));
+         // char
+         rsTypes.put(Character.TYPE.getName(),
+               ResultSet.class.getMethod("getString", arg));
+         // Short
+         rsTypes.put(java.lang.Short.class.getName(),
+               ResultSet.class.getMethod("getShort", arg));
+         // short
+         rsTypes.put(Short.TYPE.getName(),
+               ResultSet.class.getMethod("getShort", arg));
+         // Integer
+         rsTypes.put(java.lang.Integer.class.getName(),
+               ResultSet.class.getMethod("getInt", arg));
+         // int
+         rsTypes.put(Integer.TYPE.getName(),
+               ResultSet.class.getMethod("getInt", arg));
+         // Long
+         rsTypes.put(java.lang.Long.class.getName(),
+               ResultSet.class.getMethod("getLong", arg));
+         // long
+         rsTypes.put(Long.TYPE.getName(),
+               ResultSet.class.getMethod("getLong", arg));
+         // Float
+         rsTypes.put(java.lang.Float.class.getName(),
+               ResultSet.class.getMethod("getFloat", arg));
+         // float
+         rsTypes.put(Float.TYPE.getName(),
+               ResultSet.class.getMethod("getFloat", arg));
+         // Double
+         rsTypes.put(java.lang.Double.class.getName(),
+               ResultSet.class.getMethod("getDouble", arg));
+         // double
+         rsTypes.put(Double.TYPE.getName(),
+               ResultSet.class.getMethod("getDouble", arg));
          // byte[]
-         rsTypes.put("[B",                                 ResultSet.class.getMethod("getBytes", arg));
+         rsTypes.put("[B",
+               ResultSet.class.getMethod("getBytes", arg));
       } catch(NoSuchMethodException e)
       {
          // Should never happen
