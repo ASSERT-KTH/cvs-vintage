@@ -87,7 +87,7 @@ public class SMTPServer {
 
 		//boolean popbeforesmtp = accountItem.getSmtpItem().getPopBeforeSmtp();
 
-		if (popbeforesmtp == true) {
+		if (popbeforesmtp) {
 			// no esmtp - use POP3-before-SMTP instead
 			try {
 				pop3Authentification();
@@ -148,7 +148,6 @@ public class SMTPServer {
 
 			//setText("Authenticating");
 
-			System.out.println("authentication--->");
 			username = accountItem.getSmtpItem().get("user");
 			password = accountItem.getSmtpItem().get("password");
 			method = accountItem.getSmtpItem().get("login_method");
@@ -226,7 +225,6 @@ public class SMTPServer {
 		}
 
 		return true;
-
 	}
 
 	public void closeConnection() {
@@ -241,7 +239,6 @@ public class SMTPServer {
 			dialog.showDialog(e);
 
 		}
-
 	}
 
 	protected void pop3Authentification() throws Exception {
@@ -254,7 +251,7 @@ public class SMTPServer {
 		PopItem item = accountItem.getPopItem();
 		PasswordDialog dialog = null;
 
-		while ((login == false) && (cancel == false)) {
+		while (!login && !cancel) {
 			if (item.get("password").length() == 0) {
 				dialog = new PasswordDialog();
 
@@ -265,7 +262,7 @@ public class SMTPServer {
 
 				char[] name;
 
-				if (dialog.success() == true) {
+				if (dialog.success()) {
 					// ok pressed
 					name = dialog.getPassword();
 					password = new String(name);
@@ -273,7 +270,6 @@ public class SMTPServer {
 					save = dialog.getSave();
 					//method = dialog.getLoginMethod();
 
-					//System.out.println("pass:<"+password+">");
 					cancel = false;
 				} else {
 					// cancel pressed
@@ -286,8 +282,7 @@ public class SMTPServer {
 				//method = item.getLoginMethod();
 			}
 
-			if (cancel == false) {
-				//System.out.println("trying to login");
+			if (!cancel) {
 				//setText(item.getHost() + " : Login...");
 
 				//startTimer();
@@ -303,15 +298,13 @@ public class SMTPServer {
 				login = pop3Connection.login(item.get("user"), password);
 				//stopTimer();
 
-				if (login == false) {
+				if (!login) {
 					NotifyDialog d = new NotifyDialog();
 					d.showDialog("Authentification failed");
 
 					item.set("password","");
 				}
-
 			}
-
 		}
 
 		if (login) {
@@ -334,5 +327,4 @@ public class SMTPServer {
 
 		smtpProtocol.sendMessage(message.getSource(), workerStatusController);
 	}
-
 }
