@@ -42,7 +42,11 @@ This page is for editing the Attributes which are defined globally.
 #set ( $attgroup = $intake.Attribute.Default ) 
 
 #foreach( $attribute in $module.AllAttributes )
+#if ( $velocityCount % 2 > 0 )
 <tr class="a">
+#else
+<tr class="b">
+#end
 <td><input type="checkbox"/></td>
 <td>$attribute.Name (<a href="$link.setPage("admin,AttributeShow.vm").setAction("admin.ModifyAttributes").addPathInfo("eventSubmit_doSelectattribute", "Modify Attribute").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId").addPathInfo("nextTemplate","admin,AttributeEdit.vm")">edit</a>)</td>
 <td>
