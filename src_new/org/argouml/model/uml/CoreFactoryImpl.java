@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.12 2005/01/12 17:52:24 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.13 2005/01/12 18:18:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -643,14 +643,9 @@ public class CoreFactoryImpl
         if (end1 == null
                 || end2 == null
                 || !(end1 instanceof MClassifier)
-                || !(end2 instanceof MClassifier)
-                || end1 instanceof MAssociationClass
-                || end2 instanceof MAssociationClass) {
-            throw new IllegalArgumentException(""
-        				       + "either one of the arguments "
-        				       + "was null or "
-        				       + "was instanceof "
-        				       + "MAssociationClass");
+                || !(end2 instanceof MClassifier)) {
+            throw new IllegalArgumentException(
+                    "either one of the arguments was null");
         }
         return buildAssociationClass(
                 (MClass) buildClass(),
@@ -841,12 +836,9 @@ public class CoreFactoryImpl
             MClassifier end1, MClassifier end2) {
         if (end1 == null
                 || end2 == null
-                || cl == null
-                || end1 instanceof MAssociationClass
-                || end2 instanceof MAssociationClass) {
-            throw new IllegalArgumentException("either one of the arguments "
-        				       + "was null or was instanceof "
-        				       + "MAssociationClass");
+                || cl == null) {
+            throw new IllegalArgumentException(
+                    "either one of the arguments was null");
         }
         MAssociationClass assoc = (MAssociationClass) createAssociationClass();
         assoc.setName(cl.getName());
