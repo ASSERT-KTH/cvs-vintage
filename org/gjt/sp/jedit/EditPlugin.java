@@ -26,7 +26,7 @@ import org.gjt.sp.jedit.gui.OptionsDialog;
  * The interface between jEdit and a plugin.
  *
  * @author Slava Pestov
- * @version $Id: EditPlugin.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.3 2001/09/22 07:01:12 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -68,13 +68,6 @@ public abstract class EditPlugin
 	 * @since jEdit 2.6pre5
 	 */
 	public void createMenuItems(Vector menuItems) {}
-
-	/**
-	 * @deprecated Override createMenuItems(Vector) instead
-	 *
-	 * @since jEdit 2.1pre1
-	 */
-	public void createMenuItems(View view, Vector menus, Vector menuItems) {}
 
 	/**
 	 * Method called every time the plugin options dialog box is

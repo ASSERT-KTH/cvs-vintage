@@ -32,7 +32,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.3 2001/09/22 07:01:12 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -78,10 +78,10 @@ public class DockableWindowManager extends JPanel
 		this.view = view;
 		windows = new Hashtable();
 
-		top = new DockableWindowContainer.TabbedPane(TOP);
-		left = new DockableWindowContainer.TabbedPane(LEFT);
-		bottom = new DockableWindowContainer.TabbedPane(BOTTOM);
-		right = new DockableWindowContainer.TabbedPane(RIGHT);
+		top = new DockableWindowContainer.TabbedPane(this,TOP);
+		left = new DockableWindowContainer.TabbedPane(this,LEFT);
+		bottom = new DockableWindowContainer.TabbedPane(this,BOTTOM);
+		right = new DockableWindowContainer.TabbedPane(this,RIGHT);
 
 		add(BorderLayout.NORTH,top);
 		add(BorderLayout.WEST,left);
@@ -240,6 +240,35 @@ public class DockableWindowManager extends JPanel
 		entry.container.saveDockableWindow(entry.win);
 		entry.container.removeDockableWindow(entry.win);
 		windows.remove(name);
+	}
+
+	/**
+	 * Removes the specified dockable window from this dockable window manager.
+	 * @param comp The dockable window's component
+	 * @since jEdit 4.0pre1
+	 */
+	public void removeDockableWindow(Component comp)
+	{
+		Enumeration enum = windows.elements();
+		while(enum.hasMoreElements())
+		{
+			Entry entry = (Entry)enum.nextElement();
+			if(entry.win.getComponent() == comp)
+			{
+				String name = entry.win.getName();
+				Log.log(Log.DEBUG,this,"Removing " + name + " from "
+					+ entry.container);
+
+				jEdit.setBooleanProperty(name + ".auto-open",false);
+				entry.container.saveDockableWindow(entry.win);
+				entry.container.removeDockableWindow(entry.win);
+				windows.remove(name);
+				return;
+			}
+		}
+
+		Log.log(Log.ERROR,this,"This DockableWindowManager"
+			+ " does not have a window " + comp);
 	}
 
 	/**
