@@ -15,7 +15,6 @@ Attribute" button:
     <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
    
 #set ( $attgroup = $intake.Attribute.Default )
-    <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
 
 ## default to first attribute if none was selected previously
 #if ( $attgroup.Id.isSet() )
@@ -49,4 +48,5 @@ Attribute" button:
 <p>
 <input type="submit" name="eventSubmit_doSelectattribute" value="Modify Attribute">
 </p>
+$intake.declareGroups()
 </form>
