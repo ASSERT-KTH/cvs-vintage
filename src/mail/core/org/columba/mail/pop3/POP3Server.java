@@ -320,4 +320,12 @@ public class POP3Server {
 
 		store = new POP3Store(item);
 	}
+
+	/**
+	 * @throws IOException
+	 * 
+	 */
+	public void dropConnection() throws IOException {
+		store.dropConnection();
+	}
 }

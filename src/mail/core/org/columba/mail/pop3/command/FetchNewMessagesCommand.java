@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,8 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.main.Main;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
@@ -154,7 +157,26 @@ public class FetchNewMessagesCommand extends Command {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
+		WorkerStatusChangeListener listener = new WorkerStatusChangeListener() {
+			public void workerStatusChanged(WorkerStatusChangedEvent e) {
+				if( e.getSource().cancelled() ) {
+					try {
+						server.dropConnection();
+					} catch (IOException e1) {							
+					}
+				}
+				
+			}				
+		};
+		
+		// important for cancel
+		worker.addWorkerStatusChangeListener(listener);
+		
+		// download message
 		ColumbaMessage message = server.getMessage(serverUID, worker);
+		
+		// not needed anymore
+		worker.removeWorkerStatusChangeListener(listener);
 
 		if (message == null) {
 			LOG.severe("Message with UID=" + serverUID

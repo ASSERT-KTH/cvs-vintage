@@ -115,4 +115,11 @@ public class CheckForNewMessagesCommand extends Command {
 
 	//  END public void execute(Worker worker) throws Exception
 
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		// Reenable the action
+		action.setEnabled(true);
+	}
 }

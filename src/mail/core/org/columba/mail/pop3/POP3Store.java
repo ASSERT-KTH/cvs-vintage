@@ -35,16 +35,9 @@ import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.util.PasswordDialog;
-import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
-import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;
@@ -542,4 +535,12 @@ public class POP3Store {
         }
         return uidMap;
     }
+
+	/**
+	 * @throws IOException
+	 * 
+	 */
+	public void dropConnection() throws IOException {
+		protocol.dropConnection();
+	}
 }
