@@ -20,7 +20,6 @@ import org.jboss.proxy.Proxy;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.ContainerInvokerContainer;
-import org.jboss.ejb.EntityInstanceCache;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 
@@ -37,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker

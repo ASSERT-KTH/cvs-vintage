@@ -19,7 +19,6 @@ import javax.ejb.EJBObject;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.ContainerInvokerContainer;
-import org.jboss.ejb.EntityInstanceCache;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 
@@ -35,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -82,10 +81,9 @@ public final class JRMPContainerInvoker
             new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
             new StatelessSessionProxy(ci.getJndiName(), ci, ci.isOptimized()));
       }
-   
+      
    		     Logger.debug("JRMP 1.3 CI initialized");
    }
-   
 
    public void start()
    {
@@ -150,7 +148,7 @@ public final class JRMPContainerInvoker
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
  
  /*
