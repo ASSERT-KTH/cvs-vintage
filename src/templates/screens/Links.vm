@@ -36,9 +36,6 @@ $page.setTitle("Scarab Links")
  <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
 </li>
 <li>
- <a href="$link.setPage("ModifyModule.vm")">ModifyModule.vm</a>
-</li>
-<li>
  <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>
 </ul>
