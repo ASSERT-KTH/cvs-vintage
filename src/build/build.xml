@@ -7,7 +7,7 @@
 <project name="jBoss" default="main" basedir="../.." verbose="true">
   <target name="init">
     <taskdef name="xmlbean" classname="com.dreambean.xmlbeans.ant.XMLBeans"/>
-    
+
     <property name="Name" value="jBoss"/>
     <property name="name" value="jboss"/>
     <property name="version" value="2.0"/>
@@ -29,12 +29,11 @@
     <property name="build.classes.dir" value="${build.dir}/classes"/>
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
-    
+
     <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jpl-util-0_5b.jar"/>
     <property name="packages" value="org.jboss,org.jboss.ejb,org.jboss.util,org.jboss.tm,org.jboss.logging,org.jboss.jdbc,org.jboss.naming,org.jboss.web"/>
 
     <property name="build.compiler" value="classic"/>
-        
   </target>
 
   <!-- =================================================================== -->
@@ -43,7 +42,7 @@
   <target name="prepare" depends="init">
     <mkdir dir="${build.dir}"/>
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
@@ -58,16 +57,16 @@
 	   includes="org/**"
            excludes="**/activation/**, **/*BeanInfo.java"
     />
-    
-    <rmic base="${build.classes.dir}" 
-          classname="org.jboss.jmx.server.JMXAdaptorImpl" 
+
+    <rmic base="${build.classes.dir}"
+          classname="org.jboss.jmx.server.JMXAdaptorImpl"
           stubVersion="1.2"
-			 classpath="${classpath}"/>  
-			 
-    <rmic base="${build.classes.dir}" 
-          classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker" 
+			 classpath="${classpath}"/>
+
+    <rmic base="${build.classes.dir}"
+          classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker"
           stubVersion="1.2"
-			 classpath="${classpath}"/>  
+			 classpath="${classpath}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -87,20 +86,20 @@
 			  includes="**/*BeanInfo.java"
     />
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Creates the jar archives                                            -->
   <!-- =================================================================== -->
   <target name="jar" depends="xmlbeans">
     <copydir src="${src.resources}" dest="${build.classes.dir}"/>
-     
+
     <mkdir dir="${build.bin.dir}"/>
     <jar jarfile="${build.bin.dir}/run.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/run.mf"
          includes="org/jboss/Main*.*"
     />
-    
+
     <mkdir dir="${build.lib.dir}/ext"/>
     <jar jarfile="${build.lib.dir}/ext/jboss.jar"
          basedir="${build.classes.dir}"
@@ -108,27 +107,27 @@
          includes="org/jboss/**"
          excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/ejb/plugins/jaws/deployment/**"
     />
-         
+
     <mkdir dir="${build.dir}/client"/>
     <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
          includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**"
     />
-	 
+
     <jar jarfile="${build.dir}/client/deploy.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/deploy.mf"
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
     />
-	 
+
     <jar jarfile="${build.dir}/client//stop.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/stop.mf"
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
     />
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Create the EJX plugin                                               -->
   <!-- =================================================================== -->
@@ -138,14 +137,14 @@
          manifest="${etc.dir}/ejxjboss.mf"
          includes="org/jboss/ejb/deployment/**"
     />
-    
+
     <jar jarfile="${build.lib.dir}/ext/ejxjaws.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/ejxjaws.mf"
          includes="org/jboss/ejb/plugins/jaws/deployment/**"
     />
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Creates the binary structure                                        -->
   <!-- =================================================================== -->
@@ -162,9 +161,10 @@
 
      <copyfile src="${lib.dir}/jmxri.jar" dest="${dist.dir}/lib/jmxri.jar"/>
      <copyfile src="${etc.dir}/jboss.conf" dest="${dist.dir}/conf/jboss.conf"/>
+     <copyfile src="${etc.dir}/jboss.jcml" dest="${dist.dir}/conf/jboss.jcml"/>
      <copyfile src="${etc.dir}/log.properties" dest="${dist.dir}/log/log.properties"/>
      <copyfile src="${etc.dir}/db.properties" dest="${dist.dir}/db/db.properties"/>
-     
+
      <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
      <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
      <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext"/>
@@ -199,7 +199,7 @@
      <mkdir dir="${dist.dir}/docs/api"/>
      <copydir src="${docs.dir}" dest="${dist.dir}/docs"/>
      <copydir src="${build.javadocs.dir}" dest="${dist.dir}/docs/api"/>
-     
+
      <mkdir dir="${dist.dir}/src"/>
      <copydir src="${src.dir}" dest="${dist.dir}/src"/>
   </target>
