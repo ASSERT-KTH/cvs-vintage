@@ -30,13 +30,13 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-    String versionIdentifier = "BETA-PROD-PRE-03";
+    String versionIdentifier = "BETA-PROD-PRE-04";
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
