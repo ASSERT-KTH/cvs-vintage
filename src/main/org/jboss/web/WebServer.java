@@ -36,7 +36,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  *
  *   Revisions:
  *   
@@ -199,17 +199,9 @@ public class WebServer
         }
         catch (IOException e) 
         {
-            // This restart logic seems questionable...
-            debug("DynaServer stopped: " + e.getMessage());
-            e.printStackTrace();
-            debug("Restarting DynaServer");
-            try
-            {
-                start();
-            } catch (IOException ex)
-            {
-                debug("Restart failed");
-            }
+            // If the server is not null meaning we were not stopped report the err
+            if( server != null )
+               debug("DynaServer error: " + e.getMessage());
             return;
         }
 
