@@ -49,11 +49,23 @@
 -->
     <servlet-mapping>
         <servlet-name>scarab</servlet-name>
-        <url-pattern>/servlet/scarab</url-pattern>
+        <url-pattern>/s/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>scarab</servlet-name>
+        <url-pattern>/issue/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>scarab</servlet-name>
+        <url-pattern>/issues/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>scarab</servlet-name>
         <url-pattern>/servlet/scarab/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>scarab</servlet-name>
+        <url-pattern>/servlets/scarab/*</url-pattern>
     </servlet-mapping>
 
     <security-constraint>
