@@ -11,7 +11,7 @@ application/oda			oda
 application/pdf			pdf
 application/rtf			rtf
 application/vnd.mif		mif
-application/vnd.ms-excel    xsl
+application/vnd.ms-excel    xls
 application/vnd.ms-powerpoint	ppt
 application/vnd.ms-project  mpp
 application/vnd.wap.slc		slc
