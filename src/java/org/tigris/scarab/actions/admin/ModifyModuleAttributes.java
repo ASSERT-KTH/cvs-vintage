@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.13 2001/10/09 04:38:31 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.14 2001/10/09 05:23:29 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -105,8 +105,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         AttributeGroup ag = new AttributeGroup();
 
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
       
         List groups = module.getAttributeGroups(); 
@@ -120,8 +119,9 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     }
 
     /**
-        This manages clicking the Add Attribute button.
-    */
+     * This manages clicking the Add Attribute button.
+     * FIXME: this should be done with a form variable
+     */
     public void doGotoselectpage( RunData data, TemplateContext context ) 
         throws Exception
     {
@@ -129,13 +129,12 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     }
 
     /**
-        Selects attribute to add to artifact type and attribute group.
-    */
+     * Selects attribute to add to artifact type and attribute group.
+     */
     public void doSelectattribute( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         String attributeId = data.getParameters().getString("attributeid");
         String groupId = data.getParameters().getString("groupId");
@@ -146,7 +145,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         rma.setModuleId(scarabR.getCurrentModule().getModuleId());
         rma.setAttributeId(attributeId);
         rma.setDedupe(group.getOrder() < 
-           ((ScarabModule)scarabR.getCurrentModule()).getDedupeSequence());
+            ((ScarabModule)scarabR.getCurrentModule()).getDedupeSequence());
         rma.save();
 
         RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
@@ -165,11 +164,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                              TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-           .get(ScarabConstants.INTAKE_TOOL);
-
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         String groupId = data.getParameters().getString("groupId");
@@ -204,8 +200,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                         ag.getQueryKey(), false);
             agGroup.setProperties(ag);
             ag.save();
-       } 
-   }
+        } 
+    }
 
 
     /**
@@ -215,11 +211,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                                   TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-           .get(ScarabConstants.INTAKE_TOOL);
-
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         List rmas = (List)((Vector)module
@@ -291,7 +284,6 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                moduleGroup.setProperties(module);
                module.save();
            }
-
        }
 
         String nextTemplate = data.getParameters()
@@ -310,8 +302,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         Object[] keys = params.getKeys();
         String key;
         String groupId;
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         List attributeGroups = module.getAttributeGroups();
 
@@ -320,37 +311,36 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             key = keys[i].toString();
             if (key.startsWith("delete_group_"))
             {
-               if (attributeGroups.size() - 1 < 2)
-               {
-                   data.setMessage("You cannot have fewer than two groups.");
-                   break;
-               }
-               else
-               {
-                   try
-                   {
-                       groupId = key.substring(13);
-                       AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
-                                           .retrieveByPK(new NumberKey(groupId));
-                       ag.delete(user);
-                   }
-                   catch (Exception e)
-                   {
-                       data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                   }
-               }
+                if (attributeGroups.size() - 1 < 2)
+                {
+                    data.setMessage("You cannot have fewer than two groups.");
+                    break;
+                }
+                else
+                {
+                    try
+                    {
+                        groupId = key.substring(13);
+                        AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
+                                            .retrieveByPK(new NumberKey(groupId));
+                        ag.delete(user);
+                    }
+                    catch (Exception e)
+                    {
+                        data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                    }
+                }
             }
-         }
+        }
     }
 
     /**
-        Unmaps attributes to modules.
-    */
+     * Unmaps attributes to modules.
+     */
     public void doDeleteattributes( RunData data, TemplateContext context ) 
         throws Exception
     {
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ModuleEntity module = scarabR.getCurrentModule();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();

@@ -2,16 +2,18 @@
 $page.setTitle("Enter Issue")
 
 #set ($issue = $scarabR.ReportingIssue)
-#set ( $action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
+#set ($action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm"))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
+#set ($module = $scarabR.CurrentModule)
+#set ($user = $data.User)
 
 <h2>$page.Title</h2>
 <div id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
 <th><small>1:</small> Summary info</th>
-<td><small>2:</small> <a href="Wizard2" title="view duplicate check information">Duplicate check</a></td>
-<td><small>3:</small> <a href="Wizard3" title="view verbose information">Verbose info</a></td>
+<td><small>2:</small> Duplicate check</td>
+<td><small>3:</small> Verbose info</td>
 </tr>
 </table>
 </div>
@@ -19,26 +21,36 @@ $page.setTitle("Enter Issue")
 <form name="ReportForm" method="get" action="$action">
 
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
-<input type="reset" value="reset form" /></p>
+<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates"/>&#160;
+<input type="reset" value="reset"/>
+</p>
 
-<form name="EntryTemplate
+#set ($privateTemplateList = $module.getPrivateTemplates($user))
+#set ($globalTemplateList = $module.GlobalTemplates)
+#if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
 <h3>Apply issue entry template</h3>
 
 <div class="axial">
  <table width="100%" cellpadding="3" cellspacing="2" border="1">
  <tr>
- <th width="120">templates:</th>
+ <th width="120">Templates:</th>
+ 
+ <td>
+ <select>
+#foreach ($template in $privateTemplateList)
+<option value="">$template.Name
+#end
+#foreach ($template in $globalTemplateList)
+<option value="">$template.Name
+#end
+</select>
+ </td>
 
- <td><select>
- <option>No template</option>
- <option>Template X</option>
- <option>Template Y</option>
- <option>Template Z</option>
- </select> &#160;<input type="submit" value="select" /> &#160;<a href="#">template list</a></td>
+    <input type="submit" value="select"/> &#160;<a href="$link.setPage("TemplateList.vm")">template list</a>
  </tr>
  </table>
 </div>
+#end
 
 <h3>Input your issue</h3>
 
