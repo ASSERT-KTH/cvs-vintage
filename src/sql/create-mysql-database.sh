@@ -3,7 +3,7 @@
 # The directory which the SQL scripts have been pre-processed into
 POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
 # The settings file for defining values.
-DB_SETTINGS="dbsettings.props"
+DB_SETTINGS='dbsettings.props'
 
 # Sanity check
 if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
