@@ -55,7 +55,7 @@ import org.tigris.scarab.om.Issue;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.3 2001/08/31 17:36:38 nreizer Exp $
+ * @version $Id: IssueTest.java,v 1.4 2001/08/31 18:10:58 jon Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -80,8 +80,8 @@ public class IssueTest extends BaseTestCase
         issue.setModuleCast(getModule());
 
         testGetAllAttributeValuesMap(issue);
-	testGetUniqueId(issue);
-	testGetEligibleAssignees(issue); 
+        testGetUniqueId(issue);
+        testGetEligibleAssignees(issue); 
     }
     
     private void testGetAllAttributeValuesMap(Issue issue) throws Exception
@@ -89,27 +89,25 @@ public class IssueTest extends BaseTestCase
         System.out.println ("testGetAllAttributeValuesMap()");
         HashMap map = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " + map.size());
-        assertEquals (map.size(), 10);	
+        assertEquals (map.size(), 10);  
     }
 
     private void testGetUniqueId(Issue issue) throws Exception
     {
         System.out.println ("testGetUniqueId()");
 
-	String strUniqueID = null;
-	strUniqueID = issue.getUniqueId();
-	System.out.println ("Unique id: " + strUniqueID);	
+        String strUniqueID = null;
+        strUniqueID = issue.getUniqueId();
+        System.out.println ("Unique id: " + strUniqueID);   
     }
 
     private void testGetEligibleAssignees(Issue issue) throws Exception
     {
         System.out.println ("testGetEligibleAssignees()");
 
-	java.util.List eligibleAssignees = null;
-	eligibleAssignees = issue.getEligibleAssignees();
-	System.out.println ("Number of eligible assignees: "
-		+ eligibleAssignees.size());
-	
+        java.util.List eligibleAssignees = null;
+        eligibleAssignees = issue.getEligibleAssignees();
+        System.out.println ("Number of eligible assignees: "
+            + eligibleAssignees.size());
     }
-
 }
