@@ -59,7 +59,7 @@ $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($i
 <th>Select</th>
 <th>Attribute name</th>
 <th>Per project name</th>
-<th>(In)active</th>
+<th>Active</th>
 <th>Required</th>
 <th>Quick search</th>
 <th>Sequence #</th>
