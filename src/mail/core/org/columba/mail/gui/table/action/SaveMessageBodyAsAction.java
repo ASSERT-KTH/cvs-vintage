@@ -53,21 +53,17 @@ public class SaveMessageBodyAsAction
 	 * 		@param keyStroke
 	 */
 	public SaveMessageBodyAsAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_save"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_save_tooltip"),
-			"SAVE",
-			ImageLoader.getSmallImageIcon("stock_save_as-16.png"),
-			ImageLoader.getImageIcon("stock_save.png"),
-			'0',
-			null);
+		super(frameController,
+				MailResourceLoader.getString(
+						"menu", "mainframe", "menu_message_save"));
+		setTooltipText(
+				MailResourceLoader.getString(
+						"menu", "mainframe", "menu_message_save_tooltip"));
+		setActionCommand("SAVE");
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
+		setMnemonic('S');
+
 		// *20030614, karlpeder* only enabled when message(s) selected
 		setEnabled(false);
 		((AbstractMailFrameController) frameController)
@@ -79,11 +75,6 @@ public class SaveMessageBodyAsAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		/*
-		 * *20030611, karlpeder* Added content to method
-		 * so command is activated
-		 */
-		ColumbaLogger.log.debug("Save Message As... activated");
 
 		// get selected stuff
 		FolderCommandReference[] r =

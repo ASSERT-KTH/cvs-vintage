@@ -31,42 +31,32 @@ import org.columba.mail.util.MailResourceLoader;
 public class NewMessageAction extends FrameAction {
 
 	public NewMessageAction(AbstractFrameController controller) {
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_new"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_new_toolbar"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_new_tooltip"),
-			"NEW_MESSAGE",
-			ImageLoader.getSmallImageIcon("stock_edit-16.png"),
-			ImageLoader.getImageIcon("stock_edit.png"),
-			'N',
-			KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
+		super(controller, 
+				MailResourceLoader.getString(
+						"menu", "mainframe", "menu_message_new"));
+		setToolBarName(
+				MailResourceLoader.getString(
+						"menu", "mainframe", "menu_message_new_toolbar"));
+		setTooltipText(
+				MailResourceLoader.getString(
+						"menu", "mainframe", "menu_message_new_tooltip"));		
+		setActionCommand("NEW_MESSAGE");
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
+		setMnemonic('N');
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+						KeyEvent.VK_M, ActionEvent.CTRL_MASK));		
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
+
+		// Open a new composer. Choice btw. text and html will be based on
+		// stored option
 		new ComposerController();
-		
-		
-		// TEST TEST TEST *20030907, karlpeder*
-		/*
-		ComposerController ctrl = new ComposerController();
-		ComposerModel model = new ComposerModel(true);
-		ctrl.setComposerModel(model);
-		*/
-		
 		
 	}
 
