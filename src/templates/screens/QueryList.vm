@@ -62,6 +62,6 @@
     </tr>
    </table>
 #else
-    There are no stored queries.
+    <div class="alert">There are no stored queries.</div>
 #end
   </form>
