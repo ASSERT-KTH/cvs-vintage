@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.45 2002/03/08 11:47:43 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.46 2002/03/12 04:27:57 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -158,6 +158,13 @@ Bug No.  Description
          shutDownEnable at attributes that control if shutdown is enabled
          via the Ajp13 protocol.  shutdownEnable was added since it uses
          a more intuitive uppercase/lowercase spelling.
+         
+[F]      The PasswordPrompter add-on was refactored to use introspection
+         and accept customizable prompt specifications.  It can now set
+         additional passwords, such as the keystore password added to
+         Http10Connector and the "secret" for Ajp12Connector and
+         Ajp13Connector modules.  It can set other types of attributes
+         as well.
 
 
 Server:
@@ -204,6 +211,15 @@ Bug No.  Description
          Previously, calling getReader() on a recycled facade on which
          getReader() was called, you would get the old reader rather than
          a new reader for the current request.
+         
+[F]      Fixed a bug in TrustedLoader with respect to reloading trusted
+         modules when more than one is present.
+         
+[F]      Modified PoolTcpConnector checkSocketFactory() method to set the
+         module's socketFactory when obtaining an SSL socket factory,
+         instead of using a local variable.  This allows the PasswordPrompter
+         add-on to set SSL socket attributes, such as the keystore and
+         certificate passwords.
 
 1657     JSPs with tag names that contain '-' or '.' will now compile without
 [b1]     an "Invalid expression" error
@@ -366,3 +382,6 @@ Bug No.  Description
 
 [rc1]    Updated tomcat-ssl-howto.html to fix incorrect case for "clientauth"
          attribute.
+
+[F]      serverxml.html and tomcat-ug.html were updated to document the
+         new ajp12id and ajp13id startup and shutdown arguments.
