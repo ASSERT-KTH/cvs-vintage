@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.8 2005/02/02 21:18:10 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.9 2005/02/05 18:49:27 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,6 +107,15 @@ public interface StateMachinesHelper {
     Collection getAllPossibleStatemachines(Object model,
             Object oSubmachineState);
 
+    /**
+     * Returns all states that can be recursively contained by the given State.
+     * 
+     * @param oState the Composite state we are searching the states for
+     * 
+     * @return Collection the collection with found states
+     */
+    public Collection getAllPossibleSubvertices(Object oState);
+    
     /**
      * Connects a given statemachine to a submachinestate as being the
      * statemachine the submachinestate represents. To decouple ArgoUML as much

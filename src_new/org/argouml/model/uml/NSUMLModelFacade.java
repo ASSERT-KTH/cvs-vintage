@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.4 2005/02/05 10:19:42 d00mst Exp $
+// $Id: NSUMLModelFacade.java,v 1.5 2005/02/05 18:49:26 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4472,28 +4472,6 @@ public class NSUMLModelFacade implements Facade {
             return ((MStubState) o).getReferenceState();
         }
         return illegalArgumentString(o);
-    }
-
-    /**
-     * Returns all states that can be recursively contained by the given State.
-     * To decouple ArgoUML as much as possible from
-     * the NSUML model, the parameter of the method is of type Object.
-     * @param oState The Composite state we are searching the
-     * states for.
-     * @return Collection The collection with found states.
-     */
-
-    public Collection getAllPossibleSubvertices(Object oState) {
-        ArrayList v = new ArrayList();
-        ArrayList v2 = new ArrayList();
-        if (isACompositeState(oState)) {
-            v.addAll(getSubvertices(oState));
-            v2 = (ArrayList)v.clone();
-            Iterator it = v2.iterator();
-            while (it.hasNext())
-                v.addAll(getAllPossibleSubvertices(it.next()));
-        }
-        return v;
     }
 
     ////////////////////////////////////////////////////////////////

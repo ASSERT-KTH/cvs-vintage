@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperImpl.java,v 1.9 2005/02/02 21:18:09 mvw Exp $
+// $Id: StateMachinesHelperImpl.java,v 1.10 2005/02/05 18:49:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,6 +194,26 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
             return statemachines;
         }
         return null;
+    }
+
+    /**
+     * Returns all states that can be recursively contained by the given State.
+     * 
+     * @param oState the Composite state we are searching the states for
+     * 
+     * @return Collection the collection with found states
+     */
+    public Collection getAllPossibleSubvertices(Object oState) {
+        ArrayList v = new ArrayList();
+        ArrayList v2 = new ArrayList();
+        if (oState instanceof MCompositeState) {
+            v.addAll(((MCompositeState) oState).getSubvertices());
+            v2 = (ArrayList) v.clone();
+            Iterator it = v2.iterator();
+            while (it.hasNext())
+                v.addAll(getAllPossibleSubvertices(it.next()));
+        }
+        return v;
     }
 
     /**
@@ -613,7 +633,7 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
             Object o2 = Model.getFacade().getContainer(o1);
             String path = Model.getFacade().getName(o1);
             while ((o2 != null)
-                    &&(!Model.getFacade().isTop(o2))) {
+                    && (!Model.getFacade().isTop(o2))) {
                 path = Model.getFacade().getName(o2) + "::" + path;
                 o1 = o2;
                 o2 = Model.getFacade().getContainer(o1);
@@ -635,7 +655,7 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
                 && Model.getFacade().isACompositeState(container)
                 && path != null) {
 
-            Iterator it =  Model.getFacade().getAllPossibleSubvertices(container).iterator();
+            Iterator it = getAllPossibleSubvertices(container).iterator();
             int index = path.lastIndexOf("::");
             if (index != -1)
                 index += 2;
@@ -660,7 +680,7 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
      */
     public void setReferenceState(Object o, String referenced) {
         if (o instanceof MStubState) {
-            ((MStubState)o).setReferenceState(referenced);
+            ((MStubState) o).setReferenceState(referenced);
             return;
         }
         throw new IllegalArgumentException("handle: " + o);
