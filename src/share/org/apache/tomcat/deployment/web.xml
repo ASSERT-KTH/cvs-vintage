@@ -20,11 +20,11 @@
         <servlet-name>
             invoker
         </servlet-name>
-        <servlet-class>
-            org.apache.tomcat.servlets.InvokerServlet
 <!--
             org.apache.tomcat.servlets.NoInvokerServlet
 -->
+        <servlet-class>
+            org.apache.tomcat.servlets.InvokerServlet
         </servlet-class>
     </servlet>
     <servlet>
