@@ -60,7 +60,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         defaultElement.addAttribute("uid", Integer.toString(nextUid++));
         defaultElement.addElement(new XmlElement("property"));
 
-        setNode(new FolderItem(defaultElement));
+        setConfiguration(new FolderItem(defaultElement));
         setName(name);
     }
 
@@ -70,7 +70,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
     public AbstractFolder(FolderItem node) {
         super();
-        setNode(node);
+        setConfiguration(node);
     }
 
     /**
@@ -164,6 +164,21 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
      */
     public FolderItem getConfiguration() {
         return node;
+    }
+
+    /**
+     * Sets the folder's configuration.
+     */
+    public void setConfiguration(FolderItem node) {
+        this.node = node;
+
+        try {
+            if (node.getInteger("uid") >= nextUid) {
+                nextUid = node.getInteger("uid") + 1;
+            }
+        } catch (NumberFormatException ex) {
+            node.set("uid", nextUid++);
+        }
     }
 
     /**
@@ -306,22 +321,6 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         }
 
         return null;
-    }
-
-    /**
- * Sets the node.
- * @param node The node to set
- */
-    public void setNode(FolderItem node) {
-        this.node = node;
-
-        try {
-            if (node.getInteger("uid") >= nextUid) {
-                nextUid = node.getInteger("uid") + 1;
-            }
-        } catch (NumberFormatException ex) {
-            node.set("uid", nextUid++);
-        }
     }
 
     /**
