@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: LmiInitialContext.java,v 1.5 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: LmiInitialContext.java,v 1.6 2005/02/04 17:52:48 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -149,7 +149,7 @@ public class LmiInitialContext implements Context {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("LmiInitialContext.lookup(\"" + name + "\")");
         }
-        if ((name == null) && (name.equals(""))) {
+        if ((name == null) || (name.equals(""))) {
             return (new LmiInitialContext(lmiEnv));
         }
         Object o = bindings.get(name);
