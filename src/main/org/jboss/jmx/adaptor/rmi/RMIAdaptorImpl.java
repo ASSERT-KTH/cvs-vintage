@@ -8,6 +8,7 @@
 package org.jboss.jmx.adaptor.rmi;
 
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
@@ -54,7 +55,7 @@ import org.jboss.jmx.connector.notification.RMINotificationListener;
  * has an additional RemoteException.
  *
  * @todo implement notifications
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -228,12 +229,22 @@ public class RMIAdaptorImpl
       return mServer.getAttribute( pName, pAttribute );
    }
 
-   public AttributeList getAttributes(ObjectName pName, String[] pAttributes)
+   public AttributeList getAttributes(ObjectName name, String[] attributes)
       throws InstanceNotFoundException,
              ReflectionException,
              RemoteException
    {
-      return mServer.getAttributes( pName, pAttributes );
+      // Filter out any non-Serializable attributes
+      AttributeList attrs = mServer.getAttributes(name, attributes);
+      Iterator iter = attrs.iterator();
+      while( iter.hasNext() )
+      {
+         Attribute attr = (Attribute) iter.next();
+         Object value = attr.getValue();
+         if( (value instanceof Serializable) == false )
+            iter.remove();
+      }
+      return attrs;
    }
 
    public void setAttribute(ObjectName pName, Attribute pAttribute) 
