@@ -49,9 +49,6 @@ package org.tigris.scarab.attribute;
 // JDK Stuff
 import java.util.List;
 
-// Turbine Stuff
-import org.apache.turbine.om.security.Role;
-
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ScarabUser;
@@ -60,7 +57,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.6 $ $Date: 2001/07/11 07:33:47 $
+ * @version $Revision: 1.7 $ $Date: 2001/07/17 01:39:26 $
  */
 public class UserAttribute extends AttributeValue
 {
