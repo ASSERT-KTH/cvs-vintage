@@ -108,6 +108,8 @@
    <copydir src="src/j2ee" 
             dest="${tomcat.build}/classes">
         <include name="**/*.properties" />
+        <include name="**/web.dtd" />
+        <include name="**/web.xml" />
     </copydir>
   </target>
 
