@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.173 2003/07/25 17:17:59 thierrylach Exp $
+ * @version $Id: ModifyIssue.java,v 1.174 2003/07/29 05:16:00 dlr Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -446,7 +446,8 @@ public class ModifyIssue extends BaseModifyIssue
         if (intake.isAllValid() && group != null)
         {
             // adding a file is a special process
-            addFileAttachment(issue, group, scarabR, data, intake);
+            addFileAttachment(issue, group, (Attachment) null, scarabR, data,
+                              intake);
             ActivitySet activitySet = issue.doSaveFileAttachments(user);
             if (activitySet != null)
             {
@@ -464,15 +465,21 @@ public class ModifyIssue extends BaseModifyIssue
         }
     }
 
-    static void addFileAttachment(Issue issue, Group group, 
-            ScarabRequestTool scarabR, RunData data, IntakeTool intake)
-        throws Exception
-    {
-        addFileAttachment(issue, group, null, scarabR, data, intake);
-    }
-
-    static void addFileAttachment(Issue issue, Group group, Attachment attachment,
-            ScarabRequestTool scarabR, RunData data, IntakeTool intake)
+    /**
+     * Adds a file attachment to an issue.
+     *
+     * @param issue The issue to add an attachment to.
+     * @param group Intake group.
+     * @param attachment The attachment to add, or <code>null</code>
+     * to use a new blank one.
+     * @param scarabR Request tool.
+     * @param data Contextual data.
+     * @param intake Intake tool.
+     */
+    static void addFileAttachment(Issue issue, Group group,
+                                  Attachment attachment,
+                                  ScarabRequestTool scarabR, RunData data,
+                                  IntakeTool intake)
         throws Exception
     {
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
