@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.11 2000/09/24 15:21:50 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.12 2000/10/09 15:31:05 mulder Exp $
  */
 
 // standard imports
@@ -53,7 +53,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -64,15 +64,15 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     protected final static String EJB_HOME_INTERFACE    =
         "javax.ejb.EJBHome";
 
-        
+
     public boolean hasLegalRMIIIOPArguments(Method method) {
 
         Class[] params = method.getParameterTypes();
-        
-        for (int i = 0; i < params.length; ++i) 
+
+        for (int i = 0; i < params.length; ++i)
             if (!isRMIIIOPType(params[i]))
                 return false;
-                    
+
         return true;
     }
 
@@ -80,7 +80,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return isRMIIIOPType(method.getReturnType());
     }
 
-    
+
     /*
      * checks if the method includes java.rmi.RemoteException or its
      * subclass in its throws clause.
@@ -95,19 +95,19 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         return false;
     }
-        
+
     /*
      * checks if the method includes java.ejb.CreateException in its
      * throws clause.
      */
     public boolean throwsCreateException(Method method) {
-        
+
         Class[] exception = method.getExceptionTypes();
-        
+
         for (int i = 0; i < exception.length; ++i)
             if (javax.ejb.CreateException.class.isAssignableFrom(exception[i]))
                 return true;
-                
+
         return false;
     }
 
@@ -127,7 +127,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean isStatic(Class c) {
         return (Modifier.isStatic(c.getModifiers()));
     }
-    
+
     /*
      * checks if a class's member (method, constructor or field) has a 'final'
      * modifier.
@@ -292,12 +292,12 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean isFinderMethod(Method m) {
         return (m.getName().startsWith("find"));
     }
-    
+
     public boolean isCreateMethod(Method m) {
         return (m.getName().equals(CREATE_METHOD));
     }
-        
-            
+
+
     /**
      * Checks for at least one non-static field.
      */
@@ -307,9 +307,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             for(int i=0; i<list.length; i++)
                 if(!Modifier.isStatic(list[i].getModifiers()))
                     return true;
-        } 
+        }
         catch(Exception ignored) {}
-        
+
         return false;
     }
 
@@ -466,7 +466,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         Method[] method = c.getMethods();
 
-        for (int i = 0; i < method.length; ++i) 
+        for (int i = 0; i < method.length; ++i)
             if (method[i].getName().equals(EJB_CREATE_METHOD))
                 ejbCreates.add(method[i]);
 
@@ -474,18 +474,18 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     public Iterator getCreateMethods(Class c) {
-        
+
         List creates = new LinkedList();
-        
+
         Method[] method = c.getMethods();
-            
-        for (int i = 0; i < method.length; ++i) 
+
+        for (int i = 0; i < method.length; ++i)
             if (isCreateMethod(method[i]))
                 creates.add(method[i]);
 
         return creates.iterator();
     }
-    
+
     public boolean hasMoreThanOneCreateMethods(Class c) {
 
         int count = 0;
@@ -504,16 +504,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return (count > 1);
     }
 
-    
+
     public boolean hasMatchingExceptions(Method source, Method target) {
 
         // target must be a superset of source
-        
+
         Class[] a = source.getExceptionTypes();
         Class[] b = source.getExceptionTypes();
-        
+
         for (int i = 0; i < a.length; ++i) {
-            
+
             boolean found = false;
 
             for (int j = 0; j < b.length; ++j)
@@ -521,7 +521,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
                     found = true;
                     break;
                 }
-            
+
             if (!found)
                 return false;
         }
@@ -530,23 +530,23 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     public boolean hasMatchingMethod(Class bean, Method remote) {
-    
+
         String methodName = remote.getName();
 
         try {
             bean.getMethod(methodName, remote.getParameterTypes());
-            
+
             return true;
         }
         catch (NoSuchMethodException e) {
             return false;
         }
     }
-    
+
     public boolean hasMatchingReturnType(Method a, Method b) {
         return (a.getReturnType() == b.getReturnType());
     }
-        
+
     public boolean hasMatchingEJBPostCreate(Class bean, Method ejbCreate) {
         try {
             return (bean.getMethod(EJB_POST_CREATE_METHOD, ejbCreate.getParameterTypes()) != null);
@@ -564,7 +564,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return false;
         }
     }
-    
+
     public Method getMatchingEJBPostCreate(Class bean, Method ejbCreate) {
 
         try {
@@ -576,7 +576,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     public Method getMatchingEJBCreate(Class bean, Method create) {
-        
+
         try {
             return bean.getMethod(EJB_CREATE_METHOD, create.getParameterTypes());
         }
@@ -584,7 +584,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return null;
         }
     }
-    
+
 
 /*
  *************************************************************************
@@ -630,7 +630,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          *  - a conforming CORBA object reference type (see CORBA Object Reference Types on page 28-6).
          *  - a conforming IDL entity type see IDL Entity Types on page 28-6).
          */
-         
+
          /*
          * Primitive types.
          *
@@ -638,13 +638,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (type.isPrimitive())
             return true;
-            
+
         /*
          * Conforming array.
          *
          * Spec 28.2.5
          */
-        if (type.isArray()) 
+        if (type.isArray())
             return isRMIIIOPType(type.getComponentType());
 
         /*
@@ -654,7 +654,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (org.omg.CORBA.Object.class.isAssignableFrom(type))
             return true;
-            
+
         /*
          * Conforming IDL Entity type
          *
@@ -670,7 +670,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (isRMIIDLRemoteInterface(type))
             return true;
-        
+
         /*
          * Conforming exception.
          *
@@ -678,7 +678,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (isRMIIDLExceptionType(type))
             return true;
-            
+
         /*
          * Conforming value type.
          *
@@ -686,21 +686,21 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (isRMIIDLValueType(type))
             return true;
-            
+
         return false;
     }
-    
+
 
     private boolean isRMIIDLRemoteInterface(Class type) {
-                
+
         if (!java.rmi.Remote.class.isAssignableFrom(type))
             return false;
-        
+
         Iterator methodIterator = Arrays.asList(type.getMethods()).iterator();
-        
+
         while (methodIterator.hasNext()) {
             Method m = (Method)methodIterator.next();
-            
+
             /*
              * All methods in the interface MUST throw
              * java.rmi.RemoteException or its subclass.
@@ -709,7 +709,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
              */
             if (!throwsRemoteException(m))
                 return false;
-            
+
             /*
              * All checked exception classes used in method declarations
              * (other than java.rmi.RemoteException) MUST be conforming
@@ -718,15 +718,15 @@ public abstract class AbstractVerifier implements VerificationStrategy {
              * Spec 28.2.3 (4)
              */
             Iterator it = Arrays.asList(m.getExceptionTypes()).iterator();
-            
-            while (it.hasNext()) { 
+
+            while (it.hasNext()) {
                 Class exception = (Class)it.next();
-                
+
                 if (!isRMIIDLExceptionType(exception))
                     return false;
             }
         }
-        
+
         /*
          * The constant values defined in the interface MUST be
          * compile-time types of RMI/IDL primitive types or String.
@@ -734,26 +734,26 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          * Spec 28.2.3 (6)
          */
         Iterator fieldIterator = Arrays.asList(type.getFields()).iterator();
-        
+
         while (fieldIterator.hasNext()) {
-            
+
             Field f = (Field)fieldIterator.next();
-            
+
             if (f.getType().isPrimitive())
                 continue;
-            
-            if (f.getType().equals("java.lang.String"))
+
+            if (f.getType().equals(java.lang.String.class))
                 continue;
-                
+
             return false;
         }
-        
+
         return true;
     }
 
 
     private boolean isRMIIDLExceptionType(Class type) {
-            
+
         /*
          * A conforming RMI/IDL Exception class MUST be a checked
          * exception class and MUST be a valid RMI/IDL value type.
@@ -762,30 +762,30 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (!Throwable.class.isAssignableFrom(type))
             return false;
-            
+
         if (Error.class.isAssignableFrom(type))
             return false;
-        
+
         if (RuntimeException.class.isAssignableFrom(type))
             return false;
-            
+
         if (!isRMIIDLValueType(type))
             return false;
-        
+
         return true;
     }
-            
+
     private boolean isRMIIDLValueType(Class type) {
-        
+
         /*
          * A value type MUST NOT either directly or indirectly implement the
          * java.rmi.Remote interface.
          *
          * Spec 28.2.4 (4)
          */
-        if (java.rmi.Remote.class.isAssignableFrom(type)) 
+        if (java.rmi.Remote.class.isAssignableFrom(type))
             return false;
-    
+
 
         /*
          * If class is a non-static inner class then its containing class must
@@ -793,14 +793,14 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          *
          * Spec 2.8.4 (3)
          */
-        if (type.getDeclaringClass() != null && isStatic(type)) 
+        if (type.getDeclaringClass() != null && isStatic(type))
             if (!isRMIIDLValueType(type.getDeclaringClass()))
                 return false;
-        
+
         return true;
     }
 
-    
+
 /*
  *************************************************************************
  *
@@ -839,7 +839,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     private final static String EJB_POST_METHOD       =
         "ejbCreate";
-        
+
     private final static String CREATE_METHOD         =
         "create";
 
@@ -848,13 +848,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     private final static String REMOVE_METHOD         =
         "remove";
-    
+
     private final static String GET_HOME_HANDLE_METHOD =
         "getHomeHandle";
-        
+
     private final static String GET_EJB_METADATA_METHOD =
         "getEJBMetaData";
-        
+
 
 }
 
