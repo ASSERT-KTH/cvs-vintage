@@ -27,7 +27,7 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -334,10 +334,6 @@ public class ApplicationMetaData extends MetaData {
           
               String jndi = getElementContent(getOptionalChild(resourceManager, "res-jndi-name"));
               
-              // Make sure it is prefixed with java:
-              if (jndi != null && !jndi.startsWith("java:/"))
-               jndi = "java:/"+jndi;
-               
               String url = getElementContent(getOptionalChild(resourceManager, "res-url"));
           
               if (jndi != null && url == null) {
