@@ -105,6 +105,7 @@ public class MHDataStorage implements DataStorageInterface {
 
 		HeaderList headerList = new HeaderList();
 
+		if ( worker != null )
 		worker.setDisplayText("Recreating Header-Cache");
 
 		if (folder == null)
@@ -146,6 +147,7 @@ public class MHDataStorage implements DataStorageInterface {
 		Rfc822Parser parser = new Rfc822Parser();
 		ColumbaHeader header;
 		
+		if ( worker != null )
 		worker.setProgressBarMaximum(v.size());
 		
 		for (int i = 0; i < v.size(); i++) {
@@ -183,6 +185,7 @@ public class MHDataStorage implements DataStorageInterface {
 				
 				m.freeMemory();
 				
+				if ( worker != null )
 				worker.incProgressBarValue();
 
 			} catch (Exception ex) {

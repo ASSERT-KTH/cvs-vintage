@@ -12,7 +12,6 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -53,8 +52,12 @@ public class CreateVFolderOnToAction
 			'0',
 			null);
 		setEnabled(false);
+		// FIXME
+		//  -> uncomment to enable/disable action
+		/*
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);
+		*/
 	}
 
 	/* (non-Javadoc)

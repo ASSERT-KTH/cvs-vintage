@@ -235,4 +235,6 @@ public class MailFrameView extends AbstractFrameView {
 		return new ToolBar(MailConfig.get("main_toolbar").getElement("toolbar"), controller);
 	}
 
+	
+
 }

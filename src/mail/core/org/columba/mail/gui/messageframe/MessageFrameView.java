@@ -28,60 +28,47 @@ import org.columba.mail.gui.tree.util.FolderInfoPanel;
 public class MessageFrameView extends AbstractFrameView {
 
 	private FolderInfoPanel folderInfoPanel;
-	
+
 	/**
 	 * @param frameController
 	 */
 	public MessageFrameView(AbstractFrameController frameController) {
 		super(frameController);
-		
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.frame.AbstractFrameView#createMenu(org.columba.core.gui.frame.AbstractFrameController)
 	 */
 	protected Menu createMenu(AbstractFrameController controller) {
-		Menu menu = new MailMenu("org/columba/core/action/menu.xml",controller);
-		
+		Menu menu =
+			new MailMenu("org/columba/core/action/menu.xml", controller);
 
-				return menu;
+		return menu;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.frame.AbstractFrameView#createToolbar(org.columba.core.gui.frame.AbstractFrameController)
 	 */
 	protected ToolBar createToolbar(AbstractFrameController controller) {
-		
-		return new ToolBar(MailConfig.get("main_toolbar").getElement("toolbar"), controller);
+
+		return new ToolBar(
+			MailConfig.get("messageframe_toolbar").getElement("toolbar"),
+			controller);
 	}
-	
-	public void init(
-			
-			MessageView message,
-			StatusBar statusBar) {
 
-			super.init();
-			
+	public void init(MessageView message, StatusBar statusBar) {
 
-		
-			
-			getContentPane().add(message, BorderLayout.CENTER);
+		super.init();
 
-			
+		getContentPane().add(message, BorderLayout.CENTER);
 
-			ViewItem viewItem = getFrameController().getViewItem();
-			
+		ViewItem viewItem = getFrameController().getViewItem();
 
-			
+		if (viewItem.getBoolean("toolbars", "show_folderinfo") == true)
+			toolbarPane.add(folderInfoPanel);
 
-
-			if (viewItem.getBoolean("toolbars", "show_folderinfo") == true)
-				toolbarPane.add(folderInfoPanel);
-
-			
-
-		}
-
+	}
 
 	/**
 	 * @return

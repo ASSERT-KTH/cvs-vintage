@@ -53,8 +53,12 @@ public class CreateVFolderOnSubjectAction
 			'0',
 			null);
 		setEnabled(false);
+		// FIXME
+		//  -> uncomment to enable/disable action
+		/*
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);
+		*/
 	}
 
 	/* (non-Javadoc)

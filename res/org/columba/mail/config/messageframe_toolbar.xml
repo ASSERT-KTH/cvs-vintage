@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
+
+<toolbar visible="true">
+    <button action="NewMessage"/>
+	<separator/>
+	<button action="ReceiveSend"/>
+	<separator/>
+	<button action="Reply"/>
+	<button action="Forward"/>
+	<separator/>
+	<button action="CopyMessage"/>
+	<button action="MoveMessage"/>
+	<button action="DeleteMessage"/>
+	<separator/>
+	<button action="PreviousMessage" />
+	<button action="NextMessage" />
+	<separator/>
+	<button action="Cancel"/>
+</toolbar>    

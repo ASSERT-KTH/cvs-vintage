@@ -107,12 +107,13 @@ public abstract class AbstractFrameController {
 		//model.saveAndUnregister(id);
 	}
 
+
 	public void close() {
 		ColumbaLogger.log.info("closing FrameController");
 
 		view.saveWindowPosition();
 
-		FrameModel.unregister(this);
+		FrameModel.close(this);
 		
 		//FrameModel.close(this);
 		//model.unregister(id);

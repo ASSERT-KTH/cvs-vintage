@@ -69,6 +69,8 @@ public abstract class AbstractFrameView
 		toolbarPane.setLayout(new BoxLayout(toolbarPane, BoxLayout.Y_AXIS));
 		panel.add(toolbarPane, BorderLayout.NORTH);
 	}
+	
+	
 
 	public void init() {
 		menu = createMenu(frameController);

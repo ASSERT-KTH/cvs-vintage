@@ -12,6 +12,7 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.mail.gui.messageframe.MessageFrameController;
+import org.columba.mail.gui.table.action.NextMessageAction;
 
 /**
  * @author frd
@@ -51,7 +52,7 @@ public class OpenNewMessageFrameWindowAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		MessageFrameController c = (MessageFrameController) FrameModel.openView("MessageFrame");
-		c.selectInbox();
+		new NextMessageAction(c).actionPerformed(null);
 	}
 
 }

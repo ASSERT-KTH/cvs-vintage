@@ -8,15 +8,20 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -50,64 +55,48 @@ public class NextMessageAction
 				"menu",
 				"mainframe",
 				"menu_view_nextmessage_tooltip"),
-			"NEXT_MESSAGE",
-			null,
-			null,
-			'M',
-			KeyStroke.getKeyStroke("F"));
-		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
-			this);
-
-	}
-
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public NextMessageAction(
-		AbstractFrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_nextmessage"),
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
 				"menu_view_nextmessage_tooltip"),
 			"NEXT_MESSAGE",
 			null,
-			null,
+			ImageLoader.getSmallImageIcon("next-message.png"),
 			'M',
-			KeyStroke.getKeyStroke("F"));
+			KeyStroke.getKeyStroke("F"),
+			false);
 		setEnabled(false);
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);
+
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO implement action
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			((MailFrameController) getFrameController()).getTableSelection();
+
+		if (r.length > 0) {
+			FolderCommandReference ref = r[0];
+			TableController table =
+				((MailFrameController) getFrameController()).tableController;
+			MessageNode node = table.getView().getSelectedNode();
+			if ( node == null ) return;
+			
+			MessageNode nextNode = (MessageNode) node.getNextNode();
+			Object nextUid = nextNode.getUid();
+
+			Object[] uids = new Object[1];
+			uids[0] = nextUid;
+			ref.setUids(uids);
+
+			((MailFrameController) getFrameController()).setTableSelection(r);
+
+			MainInterface.processor.addOp(
+				new ViewMessageCommand(getFrameController(), r));
+		}
 	}
 	/* (non-Javadoc)
 			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

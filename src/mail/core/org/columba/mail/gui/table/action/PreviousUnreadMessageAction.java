@@ -25,7 +25,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PrevMessageAction
+public class PreviousUnreadMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
@@ -39,22 +39,22 @@ public class PrevMessageAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public PrevMessageAction(AbstractFrameController frameController) {
+	public PreviousUnreadMessageAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_view_prevmessage"),
+				"menu_view_prevunreadmessage"),
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_view_prevmessage_tooltip"),
-			"PREV_MESSAGE",
+				"menu_view_prevunreadmessage_tooltip"),
+			"PREV_UNREAD_MESSAGE",
 			null,
 			null,
-			'M',
-			KeyStroke.getKeyStroke("B"));
+			'U',
+			KeyStroke.getKeyStroke("P"));
 		setEnabled(false);
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);
@@ -71,7 +71,7 @@ public class PrevMessageAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public PrevMessageAction(
+	public PreviousUnreadMessageAction(
 		AbstractFrameController frameController,
 		String name,
 		String longDescription,
@@ -86,16 +86,16 @@ public class PrevMessageAction
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_view_prevmessage"),
+				"menu_view_prevunreadmessage"),
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_view_prevmessage_tooltip"),
-			"PREV_MESSAGE",
+				"menu_view_prevunreadmessage_tooltip"),
+			"PREV_UNREAD_MESSAGE",
 			null,
 			null,
-			'M',
-			KeyStroke.getKeyStroke("B"));
+			'U',
+			KeyStroke.getKeyStroke("P"));
 		setEnabled(false);
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);

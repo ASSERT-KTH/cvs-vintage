@@ -28,6 +28,15 @@
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>
+		<menu name="menu_view_next">
+			<menuitem action="NextMessage" />
+			<menuitem action="NextUnreadMessage" />
+		</menu>
+		<menu name="menu_view_prev">
+			<menuitem action="PreviousMessage" />
+			<menuitem action="PreviousUnreadMessage" />
+		</menu>
+		<separator/>
 		<menuitem action="ViewMessageSource"/>
 	</menu>
 	

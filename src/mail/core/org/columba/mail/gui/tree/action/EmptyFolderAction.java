@@ -58,8 +58,12 @@ public class EmptyFolderAction
 			'E',
 			null);
 		setEnabled(false);
+		// FIXME
+		//  -> uncomment to enable/disable action
+		/*
 		((MailFrameController) frameController).registerTreeSelectionListener(
 			this);
+		*/
 	}
 
 	/* (non-Javadoc)

@@ -88,12 +88,11 @@ public class FrameModel {
 
 			viewList.addElement(v.getRoot());
 
-			c.close();
+			c.saveAndClose();
 		}
 	}
 
-	public static void unregister(AbstractFrameController c) {
-
+	public static void close(AbstractFrameController c) {
 		if (list.size() == 1) {
 			// last frame
 			//  -> exit Columba
@@ -106,6 +105,8 @@ public class FrameModel {
 		} else
 			list.remove(c);
 	}
+
+	
 
 	public static AbstractFrameController openView(String id) {
 		/*
@@ -124,7 +125,7 @@ public class FrameModel {
 		AbstractFrameController c = createFrameController(id, null);
 
 		c.openView();
-		
+
 		return c;
 	}
 }

@@ -69,22 +69,19 @@ public class MailFrameController extends AbstractFrameController {
 
 	protected static Vector list = new Vector();
 
-
 	public MailFrameController(ViewItem viewItem) {
-			super("Mail", viewItem);
-
-			list.add(this);
-
-		}
+		this("Mail", viewItem);
 		
-	public MailFrameController(String id, ViewItem viewItem) {
-		super(id, viewItem);
-
 		list.add(this);
 
 	}
 
-	
+	public MailFrameController(String id, ViewItem viewItem) {
+		super(id, viewItem);
+
+		
+
+	}
 
 	public static void tableChanged(TableChangedEvent ev) throws Exception {
 		for (Enumeration e = list.elements(); e.hasMoreElements();) {
@@ -183,9 +180,10 @@ public class MailFrameController extends AbstractFrameController {
 	}
 
 	public void close() {
-		ColumbaLogger.log.info("closing MailFrameController");
+		
 
 		tableController.saveColumnConfig();
+		
 		super.close();
 
 	}
@@ -241,6 +239,16 @@ public class MailFrameController extends AbstractFrameController {
 		child.addElement(splitpanes);
 
 		return child;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#saveAndClose()
+	 */
+	public void saveAndClose() {
+		
+
+		tableController.saveColumnConfig();
+		super.saveAndClose();
 	}
 
 }

@@ -84,13 +84,13 @@ public class URLController implements ActionListener {
 	}
 
 	public void compose(String address) {
-		ComposerModel model = new ComposerModel();
+		//ComposerModel model = new ComposerModel();
 
 		ComposerController controller = new ComposerController();
 
 		((ComposerModel) controller.getModel()).setTo(address);
 
-		controller.setComposerModel(model);
+		//controller.setComposerModel(model);
 	}
 
 	public void contact(String address) {

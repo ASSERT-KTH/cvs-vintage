@@ -142,6 +142,7 @@ public abstract class AbstractHeaderCache {
 
 		//System.out.println("Number of Messages : " + capacity);
 
+		if ( worker != null )
 		worker.setDisplayText("Loading headers from cache...");
 		
 		if (worker != null)

@@ -31,9 +31,9 @@
  <action name="MoveMessage" class="org.columba.mail.gui.table.action.MoveMessageAction"/>
  <action name="DeleteMessage" class="org.columba.mail.gui.table.action.DeleteMessageAction"/>
  <action name="NextMessage" class="org.columba.mail.gui.table.action.NextMessageAction"/>
- <action name="PrevMessage" class="org.columba.mail.gui.table.action.PrevMessageAction"/>
+ <action name="PreviousMessage" class="org.columba.mail.gui.table.action.PreviousMessageAction"/>
  <action name="NextUnreadMessage" class="org.columba.mail.gui.table.action.NextUnreadMessageAction"/>
- <action name="PrevUnreadMessage" class="org.columba.mail.gui.table.action.PrevUnreadMessageAction"/>
+ <action name="PreviousUnreadMessage" class="org.columba.mail.gui.table.action.PreviousUnreadMessageAction"/>
  <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
  <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
  

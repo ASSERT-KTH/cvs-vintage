@@ -62,8 +62,12 @@ public class SubscribeFolderAction
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
 		setEnabled(false);
+		// FIXME
+		//  -> uncomment to enable/disable action
+		/*
 		((MailFrameController) frameController).registerTreeSelectionListener(
 			this);
+		*/
 	}
 
 	/* (non-Javadoc)

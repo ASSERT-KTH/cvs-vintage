@@ -44,6 +44,8 @@ public class ViewToolbarAction extends CheckBoxAction {
 			null,
 			'1',
 			null);
+			
+		//getCheckBoxMenuItem().setSelected( getInitState() );
 	}
 
 	/* (non-Javadoc)
@@ -58,7 +60,7 @@ public class ViewToolbarAction extends CheckBoxAction {
 	 * @see org.columba.core.action.CheckBoxAction#getInitState()
 	 */
 	protected boolean getInitState() {
-		return getFrameController().getViewItem().getBoolean("toolbar","visible");
+		return getFrameController().getView().isToolbarVisible();
 	}
 
 }

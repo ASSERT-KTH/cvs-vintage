@@ -15,8 +15,14 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -42,7 +48,7 @@ public class NextUnreadMessageAction
 	public NextUnreadMessageAction(AbstractFrameController frameController) {
 		super(
 			frameController,
-			MailResourceLoader.getString(
+		MailResourceLoader.getString(
 				"menu",
 				"mainframe",
 				"menu_view_nextunreadmessage"),
@@ -105,8 +111,47 @@ public class NextUnreadMessageAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO implement action
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			((MailFrameController) getFrameController()).getTableSelection();
+
+		if (r.length > 0) {
+			FolderCommandReference ref = r[0];
+			TableController table =
+				((MailFrameController) getFrameController()).tableController;
+			MessageNode node = table.getView().getSelectedNode();
+			if ( node == null ) return;
+			
+			MessageNode nextNode = (MessageNode) node.getNextNode();
+			if ( nextNode == null ) return;
+			
+			ColumbaHeader header = (ColumbaHeader) nextNode.getHeader();
+
+			boolean seen = header.getFlags().getSeen();
+			while (seen==true) {
+				// try next message	
+				nextNode = (MessageNode) nextNode.getNextNode();
+				if ( nextNode == null )return;
+				
+				header = (ColumbaHeader) nextNode.getHeader();
+				seen = header.getFlags().getSeen();
+				
+				
+			}
+
+			if (nextNode == null)
+				return;
+
+			Object nextUid = nextNode.getUid();
+
+			Object[] uids = new Object[1];
+			uids[0] = nextUid;
+			ref.setUids(uids);
+
+			((MailFrameController) getFrameController()).setTableSelection(r);
+
+			MainInterface.processor.addOp(
+				new ViewMessageCommand(getFrameController(), r));
+		}
 	}
 	/* (non-Javadoc)
 			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

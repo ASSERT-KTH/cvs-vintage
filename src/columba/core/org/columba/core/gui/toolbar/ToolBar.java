@@ -28,6 +28,7 @@ import org.columba.core.action.BasicAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.gui.util.ToolbarButton;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -62,7 +63,8 @@ public class ToolBar extends JToolBar {
 		
 		//setMargin( new Insets(0,0,0,0) );
 		
-		setFloatable(false);		
+		setFloatable(false);
+			
 	}
 
 	public boolean getVisible() {
@@ -72,7 +74,7 @@ public class ToolBar extends JToolBar {
 	private void createButtons() {
 		removeAll();	
 		ListIterator iterator = rootElement.getElements().listIterator();
-		XmlElement buttonElement;
+		XmlElement buttonElement=null;
 		
 		while( iterator.hasNext()) {
 			try {
@@ -82,6 +84,8 @@ public class ToolBar extends JToolBar {
 				else if( buttonElement.getName().equals("separator"))
 					addSeparator();
 			} catch (Exception e) {
+				ColumbaLogger.log.debug("toolbar-button="+ ((String)buttonElement.getAttribute("action")));
+				
 				e.printStackTrace();
 			}
 		}
