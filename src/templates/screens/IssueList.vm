@@ -162,8 +162,8 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
  ## append some of the neighbor ids, so that we do not always have to rerun
  ## the query to create prev/next links
- #set ($min = $velocityCount - 5)
- #set ($max = $velocityCount + 10)
+ #set ($min = $velocityCount - 2)
+ #set ($max = $velocityCount + 2)
  #set ($prevNextList = $scarabG.subset($queryResults, $min, $max))
  #set ($dummy = $issueLink.addPathInfo("issueList", $min))
  #set ($dummy = $issueLink.addPathInfo("issueList", $totalCount))
