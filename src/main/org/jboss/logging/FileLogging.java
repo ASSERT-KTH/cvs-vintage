@@ -22,11 +22,11 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class FileLogging
    extends ServiceMBeanSupport
-   implements FileLoggingMBean, MBeanRegistration, NotificationListener
+   implements FileLoggingMBean, NotificationListener
 {
    // Constants -----------------------------------------------------
 

@@ -21,11 +21,11 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class ConsoleLogging
    extends ServiceMBeanSupport
-   implements ConsoleLoggingMBean, MBeanRegistration, NotificationListener
+   implements ConsoleLoggingMBean, NotificationListener
 {
    // Constants -----------------------------------------------------
     
