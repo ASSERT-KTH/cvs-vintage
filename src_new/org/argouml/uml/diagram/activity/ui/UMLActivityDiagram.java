@@ -1,5 +1,5 @@
-// $Id: UMLActivityDiagram.java,v 1.37 2003/11/10 12:35:02 jhraigniac Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: UMLActivityDiagram.java,v 1.38 2003/11/18 16:34:59 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,8 +24,6 @@
 
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
-// Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.37 2003/11/10 12:35:02 jhraigniac Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -88,31 +86,26 @@ public class UMLActivityDiagram extends UMLDiagram {
             setName(getNewDiagramName());
         } catch (PropertyVetoException pve) {}
 
-        try {
-            // start state, end state, forks, joins, etc.
-            _actionStartPseudoState =
-                new ActionCreatePseudostate(
-                    ((Class)ModelFacade.INITIAL_PSEUDOSTATEKIND).newInstance(),
-                    "Initial");
+	// start state, end state, forks, joins, etc.
+	_actionStartPseudoState =
+	    new ActionCreatePseudostate(ModelFacade.INITIAL_PSEUDOSTATEKIND, 
+					"Initial");
 
-            _actionFinalPseudoState =
-                new CmdCreateNode(ModelFacade.FINALSTATE, "FinalState");
+	_actionFinalPseudoState =
+            new CmdCreateNode(ModelFacade.FINALSTATE, "FinalState");
 
-            _actionBranchPseudoState =
-                new ActionCreatePseudostate(
-                    ((Class)ModelFacade.BRANCH_PSEUDOSTATEKIND).newInstance(),
-                    "Branch");
+	_actionBranchPseudoState =
+	    new ActionCreatePseudostate(ModelFacade.BRANCH_PSEUDOSTATEKIND,
+					"Branch");
 
-            _actionForkPseudoState =
-                new ActionCreatePseudostate(
-                    ((Class)ModelFacade.FORK_PSEUDOSTATEKIND).newInstance(),
-                    "Fork");
+	_actionForkPseudoState =
+	    new ActionCreatePseudostate(ModelFacade.FORK_PSEUDOSTATEKIND, 
+					"Fork");
 
-            _actionJoinPseudoState =
-                new ActionCreatePseudostate(
-                    ((Class)ModelFacade.JOIN_PSEUDOSTATEKIND).newInstance(),
-                    "Join");
-        } catch (Exception ex) {}
+	_actionJoinPseudoState =
+	    new ActionCreatePseudostate(ModelFacade.JOIN_PSEUDOSTATEKIND,
+					"Join");
+
     }
 
     public UMLActivityDiagram(Object m) {
