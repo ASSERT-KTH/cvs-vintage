@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.73 2005/02/23 20:00:32 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.74 2005/03/07 21:34:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,6 +259,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
                     new ActionAddAssociationRole(
                         Model.getAggregationKind().getNone(),
                         false,
+                        "AssociationRole",
                         "Association"));
         }
         return actionAssociation;

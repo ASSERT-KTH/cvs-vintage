@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.11 2005/01/29 20:08:27 linus Exp $
+// $Id: ActionAddAssociationRole.java,v 1.12 2005/03/07 21:34:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,13 @@
 
 package org.argouml.uml.diagram.ui;
 
+import javax.swing.Action;
+import javax.swing.Icon;
+
 import org.argouml.model.Model;
 import org.argouml.ui.CmdSetMode;
 import org.tigris.gef.base.ModeCreatePolyEdge;
+import org.tigris.gef.util.ResourceLoader;
 
 /**
  * The ActionAddAssociation class is for creating a dummy link with a
@@ -56,5 +60,30 @@ public class ActionAddAssociationRole extends CmdSetMode {
               name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));
+    }
+    
+    /**
+     * The constructor.
+     * 
+     * @param aggregationKind the required aggregation for the association.
+     * @param unidirectional true if this is to create a unidirectional
+     *        association
+     * @param name the action description
+     * @param iconName the name of the icon file
+     */
+    public ActionAddAssociationRole(Object aggregationKind,
+            boolean unidirectional,
+            String name,
+            String iconName) {
+        super(ModeCreatePolyEdge.class,
+                "edgeClass",
+                Model.getMetaTypes().getAssociationRole(),
+                name);
+        _modeArgs.put("aggregation", aggregationKind);
+        _modeArgs.put("unidirectional", new Boolean(unidirectional));
+        Icon icon = ResourceLoader.lookupIconResource(iconName, iconName);
+        if (icon != null) {
+            putValue(Action.SMALL_ICON, icon);
+        }
     }
 }
