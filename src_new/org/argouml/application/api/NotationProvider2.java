@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.3 2004/05/30 06:11:08 mvw Exp $
+// $Id: NotationProvider2.java,v 1.4 2004/06/23 07:02:35 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.application.api;
 /**
  * Interface provided by classes that provide a notation.<p>
  * 
- * This interface is used by all elements in the Diagrams whenever some UML-object
- * needs to be converted into a text string.<p>
+ * This interface is used by all elements in the Diagrams whenever
+ * some UML-object needs to be converted into a text string.<p>
  * 
  * For UML this interface is implemented by 
  * {@link org.argouml.uml.generator.GeneratorDisplay}. 

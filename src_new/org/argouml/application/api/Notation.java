@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.46 2004/05/07 21:11:14 mvw Exp $
+// $Id: Notation.java,v 1.47 2004/06/23 07:02:34 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,11 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// File: Notation.java
-// Classes: Notation
-// Original Author: Thierry Lach
-// $Id: Notation.java,v 1.46 2004/05/07 21:11:14 mvw Exp $
 
 package org.argouml.application.api;
 
@@ -275,7 +270,8 @@ public final class Notation implements PropertyChangeListener {
         return getProvider(notation).generateMultiplicity(m);
     }
 
-    protected static String generateState(NotationName notation, Object/*MState*/ m) {
+    protected static String generateState(NotationName notation,
+					  Object/*MState*/ m) {
         return getProvider(notation).generateState(m);
     }
 
@@ -298,7 +294,8 @@ public final class Notation implements PropertyChangeListener {
         return getProvider(notation).generateAction(m);
     }
 
-    protected static String generateGuard(NotationName notation, Object/*MGuard*/ m) {
+    protected static String generateGuard(NotationName notation,
+					  Object/*MGuard*/ m) {
         return getProvider(notation).generateGuard(m);
     }
 

@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.12 2004/06/22 13:40:56 d00mst Exp $
+// $Id: ExplorerTreeModel.java,v 1.13 2004/06/23 07:02:44 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -301,7 +301,7 @@ public class ExplorerTreeModel extends DefaultTreeModel
 	// children and move it there
         for (int x = 0; x < reordered.size(); x++) {
 	    DefaultMutableTreeNode child =
-		    (DefaultMutableTreeNode) reordered.get(x);
+		(DefaultMutableTreeNode) reordered.get(x);
 	    Object obj = child.getUserObject();
 	    int ip = Collections.binarySearch(children, obj, order);
 
@@ -386,7 +386,8 @@ public class ExplorerTreeModel extends DefaultTreeModel
 
 	    /* Always null at least one of cc and nc in every path */
 	    if (r == 0 && cc == nc) {
-		cc = nc = null;
+		nc = null;
+		cc = null;
 		cldIdx++;
 	    } else if (r == 0) {
 		/* Objects cc and nc sorts arbitrary */
@@ -486,7 +487,8 @@ public class ExplorerTreeModel extends DefaultTreeModel
      * @param parent The parent node.
      * @param index The index.
      */
-    public void insertNodeInto(MutableTreeNode newChild, MutableTreeNode parent, int index) {
+    public void insertNodeInto(MutableTreeNode newChild,
+			       MutableTreeNode parent, int index) {
 	super.insertNodeInto(newChild, parent, index);
 
 	addNodesToMap(newChild);

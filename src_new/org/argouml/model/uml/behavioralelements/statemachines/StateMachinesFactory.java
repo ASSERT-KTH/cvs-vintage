@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.32 2004/06/02 14:12:25 mkl Exp $
+// $Id: StateMachinesFactory.java,v 1.33 2004/06/23 07:02:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -493,7 +493,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
             MTransition trans = (MTransition) createTransition();
             trans.setSource((MStateVertex) source);
             trans.setTarget((MStateVertex) target);
-            trans.setStateMachine((MStateMachine)StateMachinesHelper.getHelper()
+            trans.setStateMachine((MStateMachine) StateMachinesHelper.getHelper()
 				  .getStateMachine(source));
             return trans;
         }
@@ -526,7 +526,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
             throw new IllegalArgumentException();
         MCallEvent evt = MFactory.getDefaultFactory().createCallEvent();
         evt.setNamespace((MModel) ProjectManager.getManager()
-           .getCurrentProject().getModel());
+			 .getCurrentProject().getModel());
         ModelFacade.setName(evt, name);
         String operationName = name.substring(0, name.indexOf("(")).trim();
         Object op = StateMachinesHelper.getHelper()

@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeNode.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// $Id: ExplorerTreeNode.java,v 1.6 2004/06/23 07:02:45 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ public class ExplorerTreeNode extends DefaultMutableTreeNode {
 
     /** Creates a new instance of ExplorerTreeNode */
     public ExplorerTreeNode(Object userObj, ExplorerTreeModel model) {
-
         super(userObj);
 	this.model = model;
     }
@@ -82,7 +81,7 @@ public class ExplorerTreeNode extends DefaultMutableTreeNode {
     /**
      * cleans up for gc.
      */
-    public void remove(){
+    public void remove() {
 	this.userObject = null;
 
 	if (children != null) {
