@@ -130,7 +130,8 @@ public class TreeController implements TreeWillExpandListener,
 	 * Creates a Popup menu.
 	 */
 	public void createPopupMenu() {
-		menu = new ColumbaPopupMenu(frameController, "org/columba/mail/action/tree_contextmenu.xml");
+		menu = new ColumbaPopupMenu(frameController,
+				"org/columba/mail/action/tree_contextmenu.xml");
 	}
 
 	/**
@@ -234,11 +235,11 @@ public class TreeController implements TreeWillExpandListener,
 			return;
 		}
 
-		/*
-		 * // If the tree is in a DND action then we dont need to update all //
-		 * listeners, since this only a temporary folder selection. if
-		 * (view.isInDndAction()) { return; }
-		 */
+		// If the tree is in a DND action then we dont need to update all //
+		// listeners, since this only a temporary folder selection.
+		if (view.isInDndAction()) {
+			return;
+		}
 
 		new ViewHeaderListAction(getFrameController()).actionPerformed(null);
 
