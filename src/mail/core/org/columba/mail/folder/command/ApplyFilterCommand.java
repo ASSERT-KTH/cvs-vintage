@@ -15,13 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
@@ -36,13 +39,16 @@ import org.columba.mail.folder.MessageFolder;
  *
  */
 public class ApplyFilterCommand extends Command {
-    /**
+	private List commandList;
+	
+	/**
  * Constructor for ApplyFilterCommand.
  * @param frameMediator
  * @param references
  */
     public ApplyFilterCommand(DefaultCommandReference[] references) {
         super(references);
+        commandList = new ArrayList();
     }
 
     /**
@@ -94,9 +100,25 @@ public class ApplyFilterCommand extends Command {
                 // -> create a compound object which encapsulates all commands
                 CompoundCommand command = filter.getCommand(srcFolder, result);
 
+                
                 // add command to scheduler
-                MainInterface.processor.addOp(command);
+                //MainInterface.processor.addOp(command);
+                
+                command.execute(worker);
+                
+                commandList.add(command);
+                
             }
         }
     }
+	/* (non-Javadoc)
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		Iterator it = commandList.iterator();
+		while( it.hasNext() ) {
+			((Command) it.next()).updateGUI();
+		}
+		
+	}
 }

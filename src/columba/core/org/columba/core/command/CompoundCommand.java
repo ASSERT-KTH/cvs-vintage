@@ -63,18 +63,6 @@ public class CompoundCommand extends Command {
         }
     }
 
-    public void finish() throws Exception {
-        Command c;
-
-        for (Iterator it = commandList.iterator(); it.hasNext();) {
-            c = (Command) it.next();
-
-            //		for (int i = 0; i < commandList.size(); i++) {
-            //			c = (Command) commandList.get(i);
-            c.finish();
-        }
-    }
-
     /**
  * @see org.columba.core.command.Command#execute(Worker)
  */
@@ -84,9 +72,6 @@ public class CompoundCommand extends Command {
 
         for (Iterator it = commandList.iterator(); it.hasNext();) {
             c = (Command) it.next();
-
-            //		for (int i = 0; i < commandList.size(); i++) {
-            //			c = (Command) commandList.get(i);
             c.execute(worker);
         }
     }
@@ -135,4 +120,18 @@ public class CompoundCommand extends Command {
 
         return refs;
     }
+	/* (non-Javadoc)
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+        Command c;
+
+        for (Iterator it = commandList.iterator(); it.hasNext();) {
+            c = (Command) it.next();
+
+            //		for (int i = 0; i < commandList.size(); i++) {
+            //			c = (Command) commandList.get(i);
+            c.updateGUI();
+        }
+	}
 }
