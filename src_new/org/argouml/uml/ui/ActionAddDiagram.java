@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.15 2003/05/05 15:24:06 kataka Exp $
+// $Id: ActionAddDiagram.java,v 1.16 2003/05/09 23:26:07 alexb Exp $
 
 package org.argouml.uml.ui;
 
@@ -32,6 +32,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 /**
@@ -78,7 +79,10 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
         if (ns!= null && isValidNamespace(ns)) {
             UMLDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
-            TargetManager.getInstance().setTarget(diagram);       
+            TargetManager.getInstance().setTarget(diagram);
+            //TODO make the explorer listen to project member property changes...
+            // to eliminate coupling on gui.
+            ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
             super.actionPerformed(e);
         } else {
             log.error("No valid namespace found");
