@@ -32,48 +32,48 @@ import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 public class SaveAsTemplateAction extends AbstractColumbaAction {
-    public SaveAsTemplateAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "composer",
-                "menu_file_savetemplate"));
+	public SaveAsTemplateAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "composer",
+				"menu_file_savetemplate"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "composer",
-                "menu_file_savetemplate").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"composer", "menu_file_savetemplate").replaceAll("&", ""));
 
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
-    }
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        final ComposerController composerController = (ComposerController) getFrameMediator();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		final ComposerController composerController = (ComposerController) getFrameMediator();
 
-        if (composerController.checkState()) {
-            return;
-        }
+		// view data ->model
+		composerController.updateComponents(false);
 
-        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
-        SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-        String str = folderItem.get("templates");
-        int destUid = Integer.parseInt(str);
-        MessageFolder destFolder = (MessageFolder) MailInterface.treeModel.getFolder(destUid);
+		AccountItem item = ((ComposerModel) composerController.getModel())
+				.getAccountItem();
+		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
+		String str = folderItem.get("templates");
+		int destUid = Integer.parseInt(str);
+		MessageFolder destFolder = (MessageFolder) MailInterface.treeModel
+				.getFolder(destUid);
 
-        ComposerCommandReference[] r = new ComposerCommandReference[1];
-        r[0] = new ComposerCommandReference(composerController, destFolder);
+		ComposerCommandReference[] r = new ComposerCommandReference[1];
+		r[0] = new ComposerCommandReference(composerController, destFolder);
 
-        SaveMessageCommand c = new SaveMessageCommand(r);
+		SaveMessageCommand c = new SaveMessageCommand(r);
 
-        MainInterface.processor.addOp(c);
-    }
+		MainInterface.processor.addOp(c);
+	}
 }

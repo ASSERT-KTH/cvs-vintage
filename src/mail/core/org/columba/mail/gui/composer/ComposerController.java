@@ -101,6 +101,11 @@ public class ComposerController extends AbstractFrameController implements
 		super("Composer", view);
 	}
 
+	/**
+	 * Check if data was entered correctly.
+	 * 
+	 * @return	true, if data was entered correctly
+	 */
 	public boolean checkState() {
 		// update ComposerModel based on user-changes in ComposerView
 		updateComponents(false);

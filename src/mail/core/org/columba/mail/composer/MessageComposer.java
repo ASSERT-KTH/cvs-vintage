@@ -520,15 +520,19 @@ BufferedReader in =
         headerItemList = model.getToList();
 
         if (headerItemList.size() > 0) {
+        	HeaderItem item = (HeaderItem) headerItemList.get(0);
+        	if ( item.getDisplayName().length() != 0) 
             header.set("columba.to",
-                Address.parse((String) ((HeaderItem) headerItemList.get(0)).getDisplayName()));
+                Address.parse( item.getDisplayName()));
         }
 
         headerItemList = model.getCcList();
 
         if (headerItemList.size() > 0) {
+        	HeaderItem item = (HeaderItem) headerItemList.get(0);
+        	if ( item.getDisplayName().length() != 0) 
             header.set("columba.cc",
-                Address.parse((String) ((HeaderItem) headerItemList.get(0)).getDisplayName()));
+            		 Address.parse( item.getDisplayName()));
         }
 
         String composedBody;

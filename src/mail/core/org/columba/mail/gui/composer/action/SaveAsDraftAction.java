@@ -56,9 +56,8 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
     public void actionPerformed(ActionEvent evt) {
         final ComposerController composerController = (ComposerController) getFrameMediator();
 
-        if (composerController.checkState()) {
-            return;
-        }
+        // view data ->model
+        composerController.updateComponents(false);
         
         ComposerModel model = ((ComposerModel) composerController.getModel());
 
