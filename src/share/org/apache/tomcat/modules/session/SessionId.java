@@ -139,6 +139,13 @@ public class SessionId extends  BaseInterceptor
 	    // rewrite URL, do I need to do anything more?
 	    request.requestURI().setString(uri.substring(0, foundAt));
 
+            // remove from unparsedURI too, if not already
+            foundAt = request.unparsedURI().indexOf(sig);
+            if (foundAt!=-1) {
+                uri=request.unparsedURI().toString();
+                request.unparsedURI().setString(uri.substring(0, foundAt));
+            }
+
 	    // No validate now - we just note that this is what the user
 	    // requested. 
 	    request.setSessionIdSource( Request.SESSIONID_FROM_URL);
