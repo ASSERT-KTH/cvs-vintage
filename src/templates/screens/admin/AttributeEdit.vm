@@ -40,19 +40,18 @@ In order to modify this attribute, please choose from the options below:
         <input type="hidden" name="action" value="admin.ModifyAttributes">
 
         #set ( $attgroup = $intake.Attribute.Default )
-        <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
         <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId">
 
         <input type="text" name="$attgroup.Name.Key" value="$attribute.Name">
         <input type="submit" name="eventSubmit_doModifyattributename" value="Modify Name">
         <!-- <input type="submit" name="eventSubmit_doDeleteattribute" value="Delete Attribute"> -->
+        $intake.declareGroups()
     </form>
   </p>
 
 <p>
   <form action="$link.setPage("admin,AttributeEdit.vm")" method="POST">
     #set ( $attgroup = $intake.Attribute.Default )
-    <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
     <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId">
 
     <input type="hidden" name="action" value="admin.ModifyAttributes">
@@ -60,7 +59,6 @@ In order to modify this attribute, please choose from the options below:
 
     #set ($attType = $attribute.AttributeType)
     #set ( $atttgroup = $intake.AttributeType.Default )
-    <input type="hidden" name="$atttgroup.CID" value="$atttgroup.OID">
 
     <select name="$atttgroup.AttributeTypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -68,6 +66,7 @@ In order to modify this attribute, please choose from the options below:
     #end
     </select>
     <input type="submit" name="eventSubmit_doModifyattributetype" value="Modify Attribute Type">
+    $intake.declareGroups()
   </form>
 </p>
 

@@ -1,160 +1,47 @@
 $page.setTitle("Welcome to Scarab")
 
-<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-	<TR>
-		<TD class="PlainTextHeader">Welcome to Scarab, a Bug Tracking and Issue Reporting Tool</TD>
-	</TR>
-	<TR>
-		<TD><HR SIZE="1" NOSHADE></TD>
-	</TR>
-	<TR>
-		<TD class="PlainText">
-		<UL>
-			<LI>New users, <A HREF="$link.setPage("Register.vm")">register here</A>.
-		</UL>
-		</TD>
-	</TR>
-</TABLE>
-<P>
-<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-        <TR>
-                <TD class="Header" BGCOLOR="#999999" nowrap>&nbsp;LOG IN</TD>
-        </TR>
-</TABLE>
+Welcome to Scarab, a Bug Tracking and Issue Reporting Tool
+
+		<ul>
+			<li>New users, <a href="$link.setPage("register.vm")">register here</a>.
+		</ul>
 
 #if ($data.getMessage())
-    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-            <TR>
-                <TD class="MessageText">$data.getMessage()</TD>
-            </TR>
-    </TABLE>
+    $data.getMessage()
 #end
 
-<form action="$link.setPage("Login.vm")" method="POST" name="login" >
+<form action="$link.setPage("Login.vm")" method="POST" name="login">
     <input type="hidden" name="action" value="Login">
     #if ($data.Parameters.nextTemplate)
     <input type="hidden" name="nextTemplate" value="$data.Parameters.nextTemplate">
     #else
     <input type="hidden" name="nextTemplate" value="Start.vm">    
     #end
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD class="InputHeader">Email Address:</TD>
 
-                <TD class="PlainText">
+<p>
+Email Address:
 
     #set ( $login = $intake.Login.Default )
-    <input type="hidden" name="$login.CID" value="$login.OID">
 
     #if ( !$login.Username.isValid() )
         $login.Username.Message<br>
     #end
    <input name= "$login.Username.Key"
         value="$!login.Username.Value" size="25" type="text">
+</p>
 
-                 Enter your email address.</TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD class="InputHeader">Password:</TD>
-                <TD class="PlainText">
+<p>
+Password:
 
     #if ( !$login.Password.isValid() )
-        $login.Password.Message
+        $login.Password.Message<br>
     #end
-   <br>
    <input name= "$login.Password.Key"
-        value="" size="25" type="text" onChange="document.login.submit();">
+        value="" size="25" type="text" onchange="document.login.submit();">
+</p>
 
-Enter your password.</TD>
-        </TR>
-        <TR>
-               <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
-                    <SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD></TD>
-                <TD><INPUT TYPE="submit" NAME="eventSubmit_doLogin" VALUE="Login"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-</TABLE>
+<input type="submit" name="eventSubmit_doLogin" value="Login">
+
+$intake.declareGroups()
+
 </form>
-<P>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="10" WIDTH="100%">
-        <TR>
-                <TD WIDTH="30%"><HR SIZE="1" NOSHADE></TD>
-                <TD><B>OR</B></TD>
-                <TD WIDTH="70%"><HR SIZE="1" NOSHADE></TD>
-        </TR>
-</TABLE>
-
-<P>
-<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-        <TR>
-                <TD class="Header" BGCOLOR="#999999" nowrap>&nbsp;LOCATE A PROJECT OR ISSUE</TD>
-        </TR>
-</TABLE>
-
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-            <form name="ProjectSearchForm" action="$link.setPage("ProjectResults.vm")" method="POST">
-                <input type="hidden" name="action" value="ProjectSearch">
-                <TD class="InputHeader">Project Name:</TD>
-                <TD class="PlainText"><INPUT TYPE="text" name="projectName" value="$projectName" SIZE="15"> 
-                <INPUT TYPE="submit" NAME="eventSubmit_doProject" VALUE="Find Project"> 
-                Enter a project name.</TD>
-            </form>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-            <form name="ShowIssueForm" action="$link.setPage("IssueView.vm")" method="POST">
-                <input type="hidden" name="action" value="IssueView">
-                <TD class="InputHeader">Issue ID#:</TD>
-                <TD class="PlainText"><INPUT TYPE="text" name="issueID" value="$issueID"  SIZE="15"> 
-                <INPUT TYPE="submit" NAME="eventSubmit_doIssue" VALUE="View Issue"> 
-                Enter a issue ID number.</TD>
-            </form>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>
-        <TR>
-                <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
-        </TR>
-</TABLE>
