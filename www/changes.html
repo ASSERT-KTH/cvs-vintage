@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.212 2002/08/27 17:51:12 jon Exp $ -->
+<!-- $Id: changes.html,v 1.213 2002/08/28 19:34:56 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,7 +21,10 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b9</h3>
             <ul>
-                <li></li>
+                <li>Removed the index page. Now you just get the login page. (JDM)</li>
+                <li>Made it so that the links in the issue emails take you to the login
+                    page. After you login, you are shown the correct issue instead
+                    of having that information lost after login. (JDM)</li>
             </ul>
         </td>
     </tr>
@@ -29,6 +32,9 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b9</h3>
             <ul>
+                <li>Misc nomenclature changes to the templates for clarity. (JSS)</li>
+                <li>Fixed nasty bug introduced in b9 that made it impossible to
+                    save any attributes that were not option attributes. (JSS)</li>
                 <li>Copy the upgrade SQL .sh scripts to the target directory. (JSS)</li>
                 <li>Empty database + cross module search = stack trace
                     For more information, see Bug Report
