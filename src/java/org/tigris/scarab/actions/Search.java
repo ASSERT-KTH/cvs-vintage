@@ -62,6 +62,7 @@ import org.apache.commons.util.StringUtils;
 
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.om.NumberKey; 
+import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
@@ -70,9 +71,11 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -86,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.55 2002/01/24 20:54:12 jon Exp $
+    @version $Id: Search.java,v 1.56 2002/01/28 02:50:32 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -105,68 +108,23 @@ public class Search extends RequireLoginFirstAction
     public void doSearch(RunData data, TemplateContext context)
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
+        String queryString = getQueryString(data);
+        data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        List searchResults = scarabR.getCurrentSearchResults();
+        context.put("queryString", queryString);
 
-        ScarabUser user = null;
-
-        context.put("queryString", getQueryString(data));
-
-        if (intake.isAllValid()) 
+        if (searchResults.size() > 0)
         {
-            ScarabRequestTool scarabR = getScarabRequestTool(context);
-            IssueSearch search = new IssueSearch(scarabR.getCurrentModule(), 
-                                                 scarabR.getCurrentIssueType());
-            Group searchGroup = intake.get("SearchIssue", 
-                                     scarabR.getSearch().getQueryKey());
-            searchGroup.setProperties(search);
-
-            SequencedHashtable avMap = search.getModuleAttributeValuesMap();
-            Iterator i = avMap.iterator();
-            while (i.hasNext()) 
-            {
-                AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                Group group = intake.get("AttributeValue", aval.getQueryKey());
-                if (group != null) 
-                {
-                    group.setProperties(aval);
-                }                
-            }
-
-            List matchingIssues = null;
-            try
-            {
-                matchingIssues = search.getMatchingIssues();
-            }
-            catch (Exception e)
-            {
-            }
-            if (matchingIssues != null && matchingIssues.size() > 0)
-            {
-                // we could pass these results, but intake is not being used
-                // for sort criteria and polarity, why?.  Otherwise we have
-                // to duplicate logic from ScarabRequestTool here, so for
-                // now live with the inefficiency. !FIXME!
-                /*
-                List issueIdList = new ArrayList();
-                i = matchingIssues.iterator();
-                for (int j=0;j<matchingIssues.size();j++)
-                {
-                    issueIdList.add(((Issue)matchingIssues.get(j)).getIssueId());
-                }
-                */
-
-                user = (ScarabUser)data.getUser();
-                user.setTemp(ScarabConstants.CURRENT_QUERY, getQueryString(data));
-
-                String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, 
-                               "IssueList.vm");
-                setTarget(data, template);            
-            }
-            else
-            {
-                data.setMessage("No matching issues.");
-            }            
+            context.put("issueList", searchResults);
+            String template = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE, 
+                           "IssueList.vm");
+            setTarget(data, template);            
+        }
+        else
+        {
+            data.setMessage("No issues match your search.");
         }
     }
 
@@ -178,8 +136,6 @@ public class Search extends RequireLoginFirstAction
          throws Exception
     {        
         context.put("queryString", getQueryString(data));
-        data.getParameters().remove("template");
-        data.getParameters().add("template",  "SaveQuery.vm");
         setTarget(data, "SaveQuery.vm");            
     }
 
@@ -245,10 +201,9 @@ public class Search extends RequireLoginFirstAction
     public void doRunstoredquery(RunData data, TemplateContext context)
          throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Query query = scarabR.getQuery();
-        ScarabUser user = (ScarabUser)data.getUser();
-        user.setTemp(ScarabConstants.CURRENT_QUERY, query.getValue());
+        // Set current query to the stored query
+        ((ScarabUser)data.getUser()).setTemp(ScarabConstants.CURRENT_QUERY, 
+                                   getScarabRequestTool(context).getQuery().getValue());
         setTarget(data, "IssueList.vm");
     }
 
@@ -308,22 +263,21 @@ public class Search extends RequireLoginFirstAction
     }
 
     /**
-        Redirects to AssignIssue.
+        Redirects to AssignIssue, passing all issue ids.
     */
     public void doReassignall(RunData data, TemplateContext context)
          throws Exception
     {        
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        List issueList = scarabR.getIssueList();
-        List issueIdList = new ArrayList();
-        ParameterParser pp = data.getParameters();
-        for (int j=0;j<issueList.size();j++)
+        String[] allIssueIds = null;
+        if (data.getParameters().getStrings("all_issue_ids") != null)
         {
-           pp.add("issue_ids", 
-              ((Issue)issueList.get(j)).getIssueId().toString());
+            allIssueIds = data.getParameters().getStrings("all_issue_ids");
         }
-        context.put("issueIdList", issueIdList);
-        setTarget(data, "AssignIssue.vm");            
+        for (int i =0; i< allIssueIds.length; i++)
+        {
+            data.getParameters().add("issue_ids", allIssueIds[i]);
+        }
+        data.setTarget("AssignIssue.vm");
     }
 
     /**
@@ -344,6 +298,53 @@ public class Search extends RequireLoginFirstAction
     {        
         setTarget(data, "AdvancedQuery.vm");            
     }
+
+    /**
+        Removes users from the search form.
+    */
+    public void doRemoveusers(RunData data, TemplateContext context) 
+    {
+        List toRemove = new ArrayList();
+        Object[] keys =  data.getParameters().getKeys();
+        for (int i =0; i<keys.length; i++)
+        {
+            String key = keys[i].toString();
+            if (key.startsWith("delete_user"))
+            {
+                String userId = key.substring(12);
+                toRemove.add(userId);
+            }
+        }
+        String[] userList = data.getParameters().getStrings("user_list");
+        data.getParameters().remove("user_list");
+        for (int i=0; i < userList.length; i++)
+        { 
+            String userInList = userList[i];
+            if (!toRemove.contains(userInList))
+            {
+                data.getParameters().add("user_list", userInList);
+            }
+        }
+    }
+
+    /**
+        Adds user to the search form.
+    */
+    public void doAdduser(RunData data, TemplateContext context)  
+        throws Exception
+    {
+        String userName = data.getParameters().getString("add_user");
+        ScarabUser user = getScarabRequestTool(context).getUserByUserName(userName);
+        if (user == null)
+        {
+            data.setMessage("User was not found.");
+        }
+        else
+        {
+            data.getParameters().add("user_list", user.getUserId().toString());
+        }
+    }
+
 
     public String getQueryString(RunData data) throws Exception
     {
