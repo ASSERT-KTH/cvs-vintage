@@ -211,7 +211,7 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
         
         public ParagraphFormatMenuItem(HTML.Tag tag) {
             super(MailResourceLoader.getString("menu", "composer",
-                "menu_format_paragraph_") + tag.toString());
+                "menu_format_paragraph_"+ tag.toString()) );
             this.tag = tag;
         }
         
