@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.8 $                                           *
+ * Version:     $Revision: 1.9 $                                           *
  ***************************************************************************/
 
 
@@ -104,6 +104,7 @@
  *                        | "CHECKIN"
  *                        | "CHECKOUT"
  *                        | "UNCHECKOUT"
+ *                        | "SEARCH"
  * 
  */
 #define SC_M_OPTIONS            (unsigned char)1
@@ -126,6 +127,7 @@
 #define SC_M_CHECKIN            (unsigned char)18
 #define SC_M_CHECKOUT           (unsigned char)19
 #define SC_M_UNCHECKOUT         (unsigned char)20
+#define SC_M_SEARCH             (unsigned char)21
 
 
 /*
@@ -263,6 +265,8 @@ int sc_for_req_method(const char *method,
         *sc = SC_M_CHECKOUT;
     } else if(0 == strcmp(method, "UNCHECKOUT")) {
         *sc = SC_M_UNCHECKOUT;
+    } else if(0 == strcmp(method, "SEARCH")) {
+        *sc = SC_M_SEARCH;
     } else {
         rc = JK_FALSE;
     }

@@ -174,7 +174,8 @@ public class Ajp13
         "VERSION-CONTROL",
         "CHECKIN",
         "CHECKOUT",
-        "UNCHECKOUT"
+        "UNCHECKOUT",
+        "SEARCH"
     };
     
     // Translates integer codes to request header names
