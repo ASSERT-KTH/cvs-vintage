@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.14 2003/03/27 23:57:19 jon Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.15 2003/04/09 21:52:02 elicia Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable
@@ -315,7 +315,16 @@ public class ParentChildAttributeOption
         }
 
         // if getOptionId() is null, then it will just create a new instance
-        ao = AttributeOptionManager.getInstance(getOptionId());
+        Integer optionId = getOptionId();
+        if (optionId == null)
+        {
+            ao = AttributeOptionManager.getInstance();
+        } 
+        else
+        {
+            ao = AttributeOptionManager.getInstance(getOptionId());
+        }
+
         
         ao.setName(getName());
         ao.setDeleted(getDeleted());

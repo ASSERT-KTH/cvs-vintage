@@ -56,7 +56,7 @@ import org.apache.torque.om.ObjectKey;
  * This class manages AttributeOption objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AttributeOptionManager.java,v 1.4 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: AttributeOptionManager.java,v 1.5 2003/04/09 21:52:02 elicia Exp $
  */
 public class AttributeOptionManager
     extends BaseAttributeOptionManager
@@ -101,8 +101,7 @@ public class AttributeOptionManager
      * @param attId an <code>ObjectKey</code> value
      * @return an <code>AttributeOption</code> value
      * @exception TorqueException if an error occurs
-     */
-    public AttributeOption getInstanceImpl(ObjectKey attId)
+    public AttributeOption getInstanceImpl(Integer attId)
         throws TorqueException
     {
         AttributeOption option = null;
@@ -112,8 +111,9 @@ public class AttributeOptionManager
         }
         else 
         {
-            option = super.getInstanceImpl(attId);
+            option = super.getInstance(attId);
         }
         return option;
     }               
+     */
 }
