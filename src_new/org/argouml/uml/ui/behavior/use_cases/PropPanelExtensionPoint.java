@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.11 2003/01/01 16:06:38 kataka Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.12 2003/01/01 18:37:58 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import javax.swing.JTextField;
 
 import org.argouml.application.api.Argo;
 import org.argouml.swingext.LabelledLayout;
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -144,7 +145,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         MUseCase owner = ((MExtensionPoint) target).getUseCase();
 
         if(owner != null) {
-            navigateTo(owner);
+            ProjectBrowser.TheInstance.setTarget(owner);
         }
     }
 
