@@ -1,5 +1,5 @@
   <div class="docs" id="scarabglossary">
-   <h2>Glossary</h2>
+   <h2>$page.Title</h2>
 
    <div id="toc">
     <ul>
@@ -7,19 +7,19 @@
       Scarab Help 
 
       <ul>
-       <li><a href="$link.setPage("Introduction to Scarab")"></a></li>
+       <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
 
-       <li><a href="$link.setPage("Managing Issues")"></a></li>
+       <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
 
-       <li><a href="$link.setPage("Searching the database")"></a></li>
+       <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
 
-       <li><a href="$link.setPage("Reports")"></a></li>
+       <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
 
-       <li><a href="$link.setPage("Scarab guidelines")"></a></li>
+       <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
 
-       <li><a href="$link.setPage("FAQ")"></a></li>
+       <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
 
-       <li>Glossary</li>
+       <li><strong>Glossary</strong></li>
       </ul>
      </li>
     </ul>
