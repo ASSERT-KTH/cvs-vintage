@@ -122,7 +122,7 @@
           stubVersion="1.2">
             <classpath refid="classpath"/>
     </rmic>
- 
+
     <rmic base="${build.classes.dir}"
           classname="org.jboss.tm.usertx.server.UserTransactionSessionImpl"
           stubVersion="1.2">
@@ -269,7 +269,12 @@
        <fileset dir="${build.classes.dir}/org/jboss/jms/ra/"
              includes="META-INF/*"
        />
-    </jar>	 
+    </jar>
+
+    <jar jarfile="${build.lib.dir}/ext/jboss-castorjdo.jar"
+         basedir="${build.classes.dir}"
+         includes="org/jboss/jdo/castor/**"
+    />
   </target>
 
 
@@ -565,7 +570,7 @@
   <target name="jboss.base" depends="init">
 
     <mkdir dir="${build.util.classes.dir}"/>
-   
+
     <javac srcdir="${src.dir}"
            destdir="${build.util.classes.dir}"
            debug="on"

@@ -190,7 +190,7 @@
     <attribute name="DeployerName">Default</attribute>
     <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
     <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
-  </mbean> 
+  </mbean>
   -->
 
   <!-- ==================================================================== -->
@@ -314,7 +314,7 @@
     </attribute>
 
     <attribute name="ConnectionManagerFactoryName">
-      MinervaXACMFactory 
+      MinervaXACMFactory
     </attribute>
     <attribute name="ConnectionManagerProperties">
       # Pool type - uncomment to force, otherwise it is the default
@@ -436,6 +436,16 @@
     </constructor>
   </mbean>
   <!- - -->
+
+  <!-- Uncomment this and set up according to manual to add Castor JDO service
+  <mbean code="org.jboss.jdo.castor.CastorJDOImpl" name="DefaultDomain:service=CastorJDO,name=someName">
+    <attribute name="Configuration">file:../conf/default/database.xml</attribute>
+    <attribute name="JndiName">jdo/someName</attribute>
+    <attribute name="LockTimeout">0</attribute>
+    <attribute name="LoggingEnabled">false</attribute>
+    <attribute name="CommonClassPath">false</attribute>
+  </mbean>
+  -->
 
   <!-- ==================================================================== -->
   <!-- Add your custom MBeans here                                          -->
