@@ -13,7 +13,13 @@ import org.jboss.invocation.Invocation;
  * Provides the interface for all container interceptors.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.9 $
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @version $Revision: 1.10 $
+ *
+ *<p><b>20011219 marc fleury:</b>
+ * <ul>
+ *  <li>Method Invocation is replaced by Invocation
+ *</ul>
  */
 public interface Interceptor
    extends ContainerPlugin
