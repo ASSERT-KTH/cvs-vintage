@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.6 2003/01/22 23:37:41 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.7 2003/01/23 23:41:05 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -158,11 +158,12 @@ public class ViewXMLExportIssues extends Default
             }
             context.put("issueIdList", issueIdList);
             context.put("sdf", new SimpleDateFormat(ScarabConstants.DATE_FORMAT));
-    
+
             context.put("renderedFromScreen", Boolean.TRUE);
             String result = 
-                Module.handleRequest (context, "macros/XMLExportIssuesMacro.vm");
-            data.getOut().write(result);
+                Module.handleRequest(context, "macros/XMLExportIssuesMacro.vm");
+            data.getResponse().setContentLength(result.length());
+            data.getResponse().getOutputStream().print(result);
             context.remove("renderedFromScreen");
     
             // we already sent the response, there is no target to render
