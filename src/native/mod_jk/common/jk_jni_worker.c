@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.3 $                                           *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 #if !defined(WIN32) && !defined(NETWARE)
@@ -733,7 +733,7 @@ static int load_jvm_dll(jni_worker_t *p,
 
     if(!handle) {
         jk_log(l, JK_LOG_EMERG, 
-               "Can't log native library %s : %s\n", p->jvm_dll_path,
+               "Can't load native library %s : %s\n", p->jvm_dll_path,
                dlerror());
     } else {
         jni_create_java_vm = dlsym(handle, "JNI_CreateJavaVM");
