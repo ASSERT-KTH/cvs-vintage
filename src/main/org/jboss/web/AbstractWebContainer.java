@@ -12,6 +12,7 @@ import javax.naming.LinkRef;
 import javax.naming.NamingException;
 import javax.naming.Name;
 import javax.naming.NameNotFoundException;
+import javax.management.ObjectName;
 
 import org.w3c.dom.Element;
 
@@ -117,7 +118,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.13 $
+@version $Revision: 1.14 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
