@@ -133,7 +133,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
 				AbstractFolder destFolder = MailInterface.treeModel
-						.getFolder(item.getSpamItem().getMoveCustomFolder());
+						.getFolder(item.getSpamItem().getIncomingCustomFolder());
 
 				// create reference
 				FolderCommandReference ref2 = new FolderCommandReference(

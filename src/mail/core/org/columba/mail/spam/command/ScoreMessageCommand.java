@@ -92,7 +92,7 @@ public class ScoreMessageCommand extends FolderCommand {
 	public void execute(WorkerStatusController worker) throws Exception {
 		this.worker = worker;
 
-		// get array of source references
+		// get source reference
 		FolderCommandReference r = (FolderCommandReference) getReference();
 
 		// get array of message UIDs
