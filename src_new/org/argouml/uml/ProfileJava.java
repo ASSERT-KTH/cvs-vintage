@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.25 2004/08/29 09:29:51 mvw Exp $
+// $Id: ProfileJava.java,v 1.26 2004/12/11 15:54:09 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
-import org.argouml.xml.xmi.XMIReader;
+import org.argouml.model.uml.XmiReader;
 import org.xml.sax.InputSource;
 
 /**
@@ -346,7 +346,7 @@ public class ProfileJava extends Profile {
 
 	if (is != null) {
 	    try {
-		XMIReader xmiReader = new XMIReader();
+		XmiReader xmiReader = new XmiReader();
 		//
 		//   would really like to turn validation off to save
 		//      a lot of scary messages

@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.3 2004/10/23 11:05:48 mvw Exp $
+// $Id: ModelMemberFilePersister.java,v 1.4 2004/12/11 15:54:09 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.xml.xmi.XMIReader;
+import org.argouml.model.uml.XmiReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -103,9 +103,9 @@ public class ModelMemberFilePersister extends MemberFilePersister {
         // changed the loading of the projectfiles to solve hanging 
         // of argouml if a project is corrupted. Issue 913
         // Created xmireader with method getErrors to check if parsing went well
-        XMIReader xmiReader = null;
+        XmiReader xmiReader = null;
         try {
-            xmiReader = new XMIReader();
+            xmiReader = new XmiReader();
             source.setEncoding("UTF-8");
             mmodel = xmiReader.parseToModel(source);        
         } catch (SAXException e) { // duh, this must be caught and handled

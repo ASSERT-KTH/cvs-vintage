@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.17 2004/09/23 20:53:10 mvw Exp $
+// $Id: XMIParser.java,v 1.18 2004/12/11 15:54:09 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.XmiReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -112,7 +113,7 @@ public class XMIParser {
         LOG.info("=======================================");
         LOG.info("== READING MODEL " + url);
         try {
-            XMIReader reader = new XMIReader();
+            XmiReader reader = new XmiReader();
             InputSource source = new InputSource(url.openStream());
             source.setSystemId(url.toString());
             curModel = reader.parseToModel(source);
