@@ -31,7 +31,7 @@ import org.jboss.util.XmlHelper;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -175,6 +175,7 @@ public class ConfigurationService
             mbeanElement.setAttribute("name",name.toString());
 
             MBeanInfo info = server.getMBeanInfo(name);
+            mbeanElement.setAttribute("code",info.getClassName());
             MBeanAttributeInfo[] attributes = info.getAttributes();
             boolean hasAttributes = true;
             for (int i = 0; i < attributes.length; i++)
@@ -290,7 +291,7 @@ public class ConfigurationService
           {
                throw new IOException(se.getMessage());
           }
-
+          create(autoConf);
           load(autoConf);
        }
 
