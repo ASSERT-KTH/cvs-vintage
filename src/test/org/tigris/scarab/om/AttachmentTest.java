@@ -59,7 +59,7 @@ import org.apache.commons.fileupload.FileItem;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.7 2002/12/10 08:12:06 jon Exp $
+ * @version $Id: AttachmentTest.java,v 1.8 2003/01/02 19:54:29 jon Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
@@ -118,7 +118,7 @@ public class AttachmentTest extends BaseTestCase
         System.out.println("\ntestSaveFile()");
         FileItem fileItem = DefaultFileItem.newInstance("scarab/images/", "logo.gif", "image/jpeg", 6480, 10000);
         fileAttachment.setFile(fileItem);
-        fileAttachment.setName(fileItem.getFileName());
+        fileAttachment.setName(fileItem.getName());
         fileAttachment.setMimeType("image/jpeg");
         fileAttachment.setCreatedBy(getUser1().getUserId());
         issue.addFile(fileAttachment, getUser1());      

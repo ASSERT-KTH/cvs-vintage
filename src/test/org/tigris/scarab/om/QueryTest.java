@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.10 2002/09/13 00:00:33 jmcnally Exp $
+ * @version $Id: QueryTest.java,v 1.11 2003/01/02 19:54:29 jon Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -88,8 +88,10 @@ public class QueryTest extends BaseTestCase
         testGetAllQueryTypes();
         testSave();
         testSaveAndSendEmail();
-        testGetExecuteLink();
-        testGetEditLink();
+// Not really a test of anything and this code was moved
+// into scarabR
+//        testGetExecuteLink();
+//        testGetEditLink();
         testApprove();
         testSubscribe();
         testCopy();
@@ -136,7 +138,7 @@ public class QueryTest extends BaseTestCase
         assertEquals(query1.getValue(), retQuery.getValue());
 
     }
-
+/*
     private void testGetExecuteLink() throws Exception
     {
         System.out.println("\ntestGetExecuteLink()");
@@ -154,7 +156,7 @@ public class QueryTest extends BaseTestCase
                      query.getQueryId() + 
                      "&searchId=1&searchisp=asc&remcurmitl=true", edLink);
     }
-
+*/
     private void testGetAllQueryTypes() throws Exception
     {
         String[] scopeNames = {"personal", "module"};
