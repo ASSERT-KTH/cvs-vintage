@@ -1,4 +1,4 @@
-// $Id: TestModel.java,v 1.6 2005/01/06 23:04:54 linus Exp $
+// $Id: TestModel.java,v 1.7 2005/01/07 18:39:21 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +27,19 @@ package org.argouml.model;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * Test that the Model class returns only NSUML-free interfaces.
  */
 public class TestModel extends TestCase {
+    /**
+     * The method to test.
+     */
+    private Method savedMethod;
+
     /**
      * @param arg0 The name of the test case.
      */
@@ -41,10 +48,23 @@ public class TestModel extends TestCase {
     }
 
     /**
-     * Test each of the interfaces returned so that they don't contain any
-     * NSUML in any of their signatures.
+     * Create a test for one of the methods in Model.
+     *
+     * @param modelMethod The method to test.
      */
-    public void testInterfaces() {
+    public TestModel(Method modelMethod) {
+        this(modelMethod.getName());
+        savedMethod = modelMethod;
+    }
+
+    /**
+     * @return the test suite
+     */
+    public static Test suite() {
+	TestSuite suite =
+	    new TestSuite("Tests for "
+			  + TestModel.class.getPackage().getName());
+
         Method[] modelMethods = Model.class.getDeclaredMethods();
 
         for (int i = 0; i < modelMethods.length; i++) {
@@ -55,22 +75,41 @@ public class TestModel extends TestCase {
                 continue;
             }
 
-            assertTrue("The method " + modelMethod + "is not static",
-                       Modifier.isStatic(modelMethod.getModifiers()));
-
-            Class factoryIF = modelMethod.getReturnType();
-
-            // Handling methods that doesn't return
-            if (factoryIF.isPrimitive() && factoryIF.getName().equals("void")) {
-                continue;
-            }
-
-            assertTrue("The return type from " + modelMethod
-                       + " must be an interface.",
-                       factoryIF.isInterface());
-
-            checkInterface(factoryIF);
+	    suite.addTest(new TestModel(modelMethod));
         }
+
+	return suite;
+    }
+
+    /**
+     * Test each of the interfaces returned so that they don't contain any
+     * NSUML in any of their signatures.
+     */
+    public void testInterfaces() {
+    }
+
+
+    /**
+     * Run the test for one method.
+     *
+     * @see junit.framework.TestCase#runTest()
+     */
+    public void runTest() {
+        assertTrue("The method " + savedMethod + "is not static",
+                Modifier.isStatic(savedMethod.getModifiers()));
+
+        Class factoryIF = savedMethod.getReturnType();
+
+        // Handling methods that doesn't return
+        if (factoryIF.isPrimitive() && factoryIF.getName().equals("void")) {
+            return;
+        }
+
+        assertTrue("The return type from " + savedMethod
+                + " must be an interface.",
+                factoryIF.isInterface());
+
+        checkInterface(factoryIF);
     }
 
     /**
@@ -126,34 +165,4 @@ public class TestModel extends TestCase {
 
         return true;
     }
-
-    /**
-     * Test if the CollaborationsFactory is really a singleton.
-     */
-    public void testCollaborationsFactoryInstance() {
-        Object o1 = Model.getCollaborationsFactory();
-        Object o2 = Model.getCollaborationsFactory();
-
-        assertTrue("Different singletons", o1 == o2);
-    }
-
-    /**
-     * Test if the factory is really a singleton.
-     */
-    public void testCommonBehaviorFactoryInstance() {
-	Object o1 = Model.getCommonBehaviorFactory();
-	Object o2 = Model.getCommonBehaviorFactory();
-	assertTrue("Different singletons", o1 == o2);
-    }
-
-    /**
-     * Test if the CoreFactory is really a singleton.
-     */
-    public void testCoreFactoryInstance() {
-	Object o1 = Model.getCoreFactory();
-	Object o2 = Model.getCoreFactory();
-	assertTrue("Different singletons", o1 == o2);
-    }
-
-
 }
