@@ -1,0 +1,58 @@
+<!-- $Id: copy_move_specification.html,v 1.1 2003/09/12 15:52:35 jmcnally Exp $ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Copy and move issue specification</title>
+</head>
+
+<body>
+<h2>Copy and move issue specification</h2>
+<p>
+The destination and actor can affect the results of a move or copy of an issue.
+</p>
+<h3>Move to different issue type within same module</h3>
+<p>
+This is implemented as a simple reclassification with minimal change to 
+the issue data.  For example if a Defect is changed to Enhancement and then
+back to Defect, it's attribute values will be unaltered.  History will be
+intact.
+Q: do inactive or missing attributes in the new type cause comments to be 
+added?
+</p>
+<h3>Move to different module</h3>
+<p>
+As an issue type can have different variations between modules, a move between
+modules is treated similarly whether the issue type remains the same or
+changes.  Comments are added to the issue for attributes that are inactive
+or missing in the new module.  
+Q: do the attribute values that are commented on remain intact?  I.e. if the 
+issue is moved back, will the attribute values still be set as before it
+was moved?
+
+The user must have the 'Issue | Move' permission in the source module and
+'Issue | Enter' in the destination module to be able to move an issue across
+modules.  If the user does not have 'Issue | Edit' permission in the new
+module, user associations will be dropped.
+Q: Are these changes entered as comments?
+  
+</p>
+
+<h3>Copy to same issue type in same module</h3>
+<p>
+TBD
+</p>
+
+<h3>Copy to new issue type in same module</h3>
+<p>
+TBD
+</p>
+
+<h3>Copy to new module</h3>
+<p>
+TBD
+</p>
+
+</body>
+</html>
