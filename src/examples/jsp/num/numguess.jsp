@@ -3,7 +3,7 @@
   reserved.
 
   Number Guess Game
-  Written by Jason Hunter <jasonh@kasoftware.com>, CTO, K&A Software
+  Written by Jason Hunter, CTO, K&A Software
   http://www.servlets.com
 -->
 
