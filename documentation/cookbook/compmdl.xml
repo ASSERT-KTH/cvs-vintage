@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compmdl.xml,v 1.13 2004/08/17 05:59:02 linus Exp $ -->
+<!-- $Id: compmdl.xml,v 1.14 2004/12/18 18:45:06 mvw Exp $ -->
 
     <sect1 id="model">
       <title>Model</title>
@@ -543,14 +543,14 @@ MFactory.getDefaultFactory().create<replaceable>Type</replaceable>()
 	  <row>
 	    <entry>Delete a model element</entry>
 	    <entry>
-
-		</entry>
+        &nbsp;
+  		</entry>
 	    <entry>
-
-		</entry>
-	    <entry>
-			UmlFactory.getFactory().delete(<replaceable>object</replaceable>)
-		</entry>
+        &nbsp;
+  		</entry>
+      <entry>
+        ProjectManager.getManager().getCurrentProject().moveToTrash(<replaceable>object</replaceable>) 
+      </entry>
 	  </row>
 	  <row>
 	    <entry>
