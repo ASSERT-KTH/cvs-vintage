@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  * the target object from the cache.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class EntityMultiInstanceInterceptor
    extends AbstractInterceptor
@@ -126,6 +126,8 @@ public class EntityMultiInstanceInterceptor
 
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
+      // Set the JACC EnterpriseBean PolicyContextHandler data
+      EnterpriseBeanPolicyContextHandler.setEnterpriseBean(ctx.getInstance());
 
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);

@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -324,10 +324,10 @@ public class EjbModule
             Container con = createContainer(bean, deploymentInfo);
             con.setDeploymentInfo(deploymentInfo);
             addContainer(con);
-            // Register the permissions with the JACC layer
+            //@todo support overriding the context id via metadata is needed
             String contextID = deploymentInfo.shortName;
-            if( contextID == null )
-               contextID = deploymentInfo.shortName;
+            con.setJaccContextID(contextID);
+            // Register the permissions with the JACC layer
             PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
             PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
             createPermissions(bean, pc);

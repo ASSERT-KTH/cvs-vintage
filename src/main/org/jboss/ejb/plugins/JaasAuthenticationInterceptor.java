@@ -19,18 +19,17 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RunAsIdentity;
-import org.jboss.security.SecurityAssociation;
 import org.jboss.security.SecurityRolesAssociation;
+import org.jboss.security.SecurityAssociation;
 
-/** The SecurityInterceptor is where the EJB 2.1 authentication is performed
+/** This interceptor is where the EJB 2.1 authentication is performed
  * along with the run-as identity establishment. 
  *
- * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.1 $
  */
-public class SecurityInterceptor extends AbstractInterceptor
+public class JaasAuthenticationInterceptor extends AbstractInterceptor
 {
    /** The security domain authentication service
     */
@@ -85,7 +84,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       */
       if (runAsIdentity != null)
       {
-         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
       }
 
       try
@@ -97,7 +96,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       {
          if (runAsIdentity != null)
          {
-            SecurityAssociation.popRunAsIdentity();
+            SecurityActions.popRunAsIdentity();
          }
       }
    }
@@ -113,7 +112,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       */
       if (runAsIdentity != null)
       {
-         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
       }
 
       try
@@ -125,7 +124,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       {
          if (runAsIdentity != null)
          {
-            SecurityAssociation.popRunAsIdentity();
+            SecurityActions.popRunAsIdentity();
          }
       }
    }
@@ -144,8 +143,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (mi.getMethod() == null || securityManager == null || container == null)
       {
          // Allow for the progatation of caller info to other beans
-         SecurityAssociation.setPrincipal(principal);
-         SecurityAssociation.setCredential(credential);
+         SecurityActions.setPrincipalInfo(principal, credential);
          return;
       }
 
@@ -167,8 +165,7 @@ public class SecurityInterceptor extends AbstractInterceptor
          }
          else
          {
-            SecurityAssociation.setPrincipal(principal);
-            SecurityAssociation.setCredential(credential);
+            SecurityActions.setPrincipalInfo(principal, credential);
             if (trace)
             {
                log.trace("Authenticated  principal=" + principal);

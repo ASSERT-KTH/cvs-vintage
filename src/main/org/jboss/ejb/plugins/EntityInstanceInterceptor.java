@@ -45,7 +45,7 @@ import java.rmi.RemoteException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.74 $
+* @version $Revision: 1.75 $
 */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -193,6 +193,8 @@ public class EntityInstanceInterceptor
 
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
+      // Set the JACC EnterpriseBean PolicyContextHandler data
+      EnterpriseBeanPolicyContextHandler.setEnterpriseBean(ctx.getInstance());
 
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);

@@ -39,7 +39,7 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -229,7 +229,9 @@ public class StatefulSessionInstanceInterceptor
             
             // Associate it with the method invocation
             mi.setEnterpriseContext(ctx);
-            
+            // Set the JACC EnterpriseBean PolicyContextHandler data
+            EnterpriseBeanPolicyContextHandler.setEnterpriseBean(ctx.getInstance());
+
             // BMT beans will lock and replace tx no matter what, CMT do work on transaction
             boolean isBMT = ((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx();
             if (isBMT == false)

@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class MessageDrivenInstanceInterceptor
       extends AbstractInterceptor
@@ -71,6 +71,8 @@ public class MessageDrivenInstanceInterceptor
 
       // Use this context
       mi.setEnterpriseContext(ctx);
+      // Set the JACC EnterpriseBean PolicyContextHandler data
+      EnterpriseBeanPolicyContextHandler.setEnterpriseBean(ctx.getInstance());
 
       if (ejbTimeout.equals(mi.getMethod()))
          AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_TIMEOUT);

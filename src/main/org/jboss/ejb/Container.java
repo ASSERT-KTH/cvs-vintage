@@ -15,6 +15,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -51,6 +52,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.TransactionManager;
+import javax.xml.soap.SOAPMessage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -79,7 +81,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.152 $
+ * @version $Revision: 1.153 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -189,6 +191,9 @@ public abstract class Container
    protected long removeCount;
    /** Time statistics for the invoke(Invocation) methods */
    protected InvocationStatistics invokeStats = new InvocationStatistics();
+
+   /** The JACC context id for the container */
+   protected String jaccContextID;
 
    static
    {
@@ -368,6 +373,15 @@ public abstract class Container
          throw new IllegalArgumentException("Null EjbModule");
 
       ejbModule = app;
+   }
+
+   public String getJaccContextID()
+   {
+      return jaccContextID;
+   }
+   public void setJaccContextID(String id)
+   {
+      jaccContextID = id;
    }
 
    /**
@@ -789,25 +803,40 @@ public abstract class Container
 
    public abstract void addInterceptor(Interceptor in);
 
-   /**
+   /** The detached invoker operation.
+    * 
     * @jmx.managed-operation
     *
-    * @param mi
-    * @return
-    * @throws Exception
+    * @param mi - the method invocation context
+    * @return the value of the ejb invocation
+    * @throws Exception on error
     */
    public Object invoke(Invocation mi)
            throws Exception
    {
-      Thread currentThread = Thread.currentThread();
-      ClassLoader callerClassLoader = currentThread.getContextClassLoader();
+      ClassLoader callerClassLoader = SecurityActions.getContextClassLoader();
       long start = System.currentTimeMillis();
       Method m = null;
 
       Object type = null;
+      String contextID = getJaccContextID();
       try
       {
-         currentThread.setContextClassLoader(this.classLoader);
+         SecurityActions.setContextClassLoader(this.classLoader);
+
+         // Set the JACC context id
+         mi.setValue(InvocationKey.JACC_CONTEXT_ID, contextID);
+         contextID = SecurityActions.setContextID(contextID);
+         // Set the JACC policy context handler data is not a SEI msg
+         if( mi.getType() != InvocationType.SERVICE_ENDPOINT )
+         {
+            EJBArgsPolicyContextHandler.setArgs(mi.getArguments());
+         }
+         else
+         {
+            SOAPMessage msg = (SOAPMessage) mi.getValue(InvocationKey.SOAP_MESSAGE);
+            SOAPMsgPolicyContextHandler.setMessage(msg);
+         }
 
          // Check against home, remote, localHome, local, getHome,
          // getRemote, getLocalHome, getLocal
@@ -879,7 +908,10 @@ public abstract class Container
          // stat gathering: concurrent calls
          this.invokeStats.callOut();
 
-         currentThread.setContextClassLoader(callerClassLoader);
+         // Restore the incoming class loader
+         SecurityActions.setContextClassLoader(callerClassLoader);
+         // Restore the incoming context id
+         contextID = SecurityActions.setContextID(contextID);
       }
    }
 

@@ -28,7 +28,7 @@ import javax.xml.rpc.handler.MessageContext;
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -81,6 +81,8 @@ public class StatelessSessionInstanceInterceptor
 
       // Set the current security information
       ctx.setPrincipal(mi.getPrincipal());
+      // Set the JACC EnterpriseBean PolicyContextHandler data
+      EnterpriseBeanPolicyContextHandler.setEnterpriseBean(ctx.getInstance());
 
       // Use this context
       mi.setEnterpriseContext(ctx);
