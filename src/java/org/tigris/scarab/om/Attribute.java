@@ -83,7 +83,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.51 2002/08/09 01:40:48 jon Exp $
+  * @version $Id: Attribute.java,v 1.52 2002/08/20 20:46:26 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -261,11 +261,11 @@ public class Attribute
         throws TorqueException
     {
         AttributeType result = null;
-        Object obj = ScarabCache.get(ATTRIBUTE, GET_ATTRIBUTE_TYPE, this);
+        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_TYPE);
         if ( obj == null ) 
         {
             result = super.getAttributeType();
-            ScarabCache.put(result, ATTRIBUTE, GET_ATTRIBUTE_TYPE, this);
+            ScarabCache.put(result, this, GET_ATTRIBUTE_TYPE);
         }
         else
         {
