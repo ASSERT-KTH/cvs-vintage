@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.7 2001/08/06 20:40:59 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.8 2001/08/09 19:18:38 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href="style.css">
@@ -25,11 +25,11 @@
 </table>
     
 
-<H1>Tomcat User's Guide</H1>
+<H1>Tomcat 3.3 User's Guide</H1>
 
-<p>This document is an introduction to the Tomcat servlet
+<p>This document is an introduction to the Tomcat 3.3 servlet
 	container. It should be enough for anyone to install,
-	configure, and deploy Tomcat. As well, it answers many
+	configure, and deploy Tomcat 3.3, or later. As well, it answers many
 	questions common to new users. If you have any comments or suggestions
 	about this document don't hesitate to send them to the
 	Tomcat <a	href="http://jakarta.apache.org/site/mail.html">mailing
@@ -84,7 +84,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		<li><a href="#file_placement">File placement and
 			environment setup</a></li>
 		<li><a href="#starting_and_stopping">Starting and
-			stopping Tomcat</a>
+			stopping Tomcat</a></li>
 		<li><a href="#starting_another_dir">Starting
 			multiple instances w/individual server.xml files</a></li>
 		<li><a href="#directory_structure">Tomcat directory
@@ -99,7 +99,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		<li><a href="#server_xml">server.xml - Tomcat's main configuration
 			file</a></li>
 		<li><a href="#web_xml">web.xml - Default
-			deployment descriptor</a><br>
+			deployment descriptor</a></li>
 		<li>Web application/context security and authorization</li>
 		<li>tomcat-users.xml</li>
 		<li>JDBC realms</li>
@@ -122,13 +122,13 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		Problems</a>
 	<ul>
 		<li><a href="#error_bad_command">&quot;Bad command or
-        filename&quot; when executing Tomcat scripts</a>
+        filename&quot; when executing Tomcat scripts</a></li>
 		<li><a href="#error_8007">http://webserver:8007/
-        gives an HTTP 500</a>
+        gives an HTTP 500</a></li>
 		<li><a href="#error_ignore_directives">Apache &lt;Directory&gt;
-        and &lt;Location&gt; directives ignored</a>
+        and &lt;Location&gt; directives ignored</a></li>
 		<li><a href="#error_web_server">Web server won't
-        start when Tomcat is running</a>
+        start when Tomcat is running</a></li>
 	</ul>
 </li>
       <li><a href="#credits">Credits</a></li>
@@ -179,7 +179,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		unlike CGI-based scripting, e.g. perl, etc.
       
 		<p>From <a href="http://java.sun.com/products/servlet/">Sun's
-      servlet site</a>:
+      servlet site</a>:</p>
     
 		<blockquote>&quot;The <strong>Java<sup><font
 			size="-2">TM</font></sup> Servlet API</strong>
@@ -273,59 +273,58 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 
 <blockquote>
 
-    In the following steps, <i>&lt;version&gt;</i> will be "3.3" for the initial
-    Tomcat 3.3 release, and "3.3.<i>x</i>" for subsequent maintenance releases.
+    In the following steps, <i>&lt;version&gt;</i> will be &quot;3.3&quot; for the initial
+    Tomcat 3.3 release, and &quot;3.3.<i>x</i>&quot; for subsequent maintenance releases.
     
     <ul>
       <li><a href="http://jakarta.apache.org/site/binindex.html">Download</a> the
-        appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary file.
+        appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary file.</li>
     
       <li>Unzip the file into some directory (say /usr/local or C:\). This
-          should create a new subdirectory named <tt>"jakarta-tomcat-<i>&lt;version&gt;</i>"<tt>.
+          should create a new subdirectory named
+          <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt>.</li>
     
-    <li>Change to the <tt>"jakarta-tomcat-<i>&lt;version&gt;</i>"<tt> directory
-        and set a new environment variable (<a name="tomcat_home_env">TOMCAT_HOME</a>)
-        to point to the root directory of your Tomcat hierarchy. The exact directory may
-        change from system to system; check your local filesystem to be sure where Tomcat
-        is installed.
-        <ol>
-            <li>On Win32 systems you should type: <br>
-              <tt><big>set TOMCAT_HOME=c:\jakarta-tomcat-<i>&lt;version&gt;</i>
-	      </big></tt></li>
-            <li>On UNIX (using bash/sh) you should type: <br>
-              <tt><big>TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i> ; export TOMCAT_HOME
-	      </big></tt></li>
-            <li>On UNIX (using tcsh) you should type: <br>
-              <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
-	      </big></tt></li>
-        </ol>
-      </li>
+      <li>Change to the <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt> directory
+          and set a new environment variable (<a name="tomcat_home_env">TOMCAT_HOME</a>)
+          to point to the root directory of your Tomcat hierarchy. The exact directory may
+          change from system to system; check your local filesystem to be sure where Tomcat
+          is installed.
+          <ol>
+              <li>On Win32 systems you should type: <br>
+                <tt><big>set TOMCAT_HOME=c:\jakarta-tomcat-<i>&lt;version&gt;</i>
+  	      </big></tt></li>
+              <li>On UNIX (using bash/sh) you should type: <br>
+                <tt><big>TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i> ; export TOMCAT_HOME
+  	      </big></tt></li>
+              <li>On UNIX (using tcsh) you should type: <br>
+                <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
+  	      </big></tt></li>
+          </ol></li>
 
-      <li>Set the environment variable JAVA_HOME to point to the root
-        directory of your JDK hierarchy, then add the Java interpreter to your PATH
-        environment variable. The exact directory may change from system to system;
-        check your local filesystem to be sure where Java is installed.
-	<ol>
-	<li>Win32:<br>
-	<tt><big>
-	set JAVA_HOME=c:/jdk1.3.1<br>
-	set PATH=%PATH%;%JAVA_HOME%\bin
-	</big></tt>
-	</li>
-	<li>Unix (bash/sh):<br>
-	<tt><big>
-	set JAVA_HOME=/user/local/java/jdk1.3.1; export JAVA_HOME<br>
-	set PATH=$PATH:$JAVA_HOME/bin; export PATH<br>
-	</big></tt>
-	</li>
-	<li>Unix (tcsh):<br>
-	<tt><big>
-	setenv JAVA_HOME=/user/local/java/jdk1.3.1<br>
-	setenv PATH=$PATH:$JAVA_HOME/bin <br>
-	</big></tt>
-	</li>
-	</ol>
-      </li>
+        <li>Set the environment variable JAVA_HOME to point to the root
+          directory of your JDK hierarchy, then add the Java interpreter to your PATH
+          environment variable. The exact directory may change from system to system;
+          check your local filesystem to be sure where Java is installed.
+        	<ol>
+          	<li>Win32:<br>
+              	<tt><big>
+              	set JAVA_HOME=c:/jdk1.3.1<br>
+              	set PATH=%PATH%;%JAVA_HOME%\bin
+              	</big></tt>
+              	</li>
+          	<li>Unix (bash/sh):<br>
+              	<tt><big>
+              	set JAVA_HOME=/user/local/java/jdk1.3.1; export JAVA_HOME<br>
+              	set PATH=$PATH:$JAVA_HOME/bin; export PATH<br>
+              	</big></tt>
+              	</li>
+          	<li>Unix (tcsh):<br>
+              	<tt><big>
+              	setenv JAVA_HOME=/user/local/java/jdk1.3.1<br>
+              	setenv PATH=$PATH:$JAVA_HOME/bin <br>
+              	</big></tt>
+              	</li>
+        	</ol></li>
     </ul>
 
 <p>That's it! You can now <a href="#starting_and_stopping">
@@ -368,7 +367,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
     
     <p>By default, Tomcat will use TOMCAT_HOME/conf/server.xml for
     configuration, which by default, uses TOMCAT_HOME as its base for the contexts.
-    You can change this by using the "-f /path/to/server.xml" option, with a
+    You can change this by using the &quot;-f /path/to/server.xml&quot; option, with a
        different server configuration file and setting the home attribute of
        the <a href="#context_manager_element">ContextManager</a> element. You need to set up the required files inside the
        home:</p>
@@ -394,7 +393,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
       <p>Assuming you extracted the Tomcat binary distribution
        you should have the following directory structure under <a href="#tomcat_home_env">TOMCAT_HOME</a>:</p>
 
-<table border=1 width="75%" valign="MIDDLE">
+<table border=1 width="75%" valign="center">
       <tr>
         <th bgcolor="#c0c0c0" WIDTH="15%">Directory</th>
         <th bgcolor="#c0c0c0" WIDTH="85%">Contents</th>
@@ -441,7 +440,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 
     <p>Additionally you can, or Tomcat will, create the following
         directories:</p>
-    <table border="1" width="75%" VALIGN="MIDDLE">
+    <table border="1" width="75%" VALIGN="center">
       <tr>
         <td width="15%" align="center"> <a name="work_dir_defn"> work</a></td>
         <td width="85%"> Where Tomcat
@@ -482,7 +481,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
     <p>The following table presents the scripts that are
       most important for the common user:</p>
 
-<table border=1 width="75%" valign="MIDDLE">
+<table border=1 width="75%" valign="center">
       <tr>
         <th bgcolor="#c0c0c0" width="15%"> Script name </th>
         <th bgcolor="#c0c0c0" width="85%"> Description </th>
@@ -495,11 +494,11 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
       </tr>
       <tr>
         <td width="15%" align="center"> startup </td>
-        <td width="85%"> Starts tomcat in the background. Shortcut for "tomcat start" </td>
+        <td width="85%"> Starts tomcat in the background. Shortcut for &quot;tomcat start&quot; </td>
       </tr>
       <tr>
         <td width="15%" align="center"> shutdown </td>
-        <td width="85%"> Stops tomcat (shutting it down). Shortcut for "tomcat stop" </td>
+        <td width="85%"> Stops tomcat (shutting it down). Shortcut for &quot;tomcat stop&quot; </td>
       </tr>
 </table>
 
@@ -518,7 +517,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
       details on what variables are set and what class files are
       loaded. [??? - delete entire section pending reexamination?]</p>
 
-<table border =1 width="75%" valign="MIDDLE">
+<table border =1 width="75%" valign="center">
       <tr>
         <th bgcolor="#c0c0c0" width="15%"> Operating System </th>
         <th bgcolor="#c0c0c0" width="85%"> Actions </th>
@@ -528,10 +527,10 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
     <td width="85%">
       <ul>
         <li>Guessing what is TOMCAT_HOME if it is not
-          specified.
+          specified.</li>
           
         <li>Guessing what is JAVA_HOME if it is not
-          specified.
+          specified.</li>
           
         <li>Setting up a CLASSPATH that contains -
           
@@ -542,7 +541,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
           
             <li>${JAVA_HOME}/lib/tools.jar (this jar file contains the tool
                 javac, we need javac for jsp files).</li>
-          </ol>
+          </ol></li>
         <li>Executes java with command line parameters that set up a java
             system environment, called tomcat.home, with
             org.apache.tomcat.startup.Tomcat as the startup class. It also
@@ -575,7 +574,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
             <li> %TOMCAT_HOME%\classes (even if does not exist), </li>
             <li> %JAVA_HOME%\lib\tools.jar (this jar file contains the tool
                  javac, we need javac for jsp files).</li>
-         </ol>
+         </ol></li>
         <li>Executes java, assuming that it is in the PATH, with command line
         parameters that set up a java system environment, called tomcat.home,
         with org.apache.tomcat.startup.Tomcat as the startup class. It also
@@ -583,7 +582,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
         such as:
           
         <ol>
-            <li>The operation to perform start/stop/run/etc.
+            <li>The operation to perform start/stop/run/etc.</li>
 
             <li>A path to the server.xml used by this Tomcat process. </li>
         </ol>
@@ -614,7 +613,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
     Tomcat supports.</p>
 
 <dl>
-	<dt><strong><a name="type_1">Stand-alone servlet containers</a></strong>
+	<dt><strong><a name="type_1">Stand-alone servlet containers</a></strong></dt>
 	<dd>These are an integral part of the web server. This is the
 		case when using a Java-based web server, for example the
 		servlet container that is part of the JavaWebServer.
@@ -622,7 +621,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		servers, however, are not Java-based, which leads us to
 		the next two container types.</dd>
         
-	<dt><strong>In-process servlet containers</strong>
+	<dt><strong>In-process servlet containers</strong></dt>
 	<dd>The servlet container is a combination of a web server
 		plugin and a Java container implementation. The web
 		server plugin opens a JVM inside the web server's
@@ -636,7 +635,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		provides good performance but is limited in
 		scalability.</dd>
             
-	<dt><strong>Out-of-process servlet containers</strong>
+	<dt><strong>Out-of-process servlet containers</strong></dt>
 	<dd>The servlet container is a combination of a web server
 		plugin and a Java container implementation that runs in
 		a JVM outside the web server. The web server plugin and
@@ -667,7 +666,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 
 
 <h3><a name="configuring_tomcat">Configuring Tomcat</a></h3>
-    <p> Tomcat's configuration is based on two files:
+    <p> Tomcat's configuration is based on two files:</p>
     <ol>
       <li> <a href="#server_xml"> server.xml</a> - Tomcat's global configuration file. </li>
       <li> <a href="#web_xml"> web.xml</a> - Default deployment descriptor. </li>
@@ -723,7 +722,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
               the logger. One of &quot;tc_log&quot;, &quot;servlet_log&quot;,
               or &quot;JASPER_LOG&quot;.</li>
                     <li><strong>path. </strong>Output file, relative to
-              TOMCAT_HOME. If you omit a "path" value, then stderr &amp;
+              TOMCAT_HOME. If you omit a &quot;path&quot; value, then stderr &amp;
                       stdout are used.</li>
                     <li><strong>verbosityLevel.</strong> In order of increasing verbosity; one of &quot;FATAL&quot;, &quot;ERROR&quot;,
               &quot;WARNING&quot;, &quot;INFORMATION&quot;, or &quot;DEBUG&quot;.</li>
@@ -764,7 +763,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
          watches the various phases that user requests need to pass during its service.
                         Tomcat's administrator doesn't need to know much about the 
 		 interceptors; a developer on the other hand should know that this 
-		 is how "global" type of operations can be implemented in Tomcat 
+		 is how &quot;global&quot; type of operations can be implemented in Tomcat 
 		 (for example, security and per request logging).<br>
                         </td>
                     </tr>
@@ -880,7 +879,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
       covers web application and deployment with Tomcat. <strong>It is required reading if you're not going to
       take the time to read through the <a href="http://java.sun.com/products/servlet/download.html">Servlet API Spec</a>!</strong> </p>
     <p>
-      There is a small Tomcat "feature" that is related
+      There is a small Tomcat &quot;feature&quot; that is related
       to web.xml. Tomcat lets the user define default web.xml values for all
       contexts by putting a default web.xml file in the conf subdirectory of
       TOMCAT_HOME. When
@@ -912,7 +911,7 @@ file.  You may instead want to copy TOMCAT_HOME/conf/web.xml and modify it.</p>
 not clear whether we should teach about webapps before or after we
 introduce server.xml et al.]</p>
 
-<p>A Web Application (or "webapp") is a concept that was introduced in
+<p>A Web Application (or &quot;webapp&quot;) is a concept that was introduced in
 the <a href="http://java.sun.com/products/servlet/2.2/">Servlet
 Specification</a> version 2.2. [2.1?] You should definitely read the
 spec for the full story. From the spec (chapter 9):</p>
@@ -937,7 +936,7 @@ located at /catalog in a web server, the index.html file located at
 the base of the web application hierarchy can be served to satisfy a
 request to /catalog/index.html.</p>
 
-<p>A special directory exists within the application hierarchy named "WEB-INF". This directory
+<p>A special directory exists within the application hierarchy named &quot;WEB-INF&quot;. This directory
 contains all things related to the application that aren't in the document root of the application. It is
 important to note that the WEB-INF node is not part of the public document tree of the application.
 No file contained in the WEB-INF directory may be served directly to a client.</p>
@@ -975,9 +974,9 @@ adding a &lt;Context&gt; tag to TOMCAT_HOME/conf/server.xml. For
 example:</p>
 
 <blockquote>
-<pre>&lt;Context path="/mywebapp" 
-  docBase="/home/alex/webapps/mywebapp" 
-  reloadable="true" &gt;
+<pre>&lt;Context path=&quot;/mywebapp&quot;
+  docBase=&quot;/home/alex/webapps/mywebapp&quot;
+  reloadable=&quot;true&quot; &gt;
 &lt;/Context&gt;
 </pre>
 </blockquote>
@@ -985,9 +984,9 @@ example:</p>
 
 <h4><a name="what_is_war">What is a WAR file?</a></h4>
 
-<p><em>"WAR. Huh! What is it good for?" - Edwin Starr</em></p>
+<p><em>&quot;WAR. Huh! What is it good for?&quot; - Edwin Starr</em></p>
 
-<p>A WAR (or "web archive") file is simply a packaged webapp directory.
+<p>A WAR (or &quot;web archive&quot;) file is simply a packaged webapp directory.
 It is created using the standard Java <tt><big>jar</big></tt> tool.
 For example:</p>
 
@@ -1047,7 +1046,7 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
 
 <p>By default the Tomcat distribution comes with a naive
 	configuration whose main goal is to promote first time
-	user experience and an "out of the box" operation...
+	user experience and an &quot;out of the box&quot; operation...
 	This configuration however is not the best way to deploy
 	Tomcat on real sites. For example, real sites may
 	require some performance tuning and site-specific
@@ -1070,7 +1069,7 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
             <li> To modify the JVM command line settings. </li>
             <li> Make sure that you are using a specific JVM (out of the two
                  or three JVMs installed on your machine). </li>
-            <li> To switch user from root to some other user using the "su"
+            <li> To switch user from root to some other user using the &quot;su&quot;
                  UNIX command. </li>
             <li> Your pet reason. </li>
 </ul>
@@ -1080,7 +1079,7 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
 	use an environment variable named <tt>TOMCAT_OPTS</tt>
 	to set extra command line parameters to the JVM (such as
 	memory setting etc.). On <em>UNIX</em> you can also
-	create a file named <tt>".tomcatrc"</tt> in your home
+	create a file named <tt>&quot;.tomcatrc&quot;</tt> in your home
 	directory and Tomcat will take environment information
 	such as PATH, JAVA_HOME, TOMCAT_HOME and CLASSPATH from
 	this file. On NT however (and also on UNIX when the
@@ -1134,7 +1133,7 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
         contains two Connectors configured as in the next server.xml
         fragment:</p>
 
-<table border="1" cellspacing="0" cellpadding="0" valign="middle">
+<table border="1" cellspacing="0" cellpadding="0" valign="center">
 	<caption><em>The two default Connectors in server.xml</em></caption>
           <tr>
             <td bgcolor="#c0c0c0">
@@ -1166,10 +1165,10 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
 <ol>
             <li> Is a Connector that listens on port 8080 for incoming HTTP
                  requests. This connector is needed for stand-alone
-                 operation.
+                 operation.</li>
             <li> Is a Connector that listens on port 8007 for incoming AJPV12
                  requests. This connector is needed for web-server
-                 integration (out-of-process servlet integration).
+                 integration (out-of-process servlet integration).</li>
         </ol>
 
 <p>It is clear that a sane Tomcat deployment will use either an
@@ -1207,7 +1206,7 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
         management techniques, such as:</p>
 
 <ol>
-	<li>Keeping threads "open" and reusing them over and over
+	<li>Keeping threads &quot;open&quot; and reusing them over and over
                  again. This saves the trouble associated with creating and 
 				 destroying threads continuously.
 	<ul>
@@ -1268,12 +1267,12 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
                  to keep 10 vacant threads (as long as the upper bound is
                  kept). </li>
         </ul>
-        The default configuration is suitable for medium load sites with an
-        average of 10-40 concurrent requests. If your site differs you
-        should modify this configuration (for example reduce the upper
-        limit). Configuring the pool can be done through the &lt;Connector&gt;
-        element in server.xml as demonstrated in the next fragment:
-        <p>
+<p>The default configuration is suitable for medium load sites with an
+   average of 10-40 concurrent requests. If your site differs you
+   should modify this configuration (for example reduce the upper
+   limit). Configuring the pool can be done through the &lt;Connector&gt;
+   element in server.xml as demonstrated in the next fragment:
+</p>
 
 <table border="1" cellspacing="0" cellpadding="0" valign="middle">
 	<caption><em>Configuring the Thread Pool</em></caption>
@@ -1361,11 +1360,11 @@ do I deploy a WAR file in Tomcat?</a> in the jGuru FAQ.</p>
 <p>With help from (in alphabetical order):</p>
 
 <ul>
-	<li>Jonathan Bnayahu
-	<li>Alex Chaffee
-	<li>Fiona Czuczman
-	<li>Costin Manolache
-	<li>Rob Slifka
+	<li>Jonathan Bnayahu</li>
+	<li>Alex Chaffee</li>
+	<li>Fiona Czuczman</li>
+	<li>Costin Manolache</li>
+	<li>Rob Slifka</li>
 </ul>
 
 <table width="100%" border="0" cellpadding="10" cellspacing="0">
