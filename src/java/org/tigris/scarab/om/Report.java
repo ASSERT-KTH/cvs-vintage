@@ -63,9 +63,6 @@ public  class Report
     private static final String[] AXIS_CATEGORIES = 
         {"attributes/options", "attributes/users", "committed by/author"};
 
-    //private static List reportTypes;
-    //private static List axisCategories;
-
     private static final String ACT_ATTRIBUTE_ID;
     private static final String ACT_NEW_USER_ID;
     private static final String ACT_NEW_OPTION_ID;
@@ -77,9 +74,6 @@ public  class Report
     private static final String TRAN_CREATED_BY;
     private static final String TRAN_TYPE_ID;
 
-    //private ModuleEntity module;
-    //private String name;    
-    //private String description;
     private int type=0;
     private ScarabUser generatedBy;
     private Date generatedDate;
@@ -404,7 +398,7 @@ public  class Report
         throws Exception
     {
         ModuleEntity module = getModule();
-        List rmas = module.getRModuleAttributes(true);
+        List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         int start = 0;
         for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
@@ -472,7 +466,7 @@ public  class Report
         throws Exception
     {
         ModuleEntity module = getModule();
-        List rmas = module.getRModuleAttributes(true);
+        List rmas = module.getRModuleAttributes(getIssueType(), true);
         List ausers = new ArrayList(7*rmas.size());
         int start = 0;
         for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
@@ -621,7 +615,7 @@ public  class Report
         throws Exception
     {
         ModuleEntity module = getModule();
-        List rmas = module.getRModuleAttributes(true);
+        List rmas = module.getRModuleAttributes(getIssueType(), true);
         List allOptions = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
         {
@@ -759,7 +753,7 @@ public  class Report
         throws Exception
     {
         ModuleEntity module = getModule();
-        List rmas = module.getRModuleAttributes(true);
+        List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
         {
@@ -788,7 +782,7 @@ public  class Report
         throws Exception
     {
         ModuleEntity module = getModule();
-        List rmas = module.getRModuleAttributes(true);
+        List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
         {

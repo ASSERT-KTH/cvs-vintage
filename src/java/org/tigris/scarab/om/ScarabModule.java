@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.48 2001/10/18 02:00:02 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.49 2001/10/19 01:20:42 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -101,8 +101,9 @@ public class ScarabModule
     private Attribute[] quicksearchAttributes;
     private Attribute[] requiredAttributes;
 
-    private List allRModuleAttributes;
-    private List activeRModuleAttributes;
+    // removing the internal cache until it can be fixed using artifact_types
+    // private List allRModuleAttributes;
+    // private List activeRModuleAttributes;
     private List parentModules;
 
     private Map allRModuleOptionsMap = new HashMap();
@@ -491,31 +492,25 @@ public class ScarabModule
     public Vector getRModuleAttributes(Criteria crit)
         throws Exception
     {
-        Vector rModAtts = super.getRModuleAttributes(crit);
-
-        if ( rModAtts == null || rModAtts.size() == 0 ) 
+        Vector rModAtts = null;
+        ModuleEntity module = this;
+        ModuleEntity prevModule = null;
+        do
         {
-            ModuleEntity parent = 
-                (ModuleEntity) this.getModuleRelatedByParentIdCast();
-            if ( !ROOT_ID.equals(this.getModuleId()) ) 
-            {
-                rModAtts = parent.getRModuleAttributes(crit);
-            }
+            rModAtts = ((ScarabModule)module).superRModuleAttributes(crit);
+            prevModule = module;
+            module = (ModuleEntity) prevModule.getModuleRelatedByParentIdCast();
         }
+        while ( rModAtts.size() == 0 &&
+               !ROOT_ID.equals(prevModule.getModuleId()));
 
         return rModAtts;
     }
 
-    /**
-     * Overridden method.  Calls the super method and if no results are
-     * returned the call is passed on to the parent module.
-     */
-    public Vector getRModuleAttributes(IssueType issueType)
+    private Vector superRModuleAttributes(Criteria crit)
         throws Exception
     {
-        Criteria crit = new Criteria(1);
-        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
-        return getRModuleAttributes(crit);
+        return super.getRModuleAttributes(crit);
     }
 
     /**
@@ -601,11 +596,12 @@ public class ScarabModule
         crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
     }
 
-    public RModuleAttribute getRModuleAttribute(Attribute attribute)
+    public RModuleAttribute getRModuleAttribute(Attribute attribute, 
+                                                IssueType issueType)
         throws Exception
     {
         RModuleAttribute rma = null;
-        List rmas = getRModuleAttributes(false);
+        List rmas = getRModuleAttributes(issueType, false);
         Iterator i = rmas.iterator();
         while ( i.hasNext() )
         {
@@ -619,74 +615,33 @@ public class ScarabModule
         return rma;
     }
 
-    public List getRModuleAttributes(boolean activeOnly)
+    /**
+     * Overridden method.  Calls the super method and if no results are
+     * returned the call is passed on to the parent module.
+     */
+    public List getRModuleAttributes(IssueType issueType)
         throws Exception
     {
-        List allRModuleAttributes = null;
-        List activeRModuleAttributes = null;
-        // note this code could potentially read information from the
-        // db multiple times (MT), but this is okay
-        if ( this.allRModuleAttributes == null )
-        {
-            allRModuleAttributes = getAllRModuleAttributes();
-            this.allRModuleAttributes = allRModuleAttributes;
-        }
-        else
-        {
-            allRModuleAttributes = this.allRModuleAttributes;
-        }
-
-        if ( activeOnly )
-        {
-            if ( this.activeRModuleAttributes == null )
-            {
-                activeRModuleAttributes =
-                    new ArrayList(allRModuleAttributes.size());
-                for ( int i=0; i<allRModuleAttributes.size(); i++ )
-                {
-                    RModuleAttribute rma =
-                        (RModuleAttribute)allRModuleAttributes.get(i);
-                    if ( rma.getActive() )
-                    {
-                        activeRModuleAttributes.add(rma);
-                    }
-                }
-
-                this.activeRModuleAttributes = activeRModuleAttributes;
-            }
-            else
-            {
-                activeRModuleAttributes = this.activeRModuleAttributes;
-            }
-
-            return activeRModuleAttributes;
-        }
-        else
-        {
-            return allRModuleAttributes;
-        }
+        return getRModuleAttributes(issueType, false);
     }
 
-    private List getAllRModuleAttributes()
+    public List getRModuleAttributes(IssueType issueType, boolean activeOnly)
         throws Exception
     {
-        Criteria crit = new Criteria(0);
+        Criteria crit = new Criteria();
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
+                 issueType.getIssueTypeId());
         crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
 
-        List rModAtts = null;
-        ModuleEntity module = this;
-        ModuleEntity prevModule = null;
-        do
+        if ( activeOnly )
         {
-            rModAtts = module.getRModuleAttributes(crit);
-            prevModule = module;
-            module = (ModuleEntity) prevModule.getModuleRelatedByParentIdCast();
+            crit.add(RModuleAttributePeer.ACTIVE, true);
         }
-        while ( rModAtts.size() == 0 &&
-               !ROOT_ID.equals(prevModule.getModuleId()));
-        return rModAtts;
+
+        return getRModuleAttributes(crit);
     }
+
 
     /**
      * gets a list of all of the Attributes.
@@ -710,7 +665,7 @@ public class ScarabModule
         if ( allRModuleOptions == null )
         {
             allRModuleOptions = getAllRModuleOptions(attribute);
-            allRModuleOptionsMap.put(attribute, allRModuleAttributes);
+            allRModuleOptionsMap.put(attribute, allRModuleOptions);
         }
 
         if ( activeOnly )

@@ -5,8 +5,8 @@
 
 <form method="get" action="$action">
 
-#if ($reports.size() > 0)
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
+#if ($reports.size() > 0)
 <h3>Saved reports</h3>
 <select name="report_id">
     <option value="">Choose...</option>

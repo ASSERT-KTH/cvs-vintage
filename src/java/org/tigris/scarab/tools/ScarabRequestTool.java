@@ -779,6 +779,7 @@ try{
                 key = ((ScarabUser)data.getUser())
                     .setReportingIssue(reportingIssue);
                 data.getParameters().add(ScarabConstants.REPORTING_ISSUE, key);
+                reportingIssue.setIssueType(getCurrentIssueType());
             }
             else 
             {
@@ -1031,6 +1032,7 @@ try{
                 reportGenerator = new Report();
                 reportGenerator.setModule(getCurrentModule());
                 reportGenerator.setGeneratedBy((ScarabUser)data.getUser());
+                reportGenerator.setIssueType(getCurrentIssueType());
                 reportGenerator
                     .setQueryString(getReportQueryString(parameters));
             }

@@ -1113,7 +1113,7 @@ public class Issue
         {
             aval = (AttributeValue)setMap.get(iter.next());
             RModuleAttribute modAttr = module.
-                                       getRModuleAttribute(aval.getAttribute());
+                getRModuleAttribute(aval.getAttribute(), getIssueType());
             
             // If this attribute is not active for the destination module,
             // Add to orphanAttributes list
@@ -1168,7 +1168,7 @@ public class Issue
         {
             aval = (AttributeValue)setMap.get(iter.next());
             RModuleAttribute modAttr = module.
-                                       getRModuleAttribute(aval.getAttribute());
+                getRModuleAttribute(aval.getAttribute(), getIssueType());
             
             // If this attribute is not active for the destination module,
             // Add to orphanAttributes list

@@ -14,9 +14,9 @@
 <tr>
 <th width="120">report date</th>
  <td>
+    #fieldErrorMsg($intakeReport.NewDate "")
     <input type="text" size="20" name="$intakeReport.NewDate.Key"
-        value="$intakeReport.NewDate" />
-    <p>Leave blank for current date/time</p>
+        value="$intakeReport.NewDate" /> Leave blank for current date/time
 </td>
 </tr>
 <tr>

@@ -156,6 +156,7 @@ public class RModuleOption
         this.level = v;
     }
 
+    /*
     public RModuleAttribute getRModuleAttribute()
         throws Exception
     {
@@ -163,6 +164,7 @@ public class RModuleOption
         Attribute attribute = getAttributeOption().getAttribute();
         return module.getRModuleAttribute(attribute);
     }
+    */
 
     /* *
      * The AttributeOption that is the parent of this moduleOption.

@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.28 2001/10/17 20:48:32 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.29 2001/10/19 01:20:42 jmcnally Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -526,7 +526,8 @@ System.out.println(rmit);
                 // Set properties for module-attribute mapping
                 Attribute attribute = (Attribute)attributes.get(i);
                 RModuleAttribute rma = (RModuleAttribute)module
-                                       .getRModuleAttribute(attribute);
+                                       .getRModuleAttribute(attribute, 
+                                                            ag.getIssueType());
                 Group rmaGroup = intake.get("RModuleAttribute", 
                                  rma.getQueryKey(), false);
                 rmaGroup.setProperties(rma);
@@ -564,10 +565,11 @@ System.out.println(rmit);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
-        List rmas = (List)((Vector) module.getRModuleAttributes(false)).clone();
         String issueTypeId = data.getParameters().getString("issueTypeId");
         IssueType issueType = (IssueType) IssueTypePeer
                             .retrieveByPK(new NumberKey(issueTypeId));
+        List rmas = (List)((Vector) module
+                           .getRModuleAttributes(issueType, false)).clone();
         List attributeGroups = issueType.getAttributeGroups(module);
 
         boolean isValid = true;
@@ -718,7 +720,8 @@ System.out.println(rmit);
                                      .retrieveByPK(new NumberKey(attributeId));
 
                // Remove attribute - module mapping
-               RModuleAttribute rma = module.getRModuleAttribute(attribute);
+               RModuleAttribute rma = module
+                   .getRModuleAttribute(attribute, ag.getIssueType());
                rma.delete(user);
 
                // Remove attribute - group mapping

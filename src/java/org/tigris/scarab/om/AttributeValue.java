@@ -467,7 +467,7 @@ public abstract class AttributeValue
        throws Exception
     {
         RModuleAttribute rma = getIssue().getModule()
-            .getRModuleAttribute(getAttribute());
+            .getRModuleAttribute(getAttribute(), getIssue().getIssueType());
         return rma.getRequired();
     }
 
@@ -495,7 +495,8 @@ public abstract class AttributeValue
     {
         ModuleEntity module = ModuleManager
             .getInstance(getIssue().getModuleId());
-        return module.getRModuleAttribute(getAttribute());
+        return module.getRModuleAttribute(getAttribute(), 
+                                          getIssue().getIssueType());
     }
 
     public void setAttribute(Attribute v) throws Exception
