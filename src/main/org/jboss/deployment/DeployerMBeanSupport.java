@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * <p><b>Revisions:</b>
  *
@@ -65,9 +65,9 @@ public abstract class DeployerMBeanSupport
     *  The directory that will contain local copies of deployed packages
     */
    private File deployDir;
-    
+
    // Static --------------------------------------------------------
-   
+
    private static int nextNum = 0;
 
    private static synchronized String generateUniqueDirName()
@@ -81,7 +81,7 @@ public abstract class DeployerMBeanSupport
    {
    }
 
-   
+
    // Public --------------------------------------------------------
 
    // DeployerMBean implementation ----------------------------------
@@ -140,12 +140,12 @@ public abstract class DeployerMBeanSupport
          return deployments.containsKey(u);
       }
    }
-    
+
    // ServiceMBeanSupport overrides ---------------------------------
-   
+
     /**
      * The <code>startService</code> method sets up a temporary directory
-     * to hold the copies of deployed packages and possibly inflations 
+     * to hold the copies of deployed packages and possibly inflations
      * of those copies.  The format is (jboss.system.home)/tmp/deploy/(deployername).
      *
      * @exception Exception if an error occurs
@@ -181,7 +181,7 @@ public abstract class DeployerMBeanSupport
    }
 
     /**
-     * The <code>stopService</code> method tries to remove the 
+     * The <code>stopService</code> method tries to remove the
      * directory created in the initService method.
      *
      */
@@ -197,7 +197,7 @@ public abstract class DeployerMBeanSupport
    }
 
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
 
    /**
@@ -261,18 +261,18 @@ public abstract class DeployerMBeanSupport
    }
 
 
-    // Below here are helper methods to deal with copying packages, 
+    // Below here are helper methods to deal with copying packages,
     // unpacking packages recursively, finding things in packages,
     // and similar tasks needed for most deployment activities.
      //
     /**
      * The <code>inflateJar</code> copies the jar entries
      * from the jar url jarUrl to the directory destDir.
-     * It can be used on the whole jar, a directory, or 
+     * It can be used on the whole jar, a directory, or
      * a specific file in the jar.
      *
      * @param jarUrl the <code>URL</code> if the directory or entry to copy.
-     * @param destDir the <code>File</code> value of the directory in which to 
+     * @param destDir the <code>File</code> value of the directory in which to
      * place the inflated copies.
      * @exception DeploymentException if an error occurs
      * @exception IOException if an error occurs
@@ -304,12 +304,12 @@ public abstract class DeployerMBeanSupport
          {
             JarEntry entry = (JarEntry)e.nextElement();
             String name = entry.getName();
-            if (path == null || name.startsWith(path)) 
+            if (path == null || name.startsWith(path))
             {
                File outFile = new File(destDir, name);
-               if (!outFile.exists()) 
+               if (!outFile.exists())
                {
-            
+
                   if (entry.isDirectory())
                   {
                      outFile.mkdirs();
@@ -334,10 +334,10 @@ public abstract class DeployerMBeanSupport
                         in.close();
                      }
                   }
-                    
+
                } // end of if (outFile.exists())
             } // end of if (matches path)
-             
+
          }
       }
       finally
@@ -349,24 +349,24 @@ public abstract class DeployerMBeanSupport
    protected void extractPackages(URL url, DeploymentInfo di)
           throws DeploymentException, IOException
    {
-      if (url.getFile().endsWith(".xml")) 
+      if (url.getFile().endsWith(".xml"))
       {
          di.addXmlUrl(url);
          return;
       }
-      
-      //if its a jar or war, add to list and stop
-      if (url.getFile().endsWith(".jar") || url.getFile().endsWith(".war")) 
+
+      //if its a zip, jar or war, add to list and stop
+      if (url.getFile().endsWith(".zip") || url.getFile().endsWith(".jar") || url.getFile().endsWith(".war"))
       {
          di.addClassUrl(url);
          return;
       }
       //Sars may contain files or other packages
-      if (url.getFile().endsWith(".sar")) 
+      if (url.getFile().endsWith(".sar"))
       {
          di.addClassUrl(url);
       }
-      
+
 
       URL jarUrl;
       try
@@ -392,25 +392,25 @@ public abstract class DeployerMBeanSupport
 //jar urls don't seem to work!
 jar:file:/usr/java/jboss/co6/jboss-all/build/output/jboss-3.0.0alpha/tmp/deploy/ServiceDeployer/copydeploy.28/jmx-ejb-connector-server.sar!/META-INF/jboss-service.xml
 cannot be opened!
-            if (name.endsWith(".xml")) 
+            if (name.endsWith(".xml"))
             {
                di.addXmlUrl(new URL(jarUrl, name));
             } // end of if ()
-            
-            else 
+
+            else
             */
-            if (name.endsWith(".jar") 
-                || name.endsWith(".xml") 
-                || name.endsWith(".sar") 
-                || name.endsWith(".ear") 
-                || name.endsWith(".rar") 
-                || name.endsWith(".war") 
-                || name.endsWith(".zip")) 
+            if (name.endsWith(".jar")
+                || name.endsWith(".xml")
+                || name.endsWith(".sar")
+                || name.endsWith(".ear")
+                || name.endsWith(".rar")
+                || name.endsWith(".war")
+                || name.endsWith(".zip"))
             {
                File outFile = new File(getUniqueDir(di), name);
                File outFileParent = outFile.getParentFile();
                outFileParent.mkdirs();
-               
+
                InputStream in = jarFile.getInputStream(entry);
                try
                {
@@ -430,20 +430,20 @@ cannot be opened!
                }
                //stop for these,
                URL packageURL = new URL("file:" + outFile.toString());
-               if (name.endsWith(".jar") 
-                   || name.endsWith(".zip") 
-                   || name.endsWith(".war")) 
+               if (name.endsWith(".jar")
+                   || name.endsWith(".zip")
+                   || name.endsWith(".war"))
                {
                   di.addClassUrl(packageURL);
                } // end of if ()
                //continue for others (xml, rar, ear, sar)
-               else 
+               else
                {
-                  extractPackages(packageURL, di);    
+                  extractPackages(packageURL, di);
                } // end of else
             }
 
-            
+
          } // end of if ()
 
       }
@@ -463,7 +463,7 @@ cannot be opened!
          out.write(buffer, 0, read);
       }
    }
-   
+
    protected boolean recursiveDelete(File f)
    {
       if (f.isDirectory())
@@ -479,7 +479,7 @@ cannot be opened!
       }
       return f.delete();
    }
-   
+
    protected File getDeployDir()
    {
       return deployDir;
@@ -492,7 +492,7 @@ cannot be opened!
       File localDir = getUniqueDir(di);
       localDir.mkdirs();
       String name = new File(url.getFile()).getName();//end of file name,no path
-       
+
       File copyFile = new File(localDir, name);
       InputStream input = url.openStream();
       try
@@ -595,10 +595,10 @@ cannot be opened!
       {
          classUrls.clear();
          xmlUrls.clear();
-         for (Iterator i = dirs.iterator(); i.hasNext(); ) 
+         for (Iterator i = dirs.iterator(); i.hasNext(); )
          {
             File dir = (File)i.next();
-            if (!recursiveDelete(dir)) 
+            if (!recursiveDelete(dir))
             {
                log.info("could not delete directory " + dir + ". Will be removed on server shutdown or restart");
             } // end of if ()
