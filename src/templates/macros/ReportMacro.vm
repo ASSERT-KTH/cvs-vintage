@@ -9,7 +9,7 @@
   </select>
  #else
   personal
-  <input type="hidden" name="$reportGroup.ScopeId.Key" value="$reportGroup.ScopeId.Key" />
+  <input type="hidden" name="$reportGroup.ScopeId.Key" value="$reportGroup.ScopeId" />
  #end
 #end
 
