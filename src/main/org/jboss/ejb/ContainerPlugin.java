@@ -13,7 +13,7 @@ import org.jboss.util.Service;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface ContainerPlugin
    extends Service
@@ -30,14 +30,4 @@ public interface ContainerPlugin
     * @return     
     */
    public void setContainer(Container con);
-   
-   public void init()
-      throws Exception;
-      
-   public void start()
-      throws Exception;
-   
-   public void stop();
-   
-   public void destroy();
 }
