@@ -7,19 +7,17 @@
 
 #if ($currentModule)
 <h3>Current Module</h3>
-<div class="axial">
 <div class="datatable">
 <table cellpadding="3" cellspacing="2" border="1">
 <tr>
-    <th>Current Module Name:</th>
+    <th>Current Module Name</th>
     <td>$currentModule.Name</td>
 </tr>
 <tr>
-    <th>Current Module Desc:</th>
+    <th>Current Module Desc</th>
     <td>$currentModule.Description</td>
 </tr>
 </table>
-</div>
 </div>
 #end
 
@@ -33,12 +31,11 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm"/> 
 #end
 
-<div class="axial">
 <div class="datatable">
 <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-    <th>Module Name:</th>
-    <th>Module Desc:</th>
+    <th>Module Name</th>
+    <th>Module Desc</th>
 </tr>
 
 #foreach ($module in $userModules)
@@ -57,7 +54,6 @@ $module.Description
 #end
 
 </table>
-</div>
 </div>
 
 <p>

@@ -6,7 +6,7 @@
 
 <h2>Define report (2.4.1)</h2>
 		
-		<div id="tabs">
+		<div class="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
 			<th>1: Summary info</th>
@@ -24,9 +24,9 @@ If so,  enter the following information (it can be edited later).
 <form method="get" action="$action">
 
 <div class="axial">
-	<table border="1" cellspacing="2" cellpadding="3">
+	<table border="0" cellspacing="2" cellpadding="3">
 		<tr>
-			<th width="120">report name:</th>
+			<th width="120">report name</th>
 			<td>         
 			<input type="text" size="30" maxlength="255" 
                 name="$intakeReport.Name.Key" value="$intakeReport.Name" />
@@ -34,7 +34,7 @@ If so,  enter the following information (it can be edited later).
 		</tr>
 			
 		<tr>
-			<th width="120">report description (optional):</th>
+			<th width="120">report description (optional)</th>
 			<td>
                 <textarea name="$intakeReport.Description.Key" 
                     rows="3" cols="30">$intakeReport.Description</textarea>
@@ -55,7 +55,7 @@ If so,  enter the following information (it can be edited later).
 
 	<table border="1" cellspacing="2" cellpadding="3">			
 		<tr>
-			<th width="120">type of report:</th>
+			<th width="120">type of report</th>
 			<td>
 
 #if ($data.Parameters.getString($intakeReport.Type.Key))

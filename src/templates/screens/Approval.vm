@@ -19,23 +19,23 @@ $page.setTitle("Approval")
         <tr>
          <th nowrap="nowrap">&nbsp;</th>
 
-         <th><a href="#" title="sort">date:</a></th>
+         <th><a href="#" title="sort">date</a></th>
 
-         <th><a href="#" title="sort">type:</a></th>
+         <th><a href="#" title="sort">type</a></th>
 
-         <th><a href="#" title="sort">submitted by:</a></th>
+         <th><a href="#" title="sort">submitted by</a></th>
          
-        ## <th><a href="#" title="sort">project:</a></th>
+        ## <th><a href="#" title="sort">project</a></th>
          
-        ## <th><a href="#" title="sort">user role:</a></th>
+        ## <th><a href="#" title="sort">user role</a></th>
 
-         <th><a href="#" title="sort">name:</a></th>
+         <th><a href="#" title="sort">name</a></th>
 
-         <th><a href="#" title="sort">description:</a></th>
+         <th><a href="#" title="sort">description</a></th>
 
-         <th>comments:</th>
+         <th>comments</th>
 
-         <th>action:</th>
+         <th>action</th>
         </tr>
 
 #foreach( $query in $module.UnapprovedQueries )
@@ -119,9 +119,9 @@ $page.setTitle("Approval")
 #end
        </table>
 <div class="axial">
-                <table width="100%" border="1" cellspacing="2" cellpadding="3">
+    <table border="0" cellspacing="2" cellpadding="3">
         <tr>
-         <th width="120"><small>comments<br>
+         <th width="120"><small>comments<br />
          (sent to selected submittees)</small></th>
                  <td><textarea rows="4" cols="40" name="global_comment"></textarea></td>
         </tr>

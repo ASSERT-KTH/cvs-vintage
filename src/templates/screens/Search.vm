@@ -25,9 +25,9 @@
        <h3>text search</h3>
 
        <div class="axial">
-        <table border="1" cellspacing="2" cellpadding="3">
+        <table border="0" cellspacing="2" cellpadding="3">
          <tr>
-          <th width="120">select text attributes:</th>
+          <th width="120">select text attributes</th>
           <td>
 
 
@@ -66,7 +66,7 @@
          </tr>
 
          <tr>
-          <th width="120">enter search string:</th>
+          <th width="120">enter search string</th>
           <td>
 
              <textarea name="$searchGroup.SearchWords.Key" 
@@ -81,7 +81,7 @@
        <h3>multiple / single choice search</h3>
 
        <div class="axial">
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <table border="0" cellspacing="2" cellpadding="3">
 
 #foreach ( $attVal in $searchValues )
 
@@ -93,7 +93,7 @@
      #end
 
          <tr>
-          <th width="120">$attVal.Attribute.Name:</th>
+          <th width="120">$attVal.Attribute.Name</th>
           <td>
 
         #attrValueErrorMsg ( $attVal $field )

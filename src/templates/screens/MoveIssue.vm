@@ -16,9 +16,9 @@ $page.setTitle("Copy / Move Issue")
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th>Summary:</th>
-         <th>Date Committed:</th>
-         <th>Committed By:</th>
+         <th>Summary</th>
+         <th>Date Committed</th>
+         <th>Committed By</th>
         </tr>
         <tr class="a">
          <td>

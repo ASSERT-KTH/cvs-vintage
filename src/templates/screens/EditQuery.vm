@@ -13,21 +13,21 @@
 <input type="hidden" name="queryId" value="$queryId">
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value">
       <div class="axial">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <table cellpadding="3" cellspacing="2" border="0">
         <tr>
-         <th width="120">query name:</th>
+         <th width="120">query name</th>
 
          <td>#fieldErrorMsg($queryGroup.Name "") <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
         </tr>
 
         <tr>
-         <th width="120">query description:</th>
+         <th width="120">query description</th>
 
          <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
         </tr>
 
         <tr>
-         <th width="120">Availability:</th>
+         <th width="120">Availability</th>
 
          <td>#queryTypeSelectBox ($currentQuery)
            </td>
@@ -35,7 +35,7 @@
         </tr>
 
         <tr>
-         <th width="120">location:</th>
+         <th width="120">location</th>
          <td>current project '$module.Name'</td>
          <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId">
         </tr>
@@ -69,7 +69,7 @@
  <h3>Subscription info</h3>
 
 <div class="axial">
-       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+       <table border="0" cellspacing="2" cellpadding="3">
         <tr>
          <th width="120">Default frequency</th>
          <td>

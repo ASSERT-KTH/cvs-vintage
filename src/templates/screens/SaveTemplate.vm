@@ -18,21 +18,21 @@
 
 <h3>Save Template</h3>
 <div class="axial">
-    <table border="1" cellspacing="2" cellpadding="3">
+    <table border="0" cellspacing="2" cellpadding="3">
        <tr>
-            <th>template name:</th>
+            <th>template name</th>
             <td>
              #fieldErrorMsg($templateGroup.Name "")
             <input type="text" size="25" value="$!templateGroup.Name" name="$templateGroup.Name.Key"/></td>
        </tr>
             
        <tr>
-            <th>template descr:</th>
+            <th>template descr</th>
             <td><textarea rows="4" cols="40" name="$templateGroup.Description.Key">$!templateGroup.Description</textarea></td>
        </tr>
             
        <tr>
-         <th width="120">Availability:</th>
+         <th width="120">Availability</th>
 
          <td>#templateTypeSelectBox ($issue)
          </td>
@@ -40,14 +40,14 @@
        </tr>
 
        <tr>
-         <th width="120">location:</th>
+         <th width="120">location</th>
          <td>current project '$module.Name'</td>
          <input type = "hidden" name="$issueGroup.ModuleId.Key" value = "$module.ModuleId">
        </tr>
 
 #if ($issueId)
        <tr>
-          <th>template author:</th>
+          <th>template author</th>
              #set ($createdUser = $issue.CreatedBy)
           <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
        </tr>
@@ -57,13 +57,13 @@
                 
 
 <h3>Completed Attributes in "Enter Issue" template</h3>
-<br>
-<div id="tabs">
+
+<div class="tabs">
         <table cellpadding="3" cellspacing="0" border="0">
         <tr>
-        <th><small>1:</small> Summary info</th>
-        <td><small>2:</small> Duplicate check</td>
-        <td><small>3:</small> <a href="#" title="view verbose information">Verbose info</a></td>
+        <th>1: Summary info</th>
+        <td>2: Duplicate check</td>
+        <td>3: <a href="#" title="view verbose information">Verbose info</a></td>
         </tr>
         </table>
 </div>
@@ -71,7 +71,7 @@
 <h3>Input your issue</h3>
 
 <div class="axial">
-        <table width="100%" cellspacing="2" cellpadding="3" border="1">
+        <table cellspacing="2" cellpadding="3" border="0">
                                                 
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ( $group = $intake.AttributeValue.mapTo($attrValue) ) 
@@ -91,8 +91,7 @@
      #if ( $attVal.isRequired() )
         *
      #end
-     $attVal.Attribute.Name: 
-    </th>
+     $attVal.Attribute.Name</th>
     <td>
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
 
@@ -124,6 +123,6 @@
 </div>
 
 
-<p class="functnbar"><input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  />&#160;<input type="submit" value="clear form" class="button" /></p> 
+<p class="functnbar"><input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  />&#160;<input type="submit" value="clear form" /></p> 
 $intake.declareGroups()
 </form>

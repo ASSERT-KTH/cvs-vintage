@@ -56,7 +56,7 @@ $page.setTitle("Identified as duplicate")
 			src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
 			alt="sort" border="0" /></a></th>
 
-<th><a href="#">issue ID #:</a></th>
+<th><a href="#">issue ID #</a></th>
 
 
 #set( $attrValues = $currentIssue.ModuleAttributeValuesMap )
@@ -64,15 +64,15 @@ $page.setTitle("Identified as duplicate")
 #set ( $attVal = $attrValues.get($attKey) )
 #if ($attVal.isDedupeAttribute())
 
-<th>$attVal.Attribute.Name: </th>
+<th>$attVal.Attribute.Name</th>
 
 #end
 #end
 
 
-<th>creation date:</th>
+<th>creation date</th>
 
-<th>date closed:</th>
+<th>date closed</th>
 
 </tr>
 
@@ -173,19 +173,19 @@ value="continue issue entry" />
 #*
 
 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-<TR>
-<TD WIDTH="50%" VALIGN="top">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td width="50%" valign="top">
 
-<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
-<TR>
-<TD  BGCOLOR="#999999" COLSPAN="2">POSSIBLE ISSUE MATCHES</TD>
-</TR>
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr>
+<td  bgcolor="#999999" colspan="2">POSSIBLE ISSUE MATCHES</td>
+</tr>
 
-<TR>
-<TD>Issue ID#</TD>
-<TD>Issue Summary</TD>
-</TR>
+<tr>
+<td>Issue ID#</td>
+<td>Issue Summary</td>
+</tr>
 
 #set ( $currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
 
@@ -236,16 +236,16 @@ $!attVal.Value
 #end
 
 
-Reported by:<br>
+Reported by:<br />
 #set ( $email = $currentIssue.CreatedBy.Email )
-<A HREF="mailto:$email">$email</A>
+<a href="mailto:$email">$email</a>
 
 
-Date Entered:<br>
+Date Entered:<br />
 $currentIssue.CreatedDate
 
 
-Last Modified:<br>
+Last Modified:<br />
 $currentIssue.ModifiedDate
 
 
@@ -257,24 +257,24 @@ $currentIssue.ModifiedDate
 #foreach ($issue in $currentIssue.BlockerIssues)
 #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
 
-$comma<A HREF="$issueLink">$issue.UniqueId</A>
+$comma<a href="$issueLink">$issue.UniqueId</a>
 #set ( $comma = ", " )
 #end
-</TD>
+</td>
 </tr>
 
-<TR>
-<TD>Dependents:<br>
+<tr>
+<td>Dependents:<br />
 
 #set ( $comma = "" )
 #foreach ($issue in $currentIssue.BlockerIssues)
 #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
 
-$comma<A HREF="$issueLink">$issue.UniqueId</A>
+$comma<a href="$issueLink">$issue.UniqueId</a>
 #set ( $comma = ", " )
 #end
 
-</TD>
+</td>
 </tr>
 
 
@@ -284,20 +284,21 @@ $comma<A HREF="$issueLink">$issue.UniqueId</A>
 
 <tr><td>
 
-Does this issue match yours?<a href="$link.setPage("Links.vm")">Yes</a>(Vote)
+Does this issue match yours?<a href="$link.setPage("links.vm")">Yes</a>(Vote)
 <a href="$nextIssueLink">No</a>(Next issue)
 
-<br>
-<br>
-<a href="$link.addPathInfo($data.Parameters).setPathInfo("nextTempate", "entry,Wizard3.vm").setPage("entry,Wizard3.vm")">None of these Issues Match Mine</a> (Report issue now)
-<br>
+<p>
+<a href="$link.addPathInfo($data.Parameters).setPathInfo("nexttempate", "entry,wizard3.vm").setpage("entry,wizard3.vm")">None of these Issues Match Mine</a> (Report issue now)
+</p>
 #*
 <input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
-<input type="submit" name="eventSubmit_doNo" value="No">(Next issue)<br>
-<br>
+<input type="submit" name="eventSubmit_doNo" value="No">(Next issue)
+
+<p>
 <input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine">(New Search)
 <input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)
 *#
+</p>
 
 </td></tr>
 
@@ -306,41 +307,44 @@ Does this issue match yours?<a href="$link.setPage("Links.vm")">Yes</a>(Vote)
 <a href="#Comments">Add Comment</a>
 
 
-<P>
+<p>
 <a name="Comments">
-Comments<br>
-<br>
-<TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:bob@collab.net">bob@collab.net</A></SPAN></TD>
-<TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
-</TR>
-<TR>
-<TD HEIGHT="4" COLSPAN="5"></TD>
-</TR>
-<TR>
-<TD COLSPAN="2" CLASS="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue#12856,#30856, and $2945 are also duplicates. Gervase needs to clean up this code.</TD>
-</TR>
-<TR>
-<TD HEIGHT="4" COLSPAN="5"></TD>
-</TR>
-<TR>
-<TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"></TD>
-</TR>
-<TR>
-<TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:matt@collab.net">matt@collab.net</A></SPAN></TD>
-<TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
-</TR>
-<TR>
-<TD HEIGHT="4" COLSPAN="5"></TD>
-</TR>
-<TR>
-<TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>
-</TR>
+Comments</a>
+</p>
+
+<td class="TableDataHeader">From: <span class="TableData"><a href="mailto:bob@collab.net">bob@collab.net</a></span></td>
+<td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
+</tr>
+<tr>
+<td height="4" colspan="5"></td>
+</tr>
+<tr>
+<td colspan="2" class="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue#12856,#30856, and $2945 are also duplicates. Gervase needs to clean up this code.</td>
+</tr>
+<tr>
+<td height="4" colspan="5"></td>
+</tr>
+<tr>
+<td height="1" colspan="5" bgcolor="#cccccc"></td>
+</tr>
+<tr>
+<td class="TableDataHeader">From: <span class="TableData"><a href="mailto:matt@collab.net">matt@collab.net</a></span></td>
+<td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
+</tr>
+<tr>
+<td height="4" colspan="5"></td>
+</tr>
+<tr>
+<td colspan="2" class="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</td>
+</tr>
 
 
-Add a comment<br>
-<br>
-<TEXTAREA NAME="" value="$description" COLS="40" ROWS="3"></TEXTAREA><br>
+Add a comment
+
+<p>
+<textarea name="" value="$description" cols="40" rows="3"></textarea><br>
 <input type="submit" name="eventSubmit_doAddComment" value="Add Comment">
+</p>
 
 *#
 

@@ -66,9 +66,9 @@
             <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
                 alt="sort" border="0" />
         </th>
-		<th>Issue ID:</th>
+		<th>Issue ID</th>
 #foreach( $userAttribute in $user.getAttributesForIssueList($module))
-		<th>$userAttribute.Name:</th>
+		<th>$userAttribute.Name</th>
 #end
 		</tr>
 		

@@ -30,21 +30,21 @@ $page.setTitle("Stored Query List")
 <th>General functions</th>
 <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
-<th>Select list item(s) to:</th>
+<th>Select list item(s) to</th>
 <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
 </tr>
 <tr>
-<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;
-<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;
-<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
+<td><input type="submit" value="save" name="eventSubmit_doSavefrequencies" />&nbsp;
+<input type="submit" value="cancel" name="eventSubmit_doCancel" />&nbsp;
+<input type="submit" value="new" name="eventSubmit_doNewquery" /></td>                       
 
-<td><input type="submit" value="copy" class="bttn" name="eventSubmit_doCopyquery" />&nbsp;
+<td><input type="submit" value="copy" name="eventSubmit_doCopyquery" />&nbsp;
    #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
-<input type="submit" value="delete" class="bttn" name="eventSubmit_doDeletequeries" />
+<input type="submit" value="delete" name="eventSubmit_doDeletequeries" />
    #end
-&nbsp;<input type="submit" value="subscribe" class="bttn" name="eventSubmit_doSubscribe" />&nbsp;
-<input type="submit" value="unsubscribe" class="bttn" name="eventSubmit_doUnsubscribe" /></td>
+&nbsp;<input type="submit" value="subscribe" name="eventSubmit_doSubscribe" />&nbsp;
+<input type="submit" value="unsubscribe" name="eventSubmit_doUnsubscribe" /></td>
 </tr>
 
 
@@ -143,18 +143,18 @@ $page.setTitle("Stored Query List")
 <th>General functions</th>
 <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
-<th>Select list item(s) to:</th>
+<th>Select list item(s) to</th>
 <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
 
 </tr>
 <tr>
-<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
+<td><input type="submit" value="save" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" name="eventSubmit_doNewquery" /></td>                       
 
-<td><input type="submit" value="copy" class="bttn" name="eventSubmit_doCopyquery" />&nbsp;
+<td><input type="submit" value="copy" name="eventSubmit_doCopyquery" />&nbsp;
    #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
-<input type="submit" value="delete" class="bttn" name="eventSubmit_doDeletequeries" />
+<input type="submit" value="delete" name="eventSubmit_doDeletequeries" />
    #end
-&nbsp;<input type="submit" value="subscribe" class="bttn" name="eventSubmit_doSubscribe" />&nbsp;<input type="submit" value="unsubscribe" class="bttn" name="eventSubmit_doUnsubscribe" /></td>
+&nbsp;<input type="submit" value="subscribe" name="eventSubmit_doSubscribe" />&nbsp;<input type="submit" value="unsubscribe" name="eventSubmit_doUnsubscribe" /></td>
 </tr>
 #end
 </table>

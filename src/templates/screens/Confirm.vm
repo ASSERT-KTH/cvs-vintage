@@ -33,16 +33,16 @@ be asked to confirm it the next time you try to login.
     <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
 
 <div class="axial">
-<table cellpadding="3" cellspacing="2" border="1">
+<table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>Email Address:</th>
+  <th>Email Address</th>
   <td>
     <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue">
     #fieldErrorMsg($regGroup.Email "")
   </td>
  </tr>
  <tr>
-  <th>Confirmation Code:</th>
+  <th>Confirmation Code</th>
   <td>
     <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue">
     #fieldErrorMsg($regGroup.Confirm "")

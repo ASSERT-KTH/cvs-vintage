@@ -29,13 +29,13 @@ back to the Registration page.
     <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm">
 
 <div class="axial">
-<table cellpadding="3" cellspacing="2" border="1">
+<table cellpadding="3" cellspacing="2" border="0">
 	<tr>
-		<th>Email Address:</th>
+		<th>Email Address</th>
 		<td>$user.Email</td>
 	</tr>
 	<tr>
-		<th>Full Name:</th>
+		<th>Full Name</th>
 		<td>$user.FirstName $user.LastName</td>
 	</tr>
 	<tr>

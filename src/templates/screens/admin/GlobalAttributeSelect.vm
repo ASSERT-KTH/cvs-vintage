@@ -5,14 +5,14 @@ $page.setTitle("Global Attribute Select")
     <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
     <input type="hidden" name="groupId" value = "$data.Parameters.getString("groupId")")
 
-        <div id="tabs">
+        <div class="tabs">
             <table cellpadding="3" cellspacing="0" border="0">
             <tr>
             <th>global attributes</th>
             <td><a href="#" title="Customize 'enter issue'">Customize "enter issue"</a></td>
             </tr>
             </table>
-        </div><br>
+        </div>
 
 
         <div class="functnbar">
@@ -23,12 +23,12 @@ $page.setTitle("Global Attribute Select")
             <td><strong>general functions</strong></td>
             </tr>
             <tr>
-            <td><input type="submit" value="add to 'Enter issue page'" class="bttn" name="eventSubmit_doSelectattribute" />&nbsp;</td>
+            <td><input type="submit" value="add to 'Enter issue page'" name="eventSubmit_doSelectattribute" />&nbsp;</td>
             <td>
             #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-               <input type="submit" value="create new" class="bttn" />
+               <input type="submit" value="create new" />
             #end
-            &nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" /></td>
+            &nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
 
             </tr>
             </table>
@@ -40,11 +40,11 @@ $page.setTitle("Global Attribute Select")
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-        <th><a href="#" title="sort">input type:</a></th>
-        <th><a href="#" title="sort">attribute name:</a></th>
-        <th><a href="#" title="sort">description:</a></th>
-        <th><a href="#" title="sort">author:</a></th>
-        <th><a href="#" title="sort">creation date:</a></th>
+        <th><a href="#" title="sort">input type</a></th>
+        <th><a href="#" title="sort">attribute name</a></th>
+        <th><a href="#" title="sort">description</a></th>
+        <th><a href="#" title="sort">author</a></th>
+        <th><a href="#" title="sort">creation date</a></th>
         </tr>
         
 #set ($allAttributes = $scarabR.CurrentModule.AvailableAttributes)
@@ -72,12 +72,12 @@ $page.setTitle("Global Attribute Select")
             <td><strong>general functions</strong></td>
             </tr>
             <tr>
-            <td><input type="submit" value="add to 'Enter issue page'" class="bttn" name="eventSubmit_doSelectattribute" />&nbsp;</td>
+            <td><input type="submit" value="add to 'Enter issue page'" name="eventSubmit_doSelectattribute" />&nbsp;</td>
             <td>
             #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-               <input type="submit" value="create new" class="bttn" />
+               <input type="submit" value="create new" />
             #end
-            &nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" /></td>
+            &nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
 
             </tr>
             </table>

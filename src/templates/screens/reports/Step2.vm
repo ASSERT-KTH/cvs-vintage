@@ -6,7 +6,7 @@
 
 <h2>Define report (2.4.1)</h2>
 		
-		<div id="tabs">
+		<div class="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
 			<td>1: <a href="#" title="summary info">Summary info</a></td>
@@ -39,7 +39,7 @@ seperate column (i.e. side-by-side comparison).</p>
 <form method="get" action="$action">
 		
 <div class="axial">
-	<table border="1" cellspacing="2" cellpadding="3">
+	<table border="0" cellspacing="2" cellpadding="3">
 
 		<tr>
 			<th width="120">attributes</th>

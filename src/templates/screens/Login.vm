@@ -21,15 +21,15 @@ $page.setTitle("Welcome to Scarab")
 #set ( $loginGroup = $intake.Login.Default )
 
 <div class="axial">
-<table cellpadding="3" cellspacing="2" border="1">
-<tr><th>Email Address:</th>
+<table cellpadding="3" cellspacing="2" border="0">
+<tr><th>Email Address</th>
 <td>
 <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
 #fieldErrorMsg ($loginGroup.Username "")
 </td>
 </tr>
 
-<tr><th>Password:</th>
+<tr><th>Password</th>
 <td>
 <input name="$loginGroup.Password.Key" value="" size="25" type="password" />
 #fieldErrorMsg ($loginGroup.Password "")

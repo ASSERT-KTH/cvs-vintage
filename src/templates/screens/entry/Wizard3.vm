@@ -10,7 +10,7 @@ $page.setTitle("Enter Issue")
 <h3>Input your issue</h3>
 	
 <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="1">
+    <table cellpadding="3" cellspacing="2" border="0">
 
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
@@ -56,12 +56,12 @@ $page.setTitle("Enter Issue")
         </table>
 </div>
 
-<h3>Add Attachment:</h3>
+<h3>Add Attachment</h3>
 
 <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="1">
+    <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-      <th>Attachment Description:</th>
+      <th>Attachment Description</th>
 
 #set ( $atch = $scarabR.Attachment )
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
@@ -77,7 +77,7 @@ $page.setTitle("Enter Issue")
      </tr>
 
      <tr>
-      <th>File path:</th>
+      <th>File path</th>
 
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45" 
@@ -97,11 +97,10 @@ $page.setTitle("Enter Issue")
 <br/>
 
 <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="1">
+    <table cellpadding="3" cellspacing="2" border="0">
      <tr>
      <th>
-      workflow options:
-     </th>
+      workflow options</th>
      <td>
     return to&#160;
    <input type="radio" name="nextTemplate" 

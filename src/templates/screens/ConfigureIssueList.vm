@@ -23,9 +23,9 @@ $page.setTitle("Add/Remove Attributes From View")
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th>Select:</th>
-         <th>Attribute Name:</th>
-         <th>Columnar Sequence:</th>
+         <th>Select</th>
+         <th>Attribute Name</th>
+         <th>Columnar Sequence</th>
         </tr>
 
 #foreach ($moduleAttribute in $moduleAttributes)

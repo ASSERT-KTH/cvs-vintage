@@ -17,23 +17,23 @@ $page.setTitle("Scarab Registration")
 #end
 
     <div class="axial">
-     <table cellpadding="3" cellspacing="2" border="1">
+     <table cellpadding="3" cellspacing="2" border="0">
       <tr>
-       <th>* First Name:</th>
+       <th>* First Name</th>
        <td>
         <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" />
         #fieldErrorMsg($regGroup.FirstName "")
        </td>
       </tr>
       <tr>
-       <th> *Last Name:</th>
+       <th> *Last Name</th>
        <td>
         <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" />
         #fieldErrorMsg($regGroup.LastName "")
        </td>
       </tr>
       <tr>
-       <th> *Email Address:</th>
+       <th> *Email Address</th>
        <td>
         <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" /> 
         #fieldErrorMsg($regGroup.Email "")
@@ -44,14 +44,14 @@ $page.setTitle("Scarab Registration")
        </td>
       </tr>
       <tr>
-       <th> *Password:</th>
+       <th> *Password</th>
        <td>
         <input name="$regGroup.Password.Key" type="password" value="$regGroup.Password" size="25" />
         #fieldErrorMsg($regGroup.Password "")
        </td>
       </tr>
       <tr>
-       <th> *Password Confirm:</th>
+       <th> *Password Confirm</th>
        <td>
         <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" />
         #fieldErrorMsg($regGroup.PasswordConfirm "")

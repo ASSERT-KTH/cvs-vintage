@@ -32,10 +32,10 @@
 #foreach ( $option in $report.SelectedAxis2Options )
     #if ($secondCriteria)
         #foreach ( $optionGroup in $secondCriteria )
-    		<th>$option.DisplayValue $optionGroup.DisplayValue:</th>
+    		<th>$option.DisplayValue $optionGroup.DisplayValue</th>
         #end
     #else
-		<th>$option.DisplayValue:</th>
+		<th>$option.DisplayValue</th>
     #end
 #end
     </tr>

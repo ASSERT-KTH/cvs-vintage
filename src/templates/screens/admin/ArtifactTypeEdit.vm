@@ -6,7 +6,7 @@ $page.setTitle("Attribute Editor")
 
  <h2>Customize/create artifact type (2.1.4.0)</h2>
 
-<FORM METHOD="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+<form method="get" action="$link.setPage("admin,artifacttypeedit.vm")">
       <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
       <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
         <div class="functnbar">
@@ -20,8 +20,8 @@ $page.setTitle("Attribute Editor")
             </tr>
 
             <tr>
-            <td><input type="submit" value="submit changes" class="button" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" class="button" /></td>
-            <td><input type="submit" value="add new" class="button" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" class="button" />&#160;<input type="submit" value="delete" class="button" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" class="button" /></td>
+            <td><input type="submit" value="submit changes" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" /></td>
+            <td><input type="submit" value="add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" /></td>
 
             </tr>
             </table>
@@ -31,19 +31,19 @@ $page.setTitle("Attribute Editor")
         <h3>Artifact type details</h3>
         
         <div class="axial">
-            <table border="1" cellspacing="2" cellpadding="3">
+            <table border="0" cellspacing="2" cellpadding="3">
             <tr>
-            <th>Artifact type name:</th>
+            <th>Artifact type name</th>
             <td><input type="text" size="25" name="$moduleGroup.Name.Key" value="$!moduleGroup.Name.Value" /></td>
             </tr>
             
             <tr>
-            <th>Artifact type descr:</th>
+            <th>Artifact type descr</th>
             <td><textarea rows="4" cols="40" name="$moduleGroup.Description.Key">$!moduleGroup.Description.Value</textarea></td>
             </tr>
             
             <tr>
-            <th>author:</th>
+            <th>author</th>
             <td><div>Joe Smo</div>
             <a href="#">joes@users.com</a></td>
             </tr>
@@ -82,8 +82,8 @@ $page.setTitle("Attribute Editor")
 
 ## NO GROUPS YET - user must push button to create default groups
 <p class="alert">This module has no groups. Please click to create default groups.
-      <p><input type="submit" value="create default attribute groups" class="button" name="eventSubmit_doCreatedefaults" />
-</FORM>
+      <p><input type="submit" value="create default attribute groups" name="eventSubmit_doCreatedefaults" />
+</form>
         
 #else
         #set ( $maxNum = $module.AttributeGroups.size()+1 )
@@ -91,16 +91,16 @@ $page.setTitle("Attribute Editor")
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th nowrap="nowrap">select</th>
-        <th>attribute group name:</th>
-        <th>active/inactive:</th>
-        <th>sequence #:</th>
+        <th>attribute group name</th>
+        <th>active/inactive</th>
+        <th>sequence #</th>
         </tr>
 
   #foreach ( $group in $groups )
 ## DEDUPE
      #if ($velocityCount == ($module.DedupeSequence))
 
-         <P>
+         <p>
          <tr>
              <td>&nbsp;</td>
              <td>Duplicate check</td>
@@ -108,14 +108,14 @@ $page.setTitle("Attribute Editor")
              <td>#numericSelect( "dupe_order" 1 $maxNum $module.DedupeSequence 1 )</td>
          </tr>
        #end
-<FORM METHOD="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+<form method="get" action="$link.setPage("admin,artifacttypeedit.vm")">
       <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
       <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
     #set ( $agGroup = $intake.AttributeGroup.mapTo($group) )
 
         #rows()
         <td><input type="checkbox" name="delete_group_$group.AttributeGroupId"/></td>
-        <td><a href="$link.setPage("admin,AttributeGroup.vm").addPathInfo("groupid", $group.AttributeGroupId)">$group.Name</a>
+        <td><a href="$link.setPage("admin,attributegroup.vm").addpathinfo("groupid", $group.attributegroupid)">$group.Name</a>
         <td>#booleanCheckbox ($agGroup.Active)</td>
         <td>
             #numericSelect( $agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1 )</td> </tr> 
@@ -137,11 +137,11 @@ $page.setTitle("Attribute Editor")
             </tr>
 
             <tr>
-            <td><input type="submit" value="submit changes" class="button" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" class="button" /></td>
-            <td><input type="submit" value="add new" class="button" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" class="button" />&#160;<input type="submit" value="delete" class="button" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" class="button" /></td>
+            <td><input type="submit" value="submit changes" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" /></td>
+            <td><input type="submit" value="add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" /></td>
 
             </tr>
             </table>
         </div>      
 $intake.declareGroups()
-</FORM>
+</form>

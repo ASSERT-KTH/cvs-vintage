@@ -3,7 +3,7 @@
    
 #set ($groupId = $data.Parameters.getString("groupId"))
 
-<FORM METHOD="get" action="$link.setPage("admin,AttributeGroup.vm")">
+<form method="get" action="$link.setPage("admin,attributegroup.vm")">
       <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
       <input type="hidden" name="nextTemplate" value="admin,AttributeGroup.vm"/>
       <input type="hidden" name="groupId" value="$groupId">
@@ -18,8 +18,8 @@
             </tr>
 
             <tr>
-            <td><input type="submit" value="submit changes" class="button" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" class="button" /></td>
-            <td><input type="submit" value="add new" class="button"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="copy" class="button" />&#160;<input type="submit" value="delete" class="button"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" class="button" /></td> 
+            <td><input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" /></td>
+            <td><input type="submit" value="add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" /></td> 
             </tr>
             </table>
         </div>     
@@ -32,19 +32,19 @@
 <input type="hidden" name="groupid" value="$groupId"> 
 
         <div class="axial">
-            <table border="1" cellspacing="2" cellpadding="3">
+            <table border="0" cellspacing="2" cellpadding="3">
             <tr>
-            <th>Group name:</th>
+            <th>Group name</th>
             <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" class="text" ></td>
             </tr>
             
             <tr>
-            <th>Group descr:</th>
+            <th>Group descr</th>
             <td><textarea rows="4" cols="40" name="$agGroup.Description.Key">$!agGroup.Description.Value</textarea></td>
             </tr>
             
             <tr>
-            <th>author:</th>
+            <th>author</th>
             <td><div>Joe Smo</div>
             <a href="#">joes@users.com</a></td>
             </tr>
@@ -58,12 +58,12 @@
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th nowrap="nowrap">select</th>
-        <th>attribute name:</th>
-        <th>per project name:</th>
-        <th>(in)active:</th>
-        <th>required:</th>
-        <th>quick search:</th>
-        <th>sequence #:</th>
+        <th>attribute name</th>
+        <th>per project name</th>
+        <th>(in)active</th>
+        <th>required</th>
+        <th>quick search</th>
+        <th>sequence #</th>
         </tr>
 
 #foreach ($attribute in $group.Attributes)
@@ -89,7 +89,7 @@
 #end
         </table>
 #else
-        <P class="text">There are no attributes in this group.</p>
+        <p class="text">There are no attributes in this group.</p>
 #end
 
         <div class="functnbar2">
@@ -102,10 +102,10 @@
             </tr>
 
             <tr>
-            <td><input type="submit" value="submit changes" class="button" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" class="button" /></td>
-            <td><input type="submit" value="add new" class="button"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="copy" class="button" />&#160;<input type="submit" value="delete" class="button"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" class="button" /></td> 
+            <td><input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" /></td>
+            <td><input type="submit" value="add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" /></td> 
             </tr>
             </table>
         </div>     
 $intake.declareGroups()
-</FORM>
+</form>

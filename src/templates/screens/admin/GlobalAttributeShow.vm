@@ -24,12 +24,12 @@ This page is for editing the Global Attributes.
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Deleted:</th>
-<th>Attribute Name:</th>
-<th>Input Type:</th>
-<th>Description:</th>
-<th>Author:</th>
-<th>Creation Date:</th>
+<th>Deleted</th>
+<th>Attribute Name</th>
+<th>Input Type</th>
+<th>Description</th>
+<th>Author</th>
+<th>Creation Date</th>
 </tr>
 
 #set ($allAttributes = $scarabG.AllAttributes)

@@ -8,12 +8,12 @@ $page.setTitle("Enter Issue")
 #set ($user = $data.User)
 
 <h2>$page.Title</h2>
-<div id="tabs">
+<div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-<th><small>1:</small> Summary info</th>
-<td><small>2:</small> Duplicate check</td>
-<td><small>3:</small> Verbose info</td>
+<th>1: Summary info</th>
+<td>2: Duplicate check</td>
+<td>3: Verbose info</td>
 </tr>
 </table>
 </div>
@@ -31,9 +31,9 @@ $page.setTitle("Enter Issue")
 <h3>Apply issue entry template</h3>
 
 <div class="axial">
- <table width="100%" cellpadding="3" cellspacing="2" border="1">
+ <table cellpadding="3" cellspacing="2" border="0">
  <tr>
- <th width="120">Templates:</th>
+ <th width="120">Templates</th>
  
  <td>
  <select>
@@ -55,7 +55,7 @@ $page.setTitle("Enter Issue")
 <h3>Input your issue</h3>
 
 <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="1">
+    <table cellpadding="3" cellspacing="2" border="0">
 
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
@@ -72,8 +72,7 @@ $page.setTitle("Enter Issue")
      #if ( $attVal.isRequired() )
         *
      #end
-     $attVal.Attribute.Name:
-    </th>
+     $attVal.Attribute.Name</th>
     <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
         #attrValueText ( $attVal "50" )

@@ -27,9 +27,9 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 #datatitle ( "Attribute Info" )
 
 <div class="axial">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th width="120">input type:</th>
+  <th width="120">input type</th>
   <td>
     <select name="$atttgroup.AttributeTypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -39,7 +39,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
   </td>
 
  <tr>
-  <th width="120">attribute name:</th>
+  <th width="120">attribute name</th>
   <td>
     <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name"/>
     #fieldErrorMsg($attgroup.Name "")
@@ -47,7 +47,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
  </tr>
 
  <tr>
-  <th width="120">attribute description:</th>
+  <th width="120">attribute description</th>
   <td>
     <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
@@ -56,7 +56,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 
   #if ($attribute.CreatedDate)
  <tr>
-  <th width="120">created by:</th>
+  <th width="120">created by</th>
   <td>
   #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
   <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
@@ -66,7 +66,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 
   #if ($attribute.CreatedDate)
  <tr>
-  <th width="120">creation date:</th>
+  <th width="120">creation date</th>
   <td>
     $attribute.CreatedDate
   </td>
@@ -101,14 +101,14 @@ $intake.declareGroups()
 <table width="70%" border="0" cellspacing="2" cellpadding="2">
 <tr>
 #if ($maxNum > 0)
- <th>Deleted:</th>
+ <th>Deleted</th>
 #else
  <th>&nbsp;</th>
 #end
- <th>Parent Attribute Option:</th>
- <th>Attribute Option:</th>
- <th>Preferred Order:</th>
- <th>Weight:</th>
+ <th>Parent Attribute Option</th>
+ <th>Attribute Option</th>
+ <th>Preferred Order</th>
+ <th>Weight</th>
 </tr>
 
 #foreach ($pcao in $pcaos)
