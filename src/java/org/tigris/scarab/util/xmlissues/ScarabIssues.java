@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.36 2003/05/19 15:12:41 thierrylach Exp $
+ * @version $Id: ScarabIssues.java,v 1.37 2003/05/20 19:32:17 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -831,6 +831,20 @@ public class ScarabIssues implements java.io.Serializable
                 activitySetOM.save();
                 activitySetIdMap.put(activitySet.getId(), 
                                      activitySetOM.getPrimaryKey().toString());
+            }
+
+            // Determine if this ActivitySet should be marked as the 
+            // creation event
+            ActivitySet creationSet = issueOM.getActivitySet();
+            if (ActivitySetTypePeer.CREATE_ISSUE__PK
+                .equals(activitySetOM.getTypeId()) 
+               ||
+               (ActivitySetTypePeer.MOVE_ISSUE__PK
+                .equals(activitySetOM.getTypeId()) && 
+                        (creationSet == null || activitySetOM.getCreatedDate()
+                         .before(creationSet.getCreatedDate()))) ) 
+            {
+                issueOM.setActivitySet(activitySetOM);
             }
 
 /////////////////////////////////////////////////////////////////////////////////  
