@@ -98,7 +98,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
             System.out.println("convertToView="+view.convertColumnIndexToView(tc.getModelIndex()));
             
             column.addAttribute("position", Integer.toString(view.convertColumnIndexToView(tc.getModelIndex())));
-            
+			
         }
     }
 
@@ -133,8 +133,9 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 
                 // add column to JTable column model
                 TableColumn tc = view.createTableColumn(name, size);
-                tc.setModelIndex(index);
-                //tc.setModelIndex(position);
+                
+                //tc.setModelIndex(index);
+                tc.setModelIndex(position);
                 view.addColumn(tc);
                 
                 index++;
@@ -159,12 +160,11 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
                 // resize column width
                 tc.setPreferredWidth(size);
 
-                // TODO: fix position handling
-                /*
-                System.out.println("position="+position);
+				int columnIndex = tc.getModelIndex();
+									
                 // move column to new position
-                view.moveColumn(tc.getModelIndex(), position);
-                */
+                view.moveColumn(view.convertColumnIndexToView(tc.getModelIndex()), position);
+                
                 index++;
                 
             }
@@ -174,6 +174,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
         // property, when changing the underlying column model
         // -> setting this to (0,0) again
         view.setIntercellSpacing(new Dimension(0, 0));
+    
     }
 
     /**

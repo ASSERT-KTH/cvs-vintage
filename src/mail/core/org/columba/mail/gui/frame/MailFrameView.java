@@ -215,8 +215,12 @@ public class MailFrameView extends AbstractFrameView {
 
         ViewItem viewItem = frameController.getViewItem();
 
+		// splitpanes
         viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
         viewItem.set("splitpanes", "header", rightSplitPane.getDividerLocation());
+        
+        // folder-based configuration
+        ((MailFrameMediator)frameController).getFolderOptionsController().save(null);
         
     }
 
