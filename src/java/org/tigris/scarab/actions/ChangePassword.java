@@ -59,12 +59,15 @@ import org.apache.fulcrum.security.util.PasswordMismatchException;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is responsible for dealing with the Change Password
  * Action.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
+ * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  */
 public class ChangePassword extends ScarabTemplateAction
 {
@@ -74,6 +77,8 @@ public class ChangePassword extends ScarabTemplateAction
     public void doChangepassword(RunData data, TemplateContext context)
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String template = getCurrentTemplate(data, null);
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
@@ -93,16 +98,14 @@ public class ChangePassword extends ScarabTemplateAction
                                  IntakeTool.DEFAULT_KEY, false);
             }
             
-            String username = register.get("UserName").toString();
+            String username = data.getParameters().getString("username");
             String oldPassword = register.get("OldPassword").toString();
             String password = register.get("Password").toString();
             String passwordConfirm = register.get("PasswordConfirm").toString();
             
             if (oldPassword.equals(password))
             {
-                getScarabRequestTool(context).setInfoMessage(
-                    "Your new password was the same as your old one. " + 
-                    "Your password has not been changed!");
+                scarabR.setInfoMessage(l10n.get("PasswordSame"));
                 setTarget(data, template);
             } 
             else if (password.equals(passwordConfirm))
@@ -122,28 +125,24 @@ public class ChangePassword extends ScarabTemplateAction
                     TurbineSecurity.changePassword(confirmedUser, 
                         oldPassword, password);
 
-                    getScarabRequestTool(context).setConfirmMessage(
-                        "Your password has been changed."
-                        + " Please login with your new password.");
+                    scarabR.setConfirmMessage(l10n.get("PasswordChanged"));
                     setTarget(data, "Login.vm");
                 }
                 catch (PasswordMismatchException pme)
                 {
-                    getScarabRequestTool(context).setAlertMessage(pme.getMessage());
+                    scarabR.setAlertMessage(pme.getMessage());
                     setTarget(data, template);
                 }
             }
             else /* !password.equals(passwordConfirm) */
             {
-                getScarabRequestTool(context).setAlertMessage(
-                    "The passwords you entered do not match!");
+                scarabR.setAlertMessage(l10n.get("PasswordsDoNotMatch"));
                 setTarget(data, template);
             }
         }
         else
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "Failed to process form input.");
+            scarabR.setAlertMessage("Failed to process form input.");
             setTarget(data, template);
         }
     }
