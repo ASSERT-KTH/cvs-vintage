@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.15 2003/05/11 07:09:11 kataka Exp $
+// $Id: TargetManager.java,v 1.16 2003/05/30 14:53:03 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -460,7 +460,7 @@ public final class TargetManager {
      * @return A collection with all targets.
      */
     public synchronized Collection getTargets() {
-        return _targets.length > 0 ? Arrays.asList(_targets) : null;
+        return _targets.length > 0 ? Arrays.asList(_targets) : new ArrayList();
     }
 
     /**

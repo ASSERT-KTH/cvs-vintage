@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.66 2003/05/28 07:46:04 mkl Exp $
+// $Id: Project.java,v 1.67 2003/05/30 14:53:03 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
+import org.argouml.application.api.ArgoEventListener;
+import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.ArgoVersion;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ProjectMemberTodoList;
@@ -1021,7 +1023,7 @@ public class Project implements java.io.Serializable, TargetListener {
             }
             if (_models.contains(obj)) {
                 _models.remove(obj);
-            }
+            }           
             needSave = true;
         } else {
             if (obj instanceof ArgoDiagram) {

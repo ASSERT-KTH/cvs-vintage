@@ -27,7 +27,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.30 2003/05/16 12:25:16 mkl Exp $
+// $Id: FigEdgeModelElement.java,v 1.31 2003/05/30 14:53:03 kataka Exp $
 
 
 package org.argouml.uml.diagram.ui;
@@ -54,6 +54,7 @@ import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Category;
+import org.argouml.application.api.ArgoEventListener;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationContext;
 import org.argouml.application.api.NotationName;
@@ -593,6 +594,9 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
         Object o = getOwner();
         if (o instanceof MBase) {
             UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)o);
+        }
+        if (this instanceof ArgoEventListener) {
+            ArgoEventPump.removeListener(this);
         }
         
         Iterator it = getPathItemFigs().iterator();

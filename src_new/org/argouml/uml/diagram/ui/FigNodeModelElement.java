@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.64 2003/05/08 12:47:41 alexb Exp $
+// $Id: FigNodeModelElement.java,v 1.65 2003/05/30 14:53:03 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,7 @@ import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Category;
+import org.argouml.application.api.ArgoEventListener;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationContext;
@@ -114,8 +115,7 @@ public abstract class FigNodeModelElement
         NotationContext,
         ArgoNotationEventListener {
 
-    protected static Category cat =
-        Category.getInstance(FigNodeModelElement.class);
+    private Category cat = Category.getInstance(this.getClass());
     ////////////////////////////////////////////////////////////////
     // constants
 
@@ -149,7 +149,7 @@ public abstract class FigNodeModelElement
     public int _shadowSize =
         Configuration.getInteger(Notation.KEY_DEFAULT_SHADOW_WIDTH, 1);
     private ItemUID _id;
-    
+
     /**
      * A set of object arrays consisting of a sender of events and the event
      * types this object is interested in. The eventSenders are a cache to 
@@ -511,7 +511,7 @@ public abstract class FigNodeModelElement
                 // if there was a problem parsing,
                 // then reset the text in the fig - because the model was not
                 // updated.
-                if(me.getName() != null)
+                if (me.getName() != null)
                     ft.setText(me.getName());
                 else
                     ft.setText("");
@@ -869,6 +869,9 @@ public abstract class FigNodeModelElement
      * @see org.tigris.gef.presentation.Fig#delete()
      */
     public void delete() {
+        if (this instanceof ArgoEventListener) {
+            ArgoEventPump.removeListener(this);
+        }
 
         Object own = getOwner();
         if (own instanceof MClassifier) {
@@ -905,7 +908,7 @@ public abstract class FigNodeModelElement
         updateEdges();
         super.damage();
     }
-    
+
     /**
      * If the diagram this fig is part of is selected, this method is called so 
      * this fig is (re)registred as model event listener to it's owner and the 
@@ -913,17 +916,14 @@ public abstract class FigNodeModelElement
      *
      */
     public void setAsTarget() {
-        Object owner = getOwner();        
+        Object owner = getOwner();
         setOwner(null);
         setOwner(owner);
         damage();
     }
-    
+
     public void removeAsTarget() {
         // disableEventSenders();
     }
-    
-   
 
 } /* end class FigNodeModelElement */
-

@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.61 2003/05/12 22:32:54 alexb Exp $
+// $Id: FigClass.java,v 1.62 2003/05/30 14:53:03 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -85,7 +85,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
  */
 
 public class FigClass extends FigNodeModelElement {
-    protected static Category cat = Category.getInstance(FigClass.class);
+    private Category cat = Category.getInstance(this.getClass());
 
     ////////////////////////////////////////////////////////////////
     // constants
