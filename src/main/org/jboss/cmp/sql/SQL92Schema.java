@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.jboss.cmp.schema.AbstractClass;
 import org.jboss.cmp.schema.AbstractSchema;
+import org.jboss.cmp.schema.DuplicateNameException;
 
 /**
  * Implementaion of an AbstractSchema for SQL92 based systems.
@@ -38,8 +39,12 @@ public class SQL92Schema implements AbstractSchema
     * @param name the name of the table
     * @return a Table representing the table
     */
-   public Table addTable(String name)
+   public Table addTable(String name) throws DuplicateNameException
    {
+      if (tables.keySet().contains(name))
+      {
+         throw new DuplicateNameException(name);
+      }
       Table table = new Table(name);
       tables.put(name, table);
       return table;
