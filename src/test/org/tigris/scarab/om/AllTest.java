@@ -50,19 +50,29 @@ import org.tigris.scarab.test.BaseTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTest extends BaseTestCase {
+/**
+ * Used for running all of the tests at once.
+ *
+ * @author <a href="mailto:tmcnerney@truis.com">Tim McNerney</a>
+ * @version $Id: AllTest.java,v 1.3 2001/09/29 20:12:31 jon Exp $
+ */
+public class AllTest extends BaseTestCase
+{
     /**
      * @param name    Name of Object
      */
-    public AllTest(String name) {
+    public AllTest(String name)
+    {
         super(name);
     }
 
-    public AllTest() {
+    public AllTest()
+    {
         super("AllTest");
     }
 
-    public static Test suite() {
+    public static Test suite()
+    {
         TestSuite suite = new TestSuite();
         suite.addTest(AttributeTest.suite());
         suite.addTest(AttributeOptionTest.suite());
@@ -76,7 +86,8 @@ public class AllTest extends BaseTestCase {
      *
      * @param args This is required for main method
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         junit.textui.TestRunner.run(new TestSuite(AllTest.class));
     }
 }
