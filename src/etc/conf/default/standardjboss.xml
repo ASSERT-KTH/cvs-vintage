@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.27 2001/12/14 02:21:44 starksm Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.28 2001/12/18 22:02:04 mnf999 Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -16,7 +16,7 @@
       <container-configuration>
 	 <container-name>Standard CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -41,7 +41,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -60,7 +60,7 @@
       <container-configuration>
 	 <container-name>Standard CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -83,7 +83,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -102,7 +102,7 @@
       <container-configuration>
 	 <container-name>Clustered CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -127,7 +127,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -146,7 +146,7 @@
       <container-configuration>
 	 <container-name>Clustered CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -169,7 +169,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -188,7 +188,7 @@
       <container-configuration>
 	 <container-name>jdk1.2.2 CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -211,7 +211,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -230,7 +230,7 @@
       <container-configuration>
 	 <container-name>Standard Stateless SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -260,7 +260,7 @@
       <container-configuration>
 	 <container-name>jdk1.2.2 Stateless SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -290,7 +290,7 @@
       <container-configuration>
 	 <container-name>Clustered Stateless SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -320,7 +320,7 @@
       <container-configuration>
 	 <container-name>Standard Stateful SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <!-- CMT -->
@@ -344,7 +344,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <remover-period>1800</remover-period>
 	       <max-bean-life>1800</max-bean-life>
 	       <overager-period>300</overager-period>
@@ -360,7 +360,7 @@
       <container-configuration>
 	 <container-name>jdk1.2.2 Stateful SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <!-- CMT -->
@@ -384,7 +384,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <remover-period>1800</remover-period>
 	       <max-bean-life>1800</max-bean-life>
 	       <overager-period>300</overager-period>
@@ -400,7 +400,7 @@
       <container-configuration>
 	 <container-name>Clustered Stateful SessionBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <!-- CMT -->
@@ -425,7 +425,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUStatefulContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <remover-period>1800</remover-period>
 	       <max-bean-life>1800</max-bean-life>
 	       <overager-period>300</overager-period>
@@ -441,7 +441,7 @@
       <container-configuration>
 	 <container-name>Standard BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -464,7 +464,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -483,7 +483,7 @@
       <container-configuration>
 	 <container-name>Clustered BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactoryHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -506,7 +506,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
@@ -525,7 +525,7 @@
       <container-configuration>
 	 <container-name>jdk1.2.2 BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
-	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-invoker>org.jboss.proxy.ejb.ProxyFactory</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -548,7 +548,7 @@
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
 	       <min-capacity>50</min-capacity>
-	       <max-capacity>1000</max-capacity>
+	       <max-capacity>1000000</max-capacity>
 	       <overager-period>300</overager-period>
 	       <max-bean-age>600</max-bean-age>
 	       <resizer-period>400</resizer-period>
