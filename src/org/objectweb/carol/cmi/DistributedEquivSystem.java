@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
@@ -37,12 +37,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.javagroups.Address;
-import org.javagroups.Channel;
-import org.javagroups.JChannel;
-import org.javagroups.Message;
-import org.javagroups.SuspectEvent;
-import org.javagroups.View;
+import org.jgroups.Address;
+import org.jgroups.Channel;
+import org.jgroups.JChannel;
+import org.jgroups.Message;
+import org.jgroups.SuspectEvent;
+import org.jgroups.View;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 class ExportMsg implements Serializable {
@@ -105,7 +105,7 @@ class UnexportMsg implements Serializable {
 }
 
 /**
- * Should be used instead of the loop on localExports. To rewrite and test. 
+ * Should be used instead of the loop on localExports. To rewrite and test.
  * @author nieuviar
  */
 //class ExportsMsg implements Serializable {
@@ -319,7 +319,7 @@ class DistributedEquivSystem {
                 do {
                     // Awful. why not checked by Receive() ?
                     if (isInterrupted()) {
-                        break; 
+                        break;
                     }
                     msg = chan.receive(0);
                     if (msg == null)
@@ -411,8 +411,8 @@ class DistributedEquivSystem {
         throws
             ConfigException,
             ClusterException,
-            org.javagroups.ChannelException,
-            org.javagroups.ChannelClosedException {
+            org.jgroups.ChannelException,
+            org.jgroups.ChannelClosedException {
         ClusterIdFactory.start();
         String mcast_addr = Config.getMulticastAddress();
         int mcast_port = Config.getMulticastPort();
@@ -444,7 +444,7 @@ class DistributedEquivSystem {
         + "VIEW_ENFORCER:"
         + "STATE_TRANSFER:"
         + "QUEUE:";
-        //org.javagroups.log.Trace.init();
+        //org.jgroups.log.Trace.init();
         groupname = Config.getMulticastGroupName();
         chan = new JChannel(chan_props);
         chan.connect(groupname);
