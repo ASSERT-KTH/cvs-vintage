@@ -479,6 +479,16 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>	
+    <!-- Hypersonic (HSQLDB) -->
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.7.1</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>        
     
     <!-- Microsoft SQL Server -->
     <!-- -->
@@ -521,8 +531,11 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-      	<include>**/ActivityTest.java</include>
-        <exclude>**/*Test.java</exclude>
+      	<include>**/*Test.java</include>
+        <exclude>**/AttributeValueTest.java</exclude>
+        <exclude>**/IssueTest.java</exclude>
+        <exclude>**/IssueTypeTest.java</exclude>
+        
       </includes>
     </unitTest>
     <resources>      
