@@ -42,7 +42,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -146,8 +146,11 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
       // This is an ejbSelect, so we need to convert the pks to real ejbs.
       EntityContainer container = manager.getContainer();
       if(queryMetaData.isResultTypeMappingLocal()) {
+         JDBCStoreManager selectManager = selectEntity.getManager();
+
          LocalContainerInvoker localInvoker;
-         localInvoker = container.getLocalContainerInvoker();
+         localInvoker = selectManager.getContainer().getLocalContainerInvoker();
+
          return localInvoker.getEntityLocalCollection(finderResults);
       } else {
          ContainerInvoker invoker;
