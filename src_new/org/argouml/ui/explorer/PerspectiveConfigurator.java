@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.8 2004/10/22 18:30:17 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.9 2004/10/22 20:36:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -330,10 +330,12 @@ public class PerspectiveConfigurator extends ArgoDialog {
     class RemovePerspectiveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Object sel = perspectiveList.getSelectedValue();
-            perspectiveListModel.removeElement(sel);
+            if (perspectiveListModel.getSize() > 1) {
+                perspectiveListModel.removeElement(sel);
+            }
             perspectiveList.setSelectedIndex(0);
             if (perspectiveListModel.getSize() == 1) {
-                removeRuleButton.setEnabled(false);
+                removePerspectiveButton.setEnabled(false);
 	    }
         }
     }
