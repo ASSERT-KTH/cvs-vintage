@@ -41,6 +41,9 @@
         <property name="package.name" value="jakarta-watchdog" />
      </ant>    
      <ant antfile="${ant.file}" target="package.snapshot" >
+        <property name="package.name" value="jakarta-servletapi" />
+     </ant>    
+     <ant antfile="${ant.file}" target="package.snapshot" >
         <property name="package.name" value="xml-xalan" />
      </ant>    
      <ant antfile="${ant.file}" target="package.snapshot" >
@@ -83,10 +86,13 @@
     <target name="binaries.get"  depends="init">
         <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-Solaris-${DSTAMP}.zip" 
              dest="${nightly.dir}/tomcat.zip" ignoreErrors="true" />
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/servletapi-Solaris-${DSTAMP}.zip" 
+             dest="${nightly.dir}/servletapi.zip" ignoreErrors="true" />
         <get src="ftp://tokyo.javasoft.com/pub/jakarta/ant-Solaris-${DSTAMP}.zip" 
              dest="${nightly.dir}/ant.zip"  ignoreErrors="true" />
         <copyfile src="${nightly.dir}/tomcat.zip" dest="${nightly.dir}/tomcat-${DSTAMP}.zip" />
         <copyfile src="${nightly.dir}/ant.zip" dest="${nightly.dir}/ant-${DSTAMP}.zip" />
+        <copyfile src="${nightly.dir}/servletapi.zip" dest="${nightly.dir}/servletapi-${DSTAMP}.zip" />
     </target>
   
     <!-- logs -->
@@ -163,6 +169,9 @@
     </target>
 
   <target name="src.get" depends="init">    
+     <ant antfile="${ant.file}" target="package.get" >
+        <property name="package.name" value="jakarta-servletapi" />
+     </ant>    
      <ant antfile="${ant.file}" target="package.get" >
         <property name="package.name" value="jakarta-ant" />
      </ant>    
