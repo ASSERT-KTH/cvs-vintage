@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.55 2004/11/02 00:42:45 spestov Exp $
+ * @version $Id: EditPane.java,v 1.56 2004/11/08 04:01:20 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -598,7 +598,6 @@ public class EditPane extends JPanel implements EBComponent
 		{
 			if(_buffer == buffer)
 			{
-				textArea.getDisplayManager().bufferLoaded();
 				textArea.repaint();
 				if(bufferSwitcher != null)
 					bufferSwitcher.updateBufferList();

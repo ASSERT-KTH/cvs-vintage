@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.Buffer;
  * implementing it directly.
  *
  * @author Slava Pestov
- * @version $Id: BufferChangeListener.java,v 1.12 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: BufferChangeListener.java,v 1.13 2004/11/08 04:01:21 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public interface BufferChangeListener
@@ -118,5 +118,15 @@ public interface BufferChangeListener
 	 * @since jEdit 4.2pre2
 	 */
 	void foldHandlerChanged(Buffer buffer);
+	//}}}
+
+	//{{{ foldHandlerChanged() method
+	/**
+	 * Called to notify the text area that the buffer has been reloaded.
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.3pre1
+	 */
+	void bufferLoaded(Buffer buffer);
 	//}}}
 }

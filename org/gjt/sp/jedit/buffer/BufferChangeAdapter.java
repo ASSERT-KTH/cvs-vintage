@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
  * An adapter you can subclass to avoid having to implement all the methods
  * of the {@link BufferChangeListener} interface.
  * @author Slava Pestov
- * @version $Id: BufferChangeAdapter.java,v 1.12 2003/11/16 22:54:36 spestov Exp $
+ * @version $Id: BufferChangeAdapter.java,v 1.13 2004/11/08 04:01:21 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class BufferChangeAdapter implements BufferChangeListener
@@ -112,5 +112,15 @@ public abstract class BufferChangeAdapter implements BufferChangeListener
 	 * @since jEdit 4.2pre2
 	 */
 	public void foldHandlerChanged(Buffer buffer) {}
+	//}}}
+
+	//{{{ foldHandlerChanged() method
+	/**
+	 * Called to notify the text area that the buffer has been reloaded.
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.3pre1
+	 */
+	public void bufferLoaded(Buffer buffer) {}
 	//}}}
 }
