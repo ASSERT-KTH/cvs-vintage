@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPCosNaming.java,v 1.6 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: IIOPCosNaming.java,v 1.7 2005/02/01 18:56:08 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -148,10 +148,8 @@ public class IIOPCosNaming implements NameService {
         prop.put("java.naming.provider.url", "iiop://localhost:" + port);
         try {
             new InitialContext(prop);
-        } catch (javax.naming.CommunicationException jcm) {
+        } catch (javax.naming.NamingException ex) {
             return false;
-        } catch (Exception e) {
-            return true;
         }
         return true;
     }
