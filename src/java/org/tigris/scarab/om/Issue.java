@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.264 2003/02/03 19:12:21 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.265 2003/02/03 20:29:27 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -192,6 +192,25 @@ public class Issue
         Issue issue = new Issue(module, issueType);
         return issue;
     }
+
+
+    /**
+     * @deprecated use IssueManager.getIssueById
+     */
+    public static Issue getIssueById(String id)
+    {
+        return IssueManager.getIssueById(id);
+    }
+
+    /**
+     * @deprecated use IssueManager.getIssueById
+     */
+    public static Issue getIssueById(Issue.FederatedId fid)
+    {
+        return IssueManager.getIssueByIdImpl(fid);
+    }
+
+
 
     /**
      * Gets the UniqueId for this Issue.
