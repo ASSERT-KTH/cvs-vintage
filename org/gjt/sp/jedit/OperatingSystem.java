@@ -1,6 +1,9 @@
 /*
  * OperatingSystem.java - OS detection
- * Copyright (C) 2002 Slava Pestov
+ * :tabSize=8:indentSize=8:noTabs=false:
+ * :folding=explicit:collapseFolds=1:
+ *
+ * Copyright (C) 2002, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.9 2003/03/10 00:33:22 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.10 2003/04/22 19:46:15 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -224,14 +227,23 @@ L2:			for (int j=0; j < gc.length; j++)
 		return os == MAC_OS_X;
 	} //}}}
 
+	//{{{ isVMS() method
+	/**
+	 * Returns if we're running VMS.
+	 */
+	public static final boolean isVMS()
+	{
+		return os == VMS;
+	} //}}}
+
 	//{{{ isMacOSLF() method
-        /**
-         * Returns if we're running MacOS X and using the native look and feel.
-         */
-        public static final boolean isMacOSLF()
-        {
-                return (isMacOS() && UIManager.getLookAndFeel().isNativeLookAndFeel());
-        } //}}}
+	/**
+	* Returns if we're running MacOS X and using the native look and feel.
+	*/
+	public static final boolean isMacOSLF()
+	{
+		return (isMacOS() && UIManager.getLookAndFeel().isNativeLookAndFeel());
+	} //}}}
 
 	//{{{ isJava14() method
 	/**
@@ -248,6 +260,7 @@ L2:			for (int j=0; j < gc.length; j++)
 	private static final int WINDOWS_NT = 0x666;
 	private static final int OS2 = 0xDEAD;
 	private static final int MAC_OS_X = 0xABC;
+	private static final int VMS = 0xDEAD2;
 	private static final int UNKNOWN = 0xBAD;
 
 	private static int os;
@@ -275,6 +288,10 @@ L2:			for (int j=0; j < gc.length; j++)
 			else if(osName.indexOf("OS/2") != -1)
 			{
 				os = OS2;
+			}
+			else if(osName.indexOf("VMS") != -1)
+			{
+				os = VMS;
 			}
 			else if(File.separatorChar == '/')
 			{
