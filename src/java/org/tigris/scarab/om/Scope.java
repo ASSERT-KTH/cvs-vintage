@@ -13,7 +13,7 @@ public  class Scope
     implements Persistent
 {
 
-    public static final NumberKey PERSONAL__PK = new NumberKey("1");
-    public static final NumberKey MODULE__PK = new NumberKey("2");
+    public static final Integer PERSONAL__PK = new Integer(1);
+    public static final Integer MODULE__PK = new Integer(2);
 
 }

@@ -60,7 +60,6 @@ import org.apache.commons.lang.StringUtils;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import java.sql.Connection;
@@ -101,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.125 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.126 2003/03/25 16:57:54 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -110,7 +109,7 @@ public class ScarabModule
     private static final String GET_USERS = 
         "getUsers";
 
-    protected static final NumberKey ROOT_ID = new NumberKey("0");
+    protected static final Integer ROOT_ID = new Integer(0);
 
     /**
      * @see org.tigris.scarab.om.Module#getUsers(String)
@@ -146,8 +145,8 @@ public class ScarabModule
             if (permissions.size() >= 1)
             {
                 ArrayList groups = new ArrayList(2);
-                groups.add(getPrimaryKey());
-                groups.add(new NumberKey("0"));
+                groups.add(getModuleId());
+                groups.add(ROOT_ID);
                 crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
                              TurbineRolePermissionPeer.PERMISSION_ID);
                 crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
@@ -405,9 +404,9 @@ public class ScarabModule
     /**
      * Override method to make sure the module name gets recalculated.
      *
-     * @param id a <code>NumberKey</code> value
+     * @param id a <code>Integer</code> value
      */
-    public void setParentId(NumberKey id)
+    public void setParentId(Integer id)
         throws TorqueException
     {
         super.setParentId(id);

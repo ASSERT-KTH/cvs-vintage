@@ -68,11 +68,11 @@ import com.workingdogs.village.Record;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.adapter.DB;
-import org.apache.torque.om.NumberKey;
-import org.apache.torque.om.ComboKey;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.util.BasePeer;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.ComboKey;
+import org.apache.torque.om.SimpleKey;
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.collections.LRUMap;
 import org.apache.commons.lang.StringUtils;
@@ -217,8 +217,8 @@ public class IssueSearch
 
     private static int NO_ATTRIBUTE_SORT = -1;
 
-    private static final NumberKey NUMBERKEY_0 = new NumberKey(0);
-    private static final NumberKey ALL_TEXT = NUMBERKEY_0;
+    private static final Integer NUMBERKEY_0 = new Integer(0);
+    private static final Integer ALL_TEXT = NUMBERKEY_0;
 
     /**
      * The managed database connection used while iterating over large
@@ -232,20 +232,20 @@ public class IssueSearch
 
     private String searchWords;
     private String commentQuery;
-    private NumberKey[] textScope;
+    private Integer[] textScope;
     private String minId;
     private String maxId;
     private String minDate;
     private String maxDate;
     private int minVotes;
     
-    private NumberKey stateChangeAttributeId;
-    private NumberKey stateChangeFromOptionId;
-    private NumberKey stateChangeToOptionId;
+    private Integer stateChangeAttributeId;
+    private Integer stateChangeFromOptionId;
+    private Integer stateChangeToOptionId;
     private String stateChangeFromDate;
     private String stateChangeToDate;
 
-    private NumberKey sortAttributeId;
+    private Integer sortAttributeId;
     private String sortPolarity;
     private MITList mitList;
 
@@ -492,7 +492,7 @@ public class IssueSearch
      * attributes null will be returned.
      * @return value of textScope.
      */
-    public NumberKey[] getTextScope()
+    public Integer[] getTextScope()
         throws Exception
     {
         if (textScope == null) 
@@ -517,14 +517,14 @@ public class IssueSearch
     /**
      * Sets the text search scope to all quick search text attributes.
      */
-    private NumberKey[] getTextScopeForAll()
+    private Integer[] getTextScopeForAll()
         throws Exception
     {
-        NumberKey[] textScope = null;
+        Integer[] textScope = null;
         List textAttributes = getQuickSearchTextAttributeValues();
         if (textAttributes != null) 
         {
-            textScope = new NumberKey[textAttributes.size()];
+            textScope = new Integer[textAttributes.size()];
             for (int j=textAttributes.size()-1; j>=0; j--) 
             {
                 textScope[j] = ((AttributeValue)
@@ -538,7 +538,7 @@ public class IssueSearch
      * Set the value of textScope.
      * @param v  Value to assign to textScope.
      */
-    public void setTextScope(NumberKey[]  v) 
+    public void setTextScope(Integer[] v) 
         throws Exception
     {
         if (v != null) 
@@ -714,7 +714,7 @@ public class IssueSearch
      * Get the value of stateChangeAttributeId.
      * @return value of stateChangeAttributeId.
      */
-    public NumberKey getStateChangeAttributeId() 
+    public Integer getStateChangeAttributeId() 
     {
         if (stateChangeAttributeId == null) 
         {
@@ -727,7 +727,7 @@ public class IssueSearch
      * Set the value of stateChangeAttributeId.
      * @param v  Value to assign to stateChangeAttributeId.
      */
-    public void setStateChangeAttributeId(NumberKey  v) 
+    public void setStateChangeAttributeId(Integer  v) 
     {
         if (!ObjectUtils.equals(v, this.stateChangeAttributeId)) 
         {
@@ -740,7 +740,7 @@ public class IssueSearch
      * Get the value of stateChangeFromOptionId.
      * @return value of stateChangeFromOptionId.
      */
-    public NumberKey getStateChangeFromOptionId() 
+    public Integer getStateChangeFromOptionId() 
     {
         return stateChangeFromOptionId;
     }
@@ -749,7 +749,7 @@ public class IssueSearch
      * Set the value of stateChangeFromOptionId.
      * @param v  Value to assign to stateChangeFromOptionId.
      */
-    public void setStateChangeFromOptionId(NumberKey  v) 
+    public void setStateChangeFromOptionId(Integer  v) 
     {
         if (!ObjectUtils.equals(v, this.stateChangeFromOptionId)) 
         {
@@ -762,7 +762,7 @@ public class IssueSearch
      * Get the value of stateChangeToOptionId.
      * @return value of stateChangeToOptionId.
      */
-    public NumberKey getStateChangeToOptionId() 
+    public Integer getStateChangeToOptionId() 
     {
         return stateChangeToOptionId;
     }
@@ -771,7 +771,7 @@ public class IssueSearch
      * Set the value of stateChangeToOptionId.
      * @param v  Value to assign to stateChangeToOptionId.
      */
-    public void setStateChangeToOptionId(NumberKey  v) 
+    public void setStateChangeToOptionId(Integer  v) 
     {
         if (!ObjectUtils.equals(v, this.stateChangeToOptionId)) 
         {
@@ -839,7 +839,7 @@ public class IssueSearch
      * Get the value of sortAttributeId.
      * @return value of SortAttributeId.
      */
-    public NumberKey getSortAttributeId() 
+    public Integer getSortAttributeId() 
     {
         return sortAttributeId;
     }
@@ -848,7 +848,7 @@ public class IssueSearch
      * Set the value of sortAttributeId.
      * @param v  Value to assign to sortAttributeId.
      */
-    public void setSortAttributeId(NumberKey v) 
+    public void setSortAttributeId(Integer v) 
     {
         if (!ObjectUtils.equals(v, this.sortAttributeId)) 
         {
@@ -975,7 +975,7 @@ public class IssueSearch
         }
     }
 
-    public NumberKey getALL_TEXT()
+    public Integer getALL_TEXT()
     {
         return ALL_TEXT;
     }
@@ -1372,7 +1372,7 @@ public class IssueSearch
             AttributeValue multiAV = (AttributeValue)attValues.get(j);
             if (multiAV instanceof OptionAttribute)
             {
-                NumberKey index = multiAV.getAttributeId();
+                Integer index = multiAV.getAttributeId();
                 List options = (List)attrMap.get(index);
                 if (options == null) 
                 {
@@ -1686,11 +1686,11 @@ public class IssueSearch
     }
 
 
-    private NumberKey[] getTextMatches(List attValues)
+    private Long[] getTextMatches(List attValues)
         throws Exception
     {
         boolean searchCriteriaExists = false;
-        NumberKey[] matchingIssueIds = null;
+        Long[] matchingIssueIds = null;
         SearchIndex searchIndex = SearchFactory.getInstance();
         if (searchIndex == null)
         {
@@ -1712,7 +1712,7 @@ public class IssueSearch
                      && aval.getValue().length() != 0)
                 {
                     searchCriteriaExists = true;
-                    NumberKey[] id = {aval.getAttributeId()};
+                    Integer[] id = {aval.getAttributeId()};
                     searchIndex
                         .addQuery(id, aval.getValue());
                 }
@@ -1723,7 +1723,7 @@ public class IssueSearch
         String commentQuery = getCommentQuery();
         if (commentQuery != null && commentQuery.trim().length() > 0) 
         {
-            NumberKey[] id = {AttachmentTypePeer.COMMENT_PK};
+            Integer[] id = {AttachmentTypePeer.COMMENT_PK};
             searchIndex.addAttachmentQuery(id, commentQuery);            
             searchCriteriaExists = true;
         }
@@ -1739,8 +1739,8 @@ public class IssueSearch
     private void addStateChangeQuery(StringBuffer from)
         throws Exception
     {
-        NumberKey oldOptionId = getStateChangeFromOptionId();
-        NumberKey newOptionId = getStateChangeToOptionId();
+        Integer oldOptionId = getStateChangeFromOptionId();
+        Integer newOptionId = getStateChangeToOptionId();
         Date minUtilDate = parseDate(getStateChangeFromDate(), false);
         Date maxUtilDate = parseDate(getStateChangeToDate(), true);
         if ((oldOptionId != null &&  !oldOptionId.equals(NUMBERKEY_0))
@@ -1757,12 +1757,12 @@ public class IssueSearch
             }
             else
             {
-                if (newOptionId != null && !newOptionId.equals(new NumberKey(0))) 
+                if (newOptionId != null && !newOptionId.equals(NUMBERKEY_0)) 
                 {
                     from.append(AND).append(ActivityPeer.NEW_OPTION_ID)
                         .append('=').append(newOptionId);
                 }
-                if (oldOptionId != null && !oldOptionId.equals(new NumberKey(0)))
+                if (oldOptionId != null && !oldOptionId.equals(NUMBERKEY_0))
                 {
                     from.append(AND).append(ActivityPeer.OLD_OPTION_ID)
                         .append('=').append(oldOptionId);
@@ -1786,7 +1786,7 @@ public class IssueSearch
         }
     }
 
-    private NumberKey[] addCoreSearchCriteria(StringBuffer fromClause, 
+    private Long[] addCoreSearchCriteria(StringBuffer fromClause, 
                                               StringBuffer whereClause,
                                               Set tableAliases)
         throws Exception
@@ -1816,7 +1816,7 @@ public class IssueSearch
         addSelectedAttributes(fromClause, setAttValues, tableAliases);
 
         // search for issues based on text
-        NumberKey[] matchingIssueIds = getTextMatches(setAttValues);
+        Long[] matchingIssueIds = getTextMatches(setAttValues);
 
         if (matchingIssueIds == null || matchingIssueIds.length > 0)
         {
@@ -1835,7 +1835,7 @@ public class IssueSearch
         return matchingIssueIds;
     }
 
-    private void addIssuePKsCriteria(StringBuffer sb, NumberKey[] ids)
+    private void addIssuePKsCriteria(StringBuffer sb, Long[] ids)
     {
        if (ids != null && ids.length > 0)
        {
@@ -1865,7 +1865,7 @@ public class IssueSearch
             Set tableAliases = new HashSet();
             StringBuffer from = new StringBuffer();
             StringBuffer where = new StringBuffer();
-            NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where,
+            Long[] matchingIssueIds = addCoreSearchCriteria(from, where,
                                                                  tableAliases);
             // the matchingIssueIds are text search matches.  if length == 0,
             // then no need to search further.  if null then there was no
@@ -1920,8 +1920,8 @@ public class IssueSearch
         int count = 0;
         StringBuffer from = new StringBuffer();
         StringBuffer where = new StringBuffer();
-        NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where,
-                                                             new HashSet());
+        Long[] matchingIssueIds = addCoreSearchCriteria(from, where,
+                                                        new HashSet());
         if (matchingIssueIds == null || matchingIssueIds.length > 0) 
         {
             StringBuffer sql = new StringBuffer("SELECT count(DISTINCT ");
@@ -1957,7 +1957,7 @@ public class IssueSearch
                              StringBuffer where, Set tableAliases)
         throws Exception
     {
-        NumberKey sortAttrId = getSortAttributeId();
+        Integer sortAttrId = getSortAttributeId();
 
         // add the attribute value columns that will be shown in the list.
         // these are joined using a left outer join, so the additional
@@ -1987,7 +1987,7 @@ public class IssueSearch
                 RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
                 // locate the sort attribute position so we can move any 
                 // unset results to the end of the list.
-                NumberKey attrPK = rmua.getAttributeId();
+                Integer attrPK = rmua.getAttributeId();
                 if (attrPK.equals(sortAttrId)) 
                 {
                     sortAttrPos = count;
@@ -2115,7 +2115,7 @@ public class IssueSearch
         Module module = (Module)moduleMap.get(id);
         if (module == null)
         {
-            module = ModuleManager.getInstance(new NumberKey(id.intValue()));
+            module = ModuleManager.getInstance(id);
             moduleMap.put(id, module);
         }
         return module;
@@ -2136,8 +2136,8 @@ public class IssueSearch
     RModuleIssueType getRModuleIssueType(Integer moduleId, Integer issueTypeId)
         throws TorqueException
     {
-        NumberKey[] nks = {new NumberKey(moduleId.intValue()), 
-                           new NumberKey(issueTypeId.intValue())};
+        SimpleKey[] nks = {SimpleKey.keyFor(moduleId.intValue()), 
+                           SimpleKey.keyFor(issueTypeId.intValue())};
         ObjectKey key = new ComboKey(nks);
         RModuleIssueType rmit = (RModuleIssueType)rmitMap.get(key);
         if (rmit == null)

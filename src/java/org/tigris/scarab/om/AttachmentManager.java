@@ -51,14 +51,13 @@ import java.util.List;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 
 /** 
  * This class manages Attachment objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttachmentManager.java,v 1.8 2002/12/21 00:36:40 jon Exp $
+ * @version $Id: AttachmentManager.java,v 1.9 2003/03/25 16:57:53 jmcnally Exp $
  */
 public class AttachmentManager
     extends BaseAttachmentManager
@@ -88,7 +87,7 @@ public class AttachmentManager
     public static Attachment getInstance(String id)
         throws TorqueException
     {
-        return getInstance(new NumberKey(id));
+        return getInstance(new Long(id));
     }
 
     public static Attachment getComment(Attachment attachment, Issue issue, 
@@ -111,7 +110,7 @@ public class AttachmentManager
      * Populate a new Attachment object.
      */
     private static Attachment populate(Attachment attachment,
-                                      Issue issue, NumberKey typeId, 
+                                      Issue issue, Integer typeId, 
                                       String name, ScarabUser user, 
                                       String mimetype)
          throws Exception

@@ -69,7 +69,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.11 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: ModuleQuery.java,v 1.12 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -112,6 +112,7 @@ public class ModuleQuery extends RequireLoginFirstAction
                         // would probably be a hack of the form
                         scarabR.setAlertMessage(
                           l10n.get("InvalidIssueTypeId"));
+                        Log.get().debug("", e);
                         return;
                     }
                 }

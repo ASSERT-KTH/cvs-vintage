@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.32 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.33 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -92,7 +92,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         Group group = intake.get("IssueType", issueType.getQueryKey());
         Field field = group.get("Name");
         String name = field.toString();
-        NumberKey id = issueType.getIssueTypeId();
+        Integer id = issueType.getIssueTypeId();
 
         if (intake.isAllValid()) 
         {
@@ -355,7 +355,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             for (int i=0; i < attributeIds.length; i++)
             {
                 Attribute attribute = 
-                    scarabR.getAttribute(new NumberKey(attributeIds[i]));
+                    scarabR.getAttribute(new Integer(attributeIds[i]));
                 if (attribute != null)
                 {
                     // add issuetype-attribute groupings

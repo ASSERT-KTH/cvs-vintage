@@ -994,8 +994,12 @@ diff -u -r1.26 project.xml
         <exec executable="maven" dir="${fulcrum.dir}">
             <arg line="clean"/>
         </exec>
+<!-- maven b6 does not accept multiple -D overrides, and i could not get it
+     to take a build.properties override file either, so i just modified
+     project.properties.  This is supposed to work better in the latest code.
+-->
         <exec executable="maven" dir="${fulcrum.dir}">
-            <arg line="-Dsecurity.database.name=${scarab.database.prop.name} -Dscheduler.database.name=${scarab.database.prop.name}"/>
+            <arg line="-Dscheduler.database.name=${scarab.database.prop.name} -Dsecurity.database.javatype=${scarab.turbineSecurity.defaultJavaType} -Dsecurity.database.name=${scarab.database.prop.name} "/>
         </exec>
     </target>
 

@@ -4,7 +4,6 @@ import java.util.List;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
-import org.apache.torque.om.NumberKey;
 
 // Local classes
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -18,7 +17,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 public class IssueTypePeer 
     extends org.tigris.scarab.om.BaseIssueTypePeer
 {
-    public static NumberKey ROOT_KEY = new NumberKey("0");
+    public static Integer ROOT_KEY = new Integer("0");
 
     private static final String ISSUE_TYPE_PEER = 
         "IssueTypePeer";
@@ -136,7 +135,7 @@ public class IssueTypePeer
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public static boolean isUnique(String name, ObjectKey id)
+    public static boolean isUnique(String name, Integer id)
         throws Exception
     {
         boolean unique = true;
@@ -148,7 +147,7 @@ public class IssueTypePeer
             for (int i =0; i<types.size();i++)
             {
                 IssueType it = (IssueType)types.get(i);
-                if (id != null && !it.getPrimaryKey().equals(id)
+                if (id != null && !it.getIssueTypeId().equals(id)
                     && it.getName().trim().toLowerCase().equals(name.trim().toLowerCase()))
                 {
                     unique = false;

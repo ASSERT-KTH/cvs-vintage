@@ -47,13 +47,11 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.torque.om.NumberKey;
-
 public class DependTypePeer 
     extends org.tigris.scarab.om.BaseDependTypePeer
 {
-    public static final NumberKey BLOCKING__PK = new NumberKey("1");
-    public static final NumberKey DUPLICATE__PK = new NumberKey("2");
-    public static final NumberKey NON_BLOCKING__PK = new NumberKey("3");
+    public static final Integer BLOCKING__PK = new Integer(1);
+    public static final Integer DUPLICATE__PK = new Integer(2);
+    public static final Integer NON_BLOCKING__PK = new Integer(3);
 }
 

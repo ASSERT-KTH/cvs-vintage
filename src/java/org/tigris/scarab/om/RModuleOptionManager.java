@@ -59,9 +59,9 @@ public class RModuleOptionManager
         throws TorqueException
     {
         SimpleKey[] keys = {
-            module.getModuleId(),
-            issueType.getIssueTypeId(),
-            option.getOptionId()
+            SimpleKey.keyFor(module.getModuleId()),
+            SimpleKey.keyFor(issueType.getIssueTypeId()),
+            SimpleKey.keyFor(option.getOptionId())
         };
         return getInstance(new ComboKey(keys));
     }

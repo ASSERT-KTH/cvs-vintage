@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.26 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.27 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -242,7 +242,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 AttributeOption option = null;
                 try
                 {
-                    option = scarabR.getAttributeOption(new NumberKey(optionIds[i]));
+                    option = scarabR.getAttributeOption(new Integer(optionIds[i]));
                     module.addAttributeOption(issueType, option);
                 }
                 catch(Exception e)

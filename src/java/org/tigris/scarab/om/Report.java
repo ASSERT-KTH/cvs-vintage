@@ -58,15 +58,15 @@ import org.tigris.scarab.om.ModuleManager;
  * This class represents a Report
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Report.java,v 1.29 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: Report.java,v 1.30 2003/03/25 16:57:53 jmcnally Exp $
  */
 public  class Report 
     extends org.tigris.scarab.om.BaseReport
     implements Persistent
 {
-    public NumberKey getScopeId()
+    public Integer getScopeId()
     {
-        NumberKey id = super.getScopeId();
+        Integer id = super.getScopeId();
         if (id == null) 
         {
             id = Scope.PERSONAL__PK;

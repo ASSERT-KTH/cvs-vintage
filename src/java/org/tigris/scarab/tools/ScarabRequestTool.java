@@ -64,9 +64,10 @@ import java.util.Arrays;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
+import org.apache.torque.om.SimpleKey;
+import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
@@ -454,7 +455,7 @@ try{
             else 
             {
                 attributeOption = AttributeOptionManager
-                    .getInstance(new NumberKey(optId));
+                    .getInstance(new Integer(optId));
             }
         }
 }catch(Exception e){e.printStackTrace();}
@@ -479,9 +480,9 @@ try{
 
     /**
      * Return a specific User by ID from within the system.
-     * You can pass in either a NumberKey or something that
+     * You can pass in either a Integer or something that
      * will resolve to a String object as id.toString() is 
-     * called on everything that isn't a NumberKey.
+     * called on everything that isn't a Integer.
      */
     public ScarabUser getUser(Object id)
      throws Exception
@@ -493,14 +494,14 @@ try{
         ScarabUser su = null;
         try
         {
-            ObjectKey pk = null;
-            if (id instanceof NumberKey)
+            Integer pk = null;
+            if (id instanceof Integer)
             {
-                pk = (ObjectKey) id;
+                pk = (Integer) id;
             }
             else
             {
-                pk = new NumberKey(id.toString());
+                pk = new Integer(id.toString());
             }
             su = ScarabUserManager.getInstance(pk);
         }
@@ -555,12 +556,12 @@ try{
                     }
                     else 
                     {
-                        attribute = AttributeManager.getInstance(new NumberKey(attId));
+                        attribute = AttributeManager.getInstance(new Integer(attId));
                     }
                 }
                 else 
                 {
-                    attribute = AttributeManager.getInstance(new NumberKey(attId));
+                    attribute = AttributeManager.getInstance(new Integer(attId));
                 }
             }
         }
@@ -574,7 +575,7 @@ try{
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public Attribute getAttribute(NumberKey pk)
+    public Attribute getAttribute(Integer pk)
      throws Exception
     {
         Attribute attr = null;
@@ -593,7 +594,7 @@ try{
     /**
      * A Attribute object for use within the Scarab API.
      */
-    public AttributeOption getAttributeOption(NumberKey pk)
+    public AttributeOption getAttributeOption(Integer pk)
      throws Exception
     {
         try
@@ -607,7 +608,7 @@ try{
     public AttributeOption getAttributeOption(String key)
          throws Exception
     {
-        return getAttributeOption(new NumberKey(key));
+        return getAttributeOption(new Integer(key));
     }    
 
     public MITList getCurrentMITList()
@@ -1047,13 +1048,16 @@ try{
                 .get("Id").getValue();
             if (rModAttId == null)
             {
-                NumberKey attId = (NumberKey)getIntakeTool()
+                Integer attId = (Integer)getIntakeTool()
                     .get("Attribute", IntakeTool.DEFAULT_KEY)
                     .get("Id").getValue();
                 Module currentModule = getCurrentModule();
                 if (attId != null && currentModule != null)
                 {
-                    NumberKey[] nka = {attId, currentModule.getModuleId()};
+                    SimpleKey[] nka = {
+                        SimpleKey.keyFor(attId), 
+                        SimpleKey.keyFor(currentModule.getModuleId())
+                    };
                     rma = RModuleAttributeManager
                         .getInstance(new ComboKey(nka), false);
                 }
@@ -1103,7 +1107,7 @@ try{
         }
         else 
         {
-            module = ModuleManager.getInstance(new NumberKey(modId));
+            module = ModuleManager.getInstance(new Integer(modId));
         }
       }catch(Exception e){e.printStackTrace();}
        return module;
@@ -1123,7 +1127,7 @@ try{
         {
             try
             {
-                me = ModuleManager.getInstance(new NumberKey(key));
+                me = ModuleManager.getInstance(new Integer(key));
             }
             catch (Exception e)
             {
@@ -1391,7 +1395,7 @@ try{
         Issue issue = null;
         try
         {
-            issue = IssueManager.getInstance(new NumberKey(key));
+            issue = IssueManager.getInstance(new Long(key));
         }
         catch (Exception e)
         {
@@ -1415,7 +1419,7 @@ try{
             .get("Issue", IntakeTool.DEFAULT_KEY, false);
         if (issueGroup != null) 
         {            
-            NumberKey[] issueIds =  (NumberKey[])
+            Integer[] issueIds =  (Integer[])
                 issueGroup.get("Ids").getValue();
             if (issueIds != null)
             {
@@ -1439,8 +1443,8 @@ try{
 
     /**
      * Get a list of Issue objects from a list of issue ids.  The list
-     * can contain Strings or NumberKeys, but all ids must be of the same type
-     * (String or NumberKey).
+     * can contain Strings or Integers, but all ids must be of the same type
+     * (String or Integer).
      *
      * @param issueIds a <code>List</code> value
      * @return a <code>List</code> value
@@ -1487,13 +1491,13 @@ try{
                         .format("SomeIssueIdsNotValid", invalidIds.toString()));
                 }
             }
-            else if (issueIds.get(0) instanceof NumberKey)
+            else if (issueIds.get(0) instanceof Long)
             {
                 issues = new ArrayList(issueIds.size());
                 Iterator i = issueIds.iterator();
                 while (i.hasNext()) 
                 {
-                    Issue issue = IssueManager.getInstance((NumberKey)i.next());
+                    Issue issue = IssueManager.getInstance((Long)i.next());
                     if (issue == null) 
                     {
                         setAlertMessage(getLocalizationTool()
@@ -1508,7 +1512,7 @@ try{
             else 
             {
                 throw new IllegalArgumentException(
-                    "issue ids must be Strings or NumberKeys, not " + 
+                    "issue ids must be Strings or Longs, not " + 
                     issueIds.get(0).getClass().getName());
             }
         }        
@@ -1544,7 +1548,7 @@ try{
             + "?action=Search&eventSubmit_doSearch=Search" 
             + "&resultsperpage=25&pagenum=1" + query.getValue();
 
-        NumberKey listId = query.getListId();
+        Long listId = query.getListId();
         if (listId != null) 
         {
             link += '&' + ScarabConstants.CURRENT_MITLIST_ID + '=' + listId;
@@ -1567,7 +1571,7 @@ try{
             + "&action=Search&eventSubmit_doGotoEditQuery=foo" 
             + query.getValue();
 
-        NumberKey listId = query.getListId();
+        Long listId = query.getListId();
         if (listId != null) 
         {
             link += '&' + ScarabConstants.CURRENT_MITLIST_ID + '=' + listId;
@@ -1702,8 +1706,8 @@ try{
         }
         if (searchSuccess) 
         {        
-            NumberKey oldOptionId = search.getStateChangeFromOptionId();
-            if (oldOptionId != null && !oldOptionId.equals(new NumberKey("0"))
+            Integer oldOptionId = search.getStateChangeFromOptionId();
+            if (oldOptionId != null && !oldOptionId.equals(new Integer("0"))
                  && oldOptionId.equals(search.getStateChangeToOptionId())) 
             {
                 searchSuccess = false;
@@ -1732,7 +1736,7 @@ try{
             if (sortColumn != null && sortColumn.length() > 0 
                 && StringUtils.isNumeric(sortColumn))
             {
-                search.setSortAttributeId(new NumberKey(sortColumn));
+                search.setSortAttributeId(new Integer(sortColumn));
             }
             String sortPolarity = data.getParameters().getString("sortPolarity");
             if (sortPolarity != null && sortPolarity.length() > 0)
@@ -2669,7 +2673,7 @@ try{
             Iterator iter = userMap.keySet().iterator();
             while (iter.hasNext()) 
             {
-                issues.add(IssueManager.getInstance((NumberKey)iter.next()));
+                issues.add(IssueManager.getInstance((Long)iter.next()));
             }
         }
         return issues;

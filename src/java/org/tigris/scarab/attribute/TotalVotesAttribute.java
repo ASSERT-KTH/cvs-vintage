@@ -52,7 +52,7 @@ import org.tigris.scarab.om.AttributeValue;
  *  This is a Bugzilla-style attribute. The result is the sum of all votes.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.3 $ $Date: 2002/01/18 22:26:06 $
+ * @version $Revision: 1.4 $ $Date: 2003/03/25 16:57:52 $
  */
 public class TotalVotesAttribute extends AttributeValue
 {
@@ -61,7 +61,10 @@ public class TotalVotesAttribute extends AttributeValue
         int votes = 0;
         //try
         //{
-            votes = getNumericValue();
+        if (getNumericValue() != null) 
+        {
+            votes = getNumericValue().intValue();            
+        }
             /*
         }
         catch (Exception e)
@@ -74,7 +77,7 @@ public class TotalVotesAttribute extends AttributeValue
 
     public void addVotes(int votes)
     {
-        setNumericValue(getTotalVotes()+votes);
+        setNumericValue(new Integer(getTotalVotes()+votes));
     }
 
     public void addVote()
@@ -84,7 +87,7 @@ public class TotalVotesAttribute extends AttributeValue
 
     public void removeVotes(int votes)
     {
-        setNumericValue(getTotalVotes()-votes);
+        setNumericValue(new Integer(getTotalVotes()-votes));
     }
 
     public void removeVote()

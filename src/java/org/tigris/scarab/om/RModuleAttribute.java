@@ -145,7 +145,7 @@ public class RModuleAttribute
     public void setModule(Module me)
         throws TorqueException
     {
-        NumberKey id = me.getModuleId();
+        Integer id = me.getModuleId();
         if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
@@ -163,8 +163,8 @@ public class RModuleAttribute
         throws TorqueException
     {
         Module module = null;
-        ObjectKey id = getModuleId();
-        if (id != null) 
+        Integer id = getModuleId();
+        if ( id != null ) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -250,7 +250,7 @@ public class RModuleAttribute
     }
 
 
-    private static List getRMAs(NumberKey moduleId, NumberKey issueTypeId)
+    private static List getRMAs(Integer moduleId, Integer issueTypeId)
         throws Exception
     {
         List result = null;

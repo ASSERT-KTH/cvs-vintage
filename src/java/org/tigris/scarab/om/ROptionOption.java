@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.11 2002/10/24 22:59:26 jon Exp $
+  * @version $Id: ROptionOption.java,v 1.12 2003/03/25 16:57:53 jmcnally Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -86,7 +86,7 @@ public class ROptionOption
     /**
      * Creates a key for use in caching AttributeOptions
      */
-    static String getCacheKey(NumberKey option1, NumberKey option2)
+    static String getCacheKey(Integer option1, Integer option2)
     {
          String keyStringA = option1.toString();
          String keyStringB = option2.toString();
@@ -106,7 +106,7 @@ public class ROptionOption
     /**
      * Gets an instance of a new ROptionOption
      */
-    public static ROptionOption getInstance(NumberKey parent, NumberKey child)
+    public static ROptionOption getInstance(Integer parent, Integer child)
         throws Exception
     {
         TurbineGlobalCacheService tgcs = 
@@ -168,7 +168,7 @@ public class ROptionOption
      * This will also remove the ROptionOption from the internal cache
      * as well as from the database.
      */
-    public static void doRemove(NumberKey parent, NumberKey child)
+    public static void doRemove(Integer parent, Integer child)
         throws Exception
     {
         ROptionOption roo = getInstance();

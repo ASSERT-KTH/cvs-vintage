@@ -191,7 +191,7 @@ public class IssueManager
         if (om instanceof AttributeValue) 
         {
             AttributeValue castom = (AttributeValue)om;
-            ObjectKey key = castom.getIssueId();
+            ObjectKey key = castom.getPrimaryKey();
             try
             {
                 Serializable obj = getInstance(key);
@@ -209,7 +209,7 @@ public class IssueManager
         else if (om instanceof Attachment) 
         {
             Attachment castom = (Attachment)om;
-            ObjectKey key = castom.getIssueId();
+            ObjectKey key = castom.getPrimaryKey();
             try
             {
                 Serializable obj = getInstance(key);
@@ -229,7 +229,7 @@ public class IssueManager
         else if (om instanceof Depend) 
         {
             Depend castom = (Depend)om;
-            ObjectKey key = castom.getObserverId();
+            Long key = castom.getObserverId();
             try
             {
                 Serializable obj = getInstance(key);
@@ -252,7 +252,7 @@ public class IssueManager
         else if (om instanceof Activity) 
         {
             Activity castom = (Activity)om;
-            ObjectKey key = castom.getIssueId();
+            Long key = castom.getIssueId();
             try
             {
                 Serializable obj = getInstance(key);

@@ -18,7 +18,7 @@
            <rule name="mask" value="[0-9]+">Invalid Id</rule>
            <required-message>intake_NoAttributeWasSelected</required-message>
         </field>
-        <field name="TypeId" key="typeid" type="NumberKey">
+        <field name="TypeId" key="typeid" type="int">
             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
         <field name="Name" key="name" type="String">
@@ -45,7 +45,7 @@
            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
            <required-message>intake_NoAttributeOptionSelected</required-message>
         </field>
-        <field name="AttributeId" key="attid" type="NumberKey">
+        <field name="AttributeId" key="attid" type="int">
            <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
 <!--        
@@ -66,14 +66,14 @@
 
 <!-- Combination of AttributeOption and ROptionOption primarily for the GlobalAttributeEdit.vm page -->
 <group name="ParentChildAttributeOption" key="pcao" mapToObject="om.ParentChildAttributeOption">
-        <field name="OptionId" key="oid" type="NumberKey">
+        <field name="OptionId" key="oid" type="int">
            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
            <required-message>intake_NoAttributeOptionSelected</required-message>
         </field>
-        <field name="AttributeId" key="attid" type="NumberKey">
+        <field name="AttributeId" key="attid" type="int">
            <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
-        <field name="ParentId" key="parentid" type="NumberKey">
+        <field name="ParentId" key="parentid" type="int">
            <rule name="mask" value="[0-9|,]+">intake_InvalidOptionId</rule>
         </field>
         <field name="Name" key="name" type="String">
@@ -94,7 +94,7 @@
 </group>
 
 <group name="IssueType" key="itype" mapToObject="om.IssueType">
-        <field name="IssueTypeId" key="itypeid" type="NumberKey">
+        <field name="IssueTypeId" key="itypeid" type="int">
            <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
         <field name="Name" key="name" type="String">
@@ -113,7 +113,7 @@
 </group>
 
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
-        <field name="AttributeTypeId" key="atttid" type="NumberKey">
+        <field name="AttributeTypeId" key="atttid" type="int">
            <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
         <field name="Name" key="name" type="String">
@@ -122,7 +122,7 @@
 </group>
 
 <group name="AttributeGroup" key="attg" mapToObject="om.AttributeGroup">
-        <field name="AttributeGroupId" key="attgid" type="NumberKey">
+        <field name="AttributeGroupId" key="attgid" type="int">
            <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
         <field name="Name" key="name" type="String">
@@ -148,7 +148,7 @@
 </group>
 
 <group name="RModuleAttribute" key="rma" mapToObject="om.RModuleAttribute">
-        <field name="AttributeId" key="attid" type="NumberKey">
+        <field name="AttributeId" key="attid" type="int">
            <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
         <field name="DisplayValue" key="name" type="String">
@@ -166,7 +166,7 @@
 </group>
 
 <group name="RIssueTypeAttribute" key="ria" mapToObject="om.RIssueTypeAttribute">
-        <field name="AttributeId" key="attid" type="NumberKey">
+        <field name="AttributeId" key="attid" type="int">
            <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
         <field name="Active" key="active" type="boolean"/>
@@ -183,7 +183,7 @@
 
 <group name="RQueryUser" key="rqu" mapToObject="om.RQueryUser">
         <field name="Subscribed" key="sub" type="boolean" mapToProperty="IsSubscribed" />
-        <field name="Frequency" key="freq" type="NumberKey" 
+        <field name="Frequency" key="freq" type="int" 
              mapToProperty="SubscriptionFrequency">
              <required-message>intake_SelectOption</required-message>
              <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
@@ -259,17 +259,17 @@
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule name="mask" value="([0-9]|:)+">intake_BadIdMessage</rule>
         </field>
-        <field name="AttributeId" key="attid" type="NumberKey"/>
-        <field name="OptionId" key="optionid" type="NumberKey">
+        <field name="AttributeId" key="attid" type="int"/>
+        <field name="OptionId" key="optionid" type="int">
            <rule name="mask" value="[0-9]+">intake_PleaseSelectValidChoice</rule>
            <required-message>intake_ModuleRequiresOptionForAttribute</required-message>
         </field>
-        <field name="OptionIds" key="optids" type="NumberKey" multiValued="true"/>
-        <field name="UserId" key="visid" type="NumberKey">
+        <field name="OptionIds" key="optids" type="int" multiValued="true"/>
+        <field name="UserId" key="visid" type="int">
            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
         <field name="NumericValue" key="num" type="int" />
-        <field name="UserIds" key="visids" type="NumberKey" multiValued="true"/>
+        <field name="UserIds" key="visids" type="int" multiValued="true"/>
         <field name="Value" key="val" type="String">
            <rule name="mask" value="^$|\S">intake_ModuleRequiresDataForAttribute</rule>
            <rule name="maxLength" value="5000">intake_LengthMustBeLessThan5000CharactersUAttachmentOrComment</rule>
@@ -293,14 +293,14 @@
 <group name="Issue" key="issue" mapToObject="om.Issue">
         <field name="Id" key="id" type="String" mapToProperty="UniqueId">
         </field>
-        <field name="Ids" key="ids" type="NumberKey" 
+        <field name="Ids" key="ids" type="int" 
                mapToProperty="" multiValued="true">
            <rule name="mask" value="[0-9]+">intake_BadIdsMessage</rule>
         </field>
-        <field name="ModuleId" key="modid" type="NumberKey">
+        <field name="ModuleId" key="modid" type="int">
             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
-        <field name="TypeId" key="iti" type="NumberKey" >
+        <field name="TypeId" key="iti" type="int" >
             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
         <field name="FederatedId" key="fid" type="String"/> 
@@ -309,7 +309,7 @@
 
 <group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
         <field name="SearchWords" key="sw" type="String"/>
-        <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
+        <field name="TextScope" key="ts" type="int" multiValued="true"/>
         <field name="CommentQuery" key="cq" type="String"/>
         <field name="MinId" key="lid" type="String">
            <rule name="mask" value="^[0-9]{1,9}$|^[A-Za-z]{0,4}[0-9]{1,9}$">intake_InvalidIssueId</rule>
@@ -321,9 +321,9 @@
         </field>
         <field name="MaxDate" key="hd" type="String">
         </field>
-        <field name="StateChangeAttributeId" key="scai" type="NumberKey"/>
-        <field name="StateChangeFromOptionId" key="scfoi" type="NumberKey"/>
-        <field name="StateChangeToOptionId" key="sctoi" type="NumberKey"/>
+        <field name="StateChangeAttributeId" key="scai" type="int"/>
+        <field name="StateChangeFromOptionId" key="scfoi" type="int"/>
+        <field name="StateChangeToOptionId" key="sctoi" type="int"/>
         <field name="StateChangeFromDate" key="scfd" type="String">
             <rule name="mask" 
                 value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">intake_InvalidFromDate</rule>
@@ -332,7 +332,7 @@
             <rule name="mask" 
                 value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">intake_InvalidToDate</rule>
         </field>
-        <field name="SortAttributeId" key="sai" type="NumberKey"/>
+        <field name="SortAttributeId" key="sai" type="int"/>
         <field name="SortPolarity" key="sp" type="String"/>
         <field name="NullUser" key="nu" type="boolean"  mapToProperty=""/>
         <field name="NullUserAttr" key="nua" type="String"  mapToProperty=""/>
@@ -361,10 +361,10 @@
         <field name="ArchiveEmail" key="email" type="String">
             <rule name="maxLength" value="99"/>
         </field>
-        <field name="ParentId" key="parentid" type="NumberKey">
+        <field name="ParentId" key="parentid" type="int">
            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
-        <field name="OwnerId" key="ownerid" type="NumberKey">
+        <field name="OwnerId" key="ownerid" type="int">
            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
         <field name="Deleted" key="del" type="boolean" />
@@ -457,14 +457,14 @@
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
-    <field name="ObservedId" key="odi" type="NumberKey" >
+    <field name="ObservedId" key="odi" type="long" >
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
     <field name="ObserverUniqueId" key="ori" type="String" >
         <required-message>Please enter an id.</required-message>
         <rule name="maxLength" value="255">intake_BadIdMessage</rule>
     </field>
-    <field name="TypeId" key="dti" type="NumberKey" >
+    <field name="TypeId" key="dti" type="int" >
         <rule name="mask" value="[1-9]+">intake_BadIdMessage</rule>
     </field>
     <field name="Description" key="d" type="String">
@@ -486,11 +486,11 @@
         <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
     </field>
     <field name="Value" key="v" type="String" />
-    <field name="ScopeId" key="sco" type="NumberKey" >
+    <field name="ScopeId" key="sco" type="int" >
         <required-message>intake_SelectOption</required-message>
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
-    <field name="ModuleId" key="mi" type="NumberKey" >
+    <field name="ModuleId" key="mi" type="int" >
         <required-message>intake_IfSelectedModuleLevelQueryMustSelectModule</required-message>
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
@@ -508,11 +508,11 @@
     <field name="Description" key="d" type="String">
         <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
     </field>
-    <field name="ScopeId" key="tti" type="NumberKey" >
+    <field name="ScopeId" key="tti" type="int" >
         <required-message>intake_SelectOption</required-message>
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
-    <field name="ModuleId" key="mi" type="NumberKey" mapToProperty="">
+    <field name="ModuleId" key="mi" type="int" mapToProperty="">
         <required-message>intake_IfSelectedModuleLevelQueryMustSelectModule</required-message>
         <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
     </field>
@@ -525,7 +525,7 @@
         <field name="Description" key="desc" type="String"> 
             <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
         </field>
-        <field name="ScopeId" key="scp" type="NumberKey"/>
+        <field name="ScopeId" key="scp" type="int"/>
         <field name="DefaultDate" key="dd" type="DateString">
            <rule name="format1" value="MM/dd/yy HH:mm"/>
            <rule name="format2" value="MM/dd/yy"/>
@@ -538,10 +538,10 @@
     <field name="Action" key="rb" type="String">
         <rule name="validValues" value="copy|move">intake_ActionMustBeMoveOrCopy</rule>
     </field>
-    <field name="ModuleId" key="modId" type="NumberKey">
+    <field name="ModuleId" key="modId" type="int">
         <rule name="mask" value="[0-9]+">intake_SelectModuleFromList</rule>
     </field>
-    <field name="IssueTypeId" key="itId" type="NumberKey">
+    <field name="IssueTypeId" key="itId" type="int">
         <rule name="mask" value="[0-9]+">intake_SelectIssueTypeFromList</rule>
     </field>
     <field name="IssueId" key="issId" type="String">

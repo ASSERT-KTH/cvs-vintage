@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.util.word.IssueSearch;
 
 /** 
@@ -61,7 +60,7 @@ public  class MITListItem
     extends org.tigris.scarab.om.BaseMITListItem
     implements Persistent
 {
-    private static final NumberKey MULTIPLE_KEY = new NumberKey(0);
+    private static final Integer MULTIPLE_KEY = new Integer(0);
 
     /**
      * The number of active issues of the this issue type within the module.
@@ -157,5 +156,23 @@ public  class MITListItem
                                           item.getIssueTypeId());
         }
         return isEqual;
+    }
+
+    public String toString()
+    {
+        StringBuffer sb = new StringBuffer(50);
+        sb.append('{').append(super.toString()).append('(');
+        if (getModuleId() != null) 
+        {
+            sb.append(getModuleId());
+        }
+        sb.append(':');
+        if (getIssueTypeId() != null) 
+        {
+            sb.append(getIssueTypeId());
+        }
+        sb.append(")}");
+
+        return sb.toString();
     }
 }

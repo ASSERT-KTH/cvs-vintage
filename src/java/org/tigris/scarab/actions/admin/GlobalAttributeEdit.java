@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.40 2003/03/21 17:59:12 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.41 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -174,7 +174,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
 
                     // there could be errors here so catch and re-display
                     // the same screen again.
-                    NumberKey currentParentId = null;
+                    Integer currentParentId = null;
                     try
                     {
                         // store the currentParentId
@@ -247,7 +247,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         if (newPCAO.getName() != null && newPCAO.getName().length() > 0)
                         {
                             // save the new PCAO
-                            newPCAO.setAttributeId(new NumberKey(attribute.getAttributeId()));
+                            newPCAO.setAttributeId(attribute.getAttributeId());
                             try
                             {
                                 newPCAO.save();

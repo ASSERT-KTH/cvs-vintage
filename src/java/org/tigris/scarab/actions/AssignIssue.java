@@ -79,7 +79,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.86 2003/03/20 00:57:30 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.87 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -115,7 +115,7 @@ public class AssignIssue extends BaseModifyIssue
                 for (int j=0; j<issues.size(); j++)
                 {
                     Issue issue = (Issue)issues.get(j);
-                    NumberKey issueId = issue.getIssueId();
+                    Long issueId = issue.getIssueId();
                     List userList = (List)userMap.get(issueId);
                     if (userList == null)
                     {
@@ -252,7 +252,7 @@ public class AssignIssue extends BaseModifyIssue
                 List item = (List)userList.get(j);
                 Attribute newAttr = (Attribute)item.get(0);
                 ScarabUser assignee = (ScarabUser)item.get(1);
-                NumberKey assigneeId = assignee.getUserId();
+                Integer assigneeId = assignee.getUserId();
                 boolean alreadyAssigned = false;
 
                 for (int k=0; k < oldAssignees.size(); k++)

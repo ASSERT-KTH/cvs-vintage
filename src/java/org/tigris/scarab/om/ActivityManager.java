@@ -59,11 +59,13 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.13 2002/12/30 08:27:06 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.14 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
 {
+    private static final Integer ZERO = new Integer(0);
+
     /**
      * Creates a new <code>ActivityManager</code> instance.
      *
@@ -88,20 +90,20 @@ public class ActivityManager
 
     /**
      * Convenience method for getting an Activity instance
-     * with a String primary key (which gets converted to a NumberKey).
+     * with a String primary key (which gets converted to a Integer).
      */
     public static Activity getInstance(String id)
         throws TorqueException
     {
-        return getInstance(new NumberKey(id));
+        return getInstance(new Long(id));
     }
     
     public static Activity createNumericActivity(Issue issue, Attribute attribute,
                                                  ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
-                                                 int oldNumericValue,
-                                                 int newNumericValue)
+                                                 Integer oldNumericValue,
+                                                 Integer newNumericValue)
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,attachment,
@@ -113,8 +115,8 @@ public class ActivityManager
                                                  ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
-                                                 NumberKey oldUserId,
-                                                 NumberKey newUserId)
+                                                 Integer oldUserId,
+                                                 Integer newUserId)
         throws TorqueException
     {
         String oldUsername = null;
@@ -128,7 +130,7 @@ public class ActivityManager
             newUsername = ((ScarabUser)ScarabUserManager.getInstance(newUserId)).getUserName();
         }
         return create(issue,attribute,activitySet,description,attachment,
-                      0, 0,
+                      ZERO, ZERO,
                       oldUserId, newUserId, 
                       null, null, oldUsername, newUsername);
     }
@@ -140,7 +142,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,depend,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       null, depend.getDependType().getName(), null);
@@ -155,7 +157,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,depend,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue, null);
@@ -168,7 +170,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,depend,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       depend.getDependType().getName(), null, null);
@@ -178,12 +180,12 @@ public class ActivityManager
                                                  ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
-                                                 NumberKey oldOptionId,
-                                                 NumberKey newOptionId)
+                                                 Integer oldOptionId,
+                                                 Integer newOptionId)
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,attachment,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       oldOptionId, newOptionId,
                       null, null);
@@ -196,7 +198,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       null, newTextValue);
@@ -209,7 +211,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,attachment,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       null, null);
@@ -223,7 +225,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,null,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
@@ -238,7 +240,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,attachment,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
@@ -253,7 +255,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,attachment,
-                      0, 0,
+                      ZERO, ZERO,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
@@ -265,9 +267,9 @@ public class ActivityManager
     public static Activity create(Issue issue, Attribute attribute, 
                        ActivitySet activitySet, String description, 
                        Attachment attachment, 
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
+                       Integer oldNumericValue, Integer newNumericValue,
+                       Integer oldUserId, Integer newUserId,
+                       Integer oldOptionId, Integer newOptionId,
                        String oldTextValue, String newTextValue)
          throws TorqueException
     {
@@ -284,9 +286,9 @@ public class ActivityManager
     public static Activity create(Issue issue, Attribute attribute, 
                        ActivitySet activitySet, String description, 
                        Attachment attachment, 
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
+                       Integer oldNumericValue, Integer newNumericValue,
+                       Integer oldUserId, Integer newUserId,
+                       Integer oldOptionId, Integer newOptionId,
                        String oldTextValue, String newTextValue,
                        Connection dbCon)
          throws TorqueException
@@ -304,9 +306,9 @@ public class ActivityManager
     public static Activity create(Issue issue, Attribute attribute, 
                        ActivitySet activitySet, String description, 
                        Attachment attachment, Depend depend,
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
+                       Integer oldNumericValue, Integer newNumericValue,
+                       Integer oldUserId, Integer newUserId,
+                       Integer oldOptionId, Integer newOptionId,
                        String oldTextValue, String newTextValue, 
                        Connection dbCon)
          throws TorqueException

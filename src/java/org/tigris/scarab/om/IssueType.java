@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.TorqueException;
@@ -68,7 +67,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.43 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.44 2003/03/25 16:57:53 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -123,7 +122,7 @@ public  class IssueType
     /**
      * Gets the id of the template that corresponds to the issue type.
      */
-    public NumberKey getTemplateId()
+    public Integer getTemplateId()
         throws Exception
     {
         return getTemplateIssueType().getIssueTypeId();
@@ -190,9 +189,9 @@ public  class IssueType
         IssueType newIssueType = new IssueType();
         newIssueType.setName(getName() + " (copy)");
         newIssueType.setDescription(getDescription());
-        newIssueType.setParentId(new NumberKey(0));
+        newIssueType.setParentId(new Integer(0));
         newIssueType.save();
-        NumberKey newId = newIssueType.getIssueTypeId();
+        Integer newId = newIssueType.getIssueTypeId();
 
         // Copy template type
         IssueType template = IssueTypePeer
@@ -706,16 +705,16 @@ public  class IssueType
         Object obj = ScarabCache.get(this, GET_ALL_R_ISSUETYPE_OPTIONS, 
                                      attribute); 
         if (obj == null) 
-        {        
+        {
             List options = attribute.getAttributeOptions(false);
-            NumberKey[] optIds = null;
+            Integer[] optIds = null;
             if (options == null)
             {
-                optIds = new NumberKey[0];
+                optIds = new Integer[0];
             }
             else
             {
-                optIds = new NumberKey[options.size()];
+                optIds = new Integer[options.size()];
             }
             for (int i=optIds.length-1; i>=0; i--)
             {

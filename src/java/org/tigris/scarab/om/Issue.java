@@ -66,7 +66,6 @@ import org.apache.commons.lang.ObjectUtils;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
 import org.apache.torque.util.Criteria;
@@ -98,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.282 2003/03/22 18:35:50 jon Exp $
+ * @version $Id: Issue.java,v 1.283 2003/03/25 16:57:53 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -168,7 +167,7 @@ public class Issue
     protected static final String GET_HISTORY_LIMIT =
         "getHistoryLimit";
 
-    private static final NumberKey NUMBERKEY_0 = new NumberKey(0);
+    private static final Integer NUMBERKEY_0 = new Integer(0);
 
     /** storage for any attachments which have not been saved yet */
     private List unSavedAttachments = null;
@@ -771,7 +770,7 @@ public class Issue
     public void setModule(Module me)
         throws TorqueException
     {
-        NumberKey id = me.getModuleId();
+        Integer id = me.getModuleId();
         if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
@@ -789,8 +788,8 @@ public class Issue
         throws TorqueException
     {
         Module module = null;
-        ObjectKey id = getModuleId();
-        if (id != null) 
+        Integer id = getModuleId();
+        if ( id != null ) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -1125,9 +1124,9 @@ public class Issue
                 for (int j=assigneeAVs.size()-1; j>=0; j--) 
                 {
                     AttributeValue av = (AttributeValue)assigneeAVs.get(j);
-                    NumberKey avUserId = av.getUserId();
-                    NumberKey userUserId = users[i].getUserId();
-                    if (av != null && avUserId != null && 
+                    Integer avUserId = av.getUserId();
+                    Integer userUserId = users[i].getUserId();
+                    if ( av != null && avUserId != null && 
                          userUserId != null && 
                          avUserId.equals(userUserId))
                     {
@@ -1182,7 +1181,8 @@ public class Issue
             AttributeValue attVal = (AttributeValue)userAttVals.get(i);
             try
             {
-                ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
+                ScarabUser su = ScarabUserManager
+                    .getInstance(attVal.getUserId());
                 if (!users.contains(su))
                 {
                     users.add(su);
@@ -1319,7 +1319,7 @@ public class Issue
             Object obj = getCachedObject(GET_INITIAL_ACTIVITYSET);
             if (obj == null)
             {
-                NumberKey[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
+                Integer[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
                               ActivitySetTypePeer.MOVE_ISSUE__PK};
                 Criteria crit = new Criteria();
                 crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
@@ -1426,7 +1426,7 @@ public class Issue
                 crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                          ActivityPeer.TRANSACTION_ID);
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                NumberKey[] typeIds = {ActivitySetTypePeer.EDIT_ISSUE__PK, 
+                Integer[] typeIds = {ActivitySetTypePeer.EDIT_ISSUE__PK, 
                                        ActivitySetTypePeer.MOVE_ISSUE__PK};
                 crit.addIn(ActivitySetPeer.TYPE_ID, typeIds);
                 // there could be multiple attributes modified during the 
@@ -1490,7 +1490,8 @@ public class Issue
             }
             else 
             {
-                result = ScarabUserManager.getInstance(t.getCreatedBy());
+                result = ScarabUserManager
+                    .getInstance(t.getCreatedBy());
             }
         }
         return result;
@@ -1779,7 +1780,7 @@ public class Issue
      * Creates a new ActivitySet object for the issue.
      */
     public ActivitySet getActivitySet(ScarabUser user, Attachment attachment,
-                                      NumberKey type)
+                                      Integer type)
         throws Exception
     {
         ActivitySet activitySet = null;
@@ -1799,7 +1800,7 @@ public class Issue
     /**
      * Creates a new ActivitySet object for the issue.
      */
-    public ActivitySet getActivitySet(ScarabUser user, NumberKey type)
+    public ActivitySet getActivitySet(ScarabUser user, Integer type)
         throws Exception
     {
         return getActivitySet(user, null, type);
@@ -2681,8 +2682,8 @@ public class Issue
     public List getMatchingAttributeValuesList(String moduleId, String issueTypeId)
           throws Exception
     {
-         Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
-         IssueType issueType = IssueTypeManager.getInstance(new NumberKey(issueTypeId)); 
+         Module module = ModuleManager.getInstance(new Integer(moduleId)); 
+         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId)); 
          return getMatchingAttributeValuesList(module, issueType);
     }
 
@@ -2760,8 +2761,8 @@ public class Issue
     public List getOrphanAttributeValuesList(String moduleId, String issueTypeId)
           throws Exception
     {
-         Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
-         IssueType issueType = IssueTypeManager.getInstance(new NumberKey(issueTypeId)); 
+         Module module = ModuleManager.getInstance(new Integer(moduleId)); 
+         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId)); 
          return getOrphanAttributeValuesList(module, issueType);
     }
 
@@ -3566,7 +3567,7 @@ public class Issue
         Iterator iter = newAttVals.keySet().iterator();
         while (iter.hasNext())
         {
-            NumberKey attrId = (NumberKey)iter.next();
+            Integer attrId = (Integer)iter.next();
             Attribute attr = AttributeManager.getInstance(attrId);
             oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
             newAttVal = (AttributeValue)newAttVals.get(attrId);
@@ -3599,12 +3600,12 @@ public class Issue
         Iterator iter = newValues.keySet().iterator();
         while (iter.hasNext())
         {
-            NumberKey attrId = (NumberKey)iter.next();
-            Attribute attr = AttributeManager.getInstance(new NumberKey(attrId));
+            Integer attrId = (Integer)iter.next();
+            Attribute attr = AttributeManager.getInstance(attrId);
             if (attr.isOptionAttribute())
             {
                 AttributeOption toOption = AttributeOptionManager
-                     .getInstance(new NumberKey((String)newValues.get(attrId)));
+                     .getInstance(new Integer((String)newValues.get(attrId)));
                 msg = WorkflowFactory.getInstance().checkInitialTransition(
                                                     toOption, this, 
                                                     newValues, user);
@@ -3633,8 +3634,8 @@ public class Issue
         Iterator iter = newAttVals.keySet().iterator();
         while (iter.hasNext())
         {
-            NumberKey attrId = (NumberKey)iter.next();
-            Attribute attr = AttributeManager.getInstance(new NumberKey(attrId));
+            Integer attrId = (Integer)iter.next();
+            Attribute attr = AttributeManager.getInstance(attrId);
             oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
             newAttVal = (AttributeValue)newAttVals.get(attrId);
             AttributeOption fromOption = null;

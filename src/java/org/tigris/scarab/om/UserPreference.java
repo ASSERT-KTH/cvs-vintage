@@ -58,7 +58,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * to come up with a real system for dealing with this.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserPreference.java,v 1.4 2002/03/05 23:59:38 maartenc Exp $
+ * @version $Id: UserPreference.java,v 1.5 2003/03/25 16:57:54 jmcnally Exp $
  */
 public class UserPreference 
     extends org.tigris.scarab.om.BaseUserPreference
@@ -82,7 +82,7 @@ public class UserPreference
      * Gets a UserPrefernce object for a specific user
      * @return null if userid could not be found
      */
-    public static UserPreference getInstance(NumberKey userid)
+    public static UserPreference getInstance(Integer userid)
         throws Exception
     {
         UserPreference result = null;

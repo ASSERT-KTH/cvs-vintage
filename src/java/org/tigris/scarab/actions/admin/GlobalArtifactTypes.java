@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.35 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.36 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -94,7 +94,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                 // make sure name is unique
                 Field field = group.get("Name");
                 String name = field.toString();
-                if (IssueTypePeer.isUnique(name, issueType.getPrimaryKey())) 
+                if (IssueTypePeer.isUnique(name, issueType.getIssueTypeId())) 
                 {
                     group.setProperties(issueType);
                     issueType.save();

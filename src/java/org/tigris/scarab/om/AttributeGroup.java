@@ -55,6 +55,7 @@ import java.util.Iterator;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
@@ -116,8 +117,8 @@ public  class AttributeGroup
     public void setModule(Module me)
         throws TorqueException
     {
-        NumberKey id = me.getModuleId();
-        if (id == null) 
+        Integer id = me.getModuleId();
+        if ( id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
                                       "being associated with other objects.");
@@ -134,8 +135,8 @@ public  class AttributeGroup
         throws TorqueException
     {
         Module module = null;
-        ObjectKey id = getModuleId();
-        if (id != null) 
+        ObjectKey id = getPrimaryKey();
+        if ( id != null ) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -185,9 +186,9 @@ public  class AttributeGroup
             Iterator i = raags.iterator();
             while (i.hasNext()) 
             {
-                ObjectKey id = ((RAttributeAttributeGroup)i.next())
+                Integer id = ((RAttributeAttributeGroup)i.next())
                     .getAttributeId();
-                result.add(AttributeManager.getInstance(id));
+                result.add(AttributeManager.getInstance(SimpleKey.keyFor(id)));
             }
             getMethodResult().put(result, this, GET_ATTRIBUTES);
         }
@@ -268,7 +269,7 @@ public  class AttributeGroup
         if (user.hasPermission(permission, module))
         {
             IssueType issueType = IssueTypeManager
-               .getInstance(getIssueTypeId(), false);
+               .getInstance(SimpleKey.keyFor(getIssueTypeId()), false);
             if (issueType.getLocked())
             { 
                 throw new ScarabException("You cannot delete this group, " + 

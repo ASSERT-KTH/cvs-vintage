@@ -88,7 +88,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.118 2003/03/24 18:15:54 tenersen Exp $
+ * @version $Id: Search.java,v 1.119 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -523,7 +523,7 @@ public class Search extends RequireLoginFirstAction
         }
         if (prevQueries != null && !prevQueries.isEmpty())
         {
-            NumberKey pk = query.getQueryId();
+            Long pk = query.getQueryId();
             String name = query.getName();
             for (Iterator i = prevQueries.iterator(); 
                  i.hasNext() && !areThereDupes;)
@@ -647,7 +647,7 @@ public class Search extends RequireLoginFirstAction
        }
        else if (!attrId.equals("any") && !attrId.equals("created_by"))
        {
-           Attribute attribute = scarabR.getAttribute(new NumberKey(attrId));
+           Attribute attribute = scarabR.getAttribute(new Integer(attrId));
            MITList mitList = scarabR.getCurrentMITList();
            if (newUser == null || !newUser.hasPermission(attribute.getPermission(), 
                                                          mitList.getModules()))

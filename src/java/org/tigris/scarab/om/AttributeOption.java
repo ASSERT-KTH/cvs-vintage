@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.30 2003/03/15 21:56:58 jon Exp $
+  * @version $Id: AttributeOption.java,v 1.31 2003/03/25 16:57:53 jmcnally Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -317,7 +317,7 @@ public class AttributeOption
         for (int i=0; i < relations.size(); i++)
         {
             ROptionOption relation = (ROptionOption)relations.get(i);
-            NumberKey key = relation.getOption2Id();
+            Integer key = relation.getOption2Id();
             if (key != null)
             {
                 sortedChildren.add(relation.getOption2Option());
@@ -344,7 +344,7 @@ public class AttributeOption
         for (int i=0; i < relations.size(); i++)
         {
             ROptionOption relation = (ROptionOption)relations.get(i);
-            NumberKey key = relation.getOption1Id();
+            Integer key = relation.getOption1Id();
             if (key != null)
             {
                 sortedParents.add(relation.getOption1Option());

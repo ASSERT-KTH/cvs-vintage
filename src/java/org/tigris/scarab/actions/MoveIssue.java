@@ -83,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.50 2003/03/21 17:59:12 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.51 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -220,7 +220,7 @@ public class MoveIssue extends RequireLoginFirstAction
             {
                 commentAttrs.add(
                     (Attribute)scarabR
-                    .getAttribute(new NumberKey(key.substring(17))));
+                    .getAttribute(new Integer(key.substring(17))));
             }
         }
         String reason = data.getParameters().getString("reason");

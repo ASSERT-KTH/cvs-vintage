@@ -56,7 +56,6 @@ import java.util.HashMap;
 import java.io.StringReader;
 
 // Turbine classes
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.util.word.IssueSearch;
@@ -167,31 +166,31 @@ public  class ReportBridge
     {
         torqueReport.setDeleted(b);
     }
-    public NumberKey getScopeId()
+    public Integer getScopeId()
     {
         return torqueReport.getScopeId();
     }
-    public void setScopeId(NumberKey id)
+    public void setScopeId(Integer id)
         throws TorqueException
     {
         torqueReport.setScopeId(id);
     }
 
-    public NumberKey getUserId()
+    public Integer getUserId()
     {
         return torqueReport.getUserId();
     }
-    public void setUserId(NumberKey id)
+    public void setUserId(Integer id)
         throws TorqueException
     {
         torqueReport.setUserId(id);
     }
 
-    public NumberKey getReportId()
+    public Integer getReportId()
     {
         return torqueReport.getReportId();
     }
-    public void setReportId(NumberKey id)
+    public void setReportId(Integer id)
         throws TorqueException
     {
         torqueReport.setReportId(id);
@@ -229,7 +228,7 @@ public  class ReportBridge
         reportDefn.setModuleIssueTypes(null);
         if (v == null) 
         {
-            torqueReport.setModuleId((NumberKey)null);            
+            torqueReport.setModuleId((Integer)null);            
         }
         else 
         {
@@ -261,7 +260,7 @@ public  class ReportBridge
         if (v == null) 
         {
             // issue type id cannot be null
-            torqueReport.setIssueTypeId(new NumberKey(0));            
+            torqueReport.setIssueTypeId(new Integer(0));            
         }
         else 
         {
@@ -422,9 +421,8 @@ public  class ReportBridge
             {
                 ModuleIssueType mit = (ModuleIssueType)i.next();
                 MITListItem item = new MITListItem();
-                item.setModuleId(new NumberKey(mit.getModuleId().toString()));
-                item.setIssueTypeId(
-                    new NumberKey(mit.getIssueTypeId().toString()));
+                item.setModuleId(mit.getModuleId());
+                item.setIssueTypeId(mit.getIssueTypeId());
                 mitList.addMITListItem(item);
             }
         }
@@ -451,16 +449,16 @@ public  class ReportBridge
                  roai.hasNext() && isOk;) 
             {
                 isOk = mitList.isCommon( AttributeOptionManager.getInstance( 
-                    new NumberKey( ((ReportOptionAttribute)roai.next())
-                    .getOptionId().intValue())) );
+                    ((ReportOptionAttribute)roai.next())
+                    .getOptionId()));
             }
             for (Iterator ruai = reportDefn
                 .retrieveAllReportUserAttributes().iterator(); 
                  ruai.hasNext() && isOk;) 
             {
                 isOk = mitList.isCommon( AttributeManager.getInstance( 
-                    new NumberKey(((ReportUserAttribute)ruai.next())
-                    .getAttributeId().toString())) );
+                    ((ReportUserAttribute)ruai.next())
+                    .getAttributeId()));
             }
             
             if (!isOk) 
@@ -599,8 +597,8 @@ public  class ReportBridge
             for (Iterator i = reportOptions.iterator(); i.hasNext();) 
             {
                 ReportOptionAttribute roa = (ReportOptionAttribute)i.next();
-                NumberKey optionId = new NumberKey(roa.getOptionId().toString());
-                NumberKey attId = AttributeOptionManager.getInstance(optionId)
+                Integer optionId = roa.getOptionId();
+                Integer attId = AttributeOptionManager.getInstance(optionId)
                     .getAttributeId();
                 AttributeValue av = AttributeValue
                     .getNewInstance(attId, search);

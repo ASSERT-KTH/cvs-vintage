@@ -58,6 +58,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.localization.Localization;
 
@@ -73,17 +74,17 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.91 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.92 2003/03/25 16:57:53 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
     implements Persistent
 {
     private ActivitySet activitySet;
-    private NumberKey oldOptionId;
-    private NumberKey oldUserId;
+    private Integer oldOptionId;
+    private Integer oldUserId;
     private String oldValue;
-    private int oldNumericValue;
+    private Integer oldNumericValue;
     private boolean oldOptionIdIsSet;
     private boolean oldUserIdIsSet;
     private boolean oldValueIsSet;
@@ -191,7 +192,7 @@ public abstract class AttributeValue
     /**
      * sets the AttributeId for this as well as any chained values.
      */
-    public void setAttributeId(NumberKey nk)
+    public void setAttributeId(Integer nk)
         throws TorqueException
     {
         super.setAttributeId(nk);
@@ -204,7 +205,7 @@ public abstract class AttributeValue
     /**
      * sets the IssueId for this as well as any chained values.
      */
-    public void setIssueId(NumberKey nk)
+    public void setIssueId(Long nk)
         throws TorqueException
     {
         super.setIssueId(nk);
@@ -402,12 +403,12 @@ Leaving here so that John can remove or fix.
      * Makes sure to set the Value as well, to make display of the
      * option easier
      *
-     * @param optionId a <code>NumberKey</code> value
+     * @param optionId a <code>Integer</code> value
      */
-    public void setOptionId(NumberKey optionId)
+    public void setOptionId(Integer optionId)
         throws TorqueException
     {
-        if (optionId != null && optionId.getValue() != null) 
+        if ( optionId != null ) 
         {
             Module module = getIssue().getModule();
             IssueType issueType = getIssue().getIssueType();
@@ -463,7 +464,7 @@ Leaving here so that John can remove or fix.
      *
      * @param v
      */
-    public void setNumericValue(int v)
+    public void setNumericValue(Integer v)
     {        
         setValueOnly(String.valueOf(v));
         if (v != getNumericValue())
@@ -479,7 +480,7 @@ Leaving here so that John can remove or fix.
         }  
     }
 
-    protected void setOptionIdOnly(NumberKey optionId)
+    protected void setOptionIdOnly(Integer optionId)
         throws TorqueException
     {
         if (!ObjectUtils.equals(optionId, getOptionId()))
@@ -488,7 +489,7 @@ Leaving here so that John can remove or fix.
             // save the last saved value
             if (!isNew() && !oldOptionIdIsSet && getOptionId() != null) 
             {
-                oldOptionId = new NumberKey(getOptionId());
+                oldOptionId = getOptionId();
                 oldOptionIdIsSet = true;
             }
             super.setOptionId(optionId);
@@ -499,12 +500,12 @@ Leaving here so that John can remove or fix.
      * Makes sure to set the Value as well, to make display of the
      * user easier
      *
-     * @param userId a <code>NumberKey</code> value
+     * @param userId a <code>Integer</code> value
      */
-    public void setUserId(NumberKey userId)
+    public void setUserId(Integer userId)
         throws TorqueException
     {
-        if (userId != null && userId.getValue() != null) 
+        if (userId != null) 
         {
             ScarabUser user = ScarabUserManager.getInstance(userId);
             setValueOnly(user.getUserName());
@@ -518,7 +519,7 @@ Leaving here so that John can remove or fix.
         setUserIdOnly(userId);
     }
 
-    protected void setUserIdOnly(NumberKey value)
+    protected void setUserIdOnly(Integer value)
         throws TorqueException
     {
         if (!ObjectUtils.equals(value, getUserId()))
@@ -527,7 +528,7 @@ Leaving here so that John can remove or fix.
             // save the last saved value
             if (!isNew() && !oldUserIdIsSet) 
             {
-                oldUserId = new NumberKey(getUserId());
+                oldUserId = getUserId();
                 oldUserIdIsSet = true;
             }
             super.setUserId(value);
@@ -537,10 +538,10 @@ Leaving here so that John can remove or fix.
     /**
      * Not implemented always throws an exception
      *
-     * @return a <code>NumberKey[]</code> value
+     * @return a <code>Integer[]</code> value
      * @exception Exception if an error occurs
      */
-    public NumberKey[] getOptionIds()
+    public Integer[] getOptionIds()
         throws Exception
     {
         List optionIds = new ArrayList();
@@ -562,10 +563,10 @@ Leaving here so that John can remove or fix.
             Log.get().debug(this + " optionIds: " + optionIds);
         }
         
-        return (NumberKey[])optionIds.toArray(new NumberKey[optionIds.size()]);
+        return (Integer[])optionIds.toArray(new Integer[optionIds.size()]);
     }
 
-    public void setOptionIds(NumberKey[] ids)
+    public void setOptionIds(Integer[] ids)
         throws Exception
     {
         if (ids != null && ids.length > 0) 
@@ -587,16 +588,16 @@ Leaving here so that John can remove or fix.
     /**
      * Not implemented always throws an exception
      *
-     * @return a <code>NumberKey[]</code> value
+     * @return a <code>Integer[]</code> value
      * @exception Exception if an error occurs
      */
-    public NumberKey[] getUserIds()
+    public Integer[] getUserIds()
         throws Exception
     {
         throw new ScarabException("not implemented");
     }
 
-    public void setUserIds(NumberKey[] ids)
+    public void setUserIds(Integer[] ids)
         throws Exception
     {
         if (ids != null && ids.length > 0) 
@@ -679,7 +680,8 @@ Leaving here so that John can remove or fix.
     public AttributeOption getAttributeOption()
         throws TorqueException
     {
-        return getAttribute().getAttributeOption(getOptionId());
+        return getAttribute()
+            .getAttributeOption(getOptionId());
     }
 
     /**
@@ -725,7 +727,7 @@ Leaving here so that John can remove or fix.
      * @param attId the Attribute's Id
      */
     public static AttributeValue getNewInstance(
-        ObjectKey attId, Issue issue) throws TorqueException
+        Integer attId, Issue issue) throws TorqueException
     {
         Attribute attribute = AttributeManager.getInstance(attId);
         return getNewInstance(attribute, issue);
@@ -817,7 +819,7 @@ Leaving here so that John can remove or fix.
             {
                 saveActivity = ActivityManager
                                 .create(getIssue(), getAttribute(), activitySet, 
-                                        desc, null, getNumericValue(), 0, 
+                                        desc, null, getNumericValue(), new Integer(0), 
                                         getUserId(), null, getOptionId(), null, 
                                         getValue(), null, dbcon);
             }

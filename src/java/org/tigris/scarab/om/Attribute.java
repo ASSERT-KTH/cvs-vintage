@@ -58,6 +58,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.SimpleKey;
 import org.apache.torque.util.Criteria;
 
 // Scarab classes
@@ -74,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.59 2003/02/12 01:29:38 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.60 2003/03/25 16:57:53 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -199,27 +200,20 @@ public class Attribute
     /**
      * Helper method that takes a NumberKey
      */
-    public void setCreatedBy (NumberKey key)
-    {
-        super.setCreatedBy(new Integer(key.toString()).intValue());
-    }
-
-    /**
-     * Helper method that takes a NumberKey
-     */
     public String getCreatedUserName() throws Exception
     {
-        String createdBy = Integer.toString(getCreatedBy());
+        Integer userId = getCreatedBy();
         String userName = null;
-        if ("0".equals(createdBy))
+        if (userId == null || userId.intValue() == 0)
         {
             // FIXME: l10n
             userName = "Default";
         }
         else
         {
-            ScarabUser su = ScarabUserManager.getInstance(new NumberKey(createdBy));
-            userName = su.getFirstName() + su.getLastName();
+            ScarabUser su = ScarabUserManager
+                .getInstance(SimpleKey.keyFor(userId));
+            userName = su.getName();
         }
         return userName;
     }
@@ -435,7 +429,7 @@ public class Attribute
      * @param pk a <code>NumberKey</code> value
      * @return an <code>AttributeOption</code> value
      */
-    public AttributeOption getAttributeOption(NumberKey pk)
+    public AttributeOption getAttributeOption(Integer pk)
         throws TorqueException
     {
         if (optionsMap == null)
@@ -456,7 +450,7 @@ public class Attribute
         {
             throw new TorqueException("optionId is empty");
         }
-        return getAttributeOption(new NumberKey(optionID));
+        return getAttributeOption(new Integer(optionID));
     }
 
 

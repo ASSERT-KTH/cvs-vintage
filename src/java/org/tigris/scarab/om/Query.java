@@ -147,11 +147,11 @@ public class Query
     {
         if (me == null) 
         {
-            setModuleId((NumberKey)null);            
+            setModuleId((Integer)null);            
         }
         else 
         {
-            NumberKey id = me.getModuleId();
+            Integer id = me.getModuleId();
             if (id == null) 
             {
                 throw new TorqueException("Modules must be saved prior to " +
@@ -170,8 +170,8 @@ public class Query
         throws TorqueException
     {
         Module module = null;
-        ObjectKey id = getModuleId();
-        if (id != null) 
+        Integer id = getModuleId();
+        if ( id != null ) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -277,7 +277,7 @@ public class Query
     /**
      * Subscribes user to query.
      */
-    public void subscribe(ScarabUser user, String frequencyId)
+    public void subscribe(ScarabUser user, Integer frequencyId)
         throws Exception
     {
         RQueryUser rqu = getRQueryUser(user);

@@ -58,7 +58,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.4 2002/12/20 00:56:38 jon Exp $
+ * @version $Id: ActivitySetManager.java,v 1.5 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager
@@ -105,7 +105,7 @@ public class ActivitySetManager
     /**
      * Populates a new activitySet object.
      */
-    public static ActivitySet getInstance(NumberKey typeId, ScarabUser user)
+    public static ActivitySet getInstance(Integer typeId, ScarabUser user)
         throws Exception
     {
         return getInstance(typeId, user, null);
@@ -114,7 +114,7 @@ public class ActivitySetManager
     /**
      * Populates a new activitySet object.
      */
-    public static ActivitySet getInstance(NumberKey typeId, 
+    public static ActivitySet getInstance(Integer typeId, 
                                           ScarabUser user, Attachment attachment)
         throws Exception
     {

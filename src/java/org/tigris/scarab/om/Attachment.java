@@ -83,21 +83,21 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.56 2003/03/22 18:35:50 jon Exp $
+ * @version $Id: Attachment.java,v 1.57 2003/03/25 16:57:52 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
     implements Persistent
 {
     /** ObjectKey for a file type attachment */
-    public static final NumberKey FILE__PK = new NumberKey("1");
+    public static final Integer FILE__PK = new Integer(1);
     /** ObjectKey for a note/comment type attachment */
-    public static final NumberKey COMMENT__PK = new NumberKey("2");
+    public static final Integer COMMENT__PK = new Integer(2);
     /** ObjectKey for a url type attachment */
-    public static final NumberKey URL__PK = new NumberKey("3");
+    public static final Integer URL__PK = new Integer(3);
     /** ObjectKey for a reason for modification type attachment */
-    public static final NumberKey MODIFICATION__PK = new NumberKey("4");
-
+    public static final Integer MODIFICATION__PK = new Integer(4);
+    
     /** Path to the base location for storing files */
     private static String fileRepo = null;
 
@@ -162,11 +162,11 @@ public class Attachment
     /**
      * Populates fields for a text (non-file) type of attachment.
      */
-    public void setTextFields(ScarabUser user, Issue issue, NumberKey typeId) 
+    public void setTextFields(ScarabUser user, Issue issue, Integer typeId) 
         throws Exception
     {
         setIssue(issue);
-        setTypeId(new NumberKey(typeId));
+        setTypeId(typeId);
         setMimeType("text/plain");
         //setCreatedDate(new Date());
         setCreatedBy(user.getUserId());

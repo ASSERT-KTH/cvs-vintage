@@ -143,7 +143,7 @@ public class ModuleManager
         if (om instanceof RModuleAttribute)
         {
             RModuleAttribute castom = (RModuleAttribute)om;
-            ObjectKey key = castom.getModuleId();
+            Integer key = castom.getModuleId();
             try
             {
                 Serializable obj = getInstance(key);
@@ -161,7 +161,7 @@ public class ModuleManager
         else if (om instanceof RModuleOption)
         {
             RModuleOption castom = (RModuleOption)om;
-            ObjectKey key = castom.getModuleId();
+            Integer key = castom.getModuleId();
             try
             {
                 Serializable obj = getInstance(key);
@@ -179,7 +179,7 @@ public class ModuleManager
         else if (om instanceof RModuleIssueType) 
         {
             RModuleIssueType castom = (RModuleIssueType)om;
-            ObjectKey key = castom.getModuleId();
+            Integer key = castom.getModuleId();
             try
             {
                 Serializable obj = getInstance(key);

@@ -62,7 +62,7 @@ import org.tigris.scarab.util.Log;
  * This class manages AttributeGroup objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AttributeGroupManager.java,v 1.7 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: AttributeGroupManager.java,v 1.8 2003/03/25 16:57:53 jmcnally Exp $
  */
 public class AttributeGroupManager
     extends BaseAttributeGroupManager
@@ -113,7 +113,7 @@ public class AttributeGroupManager
         if (om instanceof RAttributeAttributeGroup)
         {
             RAttributeAttributeGroup castom = (RAttributeAttributeGroup)om;
-            ObjectKey key = castom.getGroupId();            
+            Integer key = castom.getGroupId();            
             try
             {
                 Serializable obj = getInstance(key);

@@ -64,7 +64,6 @@ import org.apache.regexp.RESyntaxException;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ComboKey;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.manager.MethodResultCache;
@@ -126,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.85 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.86 2003/03/25 16:57:52 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -227,7 +226,7 @@ public abstract class AbstractScarabModule
         throws Exception;
 
     public abstract String getRealName();
-    public abstract NumberKey getModuleId();
+    public abstract Integer getModuleId();
 
     /**
      * This method is an implementation of the Group.getName() method
@@ -1448,14 +1447,14 @@ public abstract class AbstractScarabModule
         if (obj == null) 
         {        
             List options = attribute.getAttributeOptions(true);
-            NumberKey[] optIds = null;
+            Integer[] optIds = null;
             if (options == null)
             {
-                optIds = new NumberKey[0];
+                optIds = new Integer[0];
             }
             else
             {
-                optIds = new NumberKey[options.size()];
+                optIds = new Integer[options.size()];
             }
             for (int i=optIds.length-1; i>=0; i--)
             {
@@ -1898,7 +1897,9 @@ public abstract class AbstractScarabModule
         RModuleIssueType rmit = null;
         try
         {
-            SimpleKey[] keys = {getModuleId(), issueType.getIssueTypeId()};
+            SimpleKey[] keys = { SimpleKey.keyFor(getModuleId()), 
+                                 SimpleKey.keyFor(issueType.getIssueTypeId())
+            };
             rmit = RModuleIssueTypeManager.getInstance(new ComboKey(keys));
         }
         catch (TorqueException e)
@@ -2043,7 +2044,7 @@ public abstract class AbstractScarabModule
     protected void inheritFromParent(Module parentModule)
         throws Exception
     {
-        NumberKey newModuleId = getModuleId();
+        Integer newModuleId = getModuleId();
         AttributeGroup ag1;
         AttributeGroup ag2;
         RModuleAttribute rma1 = null;
@@ -2293,7 +2294,6 @@ public abstract class AbstractScarabModule
         return result;
     }
 
-    
     /**
      * Used for ordering Groups.
      *

@@ -59,7 +59,7 @@ import org.apache.torque.om.ComboKey;
 /** 
  * This class manages RModuleIssueType objects.  
  *
- * @version $Id: RModuleIssueTypeManager.java,v 1.7 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: RModuleIssueTypeManager.java,v 1.8 2003/03/25 16:57:53 jmcnally Exp $
  */
 public class RModuleIssueTypeManager
     extends BaseRModuleIssueTypeManager
@@ -109,9 +109,8 @@ public class RModuleIssueTypeManager
             throw new IllegalArgumentException(
                 "RModuleIssueType keys must be of the form 1:2, not " + key);
         }
-        
-        NumberKey moduleId = new NumberKey(key.substring(0, colonPos));
-        NumberKey itId = new NumberKey(key.substring(colonPos+1));
+        NumberKey moduleId = new NumberKey(key.substring(1, colonPos));
+        NumberKey itId = new NumberKey(key.substring(colonPos+2, key.length()-1));
         SimpleKey[] keyArray = { moduleId, itId };
         return getInstance(new ComboKey(keyArray));
     }
