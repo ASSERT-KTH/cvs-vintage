@@ -1365,7 +1365,7 @@ public  class Report
         }
         catch (Exception e)
         {
-            getCategory().error(e);
+            log().error(e);
         }
         
         return sb.toString();

@@ -1511,10 +1511,10 @@ public class Issue
                     }
                     catch (Exception badException)
                     {
-                        getCategory().error("Could not get an id, even after "
+                        log().error("Could not get an id, even after "
                             +"trying to add a module entry into the ID_TABLE", 
                             e);
-                        getCategory()
+                        log()
                             .error("Error trying to create ID_TABLE entry for "
                                    + getIdTableKey(), badException);
                         // throw the original
