@@ -859,6 +859,7 @@ try{
         }
         catch (Exception e)
         {
+            Log.debug("Unable to retrieve Module: " + e);
         }
         return me;
     }
