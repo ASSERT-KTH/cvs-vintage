@@ -7,6 +7,9 @@
 package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
@@ -38,7 +41,7 @@ public class CloseAction extends FrameAction {
 			"CLOSE",
 			null,null,
 			'C',
-			null);
+			KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 		
 	}
 

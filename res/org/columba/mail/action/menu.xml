@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 	<menubar>
+	
+	<menu name="menu_file" extensionpoint="open">
+		<menuitem action="NewMessage"/>	
+	</menu>
+	
+	
 	<menu name="menu_file" extensionpoint="top">
 		<menuitem imenu="ReceiveMenu" />
 		<separator/>

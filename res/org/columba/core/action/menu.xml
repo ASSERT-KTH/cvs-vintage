@@ -7,14 +7,14 @@
 	    	<menuitem action="OpenNewMailWindow"/>
 	    	<menuitem action="OpenNewAddressbookWindow"/>
 	    	<extensionpoint name="open" />
-	    </menu>
-	    <menuitem action="Close"/>
+	    </menu>	    
 		<separator/>
 		<extensionpoint name="top" />	
 		<menuitem action="Print"/>	
 		<menuitem action="PrintSetup"/>	
 		<separator/>
-		<extensionpoint name="bottom" />			
+		<extensionpoint name="bottom" />
+		<menuitem action="Close"/>			
 		<menuitem action="Exit"/>			
 	</menu>
 	
