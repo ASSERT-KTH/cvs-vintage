@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class JDBCStartCommand {
 
@@ -231,7 +231,7 @@ public class JDBCStartCommand {
             JDBCFunctionMappingMetaData pkConstraint = 
                manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
             if(pkConstraint == null) {
-               throw new IllegalStateException("Primary key constriant is " +
+               throw new IllegalStateException("Primary key constraint is " +
                      "not allowed for this type of data source");
             }
 
@@ -270,7 +270,7 @@ public class JDBCStartCommand {
             JDBCFunctionMappingMetaData pkConstraint = 
                manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
             if(pkConstraint == null) {
-               throw new IllegalStateException("Primary key constriant is " +
+               throw new IllegalStateException("Primary key constraint is " +
                      "not allowed for this type of data store");
             }
 
@@ -333,7 +333,7 @@ public class JDBCStartCommand {
       JDBCFunctionMappingMetaData fkConstraint = 
             manager.getMetaData().getTypeMapping().getFkConstraintTemplate();
       if(fkConstraint == null) {
-         throw new IllegalStateException("Foreign key constriant is not " +
+         throw new IllegalStateException("Foreign key constraint is not " +
                "allowed for this type of datastore");
       }
       String a = SQLUtil.getColumnNamesClause(fields);
@@ -380,7 +380,7 @@ public class JDBCStartCommand {
             JDBCUtil.safeClose(con);
          }
       } catch(Exception e) {
-         log.debug("Could not add foreign key constriant: table=" + tableName);
+         log.warn("Could not add foreign key constraint: table=" + tableName);
          throw new DeploymentException("Error while adding foreign key " +
                "constraint", e);
       } finally {
@@ -397,6 +397,6 @@ public class JDBCStartCommand {
 
 
       // success
-      log.info("Added foreign key constriant to table '" + tableName);
+      log.info("Added foreign key constraint to table '" + tableName + "'" );
    }
 }
