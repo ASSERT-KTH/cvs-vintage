@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * of EmailLink.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: EmailLinkFactory.java,v 1.1 2003/05/31 04:02:31 dlr Exp $
+ * @version $Id: EmailLinkFactory.java,v 1.2 2003/06/02 17:35:32 dlr Exp $
  */
 public class EmailLinkFactory
 {
@@ -123,7 +123,6 @@ public class EmailLinkFactory
                 result = new ErrorEmailLink(module);            
             }
         }
-        Log.get().info("result=" + result);
         return result;
     }
 
