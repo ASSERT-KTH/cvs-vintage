@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.57 2002/03/22 04:31:38 spestov Exp $
+ * @version $Id: jEdit.java,v 1.58 2002/03/25 09:37:31 spestov Exp $
  */
 public class jEdit
 {
@@ -2604,7 +2604,7 @@ public class jEdit
 			scriptFile = MiscUtilities.constructPath(userDir,scriptFile);
 			script.append("BeanShell.runScript(null,\""
 				+ MiscUtilities.charsToEscapes(scriptFile)
-				+ "\",false);\n");
+				+ "\",null,false);\n");
 		}
 
 		return script.toString();

@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.16 2002/03/14 10:20:19 spestov Exp $
+ * @version $Id: Macros.java,v 1.17 2002/03/25 09:37:31 spestov Exp $
  */
 public class Macros
 {
@@ -554,21 +554,32 @@ public class Macros
 			{
 				buffer.beginCompoundEdit();
 
-				for(int i = 0; i < paths.length; i++)
+file_loop:			for(int i = 0; i < paths.length; i++)
 				{
+					String path = paths[i];
+
 					Handler handler;
 
 					for (int j = 0; j < macroHandlers.size(); j++)
 					{
 						handler = (Handler)macroHandlers.get(j);
 
-						if (handler.accept(paths[i]))
+						if (handler.accept(path))
 						{
-							Macro macro = handler.createMacro(paths[i],paths[i]);
+							Macro macro = handler.createMacro(path,path);
 							macro.invoke(view);
-							break;
+							continue file_loop;
 						}
 					}
+
+					// only executed if above loop falls
+					// through, ie there is no handler for
+					// this file
+					Log.log(Log.WARNING,Macros.class,path +
+						": Cannot find a suitable macro handler"
+						+ ", assuming BeanShell");
+					getHandler("beanshell").createMacro(
+						path,path).invoke(view);
 				}
 			}
 			finally
