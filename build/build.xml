@@ -892,11 +892,11 @@ diff -u -r1.26 project.xml
 ]]>
 </echo>
 
-        <exec executable="ant" dir="${fulcrum.dir}">
-            <arg line="maven:clean"/>
+        <exec executable="maven" dir="${fulcrum.dir}">
+            <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${fulcrum.dir}">
-            <arg line="-Dsecurity.database.name=${scarab.database.prop.name} -Dscheduler.database.name=${scarab.database.prop.name} maven:install-jar"/>
+        <exec executable="maven" dir="${fulcrum.dir}">
+            <arg line="-Dsecurity.database.name=${scarab.database.prop.name} -Dscheduler.database.name=${scarab.database.prop.name}"/>
         </exec>
     </target>
 
@@ -1042,11 +1042,11 @@ diff -u -r1.5 project.xml
     <!-- Build our version of Commons-Sandbox-Email easily                  -->
     <!-- ================================================================== -->
     <target name="build-commons-sandbox-email">
-        <exec executable="ant" dir="${commons-sandbox-email.dir}">
-            <arg line="maven:clean"/>
+        <exec executable="maven" dir="${commons-sandbox-email.dir}">
+            <arg line="clean"/>
         </exec>
-        <exec executable="ant" dir="${commons-sandbox-email.dir}">
-            <arg line="maven:install-jar"/>
+        <exec executable="maven" dir="${commons-sandbox-email.dir}">
+            <arg line="java:jar"/>
         </exec>
     </target>
 
