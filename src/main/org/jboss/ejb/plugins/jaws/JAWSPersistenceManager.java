@@ -80,7 +80,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -236,7 +236,7 @@ public class JAWSPersistenceManager
       // Create SQL commands
       makeSql();
       
-      // Find EJB-methods
+	  // Find EJB-methods
       ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);
       ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
       ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
@@ -257,6 +257,7 @@ public class JAWSPersistenceManager
       // Create table if necessary
       if (entity.getCreateTable())
       {
+		  
          // Try to create it
          Connection con = null;
          PreparedStatement stmt = null;
@@ -560,7 +561,7 @@ public class JAWSPersistenceManager
       if (finderMethod.getName().equals("findByPrimaryKey"))
       {
          
-         return args[0];
+         return findByPrimaryKey(ctx);
       }
       else
       {
@@ -850,108 +851,116 @@ public class JAWSPersistenceManager
       }
    }
       
-   public void storeEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
-   {
+	 /*
+	 * storeEntity(EntityEnterpriseContext ctx) 
+	 *
+	 * if the readOnly flag is specified in the xml file this won't store.
+	 * if not a tuned update is issued.
+	 *
+	 */
+	public void storeEntity(EntityEnterpriseContext ctx)
+	throws RemoteException
+	{
 		// Check for read-only
 		if (readOnly)
 			return;
-	
-      Connection con = null;
-      PreparedStatement stmt = null;
-      try
-      {
-         // Call bean
-         ejbStore.invoke(ctx.getInstance(), new Object[0]);
-
-         // Create tuned update
-         String updateSql = "UPDATE "+tableName+" SET ";
-         Object[] currentState = getState(ctx);
-         boolean[] dirtyField = new boolean[currentState.length];
-         Object[] oldState = ((PersistenceContext)ctx.getPersistenceContext()).state;
-         boolean dirty = false;
-         int refIdx = 0;
-         for (int i = 0;i < currentState.length; i++)
-         {
-            if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
-            {
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		try
+		{
+			// Call bean
+			ejbStore.invoke(ctx.getInstance(), new Object[0]);
+			
+			// Create tuned update
+			String updateSql = "UPDATE "+tableName+" SET ";
+			Object[] currentState = getState(ctx);
+			boolean[] dirtyField = new boolean[currentState.length];
+			Object[] oldState = ((PersistenceContext)ctx.getPersistenceContext()).state;
+			boolean dirty = false;
+			int refIdx = 0;
+			
+			System.out.println("THE CURRENTSTATE "+getState(ctx));
+			for (int i = 0;i < currentState.length; i++)
+			{
+				if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF) {
 					if (((currentState[i] != null) && 
 							(oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
-						 (oldState[i] != null))
+						(oldState[i] != null))
 					{
-					   JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
-					   for (int j = 0; j < pkFields.length; j++)
-					   {
-					      updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
-					      dirty = true;
-					   }
-					   dirtyField[i] = true;
+						JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
+						for (int j = 0; j < pkFields.length; j++)
+						{
+							updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
+							dirty = true;
+						}
+						dirtyField[i] = true;
 					}
-               refIdx++;
-            } else
-            {
-					if (((currentState[i] != null) &&
-						 (oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
-						 (oldState[i] != null))
+					refIdx++;
+				} else
+				{
+					if (((currentState[i] != null) && 
+							(oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
+						(oldState[i] != null))
 					{
-					   updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";
-					   dirty = true;
-					   dirtyField[i] = true;
+						updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";
+						dirty = true;
+						dirtyField[i] = true;
 					}
-            }
-         }
-         
-         if (!dirty)
-         {
-            return;
-         } else
-         {
-            updateSql += " WHERE "+pkColumnWhereList;
-         }
-         
-         // Update database
-         con = getConnection();
-         stmt = con.prepareStatement(updateSql);
-         
-         int idx = 1;
-         refIdx = 0;
-         for (int i = 0;i < dirtyField.length; i++)
-         {
-            if (((JawsCMPField)CMPFields.get(i)).getJdbcType().equals("REF"))
-            {
-               if (dirtyField[i])
-               {
-                  idx = setParameter(stmt,idx,((Integer)jdbcTypes.get(i)).intValue(), currentState[i],refIdx);
-               }
-               refIdx++;
-            } else
-            {
-               if (dirtyField[i])
-               {
-                  idx = setParameter(stmt,idx,((Integer)jdbcTypes.get(i)).intValue(), currentState[i],refIdx);
-               }
-            }
-         }
-         
-         // Primary key in WHERE-clause
-         for (int i = 0; i < pkFields.size(); i++)
-         {
-            Field field = (Field)pkFields.get(i);
-            idx = setParameter(stmt,idx,((Integer)pkJdbcTypes.get(i)).intValue(), field.get(ctx.getInstance()),0);
-         }
-         
-         // Execute update
-         stmt.execute();
-      } catch (Exception e)
-      {
-         throw new ServerException("Store failed", e);
-      } finally
-      {
-         if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
-         if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
-      }
-      
-   }
+				}
+			}
+			
+			if (!dirty)
+			{
+				return;
+			} else
+			{
+				updateSql += " WHERE "+pkColumnWhereList;
+			}
+			
+			// Update database
+			con = getConnection();
+			stmt = con.prepareStatement(updateSql);
+			
+			int idx = 1;
+			refIdx = 0;
+			for (int i = 0;i < dirtyField.length; i++)
+			{
+				if (((JawsCMPField)CMPFields.get(i)).getJdbcType().equals("REF"))
+				{
+					if (dirtyField[i])
+					{
+						idx = setParameter(stmt,idx,((Integer)jdbcTypes.get(i)).intValue(), currentState[i],refIdx);
+					}
+					refIdx++;
+				} else
+				{
+					if (dirtyField[i])
+					{
+						idx = setParameter(stmt,idx,((Integer)jdbcTypes.get(i)).intValue(), currentState[i],refIdx);
+					}
+				}
+			}
+			
+			// Primary key in WHERE-clause
+			for (int i = 0; i < pkFields.size(); i++)
+			{
+				Field field = (Field)pkFields.get(i);
+				idx = setParameter(stmt,idx,((Integer)pkJdbcTypes.get(i)).intValue(), field.get(ctx.getInstance()),0);
+			}
+			
+			// Execute update
+			stmt.execute();
+		} catch (Exception e)
+		{
+			throw new ServerException("Store failed", e);
+		} finally
+		{
+			if (stmt != null) try { stmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			if (con != null) try { con.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+	
+	}
 
    public void passivateEntity(EntityEnterpriseContext ctx)
       throws RemoteException
