@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 
 rem Batch file to run the tomcat sanity test suite
 rem Note: You may send the output to a file using "run-tomcat -l file"
@@ -24,7 +24,7 @@ if "%_OLDCP%" == "" goto runant
 set CLASSPATH=%CLASSPATH%;%_OLDCP%
 
 :runant
-ant -Dgdir="%TOMCAT_HOME%/webapps/test/Golden" -f "%TOMCAT_HOME%/webapps/test/WEB-INF/test-tomcat.xml" %1 %2 %3 %4 %5 %6 %7 %8 %9 client
+call ant -Dgdir="%TOMCAT_HOME%/webapps/test/Golden" -f "%TOMCAT_HOME%/webapps/test/WEB-INF/test-tomcat.xml" %1 %2 %3 %4 %5 %6 %7 %8 %9 client
 
 set CLASSPATH=%_OLDCP%
 
