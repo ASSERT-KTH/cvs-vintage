@@ -190,6 +190,10 @@ public class IssueSearch
             {
                 setModule(mitList.getModule());
             }
+            if (mitList.isSingleIssueType()) 
+            {
+                setIssueType(mitList.getIssueType());
+            }
         }        
     }
 
