@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.2 1999/12/08 23:43:34 bergsten Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/08 23:43:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.3 2000/01/12 07:11:15 shemnon Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/12 07:11:15 $
  *
  * ====================================================================
  * 
@@ -82,6 +82,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.jasper.JasperException;
+import org.apache.jasper.Constants;
 
 
 /**
@@ -161,9 +162,9 @@ public class JspRuntimeLibrary {
 					String param, boolean ignoreMethodNF) 
 					throws JasperException
     {
+        java.lang.reflect.Method method = null;
+        Class                    type   = null;
 	try {
-	    java.lang.reflect.Method method = null;
-	    Class                    type   = null;
 	    java.beans.BeanInfo info
 		= java.beans.Introspector.getBeanInfo(bean.getClass());
 	    if ( info != null ) {
@@ -179,8 +180,11 @@ public class JspRuntimeLibrary {
 	    }
 	    if ( method != null ) {
 		if (type.isArray()) {
-		    if (request == null)
-			throw new JasperException("Can't set indexed property");
+                    if (request == null) {
+                        throw new JasperException(Constants.getString(
+                                "jsp.error.beans.setproperty.noindexset",
+                                new Object[] {}));
+                    };
 		    Class t = type.getComponentType();
 		    String[] values = request.getParameterValues(param);
 		    //XXX Please check.
@@ -198,14 +202,21 @@ public class JspRuntimeLibrary {
 		    if ( oval != null )
 			method.invoke(bean, new Object[] { oval });
 		}
-	    } else {
-		if (!ignoreMethodNF)
-		    throw new JasperException("Can't find method for " + prop);
-		
 	    }
 	} catch (Exception ex) {
 	    throw new JasperException (ex);
 	}
+        if (!ignoreMethodNF && (method == null)) {
+            if (type == null) {
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.noproperty",
+                        new Object[] {prop, bean.getClass().getName()}));
+            } else {
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.nomethod.setproperty",
+                        new Object[] {prop, bean.getClass().getName()}));
+            }
+        }
     }
     // __end introspecthelperMethod
     
@@ -412,23 +423,15 @@ public class JspRuntimeLibrary {
     // __begin lookupReadMethodMethod
     public static Object handleGetProperty(Object o, String prop)
     throws JasperException {
-        java.lang.reflect.Method method = null;
+        if (o == null)        {
+            throw new JasperException(Constants.getString(
+                    "jsp.error.beans.nullbean",
+                    new Object[] {}));
+        }
 	Object value = null;
         try {
-            java.beans.BeanInfo info 
-                = java.beans.Introspector.getBeanInfo(o.getClass());
-            if ( info != null ) {
-                java.beans.PropertyDescriptor pd[]
-                    = info.getPropertyDescriptors();
-                for (int i = 0 ; i < pd.length ; i++) {
-                    if ( pd[i].getName().equalsIgnoreCase(prop) ) {
-                        method = pd[i].getReadMethod();
-                        break;
-                    }
-                }
-            }
-	    if (method == null)
-		throw new JasperException("CAn't find method for " + prop);
+            java.lang.reflect.Method method = 
+                    getReadMethod(o.getClass(), prop);
 	    value = method.invoke(o, null);
         } catch (Exception ex) {
 	    throw new JasperException (ex);
@@ -442,7 +445,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { value });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -454,7 +457,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Integer(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -466,7 +469,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Short(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -478,7 +481,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Long(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -490,7 +493,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Double(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -502,7 +505,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Float(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -514,7 +517,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Character(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -526,7 +529,7 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Byte(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
@@ -538,20 +541,20 @@ public class JspRuntimeLibrary {
 	throws JasperException
     {
 	try {
-	    Method method = getMethod(bean, prop);
+            Method method = getWriteMethod(bean.getClass(), prop);
 	    method.invoke(bean, new Object[] { new Boolean(value) });
 	} catch (Exception ex) {
 	    throw new JasperException(ex);
 	}	
     }
     
-    public static java.lang.reflect.Method getMethod(Object bean, String prop)
+    public static java.lang.reflect.Method getWriteMethod(Class beanClass, String prop)
     throws JasperException {
 	java.lang.reflect.Method method = null;	
+        Class type = null;
 	try {
-	    Class                    type   = null;
 	    java.beans.BeanInfo info
-		= java.beans.Introspector.getBeanInfo(bean.getClass());
+                = java.beans.Introspector.getBeanInfo(beanClass);
 	    if ( info != null ) {
 		java.beans.PropertyDescriptor pd[]
 		    = info.getPropertyDescriptors();
@@ -562,10 +565,67 @@ public class JspRuntimeLibrary {
 			break;
 		    }
 		}
+            } else {        
+                // just in case introspection silently fails.
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.nobeaninfo",
+                        new Object[] {beanClass.getName()}));
+            }
+        } catch (Exception ex) {
+            throw new JasperException (ex);
+        }
+        if (method == null) {
+            if (type == null) {
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.noproperty",
+                        new Object[] {prop, beanClass.getName()}));
+            } else {
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.nomethod.setproperty",
+                        new Object[] {prop, beanClass.getName()}));
+            }
+        }
+        return method;
+    }
+
+    public static java.lang.reflect.Method getReadMethod(Class beanClass, String prop)
+    throws JasperException {
+        java.lang.reflect.Method method = null;        
+        Class type = null;
+        try {
+            java.beans.BeanInfo info
+                = java.beans.Introspector.getBeanInfo(beanClass);
+            if ( info != null ) {
+                java.beans.PropertyDescriptor pd[]
+                    = info.getPropertyDescriptors();
+                for (int i = 0 ; i < pd.length ; i++) {
+                    if ( pd[i].getName().equals(prop) ) {
+                        method = pd[i].getReadMethod();
+                        type   = pd[i].getPropertyType();
+                        break;
+                    }
+                }
+            } else {        
+                // just in case introspection silently fails.
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.nobeaninfo",
+                        new Object[] {beanClass.getName()}));
 	    }
 	} catch (Exception ex) {
 	    throw new JasperException (ex);
 	}
+        if (method == null) {
+            if (type == null) {
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.noproperty",
+                        new Object[] {prop, beanClass.getName()}));
+            } else {
+                throw new JasperException(Constants.getString(
+                        "jsp.error.beans.nomethod",
+                        new Object[] {prop, beanClass.getName()}));
+            }
+        }
+
 	return method;
     }
     

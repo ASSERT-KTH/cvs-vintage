@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.2 1999/12/08 23:42:50 bergsten Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/08 23:42:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.3 2000/01/12 07:11:14 shemnon Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/12 07:11:14 $
  *
  * ====================================================================
  * 
@@ -62,6 +62,7 @@ package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
 import org.apache.jasper.JasperException;
+import org.apache.jasper.runtime.JspRuntimeLibrary;
 import java.lang.reflect.Method;
 
 import org.apache.jasper.Constants;
@@ -94,16 +95,17 @@ public class GetPropertyGenerator
 	    
 	    if (beanInfo.checkVariable(name)) {
 		// Bean is defined using useBean.
-		Class cls = beanInfo.getBeanType (name);
+                // introspect at compile time
+                Class cls = beanInfo.getBeanType(name);
 		String clsName = cls.getName();
-		String modProperty = property.substring(0,1).toUpperCase() +
-		    property.substring(1);
-		String methodName = "get" + modProperty;
+                java.lang.reflect.Method meth = JspRuntimeLibrary.getReadMethod(cls, property);
+                
+                String methodName = meth.getName();
 		writer.println("out.print(JspRuntimeLibrary.toString(" +
 			       "(((" + clsName + ")pageContext.findAttribute(" +
-			       "\"" + name + "\")).get" + modProperty + "())));");
+                               "\"" + name + "\"))." + methodName + "())));");
 	    } else {
-		// Get the class name and then introspect.
+                // Get the class name and then introspect at runtime.
 		writer.println("out.print(JspRuntimeLibrary.toString(JspRuntimeLibrary." +
 			       "handleGetProperty(pageContext.findAttribute(" +
 			       "\"" + name + "\"), \"" + property + "\")));");

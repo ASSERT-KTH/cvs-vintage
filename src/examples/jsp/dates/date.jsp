@@ -20,7 +20,7 @@
 <li>	Day Of Year: is  <jsp:getProperty name="clock" property="dayOfYear"/>
 <li>	Week Of Year: is  <jsp:getProperty name="clock" property="weekOfYear"/>
 <li>	era: is  <jsp:getProperty name="clock" property="era"/>
-<li>	DST Offset: is  <jsp:getProperty name="clock" property="dSTOffset"/>
+<li>	DST Offset: is  <jsp:getProperty name="clock" property="DSTOffset"/>
 <li>	Zone Offset: is  <jsp:getProperty name="clock" property="zoneOffset"/>
 </ul>
 </font>
