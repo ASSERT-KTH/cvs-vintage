@@ -725,8 +725,10 @@ final class JasperLiaison {
         URL commonCP[];
         serverCP=jdkProxy.getParentURLs(this.getClass().getClassLoader());
         commonCP=jdkProxy.getURLs(this.getClass().getClassLoader());
-        cpath+=separator+extractClassPath(serverCP);
-        cpath+=separator+extractClassPath(commonCP);
+	if( serverCP!=null ) 
+	    cpath+=separator+extractClassPath(serverCP);
+	if( commonCP!=null ) 
+	    cpath+=separator+extractClassPath(commonCP);
 	return cpath;
     }
     String extractClassPath(URL urls[]){
@@ -734,6 +736,9 @@ final class JasperLiaison {
         String cpath="";
         for(int i=0; i< urls.length; i++ ) {
             URL cp = urls[i];
+	    if( cp == null ) {
+		continue;
+	    }
             File f = new File( cp.getFile());
             if (cpath.length()>0) cpath += separator;
             cpath += f;
