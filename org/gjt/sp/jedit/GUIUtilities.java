@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.34 2002/06/18 06:55:59 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.35 2002/06/22 08:32:59 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1101,23 +1101,24 @@ public class GUIUtilities
 		{
 			Dimension size = popup.getPreferredSize();
 
-			Dimension winSize = win.getSize();
+			Rectangle screenSize = win.getGraphicsConfiguration()
+				.getBounds();
 
-			if(newX + size.width > winSize.width
-				&& newX >= size.width)
+			if(newX + size.width + win.getX() > screenSize.width
+				&& newX + win.getX() >= size.width)
 			{
-				newX = (winSize.width - size.width + extraOffset);
+				newX -= (size.width + extraOffset);
 			}
 			else
 			{
 				newX += extraOffset;
 			}
 
-			if(newY + size.height > winSize.height
+			if(newY + size.height > win.getHeight()
 				&& newY >= size.height)
 			{
 				if(point)
-					newY -= (size.height + extraOffset);
+					newY = (win.getHeight() - size.height + extraOffset);
 				else
 					newY -= (size.height + extraOffset + comp.getHeight());
 			}

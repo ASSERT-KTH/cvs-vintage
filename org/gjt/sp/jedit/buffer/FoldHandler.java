@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
 /**
  * Interface for obtaining the fold level of a specified label.
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.4 2002/05/19 03:34:01 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.5 2002/06/22 08:33:00 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class FoldHandler
@@ -89,6 +89,18 @@ public abstract class FoldHandler
 		}
 
 		foldHandlers.add(handler);
+	}
+	//}}}
+
+	//{{{ unregisterFoldHandler() method
+	/**
+	 * Removes a fold handler from the list of registered handlers
+	 * @param handler The fold handler to add
+	 * @since jEdit 4.1pre2
+	 */
+	public static void unregisterFoldHandler(FoldHandler handler)
+	{
+		foldHandlers.remove(handler);
 	}
 	//}}}
 
