@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.82 2003/05/14 03:27:29 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.83 2003/05/23 21:19:52 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -698,14 +698,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			int h = clipRect.y + clipRect.height;
 			textArea.chunkCache.invalidateChunksFrom(lastInvalid + 1);
 			repaint(0,h,getWidth(),getHeight() - h);
-		}
-
-		if(Debug.KEY_DELAY_TIMER && textArea.time != 0L)
-		{
-			Log.log(Log.DEBUG,this,"Key delay: "
-				+ (System.currentTimeMillis() - textArea.time)
-				+ " ms");
-			textArea.time = 0L;
 		}
 	} //}}}
 

@@ -39,7 +39,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.37 2003/05/02 00:38:21 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.38 2003/05/23 21:19:52 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -179,6 +179,17 @@ public class VFSFileChooserDialog extends EnhancedDialog
 			{
 				getToolkit().beep();
 				return;
+			}
+
+			String bufferDir = browser.getView().getBuffer()
+				.getDirectory();
+			if(filename.equals("-"))
+				filename = bufferDir;
+			else if(filename.startsWith("-/")
+				|| filename.startsWith("-" + File.separator))
+			{
+				filename = MiscUtilities.constructPath(
+					bufferDir,filename.substring(2));
 			}
 
 			final int[] type = { -1 };
@@ -345,9 +356,9 @@ public class VFSFileChooserDialog extends EnhancedDialog
 				{
 					String path = file.path;
 					String directory = browser.getDirectory();
-					VFS vfs = VFSManager.getVFSForPath(directory);
-					String parent = vfs.getParentOfPath(path);
-					if(parent.equals(directory))
+					String parent = MiscUtilities
+						.getParentOfPath(path);
+					if(VFSBrowser.pathsEqual(parent,directory))
 						path = file.name;
 
 					filenameField.setText(path);

@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.10 2003/05/14 20:11:57 spestov Exp $
+ * @version $Id: Debug.java,v 1.11 2003/05/23 21:19:51 spestov Exp $
  */
 public class Debug
 {
@@ -88,11 +88,6 @@ public class Debug
 	 * Show time taken for each EBComponent.
 	 */
 	public static boolean EB_TIMER = false;
-
-	/**
-	 * Show time from receiving a key event and the resulting repaint.
-	 */
-	public static boolean KEY_DELAY_TIMER = false;
 
 	/**
 	 * Disable monospaced font optimization.

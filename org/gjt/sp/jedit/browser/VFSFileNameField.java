@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.11 2003/05/16 21:16:27 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.12 2003/05/23 21:19:52 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -153,7 +153,8 @@ class VFSFileNameField extends HistoryTextField
 			}
 			else if(ch == '\b')
 			{
-				if(getCaretPosition() == 0)
+				if(getSelectionStart() == 0
+					&& getSelectionEnd() == 0)
 				{
 					goToParent();
 
