@@ -1,4 +1,4 @@
-$Id: readme,v 1.5 1999/12/14 22:43:37 akv Exp $
+$Id: readme,v 1.6 1999/12/15 00:24:32 rubys Exp $
 	
 Tomcat 3.0
 
@@ -67,9 +67,6 @@ KNOWN BUGS AND ISSUES
    .jar file that contains .class files for all user-defined tags and
    the tag library descriptor in the META-INF directory -
    META-INF/taglib.tld. 
-
-5. The server can not serve static files on a Windows platform if
-   you use JDK 1.1.x. Use JDK 1.2.x instead.
 
 
 TROUBLESHOOTING
