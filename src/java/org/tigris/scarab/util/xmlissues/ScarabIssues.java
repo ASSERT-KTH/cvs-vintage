@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.13 2003/01/29 01:12:12 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.14 2003/01/30 00:02:37 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -355,7 +355,7 @@ public class ScarabIssues implements java.io.Serializable
         // check for existing module
         try
         {
-            @OM@.Module moduleOM = @OM@.ModuleManager.getInstance(module.getName(), module.getCode());
+            @OM@.Module moduleOM = @OM@.ModuleManager.getInstance(module.getDomain(), module.getName(), module.getCode());
             if (moduleOM == null)
             {
                 throw new Exception();
@@ -364,7 +364,7 @@ public class ScarabIssues implements java.io.Serializable
         }
         catch (Exception e)
         {
-            importErrors.add("Could not find Module: " + module.getName() + " Code: " + module.getCode());
+            importErrors.add("Could not find Module: " + module.getName() + " Code: " + module.getCode() + " in domain " + module.getDomain());
         }
         
         // get the instance of the issue type
@@ -498,7 +498,7 @@ public class ScarabIssues implements java.io.Serializable
         throws Exception
     {
         // get the instance of the module
-        @OM@.Module moduleOM = @OM@.ModuleManager.getInstance(module.getName(), module.getCode());
+        @OM@.Module moduleOM = @OM@.ModuleManager.getInstance(module.getDomain(), module.getName(), module.getCode());
         // get the instance of the issue type
         @OM@.IssueType issueTypeOM = @OM@.IssueType.getInstance(issue.getArtifactType());
         issueTypeOM.setName(issue.getArtifactType());
