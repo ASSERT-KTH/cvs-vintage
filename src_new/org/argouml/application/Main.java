@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.77 2003/08/27 17:50:18 linus Exp $
+// $Id: Main.java,v 1.78 2003/08/28 20:49:56 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -603,7 +603,6 @@ class PreloadClasses implements Runnable {
         c = java.lang.reflect.Modifier.class;
         c = java.util.TooManyListenersException.class;
         c = org.argouml.kernel.DelayedChangeNotify.class;
-        c = org.argouml.kernel.HistoryItemResolve.class;
         c = org.argouml.kernel.Wizard.class;
         c = org.argouml.ui.Clarifier.class;
         c = org.argouml.ui.StylePanelFig.class;
