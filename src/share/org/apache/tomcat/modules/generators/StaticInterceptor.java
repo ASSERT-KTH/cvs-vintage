@@ -62,6 +62,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.http.*;
+import org.apache.tomcat.util.buf.*;
 import java.io.*;
 import java.net.*;
 import java.text.*;
@@ -240,14 +241,6 @@ public class StaticInterceptor extends BaseInterceptor {
 final class FileHandler extends Handler  {
     int realFileNote;
     Context context;
-    /**
-     * The set of SimpleDateFormat formats to use in getDateHeader().
-     */
-    protected static final SimpleDateFormat formats[] = {
-	new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
-	new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US),
-	new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US)
-    };
 
     FileHandler() {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
@@ -291,22 +284,13 @@ final class FileHandler extends Handler  {
 	}
 
 	File file = new File( absPath );
-        String headerValue=req.getHeader("If-Modified-Since");
-        if (headerValue != null) {
+        MessageBytes imsMB=req.getMimeHeaders().getValue("If-Modified-Since");
 
-            Date date = null;
+        if (imsMB != null) {
 
-            // Parsing the HTTP Date
-            for (int i = 0; (date == null) && (i < formats.length); i++) {
-                try {
-                    date = formats[i].parse(headerValue);
-                } catch (ParseException e) {
-                    ;
-                }
-            }
+            long date = imsMB.getTime();
 
-            if ((date != null)
-                && (file.lastModified() <= (date.getTime() + 1000)) ) {
+            if ((file.lastModified() <= (date + 1000)) ) {
                 // The entity has not been modified since the date
                 // specified by the client. This is not an error case.
                 context.getContextManager().handleStatus( req, res, 304);
