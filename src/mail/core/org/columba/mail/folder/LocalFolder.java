@@ -34,7 +34,7 @@ public abstract class LocalFolder extends Folder {
 	protected int nextMessageUid;
 	protected AbstractMessage aktMessage;
 	protected DataStorageInterface dataStorage;
-	protected SearchEngineInterface searchEngine;
+	protected AbstractSearchEngine searchEngine;
 
 	public LocalFolder(FolderItem item) {
 		super(item);
@@ -200,10 +200,10 @@ public abstract class LocalFolder extends Folder {
 
 	/********************** searching/filtering ***********************/
 
-	public SearchEngineInterface getSearchEngineInstance() {
+	public AbstractSearchEngine getSearchEngineInstance() {
 		if (searchEngine == null){
-			//searchEngine = new LuceneSearchEngine(this);
-			searchEngine = new LocalSearchEngine(this);
+			searchEngine = new LuceneSearchEngine(this);
+			//searchEngine = new LocalSearchEngine(this);
 		}
 
 		return searchEngine;

@@ -28,7 +28,7 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.RemoteHeaderCache;
 import org.columba.mail.folder.RemoteSearchEngine;
-import org.columba.mail.folder.SearchEngineInterface;
+import org.columba.mail.folder.AbstractSearchEngine;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.imap.parser.IMAPFlags;
@@ -70,7 +70,7 @@ public class IMAPFolder extends RemoteFolder {
 		//setChanged(true);
 	}
 
-	public SearchEngineInterface getSearchEngineInstance() {
+	public AbstractSearchEngine getSearchEngineInstance() {
 		if (searchEngine == null)
 			searchEngine = new RemoteSearchEngine(this);
 

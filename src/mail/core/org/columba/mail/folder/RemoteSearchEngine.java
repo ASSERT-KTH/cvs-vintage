@@ -1,10 +1,10 @@
 package org.columba.mail.folder;
 
+import java.util.LinkedList;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -19,15 +19,21 @@ import org.columba.mail.message.AbstractMessage;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class RemoteSearchEngine implements SearchEngineInterface {
+public class RemoteSearchEngine extends AbstractSearchEngine {
+
+	private final static String[] caps = {
+		"Body", "Subject", "From", "To", "Cc",
+		"Bcc", "Custom Headerfield", "Date", "Flags",
+		"Priority", "Size"
+	};
+
 
 	//protected IMAPProtocol imap;
 
-	protected Folder folder;
 	protected IMAPRootFolder rootFolder;
 
 	public RemoteSearchEngine(Folder folder) {
-		this.folder = folder;
+		super(folder);
 
 		rootFolder = (IMAPRootFolder) ((IMAPFolder) folder).getRootFolder();
 		//imap = rootFolder.getImapServerConnection();
@@ -255,10 +261,8 @@ public class RemoteSearchEngine implements SearchEngineInterface {
 		return searchString.toString();
 	}
 	
-	protected String generateSearchString( Filter filter )
+	protected String generateSearchString( FilterRule rule )
 	{
-		FilterRule rule = filter.getFilterRule();
-
 		Vector ruleStringList = new Vector();
 
 		for (int i = 0; i < rule.count(); i++) {
@@ -348,31 +352,6 @@ public class RemoteSearchEngine implements SearchEngineInterface {
 		return searchString;
 	}
 	
-	public Object[] searchMessages(
-		Filter filter,
-		WorkerStatusController worker)
-		throws Exception
-		{
-			return ((IMAPFolder) folder)
-			.getStore()
-			.search(generateSearchString( filter) , ((IMAPFolder) folder).getImapPath(), worker)
-			.toArray();
-		}
-
-	public Object[] searchMessages(
-		Filter filter,
-		Object[] uids,
-		WorkerStatusController worker)
-		throws Exception {
-		
-
-		return ((IMAPFolder) folder)
-			.getStore()
-			.search(uids, generateSearchString( filter), ((IMAPFolder) folder).getImapPath(), worker)
-			.toArray();
-
-	}
-
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
 	 */
@@ -383,6 +362,35 @@ public class RemoteSearchEngine implements SearchEngineInterface {
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(java.lang.Object)
 	 */
 	public void messageRemoved(Object uid) {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractSearchEngine#getCaps()
+	 */
+	public String[] getCaps() {
+		return caps;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object)
+	 */
+	protected LinkedList queryEngine(FilterRule filter, Object[] uids, WorkerStatusController worker)
+		throws Exception {
+			return ((IMAPFolder) folder)
+				.getStore()
+				.search(uids, generateSearchString( filter), ((IMAPFolder) folder).getImapPath(), worker);
+	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
+	 */
+	protected LinkedList queryEngine(
+		FilterRule filter,
+		WorkerStatusController worker)
+		throws Exception {
+			return ((IMAPFolder) folder)
+			.getStore()
+			.search(generateSearchString( filter) , ((IMAPFolder) folder).getImapPath(), worker);
 	}
 
 }

@@ -244,8 +244,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		middleIfPanel.add(ifPanel, BorderLayout.NORTH);
 
 		criteriaList =
-			new CriteriaList(
-				destFolder.getFilterPluginHandler(),
+			new CriteriaList(				
 				destFolder.getFilter());
 		criteriaList.setPreferredSize(new Dimension(500, 100));
 		middleIfPanel.add(criteriaList, BorderLayout.CENTER);

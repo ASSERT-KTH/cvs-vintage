@@ -29,7 +29,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.LocalSearchEngine;
+import org.columba.mail.folder.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.AbstractMessage;
@@ -199,7 +199,7 @@ public class VirtualFolder extends Folder {
 
 	}
 
-	public LocalSearchEngine getSearchEngine() {
+	public DefaultSearchEngine getSearchEngine() {
 		return null;
 	}
 

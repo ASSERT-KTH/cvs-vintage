@@ -8,8 +8,8 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.LocalSearchEngine;
-import org.columba.mail.folder.SearchEngineInterface;
+import org.columba.mail.folder.DefaultSearchEngine;
+import org.columba.mail.folder.AbstractSearchEngine;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -34,7 +34,7 @@ public class TempFolder extends Folder {
 	protected int nextUid;
 	protected AbstractMessage aktMessage;
 	protected DataStorageInterface dataStorage;
-	protected LocalSearchEngine searchEngine;
+	protected DefaultSearchEngine searchEngine;
 
 	/**
 	 * Constructor for TempFolder.
@@ -254,9 +254,9 @@ public class TempFolder extends Folder {
 		return message;
 	}
 
-	public SearchEngineInterface getSearchEngineInstance() {
+	public AbstractSearchEngine getSearchEngineInstance() {
 		if (searchEngine == null)
-			searchEngine = new LocalSearchEngine(this);
+			searchEngine = new DefaultSearchEngine(this);
 
 		return searchEngine;
 	}

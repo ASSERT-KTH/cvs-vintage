@@ -90,7 +90,7 @@ public class HeaderfieldFilter extends AbstractFilter{
 		switch (condition) {
 			case FilterCriteria.CONTAINS :
 				{
-					if (headerItem.indexOf(pattern.toLowerCase()) != -1)
+					if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) != -1)
 						result = true;
 
 					break;
@@ -98,7 +98,7 @@ public class HeaderfieldFilter extends AbstractFilter{
 				}
 			case FilterCriteria.CONTAINS_NOT :
 				{
-					if (headerItem.indexOf(pattern.toLowerCase()) == -1)
+					if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) == -1)
 						result = true;
 
 					break;
@@ -121,7 +121,7 @@ public class HeaderfieldFilter extends AbstractFilter{
 				}
 			case FilterCriteria.BEGINS_WITH :
 				{
-					if (headerItem.startsWith(pattern.toLowerCase()))
+					if (headerItem.toLowerCase().startsWith(pattern.toLowerCase()))
 						result = true;
 
 					break;
@@ -129,7 +129,7 @@ public class HeaderfieldFilter extends AbstractFilter{
 				}
 			case FilterCriteria.ENDS_WITH :
 				{
-					if (headerItem.endsWith(pattern.toLowerCase()))
+					if (headerItem.toLowerCase().endsWith(pattern.toLowerCase()))
 						result = true;
 
 					break;

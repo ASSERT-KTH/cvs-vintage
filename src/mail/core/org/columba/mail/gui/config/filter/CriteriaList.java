@@ -52,9 +52,9 @@ public class CriteriaList extends JPanel implements ActionListener {
 	private JPanel panel;
 	private AbstractPluginHandler pluginHandler;
 
-	public CriteriaList(AbstractPluginHandler pluginHandler, Filter filter) {
+	public CriteriaList(Filter filter) {
 		super();
-		this.pluginHandler = pluginHandler;
+		pluginHandler = MainInterface.pluginManager.getHandler("filter");
 
 		this.config = MainInterface.config;
 		this.filter = filter;

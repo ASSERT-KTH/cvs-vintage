@@ -880,15 +880,15 @@ public class HeaderTableActionListener
 		  JPopupMenu menu = new JPopupMenu();
 		  for ( int i=0; i< v.count(); i++ )
 		  {
-		      String c = v.getName(i);
-		      boolean b = v.getEnabled(i);
-		        //System.out.println("name: "+c+" boolean: "+b );
+			  String c = v.getName(i);
+			  boolean b = v.getEnabled(i);
+				//System.out.println("name: "+c+" boolean: "+b );
 		
-		      JCheckBoxMenuItem item = new JCheckBoxMenuItem( c );
-		      item.setEnabled( false );
-		      if ( b ) item.setSelected( true );
+			  JCheckBoxMenuItem item = new JCheckBoxMenuItem( c );
+			  item.setEnabled( false );
+			  if ( b ) item.setSelected( true );
 		
-		      menu.add( item );
+			  menu.add( item );
 		  }
 		
 		  menu.show( button, 0, 0);
@@ -992,10 +992,10 @@ public class HeaderTableActionListener
 			
 			if ( hasFocus() )
 			{
-			    int rowCount = getTable().getRowCount();
-			    getTable().setRowSelectionInterval( 0, rowCount-1 );
+				int rowCount = getTable().getRowCount();
+				getTable().setRowSelectionInterval( 0, rowCount-1 );
 			
-			    changeMessageActions();
+				changeMessageActions();
 			}
 			
 		
@@ -1426,7 +1426,7 @@ public class HeaderTableActionListener
 		filter.setName(headerItem + ": " + pattern);
 
 		FilterDialog dialog =
-			new FilterDialog(folder.getFilterPluginHandler(), filter);
+			new FilterDialog(filter);
 
 	}
 

@@ -24,7 +24,7 @@ public class LocalFilterPluginHandler extends AbstractFilterPluginHandler {
 	 * @param config
 	 */
 	public LocalFilterPluginHandler() {
-		super("filter_local", "org/columba/mail/filter/filter_local.xml", "filterlist");
+		super("filter", "org/columba/mail/filter/filter.xml", "filterlist");
 
 		
 	}

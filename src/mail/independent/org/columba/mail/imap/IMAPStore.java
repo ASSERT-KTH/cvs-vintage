@@ -3,6 +3,7 @@ package org.columba.mail.imap;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -1093,13 +1094,13 @@ public class IMAPStore {
 
 	}
 
-	public Vector search(
+	public LinkedList search(
 		Object[] uids,
 		String searchString,
 		String path,
 		WorkerStatusController worker)
 		throws Exception {
-		Vector result = new Vector();
+		LinkedList result = new LinkedList();
 
 		isLogin(worker);
 
@@ -1133,12 +1134,12 @@ public class IMAPStore {
 		return null;
 	}
 
-	public Vector search(
+	public LinkedList search(
 		String searchString,
 		String path,
 		WorkerStatusController worker)
 		throws Exception {
-		Vector result = new Vector();
+		LinkedList result = new LinkedList();
 
 		isLogin(worker);
 

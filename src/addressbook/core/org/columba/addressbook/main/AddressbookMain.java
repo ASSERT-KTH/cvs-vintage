@@ -17,6 +17,7 @@ package org.columba.addressbook.main;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.frame.AddressbookView;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.command.TaskManager;
 import org.columba.core.main.MainInterface;
@@ -33,6 +34,7 @@ public class AddressbookMain {
 
 	public static void main(String[] args) {
 		new AddressbookResourceLoader();
+		MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
 		
 		MainInterface.addressbookInterface.taskManager = new TaskManager();
 		MainInterface.addressbookInterface.treeModel = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );

@@ -359,7 +359,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 
 		if (parent != null) {
 
-			FilterDialog dialog = new FilterDialog(folder.getFilterPluginHandler(), parent);
+			FilterDialog dialog = new FilterDialog( parent);
 
 			/*
 			java.awt.Dimension dim = new Dimension( 400,400 );

@@ -1,5 +1,7 @@
 package org.columba.mail.plugin;
 
+import java.io.File;
+
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -78,6 +80,7 @@ public class AbstractFilterPluginHandler extends AbstractPluginHandler {
 
 		return getPlugin(name, className, args);
 	}
+
 
 	
 

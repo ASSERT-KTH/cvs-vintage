@@ -38,6 +38,12 @@ public class FilterRule extends DefaultItem {
 		list = new Vector();
 
 	}
+	
+	public FilterRule() {
+		super(new XmlElement());
+		
+		list = new Vector();
+	}
 
 	public void addEmptyCriteria() {
 		XmlElement criteria = new XmlElement("criteria");
@@ -53,6 +59,10 @@ public class FilterRule extends DefaultItem {
 		
 		list.add(criteria);
 		*/
+	}
+
+	public void add(FilterCriteria criteria) {
+		getRoot().addElement(criteria.getRoot());
 	}
 
 	public void remove(int index) {

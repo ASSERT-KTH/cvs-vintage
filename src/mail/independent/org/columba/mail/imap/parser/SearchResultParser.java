@@ -1,7 +1,7 @@
 package org.columba.mail.imap.parser;
 
+import java.util.LinkedList;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import org.columba.mail.imap.IMAPResponse;
 
@@ -22,8 +22,8 @@ public class SearchResultParser {
 		super();
 	}
 
-	public static Vector parse(IMAPResponse[] responses) {
-		Vector v = new Vector();
+	public static LinkedList parse(IMAPResponse[] responses) {
+		LinkedList v = new LinkedList();
 
 		for (int i = 0; i < responses.length - 1; i++) {
 			if (responses[i] == null)

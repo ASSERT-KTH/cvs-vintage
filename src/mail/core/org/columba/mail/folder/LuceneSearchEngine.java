@@ -3,14 +3,16 @@ package org.columba.mail.folder;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -28,7 +30,8 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownPluginInterface;
-import org.columba.mail.filter.Filter;
+import org.columba.core.util.ListTools;
+import org.columba.core.util.Lock;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.message.AbstractMessage;
@@ -44,29 +47,46 @@ import org.columba.mail.parser.Rfc822Parser;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPluginInterface {
+public class LuceneSearchEngine
+	extends AbstractSearchEngine
+	implements ShutdownPluginInterface {
 
-	Folder folder;
+	private final static int OPTIMIZE_AFTER_N_OPERATIONS = 30;
+
 	IndexWriter indexWriter;
 	IndexReader indexReader;
 	File indexDir;
 	Directory luceneIndexDir;
 
+	LinkedList deleted;
+
+	int operationCounter;
+
 	Analyzer analyzer;
+
+	Lock indexLock;
+	
+	long lastModified;
+
+	private final static String[] caps =
+		{ "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield" };
 
 	/**
 	 * Constructor for LuceneSearchEngine.
 	 */
 	public LuceneSearchEngine(Folder folder) {
-		this.folder = folder;
+		super(folder);
 
 		MainInterface.shutdownManager.register(this);
 
-		analyzer = new StandardAnalyzer();
+		analyzer = new CAnalyzer();
+
+		deleted = new LinkedList();
+		operationCounter = 0;
 
 		File folderDir = folder.getDirectoryFile();
 
-		indexDir = new File(folderDir,".index");
+		indexDir = new File(folderDir, ".index");
 
 		try {
 			if (!indexDir.exists()) {
@@ -83,25 +103,26 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 				JOptionPane.ERROR_MESSAGE);
 		}
 
-			
-			try {
-				// If there is an existing lock then it must be from a
-				// previous crash -> remove it!
-				luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
-				if( IndexReader.isLocked(luceneIndexDir))
-					IndexReader.unlock(luceneIndexDir);
-			} catch (IOException e) {
-				// Remove of lock didn't work -> delete by hand
-				File commitLock = new File(indexDir,"commit.lock");
-				if( commitLock.exists()) commitLock.delete();
+		try {
+			// If there is an existing lock then it must be from a
+			// previous crash -> remove it!
+			luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
+			if (IndexReader.isLocked(luceneIndexDir))
+				IndexReader.unlock(luceneIndexDir);
+		} catch (IOException e) {
+			// Remove of lock didn't work -> delete by hand
+			File commitLock = new File(indexDir, "commit.lock");
+			if (commitLock.exists())
+				commitLock.delete();
 
-				File writeLock = new File(indexDir,"write.lock");
-				if( writeLock.exists()) writeLock.delete();
-			}
-				
+			File writeLock = new File(indexDir, "write.lock");
+			if (writeLock.exists())
+				writeLock.delete();
+		}
 
+		indexLock = new Lock();
 	}
-	
+
 	protected IndexWriter getWriter() {
 		try {
 			if (indexReader != null) {
@@ -123,6 +144,7 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 	protected IndexReader getReader() {
 		try {
 			if (indexWriter != null) {
+				indexWriter.optimize();
 				indexWriter.close();
 				indexWriter = null;
 			}
@@ -131,10 +153,24 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 				indexReader = IndexReader.open(indexDir);
 			}
 
+/*			
+			if( indexReader==null) {
+				lastModified = IndexReader.lastModified(indexDir);
+				indexReader = IndexReader.open(indexDir);				
+			} else {
+				if(IndexReader.lastModified(indexDir)>lastModified ) {					
+					indexReader.close();
+					indexReader = IndexReader.open(indexDir);				
+					lastModified = IndexReader.lastModified(indexDir);
+				}
+			}
+*/
+			
+			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return indexReader;
 	}
 
@@ -142,7 +178,6 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 		FilterCriteria criteria;
 		String field;
 		int mode;
-
 
 		Query result = new BooleanQuery();
 		Query subresult = null;
@@ -165,34 +200,34 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 			criteria = filterRule.get(i);
 			mode = criteria.getCriteria();
 			field = criteria.getHeaderItemString().toLowerCase();
-			
-			TokenStream tokenStream = analyzer.tokenStream(field,new StringReader(criteria.getPattern()));
-			
+
+			TokenStream tokenStream =
+				analyzer.tokenStream(
+					field,
+					new StringReader(criteria.getPattern()));
+
 			termQuery = new BooleanQuery();
 
 			try {
 				Token token = tokenStream.next();
-				
-				while( token != null) {
-					termQuery.add(new TermQuery(new Term(field,token.termText())),
-					true,
-					false);
-					
+
+				while (token != null) {
+					termQuery.add(
+						new TermQuery(new Term(field, token.termText())),
+						true,
+						false);
+
 					token = tokenStream.next();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 
 			switch (mode) {
 				case FilterCriteria.CONTAINS :
 					{
 						subresult = new BooleanQuery();
-						((BooleanQuery) subresult).add(
-							termQuery,
-							true,
-							false);
+						((BooleanQuery) subresult).add(termQuery, true, false);
 						break;
 					}
 
@@ -200,13 +235,10 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 					{
 						subresult = new BooleanQuery();
 						((BooleanQuery) subresult).add(
-							new TermQuery(new Term("qall", "on")),
+							new TermQuery(new Term("qall", "hit")),
 							true,
 							false);
-						((BooleanQuery) subresult).add(
-							termQuery,
-							false,
-							true);
+						((BooleanQuery) subresult).add(termQuery, false, true);
 						break;
 					}
 			}
@@ -217,49 +249,36 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 		return result;
 	}
 
-	/**
-	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public Object[] searchMessages(
-		Filter filter,
-		Object[] uids,
+	protected LinkedList queryEngine(
+		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
+		Query query = getLuceneQuery(filter, analyzer);
 
-		Object[] result = queryLucene(filter);
-
-		return result;
-	}
-
-	private Object[] queryLucene(Filter filter) throws IOException {
-		if (indexWriter != null) {
-			indexWriter.optimize();
-			indexWriter.close();
-			indexWriter = null;
-		}
-
-		Query query = getLuceneQuery(filter.getFilterRule(), analyzer);
-
-		Object[] result;
+		indexLock.tryToGetLock(null);
 		Searcher searcher = new IndexSearcher(getReader());
 
 		Hits hits = searcher.search(query);
+		indexLock.release();
 
-		result = new Object[hits.length()];
-		for (int i = 0; i < hits.length(); i++)
-			result[i] = new Integer(hits.doc(i).getField("uid").stringValue());
+		LinkedList result = new LinkedList();
+		for (int i = 0; i < hits.length(); i++) {
+			result.add(new Integer(hits.doc(i).getField("uid").stringValue()));
+		}
+
+		ListTools.substract(result, deleted);
+
 		return result;
 	}
 
-	/**
-	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
-	 */
-	public Object[] searchMessages(
-		Filter filter,
+	protected LinkedList queryEngine(
+		FilterRule filter,
+		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
+		LinkedList result = queryEngine(filter, worker);
 
-		Object[] result = queryLucene(filter);
+		ListTools.intersect(result, Arrays.asList(uids));
 		return result;
 	}
 
@@ -272,7 +291,7 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 
 		messageDoc.add(Field.Keyword("uid", message.getUID().toString()));
 
-		messageDoc.add(Field.UnStored("qall", "on"));
+		messageDoc.add(Field.Keyword("qall", "hit"));
 
 		if (message.getMimePartTree() == null) {
 			String source = message.getSource();
@@ -296,7 +315,10 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 			messageDoc.add(Field.UnStored("body", body.getBody()));
 
 		try {
+			indexLock.tryToGetLock(null);
 			getWriter().addDocument(messageDoc);
+			incOperationCounter();
+			indexLock.release();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -310,32 +332,97 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(java.lang.Object)
 	 */
 	public void messageRemoved(Object uid) {
+		deleted.add(uid);
+		
+		/*
 		try {
+			indexLock.tryToGetLock(null);
 			getReader().delete(new Term("uid", uid.toString()));
+			indexLock.release();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 				null,
 				e.getMessage(),
 				"Error while removing Message from Lucene Index",
 				JOptionPane.ERROR_MESSAGE);
+		}*/
+		
+	}
+
+	private void commitDeletion() {
+		if( deleted.size() == 0) return;
+		
+		try {
+			if( indexWriter != null) {
+				indexWriter.close();
+				indexWriter = null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
+		ListIterator it = deleted.listIterator();
+		
+		while( it.hasNext() ) {		
+			try {
+				getReader().delete(new Term("uid", it.next().toString()));
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(
+					null,
+					e.getMessage(),
+					"Error while removing Message from Lucene Index",
+					JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+		deleted.clear();
+	}
+
+	private void incOperationCounter() {
+		operationCounter++;
+		if( operationCounter > OPTIMIZE_AFTER_N_OPERATIONS ) {
+			
+			commitDeletion();
+			try {
+				getWriter().optimize();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(
+					null,
+					e.getMessage(),
+					"Error while optimizing Lucene Index",
+					JOptionPane.ERROR_MESSAGE);				
+			}
+			operationCounter = 0; 
+		}
+		
 	}
 
 	/**
 	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
 	 */
-	public void shutdown() {		
+	public void shutdown() {
+		
+		commitDeletion();
 		try {
-			if( indexWriter != null) {
+			if (indexWriter != null) {
+				indexWriter.optimize();
 				indexWriter.close();
 			}
-			
-			if( indexReader != null){
+
+			if (indexReader != null) {
 				indexReader.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Returns the caps.
+	 * @return String[]
+	 */
+	public String[] getCaps() {
+		return caps;
 	}
 
 }

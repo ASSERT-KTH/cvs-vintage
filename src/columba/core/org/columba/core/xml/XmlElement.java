@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Log: XmlElement.java,v $
+// Revision 1.3  2003/01/31 10:27:46  tstich
+// [intern]Refined SearchEngine structure, Lucene supported as Standard SearchEngine
+//
 // Revision 1.2  2003/01/06 20:47:50  fdietz
 // [intern]added default values to config-methods, added enable_threaded_view property for folders
 //
@@ -66,6 +69,7 @@ public class XmlElement {
 	 */
 	public XmlElement() {
 		SubElements = new Vector();
+		this.Attributes = new Hashtable(10);
 	}
 	/**
 	 * **FIXME** This function needs documentation

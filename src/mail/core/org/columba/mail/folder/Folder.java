@@ -23,8 +23,6 @@ import javax.swing.tree.TreeNode;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
@@ -36,7 +34,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import org.columba.mail.plugin.LocalFilterPluginHandler;
 
 /**
  *    Abstract Basic Folder class. Is subclasses by every folder
@@ -243,13 +240,6 @@ public abstract class Folder extends FolderTreeNode {
 		} else {
 			return false;
 		}
-	}
-
-	public AbstractPluginHandler getFilterPluginHandler() {
-		LocalFilterPluginHandler pluginHandler =
-			(LocalFilterPluginHandler) MainInterface.pluginManager.getHandler(
-				"filter_local");
-		return pluginHandler;
 	}
 
 	public abstract void expungeFolder(
