@@ -74,7 +74,7 @@ import java.util.*;
 public class Container {
 
     private Context context;
-    private ServletLoader servletLoader;
+    private ServletClassLoader servletLoader;
     private Hashtable servlets = new Hashtable();
     private Hashtable prefixMappedServlets = new Hashtable();
     private Hashtable extensionMappedServlets = new Hashtable();
@@ -92,9 +92,9 @@ public class Container {
 	return context;
     }
 
-    ServletLoader getLoader() {
+    ServletClassLoader getLoader() {
 	if(servletLoader == null) {
-	    servletLoader = new ServletLoader(this);
+	    servletLoader = new ServletClassLoader(this);
 	}
 
 	return servletLoader;
