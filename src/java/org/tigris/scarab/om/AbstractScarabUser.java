@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.45 2002/07/19 00:07:25 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.46 2002/07/23 21:58:43 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1216,6 +1216,7 @@ public abstract class AbstractScarabUser
                 rmua = getNewRModuleUserAttribute(attribute, module, issueType);
             }
             rmua.setOrder(i++);
+            rmua.setUserId(getUserId());
             rmua.save();
         }
     }
