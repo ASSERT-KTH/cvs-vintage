@@ -8,7 +8,6 @@ package org.columba.mail.gui.messageframe;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -73,6 +72,19 @@ public class MessageFrameController extends MailFrameController {
 		return view;
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
+	 */
+	public void close() {
+		super.close();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#saveAndClose()
+	 */
+	public void saveAndClose() {
+
+		super.saveAndClose();
+	}
 
 }

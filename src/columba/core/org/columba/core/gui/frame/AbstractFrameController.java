@@ -113,6 +113,8 @@ public abstract class AbstractFrameController {
 
 		view.saveWindowPosition();
 
+		view.setVisible(false);
+		
 		FrameModel.close(this);
 		
 		//FrameModel.close(this);
