@@ -62,6 +62,7 @@ import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class is responsible for building a list of Module/IssueTypes based
@@ -69,7 +70,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.8 2002/10/23 21:28:17 jon Exp $
+ * @version $Id: ModuleQuery.java,v 1.9 2003/01/08 22:39:07 jmcnally Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -143,6 +144,7 @@ public class ModuleQuery extends RequireLoginFirstAction
             catch (java.lang.IllegalArgumentException e)
             {
                 scarabR.setAlertMessage(l10n.get("NoMatchingIssues"));
+                Log.get().debug("", e);
             }
         }
         else if ("all".equals(queryType) || "my".equals(queryType)) 
@@ -170,15 +172,12 @@ public class ModuleQuery extends RequireLoginFirstAction
             catch (java.lang.IllegalArgumentException e)
             {
                 // Swallow this exception.
+                Log.get().debug("", e);
             }
             if (searchResults != null && searchResults.size() > 0)
             {
                 context.put("issueList", searchResults);
                 setTarget(data, "IssueList.vm");
-            }
-            else 
-            {
-                scarabR.setAlertMessage(l10n.get("NoMatchingIssues"));
             }
         }
         else
