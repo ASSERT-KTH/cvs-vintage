@@ -19,12 +19,14 @@ import java.util.Iterator;
 
 import java.security.Principal;
 import javax.security.auth.Subject;
+import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import com.sun.security.auth.login.ConfigFile;
 
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -75,6 +77,12 @@ public class JaasSecurityManager implements EJBSecurityManager, RealmMapping {
      * Maps original principal to Set of roles for the bean.
      */
     private final HashMap _roles = new HashMap();
+
+    static {
+        // by default all login modules are loaded via the system classloader
+        // here is a non-100%-pure-Java workaround
+        Configuration.setConfiguration(new ConfigFile());
+    }
 
     /**
      * @param smName The name of the security manager
@@ -169,6 +177,7 @@ public class JaasSecurityManager implements EJBSecurityManager, RealmMapping {
             _roles.put(principal, subj.getPublicCredentials());
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         } 
     }    

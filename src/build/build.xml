@@ -137,7 +137,7 @@
     <jar jarfile="${build.lib.dir}/jboss-jaas.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss.mf"
-         includes="org/jboss/security/SimpleServerLoginModule.class"
+         includes="org/jboss/security/*ServerLoginModule.class"
     />
 
     <mkdir dir="${build.dir}/client"/>
@@ -207,8 +207,8 @@
 
      <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
      <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
-     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib" includes="xml.jar,jaas.jar"/>
-     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="xml.jar,jaas.jar"/>
+     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib" includes="xml.jar,jaas.jar,jdbc2_0-stdext.jar"/>
+     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="xml.jar,jaas.jar,jdbc2_0-stdext.jar"/>
      <copydir src="${build.bin.dir}" dest="${dist.dir}/bin"/>
      <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
      <copydir src="${build.lib.dir}" dest="${dist.dir}/lib"/>

@@ -19,8 +19,6 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.spi.LoginModule;
-import org.jboss.system.SecurityAssociation;
-import org.jboss.system.SimplePrincipal;
 
 
 /**
