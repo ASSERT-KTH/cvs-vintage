@@ -101,6 +101,8 @@
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
 #set ($module = $attrValue.Issue.Module)
+#set ($values = $attrInput.get($optionFieldName).Value)
+
 <select name="$attrInput.get($optionFieldName).Key"
 #if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
@@ -108,10 +110,20 @@
   #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
-    #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
-      #set ($selected = " selected")
+    #if ($values)   
+       #if ($multiple.toString().equals("true"))
+         #foreach ($value in $values)
+            #if ($value.equals($option.OptionId))
+               #set ($selected="selected")
+            #end
+         #end
+       #else
+         #if ($values.equals($option.OptionId))
+           #set ($selected="selected")
+          #end
+       #end
     #end
-    <option$selected value="$option.OptionId">
+    <option $selected value="$option.OptionId">
 #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
           $option.DisplayValue</option>
   #end
