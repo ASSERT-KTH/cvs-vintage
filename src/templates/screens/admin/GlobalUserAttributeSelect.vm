@@ -12,6 +12,7 @@
 #if ($canEditDomain)
     <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewuserattribute"/>&#160;
 #end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel"/>
 </div>
 #end
 
@@ -19,6 +20,7 @@
 
 <form action="$link.setPage("admin,GlobalUserAttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
+<input type="hidden" name="_session_access_counter" value="$data.User.getTemp("_session_access_counter")" />
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />

@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.62 2003/03/28 02:08:17 jon Exp $
+  * @version $Id: Attribute.java,v 1.63 2003/04/01 02:50:43 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -706,9 +706,9 @@ public class Attribute
         return newAttribute;
     }
             
-    /* *
+    /* 
      * Delete mappings with all modules and issue types.
-     * /
+     */
     public void deleteModuleMappings(ScarabUser user)
         throws Exception
     {
@@ -723,5 +723,22 @@ public class Attribute
         }
         ScarabCache.clear();
     }
-    */
+
+    /* 
+     * Delete mappings with global issue types.
+     */
+    public void deleteIssueTypeMappings(ScarabUser user)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID, 
+                 getAttributeId());
+        List rias = RIssueTypeAttributePeer.doSelect(crit);
+        for (int i=0; i<rias.size(); i++)
+        {
+            RIssueTypeAttribute ria = (RIssueTypeAttribute)rias.get(i);
+            ria.delete(user);
+        }
+        ScarabCache.clear();
+    }
 }

@@ -45,6 +45,7 @@
 </td>
 #end
 
+#if ($currentIssueType)
 <td>
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
@@ -57,12 +58,10 @@
         <option value="IssueList.vm">&#160;$l10n.MostRecent</option>
     #end
   
-    #if ($currentIssueType)
       #set ($defaultQuery = $user.getDefaultQuery($module, $currentIssueType))
       #if ($defaultQuery)
         <option value="$defaultQuery.QueryId" >&#160;Default query</option>
       #end 
-    #end
 
 #set ($privateQueries = $scarabR.PrivateQueries)
 #set ($globalQueries = $scarabR.GlobalQueries)
@@ -87,6 +86,7 @@
   <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
 </form>
   </td>
+#end
 
 #if ($currentIssueType)
   ## Add Template list to the top bar so that using a template will be easier

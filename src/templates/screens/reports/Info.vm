@@ -17,16 +17,7 @@
 <form method="get" action="$link.setPage("reports,Info.vm")">
 <input type="hidden" name="action" value="ConfigureReport"/>
 
-#if ($report.isReadyForCalculation())
-<div class="functnbar">
-  <input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" />
- #if ($reportIsEditable)
-  &#160;<input type="submit" value="$l10n.SaveReport" 
-    name="eventSubmit_doSavereport" />
- #end
-</div>
-#end						
+#reportFunctionBar("functnbar" $report)
 
 $data.User.setCurrentMITList($report.getMITList())
 #showMITList($l10n.MITListReportHeading $data.User true)
@@ -65,16 +56,7 @@ $data.User.setCurrentMITList($report.getMITList())
   <input type="submit" value="$l10n.Update" name="eventSubmit_doSaveInfo" />
 </div>
 
-#if ($report.isReadyForCalculation())
-<div class="functnbar2">
-  <input type="submit" value="$l10n.RecalculateOutput" 
-    name="eventSubmit_doGenerateReport" />
- #if ($reportIsEditable)
-  &#160;<input type="submit" value="$l10n.SaveReport" 
-    name="eventSubmit_doSavereport" />
- #end
-</div>
-#end						
+#reportFunctionBar("functnbar2" $report)
 
 $intake.declareGroups()
 </form>

@@ -1,3 +1,16 @@
+#macro ( reportFunctionBar $cssClass $report )
+#if ($report.isReadyForCalculation())
+<div class="$cssClass">
+    <input type="submit" value="$l10n.RecalculateOutput" 
+      name="eventSubmit_doGenerateReport" />
+ #if ($report.isSavable($data.User))
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
+#end						
+#end
+
 #macro (reportScopeSelectBox $reportGroup)
  #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
   <select name="$reportGroup.ScopeId.Key">

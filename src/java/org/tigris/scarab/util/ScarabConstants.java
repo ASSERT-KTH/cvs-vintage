@@ -50,7 +50,7 @@ package org.tigris.scarab.util;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.52 2003/03/25 16:57:55 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.53 2003/04/01 02:50:44 jon Exp $
  */
 public interface ScarabConstants
 {
@@ -224,4 +224,7 @@ public interface ScarabConstants
      * The default base for resolving ResourceBundles.
      */
     String DEFAULT_BUNDLE_NAME = "ScarabBundle";
+
+    Integer INTEGER_0 = new Integer(0);
+
 }    

@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.32 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: AttributeOption.java,v 1.33 2003/04/01 02:50:43 jon Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -448,6 +448,18 @@ public class AttributeOption
         Criteria crit = new Criteria();
         crit.add(RModuleOptionPeer.OPTION_ID, getOptionId());
         RModuleOptionPeer.doDelete(crit);
+        ScarabCache.clear();
+    }
+
+    /**
+     * Delete mappings with global issue types.
+     */
+    public void deleteIssueTypeMappings(ScarabUser user)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RIssueTypeOptionPeer.OPTION_ID, getOptionId());
+        RIssueTypeOptionPeer.doDelete(crit);
         ScarabCache.clear();
     }
 

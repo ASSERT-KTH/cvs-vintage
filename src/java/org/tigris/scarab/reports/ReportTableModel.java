@@ -53,17 +53,19 @@ import java.util.List;
 import com.workingdogs.village.Record;
 
 // Turbine classes
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.ActivitySetPeer;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.util.TableModel;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 public class ReportTableModel 
     extends TableModel
@@ -103,15 +105,16 @@ public class ReportTableModel
     private List rowHeadings;
     private List columnHeadings;
     private Date date;
-    private NumberKey moduleId;
-    private NumberKey issueTypeId;
+    private Integer moduleId;
+    private Integer issueTypeId;
     private MITList mitList;
 
     private int[] colspan;
     private int[] rowspan;
+    private boolean isSearchAllowed;
 
-    ReportTableModel(ReportBridge report, Date date)
-        throws TorqueException
+    ReportTableModel(ReportBridge report, Date date, ScarabUser searcher)
+        throws Exception
     {
         this.reportDefn = report.getReportDefinition();
         ReportAxis axis = null;
@@ -140,14 +143,28 @@ public class ReportTableModel
         if (xmits.size() == 1) 
         {
             ModuleIssueType mit = (ModuleIssueType)xmits.get(0);
-            this.moduleId = new NumberKey(mit.getModuleId().toString());
-            this.issueTypeId = new NumberKey(mit.getIssueTypeId().toString());
+            this.moduleId = mit.getModuleId();
+            this.issueTypeId = mit.getIssueTypeId();
+            isSearchAllowed = searcher.hasPermission(
+                ScarabSecurity.ISSUE__SEARCH, ModuleManager.getInstance(moduleId)); 
         }
         else 
         {
-            this.mitList = report.getMITList();
+            String[] perms = {ScarabSecurity.ISSUE__SEARCH};
+            MITList searchableList = report.getMITList()
+                .getPermittedSublist(perms, searcher);
+            isSearchAllowed = searchableList.size() > 0;
+            if (searchableList.size() == 1) 
+            {
+                MITListItem item = searchableList.getFirstItem();
+                this.moduleId = item.getModuleId();
+                this.issueTypeId = item.getIssueTypeId();
+            }
+            else 
+            {
+                this.mitList = searchableList;
+            }            
         }
-        
     }
 
     /**
@@ -446,19 +463,24 @@ public class ReportTableModel
     private int getCountAndCleanUp(Criteria crit)
         throws Exception
     {
-        if (isXMITSearch())
+        int result = 0;
+        if (isSearchAllowed) 
         {
-            mitList.addToCriteria(crit);
-        }
-        else 
-        {
-            crit.add(IssuePeer.MODULE_ID, moduleId);
-            crit.add(IssuePeer.TYPE_ID, issueTypeId);
-        }
-
-        crit.add(IssuePeer.DELETED, false);
-        return ((Record)ActivityPeer.doSelectVillageRecords(crit).get(0))
+            if (isXMITSearch())
+            {
+                mitList.addToCriteria(crit);
+            }
+            else 
+            {
+                crit.add(IssuePeer.MODULE_ID, moduleId);
+                crit.add(IssuePeer.TYPE_ID, issueTypeId);
+            }
+            crit.add(IssuePeer.DELETED, false);
+            result = ((Record)ActivityPeer.doSelectVillageRecords(crit).get(0))
             .getValue(1).asInt();
+        }
+        
+        return result;
     }
 
     public boolean isOption(Object obj)

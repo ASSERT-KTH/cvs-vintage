@@ -26,6 +26,7 @@
 <div class="app" id="globalAttributeSelect">
 
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
+<input type="hidden" name="_session_access_counter" value="$data.User.getTemp("_session_access_counter")" />
 <input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="groupid" value="$groupId" />

@@ -77,12 +77,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.workflow.WorkflowFactory;
+import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.Log;
 
 /**
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.48 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.49 2003/04/01 02:50:43 jon Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -345,9 +347,11 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     {
                         ag.deleteAttribute(attribute, user, module);
                     }
-                    catch (Exception e) 
+                    catch (ScarabException e) 
                     {
                         scarabR.setAlertMessage(e.getMessage());
+                        Log.get().warn(
+                            "This is an application error, if it is not permission related.", e);
                     }
                 }
             }

@@ -47,6 +47,7 @@ package org.tigris.scarab.pipeline;
  */ 
 
 import java.util.Map;
+import java.util.List;
 import java.util.HashMap;
 import java.io.IOException;
 import org.apache.turbine.RunData;
@@ -67,12 +68,13 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
+import org.tigris.scarab.om.RModuleIssueType;
 
 /**
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.16 2003/03/28 02:08:17 jon Exp $
+ * @version $Id: FreshenUserValve.java,v 1.17 2003/04/01 02:50:43 jon Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -171,7 +173,7 @@ public class FreshenUserValve
     }
 
     private void setCurrentModule(ScarabUser user, RunData data)
-        throws TurbineException
+        throws TurbineException, Exception
     {
         Module module = null;
         ParameterParser parameters = data.getParameters();
@@ -203,9 +205,41 @@ public class FreshenUserValve
                     ", but did not contain enough info to create issue.");
             }
         }
+        // If they have just changed modules,
+        // Set the current issue type to the new module's first active issue type.
+        if (user.getCurrentModule() != module)
+        {
+            IssueType issueType = null;
+            List navIssueTypes = module.getNavIssueTypes();
+            if (navIssueTypes.size() > 0)
+            {
+                issueType = (IssueType)navIssueTypes.get(0);
+            }
+            else 
+            {
+                List activeIssueTypes = module.getIssueTypes(true);
+                if (activeIssueTypes.size() > 0)
+                {
+                    issueType = (IssueType)activeIssueTypes.get(0);
+                }
+            }
+            user.setCurrentIssueType(issueType);
+            if (issueType != null)
+            {
+                 parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
+                            issueType.getQueryKey());
+            }
+            else
+            {
+                 parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, "");
+            }
+        }
         user.setCurrentModule(module);
     }
 
+    // FIXME! the setCurrentModule method now contains code setting the 
+    // issue type.  So the separation is now fuzzy, we should probably combine
+    // the methods to avoid confusion
     private void setCurrentIssueType(ScarabUser user, RunData data)
         throws TurbineException
     {
@@ -244,8 +278,12 @@ public class FreshenUserValve
         boolean isActive = false;
         try 
         {
-            isActive = issueType != null && user.getCurrentModule()
-                .getRModuleIssueType(issueType).getActive();
+            if (issueType != null) 
+            {
+                RModuleIssueType rmit = user.getCurrentModule()
+                    .getRModuleIssueType(issueType);
+                isActive = rmit != null && rmit.getActive();
+            }
         }
         catch (Exception e)
         {
@@ -255,6 +293,10 @@ public class FreshenUserValve
         if (isActive)
         {
             user.setCurrentIssueType(issueType);
+        }
+        else 
+        {
+            Log.get().debug("Did not set current IssueType");
         }
     }
 }

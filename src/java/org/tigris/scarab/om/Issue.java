@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.284 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: Issue.java,v 1.285 2003/04/01 02:50:43 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3488,7 +3488,6 @@ public class Issue
                 .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
             activitySet.save();
         }
-
         // enter the values into the activitySet
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
@@ -3506,6 +3505,9 @@ public class Issue
             }
         }
         this.save();
+
+        // create initial issue creation activity
+        ActivityManager.createReportIssueActivity(this, activitySet);
 
         // this needs to be done after the issue is created.
         // check to make sure the attachment has data before submitting it.

@@ -144,9 +144,13 @@ public class IssueManager
             
             try
             {
-                result = (Issue)IssuePeer.doSelect(crit).get(0);
-                IssueManager.putInstance(result);
-                getMethodResult().put(result, ISSUE, GET_ISSUE_BY_ID, fid);
+                List issues = IssuePeer.doSelect(crit);
+                if (!issues.isEmpty()) 
+                {
+                    result = (Issue)issues.get(0);
+                    IssueManager.putInstance(result);
+                    getMethodResult().put(result, ISSUE, GET_ISSUE_BY_ID, fid);
+                }                
             }
             catch (Exception e) 
             {
@@ -180,6 +184,7 @@ public class IssueManager
         DependManager.addCacheListener(this);
         ActivityManager.addCacheListener(this);
         AttributeManager.addCacheListener(this);
+        RModuleAttributeManager.addCacheListener(this);
     }
 
 
@@ -270,6 +275,10 @@ public class IssueManager
         {
             getMethodResult().clear();
         }
+        else if (om instanceof RModuleAttribute) 
+        {
+            getMethodResult().clear();
+        }
     }
 
     public void refreshedObject(Persistent om)
@@ -286,6 +295,7 @@ public class IssueManager
         interestedCacheFields.add(DependPeer.OBSERVER_ID);
         interestedCacheFields.add(DependPeer.OBSERVED_ID);
         interestedCacheFields.add(AttributePeer.ATTRIBUTE_ID);
+        interestedCacheFields.add(RModuleAttributePeer.MODULE_ID);
         return interestedCacheFields;
     }
 }

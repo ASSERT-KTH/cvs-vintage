@@ -48,6 +48,7 @@ package org.tigris.scarab.util.xmlissues;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 import java.io.File;
 import java.io.Writer;
@@ -69,6 +70,8 @@ import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.TurbineInitialization;
 import org.tigris.scarab.util.xmlissues.ScarabIssues;
 
+import org.tigris.scarab.om.Module;
+
 
 /**
  * <p>This is a bean'ish object which allows one to set values for importing 
@@ -84,7 +87,7 @@ import org.tigris.scarab.util.xmlissues.ScarabIssues;
  * initialized, there is no need to call the init() method.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.10 2003/03/28 00:02:24 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.11 2003/04/01 02:50:44 jon Exp $
  */
 public class ImportIssues
 {
@@ -192,6 +195,25 @@ public class ImportIssues
     public List runImport(File importFile)
         throws Exception
     {
+        return runImport(importFile, null);
+    }
+
+    /**
+     * Run an import.
+     *
+     * Assumes we're up and running inside of turbine.
+     *
+     * @param importFile File to import.
+     * @param currentModule If non-null, run check that import is going 
+     * against this module.
+     *
+     * @return List of errors if any.
+     *
+     * @exception Exception
+     */
+    public List runImport(File importFile, Module currentModule)
+        throws Exception
+    {
         List importErrors = null;
         LOG.debug("Importing: " + importFile.getAbsolutePath());
 
@@ -203,7 +225,7 @@ public class ImportIssues
             BeanReader reader = createScarabIssuesBeanReader();
             importErrors = validate(importFile.getAbsolutePath(), 
                 new BufferedInputStream(new FileInputStream(importFile)),
-                reader);
+                reader, currentModule);
             if (importErrors == null)
             {
                 this.si = insert(importFile.getAbsolutePath(), 
@@ -246,6 +268,30 @@ public class ImportIssues
     public List runImport(FileItem importFile)
         throws Exception
     {
+        return runImport(importFile, null);
+    }
+
+    /**
+     * Run an import.
+     *
+     * Assumes we're up and running inside of turbine.  Awkwardly duplicates 
+     * {@link import(File) import} but duplication is so we can do the reget of
+     * the input stream; FileInput "manages" backing up the Upload for us on the
+     * second get of the input stream (It creates new ByteArrayInputStream 
+     * w/ the src being a byte array of the file its kept in memory or in 
+     * temporary storage on disk).  
+     *
+     * @param importFile FileItem reference to use importing.
+     * @param currentModule If non-null, run check that import is going 
+     * against this module.
+     *
+     * @return List of errors if any.
+     *
+     * @exception Exception
+     */
+    public List runImport(FileItem importFile, Module currentModule)
+        throws Exception
+    {
         List importErrors = null;
         LOG.debug("Importing: " + importFile.getName());
 
@@ -255,7 +301,7 @@ public class ImportIssues
             WorkflowFactory.setForceUseDefault(true);
             BeanReader reader = createScarabIssuesBeanReader();
             importErrors = validate(importFile.getName(), 
-                importFile.getInputStream(), reader);
+                importFile.getInputStream(), reader, currentModule);
             if (importErrors == null)
             {
                 // Reget the input stream.
@@ -287,12 +333,15 @@ public class ImportIssues
      * @param name Filename to output in log message.  May be null.
      * @param is Input stream to read.
      * @param reader ScarabIssues bean reader instance.
+     * @param currentModule If non-null, run check that import is going 
+     * against this module.
      *
      * @return Null if stream passes validation else list of errors.
      *
      * @exception Exception.
      */
-    protected List validate(String name, InputStream is, BeanReader reader)
+    protected List validate(String name, InputStream is, BeanReader reader, 
+            Module currentModule)
         throws Exception
     {
         ScarabIssues.setInValidationMode(true);
@@ -300,6 +349,26 @@ public class ImportIssues
         si.doValidateDependencies();
         si.doValidateUsers();
         List importErrors = si.doGetImportErrors();
+        if(currentModule != null)
+        {
+            // If currentModule is not null, make sure the xml module is that
+            // of the passed currentModule.  We do the check here late because
+            // we know the xml is good if we get this far -- that the 
+            // si.getModule() will not return null.
+            String xmlCode = si.getModule().getCode();
+            if (xmlCode == null || !currentModule.getCode().equals(xmlCode))
+            {
+                if (importErrors == null)
+                {
+                    importErrors = new ArrayList();
+                }
+
+                importErrors.add("XML module is " + si.getModule().getName()
+                    + " but current module is " + currentModule.getName()
+                    + "."); 
+            }
+        }
+
         if (importErrors != null) 
         {
             if (importErrors.size() == 0)

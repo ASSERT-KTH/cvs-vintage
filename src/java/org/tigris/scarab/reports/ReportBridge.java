@@ -275,45 +275,51 @@ public  class ReportBridge
         }
     }
 
-    public boolean isEditable(ScarabUser user)
+    /**
+     * Checks permission in all modules involved in report
+     */
+    private boolean hasPermission(String permission, ScarabUser user)
     {
-        boolean isEditable = false;
+        boolean result = false;
         try
         {
-            isEditable = torqueReport.isNew()
-                ||
-                (Scope.PERSONAL__PK.equals(torqueReport.getScopeId()) 
-                  && user.getUserId().equals(torqueReport.getUserId()))
-                ||
-                (Scope.MODULE__PK.equals(torqueReport.getScopeId()) &&
-                 user.hasPermission(ScarabSecurity.MODULE__EDIT, getModule()));
+            MITList mitlist = getMITList();
+            result = mitlist.isSingleModule() ? 
+                user.hasPermission(permission, mitlist.getModule()) :
+                user.hasPermission(permission, mitlist.getModules());
         }
-        catch (TorqueException e)
+        catch (Exception e)
         {
-            isEditable = false;
+            result = false;
             Log.get().error(e);
         }
-        return isEditable;
+        return result;
+    }
+
+    public boolean isEditable(ScarabUser user)
+    {
+        return torqueReport.isNew()
+            ||
+            (Scope.PERSONAL__PK.equals(torqueReport.getScopeId()) 
+             && user.getUserId().equals(torqueReport.getUserId()))
+            ||
+            (Scope.MODULE__PK.equals(torqueReport.getScopeId()) &&
+             hasPermission(ScarabSecurity.MODULE__EDIT, user));
     }
 
     public boolean isDeletable(ScarabUser user)
     {
-        boolean isDeletable = false;
-        try
-        {
-            isDeletable =
-                (Scope.PERSONAL__PK.equals(torqueReport.getScopeId()) 
-                  && user.getUserId().equals(torqueReport.getUserId()))
-                ||
-                (Scope.MODULE__PK.equals(torqueReport.getScopeId()) &&
-                 user.hasPermission(ScarabSecurity.ITEM__DELETE, getModule()));
-        }
-        catch (TorqueException e)
-        {
-            isDeletable = false;
-            Log.get().error(e);
-        }
-        return isDeletable;
+        return (Scope.PERSONAL__PK.equals(torqueReport.getScopeId()) 
+                && user.getUserId().equals(torqueReport.getUserId()))
+            ||
+            (Scope.MODULE__PK.equals(torqueReport.getScopeId()) &&
+             hasPermission(ScarabSecurity.ITEM__DELETE, user));
+    }
+
+    public boolean isSavable(ScarabUser user)
+    {
+        return isEditable(user) && 
+            hasPermission( ScarabSecurity.USER__EDIT_PREFERENCES, user);
     }
 
     /**
@@ -516,10 +522,10 @@ public  class ReportBridge
         return result;
     }
 
-    public ReportTableModel getModel()
+    public ReportTableModel getModel(ScarabUser searcher)
         throws Exception
     {
-        return new ReportTableModel(this, getGeneratedDate());
+        return new ReportTableModel(this, getGeneratedDate(), searcher);
     }
         
     public void save() 

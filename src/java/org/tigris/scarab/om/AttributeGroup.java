@@ -463,8 +463,14 @@ public  class AttributeGroup
                 // Remove attribute - issue type mapping
                 List rias = issueType.getRIssueTypeAttributes
                                      (false, AttributePeer.NON_USER);
-                ria.delete(user);
-                rias.remove(ria);
+                if (ria != null) 
+                {
+                    ria.delete(user);                    
+                }
+                if (rias != null) 
+                {
+                    rias.remove(ria);        
+                }
             }
             else
             {

@@ -61,19 +61,25 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This class manages the validation and importing of issues.
  *
- * This classes has a format dictated by the betwixt parser: Its given to the 
- * betwixt parser for it call methods on as it encounters elements in xml 
- * being read.  The methods supplied, their signatures, access modes, and
- * whether a setter to go w/ a getter determines what'll be called by betwixt
- * as it goes through the file.  What this means in effect is that you can not
- * read this file in isolation: Doing so would make you do things like remove
- * the data member 'issue' and its accessor methods because it looks as though
- * they are unused whereas in fact they are signals to the betwixt parser: It
- * reads them and sees its to create instances of issues from the xml being
- * parsed.
+ * This classes has a format dictated by the betwixt parser. This class is 
+ * given to the betwixt parser and as betwixt parses elements of the xml file,
+ * it looks for the public getters and setters in this class's signature and
+ * thereby makes determinations on what to call in this class. What this means
+ * in effect is that you can not read this file in isolation: Doing so would
+ * make you do things like remove the data member 'issue' and its accessor
+ * methods because it looks as though they are unused whereas in fact they are
+ * signals to the betwixt parser: It reads them and interprets their presence
+ * and instruction to create instances of issues from the xml being parsed.
+ *
+ * <p>Also, of note, the design of this class is that, it has two modes based
+ * off the setting of the inValidationMode class.  When parsing w/ the
+ * inValidationMode flag set, the db is not touched. The code just validates
+ * the xml's data content checking the users exist in the db, that the 
+ * attributes and modules referenced already exit.  A parse w/ the 
+ * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.28 2003/03/28 00:02:24 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.29 2003/04/01 02:50:44 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {

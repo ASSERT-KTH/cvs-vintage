@@ -18,6 +18,9 @@
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
 <div class="axial">
+  #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
+    <p class="alert">$l10n.QueryWarning</p>
+  #end
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
    <th width="120">* $l10n.Name</th>

@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.91 2003/03/28 00:02:23 jon Exp $
+ * @version $Id: IssueSearch.java,v 1.92 2003/04/01 02:50:44 jon Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -505,7 +505,7 @@ public class IssueSearch
         {
             for (int i = textScope.length - 1; i >= 0; i--)
             {
-                if (ALL_TEXT.equals(textScope[i])) 
+                if (NUMBERKEY_0.equals(textScope[i])) 
                 {
                     textScope = getTextScopeForAll();
                     break;
@@ -547,7 +547,7 @@ public class IssueSearch
         {
             for (int i=v.length-1; i>=0; i--) 
             {
-                if (v[i].equals(ALL_TEXT)) 
+                if (v[i].equals(NUMBERKEY_0)) 
                 {
                     v = getTextScopeForAll();
                     break;
@@ -979,7 +979,7 @@ public class IssueSearch
 
     public Integer getALL_TEXT()
     {
-        return ALL_TEXT;
+        return NUMBERKEY_0;
     }
 
     public List getQuickSearchTextAttributeValues()

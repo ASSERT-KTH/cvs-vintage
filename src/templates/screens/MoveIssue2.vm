@@ -4,7 +4,7 @@
 #set ($issueId = $moveIssueGroup.IssueId)
 #set ($issue = $scarabR.getIssue("$issueId"))
 
-#if (!$issueId || $issueId.length() == 0 || !$issue)
+#if (!$issueId || $issueId.toString().length() == 0 || !$issue)
 
 <h3>$l10n.Error</h3>
 <p class="alert">$l10n.CouldNotFindIssue</p>

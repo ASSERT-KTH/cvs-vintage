@@ -52,13 +52,14 @@ import java.util.HashMap;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
+import org.tigris.scarab.util.ScarabConstants;
 
 /** 
  * This class manages Activity objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.15 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.16 2003/04/01 02:50:43 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -258,6 +259,17 @@ public class ActivityManager
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
+    }
+
+    /**
+     * Populates a new Activity object for initial issue creation.
+     */
+    public static Activity createReportIssueActivity(Issue issue, ActivitySet activitySet)
+        throws TorqueException
+    {
+        return create(issue, AttributeManager.getInstance(ScarabConstants.INTEGER_0), 
+                      activitySet, "issue created", null,
+                      ZERO, ZERO, null, null, null, null, null, null);
     }
 
     /**

@@ -169,7 +169,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSavegroups" />
+##<input type="submit" value="$l10n.Resort" name="eventSubmit_doSavegroups" />
 </div>
 #end
 
@@ -229,7 +229,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
   <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
   <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
-  <input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
+  ##<input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
   </div>
 #end
 

@@ -54,6 +54,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
@@ -74,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.41 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.42 2003/04/01 02:50:43 jon Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -95,25 +96,38 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             Attribute attr = scarabR.getAttribute();
             Group attrGroup = null;
             boolean isDupe = false;
-            String attributeName = null;
+            Field attributeName = null;
+            Field description = null;
             if (attr.getAttributeId() == null)
             {
                 // new attribute
                 attrGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-                attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
-                attr.setCreatedDate(new Date());
-                attributeName = attrGroup.get("Name").toString();
-                isDupe = Attribute.checkForDuplicate(attributeName);
             }
             else
             {
                 attrGroup = intake.get("Attribute", attr.getQueryKey());
-                attributeName = attrGroup.get("Name").toString();
-                isDupe = Attribute.checkForDuplicate(attributeName, attr);
             }
+            attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
+            attr.setCreatedDate(new Date());
+            attributeName = attrGroup.get("Name");
+            description = attrGroup.get("Description");
+            isDupe = Attribute.checkForDuplicate(attributeName.toString(), attr);
          
+            // Check for blank attribute names.
+            if (attributeName.toString().trim().length() == 0)
+            {
+                attributeName.setMessage("intake_AttributeNameNotAllowedEmpty");
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                success = false;
+            }
+            if (description.toString().trim().length() == 0)
+            {
+                description.setMessage("intake_AttributeDescriptionNotAllowedEmpty");
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                success = false;
+            }
             // Check for duplicate attribute names.
-            if (isDupe)
+            else if (isDupe)
             {
                 scarabR.setAlertMessage(
                     l10n.get("CannotCreateDuplicateAttribute"));
@@ -121,6 +135,14 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
             else
             {
+                // if deleting attribute, delete from modules and issue types
+                if (!attr.getDeleted() && 
+                    attrGroup.get("Deleted").toString().equals("true"))
+                {
+                    ScarabUser user = (ScarabUser)data.getUser();
+                    attr.deleteModuleMappings(user); 
+                    attr.deleteIssueTypeMappings(user); 
+                }
                 attrGroup.setProperties(attr);
                 attr.save();
                 scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
@@ -187,7 +209,9 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         {
                             AttributeOption option = AttributeOptionPeer
                                 .retrieveByPK(pcao.getOptionId());
-                            option.deleteModuleMappings((ScarabUser)data.getUser());
+                            ScarabUser user = (ScarabUser)data.getUser();
+                            option.deleteModuleMappings(user);
+                            option.deleteIssueTypeMappings(user);
                         }
 
                         // the UI prevents this from being true, but check

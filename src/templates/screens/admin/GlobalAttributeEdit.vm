@@ -57,15 +57,15 @@
  <tr>
   <th>* $l10n.Name</th>
   <td>
-    <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
     #fieldErrorMsg($attgroup.Name "")
+    <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
   </td>
  </tr>
  <tr>
   <th>* $l10n.Description</th>
   <td>
-    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
   </td>
  </tr>
   #if ($attribute.CreatedDate)
@@ -187,8 +187,7 @@
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveoptions" />&#160;
-<input type="submit" value="$l10n.DeleteUndeleteSelected"  name="eventSubmit_doSaveoptions" />
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveoptions" />
 </div>
 
 #end

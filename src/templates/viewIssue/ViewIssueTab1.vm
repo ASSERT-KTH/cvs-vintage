@@ -47,7 +47,7 @@
                      #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
                   #else
                     <input name= "$attrInput.Value.Key"
-                      value="$!attrInput.Value" size="50" type="text" />
+                      value="$!attrInput.Value" size="70" type="text" />
                   #end
                 #end
                   </td>

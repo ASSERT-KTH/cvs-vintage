@@ -87,7 +87,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.120 2003/03/27 23:52:15 jon Exp $
+ * @version $Id: Search.java,v 1.121 2003/04/01 02:50:43 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -132,7 +132,16 @@ public class Search extends RequireLoginFirstAction
          throws Exception
     {
         data.getParameters().setString("queryString", getQueryString(data));
-        setTarget(data, "SaveQuery.vm");
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (scarabR.hasPermission(ScarabSecurity.USER__EDIT_PREFERENCES))
+        {
+            setTarget(data, "SaveQuery.vm");
+        }
+        else 
+        {
+            scarabR.setAlertMessage(
+                getLocalizationTool(context).get(NO_PERMISSION_MESSAGE));
+        }
     }
 
     public void doRedirecttocrossmodulelist(RunData data, TemplateContext context)
@@ -148,9 +157,15 @@ public class Search extends RequireLoginFirstAction
     public void doSavequery(RunData data, TemplateContext context)
          throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        if (!scarabR.hasPermission(ScarabSecurity.USER__EDIT_PREFERENCES))
+        {
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            return;
+        }
+
+        IntakeTool intake = getIntakeTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         Query query = scarabR.getQuery();
@@ -172,6 +187,11 @@ public class Search extends RequireLoginFirstAction
             }
             else 
             {
+                // associate the query with a new list, the current
+                // implementation does not allow for multiple queries to 
+                // work from the same MITList and this guarantees they 
+                // will not accidently be linked.
+                currentList = currentList.copy();
                 query.setMITList(currentList);
                 if (!currentList.isSingleModule()) 
                 {
@@ -581,6 +601,7 @@ public class Search extends RequireLoginFirstAction
         }
         data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
                                        getCurrentTemplate(data));
+        data.getParameters().setString("queryString", getQueryString(data));
         setTarget(data, "UserList.vm");            
     } 
 

@@ -53,6 +53,7 @@ function submitFormTo(form, name) {
 
 #if ($queryString && $searchType.equals("advanced"))
 <div class="functnbar">
+#if ($scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 <select name="format"
@@ -64,6 +65,7 @@ function submitFormTo(form, name) {
 <noscript>
 <input type="submit" name="eventSubmit_doSearch" value="$l10n.Go" />
 </noscript>
+#end
 </div>
 #end
 
@@ -255,6 +257,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 
 #if ($queryString && $searchType.equals("advanced"))
 <div class="functnbar2">
+#if ($scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 <select name="format"
@@ -266,6 +269,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 <noscript>
 <input type="submit" name="eventSubmit_doSearch" value="$l10n.Go" />
 </noscript>
+#end
 </div>
 #end
 

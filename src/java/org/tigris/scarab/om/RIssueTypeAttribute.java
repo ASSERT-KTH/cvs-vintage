@@ -162,15 +162,18 @@ public  class RIssueTypeAttribute
         if (attr.isOptionAttribute())
         {
             List optionList = getIssueType().getRIssueTypeOptions(attr, false);
-            ArrayList optionIdList = new ArrayList(optionList.size());
-            for (int i =0; i<optionList.size(); i++)
-            { 
-                optionIdList.add(((RIssueTypeOption)optionList.get(i)).getOptionId());
-            }
-            Criteria c2 = new Criteria()
-                .add(RIssueTypeOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+            if (optionList != null && !optionList.isEmpty()) 
+            {            
+                ArrayList optionIdList = new ArrayList(optionList.size());
+                for (int i =0; i<optionList.size(); i++)
+                { 
+                    optionIdList.add(((RIssueTypeOption)optionList.get(i)).getOptionId());
+                }
+                Criteria c2 = new Criteria()
+                    .add(RIssueTypeOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
                     .addIn(RIssueTypeOptionPeer.OPTION_ID, optionIdList);
-            RIssueTypeOptionPeer.doDelete(c2);
+                RIssueTypeOptionPeer.doDelete(c2);
+            }
         }
     }
 

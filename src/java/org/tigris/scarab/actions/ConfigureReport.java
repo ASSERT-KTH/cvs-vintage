@@ -86,7 +86,7 @@ import org.tigris.scarab.util.ScarabConstants;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.11 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: ConfigureReport.java,v 1.12 2003/04/01 02:50:43 jon Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -1106,7 +1106,7 @@ public class ConfigureReport
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = getScarabRequestTool(context).getReport();
         Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
+        if (!report.isSavable((ScarabUser)data.getUser())) 
         {
             setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
@@ -1193,8 +1193,7 @@ public class ConfigureReport
                     }                   
                     else 
                     {
-                        getScarabRequestTool(context).setAlertMessage(
-                            getLocalizationTool(context).get(NO_PERMISSION_MESSAGE));
+                        setNoPermissionMessage(context);
                     }
                 }
             }
@@ -1203,8 +1202,7 @@ public class ConfigureReport
 
     private void setNoPermissionMessage(TemplateContext context)
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+        getScarabRequestTool(context).setAlertMessage(
+            getLocalizationTool(context).get(NO_PERMISSION_MESSAGE));
     }
 }

@@ -40,20 +40,11 @@
 #set ($singleHeading = $headings && $headings.size() == 1)
 #set ($multiHeading = $headings && $headings.size() > 1)
 
+#reportFunctionBar("functnbar" $report)
 
-#if ($report.isReadyForCalculation())
-<div class="functnbar">
-    <input type="submit" value="$l10n.RecalculateOutput" 
-      name="eventSubmit_doGenerateReport" />
- #if ($reportIsEditable)
-  &#160;<input type="submit" value="$l10n.SaveReport" 
-    name="eventSubmit_doSavereport" />
- #end
-</div>
-#end						
-
-## don't show the headings section if the axis is Dates 
-##if (($singleHeading && $headings.get(0).calculateType() != 2) || $multiHeading)
+## don't show the headings section if the axis is Dates
+#set ($isNotDateAxis = $headings.get(0).calculateType() != 2)
+##if (($singleHeading && $isNotDateAxis) || $multiHeading)
 #if ($singleHeading || $multiHeading)
   #if ($headingIndex == -1)
     #set ($headingIndex = 0)
@@ -114,10 +105,12 @@
     #set ($headingIndex = 0)
     <input type="hidden" name="heading" value="0" />
     #set ($selectedHeading = $headings.get(0))
+  #if ($isNotDateAxis && $selectedHeading.size() > 0)
   <div class="functnbar3">
     <input type="submit" name="eventSubmit_doAddHeading" 
         value="$l10n.AddNewHeading">
   </div>
+  #end
 #end
 			
 <h3>$l10n.get("${rowCol}Criteria")</h3>	  
@@ -136,7 +129,10 @@
 
         <select name="headingtype">
           <option value="0" #if ($selectedType == 0)selected="selected"#end>$l10n.AttributesOrOptions</option>
+#set ($userAttrs = $report.MITList.CommonUserAttributes)
+#if ($userAttrs && !$userAttrs.isEmpty())
           <option value="1" #if ($selectedType == 1)selected="selected"#end>$l10n.UsersByUserAttribute</option>
+#end
   #if (!$headings || $singleHeading)
           <option value="2" #if ($selectedType == 2)selected="selected"#end>$l10n.DatesOrDatesRanges</option>
   #end

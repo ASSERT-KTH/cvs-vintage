@@ -16,7 +16,7 @@
 </div>
 #end
 
-$data.User.setCurrentMITList($report.getMITList())
+$data.User.setCurrentMITList($report.getMITList().getPermittedSublist($scarabG.Permission.ISSUE__SEARCH, $data.User))
 #showMITList($l10n.MITListReportHeading $data.User false)
 
 <div class="axial">
@@ -56,12 +56,12 @@ $l10n.Report
 ## to the macro.  If the method reference is used as the argument to the macro 
 ## and the model is referenced many times within the macro,
 ## a new model will be created each time.
-#set ($reportModel = $report.Model)
+#set ($reportModel = $report.getModel($data.User))
 #set ($reportIssueType = $report.IssueType)
 #reportTable($reportModel $reportIssueType)
 </div>
 
-#if ($reportIsEditable)
+#if ($report.isSavable($data.User))
 <form method="get" action="$link.setPage("reports,Report_1.vm")">
 <input type="hidden" name="action" value="ConfigureReport" />
 <div class="functnbar3">

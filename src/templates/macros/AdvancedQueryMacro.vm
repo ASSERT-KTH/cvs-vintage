@@ -1,3 +1,12 @@
+#macro ( advancedQueryFunctionBar $cssClass )
+<div class="$cssClass">
+<input type="submit"  name="eventSubmit_doSearch" value="$l10n.Submit" />&#160;
+#if ($scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
+<input type="submit" value="$l10n.SaveQuery"  name="eventSubmit_doRedirecttosavequery" />
+#end
+</div>
+#end
+
 #macro( advancedQuery )
 #set ($refine = $data.Parameters.getString("refine", ""))
 <input type="hidden" name="refine" value="$refine"/>
