@@ -22,61 +22,56 @@ import org.columba.core.util.OSInfo;
 /**
  * Plugin for the aspell spell-checking package.
  * 
- * TODO: overwrite locate() and use some platform dependent
- * good-guessing where the tool might be installed.
- * 
  * @author fdietz
  */
 public class ASpellPlugin extends AbstractExternalToolsPlugin {
-
-	// default unix location
-	File usrLinux = new File("/usr/bin/aspell");
-	File localUsrLinux = new File("/usr/local/bin/aspell");
-	
-	// windows executable
-	String windowsExecutable = "aspell.exe";
+	File defaultLinux = new File("/usr/bin/aspell");
+	File defaultLocalLinux = new File("/usr/local/bin/aspell");
+	File defaultWin = new File("C:\\Program Files\\Aspell\\bin\\aspell.exe");
 
 	/**
-	 * 
+	 * Construct the default ASpell plugin.
 	 */
 	public ASpellPlugin() {
 		super();
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#getDescription()
-	 */
 	public String getDescription() {
 		// TODO: i18n
 		return "<html><body><p>GNU Aspell is a Free and Open Source spell checker designed to eventually replace Ispell.</p><p>It can either be used as a library or as an independent spell checker. Its main feature is that it does a much better job of coming up with possible suggestions than just about any other spell checker out there for the English language, including Ispell and Microsoft Word.</p></p>It also has many other technical enhancements over Ispell such as using shared memory for dictionaries and intelligently handling personal dictionaries when more than one Aspell process is open at once.</p></body></html>";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#getWebsite()
-	 */
 	public String getWebsite() {
 		return "http://aspell.sourceforge.net";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#locate()
-	 */
 	public File locate() {
-		
-		// linux/unix version should have aspell in /usr/bin/aspell
+		/* If this is a unix-based system, check the 2 best-known areas for the
+		 * aspell binary.
+		 */
 		if (OSInfo.isLinux() || OSInfo.isSolaris()) {
-			if (usrLinux.exists())
-				return usrLinux;
-			else if ( localUsrLinux.exists() )
-				return localUsrLinux;
+			if (defaultLinux.exists())
+				return defaultLinux;
+			else if (defaultLocalLinux.exists())
+				return defaultLocalLinux;
 		}
 
-		// TODO: add automatic detecting for windows here
-		//       we should probably do a registry lookup
-		//       we should be easy with java.util.prefs API
-		
+		/* RIYAD: The Prefs API cannot be used to read the Window's registry,
+		 * it is coded to use the registry (if available) as a backing store
+		 * on in the SOFTWARE/JavaSoft/Prefs registry keys for HKEY_CURRENT_USER 
+		 * and HKEY_LOCAL_MACHINE paths. I have seen a few java apps that use
+		 * the Windows registry and they all required a native lib to do it.
+		 */
+		 
+		/* If this is windows, check the default installation location for the
+		 * aspell.exe binary.
+		 */
+		if (OSInfo.isWin32Platform() && defaultWin.exists())
+			return defaultWin;
+			
+		/* Couldn't find anything, so return null and let the wizard ask the
+		 * user.
+		 */
 		return null;
 	}
-
 }

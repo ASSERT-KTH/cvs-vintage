@@ -22,61 +22,63 @@ import org.columba.core.util.OSInfo;
 /**
  * Plugin for the aspell spell-checking package.
  * 
- * TODO: overwrite locate() and use some platform dependent
- * good-guessing where the tool might be installed.
- * 
  * @author fdietz
  */
 public class GPGPlugin extends AbstractExternalToolsPlugin {
-
-	//	default unix location
-	File usrLinux = new File("/usr/bin/gpg");
-	File localUsrLinux = new File("/usr/local/bin/gpg");
-
-	// windows executable
-	String windowsExecutable = "gpg.exe";
+	File defaultLinux = new File("/usr/bin/gpg");
+	File defaultLocalLinux = new File("/usr/local/bin/gpg");
+	
+	/* GPG for windows is an executable-only download, fortunately there is
+	 * a windows registry file included in the download and has this as the
+	 * default installation path in it. While users will probably install GPG
+	 * into many other places, this is atleast a best-guess start. 
+	 */
+	File defaultWin = new File("C:\\GnuPG\\gpg.exe");
 
 	/**
-	 * 
+	 * Construct the default GPG plugin. 
 	 */
 	public GPGPlugin() {
 		super();
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#getDescription()
-	 */
 	public String getDescription() {
 		return "<html><body><p>GnuPG is a complete and free replacement for PGP.</p><p>Because it does not use the patented IDEA algorithm, it can be used without any restrictions. GnuPG is a RFC2440 (OpenPGP) compliant application.</p><p>GnuPG itself is a commandline tool without any graphical stuff. It is the real crypto engine which can be used directly from a command prompt, from shell scripts or by other programs. Therefore it can be considered as a backend for other applications.</p></body></html>";
 	}
 
-	/* (non-Javadoc)
-		 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#getWebsite()
-		 */
 	public String getWebsite() {
 		return "http://www.gnupg.org";
 	}
 
-	/* (non-Javadoc)
-		 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#locate()
-		 */
 	public File locate() {
-
-		// linux/unix version should have GnuPG in /usr/bin/gpg
+		/* If this is a unix-based system, check the 2 best-known areas for the
+		 * gpg binary.
+		 */
 		if (OSInfo.isLinux() || OSInfo.isSolaris()) {
 			if (OSInfo.isLinux() || OSInfo.isSolaris()) {
-				if (usrLinux.exists())
-					return usrLinux;
-				else if (localUsrLinux.exists())
-					return localUsrLinux;
+				if (defaultLinux.exists())
+					return defaultLinux;
+				else if (defaultLocalLinux.exists())
+					return defaultLocalLinux;
 			}
 		}
 
-		//		TODO: add automatic detecting for windows here
-		//       we should probably do a registry lookup
-		//       we should be easy with java.util.prefs API
+		/* RIYAD: The Prefs API cannot be used to read the Window's registry,
+		 * it is coded to use the registry (if available) as a backing store
+		 * on in the SOFTWARE/JavaSoft/Prefs registry keys for HKEY_CURRENT_USER 
+		 * and HKEY_LOCAL_MACHINE paths. I have seen a few java apps that use
+		 * the Windows registry and they all required a native lib to do it.
+		 */
 
+		/* If this is windows, check the default installation location for the
+		 * gpg.exe binary.
+		 */
+		if (OSInfo.isWin32Platform() && defaultWin.exists())
+			return defaultWin;
+
+		/* Couldn't find anything, so return null and let the wizard ask the
+		 * user.
+		 */
 		return null;
 	}
 }

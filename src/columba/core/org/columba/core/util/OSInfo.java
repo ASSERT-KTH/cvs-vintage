@@ -35,7 +35,7 @@ public class OSInfo {
 	}
 	
 	public static boolean isWinNTPlatform() {
-		return (isWinNT() || isWin2K() || isWinXP());
+		return (isWinNT() || isWin2K() || isWin2K3() || isWinXP());
 	}
 	
 	public static boolean isWindowsPlatform() {
@@ -61,6 +61,10 @@ public class OSInfo {
 	
 	public static boolean isWin2K() {
 		return "Windows 2000".equalsIgnoreCase(System.getProperty(OS_NAME));
+	}
+	
+	public static boolean isWin2K3() {
+		return "Windows 2003".equalsIgnoreCase(System.getProperty(OS_NAME));
 	}
 	
 	public static boolean isWinXP() {
