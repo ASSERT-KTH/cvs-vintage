@@ -76,7 +76,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Confirm.java,v 1.24 2001/10/25 00:47:24 jon Exp $
+ * @version $Id: Confirm.java,v 1.25 2001/10/25 23:54:45 jmcnally Exp $
  */
 public class Confirm extends ScarabTemplateAction
 {
@@ -84,7 +84,8 @@ public class Confirm extends ScarabTemplateAction
      * This manages clicking the Register button which will end up sending
      * the user to the RegisterConfirm screen.
      */
-    public void doConfirm( RunData data, TemplateContext context ) throws Exception
+    public void doConfirm( RunData data, TemplateContext context ) 
+        throws Exception
     {
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
@@ -109,7 +110,8 @@ public class Confirm extends ScarabTemplateAction
 
             if (register == null)
             {
-                data.setMessage("Register group is null, please report this error.");
+                data.setMessage(
+                    "Register group is null, please report this error.");
                 return;
             }
             String username = null;
@@ -118,12 +120,14 @@ public class Confirm extends ScarabTemplateAction
             Field confirmField = register.get("Confirm");
             if (usernameField == null)
             {
-                data.setMessage("Username field is null, please report this error.");
+                data.setMessage(
+                    "Username field is null, please report this error.");
                 return;
             }
             else if (confirmField == null)
             {
-                data.setMessage("Confirm field is null, please report this error.");
+                data.setMessage(
+                    "Confirm field is null, please report this error.");
                 return;
             }
             username = usernameField.toString();
@@ -143,17 +147,18 @@ public class Confirm extends ScarabTemplateAction
                     data.setUser(confirmedUser);
                     data.save();
     
-                    data.setMessage("Your account has been confirmed. Welcome to Scarab!");
+                    data.setMessage(
+                        "Your account has been confirmed. Welcome to Scarab!");
                     setTarget(data, nextTemplate);
                     
                     // FIXME: Hack to give every new account a Developer Role
                     // within every Group (ie: Module). This is a major major
-                    // major major major hole. The point however is to allow people
-                    // using the runbox or downloading scarab a chance to be able
-                    // to enter an issue without having to muck with Flux to get
-                    // the right roles. Hopefully someone from the community will
-                    // contribute code to clean this up. For more information, 
-                    // please read this thread:
+                    // major major major hole. The point however is to allow 
+                    // people using the runbox or downloading scarab a chance 
+                    // to be able to enter an issue without having to muck 
+                    // with Flux to get the right roles. Hopefully someone 
+                    // from the community will contribute code to clean this 
+                    // up. For more information, please read this thread:
                     // http://scarab.tigris.org/servlets/ReadMsg?msgId=38339&listName=dev
                     List allModules = ScarabModulePeer.getAllModules();
                     Iterator itr = allModules.iterator();
@@ -183,8 +188,8 @@ public class Confirm extends ScarabTemplateAction
             }
             else // we don't have confirmation! :-(
             {
-                data.setMessage("Sorry, that email address and/or confirmation " + 
-                                "code is invalid.");
+                data.setMessage("Sorry, that email address and/or confirmation"
+                                + "code is invalid.");
                 setTarget(data, template);
             }
         }
@@ -193,7 +198,8 @@ public class Confirm extends ScarabTemplateAction
     /**
         This manages clicking the Cancel button
     */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context ) 
+        throws Exception
     {
         setTarget(data, data.getParameters().getString(
                 ScarabConstants.CANCEL_TEMPLATE, "Login.vm"));
@@ -202,7 +208,8 @@ public class Confirm extends ScarabTemplateAction
     /**
         calls doCancel()
     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context ) 
+        throws Exception
     {
         doCancel(data, context);
     }
