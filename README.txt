@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.50 2002/10/26 21:10:56 jon Exp $
+$Id: README.txt,v 1.51 2002/10/28 21:36:12 jon Exp $
 
 Welcome to Scarab!
 
@@ -120,8 +120,6 @@ Within the /src directory are a number of sub directories...
     /sql        <-- SQL files for defining the database.
     /templates  <-- Velocity templates for the HTML and Email.
     /test       <-- Test suite code.
-    /tomcat-4.0 <-- A minimal copy of Tomcat 4.0.x for use with the Scarab
-                    sandbox. Will be removed soon.
     /tomcat-4.1 <-- A minimal copy of Tomcat 4.1.x for use with the Scarab
                     sandbox.
 
