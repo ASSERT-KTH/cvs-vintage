@@ -4,4 +4,16 @@ $page.setTitle("Welcome to Scarab!")
 <h2>Welcome to Scarab!</h2>
 </font>
 
-<a href="$link.setPage("Links.vm")">Links to Site Pages</a>
+<p>
+This is going to be the homepage that you first get to when you bring up
+Scarab. In some installations, this will be the Login page and in
+others, you can have it bring up this page. For now, we just have a link
+to our Links.vm page (below) which is a list of the currently
+implemented (and under construction) pages for the application. If you
+have questions or comments, please read
+<a href="http://scarab.tigris.org/project_members.html">this page</a>.
+</p>
+
+<p>
+<a href="$link.setPage("Links.vm")">Links Page</a>
+</p>
