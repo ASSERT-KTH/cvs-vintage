@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.34 2005/01/30 20:47:55 linus Exp $
+// $Id: FigMessage.java,v 1.35 2005/02/01 20:42:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.collaboration.ui.FigAssociationRole;
@@ -289,8 +290,11 @@ public class FigMessage extends FigNodeModelElement {
 		ParserDisplay.SINGLETON.parseMessage(message, s);
 		ProjectBrowser.getInstance().getStatusBar().showStatus("");
 	    } catch (ParseException pe) {
-		ProjectBrowser.getInstance().getStatusBar()
-		    .showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+                String msg = "statusmsg.bar.error.parsing.message";
+                Object[] args = {pe.getLocalizedMessage(), 
+                    new Integer(pe.getErrorOffset())};
+                ProjectBrowser.getInstance().getStatusBar().showStatus(
+                        Translator.messageFormat(msg, args));
 	    }
 	}
 	else

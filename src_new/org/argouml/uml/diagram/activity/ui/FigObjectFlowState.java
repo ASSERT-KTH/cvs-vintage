@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.16 2005/01/30 20:48:14 linus Exp $
+// $Id: FigObjectFlowState.java,v 1.17 2005/02/01 20:42:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import java.util.Iterator;
 import org.argouml.application.api.Notation;
 import org.argouml.application.events.ArgoEvent;
 import org.argouml.application.events.ArgoEventPump;
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -358,8 +359,11 @@ public class FigObjectFlowState extends FigNodeModelElement {
             }
             ProjectBrowser.getInstance().getStatusBar().showStatus("");
         } catch (ParseException pe) {
+            String msg = "statusmsg.bar.error.parsing.objectflowstate";
+            Object[] args = {pe.getLocalizedMessage(), 
+                new Integer(pe.getErrorOffset())};
             ProjectBrowser.getInstance().getStatusBar().showStatus(
-                    "Input rejected: " + pe.getMessage());
+                    Translator.messageFormat(msg, args));
             updateClassifierText();
             updateStateText();
         }

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.84 2005/01/31 20:20:16 mvw Exp $
+// $Id: FigAssociation.java,v 1.85 2005/02/01 20:42:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoJMenu;
@@ -241,7 +242,10 @@ public class FigAssociation extends FigEdgeModelElement {
 	if (conn == null || conn.size() == 0) {
 	    return;
 	}
-
+    
+	String msg = 
+	    Translator.localize("statusmsg.bar.error.parsing.multiplicity");
+	
 	if (ft == srcRole) {
 	    Object srcAE = (conn.toArray())[0];
 	    Model.getCoreHelper().setName(srcAE, srcRole.getText());
@@ -255,9 +259,9 @@ public class FigAssociation extends FigEdgeModelElement {
 	                        .createMultiplicity(srcMult.getText());
 	        Model.getCoreHelper().setMultiplicity(srcAE, multi);
 	    } catch (IllegalArgumentException e) {
+	        Object[] args = {e.getLocalizedMessage()};
 	        ProjectBrowser.getInstance().getStatusBar().showStatus(
-                        "Error parsing multiplicity: " + e);
-                // TODO: i18n
+                    Translator.messageFormat(msg, args));
 	        srcMult.setText(
                     Model.getFacade().getMultiplicity(srcAE).toString());
 	    }
@@ -268,9 +272,9 @@ public class FigAssociation extends FigEdgeModelElement {
 	                        .createMultiplicity(destMult.getText());
 	        Model.getCoreHelper().setMultiplicity(destAE, multi);
 	    } catch (IllegalArgumentException e) {
+	        Object[] args = {e.getLocalizedMessage()};
 	        ProjectBrowser.getInstance().getStatusBar().showStatus(
-	                "Error parsing multiplicity: " + e);
-	        // TODO: i18n
+                    Translator.messageFormat(msg, args));
 	        srcMult.setText(
                     Model.getFacade().getMultiplicity(destAE).toString());
 	    }

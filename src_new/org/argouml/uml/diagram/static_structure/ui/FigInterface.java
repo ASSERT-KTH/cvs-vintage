@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.92 2005/01/30 20:48:00 linus Exp $
+// $Id: FigInterface.java,v 1.93 2005/02/01 20:42:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
+import org.argouml.i18n.Translator;
 import org.argouml.language.helpers.NotationHelper;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoJMenu;
@@ -584,8 +585,11 @@ public class FigInterface extends FigNodeModelElement
 				       highlightedFigText.getText().trim());
                 ProjectBrowser.getInstance().getStatusBar().showStatus("");
             } catch (ParseException pe) {
-                ProjectBrowser.getInstance().getStatusBar()
-		    .showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+                String msg = "statusmsg.bar.error.parsing.operation";
+                Object[] args = {pe.getLocalizedMessage(), 
+                    new Integer(pe.getErrorOffset())};
+                ProjectBrowser.getInstance().getStatusBar().showStatus(
+                        Translator.messageFormat(msg, args));
             }
             return;
         }

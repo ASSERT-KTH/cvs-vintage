@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.26 2005/01/30 20:48:12 linus Exp $
+// $Id: FigCompositeState.java,v 1.27 2005/02/01 20:42:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import java.util.Vector;
 
 import javax.swing.JSeparator;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.ActionAddConcurrentRegion;
@@ -381,9 +382,11 @@ public class FigCompositeState extends FigState {
             try {
                 ParserDisplay.SINGLETON.parseStateBody(st, s);
             } catch (ParseException pe) {
+                String msg = "statusmsg.bar.error.parsing.compositestate";
+                Object[] args = {pe.getLocalizedMessage(), 
+                    new Integer(pe.getErrorOffset())};
                 ProjectBrowser.getInstance().getStatusBar().showStatus(
-                        "Error: " + pe + " at " + pe.getErrorOffset());
-                // TODO: i18n
+                        Translator.messageFormat(msg, args));
             }
         }
     }
