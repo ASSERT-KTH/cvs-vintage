@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.10 2003/03/28 02:47:55 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.11 2003/03/31 01:42:33 spestov Exp $
  */
 public class DisplayManager
 {
@@ -556,13 +556,13 @@ public class DisplayManager
 	//{{{ getFirstLine() method
 	int getFirstLine()
 	{
-		return firstLine.scrollLine;
+		return firstLine.scrollLine + firstLine.skew;
 	} //}}}
 
 	//{{{ setFirstLine() method
 	void setFirstLine(int firstLine)
 	{
-		int amount = (firstLine - this.firstLine.scrollLine);
+		int amount = (firstLine - getFirstLine());
 		if(amount > 0)
 			this.firstLine.scrollDown(amount);
 		else if(amount < 0)
@@ -648,6 +648,8 @@ public class DisplayManager
 	//{{{ FirstLine class
 	class FirstLine extends OffsetManager.Anchor
 	{
+		int skew;
+
 		//{{{ FirstLine constructor
 		FirstLine(int index)
 		{
@@ -665,7 +667,7 @@ public class DisplayManager
 					physicalLine = getNextVisibleLine(physicalLine);
 			}
 			textArea.updateScrollBars();
-			textArea.chunkCache.setFirstLine(scrollLine,physicalLine,0);
+			textArea.chunkCache.setFirstLine(scrollLine,physicalLine,skew);
 		} //}}}
 
 		//{{{ reset() method
@@ -673,12 +675,15 @@ public class DisplayManager
 		{
 			physicalLine = getFirstVisibleLine();
 			scrollLine = 0;
+			skew = 0;
 		} //}}}
 
 		//{{{ physDown() method
 		// scroll down by physical line amount
 		void physDown(int amount)
 		{
+			skew = 0;
+
 			offsetMgr.removeAnchor(this);
 
 			int newScrollLine = scrollLine;
@@ -707,6 +712,8 @@ public class DisplayManager
 		// scroll up by physical line amount
 		void physUp(int amount)
 		{
+			skew = 0;
+
 			offsetMgr.removeAnchor(this);
 
 			int newScrollLine = scrollLine;
@@ -736,18 +743,24 @@ public class DisplayManager
 		void scrollDown(int amount)
 		{
 			offsetMgr.removeAnchor(this);
+
+			amount += skew;
+
+			skew = 0;
+
 			while(amount > 0)
 			{
 				int screenLines = getScreenLineCount(physicalLine);
 				if(amount < screenLines)
 				{
-					return;
+					skew = amount;
+					break;
 				}
 				else
 				{
 					int nextLine = getNextVisibleLine(physicalLine);
 					if(nextLine == -1)
-						return;
+						break;
 					physicalLine = nextLine;
 					amount -= screenLines;
 					scrollLine += screenLines;
@@ -763,21 +776,31 @@ public class DisplayManager
 		void scrollUp(int amount)
 		{
 			offsetMgr.removeAnchor(this);
-			while(amount > 0)
+
+			if(amount <= skew)
 			{
-				int prevLine = getPrevVisibleLine(physicalLine);
-				if(prevLine == -1)
-					return;
-				int screenLines = getScreenLineCount(prevLine);
-				if(amount < screenLines)
+				skew -= amount;
+			}
+			else
+			{
+				amount -= skew;
+				skew = 0;
+
+				while(amount > 0)
 				{
-					return;
-				}
-				else
-				{
+					int prevLine = getPrevVisibleLine(physicalLine);
+					if(prevLine == -1)
+						break;
 					physicalLine = prevLine;
-					amount -= screenLines;
+					int screenLines = getScreenLineCount(physicalLine);
 					scrollLine -= screenLines;
+					if(amount < screenLines)
+					{
+						skew = screenLines - amount;
+						break;
+					}
+					else
+						amount -= screenLines;
 				}
 			}
 

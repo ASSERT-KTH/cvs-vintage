@@ -65,7 +65,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.143 2003/03/29 20:29:31 spestov Exp $
+ * @version $Id: Buffer.java,v 1.144 2003/03/31 01:42:32 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2136,7 +2136,8 @@ public class Buffer implements EBComponent
 				}
 			}
 
-			//System.err.println("tokenize from " + start + " to " + lineIndex);
+			if(Debug.TOKEN_MARKER_DEBUG)
+				Log.log(Log.DEBUG,this,"tokenize from " + start + " to " + lineIndex);
 			for(int i = start; i <= lineIndex; i++)
 			{
 				getLineText(i,seg);
