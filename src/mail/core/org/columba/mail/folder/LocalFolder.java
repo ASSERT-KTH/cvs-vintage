@@ -111,6 +111,8 @@ public abstract class LocalFolder extends Folder {
 		int size = Math.round(source.length() / 1024);
 		header.set("columba.size", new Integer(size));
 
+		parser.addColumbaHeaderFields(header);
+		
 		AbstractMessage m = new Message(header);
 		m.setSource(source);
 
