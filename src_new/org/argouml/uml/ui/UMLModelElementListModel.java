@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel.java,v 1.28 2004/04/27 08:20:14 thn Exp $
+// $Id: UMLModelElementListModel.java,v 1.29 2004/05/22 13:46:57 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,25 +79,30 @@ public abstract class UMLModelElementListModel
      *   The container that provides the "target" model element.
      */
     private UMLUserInterfaceContainer _container;
+
     /**
      *  If "true" then a list entry (typically labelled "none") will
      *  be displayed when there are no actual entries in the list.
      */
     private boolean _showNone;
+
     /**
      * The number of actual entries in the list.
      */
     private int _currentModelElementSize = 0;
+
     /**
      * Set to true when an event suggests that the size needs to be
      * recalculated.
      */
     private boolean _recalcSize;
+
     /**
      *  A string indicating an NSUML event name that indicates that list may
      *  need to be updated.
      */
     private String _property;
+
     /**
      *  The string used to indicate no actual entries in the list.  Eventually,
      *    should be part of the profile or localization.
@@ -335,7 +340,9 @@ public abstract class UMLModelElementListModel
         }
     }
 
-    //      documented in UMLUserInterfaceComponent
+    /**
+     * @see ru.novosoft.uml.MElementListener#roleRemoved(MElementEvent)
+     */
     public void roleRemoved(final MElementEvent event) {
         String eventName = event.getName();
         if (_property == null
@@ -352,19 +359,25 @@ public abstract class UMLModelElementListModel
         fireContentsChanged(this, 0, getSize() - 1);
     }
 
-    //      documented in UMLUserInterfaceComponent
+    /**
+     * @see ru.novosoft.uml.MElementListener#listRoleItemSet(MElementEvent)
+     */
     public void listRoleItemSet(final MElementEvent p1) {
         resetSize();
         fireContentsChanged(this, 0, getSize() - 1);
     }
 
-    //      documented in UMLUserInterfaceComponent
+    /**
+     * @see ru.novosoft.uml.MElementListener#removed(MElementEvent)
+     */
     public void removed(final MElementEvent p1) {
         resetSize();
         fireContentsChanged(this, 0, getSize() - 1);
     }
 
-    //      documented in UMLUserInterfaceComponent
+    /**
+     * @see ru.novosoft.uml.MElementListener#propertySet(MElementEvent)
+     */
     public void propertySet(final MElementEvent p1) {
         resetSize();
         fireContentsChanged(this, 0, getSize() - 1);
@@ -621,7 +634,7 @@ public abstract class UMLModelElementListModel
         Object target = TargetManager.getInstance().getTarget();
         TargetManager.getInstance().setTarget(modElem);
         ActionEvent event = new ActionEvent(this, 1, "delete");
-        ActionRemoveFromModel.SINGLETON.actionPerformed(event);
+        new ActionRemoveFromModel().actionPerformed(event);
         fireIntervalRemoved(this, index, index);
         if (!target.equals(modElem)) {
             TargetManager.getInstance().setTarget(target);

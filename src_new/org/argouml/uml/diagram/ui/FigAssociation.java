@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.64 2004/04/25 01:27:58 d00mst Exp $
+// $Id: FigAssociation.java,v 1.65 2004/05/22 13:46:57 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -315,11 +315,11 @@ public class FigAssociation extends FigEdgeModelElement {
 
     static ArrowHead _NAV_AGGREGATE =
 	new ArrowHeadComposite(ArrowHeadDiamond.WhiteDiamond,
-			       ArrowHeadGreater.getInstance());
+			       new ArrowHeadGreater());
 
     static ArrowHead _NAV_COMP =
 	new ArrowHeadComposite(ArrowHeadDiamond.BlackDiamond,
-			       ArrowHeadGreater.getInstance());
+			       new ArrowHeadGreater());
 
     protected ArrowHead chooseArrowHead(Object ak, boolean nav) {
         
@@ -327,7 +327,7 @@ public class FigAssociation extends FigEdgeModelElement {
 
 	if (nav) {
 	    if (ModelFacade.NONE_AGGREGATIONKIND.equals(ak) || (ak == null)) {
-		arrow = ArrowHeadGreater.getInstance();
+		arrow = new ArrowHeadGreater();
             } else if (ModelFacade.AGGREGATE_AGGREGATIONKIND.equals(ak)) {
 		arrow = _NAV_AGGREGATE;
             } else if (ModelFacade.COMPOSITE_AGGREGATIONKIND.equals(ak)) {

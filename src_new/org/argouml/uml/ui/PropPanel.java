@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.78 2004/04/27 08:20:14 thn Exp $
+// $Id: PropPanel.java,v 1.79 2004/05/22 13:46:57 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -605,7 +605,7 @@ public abstract class PropPanel
             Object base = target;
             TargetManager.getInstance().setTarget(base);
             ActionEvent event = new ActionEvent(this, 1, "delete");
-            ActionRemoveFromModel.SINGLETON.actionPerformed(event);
+            new ActionRemoveFromModel().actionPerformed(event);
             if (newTarget != null) {
                 TargetManager.getInstance().setTarget(newTarget);
             }
