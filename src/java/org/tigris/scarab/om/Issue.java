@@ -141,7 +141,8 @@ public class Issue
             // we could start at 1 here, if the spec says one char is 
             // required, will keep it safe for now.
             StringBuffer code = new StringBuffer(4);
-            for ( int i=0; i<4; i++) 
+            int max = id.length() < 4 ? id.length() : 4;
+            for ( int i=0; i<max; i++) 
             {
                 char c = id.charAt(i);
                 if ( c != '0' && c != '1' && c != '2' && c != '3' && c != '4'
@@ -150,9 +151,22 @@ public class Issue
                     code.append(c);
                 }
             }
-            prefix = code.toString();
+            if ( code.length() != 0 ) 
+            {
+                prefix = code.toString();                 
+            }
             count = Integer.parseInt( id.substring(code.length()) );
             
+        }
+
+        
+        /**
+         * Get the IdInstance
+         * @return String
+         */
+        public String getDomain()
+        {
+            return domainId;
         }
 
         /**
@@ -163,8 +177,7 @@ public class Issue
         {
             return prefix;
         }
-        
-        
+                
         /**
          * Get the Count
          * @return int
@@ -175,12 +188,29 @@ public class Issue
         }
         
         /**
-         * Get the IdInstance
+         * Set the IdInstance
          * @return String
          */
-        public String getDomain()
+        public void setDomain(String domainId)
         {
-            return domainId;
+            this.domainId = domainId;
+        }
+        /**
+         * Set the Prefix
+         * @param String
+         */
+        public void setPrefix(String prefix)
+        {
+            this.prefix = prefix;
+        }
+        
+        /**
+         * Set the Count
+         * @param int
+         */
+        public void setCount(int count)
+        {
+            this.count = count;
         }
     }
 
