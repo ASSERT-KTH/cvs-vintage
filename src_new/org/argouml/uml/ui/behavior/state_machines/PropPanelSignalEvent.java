@@ -1,4 +1,4 @@
-// $Id: PropPanelSignalEvent.java,v 1.5 2004/09/12 09:54:02 mvw Exp $
+// $Id: PropPanelSignalEvent.java,v 1.6 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class PropPanelSignalEvent extends PropPanelEvent {
      * 
      */
     public PropPanelSignalEvent() {
-        super("Signal event", _eventIcon, 
+        super("Signal event", eventIcon, 
               ConfigLoader.getTabPropsOrientation());
     }
 } 

@@ -1,4 +1,4 @@
-// $Id: PropPanelPermission.java,v 1.10 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelPermission.java,v 1.11 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,16 @@ import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for a Permission.
+ *
+ */
 public class PropPanelPermission extends PropPanelDependency {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelPermission() {
         super("Permission", ConfigLoader.getTabPropsOrientation());
 
@@ -48,8 +56,9 @@ public class PropPanelPermission extends PropPanelDependency {
         addSeperator();
 
         addField(Translator.localize("UMLMenu", "label.suppliers"),
-                _supplierScroll);
-        addField(Translator.localize("UMLMenu", "label.clients"), _clientScroll);
+                getSupplierScroll());
+        addField(Translator.localize("UMLMenu", "label.clients"), 
+                getClientScroll());
 
         // TODO: add Mapping
         buttonPanel.add(new PropPanelButton2(this,

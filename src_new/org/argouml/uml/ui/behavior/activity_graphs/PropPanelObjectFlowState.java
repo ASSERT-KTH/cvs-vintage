@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.4 2004/08/11 20:59:24 mvw Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.5 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,14 +62,14 @@ public class PropPanelObjectFlowState extends PropPanelState {
      */
     public PropPanelObjectFlowState(String name, ImageIcon icon,
             Orientation orientation) {
-        super(name, _stateIcon, ConfigLoader.getTabPropsOrientation());
+        super(name, objectFlowStateIcon, ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
         addField(Translator.localize("UMLMenu", "label.stereotype"),
                 getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.container"),
-                containerScroll);
+                getContainerScroll());
 
         // field for Classifier(InState)
         addField(Translator.localize("UMLMenu", "label.type"),
@@ -80,9 +80,9 @@ public class PropPanelObjectFlowState extends PropPanelState {
         addSeperator();
 
         addField(Translator.localize("UMLMenu", "label.incoming"),
-                incomingScroll);
+                getIncomingScroll());
         addField(Translator.localize("UMLMenu", "label.outgoing"),
-                outgoingScroll);
+                getOutgoingScroll());
 
     }
 

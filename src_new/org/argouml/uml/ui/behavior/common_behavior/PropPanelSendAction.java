@@ -1,4 +1,4 @@
-// $Id: PropPanelSendAction.java,v 1.3 2003/06/30 18:00:37 linus Exp $
+// $Id: PropPanelSendAction.java,v 1.4 2004/09/12 16:47:12 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,19 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 
 /**
+ * The properties panel for a SendAction.
+ * 
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
 public class PropPanelSendAction extends PropPanelAction {
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelSendAction() {
-        super("SendAction", _callActionIcon);
+        super("SendAction", callActionIcon);
     }
 
 } 

@@ -1,4 +1,4 @@
-// $Id: PropPanelInteraction.java,v 1.22 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelInteraction.java,v 1.23 2004/09/12 16:47:13 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,14 +37,20 @@ import org.argouml.util.ConfigLoader;
 
 /**
  * Proppanel for interactions.
+ * 
  * @author jaap.branderhorst@xs4all.nl
  */
 public class PropPanelInteraction extends PropPanelModelElement {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelInteraction() {
         super("Interaction", ConfigLoader.getTabPropsOrientation());
 
-    	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
+    	addField(Translator.localize("UMLMenu", "label.name"), 
+                getNameTextField());
     	addField(Translator.localize("UMLMenu", "label.stereotype"),
 		 getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"),
@@ -54,17 +60,21 @@ public class PropPanelInteraction extends PropPanelModelElement {
 	    new UMLLinkedList(new UMLInteractionContextListModel());
         contextList.setVisibleRowCount(1);
         JScrollPane contextScroll = new JScrollPane(contextList);
-        addField(Translator.localize("UMLMenu", "label.context"), contextScroll);
+        addField(Translator.localize("UMLMenu", "label.context"), 
+                contextScroll);
 
         addSeperator();
 
         JList messagesList =
 	    new UMLLinkedList(new UMLInteractionMessagesListModel());
       	JScrollPane messagesScroll = new JScrollPane(messagesList);
-        addField(Translator.localize("UMLMenu", "label.messages"), messagesScroll);
+        addField(Translator.localize("UMLMenu", "label.messages"), 
+                messagesScroll);
 
-        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateContext()));
-    	buttonPanel.add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        buttonPanel.add(new PropPanelButton2(this, 
+                new ActionNavigateContext()));
+    	buttonPanel.add(new PropPanelButton2(this, 
+                new ActionRemoveFromModel()));
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.21 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelReception.java,v 1.22 2004/09/12 16:47:12 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,12 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelReception extends PropPanelModelElement {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelReception() {
-        super("Reception", _receptionIcon, ConfigLoader
+        super("Reception", receptionIcon, ConfigLoader
                 .getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.RECEPTION;
@@ -58,17 +62,17 @@ public class PropPanelReception extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceComboBox());
 
-        JPanel _modifiersPanel = new JPanel(new GridLayout2(0, 2,
+        JPanel modifiersPanel = new JPanel(new GridLayout2(0, 2,
                 GridLayout2.ROWCOLPREFERRED));
 
-        _modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
-        _modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
-        _modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());
+        modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
+        modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
+        modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());
         // Reception are by definition never queries! see WFRs.
         // therefore do not provide the according checkbox!
 
         addField(Translator.localize("UMLMenu", "label.modifiers"),
-                _modifiersPanel);
+                modifiersPanel);
 
         addSeperator();
 

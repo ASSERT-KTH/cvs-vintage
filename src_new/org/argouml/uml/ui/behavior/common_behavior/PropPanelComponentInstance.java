@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.30 2004/09/12 09:53:59 mvw Exp $
+// $Id: PropPanelComponentInstance.java,v 1.31 2004/09/12 16:47:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,8 @@ import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
+ * The properties panel for a ComponentInstance. 
+ * 
  * TODO: this property panel needs refactoring to remove dependency on old gui
  * components.
  */

@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.43 2004/09/12 09:54:00 mvw Exp $
+// $Id: PropPanelDataType.java,v 1.44 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class PropPanelDataType extends PropPanelClassifier {
                 getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceComboBox());
-        add(_modifiersPanel);
+        add(getModifiersPanel());
 
         addSeperator();
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.43 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelAttribute.java,v 1.44 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.43 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelAttribute.java,v 1.44 2004/09/12 16:47:14 mvw Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -42,18 +42,26 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLInitialValueComboBox;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for an Attribute.
+ *
+ */
 public class PropPanelAttribute extends PropPanelStructuralFeature {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelAttribute() {
         super("Attribute", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
         //	addField(
-        //	        Translator.localize("UMLMenu", "label.stereotype"),
-        //		 new UMLComboBoxNavigator(
-        //					  this,
-        //		         Translator.localize("UMLMenu", "tooltip.nav-stereo"),
+        //	    Translator.localize("UMLMenu", "label.stereotype"),
+        //		new UMLComboBoxNavigator(
+        //		 this,
+        //		 Translator.localize("UMLMenu", "tooltip.nav-stereo"),
         //					  getStereotypeBox()));
         addField(Translator.localize("UMLMenu", "label.stereotype"),
                 getStereotypeBox());
@@ -71,7 +79,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         // addField(Translator.localize("UMLMenu", "label.initial-value"), new
         // JScrollPane(new UMLLinkedList(new
         // UMLAttributeInitialValueListModel())));
-        // TODO The following line is my hack fix for the above line.
+        // TODO: The following line is my hack fix for the above line.
         // this fixes issue 1378 but re-introduces a deprecated class
         // IMO the initial value should not be a combo or a list
         // but a simple text field. Bob Tarling 12 Feb 2004.
@@ -89,6 +97,9 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
                 .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
+    /**
+     * Create a new attribute.
+     */
     public void newAttribute() {
         Object target = getTarget();
         if (ModelFacade.isAStructuralFeature(target)) {

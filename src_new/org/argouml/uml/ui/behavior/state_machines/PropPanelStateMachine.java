@@ -1,4 +1,4 @@
-// $Id: PropPanelStateMachine.java,v 1.16 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelStateMachine.java,v 1.17 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStateMachine.java,v 1.16 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelStateMachine.java,v 1.17 2004/09/12 16:47:14 mvw Exp $
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
@@ -38,6 +38,8 @@ import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 /**
+ * The properties panel for a Statemachine.
+ * 
  * @since Dec 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -51,11 +53,20 @@ public class PropPanelStateMachine extends PropPanelModelElement {
 
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param name the title of the properties panel, to be shown at the top
+     * @param orient the orientation of the panel
+     */
     public PropPanelStateMachine(String name, Orientation orient) {
         super(name, orient);
         initialize();
     }
 
+    /**
+     * Initialise the panel with fields and stuff.
+     */
     protected void initialize() {
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
@@ -71,7 +82,7 @@ public class PropPanelStateMachine extends PropPanelModelElement {
         JList contextList = new UMLLinkedList(
                 new UMLStateMachineContextListModel());
         addField(Translator.localize("UMLMenu",
-                "label.represented-modelelement"), new JScrollPane(contextList));
+            "label.represented-modelelement"), new JScrollPane(contextList));
 
         // the top state
         JList topList = new UMLLinkedList(new UMLStateMachineTopListModel());

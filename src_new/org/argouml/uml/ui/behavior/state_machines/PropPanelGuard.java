@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.22 2004/09/07 18:50:07 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.23 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.22 2004/09/07 18:50:07 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.23 2004/09/12 16:47:14 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -39,9 +39,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
-import org.argouml.uml.ui.UMLConditionExpressionModel;
-import org.argouml.uml.ui.UMLExpressionBodyField;
-import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;

@@ -1,4 +1,4 @@
-// $Id: PropPanelCallState.java,v 1.2 2004/08/02 21:35:42 mvw Exp $
+// $Id: PropPanelCallState.java,v 1.3 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui.behavior.activity_graphs;
 
 import javax.swing.ImageIcon;
 
-import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientation;
 import org.argouml.util.ConfigLoader;
 
@@ -38,17 +37,18 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelCallState extends PropPanelActionState {
 
     /**
-     *  
+     * The constructor.
+     * 
      */
     public PropPanelCallState() {
-        this("CallState", _callStateIcon, ConfigLoader
+        this("CallState", callStateIcon, ConfigLoader
                 .getTabPropsOrientation());
     }
 
     /**
-     * @param name
-     * @param icon
-     * @param orientation
+     * @param name the name of the properties panel
+     * @param icon the icon to be shown next to the name
+     * @param orientation the orientation of the panel
      */
     public PropPanelCallState(String name, ImageIcon icon,
             Orientation orientation) {

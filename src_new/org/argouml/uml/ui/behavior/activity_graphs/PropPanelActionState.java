@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.18 2004/08/02 21:35:42 mvw Exp $
+// $Id: PropPanelActionState.java,v 1.19 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.18 2004/08/02 21:35:42 mvw Exp $
+// $Id: PropPanelActionState.java,v 1.19 2004/09/12 16:47:15 mvw Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -40,36 +40,46 @@ import org.argouml.util.ConfigLoader;
  * User interface panel shown at the bottom of the screen that allows the user
  * to edit the properties of the selected UML model element.
  */
-
 public class PropPanelActionState extends PropPanelState {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelActionState() {
-        this("Action State", _actionStateIcon, ConfigLoader
+        this("Action State", actionStateIcon, ConfigLoader
                 .getTabPropsOrientation());
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param name the name of the properties panel
+     * @param icon the icon to be shown next to the name
+     * @param orientation the orientation of the panel
+     */
     public PropPanelActionState(String name, ImageIcon icon,
             Orientation orientation) {
 
-        super(name, _actionStateIcon, orientation);
+        super(name, actionStateIcon, orientation);
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
         //        addField(Translator.localize("UMLMenu", "label.stereotype"),
         //		 new UMLComboBoxNavigator(this,
         //					  Translator.localize("UMLMenu",
-        //							"tooltip.nav-stereo"),
+        //						"tooltip.nav-stereo"),
         //					  getStereotypeBox()));
         addField(Translator.localize("UMLMenu", "label.stereotype"),
                 getStereotypeBox());
 
-        addField(Translator.localize("UMLMenu", "label.entry"), entryScroll);
+        addField(Translator.localize("UMLMenu", "label.entry"), getEntryScroll());
         addSeperator();
 
         addField(Translator.localize("UMLMenu", "label.incoming"),
-                incomingScroll);
+                getIncomingScroll());
         addField(Translator.localize("UMLMenu", "label.outgoing"),
-                outgoingScroll);
+                getOutgoingScroll());
 
     }
 

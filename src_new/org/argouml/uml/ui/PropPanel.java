@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.89 2004/09/07 18:50:04 mvw Exp $
+// $Id: PropPanel.java,v 1.90 2004/09/12 16:47:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -699,14 +699,14 @@ public abstract class PropPanel
     }
 
     /**
-     * @param theTitleLabel
+     * @param theTitleLabel the title of the panel shown at the top
      */
     protected void setTitleLabel(JLabel theTitleLabel) {
         this.titleLabel = theTitleLabel;
     }
 
     /**
-     * @return
+     * @return the title of the panel shown at the top
      */
     protected JLabel getTitleLabel() {
         return titleLabel;

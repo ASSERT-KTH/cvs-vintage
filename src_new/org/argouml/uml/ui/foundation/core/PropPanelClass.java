@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.54 2004/09/12 09:54:00 mvw Exp $
+// $Id: PropPanelClass.java,v 1.55 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,8 @@ import org.argouml.uml.ui.behavior.common_behavior.ActionNewReception;
 import org.argouml.util.ConfigLoader;
 
 /**
+ * The properties panel for a Class.
+ * 
  * TODO: this property panel needs refactoring to remove dependency on old gui
  * components.
  */
@@ -81,8 +83,8 @@ public class PropPanelClass extends PropPanelClassifier {
                 getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceComboBox());
-        _modifiersPanel.add(new UMLClassActiveCheckBox());
-        add(_modifiersPanel);
+        getModifiersPanel().add(new UMLClassActiveCheckBox());
+        add(getModifiersPanel());
         add(getNamespaceVisibilityPanel());
 
         addSeperator();

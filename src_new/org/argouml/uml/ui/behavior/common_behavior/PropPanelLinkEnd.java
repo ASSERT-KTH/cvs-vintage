@@ -1,4 +1,4 @@
-// $Id: PropPanelLinkEnd.java,v 1.3 2004/09/12 09:53:59 mvw Exp $
+// $Id: PropPanelLinkEnd.java,v 1.4 2004/09/12 16:47:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,9 @@ import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 /**
- * A basic property panel for link ends. TODO: uses the associationEnd icon
+ * A basic property panel for link ends. 
+ * 
+ * TODO: uses the associationEnd icon
  * 
  * @author mkl
  *  

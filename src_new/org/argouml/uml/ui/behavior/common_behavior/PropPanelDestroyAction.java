@@ -1,4 +1,4 @@
-// $Id: PropPanelDestroyAction.java,v 1.3 2003/06/30 18:00:36 linus Exp $
+// $Id: PropPanelDestroyAction.java,v 1.4 2004/09/12 16:47:12 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,19 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 
 /**
+ * The properties panel for a DestroyAction.
+ * 
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
 public class PropPanelDestroyAction extends PropPanelAction {
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelDestroyAction() {
-        super("DestroyAction", _callActionIcon);
+        super("DestroyAction", callActionIcon);
     }
 
 } 

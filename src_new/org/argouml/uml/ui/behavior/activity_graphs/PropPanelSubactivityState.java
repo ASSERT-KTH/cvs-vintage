@@ -1,4 +1,4 @@
-// $Id: PropPanelSubactivityState.java,v 1.1 2004/08/02 21:35:42 mvw Exp $
+// $Id: PropPanelSubactivityState.java,v 1.2 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.uml.ui.behavior.state_machines.PropPanelSubmachineState;
 import org.argouml.util.ConfigLoader;
 
 /**
+* The properties panel for the SubactivityState.
 * 
 * @author mvw
 *  
@@ -38,7 +39,7 @@ public class PropPanelSubactivityState extends PropPanelSubmachineState {
   * Constructor
   */
     public PropPanelSubactivityState() { 
-        super("SubactivityState", _subactivityStateIcon, ConfigLoader
+        super("SubactivityState", subactivityStateIcon, ConfigLoader
              .getTabPropsOrientation());    
     }
 }

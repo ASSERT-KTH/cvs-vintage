@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.41 2004/09/12 09:54:00 mvw Exp $
+// $Id: PropPanelInterface.java,v 1.42 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,7 @@ public class PropPanelInterface extends PropPanelClassifier {
 	      "checkbox.root-uc"),this,new UMLReflectionBooleanProperty(
 	      "isRoot",mclass,"isRoot","setRoot")));
 	*/
-	add( _modifiersPanel);
+	add( getModifiersPanel());
 	add(getNamespaceVisibilityPanel());
 
 	addSeperator();
@@ -109,7 +109,7 @@ public class PropPanelInterface extends PropPanelClassifier {
 	//new PropPanelButton(this,buttonPanel,realizationIcon, 
         //    Translator.localize("UMLMenu", "button.new-realization"),
         //    "addRealization",null);
-	new PropPanelButton(this, buttonPanel, _receptionIcon, 
+	new PropPanelButton(this, buttonPanel, receptionIcon, 
             Translator.localize("UMLMenu", "button.new-reception"), 
             getActionNewReception());
 	buttonPanel

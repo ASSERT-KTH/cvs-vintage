@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.39 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelClassifierRole.java,v 1.40 2004/09/12 16:47:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.39 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelClassifierRole.java,v 1.40 2004/09/12 16:47:13 mvw Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -56,26 +56,31 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     /**
      * The combobox for the multiplicity of this type.
      */
-    protected UMLComboBox2 multiplicityComboBox;
+    private UMLComboBox2 multiplicityComboBox;
+    
     /** 
      * Model for the MultiplicityComboBox 
      */
     private static UMLMultiplicityComboBoxModel multiplicityComboBoxModel;
     
-    ////////////////////////////////////////////////////////////////
-    // contructors
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelClassifierRole() {
 	super("ClassifierRole", ConfigLoader.getTabPropsOrientation());
 
 	Class mclass = (Class) ModelFacade.CLASSIFIER_ROLE;
 
 	addField(Translator.localize("UMLMenu", "label.name"),
-		 getNameTextField());
-	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+	    getNameTextField());
+	addField(Translator.localize("UMLMenu", "label.stereotype"), 
+            getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"),
-		 getNamespaceScroll());
+	    getNamespaceScroll());
 
-	addField(Translator.localize("UMLMenu", "label.multiplicity"),getMultiplicityComboBox()); 
+	addField(Translator.localize("UMLMenu", "label.multiplicity"),
+            getMultiplicityComboBox()); 
 	JList baseList =
 	    new UMLMutableLinkedList(new UMLClassifierRoleBaseListModel(),
 				     ActionAddClassifierRoleBase.SINGLETON,
@@ -117,8 +122,11 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 	buttonPanel.add(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-	new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
-	buttonPanel.add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+	new PropPanelButton(this, buttonPanel, receptionIcon, 
+            Translator.localize("UMLMenu", "button.new-reception"), 
+            getActionNewReception());
+	buttonPanel.add(new PropPanelButton2(this, 
+            new ActionRemoveFromModel()));
     }
 
     /**

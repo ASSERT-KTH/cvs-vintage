@@ -1,4 +1,4 @@
-// $Id: PropPanelUsage.java,v 1.10 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelUsage.java,v 1.11 2004/09/12 16:47:14 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,27 +30,42 @@ import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for a Usage.
+ *
+ */
 public class PropPanelUsage extends PropPanelDependency {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelUsage() {
         super("Usage", ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
-        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addField(Translator.localize("UMLMenu", "label.name"), 
+                getNameTextField());
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), 
+        //     new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", 
+        //     "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+                getStereotypeBox());
+        addField(Translator.localize("UMLMenu", "label.namespace"), 
+                getNamespaceComboBox());
 
         addSeperator();
 
-        addField(Translator.localize("UMLMenu", "label.suppliers"), _supplierScroll);
-        addField(Translator.localize("UMLMenu", "label.clients"), _clientScroll);
+        addField(Translator.localize("UMLMenu", "label.suppliers"), 
+                getSupplierScroll());
+        addField(Translator.localize("UMLMenu", "label.clients"), 
+                getClientScroll());
 
         // TODO: add Mapping
-        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateNamespace()));
-        buttonPanel
-        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));    }
-
-
+        buttonPanel.add(new PropPanelButton2(this, 
+                new ActionNavigateNamespace()));
+        buttonPanel.add(new PropPanelButton2(this, 
+                new ActionRemoveFromModel()));    
+    }
 
 } /* end class PropPanelUsage */
 

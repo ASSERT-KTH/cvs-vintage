@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.19 2004/09/12 09:54:00 mvw Exp $
+// $Id: PropPanelCallEvent.java,v 1.20 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class PropPanelCallEvent extends PropPanelEvent {
      * 
      */
     public PropPanelCallEvent() {
-        super("Call event", _eventIcon, 
+        super("Call event", eventIcon, 
               ConfigLoader.getTabPropsOrientation());
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelState.java,v 1.16 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelState.java,v 1.17 2004/09/12 16:47:15 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.16 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelState.java,v 1.17 2004/09/12 16:47:15 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -39,24 +39,28 @@ import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 
+/**
+ * The abstract properties panel for a State.
+ *
+ */
 public abstract class PropPanelState extends PropPanelStateVertex {
 
-    protected JScrollPane entryScroll;
-    protected JScrollPane exitScroll;
-    protected JScrollPane doScroll;
-    protected JScrollPane internalTransitionsScroll;
-    protected JScrollPane deferrableEventsScroll;
-    protected JList entryList;
-    protected JList exitList;
-    protected JList doList;
-    protected JList internalTransitionsList;
+    private JScrollPane entryScroll;
+    private JScrollPane exitScroll;
+    private JScrollPane doScroll;
+    private JScrollPane internalTransitionsScroll;
+    private JScrollPane deferrableEventsScroll;
+    private JList entryList;
+    private JList exitList;
+    private JList doList;
+    private JList internalTransitionList;
 
 
     /**
      * Constructor for PropPanelState.
-     * @param name
-     * @param icon
-     * @param orientation
+     * @param name the name of the properties panel, to be shown at the top
+     * @param icon the icon to be shown next to the name
+     * @param orientation the orientation of the panel
      */
     public PropPanelState(
         String name,
@@ -64,19 +68,63 @@ public abstract class PropPanelState extends PropPanelStateVertex {
         Orientation orientation) {
         super(name, icon, orientation);
         
-        JList deferrableList = new UMLLinkedList(new UMLStateDeferrableEventListModel());
+        JList deferrableList = new UMLLinkedList(
+                new UMLStateDeferrableEventListModel());
         deferrableEventsScroll = new JScrollPane(deferrableList);
-        JList entryList = new UMLStateEntryList(new UMLStateEntryListModel());
+        entryList = new UMLStateEntryList(new UMLStateEntryListModel());
         entryList.setVisibleRowCount(1);
         entryScroll = new JScrollPane(entryList);
-        JList exitList = new UMLStateExitList(new UMLStateExitListModel());
+        exitList = new UMLStateExitList(new UMLStateExitListModel());
         exitList.setVisibleRowCount(1);
         exitScroll = new JScrollPane(exitList);
-        JList internalTransitionList = new UMLMutableLinkedList(new UMLStateInternalTransition(), null, ActionNewTransition.SINGLETON);
+        internalTransitionList = new UMLMutableLinkedList(
+                new UMLStateInternalTransition(), null, 
+                ActionNewTransition.SINGLETON);
         internalTransitionsScroll = new JScrollPane(internalTransitionList);
-        JList doList = new UMLStateDoActivityList(new UMLStateDoActivityListModel());
+        doList = new UMLStateDoActivityList(
+                new UMLStateDoActivityListModel());
         doList.setVisibleRowCount(1);
         doScroll = new JScrollPane(doList);
+    }
+
+
+    /**
+     * @return Returns the entryScroll.
+     */
+    protected JScrollPane getEntryScroll() {
+        return entryScroll;
+    }
+
+
+    /**
+     * @return Returns the exitScroll.
+     */
+    protected JScrollPane getExitScroll() {
+        return exitScroll;
+    }
+
+
+    /**
+     * @return Returns the doScroll.
+     */
+    protected JScrollPane getDoScroll() {
+        return doScroll;
+    }
+
+
+    /**
+     * @return Returns the internalTransitionsScroll.
+     */
+    protected JScrollPane getInternalTransitionsScroll() {
+        return internalTransitionsScroll;
+    }
+
+
+    /**
+     * @return Returns the deferrableEventsScroll.
+     */
+    protected JScrollPane getDeferrableEventsScroll() {
+        return deferrableEventsScroll;
     }
 
     

@@ -1,4 +1,4 @@
-// $Id: PropPanelAbstraction.java,v 1.18 2004/09/07 18:50:05 mvw Exp $
+// $Id: PropPanelAbstraction.java,v 1.19 2004/09/12 16:47:13 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,11 +30,16 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for a Abstraction.
+ *
+ */
 public class PropPanelAbstraction extends PropPanelDependency {
 
-  ////////////////////////////////////////////////////////////////
-  // constructors
-
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelAbstraction() {
         super("Abstraction", ConfigLoader.getTabPropsOrientation());
 
@@ -51,9 +56,9 @@ public class PropPanelAbstraction extends PropPanelDependency {
         addSeperator();
 
         addField(Translator.localize("UMLMenu", "label.suppliers"), 
-                _supplierScroll);
+                getSupplierScroll());
         addField(Translator.localize("UMLMenu", "label.clients"), 
-                _clientScroll);
+                getClientScroll());
 
         // TODO: add Mapping
         new PropPanelButton(this, buttonPanel, navUpIcon, Translator.localize(
