@@ -14,8 +14,10 @@ import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.metadata.AssemblyDescriptorMetaData;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.security.*;
+import org.jboss.mx.util.MBeanServerLocator;
 
 import javax.ejb.EJBException;
+import javax.management.MBeanServer;
 import java.security.Principal;
 import java.util.Set;
 import java.util.Map;
@@ -27,7 +29,7 @@ import java.util.Map;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -44,14 +46,15 @@ public class SecurityInterceptor extends AbstractInterceptor
     * @supplierQualifier identity mapping
     */
    protected RealmMapping realmMapping;
+
+   // The bean uses this run-as identity to call out
    protected RunAsIdentity runAsIdentity;
 
    // A map of SecurityRolesMetaData from jboss.xml
    protected Map securityRoles;
 
-   public SecurityInterceptor()
-   {
-   }
+   // The unauthenticated principal
+   protected Principal unauthPrincipal;
 
    /** Called by the super class to set the container to which this interceptor
     belongs. We obtain the security manager and runAs identity to use here.
@@ -62,8 +65,8 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (container != null)
       {
          BeanMetaData beanMetaData = container.getBeanMetaData();
-         ApplicationMetaData application = beanMetaData.getApplicationMetaData();
-         AssemblyDescriptorMetaData assemblyDescriptor = application.getAssemblyDescriptor();
+         ApplicationMetaData applicationMetaData = beanMetaData.getApplicationMetaData();
+         AssemblyDescriptorMetaData assemblyDescriptor = applicationMetaData.getAssemblyDescriptor();
          securityRoles = assemblyDescriptor.getSecurityRoles();
 
          SecurityIdentityMetaData secMetaData = beanMetaData.getSecurityIdentityMetaData();
@@ -76,8 +79,10 @@ public class SecurityInterceptor extends AbstractInterceptor
             Set extraRoleNames = assemblyDescriptor.getSecurityRoleNamesByPrincipal(principalName);
             runAsIdentity = new RunAsIdentity(roleName, principalName, extraRoleNames);
          }
+
          securityManager = container.getSecurityManager();
          realmMapping = container.getRealmMapping();
+         unauthPrincipal = new SimplePrincipal(applicationMetaData.getUnauthenticatedPrincipal());
       }
    }
 
@@ -174,22 +179,34 @@ public class SecurityInterceptor extends AbstractInterceptor
       RunAsIdentity callerRunAsIdentity = SecurityAssociation.peekRunAsIdentity();
       if (callerRunAsIdentity == null)
       {
-         // Check the security info from the method invocation
-         SecurityRolesAssociation.setSecurityRoles(securityRoles);
-         if (securityManager.isValid(principal, credential) == false)
+         if (principal != null && principal.equals(unauthPrincipal) == false)
          {
-            String msg = "Authentication exception, principal=" + principal;
-            log.error(msg);
-            SecurityException e = new SecurityException(msg);
-            throw new EJBException("checkSecurityAssociation", e);
+            // Check the security info from the method invocation
+            SecurityRolesAssociation.setSecurityRoles(securityRoles);
+            if (securityManager.isValid(principal, credential) == false)
+            {
+               String msg = "Authentication exception, principal=" + principal;
+               log.error(msg);
+               SecurityException e = new SecurityException(msg);
+               throw new EJBException("checkSecurityAssociation", e);
+            }
+            else
+            {
+               SecurityAssociation.setPrincipal(principal);
+               SecurityAssociation.setCredential(credential);
+               if (trace)
+               {
+                  log.trace("Authenticated  principal=" + principal);
+               }
+            }
          }
          else
          {
+            principal = unauthPrincipal;
             SecurityAssociation.setPrincipal(principal);
-            SecurityAssociation.setCredential(credential);
             if (trace)
             {
-               log.trace("Authenticated  principal=" + principal);
+               log.trace("Unauthenticated  principal=" + principal);
             }
          }
       }
