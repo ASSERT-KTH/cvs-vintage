@@ -14,18 +14,21 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
 
 /**
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
 {
    // Constants -----------------------------------------------------
 
+   protected static Logger log = Logger.getLogger(MetaData.class);
+   
    // These do not really belong here
 
    public static final byte TX_NOT_SUPPORTED  = 0;
