@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.13 2002/02/27 07:48:05 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.14 2002/03/17 04:26:27 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -368,6 +368,13 @@ public class JARClassLoader extends ClassLoader
 			}
 			else if(what.equals("jedit"))
 			{
+				if(arg.length() != 11)
+				{
+					Log.log(Log.ERROR,this,"Invalid jEdit version"
+						+ " number: " + arg);
+					return false;
+				}
+
 				if(MiscUtilities.compareStrings(
 					jEdit.getBuild(),arg,false) < 0)
 				{
