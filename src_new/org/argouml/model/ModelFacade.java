@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.86 2003/08/30 20:49:16 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.87 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -1548,6 +1549,20 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /** Determine if a model element contains a connection
+     *
+     * @param handle to the association.
+     * @return true if the model element contains a connection
+     */
+    public boolean containsConnection(Object element, Object connection) {
+        if (element instanceof MAssociation) {
+            return ((MAssociation) element).getConnections().contains(connection);
+        }
+
+        // ...
+        throw new IllegalArgumentException("Unrecognized object " + element);
+    }
+
     /** Count the number of Connections or AssociationEnds to an Association.
      *
      * @param handle to the association.
@@ -1746,6 +1761,18 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /**
+     * Add a new comment to a model element
+     * @param element the element to which the comment is to be added
+     * @param comment the comment for the model element
+     */
+    public static void addComment(Object element, Object comment) {
+        if (element instanceof MModelElement && comment instanceof MComment) {
+            ((MModelElement) element).addComment((MComment)comment);
+        }
+        throw new IllegalArgumentException("Unrecognized object " + element);
+    }
+    
     public static Collection getConstraints(Object handle) {
         if (handle instanceof MModelElement) {
             return ((MModelElement) handle).getConstraints();
@@ -3044,6 +3071,17 @@ public class ModelFacade {
         }
         throw new IllegalArgumentException("Unrecognized object " + handle
 					   + " or " + value);
+    }
+
+    /**
+     * Sets the features of some model element.
+     * @param element the model element to set features to
+     * @param features the list of features
+     */
+    public static void setFeatures(Object element, Collection features) {
+        if (element != null && element instanceof MClassifier && features instanceof List) {
+            ((MClassifier)element).setFeatures((List)features);
+        }
     }
 
     /**

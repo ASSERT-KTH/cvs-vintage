@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.24 2003/08/30 12:02:32 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.25 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.24 2003/08/30 12:02:32 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.25 2003/08/30 23:11:50 bobtarling Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -66,7 +66,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
      *  Also, elements from other models will have their FigNodes add a
      *  line to say what their model is. */
 
-    protected MNamespace _namespace;
+    protected Object _namespace;
 
     /** The statemachine we are diagramming */
     protected MStateMachine _machine;
@@ -74,9 +74,9 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    public MNamespace getNamespace() { return _namespace; }
-    public void setNamespace(MNamespace m) {
-	_namespace = m;
+    public Object getNamespace() { return _namespace; }
+    public void setNamespace(Object namespace) {
+	_namespace = namespace;
     }
 
     public MStateMachine getMachine() { return _machine; }

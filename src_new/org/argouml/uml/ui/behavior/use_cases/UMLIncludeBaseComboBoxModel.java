@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.10 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.11 2003/08/30 23:11:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ((MInclude) getTarget()).getBase();
+            return ModelFacade.getBase(getTarget());
         }
         return null;
     }

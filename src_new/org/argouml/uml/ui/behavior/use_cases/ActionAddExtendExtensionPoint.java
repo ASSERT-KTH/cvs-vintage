@@ -1,4 +1,4 @@
-// $Id: ActionAddExtendExtensionPoint.java,v 1.6 2003/06/29 23:50:15 linus Exp $
+// $Id: ActionAddExtendExtensionPoint.java,v 1.7 2003/08/30 23:11:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddExtendExtensionPoint.java,v 1.6 2003/06/29 23:50:15 linus Exp $
+// $Id: ActionAddExtendExtensionPoint.java,v 1.7 2003/08/30 23:11:49 bobtarling Exp $
 package org.argouml.uml.ui.behavior.use_cases;
 
+import java.util.Collection;
 import java.util.Vector;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import ru.novosoft.uml.behavior.use_cases.MExtend;
 
@@ -59,7 +61,9 @@ public class ActionAddExtendExtensionPoint extends AbstractActionAddModelElement
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
-            ret.addAll(((MExtend) getTarget()).getBase().getExtensionPoints());
+            MExtend extend = (MExtend)getTarget();
+            Collection c = extend.getBase().getExtensionPoints();
+            ret.addAll(c);
         }
         return ret;
     }

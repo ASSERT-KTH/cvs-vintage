@@ -1,6 +1,6 @@
 
 
-// $Id: UMLActivityDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: UMLActivityDiagram.java,v 1.30 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: UMLActivityDiagram.java,v 1.30 2003/08/30 23:11:50 bobtarling Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -183,7 +183,7 @@ public class UMLActivityDiagram extends UMLDiagram {
         lay.setGraphEdgeRenderer(rend);
     }
 
-    public MModelElement getOwner() {
+    public Object getOwner() {
         StateDiagramGraphModel gm = (StateDiagramGraphModel) getGraphModel();
         MStateMachine sm = gm.getMachine();
         if (sm != null)

@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.15 2003/06/29 23:50:11 linus Exp $
+// $Id: PropPanelReception.java,v 1.16 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,10 +94,10 @@ public class PropPanelReception extends PropPanelModelElement {
      * Returns the owner of the reception. Necessary for the MClassifierComboBox.
      * @return MClassifier
      */
-    public MClassifier getOwner() {
+    public Object getOwner() {
         Object target = getTarget();
         if (ModelFacade.isAReception(target)) {
-            return ((MReception) target).getOwner();
+            return ModelFacade.getOwner(target);
         }
         return null;
     }

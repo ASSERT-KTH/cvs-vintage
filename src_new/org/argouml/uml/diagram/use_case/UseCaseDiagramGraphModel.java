@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.25 2003/08/30 18:59:42 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.26 2003/08/30 23:11:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.25 2003/08/30 18:59:42 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.26 2003/08/30 23:11:49 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -403,7 +403,7 @@ public class UseCaseDiagramGraphModel
             end1 = ((MGeneralization) edge).getParent();
         }
         else if (org.argouml.model.ModelFacade.isAExtend(edge)) {
-            end0 = ((MExtend) edge).getBase();
+            end0 = ModelFacade.getBase(edge);
             end1 = ((MExtend) edge).getExtension();
         }
         else if (org.argouml.model.ModelFacade.isAInclude(edge)) {
@@ -413,7 +413,7 @@ public class UseCaseDiagramGraphModel
             // by reversing their accessors in the code
 
             end0 = ((MInclude) edge).getAddition();
-            end1 = ((MInclude) edge).getBase();
+            end1 = ModelFacade.getBase(edge);
         }
         else if (org.argouml.model.ModelFacade.isADependency(edge)) {
 

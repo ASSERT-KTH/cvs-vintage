@@ -1,5 +1,4 @@
-
-// $Id: PropPanelInclude.java,v 1.15 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: PropPanelInclude.java,v 1.16 2003/08/30 23:11:49 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +31,7 @@ package org.argouml.uml.ui.behavior.use_cases;
 import javax.swing.JComboBox;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -176,15 +176,15 @@ public class PropPanelInclude extends PropPanelModelElement {
      *          {@link UMLComboBoxModel}.
      */
 
-    public MUseCase getAddition() {
-        MUseCase addition   = null;
-        Object      target      = getTarget();
+    public Object getAddition() {
+        Object addition   = null;
+        Object target = getTarget();
 
         // Note that because of the NSUML bug, we must use getBase() rather
         // than getAddition() to get the addition use case.
 
-        if (org.argouml.model.ModelFacade.isAInclude(target)) {
-            addition = ((MInclude) target).getBase();
+        if (ModelFacade.isAInclude(target)) {
+            addition = ModelFacade.getBase(target);
         }
 
         return addition;

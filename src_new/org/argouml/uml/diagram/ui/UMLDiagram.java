@@ -1,7 +1,7 @@
 
 
 
-// $Id: UMLDiagram.java,v 1.33 2003/08/27 19:53:23 jjones Exp $
+// $Id: UMLDiagram.java,v 1.34 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,12 +167,13 @@ public abstract class UMLDiagram
     public String getClassAndModelID() {
         String s = super.getClassAndModelID();
         if (getOwner() == null) return s;
-        String id = (String) (getOwner().getUUID());
+        String id = ModelFacade.getUUID(getOwner());
+        //String id = (String) (getOwner().getUUID());
         return s + "|" + id;
     }
 
     // TODO: should be overwritten by each subclass of UMLDiagram
-    public MModelElement getOwner() {
+    public Object getOwner() {
         return _namespace;
     }
     

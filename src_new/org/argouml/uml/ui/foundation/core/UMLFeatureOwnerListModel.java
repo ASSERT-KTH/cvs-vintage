@@ -1,4 +1,4 @@
-// $Id: UMLFeatureOwnerListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLFeatureOwnerListModel.java,v 1.3 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
@@ -49,7 +50,7 @@ public class UMLFeatureOwnerListModel extends UMLModelElementListModel2 {
     protected void buildModelList() {
 	if (_target != null) {
 	    removeAllElements();
-	    addElement(((MFeature) getTarget()).getOwner());
+	    addElement(ModelFacade.getOwner(getTarget()));
 	}
     }
 
@@ -57,7 +58,7 @@ public class UMLFeatureOwnerListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {
-	return ((MFeature) getTarget()).getOwner() == o;
+	return ModelFacade.getOwner(getTarget()) == o;
     }
 
 }

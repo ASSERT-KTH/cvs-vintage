@@ -1,6 +1,4 @@
-
-
-// $Id: UMLAssociationEndRoleBaseListModel.java,v 1.8 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLAssociationEndRoleBaseListModel.java,v 1.9 2003/08/30 23:11:50 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
@@ -52,17 +51,19 @@ public class UMLAssociationEndRoleBaseListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (_target != null && ((MAssociationEndRole) getTarget()).getBase() != null) {
-            addElement(((MAssociationEndRole) getTarget()).getBase());
+        if (_target != null && ModelFacade.getBase(getTarget()) != null) {
+            addElement(ModelFacade.getBase(getTarget()));
         }
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
-    protected boolean isValidElement(MBase m) {
-        return org.argouml.model.ModelFacade.isAAssociationEnd(m) && 
-            ((MAssociationRole) ((MAssociationEndRole) getTarget()).getAssociation()).getBase().getConnections().contains(m);
+    protected boolean isValidElement(MBase base) {
+        if (!ModelFacade.isAAssociationEnd(base)) return false;
+        
+        MAssociationEndRole assocEndRole = (MAssociationEndRole) getTarget();
+        MAssociationRole assocRole = (MAssociationRole) assocEndRole.getAssociation();
+        return assocRole.getBase().getConnections().contains(base);
     }
-
 }
