@@ -46,7 +46,12 @@ $page.setTitle("Select Module")
     <th>Module desc</th>
 </tr>
 
-#if ($data.Parameters.getString("template").equals("Login.vm"))
+#set ($template = $data.Parameters.getString("template", ""))
+
+## Muck with the IA flow of things...if we came from any of these templates, then
+## we want to always go to SelectArtifactType.vm
+
+#if ($template.equals("Login.vm") || $template.equals("SelectModule.vm") || $template.equals("Index.vm"))
 #set ($tmpNext = "SelectArtifactType.vm")
 #else
 #set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
