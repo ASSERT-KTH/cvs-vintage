@@ -1557,8 +1557,8 @@ public class Issue
                     .add(ActivityPeer.ATTRIBUTE_ID, AttributePeer.STATUS__PK)
                     .addJoin(ActivityPeer.TRANSACTION_ID, 
                              TransactionPeer.TRANSACTION_ID)
-                    .add( ActivityPeer.NEW_VALUE, 
-                      AttributeOption.STATUS__CLOSED__PK.toString() )
+                    .add( ActivityPeer.NEW_OPTION_ID, 
+                      AttributeOption.STATUS__CLOSED__PK )
                     .addDescendingOrderByColumn(TransactionPeer.CREATED_DATE);
                 
                 List transactions = TransactionPeer.doSelect(crit);
