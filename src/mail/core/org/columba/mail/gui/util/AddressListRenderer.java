@@ -82,7 +82,5 @@ public class AddressListRenderer {
 			result.append(address.getShortAddress());
 
 		result.append("</A>");
-		
-		System.out.println("reslt="+result.toString());
 	}
 }
