@@ -44,7 +44,7 @@ public class CheckForNewMessagesCommand extends Command {
 
 		command.log("Authenticating...", worker);
 
-		int totalMessageCount = server.getMessageCount();
+		int totalMessageCount = server.getMessageCount(worker);
 
 		try {
 			Vector newUIDList = command.fetchUIDList(totalMessageCount, worker);

@@ -9,15 +9,14 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -58,7 +57,7 @@ public class FetchNewMessagesCommand extends Command {
 
 		log("Authenticating...", worker);
 
-		totalMessageCount = server.getMessageCount();
+		totalMessageCount = server.getMessageCount(worker);
 
 		try {
 			Vector newUIDList = fetchUIDList(totalMessageCount, worker);
@@ -230,7 +229,7 @@ public class FetchNewMessagesCommand extends Command {
 
 		log("Fetching message size list...", worker);
 		// fetch message-size list 		
-		Vector messageSizeList = server.getMessageSizeList();
+		Vector messageSizeList = server.getMessageSizeList(worker);
 		ColumbaLogger.log.info(
 			"fetched message-size-list capacity=" + messageSizeList.size());
 		return messageSizeList;

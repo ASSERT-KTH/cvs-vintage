@@ -2,6 +2,7 @@ package org.columba.mail.pop3;
 
 import java.util.Vector;
 
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -59,7 +60,7 @@ public class POP3Store {
 
 	public Vector fetchUIDList( int totalMessageCount, WorkerStatusController worker ) throws Exception {
 
-		isLogin();
+		isLogin( worker );
 
 		String str = protocol.fetchUIDList(totalMessageCount, worker);
 
@@ -71,9 +72,9 @@ public class POP3Store {
 	
 
 
-	public Vector fetchMessageSizeList() throws Exception {
+	public Vector fetchMessageSizeList(WorkerStatusController worker) throws Exception {
 
-		isLogin();
+		isLogin( worker );
 
 		String str = protocol.fetchMessageSizes();
 
@@ -83,9 +84,9 @@ public class POP3Store {
 		return v;
 	}
 
-	public int fetchMessageCount() throws Exception 
+	public int fetchMessageCount(WorkerStatusController worker) throws Exception 
 	{
-		isLogin();
+		isLogin( worker );
 		
 		int messageCount = protocol.fetchMessageCount();
 		
@@ -93,9 +94,9 @@ public class POP3Store {
 		
 	}
 	
-	public void deleteMessage(int index) throws Exception {
+	public void deleteMessage(int index, WorkerStatusController worker) throws Exception {
 
-		isLogin();
+		isLogin( worker );
 
 		boolean b = protocol.deleteMessage(index);
 
@@ -105,7 +106,7 @@ public class POP3Store {
 		ColumbaHeader header = new ColumbaHeader();
 		Rfc822Parser parser = new Rfc822Parser();
 		
-		isLogin();
+		isLogin( worker );
 
 		String rawString = protocol.fetchMessage( new Integer(index).toString() ,  worker);
 
@@ -147,7 +148,7 @@ public class POP3Store {
 		state = STATE_NONAUTHENTICATE;
 	}
 	
-	public void login() throws Exception {
+	public void login( WorkerStatusController worker) throws Exception {
 		PasswordDialog dialog;
 		boolean login = false;
 
@@ -184,7 +185,8 @@ public class POP3Store {
 					//setCancel(false);
 				} else {
 					// cancel pressed
-					//setCancel(true);
+					worker.cancel();
+					throw new CommandCancelledException();
 				}
 			} else {
 				password = popItem.get("password");
@@ -193,6 +195,7 @@ public class POP3Store {
 				//method = popItem.getLoginMethod();
 			}
 
+		
 			/*
 			if (getCancel() == false) {
 			*/
@@ -238,11 +241,11 @@ public class POP3Store {
 
 	}
 
-	public boolean isLogin() throws Exception {
+	public boolean isLogin( WorkerStatusController worker ) throws Exception {
 		if (state == STATE_AUTHENTICATE)
 			return true;
 		else {
-			login();
+			login( worker );
 
 			return false;
 		}

@@ -100,8 +100,8 @@ public class POP3Server {
 		return getStore().fetchUIDList(totalMessageCount, worker);
 	}
 
-	public Vector getMessageSizeList() throws Exception {
-		return getStore().fetchMessageSizeList();
+	public Vector getMessageSizeList(WorkerStatusController worker) throws Exception {
+		return getStore().fetchMessageSizeList(worker);
 	}
 
 	protected boolean existsLocally(Object uid, HeaderList list)
@@ -171,15 +171,15 @@ public class POP3Server {
 		return result;
 	}
 
-	public void deleteMessages(int[] indexes) throws Exception {
+	public void deleteMessages(int[] indexes, WorkerStatusController worker) throws Exception {
 		for (int i = 0; i < indexes.length; i++) {
-			store.deleteMessage(indexes[i]);
+			store.deleteMessage(indexes[i], worker);
 		}
 	}
 	
-	public int getMessageCount() throws Exception
+	public int getMessageCount(WorkerStatusController worker) throws Exception
 	{
-		return getStore().fetchMessageCount();
+		return getStore().fetchMessageCount(worker);
 	}
 
 	public Message getMessage(int index, Object uid, WorkerStatusController worker) throws Exception {
