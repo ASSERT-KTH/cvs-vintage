@@ -82,7 +82,7 @@ $user.setHomePage("query")
   #if ($attVal.Attribute.AttributeType.ValidationKey)
     #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
   #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
-    #set ($field = "OptionId")
+    #set ($field = "OptionIds")
   #end
   <tr>
    <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
