@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.5 2001/12/12 17:01:15 dr Exp $
+@version $Id: ManageUserSearch.vm,v 1.6 2002/01/14 10:16:37 maartenc Exp $
 *#
 
 $page.setTitle("User Search")
@@ -75,7 +75,7 @@ Results per page:
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-   <input type="submit" value="Search" />
+   <input type="submit" name="eventSubmit_doSearch" value="Search" />
    &#160;&#160;&#160;
    <input type="submit" name="eventSubmit_doGotoadduser" value="Add User" />
 
