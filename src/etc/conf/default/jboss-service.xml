@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.56 2002/06/24 17:26:54 cazzius Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.57 2002/07/12 17:00:17 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -10,11 +10,9 @@
 
 <server>
 
-  <!--
-     | The Classpath element is needed for http based installations 
-     | we need to list all the archives that the server needs at boot
-     | if the installation is local and the configuration is from file
-     | then there is no need to list the files and it should commented
+  <!-- Load all jars from the JBOSS_DIST/server/<config>/lib directory. This
+    can be restricted to specific jars by specifying them in the archives
+    attribute.
    -->
   <classpath codebase="lib" archives="*"/>
 
@@ -178,74 +176,78 @@
   </mbean>
   -->
 
-
-  <!--
-     | Use URLDirectoryScanner if you need to specify which urls are
-     | directories to scan, and which are urls to be deployed directly.
-     | URLDeploymentScanner assumes that all directories are to be scanned,
-     | which can cause problems if you deploy exploded archives.
-   -->
+  <!-- An mbean for hot deployment/undeployment of archives.
+  -->
   <mbean code="org.jboss.deployment.scanner.URLDeploymentScanner"
 	 name="jboss.deployment:type=DeploymentScanner,flavor=URL">
 
-    <!-- Uncomment (and comment/remove version below) to enable usage of the DeploymentCache
+    <!-- Uncomment (and comment/remove version below) to enable usage of the
+      DeploymentCache
     <depends optional-attribute-name="Deployer">jboss.deployment:type=DeploymentCache</depends>
     -->
     <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
 
-    <!-- 
-       | The URLComparator can be used to specify a deployment ordering
-       | for deployments found in a scanned directory.  The class specified
-       | must be an implementation of java.util.Comparator, it must be able
-       | to compare two URL objects, and it must have a no-arg constructor.
-       | Two deployment comparators are shipped with JBoss:
-       |   - org.jboss.deployment.DeploymentSorter 
-       |     Sorts by file extension, as follows:
-       |       "sar", "service.xml", "rar", "jar", "war", "wsr", "ear", "zip", 
-       |       "*"
-       |   - org.jboss.deployment.scanner.PrefixDeploymentSorter
-       |     If the name portion of the url begins with 1 or more digits, those 
-       |     digits are converted to an int (ignoring leading zeroes), and 
-       |     files are deployed in that order.  Files that do not start with 
-       |     any digits will be deployed last, and they will be sorted by
-       |     extension as above with DeploymentSorter.
-     -->
-    <!--
-    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
+    <!-- The URLComparator can be used to specify a deployment ordering
+         for deployments found in a scanned directory.  The class specified
+         must be an implementation of java.util.Comparator, it must be able
+         to compare two URL objects, and it must have a no-arg constructor.
+         Two deployment comparators are shipped with JBoss:
+           - org.jboss.deployment.DeploymentSorter 
+             Sorts by file extension, as follows:
+               "sar", "service.xml", "rar", "jar", "war", "wsr", "ear", "zip", 
+               "*"
+           - org.jboss.deployment.scanner.PrefixDeploymentSorter
+             If the name portion of the url begins with 1 or more digits, those 
+             digits are converted to an int (ignoring leading zeroes), and 
+             files are deployed in that order.  Files that do not start with 
+             any digits will be deployed last, and they will be sorted by
+             extension as above with DeploymentSorter.
     -->
+    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
+    <!--
     <attribute name="URLComparator">org.jboss.deployment.scanner.PrefixDeploymentSorter</attribute>
+    -->
 
-    <!-- 
-       | The Filter specifies a java.io.FileFilter for scanned
-       | directories.  Any file not accepted by this filter will not be
-       | deployed.  The org.jboss.deployment.scanner.DeploymentFilter 
-       | rejects the following patterns:
-       |     "#*", "%*", ",*", ".*", "_$*", "*#", "*$", "*%", "*.BAK", 
-       |     "*.old", "*.orig", "*.rej", "*.bak", "*,v", "*~", ".make.state", 
-       |     ".nse_depinfo", "CVS", "CVS.admin", "RCS", "RCSLOG", "SCCS", 
-       |     "TAGS", "core", "tags"
-     -->
+    <!-- The Filter specifies a java.io.FileFilter for scanned
+         directories.  Any file not accepted by this filter will not be
+         deployed.  The org.jboss.deployment.scanner.DeploymentFilter 
+         rejects the following patterns:
+             "#*", "%*", ",*", ".*", "_$*", "*#", "*$", "*%", "*.BAK", 
+             "*.old", "*.orig", "*.rej", "*.bak", "*,v", "*~", ".make.state", 
+             ".nse_depinfo", "CVS", "CVS.admin", "RCS", "RCSLOG", "SCCS", 
+             "TAGS", "core", "tags"
+    -->
     <attribute name="Filter">org.jboss.deployment.scanner.DeploymentFilter</attribute>
 
     <attribute name="ScanPeriod">5000</attribute>
 
-    <!-- 
-       | URLs are comma seperated and unprefixed arguments are considered
-       | file URLs and resolve relative to server home unless the given path
-       | is absolute.  Comment this out if using URLDirectoryScanner.
+    <!-- URLs are comma seperated and unprefixed arguments are considered
+       file URLs and resolve relative to server home(JBOSS_DIST/server/default)
+       unless the given path is absolute. Any referenced directories cannot
+       be unpackaged archives, use the parent directory of the unpacked
+       archive.
      -->
     <attribute name="URLs">
        ./deploy
     </attribute>
+  </mbean>
 
-    <!--
-       | Use this for URLDirectoryScanner.  Each entry specifies either a
-       | dir (directory to be scanned), or url (url to be deployed).  Like
-       | the URLs for the DeploymentScanner above, a file: protocol will
-       | be assumed if not specified otherwise.  Uncomment for use with
-       | URLDirectoryScanner .
-     -->
-    <!--
+  <!--  An alternate hot deployer mbean. Use URLDirectoryScanner if you need to
+    specify which urls are directories to scan, and which are urls to be
+    deployed directly. URLDeploymentScanner assumes that all directories are to
+    be scanned, which can cause problems if directory referred to in the
+    deploy attribute is an exploded archive.
+  <mbean code="org.jboss.deployment.scanner.URLDirectoryScanner"
+       name="jboss.deployment:type=DeploymentScanner,flavor=URL">
+
+    <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
+    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
+    <attribute name="Filter">org.jboss.deployment.scanner.DeploymentFilter</attribute>
+    <attribute name="ScanPeriod">5000</attribute>
+    /* Each entry specifies either a dir (directory to be scanned),
+      or url (url to be deployed). Like the URLs for the DeploymentScanner
+      above, a file: protocol will be assumed if not specified otherwise.
+    */
     <attribute name="URLs">
         <urls>
             <dir name="./deploy" />
@@ -254,7 +256,7 @@
             <url name="http://www.test.com/samples/myapp.ear" />
         </urls>
     </attribute>
-    -->
   </mbean>
+  -->
 
 </server>
