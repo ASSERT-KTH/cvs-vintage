@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.79 2002/05/17 04:54:29 spestov Exp $
+ * @version $Id: Buffer.java,v 1.80 2002/05/17 04:59:49 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1524,7 +1524,8 @@ public class Buffer implements EBComponent
 	 */
 	public void propertiesChanged()
 	{
-		parseFully = jEdit.getBooleanProperty("parseFully");
+		parseFully = (!"text".equals(mode.getName())
+			&& jEdit.getBooleanProperty("parseFully"));
 
 		setTokenMarker(mode.getTokenMarker());
 
