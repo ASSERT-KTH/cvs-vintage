@@ -179,12 +179,13 @@ public class Container implements Cloneable {
 	// What happens with "" or null ?
 	// XXX Which one is default servlet ? API doesn't say,
 	// but people expect it to work.
-	if(path==null ||
-	   path.equals("") ||
-	   path.equals( "/") ||
-	   path.equals("/*" ) ) {
-	    mapType=DEFAULT_MAP;
-	} else if (path.startsWith("/") &&
+// 	if(path==null ||
+// 	   path.equals("") ||
+// 	   path.equals( "/") ||
+// 	   path.equals("/*" ) ) {
+// 	    mapType=DEFAULT_MAP;
+// 	} else
+	if (path.startsWith("/") &&
 	    path.endsWith("/*")) {
 	    mapType=PREFIX_MAP;
 	} else if (path.startsWith("*.")) {

@@ -171,7 +171,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    // it was only a security map, no handler defined
 	    return;
 	}
-	
+
 	switch( ct.getMapType() ) {
 	case Container.PREFIX_MAP:
 	    // cut /* ( no need to do a string concat for every match )

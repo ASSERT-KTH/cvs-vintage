@@ -110,10 +110,14 @@ public class JspInterceptor extends BaseInterceptor {
 
     public int requestMap( Request req ) {
 	ServletWrapper wrapper=req.getWrapper();
-	if( ! "jsp".equals( wrapper.getName())
+	if( wrapper!=null && ! "jsp".equals( wrapper.getName())
 	    && wrapper.getPath() == null)
 	    return 0;
 
+	// XXX jsp handler is still needed
+	if( wrapper==null )
+	    return 0;
+	
 	Context ctx= req.getContext();
 
 	// If this Wrapper was already used, we have all the info
