@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.1 $
+ *      @version $Revision: 1.2 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -288,7 +288,8 @@ ContainerInvoker, XmlLoadable
 	    connectionConsumer = topicConnection.createConnectionConsumer(topic, messageSelector, pool, maxMessagesNr); 
 	   } else {
 	       // Create durable - FIXME durable name!!
-	       connectionConsumer = topicConnection.createDurableConnectionConsumer(topic, messageSelector, pool, maxMessagesNr);
+	       String durableName = "";
+	       connectionConsumer = topicConnection.createDurableConnectionConsumer(topic, durableName,messageSelector, pool, maxMessagesNr);
 	   }
 	   // set global connection, so we have something to start() and close()
 	   connection = topicConnection;
