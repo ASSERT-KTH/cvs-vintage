@@ -44,44 +44,44 @@ import org.jboss.logging.Logger;
 *   Possible options:
 *   After each call
 *   On tx commit
-*      
+*
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.29 $
+*   @version $Revision: 1.30 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
 {
     // Constants -----------------------------------------------------
-    
+
     // Attributes ----------------------------------------------------
-    
+
     /**
     *  The current commit option.
     */
     protected int commitOption;
-    
+
     /**
     *  The container of this interceptor.
     */
     protected EntityContainer container;
-    
+
     /**
     *  Optional isModified method
     */
     protected Method isModified;
-    
+
     // Static --------------------------------------------------------
-    
+
     // Constructors --------------------------------------------------
-    
+
     // Public --------------------------------------------------------
-    public void setContainer(Container container) 
-    { 
-       this.container = (EntityContainer)container; 
+    public void setContainer(Container container)
+    {
+       this.container = (EntityContainer)container;
     }
-    
+
     public void init()
     throws Exception
     {
@@ -97,12 +97,12 @@ extends AbstractInterceptor
          // Ignore
        }
     }
-    
+
     public Container getContainer()
     {
        return container;
     }
-    
+
     /**
     *  Register a transaction synchronization callback with a context.
     */
@@ -110,49 +110,49 @@ extends AbstractInterceptor
     {
        // Create a new synchronization
        InstanceSynchronization synch = new InstanceSynchronization(tx, ctx);
-       
+
        try {
          // OSH: An extra check to avoid warning.
          // Can go when we are sure that we no longer get
          // the JTA violation warning.
-         
-		 // SA FIXME. this is a bad check. when minerva marks rollback, we still should 
+
+		 // SA FIXME. this is a bad check. when minerva marks rollback, we still should
 		 // be notified of the tx demarcation.
-		 
+
 		 //if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-          
+
          // ctx.setValid(false);
-          
+
          // return;
          //}
-         
+
          // We want to be notified when the transaction commits
          tx.registerSynchronization(synch);
-       
+
        } catch (RollbackException e) {
-         
+
          // The state in the instance is to be discarded, we force a reload of state
          ctx.setValid(false);
-       
+
        } catch (Exception e) {
-         
+
          throw new EJBException(e);
-       
+
        }
     }
-    
+
     private void deregister(EntityEnterpriseContext ctx)
     {
        // MF FIXME: I suspect this is redundant now
        // (won't the pool clean it up?)
-       
+
        // Deassociate ctx with tx
        // OSH: TxInterceptor seems to do this: ctx.setTransaction(null);
        // OSH: Pool seems to do this: ctx.setInvoked(false);
     }
-    
+
     // Interceptor implementation --------------------------------------
-    
+
     public Object invokeHome(MethodInvocation mi)
     throws Exception
     {
@@ -163,89 +163,89 @@ extends AbstractInterceptor
          EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
          if (ctx.getId() != null) {
           Transaction tx = mi.getTransaction();
-          
+
           if (tx != null && tx.getStatus() == Status.STATUS_ACTIVE)
               register(ctx, tx); // Set tx
-          
+
           // Currently synched with underlying storage
           ctx.setValid(true);
          }
        }
     }
-    
+
     public Object invoke(MethodInvocation mi)
     throws Exception
     {
        // We are going to work with the context a lot
        EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
-       
-       // The Tx coming as part of the Method Invocation 
+
+       // The Tx coming as part of the Method Invocation
        Transaction tx = mi.getTransaction();
-       
+
        //Logger.debug("CTX in: isValid():"+ctx.isValid()+" isInvoked():"+ctx.isInvoked());
        //Logger.debug("newTx: "+ tx);
-       
+
        // Is my state valid?
        if (!ctx.isValid()) {
-         
+
          // If not tell the persistence manager to load the state
          ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
-         
+
          // Now the state is valid
          ctx.setValid(true);
        }
-       
+
        // So we can go on with the invocation
        //DEBUG		Logger.debug("Tx is "+ ((tx == null)? "null" : tx.toString()));
-       
+
        // Invocation with a running Transaction
-       
+
        if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION) {
-         
+
          try {
-          
+
           //Invoke down the chain
           return getNext().invoke(mi);
-         
-         } 
-         
+
+         }
+
          finally {
-          
+
           // Do we have a valid bean (not removed)
           if (ctx.getId() != null) {
-              
+
               // If the context was not invoked previously...
               if (!ctx.isInvoked()) {
-                 
+
                  // It is now and this will cause ejbStore to be called...
                  ctx.setInvoked(true);
-                 
+
                  // ... on a transaction callback that we register here.
                  register(ctx, tx);
               }
           }
-          
+
           // Entity was removed
           else {
-              
+
               if (ctx.getTransaction() != null) {
-                 
+
                  //DEBUG Logger.debug("CTX out: isValid():"+ctx.isValid()+" isInvoked():"+ctx.isInvoked());
                  //DEBUG Logger.debug("PresentTx:"+tx);
-                 
+
                  // If a ctx still has a transaction we would need to deresgister the sync
                  // The simplest is to tell the pool to kill the instance if tx is present
-              
+
               }
           }
          }
        }
-       
-       //    
+
+       //
        else { // No tx
          try {
           Object result = getNext().invoke(mi);
-          
+
           // Store after each invocation -- not on exception though, or removal
           // And skip reads too ("get" methods)
           // OSH FIXME: Isn't this startsWith("get") optimization a violation of
@@ -258,12 +258,12 @@ extends AbstractInterceptor
               {
                  dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
               }
-              
+
               // Store entity
               if (dirty)
                  ((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
           }
-          
+
           return result;
          } catch (Exception e) {
           // Exception - force reload on next call
@@ -272,12 +272,12 @@ extends AbstractInterceptor
          }
        }
     }
-    
-    
+
+
     // Protected  ----------------------------------------------------
-    
+
     // Inner classes -------------------------------------------------
-    
+
     private class InstanceSynchronization
     implements Synchronization
     {
@@ -285,12 +285,12 @@ extends AbstractInterceptor
        *  The transaction we follow.
        */
        private Transaction tx;
-       
+
        /**
        *  The context we manage.
        */
        private EntityEnterpriseContext ctx;
-       
+
        /**
        *  Create a new instance synchronization instance.
        */
@@ -299,32 +299,32 @@ extends AbstractInterceptor
          this.tx = tx;
          this.ctx = ctx;
        }
-       
+
        // Synchronization implementation -----------------------------
-       
+
        public void beforeCompletion()
        {
          // DEBUG Logger.debug("beforeCompletion called for ctx "+ctx.hashCode());
-         
+
          if (ctx.getId() != null) {
-          
-          // This is an independent point of entry. We need to make sure the 
+
+          // This is an independent point of entry. We need to make sure the
           // thread is associated with the right context class loader
           ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
           Thread.currentThread().setContextClassLoader(container.getClassLoader());
-          
+
           try {
-              
+
               try {
-                 
+
                  // MF FIXME: should we throw an exception if lock is present (app error)
                  // it would mean that someone is commiting when all the work is not done
-                 
+
                  // Store instance if business method was invoked
                  if (ctx.isInvoked()) {
-                   
+
                    //DEBUG Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
-                   
+
                    // Check isModified bean flag
                    boolean dirty = true;
                    if (isModified != null)
@@ -338,7 +338,7 @@ extends AbstractInterceptor
                         e.printStackTrace();
                     }
                    }
-                   
+
                    if (dirty)
                     container.getPersistenceManager().storeEntity(ctx);
                  }
@@ -348,7 +348,7 @@ extends AbstractInterceptor
           }
           catch (RemoteException e) {
               Logger.exception(e);
-              
+
               // Store failed -> rollback!
               try {
                  tx.setRollbackOnly();
@@ -359,84 +359,82 @@ extends AbstractInterceptor
               }
           }
           finally {
-              
+
               Thread.currentThread().setContextClassLoader(oldCl);
           }
          }
        }
-       
-       
+
+
        public void afterCompletion(int status)
        {
-         
-         // This is an independent point of entry. We need to make sure the 
+
+         // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-         
-         try 
+
+         try
          {
-          
+
           //DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
-          
+
           // If rolled back -> invalidate instance
           // If removed -> send back to the pool
-          if (status == Status.STATUS_ROLLEDBACK || ctx.getId() == null) { 
-              
-              try { 
-                 
+          if (status == Status.STATUS_ROLLEDBACK || ctx.getId() == null) {
+
+              try {
+
                  // finish the transaction association
                  ctx.setTransaction(null);
-                 
+
                  // remove from the cache
                  container.getInstanceCache().remove(ctx.getCacheKey());
-                 
+
                  // return to pool
-                 container.getInstancePool().free(ctx); 
-              
+                 container.getInstancePool().free(ctx);
+
               } catch (Exception e) {
                  // Ignore
               }
-              
-          } else { 
-                 
+
+          } else {
+
               // We are afterCompletion so the invoked can be set to false (db sync is done)
               ctx.setInvoked(false);
-                 
-              switch (commitOption) { 
+
+              switch (commitOption) {
                  // Keep instance cached after tx commit
                  case ConfigurationMetaData.A_COMMIT_OPTION:
                    // The state is still valid (only point of access is us)
-                   ctx.setValid(true); 
+                   ctx.setValid(true);
                  break;
-                   
+
                  // Keep instance active, but invalidate state
                  case ConfigurationMetaData.B_COMMIT_OPTION:
                    // Invalidate state (there might be other points of entry)
-                   ctx.setValid(false); 
+                   ctx.setValid(false);
                  break;
-                   
+
                  // Invalidate everything AND Passivate instance
                  case ConfigurationMetaData.C_COMMIT_OPTION:
-                   try { 
-                    container.getInstanceCache().release(ctx);	
-                   } catch (Exception e) { 
+                   try {
+                    container.getInstanceCache().release(ctx);
+                   } catch (Exception e) {
                     Logger.debug(e);
                    }
                  break;
               }
-              
+
               // finish the transaction association
               ctx.setTransaction(null);
           }
          }
-         
-         finally { 
-          
+
+         finally {
+
           Thread.currentThread().setContextClassLoader(oldCl);
-          
-                // Notify next waiting for this tx to end, they are waiting since the locking logic
-                synchronized (ctx) {ctx.notify();}
+
          }
        }
     }
