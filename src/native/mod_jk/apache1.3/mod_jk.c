@@ -58,6 +58,7 @@
  *              See ../common/jk_service.h for general mod_jk info         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  *              Dan Milstein <danmil@shore.net>                            *
+ *              Henri Gomez <hgomez@slib.fr>                               *
  * Version:     $ $                                                        *
  ***************************************************************************/
 
@@ -698,6 +699,14 @@ static const char *jk_add_env_var(cmd_parms *cmd,
 }
 
 
+static const char * jk_set_log_fmt(cmd_parms *cmd,
+				   void *dummy,
+				   char * log_format)
+{
+	jk_set_log_format(log_format);
+	return NULL;
+}
+
 static const command_rec jk_cmds[] =
 {
     /*
@@ -729,7 +738,8 @@ static const command_rec jk_cmds[] =
      "Full path to the Jakarta Tomcat module log file"},
     {"JkLogLevel", jk_set_log_level, NULL, RSRC_CONF, TAKE1,
      "The Jakarta Tomcat module log level, can be debug, info, error or emerg"},
-
+    {"JkLogStampFormat", jk_set_log_fmt, NULL, RSRC_CONF, TAKE1,
+     "The Jakarta Tomcat module log format, follow strftime synthax"},
     /*
      * Apache has multiple SSL modules (for example apache_ssl, stronghold
      * IHS ...). Each of these can have a different SSL environment names
