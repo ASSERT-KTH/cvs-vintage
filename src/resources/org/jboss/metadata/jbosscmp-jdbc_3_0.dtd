@@ -18,7 +18,7 @@ The optional defaults elements contains the default values for
 entities, and relationships.
 -->
 <!ELEMENT defaults (datasource?, type-mapping?, create-table?, remove-table?,
-         read-only?, time-out?, select-for-update?, pk-constraint?,
+         read-only?, time-out?, row-locking?, pk-constraint?,
          fk-constraint?, preferred-relation-mapping?, read-ahead?)>
 
 
@@ -71,11 +71,11 @@ valid (milliseconds).
 <!--
 Should select statements the SELECT ... FOR UPDATE syntax?
 
-The select-for-update element must be one of the two following:
-         <select-for-update>true</select-for-update>
-         <select-for-update>false</select-for-update>
+The row-locking element must be one of the two following:
+         <row-locking>true</row-locking>
+         <row-locking>false</row-locking>
 -->
-<!ELEMENT select-for-update (#PCDATA)>
+<!ELEMENT row-locking (#PCDATA)>
 
 
 <!--
@@ -169,7 +169,7 @@ be configured.
 The entity element contains the configuration of an entity
 -->
 <!ELEMENT entity (ejb-name, datasource?, type-mapping?, create-table?, 
-         remove-table?, read-only?, time-out?, select-for-update?, 
+         remove-table?, read-only?, time-out?, row-locking?, 
          pk-constraint?, read-ahead?, table-name?, cmp-field*, 
          eager-load?, lazy-load-groups*, query*)>
 
@@ -411,7 +411,7 @@ relation-table. This is the only mapping available for many-to-many
 relationships.
 -->
 <!ELEMENT table-mapping (table-name?, datasource?, create-table?, 
-         remove-table?, select-for-update?, pk-constraint?,
+         remove-table?, row-locking?, pk-constraint?,
          (ejb-relationship-role, ejb-relationship-role)?)>
 
 
@@ -467,7 +467,7 @@ This includes both type mapping and function mapping.
 
 
 Should be:
-<!ELEMENT type-mapping (name, (function-mapping, mapping)+)>
+<!ELEMENT type-mapping (name, row-locking-template, (function-mapping, mapping)+)>
 -->
 <!ELEMENT type-mapping ANY>
 
@@ -475,6 +475,11 @@ Should be:
 Name of the type-mapping.
 -->
 <!ELEMENT name (#PCDATA)>
+
+<!-- 
+Specifies the java class type to be mapped.
+-->
+<!ELEMENT row-locking-template (#PCDATA)>
 
 <!--
 Specifies the mapping from a java type to a jdbc and a sql type.
