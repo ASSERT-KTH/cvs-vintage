@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.25 2000/05/26 17:32:16 costin Exp $
- * $Revision: 1.25 $
- * $Date: 2000/05/26 17:32:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.26 2000/06/22 23:14:50 alex Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/06/22 23:14:50 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -207,14 +208,26 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 		// do nothing - we are just cleaning up, this is
 		// a workaround for Netscape \n\r in POST - it is supposed
 		// to be ignored
-	    } catch(java.net.SocketException ex) {
-		// do nothing - same
 	    }
-	    //	    System.out.print("5");
-	} catch (Exception e) {
-	    contextM.log( "Error reading request " + e.getMessage());
-	    e.printStackTrace();
-	} finally {
+	}
+	catch(java.net.SocketException e) {
+	    // SocketExceptions are normal
+	    contextM.doLog( "SocketException reading request, ignored", e, Logger.INFORMATION);
+	}
+	catch (java.io.IOException e) {
+	    // IOExceptions are normal 
+	    contextM.doLog( "IOException reading request, ignored", e, Logger.INFORMATION);
+	}
+	// Future developers: if you discover any other
+	// rare-but-nonfatal exceptions, catch them here, and log
+	// with INFORMATION level.
+	catch (Throwable e) {
+	    // any other exception or error is odd. Here we log it
+	    // with "ERROR" level, so it will show up even on
+	    // less-than-verbose logs.
+	    contextM.doLog( "Error reading request, ignored", e, Logger.ERROR);
+	} 
+	finally {
 	    // recycle kernel sockets ASAP
 	    try { if (socket != null) socket.close (); }
 	    catch (IOException e) { /* ignore */ }
