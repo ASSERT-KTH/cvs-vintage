@@ -361,7 +361,7 @@ from:&#160;<input type="text" size="20"
                 value="$!attrInput.Value" size="25" type="text" />
         #end
         #if ($firstTextWidget)
-        #enterHelp($link.setPage("help,UserQueryText.vm") "" " $l10n.TextQueries?")</div>
+        <small>#enterHelp($link.setPage("help,UserQueryText.vm") "" " $l10n.TextQueries?")</small>
            #set ($firstTextWidget = false)
         #end
       #end
