@@ -19,7 +19,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125b spring 1996
-// $Id: FigNode.java,v 1.1 1998/01/26 22:19:22 jrobbins Exp $
+// $Id: FigNode.java,v 1.2 1998/02/11 22:31:25 jrobbins Exp $
 
 package uci.gef;
 
@@ -153,7 +153,7 @@ public class FigNode extends FigGroup {
    *  <A HREF="../features.html#graph_visualization_ports">
    *  <TT>FEATURE: graph_visualization_ports</TT></A>
    */
-  public void addPort(NetPort np, Fig f) {
+  public void bindPort(NetPort np, Fig f) {
     Fig oldPortFig = getPortFig(np);
     if (oldPortFig != null) oldPortFig.setOwner(null); //?
     f.setOwner(np);
