@@ -23,6 +23,7 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -152,7 +153,25 @@ public class SMTPServer {
 			password = accountItem.getSmtpItem().get("password");
 			method = accountItem.getSmtpItem().get("login_method");
 
-			if ((username.length() == 0) || (password.length() == 0)) {
+			if (username.length() == 0)
+			{
+				// there seems to be no username set in the smtp-options
+				//  -> use username from pop3 or imap options
+				if ( accountItem.isPopAccount() )
+				{
+				
+					PopItem pop3Item = accountItem.getPopItem();
+					username = pop3Item.get("user");
+				}
+				else
+				{
+					ImapItem imapItem = accountItem.getImapItem();
+					username = imapItem.get("user");
+				}
+				
+			}
+			
+			if (password.length() == 0) {
 
 				passDialog.showDialog(
 					accountItem.getIdentityItem().get("address"),
@@ -168,6 +187,7 @@ public class SMTPServer {
 				} else {
 					return false;
 				}
+			
 			}
 
 			while (!cont) {
