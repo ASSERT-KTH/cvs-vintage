@@ -152,7 +152,11 @@ public class ReloadInterceptor extends  BaseInterceptor
     protected void  loaderHook( DependManager dm, Context context ) {
 	// ReloadInterceptor must be configured _after_ LoaderInterceptor
 	ClassLoader cl=context.getClassLoader();
-	ClassLoader loader=new DependClassLoader( dm, cl);
+	
+	ClassLoader loader=
+	    new DependClassLoader12( dm, cl,
+		     context.getAttribute( Context.ATTRIB_PROTECTION_DOMAIN));
+
 	context.setClassLoader(loader);
 	context.setAttribute( "org.apache.tomcat.classloader", loader);
     }
@@ -187,7 +191,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 		// So far we work as if the admin interface was
 		// used to remove/add the context.
 		// Or like the deploytool in J2EE.
-		Context ctx1=new Context();
+		Context ctx1=cm.createContext();
 		ctx1.setContextManager( cm );
 		ctx1.setPath(ctx.getPath());
 		ctx1.setDocBase(ctx.getDocBase());
