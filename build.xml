@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.161 2004/04/14 13:18:38 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.162 2004/04/17 13:29:01 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -418,6 +418,8 @@
 
       <fileset dir="${build.resources}">
         <include name="org/jboss/**"/>
+        <include name="dtd/**"/>
+        <include name="schema/**"/>
         <exclude name="org/jboss/ejb/deployment/**"/>
         <exclude name="org/jboss/ejb/plugins/**"/>
       </fileset>

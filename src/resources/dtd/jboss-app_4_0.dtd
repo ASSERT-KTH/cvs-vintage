@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!-- The JBoss 4.x specific elements for ears.
-$Id: jboss-app_4_0.dtd,v 1.1 2004/04/05 10:26:46 tdiesler Exp $
+$Id: jboss-app_4_0.dtd,v 1.1 2004/04/17 13:28:15 tdiesler Exp $
 
 DOCTYPE jboss-app
     PUBLIC "-//JBoss//DTD J2EE Application 1.4//EN"

@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 2.4//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_2_4.dtd">
 
-$Id: jboss_2_4.dtd,v 1.9 2001/11/09 23:11:21 slaboure Exp $
-$Revision: 1.9 $
+$Id: jboss_2_4.dtd,v 1.1 2004/04/17 13:28:15 tdiesler Exp $
+$Revision: 1.1 $
 
 Overview of the architecture of jboss.xml
 
