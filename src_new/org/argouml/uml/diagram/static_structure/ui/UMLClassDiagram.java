@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.21 2003/02/16 19:31:03 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.22 2003/02/17 00:27:22 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -155,16 +155,17 @@ public class UMLClassDiagram extends UMLDiagram {
 
         _toolBar.add(_actionPackage);
         _toolBar.add(_actionClass);
-
+        
+        //_toolBar.add(_actionAssociation);
         // TODO
         // Bobs nasty hack. The PopupToolBoxButton class can only be trusted for
-        // now on metal. Use old style popup for oth plafs.
-        if (LookAndFeelMgr.SINGLETON.determineLookAndFeel().equals(LookAndFeelMgr.METAL_PLAF)) {
+        // now on metal. Use old style popup for other plafs.
+        //if (LookAndFeelMgr.SINGLETON.determineLookAndFeel().equals(LookAndFeelMgr.METAL_PLAF)) {
             _toolBar.add(buildAssociationPopup());
-        } else {
-            JButton associationButton = _toolBar.add(_actionAssociation);
-            _toolBar.add(buildUglyAssociationPopup(associationButton));
-        }
+        //} else {
+        //    JButton associationButton = _toolBar.add(_actionAssociation);
+        //    _toolBar.add(buildUglyAssociationPopup(associationButton));
+        //}
         
         _toolBar.add(_actionDepend);
         _toolBar.add(_actionPermission);
