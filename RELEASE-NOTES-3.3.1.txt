@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.47 2002/03/15 14:57:53 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.48 2002/03/22 04:06:23 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -170,6 +170,10 @@ Bug No.  Description
          and to be able to perform prompting for context local modules.
          Added a "readme" file to document its use.
 
+[F]      The facade classes in org.apache.tomcat.facade are now declared
+         as public classes.  This allows their methods to be called
+	 using introspection from a web application.
+
 
 Server:
 
@@ -224,6 +228,9 @@ Bug No.  Description
          instead of using a local variable.  This allows the PasswordPrompter
          add-on to set SSL socket attributes, such as the keystore and
          certificate passwords.
+
+[F]      A couple of "off by 1" bugs were fixed in the CharChunk and
+         ByteChunk utility classes.
 
 1657     JSPs with tag names that contain '-' or '.' will now compile without
 [b1]     an "Invalid expression" error
@@ -322,6 +329,13 @@ Bug No.  Description
 [F]      PoolTcpConnector was modified to allow the PasswordPrompter add-on
          module to successfully set connection attributes for secure
          connections.
+
+[F]      conf/jk/wrapper.properties was updated to work with a spaces in the
+         JDK path and a wrapper.jvm.options property was added to make
+	 it easier to add options.
+
+[F]      conf/jk/uriworkermap.properties and conf/jk/obj.conf example files
+         wer updated to be more current.
 
 4313     Bug in property substitution for server.xml and apps.xml files was
 [b1]     fixed.
