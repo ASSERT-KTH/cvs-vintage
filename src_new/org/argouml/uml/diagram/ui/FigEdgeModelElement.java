@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.83 2005/01/30 21:46:51 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.84 2005/02/10 20:33:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -762,6 +762,9 @@ public abstract class FigEdgeModelElement
             diagram.damage();
         }
         super.removeFromDiagram();
+        
+        this.getLayer().remove(this);
+        Globals.curEditor().remove(this);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.150 2005/01/30 21:46:52 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.151 2005/02/10 20:33:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1525,6 +1525,10 @@ public abstract class FigNodeModelElement
             Model.getPump().removeModelEventListener(this, own);
         }
         shadowSize = 0;
+        
+        this.getLayer().remove(this);
+        Globals.curEditor().remove(this);
+        
         super.removeFromDiagram();
     }
 

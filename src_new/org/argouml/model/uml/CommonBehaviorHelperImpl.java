@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperImpl.java,v 1.5 2005/01/30 20:48:14 linus Exp $
+// $Id: CommonBehaviorHelperImpl.java,v 1.6 2005/02/10 20:33:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -364,9 +364,15 @@ class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
         if (handle instanceof MComponentInstance
                 && nodeInstance instanceof MNodeInstance) {
             ((MComponentInstance) handle).setNodeInstance(
-                (MNodeInstance) nodeInstance);
+                    (MNodeInstance) nodeInstance);
             return;
         }
+        else if (handle instanceof MComponentInstance
+                && nodeInstance == null) {
+            ((MComponentInstance) handle).setNodeInstance(null);
+            return;
+        }
+
         throw new IllegalArgumentException("handle: " + handle
                 + " or nodeInstance: " + nodeInstance);
     }

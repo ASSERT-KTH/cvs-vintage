@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.27 2005/01/30 20:48:33 linus Exp $
+// $Id: FigMNode.java,v 1.28 2005/02/10 20:33:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -203,11 +203,14 @@ public class FigMNode extends FigNodeModelElement {
      * @see org.tigris.gef.presentation.Fig#setEnclosingFig(org.tigris.gef.presentation.Fig)
      */
     public void setEnclosingFig(Fig encloser) {
-	super.setEnclosingFig(encloser);
+        if (encloser == null
+                || (encloser != null
+                && Model.getFacade().isANode(encloser.getOwner()))) {
+            super.setEnclosingFig(encloser);
+        }
+        Vector figures = getEnclosedFigs();
 
-	Vector figures = getEnclosedFigs();
-
-	if (getLayer() != null) {
+        if (getLayer() != null) {
             // elementOrdering(figures);
             Collection contents = getLayer().getContents(null);
             Collection bringToFrontList = new ArrayList();
@@ -222,7 +225,7 @@ public class FigMNode extends FigNodeModelElement {
             Iterator bringToFrontIter = bringToFrontList.iterator();
             while (bringToFrontIter.hasNext()) {
                 FigEdgeModelElement figEdge =
-                    (FigEdgeModelElement) bringToFrontIter.next();
+                        (FigEdgeModelElement) bringToFrontIter.next();
                 figEdge.getLayer().bringToFront(figEdge);
             }
         }

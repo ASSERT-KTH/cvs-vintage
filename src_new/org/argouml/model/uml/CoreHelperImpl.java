@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.12 2005/02/03 20:40:52 linus Exp $
+// $Id: CoreHelperImpl.java,v 1.13 2005/02/10 20:33:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3329,4 +3329,18 @@ class CoreHelperImpl implements CoreHelper {
         throw new IllegalArgumentException("handle: " + handle
                 + " or visibility: " + visibility);
     }
+
+    /**
+     * @param handle Component
+     * @param node Node
+     */
+    public void removeDeploymentLocation(Object handle, Object node) {
+        if (handle instanceof MComponent && node instanceof MNode) {
+            ((MComponent) handle).removeDeploymentLocation((MNode) node);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle
+                + " or node: " + node);
+    }
+
 }
