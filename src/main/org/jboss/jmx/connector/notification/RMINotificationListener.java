@@ -63,7 +63,12 @@ public class RMINotificationListener
 		Notification pNotification,
 		Object pHandback
 	) {
-      mClientListener.handleNotification( pNotification, pHandback );
+      try {
+         mClientListener.handleNotification( pNotification, pHandback );
+      }
+      catch( RemoteException re ) {
+         throw new RuntimeException( re.getMessage() );
+      }
    }
    
    /**

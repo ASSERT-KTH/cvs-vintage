@@ -54,7 +54,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
-import org.jboss.jmx.ObjectHandler;
 import org.jboss.jmx.connector.JMXConnector;
 import org.jboss.jmx.connector.notification.ClientNotificationListener;
 import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
@@ -74,7 +73,7 @@ import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 **/
 public class EJBConnector
    implements JMXConnector, EJBConnectorMBean

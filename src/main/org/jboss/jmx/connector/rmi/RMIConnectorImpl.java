@@ -60,7 +60,6 @@ import javax.rmi.PortableRemoteObject;
 
 import org.jboss.system.ServiceMBeanSupport;
 
-import org.jboss.jmx.ObjectHandler;
 import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
 import org.jboss.jmx.connector.JMXConnector;
 import org.jboss.jmx.connector.JMXConnectorMBean;
