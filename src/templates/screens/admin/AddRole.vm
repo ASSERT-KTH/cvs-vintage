@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddRole.vm,v 1.5 2002/03/15 18:46:06 jon Exp $
+@version $Id: AddRole.vm,v 1.6 2002/04/09 22:06:28 jon Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
@@ -36,7 +36,7 @@
 </div>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doAddrole" value="Add Role" />&#160;
+ <input type="submit" name="eventSubmit_doAddrole" value="Add" />&#160;
  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 

@@ -46,23 +46,21 @@
  </td>
 </tr>
 <tr>
- <th> *Last name</th>
+ <th>* Last name</th>
  <td>
   <input name="$regGroup.LastName.Key" value="$lastNameData" type="text" size="25" />
   #fieldErrorMsg($regGroup.LastName "")
  </td>
 </tr>
 <tr>
- <th> *Email address</th>
+ <th>* Email address</th>
  <td>
   <input name="$regGroup.Email.Key" value="$emailData" type="text" size="25" />
   #fieldErrorMsg($regGroup.Email "")
  </td>
 </tr>
 <tr>
- <th>
-  *Password
- </th>
+ <th>* Password</th>
  <td>
   <input name="$regGroup.Password.Key" value="$passwordData" type="text" size="25" />
   #fieldErrorMsg($regGroup.Password "")
@@ -74,7 +72,7 @@
 <p>* Required field</p>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doAdduser" value="Add New User" />&#160;
+ <input type="submit" name="eventSubmit_doAdduser" value="Add" />&#160;
  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 

@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.20 2002/04/05 01:22:58 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.21 2002/04/09 22:06:28 jon Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -78,7 +78,7 @@ Results per page:
 
 <div class="functnbar2">
    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-   <input type="submit" name="eventSubmit_doGotoadduser" value="Add User" />
+   <input type="submit" name="eventSubmit_doGotoadduser" value="Add user" />
 </div>
 
 </form>

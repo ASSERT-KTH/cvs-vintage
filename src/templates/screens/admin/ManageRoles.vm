@@ -1,13 +1,13 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.8 2002/03/13 21:34:44 jon Exp $
+@version $Id: ManageRoles.vm,v 1.9 2002/04/09 22:06:28 jon Exp $
 *#
 
 <div id="manageRoles" class="app">
 
 <h2>$page.Title</h2>
 
-<h3>Role List</h3>
+<h3>Role list</h3>
 
 <form action="admin%2CManageRoles.vm" method="post">
   <input type="hidden" name="action" value="admin.ManageRoles" />
@@ -31,9 +31,9 @@
 </table>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doGotoeditrole" value="Edit Role" />&#160;
- <input type="submit" name="eventSubmit_doGotodeleterole" value="Delete Role" />&#160;
- <input type="submit" name="eventSubmit_doGotoaddrole" value="Add New Role" />
+ <input type="submit" name="eventSubmit_doGotoeditrole" value="Edit" />&#160;
+ <input type="submit" name="eventSubmit_doGotodeleterole" value="Delete" />&#160;
+ <input type="submit" name="eventSubmit_doGotoaddrole" value="Add new" />
 </div>
 
 </form>
