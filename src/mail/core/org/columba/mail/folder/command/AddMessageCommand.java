@@ -24,7 +24,7 @@ public class AddMessageCommand extends Command {
 
 	protected HeaderInterface[] headerList = new HeaderInterface[1];
 	protected Folder folder;
-	
+
 	/**
 	 * Constructor for AddMessageCommand.
 	 * @param frameController
@@ -36,16 +36,19 @@ public class AddMessageCommand extends Command {
 		super(frameController, references);
 	}
 
+	public void updateSelectedGUI() throws Exception {
+		MailFrameController frame = (MailFrameController) frameController;
+
+		TableChangedEvent ev =
+			new TableChangedEvent(TableChangedEvent.ADD, folder, headerList);
+
+		frame.tableController.tableChanged(ev);
+	}
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController)frameController;
-		
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.ADD, folder, headerList );
-		 
-		frame.tableController.tableChanged(ev);
-		
+
 		MainInterface.treeModel.nodeChanged(folder);
 	}
 
@@ -56,9 +59,9 @@ public class AddMessageCommand extends Command {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 		folder = (Folder) r[0].getFolder();
 		AbstractMessage message = (AbstractMessage) r[0].getMessage();
-		
+
 		Object uid = folder.addMessage(message, worker);
-		
+
 		// we need this to reflect changes in table-widget
 		// -> this is cached in folder anyway, so actually
 		// -> we just get the HeaderInterface from a Hashtable

@@ -41,15 +41,19 @@ public class MarkMessageCommand extends FolderCommand {
 		super(frameController, references);
 	}
 
+	public void updateSelectedGUI() throws Exception {
+		MailFrameController frame = (MailFrameController) frameController;
+		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.MARK, folder, uids, markVariant );
+		 
+		frame.tableController.tableChanged(ev);
+	}
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		MailFrameController frame = (MailFrameController)frameController;
 		
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.MARK, folder, uids, markVariant );
-		 
-		frame.tableController.tableChanged(ev);
+		
 		
 		MainInterface.treeModel.nodeChanged(folder);
 	}
