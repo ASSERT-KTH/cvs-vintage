@@ -145,7 +145,7 @@ public class ScarabModule
     }
 
     /**
-     * List of Query objects associated with this module.
+     * List of private queries associated with this module.
      * Created by this user.
      */
     public Vector getPrivateQueries(ScarabUser user)
@@ -178,18 +178,32 @@ public class ScarabModule
 
     /**
      * List of Issue Template objects associated with this module.
-     *
      */
-    public Vector getIssueTemplates()
+    public Vector getPrivateIssueTemplates(ScarabUser user)
         throws Exception
     {
         Vector templates = null;
         Criteria crit = new Criteria()
             .add(IssueTemplatePeer.MODULE_ID, getModuleId())
             .add(IssueTemplatePeer.DELETED, 0)
-            .add(QueryPeer.APPROVED, 1);
+            .add(IssueTemplatePeer.USER_ID, user.getUserId())
+            .add(IssueTemplatePeer.TEMPLATE_TYPE_ID, IssueTemplate.USER__PK);
         templates = IssueTemplatePeer.doSelect(crit);
+        return templates;
+    }
 
+    /**
+     * List of global Issue Template objects associated with this module.
+     */
+    public Vector getGlobalTemplates()
+        throws Exception
+    {
+        Vector templates = null;
+        Criteria crit = new Criteria()
+            .add(IssueTemplatePeer.MODULE_ID, getModuleId())
+            .add(IssueTemplatePeer.DELETED, 0)
+            .add(IssueTemplatePeer.TEMPLATE_TYPE_ID, IssueTemplate.GLOBAL__PK);
+        templates = IssueTemplatePeer.doSelect(crit);
         return templates;
     }
 
