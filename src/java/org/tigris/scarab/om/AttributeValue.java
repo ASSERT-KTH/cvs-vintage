@@ -23,7 +23,6 @@ import org.apache.turbine.services.*;
   * You should add additional methods to this class to meet the
   * application requirements.  This class will only be generated as
   * long as it does not already exist in the output directory.
-
   */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -58,7 +57,7 @@ public abstract class AttributeValue
     }
 
 
-    /** Creates, initializes and returns a new Attribute.
+    /* * Creates, initializes and returns a new Attribute.
      * @return new Attribute instance
      * @param issue Isuue object which this attribute is associated with
      * @param intId This Attribute's Id

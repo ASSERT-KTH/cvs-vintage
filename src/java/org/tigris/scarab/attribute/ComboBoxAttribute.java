@@ -54,6 +54,6 @@ import java.util.*;
  *  used for Severity, Priority, Platform and the like.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version 
+ * @version $Id: ComboBoxAttribute.java,v 1.4 2001/03/29 19:21:58 jmcnally Exp $ 
  */
 public class ComboBoxAttribute extends SelectOneAttribute {}
