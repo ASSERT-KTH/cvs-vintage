@@ -366,7 +366,7 @@
        #set ($atch = $scarabR.Attachment)
        #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
        #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
-       #if($attachments.size>0)
+       #if($attachments.size()>0)
            <tr>
            <th> &nbsp; </th>
            <th>File Name</th>
