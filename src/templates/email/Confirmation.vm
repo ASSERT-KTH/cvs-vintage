@@ -8,7 +8,7 @@ Your confirmation code is: $scarabR.User.Confirmed
 In order to confirm your account, please visit the following
 url and enter in your confirmation value above.
 
-<$link.setPage("Confirm.vm").addPathInfo("Confirm", $scarabR.User.Confirmed).addPathInfo("Email",$scarabR.User.Email).setEncodeURLOff()>
+<$link.setPage("Confirm.vm").addPathInfo("Confirm", $scarabR.User.Confirmed).addPathInfo("Email",$scarabR.User.Email)>
 
 
 Thanks,
