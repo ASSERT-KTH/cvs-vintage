@@ -79,6 +79,7 @@ import java.rmi.registry.*;
 
 public class Startup {
 
+    boolean isRmi=false; 
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
     
@@ -113,7 +114,9 @@ public class Startup {
 
 	ServerConfig serverConfig = config.getServerConfig();
 
-        Registry registry= createRegistry(serverConfig.getAdminPort());
+	Registry registry=null;
+	if( isRmi )
+	    registry = createRegistry(serverConfig.getAdminPort());
 	Enumeration contextManagers = serverConfig.getContextManagers();
 
 	while (contextManagers.hasMoreElements()) {

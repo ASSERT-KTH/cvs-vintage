@@ -255,14 +255,14 @@ class XmlHelperHandler implements DocumentHandler {
 	    if( attributes.getValue("type") != null )
 		elem=helper.getObjectForTag( tag + "." + attributes.getValue("type"));
 
-	    // Normal tag <foo> - mapped to org.bar.Foo, will construct a new Foo.
-	    if( elem==null)
-		elem=helper.getObjectForTag( tag );
-
 	    // Another attempt - if className exists, use it as java type
 	    if( attributes.getValue("className") != null )
 		elem=helper.getObjectForClassName( attributes.getValue( "className" ));
 	    
+	    // Normal tag <foo> - mapped to org.bar.Foo, will construct a new Foo.
+	    if( elem==null)
+		elem=helper.getObjectForTag( tag );
+
 	    if( elem ==null ) {
 		System.out.println("Can't map " + tag );
 		return;

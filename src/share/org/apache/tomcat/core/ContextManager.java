@@ -114,6 +114,9 @@ public class ContextManager {
     int port;
 
     String workDir;
+
+    // Instalation directory  
+    String home;
     
     Vector connectors=new Vector();
 
@@ -152,7 +155,7 @@ public class ContextManager {
 	    // XXX find a better exception 
 	    throw new IllegalArgumentException("No default context " + defaultContext);
 	}
-
+	
 	if( requestInterceptors.size() == 0 ) {
 	    // nothing set up by starter, add default ones
 	    if(debug>0) log("Setting default interceptors " + requestInterceptors);
@@ -170,6 +173,11 @@ public class ContextManager {
             Context context = getContext((String)enum.nextElement());
             context.init();
 	}
+
+	// XXX make it configurable - all actions in this method will
+	// be replaced with Interceptors or Tasks. 
+	org.apache.tomcat.task.ApacheConfig apacheConfig=new org.apache.tomcat.task.ApacheConfig();
+	apacheConfig.execute( this );
     }
 
     public void stop() throws Exception {
@@ -212,6 +220,7 @@ public class ContextManager {
      * @param ctx context to be added.
      */
     public void addContext( Context ctx ) {
+	//	System.out.println("Add context ");
 	ctx.setContextManager( this );
 	// assert "valid path" 
 
@@ -259,6 +268,22 @@ public class ContextManager {
     }
     
     // -------------------- Defaults for all contexts --------------------
+    /** The root directory of tomcat
+     */
+    public String getHome() {
+	if( home != null ) return home;
+	// XXX check if TOMCAT_HOME env is set 
+
+	// Convert "." to absolute path
+	home=new File("").getAbsolutePath();
+	return home;
+    }
+    
+    /** Set instalation directory
+     */
+    public void setHome(String home) {
+	this.home=home;
+    }
     
     /**
      * Sets the port number on which this server listens.

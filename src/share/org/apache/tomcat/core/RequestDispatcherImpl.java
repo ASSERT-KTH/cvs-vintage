@@ -202,7 +202,6 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	subRequest.setResponse( realResponse );
 	
 	context.getContextManager().processRequest(subRequest);
-
 	// Now subRequest containse the processed and aliased paths, plus
 	// the wrapper that will handle the request.
 
@@ -243,7 +242,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	addQueryString( realRequest, queryString );
 
-	// now it's really strange: we call the wrapper on the subrequest
+// 	System.out.println("Lookup : " + subRequest );
+// 	System.out.println();
+// 	System.out.println("Req: " + realRequest);
+ 	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
 	subRequest.getWrapper().handleRequest(realRequest.getFacade() , iResponse);

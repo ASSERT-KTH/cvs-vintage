@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.7 2000/01/15 23:30:21 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/15 23:30:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.8 2000/01/25 01:11:54 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/25 01:11:54 $
  *
  * ====================================================================
  *
@@ -594,6 +594,11 @@ public class ResponseImpl implements Response {
 	try {
 	    PrintWriter out = getWriter();
 	    out.close();
+	} catch (IOException err) {
+	    if("Broken pipe".equals( err.getMessage()))
+		System.out.println("Broken pipe");
+	    else
+		throw err;
 	} catch (IllegalStateException ise) {
 	    ServletOutputStream out = getOutputStream();
 	    out.close();

@@ -155,6 +155,7 @@ public class Context {
     int debug=0;
     
     public Context() {
+	//	System.out.println("New Context ");
     }
 	
     // -------------------- Settable context properties --------------------
