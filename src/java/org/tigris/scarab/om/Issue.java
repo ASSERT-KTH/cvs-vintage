@@ -631,21 +631,30 @@ public class Issue
         for ( int i=0; i<attributeList.size(); i++ ) 
         {
             Attribute att = (Attribute) attributeList.get(i);
-            attributeIdList.add(att.getAttributeId());
+            RModuleAttribute modAttr = getModule().
+                getRModuleAttribute(att, getIssueType());
+            if (modAttr.getActive())
+            {
+                attributeIdList.add(att.getAttributeId());
+            }
         }
 
-        Criteria crit = new Criteria()
-            .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
-            .add(AttributeValuePeer.DELETED, false);
-        crit.setDistinct();
-
-        List attValues = getAttributeValues(crit);
-        for ( int i=0; i<attValues.size(); i++ ) 
+        if (!attributeIdList.isEmpty())
         {
-            AttributeValue attVal = (AttributeValue) attValues.get(i);
-            ScarabUser su = UserManager.getInstance(attVal.getUserId());
-            assignees.add(su);
+            Criteria crit = new Criteria()
+                .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
+                .add(AttributeValuePeer.DELETED, false);
+            crit.setDistinct();
+
+            List attValues = getAttributeValues(crit);
+            for ( int i=0; i<attValues.size(); i++ ) 
+            {
+                AttributeValue attVal = (AttributeValue) attValues.get(i);
+                ScarabUser su = UserManager.getInstance(attVal.getUserId());
+                assignees.add(su);
+            }
         }
+
         ScarabUser createdBy = getCreatedBy();
         if (!assignees.contains(createdBy))
         { 
