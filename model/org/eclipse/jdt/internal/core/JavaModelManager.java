@@ -698,7 +698,7 @@ public void doneSaving(ISaveContext context){
 			info.triedRead= true;
 			try {
 				if (monitor != null)
-					monitor.subTask(Util.bind("build.readStateProgress"/*nonNLS*/, project.getName())); //$NON-NLS-1$
+					monitor.subTask(Util.bind("build.readStateProgress", project.getName())); //$NON-NLS-1$
 				state = readState2(project);
 			} catch (CoreException e) {
 				e.printStackTrace();
@@ -1063,7 +1063,7 @@ public void prepareToSave(ISaveContext context) throws CoreException {
 				case IResourceChangeEvent.PRE_AUTO_BUILD :
 					if(delta != null) {
 						this.checkProjectBeingAdded(delta);
-						DeltaProcessor.checkProjectPropertyFileUpdate(delta, null); // will close project if affected by the property file change
+						DeltaProcessor.performPreBuildCheck(delta, null); // will close project if affected by the property file change
 					}
 					break;
 				case IResourceChangeEvent.POST_CHANGE :
