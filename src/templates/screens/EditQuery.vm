@@ -7,7 +7,9 @@ $page.setTitle("Edit query")
 #set ($queryGroup = $intake.Query.mapTo($currentQuery))
 #set ($module = $scarabR.CurrentModule)
 
-<h2>Edit query $currentQuery.Name</h2>
+<h2>Edit query</h2>
+
+<h3>Query: $currentQuery.Name</h3>
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm").toString())
 <form action="$action" method="post">
@@ -39,7 +41,7 @@ $page.setTitle("Edit query")
  </table>
 </div>
 
-<div class="functnbar">
+<div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
