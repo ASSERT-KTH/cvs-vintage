@@ -94,12 +94,6 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	policyFile=pf;
     }
 
-    public void addInterceptor(ContextManager cm, Context ctx,
-			       BaseInterceptor module)
-	throws TomcatException
-    {
-    }
-
     /** Set the security manager, so that policy will be used
      */
     public void engineInit(ContextManager cm) throws TomcatException {
@@ -127,8 +121,9 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	    Class c=Class.forName(securityManagerClass);
 	    Object o=c.newInstance();
 	    System.setSecurityManager((SecurityManager)o);
-	    if (debug>0) log("Security Manager set to " +
-		securityManagerClass, Log.DEBUG);
+
+	    log("Security Manager set to " + securityManagerClass +
+		" " + System.getProperty("java.security.policy"));
 	} catch( ClassNotFoundException ex ) {
 	    log("SecurityManager Class not found: " +
 			       securityManagerClass, Log.ERROR);
@@ -177,6 +172,10 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	pp = new PropertyPermission("path.separator", "read");
 	if( pp != null )
 	    p.add((Permission)pp);
+
+	if( debug > 0 || ctx.getDebug() > 0 )
+	    ctx.log("Permissions " + p );
+	    
     }
     
     public void contextInit( Context context)
@@ -184,7 +183,6 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
     {
 	ContextManager cm = context.getContextManager();
 	String base = context.getAbsolutePath();
-	//	File wd = context.getWorkDir();
 	    
 	try {	
 	    File dir = new File(base);
@@ -197,17 +195,6 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	       We may add fancy config later, if needed
 	     */
 	    Permissions p = new Permissions();
-	    
-	    
-	    // 	    // Add global permissions ( from context manager )
-	    // 	    // XXX maybe use imply or something like that
-	    // 	    Permissions perms = (Permissions)cm.getPermissions();
-	    // 	    if( perms!= null ) {
-	    // 		Enumeration enum=perms.elements();
-	    // 		while(enum.hasMoreElements()) {
-	    // 		    p.add((Permission)enum.nextElement());
-	    // 		}
-	    // 	    }
 	    
 	    addDefaultPermissions( context, dir.getAbsolutePath(), p);
 	
