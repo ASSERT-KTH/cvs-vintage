@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 // Turbine Stuff 
 import org.apache.turbine.ParameterParser; 
@@ -81,7 +82,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.106 2003/02/07 03:35:48 jon Exp $
+ * @version $Id: Search.java,v 1.107 2003/02/11 16:16:16 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -411,12 +412,39 @@ public class Search extends RequireLoginFirstAction
     {
         String userName = data.getParameters().getString("add_user");
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = scarabR.getUserByUserName(userName);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        // we are only interested in users that can be assignees
+        MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
+        List potentialAssignees = null;
+        if (mitList == null) 
+        {
+            Module module = scarabR.getCurrentModule();
+            List perms = module.getUserPermissions(scarabR.getCurrentIssueType());
+            ScarabUser[] userArray =  module.getUsers(perms);
+            potentialAssignees = new ArrayList(userArray.length);
+            for (int i=0;i<userArray.length; i++)
+            {
+                potentialAssignees.add(userArray[i]);
+            }            
+        }
+        else
+        {
+            potentialAssignees = mitList.getPotentialAssignees();
+        }
+        ScarabUser user = null;
+        for (Iterator i = potentialAssignees.iterator(); i.hasNext() && user == null;) 
+        {
+            ScarabUser testUser = (ScarabUser)i.next();
+            if (userName.equals(testUser.getUserName())) 
+            {
+                user = testUser;
+            }
+        }
         
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);        
         if (user == null)
         {
-            scarabR.setAlertMessage(l10n.get("UserNotFound"));
+            scarabR.setAlertMessage(l10n.get("UserNotPossibleAssignee"));
         }
         else
         {
