@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.26 2002/09/12 00:59:09 elicia Exp $
+ * @version $Id: IssueType.java,v 1.27 2002/09/18 20:27:24 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -168,12 +168,71 @@ public  class IssueType
         newIssueType.setDescription(getDescription());
         newIssueType.setParentId(new NumberKey(0));
         newIssueType.save();
+        NumberKey newId = newIssueType.getIssueTypeId();
+
+        // Copy template type
         IssueType template = (IssueType)IssueTypePeer
               .retrieveByPK(getTemplateId());
         IssueType newTemplate = new IssueType();
         newTemplate.setName(template.getName());
-        newTemplate.setParentId(newIssueType.getIssueTypeId());
+        newTemplate.setParentId(newId);
         newTemplate.save();
+
+        // Copy user attributes
+        List userRIAs = getRIssueTypeAttributes(false, "user");
+        for (int m=0; m<userRIAs.size(); m++)
+        {
+            RIssueTypeAttribute userRia = (RIssueTypeAttribute)userRIAs.get(m);
+            RIssueTypeAttribute newUserRia = userRia.copyRia();
+            newUserRia.setIssueTypeId(newId);
+            newUserRia.save();
+        }
+
+        // Copy attribute groups
+        List attrGroups = getAttributeGroups(false);
+        for (int i = 0; i<attrGroups.size(); i++)
+        {
+            AttributeGroup group = (AttributeGroup)attrGroups.get(i);
+            AttributeGroup newGroup = group.copyGroup();
+            newGroup.setIssueTypeId(newId);
+            newGroup.save();
+
+            // add attributes
+            List attrs = group.getAttributes();
+            if (attrs != null)
+            {
+                for (int j=0; j<attrs.size(); j++)
+                {
+                    // save attribute-attribute group maps
+                    Attribute attr = (Attribute)attrs.get(j);
+                    RAttributeAttributeGroup raag = group.getRAttributeAttributeGroup(attr);
+                    RAttributeAttributeGroup newRaag = new RAttributeAttributeGroup();
+                    newRaag.setAttributeId(raag.getAttributeId());
+                    newRaag.setOrder(raag.getOrder());
+                    newRaag.setGroupId(newGroup.getAttributeGroupId());
+                    newRaag.save();
+
+                    // save attribute-issueType maps
+                    RIssueTypeAttribute ria = getRIssueTypeAttribute(attr);
+                    RIssueTypeAttribute newRia = ria.copyRia();
+                    newRia.setIssueTypeId(newId);
+                    newRia.save();
+
+                    // save options
+                    List rios = getRIssueTypeOptions(attr, false);
+                    if (rios != null)
+                    {
+                        for (int k=0; k<rios.size(); k++)
+                        {
+                            RIssueTypeOption rio = (RIssueTypeOption)rios.get(k);
+                            RIssueTypeOption newRio = rio.copyRio();
+                            newRio.setIssueTypeId(newId);
+                            newRio.save();
+                        }
+                    }
+                }
+            }
+        }
         return newIssueType;
     }
 
@@ -193,6 +252,20 @@ public  class IssueType
             rmit.delete(user);
         }
         ScarabCache.clear();
+    }
+
+    /**
+     * Delete mappings with all issue types
+     */
+    public void deleteIssueTypeMappings(ScarabUser user)
+        throws Exception
+    {
+        List attrGroups = getAttributeGroups(false);
+        for (int i=0; i<attrGroups.size(); i++)
+        {
+            AttributeGroup group = (AttributeGroup)attrGroups.get(i);
+            group.delete(user);
+        }
     }
 
 
