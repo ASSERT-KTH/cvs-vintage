@@ -48,6 +48,8 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -218,6 +220,29 @@ public class RModuleOption
         return module.getRModuleAttribute(attribute, issueType);
     }
 
+    
+    /**
+     * Gets a list of this attribute option's descendants
+     * That are associated with this module/Issue Type
+     */
+    public List getDescendants(IssueType issueType)
+        throws Exception
+    {
+        List descendants = new ArrayList();
+        List attrDescendants = getAttributeOption().getDescendants();
+        for (int i =0;i < attrDescendants.size(); i++)
+        { 
+            RModuleOption rmo = null;
+            AttributeOption option = (AttributeOption)attrDescendants.get(i);
+            rmo = getModule().getRModuleOption(option, issueType);
+            if (rmo != null && rmo.getOptionId().equals(option.getOptionId()))
+            {
+                descendants.add(option);
+            }
+        }
+        return descendants;
+    }
+        
     public void delete( ScarabUser user )
          throws Exception
     {                
