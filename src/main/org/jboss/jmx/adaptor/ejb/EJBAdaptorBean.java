@@ -43,14 +43,14 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * JMX EJB-Adaptor allowing a EJB client to work on a remote
 * MBean Server.
 *
 * @author Andreas Schaefer
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 *
 * @ejb:bean type="Stateless"
 *           name="jmx/ejb/Adaptor"
@@ -77,7 +77,7 @@ public class EJBAdaptorBean
    * Reference to the MBeanServer all the methods of this Connector are
    * forwarded to
    **/
-   private JMXConnector mConnector;
+   private RemoteMBeanServer mConnector;
    
    // -------------------------------------------------------------------------
    // Methods
@@ -605,12 +605,12 @@ public class EJBAdaptorBean
                   if( lServer instanceof MBeanServer ) {
                      mConnector = new LocalConnector( (MBeanServer) lServer );
                   } else
-                  if( lServer instanceof JMXConnector ) {
-                     mConnector = (JMXConnector) lServer;
+                  if( lServer instanceof RemoteMBeanServer ) {
+                     mConnector = (RemoteMBeanServer) lServer;
                   } else {
                      throw new CreateException(
                         "Server: " + lServer + " reference by Server-Name: " + lServerName +
-                        " is not of type MBeanServer or JMXConnector: "
+                        " is not of type MBeanServer or RemoteMBeanServer: "
                      );
                   }
                } else {
@@ -713,7 +713,7 @@ public class EJBAdaptorBean
    // Private Classes
    // -------------------------------------------------------------------------  
    
-   private class LocalConnector implements JMXConnector {
+   private class LocalConnector implements RemoteMBeanServer {
       
       private MBeanServer mServer = null;
       

@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.35 2001/10/09 00:59:38 olegnitz Exp $ -->
+<!-- $Id: build.xml,v 1.36 2001/10/11 01:41:58 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -623,7 +623,6 @@ os.version:      ${os.version}
 
     <!-- Build jmx-rmi-adaptor.sar (should try to use jlink for this)--> 
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar">
-         <!-- manifest="${build.etc}/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -640,7 +639,7 @@ os.version:      ${os.version}
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/adaptor/ejb/**"/>
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
-        <include name="org/jboss/jmx/connector/JMXConnector.class"/>
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
       </fileset>
       <fileset dir="${build.metadata}">
         <include name="META-INF/*.xml"/>
@@ -691,7 +690,7 @@ os.version:      ${os.version}
          manifest="${build.etc}/rmi-adaptor.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/**"/>
-        <include name="org/jboss/jmx/connector/JMXConnector**"/>
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/rmi/**"/>
         <include name="org/jboss/system/Service**"/>
@@ -708,7 +707,7 @@ os.version:      ${os.version}
          manifest="${build.etc}/deploy.mf">
       <fileset dir="${build.classes}">
          <include name="org/jboss/jmx/service/Deployer.class"/>
-         <include name="org/jboss/jmx/connector/JMXConnector**"/>
+         <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
          <include name="org/jboss/jmx/connector/notification/RMI**"/>
          <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
          <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
@@ -729,8 +728,9 @@ os.version:      ${os.version}
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
         <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
-        <include name="org/jboss/jmx/connector/JMXConnector.class"/>
-        <include name="org/jboss/jmx/connector/JMXConnectorMBean.class"/>
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
+        <!-- <include
+        name="org/jboss/jmx/connector/RemoteMBeanServerMBean.class"/> -->
         <include name="org/jboss/jmx/connector/notification/RMI**"/>
         <include name="org/jboss/jmx/connector/notification/JMSNotificationListener.class"/>
         <include name="org/jboss/jmx/connector/rmi/**"/>

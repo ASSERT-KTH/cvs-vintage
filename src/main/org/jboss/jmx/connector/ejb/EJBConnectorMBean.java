@@ -6,7 +6,7 @@
 */
 package org.jboss.jmx.connector.ejb;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * MBean Interface for the EJB-Connector (client-side) to
@@ -15,7 +15,7 @@ import org.jboss.jmx.connector.JMXConnector;
 * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
 **/
 public interface EJBConnectorMBean
-	extends JMXConnector
+	extends RemoteMBeanServer
 {
 	/**
 	* Starts the connection to the given server

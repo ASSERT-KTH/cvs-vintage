@@ -61,8 +61,8 @@ import javax.rmi.PortableRemoteObject;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
-import org.jboss.jmx.connector.JMXConnector;
-import org.jboss.jmx.connector.JMXConnectorMBean;
+import org.jboss.jmx.connector.RemoteMBeanServer;
+// import org.jboss.jmx.connector.RemoteMBeanServerMBean;
 import org.jboss.jmx.connector.notification.ClientNotificationListener;
 import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
 import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
@@ -76,7 +76,7 @@ import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
 */
 public class RMIConnectorImpl
-   implements JMXConnectorMBean, RMIConnectorImplMBean
+   implements /* RemoteMBeanServerMBean, */ RMIConnectorImplMBean
 {
    // Constants -----------------------------------------------------
    
@@ -139,15 +139,7 @@ public class RMIConnectorImpl
          while( i.hasNext() ) {
             ClientNotificationListener lListener = (ClientNotificationListener) i.next();
             try {
-               removeNotificationListener(
-                  lListener.getSenderMBean(),
-                  lListener.getRemoteListenerName()
-               );
-            }
-            catch( Exception e ) {
-            }
-            try {
-               unregisterMBean( lListener.getRemoteListenerName() );
+               lListener.removeNotificationListener( this );
             }
             catch( Exception e ) {
             }
@@ -197,7 +189,7 @@ public class RMIConnectorImpl
       return lConnection;
    }
    
-   // JMXConnector implementation -------------------------------------
+   // RemoteMBeanServer implementation -------------------------------------
 
    public ObjectInstance createMBean(
       String pClassName,
@@ -556,16 +548,11 @@ public class RMIConnectorImpl
       InstanceNotFoundException,
       ListenerNotFoundException
    {
-      try {
-         ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
-         int i = mListeners.indexOf( lCheck );
-         if( i >= 0 ) {
-            ClientNotificationListener lListener = (ClientNotificationListener) mListeners.get( i );
-            unregisterMBean( lListener.getRemoteListenerName() );
-         }
-      }
-      catch( MBeanRegistrationException mbre ) {
-         throw new RuntimeException( "Remote access to perform this operation failed: " + mbre.getMessage() );
+      ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
+      int i = mListeners.indexOf( lCheck );
+      if( i >= 0 ) {
+         ClientNotificationListener lListener = (ClientNotificationListener) mListeners.get( i );
+         lListener.removeNotificationListener( this );
       }
    }
 

@@ -12,7 +12,7 @@ import java.util.Hashtable;
 import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.system.ServiceMBean;
 
 /**
@@ -82,7 +82,7 @@ public interface ConnectorFactoryServiceMBean
    *
    * @return JMX Connector or null if server or protocol is not supported
    **/
-   public JMXConnector createConnection(
+   public RemoteMBeanServer createConnection(
       ConnectorFactoryImpl.ConnectorName pConnector
    );
 

@@ -6,14 +6,14 @@
 */
 package org.jboss.jmx.connector.rmi;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 *
 * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
 **/
 public interface RMIConnectorImplMBean
-	extends JMXConnector
+	extends RemoteMBeanServer
 {
 	/**
 	* Starts the connection to the given server

@@ -11,6 +11,7 @@ import java.util.Random;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.JMException;
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanException;
@@ -22,7 +23,7 @@ import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * Basic Local Listener to receive Notification from a remote JMX Agent
@@ -46,7 +47,7 @@ public abstract class ClientNotificationListener {
    }
    
    public ObjectName createListener(
-      JMXConnector pConnector,
+      RemoteMBeanServer pConnector,
       String mClass,
       Object[] pParameters,
       String[] pSignatures
@@ -61,11 +62,6 @@ public abstract class ClientNotificationListener {
       while( lName == null ) {
          try {
             lName = new ObjectName( "JMX:type=listener,id=" + mRandom.nextLong() );
-            System.out.println( "ClientNotificationListener.createListener(), " +
-               "class: " + mClass + ", name: " + lName +
-               "parameters: " + java.util.Arrays.asList( pParameters ) +
-               "signatures: " + java.util.Arrays.asList( pSignatures )
-            );
             ObjectInstance lInstance = pConnector.createMBean(
                mClass,
                lName,
@@ -83,7 +79,7 @@ public abstract class ClientNotificationListener {
    }
 
    public void addNotificationListener(
-      JMXConnector pConnector,
+      RemoteMBeanServer pConnector,
       NotificationFilter pFilter
    ) throws
       InstanceNotFoundException
@@ -94,6 +90,26 @@ public abstract class ClientNotificationListener {
          pFilter,
          null
       );
+   }
+   
+  public void removeNotificationListener(
+      RemoteMBeanServer pConnector
+   ) throws
+      InstanceNotFoundException
+   {
+      try {
+         pConnector.removeNotificationListener(
+            mSender,
+            mRemoteListener
+         );
+      }
+      catch( JMException jme ) {
+      }
+      try {
+         pConnector.unregisterMBean( mRemoteListener );
+      }
+      catch( JMException jme ) {
+      }
    }
    
    public ObjectName getSenderMBean() {

@@ -25,7 +25,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.jmx.connector.ejb.EJBConnector;
 import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
 
@@ -46,7 +46,7 @@ public class ConnectorFactoryImpl {
    // Attributes ----------------------------------------------------
 
    private MBeanServer mServer;
-   private int mNotificationType = JMXConnector.NOTIFICATION_TYPE_RMI;
+   private int mNotificationType = RemoteMBeanServer.NOTIFICATION_TYPE_RMI;
    private String mJMSName;
    private String mEJBAdaptorName = "ejb/jmx/ejb/Adaptor";
 
@@ -75,7 +75,7 @@ public class ConnectorFactoryImpl {
    ) {
       mServer = pServer;
       if( pJMSName != null ) {
-         mNotificationType = JMXConnector.NOTIFICATION_TYPE_JMS;
+         mNotificationType = RemoteMBeanServer.NOTIFICATION_TYPE_JMS;
          mJMSName = pJMSName;
       } else {
          mNotificationType = pNotificationType;
@@ -125,10 +125,10 @@ public class ConnectorFactoryImpl {
     *
     * @return JMX Connector or null if server or protocol is not supported
     **/
-   public JMXConnector createConnection(
+   public RemoteMBeanServer createConnection(
       ConnectorName pConnector
    ) {
-      JMXConnector lConnector = null;
+      RemoteMBeanServer lConnector = null;
       // At the moment only RMI and EJB protocol is supported (on the client side)
       if( pConnector.getProtocol().equals( "rmi" ) ) {
          try {

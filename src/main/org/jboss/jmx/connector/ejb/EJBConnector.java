@@ -6,7 +6,6 @@
 */
 package org.jboss.jmx.connector.ejb;
 
-import org.jboss.jmx.adaptor.ejb.ServiceUnavailableException;
 import org.jboss.jmx.adaptor.interfaces.Adaptor;
 import org.jboss.jmx.adaptor.interfaces.AdaptorHome;
 
@@ -54,7 +53,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.jmx.connector.notification.ClientNotificationListener;
 import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
 import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
@@ -73,10 +72,10 @@ import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 **/
 public class EJBConnector
-   implements JMXConnector, EJBConnectorMBean
+   implements RemoteMBeanServer, EJBConnectorMBean
 {
 
    // -------------------------------------------------------------------------
@@ -208,41 +207,26 @@ public class EJBConnector
    * @return Returns a SurveyManagement bean for use by the Survey handler.
    **/
    private Adaptor getAdaptorBean( String pJNDIName )
-      throws ServiceUnavailableException
+      throws
+         NamingException,
+         RemoteException,
+         CreateException
    {
-      try {
-         Context lJNDIContext = null;
-         // The Adaptor can be registered on another JNDI-Server therefore
-         // the user can overwrite the Provider URL
-         if( mJNDIServer != null ) {
-            Hashtable lProperties = new Hashtable();
-            lProperties.put( Context.PROVIDER_URL, mJNDIServer );
-            lJNDIContext = new InitialContext( lProperties );
-         } else {
-            lJNDIContext = new InitialContext();
-         }
-         Object aEJBRef = lJNDIContext.lookup( pJNDIName );
-         AdaptorHome aHome = (AdaptorHome) 
-            PortableRemoteObject.narrow( aEJBRef, AdaptorHome.class );
+      Context lJNDIContext = null;
+      // The Adaptor can be registered on another JNDI-Server therefore
+      // the user can overwrite the Provider URL
+      if( mJNDIServer != null ) {
+         Hashtable lProperties = new Hashtable();
+         lProperties.put( Context.PROVIDER_URL, mJNDIServer );
+         lJNDIContext = new InitialContext( lProperties );
+      } else {
+         lJNDIContext = new InitialContext();
+      }
+      Object aEJBRef = lJNDIContext.lookup( pJNDIName );
+      AdaptorHome aHome = (AdaptorHome) 
+         PortableRemoteObject.narrow( aEJBRef, AdaptorHome.class );
 
-         return aHome.create();
-      }
-      catch( NamingException pNE ) {
-         pNE.printStackTrace();
-         throw new ServiceUnavailableException( 
-            "JNDI lookup failed: " + pNE.getMessage() 
-         );
-      }
-      catch( RemoteException pRE ) {
-         throw new ServiceUnavailableException(
-            "Remote communication error: " + pRE.getMessage()
-         );
-      }
-      catch( CreateException pCE ) {
-         throw new ServiceUnavailableException(
-            "Problem creating content management session bean: " + pCE.getMessage()
-         );
-      }
+      return aHome.create();
    }
    
    // -------------------------------------------------------------------------
@@ -560,7 +544,6 @@ public class EJBConnector
          if( e instanceof InstanceNotFoundException ) {
             throw (InstanceNotFoundException) e;
          }
-         e.printStackTrace();
          throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
       }
    }
@@ -595,16 +578,11 @@ public class EJBConnector
       InstanceNotFoundException,
       ListenerNotFoundException
    {
-      try {
-         ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
-         int i = mListeners.indexOf( lCheck );
-         if( i >= 0 ) {
-            ClientNotificationListener lListener = (ClientNotificationListener) mListeners.get( i );
-            unregisterMBean( lListener.getRemoteListenerName() );
-         }
-      }
-      catch( MBeanRegistrationException mbre ) {
-         throw new RuntimeException( "Remote access to perform this operation failed: " + mbre.getMessage() );
+      ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
+      int i = mListeners.indexOf( lCheck );
+      if( i >= 0 ) {
+         ClientNotificationListener lListener = (ClientNotificationListener) mListeners.get( i );
+         lListener.removeNotificationListener( this );
       }
    }
 
@@ -657,15 +635,7 @@ public class EJBConnector
          while( i.hasNext() ) {
             ClientNotificationListener lListener = (ClientNotificationListener) i.next();
             try {
-               removeNotificationListener(
-                  lListener.getSenderMBean(),
-                  lListener.getRemoteListenerName()
-               );
-            }
-            catch( Exception e ) {
-            }
-            try {
-               unregisterMBean( lListener.getRemoteListenerName() );
+               lListener.removeNotificationListener( this );
             }
             catch( Exception e ) {
             }

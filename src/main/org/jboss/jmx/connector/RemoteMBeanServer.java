@@ -48,7 +48,7 @@ import javax.management.ReflectionException;
 *
 * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
 **/
-public interface JMXConnector {
+public interface RemoteMBeanServer {
 
 	// Constants -----------------------------------------------------
 	

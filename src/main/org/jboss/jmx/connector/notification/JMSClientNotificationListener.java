@@ -33,7 +33,7 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 import javax.rmi.PortableRemoteObject;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * Local JMS Listener to receive the message and send to the listener
@@ -50,7 +50,7 @@ public class JMSClientNotificationListener
       NotificationFilter pFilter,
       String pQueueJNDIName,
       String pServerName,
-      JMXConnector pConnector
+      RemoteMBeanServer pConnector
    ) throws
       JMSException,
       JMException,

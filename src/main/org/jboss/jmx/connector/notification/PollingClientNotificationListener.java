@@ -16,7 +16,7 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * Local Polling Listener to receive the message and send to the listener
@@ -26,7 +26,7 @@ public class PollingClientNotificationListener
    implements Runnable
 {
 
-   private JMXConnector                mConnector;
+   private RemoteMBeanServer                mConnector;
    private int                         mSleepingPeriod = 2000;
    
    public PollingClientNotificationListener(
@@ -36,7 +36,7 @@ public class PollingClientNotificationListener
       NotificationFilter pFilter,
       int pSleepingPeriod,
       int pMaximumListSize,
-      JMXConnector pConnector
+      RemoteMBeanServer pConnector
    ) throws
       JMException
    {

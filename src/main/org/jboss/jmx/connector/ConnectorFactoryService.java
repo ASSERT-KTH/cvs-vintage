@@ -15,7 +15,7 @@ import javax.management.MBeanServer;
 
 import javax.naming.InitialContext;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -82,7 +82,7 @@ public class ConnectorFactoryService
 		return mFactory.getConnectors( pProperties, pTester );
    }
 
-   public JMXConnector createConnection(
+   public RemoteMBeanServer createConnection(
       ConnectorFactoryImpl.ConnectorName pConnector
    ) {
 		return mFactory.createConnection( pConnector );

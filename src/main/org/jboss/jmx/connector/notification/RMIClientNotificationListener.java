@@ -17,7 +17,7 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * Client-side RMI Listener to receive the message and send to the
@@ -36,7 +36,7 @@ public class RMIClientNotificationListener
       NotificationListener pClientListener,
       Object pHandback,
       NotificationFilter pFilter,
-      JMXConnector pConnector
+      RemoteMBeanServer pConnector
    ) throws
       RemoteException,
       JMException

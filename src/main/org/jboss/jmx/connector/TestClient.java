@@ -82,20 +82,20 @@ public class TestClient {
          }
          switch( lType ) {
             case 1:
-               lType = JMXConnector.NOTIFICATION_TYPE_RMI;
+               lType = RemoteMBeanServer.NOTIFICATION_TYPE_RMI;
                break;
             case 2:
-               lType = JMXConnector.NOTIFICATION_TYPE_JMS;
+               lType = RemoteMBeanServer.NOTIFICATION_TYPE_JMS;
                break;
             case 3:
-               lType = JMXConnector.NOTIFICATION_TYPE_POLLING;
+               lType = RemoteMBeanServer.NOTIFICATION_TYPE_POLLING;
          }
 			lLocalServer.setAttribute(
 				lFactoryInstance.getObjectName(),
             new Attribute( "NotificationType", new Integer( lType ) )
          );
          String lJMSName = null;
-         if( lType == JMXConnector.NOTIFICATION_TYPE_JMS ) {
+         if( lType == RemoteMBeanServer.NOTIFICATION_TYPE_JMS ) {
             while( lJMSName == null || lJMSName.trim().length() == 0 ) {
                lJMSName = getUserInputLine(
                   "\n" +
@@ -194,7 +194,7 @@ public class TestClient {
          lMessage.setLength( 0 );
 			// Take the first server and its first protoccol and create a
 			// connection to the remote MBeanServer
-			JMXConnector lConnector = (JMXConnector) lLocalServer.invoke(
+			RemoteMBeanServer lConnector = (RemoteMBeanServer) lLocalServer.invoke(
 				lFactoryInstance.getObjectName(),
 				"createConnection",
 				new Object[] {
@@ -282,7 +282,7 @@ public class TestClient {
 	
 	// Constructors --------------------------------------------------> 
 	// Public --------------------------------------------------------
-	public static void listServices( JMXConnector pConnector )
+	public static void listServices( RemoteMBeanServer pConnector )
 		throws Exception
 	{
 		try {
@@ -306,7 +306,7 @@ public class TestClient {
 			e.printStackTrace();
 		}
 	}
-	public static void registerListeners( JMXConnector pConnector )
+	public static void registerListeners( RemoteMBeanServer pConnector )
 		throws Exception
 	{
 		try {

@@ -22,7 +22,7 @@ import javax.management.RuntimeErrorException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
 * A JMX client to deploy an application into a running JBoss server.
@@ -31,7 +31,7 @@ import org.jboss.jmx.connector.JMXConnector;
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class Deployer
 {
@@ -126,13 +126,13 @@ public class Deployer
    }
 
    /**
-    * Lookup of JMXConnector factored out.
+    * Lookup of RemoteMBeanServer factored out.
     */
-   protected JMXConnector lookupConnector() throws NamingException {
-      JMXConnector connector = null;
+   protected RemoteMBeanServer lookupConnector() throws NamingException {
+      RemoteMBeanServer connector = null;
       InitialContext ctx = new InitialContext();
       try {
-         connector = (JMXConnector) ctx.lookup( "jmx:" + mServerName + ":rmi" );
+         connector = (RemoteMBeanServer) ctx.lookup( "jmx:" + mServerName + ":rmi" );
       }
       finally {
          ctx.close();
@@ -154,7 +154,7 @@ public class Deployer
    {
       URL _url = createURL(url);
       // lookup the adapter to use
-      JMXConnector server = lookupConnector();
+      RemoteMBeanServer server = lookupConnector();
 
       // get the deployer name to use
       ObjectName name = getFactoryName();
