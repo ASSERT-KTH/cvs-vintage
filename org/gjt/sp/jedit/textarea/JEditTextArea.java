@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.157 2002/12/25 20:44:55 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.158 2002/12/27 02:13:34 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -573,6 +573,7 @@ public class JEditTextArea extends JComponent
 	 */
 	public void scrollTo(int line, int offset, boolean doElectricScroll)
 	{
+		System.err.println("scroll to");
 		int extraEndVirt;
 		int lineLength = buffer.getLineLength(line);
 		if(offset > lineLength)

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.59 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.60 2002/12/27 02:13:33 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -907,7 +907,12 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 			if(file.type == VFS.DirectoryEntry.DIRECTORY
 				|| file.type == VFS.DirectoryEntry.FILESYSTEM)
-				setDirectory(file.path);
+			{
+				if(mode == M_OPEN_NEW_VIEW && this.mode == BROWSER)
+					browseDirectoryInNewWindow(view,file.path);
+				else
+					setDirectory(file.path);
+			}
 			else if(this.mode == BROWSER || this.mode == BROWSER_DIALOG)
 			{
 				Buffer _buffer = jEdit.getBuffer(file.path);
