@@ -101,8 +101,25 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
      */
     public int preService(Request request, Response response) {
 	if( request.getContext() == null ) return 0;
+	// fix for 1112
+	Request child=request.getChild();
+	if( child!=null ) {
+	    request=child;
+	}
 	fixJDKContextClassLoader(request.getContext());
 	return 0;
+    }
+
+    public int postService(Request request, Response response) {
+	Request child=request.getChild();
+	if( child==null ) return;
+
+	// after include, reset the class loader
+	// fix for 1112
+	Request child=request.getChild();
+	request=child.getParent();
+	if( request != null )
+	    fixJDKContextClassLoader(request.getContext());
     }
 
     static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
@@ -126,23 +143,6 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 	    return; // nothing to do - or in include if same context
 	
 	jdk11Compat.setContextClassLoader(cl);
-	// XXX if sandboxing is enabled and include() is not doing
-	// doPriviledged, then the code that checks for cross-context
-	// calls must also set the class loader or doPriviledged.
-	
-	// include() has it's own doPrivileged, no need for a second.
-	
-// 	// this may be called from include(), in which case we
-// 	// have the codebase==jsp or servlet
-// 	java.security.AccessController.doPrivileged(new
-// 	    java.security.PrivilegedAction()
-// 	    {
-// 		public Object run()  {
-// 		    Thread.currentThread().setContextClassLoader(cl);
-// 		    return null;
-// 		}
-// 	    });
-	
     }
     
 }
