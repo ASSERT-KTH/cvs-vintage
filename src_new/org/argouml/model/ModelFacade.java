@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.23 2003/02/06 19:09:07 thn Exp $
+// $Id: ModelFacade.java,v 1.24 2003/02/06 23:30:29 d00mst Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,13 +360,7 @@ public class ModelFacade {
      * @returns true if handle is a constructor.
      */
     public static boolean isConstructor(Object handle) {
-        MStereotype createStereoType =
-            ExtensionMechanismsFactory.getFactory().buildStereotype(
-                new MOperationImpl(),
-                "create");
-        return ExtensionMechanismsHelper.getHelper().isValidStereoType(
-            handle,
-            createStereoType);
+        return isStereotype(handle, "create");
     }
 
     /**
