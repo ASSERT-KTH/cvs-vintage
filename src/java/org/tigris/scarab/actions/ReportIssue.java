@@ -90,7 +90,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.153 2002/12/10 06:00:06 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.154 2002/12/19 00:17:47 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -417,6 +417,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     doRedirect(data, context, templateCode, issue);
                 
                     // send email
+                    // FIXME: get rid of this logic.
                     if (summary.length() == 0 && comment != null)
                     {
                         summary = comment.getData();
@@ -424,7 +425,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     if (summary.length() > 60)
                     {
                         summary = summary.substring(0,60) + "...";
-                    }                
+                    }
                     summary = (summary.length() == 0) ? summary : " - " + summary;
                     
                     String[] args = { 
@@ -512,10 +513,10 @@ public class ReportIssue extends RequireLoginFirstAction
     }
     
     /**
-     * Handles adding a note to an issue. This is an option
+     * Handles adding a comment to one or more issues. This is an option
      * which is available on Wizard2 during the dedupe process.
      */
-    public void doAddnote(RunData data, TemplateContext context) 
+    public void doAddcomments(RunData data, TemplateContext context) 
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -545,19 +546,19 @@ public class ReportIssue extends RequireLoginFirstAction
                     {
                         Issue issue = (Issue)issues.get(i);
                         activitySet = 
-                            issue.addNote(activitySet, attachment, 
+                            issue.addComment(activitySet, attachment, 
                                 (ScarabUser)data.getUser());
                         if (!activitySet.sendEmail(
                              new ContextAdapter(context), issue))
                         {
                             scarabR.setInfoMessage(
-                                l10n.get("NoteAddedButEmailError"));
+                                l10n.get("CommentAddedButEmailError"));
                         }
                     }
 
                     scarabR.setConfirmMessage(l10n.get("CommentAdded"));
                     // if there was only one duplicate issue and we just added
-                    // a note to it, assume user is done
+                    // a comment to it, assume user is done
                     String nextTemplate = 
                         ((ScarabUser)data.getUser()).getHomePage();
                     if (! searchAndSetTemplate(data, context, 1, nextTemplate))
@@ -572,7 +573,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 else 
                 {
                     scarabR.setAlertMessage(
-                        l10n.get("NoTextInNotesTextArea"));
+                        l10n.get("NoTextInCommentTextArea"));
                     searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
                 }
             }
@@ -686,18 +687,18 @@ public class ReportIssue extends RequireLoginFirstAction
                     scarabR.setAlertMessage(
                         l10n.get("InsufficientPermissionsToEnterIssues"));
                 }
-               break;
+                break;
             case 2: 
                 if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                        user.getCurrentModule()))
                 {
                     template = "AssignIssue.vm";
+                    data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE, 
+                                             "ViewIssue.vm");
                     data.getParameters().add("issue_ids", 
                                              issue.getUniqueId());
-                    data.getParameters().add(ScarabConstants.CANCEL_TEMPLATE, 
-                                             "ViewIssue.vm");
-                    data.getParameters()
-                        .add("id", issue.getUniqueId().toString());
+//                    data.getParameters()
+//                        .setString("id", issue.getUniqueId().toString());
                     getIntakeTool(context).removeAll();
                     scarabR.resetAssociatedUsers();
                 }
@@ -707,14 +708,14 @@ public class ReportIssue extends RequireLoginFirstAction
                     scarabR.setAlertMessage(
                         l10n.get("InsufficientPermissionsToAssignIssues"));
                 }
-               break;
+                break;
             case 3: 
                 if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, 
                                        user.getCurrentModule()))
                 {
                     template = "ViewIssue.vm";
                     data.getParameters()
-                        .add("id",issue.getUniqueId().toString());
+                        .setString("id",issue.getUniqueId().toString());
                 }
                 else 
                 {
@@ -722,9 +723,28 @@ public class ReportIssue extends RequireLoginFirstAction
                     scarabR.setAlertMessage(
                         l10n.get("InsufficientPermissionsToViewIssues"));
                 }
-               break;
+                break;
             case 4: 
-               template = "Index.vm";
+                template = user.getHomePage();
+                break;
+            case 5: 
+                if (user.hasPermission(ScarabSecurity.ISSUE__VIEW, 
+                                       user.getCurrentModule()))
+                {
+                    template = "ViewIssue.vm";
+                    data.getParameters()
+                        .setString("id",issue.getUniqueId().toString());
+                    data.getParameters()
+                        .setString("tab","3"); // comment tab == 3
+                    data.getUser().setTemp(ScarabConstants.TAB_KEY, "3");
+                }
+                else 
+                {
+                    template = user.getHomePage();
+                    scarabR.setAlertMessage(
+                        l10n.get("InsufficientPermissionsToViewIssues"));
+                }
+                break;
         } 
         setTarget(data, template);
     }
