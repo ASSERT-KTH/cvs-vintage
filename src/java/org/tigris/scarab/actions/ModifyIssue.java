@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.139 2002/12/13 00:16:12 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.140 2002/12/19 21:05:22 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -462,8 +462,8 @@ public class ModifyIssue extends BaseModifyIssue
         if (intake.isAllValid() && group != null)
         {
             // adding a file is a special process
-            ActivitySet activitySet =
-                addFileAttachment(issue, group, scarabR, data, intake);
+            addFileAttachment(issue, group, scarabR, data, intake);
+            ActivitySet activitySet = issue.doSaveFileAttachments(user);
             if (activitySet != null)
             {
                 sendEmail(activitySet, issue, l10n.get("FileSaved"), context);
@@ -480,14 +480,14 @@ public class ModifyIssue extends BaseModifyIssue
         }
     }
 
-    static ActivitySet addFileAttachment(Issue issue, Group group, 
+    static void addFileAttachment(Issue issue, Group group, 
             ScarabRequestTool scarabR, RunData data, IntakeTool intake)
         throws Exception
     {
-        return addFileAttachment(issue, group, null, scarabR, data, intake);
+        addFileAttachment(issue, group, null, scarabR, data, intake);
     }
 
-    static ActivitySet addFileAttachment(Issue issue, Group group, Attachment attachment,
+    static void addFileAttachment(Issue issue, Group group, Attachment attachment,
             ScarabRequestTool scarabR, RunData data, IntakeTool intake)
         throws Exception
     {
@@ -552,7 +552,7 @@ public class ModifyIssue extends BaseModifyIssue
                 }
                 group.setProperties(attachment);
                 attachment.setMimeType(mimeType);
-                activitySet = issue.addFile(attachment, (ScarabUser)data.getUser());
+                issue.addFile(attachment, (ScarabUser)data.getUser());
                 // remove the group so that the form data doesn't show up again
                 intake.remove(group);
             }
@@ -565,7 +565,6 @@ public class ModifyIssue extends BaseModifyIssue
         {
             scarabR.setAlertMessage(l10n.get("CouldNotLocateAttachmentGroup"));
         }
-        return activitySet;
     }
 
     /**
