@@ -1,0 +1,13 @@
+<bean 
+  class="org.jboss.ejb.deployment.JDBCResource"
+  displayname="JDBC datasource"
+  iconcolor16="/images/database.gif">
+  
+  <property 
+    name="Name" class="java.lang.String" 
+    displayname="Resource name"/>
+    
+  <property 
+    name="Url" class="java.lang.String" 
+    displayname="Database URL"/>
+</bean>

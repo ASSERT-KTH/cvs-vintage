@@ -1,0 +1,90 @@
+/*
+ * jBoss, the OpenSource EJB server
+ *
+ * Distributable under GPL license.
+ * See terms of license at gnu.org.
+ */
+package org.jboss.util;
+
+import java.io.*;
+import java.net.*;
+import java.lang.reflect.*;
+
+import javax.management.*;
+import javax.management.loading.MLet;
+
+import org.jboss.logging.Log;
+
+/**
+ *   <description> 
+ *      
+ *   @see <related>
+ *   @author Rickard Öberg (rickard.oberg@telkel.com)
+ *   @version $Revision: 1.1 $
+ */
+public class MBeanProxy
+   implements InvocationHandler
+{
+   // Constants -----------------------------------------------------
+    
+   // Attributes ----------------------------------------------------
+   ObjectName name;
+   MBeanServer server;
+   
+   // Static --------------------------------------------------------
+   public static Object create(Class intf, String name)
+      throws MalformedObjectNameException
+   {
+      return Proxy.newProxyInstance(intf.getClassLoader(),
+                                          new Class[] { intf },
+                                          new MBeanProxy(name));
+   }
+
+   public static Object create(Class intf, ObjectName name)
+   {
+      return Proxy.newProxyInstance(intf.getClassLoader(),
+                                          new Class[] { intf },
+                                          new MBeanProxy(name));
+   }
+   
+   // Constructors --------------------------------------------------
+   MBeanProxy(String name)
+      throws MalformedObjectNameException
+   {
+      this(new ObjectName(name));
+   }
+   
+   MBeanProxy(ObjectName name)
+   {
+      this.name = name;
+      server = (MBeanServer)MBeanServer.findJMXAgent(null).iterator().next();
+   }
+   
+   // Public --------------------------------------------------------
+   public Object invoke(Object proxy,
+                     Method method,
+                     Object[] args)
+              throws Throwable
+   {
+      if (args == null) args = new Object[0];
+      
+      Class[] types = method.getParameterTypes();
+      String[] sig = new String[types.length];
+      for (int i = 0; i < types.length; i++)
+         sig[i] = types[i].getName();
+      
+      try
+      {
+         return server.invoke(name, method.getName(), args, sig);
+      } catch (MBeanException e)
+      {
+         throw e.getTargetException();
+      } catch (ReflectionException e)
+      {
+         throw e.getTargetException();
+      }
+   }
+   
+   // Protected -----------------------------------------------------
+}
+

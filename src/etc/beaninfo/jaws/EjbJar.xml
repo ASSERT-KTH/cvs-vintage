@@ -1,0 +1,5 @@
+<bean 
+  class="org.jboss.ejb.plugins.jaws.deployment.EjbJar"
+  displayname="JAWS configuration"
+  iconcolor16="/images/container.gif">
+</bean>

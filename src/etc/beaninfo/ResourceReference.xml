@@ -1,0 +1,17 @@
+<bean 
+  class="org.jboss.ejb.deployment.ResourceReference"
+  displayname="Resource reference"
+  iconcolor16="/images/bean.gif">
+  
+  <property 
+    name="Name" class="java.lang.String" 
+    displayname="Name" readonly="true"/>
+    
+  <property 
+    name="Type" class="java.lang.String" 
+    displayname="Type" readonly="true"/>
+    
+  <property 
+    name="ResourceName" class="java.lang.String" 
+    displayname="Resource name"/>
+</bean>

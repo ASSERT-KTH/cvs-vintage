@@ -1,0 +1,10 @@
+<bean 
+  class="org.jboss.ejb.deployment.JRMPContainerInvokerConfiguration"
+  displayname="JRMP protocol"
+  iconcolor16="/images/database.gif">
+  
+  <property 
+    name="Optimized" class="boolean" 
+    displayname="Optimize local calls"/>
+</bean>
+   

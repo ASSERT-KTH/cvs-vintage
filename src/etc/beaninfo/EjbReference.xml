@@ -1,0 +1,13 @@
+<bean 
+  class="org.jboss.ejb.deployment.EjbReference"
+  displayname="EJB reference"
+  iconcolor16="/images/bean.gif">
+  
+  <property 
+    name="Name" class="java.lang.String" 
+    displayname="Name" readonly="true"/>
+    
+  <property 
+    name="JndiName" class="java.lang.String" 
+    displayname="JNDI name"/>
+</bean>

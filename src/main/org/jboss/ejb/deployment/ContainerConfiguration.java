@@ -1,0 +1,255 @@
+/*
+ * jBoss, the OpenSource EJB server
+ *
+ * Distributable under GPL license.
+ * See terms of license at gnu.org.
+ */
+package org.jboss.ejb.deployment;
+
+import java.awt.*;
+import java.beans.*;
+import java.beans.beancontext.*;
+import java.io.*;
+import java.util.*;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.dreambean.awt.GenericCustomizer;
+import com.dreambean.ejx.xml.XMLManager;
+import com.dreambean.ejx.xml.XmlExternalizable;
+import com.dreambean.ejx.Util;
+
+/**
+ *   <description> 
+ *      
+ *   @see <related>
+ *   @author Rickard Öberg (rickard.oberg@telkel.com)
+ *   @version $Revision: 1.1 $
+ */
+public abstract class ContainerConfiguration
+   extends BeanContextServicesSupport
+   implements BeanContextChildComponentProxy, XmlExternalizable
+{
+   // Constants -----------------------------------------------------
+    
+   // Attributes ----------------------------------------------------
+   String name= "";
+   String type= "";
+   
+   String containerInvoker= "";
+   String instancePool= "";
+   String instanceCache= "";
+   String persistenceManager= "";
+   String transactionManager= "";
+   
+   Object containerInvokerConfiguration;
+   Object instancePoolConfiguration;
+   Object instanceCacheConfiguration;
+   Object transactionManagerConfiguration;
+   
+   ArrayList interceptors = new ArrayList();
+   
+   Customizer c;
+   
+   // Static --------------------------------------------------------
+
+   // Constructors --------------------------------------------------
+    
+   // Public --------------------------------------------------------
+   public void setName(String n) { name = n; }
+   public String getName() { return name; }
+   
+   public void setType(String t) { type = t; }
+   public String getType() { return type; }
+   
+   public void setContainerInvoker(String ci) 
+   { 
+      containerInvoker = ci; 
+      
+      if (containerInvokerConfiguration != null)
+      {
+         remove(containerInvokerConfiguration);
+         containerInvokerConfiguration = null;
+      }
+      
+      try
+      {
+         Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getConfigurationClassName(ci));
+         Object obj = clazz.newInstance();
+         if (obj instanceof XmlExternalizable &&
+             (obj instanceof BeanContextChildComponentProxy ||
+              obj instanceof BeanContextContainerProxy))
+         {
+            containerInvokerConfiguration = obj;
+            add(containerInvokerConfiguration);
+         }
+      } catch (Throwable e)
+      {
+//         System.out.println(e);
+      }
+   }
+   
+   public String getContainerInvoker() { return containerInvoker; }
+   public Object getContainerInvokerConfiguration() { return containerInvokerConfiguration; }
+   
+   public void setInstancePool(String ip) 
+   { 
+      instancePool = ip; 
+      
+      if (instancePoolConfiguration != null)
+      {
+         remove(instancePoolConfiguration);
+         instancePoolConfiguration = null;
+      }
+      
+      try
+      {
+         Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getConfigurationClassName(ip));
+         Object obj = clazz.newInstance();
+         if (obj instanceof XmlExternalizable &&
+             (obj instanceof BeanContextChildComponentProxy ||
+              obj instanceof BeanContextContainerProxy))
+         {
+            instancePoolConfiguration = obj;
+            add(instancePoolConfiguration);
+         }
+      } catch (Throwable e)
+      {
+//         System.out.println(e);
+      }
+   }
+   public String getInstancePool() { return instancePool; }
+   public Object getInstancePoolConfiguration() { return instancePoolConfiguration; }
+
+   public void setInstanceCache(String ic) 
+   { 
+      instanceCache = ic; 
+      
+      if (instanceCacheConfiguration != null)
+      {
+         remove(instanceCacheConfiguration);
+         instanceCacheConfiguration = null;
+      }
+      
+      try
+      {
+         Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getConfigurationClassName(ic));
+         Object obj = clazz.newInstance();
+         if (obj instanceof XmlExternalizable &&
+             (obj instanceof BeanContextChildComponentProxy ||
+              obj instanceof BeanContextContainerProxy))
+         {
+            instanceCacheConfiguration = obj;
+            add(instanceCacheConfiguration);
+         }
+      } catch (Throwable e)
+      {
+//         System.out.println(e);
+      }
+   }
+   
+   public String getInstanceCache() { return instanceCache; }
+   public Object getInstanceCacheConfiguration() { return instanceCacheConfiguration; }
+
+   public void setPersistenceManager(String pm) { persistenceManager = pm; }
+   public String getPersistenceManager() { return persistenceManager; }
+   
+   public void setTransactionManager(String tm) { transactionManager = tm; }
+   public String getTransactionManager() { return transactionManager; }
+   
+   public String toString()
+   {
+      return name.equals("") ? "Container configuration" : name;
+   }
+   
+   // BeanContextChildComponentProxy implementation -----------------
+   public Component getComponent()
+   {
+      if (c == null)
+          c = new GenericCustomizer(this);
+      return (Component)c;
+   }
+   
+   // XmlExternalizable implementation ------------------------------
+   public Element exportXml(Document doc)
+   	throws Exception
+   {
+      Element containerconfiguration = doc.createElement("container-configuration");
+      XMLManager.addAttribute(containerconfiguration,"configuration-class",getClass().getName());
+      XMLManager.addElement(containerconfiguration,"container-name",getName());
+      XMLManager.addElement(containerconfiguration,"container-invoker",getContainerInvoker());
+      XMLManager.addElement(containerconfiguration,"instance-pool",getInstancePool());
+      XMLManager.addElement(containerconfiguration,"instance-cache",getInstanceCache());
+      XMLManager.addElement(containerconfiguration,"persistence-manager",getPersistenceManager());
+      XMLManager.addElement(containerconfiguration,"transaction-manager",getTransactionManager());
+      
+      if (containerInvokerConfiguration != null)
+         containerconfiguration.appendChild(((XmlExternalizable)containerInvokerConfiguration).exportXml(doc));
+      
+      if (instanceCacheConfiguration != null)
+         containerconfiguration.appendChild(((XmlExternalizable)instanceCacheConfiguration).exportXml(doc));
+         
+      if (instancePoolConfiguration != null)
+         containerconfiguration.appendChild(((XmlExternalizable)instancePoolConfiguration).exportXml(doc));
+         
+      return containerconfiguration;
+   }
+   
+   public void importXml(Element elt)
+      throws Exception
+   {
+   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals("jboss"))
+   	{
+	      NodeList nl = elt.getChildNodes();
+	      for (int i = 0; i < nl.getLength(); i++)
+	      {
+	         Node n = nl.item(i);
+	         String name = n.getNodeName();
+	         
+	         if (name.equals("container-name"))
+            {
+               setName(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("container-invoker"))
+	         {
+	            setContainerInvoker(n.hasChildNodes() ? XMLManager.getString(n) : "");
+	         } else if (name.equals("instance-pool"))
+            {
+               setInstancePool(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("instance-cache"))
+            {
+               setInstanceCache(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("persistence-manager"))
+            {
+               setPersistenceManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("transaction-manager"))
+            {
+               setTransactionManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("container-invoker-conf"))
+            {
+               ((XmlExternalizable)containerInvokerConfiguration).importXml((Element)n);
+            } else if (name.equals("container-cache-conf"))
+            {
+               ((XmlExternalizable)instanceCacheConfiguration).importXml((Element)n);
+            } else if (name.equals("container-pool-conf"))
+            {
+               ((XmlExternalizable)instancePoolConfiguration).importXml((Element)n);
+            }
+	      }
+   	}
+   }
+   // Package protected ---------------------------------------------
+    
+   // Protected -----------------------------------------------------
+   protected String getConfigurationClassName(String name)
+   {
+      name = name.substring(name.lastIndexOf(".")+1);
+      return "org.jboss.ejb.deployment."+name+"Configuration";
+   }
+    
+   // Private -------------------------------------------------------
+
+   // Inner classes -------------------------------------------------
+}

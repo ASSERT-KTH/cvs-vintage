@@ -1,0 +1,7 @@
+Name: org/jboss/
+Specification-Title: jBoss
+Specification-Version: v2.0 alpha1
+Specification-Vendor: The jBoss Organization
+Implementation-Title: jboss
+Implementation-Version: build1
+Implementation-Vendor: The jBoss Organization

@@ -1,0 +1,5 @@
+<bean 
+  class="org.jboss.ejb.deployment.EjbJar"
+  displayname="jBoss"
+  iconcolor16="/images/container.gif">
+</bean>
