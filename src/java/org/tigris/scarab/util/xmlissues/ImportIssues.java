@@ -46,6 +46,8 @@ package org.tigris.scarab.util.xmlissues;
  * individuals on behalf of Collab.Net.
  */
 
+import java.beans.BeanDescriptor;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -105,7 +107,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.26 2003/08/13 18:35:38 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.27 2003/08/15 18:37:15 dlr Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues
@@ -640,24 +642,11 @@ public class ImportIssues
         reader.setXMLIntrospector(createXMLIntrospector());
         reader.registerBeanClass(ScarabIssues.class);
         NameMapper nm = reader.getXMLIntrospector().getNameMapper();
-        reader.addRule(mapTypeToElementName(ScarabIssues.class, nm),
+        reader.addRule(nm.mapTypeToElementName
+                       (new BeanDescriptor(ScarabIssues.class).getName()),
                        new ScarabIssuesSetupRule());
         reader.setErrorHandler(this);
         return reader;
-    }
-
-    /**
-     * A Betwixt <code>NameMapper</code> wrapper.
-     */
-    private String mapTypeToElementName(Class c, NameMapper nm)
-    {
-        String typeName = c.getName();
-        int i = typeName.lastIndexOf('.');
-        if (i != -1)
-        {
-            typeName = typeName.substring(i + 1);
-        }
-        return nm.mapTypeToElementName(typeName);
     }
 
     protected XMLIntrospector createXMLIntrospector()
