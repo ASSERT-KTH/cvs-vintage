@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.63 2003/10/26 15:49:42 ejort Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.64 2003/11/12 12:27:17 pilhuhn Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -2186,6 +2186,8 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
 
       <type-mapping>
          <name>SapDB</name>
+         <!-- SapDB 7.3 might require '... UPDATE OF ?1' in the row-locking-template -->
+         <!-- as is works with SapDB 7.4 -->         
          <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD FOREIGN KEY ?2 (?3) REFERENCES ?4 (?5)</fk-constraint-template>
