@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.13 2004/06/13 11:08:23 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.14 2004/06/13 13:36:17 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.webservice.WSDLDefinitionFactory;
@@ -30,7 +30,7 @@ import java.util.Iterator;
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -165,9 +165,9 @@ public class ServiceRefMetaData implements Serializable
 
       try
       {
-         URL wsdlLocation = resourceCL.findResource(wsdlFile);
+         URL wsdlURL = (wsdlOverride != null ? wsdlOverride : resourceCL.findResource(wsdlFile));
          WSDLDefinitionFactory factory = WSDLDefinitionFactory.newInstance();
-         wsdlDefinition = factory.parse(wsdlLocation);
+         wsdlDefinition = factory.parse(wsdlURL);
       }
       catch (WSDLException e)
       {
