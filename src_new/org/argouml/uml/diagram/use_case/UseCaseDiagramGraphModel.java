@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.52 2005/01/23 19:54:13 mvw Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.53 2005/01/24 17:52:05 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -523,7 +523,8 @@ public class UseCaseDiagramGraphModel
      * @param node  The node whose edges are to be added.
      */
     public void addNodeRelatedEdges(Object node) {
-
+        super.addNodeRelatedEdges(node);
+        
         // Extend and include relationships for use cases. Collect all the
         // relationships of which the use case is either end and iterate to see
         // if they can be added.

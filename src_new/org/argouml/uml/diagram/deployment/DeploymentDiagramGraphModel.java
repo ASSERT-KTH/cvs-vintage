@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.42 2005/01/20 23:20:34 linus Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.43 2005/01/24 17:52:05 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -318,6 +318,8 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
      * @see org.tigris.gef.graph.MutableGraphModel#addNodeRelatedEdges(java.lang.Object)
      */
     public void addNodeRelatedEdges(Object node) {
+        super.addNodeRelatedEdges(node);
+        
 	if (ModelFacade.isAClassifier(node)) {
 	    Collection ends = ModelFacade.getAssociationEnds(node);
 	    Iterator iter = ends.iterator();

@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.38 2005/01/23 20:41:15 mvw Exp $
+// $Id: FigComment.java,v 1.39 2005/01/24 17:52:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,6 @@ public class FigComment
      * The main constructor used for file loading.
      */
     public FigComment() {
-        allowRemoveFromDiagram(false);
         
         body = new FigPoly(Color.black, Color.white);
         body.addPoint(x, y);

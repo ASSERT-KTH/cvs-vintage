@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.39 2005/01/20 23:20:42 linus Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.40 2005/01/24 17:52:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -638,6 +638,8 @@ public class SequenceDiagramGraphModel
      * @see org.tigris.gef.graph.MutableGraphModel#addNodeRelatedEdges(java.lang.Object)
      */
     public void addNodeRelatedEdges(Object node) {
+        super.addNodeRelatedEdges(node);
+        
         if (ModelFacade.isAInstance(node)) {
             Collection ends = ModelFacade.getLinkEnds(node);
             Iterator iter = ends.iterator();
@@ -795,8 +797,10 @@ public class SequenceDiagramGraphModel
                     getInteraction(),
                     associationRole);
             Model.getCollaborationsHelper().setAction(message, action);
-            Model.getCollaborationsHelper().setSender(message, classifierRoleFrom);
-            Model.getCommonBehaviorHelper().setReceiver(message, classifierRoleTo);
+            Model.getCollaborationsHelper()
+                .setSender(message, classifierRoleFrom);
+            Model.getCommonBehaviorHelper()
+                .setReceiver(message, classifierRoleTo);
             addEdge(link);
             edge = link;
         }

@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.56 2005/01/20 23:20:42 linus Exp $
+// $Id: StateDiagramGraphModel.java,v 1.57 2005/01/24 17:52:05 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -277,6 +277,8 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      * @see org.tigris.gef.graph.MutableGraphModel#addNodeRelatedEdges(java.lang.Object)
      */
     public void addNodeRelatedEdges(Object node) {
+        super.addNodeRelatedEdges(node);
+        
         if (ModelFacade.isAStateVertex(node)) {
             Vector transen = new Vector(ModelFacade.getOutgoings(node));
             transen.addAll(ModelFacade.getIncomings(node));

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.70 2005/01/23 19:41:06 mvw Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.71 2005/01/24 17:52:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -442,6 +442,8 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
      * @see org.tigris.gef.graph.MutableGraphModel#addNodeRelatedEdges(Object)
      */
     public void addNodeRelatedEdges(Object node) {
+        super.addNodeRelatedEdges(node);
+        
         if (ModelFacade.isAClassifier(node)) {
             Collection ends = ModelFacade.getAssociationEnds(node);
             Iterator iter = ends.iterator();
