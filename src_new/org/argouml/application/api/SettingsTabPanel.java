@@ -1,4 +1,4 @@
-// $Id: SettingsTabPanel.java,v 1.6 2004/09/08 05:40:38 linus Exp $
+// $Id: SettingsTabPanel.java,v 1.7 2004/10/18 14:09:36 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,37 +43,37 @@ public interface SettingsTabPanel {
     /** 
      * Save any fields changed.
      */
-    public void handleSettingsTabSave();
+    void handleSettingsTabSave();
 
     /** 
      * Cancel any changes.
      */
-    public void handleSettingsTabCancel();
+    void handleSettingsTabCancel();
 
     /** 
      * Load or reload field settings.
      */
-    public void handleSettingsTabRefresh();
+    void handleSettingsTabRefresh();
 
     /** 
      * Gets the unlocalized settings tab name.
      *
      * @return the unlocalized settings tab name
      */
-    public String getTabKey();
+    String getTabKey();
 
     /** 
      * Gets the name of the resource bundle to use.
      *
      * @return the name of the resource bundle to use.
      */
-    public String getTabResourceBundleKey();
+    String getTabResourceBundleKey();
 
     /** 
      * Gets the JPanel which implements the tab.
      *
      * @return the JPanel which implements the tab
      */
-    public JPanel getTabPanel();
+    JPanel getTabPanel();
 
 } /* End interface SettingsTabPanel */
