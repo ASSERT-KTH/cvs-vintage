@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -29,8 +28,6 @@ import java.util.Vector;
  */
 public class ColumbaLoader implements Runnable {
   public final static int COLUMBA_PORT = 50000;
-  private int File;
-  private String key;
   private Thread thread;
   private ServerSocket serverSocket;
 
@@ -88,8 +85,6 @@ public class ColumbaLoader implements Runnable {
         }
 
         // do something with the arguments..
-        System.out.println("arguments received...");
-
         handleArgs(arguments.toString());
 
         client.close();
@@ -100,9 +95,15 @@ public class ColumbaLoader implements Runnable {
     }
   }
 
+  /**
+   * Parsing the given argumentString and split this String into a StringArray. The separator is
+   * the character %, thus the whole arguments should not have this character inside. The  
+   * character itselfs is added in Main.java @see Main#loadInVMInstance(String[]). After splitting
+   * is finished the CmdLineArgumentHandler is called, to do things with the arguments
+   * @see CmdLineArgumentHandler
+   * @param argumentString String which holds any arguments seperated by <br>%</br> character
+   */
   protected void handleArgs(String argumentString) {
-    System.out.println("argument string=" + argumentString);
-
     List v = new Vector();
 
     StringTokenizer st = new StringTokenizer(argumentString, "%");
