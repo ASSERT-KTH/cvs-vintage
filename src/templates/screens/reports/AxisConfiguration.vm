@@ -52,8 +52,7 @@
   <h3>$l10n.get("${rowCol}Headings")</h3>
   #if ($multiHeading)
   <div class="colbar">
-    $l10n.format("DefineHeaderInstructions", "$l10n.EditSelectedHeading")
-    "$l10n.format("SelectOptionsHeader", $axisIndex)" $l10n.ToSetThe $l10n.HeadingSummary.toLowerCase().
+    $l10n.format('DefineHeaderSelectionOptionsAndHeadingSummaryInstructions', $l10n.EditSelectedHeading, $l10n.format('SelectOptionsHeader', $axisIndex), $l10n.HeadingSummary.toLowerCase())
   </div>
   #end
   <div>
