@@ -1,0 +1,90 @@
+                              Apache Tomcat 3.3.1
+                              ===================
+                                 Release Notes
+                                 =============
+
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.1 2001/11/09 03:37:53 larryi Exp $
+
+
+This document describes the changes that have been made since the
+last release of Tomcat 3.3.
+
+=========
+Bug Fixes
+=========
+
+Feature Additions:
+
+Bug No.  Description
+
+         Restored prefix attribute to InvokerInterceptor.  It was available in
+         Tomcat 3.2.x.
+
+         Added SingleThreadModel pooling to ServletHandler.  The default is to
+         use pooling.
+
+         Added optional checking (configured on SessionId module) to ensure
+         that the SSL session IDs match for each request within a Tomcat
+         session.  This check is disabled by default.
+
+         Added org.apache.tomcat.util.net.URL class from Tomcat 4.0 so
+         request.encodeURL() can work under SSL without JSSE.  This can occur
+         if you have Apache forwarding SSL requests to a Tomcat that doesn't
+         have JSSE installed.
+
+
+Server:
+
+Bug No.  Description
+
+4418     Ported Tomcat 3.2.x fix for race condition in ServerSocketFactory.
+
+4436     Reduce log output from DecodeInterceptor if debug level is zero.  This
+         avoids having a log entry for each request.
+
+4564     Fix bug in Http10Interceptor where getRemoteAddr() returns 127.0.0.1
+         instead of correct address.
+
+4599     ThreadPool was updated to not reset the maxThreads, maxSpareThreads
+         and minSpareThreads values in its start() method.
+
+         Fixed problem in AccessInterceptor where the beginning characters
+         of the login or error page match the context path.  Tomcat could
+         mistakenly think that the context path had been incorrectly included
+         in the login or error page setting.  It can still make this mistake
+         if the page is under a sub-directory with the same name as the
+         context path.
+         
+         The missing jdbcRealm.getCredentialsSQLException property string was
+         added.
+
+         Fixed bug with useJspServlet option in JspInterceptor.  If set to true
+         untrusted web applications couldn't run the JspServlet because
+         jasper.jar and tools.jar weren't accessible.
+
+
+Configuration:
+
+Bug No.  Description
+
+4313     Bug in property substitution for server.xml and apps.xml files was
+         fixed.
+
+
+Documentation:
+
+Bug No.  Description
+
+         Tomcat-on-NetWare-HowTo.html updated to fix errors related to new
+         functionality in Tomcat 3.3.
+
+         tomcat-ug.html updated with additional classloader information.
+     
+         serverxml.html updated to document new checkSSLSessionId attribute on
+         SessionId module.
+
+         tomcat-iis-howto.html updated to make it clearer that the "Filter Dlls"
+         key is used only on Win98.
+
+         JDBCRealm-howto.html updated to name the correct class and its jar
+         location for digested passwords.
