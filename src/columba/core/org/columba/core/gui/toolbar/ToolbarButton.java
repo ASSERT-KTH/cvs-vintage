@@ -55,26 +55,22 @@ public class ToolbarButton extends CButton {
                 WITH_TEXT = item.getBoolean("toolbar","enable_text");
                 ALIGNMENT = item.getBoolean("toolbar","text_position");
 
-		if (WITH_TEXT && ALIGNMENT) {
-			setVerticalTextPosition(SwingConstants.BOTTOM);
-			setHorizontalTextPosition(SwingConstants.CENTER);
-			setIcon(a.getLargeIcon());
-
-			//setText(a.getToolbarName());
-			setText( a.getName() );
-		} else if (WITH_TEXT && !ALIGNMENT) {
-			setVerticalTextPosition(SwingConstants.CENTER);
-			setHorizontalTextPosition(SwingConstants.RIGHT);
-			setIcon(a.getLargeIcon());
-
+		setIcon(a.getLargeIcon());
+		if (WITH_TEXT) {
 			boolean showText = a.isShowToolBarText();
 			if (!showText) setText("");
 			else setText(a.getToolBarName());
-			//setText(a.getName());
-		} else if (!WITH_TEXT) {
-			setIcon(a.getLargeIcon());
+			
+			if (ALIGNMENT) {
+				setVerticalTextPosition(SwingConstants.BOTTOM);
+				setHorizontalTextPosition(SwingConstants.CENTER);
+			} else {
+				setVerticalTextPosition(SwingConstants.CENTER);
+				setHorizontalTextPosition(SwingConstants.RIGHT);
+			}
+		} else {
 			setText(null);
-                }
+		}
 	}
 
 	public boolean isFocusTraversable() {
