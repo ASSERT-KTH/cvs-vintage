@@ -61,7 +61,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -91,11 +91,19 @@ public abstract class AbstractInstanceCache
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
+   /* The worker queue that passivates beans in another thread. One passivator
+    is shared for all EJB deployments.
+    */
+   static private WorkerQueue m_passivator = new WorkerQueue("EJB Passivator Thread", true);
+   static
+   {
+      // Start the passivator thread
+      m_passivator.start();
+   }
    protected static Logger log = Logger.getLogger(AbstractInstanceCache.class);
+
    /* The object that is delegated to implement the desired caching policy */
    private CachePolicy m_cache;
-   /* The worker queue that passivates beans in another thread */
-   private WorkerQueue m_passivator;
    /* The mutex object for the cache */
    private Object m_cacheLock = new Object();
    /* Helper class that handles synchronization for the passivation thread */
@@ -334,8 +342,6 @@ public abstract class AbstractInstanceCache
       getCache().init();
       m_passivationHelper = new PassivationHelper();
       String threadName = "Passivator Thread for " + getContainer().getBeanMetaData().getEjbName();
-      ClassLoader cl = getContainer().getClassLoader();
-      m_passivator = new PassivatorQueue(threadName, cl);
 
       if (isJMSMonitoringEnabled())
       {
@@ -356,7 +362,6 @@ public abstract class AbstractInstanceCache
    public void start() throws Exception
    {
       getCache().start();
-      m_passivator.start();
 
       if (isJMSMonitoringEnabled())
       {
@@ -372,7 +377,6 @@ public abstract class AbstractInstanceCache
          getCache().stop();
       }
 
-      if (m_passivator != null) {m_passivator.stop();}
 
       if (isJMSMonitoringEnabled() && m_jmsConnection != null)
       {
@@ -424,12 +428,15 @@ public abstract class AbstractInstanceCache
 
    protected void logActivation(Object id)
    {
-      m_buffer.setLength(0);
-      m_buffer.append("Activated bean ");
-      m_buffer.append(getContainer().getBeanMetaData().getEjbName());
-      m_buffer.append(" with id = ");
-      m_buffer.append(id);
-      log.debug(m_buffer.toString());
+      if( log.isTraceEnabled() )
+      {
+         m_buffer.setLength(0);
+         m_buffer.append("Activated bean ");
+         m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+         m_buffer.append(" with id = ");
+         m_buffer.append(id);
+         log.trace(m_buffer.toString());
+      }
 
       if (isJMSMonitoringEnabled())
       {
@@ -451,12 +458,15 @@ public abstract class AbstractInstanceCache
 
    protected void logPassivationScheduled(Object id)
    {
-      m_buffer.setLength(0);
-      m_buffer.append("Scheduled passivation of bean ");
-      m_buffer.append(getContainer().getBeanMetaData().getEjbName());
-      m_buffer.append(" with id = ");
-      m_buffer.append(id);
-      log.debug(m_buffer.toString());
+      if( log.isTraceEnabled() )
+      {
+         m_buffer.setLength(0);
+         m_buffer.append("Scheduled passivation of bean ");
+         m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+         m_buffer.append(" with id = ");
+         m_buffer.append(id);
+         log.trace(m_buffer.toString());
+      }
 
       if (isJMSMonitoringEnabled())
       {
@@ -479,12 +489,16 @@ public abstract class AbstractInstanceCache
 
    protected void logPassivation(Object id)
    {
-      m_buffer.setLength(0);
-      m_buffer.append("Passivated bean ");
-      m_buffer.append(getContainer().getBeanMetaData().getEjbName());
-      m_buffer.append(" with id = ");
-      m_buffer.append(id);
-      log.debug(m_buffer.toString());
+      if( log.isTraceEnabled() )
+      {
+         m_buffer.setLength(0);
+         m_buffer.append("Passivated bean ");
+         m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+         m_buffer.append(" with id = ");
+         m_buffer.append(id);
+         log.trace(m_buffer.toString());
+      }
+
 
       if (isJMSMonitoringEnabled())
       {
@@ -507,12 +521,15 @@ public abstract class AbstractInstanceCache
 
    protected void logPassivationPostponed(Object id)
    {
-      m_buffer.setLength(0);
-      m_buffer.append("Postponed passivation of bean ");
-      m_buffer.append(getContainer().getBeanMetaData().getEjbName());
-      m_buffer.append(" with id = ");
-      m_buffer.append(id);
-      log.debug(m_buffer.toString());
+      if( log.isTraceEnabled() )
+      {
+         m_buffer.setLength(0);
+         m_buffer.append("Postponed passivation of bean ");
+         m_buffer.append(getContainer().getBeanMetaData().getEjbName());
+         m_buffer.append(" with id = ");
+         m_buffer.append(id);
+         log.trace(m_buffer.toString());
+      }
 
       if (isJMSMonitoringEnabled())
       {
@@ -643,8 +660,11 @@ public abstract class AbstractInstanceCache
                       */
                      BeanLock lock = getContainer().getLockManager().getLock(id);
                      lock.sync();
-                     try {
-
+                     ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                     ClassLoader beanCL = getContainer().getClassLoader();
+                     try
+                     {
+                        Thread.currentThread().setContextClassLoader(beanCL);
                         // marcf: the mutex is not good as we need a thread reentrant one, for now we
                         // use straight synchronization on the ctx as there is a one-one relationship
                         // Also the ctx are not reused any longer so no chance of using the wrong ctx
@@ -725,6 +745,7 @@ public abstract class AbstractInstanceCache
                      }//synchronized(ctx)
                      finally
                      {
+                        Thread.currentThread().setContextClassLoader(cl);
                         lock.releaseSync();
                         getContainer().getLockManager().removeLockRef(id);
                      }
@@ -863,86 +884,3 @@ abstract class PassivationJob implements Executable
    }
 }
 
-class PassivatorQueue extends WorkerQueue
-{
-   protected static Logger log = Logger.getLogger(PassivatorQueue.class);
-   /**
-    * Used for debug purposes, holds the scheduled passivation jobs
-    */
-   // private Map m_map = new HashMap();
-
-   /**
-    * Creates a new passivator queue with default thread name of
-    * "Passivator Thread".
-    */
-   PassivatorQueue()
-   {
-      this("Passivator Thread", null);
-   }
-   /**
-    * Creates a new passivator queue with the given thread name and given
-    * context class loader. <br>
-    * @param threadName the name of the passivator thread
-    * @param cl the context class loader; if null the context class loader is not set.
-    */
-   PassivatorQueue(String threadName, ClassLoader cl)
-   {
-      super(threadName);
-      if (cl != null)
-      {
-         m_queueThread.setContextClassLoader(cl);
-      }
-   }
-   /**
- * Overridden for debug purposes
- *//*
- protected Executable getJobImpl() throws InterruptedException
- {
- PassivationJob j = (PassivationJob)super.getJobImpl();
- EnterpriseContext ctx = j.getEnterpriseContext();
- Object id = ctx.getId();
- m_map.remove(id);
- return j;
- }
- */
- /**
- * Overridden for debug purposes
- *//*
- protected void putJobImpl(Executable job)
- {
- PassivationJob j = (PassivationJob)job;
- EnterpriseContext ctx = j.getEnterpriseContext();
- Object id = ctx.getId();
- if (m_map.get(id) != null)
- {
- // Here is a bug, job requests are scheduled only once per bean.
- System.err.println("DUPLICATE PASSIVATION JOB INSERTION FOR ID = " + ctx.getId());
- System.err.println("CTX isLocked: " + ctx.isLocked());
- System.err.println("CTX transaction: " + ctx.getTransaction());
- throw new IllegalStateException();
- }
- else
- {
- m_map.put(id, job);
- }
- super.putJobImpl(job);
- }
- */
- /**
- * Logs exceptions thrown during job execution.
- */
-   protected void logJobException(Exception x)
-   {
-      // Log system exceptions
-      if (x instanceof EJBException)
-      {
-         Exception nestedX = ((EJBException)x).getCausedByException();
-         if (nestedX != null)
-         {
-            log.error("BEAN EXCEPTION", x);
-         }
-      } else {
-         log.error("EXCEPTION", x);
-      }
-   }
-}

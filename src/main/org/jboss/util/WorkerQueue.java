@@ -12,7 +12,7 @@ package org.jboss.util;
  *
  * @see Executable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class WorkerQueue
 {
@@ -40,7 +40,15 @@ public class WorkerQueue
     public WorkerQueue(String threadName) 
     {
         m_queueThread = new Thread(createQueueLoop(), threadName);
-//      m_queueThread.setPriority(Thread.MIN_PRIORITY);
+    }
+    /**
+     * Creates a new worker queue with the specified thread name
+     and daemon mode flag
+     */
+    public WorkerQueue(String threadName, boolean isDaemon) 
+    {
+        m_queueThread = new Thread(createQueueLoop(), threadName);
+        m_queueThread.setDaemon(isDaemon);
     }
 
     // Public --------------------------------------------------------
