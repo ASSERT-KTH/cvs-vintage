@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.10 2002/05/10 21:17:39 jon Exp $
+# $Id: create-db.sh,v 1.11 2002/05/17 00:44:52 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -56,9 +56,9 @@ do
     shift
 done
 
-if [ -e "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
+if [ -f "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
     dbtype="mysql"
-elif [ -e "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
+elif [ -f "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
     dbtype="postgresql"
 fi
 
