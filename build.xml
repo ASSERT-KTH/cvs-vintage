@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.38 2005/03/10 10:06:08 benoitf Exp $
+ - $Id: build.xml,v 1.39 2005/03/11 14:05:23 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -50,7 +50,7 @@
   <property file="${config}/configure.properties" />
 
   <!-- carol meta information -->
-  <property name="carol.version" value="2.0.0" />
+  <property name="carol.version" value="2.0" />
   <property name="carol.name" value="Carol" />
   <property name="carol.package" value="org.objectweb.carol" />
 
@@ -97,7 +97,6 @@
     <antcall target="compile.stub" />
     <antcall target="compile.stub.jeremie" />
     <antcall target="compile.jonathan" />
-    <antcall target="compile.jvm.daemon" />
     <antcall target="compile.cmi" />
   </target>
 
@@ -118,14 +117,6 @@
     </javac>
   </target>
 
-  <target name="compile.jvm.daemon">
-    <rmic base="${build}/classes"
-          compiler="sun"
-          classname="org.objectweb.carol.util.bootstrap.ProcessesManager">
-      <classpath refid="carol.classpath" />
-    </rmic>
-  </target>
-
   <target name="compile.stub">
 
     <!-- for sun jrmp  -->
@@ -139,13 +130,8 @@
           classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
       <classpath refid="carol.classpath" />
     </rmic>
-    <!-- The registry -->
-    <rmic base="${build}/classes"
-          compiler="sun"
-          classname="org.objectweb.carol.jndi.registry.RegistryManagerImpl">
-      <classpath refid="carol.classpath" />
-    </rmic>
-    <!-- for sun iiop  -->
+
+    <!-- for iiop  -->
     <rmic base="${build}/classes"
           iiop="true"
           compiler="sun"
@@ -244,8 +230,6 @@
     <subant target="dist.jar" inheritall="true">
       <fileset dir="${archive}" includes="*.xml" />
     </subant>
-    <copy file="${externals}/commons-cli-1.0.jar"
-          tofile="${dist.lib}/commons-cli-1.0.jar" />
   </target>
 
 
