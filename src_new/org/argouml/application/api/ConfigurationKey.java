@@ -1,4 +1,4 @@
-// $Id: ConfigurationKey.java,v 1.3 2003/06/29 23:53:41 linus Exp $
+// $Id: ConfigurationKey.java,v 1.4 2003/09/17 00:04:47 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,11 +36,14 @@ import java.beans.*;
 public interface ConfigurationKey {
 
     /** Return the actual key used to access the configuration.
+     * @return the key.
      */ 
     public String getKey();
 
     /** Tells if this configuration key is the one changed in the
-     *  PropertyChangeEvent.
+     *  <code>PropertyChangeEvent</code>.
+     * @param pce PropertyChangeEvent to check
+     * @return true if the changed property is for the key.
      */
     public boolean isChangedProperty(PropertyChangeEvent pce);
 }
