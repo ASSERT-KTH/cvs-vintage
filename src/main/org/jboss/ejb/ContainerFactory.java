@@ -79,7 +79,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.62 $
+*   @version $Revision: 1.63 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -456,34 +456,8 @@ public class ContainerFactory
                  container.setInstancePool(ip);
 
                // Create interceptors
-
-               container.addInterceptor(new LogInterceptor());
-               container.addInterceptor(new SecurityInterceptor());
-
-               if (((MessageDrivenMetaData)bean).isContainerManagedTx())
-               {
-                  // CMT
-                  container.addInterceptor(new TxInterceptorCMT());
-
-                  if (metricsEnabled)
-                     container.addInterceptor(new MetricsInterceptor());
-
-                  container.addInterceptor(new MessageDrivenInstanceInterceptor());
-               }
-               else
-               {
-                  // BMT
-                  container.addInterceptor(new MessageDrivenInstanceInterceptor());
-                  // FIXME. should we have a special BMT tx interceptor
-                  // to place ACK there???
-                  container.addInterceptor(new MessageDrivenTxInterceptorBMT());
-
-                  if (metricsEnabled)
-                     container.addInterceptor(new MetricsInterceptor());
-               }
-
-               // Finally we add the last interceptor from the container
-               container.addInterceptor(container.createContainerInterceptor());
+               int transType = ((MessageDrivenMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+               ContainerInterceptors.addInterceptors(container, transType, metricsEnabled, conf.getContainerInterceptorsConf());
 
                // Add container to application
                app.addContainer(container);
@@ -561,33 +535,10 @@ public class ContainerFactory
                      }
                  container.setInstancePool(ip);
 
+
                   // Create interceptors
-
-                  container.addInterceptor(new LogInterceptor());
-                  container.addInterceptor(new SecurityInterceptor());
-
-                  if (((SessionMetaData)bean).isContainerManagedTx())
-                  {
-                     // CMT
-                     container.addInterceptor(new TxInterceptorCMT());
-
-                     if (metricsEnabled)
-                        container.addInterceptor(new MetricsInterceptor());
-
-                     container.addInterceptor(new StatelessSessionInstanceInterceptor());
-                  }
-                  else
-                  {
-                     // BMT
-                     container.addInterceptor(new StatelessSessionInstanceInterceptor());
-                     container.addInterceptor(new TxInterceptorBMT());
-
-                     if (metricsEnabled)
-                        container.addInterceptor(new MetricsInterceptor());
-                  }
-
-                  // Finally we add the last interceptor from the container
-                  container.addInterceptor(container.createContainerInterceptor());
+                  int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+                  ContainerInterceptors.addInterceptors(container, transType, metricsEnabled, conf.getContainerInterceptorsConf());
 
                   // Add container to application
                   app.addContainer(container);
@@ -679,32 +630,8 @@ public class ContainerFactory
                   container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 
                   // Create interceptors
-                  container.addInterceptor(new LogInterceptor());
-
-                  if (((SessionMetaData)bean).isContainerManagedTx())
-                  {
-                     // CMT
-                     container.addInterceptor(new TxInterceptorCMT());
-
-                     if (metricsEnabled)
-                        container.addInterceptor(new MetricsInterceptor());
-
-                     container.addInterceptor(new StatefulSessionInstanceInterceptor());
-
-                  }
-                  else
-                  {
-                     // BMT : the tx interceptor needs the context from the instance interceptor
-                     container.addInterceptor(new StatefulSessionInstanceInterceptor());
-                     container.addInterceptor(new TxInterceptorBMT());
-
-                     if (metricsEnabled)
-                        container.addInterceptor(new MetricsInterceptor());
-                  }
-
-                  container.addInterceptor(new SecurityInterceptor());
-
-                  container.addInterceptor(container.createContainerInterceptor());
+                  int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
+                  ContainerInterceptors.addInterceptors(container, transType, metricsEnabled, conf.getContainerInterceptorsConf());
 
                   // Add container to application
                   app.addContainer(container);
@@ -828,19 +755,8 @@ public class ContainerFactory
                }
 
                // Create interceptors
-               container.addInterceptor(new LogInterceptor());
-               container.addInterceptor(new SecurityInterceptor());
-
-               // entity beans are always CMT
-               container.addInterceptor(new TxInterceptorCMT());
-
-               if (metricsEnabled)
-                  container.addInterceptor(new MetricsInterceptor());
-
-               container.addInterceptor(new EntityInstanceInterceptor());
-               container.addInterceptor(new EntitySynchronizationInterceptor());
-
-               container.addInterceptor(container.createContainerInterceptor());
+               int transType = ContainerInterceptors.CMT;
+               ContainerInterceptors.addInterceptors(container, transType, metricsEnabled, conf.getContainerInterceptorsConf());
 
                // Add container to application
                app.addContainer(container);
