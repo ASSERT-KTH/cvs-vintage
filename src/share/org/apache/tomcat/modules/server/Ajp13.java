@@ -70,6 +70,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.aaa.SimplePrincipal;
 import org.apache.tomcat.util.http.HttpMessages;
 
 /* Frozen, bug fixes only: all active development goes in
@@ -327,6 +328,9 @@ public class Ajp13
 		
 	    case SC_A_REMOTE_USER  :
 		req.setRemoteUser( msg.getString());
+		// XXX recycle ?
+		// Note that roles are not integrated with apache
+		req.setUserPrincipal( new SimplePrincipal( msg.getString()));
                 break;
 		
 	    case SC_A_AUTH_TYPE    :
