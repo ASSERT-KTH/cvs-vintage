@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.12 2004/07/17 13:10:30 kataka Exp $
+// $Id: FigActor.java,v 1.13 2004/07/20 16:01:58 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.12 2004/07/17 13:10:30 kataka Exp $
+// $Id: FigActor.java,v 1.13 2004/07/20 16:01:58 mkl Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -89,7 +89,6 @@ public class FigActor extends FigNodeModelElement {
         addFig(_leftLeg);
         addFig(_rightLeg);
         addFig(getNameFig());
-
     }
 
     public FigActor(GraphModel gm, Object node) {
@@ -131,10 +130,6 @@ public class FigActor extends FigNodeModelElement {
         return false;
     }
 
-    //   public Selection makeSelection() {
-    //     return new SelectionMoveClarifiers(this);
-    //   }
-
     public void setLineColor(Color col) {
         _head.setLineColor(col);
         _body.setLineColor(col);
@@ -142,6 +137,7 @@ public class FigActor extends FigNodeModelElement {
         _leftLeg.setLineColor(col);
         _rightLeg.setLineColor(col);
     }
+    
     public Color getLineColor() {
         return _head.getLineColor();
     }
@@ -156,6 +152,7 @@ public class FigActor extends FigNodeModelElement {
     public void setFilled(boolean f) {
         _head.setFilled(f);
     }
+    
     public boolean getFilled() {
         return _head.getFilled();
     }
@@ -167,6 +164,7 @@ public class FigActor extends FigNodeModelElement {
         _leftLeg.setLineWidth(w);
         _rightLeg.setLineWidth(w);
     }
+    
     public int getLineWidth() {
         return _head.getLineWidth();
     }
