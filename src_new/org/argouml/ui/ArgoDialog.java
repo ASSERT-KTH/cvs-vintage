@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.14 2004/10/28 17:12:51 mvw Exp $
+// $Id: ArgoDialog.java,v 1.15 2004/11/04 17:23:15 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.Frame;
 import javax.swing.AbstractButton;
 
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.Dialog;
+import org.tigris.swidgets.Dialog;
 
 /**
  * A dialog with localized buttons.

@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.30 2004/11/01 21:29:53 mvw Exp $
+// $Id: TabDocumentation.java,v 1.31 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,9 @@ import javax.swing.JScrollPane;
 import org.argouml.application.api.Configuration;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.swingext.Horizontal;
-import org.argouml.swingext.LabelledLayout;
-import org.argouml.swingext.Vertical;
+import org.tigris.swidgets.Horizontal;
+import org.tigris.swidgets.LabelledLayout;
+import org.tigris.swidgets.Vertical;
 import org.tigris.gef.presentation.Fig;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.29 2004/11/01 19:55:04 mvw Exp $
+// $Id: PropPanelEvent.java,v 1.30 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.uml.CoreFactory;
-import org.argouml.swingext.Orientation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -39,6 +38,8 @@ import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
+
+import org.tigris.swidgets.Orientation;
 
 /**
  * The properties panel for an Event.

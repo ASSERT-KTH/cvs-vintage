@@ -1,4 +1,4 @@
-// $Id: PropPanelCallState.java,v 1.4 2004/09/22 17:27:46 mvw Exp $
+// $Id: PropPanelCallState.java,v 1.5 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.ui.behavior.activity_graphs;
 
 import javax.swing.ImageIcon;
 
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientation;
 import org.argouml.util.ConfigLoader;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.40 2004/10/15 18:14:18 mvw Exp $
+// $Id: MultiEditorPane.java,v 1.41 2004/11/04 17:23:16 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.QuadrantPanel;
-import org.argouml.swingext.Horizontal;
+import org.tigris.swidgets.Horizontal;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;

@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.86 2004/11/01 19:55:15 mvw Exp $
+// $Id: PropPanelModelElement.java,v 1.87 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.swingext.Orientation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -55,6 +54,7 @@ import org.argouml.uml.ui.UMLPlainTextDocument;
 import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.util.ConfigLoader;
+import org.tigris.swidgets.Orientation;
 
 /**
  * The properties panel for a modelelement.

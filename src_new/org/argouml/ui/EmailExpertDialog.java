@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.18 2004/09/28 19:45:06 mvw Exp $
+// $Id: EmailExpertDialog.java,v 1.19 2004/11/04 17:23:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.LabelledLayout;
+import org.tigris.swidgets.LabelledLayout;
 
 /** The email expert dialog does not work and is in
  * desperate need of some attention.

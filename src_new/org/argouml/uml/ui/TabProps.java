@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.51 2004/10/26 18:45:08 mvw Exp $
+// $Id: TabProps.java,v 1.52 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,8 +49,8 @@ import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoModuleEvent;
 import org.argouml.application.events.ArgoModuleEventListener;
 import org.argouml.model.ModelFacade;
-import org.argouml.swingext.Orientable;
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientable;
+import org.tigris.swidgets.Orientation;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;

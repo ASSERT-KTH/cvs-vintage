@@ -1,4 +1,4 @@
-// $Id: PropPanelState.java,v 1.19 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelState.java,v 1.20 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.19 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelState.java,v 1.20 2004/11/04 17:23:18 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -35,9 +35,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
+import org.tigris.swidgets.Orientation;
 
 /**
  * The abstract properties panel for a State.

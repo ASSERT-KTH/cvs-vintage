@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.28 2004/11/01 10:55:20 mkl Exp $
+// $Id: AddToDoItemDialog.java,v 1.29 2004/11/04 17:23:14 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,12 +40,12 @@ import javax.swing.ListCellRenderer;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.Translator;
-import org.argouml.swingext.LabelledLayout;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.tigris.gef.util.VectorSet;
+import org.tigris.swidgets.LabelledLayout;
 
 /**
  * The dialog to enter a new ToDoItem.

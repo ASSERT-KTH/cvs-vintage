@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.24 2004/11/01 10:55:20 mkl Exp $
+// $Id: TabToDo.java,v 1.25 2004/11/04 17:23:15 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,6 @@ import javax.swing.JToolBar;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.swingext.BorderSplitPane;
-import org.argouml.swingext.Horizontal;
-import org.argouml.swingext.Vertical;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.cmd.ActionEmailExpert;
 import org.argouml.ui.cmd.ActionNewToDoItem;
@@ -42,6 +39,9 @@ import org.argouml.ui.cmd.ActionSnooze;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
+import org.tigris.swidgets.BorderSplitPane;
+import org.tigris.swidgets.Horizontal;
+import org.tigris.swidgets.Vertical;
 import org.tigris.toolbar.ToolBar;
 
 /**

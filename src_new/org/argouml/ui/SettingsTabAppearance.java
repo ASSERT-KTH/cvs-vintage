@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.4 2004/09/03 07:27:10 mvw Exp $
+// $Id: SettingsTabAppearance.java,v 1.5 2004/11/04 17:23:16 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
-import org.argouml.swingext.LabelledLayout;
+import org.tigris.swidgets.LabelledLayout;
 
 /**
  *  Provides settings for altering the appearance of the Argo application.

@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.61 2004/10/13 05:52:13 linus Exp $
+// $Id: PropPanelOperation.java,v 1.62 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import javax.swing.border.TitledBorder;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.swingext.GridLayout2;
+import org.tigris.swidgets.GridLayout2;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.ActionAddOperation;

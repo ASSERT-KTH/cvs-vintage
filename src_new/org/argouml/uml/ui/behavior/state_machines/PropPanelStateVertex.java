@@ -1,4 +1,4 @@
-// $Id: PropPanelStateVertex.java,v 1.21 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelStateVertex.java,v 1.22 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton2;

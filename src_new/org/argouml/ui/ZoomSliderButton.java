@@ -1,4 +1,4 @@
-// $Id: ZoomSliderButton.java,v 1.11 2004/10/13 05:52:24 linus Exp $
+// $Id: ZoomSliderButton.java,v 1.12 2004/11/04 17:23:16 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import javax.swing.event.ChangeListener;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.PopupButton;
+import org.tigris.swidgets.PopupButton;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 

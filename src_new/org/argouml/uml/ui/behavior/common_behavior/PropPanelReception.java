@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.25 2004/10/13 05:52:10 linus Exp $
+// $Id: PropPanelReception.java,v 1.26 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.GridLayout2;
+import org.tigris.swidgets.GridLayout2;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton2;

@@ -1,4 +1,4 @@
-// $Id: UMLButtonPanel.java,v 1.4 2004/09/15 19:17:05 mvw Exp $
+// $Id: UMLButtonPanel.java,v 1.5 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Enumeration;
 
 import javax.swing.JPanel;
 
-import org.argouml.swingext.*;
+import org.tigris.swidgets.SerialLayout;
 
 import ru.novosoft.uml.MElementEvent;
 

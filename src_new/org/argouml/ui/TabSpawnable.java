@@ -1,4 +1,4 @@
-// $Id: TabSpawnable.java,v 1.25 2004/10/19 05:40:05 linus Exp $
+// $Id: TabSpawnable.java,v 1.26 2004/11/04 17:23:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,8 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.TabToDo;
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.Orientable;
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientable;
+import org.tigris.swidgets.Orientation;
 import org.argouml.uml.diagram.ui.TabDiagram;
 import org.argouml.uml.ui.TabModelTarget;
 

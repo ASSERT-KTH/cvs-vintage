@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.7 2004/10/13 05:52:30 linus Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.8 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
 import org.argouml.util.ConfigLoader;

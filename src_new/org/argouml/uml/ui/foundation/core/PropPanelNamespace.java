@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.20 2004/11/01 19:55:14 mvw Exp $
+// $Id: PropPanelNamespace.java,v 1.21 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,10 @@ import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.CoreFactory;
 import org.argouml.model.uml.ModelManagementFactory;
-import org.argouml.swingext.Orientation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLLinkedList;
+
+import org.tigris.swidgets.Orientation;
 
 /**
  * The abstract properties panel for a Namespace.

@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.45 2004/10/15 18:14:18 mvw Exp $
+// $Id: DetailsPane.java,v 1.46 2004/11/04 17:23:16 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,8 +50,8 @@ import org.argouml.cognitive.ui.TabToDo;
 import org.argouml.cognitive.ui.TabToDoTarget;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.swingext.Orientable;
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientable;
+import org.tigris.swidgets.Orientation;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;

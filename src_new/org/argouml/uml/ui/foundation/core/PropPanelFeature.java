@@ -1,4 +1,4 @@
-// $Id: PropPanelFeature.java,v 1.13 2004/10/13 05:52:15 linus Exp $
+// $Id: PropPanelFeature.java,v 1.14 2004/11/04 17:23:18 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
 

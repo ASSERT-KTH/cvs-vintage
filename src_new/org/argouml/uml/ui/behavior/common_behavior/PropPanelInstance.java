@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.34 2004/10/14 05:48:20 linus Exp $
+// $Id: PropPanelInstance.java,v 1.35 2004/11/04 17:23:17 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.34 2004/10/14 05:48:20 linus Exp $
+// $Id: PropPanelInstance.java,v 1.35 2004/11/04 17:23:17 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.swingext.Orientation;
+import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
