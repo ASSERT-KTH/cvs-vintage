@@ -74,7 +74,7 @@ import org.jboss.metadata.XmlFileLoader;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.30 $
+*   @version $Revision: 1.31 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -240,6 +240,9 @@ public class ContainerFactory
          // URL's to put in classloader   
          URL[] urls;
          
+			// save the name of the jar before copying -> undeploy with the same name
+			URL origUrl = url;
+			
 			// copy the jar file to prevent locking - redeploy failure
 			if (url.getProtocol().startsWith("file")) 
          {
@@ -548,8 +551,8 @@ public class ContainerFactory
 			// Done
 			log.log("Deployed application: "+app.getName());
 
-			// Register deployment
-			deployments.put(url, app);
+			// Register deployment. Use the original name in the hashtable
+			deployments.put(origUrl, app);
 		} catch (Throwable e)
 		{
 			e.printStackTrace();

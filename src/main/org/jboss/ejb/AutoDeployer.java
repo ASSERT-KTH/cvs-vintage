@@ -37,7 +37,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -166,12 +166,39 @@ public class AutoDeployer
                   }
                }
             }
-            
+			
+			
+			// undeploy removed jars
+			Iterator iterator = watchedURLs.iterator();
+			
+			while (iterator.hasNext()) {
+				URL url = ((Deployment)iterator.next()).url;
+				
+				// if the url is a file that doesn't exist
+				// TODO: real urls
+				if (url.getProtocol().startsWith("file") && ! new File(url.getFile()).exists()) {
+					
+					// the file does not exist anymore. undeploy
+					log.log("Auto undeploy of "+url);
+					try {
+				   		undeploy(url.toString());
+					} catch (Exception e) {
+					    log.error("Undeployment failed");
+						log.exception(e);
+					}
+					deployedURLs.remove(url);
+					
+					// this should be the safe way to call watchedURLS.remove
+					iterator.remove();
+				}   			
+			}
+				   
+				   
             // Check watched URLs
             for (int i = 0; i < watchedURLs.size(); i++)
             {
                Deployment deployment = (Deployment)watchedURLs.get(i);
-               
+			   
                // Get last modified timestamp
                long lm;
                if (deployment.watch.getProtocol().startsWith("file"))
@@ -256,6 +283,23 @@ public class AutoDeployer
       {   
    		// Call the ContainerFactory that is loaded in the JMX server
          server.invoke(factoryName, "deploy",
+                         new Object[] { url }, new String[] { "java.lang.String" });
+      } catch (MBeanException e)
+      {
+         throw e.getTargetException();
+      } catch (RuntimeErrorException e)
+      {
+         throw e.getTargetError();
+      }
+   }
+   
+   protected void undeploy(String url)
+      throws Exception
+   {
+      try
+      {   
+   		// Call the ContainerFactory that is loaded in the JMX server
+         server.invoke(factoryName, "undeploy",
                          new Object[] { url }, new String[] { "java.lang.String" });
       } catch (MBeanException e)
       {
