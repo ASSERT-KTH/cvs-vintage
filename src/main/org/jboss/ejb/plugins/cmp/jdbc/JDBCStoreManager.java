@@ -59,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -373,7 +373,12 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          Object[] args,
          EntityEnterpriseContext ctx) throws CreateException {
 
-      return createEntityCommand.execute(createMethod, args, ctx);
+      Object pk = createEntityCommand.execute(createMethod, args, ctx);
+
+      // mark the entity as created
+      entityBridge.setCreated(ctx);
+
+      return pk;
    }
 
    public Object findEntity(
@@ -403,6 +408,9 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          }
          entityBridge.resetPersistenceContext(ctx);
       }
+
+      // mark the entity as created; if it was loading it was created 
+      entityBridge.setCreated(ctx);
 
       loadEntityCommand.execute(ctx);
    }

@@ -40,7 +40,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -163,9 +163,6 @@ public class JDBCLoadEntityCommand {
             throw new NoSuchEntityException("Entity not found: primaryKey=" +
                   ctx.getId());
          }
-
-         // mark the entity as created; if it was loaded it was created 
-         entity.setCreated(ctx);
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
