@@ -168,7 +168,7 @@ public final class IntrospectionUtils {
 	    return install;
 	}
 	if ( home != null ) {
-	    System.setProperty( installSysProp, home );
+	    System.getProperties().put( installSysProp, home );
 	    return home;
 	}
 
