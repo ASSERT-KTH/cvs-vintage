@@ -78,6 +78,8 @@
                 <java-type>java.lang.Object</java-type>
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>BLOB</sql-type>
+<!-- Change this from BLOB to RAW(255) if you know your
+     serialized object will be <= 255 bytes -->
             </mapping>
         </type-mapping>
         <type-mapping>
@@ -146,6 +148,8 @@
                 <java-type>java.lang.Object</java-type>
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>LONG RAW</sql-type>
+<!-- Change this from LONG RAW to RAW(255) if you know your
+     serialized object will be <= 255 bytes -->
             </mapping>
         </type-mapping>
         <type-mapping>
@@ -223,18 +227,33 @@
             <name>PostgreSQL</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
-                <jdbc-type>VARCHAR</jdbc-type>
-                <sql-type>VARCHAR(5)</sql-type>
+                <jdbc-type>TINYINT</jdbc-type>
+                <sql-type>INT2</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.lang.Byte</java-type>
+                <jdbc-type>TINYINT</jdbc-type>
+                <sql-type>INT2</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Short</java-type>
-                <jdbc-type>INTEGER</jdbc-type>
-                <sql-type>INTEGER</sql-type>
+                <jdbc-type>SMALLINT</jdbc-type>
+                <sql-type>INT2</sql-type>
             </mapping>
             <mapping>
-                <java-type>java.util.Date</java-type>
-                <jdbc-type>DATE</jdbc-type>
-                <sql-type>DATE</sql-type>
+                <java-type>java.lang.Integer</java-type>
+                <jdbc-type>INTEGER</jdbc-type>
+                <sql-type>INT4</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.lang.Long</java-type>
+                <jdbc-type>BIGINT</jdbc-type>
+                <sql-type>INT8</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.lang.Float</java-type>
+                <jdbc-type>FLOAT</jdbc-type>
+                <sql-type>FLOAT(7)</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Double</java-type>
@@ -244,42 +263,32 @@
             <mapping>
                 <java-type>java.lang.Character</java-type>
                 <jdbc-type>CHAR</jdbc-type>
-                <sql-type>CHAR</sql-type>
+                <sql-type>CHAR(1)</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.lang.String</java-type>
+                <jdbc-type>VARCHAR</jdbc-type>
+                <sql-type>TEXT</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.sql.Date</java-type>
+                <jdbc-type>DATE</jdbc-type>
+                <sql-type>DATE</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.sql.Time</java-type>
+                <jdbc-type>TIME</jdbc-type>
+                <sql-type>TIME</sql-type>
+            </mapping>
+            <mapping>
+                <java-type>java.sql.Timestamp</java-type>
+                <jdbc-type>TIMESTAMP</jdbc-type>
+                <sql-type>TIMESTAMP</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Object</java-type>
                 <jdbc-type>JAVA_OBJECT</jdbc-type>
                 <sql-type>OID</sql-type>
-            </mapping>
-            <mapping>
-                <java-type>java.sql.TimeStamp</java-type>
-                <jdbc-type>TIMESTAMP</jdbc-type>
-                <sql-type>TIMESTAMP</sql-type>
-            </mapping>
-            <mapping>
-                <java-type>java.lang.Integer</java-type>
-                <jdbc-type>INTEGER</jdbc-type>
-                <sql-type>INTEGER</sql-type>
-            </mapping>
-            <mapping>
-                <java-type>java.lang.Byte</java-type>
-                <jdbc-type>TINYINT</jdbc-type>
-                <sql-type>INT2</sql-type>
-            </mapping>
-            <mapping>
-                <java-type>java.lang.Float</java-type>
-                <jdbc-type>FLOAT</jdbc-type>
-                <sql-type>FLOAT</sql-type>
-            </mapping>
-            <mapping>
-                <java-type>java.lang.String</java-type>
-                <jdbc-type>VARCHAR</jdbc-type>
-                <sql-type>VARCHAR(256)</sql-type>
-            </mapping>
-            <mapping>
-                <java-type>java.lang.Long</java-type>
-                <jdbc-type>BIGINT</jdbc-type>
-                <sql-type>INT4</sql-type>
             </mapping>
         </type-mapping>
         <type-mapping>
