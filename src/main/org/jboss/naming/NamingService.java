@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.naming;
 
 import java.io.InputStream;
@@ -31,8 +32,11 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.29 $
- *   
+ * @version $Revision: 1.30 $
+ *
+ * @jmx:mbean name="jboss:service=Naming"
+ *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
+ *            
  * <p><b>Revisions:</b>
  *
  * <p><b>20010622 scott.stark:</b>
@@ -49,23 +53,16 @@ public class NamingService
    extends ServiceMBeanSupport
    implements NamingServiceMBean
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
    Main naming;
    
    /** Object Name of the JSR-77 representant of this servie **/
    ObjectName mJNDI;
    
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
    public NamingService()
    {
       naming = new Main(this.getClass().getName());
    }
 
-   // Public --------------------------------------------------------
    public void setPort(int port)
    {
       naming.setPort(port);
@@ -90,6 +87,7 @@ public class NamingService
    {
       return naming.getBindAddress();
    }
+   
    public void setBindAddress(String host) throws UnknownHostException
    {
       naming.setBindAddress(host);
@@ -99,30 +97,33 @@ public class NamingService
    {
       return naming.getBacklog();
    }
+   
    public void setBacklog(int backlog)
    {
       naming.setBacklog(backlog);
    }
 
-    public String getClientSocketFactory()
-    {
-        return naming.getClientSocketFactory();
-    }
-    public void setClientSocketFactory(String factoryClassName)
-        throws ClassNotFoundException, InstantiationException, IllegalAccessException
-    {
-        naming.setClientSocketFactory(factoryClassName);
-    }
+   public String getClientSocketFactory()
+   {
+      return naming.getClientSocketFactory();
+   }
+   
+   public void setClientSocketFactory(String factoryClassName)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException
+   {
+      naming.setClientSocketFactory(factoryClassName);
+   }
 
-    public String getServerSocketFactory()
-    {
-        return naming.getServerSocketFactory();
-    }
-    public void setServerSocketFactory(String factoryClassName)
-        throws ClassNotFoundException, InstantiationException, IllegalAccessException
-    {
-        naming.setServerSocketFactory(factoryClassName);
-    }
+   public String getServerSocketFactory()
+   {
+      return naming.getServerSocketFactory();
+   }
+   
+   public void setServerSocketFactory(String factoryClassName)
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException
+   {
+      naming.setServerSocketFactory(factoryClassName);
+   }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
@@ -178,8 +179,8 @@ public class NamingService
          log.warn("Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
 
       /* Bind an ObjectFactory to "java:comp" so that "java:comp/env" lookups
-       produce a unique context for each thread contexxt ClassLoader that
-       performs the lookup.
+         produce a unique context for each thread contexxt ClassLoader that
+         performs the lookup.
       */
       ClassLoader topLoader = Thread.currentThread().getContextClassLoader();
       ENCFactory.setTopClassLoader(topLoader);
@@ -192,6 +193,7 @@ public class NamingService
    }
 
    protected void stopService()
+      throws Exception
    {
       naming.stop();
       log.debug("JNP server stopped");
@@ -214,6 +216,4 @@ public class NamingService
          JNDIResource.destroy( getServer(), "LocalJNDI" );
       }
    }
-   
-   // Protected -----------------------------------------------------
 }
