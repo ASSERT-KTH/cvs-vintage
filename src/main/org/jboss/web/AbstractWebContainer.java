@@ -144,7 +144,7 @@ in the catalina module.
 
 @author  Scott.Stark@jboss.org
 @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
-@version $Revision: 1.66 $
+@version $Revision: 1.67 $
 */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -344,6 +344,7 @@ public abstract class AbstractWebContainer
       WebDescriptorParser webAppParser = ...;
       WebMetaData metaData = parseMetaData(ctxPath, warUrl);
       WebApplication warInfo = new WebApplication(metaData);
+      warInfo.setDeploymentInfo(di);
       performDeploy(warInfo, warUrl, webAppParser);
       deploymentMap.put(warUrl, warInfo);
       thread.setContextClassLoader(appClassLoader);
