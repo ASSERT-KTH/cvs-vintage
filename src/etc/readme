@@ -1,0 +1,103 @@
+$Id: readme,v 1.1 1999/10/09 00:19:58 duncan Exp $
+	
+JavaServer(tm) WDK (JavaServer(tm) Web Development Kit 1.1 Release to Experts)
+
+Released: August 1999
+
+All classes are written exclusively in the Java(tm) Programming
+Language and may be used with and JRE 1.1 conformant system,
+including Java2 conformant systems.
+
+This release has been developed on the following systems:
+
+    Sparc Solaris 2.6 and Java 2 Standard Edition (or JDK 1.2.x)
+    Windows NT and Java 2 Standard Edition (or JDK 1.2.x)
+
+You should read the License Agreement which applies to this
+software.
+
+At this time, the documentation for this release is primarily:
+
+     This README document
+     A FAQ on some JSWDK specifics
+     The JavaDoc documentation
+     API Examples
+
+RUNNING THE SERVER
+------------------
+
+In order to run the Server it is necessary to have installed a compliant
+JDK. You must also have the "java" program available in your path (set
+using the PATH environment variable). More information can be found at
+http://java.sun.com/products/jdk.
+
+If you are using JDK 1.2, tools.jar (which can be found in
+/path/to/jdk1.2/lib/tools.jar) needs to be in your
+CLASSPATH. Tools.jar contains "javac" which is used by the JSP engine
+to compile the servlets generated from .jsp's.
+
+There is a Unix based Korn Shell Script and a Windows based Batch File
+provided in the installation directory. To startup the server on Unix:
+
+     % startserver
+
+To start up the server on Windows
+
+     C:\jswdk\> startserver
+
+Once the server is running, you can use any web browser to browse
+
+     http://localhost:8080
+
+and you will be browsing pages served from the server. You can read
+the JavaDoc documentation for the javax.servlet packages as well as
+see some JSP and servlet examples.
+
+To stop the server, use the following commands:
+
+    Unix: 		% stopserver
+    Windows: 		> stopserver
+
+KNOWN BUGS AND ISSUES
+---------------------
+
+1. Automatic servlet reloading is not implemented in JSWDK. 
+
+2. The JSP engine (wrongly) treats buffer size in units of characters
+   instead of bytes.
+
+3. The web server crashes with a StackOverflowException if there
+   is infinite recursion in RequestDispatcher.forward/include or
+   <jsp:forward/include .../>.
+
+4. In the taglib directive, uri in this release of JSWDK refers to a
+   .jar file that contains .class files for all user-defined tags and
+   the tag library descriptor in the META-INF directory -
+   META-INF/taglib.tld. 
+
+
+TROUBLESHOOTING
+---------------
+
+On a Windows 95/98 machine you may see an "Out of Environment Space"
+error message when starting the server. This is caused by Windows
+providing too small a space for environment variables. To work around
+this limitation:
+
+	Close the DOS window (the error can corrupt its CLASSPATH variable)
+	Open a new MS-DOS window
+	Click on the MS-DOS icon at the top-left of the Window
+	Select teh Properties option
+	Click on the "Memory" tab
+	Adjust the "Initial Environment" drop-down box from "Auto" to "2816"
+	Click on OK
+	Start the server
+
+FEEDBACK
+--------
+
+Please send your bugs and feedback on this software to
+<jswdk-feedback@sun.com>. 
+
+________________________________________________________________________
+Java is a trademark of Sun Microsystems, Inc.

@@ -1,0 +1,191 @@
+Some Frequently Asked Questions (FAQ) on JSWDK
+----------------------------------------------
+
+Q: I am getting a 404 Error, what does it mean?
+
+A: In simple terms, it means the server was not able to locate 
+   the resource you requested. This can occur because of two 
+   reasons:
+
+   One, the URL you typed was wrong or has a typo.
+   And two, the URL you requested could not be resolved with 
+   the current "docsBase". If you are trying to run your own 
+   "web-application" please read  the questions related to 
+   "installing your own web-application" in this FAQ.
+
+Q: I am getting a 500 Error, what does it mean?
+
+A: In simple terms, it means that there was some "Internal Server
+   Error" while processing your request. You need to study carefully
+   the trace at the server window to find out more about the error.
+
+   These errors can occur while translating your jsp source to a 
+   servlet. These are translation-time errors and occur mostly because
+   of some syntax error in the jsp file or in the generated java file.
+   Please use the error-message at the server-window for debugging.
+
+   Errors can also occur at request-time. Again, the information about 
+   specific problem/exception can be obtained by looking at the 
+   server-side trace.
+
+Q: What do I need in my CLASSPATH?
+
+A: All you need is a correct version of JDK (1.1.x or 1.2). 
+
+   Since the JSP engine also uses 'javac' it needs to be in the CLASSPATH.
+   If you are using JDK 1.1.x it will automatically be included. If 
+   you are using JDK 1.2 you will need to set JAVA_HOME to the directory
+   where JDK is installed or alternately you can put "tools.jar" in your
+   CLASSPATH.
+
+   All other classes, jar files that are needed, are put by the startserver
+   script and you don't need to worry about them.
+
+Q: Where are the classes for JSPs and Servlets?
+
+A: webserver.jar	     -- class files for Servlet Engine.
+   lib/jspengine.jar         -- class files for JSP Engine.
+   lib/servlet.jar           -- Public APIs for Servlet.
+   lib/jsp.jar               -- Public APIs for JSP.
+   lib/xml.jar               -- classes for parsing XML document.
+
+Q: Can I combine these classes with other webservers?
+
+A: The JSP engine uses just the public portion of the Java Servlet 2.1 
+   API. In theory, it could run on other servlet engines that support 
+   the Servlet 2.1 API but we have not tested this release on any servlet 
+   engine other than the one in JSWDK.
+
+Q: Where do I put my jsp sources and beans?
+
+A: If you just want to test JSPs without creating a separate web-application
+   you can use the default "example" application. If you want to create
+   a new web-application please read "how to install a new web-application?".
+
+   To use the default, put all your JSP source under /examples/jsp, either 
+   in the same directory or under a new subdirectory of /examples/jsp (as
+   done in the included examples). Put all your beans (class files) under
+   /examples/WEB-INF/jsp/beans appropriately (as done for the included 
+   beans). The startserver script will automatically add these classes to 
+   the CLASSPATH at runtime.
+
+   If your server is already running, you will need to stop and restart it.
+   You can invoke your jsps using http://locahost:8080/examples/jsp/yours.jsp
+
+
+Q: What is a web-application? How can I install a new web-application?
+
+A: A web-application is a collection of resources such as jsps, servlets,
+   html files, images, etc. which are mapped to a specific "URI" prefix.
+
+   For example, all the resources related to baseball can be assembled
+   into a "baseball" directory and correspondingly all the requests that
+   start with "/baseball"  can be mapped to this application.
+
+   A new application can be added to JSWDK by editing webserver.xml file.
+   To add "baseball" application you can make the following additions to 
+   the file (at the appropriate place):
+
+   <WebApplication id="baseball0" mapping="/baseball" docBase="baseball"/>
+
+   Please read "webserver.xml" for more details.
+
+   a) To install servlets within a web-application, you can do the following:
+
+   * Once a servlet has been compiled, it can be added to JSWDK by:
+     determine which "web application" context you'd like to add the servlet 
+     to
+
+		add the servlet class file to the
+		WEBAPP/WEB-INF/servlets directory
+
+   * In order to activate the newly installed servlet
+     you need to also:
+
+		register the servlet with the
+		WEBAPP/WEB-INF/servlets.properties file
+
+		you can optionally map your servlet
+		to uri requests relative to the context
+		within it is located by adding an
+		entry in the WEBAPP/WEB-INF/mappings.properties
+		file
+		
+    * And finally restart the server
+
+	You can access your new servlet via a URI similiar
+	to the following:
+
+		http://localhost:8080/WEBAPP/servlet/SERVLET-NAME
+
+	If you've associated a URI path mapping to your
+	servlet you can access it via a URI similiar to the
+	following:
+
+		http://localhost:8080/WEBAPP/foo.EXTENSION
+
+			- or -
+
+		http://localhost:8080/WEBAPP/MAP-PATH
+
+	where:
+
+		WEBAPP = the web-application URI name
+		SERVLET-NAME = the base name of a servlet
+		EXTENSION = a file time extension
+		MAP-PATH = associated URI MAP path
+
+   b) To install jsps and beans within a web-application you can do 
+      the following:
+
+   * Put the jsp sources in any directory under /WEBAPP.
+   
+   * Make sure that the compiled beans are in the CLASSPATH. This can
+     be done either by setting the CLASSPATH manually or by editing 
+     the startserver script.
+
+   * Edit the file WEBAPP/WEB-INF/mappings.properties and the file 
+     WEBAPP/WEB-INF/servlets.properties to map ".jsp" in the URI to 
+     the JspServlet which will process the jsp file. 
+     (Please refer to property files under /examples/WEB-INF/ to do 
+     this. The mapping should be very similar.)
+
+   * And finally restart the server.
+
+     You can invoke your new jsp via a URI similar to the following:
+
+     http://localhost:8080/WEBAPP/yourfile.jsp
+
+Q: How are the URIs mapped at the server?
+
+A: First, the web-server will match the beginning of the requested URI
+   against the prefixes of all contexts (web-applications). If no context 
+   matches, it will use the default context instead. 
+
+Q: What do different init parameters mean?
+
+   * keepgenerated: 
+        Whether to keep the generated java file or no. Can take a
+        value of true/false. If value is true then the generated files 
+        are kept else they are deleted.
+
+   * scratchDir: 
+	The work dir which will be created for storing all the
+	generated code. This can be set to any dir. That directory will be 
+	created under the docbase.
+
+   * largeFile: 
+	Can take a value of true/false. If the file is really large then 
+	all the static html is stored is a separate data file if the value 
+	of this param is set to true.
+
+   * sendErrToClient: 
+	Can take a value of true/false. If set to true then all
+	the compilation/parsing errors will be sent as part of the response 
+	to the client.
+
+   * ieClassId: 
+	This is used with the plugin. This is a particular id that is
+	set to activate the plugin. The default value for IE 4 and 5 are 
+	set as of now. This is for future use incase the classId for IE 
+	changes in the future. 

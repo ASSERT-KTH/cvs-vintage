@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE Server
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Servlet Server 1.0//EN"
+    "file:./etc/server.dtd">
+
+<!--
+
+This is the configuration file for the JSWDK server.
+Following is a brief overview of the JSWDK server
+configuration options. Please review the following
+file for complete configuration information:
+
+    etc/server.dtd
+
+-->
+
+<Server adminPort="-1" workDir="work">
+    <ContextManager port="8080" hostName="" inet="">
+
+<!--
+    Note: a default context, one which path is specified
+          as "/", must be defined per the servlet 2.2
+          specification.
+-->
+
+        <Context path="/" docBase="webpages"
+            defaultSessionTimeOut="30" isWARExpanded="true"
+            isWARValidated="false" isInvokerEnabled="true"
+            isWorkDirPersistent="false"/>
+        <Connector className="tomcat">
+            <Parameter name="foo" value="bar"/>
+        </Connector>
+    </ContextManager>
+</Server>

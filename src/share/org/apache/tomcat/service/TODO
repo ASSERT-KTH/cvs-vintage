@@ -1,0 +1,13 @@
+
+1. Recycling
+
+- Add to TcpConnectionHandler: 
+  Object initThread(Thread) 
+- Pass the returned object to 
+  processConnection(TcpConnection c, Object threadCache).
+
+This will work in the same way as the cookie in pthreads, and will allow
+recycling. 
+
+
+2. 

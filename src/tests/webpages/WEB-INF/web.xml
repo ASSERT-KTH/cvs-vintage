@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+
+<web-app>
+    <servlet>
+        <servlet-name>
+            servlet1
+        </servlet-name>
+        <servlet-class>
+            requestMap.Servlet1
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>
+            servlet2
+        </servlet-name>
+        <servlet-class>
+            requestMap.Servlet2
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>
+            servlet3
+        </servlet-name>
+        <servlet-class>
+            requestMap.Servlet3
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>
+            servlet4
+        </servlet-name>
+        <servlet-class>
+            requestMap.Servlet4
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>
+            servlet1
+        </servlet-name>
+        <url-pattern>
+            /foo/bar/*
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>
+            servlet2
+        </servlet-name>
+        <url-pattern>
+            /baz/*
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>
+            servlet3
+        </servlet-name>
+        <url-pattern>
+            /catalog
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>
+            servlet4
+        </servlet-name>
+        <url-pattern>
+            *.bop
+        </url-pattern>
+    </servlet-mapping>
+</web-app>

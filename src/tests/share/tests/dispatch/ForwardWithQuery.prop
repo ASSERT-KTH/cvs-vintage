@@ -1,0 +1,27 @@
+#
+#
+#
+
+ServletName:/servlet/dispatch.ForwardWithQueryServlet
+TargetTag:FORWARDWITHQUERYTARGET
+ContentType:text/funky
+Debug:false
+
+
+QueryStrings:1,2,3,4
+
+
+query.1.name:name
+query.1.value:Sun Microsystems, \
+              Netscape, \
+              Oracle
+
+query.2.name:age
+query.2.value:100000
+
+query.3.name:city
+query.3.value:Cupertino
+
+query.4.name:state
+query.4.value:California
+

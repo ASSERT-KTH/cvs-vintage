@@ -1,0 +1,57 @@
+
+AJP11 is implemented as part of JServ. It's probably the most
+stable connector, and has load balancing and all the nice stuff.
+
+
+1. Download Apache 1.3.9 ( or any other recent version ).
+Binaries for almost anything can be found at:
+      http://www.apache.org/dist/binaries/
+( solaris and Linux: /home/costin/APACHE )
+
+
+
+2. Install apache. Try to use a directory that is local, i.e. not in
+your NFS-mounted home ( or the speed will be verrry small).
+I did:
+
+~/tmp $ /usr/dist/exe/gzip -dc apache_1.3.9-sun4u-sun-solaris2.270.tar.gz |tar xvf -
+~/tmp $ cd apache_1.3.9
+~/tmp/apache_1.3.9 $ ./install-bindist.sh /opt/apache
+
+
+
+3. Get the "connector": mod_jserv.so.
+You can get the source from java.apache.org, or binaries from my home.
+( /home/costin/APACHE ) ( this is the un-modified module that comes from
+apache/jserv)
+Install mod_jser.so in /opt/apache/conf/libexec.
+
+4. Configure.
+Edit /opt/apache/conf/httpd.conf, replace 80 with 8080 ( the Port ).
+Add at the end:
+    Include conf/ajp11.conf
+I have a basic ajp11.conf file in my home,you can use it or create your own config.
+Copy ajp11.conf in /opt/apache/conf
+
+You may also need to change
+  ServerName your.desktop.name
+( that means your desktop configuration is broken, but that happens )
+
+5. Checkout the latest tomcat, build.
+
+6. Copy startserver.sh to startajp.sh
+
+7. In startajp.sh replace
+     org.apache.tomcat.shell.Startup &
+ with
+     org.apache.tomcat.shell.Ajp11Start -port 8007
+( shutdown doesn't work yet, so don't put the process in background,
+you'll need to ^C )
+
+
+8. Start apache ( /opt/apache/bin/apachectl start ) and tomcat
+( startajp.sh )
+You can see the logs in /opt/apache/logs.
+
+
+Costin

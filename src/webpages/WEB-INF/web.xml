@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+
+<web-app>
+    <servlet>
+        <servlet-name>
+            snoop
+        </servlet-name>
+        <servlet-class>
+            SnoopServlet
+        </servlet-class>
+<!--
+        <init-param>
+            <param-name>
+                foo
+            </param-name>
+            <param-value>
+                bar
+            </param-value>
+        </init-param>
+-->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>
+            snoop
+        </servlet-name>
+        <url-pattern>
+            /snoop
+        </url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>
+            snoop
+        </servlet-name>
+        <url-pattern>
+            *.snp
+        </url-pattern>
+    </servlet-mapping>
+</web-app>

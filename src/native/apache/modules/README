@@ -1,0 +1,3 @@
+Various helper modules will go here ( load balancing, wrapper, etc).
+Also, stand-alone connectors ( not using MsgBuff ) will sit here ( or in
+a separate directory if more than 1 file.
