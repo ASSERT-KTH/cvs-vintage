@@ -121,6 +121,17 @@ public  class AttributeGroup
          return ras;
     }
 
+    public RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )
+         throws Exception
+    {                
+        RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
+        raag.setGroupId(getAttributeGroupId());
+        raag.setAttributeId(attribute.getAttributeId());
+        raag.setOrder(getAttributes().size() +1 );
+        return raag;
+    }
+
+
     public void delete( ScarabUser user )
          throws Exception
     {                
