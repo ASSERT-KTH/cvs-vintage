@@ -24,32 +24,12 @@
 package org.argouml.application.api;
 import javax.swing.*;
 
-/**  An interface which identifies an ArgoUML plug-in to the menu.
+/**  An interface which identifies an ArgoUML plug-in as a resource bundle.
  *   Plug-ins are replacements or additions to standard Argo classes.
  *   
- *   PluggableMenu require two criteria.  The first is a JMenuItem.
- *   The second is an unlocalized string which identifies the menu
- *   requesting the plugin, such as "File" or "Edit".
- *
  *   @author Thierry Lach
  *   @since 0.9.4
  */
-public interface PluggableMenu extends Pluggable {
-
-    /** Return the JMenuItem controlled by the plugin under the specific
-     *  context.  One menu plugin may control multiple menu items.
-     *
-     *  @param parentMenuItem The menuitem which this menuitem would attach to.
-     *
-     *  @param menuType The type of the parentMenu.
-     *
-     *  @return A JMenuItem object controlled by the plug-in.
-     */
-    public JMenuItem getMenuItem(JMenuItem parentMenuItem, String menuType);
-
-    // public boolean inContext(Object[] context);
-
-    public Object[] buildContext(JMenuItem parentMenuItem, String menuType);
-
-} /* End interface PluggableMenu */
+public interface PluggableResourceBundle extends Pluggable {
+} /* End interface PluggableResourceBundle */
 
