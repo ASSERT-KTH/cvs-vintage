@@ -302,9 +302,14 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
         if (getObservable() != null) {
             getObservable().setMax(uids.length);
+            getObservable().resetCurrent();
         }
 
         for (int i = 0; i < uids.length; i++) {
+        	if ((getObservable() != null) && ((i % 100) == 0)) {
+                getObservable().setCurrent(i);
+            }
+        	
             if ((oldHeaderList != null) && oldHeaderList.containsKey(uids[i])) {
                 header = oldHeaderList.get(uids[i]);
                 headerList.add(header, uids[i]);

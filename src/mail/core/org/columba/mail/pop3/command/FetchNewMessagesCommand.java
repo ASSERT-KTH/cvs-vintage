@@ -84,13 +84,18 @@ public class FetchNewMessagesCommand extends Command {
 			// login and get # of messages on server
 			totalMessageCount = server.getMessageCount();
 
+			if ( worker.cancelled() ) throw new CommandCancelledException();
+			
 			// synchronize local UID list with server UID list
 			List newMessagesUidList = synchronize();
 
+			if ( worker.cancelled() ) throw new CommandCancelledException();
+			
 			if (MainInterface.DEBUG) {
 				LOG.fine(newMessagesUidList.toString());
 			}
 
+			if ( worker.cancelled() ) throw new CommandCancelledException();
 			// only download new messages
 			downloadNewMessages(newMessagesUidList, worker);
 
@@ -182,6 +187,9 @@ public class FetchNewMessagesCommand extends Command {
 		newMessageCount = newMessagesUIDList.size();
 
 		for (int i = 0; i < newMessageCount; i++) {
+			
+			if ( worker.cancelled() ) throw new CommandCancelledException();
+			
 			// which UID should be downloaded next
 			Object serverUID = newMessagesUIDList.get(i);
 
