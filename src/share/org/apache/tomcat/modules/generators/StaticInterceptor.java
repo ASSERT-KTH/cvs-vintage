@@ -59,7 +59,6 @@
 package org.apache.tomcat.modules.generators;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.*;
 import java.io.*;

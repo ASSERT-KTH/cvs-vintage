@@ -4,11 +4,8 @@ import java.net.*;
 import java.io.*;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.request.*;
-import org.apache.tomcat.modules.server.*;
-import org.apache.tomcat.modules.session.*;
-import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.modules.server.*;
 import java.security.*;
 import java.util.*;
 

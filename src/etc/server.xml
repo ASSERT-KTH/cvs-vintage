@@ -99,13 +99,15 @@
 
       <!-- ==================== Interceptors ==================== -->
         <ContextInterceptor 
-            className="org.apache.tomcat.context.DefaultCMSetter" />
+            className="org.apache.tomcat.modules.config.DefaultCMSetter" />
 
         <!-- 
-         ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
+         ContextInterceptor 
+            className="org.apache.tomcat.modules.loggers.LogEvents" 
          -->
         
-        <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.modules.config.AutoSetup" />
 
         <ContextInterceptor 
             className="org.apache.tomcat.facade.WebXmlReader" />
@@ -113,21 +115,21 @@
         <!-- Uncomment out if you have JDK1.2 and want to implement
 	     the Java SecurityManager
         <ContextInterceptor 
-            className="org.apache.tomcat.context.PolicyInterceptor" />
+            className="org.apache.tomcat.modules.config.PolicyInterceptor" />
         -->
 
         <!-- For JDK1.2 and URLClassLoader 
         <ContextInterceptor 
-            className="org.apache.tomcat.context.LoaderInterceptor12" />
+            className="org.apache.tomcat.modules.config.LoaderInterceptor12" />
         -->
 
         <ContextInterceptor 
-            className="org.apache.tomcat.context.LoaderInterceptor11" />
+            className="org.apache.tomcat.modules.config.LoaderInterceptor11" />
 
         <!-- Default Error handler 
           -->
         <ContextInterceptor 
-            className="org.apache.tomcat.context.ErrorHandler" />
+            className="org.apache.tomcat.modules.generators.ErrorHandler" />
 
 
         <ContextInterceptor 
@@ -137,26 +139,27 @@
         <!-- Session interceptor will extract the session id from cookies and 
              deal with URL rewriting ( by fixing the URL )
           -->
-        <RequestInterceptor className="SessionId" />
+        <RequestInterceptor 
+            className="org.apache.tomcat.modules.session.SessionId" />
 
         <!-- Find the container ( context and prefix/extension map ) 
              for a request.
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.SimpleMapper1" 
+            className="org.apache.tomcat.modules.mappers.SimpleMapper1" 
             debug="0" />
 
         <!-- fix the context class loader, other JDK1.2 specific code
         <RequestInterceptor 
-            className="org.apache.tomcat.request.Jdk12Interceptor" 
+            className="org.apache.tomcat.modules.mappers.Jdk12Interceptor" 
             debug="0" />
           -->
 
         <!-- Non-standard invoker, for backward compat. ( /servlet/* )
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.InvokerInterceptor" 
-            debug="0" />
+           className="org.apache.tomcat.modules.generators.InvokerInterceptor" 
+           debug="0" />
 
         <!-- "jsp" handler 
           -->
@@ -167,30 +170,31 @@
         <!-- "default" handler - static files and dirs
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.StaticInterceptor" 
+            className="org.apache.tomcat.modules.generators.StaticInterceptor" 
             debug="0" listings="true" />
         
 	<!-- Handle reloads - will be moved to per/context
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.ReloadInterceptor" 
+            className="org.apache.tomcat.modules.mappers.ReloadInterceptor" 
             debug="0" />
 
         <!-- Plug a session manager. You can plug in more advanced session
              modules.
           -->
-        <RequestInterceptor className="SimpleSessionStore" />
+        <RequestInterceptor 
+	    className="org.apache.tomcat.modules.session.SimpleSessionStore" />
 
         <!-- Check if the request requires an authenticated role.
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.AccessInterceptor" 
+            className="org.apache.tomcat.modules.aaa.AccessInterceptor" 
             debug="0" />
 
         <!-- Implements BASIC and FORM autorization
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.CredentialsInterceptor" 
+            className="org.apache.tomcat.modules.aaa.CredentialsInterceptor" 
             debug="0" />
 
         <!-- Check permissions using the simple xml file. You can 
@@ -198,7 +202,7 @@
              uncomment below to have a global tomcat Realm.
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.SimpleRealm" 
+            className="org.apache.tomcat.modules.aaa.SimpleRealm" 
             filename="conf/users/global-users.xml"
             debug="0" />
 
@@ -219,7 +223,7 @@
         -->
         <!--
         <RequestInterceptor 
-            className="org.apache.tomcat.request.JDBCRealm" 
+            className="org.apache.tomcat.modules.aaa.JDBCRealm" 
             debug="99" 
 	    driverName="sun.jdbc.odbc.JdbcOdbcDriver" 
 	    connectionURL="jdbc:odbc:TOMCAT" 
@@ -305,7 +309,7 @@
             debug="0" 
 	    reloadable="true" > 
            <RequestInterceptor 
-              className="org.apache.tomcat.request.SimpleRealm" 
+              className="org.apache.tomcat.modules.aaa.SimpleRealm" 
               filename="conf/users/example-users.xml"
               debug="0" />
             <Logger name="example_tc_log" 
@@ -332,7 +336,7 @@
                  reloadable="true" 
                  trusted="false" > 
         <RequestInterceptor 
-            className="org.apache.tomcat.request.SimpleRealm" 
+            className="org.apache.tomcat.modules.aaa.SimpleRealm" 
             filename="conf/users/admin-users.xml"
             debug="0" />
         </Context>

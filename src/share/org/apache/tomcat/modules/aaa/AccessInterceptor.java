@@ -60,7 +60,6 @@
 package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.session.*;
 import org.apache.tomcat.util.*;
 import java.util.*;
 import java.io.*;
