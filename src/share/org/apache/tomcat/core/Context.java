@@ -524,7 +524,7 @@ public class Context {
 	    // Workaround for frequent "bug" in web.xmls
 	    // Declare a default mapping
 	    log("Mapping with unregistered servlet " + servletName );
-	    addServlet( servletName, servletName );
+	    sw = addServlet( servletName, servletName );
 	}
 	if( "/".equals(path) )
 	    defaultServlet = sw;
@@ -673,7 +673,7 @@ public class Context {
 	try {
 	    setDebug( Integer.parseInt(level) );
 	} catch (Exception e) {
-	    log("Set debug to '" + level + "':", e);
+	    log("Trying to set debug to '" + level + "':", e, Logger.ERROR);
 	}
     }
 
@@ -681,48 +681,34 @@ public class Context {
 	return debug;
     }
 
+    // ------------------- Logging ---------------
+
+    LogHelper loghelper = new LogHelper("tc_log", this);
+    LogHelper loghelperServlet = new LogHelper("servlet_log", null);
+
     /** Internal log method
      */
     public final void log(String msg) {
-	log(msg, null);
+	loghelper.log(msg);
     }
 
+    /** Internal log method
+     */
     public void log(String msg, Throwable t) {
-	// XXX \n
-	// Custom output -
-	if( contextM == null ) {
-	    System.out.println( msg );
-	    if( t!=null ) 
-		t.printStackTrace(System.out);
-	    return;
-	}
-	if( msg.startsWith( "<l:" ))
-	    contextM.doLog( msg, t );
-	else
-	    contextM.doLog(this.toString() + " " + msg, t);
+	loghelper.log(msg, t);
     }
 
-    boolean firstLog = true;
-    Logger csLog = null;
+    /** Internal log method
+     */
+    public void log(String msg, Throwable t, int level) {
+	loghelper.log(msg, t, level);
+    }
 
     /** User-level log method ( called from a servlet)
      */
     public void logServlet( String msg , Throwable t ) {
-	if (firstLog == true) {
-	    csLog = Logger.getLogger("servlet_log");
-	    if( csLog!= null ) {
-		csLog.setCustomOutput("true");
-		csLog.setVerbosityLevel(Logger.INFORMATION);
-		firstLog = false;
-	    }
-	}
-	if (csLog != null) {
-	    csLog.log("Context log path=\"" + path  + "\" :" + msg + "\n");
-	    //	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>\n");
-	} else {
-	    System.out.println("Context log path=\"" + path  + "\"" + msg);
-	    //	    System.out.println("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
-	}
+	msg = ("path=\"" + path  + "\" :" + msg);
+	loghelperServlet.log(msg, t);
     }
 
     public String toString() {
@@ -1043,7 +1029,7 @@ public class Context {
 	if( isTrusted() ) return true;
 	if( true ) {
 	    // XXX  XXX XXX
-	    log( "Illegal access to internal attribute ");
+	    log( "Illegal access to internal attribute ", null, Logger.ERROR);
 	    return true;
 	}
 	 	
