@@ -28,7 +28,7 @@ import javax.transaction.Transaction;
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
  *  @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Externalizable
@@ -77,6 +77,7 @@ public final class RemoteMethodInvocation
    		 hash = (hash +20000) ^ clazz[i].getName().hashCode();
    	}
 
+      //DEBUGSystem.out.println(method+"="+hash);
    	return hash;
    }
 	
