@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.55 2003/10/22 18:50:40 jjones Exp $
+// $Id: FigAssociation.java,v 1.56 2003/10/27 22:41:31 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,9 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoJMenu;
-import org.argouml.uml.ui.ActionAggregation;
-import org.argouml.uml.ui.ActionMultiplicity;
-import org.argouml.uml.ui.ActionNavigability;
+import org.argouml.uml.diagram.ui.ActionAggregation;
+import org.argouml.uml.diagram.ui.ActionMultiplicity;
+import org.argouml.uml.diagram.ui.ActionNavigability;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.base.PathConvPercentPlusConst;

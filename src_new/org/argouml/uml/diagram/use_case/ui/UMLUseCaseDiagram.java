@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.34 2003/10/27 22:08:57 kataka Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.35 2003/10/27 22:41:31 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.34 2003/10/27 22:08:57 kataka Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.35 2003/10/27 22:41:31 alexb Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -50,8 +50,8 @@ import org.argouml.ui.CmdCreateNode;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.use_case.UseCaseDiagramGraphModel;
-import org.argouml.uml.ui.ActionAddExtensionPoint;
-import org.argouml.uml.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionAddExtensionPoint;
 import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;

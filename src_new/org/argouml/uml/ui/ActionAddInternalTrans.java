@@ -1,4 +1,4 @@
-// $Id: ActionAddInternalTrans.java,v 1.8 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: ActionAddInternalTrans.java,v 1.9 2003/10/27 22:41:32 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,10 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.ui.targetmanager.TargetManager;
 
+/**
+ * this class is not used.
+ * @deprecated as of 0.15.2, remove in 0.15.3, alexb
+ */
 class ActionAddInternalTrans extends UMLChangeAction {
     public ActionAddInternalTrans() { super("action.add-internal-transition"); }
 

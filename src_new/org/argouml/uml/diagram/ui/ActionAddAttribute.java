@@ -1,5 +1,5 @@
-// $Id: ActionProperties.java,v 1.8 2003/10/27 22:41:32 alexb Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: ActionAddAttribute.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,51 +22,57 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.uml.diagram.ui;
 
-import org.argouml.i18n.Translator;
-import org.argouml.ui.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 
-import javax.swing.Action;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
+import org.argouml.model.uml.UmlFactory;
+import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.ui.UMLChangeAction;
 
-/** Action to select the properties tab.
- * @stereotype singleton
- *
- * @deprecated as of 0.15.2 replace with {@link 
- *  org.argouml.uml.diagram.ui.ActionProperties}, remove 0.15.3, alexb
+/** Action to add an attribute to a classifier.
+ *  @stereotype singleton
  */
-public class ActionProperties extends UMLAction {
+public class ActionAddAttribute extends UMLChangeAction {
 
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    public static ActionProperties SINGLETON = new ActionProperties(); 
+    public static ActionAddAttribute SINGLETON = new ActionAddAttribute();
+
+   
 
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    protected ActionProperties() { 
-        super(Translator.localize("action.properties"), HAS_ICON);
-        String localMnemonic = Translator.localize("action.properties.mnemonic");
-        if (localMnemonic != null && localMnemonic.length() == 1) {
-            putValue(Action.MNEMONIC_KEY, new Integer((int) localMnemonic.charAt(0)));
-        }        
-    }
+    public ActionAddAttribute() { super("button.add-attribute"); }
 
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
-    public void actionPerformed(ActionEvent ae) {
+    public void actionPerformed(ActionEvent ae) {	
+	Project p = ProjectManager.getManager().getCurrentProject();
+	Object target = TargetManager.getInstance().getModelTarget();
+	if (!(org.argouml.model.ModelFacade.isAClassifier(target))) return;
+	Object/*MClassifier*/ cls = target;
+	Object/*MAttribute*/ attr = UmlFactory.getFactory().getCore().buildAttribute(cls);
+	TargetManager.getInstance().setTarget(attr);
+	super.actionPerformed(ae);
+    }
+
+    public boolean shouldBeEnabled() {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
-	if (pb == null) return;
-	pb.selectTabNamed("action.properties");
+	Object target =  TargetManager.getInstance().getModelTarget();
+	/*
+	if (target instanceof MInterface) {
+		return Notation.getDefaultNotation().getName().equals("Java");
+	}
+	*/
+	return org.argouml.model.ModelFacade.isAClass(target);		
     }
-
-    public boolean shouldBeEnabled() { 
-	return true; 
-    }
-} /* end class ActionProperties */
-
+} /* end class ActionAddAttribute */

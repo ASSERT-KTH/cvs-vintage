@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.24 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: ActionAddAttribute.java,v 1.25 2003/10/27 22:41:32 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,8 @@ import org.argouml.ui.targetmanager.TargetManager;
 
 /** Action to add an attribute to a classifier.
  *  @stereotype singleton
+ * @deprecated since 0.15.2, replace with {@link 
+ * org.argouml.uml.diagram.ui.ActionAddAttribute}, remove 0.15.3, alexb
  */
 public class ActionAddAttribute extends UMLChangeAction {
 

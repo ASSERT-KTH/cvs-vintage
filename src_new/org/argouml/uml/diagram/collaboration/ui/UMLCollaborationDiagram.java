@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.35 2003/10/27 22:08:56 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.36 2003/10/27 22:41:30 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,8 @@ import org.argouml.uml.diagram.collaboration.CollabDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAssociationRole;
 import org.argouml.uml.diagram.ui.FigMessage;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.ui.ActionAddMessage;
-import org.argouml.uml.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionAddMessage;
 
 import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.Layer;

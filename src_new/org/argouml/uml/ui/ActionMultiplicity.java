@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.6 2003/09/21 15:23:22 bobtarling Exp $
+// $Id: ActionMultiplicity.java,v 1.7 2003/10/27 22:41:32 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,10 @@ import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
 
+/**
+ * @deprecated as of 0.15.2 replace with {@link 
+ *  org.argouml.uml.diagram.ui.ActionMultiplicity}, remove 0.15.3, alexb
+ */
 
 public class ActionMultiplicity extends UMLAction {
     String str = "";

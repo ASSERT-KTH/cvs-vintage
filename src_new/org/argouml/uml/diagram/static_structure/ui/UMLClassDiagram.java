@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.40 2003/10/27 22:08:57 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.41 2003/10/27 22:41:31 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.40 2003/10/27 22:08:57 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.41 2003/10/27 22:41:31 alexb Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -38,9 +38,9 @@ import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
 import org.argouml.uml.diagram.ui.RadioAction;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.ui.ActionAddAttribute;
-import org.argouml.uml.ui.ActionAddNote;
-import org.argouml.uml.ui.ActionAddOperation;
+import org.argouml.uml.diagram.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionAddAttribute;
+import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;

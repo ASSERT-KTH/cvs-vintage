@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.6 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: ActionAggregation.java,v 1.7 2003/10/27 22:41:32 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,10 @@ import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
 
+/**
+ * @deprecated as of 0.15.2, replaced with {@link
+ *  org.argouml.uml.diagram.ui.ActionAggregation}, remove in 0.15.3, alexb
+ */
 public class ActionAggregation extends UMLAction {
     String str = "";
     Object/*MAggregationKind*/ agg = null;

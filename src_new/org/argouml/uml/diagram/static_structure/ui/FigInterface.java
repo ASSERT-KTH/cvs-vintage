@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.54 2003/10/22 18:50:40 jjones Exp $
+// $Id: FigInterface.java,v 1.55 2003/10/27 22:41:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,11 +51,11 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.generator.ParserDisplay;
-import org.argouml.uml.ui.ActionAddNote;
-import org.argouml.uml.ui.ActionAddOperation;
-import org.argouml.uml.ui.ActionCompartmentDisplay;
-import org.argouml.uml.ui.ActionModifier;
+import org.argouml.uml.diagram.ui.ActionAddOperation;
+import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
+import org.argouml.uml.diagram.ui.ActionModifier;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;

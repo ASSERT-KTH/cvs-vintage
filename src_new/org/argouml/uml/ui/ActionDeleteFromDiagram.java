@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.12 2003/10/22 18:50:40 jjones Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.13 2003/10/27 22:41:32 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,9 @@ import org.tigris.gef.presentation.Fig;
 
 /** deletes an modelelement from the diagram, but not from the model.
  *  @stereotype singleton
+ *
+ * @deprecated as of 0.15.2, replaced with {@link
+ *  org.argouml.uml.diagram.ui.ActionDeleteFromDiagram}, remove in 0.15.3, alexb
  */
 public class ActionDeleteFromDiagram extends UMLChangeAction {
 

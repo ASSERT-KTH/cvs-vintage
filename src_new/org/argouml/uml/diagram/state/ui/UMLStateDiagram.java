@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.42 2003/10/27 22:08:57 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.43 2003/10/27 22:41:30 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.42 2003/10/27 22:08:57 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.43 2003/10/27 22:41:30 alexb Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -43,7 +43,7 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionAddNote;
 
 import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.LayerPerspective;

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.42 2003/10/22 18:50:40 jjones Exp $
+// $Id: FigEdgeModelElement.java,v 1.43 2003/10/27 22:41:31 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.42 2003/10/22 18:50:40 jjones Exp $
+// $Id: FigEdgeModelElement.java,v 1.43 2003/10/27 22:41:31 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -78,8 +78,8 @@ import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDManager;
-import org.argouml.uml.ui.ActionDeleteFromDiagram;
-import org.argouml.uml.ui.ActionProperties;
+import org.argouml.uml.diagram.ui.ActionDeleteFromDiagram;
+import org.argouml.uml.diagram.ui.ActionProperties;
 import org.argouml.util.Trash;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
