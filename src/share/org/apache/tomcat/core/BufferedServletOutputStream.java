@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.4 1999/11/01 20:09:19 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/01 20:09:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.5 1999/11/09 23:18:45 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/11/09 23:18:45 $
  *
  * ====================================================================
  * 
@@ -126,8 +126,10 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     }
 
     protected void sendHeaders() throws IOException {
-	response.writeHeaders();
-	resA.endHeaders();
+	if(response!=null)
+	    response.writeHeaders();
+	if(resA!=null)
+	    resA.endHeaders();
     }
 
     public void setResponse( Response response ) {
