@@ -107,15 +107,10 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.91 2002/05/02 18:17:22 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.92 2002/05/02 22:29:52 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
-
-    private static final String EMAIL_ERROR = ", but could not send " +
-        "notification email due to a mail server error.";
-
-    private static final String DEFAULT_MSG = "Your changes were saved";
 
     public void doSubmitattributes(RunData data, TemplateContext context)
         throws Exception
@@ -395,7 +390,7 @@ public class ModifyIssue extends BaseModifyIssue
                         descBuf.append("added comment '");
                         if (comment.length() > 25)
                         { 
-                            descBuf.append(comment.substring(1,25)).append("...");
+                            descBuf.append(comment.substring(0,25)).append("...");
                         }
                         else
                         {
@@ -405,6 +400,7 @@ public class ModifyIssue extends BaseModifyIssue
                         registerActivity(descBuf.toString(),
                             "Your comment was saved", 
                             issue, user, null, context, data, "", comment); 
+                        scarabR.setConfirmMessage("Your comment was added.");
                     }
                     intake.remove(group);    
                 }
@@ -423,6 +419,7 @@ public class ModifyIssue extends BaseModifyIssue
                    .append("' at ").append(path).toString();
                     registerActivity(desc, "Your file was added", issue, user, 
                                      null, context, data);
+                    data.setMessage(DEFAULT_MSG);  
                 }
             } 
             else
@@ -581,6 +578,7 @@ public class ModifyIssue extends BaseModifyIssue
                    .toString();
                registerActivity(desc, "Your link was deleted", 
                                 issue, user, null, context, data);
+               data.setMessage(DEFAULT_MSG);  
             } 
         }
     }
@@ -728,6 +726,7 @@ public class ModifyIssue extends BaseModifyIssue
                         .toString();
                     registerActivity(desc, DEFAULT_MSG, currentIssue, 
                         user, null, context, data, oldValue, newValue);
+                    data.setMessage(DEFAULT_MSG);  
                 }
             }
         }
@@ -827,6 +826,7 @@ public class ModifyIssue extends BaseModifyIssue
                 .toString();
             registerActivity(desc, "added dependency", issue, 
                              user, null, context, data);
+            data.setMessage(DEFAULT_MSG);  
 
             intake.remove(group);
         }

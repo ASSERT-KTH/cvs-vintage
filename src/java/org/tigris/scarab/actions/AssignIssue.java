@@ -100,14 +100,11 @@ import org.tigris.scarab.util.Email;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.45 2002/04/29 18:56:00 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.46 2002/05/02 22:29:52 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
 
-    private static final String EMAIL_ERROR = "Your changes were saved, " +
-                                "but could not send notification email due " + 
-                                "to a sendmail error.";
 
     public void doSavevalues(RunData data, TemplateContext context) 
         throws Exception
