@@ -1,31 +1,29 @@
-/*
- * Created on Apr 25, 2003
- * File ColumbaCmdLineParser.java
- *
- * The contents of this file are subject to the Mozilla Public License Version 1.1
- * (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and
- * limitations under the License.
- *
- * The Original Code is "The Columba Project"
- *
- * The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
- * Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
- *
- * All Rights Reserved.
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+
 package org.columba.core.main;
 
 import jargs.gnu.CmdLineParser;
 
 import org.columba.core.config.ConfigPath;
 
-
 /**
- * Pasring the commandline Arguments and setting states, that can be used from other components.
+ * Parsing the commandline arguments and setting states, that can be used
+ * from other components.
+ *
  * @author waffel
  */
 public class ColumbaCmdLineParser {
@@ -127,7 +125,7 @@ public class ColumbaCmdLineParser {
     }
 
     /**
-     * Checks if the commandlineargument -d,--debug is given, if this is true the intern debugValue
+     * Checks if the commandline argument -d,--debug is given, if this is true the intern debugValue
      * is set to true @see ColumbaCmdLineParser#setDebugOption(boolean) else the option is set to
      * false. You can get the option via @see ColumbaCmdLineParser#isDebugOption()
      * @param debugOpt Option for debug @see CmdLineParser.Option
@@ -142,7 +140,7 @@ public class ColumbaCmdLineParser {
     }
 
     /**
-     * Checks if the commandlineoption -p,--path is given, if this is true a new ConfigPath with the path
+     * Checks if the commandline option -p,--path is given, if this is true a new ConfigPath with the path
      * to the configs is generated, else a empty (default) ConfigPath Object is created
      * @param pathOpt the path option @see CmdLineParser.Option
      * @param parser parser which parsed the Option
@@ -158,7 +156,7 @@ public class ColumbaCmdLineParser {
         }
     }
 
-    /** Checks if the commandlineargument -r,--rcpt (recipient) is given. If this is true the intern
+    /** Checks if the commandline argument -r,--rcpt (recipient) is given. If this is true the intern
      * value for recipient is set @see ColumbaCmdLineParser#setRcptOption(String) ,else the option
      * is set to null. You can access it via @see ColumbaCmdLineParser#getRcptOption()
      * @param rcptOpt the recipient Option @see CmdLineParser.Option
@@ -170,7 +168,7 @@ public class ColumbaCmdLineParser {
     }
 
     /**
-     * Checks if the commandlineargument -b,--body is given, if this is true, then the intern value
+     * Checks if the commandline argument -b,--body is given, if this is true, then the intern value
      * for body is set @see ColumbaCmdLineParser#setBodyOption(String) ,else the option is set to
      * null. You can get the option value via @see ColumbaCmdLineParser#getBodyOption()
      * @param bodyOpt the Option for body @see CmdLineParser.Option
@@ -198,12 +196,12 @@ public class ColumbaCmdLineParser {
     }
 
     /**
-          * Checks the option --mailurl, if this is true the intern mailurlValue is set
-          * @see ColumbaCmdLineParser#setMailurlOption(String), else the option is set to null.
-          * You can access this option via @see ColumbaCmdLineParser#getMailurlOption()
-          * @param mailurlOpt Composer Option @see CmdLineParser.Option
-          * @param parser parser which parsed the Option
-          */
+      * Checks the option --mailurl, if this is true the intern mailurlValue is set
+      * @see ColumbaCmdLineParser#setMailurlOption(String), else the option is set to null.
+      * You can access this option via @see ColumbaCmdLineParser#getMailurlOption()
+      * @param mailurlOpt Composer Option @see CmdLineParser.Option
+      * @param parser parser which parsed the Option
+      */
     private void checkMailurl(CmdLineParser.Option mailurlOpt,
         CmdLineParser parser) {
         String mailurlValue = (String) parser.getOptionValue(mailurlOpt);
@@ -228,7 +226,7 @@ public class ColumbaCmdLineParser {
 
     /**
      * prints the usage of the program with commandline arguments.
-     * TODO: all option should be printed
+     * TODO: all options should be printed
      */
     public static void printUsage() {
         System.out.println("usage: java -jar columba.jar [OPTION]");
