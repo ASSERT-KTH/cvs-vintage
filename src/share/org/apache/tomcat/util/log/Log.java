@@ -81,12 +81,12 @@ import java.util.*;
  * <p>
  * Usage: <pre>
  * class Foo {
- *   Log log = new Log("tc_log", "Foo"); // or...
- *   Log log = new Log("tc_log", this); // fills in "Foo" for you
+ *   Log log = Log.getLog("tc_log", "Foo"); // or...
+ *   Log log = Log.getLog("tc_log", this); // fills in "Foo" for you
  *   ...
  *     log.log("Something happened");
  *     ...
- *     log.log("Starting something", Logger.DEBUG);
+ *     log.log("Starting something", Log.DEBUG);
  *     ...
  *     catch (IOException e) {
  *       log.log("While doing something", e);
@@ -94,22 +94,26 @@ import java.util.*;
  * </pre>
  *
  * @author Alex Chaffee [alex@jguru.com]
+ * @author Costin Manolache
  **/
 public class Log {
-
+    /**
+     * Verbosity level codes.
+     */
+    public static final int FATAL = Integer.MIN_VALUE;
+    public static final int ERROR = 1;
+    public static final int WARNING = 2;
+    public static final int INFORMATION = 3;
+    public static final int DEBUG = 4;
+    
+    
     // name of the logger ( each logger has a unique name,
     // used as a key internally )
     private String logname;
+
     // string displayed at the beginning of each log line,
     // to identify the source
     private String prefix;
-
-    // The real logger object ( that knows to write to
-    // files, optimizations, etc)
-    private Logger logger;
-
-    // Do we need that? 
-    //    private Log proxy;
 
     // -------------------- Various constructors --------------------
 
@@ -147,6 +151,17 @@ public class Log {
 	this.prefix = prefix;
     }
 
+    public static Log getLog( String channel, String prefix ) {
+	Log log=new Log( channel, prefix );
+	return log;
+    }
+    
+    public static Log getLog( String channel, Object owner ) {
+	// XXX return singleton
+	Log log=new Log( channel, owner );
+	return log;
+    }
+    
     // -------------------- Log messages. --------------------
     // That all a client needs to know about logging !
     // --------------------
@@ -188,9 +203,6 @@ public class Log {
 	    msg = prefix + ": " + msg;
 	}
 	
-	// 	    // activate proxy if present
-	// 	    if (proxy != null)
-	// 		logger = proxy.getLogger();
 	
 	// activate logname fetch if necessary
 	if (logger == null) {
@@ -208,11 +220,11 @@ public class Log {
 
 
     // -------------------- Extra configuration stuff --------------------
+    // The real logger object ( that knows to write to
+    // files, optimizations, etc)
+    private Logger logger;
 
-    
     public Logger getLogger() {
-	// 	    if (proxy != null)
-	// 		logger = proxy.getLogger();
 	return logger;
     }
     
