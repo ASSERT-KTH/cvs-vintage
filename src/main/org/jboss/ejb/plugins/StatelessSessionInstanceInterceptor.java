@@ -9,8 +9,10 @@ package org.jboss.ejb.plugins;
 import java.rmi.RemoteException;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
+import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionContainer;
+
 
 /**
  * This container acquires the given instance. This must be used after
@@ -18,7 +20,7 @@ import org.jboss.ejb.StatelessSessionContainer;
  * JNDI environment to be set
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -47,13 +49,13 @@ public class StatelessSessionInstanceInterceptor
 	
    // Interceptor implementation --------------------------------------
    
-   public Object invokeHome(final MethodInvocation mi) throws Exception
+   public Object invokeHome(final Invocation mi) throws Exception
    {
       // We don't need an instance since the call will be handled by container
       return getNext().invokeHome(mi);
    }
 
-   public Object invoke(final MethodInvocation mi) throws Exception
+   public Object invoke(final Invocation mi) throws Exception
    {
       // Get context
       mi.setEnterpriseContext(container.getInstancePool().get());
@@ -80,8 +82,8 @@ public class StatelessSessionInstanceInterceptor
       } finally
       {
          // Return context
-         if (mi.getEnterpriseContext() != null)
-            container.getInstancePool().free(mi.getEnterpriseContext());
+         if ( mi.getEnterpriseContext() != null)
+            container.getInstancePool().free(((EnterpriseContext) mi.getEnterpriseContext()));
       }
    }
 }

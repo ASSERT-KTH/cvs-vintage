@@ -34,7 +34,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -45,10 +45,10 @@ import org.jboss.metadata.ConfigurationMetaData;
 public class EntityMultiInstanceSynchronizationInterceptor
    extends EntitySynchronizationInterceptor
 {
-   public void init()
+   public void create()
       throws Exception
    {
-      super.init();
+      super.create();
       if (container.getInstancePool() instanceof EntityInstancePool)
       {
          ((EntityInstancePool)container.getInstancePool()).setReclaim(true);
