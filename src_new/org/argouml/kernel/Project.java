@@ -24,7 +24,7 @@
 // File: Project.java
 // Classes: Project
 // Original Author: not known
-// $Id: Project.java,v 1.23 2002/07/29 11:38:43 kataka Exp $
+// $Id: Project.java,v 1.24 2002/07/29 13:00:42 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to remove
 // include and extend relationships when deleting a use case.
@@ -289,6 +289,8 @@ public class Project implements java.io.Serializable {
         catch (ParserConfigurationException pc) {}
         MModel mmodel = null;
         
+        InputSource source = new InputSource(zis);
+        source.setEncoding("UTF-8");
         mmodel = xmiReader.parse(new InputSource(zis));
         if (mmodel != null && !xmiReader.getErrors()) {
             try {
