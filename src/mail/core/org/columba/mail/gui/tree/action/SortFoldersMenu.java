@@ -93,13 +93,13 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
     private void loadConfig() {
         XmlElement element = MailInterface.config.get("options").getElement("/options/gui/tree/sorting");
 
+        FolderComparator comparator = null;
         if (element != null) {
 
             DefaultItem item = new DefaultItem(element);
             boolean ascending = item.getBoolean("ascending", true);
             activeComparator = item.get("comparator").toUpperCase();
 
-            FolderComparator comparator = null;
             if (activeComparator.equals(ALPHABETIC_ACTION)) {
                 comparator = new FolderComparator(ascending);
                 alphaMenuItem.setSelected(true);
@@ -117,12 +117,16 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
             } else {
                 descendingMenuItem.setSelected(true);
             }
+        } else {
+            comparator = new FolderComparator(true);
+            alphaMenuItem.setSelected(true);
+            ascendingMenuItem.setSelected(true);
+        }
 
-            if (comparator != null) {
-                TreeViewOwner mediator = (TreeViewOwner) getController();
-                mediator.getTreeController().getView().setFolderComparator(comparator);
-                mediator.getTreeController().getView().setSortingEnabled(true);
-            }
+        if (comparator != null) {
+            TreeViewOwner mediator = (TreeViewOwner) getController();
+            mediator.getTreeController().getView().setFolderComparator(comparator);
+            mediator.getTreeController().getView().setSortingEnabled(true);
         }
     }
 
