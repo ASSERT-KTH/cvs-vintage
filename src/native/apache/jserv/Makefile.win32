@@ -1,6 +1,6 @@
 #############################################
 # Apache mod_jserv Makefile for Win32 systems
-# $Revision: 1.1 $
+# $Revision: 1.2 $
 #############################################
 
 #####################
@@ -25,18 +25,18 @@ all: error
 ##############################
 # Check for PACKAGE definition
 ##############################
-!IFNDEF PACKAGE
-errormessage = Variable "PACKAGE" not defined.
-all: error
-!ENDIF
+# !IFNDEF PACKAGE
+# errormessage = Variable "PACKAGE" not defined.
+# all: error
+# !ENDIF
 
 ##############################
 # Check for VERSION definition
 ##############################
-!IFNDEF VERSION
-errormessage = Variable "VERSION" not defined.
-all: error
-!ENDIF
+# !IFNDEF VERSION
+# errormessage = Variable "VERSION" not defined.
+# all: error
+# !ENDIF
 
 ##########################
 # Compile time definitions
@@ -54,7 +54,7 @@ JSERV_DEFINE = $(JSERV_DEFINE) /D "EAPI"
 #################################
 # Include search path definitions
 #################################
-JSERV_C_INCL = /I$(APACHE_SRC)\include /I$(APACHE_SRC)\os\win32 /I.
+JSERV_C_INCL = "/I$(APACHE_SRC)\include" "/I$(APACHE_SRC)\os\win32" /I.
 
 ####################
 # C Compiler options
@@ -65,7 +65,7 @@ JSERV_C_OPTS = /nologo /MD /W3 /GX /O2 /YX  /FD /c /Fp"ApacheModuleJServ.pch" \
 ################
 # Linker options
 ################
-JSERV_L_OPTS = /nologo $(APACHE_SRC)\CoreR\ApacheCore.lib kernel32.lib user32.lib \
+JSERV_L_OPTS = /nologo "$(APACHE_SRC)\CoreR\ApacheCore.lib" kernel32.lib user32.lib \
                gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib \
                wsock32.lib /subsystem:console /incremental:no /machine:I386 \
                /pdb:".\ApacheModuleJServ.pdb" /NODEFAULTLIB:LIBC
@@ -93,15 +93,15 @@ JSERV_OBJS=mod_jserv.obj \
 build: jserv.h ApacheJServ.exe
     echo Done.
 !ELSE
-build: jserv.h $(APACHE_SRC)\CoreR\ApacheCore.lib ApacheModuleJServ.dll
+build: jserv.h "$(APACHE_SRC)\CoreR\ApacheCore.lib" ApacheModuleJServ.dll
     echo Done.
 !ENDIF
 
 #############
 # Build rules
 #############
-jserv.h: autochange.exe
-    @autochange PACKAGE=$(PACKAGE) VERSION=$(VERSION) < jserv.h.in > jserv.h
+# jserv.h: autochange.exe
+#     @autochange PACKAGE=$(PACKAGE) VERSION=$(VERSION) < jserv.h.in > jserv.h
     
 autochange.exe: autochange.c
     $(CC) autochange.c
@@ -137,9 +137,9 @@ distclean: clean
 #################################
 help:
     type <<
-USAGE: nmake -f Makefile.Win32 APACHE_SRC=(apache source dir)
-             PACKAGE=(package name) VERSION=(version number) [clean]
+USAGE: nmake -f Makefile.Win32 APACHE_SRC=(apache source dir) [clean]
 <<
+#            PACKAGE=(package name) VERSION=(version number) [clean]
 
 error:
     echo ERROR: $(errormessage)
