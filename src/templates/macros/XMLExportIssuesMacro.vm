@@ -81,6 +81,7 @@
                 <parent>$scarabR.getIssueByPk($activityDepend.ObservedId.toString()).UniqueId</parent>
                 <child>$scarabR.getIssueByPk($activityDepend.ObserverId.toString()).UniqueId</child>
                 <type>$activityDepend.DependType.Name</type>
+                <deleted>$activiyDepend.Deleted</deleted>
               </dependency>
               #end
               #set ($activityDepend = false)
