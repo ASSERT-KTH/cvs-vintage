@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.36 2001/07/16 01:09:07 costin Exp $
+/* $Id: Main.java,v 1.37 2001/08/21 05:35:05 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -70,278 +70,238 @@ import org.apache.tomcat.util.IntrospectionUtils;
 import org.apache.tomcat.util.compat.Jdk11Compat;
 
 // The main idea is to have a starter with minimal class loader deps,
-// and use it to create the initial environment
+// and use it to create the initial environment. This class is pretty generic,
+// deps on tomcat are minimal ( depends only on tomcat.util ).
 
 /**
-	Starter class for Tomcat.
-	<p>
-	This is a replacement/enhancement for the .sh and .bat files - you can
-	use JDK1.2 "java -jar tomcat.jar", or ( for jdk 1.1 ) you just need to
-	include a single jar file in the classpath.
-	<p>
-	This class creates three class loader instances: 
-	<ol>
-	<li>a 'common' loader to be the parent of both the server
-	    container and also webapp loaders.</li>
-	<li>an 'applications' loader to load classes used by all webapps, but
-	    not the servlet engine.</i>
-	<li>a 'container' loader exclusively for the tomcat servlet engine.</li>
-	</ol>
-	Both the 'apps' loader and 'container' loader have the common loader as
-	the parent class loader.  The class path for each is assembled like so:
-	<ul>
-	<li>common - all elements of the 
-	      <code>org.apache.tomcat.common.classpath</code>
-	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/common/.
-	      </li>
-	<li>apps - all elements of the 
-	      <code>org.apache.tomcat.apps.classpath</code>
-	      property plus all *.jar files found in ${TOMCAT_HOME}/lib/apps/.
-	      In addition, all classes loaded via the 'common' loader.</i>
-	<li>container - all jar files found in ${TOMCAT_HOME}/lib/container/ plus 
-	      the class folder ${TOMCAT_HOME}/classes and finally also the utility 
-	      jar file ${JAVA_HOME}/lib/tools.jar.  In addition, all classes loaded
-	      via the common loader.</li>
-	</ul>
-	After creating the above class loaders, this class instantiates, initializes
-	and starts an instance of the class <code>org.apache.tomcat.startup.Tomcat</code>.
-	<p>
-	@author Costin Manolache
-	@author Ignacio J. Ortega
-	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.36 $ $Date: 2001/07/16 01:09:07 $
+ * Launcher capable of setting class loader and guessing locations.
+ * <p>
+ * This is a replacement/enhancement for the .sh and .bat files - you can
+ * use JDK1.2 "java -jar [PROGRAM].jar", or ( for jdk 1.1 ) you just need to
+ * include a single jar file in the classpath.
+ * <p>
+ * The class will first guess it's own location by looking in each classpath
+ * location. It'll then process the command line parameters and based on
+ * a properties file, locate the actual class that will be started.
+ * <p>
+ * It'll then construct a class loader ( common ) from the content of a
+ * specified directory and/or additionl system property. Based on the first
+ * argument, it'll instantiate a class ( in the created class loader ), set the
+ * parameters, and call it's execute() method.
+ *
+ * @author Costin Manolache
+ * @author Ignacio J. Ortega
+ * @author Mel Martinez mmartinez@g1440.com
  */
 public class Main{
-
-    /**
-            name of configuration property to set (using the -D option at
-            startup or via .properties file) to specify the classpath
-            to be used by the ClassLoader shared amongst all web applications
-            (but not by the servlet container).  Specify this string as
-            normal file paths separated by the path.seperator delimiter for
-            the host platform.  Example (unix):
-            <pre><code>
-            * org.apache.tomcat.apps.classpath = /home/mypath/lib/mylib.jar: \
-            *                                      /home/mypath/classes/
-            </code></pre>
-    */
-    public static final String TOMCAT_APPS_CLASSPATH_PROPERTY =
-            "org.apache.tomcat.apps.classpath";
-
-    /**
-            the classpath shared among all web apps (in addition to any
-            jar files placed directly in $TOMCAT_HOME/lib/apps/).
-    */
-    public static final String TOMCAT_APPS_CLASSPATH;
-
-    /**
-            name of configuration property to set (using the -D option at
-            startup or via .properties file) to specify the classpath
-            to be used by the ClassLoader common to both the servlet engine
-            and all web applications.  Specify this string as
-            normal file paths separated by the path.seperator delimiter for
-            the host platform.  Example (unix):
-            <pre><code>
-            * org.apache.tomcat.common.classpath = /home/mypath/lib/mylib.jar: \
-            *                                      /home/mypath/classes/
-            </code></pre>
-    */
-    public static final String TOMCAT_COMMON_CLASSPATH_PROPERTY =
-            "org.apache.tomcat.common.classpath";
-
-    /**
-            the classpath common to both the servlet engine and also to
-            any web applications served by it (in addition to any
-            jar files placed directly in $TOMCAT_HOME/lib/common/).
-    */
-    public static final String TOMCAT_COMMON_CLASSPATH;
-
-    static{
-        String s=null;
-        s = System.getProperty(TOMCAT_APPS_CLASSPATH_PROPERTY);
-        if(s==null){
-            s="";
-        }
-        TOMCAT_APPS_CLASSPATH=s;
-        s=null;
-        s = System.getProperty(TOMCAT_COMMON_CLASSPATH_PROPERTY);
-        if(s==null){
-            s="";
-        }
-        TOMCAT_COMMON_CLASSPATH=s;
-    }
+    public static final String PROPERTY_COMMON_LOADER =
+	"org.apache.tomcat.common.loader";
 
     String installDir;
-    String libBase;
+    String libDir;
     String serverBase;
     String commonBase;
     String homeDir;
-    static final String DEFAULT_CONFIG="conf" + File.separator + "server.xml";
-    boolean doStop=false;
-    // if needed
-    // null means user didn't set one
-    String configFile;
-
+    ClassLoader parentL;
+    
     public Main() {
     }
 
+    // -------------------- Properties --------------------
+
+    public void setLibDir( String dir ) {
+	libDir=dir;
+    }
+
+    public void setLoaderProperty( String prop ) {
+
+    }
+
+    public void setInstallDir( String dir ) {
+
+    }
+
+    public void setParentLoader( ClassLoader p ) {
+	parentL=p;
+    }
+
+    // -------------------- Main --------------------
+    
     public static void main(String args[] ) {
 	try {
-	    Main tomcat=new Main();
-	    tomcat.execute( args );
+	    Main m=new Main();
+	    m.processArgs( args );
+	    m.execute();
 	} catch(Exception ex ) {
 	    System.out.println("Fatal error");
 	    ex.printStackTrace();
 	}
     }
-
+ 
     void log( String s ) {
 	System.err.println("TomcatStartup: " + s );
     }
 
     // -------------------- Utils --------------------
 
-    public String getInstallDir() {
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    String args[];
+    URL commonCP[];
+    ClassLoader commonCL;
+    
+    public void processArgs( String args[] ) {
+	this.args=args;
+    }
+
+    private void initDirs()
+	throws Exception
+    {
+	if( installDir==null ) {
+	    installDir=	IntrospectionUtils.
+		guessInstall("tomcat.install", "tomcat.home","tomcat.jar");
+	}
 	if( installDir==null )
 	    installDir=".";
-	return installDir;
+	    
+	if( libDir==null ){
+	    libDir=installDir + File.separator + "lib" + File.separator +
+		"common";
+	}
+    }
+    
+    public void initClassLoader() {
+	if( parentL==null )
+	    parentL=this.getClass().getClassLoader();
+	commonCL=
+	    jdk11Compat.newClassLoaderInstance(commonCP, parentL);
+	if( dL > 0 )
+	    IntrospectionUtils.displayClassPath("Main classpath: ", commonCP );
     }
 
-    public String getServerDir() {
-        if( libBase==null ){
-	    libBase=getInstallDir() + File.separator + "lib" +
-		File.separator + "container" + File.separator;
-        }
-	return libBase;
+    /** If "-sandbox" parameter is found ( the first after the action ), we'll
+     *  load a sandbox with the policy in install/conf/tomcat.policy. This
+     *  has to happen before loading any class or constructing the loader, or
+     *  some VMs will have wrong permissions.
+     *  
+     *  We do that here, instead of the shell script, in order to support java -jar
+     *  and to minimize the ammount of platform-dependent code.
+     *
+     *  Note that we are not setting a security manager - just adding permissions
+     *  so that all "system" classes have permissions.
+     */
+    public void initSecurityFile() {
+// 	if( args.length > 1 &&
+// 	    "-sandbox".equals( args[1] ) ) {
+// 	    if( null == System.getProperty("java.security.policy")) {
+// 		File f=null;
+// 		String policyFile=installDir + File.separator + "conf" +
+// 		    File.separator + "tomcat.policy";
+		
+// 		debug("Setting policy file to " + policyFile + " tomcat.home= " +
+// 		    System.getProperty( "tomcat.home") );
+// 		System.setProperty( "tomcat.home", installDir );
+// 		System.setProperty("java.security.policy",  policyFile);
+// 		java.security.Policy.getPolicy().refresh();
+// 	    }
+// 	}
+    }
+    
+    // -------------------- Tasks --------------------
+    
+    static Hashtable tasks=new Hashtable();
+    static {
+	tasks.put("stop", "org.apache.tomcat.startup.StopTomcat");
+	tasks.put("enableAdmin", "org.apache.tomcat.startup.EnableAdmin");
+	tasks.put("start", "org.apache.tomcat.startup.EmbededTomcat");
+	tasks.put("run", "org.apache.tomcat.startup.EmbededTomcat");
+	tasks.put("jspc", "org.apache.tomcat.startup.Jspc");
+	tasks.put("estart", "org.apache.tomcat.startup.EmbededTomcat");
+	tasks.put("", "org.apache.tomcat.startup.EmbededTomcat");
     }
 
-    public String getAppsDir() {
-        if( serverBase==null ){
-	    serverBase=getInstallDir() + File.separator + "lib" +
-		File.separator + "apps" + File.separator;
-        }
-	return serverBase;
+    String task;
+
+    public void setTask( String s ) {
+	task=s;
+    }
+    
+    String findTask( String args[] ) {
+	// XXX We should display a help with all actions !
+	if( args.length == 0 ) return null;
+	String arg=args[0];
+	if( arg.startsWith( "-" ) )
+	    arg="";
+	if( tasks.get( arg ) == null ) {
+	    return null;
+	}
+	if( dL>0)
+	    debug("Task: " + arg + " " + tasks.get( arg ));
+	return arg;
     }
 
-    public String getCommonDir() {
-        if( commonBase==null ){
-	    commonBase=getInstallDir() + File.separator + "lib" +
-		File.separator+ "common" + File.separator;
-			
-        }
-	return commonBase;
+    public void printUsage() {
+	PrintStream out=System.out;
+	out.println( "Usage: java " + this.getClass().getName() +
+		     " [task] [options]");
+	out.println();
+	out.println("Tasks: " );
+	Enumeration keys=tasks.keys();
+	while( keys.hasMoreElements() ) {
+	    String t=(String)keys.nextElement();
+	    String classN=(String)tasks.get(t);
+	    out.println("    " + t );
+	    printOptions( classN );
+	}
+	out.println();
     }
 
-
-    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
-
-    protected void execute( String args[] ) throws Exception {
+    private void printOptions( String classN ) {
+    }
+    
+    // -------------------- Execute --------------------
+    
+    public void execute() throws Exception {
 
         try {
-            installDir=IntrospectionUtils.guessInstall("tomcat.install",
-                                "tomcat.home", "tomcat.jar");
+	    if( task==null )
+		task=findTask( args );
+	    if(  null == task) {
+		printUsage();
+		return;
+	    }
 
-            homeDir = System.getProperty("tomcat.home");
+	    initDirs();
+	    commonCP=
+		IntrospectionUtils.getClassPath( libDir, null,
+						 PROPERTY_COMMON_LOADER,
+						 false);
+	    initSecurityFile();
+	    initClassLoader();
 
-            ClassLoader parentL=this.getClass().getClassLoader();
-
-            // the server classloader loads from classes dir too and
-	    // from tools.jar
-
-	    // Create the common class loader --------------------
-	    Vector commonJars = new Vector();
-	    IntrospectionUtils.addToClassPath( commonJars,
-					       getCommonDir());
-	    IntrospectionUtils.addJarsFromClassPath(commonJars,
-						    TOMCAT_COMMON_CLASSPATH);
-            addToTomcatClasspathSysProp(commonJars);
-
-            URL[] commonClassPath=IntrospectionUtils.getClassPath(commonJars);
-	    //            displayClassPath( "common ", commonClassPath );
-	    ClassLoader commonCl=
-                    jdk11Compat.newClassLoaderInstance(commonClassPath ,
-						       parentL);
-
-
-	    // Create the container class loader --------------------
-            Vector serverJars=new Vector();
-	    IntrospectionUtils.addToClassPath( serverJars, getServerDir());
-	    IntrospectionUtils.addToolsJar( serverJars );
-
-
-	    URL[] serverClassPath=IntrospectionUtils.getClassPath(serverJars);
-	    //displayClassPath( "server ", serverClassPath );
-            ClassLoader serverCl=
-                    jdk11Compat.newClassLoaderInstance(serverClassPath ,
-						       commonCl);
-	    jdk11Compat.setContextClassLoader( serverCl );
-
-	    // Create the webapps class loader --------------------
-            Vector appsJars = new Vector();
-	    IntrospectionUtils.addToClassPath(appsJars, getAppsDir());
-	    IntrospectionUtils.addJarsFromClassPath( appsJars, 
-						     TOMCAT_APPS_CLASSPATH);
-            addToTomcatClasspathSysProp(appsJars);
-
-            URL[] appsClassPath=IntrospectionUtils.getClassPath(appsJars);
-            ClassLoader appsCl=
-		jdk11Compat.newClassLoaderInstance(appsClassPath ,
-						       commonCl);
-
-	    // Instantiate tomcat ( using container class loader )
-            Class cls=serverCl.loadClass("org.apache.tomcat.startup.Tomcat");
+            Class cls=commonCL.loadClass((String)tasks.get(task));
+	    
             Object proxy=cls.newInstance();
 
-            IntrospectionUtils.setAttribute(proxy,"args", args );
-            IntrospectionUtils.setAttribute(proxy,"home", homeDir );
             IntrospectionUtils.setAttribute(proxy,"install", installDir );
-            IntrospectionUtils.setAttribute(proxy,"parentClassLoader",appsCl);
+
+	    IntrospectionUtils.setAttribute(proxy,"parentClassLoader",parentL);
+	    IntrospectionUtils.setAttribute(proxy,"commonClassPath",
+					    commonCP);
 	    IntrospectionUtils.setAttribute(proxy,"commonClassLoader",
-					    commonCl);
-	    IntrospectionUtils.setAttribute(proxy,"containerClassLoader",
-					    serverCl);
-	    IntrospectionUtils.setAttribute(proxy,"appsClassLoader",
-					    appsCl);
+					    commonCL);
+            IntrospectionUtils.setAttribute(proxy,"args", args );
+
             IntrospectionUtils.execute(  proxy, "execute" );
-            return;
         } catch( Exception ex ) {
-            System.out.println("Guessed home=" + homeDir);
+            System.out.println("Guessed home=" + installDir);
             ex.printStackTrace();
         }
     }
 
-    public void displayClassPath( String msg, URL[] cp ) {
-	System.out.println(msg);
-	for( int i=0; i<cp.length; i++ ) {
-	    System.out.println( cp[i].getFile() );
-	}
+    private static int dL=0;
+    private void debug( String s ) {
+	System.out.println("Main: " +s );
     }
-
-    /**
-     * Adds classpath entries from a vector of URL's to the
-     * "tc_path_add" System property.  This System property lists
-     * the classpath entries common to web applications. This System
-     * property is currently used by Jasper when its JSP servlet
-     * compiles the Java file for a JSP.
-    */
-
-    private void addToTomcatClasspathSysProp(Vector v)
-    {
-        String sep = System.getProperty("path.separator");
-        String cp = System.getProperty("tc_path_add");
-
-        Enumeration e = v.elements();
-        while( e.hasMoreElements() ) {
-            URL url = (URL)e.nextElement();
-            if( cp != null)
-                cp += sep + url.getFile();
-            else
-                cp = url.getFile();
-        }
-        if( cp != null)
-            System.getProperties().put("tc_path_add",cp);
-    }
-
 }
 
 
