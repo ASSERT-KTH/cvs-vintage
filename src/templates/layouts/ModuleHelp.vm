@@ -4,14 +4,15 @@
         <p><img src="$data.Request.ContextPath/images/module2.gif" 
         width="113" height="51" alt="" border="0" /></p>
         
-        <p><small>A module is the unit of work space representing a unique
-        set of "artifact types" (e.g., issues). Each new module also has
-        the following unique attributes:</small></p>
+        <p><small>A module is the unit of work space representing a
+        unique set of "issue types" (e.g., defects, patches, tasks).
+        Each new module also has the following unique
+        attributes:</small></p>
         
         <ul>
         <li><small>a set of users</small></li>
         <li><small>a set of roles</small></li>
-        <li><small>a set of permissions per role, per artifact type</small></li>
+        <li><small>a set of permissions per role, per issue type</small></li>
         </ul>
         
         <p><small>Scarab uses the generic term "module" instead of the more

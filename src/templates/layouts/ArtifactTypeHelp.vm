@@ -4,7 +4,7 @@
         <p><img src="$data.Request.ContextPath/images/artifact.gif"
         width="113" height="72" alt="" border="0" /></p>
         
-        <p><small>An artifact type is a unique instance of a Scarab
+        <p><small>An issue type is a unique instance of a Scarab
         database, including the following attributes:</small></p>
         
         <ul>
@@ -13,7 +13,7 @@
         <li><small>a unique set of permissions per role</small></li>
         </ul>
         
-        <p><small>Once a user selects an artifact type, Scarab's
+        <p><small>Once a user selects an issue type, Scarab's
         navigation will indicate their selection state by dropping down
         a list of functions within that artifact type, giving authorized
         user's access to functionality such as:</small></p>
@@ -25,7 +25,7 @@
         </ul>
 
         <p><small>The user's input remains confined to the selected
-        artifact type until they select another artifact type from the
+        issue type until they select another artifact type from the
         left side-bar navigation, or from the artifact type
         index.</small></p>
     </div>    

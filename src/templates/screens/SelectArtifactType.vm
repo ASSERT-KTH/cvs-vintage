@@ -1,16 +1,16 @@
-$page.setTitle("Select Artifact Type")
+$page.setTitle("Select Issue type")
 
 #set ($nextTemplate = $data.Parameters.getString("nextTemplate"))
 #if (!$nextTemplate || $nextTemplate.equals("SelectArtifactType.vm"))
    #set ($nextTemplate = "entry,Wizard1.vm")
 #end
      <div class="app" id="divselect_module">
-        <h3>Artifact types: The '$scarabR.CurrentModule.Name' module</h3>
+        <h3>Issue types: The '$scarabR.CurrentModule.Name' module</h3>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-          <th>Artifact type name</th>
-          <th>Artifact type description</th>
+          <th>Issue type name</th>
+          <th>Issue type description</th>
         </tr>
 
 #foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
