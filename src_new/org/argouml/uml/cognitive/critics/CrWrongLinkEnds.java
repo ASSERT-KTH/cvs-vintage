@@ -1,4 +1,4 @@
-// $Id: CrWrongLinkEnds.java,v 1.14 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrWrongLinkEnds.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongLinkEnds.java,v 1.14 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrWrongLinkEnds.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,7 +53,7 @@ public class CrWrongLinkEnds extends CrUML {
      */
     public CrWrongLinkEnds() {
 	setHeadline("LinkEnds have not the same locations");
-	addSupportedDecision(CrUML.decPATTERNS);
+	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 
     /**

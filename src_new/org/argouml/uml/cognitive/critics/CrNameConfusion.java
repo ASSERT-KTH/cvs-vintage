@@ -1,4 +1,4 @@
-// $Id: CrNameConfusion.java,v 1.12 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrNameConfusion.java,v 1.13 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.12 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrNameConfusion.java,v 1.13 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -52,7 +52,7 @@ public class CrNameConfusion extends CrUML {
      */
     public CrNameConfusion() {
 	setHeadline("Revise Name to Avoid Confusion");
-	addSupportedDecision(CrUML.decNAMING);
+	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_PRESENTATION);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");

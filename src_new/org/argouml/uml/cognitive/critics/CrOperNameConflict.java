@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.14 2004/08/29 14:31:00 mvw Exp $
+// $Id: CrOperNameConflict.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,8 @@ public class CrOperNameConflict extends CrUML {
 
         setResource("CrOperNameConflict");
 
-        addSupportedDecision(CrUML.decMETHODS);
-        addSupportedDecision(CrUML.decNAMING);
+        addSupportedDecision(CrUML.DEC_METHODS);
+        addSupportedDecision(CrUML.DEC_NAMING);
 
         setKnowledgeTypes(Critic.KT_SYNTAX);
 

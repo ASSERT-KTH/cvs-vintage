@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutComponent.java,v 1.13 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrObjectWithoutComponent.java,v 1.14 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class CrObjectWithoutComponent extends CrUML {
      */
     public CrObjectWithoutComponent() {
 	setHeadline("Objects normally are inside components");
-	addSupportedDecision(CrUML.decPATTERNS);
+	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 
     /**

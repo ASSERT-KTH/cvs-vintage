@@ -1,4 +1,4 @@
-// $Id: StylePanelFigNodeModelElement.java,v 1.2 2004/09/01 18:48:04 mvw Exp $
+// $Id: StylePanelFigNodeModelElement.java,v 1.3 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,9 +136,10 @@ public class StylePanelFigNodeModelElement extends StylePanelFig implements
         super.refresh();
 
         // Change the shadow size if appropriate
-        if (_target instanceof FigNodeModelElement) {
+        if (getPanelTarget() instanceof FigNodeModelElement) {
 
-            int shadowSize = ((FigNodeModelElement) _target).getShadowSize();
+            int shadowSize = ((FigNodeModelElement) 
+                    getPanelTarget()).getShadowSize();
 
             if (shadowSize > 0) {
                 shadowField.setSelectedIndex(shadowSize);
@@ -155,12 +156,13 @@ public class StylePanelFigNodeModelElement extends StylePanelFig implements
      */
     public void setTargetShadow() {
         int i = shadowField.getSelectedIndex();
-        if (_target == null || !(_target instanceof FigNodeModelElement))
-                return;
-        FigNodeModelElement nodeTarget = (FigNodeModelElement) _target;
+        if (getPanelTarget() == null 
+                || !(getPanelTarget() instanceof FigNodeModelElement))
+            return;
+        FigNodeModelElement nodeTarget = (FigNodeModelElement) getPanelTarget();
         int oldShadowSize = nodeTarget.getShadowSize();
         nodeTarget.setShadowSize(i);
-        _target.endTrans();
+        getPanelTarget().endTrans();
         if (i != oldShadowSize) {
             markNeedsSave();
         }

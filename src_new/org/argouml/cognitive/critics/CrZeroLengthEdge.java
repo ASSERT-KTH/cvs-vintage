@@ -1,4 +1,4 @@
-// $Id: CrZeroLengthEdge.java,v 1.7 2004/09/05 06:10:21 mvw Exp $
+// $Id: CrZeroLengthEdge.java,v 1.8 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.7 2004/09/05 06:10:21 mvw Exp $
+// $Id: CrZeroLengthEdge.java,v 1.8 2004/09/21 19:03:31 mvw Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -48,9 +48,9 @@ public class CrZeroLengthEdge extends CrUML {
     public CrZeroLengthEdge() {
 	// TODO: {name} is not expanded for diagram objects
 	setHeadline("Make Edge More Visible");
-	addSupportedDecision(CrUML.decRELATIONSHIPS);
-	addSupportedDecision(CrUML.decINHERITANCE);
-	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+	addSupportedDecision(CrUML.DEC_INHERITANCE);
+	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_PRESENTATION);    
     }
 

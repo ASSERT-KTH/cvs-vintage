@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.21 2004/08/29 14:31:00 mvw Exp $
+// $Id: CrNoOperations.java,v 1.22 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class CrNoOperations extends CrUML {
      */
     public CrNoOperations() {
 	setHeadline("Add Operations to <ocl>self</ocl>");
-	addSupportedDecision(CrUML.decBEHAVIOR);
+	addSupportedDecision(CrUML.DEC_BEHAVIOR);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("behavioralFeature");
     }

@@ -1,4 +1,4 @@
-// $Id: CrMergeClasses.java,v 1.13 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrMergeClasses.java,v 1.14 2004/09/21 19:03:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class CrMergeClasses extends CrUML {
     public CrMergeClasses() {
 	setHeadline("Consider Combining Classes");
 	setPriority(ToDoItem.LOW_PRIORITY);
-	addSupportedDecision(CrUML.decCLASS_SELECTION); 
+	addSupportedDecision(CrUML.DEC_CLASS_SELECTION); 
 	addTrigger("associationEnd");
     }
 

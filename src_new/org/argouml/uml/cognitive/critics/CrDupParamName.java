@@ -1,4 +1,4 @@
-// $Id: CrDupParamName.java,v 1.13 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrDupParamName.java,v 1.14 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.13 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrDupParamName.java,v 1.14 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,7 @@ public class CrDupParamName extends CrUML {
     public CrDupParamName() {
 	setHeadline("Duplicate Parameter Name");
 
-	addSupportedDecision(CrUML.decCONTAINMENT);
+	addSupportedDecision(CrUML.DEC_CONTAINMENT);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
     }
 

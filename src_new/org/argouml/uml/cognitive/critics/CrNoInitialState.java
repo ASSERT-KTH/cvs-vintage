@@ -1,4 +1,4 @@
-// $Id: CrNoInitialState.java,v 1.12 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNoInitialState.java,v 1.13 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoInitialState.java
 // Classes: CrNoInitialState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInitialState.java,v 1.12 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNoInitialState.java,v 1.13 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,7 +45,7 @@ public class CrNoInitialState extends CrUML {
      */
     public CrNoInitialState() {
 	setHeadline("Place an Initial MState");
-	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	addTrigger("substate");
     }
 

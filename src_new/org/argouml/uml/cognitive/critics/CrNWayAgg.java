@@ -1,4 +1,4 @@
-// $Id: CrNWayAgg.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNWayAgg.java,v 1.12 2004/09/21 19:03:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNWayAgg.java,v 1.12 2004/09/21 19:03:27 mvw Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -72,7 +72,7 @@ public class CrNWayAgg extends CrUML {
 
         setResource("CrNWayAgg");
 
-        addSupportedDecision(CrUML.decCONTAINMENT);
+        addSupportedDecision(CrUML.DEC_CONTAINMENT);
         setKnowledgeTypes(Critic.KT_SEMANTICS);
 
         // These may not actually make any difference at present (the code

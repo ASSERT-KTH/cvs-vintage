@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.8 2004/09/07 18:50:05 mvw Exp $
+// $Id: CrMultipleRealization.java,v 1.9 2004/09/21 19:03:30 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.8 2004/09/07 18:50:05 mvw Exp $
+// $Id: CrMultipleRealization.java,v 1.9 2004/09/21 19:03:30 mvw Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -48,8 +48,8 @@ public class CrMultipleRealization extends CrUML {
      */
     public CrMultipleRealization() {
 	setHeadline("Interface cannot realize another interface");
-	addSupportedDecision(CrUML.decINHERITANCE);
-	addSupportedDecision(CrUML.decCODE_GEN);
+	addSupportedDecision(CrUML.DEC_INHERITANCE);
+	addSupportedDecision(CrUML.DEC_CODE_GEN);
 	addTrigger("generalization");
     }
 

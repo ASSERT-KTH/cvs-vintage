@@ -1,4 +1,4 @@
-// $Id: CrWrongDepEnds.java,v 1.13 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrWrongDepEnds.java,v 1.14 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrWrongDepEnds.java
 // Classes: CrWrongDepEnds
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongDepEnds.java,v 1.13 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrWrongDepEnds.java,v 1.14 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -52,7 +52,7 @@ public class CrWrongDepEnds extends CrUML {
      */
     public CrWrongDepEnds() {
 	setHeadline("Wrong location-types");
-	addSupportedDecision(CrUML.decPATTERNS);
+	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 
     /**

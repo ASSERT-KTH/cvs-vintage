@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.132 2004/09/03 19:28:46 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.133 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,9 @@ public class ProjectBrowser
 
     private static final String BUNDLE = "statusmsg";
 	
+    /** Default width: DEFAULT_COMPONENTWIDTH */
     public static final int DEFAULT_COMPONENTWIDTH = 220;
+    /** Default height: DEFAULT_COMPONENTHEIGHT */
     public static final int DEFAULT_COMPONENTHEIGHT = 200;
 
     ////////////////////////////////////////////////////////////////
@@ -729,21 +731,21 @@ public class ProjectBrowser
     }
 
     /**
-     * @param event
+     * @param event the event
      */
     public void moduleUnloaded(ArgoModuleEvent event) {
         // TODO:  Disable menu
     }
 
     /**
-     * @param event
+     * @param event the event
      */
     public void moduleEnabled(ArgoModuleEvent event) {
         // TODO:  Enable menu
     }
 
     /**
-     * @param event
+     * @param event the event
      */
     public void moduleDisabled(ArgoModuleEvent event) {
         // TODO:  Disable menu

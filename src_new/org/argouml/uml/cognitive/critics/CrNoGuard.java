@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNoGuard.java,v 1.9 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoGuard.java
 // Classes: CrNoGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoGuard.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNoGuard.java,v 1.9 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,7 +46,7 @@ public class CrNoGuard extends CrUML {
      */
     public CrNoGuard() {
 	setHeadline("Add MGuard to Transistion");
-	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("guard");
     }

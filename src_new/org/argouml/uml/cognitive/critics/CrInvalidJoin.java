@@ -1,4 +1,4 @@
-// $Id: CrInvalidJoin.java,v 1.8 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrInvalidJoin.java,v 1.9 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrInvalidJoin.java
 // Classes: CrInvalidJoin
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidJoin.java,v 1.8 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrInvalidJoin.java,v 1.9 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,7 @@ public class CrInvalidJoin extends CrUML {
      */
     public CrInvalidJoin() {
 	setHeadline("Change Join Transitions");
-	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	addTrigger("outgoing");
     }
 

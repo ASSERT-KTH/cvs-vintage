@@ -1,4 +1,4 @@
-// $Id: CrReservedName.java,v 1.18 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrReservedName.java,v 1.19 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,7 +187,7 @@ public class CrReservedName extends CrUML {
     public CrReservedName() {
 	setHeadline("Change <ocl>self</ocl> to a Non-Reserved Word");
 	setPriority(ToDoItem.HIGH_PRIORITY);
-	addSupportedDecision(CrUML.decNAMING);
+	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");
 	addTrigger("feature_name");

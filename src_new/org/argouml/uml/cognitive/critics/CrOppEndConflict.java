@@ -1,4 +1,4 @@
-// $Id: CrOppEndConflict.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrOppEndConflict.java,v 1.9 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrOppEndConflict.java,v 1.9 2004/09/21 19:03:25 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 import java.util.ArrayList;
@@ -49,9 +49,9 @@ public class CrOppEndConflict extends CrUML {
      */
     public CrOppEndConflict() {
         setHeadline("Rename MAssociation Roles");
-        addSupportedDecision(CrUML.decINHERITANCE);
-        addSupportedDecision(CrUML.decRELATIONSHIPS);
-        addSupportedDecision(CrUML.decNAMING);
+        addSupportedDecision(CrUML.DEC_INHERITANCE);
+        addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+        addSupportedDecision(CrUML.DEC_NAMING);
         setKnowledgeTypes(Critic.KT_SYNTAX);
         addTrigger("associationEnd");
     }

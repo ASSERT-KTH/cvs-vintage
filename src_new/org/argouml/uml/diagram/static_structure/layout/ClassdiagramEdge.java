@@ -1,4 +1,4 @@
-// $Id: ClassdiagramEdge.java,v 1.6 2004/09/09 18:07:19 mvw Exp $
+// $Id: ClassdiagramEdge.java,v 1.7 2004/09/21 19:03:30 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,14 +40,14 @@ public abstract class ClassdiagramEdge implements LayoutedEdge {
     private static int hGap;
     
     
-    FigEdge currentEdge = null;
+    private FigEdge currentEdge = null;
     /** the underlying fig of the edge we want to layout */
-    FigPoly underlyingFig = null;
+    private FigPoly underlyingFig = null;
     
     /** each fig has a source and a destination port
      */
-    Fig destFigNode;
-    Fig sourceFigNode;
+    private Fig destFigNode;
+    private Fig sourceFigNode;
     
    
     /** Constructor. 
@@ -62,15 +62,60 @@ public abstract class ClassdiagramEdge implements LayoutedEdge {
         sourceFigNode = edge.getSourceFigNode();
     }
     
-    /** abstract method to layout the edge
+    /** 
+     * Abstract method to layout the edge.
+     *
+     * @see org.argouml.uml.diagram.layout.LayoutedEdge#layout()
      */
     public abstract void layout();  
  
+    /**
+     * @param h the horizontal gap
+     */
     public static void setHGap(int h) { hGap = h; }
+    
+    /**
+     * @param v the vertical gap
+     */
     public static void setVGap(int v) { vGap = v; }
     
+    /**
+     * @return the horizontal gap
+     */
     public static int getHGap() { return hGap; }
+    
+    /**
+     * @return the vertical gap
+     */
     public static int getVGap() { return vGap; }
+
+    /**
+     * @return Returns the destFigNode.
+     */
+    Fig getDestFigNode() {
+        return destFigNode;
+    }
+
+    /**
+     * @return Returns the sourceFigNode.
+     */
+    Fig getSourceFigNode() {
+        return sourceFigNode;
+    }
+
+    /**
+     * @return Returns the currentEdge.
+     */
+    protected FigEdge getCurrentEdge() {
+        return currentEdge;
+    }
+
+    /**
+     * @return Returns the underlyingFig.
+     */
+    protected FigPoly getUnderlyingFig() {
+        return underlyingFig;
+    }
     
 }
       

@@ -1,4 +1,4 @@
-// $Id: CrNonAggDataType.java,v 1.7 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNonAggDataType.java,v 1.8 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNonAggDataType.java
 // Classes: CrNonAggDataType
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNonAggDataType.java,v 1.7 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNonAggDataType.java,v 1.8 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,8 +45,8 @@ public class CrNonAggDataType extends CrUML {
      */
     public CrNonAggDataType() {
 	setHeadline("Wrap MDataType");
-	addSupportedDecision(CrUML.decCONTAINMENT);
-	addSupportedDecision(CrUML.decCLASS_SELECTION);
+	addSupportedDecision(CrUML.DEC_CONTAINMENT);
+	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
     }
 

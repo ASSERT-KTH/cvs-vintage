@@ -1,4 +1,4 @@
-// $Id: CrUtilityViolated.java,v 1.10 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrUtilityViolated.java,v 1.11 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,9 +48,9 @@ public class CrUtilityViolated extends CrUML {
      */
     public CrUtilityViolated() {
         setHeadline("Remove instance variables from Utility Class");
-        addSupportedDecision(CrUML.decSTORAGE);
-        addSupportedDecision(CrUML.decSTEREOTYPES);
-        addSupportedDecision(CrUML.decCLASS_SELECTION);
+        addSupportedDecision(CrUML.DEC_STORAGE);
+        addSupportedDecision(CrUML.DEC_STEREOTYPES);
+        addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
         addTrigger("stereotype");
         addTrigger("behavioralFeature");
     }

@@ -1,4 +1,4 @@
-// $Id: StylePanelFigMessage.java,v 1.11 2004/09/11 06:34:51 mvw Exp $
+// $Id: StylePanelFigMessage.java,v 1.12 2004/09/21 19:03:32 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,7 @@ public class StylePanelFigMessage extends StylePanelFigNodeModelElement {
      */
     public void refresh() {
         super.refresh();
-        int direction = ((FigMessage) _target).getArrow();
+        int direction = ((FigMessage) getPanelTarget()).getArrow();
         arrowField.setSelectedItem(FigMessage.getArrowDirections()
                 .elementAt(direction));
     }
@@ -93,9 +93,9 @@ public class StylePanelFigMessage extends StylePanelFigNodeModelElement {
     public void setTargetArrow() {
         String ad = (String) arrowField.getSelectedItem();
         int arrowDirection = FigMessage.getArrowDirections().indexOf(ad);
-        if (_target == null || arrowDirection == -1) return;
-        ((FigMessage) _target).setArrow(arrowDirection);
-        _target.endTrans();
+        if (getPanelTarget() == null || arrowDirection == -1) return;
+        ((FigMessage) getPanelTarget()).setArrow(arrowDirection);
+        getPanelTarget().endTrans();
     }
 
     ////////////////////////////////////////////////////////////////

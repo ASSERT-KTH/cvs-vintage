@@ -1,4 +1,4 @@
-// $Id: OCLExpander.java,v 1.6 2004/09/05 16:57:49 bobtarling Exp $
+// $Id: OCLExpander.java,v 1.7 2004/09/21 19:03:29 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,11 @@ import java.util.Map;
  */
 public class OCLExpander extends org.tigris.gef.ocl.OCLExpander {
 
+    /**
+     * The constructor.
+     * 
+     * @param templates the templates
+     */
     public OCLExpander(Map templates) {
         super(templates);
     }

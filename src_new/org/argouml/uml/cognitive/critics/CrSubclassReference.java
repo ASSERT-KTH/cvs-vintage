@@ -1,4 +1,4 @@
-// $Id: CrSubclassReference.java,v 1.11 2004/08/29 07:47:28 mvw Exp $
+// $Id: CrSubclassReference.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.11 2004/08/29 07:47:28 mvw Exp $
+// $Id: CrSubclassReference.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,8 +53,8 @@ public class CrSubclassReference extends CrUML {
      */
     public CrSubclassReference() {
 	setHeadline("Remove Reference to Specific Subclass");
-	addSupportedDecision(CrUML.decRELATIONSHIPS);
-	addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
+	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+	addSupportedDecision(CrUML.DEC_PLANNED_EXTENSIONS);
 	setKnowledgeTypes(Critic.KT_SEMANTICS);
 	addTrigger("specialization");
 	addTrigger("associationEnd");

@@ -1,4 +1,4 @@
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.12 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.13 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
      */
     public CrSeqInstanceWithoutClassifier() {
 	setHeadline("Set classifier");
-	addSupportedDecision(CrUML.decPATTERNS);
+	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 
     /**

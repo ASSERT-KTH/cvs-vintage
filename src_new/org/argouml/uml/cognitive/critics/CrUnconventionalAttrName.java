@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.13 2004/08/29 11:48:45 mvw Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.14 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUnconventionalAttrName.java
 // Classes: CrUnconventionalAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.13 2004/08/29 11:48:45 mvw Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.14 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -57,7 +57,7 @@ public class CrUnconventionalAttrName extends CrUML {
      */
     public CrUnconventionalAttrName() {
 	setHeadline("Choose a Better MAttribute Name");
-	addSupportedDecision(CrUML.decNAMING);
+	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("feature_name");
     }

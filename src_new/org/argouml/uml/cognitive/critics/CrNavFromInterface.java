@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNavFromInterface.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class CrNavFromInterface extends CrUML {
 
         // Specify design issue category and knowledge type
 
-        addSupportedDecision(CrUML.decRELATIONSHIPS);
+        addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
         setKnowledgeTypes(Critic.KT_SYNTAX);
 
         // This may not actually make any difference at present (the code

@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.11 2004/09/05 06:10:21 mvw Exp $
+// $Id: CrNodesOverlap.java,v 1.12 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.11 2004/09/05 06:10:21 mvw Exp $
+// $Id: CrNodesOverlap.java,v 1.12 2004/09/21 19:03:31 mvw Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -58,9 +58,9 @@ public class CrNodesOverlap extends CrUML {
     public CrNodesOverlap() {
 	// TODO: {name} is not expanded for diagram objects
 	setHeadline("Clean Up Diagram");
-	addSupportedDecision(CrUML.decCLASS_SELECTION);
-	addSupportedDecision(CrUML.decEXPECTED_USAGE);
-	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
+	addSupportedDecision(CrUML.DEC_EXPECTED_USAGE);
+	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_PRESENTATION);
     }
 

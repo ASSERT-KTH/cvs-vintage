@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.8 2004/08/28 15:15:19 mvw Exp $
+// $Id: StylePanelFigClass.java,v 1.9 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,7 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
     public void refresh() {
         refreshTransaction = true;
         super.refresh();
-        FigClass tc = (FigClass) _target;
+        FigClass tc = (FigClass) getPanelTarget();
         attrCheckBox.setSelected(tc.isAttributesVisible());
         operCheckBox.setSelected(tc.isOperationsVisible());
         refreshTransaction = false;
@@ -148,11 +148,11 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
             Object src = e.getSource();
 
             if (src == attrCheckBox) {
-                ((FigClass) _target).setAttributesVisible(attrCheckBox
+                ((FigClass) getPanelTarget()).setAttributesVisible(attrCheckBox
                         .isSelected());
                 markNeedsSave();
             } else if (src == operCheckBox) {
-                ((FigClass) _target).setOperationsVisible(operCheckBox
+                ((FigClass) getPanelTarget()).setOperationsVisible(operCheckBox
                         .isSelected());
                 markNeedsSave();
             } else

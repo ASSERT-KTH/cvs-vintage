@@ -1,4 +1,4 @@
-// $Id: GridLayout2.java,v 1.11 2004/08/19 19:27:20 mvw Exp $
+// $Id: GridLayout2.java,v 1.12 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -188,7 +188,7 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
      */
     public static final int FITPARENT = 22;
 
-    int cellSizing = FITPARENT;
+    private int cellSizing = FITPARENT;
 
     private int fill = BOTH;
     private int anchor = WEST;
@@ -196,19 +196,19 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
     /**
      * The height of the child component with the largest height
      */
-    protected int largestHeight;
+    private int largestHeight; 
     /**
      * The width of the child component with the largest width
      */
-    protected int largestWidth;
+    private int largestWidth;
     /**
      * The required cell width of each column
      */
-    protected int[] colWidth;
+    private int[] colWidth;
     /**
      * The required cell height of each row
      */
-    protected int[] rowHeight;
+    private int[] rowHeight;
 
     /**
      * Construct a new GridLayout2 with a default of one column per
@@ -709,5 +709,68 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
      */
     public void setVgap(int v) {
         this.vgap = v;
+    }
+
+    /**
+     * @param lh The largestHeight to set.
+     */
+    protected void setLargestHeight(int lh) {
+        this.largestHeight = lh;
+    }
+
+    /**
+     * @return Returns the largestHeight.
+     */
+    protected int getLargestHeight() {
+        return largestHeight;
+    }
+
+    /**
+     * @param lw The largestWidth to set.
+     */
+    protected void setLargestWidth(int lw) {
+        this.largestWidth = lw;
+    }
+
+    /**
+     * @return Returns the largestWidth.
+     */
+    protected int getLargestWidth() {
+        return largestWidth;
+    }
+
+    /**
+     * @param cw The colWidth to set.
+     */
+    protected void setColWidth(int[] cw) {
+        this.colWidth = cw;
+    }
+
+    /**
+     * @return Returns the colWidth.
+     */
+    protected int[] getColWidth() {
+        return colWidth;
+    }
+
+    /**
+     * @param rh The rowHeight to set.
+     */
+    protected void setRowHeight(int[] rh) {
+        this.rowHeight = rh;
+    }
+
+    /**
+     * @return Returns the rowHeight.
+     */
+    protected int[] getRowHeight() {
+        return rowHeight;
+    }
+
+    /**
+     * @return Returns the cellSizing.
+     */
+    int getCellSizing() {
+        return cellSizing;
     }
 }

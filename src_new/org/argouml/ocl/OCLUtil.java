@@ -1,4 +1,4 @@
-// $Id: OCLUtil.java,v 1.11 2004/06/23 07:02:42 linus Exp $
+// $Id: OCLUtil.java,v 1.12 2004/09/21 19:03:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ public final class OCLUtil {
     /**
      * Get the inner-most enclosing namespace for the model element.
      *
+     * @param me the modelelement
      * @return a namespace
      */
     public static Object getInnerMostEnclosingNamespace (Object me) {
@@ -94,7 +95,8 @@ public final class OCLUtil {
 		    }
 
 		    sbContext.append(ModelFacade.getType(mp)).append(": ");
-		    sbContext.append(ModelFacade.getName(ModelFacade.getType(mp)));
+		    sbContext.append(ModelFacade.getName(
+		            ModelFacade.getType(mp)));
 		}
 	    }
 

@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.16 2004/09/05 13:18:09 mvw Exp $
+// $Id: EmailExpertDialog.java,v 1.17 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,7 +99,8 @@ public class EmailExpertDialog extends ArgoDialog {
         JLabel ccLabel = new JLabel(Translator.localize("label.cc"));
         JLabel subjectLabel = new JLabel(Translator.localize("label.subject"));
     
-        JPanel panel = new JPanel(new LabelledLayout(labelGap, componentGap));
+        JPanel panel = new JPanel(new LabelledLayout(getLabelGap(), 
+                getComponentGap()));
 
         toLabel.setLabelFor(emailTo);
         panel.add(toLabel);

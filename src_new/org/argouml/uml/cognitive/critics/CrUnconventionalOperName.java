@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalOperName.java,v 1.14 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrUnconventionalOperName.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.14 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrUnconventionalOperName.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,7 +49,7 @@ public class CrUnconventionalOperName extends CrUML {
      */
     public CrUnconventionalOperName() {
 	setHeadline("Choose a Better MOperation Name");
-	addSupportedDecision(CrUML.decNAMING);
+	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("feature_name");
     }

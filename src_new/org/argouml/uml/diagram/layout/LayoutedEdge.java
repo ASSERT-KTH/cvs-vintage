@@ -1,4 +1,4 @@
-// $Id: LayoutedEdge.java,v 1.5 2003/11/10 12:35:02 jhraigniac Exp $
+// $Id: LayoutedEdge.java,v 1.6 2004/09/21 19:03:32 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,5 +29,8 @@ package org.argouml.uml.diagram.layout;
  */
 public interface LayoutedEdge extends LayoutedObject {
     
+    /**
+     * Abstract method to layout the edge.
+     */
     public void layout();
 }

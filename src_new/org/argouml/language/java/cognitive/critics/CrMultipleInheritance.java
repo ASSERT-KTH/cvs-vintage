@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.7 2004/09/07 18:50:05 mvw Exp $
+// $Id: CrMultipleInheritance.java,v 1.8 2004/09/21 19:03:30 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.7 2004/09/07 18:50:05 mvw Exp $
+// $Id: CrMultipleInheritance.java,v 1.8 2004/09/21 19:03:30 mvw Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -50,8 +50,8 @@ public class CrMultipleInheritance extends CrUML {
      */
     public CrMultipleInheritance() {
 	setHeadline("Change Multiple Inheritance to Interfaces");
-	addSupportedDecision(CrUML.decINHERITANCE);
-	addSupportedDecision(CrUML.decCODE_GEN);
+	addSupportedDecision(CrUML.DEC_INHERITANCE);
+	addSupportedDecision(CrUML.DEC_CODE_GEN);
 	addTrigger("generalization");
     }
 

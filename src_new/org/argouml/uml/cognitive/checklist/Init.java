@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.13 2004/08/29 10:35:52 mvw Exp $
+// $Id: Init.java,v 1.14 2004/09/21 19:03:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -192,8 +192,8 @@ public class Init {
 	    "checklist.operation.encoding.is-returntype-too-restrictive",
 	    cl);
 	newCheckItem(cat,
-	    "checklist.operation.encoding.does-returntype-allow-impossible-values",
-	     cl);
+	    "checklist.operation.encoding.does-returntype-allow-impossible-"
+            + "values", cl);
 	newCheckItem(cat, 
             "checklist.operation.encoding.combine-with-other", cl);
 	newCheckItem(cat, "checklist.operation.encoding.break-into-parts", cl);
@@ -267,8 +267,8 @@ public class Init {
 	newCheckItem(cat, "checklist.association.location.eliminate-from-model",
 		     cl);
 	newCheckItem(cat,
-	    "checklist.association.location.eliminates-or-affects-something-else",
-	    cl);
+	    "checklist.association.location.eliminates-or-affects-"
+            + "something-else", cl);
 
 	cat = Translator.localize("checklist.association.updates");
 	newCheckItem(cat, "checklist.association.updates.reasons-for-update",
@@ -343,8 +343,8 @@ public class Init {
 	newCheckItem(cat, "checklist.instance.structure.belong", cl);
 	newCheckItem(cat, "checklist.instance.structure.make-internal", cl);
 	newCheckItem(cat,
-	    "checklist.instance.structure.is-state-in-another-machine-exclusive",
-	    cl);
+	    "checklist.instance.structure.is-state-in-another-machine-" 
+            + "exclusive", cl);
 
 	cat = Translator.localize("checklist.instance.actions");
 	newCheckItem(cat, "checklist.instance.actions.list-entry-actions", cl);
@@ -509,8 +509,8 @@ public class Init {
 	newCheckItem(cat, "checklist.transition.actions.is-precondition-met",
 		     cl);
 	newCheckItem(cat,
-	    "checklist.transition.actions.is-postcondition-consistant-with-destination",
-	    cl);
+	    "checklist.transition.actions.is-postcondition-consistant-with-" 
+            + "destination", cl);
 
 	CheckManager.register((Class) ModelFacade.TRANSITION, cl);
 

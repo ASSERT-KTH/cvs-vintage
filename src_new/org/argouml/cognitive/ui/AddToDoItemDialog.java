@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.25 2004/09/05 13:18:08 mvw Exp $
+// $Id: AddToDoItemDialog.java,v 1.26 2004/09/21 19:03:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,7 +100,8 @@ public class AddToDoItemDialog extends ArgoDialog {
             new JLabel("Offenders:"/*Translator.localize("label.offenders")*/);
         priorityComboBox.setSelectedItem(PRIORITIES[0]);
 
-        JPanel panel = new JPanel(new LabelledLayout(labelGap, componentGap));
+        JPanel panel = new JPanel(new LabelledLayout(getLabelGap(), 
+                getComponentGap()));
 
         headlineLabel.setLabelFor(headLineTextField);
         panel.add(headlineLabel);

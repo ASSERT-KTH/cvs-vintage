@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.19 2004/08/19 18:05:36 mvw Exp $
+// $Id: CrConsiderSingleton.java,v 1.20 2004/09/21 19:03:29 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class CrConsiderSingleton extends CrUML {
 
         setResource("CrConsiderSingleton");
 
-        addSupportedDecision(CrUML.decPATTERNS);
+        addSupportedDecision(CrUML.DEC_PATTERNS);
         setPriority(ToDoItem.LOW_PRIORITY);
 
         // These may not actually make any difference at present (the code

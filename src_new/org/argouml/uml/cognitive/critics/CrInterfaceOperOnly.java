@@ -1,4 +1,4 @@
-// $Id: CrInterfaceOperOnly.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.10 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrInterfaceOperOnly.java
 // Classes: CrInterfaceOperOnly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceOperOnly.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.10 2004/09/21 19:03:25 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,7 @@ public class CrInterfaceOperOnly extends CrUML {
      */
     public CrInterfaceOperOnly() {
 	setHeadline("Interfaces may only have operations");
-	addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
+	addSupportedDecision(CrUML.DEC_PLANNED_EXTENSIONS);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("structuralFeature");
     }

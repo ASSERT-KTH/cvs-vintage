@@ -1,4 +1,4 @@
-// $Id: CrMultiComposite.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrMultiComposite.java,v 1.9 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 // File: CrMultiComposite.java
 // Classes: CrMultiComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrMultiComposite.java,v 1.9 2004/09/21 19:03:25 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 import org.argouml.cognitive.Designer;
@@ -43,7 +43,7 @@ public class CrMultiComposite extends CrUML {
      */
     public CrMultiComposite() {
         setHeadline("Composite Role with MMultiplicity > 1");
-        addSupportedDecision(CrUML.decCONTAINMENT);
+        addSupportedDecision(CrUML.DEC_CONTAINMENT);
         setKnowledgeTypes(Critic.KT_SEMANTICS);
         addTrigger("aggregation");
         addTrigger("multiplicity");

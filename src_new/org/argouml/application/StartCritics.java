@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.13 2004/09/05 13:18:09 mvw Exp $
+// $Id: StartCritics.java,v 1.14 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,8 +64,8 @@ public class StartCritics implements Runnable {
         LOG.info("spawned critiquing thread");
 
         // should be in logon wizard?
-        dsgr.startConsidering(CrUML.decINHERITANCE);
-        dsgr.startConsidering(CrUML.decCONTAINMENT);
+        dsgr.startConsidering(CrUML.DEC_INHERITANCE);
+        dsgr.startConsidering(CrUML.DEC_CONTAINMENT);
         Designer.setUserWorking(true);
     }
 

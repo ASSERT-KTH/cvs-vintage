@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.27 2004/08/24 06:33:47 linus Exp $
+// $Id: ArgoFacade.java,v 1.28 2004/09/21 19:03:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class ArgoFacade implements tudresden.ocl.check.types.ModelFacade {
     /**
      * The target that this instance is connected to.
      */
-    public Object target;
+    private Object target;
 
     /**
      * Construtor.
@@ -114,7 +114,7 @@ class ArgoAny implements Any, Type2 {
      */
     private static final Logger LOG = Logger.getLogger(ArgoAny.class);
 
-    Object classifier;
+    private Object classifier;
 
     /**
      * Constructor.

@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.10 2004/08/28 15:29:18 mvw Exp $
+// $Id: SelectionClassifierRole.java,v 1.11 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,10 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.Handle;
 
+/**
+ * The selection buttons for a classifier role.
+ *
+ */
 public class SelectionClassifierRole extends SelectionWButtons {
 
     private static final Logger LOG =

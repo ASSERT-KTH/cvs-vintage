@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutClassifier.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutClassifier.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -51,7 +51,7 @@ public class CrObjectWithoutClassifier extends CrUML {
      */
     public CrObjectWithoutClassifier() {
 	setHeadline("Set Object-classifier");
-	addSupportedDecision(CrUML.decPATTERNS);
+	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 
     /**

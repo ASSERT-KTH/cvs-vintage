@@ -1,4 +1,4 @@
-// $Id: Profile.java,v 1.10 2004/08/29 09:29:51 mvw Exp $
+// $Id: Profile.java,v 1.11 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public abstract class Profile {
     public abstract String formatCollection(Iterator iter,
 					    Object namespace);
     /**
-     * @return
+     * @return the UML Model that contains the profile model
      */
     public abstract Object/*MModel*/ getProfileModel();
 }

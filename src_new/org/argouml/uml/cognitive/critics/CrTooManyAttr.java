@@ -1,4 +1,4 @@
-// $Id: CrTooManyAttr.java,v 1.10 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrTooManyAttr.java,v 1.11 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyAttr.java
 // Classes: CrTooManyAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAttr.java,v 1.10 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrTooManyAttr.java,v 1.11 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,7 +48,7 @@ public class CrTooManyAttr extends CrUML {
      */
     public CrTooManyAttr() {
 	setHeadline("Reduce Attributes on <ocl>self</ocl>");
-	addSupportedDecision(CrUML.decSTORAGE);
+	addSupportedDecision(CrUML.DEC_STORAGE);
 	setArg(THRESHOLD, new Integer(7));
 	addTrigger("structuralFeature");
     }

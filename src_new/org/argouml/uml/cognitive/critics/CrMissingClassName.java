@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.11 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrMissingClassName.java,v 1.12 2004/09/21 19:03:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMissingClassName.java
 // Classes: CrMissingClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.11 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrMissingClassName.java,v 1.12 2004/09/21 19:03:25 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,7 +48,7 @@ public class CrMissingClassName extends CrUML {
      */
     public CrMissingClassName() {
 	setHeadline("Choose a Name");
-	addSupportedDecision(CrUML.decNAMING);
+	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS, Critic.KT_SYNTAX);
 	addTrigger("name");
     }

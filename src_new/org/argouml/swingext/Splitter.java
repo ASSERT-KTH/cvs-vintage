@@ -1,4 +1,4 @@
-// $Id: Splitter.java,v 1.10 2004/08/20 15:59:59 mvw Exp $
+// $Id: Splitter.java,v 1.11 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,10 +63,16 @@ public class Splitter extends JComponent {
     private static final Orientation VERTICAL_SPLIT = 
         Vertical.getInstance();
 
+    /** The side of the splitter of the component to be hidden on 
+     * a quick hide action. */
     protected static final int NONE = -1;
+    /** The side of the splitter to be hidden on a quick hide action: WEST */
     protected static final int WEST = 0;
+    /** The side of the splitter to be hidden on a quick hide action: EAST */
     protected static final int EAST = 1;
+    /** The side of the splitter to be hidden on a quick hide action: NORTH */
     protected static final int NORTH = 0;
+    /** The side of the splitter to be hidden on a quick hide action: SOUTH */
     protected static final int SOUTH = 1;
 
     /**

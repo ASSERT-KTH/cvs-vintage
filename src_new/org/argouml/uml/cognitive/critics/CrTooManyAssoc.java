@@ -1,4 +1,4 @@
-// $Id: CrTooManyAssoc.java,v 1.9 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrTooManyAssoc.java,v 1.10 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyAssoc.java
 // Classes: CrTooManyAssoc
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAssoc.java,v 1.9 2004/08/29 16:29:13 mvw Exp $
+// $Id: CrTooManyAssoc.java,v 1.10 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,7 +48,7 @@ public class CrTooManyAssoc extends CrUML {
     public CrTooManyAssoc() {
 	setHeadline("Reduce Associations on <ocl>self</ocl>");
 
-	addSupportedDecision(CrUML.decRELATIONSHIPS);
+	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
 	setArg(THRESHOLD, new Integer(7));
 	addTrigger("associationEnd");
     }

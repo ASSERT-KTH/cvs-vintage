@@ -1,4 +1,4 @@
-// $Id: CrNoIncomingTransitions.java,v 1.14 2004/07/18 07:01:25 mvw Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.14 2004/07/18 07:01:25 mvw Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -41,7 +41,7 @@ public class CrNoIncomingTransitions extends CrUML {
      */
     public CrNoIncomingTransitions() {
 	setHeadline("Add Incoming Transitions to <ocl>self</ocl>");
-	addSupportedDecision(CrUML.decSTATE_MACHINES);
+	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	addTrigger("incoming");
     }
 

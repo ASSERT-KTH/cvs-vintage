@@ -1,4 +1,4 @@
-// $Id: StylePanelFigRRect.java,v 1.7 2004/09/01 18:48:04 mvw Exp $
+// $Id: StylePanelFigRRect.java,v 1.8 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,8 @@ public class StylePanelFigRRect extends StylePanelFig {
      */
     public void refresh() {
         super.refresh();
-        String roundingStr = ((FigRRect) _target).getCornerRadius() + "";
+        String roundingStr = 
+            ((FigRRect) getPanelTarget()).getCornerRadius() + "";
         roundingField.setText(roundingStr);
     }
 
@@ -89,12 +90,12 @@ public class StylePanelFigRRect extends StylePanelFig {
      * Set the corner rounding.
      */
     protected void setTargetRounding() {
-        if (_target == null) return;
+        if (getPanelTarget() == null) return;
         String roundingStr = roundingField.getText();
         if (roundingStr.length() == 0) return;
         int r = Integer.parseInt(roundingStr);
-        ((FigRRect) _target).setCornerRadius(r);
-        _target.endTrans();
+        ((FigRRect) getPanelTarget()).setCornerRadius(r);
+        getPanelTarget().endTrans();
     }
 
     /**

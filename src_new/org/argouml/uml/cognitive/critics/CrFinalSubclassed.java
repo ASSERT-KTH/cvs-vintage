@@ -1,4 +1,4 @@
-// $Id: CrFinalSubclassed.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrFinalSubclassed.java,v 1.10 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrFinalSubclassed.java
 // Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrFinalSubclassed.java,v 1.10 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,7 +48,7 @@ public class CrFinalSubclassed extends CrUML {
      */
     public CrFinalSubclassed() {
 	setHeadline("Remove final keyword or remove subclasses");
-	addSupportedDecision(CrUML.decINHERITANCE);
+	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	setKnowledgeTypes(Critic.KT_SEMANTICS);
 	addTrigger("specialization");
 	addTrigger("isLeaf");

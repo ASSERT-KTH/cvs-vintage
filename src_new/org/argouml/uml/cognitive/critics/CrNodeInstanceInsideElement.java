@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceInsideElement.java,v 1.9 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNodeInstanceInsideElement.java,v 1.10 2004/09/21 19:03:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNodeInstanceInsideElement.java
 // Classes: CrNodeInstanceInsideElement
 // Original Author: jrobbins@5eichler@informatik.uni-hamburg.de
-// $Id: CrNodeInstanceInsideElement.java,v 1.9 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrNodeInstanceInsideElement.java,v 1.10 2004/09/21 19:03:27 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -51,7 +51,7 @@ public class CrNodeInstanceInsideElement extends CrUML {
      */
     public CrNodeInstanceInsideElement() {
 	setHeadline("NodeInstances normally have no enclosers");
-	addSupportedDecision(CrUML.decPATTERNS);
+	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: CrDisambigStateName.java,v 1.11 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrDisambigStateName.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.11 2004/08/29 14:24:58 mvw Exp $
+// $Id: CrDisambigStateName.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,7 +49,7 @@ public class CrDisambigStateName extends CrUML {
      */
     public CrDisambigStateName() {
 	setHeadline("Choose a Unique Name for <ocl>self</ocl>");
-	addSupportedDecision(CrUML.decNAMING);
+	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");
 	addTrigger("parent");

@@ -1,4 +1,4 @@
-// $Id: TabTable.java,v 1.4 2004/09/01 16:48:22 mvw Exp $
+// $Id: TabTable.java,v 1.5 2004/09/21 19:03:28 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,11 @@ package org.argouml.ui;
 import org.argouml.uml.ui.TabProps;
 
 
+/**
+ * This class is not used any more - it is part of the model presentation 
+ * in table form.
+ *
+ */
 public class TabTable extends TabProps {
 
     /**

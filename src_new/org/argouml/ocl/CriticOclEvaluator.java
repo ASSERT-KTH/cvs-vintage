@@ -1,4 +1,4 @@
-// $Id: CriticOclEvaluator.java,v 1.1 2004/09/05 16:57:49 bobtarling Exp $
+// $Id: CriticOclEvaluator.java,v 1.2 2004/09/21 19:03:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,12 +44,19 @@ public class CriticOclEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
     private CriticOclEvaluator() {
     }
     
+    /**
+     * @return the singleton of CriticOclEvaluator
+     */
     public static final CriticOclEvaluator getInstance() {
         return INSTANCE;
     }
     
+    /**
+     * @see org.tigris.gef.ocl.OCLEvaluator#evalToString(
+     * java.lang.Object, java.lang.String)
+     */
     public synchronized String evalToString(Object self, String expr)
-            throws ExpansionException {
+        throws ExpansionException {
         String res = null;
         if (GET_NAME_EXPR_1.equals(expr) && ModelFacade.isAModelElement(self)) 
         {
@@ -83,6 +90,10 @@ public class CriticOclEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
         return res;
     }
 
+    /**
+     * @see org.tigris.gef.ocl.OCLEvaluator#evalToString(
+     * java.lang.Object, java.lang.String, java.lang.String)
+     */
     public synchronized String evalToString(
             Object self,
             String expr, 

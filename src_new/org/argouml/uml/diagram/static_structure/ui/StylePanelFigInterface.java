@@ -1,4 +1,4 @@
-// $Id: StylePanelFigInterface.java,v 1.8 2004/08/28 15:15:19 mvw Exp $
+// $Id: StylePanelFigInterface.java,v 1.9 2004/09/21 19:03:31 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,7 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
     public void refresh() {
         refreshTransaction = true;
         super.refresh();
-        FigInterface ti = (FigInterface) _target;
+        FigInterface ti = (FigInterface) getPanelTarget();
         operCheckBox.setSelected(ti.isOperationsVisible());
         refreshTransaction = false;
     }
@@ -125,8 +125,8 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
             Object src = e.getSource();
 
             if (src == operCheckBox) {
-                ((FigInterface) _target).setOperationsVisible(operCheckBox
-                        .isSelected());
+                ((FigInterface) getPanelTarget())
+                    .setOperationsVisible(operCheckBox.isSelected());
                 markNeedsSave();
             } else
                 super.itemStateChanged(e);

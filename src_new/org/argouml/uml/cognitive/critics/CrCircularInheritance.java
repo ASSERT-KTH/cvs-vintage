@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.14 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrCircularInheritance.java,v 1.15 2004/09/21 19:03:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.14 2004/08/29 14:51:54 mvw Exp $
+// $Id: CrCircularInheritance.java,v 1.15 2004/09/21 19:03:27 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -57,7 +57,7 @@ public class CrCircularInheritance extends CrUML {
     public CrCircularInheritance() {
 	setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");
 	setPriority(ToDoItem.HIGH_PRIORITY);
-	addSupportedDecision(CrUML.decINHERITANCE);
+	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("generalization");
 	// no need for trigger on "specialization"

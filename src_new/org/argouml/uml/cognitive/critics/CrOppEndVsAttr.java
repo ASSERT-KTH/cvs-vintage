@@ -1,4 +1,4 @@
-// $Id: CrOppEndVsAttr.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrOppEndVsAttr.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrOppEndVsAttr.java
 // Classes: CrOppEndVsAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndVsAttr.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
+// $Id: CrOppEndVsAttr.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,9 +48,9 @@ public class CrOppEndVsAttr extends CrUML {
      */
     public CrOppEndVsAttr() {
         setHeadline("Rename Role or MAttribute");
-        addSupportedDecision(CrUML.decINHERITANCE);
-        addSupportedDecision(CrUML.decRELATIONSHIPS);
-        addSupportedDecision(CrUML.decNAMING);
+        addSupportedDecision(CrUML.DEC_INHERITANCE);
+        addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
+        addSupportedDecision(CrUML.DEC_NAMING);
         setKnowledgeTypes(Critic.KT_SYNTAX);
         addTrigger("associationEnd");
         addTrigger("structuralFeature");
