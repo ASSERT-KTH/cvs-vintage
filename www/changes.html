@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.80 2002/03/15 01:33:31 jon Exp $ -->
+<!-- $Id: changes.html,v 1.81 2002/03/15 04:12:53 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -63,6 +63,11 @@
                     (MC)</li>
                 <li>Added copy buttons for Global Attributes, Global User Attributes, 
                     and Global IssueTypes. (EWD)</li>
+                <li>Added the ability to delete or undelete a module.
+                    Also added some missing security checks to the
+                    action which manages modifying modules so that it is
+                    not possible to assign/edit a parent module which
+                    you do not have permission to edit. (JSS)</li>
             </ul>
         </td>
     </tr>
@@ -147,6 +152,10 @@
                 <li>AssignIssue: Checking to make sure issue id's are
                     valid. Getting issues by unique id instead of pk.
                     (EWD)</li>
+                <li>Fixed the modify modules parent popup.
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=195">195</a>
+                    (JSS)</li>
             </ul>
         </td>
     </tr>    
