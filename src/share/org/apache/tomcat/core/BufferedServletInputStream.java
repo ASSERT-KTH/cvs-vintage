@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.6 2000/02/14 04:59:38 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/14 04:59:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.7 2000/03/21 23:09:44 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/03/21 23:09:44 $
  *
  * ====================================================================
  * 
@@ -79,7 +79,6 @@ import javax.servlet.*;
  * @author James Duncan Davidson <duncan@eng.sun.com>
  * @author Jason Hunter <jch@eng.sun.com>
  */
-
 public class BufferedServletInputStream extends ServletInputStream {
 
     // XXX

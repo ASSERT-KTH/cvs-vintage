@@ -520,6 +520,13 @@
             />
    </target>
 
+  <target name="post1">
+    <gtest description="Content Type Test"
+           request="POST /test/servlet/Post HTTP/1.0"
+           debug="10"
+           content="Test POST BODY" />
+   </target>
+   
    <target name="post">
       <gtest request="POST /test/servlet/request.NotThere HTTP/1.0"
              content="name=lightness of being"

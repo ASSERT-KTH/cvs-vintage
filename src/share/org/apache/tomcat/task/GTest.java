@@ -229,7 +229,9 @@ public class GTest  {
 	InputStream is=	s.getInputStream();
 
 	// Write the request
-	OutputStreamWriter out=new OutputStreamWriter(s.getOutputStream());
+	s.setSoLinger( true, 1000);
+	OutputStream os=s.getOutputStream();
+	OutputStreamWriter out=new OutputStreamWriter(os);
 	PrintWriter pw = new PrintWriter(out);
 
 	try {
@@ -243,7 +245,7 @@ public class GTest  {
 		pw.println("");
 	    
 	    if( content != null) {
-		pw.println(content);
+		pw.print(content);
 		// XXX no /n at the end -see HTTP specs!
 	    }
 	    
@@ -256,6 +258,8 @@ public class GTest  {
 	    // http 0.9
 	    if( request.indexOf( "HTTP/1." ) > -1) {
 		responseLine = read( is );
+		
+		if( debug>0) System.out.println("RESPONSE: " + responseLine );
 		headers=parseHeaders( is );
 	    }
 
@@ -264,12 +268,7 @@ public class GTest  {
 	    if(result!=null)
 		responseBody=result.toString();
 
-	    if( debug>0) {
-		System.out.println("DEBUG Response: " );
-		System.out.println(responseLine );
-		System.out.println(responseBody );
-		System.out.println("DEBUG END " );
-	    }
+	    if(debug>0) System.out.println("BODY: " + responseBody );
 	} catch( SocketException ex ) {
 	    System.out.println("Socket Exception: " + ex);
 	    ex.printStackTrace();
@@ -381,6 +380,8 @@ public class GTest  {
 	    }
 
 	    parseHeader( line, headers);
+	    if( debug>0) System.out.println("HEADER: " +line +"X" );
+
 	}
 
 	return headers;
@@ -416,6 +417,7 @@ public class GTest  {
 	while (true) {
 	    try {
 		int ch = input.read();
+		//		System.out.println("XXX " + (char)ch );
 		if (ch < 0) {
 		    if (sb.length() == 0) {
 			if(debug>0) System.out.println("Error reading line " + ch + " " + sb.toString() );
@@ -431,7 +433,7 @@ public class GTest  {
 		System.out.println("Error reading : " + ex );
 		debug=1;
 		if(debug>0) System.out.println("Partial read: " + sb.toString());
-		//ex.printStackTrace();
+		ex.printStackTrace();
 		//break;
 	    }
 	}
