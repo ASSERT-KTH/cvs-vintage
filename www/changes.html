@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.49 2002/02/18 21:22:39 maartenc Exp $ -->
+<!-- $Id: changes.html,v 1.50 2002/02/18 22:52:59 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -37,6 +37,11 @@
                     template caching on in the Scarab distributions. It is
                     still default off in the nightly/cvs distributions. 
                     (JSS)</li>
+                <li>Modified the build system to use Torque to generate
+                    the Turbine schema's from .xml files. This should help
+                    pave the way towards making it easier to port Scarab 
+                    to other database systems than MySQL. More community
+                    help is needed to get this to 100%. (JSS)</li>
             </ul>
         </td>
     </tr>
@@ -59,6 +64,9 @@
                     of the parent module were not copied. See also Bug Report 
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=191">191</a>
                     (MC)</li>
+                <li>Upgraded the MySQL driver to 2.0.11 because someone reported
+                    "Unexpected end of input stream" errors in Issuezilla at one
+                    point and this version promises to fix those problems. (JSS).</li>
             </ul>
         </td>
     </tr>
