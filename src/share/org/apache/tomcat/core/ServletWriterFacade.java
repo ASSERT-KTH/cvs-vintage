@@ -72,7 +72,7 @@ import javax.servlet.ServletOutputStream;
  *  that we spend too much time in that area ).
  *
  *  This will also help us control the multi-buffering ( since all writers have
- *  8k or more of un-recyclable buffers). Recycling is good !
+ *  8k or more of un-recyclable buffers). 
  *
  * @author Costin Manolache [costin@eng.sun.com]
  */
@@ -137,3 +137,308 @@ public class ServletWriterFacade extends PrintWriter {
 
 }
 
+// -------------------- From Crimson !
+
+//
+// Delegating to a converter module will always be slower than
+// direct conversion.  Use a similar approach for any other
+// readers that need to be particularly fast; only block I/O
+// speed matters to this package.  For UTF-16, separate readers
+// for big and little endian streams make a difference, too;
+// fewer conditionals in the critical path!
+//
+abstract class BaseReader extends Reader
+{
+    protected InputStream	instream;
+    protected byte		buffer [];
+    protected int		start, finish;
+    
+    BaseReader (InputStream stream)
+    {
+	super (stream);
+	
+	instream = stream;
+	buffer = new byte [8192];
+    }
+
+    public boolean ready () throws IOException
+    {
+	return instream == null
+	    || (finish - start) > 0
+	    ||  instream.available () != 0;
+	}
+
+    // caller shouldn't read again
+    public void close () throws IOException
+    {
+	if (instream != null) {
+	    instream.close ();
+	    start = finish = 0;
+	    buffer = null;
+	    instream = null;
+	}
+    }
+}
+
+//
+// We want this reader, to make the default encoding be as fast
+// as we can make it.  JDK's "UTF8" (not "UTF-8" till JDK 1.2)
+// InputStreamReader works, but 20+% slower speed isn't OK for
+// the default/primary encoding.
+//
+final class Utf8Reader extends BaseReader
+{
+    // 2nd half of UTF-8 surrogate pair
+    private char		nextChar;
+    
+    Utf8Reader (InputStream stream)
+    {
+	super (stream);
+    }
+    
+    public int read (char buf [], int offset, int len) throws IOException
+    {
+	int i = 0, c = 0;
+	
+	if (len <= 0)
+	    return 0;
+	
+	// avoid many runtime bounds checks ... a good optimizer
+	// (static or JIT) will now remove checks from the loop.
+	if ((offset + len) > buf.length || offset < 0)
+	    throw new ArrayIndexOutOfBoundsException ();
+	
+	// Consume remaining half of any surrogate pair immediately
+	if (nextChar != 0) {
+	    buf [offset + i++] = nextChar;
+	    nextChar = 0;
+	}
+	
+	while (i < len) {
+	    // stop or read data if needed
+	    if (finish <= start) {
+		if (instream == null) {
+		    c = -1;
+		    break;
+		}
+		start = 0;
+		finish = instream.read (buffer, 0, buffer.length);
+		if (finish <= 0) {
+		    this.close ();
+		    c = -1;
+		    break;
+		}
+	    }
+	    
+	    //
+	    // RFC 2279 describes UTF-8; there are six encodings.
+	    // Each encoding takes a fixed number of characters
+	    // (1-6 bytes) and is flagged by a bit pattern in the
+	    // first byte.  The five and six byte-per-character
+	    // encodings address characters which are disallowed
+	    // in XML documents, as do some four byte ones.
+	    // 
+	    
+	    //
+	    // Single byte == ASCII.  Common; optimize.
+	    //
+	    c = buffer [start] & 0x0ff;
+	    if ((c & 0x80) == 0x00) {
+		// 0x0000 <= c <= 0x007f
+		start++;
+		buf [offset + i++] = (char) c;
+		continue;
+	    }
+		
+	    //
+	    // Multibyte chars -- check offsets optimistically,
+	    // ditto the "10xx xxxx" format for subsequent bytes
+	    //
+	    int		off = start;
+		
+	    try {
+		// 2 bytes
+		if ((buffer [off] & 0x0E0) == 0x0C0) {
+		    c  = (buffer [off++] & 0x1f) << 6;
+		    c +=  buffer [off++] & 0x3f;
+
+		    // 0x0080 <= c <= 0x07ff
+
+		    // 3 bytes
+		} else if ((buffer [off] & 0x0F0) == 0x0E0) {
+		    c  = (buffer [off++] & 0x0f) << 12;
+		    c += (buffer [off++] & 0x3f) << 6;
+		    c +=  buffer [off++] & 0x3f;
+
+		    // 0x0800 <= c <= 0xffff
+
+		    // 4 bytes
+		} else if ((buffer [off] & 0x0f8) == 0x0F0) {
+		    c  = (buffer [off++] & 0x07) << 18;
+		    c += (buffer [off++] & 0x3f) << 12;
+		    c += (buffer [off++] & 0x3f) << 6;
+		    c +=  buffer [off++] & 0x3f;
+
+		    // 0x0001 0000  <= c  <= 0x001f ffff
+
+		    // Unicode supports c <= 0x0010 ffff ...
+		    if (c > 0x0010ffff)
+			throw new CharConversionException (
+							   "UTF-8 encoding of character 0x00"
+							   + Integer.toHexString (c)
+							   + " can't be converted to Unicode."
+							   );
+
+		    else if (c > 0xffff) {
+			// Convert UCS-4 char to surrogate pair (UTF-16)
+			c -= 0x10000;
+			nextChar = (char) (0xDC00 + (c & 0x03ff));
+			c = 0xD800 + (c >> 10);
+		    }
+		    // 5 and 6 byte versions are XML WF errors, but
+		    // typically come from mislabeled encodings
+		} else
+		    throw new CharConversionException (
+						       "Unconvertible UTF-8 character"
+						       + " beginning with 0x"
+						       + Integer.toHexString (
+									      buffer [start] & 0xff)
+						       );
+
+	    } catch (ArrayIndexOutOfBoundsException e) {
+		// off > length && length >= buffer.length
+		c = 0;
+	    }
+
+	    //
+	    // if the buffer held only a partial character,
+	    // compact it and try to read the rest of the
+	    // character.  worst case involves three
+	    // single-byte reads -- quite rare.
+	    //
+	    if (off > finish) {
+		System.arraycopy (buffer, start,
+				  buffer, 0, finish - start);
+		finish -= start;
+		start = 0;
+		off = instream.read (buffer, finish,
+				     buffer.length - finish);
+		if (off < 0) {
+		    this.close ();
+		    throw new CharConversionException (
+						       "Partial UTF-8 char");
+		}
+		finish += off;
+		continue;
+	    }
+
+	    //
+	    // check the format of the non-initial bytes
+	    //
+	    for (start++; start < off; start++) {
+		if ((buffer [start] & 0xC0) != 0x80) {
+		    this.close ();
+		    throw new CharConversionException (
+						       "Malformed UTF-8 char -- "
+						       + "is an XML encoding declaration missing?"
+						       );
+		}
+	    }
+
+	    //
+	    // If this needed a surrogate pair, consume ASAP
+	    //
+	    buf [offset + i++] = (char) c;
+	    if (nextChar != 0 && i < len) {
+		buf [offset + i++] = nextChar;
+		nextChar = 0;
+	    }
+	}
+	if (i > 0)
+	    return i;
+	return (c == -1) ? -1 : 0;
+    }
+}
+
+//
+// We want ASCII and ISO-8859 Readers since they're the most common
+// encodings in the US and Europe, and we don't want performance
+// regressions for them.  They're also easy to implement efficiently,
+// since they're bitmask subsets of UNICODE.
+//
+// XXX haven't benchmarked these readers vs what we get out of JDK.
+//
+final class AsciiReader extends BaseReader
+{
+    AsciiReader (InputStream in) { super (in); }
+
+    public int read (char buf [], int offset, int len) throws IOException
+    {
+	int		i, c;
+
+	if (instream == null)
+	    return -1;
+
+	// avoid many runtime bounds checks ... a good optimizer
+	// (static or JIT) will now remove checks from the loop.
+	if ((offset + len) > buf.length || offset < 0)
+	    throw new ArrayIndexOutOfBoundsException ();
+
+	for (i = 0; i < len; i++) {
+	    if (start >= finish) {
+		start = 0;
+		finish = instream.read (buffer, 0, buffer.length);
+		if (finish <= 0) {
+		    if (finish <= 0)
+			this.close ();
+		    break;
+		}
+	    }
+	    c = buffer [start++];
+	    if ((c & 0x80) != 0)
+		throw new CharConversionException (
+						   "Illegal ASCII character, 0x"
+						   + Integer.toHexString (c & 0xff)
+						   );
+	    buf [offset + i] = (char) c;
+	}
+	if (i == 0 && finish <= 0)
+	    return -1;
+	return i;
+    }
+}
+
+final class Iso8859_1Reader extends BaseReader
+{
+    Iso8859_1Reader (InputStream in) { super (in); }
+    
+    public int read (char buf [], int offset, int len) throws IOException
+    {
+	int		i;
+	
+	if (instream == null)
+	    return -1;
+	
+	// avoid many runtime bounds checks ... a good optimizer
+	// (static or JIT) will now remove checks from the loop.
+	if ((offset + len) > buf.length || offset < 0)
+	    throw new ArrayIndexOutOfBoundsException ();
+	    
+	for (i = 0; i < len; i++) {
+	    if (start >= finish) {
+		start = 0;
+		finish = instream.read (buffer, 0, buffer.length);
+		if (finish <= 0) {
+		    if (finish <= 0)
+			this.close ();
+		    break;
+		}
+	    }
+	    buf [offset + i] = (char) (0x0ff & buffer [start++]);
+	}
+	if (i == 0 && finish <= 0)
+	    return -1;
+	return i;
+    }
+}
+ 

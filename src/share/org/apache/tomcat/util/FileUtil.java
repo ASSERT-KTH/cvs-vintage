@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.5 2000/03/16 20:43:26 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/03/16 20:43:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.6 2000/04/26 18:57:36 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/04/26 18:57:36 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@
 package org.apache.tomcat.util;
 
 import java.io.File;
+import java.io.IOException;
 
 /*
  * FileUtil contains utils for dealing with Files. Some of these are 
@@ -202,5 +203,18 @@ public class FileUtil {
         }
 	return path;
     }
+
+    // Used in few places.
+    public static String getCanonicalPath(String name ) {
+	if( name==null ) return null;
+        File f = new File(name);
+        try {
+            return  f.getCanonicalPath();
+        } catch (IOException ioe) {
+	    ioe.printStackTrace();
+	    return name; // oh well, we tried...
+        }
+    }
+    
 
 }

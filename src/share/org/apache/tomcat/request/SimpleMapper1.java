@@ -172,11 +172,11 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	// beeing late
 	
 	// Add all context that are set in CM
-	Enumeration enum=cm.getContextNames();
+	Enumeration enum=cm.getContexts();
 	while( enum.hasMoreElements() ) {
-	    String name=(String) enum.nextElement();
+	    
 	    try {
-		Context ctx=cm.getContext( name );
+		Context ctx=(Context)enum.nextElement();
 		addContext( cm, ctx );
 	    } catch (TomcatException ex ) {
 		ex.printStackTrace();

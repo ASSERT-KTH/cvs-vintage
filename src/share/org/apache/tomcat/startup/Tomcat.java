@@ -155,7 +155,7 @@ public class Tomcat {
 	    tchome = ".";	// Assume current working directory
 	}
 	// Home will be identical to tomcat home if default config is used.
-	cm.setTomcatHome(tchome);
+	cm.setInstallDir(tchome);
 	return (new File(tchome, DEFAULT_CONFIG));
 
     }

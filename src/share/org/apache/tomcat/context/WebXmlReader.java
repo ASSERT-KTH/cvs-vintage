@@ -36,7 +36,7 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    // try the default ( installation ) 
 	    if( ! default_xml.exists() ) {
-		String tchome=ctx.getContextManager().getTomcatHome();
+		String tchome=ctx.getContextManager().getInstallDir();
 		if( tchome != null )
 		    default_xml=new File( tchome + "/conf/web.xml");
 	    }

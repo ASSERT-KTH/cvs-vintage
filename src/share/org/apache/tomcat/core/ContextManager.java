@@ -72,67 +72,92 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/* XXX The main function of CM is to serve as an entry point into
+   tomcat and manage a list of resources that are part of the servlet
+   processing. ( manage == keep a list and provide centralized access ).
+
+   It also have helper functions for common callbacks - but we need to
+   review and change that.
+*/
+/*
+ * It is possible to extend and override some of the methods ( this is not
+ * "final" ), but this is an extreme case and shouldn't be used - if you want
+ * to extend the server you should use interceptors.
+ * Another extreme case is having more than one ContextManager instances.
+ * Each will corespond to a separate servlet engine/container that will work
+ * independent of each other in the same VM ( each having possible multiple
+ * virtual hosts, etc). Both uses are not forbiden, but shouldn't be used
+ * unless there is real need for that - and if that happen we should 
+ * add interfaces to express the use cases.
+ */
+
 
 /**
- * A collection class representing the Contexts associated with a particular
- * Server.  The managed Contexts can be accessed by path.
+ * ContextManager is the entry point and "controler" of the servlet execution.
+ * It maintains a list of WebApplications and a list of global event interceptors
+ * that are set up to handle the actual execution.
+ * 
+ * The ContextManager is a helper that will direct the request processing flow
+ * from its arrival from the server/protocl adapter ( in service() ).
+ * It is also responsible for controlling the request processing steps, from
+ * request parsing and mapping, auth, autorization, pre/post service, actual
+ * invocation and logging.
+ * 
+ * It will also store properties that are global to the servlet container - 
+ * like root directory, install dir, work dir. 
  *
- * It also store global default properties - the server name and port ( returned by
- * getServerName(), etc) and workdir.
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
+ * @author costin@eng.sun.com
  */
-public class ContextManager {
+public class ContextManager { 
+
     /**
      * The string constants for this ContextManager.
      */
     private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
 
+    /** Global interceptors - all requests that will be served by this
+	engine will pass those filters
+    */
     private Vector requestInterceptors = new Vector();
     private Vector contextInterceptors = new Vector();
     
-    // cache - faster access
+    // cache - faster access to interceptors, using [] instead of Vector
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];
     
-    /**
-     * The set of Contexts associated with this ContextManager,
-     * keyed by context paths.
-     * @deprecated - the server shouldn't make any assumptions about
-     *  the key.
+    /** Adapters for the incoming protocol
      */
-    private Hashtable contexts = new Hashtable();
+    Vector connectors=new Vector();
+
     /** Contexts managed by this server
      */
     private Vector contextsV=new Vector();
 
-    public static final String DEFAULT_HOSTNAME="localhost";
-    public static final int DEFAULT_PORT=8080;
-    public static final String DEFAULT_WORK_DIR="work";
-    
-    /**
-     * The virtual host name for the Server this ContextManager
-     * is associated with.
-     */
-    String hostname;
-
-    /**
-     * The port number being listed to by the Server this ContextManager
-     * is associated with.
-     */
-    int port;
-
     int debug=0;
+
+    // Global properties for this tomcat instance:
+    
+    /** Private workspace for this server
+     */
     String workDir;
 
-    // Instalation directory  
+    /** The base directory where this instance runs.
+     *  It can be different from the install directory to
+     *  allow one install per system and multiple users
+     */
     String home;
-    String tomcatHome;
 
-    Vector connectors=new Vector();
+    /** The directory where tomcat is installed
+     */  
+    String installDir;
 
+    /** Default work dir, relative to home
+     */
+    public static final String DEFAULT_WORK_DIR="work";
     
     /**
      * Construct a new ContextManager instance with default values.
@@ -140,15 +165,101 @@ public class ContextManager {
     public ContextManager() {
     }
 
-    // -------------------- Context repository --------------------
 
-    /** Set default settings ( interceptors, connectors, loader, manager )
+    // -------------------- Setable properties: tomcat directories  --------------------
+
+    /** 
+     *  The home of the tomcat instance - you can have multiple
+     *  users running tomcat, with a shared install directory.
+     *  Every instance will have its own logs, webapps directory
+     *  and local config, all relative to this directory.
+     */
+    public void setHome(String home) {
+	this.home=FileUtil.getCanonicalPath( home ); 
+	log( "Setting home to " + this.home );
+    }
+    
+    /** 
+     *  The home of the tomcat instance - you can have multiple
+     *  users running tomcat, with a shared install directory.
+     *  Every instance will have its own logs, webapps directory
+     *  and local config, all relative to this directory.
+     *
+     *  If no home is configured we'll try the install dir
+     *  XXX clean up the order and process of guessing - maybe we can
+     *  just throw error instead of guessing wrong.
+     */
+    public String getHome() {
+	if(home!=null) return home;
+
+	// If none defined, assume tomcat.home is used as base.
+	if( installDir != null )
+	    home=FileUtil.getCanonicalPath( installDir );
+
+	if(home!=null) return home;
+
+	// try at least the system property
+	home=FileUtil.getCanonicalPath( System.getProperty("tomcat.home") );	
+	if(home!=null) return home;
+	
+	home=FileUtil.getCanonicalPath( "." ); // try current dir - we should throw an exception
+	return home;
+    }
+
+    /** Get installation directory, where libraries and default files
+     *	are located.  If path specified is relative, 
+     *  evaluate it relative to the current working directory.
+     */
+    public String getInstallDir() {
+	if(installDir!= null) return installDir;
+	
+	installDir=System.getProperty("tomcat.home");
+	if(installDir!= null) return installDir;
+
+	// If the property is not set ( for example JNI worker ) assume
+	// at least home is set up corectly.
+	installDir=getHome();
+	return installDir;
+    }
+
+    /** Set installation directory, where libraries and default files
+     *	are located.  If path specified is relative, 
+     *  evaluate it relative to the current working directory.
+     */
+    public void setInstallDir( String tH ) {
+	installDir=tH;
+    }
+    
+    /**
+     * WorkDir property - where all working files will be created
+     */ 
+    public void setWorkDir( String wd ) {
+	if(debug>0) log("set work dir " + wd);
+	this.workDir=wd;
+    }
+
+    /**
+     * WorkDir property - where all working files will be created
+     */ 
+    public String getWorkDir() {
+	if( workDir==null)
+	    workDir=getHome() + File.separator + DEFAULT_WORK_DIR;
+	return workDir;
+    }
+
+    // -------------------- Support functions --------------------
+
+    /**
+     *  Set default settings ( interceptors, connectors, loader, manager )
      *  It is called from init if no connector is set up  - note that we
      *  try to avoid any "magic" - you either set up everything ( using
      *  server.xml or alternatives) or you don't set up and then defaults
      *  will be used.
      * 
      *  Set interceptors or call setDefaults before adding contexts.
+     *
+     *  This is mostly used to allow "0 config" case ( you just want the
+     *  reasonable defaults and nothing else ).
      */
     public void setDefaults() {
 	if(connectors.size()==0) {
@@ -177,40 +288,30 @@ public class ContextManager {
 	}
     }
      
-    
-    /**
-     * Get the names of all the contexts in this server.
-     * @deprecated Path is not "unique key".
-     */
-    public Enumeration getContextNames() {
-        return contexts.keys();
-    }
-
-    /** Return the list of contexts managed by this server
-     */
-    public Enumeration getContexts() {
-	return contextsV.elements();
-    }
-    
     /** Init() is called after the context manager is set up
-     *  and configured. 
+     *  and configured. It will init all internal components
+     *  to be ready for start.
+     *
+     *  There is a difference between Context and Adapters - the
+     *  adapter has start/stop, the Context has init/shutdown(destroy
+     *  may be a better name ? ). ( Initializing is different from starting.)
      */
     public void init()  throws TomcatException {
-	String cp=System.getProperty( "java.class.path");
-	log( "Tomcat install = " + getTomcatHome());
+	log( "Tomcat install = " + getInstallDir());
 	log( "Tomcat home = " + home);
-	if(debug>0 ) log( "Tomcat classpath = " +  cp );
-	//	long time=System.currentTimeMillis();
+	if(debug>0 ) log( "Tomcat classpath = " +  System.getProperty( "java.class.path" ));
+
+	setAccount( ACC_INIT_START, System.currentTimeMillis());
+	
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineInit( this );
 	}
-	
+
     	// init contexts
 	Enumeration enum = getContexts();
-	Context context=null;
 	while (enum.hasMoreElements()) {
-	    context = (Context)enum.nextElement();
+	    Context context = (Context)enum.nextElement();
 	    try {
 		initContext( context );
 	    } catch (TomcatException ex ) {
@@ -222,18 +323,32 @@ public class ContextManager {
 		}
 	    }
 	}
-	//	log("Time to initialize: "+ (System.currentTimeMillis()-time), Logger.INFORMATION);
+	setAccount( ACC_INIT_END, System.currentTimeMillis() );
     }
 
+    /** Will shutdown all contexts
+     */
+    public void shutdown() throws TomcatException {
+	Enumeration enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    removeContext((Context)enum.nextElement());
+	}
+
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].engineShutdown( this );
+	}
+    }
     
     /**
-     * Initializes this context to take on requests. This action
+     * Initializes this context to be able to accept requests. This action
      * will cause the context to load it's configuration information
      * from the webapp directory in the docbase.
      *
-     * <p>This method may only be called once and must be called
-     * before any requests are handled by this context and after setContextManager()
-     * is called.
+     * <p>This method must be called
+     * before any requests are handled by this context. It will be called
+     * after the context was added, typically when the engine starts
+     * or after the admin added a new context.
      */
     public void initContext( Context ctx ) throws TomcatException {
 	ContextInterceptor cI[]=getContextInterceptors();
@@ -241,11 +356,16 @@ public class ContextManager {
 	    cI[i].contextInit( ctx );
 	}
     }
-    
-    public void shutdownContext( Context ctx ) throws TomcatException {
-	// shut down and servlet
-	Enumeration enum = ctx.getServletNames();
 
+    /** Stop the context and release all resources.
+     */
+    public void shutdownContext( Context ctx ) throws TomcatException {
+	// XXX This is here by accident, it should be moved as part
+	// of a normal context interceptor that will handle all standard
+	// start/stop actions
+	
+	// shut down and servlets
+	Enumeration enum = ctx.getServletNames();
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper wrapper = ctx.getServletByName( key );
@@ -259,42 +379,32 @@ public class ContextManager {
 	}
     }
     
-    /** Will start the connectors and begin serving requests
+    /** Will start the connectors and begin serving requests.
+     *  It must be called after init.
      */
-    public void start() throws Exception {//TomcatException {
+    public void start() throws Exception {// XXX TomcatException {
 	Enumeration connE=getConnectors();
 	while( connE.hasMoreElements() ) {
 	    ((ServerConnector)connE.nextElement()).start();
 	}
     }
 
-    public void stop() throws Exception {//TomcatException {
+    /** Will stop all connectors
+     */
+    public void stop() throws Exception {// XXX TomcatException {
 	if(debug>0) log("Stopping context manager ");
 	Enumeration connE=getConnectors();
 	while( connE.hasMoreElements() ) {
 	    ((ServerConnector)connE.nextElement()).stop();
 	}
-
-	ContextInterceptor cI[]=getContextInterceptors();
-	Enumeration enum = getContextNames();
-	while (enum.hasMoreElements()) {
-	    removeContext((String)enum.nextElement());
-	}
+	shutdown();
     }
 
-    /**
-     * Gets a context by it's name, or <code>null</code> if there is
-     * no such context.
-     *
-     * @param name Name of the requested context
-     * @deprecated Use an external iterator to find the context that
-     *  matches your conditions.
-     *
+    // -------------------- Contexts -------------------- 
+    /** Return the list of contexts managed by this server
      */
-    public Context getContext(String name) {
-	// System.out.println("Using deprecated getContext");
-	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-	return (Context)contexts.get(name);
+    public Enumeration getContexts() {
+	return contextsV.elements();
     }
     
     /**
@@ -327,27 +437,6 @@ public class ContextManager {
 	contextsV.addElement( ctx );
     }
     
-    /**
-     * Shut down and removes a context from service.
-     *
-     * @param name Name of the Context to be removed
-     * @deprecated Use removeContext( Context ).
-     */
-    public void removeContext(String name) throws TomcatException {
-	Context context = (Context)contexts.get(name);
-	log( "Removing context " + context.toString());
-
-	ContextInterceptor cI[]=getContextInterceptors();
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].removeContext( this, context );
-	}
-
-	if(context != null) {
-	    shutdownContext( context );
-	    contexts.remove(name);
-	}
-    }
-
     /** Shut down and removes a context from service
      */
     public void removeContext( Context context ) throws TomcatException {
@@ -363,7 +452,9 @@ public class ContextManager {
 	shutdownContext( context );
 	contextsV.removeElement(context);
     }
-    
+
+    /** Notify interceptors that a new container was added.
+     */
     public void addContainer( Container container )
     	throws TomcatException
     {
@@ -373,6 +464,8 @@ public class ContextManager {
 	}
     }
 
+    /** Notify interceptors that a container was removed.
+     */
     public void removeContainer( Container container )
 	throws TomcatException
     {
@@ -449,140 +542,32 @@ public class ContextManager {
 	}
 	return cInterceptors;
     }
-
-    public void addLogger(Logger logger) {
-	// Will use this later once I feel more sure what I want to do here.
-	// -akv
-	// firstLog=false;
-	//	if("tc_log".equals( logger.getName()) cmLog=logger;
-    }
-
-
-    // -------------------- Defaults for all contexts --------------------
-    /** The root directory of tomcat
-     */
-    public String getHome() {
-	if(home!=null) return home;
-
-	// If none defined, assume tomcat.home is used as base.
-	home=getCanonicalPath( tomcatHome );
-	if(home!=null) return home;
-
-	// try at least the system property
-	home=getCanonicalPath( System.getProperty("tomcat.home") );	
-	if(home!=null) return home;
-	
-	home=getCanonicalPath( "." ); // try current dir - we should throw an exception
-	return home;
-    }
-    
-    /** Tomcat installation directory, where libraries and default files are located
-     */
-    public String getTomcatHome() {
-	if(tomcatHome!= null) return tomcatHome;
-	
-	tomcatHome=System.getProperty("tomcat.home");
-	if(tomcatHome!= null) return tomcatHome;
-
-	// If the property is not set ( for example JNI worker ) assume
-	// at least home is set up corectly.
-	tomcatHome=getHome();
-	return tomcatHome;
-    }
-
-    public void setTomcatHome( String tH ) {
-	tomcatHome=tH;
-    }
-
-    // Used in few places.
-    static String getCanonicalPath(String name ) {
-	if( name==null ) return null;
-        File f = new File(name);
-        try {
-            return  f.getCanonicalPath();
-        } catch (IOException ioe) {
-	    ioe.printStackTrace();
-	    return name; // oh well, we tried...
-        }
-    }
-    
-    /** 
-     * Set installation directory.  If path specified is relative, 
-     * evaluate it relative to the current working directory.
-     *
-     * This is used for the home attribute and it's used to find webapps
-     * and conf. Note that libs are probably already configured, so it will
-     * not affect that.
-     */
-    public void setHome(String home) {
-	this.home=getCanonicalPath( home ); 
-	log( "Setting home to " + this.home );
-    }
-    
-    /**
-     * Sets the port number on which this server listens.
-     *
-     * @param port The new port number
-     * @deprecated 
-     */
-    public void setPort(int port) {
-	this.port=port;
-    }
-
-    /**
-     * Gets the port number on which this server listens.
-     * @deprecated 
-     */
-    public int getPort() {
-	if(port==0) port=DEFAULT_PORT;
-	return port;
-    }
-
-    /**
-     * Sets the virtual host name of this server.
-     *
-     * @param host The new virtual host name
-     * @deprecated 
-     */
-    public void setHostName( String host) {
-	this.hostname=host;
-    }
-
-    /**
-     * Gets the virtual host name of this server.
-     * @deprecated 
-     */
-    public String getHostName() {
-	if(hostname==null)
-	    hostname=DEFAULT_HOSTNAME;
-	return hostname;
-    }
-
-    /**
-     * WorkDir property - where all temporary files will be created
-     */ 
-    public void setWorkDir( String wd ) {
-	if(debug>0) log("set work dir " + wd);
-	this.workDir=wd;
-    }
-
-    public String getWorkDir() {
-	if( workDir==null)
-	    workDir=DEFAULT_WORK_DIR;
-	return workDir;
-    }
-
     // -------------------- Request processing / subRequest --------------------
+    // -------------------- Main request processing methods -------------------- 
+
+    /** Prepare the req/resp pair for use in tomcat.
+     *  Call it after you create the request/response objects
+     */
+    public void initRequest( Request req, Response resp ) {
+	// used to be done in service(), but there is no need to do it
+	// every time. 
+	// We may add other special calls here.
+	// XXX Maybe make it a callback? 
+	resp.setRequest( req );
+	req.setResponse( resp );
+	req.setContextManager( this );
+    }
     
-    /** Common for all connectors, needs to be shared in order to avoid
-	code duplication
-    */
+    /** This is the entry point in tomcat - the connectors ( or any other
+     *  component able to generate Request/Response implementations ) will
+     *  call this method to get it processed.
+     *  XXX make sure the alghoritm is right, deal with response codes
+     */
     public void service( Request rrequest, Response rresponse ) {
 	try {
 	    /* assert rrequest/rresponse are set up
 	       corectly - have cm, and one-one relation
 	    */
-
 	    // wront request - parsing error
 	    int status=rresponse.getStatus();
 
@@ -609,14 +594,12 @@ public class ContextManager {
 	} catch( Throwable ex ) {
 	    if(debug>0) log( "Error closing request " + ex);
 	}
-	//	log( "Done with request " + rrequest );
-	//	System.out.print("C");
 	return;
     }
 
     /** Will find the ServletWrapper for a servlet, assuming we already have
-     *  the Context. This is used by Dispatcher and getResource - where the Context
-     *  is already known.
+     *  the Context. This is also used by Dispatcher and getResource - where the Context
+     *  is already known. 
      */
     public int processRequest( Request req ) {
 	if(debug>9) log("ProcessRequest: "+req.toString());
@@ -630,18 +613,23 @@ public class ContextManager {
 	}
 
 	if(debug>9) log("After processing: "+req.toString());
-
 	
 	return 0;
     }
 
-    int authenticate( Request req, Response res ) {
+    /** Call all authentication callbacks. If any of them is able to identify the user
+     *  it will set the principal in req.
+     */
+    public int authenticate( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).authenticate( req, res );
 	}
 	return 0;
     }
 
+    /** Call all authorization callbacks. The "require valid user" attributes are probably
+     *  set during the mapping stage ( for efficiency), but it can be done here too.
+     */
     int authorize( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    int err = ((RequestInterceptor)requestInterceptors.elementAt(i)).authorize( req, res );
@@ -650,7 +638,10 @@ public class ContextManager {
 	return 0;
     }
 
-
+    /** Call beforeBody callbacks. Before body allows you do do various actions before
+	the first byte of the response is sent. After all those callbacks are called
+	tomcat may send the status and headers
+    */
     int doBeforeBody( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeBody( req, res );
@@ -658,6 +649,11 @@ public class ContextManager {
 	return 0;
     }
 
+    /** Call beforeCommit callbacks. This allows interceptors to manipulate the
+	buffer before it gets sent.
+	XXX Add a standard way to access the body. The method was not used too
+	much, we need a review and maybe change in parameters.
+    */
     int doBeforeCommit( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeCommit( req, res );
@@ -665,6 +661,10 @@ public class ContextManager {
 	return 0;
     }
 
+    /** Call afterBody callbacks. It is called after the servlet finished sending the
+	response ( either closeing the stream or ending ). You can deal with connection
+	reuse or do other actions
+    */
     int doAfterBody( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).afterBody( req, res );
@@ -672,13 +672,80 @@ public class ContextManager {
 	return 0;
     }
     
+    // -------------------- Sub-Request mechanism --------------------
+
+    /** Create a new sub-request in a given context, set the context "hint"
+     *  This is a particular case of sub-request that can't get out of
+     *  a context ( and we know the context before - so no need to compute it again)
+     *
+     *  Note that session and all stuff will still be computed.
+     */
+    public Request createRequest( Context ctx, String urlPath ) {
+	// assert urlPath!=null
+
+	// deal with paths with parameters in it
+	String contextPath=ctx.getPath();
+	String origPath=urlPath;
+
+	// append context path
+	if( !"".equals(contextPath) && !"/".equals(contextPath)) {
+	    if( urlPath.startsWith("/" ) )
+		urlPath=contextPath + urlPath;
+	    else
+		urlPath=contextPath + "/" + urlPath;
+	} else {
+	    // root context
+	    if( !urlPath.startsWith("/" ) )
+		urlPath= "/" + urlPath;
+	}
+
+	if( debug >4 ) log("createRequest " + origPath + " " + urlPath  );
+	Request req= createRequest( urlPath );
+	String host=ctx.getHost();
+	if( host != null) req.setServerName( host );
+	return req;
+    }
+
+    /** Create a new sub-request, deal with query string
+     */
+    public Request createRequest( String urlPath ) {
+	String queryString=null;
+	int i = urlPath.indexOf("?");
+	int len=urlPath.length();
+	if (i>-1) {
+	    if(i<len)
+		queryString =urlPath.substring(i + 1, urlPath.length());
+	    urlPath = urlPath.substring(0, i);
+	}
+	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+
+	/** Creates an "internal" request
+	 */
+	RequestImpl lr = new RequestImpl();
+	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
+	//lr.setRequestAdapter( reqA);
+	lr.setRequestURI( urlPath );
+	lr.setQueryString( queryString );
+	//	lr.processQueryString();
+
+	//	lr.setContext( ctx );
+	
+	// XXX set query string too 
+	return lr;
+    }
+
+    // -------------------- Error handling --------------------
+    
+    /** General error handling mechanism. It will try to find an error handler
+     * or use the default handler.
+     * XXX very complex - need a rewrite. 
+     */
     void handleError( Request req, Response res , Throwable t, int code ) {
 	Context ctx = req.getContext();
 	if(ctx==null) {
 	    ctx=getContext("");
 	}
 	if(ctx.getDebug() > 4 ) ctx.log("In error handler " + code + " " + t +  " / " + req );
-	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	String path=null;
 	ServletWrapper errorServlet=null;
 
@@ -687,7 +754,6 @@ public class ContextManager {
 	    errorServlet=ctx.getServletByName("tomcat.errorPage");
 	} else if( req.getAttribute("javax.servlet.error.status_code") != null ||
 	    req.getAttribute("javax.servlet.error.exception_type")!=null) {
-	    //  /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	    if( ctx.getDebug() > 0 ) ctx.log( "Error: exception inside exception servlet " +
 					      req.getAttribute("javax.servlet.error.status_code") + " " +
 					      req.getAttribute("javax.servlet.error.exception_type"));
@@ -775,97 +841,8 @@ public class ContextManager {
 
 	return;
     }
-    
-    // -------------------- Sub-Request mechanism --------------------
-
-    /** Create a new sub-request in a given context, set the context "hint"
-     *  This is a particular case of sub-request that can't get out of
-     *  a context ( and we know the context before - so no need to compute it again)
-     *
-     *  Note that session and all stuff will still be computed.
-     */
-    Request createRequest( Context ctx, String urlPath ) {
-	// assert urlPath!=null
-
-	// deal with paths with parameters in it
-	String contextPath=ctx.getPath();
-	String origPath=urlPath;
-
-	// append context path
-	if( !"".equals(contextPath) && !"/".equals(contextPath)) {
-	    if( urlPath.startsWith("/" ) )
-		urlPath=contextPath + urlPath;
-	    else
-		urlPath=contextPath + "/" + urlPath;
-	} else {
-	    // root context
-	    if( !urlPath.startsWith("/" ) )
-		urlPath= "/" + urlPath;
-	}
-
-	if( debug >4 ) log("createRequest " + origPath + " " + urlPath  );
-	Request req= createRequest( urlPath );
-	String host=ctx.getHost();
-	if( host != null) req.setServerName( host );
-	return req;
-    }
-
-    /** Create a new sub-request, deal with query string
-     */
-    public Request createRequest( String urlPath ) {
-	String queryString=null;
-	int i = urlPath.indexOf("?");
-	int len=urlPath.length();
-	if (i>-1) {
-	    if(i<len)
-		queryString =urlPath.substring(i + 1, urlPath.length());
-	    urlPath = urlPath.substring(0, i);
-	}
-	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-
-	/** Creates an "internal" request
-	 */
-	RequestImpl lr = new RequestImpl();
-	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
-	//lr.setRequestAdapter( reqA);
-	lr.setRequestURI( urlPath );
-	lr.setQueryString( queryString );
-	//	lr.processQueryString();
-
-	//	lr.setContext( ctx );
-	
-	// XXX set query string too 
-	return lr;
-    }
-
-    /** Prepare the req/resp pair for use in tomcat.
-	Call it after you create the request/response objects
-     */
-    public void initRequest( Request req, Response resp ) {
-	// used to be done in service(), but there is no need to do it
-	// every time. 
-	// We may add other special calls here.
-	// XXX Maybe make it a callback? 
-	resp.setRequest( req );
-	req.setResponse( resp );
-	req.setContextManager( this );
-    }
-
-    // -------------------- Support for notes
+    // -------------------- Support for notes --------------------
         
-    // used to allow interceptors to set specific per/request, per/container
-    // and per/CM informations.
-    
-    // This will allow us to remove all "specialized" methods in
-    // Request and Container/Context, without losing the functionality.
-    
-    // Remember - Interceptors are not supposed to have internal state
-    // and minimal configuration, all setup is part of the "core", under
-    // central control.
-
-    // We use indexed notes instead of attributes for performance -
-    // this is internal to tomcat and most of the time in critical path
-
     /** Note id counters. Synchronized access is not necesarily needed
      *  ( the initialization is in one thread ), but anyway we do it
      */
@@ -881,6 +858,18 @@ public class ContextManager {
     
     String noteDescription[][]=new String[3][MAX_NOTES];
 
+    /** used to allow interceptors to set specific per/request, per/container
+     * and per/CM informations.
+     *
+     * This will allow us to remove all "specialized" methods in
+     * Request and Container/Context, without losing the functionality.
+     * Remember - Interceptors are not supposed to have internal state
+     * and minimal configuration, all setup is part of the "core", under
+     *  central control.
+     *  We use indexed notes instead of attributes for performance -
+     * this is internal to tomcat and most of the time in critical path
+     */
+    
     /** Create a new note id. Interceptors will get an Id at init time for
      *  all notes that it needs. 
      *
@@ -899,7 +888,7 @@ public class ContextManager {
 	return noteDescription[noteType][noteId];
     }
     
-    // -------------------- Per-server notes
+    // -------------------- Per-server notes -------------------- 
     Object notes[]=new Object[MAX_NOTES];
 
     public void setNote( int pos, Object value ) {
@@ -913,9 +902,16 @@ public class ContextManager {
     // -------------------- Logging and debug --------------------
     boolean firstLog = true;
     Logger cmLog = null;
+    
 
-    
-    
+    public void addLogger(Logger logger) {
+	// Will use this later once I feel more sure what I want to do here.
+	// -akv
+	// firstLog=false;
+	//	if("tc_log".equals( logger.getName()) cmLog=logger;
+    }
+
+
     public void setDebug( int level ) {
 	if( level != 0 ) System.out.println( "Setting level to " + level);
 	debug=level;
@@ -926,10 +922,7 @@ public class ContextManager {
     }
     
     public final void log(String msg) {
-	//	if( msg.startsWith( "<l:" ))
 	doLog( msg );
-	//else
-	//doLog("<l:tc>" + msg + "</l:tc>");
     }
 
     public final void doLog(String msg) {
@@ -956,6 +949,145 @@ public class ContextManager {
 	}
     }
 
+    // -------------------- Accounting --------------------
+    // XXX Can be implemented as note !
+
+    public static final int ACC_INIT_START=0;
+    public static final int ACC_INIT_END=0;
+    
+    public static final int ACCOUNTS=7;
+    long accTable[]=new long[ACCOUNTS];
+
+    public void setAccount( int pos, long value ) {
+	accTable[pos]=value;
+    }
+
+    public long getAccount( int pos ) {
+	return accTable[pos];
+    }
+
+    // -------------------- DEPRECATED --------------------
+    // XXX host and port are used only to construct a unique
+    // work-dir for contexts, using them and the path
+    // Since nobody sets them - I guess we can just drop them
+    // anyway.
+    // XXX ask and find if there is any other use!
+    public static final String DEFAULT_HOSTNAME="localhost";
+    public static final int DEFAULT_PORT=8080;
+    String hostname;
+    int port;
+
+    /**
+     * Sets the port number on which this server listens.
+     *
+     * @param port The new port number
+     * @deprecated 
+     */
+    public void setPort(int port) {
+	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	this.port=port;
+    }
+
+    /**
+     * Gets the port number on which this server listens.
+     * @deprecated 
+     */
+    public int getPort() {
+	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	if(port==0) port=DEFAULT_PORT;
+	return port;
+    }
+
+    /**
+     * Sets the virtual host name of this server.
+     *
+     * @param host The new virtual host name
+     * @deprecated 
+     */
+    public void setHostName( String host) {
+	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	this.hostname=host;
+    }
+
+    /**
+     * Gets the virtual host name of this server.
+     * @deprecated 
+     */
+    public String getHostName() {
+	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	if(hostname==null)
+	    hostname=DEFAULT_HOSTNAME;
+	return hostname;
+    }
+    // -------------------- DEPRECATED --------------------
+    
+    /**
+     * The set of Contexts associated with this ContextManager,
+     * keyed by context paths.
+     * @deprecated - the server shouldn't make any assumptions about
+     *  the key.
+     */
+    private Hashtable contexts = new Hashtable();
+
+    /**
+     * Get the names of all the contexts in this server.
+     * @deprecated Path is not "unique key".
+     */
+    public Enumeration getContextNames() {
+	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+        return contexts.keys();
+    }
+
+    /**
+     * Gets a context by it's name, or <code>null</code> if there is
+     * no such context.
+     *
+     * @param name Name of the requested context
+     * @deprecated Use an external iterator to find the context that
+     *  matches your conditions.
+     *
+     */
+    public Context getContext(String name) {
+	// System.out.println("Using deprecated getContext");
+	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	return (Context)contexts.get(name);
+    }
+    
+    /**
+     * Shut down and removes a context from service.
+     *
+     * @param name Name of the Context to be removed
+     * @deprecated Use removeContext( Context ).
+     */
+    public void removeContext(String name) throws TomcatException {
+	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	Context context = (Context)contexts.get(name);
+	log( "Removing context " + context.toString());
+
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeContext( this, context );
+	}
+
+	if(context != null) {
+	    shutdownContext( context );
+	    contexts.remove(name);
+	}
+    }
+
+    /** @deprecated
+     */
+    public void setTomcatHome( String s ) {
+	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	setInstallDir( s );
+    }
+
+    /** @deprecated
+     */
+    public String getTomcatHome() {
+	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	return getInstallDir();
+    }
     
     
 }

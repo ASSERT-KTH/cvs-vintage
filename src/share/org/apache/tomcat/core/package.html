@@ -1,45 +1,79 @@
 <html>
-<head>
-<title>The servlet engine implementation</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-</head>
+  <head>
+    <title>The servlet engine implementation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  </head>
+  
+  <body bgcolor="#FFFFFF">
+    <h2>Components</h2>
 
-<body bgcolor="#FFFFFF">
-<h2>Components</h2>
+    <dl>
 
-<dl>
+      <dt>ContextManager</dt>
+      <dd>
+    	<ul>
+      	  <li>maintains a list of adapters</li>
+      	  <li>is the entry point for adapters and any component that can generate 
+	    a Request/Response and wants to use servlets.</li>
+      	  <li>is the control point that handles callback calls and notifications.</li>
+      	  <li>maintains a list of webapps that are configured in the system.</li>
+    	</ul>
+      </dd>
+      
+      <dt>Request,Response</dt>
+      <dd>Internal representations, containing various attributes associated with
+    	the request during processing.
+      </dd>
 
-<dt>Facades
-<dd>For every object exposed in the servlet specification tomcat use a 
-Facade. It have few important advantages:
-<ul>
-<li>Security - the user should have no way to access the real implementation
-objects, except one controled way ( HttpRequestFacade.getRealRequest() ).
-When policy-based security will be added that will allow the user to declare a 
-"trusted" servlet, and no other servlet will be able to access internal objects.
-<li>Future evolution of Servlet API - the API changed and will probably change, 
-by adding new methods and new semantics. Facades makes very simple to make sure
-we respect the spec, without having to change the core too much.
-That may allow supporting multiple servlet API versions ( but it's not a goal -
-each context has it's own classloader and it may be possible to load a different
-JDK and set of facades ).
-<li>Decouple the API and the web server. Tomcat.core allows integration with
-web servers, and it's  modeled after APIs like Apache's, ISAPI and NSAPI.
-</ul>
+      <dt>Interceptors</dt>
+      <dd> 
+	Request processing involves several stages - parsing, matching using url
+	patterns, authentication and authorization, calling the handler and various
+ 	callbacks before, after and during the handler. 
+	An interceptor defines callbacks ( or hooks ) for one or several actions
+	and is able to alter that function.
+	In fact, most of the processing logic is implemented as interceptor 
+	callbacks, in an event-based system.
+      </dd>
 
-</dd>
-
-<dt>Request,Response
-<dd>
-
-<dt>Context, Container, ServletWrapper
-<dd>
-
-<dt>ContextManager
-<dd>
-
-</dl>
-
-
-</body>
+      <dt>Context, Container</dt>
+      <dd>
+    	Container represents a group of URLs sharing common properties like handler,
+    	security, normal properties. Context is a particular case that is associated
+    	with a web application and keeps all the properties defined in the spec. 
+    	We are slowly moving toward use of Container, it can also represent group
+    	of contexts, virtual hosts, etc. 
+    	It is not a good idea to introduce sub-classes for every type of group, 
+    	the isA property is not allways clearly cut. 
+      </dd>
+      
+      <dt>ServletWrapper</dt>
+      <dd>
+    	A normal servlet or JSP, plus all the surounding logic.
+      </dd>
+      
+      
+      <dt>Facades</dt>
+      <dd>For every object exposed in the servlet specification tomcat use a 
+    	Facade. It have few important advantages:
+    	<ul>
+	  <li>Security - the user should have no way to access the real implementation
+	    objects, except one controled way ( HttpRequestFacade.getRealRequest() ).
+	    When policy-based security will be added that will allow the user to declare a 
+	    "trusted" servlet, and no other servlet will be able to access internal objects.</li>
+	  <li>Future evolution of Servlet API - the API changed and will probably change, 
+	    by adding new methods and new semantics. Facades makes very simple to make sure
+	    we respect the spec, without having to change the core too much.
+	    That may allow supporting multiple servlet API versions ( but it's not a goal -
+	    each context has it's own classloader and it may be possible to load a different
+	    JDK and set of facades ).</li>
+	  <li>Decouple the API and the web server. Tomcat.core allows integration with
+	    web servers, and it's  modeled after APIs like Apache's, ISAPI and NSAPI.</li>
+    	</ul>
+    	
+      </dd>
+    </dl>
+    
+    
+  </body>
 </html>
