@@ -26,7 +26,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.5 2001/01/09 08:25:43 carnold Exp $
+// $Id: PropPanelInstance.java,v 1.6 2001/01/10 06:24:00 carnold Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 import java.awt.*;
@@ -47,20 +47,20 @@ public class PropPanelInstance extends PropPanel {
 
     Class mclass = MInstance.class;
 
-    addCaption(new JLabel("Name:"),0,0,0);
+    addCaption("Name:",0,0,0);
     addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
 
 
-    addCaption(new JLabel("Stereotype:"),1,0,0);
+    addCaption("Stereotype:",1,0,0);
     JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
     addField(stereotypeBox,1,0,0);
 
-    addCaption(new JLabel("Classifier:"),2,0,0);
+    addCaption("Classifier:",2,0,0);
     UMLComboBoxModel classifierModel = new UMLComboBoxModel(this,"isAcceptibleClassifier",
             "classifier","getClassifier","setClassifier",false,MClassifier.class,true);
     addField(new UMLComboBox(classifierModel),2,0,0);
 
-    addCaption(new JLabel("Namespace:"),3,0,1);
+    addCaption("Namespace:",3,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
@@ -69,7 +69,7 @@ public class PropPanelInstance extends PropPanel {
     //
     //   temporary
     //
-    addCaption(new JLabel("Related Elements"),0,1,1);
+    addCaption("Related Elements",0,1,1);
     JTree tempTree = new JTree(new Object[] { "Slots", "Links", "Stimuli [Recieved, Sent, In Arg List]" });
     addField(tempTree,0,1,1);
   }

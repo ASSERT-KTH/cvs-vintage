@@ -26,7 +26,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.4 2000/11/17 16:23:36 carnold Exp $
+// $Id: PropPanelPseudostate.java,v 1.5 2001/01/10 06:24:01 carnold Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -47,10 +47,10 @@ public class PropPanelPseudostate extends PropPanel {
 
     Class mclass = MPseudostate.class;
     
-    addCaption(new JLabel("Name:"),0,0,0);
+    addCaption("Name:",0,0,0);
     addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
 
-    addCaption(new JLabel("Kind:"),1,0,0);
+    addCaption("Kind:",1,0,0);
     
     JPanel kindPanel = new JPanel(new GridLayout(0,2));
     ButtonGroup kindGroup = new ButtonGroup();
@@ -88,14 +88,14 @@ public class PropPanelPseudostate extends PropPanel {
     addField(kindPanel,1,0,0);
     
 
-    addCaption(new JLabel("Namespace:"),2,0,1);
+    addCaption("Namespace:",2,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
     addField(namespaceList,2,0,0);
     
-    addCaption(new JLabel("Incoming:"),0,1,0);
-    addCaption(new JLabel("Outgoing:"),1,1,1);
+    addCaption("Incoming:",0,1,0);
+    addCaption("Outgoing:",1,1,1);
     
     
   }

@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.4 2000/11/17 16:23:36 carnold Exp $
+// $Id: PropPanelState.java,v 1.5 2001/01/10 06:24:01 carnold Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -47,24 +47,24 @@ public class PropPanelState extends PropPanel {
 
         Class mclass = MState.class;
     
-        addCaption(new JLabel("Name:"),0,0,0);
+        addCaption("Name:",0,0,0);
         addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
 
-        addCaption(new JLabel("Stereotype:"),1,0,0);
+        addCaption("Stereotype:",1,0,0);
         JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
         addField(stereotypeBox,1,0,0);
 
-        addCaption(new JLabel("State Machine:"),2,0,0);
+        addCaption("State Machine:",2,0,0);
         JList stateList = new UMLList(new UMLReflectionListModel(this,"statemachine",false,"getStateMachine",null,null,null),true);
         addLinkField(stateList,2,0,0);
         
-        addCaption(new JLabel("Namespace:"),3,0,1);
+        addCaption("Namespace:",3,0,1);
         JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
         addLinkField(namespaceList,3,0,0);
     
 
-        addCaption(new JLabel("Incoming:"),0,1,0);
-        addCaption(new JLabel("Outgoing:"),1,1,1);
+        addCaption("Incoming:",0,1,0);
+        addCaption("Outgoing:",1,1,1);
     
     
   }
