@@ -33,7 +33,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.63 $</tt>
+ * @version <tt>$Revision: 1.64 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -156,7 +156,15 @@ public class StatefulSessionContainer
       }
 
       // Remove from storage
-      getPersistenceManager().removeSession(ctx);
+      try
+      {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
+         getPersistenceManager().removeSession(ctx);
+      }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
 
       // We signify "removed" with a null id
       ctx.setId(null);
@@ -182,14 +190,17 @@ public class StatefulSessionContainer
       // Invoke ejbCreate<METHOD>()
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
+
          // Build the ejbCreate<METHOD> from the home create<METHOD> sig
          String createName = m.getName();
+         Object instance = ctx.getInstance();
          String ejbCreateName = "ejbC" + createName.substring(1);
-         Method createMethod = getBeanClass().getMethod(ejbCreateName, m.getParameterTypes());
+         Method createMethod = instance.getClass().getMethod(ejbCreateName, m.getParameterTypes());
          if (debug) {
             log.debug("Using create method for session: " + createMethod);
          }
-         createMethod.invoke(ctx.getInstance(), args);
+         createMethod.invoke(instance, args);
          createCount++;
       }
       catch (IllegalAccessException e)
@@ -223,6 +234,10 @@ public class StatefulSessionContainer
             throw new org.jboss.util.UnexpectedThrowable(t);
          }
       }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
 
       // call back to the PM to let it know that ejbCreate has been called with success
       getPersistenceManager().createdSession(ctx);
@@ -242,10 +257,9 @@ public class StatefulSessionContainer
    public EJBObject createHome(Invocation mi)
       throws Exception
    {
-      createSession(mi.getMethod(), mi.getArguments(),
-                    (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
-
-      return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
+      StatefulSessionEnterpriseContext ctx = (StatefulSessionEnterpriseContext) mi.getEnterpriseContext();
+      createSession(mi.getMethod(), mi.getArguments(), ctx);
+      return ctx.getEJBObject();
    }
 
 
@@ -263,10 +277,9 @@ public class StatefulSessionContainer
    public EJBLocalObject createLocalHome(Invocation mi)
       throws Exception
    {
-      createSession(mi.getMethod(), mi.getArguments(),
-                    (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
-
-      return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
+      StatefulSessionEnterpriseContext ctx = (StatefulSessionEnterpriseContext) mi.getEnterpriseContext();
+      createSession(mi.getMethod(), mi.getArguments(), ctx);
+      return ctx.getEJBLocalObject();
    }
 
    /**
@@ -521,12 +534,16 @@ public class StatefulSessionContainer
             // Invoke and handle exceptions
             try
             {
+               ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
                Object bean = ctx.getInstance();
                return mi.performCall(bean, m, mi.getArguments());
             }
             catch (Exception e)
             {
                rethrow(e);
+            }
+            finally{
+               ctx.popInMethodFlag();
             }
          }
 

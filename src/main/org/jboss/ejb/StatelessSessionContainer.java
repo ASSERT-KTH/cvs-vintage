@@ -30,7 +30,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class StatelessSessionContainer
    extends SessionContainer
@@ -217,11 +217,16 @@ public class StatelessSessionContainer
          {
             try
             {
+               ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
                return mi.performCall(StatelessSessionContainer.this, m, new Object[] { mi });
             }
             catch (Exception e)
             {
                rethrow(e);
+            }
+            finally
+            {
+               ctx.popInMethodFlag();
             }
          }
          else // we have a method that needs to be done by a bean instance
@@ -229,12 +234,17 @@ public class StatelessSessionContainer
             // Invoke and handle exceptions
             try
             {
+               ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
                Object bean = ctx.getInstance();
                return mi.performCall(bean, m, mi.getArguments());
             }
             catch (Exception e)
             {
                rethrow(e);
+            }
+            finally
+            {
+               ctx.popInMethodFlag();
             }
          }
 
