@@ -67,7 +67,9 @@ import java.io.*;
 
 /**
  * Default actions after receiving the request: get charset, unescape,
- * pre-process.
+ * pre-process.  This intercept can optionally normalize the request
+ * and check for certain unsafe escapes.  Both of these options
+ * are on by default.
  * 
  */
 public class DecodeInterceptor extends  BaseInterceptor  {
@@ -81,6 +83,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     private int encodingInfoNote;
     private int sessionEncodingNote;
 
+    private boolean normalize=true;
     private boolean safe=true;
     
     public DecodeInterceptor() {
@@ -105,9 +108,20 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	charsetURIAttribute=";" + charsetAttribute + "=";
     }
 
-    /** Decode interceptor can normalize unsafe urls, by eliminating
-	dangerous things like /../, // , etc - all of them are known
-	as very dangerous for security.
+    /** Decode interceptor can normalize urls, per RFC 1630
+    */
+    public void setNormalize( boolean b ) {
+	normalize=b;
+    }
+
+    /** Decode interceptor can reject unsafe urls. These are
+        URL's containing the following escapes:
+        %25 = '%'
+        %2E = '.'
+        %2F = '/'
+        %5C = '\'
+        These are rejected because they interfere with URL's
+        pattern matching with reguard to security issues.
     */
     public void setSafe( boolean b ) {
 	safe=b;
@@ -241,6 +255,32 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	}
 	
     }
+
+    private boolean isSafeURI(MessageBytes pathMB) {
+        int start = pathMB.indexOf("%");
+        if( start >= 0 ) {
+            int end = pathMB.indexOf(";jsessionid=");
+            if( end < 0 || start < end ) {
+                int percent = pathMB.indexOfIgnoreCase("%25",start);
+                if( percent >= 0 && ( end < 0 || percent < end ) )
+                    return false;
+
+                int period = pathMB.indexOfIgnoreCase("%2E",start);
+                if( period >= 0 && ( end < 0 || period < end ) )
+                    return false;
+
+                int fslash = pathMB.indexOfIgnoreCase("%2F",start);
+                if( fslash >= 0 && ( end < 0 || fslash < end ) )
+                    return false;
+
+                int bslash = pathMB.indexOfIgnoreCase("%5C",start);
+                if( bslash >= 0 && ( end < 0 || bslash < end ) )
+                    return false;
+            }
+        }
+
+        return true;
+    }
     
     public int postReadRequest( Request req ) {
 	MessageBytes pathMB = req.requestURI();
@@ -251,7 +291,21 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
 	//if( path.indexOf("?") >=0 )
 	//   throw new RuntimeException("ASSERT: ? in requestURI");
+
+        // If path is unsafe, return forbidden
+        if( safe && !isSafeURI(pathMB) )
+            return 403;
 	
+	if( normalize &&
+	    ( pathMB.indexOf("//") >= 0 ||
+	      pathMB.indexOf("/." ) >=0
+	      )) {
+	    //debug=1;
+	    normalizePath( pathMB );
+	    if( debug > 0 )
+		log( "Normalized url "  + pathMB );
+	}
+
 	// Set the char encoding first
 	String charEncoding=null;	
 	MimeHeaders headers=req.getMimeHeaders();
@@ -331,16 +385,6 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 		log( "Error decoding request ", ex);
 		return 400;
 	    }
-	}
-
-	if( safe &&
-	    ( pathMB.indexOf("//") >= 0 ||
-	      pathMB.indexOf("/." ) >=0
-	      )) {
-	    //debug=1;
-	    normalizePath( pathMB );
-	    if( debug > 0 )
-		log( "Normalized url "  + pathMB );
 	}
 
 	return 0;
