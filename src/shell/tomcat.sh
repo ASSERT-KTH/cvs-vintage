@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.23 2001/04/22 15:52:11 costin Exp $
+# $Id: tomcat.sh,v 1.24 2001/05/26 19:20:28 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -144,8 +144,8 @@ elif [ "$1" = "start" ] ; then
   WAIT=0
   if [ "$1" = "-wait" ] ; then
     shift
-    # wait at least 2 min
-    WAIT=120
+    # wait at least 6 min 
+    WAIT=360
   fi
 
   if [ "$1" = "-noout" ] ; then
