@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.13 $ 
+* @version $Revision: 1.14 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -374,8 +374,8 @@ implements EJBDeployerMBean
       NDC.pop();
       
       // Create application
-      //ObjectName ejbModule = ObjectNameFactory.create("jboss.j2ee:service=EjbModule,url=" + di.url.getPath());
-      ObjectName ejbModule = ObjectNameFactory.create(EjbModule.BASE_EJB_MODULE_NAME + ",url=" + di.url.getPath());
+      String urlname = di.url.toString().replace(':', '%');
+      ObjectName ejbModule = ObjectNameFactory.create(EjbModule.BASE_EJB_MODULE_NAME + ",url=" + urlname);
 
       try
       {
