@@ -8,6 +8,7 @@
 package org.jboss.deployment.scope;
 
 import org.jboss.deployment.Deployment;
+import org.jboss.deployment.J2eeDeploymentException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -103,8 +104,10 @@ public class ScopedURLClassLoader extends URLClassLoader {
         return result;
     }
     
-    /** what happens on undeploy, could be overridden to tear down meta-data and such */
-    protected void onUndeploy() {
+    /** what happens on undeploy, could be overridden to tear down meta-data and such 
+     *  @throws J2eeDeploymentException if this last stage of undeployment fails for some reason
+     */
+    protected void onUndeploy() throws J2eeDeploymentException {
         // nothing
     }
 
