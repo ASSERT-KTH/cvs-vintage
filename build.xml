@@ -129,6 +129,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run.sh"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
+				<include name="ext/Lib/**"/>
 				<!-- include name="ext/csWillySpell.jar" -->
 			</zipfileset>
 		</zip>
@@ -156,6 +157,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
+				<include name="ext/Lib/**"/>
 			</zipfileset>
 			<!--zipfileset dir="${dest}" prefix="columba-${version}-src" -->
 				<!-- include name="run.sh"/-->
