@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIFixedPortFirewallSocketFactory.java,v 1.2 2005/03/10 09:50:11 benoitf Exp $
+ * $Id: RMIFixedPortFirewallSocketFactory.java,v 1.3 2005/03/15 09:55:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -91,19 +91,16 @@ public class RMIFixedPortFirewallSocketFactory extends RMISocketFactory {
      * @see java.rmi.server.RMISocketFactory#createSocket(java.lang.String, int)
      */
     public Socket createSocket(String host, int port) throws IOException {
-        // When asking for a new random port, use the port defined by the user
-        if (port == 0) {
-            port = exportedObjectsPort;
-        }
         return new Socket(host, port);
     }
 
     /**
      * Register the factory
+     * @return the factory which was created
      * @param port given port number for exporting objects
      * @throws RemoteException if the registration is not possible
      */
-    public static void register(int port) throws RemoteException {
+    public static RMISocketFactory register(int port) throws RemoteException {
         if (factory == null) {
             factory = new RMIFixedPortFirewallSocketFactory(port);
 
@@ -114,7 +111,10 @@ public class RMIFixedPortFirewallSocketFactory extends RMISocketFactory {
             } catch (IOException ioe) {
                 throw new RemoteException("Cannot set the default registry factory :", ioe);
             }
+
+
         }
+        return factory;
     }
 
 }
