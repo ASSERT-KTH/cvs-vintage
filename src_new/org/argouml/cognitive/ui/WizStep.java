@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.22 2003/12/08 11:46:00 jhraigniac Exp $
+// $Id: WizStep.java,v 1.23 2003/12/08 16:19:26 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class WizStep extends JPanel
     private Object _target;
 
     protected static final void setMnemonic(JButton b, String key) {
-	String m = Translator.localize("Cognitive", key);
+	String m = Translator.localize(key);
 	if (m == null)
 	    return;
 	if (m.length() == 1) {
@@ -97,8 +97,8 @@ public class WizStep extends JPanel
     public WizStep() {
 	setMnemonic(_backButton, "mnemonic.button.back");
 	setMnemonic(_nextButton, "mnemonic.button.next");
-	setMnemonic(_finishButton, "mnemonic.bundle.finish");
-	setMnemonic(_helpButton, "mnemonic.bundle.help");
+	setMnemonic(_finishButton, "mnemonic.button.finish");
+	setMnemonic(_helpButton, "mnemonic.button.help");
 	_buttonPanel.setLayout(new GridLayout(1, 5));
 	_buttonPanel.add(_backButton);
 	_buttonPanel.add(_nextButton);

@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.30 2003/11/25 10:58:18 jhraigniac Exp $
+// $Id: Critic.java,v 1.31 2003/12/08 16:19:27 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.30 2003/11/25 10:58:18 jhraigniac Exp $
+// $Id: Critic.java,v 1.31 2003/12/08 16:19:27 jhraigniac Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -72,31 +72,29 @@ public class Critic implements Poster, Serializable {
     public static final String ENABLED = "enabled";
     public static final String SNOOZE_ORDER = "snoozeOrder";
 
-    protected static final String RESOURCE_BUNDLE = "Cognitive";
-
     /** Types of knowledge that critics can deliver */
     public static String KT_DESIGNERS = 
-	Translator.localize(RESOURCE_BUNDLE, "knowledge.designers");
+	Translator.localize("misc.knowledge.designers");
     public static String KT_CORRECTNESS =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.correctness");
+    Translator.localize("misc.knowledge.correctness");
     public static String KT_COMPLETENESS =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.completeness");
+    Translator.localize("misc.knowledge.completeness");
     public static String KT_CONSISTENCY =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.consistency");
+    Translator.localize("misc.knowledge.consistency");
     public static String KT_SYNTAX = 
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.syntax");
+    Translator.localize("misc.knowledge.syntax");
     public static String KT_SEMANTICS = 
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.semantics");
+    Translator.localize("misc.knowledge.semantics");
     public static String KT_OPTIMIZATION =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.optimization");
+    Translator.localize("misc.knowledge.optimization");
     public static String KT_PRESENTATION =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.presentation");
+    Translator.localize("misc.knowledge.presentation");
     public static String KT_ORGANIZATIONAL =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.organizational");
+    Translator.localize("misc.knowledge.organizational");
     public static String KT_EXPERIENCIAL =
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.experiential");
+    Translator.localize("misc.knowledge.experiential");
     public static String KT_TOOL = 
-    Translator.localize(RESOURCE_BUNDLE, "knowledge.tool");
+    Translator.localize("misc.knowledge.tool");
 
     /** This function calculates the default url to describe this critic.
      * This syntax is synchronized with:

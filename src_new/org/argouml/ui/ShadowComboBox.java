@@ -1,4 +1,4 @@
-// $Id: ShadowComboBox.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: ShadowComboBox.java,v 1.5 2003/12/08 16:19:26 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,14 +43,12 @@ import org.argouml.uml.diagram.ui.FigNodeModelElement;
 **/
 public class ShadowComboBox extends JComboBox {
 
-    private static final String BUNDLE = "Cognitive";
-
     private static ShadowFig[]  _shadowFigs = null;
 
     public ShadowComboBox() {
         super();
         
-        addItem(Translator.localize(BUNDLE, "stylepane.label.no-shadow"));
+        addItem(Translator.localize("label.stylepane.no-shadow"));
         addItem("1");
         addItem("2");
         addItem("3");

@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle_en_GB.java
 // Classes: UMLCognitiveResourceBundle_en_GB
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle_en_GB.java,v 1.7 2003/12/08 11:46:00 jhraigniac Exp $
+// $Id: UMLCognitiveResourceBundle_en_GB.java,v 1.8 2003/12/08 16:19:26 jhraigniac Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -84,23 +84,6 @@ public class UMLCognitiveResourceBundle_en_GB extends ListResourceBundle {
         {"decision.stereotypes", "Stereotypes"},
         {"decision.storage", "Storage"},
         {"decision.uncategorized", "Uncategorised"},
-
-        {"knowledge.completeness", "Completeness"},
-        {"knowledge.consistency", "Consistency"},
-        {"knowledge.correctness", "Correctness"},
-        {"knowledge.designers", "Designer's"},
-        {"knowledge.experiential", "Experiential"},
-        {"knowledge.optimization", "Optimisation"},
-        {"knowledge.organizational", "Organisational"},
-        {"knowledge.presentation", "Presentation"},
-        {"knowledge.semantics", "Semantics"},
-        {"knowledge.syntax", "Syntax"},
-        {"knowledge.tool", "Tool"},
-
-        {"mnemonic.button.back", "B"},
-        {"mnemonic.button.next", "N"},
-        {"mnemonic.button.finish", "F"},
-        {"mnemonic.button.help", "H"},
 
 	// Critics text
         { "CrAssocNameConflict_head" ,
