@@ -14,124 +14,156 @@ import javax.management.ObjectName;
 
 import org.apache.log4j.Category;
 
-/** A simple mbean that dumps out info like the system properties, etc.
+/**
+ * A simple mbean that dumps out info like the system properties, etc.
  *      
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.9 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
+ * @version $Revision: 1.10 $
  */
-public class Info implements InfoMBean, MBeanRegistration {
-	// Constants -----------------------------------------------------
-	public static final String OBJECT_NAME= ":service=Info";
+public class Info
+   implements InfoMBean, MBeanRegistration
+{
+   // Constants -----------------------------------------------------
 
-	// Attributes ----------------------------------------------------
-	Category log= Category.getInstance(Info.class);
+   public static final String OBJECT_NAME= ":service=Info";
 
-	// Static --------------------------------------------------------
+   // Attributes ----------------------------------------------------
 
-	// Constructors --------------------------------------------------
+   /** Instance logger. */
+   private Category log = Category.getInstance(this.getClass());
 
-	// Public --------------------------------------------------------
-	public ObjectName preRegister(MBeanServer server, ObjectName name) throws java.lang.Exception {
-		// Dump out basic info as INFO priority msgs
-		log.info("Java version: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
-		log.info("Java VM: " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version") + "," + System.getProperty("java.vm.vendor"));
-		log.info("System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + "," + System.getProperty("os.arch"));
-		// Now dump out the entire System properties as DEBUG priority msgs
-		log.debug("+++ Full System Properties Dump");
-		Enumeration names= System.getProperties().propertyNames();
-		while (names.hasMoreElements()) {
-			String pname= (String) names.nextElement();
-			log.debug(pname + ": " + System.getProperty(pname));
-		}
+   // Static --------------------------------------------------------
 
-		// MF TODO: say everything that needs to be said here: copyright, included libs and TM, contributor and (C) jboss org 2000
-		return new ObjectName(OBJECT_NAME);
-	}
+   // Constructors --------------------------------------------------
 
-	public void postRegister(java.lang.Boolean registrationDone) {
-	}
+   // Public --------------------------------------------------------
 
-	public void preDeregister() throws java.lang.Exception {
-	}
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
+      throws Exception
+   {
+      // Dump out basic info as INFO priority msgs
+      log.info("Java version: " +
+               System.getProperty("java.version") + "," +
+               System.getProperty("java.vendor"));
+      log.info("Java VM: " +
+               System.getProperty("java.vm.name") + " " +
+               System.getProperty("java.vm.version") + "," +
+               System.getProperty("java.vm.vendor"));
+      log.info("System: " +
+               System.getProperty("os.name") + " " +
+               System.getProperty("os.version") + "," +
+               System.getProperty("os.arch"));
 
-	public void postDeregister() {
-	}
+      // dump out the entire system properties if debug is enabled
+      if (log.isDebugEnabled()) {
+         log.debug("+++ Full System Properties Dump");
+         Enumeration names= System.getProperties().propertyNames();
+         while (names.hasMoreElements()) {
+            String pname= (String) names.nextElement();
+            log.debug(pname + ": " + System.getProperty(pname));
+         }
+      }
+                
+      // MF TODO: say everything that needs to be said here:
+      // copyright, included libs and TM, contributor and (C) jboss org 2000
+      return new ObjectName(OBJECT_NAME);
+   }
 
-	public String getThreadGroupInfo(ThreadGroup group) {
+   public void postRegister(Boolean registrationDone) {
+      // empty
+   }
 
-		StringBuffer rc= new StringBuffer();
+   public void preDeregister() throws Exception {
+      // empty
+   }
 
-		rc.append("<BR><B>");
-		rc.append("Thread Group: " + group.getName());
-		rc.append("</B> : ");
-		rc.append("max priority:" + group.getMaxPriority() + ", demon:" + group.isDaemon());
+   public void postDeregister() {
+      // empty
+   }
 
-		rc.append("<blockquote>");
-		Thread threads[]= new Thread[group.activeCount()];
-		group.enumerate(threads, false);
-		for (int i= 0; i < threads.length && threads[i] != null; i++) {
-			rc.append("<B>");
-			rc.append("Thread: " + threads[i].getName());
-			rc.append("</B> : ");
-			rc.append("priority:" + threads[i].getPriority() + ", demon:" + threads[i].isDaemon());
-			rc.append("<BR>");
-		}
+   public String getThreadGroupInfo(ThreadGroup group) {
+      StringBuffer rc= new StringBuffer();
 
-		ThreadGroup groups[]= new ThreadGroup[group.activeGroupCount()];
-		group.enumerate(groups, false);
-		for (int i= 0; i < groups.length && groups[i] != null; i++) {
-			rc.append(getThreadGroupInfo(groups[i]));
-		}
-		rc.append("</blockquote>");
-		return rc.toString();
-	}
+      rc.append("<BR><B>");
+      rc.append("Thread Group: " + group.getName());
+      rc.append("</B> : ");
+      rc.append("max priority:" + group.getMaxPriority() +
+                ", demon:" + group.isDaemon());
 
-	public String listMemoryUsage() {
+      rc.append("<blockquote>");
+      Thread threads[]= new Thread[group.activeCount()];
+      group.enumerate(threads, false);
+      for (int i= 0; i < threads.length && threads[i] != null; i++) {
+         rc.append("<B>");
+         rc.append("Thread: " + threads[i].getName());
+         rc.append("</B> : ");
+         rc.append("priority:" + threads[i].getPriority() +
+                   ", demon:" + threads[i].isDaemon());
+         rc.append("<BR>");
+      }
 
-		String rc= "<P><B>Total Memory: </B>" + (Runtime.getRuntime().totalMemory()) + " </P>" + "<P><B>Free Memory: </B>" + (Runtime.getRuntime().freeMemory()) + " </P>";
+      ThreadGroup groups[]= new ThreadGroup[group.activeGroupCount()];
+      group.enumerate(groups, false);
+      for (int i= 0; i < groups.length && groups[i] != null; i++) {
+         rc.append(getThreadGroupInfo(groups[i]));
+      }
+      rc.append("</blockquote>");
+      return rc.toString();
+   }
 
-		return rc;
-	}
+   public String listMemoryUsage() {
+      String rc= "<P><B>Total Memory: </B>" +
+         (Runtime.getRuntime().totalMemory()) +
+         " </P>" + "<P><B>Free Memory: </B>" +
+         (Runtime.getRuntime().freeMemory()) + " </P>";
+      return rc;
+   }
 
-	public String listSystemInfo() {
+   public String listSystemInfo() {
+      // Dump out basic info as INFO priority msgs
+      StringBuffer rc= new StringBuffer();
+      rc.append("<pre>");
+      rc.append("Java version: " +
+                System.getProperty("java.version") + "," +
+                System.getProperty("java.vendor"));
+      rc.append("\n");
+      rc.append("Java VM: " +
+                System.getProperty("java.vm.name") + " " +
+                System.getProperty("java.vm.version") + "," +
+                System.getProperty("java.vm.vendor"));
+      rc.append("\n");
+      rc.append("System: " +
+                System.getProperty("os.name") + " " +
+                System.getProperty("os.version") + "," +
+                System.getProperty("os.arch"));
+      rc.append("\n");
+      rc.append("</pre>");
 
-		// Dump out basic info as INFO priority msgs
-		StringBuffer rc= new StringBuffer();
-		rc.append("<pre>");
-		rc.append("Java version: " + System.getProperty("java.version") + "," + System.getProperty("java.vendor"));
-		rc.append("\n");
-		rc.append("Java VM: " + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version") + "," + System.getProperty("java.vm.vendor"));
-		rc.append("\n");
-		rc.append("System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + "," + System.getProperty("os.arch"));
-		rc.append("\n");
-		rc.append("</pre>");
+      // HRC: Should we also do a full system properties dump??
 
-		// HRC: Should we also do a full system properties dump??
+      return rc.toString();
+   }
 
-		return rc.toString();
-	}
+   public String listThreadDump() {
+      // Get the root thread group
+      ThreadGroup root= Thread.currentThread().getThreadGroup();
+      while (root.getParent() != null) {
+         root = root.getParent();
+      }
 
-	public String listThreadDump() {
-
-		// Get the root thread group
-		ThreadGroup root= Thread.currentThread().getThreadGroup();
-		while (root.getParent() != null) {
-			root= root.getParent();
-		}
-
-		// I'm not sure why what gets reported is off by +1, 
-		// but I'm adjusting so that it is consistent with the display
-		int activeThreads = root.activeCount()-1;
-		// I'm not sure why what gets reported is off by -1
-		// but I'm adjusting so that it is consistent with the display
-		int activeGroups = root.activeGroupCount()+1;
+      // I'm not sure why what gets reported is off by +1, 
+      // but I'm adjusting so that it is consistent with the display
+      int activeThreads = root.activeCount()-1;
+      // I'm not sure why what gets reported is off by -1
+      // but I'm adjusting so that it is consistent with the display
+      int activeGroups = root.activeGroupCount()+1;
 		
-		String rc=
-		    "<b>Total Threads:</b> "+activeThreads+"<br>"+
-		    "<b>Total Thread Groups:</b> "+activeGroups+"<br>"+
-			getThreadGroupInfo(root) ;
-		return rc;
-	}
+      String rc=
+         "<b>Total Threads:</b> "+activeThreads+"<br>"+
+         "<b>Total Thread Groups:</b> "+activeGroups+"<br>"+
+         getThreadGroupInfo(root) ;
+      return rc;
+   }
 }
