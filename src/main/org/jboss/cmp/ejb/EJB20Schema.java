@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.math.BigDecimal;
 
 import org.jboss.cmp.schema.AbstractClass;
 import org.jboss.cmp.schema.AbstractSchema;
@@ -36,6 +37,7 @@ public class EJB20Schema implements AbstractSchema
       new JavaType(String.class, AbstractType.STRING),
       new JavaType(int.class, AbstractType.INTEGER),
       new JavaType(double.class, AbstractType.DOUBLE),
+      new JavaType(BigDecimal.class, AbstractType.DECIMAL),
       new JavaType(java.util.Date.class, AbstractType.DATETIME),
       new JavaType(byte[].class, AbstractType.BINARY)
    };
