@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JMSContainerInvoker
 	 implements ContainerInvoker, XmlLoadable
@@ -69,6 +69,13 @@ public class JMSContainerInvoker
 
    /** {@link MessageListener#onMessage} reference. */
    protected static /* final */ Method ON_MESSAGE;
+   
+   /** 
+    * Default destination type. Used when no message-driven-destination is
+    * given in ejb-jar, and a lookup of destinationJNDI from jboss.xml is 
+    * not successfull. Default value: javax.jms.Topic.
+    */
+   protected static final String DEFAULT_DESTINATION_TYPE = "javax.jms.Topic";
 
    /**
     * Initialize the ON_MESSAGE reference.
@@ -287,6 +294,37 @@ public class JMSContainerInvoker
    }
 
    /**
+    * Try to get a destination type by looking up the destination JNDI, or 
+    * provide a default if there is not destinationJNDI or if it is not 
+    * possible to lookup.
+    *
+    * @param ctx           The naming context to lookup destinations from.
+    * @param destinationJNDI      The name to use when looking up destinations.
+    * @return              The destination type, either derived from destinationJDNI or DEFAULT_DESTINATION_TYPE
+    */
+   protected String getDestinationType(Context ctx, String destinationJNDI) {
+      String destType = null;
+      
+      if (destinationJNDI != null) {
+	 try {
+	    Destination dest = (Destination)ctx.lookup(destinationJNDI);
+	    if (dest instanceof javax.jms.Topic)
+	       destType = "javax.jms.Topic";
+	    else if (dest instanceof javax.jms.Queue)
+	       destType = "javax.jms.Queue";
+	 }catch(NamingException ex) {
+	    log.debug("Could not do heristic lookup of destination " + ex, ex);
+	 }
+	 
+      }
+      if (destType == null) {
+	 log.info("WARNING Could not determine destination type, defaults to: " + DEFAULT_DESTINATION_TYPE);
+	 destType = DEFAULT_DESTINATION_TYPE;
+      }
+      return destType;
+   }
+
+   /**
     * Create a server session pool for the given connection.
     *
     * @param connection      The connection to use.
@@ -347,7 +385,7 @@ public class JMSContainerInvoker
       // Selector
       String messageSelector = config.getMessageSelector();
 
-      // Queue or Topic
+      // Queue or Topic - optional unfortunately
       String destinationType = config.getDestinationType();
 
       // Bean Name
@@ -379,6 +417,14 @@ public class JMSContainerInvoker
       String jndiSuffix = parseJndiSuffix(destinationJNDI,
 					  config.getEjbName());
       log.debug("jndiSuffix: " + jndiSuffix);
+
+      // Unfortunately the destination is optional, so if we do not have one 
+      // here we have to look it up if we have a destinationJNDI, else give it
+      // a default.
+      if (destinationType == null) {
+	 log.info("No message-driven-destination given, guessing type");
+	 destinationType = getDestinationType(context, destinationJNDI);
+      }
 
       if (destinationType.equals("javax.jms.Topic"))
       {

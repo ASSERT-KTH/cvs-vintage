@@ -20,7 +20,7 @@ import org.jboss.ejb.DeploymentException;
  * 
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -37,7 +37,7 @@ public class MessageDrivenMetaData
    // Attributes ----------------------------------------------------
    
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
-   private String destinationType;
+   private String destinationType = null;
    private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
    private String messageSelector; // = null;
    private String destinationJndiName;
@@ -164,23 +164,26 @@ public class MessageDrivenMetaData
 
       messageSelector = getOptionalChildContent(element, "message-selector");
 
+      // destination is optional
       Element destination =
-         getUniqueChild(element, "message-driven-destination");
-      destinationType = getUniqueChildContent(destination, "destination-type");
-		 
-      if (destinationType.equals("javax.jms.Topic")) {
-         String subscr =
-            getUniqueChildContent(destination, "subscription-durability");
-                                             
-         // Should we do sanity check??
-         if (subscr.equals("Durable")) {
-            subscriptionDurability = DURABLE_SUBSCRIPTION;
-         }
-         else {
-            subscriptionDurability = NON_DURABLE_SUBSCRIPTION;//Default
-         }
+         getOptionalChild(element, "message-driven-destination");
+      if (destination != null) {
+	 destinationType = getUniqueChildContent(destination, 
+						 "destination-type");
+	 
+	 if (destinationType.equals("javax.jms.Topic")) {
+	    String subscr =
+	       getUniqueChildContent(destination, "subscription-durability");
+	    
+	    // Should we do sanity check??
+	    if (subscr.equals("Durable")) {
+	       subscriptionDurability = DURABLE_SUBSCRIPTION;
+	    }
+	    else {
+	       subscriptionDurability = NON_DURABLE_SUBSCRIPTION;//Default
+	    }
+	 }
       }
-      
       // set the transaction type
       String transactionType =
          getUniqueChildContent(element, "transaction-type");
