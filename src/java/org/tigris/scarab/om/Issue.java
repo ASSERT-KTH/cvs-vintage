@@ -870,6 +870,28 @@ public class Issue
 
 
     /**
+     * Returns list of issue template types.
+     */
+    public List getTemplateTypes() throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(IssueTypePeer.ISSUE_TYPE_ID, IssueType.ISSUE__PK, Criteria.NOT_EQUAL);
+        return IssueTypePeer.doSelect(crit);
+    }
+
+    /**
+     * Get IssueTemplateInfo by Issue Id.
+     */
+    public IssueTemplateInfo getTemplateInfo() 
+          throws Exception
+    {
+        Criteria crit = new Criteria(1);
+        crit.add(IssueTemplateInfoPeer.ISSUE_ID, getIssueId());
+        return (IssueTemplateInfo)(IssueTemplateInfoPeer.doSelect(crit).get(0));
+    }
+
+
+    /**
      * The Date when this issue was closed.
      *
      * @return a <code>Date</code> value, null if status has not been
@@ -1037,6 +1059,61 @@ public class Issue
         }
         save();
     }
+
+    /**
+     * Checks permission and approves or rejects issue template. 
+     * If template is approved, template type set to "global", else set to "personal".
+     */
+    public void approve( ScarabUser user, boolean approved )
+         throws Exception, ScarabException
+
+    {                
+        ScarabSecurity security = SecurityFactory.getInstance();
+        ScarabModule module = getScarabModule();
+
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
+                                   module))
+        {
+            IssueTemplateInfo templateInfo = getTemplateInfo();
+            templateInfo.setApproved(true);
+            templateInfo.save();
+            if (approved)
+            {
+                setTypeId(IssueType.GLOBAL_TEMPLATE__PK);
+            }
+            save();
+        } 
+        else
+        {
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }            
+    }
+
+    /**
+     * Checks if user has permission to delete issue template.
+     * Only the creating user can delete a personal template.
+     * Only project owner or admin can delete a project-wide template.
+     */
+    public void delete( ScarabUser user )
+         throws Exception, ScarabException
+    {                
+        ScarabModule module = getScarabModule();
+        ScarabSecurity security = SecurityFactory.getInstance();
+
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
+                                   user, module)
+          || (user.equals(getCreatedBy()) 
+             && getTypeId().equals(IssueType.USER_TEMPLATE__PK)))
+        {
+            setDeleted(true);
+            save();
+        } 
+        else
+        {
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }            
+    }
+
 
     // *******************************************************************
     // Permissions methods
