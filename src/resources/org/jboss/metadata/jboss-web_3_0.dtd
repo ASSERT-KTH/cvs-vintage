@@ -97,3 +97,9 @@ LinkRef.
 Used in: resource-ref, resource-env-ref, ejb-ref
 -->
 <!ELEMENT jndi-name (#PCDATA)>
+
+<!-- The res-url element value is url a URL string.
+
+   Used in: resource-ref
+-->
+<!ELEMENT res-url (#PCDATA)>
