@@ -46,7 +46,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -186,9 +186,9 @@ class TxCapsule implements TimeoutTarget
              SystemException
    {
       try {
-         Logger.log("TxCapsule before lock");
+         //DEBUG Logger.log("TxCapsule before lock");
 		 lock();
-         Logger.log("TxCapsule after lock status is "+getStringStatus(status));
+         //DEBUG Logger.log("TxCapsule after lock status is "+getStringStatus(status));
 		 
          switch (status) {
          case Status.STATUS_PREPARING:
@@ -215,7 +215,7 @@ class TxCapsule implements TimeoutTarget
             doAfterCompletion();
             throw new RollbackException("Already marked for rollback");
          case Status.STATUS_ACTIVE:
-			 Logger.log("Commiting tx with status Active");
+			 //DEBUG Logger.log("Commiting tx with status Active");
             break;
          default:
             throw new IllegalStateException("Illegal status: " + status);
@@ -229,17 +229,17 @@ class TxCapsule implements TimeoutTarget
 		 
          if (status == Status.STATUS_ACTIVE) {
             if (resources.size() == 0) {
-				Logger.log("no resources 0 phi commit");
+				//DEBUG Logger.log("no resources 0 phi commit");
                // Zero phase commit is really fast ;-)
                status = Status.STATUS_COMMITTED;
             } else if (resources.size() == 1) {
-               Logger.log("1 resource 1 phi commit");
+               // DEBUG Logger.log("1 resource 1 phi commit");
 			   // One phase commit
 			   
                commitResources(true);
             } else {
 				
-				Logger.log("many resources 2 phi commit");
+				// DEBUG Logger.log("many resources 2 phi commit");
                // Two phase commit
 
                if (!prepareResources()) {
@@ -735,9 +735,9 @@ class TxCapsule implements TimeoutTarget
       unlock();
       try {
          for (int i = 0; i < sync.size(); i++) {
-			 Logger.log("calling beforeCompletion on synch status is "+getStringStatus(status));
+			//DEBUG Logger.log("calling beforeCompletion on synch status is "+getStringStatus(status));
             ((Synchronization)sync.get(i)).beforeCompletion();
-			 Logger.log("Done calling beforeCompletion on synch status is "+getStringStatus(status));
+			//DEBUG Logger.log("Done calling beforeCompletion on synch status is "+getStringStatus(status));
             
 		}
       } finally {
