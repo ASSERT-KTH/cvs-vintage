@@ -13,9 +13,11 @@
 
 #set ($adminMenu = $data.Parameters.getString($scarabG.Constant.CURRENT_ADMIN_MENU, ""))
 
-<div class="focus">
-<strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
+<div class="toolgroup">
+<div class="label">
+ <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong></div>
 
+<div class="body">
 #if ($allowGATS || $allowGAS)
   #if ($adminMenu.equals("1"))
     <div><strong>Global data</strong>
@@ -76,6 +78,6 @@
     #end
   #end
 #end
-
+</div>
 </div>
 #end

@@ -6,6 +6,7 @@
   <meta http-equiv="Content-type" content="$data.ContentType" />
   <style type="text/css">
   @import url($staticLink.setPath("/style/tigris.css"));
+  @import url($staticLink.setPath("/style/scarab.css"));
   </style>
   <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
 <script type="text/javascript">
@@ -43,41 +44,35 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
   </table>
  </div>
 
+#if ($data.User.hasLoggedIn())
 <div id="breadcrumbs"><table border="0" cellspacing="0" cellpadding="4" width="100%"><tr><td> 
 #if ($scarabR.CurrentModule)
- <strong>Current module:</strong>
+<a href="$link.setPage("SelectModule.vm")">Modules</a> > 
  $link.setPage("SelectModule.vm").setLabel("$scarabR.CurrentModule.Name")
 #else
- &nbsp;
+<a href="$link.setPage("SelectModule.vm")">Modules</a>
 #end
 </td></tr></table></div>
+#end
 
-
-<table border="0" cellspacing="0" cellpadding="8" width="100%" id="main">
+<table border="0" cellspacing="0" cellpadding="4" width="100%" id="main">
  <tr valign="top">
   <td id="leftcol" width="20%">
   <div id="navcolumn">
 $renderer.render("navigations", $template, "Default.vm")
-  </div>
-<div id="helptext">
-<table border="0" cellspacing="0" cellpadding="3" width="100%">
-<tr>
-<th>How do I...?</th>
-</tr>
-<tr>
-<td>
+<div id="helptext" class="toolgroup">
+<div class="label"><strong>How do I...?</strong></div>
+<div class="body">
   $renderer.render("navigations", "Help.vm")
-</td>
-</tr>
-</table>
-</div>
+</div></div>
+  </div>
  </td>
  <td>
 #if (!$data.Parameters.getString("nonav") && !$data.Parameters.getString("nosearchnav"))
     $renderer.render("navigations", "SearchNav.vm")
 #end
-<div id="apphead"><h2>$title</h2></div>
 <div id="bodycol">
+<div id="apphead"><h2>$title</h2></div>
  <!-- Scarab - App -->
 $renderer.render("layouts", "MainContent.vm")
 <!-- Structural Elements -->
