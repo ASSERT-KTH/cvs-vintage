@@ -40,12 +40,12 @@
 
       <generatedsource id="jboss-ql-parser" 
          srcdir="main"
-         javacc="org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt"/>
+         jtree-javacc="org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt"/>
          
       <generatedsource id="ejb-ql-parser" 
          srcdir="main"
          path="jboss-ql-parser"
-         javacc="org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"/>
+         jtree-javacc="org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"/>
 
       <source id="main"
          rmic="org/jboss/tm/usertx/server/UserTransactionSessionFactoryImpl.class,
@@ -261,14 +261,6 @@
          </include>
          <include input="uuid-key-generator"/>
       </artifactdef>
-
-      <!-- ============================================================ -->
-      <!-- Services                                                     -->
-      <!-- ============================================================ -->
-
-      <artifactdef artifact="sqlexception-service.xml"/>
-      <artifactdef artifact="client-deployer-service.xml"/>
-
 
       <!-- ============================================================ -->
       <!-- Binary Artifacts                                             -->
