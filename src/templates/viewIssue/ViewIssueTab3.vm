@@ -45,7 +45,7 @@ $l10n.NoComments
    </div>
       #elseif ($canEditComments && !$comments.isEmpty())
          <div align="right"><small>
-         $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).setLabel("Edit comments").addPathInfo("edit_comments", true)
+         $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).setLabel("$l10n.EditComment").addPathInfo("edit_comments", true).addPathInfo("fullcomments", $fullComments)
          </small></div>
   #end
 
@@ -53,10 +53,10 @@ $l10n.NoComments
 
 #if ($currentIssue.isCommentsLong())
   #if ($fullComments.equals("true"))
-    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("fullcomments", "false").addPathInfo("tab", $tab))
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("fullcomments", "false").addPathInfo("tab", $tab).addPathInfo("edit_comments", $isEditComments))
     <p><a href="$commentsLink">$l10n.HideCommentList</a></p>
   #else
-    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true").addPathInfo("tab", $tab))
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true").addPathInfo("tab", $tab).addPathInfo("edit_comments", $isEditComments))
     #set ($hiddenCommentCount = $currentIssue.CommentsCount - $currentIssue.CommentsLimit)
     <p>$l10n.format("ThereAreMoreComments", $hiddenCommentCount)
     <a href="$commentsLink">$l10n.ShowCommentList</a></p>
