@@ -53,7 +53,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.118 $
+ * @version $Revision: 1.119 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -62,8 +62,6 @@ public class EntityContainer
    implements EJBProxyFactoryContainer, InstancePoolContainer,
       EntityContainerMBean
 {
-   protected static final Method EJBOBJECT_REMOVE;
-   
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
@@ -104,18 +102,6 @@ public class EntityContainer
     * manage this instance.
     */
    protected static GlobalTxEntityMap globalTxEntityMap = new GlobalTxEntityMap();
-
-   static
-   {
-      try
-      {
-         EJBOBJECT_REMOVE = EJBObject.class.getMethod("remove", new Class[0]);
-      }
-      catch (Throwable t)
-      {
-         throw new NestedRuntimeException(t);
-      }
-   }
    
    public static GlobalTxEntityMap getGlobalTxEntityMap()
    {
@@ -572,14 +558,10 @@ public class EntityContainer
       throw new Error("Not yet implemented");
    }
 
-   /**
-    * @throws Error    Not yet implemented.
-    */
    public Object getPrimaryKey(Invocation mi)
       throws RemoteException
    {
-      // TODO
-      throw new Error("Not yet implemented");
+      return mi.getId();
    }
 
    /**

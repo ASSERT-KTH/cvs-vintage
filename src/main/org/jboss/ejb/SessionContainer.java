@@ -6,17 +6,20 @@
  */
 package org.jboss.ejb;
 
-// $Id: SessionContainer.java,v 1.8 2004/06/21 14:17:25 ejort Exp $
+// $Id: SessionContainer.java,v 1.9 2004/06/22 12:10:18 ejort Exp $
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.metadata.SessionMetaData;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
+import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
+import javax.ejb.RemoveException;
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
 import javax.management.ObjectName;
@@ -35,7 +38,7 @@ import java.util.Map;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 30.10.2003
  */
 public abstract class SessionContainer extends Container
@@ -591,6 +594,33 @@ public abstract class SessionContainer extends Container
 
    public Object internalInvokeHome(Invocation mi) throws Exception
    {
+      Method method = mi.getMethod();
+      if (method != null && method.getName().equals("remove"))
+      {
+         // Map to EJBHome.remove(Object) to EJBObject.remove()
+         InvocationType type = mi.getType(); 
+         if (type == InvocationType.HOME)
+            mi.setType(InvocationType.REMOTE);
+         else if (type == InvocationType.LOCALHOME)
+            mi.setType(InvocationType.LOCAL);
+         mi.setMethod(EJBOBJECT_REMOVE);
+
+         // Handle or primary key?
+         Object arg = mi.getArguments()[0];
+         if (arg instanceof Handle)
+         {
+            if (arg == null)
+               throw new RemoteException("Null handle");
+            Handle handle = (Handle) arg;
+            EJBObject ejbObject = handle.getEJBObject();
+            mi.setId(ejbObject.getPrimaryKey());
+         }
+         else
+            throw new RemoveException("EJBHome.remove(Object) not allowed for session beans");
+
+         mi.setArguments(new Object[0]);
+         return getInterceptor().invoke(mi);
+      }
       return getInterceptor().invokeHome(mi);
    }
 
@@ -621,14 +651,16 @@ public abstract class SessionContainer extends Container
       return null;
    }
 
-   /**
-    * @return  Always null
-    */
    public Object getPrimaryKey(Invocation mi) throws RemoteException
+   {
+      return getPrimaryKey();
+   }
+
+   public Object getPrimaryKey() throws RemoteException
    {
       throw new RemoteException("Call to getPrimaryKey not allowed on session bean");
    }
-
+   
    public EJBHome getEJBHome(Invocation mi) throws RemoteException
    {
       EJBProxyFactory ci = getProxyFactory();

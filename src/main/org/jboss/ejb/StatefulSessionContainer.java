@@ -24,6 +24,7 @@ import javax.ejb.Timer;
 import javax.management.ObjectName;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.util.UnreachableStatementException;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
 
 /**
@@ -35,7 +36,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvoker;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.74 $</tt>
+ * @version <tt>$Revision: 1.75 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -273,7 +274,7 @@ public class StatefulSessionContainer
    public void removeLocalHome(Invocation mi)
       throws RemoteException, RemoveException
    {
-      throw new Error("Not Yet Implemented");
+      throw new UnreachableStatementException();
    }
 
    public EJBLocalObject createLocalHome(Invocation mi)

@@ -10,6 +10,7 @@ package org.jboss.ejb;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.proxy.ejb.EJBMetaDataImpl;
+import org.jboss.util.UnreachableStatementException;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  */
 public class StatelessSessionContainer extends SessionContainer
         implements EJBProxyFactoryContainer, InstancePoolContainer
@@ -92,8 +93,7 @@ public class StatelessSessionContainer extends SessionContainer
    public void removeHome(Handle handle)
            throws RemoteException, RemoveException
    {
-      removeCount++;
-      log.debug("Useless invocation of remove(Handle) for stateless session bean");
+      throw new UnreachableStatementException();
    }
 
    /**
@@ -102,8 +102,7 @@ public class StatelessSessionContainer extends SessionContainer
    public void removeHome(Object primaryKey)
            throws RemoteException, RemoveException
    {
-      removeCount++;
-      log.debug("Useless invocation of remove(Object) for stateless session bean");
+      throw new UnreachableStatementException();
    }
 
    // Protected  ----------------------------------------------------

@@ -32,11 +32,13 @@ import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
+import org.jboss.util.NestedRuntimeException;
 import org.jboss.webservice.WebServiceClientDeployer;
 import org.jboss.webservice.WebServiceClientHandler;
 import org.omg.CORBA.ORB;
 
 import javax.ejb.EJBException;
+import javax.ejb.EJBObject;
 import javax.ejb.TimerService;
 import javax.ejb.spi.HandleDelegate;
 import javax.management.MBeanException;
@@ -71,13 +73,13 @@ import java.util.Set;
  *
  * @see EJBDeployer
  *
- * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@jboss.org">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.151 $
+ * @version $Revision: 1.152 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -92,6 +94,8 @@ public abstract class Container
    
    public final static ObjectName EJB_CONTAINER_QUERY_NAME =
            ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
+
+   protected static final Method EJBOBJECT_REMOVE;
 
    /** This is the application that this container is a part of */
    protected EjbModule ejbModule;
@@ -185,6 +189,18 @@ public abstract class Container
    protected long removeCount;
    /** Time statistics for the invoke(Invocation) methods */
    protected InvocationStatistics invokeStats = new InvocationStatistics();
+
+   static
+   {
+      try
+      {
+         EJBOBJECT_REMOVE = EJBObject.class.getMethod("remove", new Class[0]);
+      }
+      catch (Throwable t)
+      {
+         throw new NestedRuntimeException(t);
+      }
+   }
 
    // Public --------------------------------------------------------
 
