@@ -1,4 +1,4 @@
-// $Id: UMLClassOperationListModel.java,v 1.6 2004/12/16 19:29:39 mvw Exp $
+// $Id: UMLClassOperationListModel.java,v 1.7 2004/12/16 19:51:54 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,8 @@ import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
  * @author jaap.branderhorst@xs4all.nl, alexb
  * @since Mar 22, 2003
  */
-public class UMLClassOperationListModel extends UMLModelElementOrderedListModel2 {
+public class UMLClassOperationListModel 
+    extends UMLModelElementOrderedListModel2 {
    
     /**
      * Constructor for UMLClassifierFeatureListModel.
