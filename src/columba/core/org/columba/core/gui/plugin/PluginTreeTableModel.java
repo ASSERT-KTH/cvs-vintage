@@ -51,6 +51,8 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
 		PluginNode node =
 			(PluginNode) tree.getPathForRow(row).getLastPathComponent();
 
+		if ( col==2 ) return new Boolean(node.isEnabled());
+		
 		return node;
 	}
 

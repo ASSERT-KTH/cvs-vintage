@@ -50,8 +50,22 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * @author fdietz
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * This dialog lets you view all installed plugins in a
+ * categorized tree view.
+ * 
+ * There are buttons which let you:
+ * - install new plugins
+ * - remove plugins
+ * - enable/disable plugins
+ * - view plugin info (readme.txt in plugin folder)
+ * 
+ * TODO: remove plugins
+ * 
+ * TODO: enable/disable plugins doesn't work right know
+ *       - have to find a good way of using renderer/editor (JCheckBox)
+ *       - EabledRenderer/Editor aren't working correctly
+ *         (and are disabled right now)
+ * 
  */
 public class PluginManagerDialog
 	extends JDialog
@@ -353,16 +367,14 @@ public class PluginManagerDialog
 			"Plugin will be started on next startup of Columba");
 		
 		/*
-		 * TODO: extract the plugin-folder 
+		 * TODO: extract the plugin-folder name
 		 * 
 		 * if this works you don't have to restart Columba,
 		 * the plugin will be loaded automatically 
 		 * 
-		 */
 		 
-		 /*
-		File pluginFolder=null;
-		MainInterface.pluginManager.addPlugin(pluginFolder);
+		   File pluginFolder=null;
+		   MainInterface.pluginManager.addPlugin(pluginFolder);
 		*/
 	}
 
