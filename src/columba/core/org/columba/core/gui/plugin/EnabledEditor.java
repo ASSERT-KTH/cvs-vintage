@@ -30,7 +30,8 @@ public class EnabledEditor
 	 * 
 	 */
 	public EnabledEditor() {
-		
+		component.setHorizontalAlignment(SwingConstants.CENTER);
+		component.setOpaque(true);
 	}
 
 	//	This method is called when a cell value is edited by the user.

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -43,6 +45,8 @@ public class PluginTree extends TreeTable {
 
 	protected Map map;
 	protected PluginTreeTableModel model;
+	
+	private JCheckBox enabledCheckBox;
 
 	/**
 	 * 
@@ -69,13 +73,18 @@ public class PluginTree extends TreeTable {
 		tc.setMaxWidth(80);
 		tc.setMinWidth(80);
 
+		
 		// make "enabled" column fixed size
 		tc = getColumn(columns[2]);
 		//tc.setCellRenderer(new EnabledRenderer());
+		//tc.setCellRenderer( new DefaultCellRenderer(n))
+		//tc.setCellEditor( new DefaultCellEditor(new JCheckBox()));
+		//setDefaultEditor(Boolean.class, new JComboBox());
+		
 		//tc.setCellEditor(new EnabledEditor());
 		tc.setMaxWidth(80);
 		tc.setMinWidth(80);
-
+		
 	}
 
 	public void addPlugin(XmlElement pluginElement) {

@@ -8,10 +8,9 @@ package org.columba.core.gui.plugin;
 
 import java.awt.Component;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * @author frd
@@ -19,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class VersionRenderer extends JLabel implements TableCellRenderer {
+public class VersionRenderer extends DefaultTableCellRenderer {
 
 	/**
 	 * 
@@ -29,6 +28,7 @@ public class VersionRenderer extends JLabel implements TableCellRenderer {
 
 		setHorizontalAlignment(SwingConstants.CENTER);
 
+		setOpaque(true);
 	}
 
 	/* (non-Javadoc)
@@ -42,30 +42,19 @@ public class VersionRenderer extends JLabel implements TableCellRenderer {
 		int rowIndex,
 		int vColIndex) {
 
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
+			
 		PluginNode node = (PluginNode) value;
 
 		String version = node.getVersion();
-		if ( version == null ) version = " ";
-		
+		if (version == null)
+			version = " ";
+
 		setText(version);
 
-		return this;
+		return this; 
 	}
 
-	// The following methods override the defaults for performance reasons
-	public void validate() {
-	}
-	public void revalidate() {
-	}
-	protected void firePropertyChange(
-		String propertyName,
-		Object oldValue,
-		Object newValue) {
-	}
-	public void firePropertyChange(
-		String propertyName,
-		boolean oldValue,
-		boolean newValue) {
-	}
+	
 
 }

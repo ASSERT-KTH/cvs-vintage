@@ -11,6 +11,7 @@ import java.awt.Component;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 /**
@@ -23,7 +24,7 @@ public class EnabledRenderer extends JCheckBox implements TableCellRenderer {
 
 	public EnabledRenderer() {
 		setHorizontalAlignment(SwingConstants.CENTER);
-		setOpaque(true);
+		//setOpaque(true);
 	}
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -36,11 +37,23 @@ public class EnabledRenderer extends JCheckBox implements TableCellRenderer {
 		int arg4,
 		int arg5) {
 
+		/*
 		PluginNode node = (PluginNode) value;
-
+		
+		if ( node.isCategory() )
+		{
+			// this node is category folder
+			// -> don't make it editable
+			
+			return new DefaultTableCellRenderer();
+		}
+		
 		boolean b = node.isEnabled();
-
-		setSelected(b);
+		*/
+		
+		Boolean b = (Boolean) value;
+		
+		setSelected( b.booleanValue());
 
 		return this;
 	}
