@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.51 2002/01/23 00:20:52 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.52 2002/01/23 23:21:53 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -97,7 +97,7 @@ public interface ModuleEntity
      * @param permissions a <code>List</code> value
      * @return ScarabUser[]
      */
-    public ScarabUser[] getUsers(List permissions);
+    public ScarabUser[] getUsers(List permissions) throws Exception;
 
     /**
      * This method is only used by the Turbine Group interface.
