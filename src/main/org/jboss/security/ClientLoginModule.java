@@ -18,7 +18,19 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+/** A simple implementation of LoginModule for use by JBoss clients for
+the establishment of the caller identity and credentials. This simply sets
+the SecurityAssociation principal to the value of the NameCallback
+filled in by the CallbackHandler, and the SecurityAssociation credential
+to the value of the PasswordCallback filled in by the CallbackHandler.
 
+It has one option: multi-threaded=[true|false]
+When the multi-threaded option is set to true, the SecurityAssociation.setServer()
+so that each login thread has its own principal and credential storage.
+
+@author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
+@author Scott_Stark@displayscape.com
+*/
 public class ClientLoginModule implements LoginModule {
     private CallbackHandler _callbackHandler;
 
@@ -28,6 +40,14 @@ public class ClientLoginModule implements LoginModule {
     public void initialize(Subject subject, CallbackHandler callbackHandler,
             Map sharedState, Map options) {
         _callbackHandler = callbackHandler;
+        // Check for multi-threaded option
+        String mt = (String) options.get("multi-threaded");
+        if( mt != null && Boolean.valueOf(mt).booleanValue() == true )
+        {   /* Turn on the server mode which uses thread local storage for
+                the principal information.
+            */
+            SecurityAssociation.setServer();
+        }
     }
 
     /**
