@@ -1,7 +1,7 @@
 #macro( advancedQuery $module )
 #set ($search = $scarabR.Search)
-##set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
-#set ($query = $intake.SearchIssue.mapTo($search))
+#set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
+#set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
@@ -11,27 +11,27 @@
 <tr>
 <th width="120">
     Issue ID# range
-    #fieldErrorMsg($query.MinId "")
-    #fieldErrorMsg($query.MaxId "")
+    #fieldErrorMsg($searchGroup.MinId "")
+    #fieldErrorMsg($searchGroup.MaxId "")
 </th>
 <td>
 from:&#160;<input type="text" size="20"
-    name="$query.MinId.Key" value="$query.MinId" />
+    name="$searchGroup.MinId.Key" value="$searchGroup.MinId" />
 &#160;&#160;to:&#160;<input type="text" size="20"
-    name="$query.MaxId.Key" value="$query.MaxId" />
+    name="$searchGroup.MaxId.Key" value="$searchGroup.MaxId" />
 </td>
 </tr>
 <tr>
 <th width="120">
     Issue creation date range
-    #fieldErrorMsg($query.MinDate "")
-    #fieldErrorMsg($query.MaxDate "")
+    #fieldErrorMsg($searchGroup.MinDate "")
+    #fieldErrorMsg($searchGroup.MaxDate "")
 </th>
 <td>
 from:&#160;<input type="text" size="20"
-    name="$query.MinDate.Key" value="$query.MinDate.toString()" />
+    name="$searchGroup.MinDate.Key" value="$searchGroup.MinDate.toString()" />
 &#160;&#160;to:&#160;<input type="text" size="20"
-    name="$query.MaxDate.Key" value="$query.MaxDate.toString()" />
+    name="$searchGroup.MaxDate.Key" value="$searchGroup.MaxDate.toString()" />
 (e.g. MM/DD/YYYY hh:mm)
 </td>
 </tr>
@@ -88,38 +88,77 @@ from:&#160;<input type="text" size="20"
 
 
 ##PERSONNEL
-<h3>Personnel search</h3>
-<div class="axial">
- <table cellpadding="3" cellspacing="2" border="0">
-     <tr>
-   <th width="120">Committed by</th>
-   <td>
-            <select name="$query.CreatedByUserNames.Key" multiple="multiple">
-#foreach ( $createdBy in $module.EligibleIssueReporters )
-    <option value="$createdBy.UserName">$createdBy.UserName</option>
-#end
-   </select>
-            </td>
-     </tr>
-#foreach ( $attKey in $attrValues.sequence() )
-  #set ( $attVal = $attrValues.get($attKey) )
-  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-  #if ($attVal.Attribute.isUserAttribute())
-    #if ( $attVal.Attribute.AttributeType.ValidationKey )
-        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-    #else
-        #set ( $field = "UserId" )
-    #end
+<h3>Personel association search</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="120">$attVal.RModuleAttribute.DisplayValue</th>
-   <td>
-       #attrValueErrorMsg ( $attVal $field )
-       #userSelectBox ($attVal "5" "multiple")
-   </td>
-  </tr>
-  #end
+<th nowrap="nowrap">&nbsp;</th>
+<td align="left"><strong>Name</strong></td>
+<td align="left"><strong>Email</strong></td>
+<td align="left"><strong>Association</strong></td>
+</tr>
+#set ($userList = $data.Parameters.getStrings("user_list"))
+#set ($userAttrs = $module.getUserAttributes($issueType)) 
+
+#foreach ($userId in $userList)
+  <input type="hidden" name="user_list" value="$userId"  />
+#indexedRows($velocityCount) 
+#set ($loopVar = $velocityCount)
+#set ($user = $scarabR.getUser($userId))
+
+## Determine what the previous value of the selected user attribute
+## In case page has been reloaded
+#if ($user.UserName.equals($data.Parameters.getString("add_user")))
+  #set ($selectedAttr = $data.Parameters.getString("add_user_attr"))
+#else
+  #set ($selectedAttr = $data.Parameters.getString("user_attr_$userId"))
 #end
- </table>
+  <td><input type="checkbox" name="delete_user_$userId" /></td>
+  <td><strong>$user.FirstName $user.LastName</strong></td>
+  <td><a href="mailto:$user.Email">$user.Email</a></td>
+  <td>
+   <select name="user_attr_$userId" size="" >
+      <option value="any"
+         #if ($selectedAttr.equals("any")) "selected" #end
+         >Any</option>
+      <option value="created_by"
+         #if ($selectedAttr.equals("created_by")) "selected" #end
+         >Committed by:</option>
+    #foreach ($selectUserAttr in $userAttrs)
+       #set ($selected = "")
+       #if ($selectedAttr.equals($selectUserAttr.AttributeId.toString())) 
+          #set ($selected="selected")
+       #end
+      <option value="$selectUserAttr.AttributeId" $selected>$selectUserAttr.Name:</option>
+    #end
+   </select>
+  </td>
+</tr>
+#end
+
+## Add user to search list
+ #if ($loopVar % 2 > 0)
+    <tr class="b">
+ #else
+    <tr class="a">
+ #end
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+  <td><input type="text" name="add_user" /></td>
+  <td><select name="add_user_attr" size="">
+      <option value="any">Any</option>
+      <option value="created_by">Committed by:</option>
+    #foreach ($selectUserAttr in $userAttrs)
+      <option value="$selectUserAttr.AttributeId">$selectUserAttr.Name:</option>
+    #end
+    </select>
+  </td>
+</tr>
+</table> 
+         
+<div class="functnbar3">
+<input type="submit" value="Add new" name="eventSubmit_doAdduser" />&nbsp;
+<input type="submit" value="Delete selected" name="eventSubmit_doRemoveusers" />&nbsp;
+<input type="submit" value="Edit list" name="eventSubmit_doGotoothertemplate" />
 </div>
 
 ## STATE CHANGE QUERY
@@ -129,13 +168,13 @@ from:&#160;<input type="text" size="20"
 <tr>
  <th width="120">Attribute</th>
  <td>
-     <select name="$query.StateChangeAttributeId.Key">
+     <select name="$searchGroup.StateChangeAttributeId.Key">
 #foreach ( $attKey in $attrValues.sequence() )
     #set ( $attVal = $attrValues.get($attKey) )
     #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
         #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
         #set ( $selected = "" )
-        #if ( $query.StateChangeAttributeId.Value == $attVal.AttributeId )
+        #if ( $searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )
       #set ( $selected = ' selected="selected"' )
             #set ( $selectedAttribute = $attVal.Attribute )
      #end
@@ -151,15 +190,15 @@ from:&#160;<input type="text" size="20"
 <tr>
  <th width="120">State change query</th>
  <td>
-  <select name="$query.StateChangeFromOptionId.Key">
+  <select name="$searchGroup.StateChangeFromOptionId.Key">
     #set ( $selected = "" )
-    #if ( !$query.StateChangeFromOptionId.Value )
+    #if ( !$searchGroup.StateChangeFromOptionId.Value )
   #set ( $selected = ' selected="selected"' )
  #end
     <option$selected value="">any value</option>
 #foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
     #set ( $selected = "" )
-    #if ( $query.StateChangeFromOptionId.Value && $option.OptionId == $query.StateChangeFromOptionId.Value )
+    #if ( $searchGroup.StateChangeFromOptionId.Value && $option.OptionId == $searchGroup.StateChangeFromOptionId.Value )
   #set ( $selected = ' selected="selected"' )
  #end
     <option$selected value="$option.OptionId">
@@ -167,15 +206,15 @@ from:&#160;<input type="text" size="20"
                 </option>
 #end
   </select> to
-  <select name="$query.StateChangeToOptionId.Key">
+  <select name="$searchGroup.StateChangeToOptionId.Key">
     #set ( $selected = "" )
-    #if ( !$query.StateChangeToOptionId.Value )
+    #if ( !$searchGroup.StateChangeToOptionId.Value )
   #set ( $selected = ' selected="selected"' )
  #end
     <option$selected value="">any value</option>
 #foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
     #set ( $selected = "" )
-    #if ( $query.StateChangeToOptionId.Value && $option.OptionId == $query.StateChangeToOptionId.Value )
+    #if ( $searchGroup.StateChangeToOptionId.Value && $option.OptionId == $searchGroup.StateChangeToOptionId.Value )
   #set ( $selected = ' selected="selected"' )
  #end
     <option$selected value="$option.OptionId">
@@ -188,57 +227,29 @@ from:&#160;<input type="text" size="20"
  <tr>
     <th width="120">
         Date range
-        #fieldErrorMsg($query.StateChangeFromDate "")
-        #fieldErrorMsg($query.StateChangeToDate "")
+        #fieldErrorMsg($searchGroup.StateChangeFromDate "")
+        #fieldErrorMsg($searchGroup.StateChangeToDate "")
     </th>
     <td>
-        <input type="text" size=20 name="$query.StateChangeFromDate.Key"
-            value="$query.StateChangeFromDate">&#160;
+        <input type="text" size=20 name="$searchGroup.StateChangeFromDate.Key"
+            value="$searchGroup.StateChangeFromDate">&#160;
         to
-        <input type="text" size=20 name="$query.StateChangeToDate.Key"
-            value="$query.StateChangeToDate">
+        <input type="text" size=20 name="$searchGroup.StateChangeToDate.Key"
+            value="$searchGroup.StateChangeToDate">
         (e.g. MM/DD/YYYY hh:mm)
     </td>
  </tr>
 </table>
 </div>
 
-<h3>Results display options</h3>
-		
-<div class="axial">
-<table  cellpadding="3" cellspacing="2" border="1">
-  <tr>
-    <th width="120">sort by</th>
-	<td><select name="sortAttrId">
-           <option value="">Choose..</option>
-           #foreach ($attKey in $attrValues.sequence())
-              #set ($attVal = $attrValues.get($attKey))
-       	      <option value="$attVal.AttributeId">$attVal</option>
-           #end
-	</select>
-        &nbsp;
-        <select name="sortPolarity">
-          <option value="asc"> ascending </option>
-          <option value="desc"> descending </option>
-        </select>
-         </td>
-	</tr>
-     <tr>
-       <th>Issues per page</th>
-<input type="hidden" name="pageNum" value="1" />
-       <td><input type="radio" name="resultsPerPage"   value="25" checked="checked" /> 25 <input type="radio" name="resultsPerPage"   value="50" /> 50 <input type="radio" name="resultsPerPage"   value="75" /> 75 <input type="radio" name="resultsPerPage" value="100" /> 100</td>
-     </tr>
-      </table>
-</div>
 
-#* FIXME: use intake 
 <h3>Search results view prefs</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
  <th width="120">Sort by</th>
  <td>
- <select name="$query.InitialSortAttributeId.Key">
+ <select name="$searchGroup.SortAttributeId.Key">
     <option value="">Choose...</option>
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attribute = $attrValues.get($attKey).Attribute )
@@ -247,7 +258,7 @@ from:&#160;<input type="text" size="20"
    </option>
 #end
 </select>&#160;
-<select name="$query.InitialSortPolarity.Key">
+<select name="$searchGroup.SortPolarity.Key">
     <option value="asc">
         ascending
     </option>
@@ -268,6 +279,5 @@ from:&#160;<input type="text" size="20"
 </tr>
 </table>
 </div>
-*#
 
 #end
