@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.46 2005/01/20 23:20:41 linus Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.47 2005/01/22 17:36:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,13 +66,24 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     public Object getNamespace() { return ModelFacade.getNamespace(collab); }
 
     /**
-     * @param m the collaboration to be set for this diagram
+     * @param collaboration the collaboration to be set for this diagram
      */
-    public void setCollaboration(Object m) {
-        if (!(ModelFacade.isACollaboration(m))) {
-            throw new IllegalArgumentException("invalid collaboration");
+    public void setCollaboration(Object collaboration) {
+        try {
+            if (collaboration == null) {
+                throw new IllegalArgumentException(
+                    "A null collaboration was supplied");
+            }
+            if (!(ModelFacade.isACollaboration(collaboration))) {
+                throw new IllegalArgumentException(
+                    "Expected a collaboration. The type received was "
+                    + collaboration.getClass().getName());
+            }
+        } catch (IllegalArgumentException e) {
+            LOG.error("Illegal Argument to setCollaboration", e);
+            throw e;
         }
-        collab = /*(MCollaboration)*/ m;
+        collab = collaboration;
     }
 
 
