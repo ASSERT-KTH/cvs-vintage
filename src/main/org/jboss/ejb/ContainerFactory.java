@@ -81,7 +81,7 @@ import org.jboss.web.WebServiceMBean;
 *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 *
-*   @version $Revision: 1.78 $
+*   @version $Revision: 1.79 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -598,7 +598,7 @@ public class ContainerFactory
     // Stolen from Stateless deploy
     // Create container
     MessageDrivenContainer container = new MessageDrivenContainer();
-    int transType = ((MessageDrivenMetaData)bean).isContainerManagedTx() ? CMT : BMT;
+    int transType = bean.isContainerManagedTx() ? CMT : BMT;
 
     initializeContainer( container, conf, bean, transType, cl, localCl );
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
@@ -615,7 +615,7 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     StatelessSessionContainer container = new StatelessSessionContainer();
-    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? CMT : BMT;
+    int transType = bean.isContainerManagedTx() ? CMT : BMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
     if (bean.getHome() != null)
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
@@ -632,7 +632,7 @@ public class ContainerFactory
     ConfigurationMetaData conf = bean.getContainerConfiguration();
     // Create container
     StatefulSessionContainer container = new StatefulSessionContainer();
-    int transType = ((SessionMetaData)bean).isContainerManagedTx() ? CMT : BMT;
+    int transType = bean.isContainerManagedTx() ? CMT : BMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
     if (bean.getHome() != null)
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
