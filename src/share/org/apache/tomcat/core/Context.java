@@ -127,33 +127,34 @@ public class Context {
     public Context(ContextManager server, String path) {
         this.server = server;
 	this.path = path;
-
         contextFacade = new ServletContextFacade(server, this);
-
-	//String s = Double.toString(Math.abs(Math.random()));
-	//s = s.substring(2, s.length());
-	//sessionCookieName="SESSION" + s + "ID";
-
-	Properties props = getProperties(Constants.Property.Name);
-
-	/*
-	 * Whoever modifies this needs to check this modification is
-	 * ok with the code in com.jsp.runtime.ServletEngine or talk
-	 * to akv before you check it in. 
-	 */
-
-	engineHeader = props.getProperty(
-	    Constants.Property.EngineHeader,
-	    Constants.Context.EngineHeader + "; Java " +
-	    System.getProperty("java.version") + "; " +
-	    System.getProperty("os.name") + " " +
-	    System.getProperty("os.version") + " " +
-	    System.getProperty("os.arch") + "; java.vendor=" +
-	    System.getProperty("java.vendor") + ")");
     }
 
     public String getEngineHeader() {
-        return engineHeader;
+        if( engineHeader==null) {
+	    /*
+	     * Whoever modifies this needs to check this modification is
+	     * ok with the code in com.jsp.runtime.ServletEngine or talk
+	     * to akv before you check it in. 
+	     */
+	    // Default value for engine header
+	    // no longer use core.properties - the configuration comes from
+	    // server.xml or web.xml - no more properties.
+	    StringBuffer sb=new StringBuffer();
+	    sb.append(Constants.Context.EngineHeader);
+	    sb.append( "; Java " );
+	    sb.append(System.getProperty("java.version")).append("; ");
+	    sb.append(System.getProperty("os.name") + " ");
+	    sb.append(System.getProperty("os.version") + " ");
+	    sb.append(System.getProperty("os.arch") + "; java.vendor=");
+	    sb.append(System.getProperty("java.vendor")).append(")");
+	    engineHeader=sb.toString();
+	}
+	return engineHeader;
+    }
+
+    public void setEngineHeader(String s) {
+        engineHeader=s;
     }
 
     public ContextManager getContextManager() {
