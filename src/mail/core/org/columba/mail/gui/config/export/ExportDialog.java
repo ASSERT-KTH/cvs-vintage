@@ -25,9 +25,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -43,11 +46,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
@@ -77,13 +84,17 @@ public class ExportDialog
 	JButton helpButton;
 	JButton closeButton;
 
-	FolderTreeTable table;
+	//FolderTreeTable table;
+	JTree tree;
+	Map map;
 
 	protected DefaultMutableTreeNode selectedNode;
 
 	public ExportDialog() {
 		// modal JDialog
 		super(new JFrame(), true);
+
+		map = new HashMap();
 
 		initComponents();
 
@@ -111,6 +122,15 @@ public class ExportDialog
 		selectAllButton.setActionCommand("SELECTALL");
 		selectAllButton.addActionListener(this);
 
+		tree = new JTree(MainInterface.treeModel);
+		tree.setRootVisible(false);
+		tree.setCellRenderer(new CheckRenderer(map));
+		//tree.setCellEditor(new CheckEditor());
+		tree.getSelectionModel().setSelectionMode(
+			TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.addMouseListener(new NodeSelectionListener(tree));
+		tree.expandRow(0);
+		tree.expandRow(1);
 		// top panel
 
 		JPanel topPanel = new JPanel();
@@ -167,9 +187,8 @@ public class ExportDialog
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-		table = new FolderTreeTable();
-		table.getTree().addTreeSelectionListener(this);
-		JScrollPane scrollPane = new JScrollPane(table);
+		tree.addTreeSelectionListener(this);
+		JScrollPane scrollPane = new JScrollPane(tree);
 		scrollPane.setPreferredSize(new Dimension(450, 300));
 		scrollPane.getViewport().setBackground(Color.white);
 		centerPanel.add(scrollPane);
@@ -205,6 +224,46 @@ public class ExportDialog
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 	}
+
+	class NodeSelectionListener extends MouseAdapter {
+		JTree tree;
+
+		NodeSelectionListener(JTree tree) {
+			this.tree = tree;
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			int x = e.getX();
+			int y = e.getY();
+			int row = tree.getRowForLocation(x, y);
+			TreePath path = tree.getPathForRow(row);
+			//TreePath  path = tree.getSelectionPath();
+			if (path != null) {
+				FolderTreeNode node =
+					(FolderTreeNode) path.getLastPathComponent();
+
+				if (map.containsKey(node)) {
+					Boolean bool = (Boolean) map.get(node);
+					if (bool.equals(Boolean.TRUE))
+						map.put(node, Boolean.FALSE);
+					else
+						map.put(node, Boolean.TRUE);
+				} else {
+					// no entry in map for this node
+					// -> add default one
+					map.put(node, Boolean.TRUE);
+				}
+				
+				 ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
+				// I need revalidate if node is root.  but why?
+				if (row == 0) {
+					tree.revalidate();
+					tree.repaint();
+				}
+			}
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -221,6 +280,9 @@ public class ExportDialog
 			} catch (MalformedURLException mue) {
 			}
 		} else if (action.equals("EXPORT")) {
+			
+			
+			
 			File destFile = null;
 
 			// ask the user about the destination file
@@ -233,35 +295,37 @@ public class ExportDialog
 				destFile = file;
 			}
 
+			setVisible(false);
+			
 			// get list of all folders
-			Map map = table.getMap();
 			Iterator it = map.keySet().iterator();
-
+			
 			Vector v = new Vector();
-
+			
 			// get list of all selected folders
 			while (it.hasNext()) {
 				DefaultMutableTreeNode node =
 					(DefaultMutableTreeNode) it.next();
-
+			
 				Boolean export = (Boolean) map.get(node);
-
+			
 				if (export.equals(Boolean.TRUE)) {
 					v.add(node);
 				}
 			}
-
+			
 			// create command reference array for the command
 			FolderCommandReference[] r = new FolderCommandReference[v.size()];
 			for (int i = 0; i < v.size(); i++) {
 				FolderTreeNode node = (FolderTreeNode) v.get(i);
-
+			
 				r[i] = new FolderCommandReference(node);
 				r[i].setDestFile(destFile);
 			}
-
+			
 			// execute the command
 			MainInterface.processor.addOp(new ExportFolderCommand(r));
+			
 		}
 
 	}

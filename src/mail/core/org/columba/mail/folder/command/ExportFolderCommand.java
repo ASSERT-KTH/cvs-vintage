@@ -55,26 +55,40 @@ public class ExportFolderCommand extends FolderCommand {
 		FolderCommandReference[] references =
 			(FolderCommandReference[]) getReferences();
 		adapter = new FolderCommandAdapter(references);
-
+	
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
 		File destFile = r[0].getDestFile();
 		
 		FileOutputStream os = new FileOutputStream(destFile);
 
+		int counter = 0;
+		
 		for (int i = 0; i < r.length; i++) {
 			
 			Folder srcFolder = (Folder) r[i].getFolder();
+			worker.setDisplayText("Exporting "+srcFolder.getName()+" "+(i+1)+"/"+r.length+"...");
+		 	
 			Object[] uids = srcFolder.getUids();
 			
+			worker.setProgressBarMaximum(uids.length);
+			worker.setProgressBarValue(0);
 			for (int j = 0; j < uids.length; j++) {
 				String source = srcFolder.getMessageSource(uids[j]);
 				os.write(source.getBytes());
 				os.flush();
+				worker.setProgressBarValue(j);
+				counter++;
+				
+				if ( worker.cancelled() ) break;
 			}
+			
+			if ( worker.cancelled() ) break;
 		}
 
 		os.close();
+		
+		worker.setDisplayText("Exported "+counter+" messages successfully");
 	}
 
 }
