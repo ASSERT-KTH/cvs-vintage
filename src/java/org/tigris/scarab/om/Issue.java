@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.214 2002/11/13 00:23:47 jon Exp $
+ * @version $Id: Issue.java,v 1.215 2002/11/13 00:31:25 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -436,6 +436,16 @@ public class Issue
     public boolean isTemplate() throws Exception
     {
        return !getIssueType().equals(IssueType.ISSUE__PK);
+    }
+
+    /**
+     * Adds a comment to an issue and passes null as the activity set
+     * to create a new one.
+     */
+    public ActivitySet addComment(Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        return addComment(null, attachment, user);
     }
 
     /**
