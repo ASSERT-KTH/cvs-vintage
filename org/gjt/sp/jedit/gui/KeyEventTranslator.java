@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.17 2003/08/09 05:26:48 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.18 2003/08/28 22:05:24 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -174,6 +174,9 @@ public class KeyEventTranslator
 			return null;
 		}
 
+		/* I guess translated events do not have the 'evt' field set
+		so consuming won't work. I don't think this is a problem as
+		nothing uses translation anyway */
 		Key trans = (Key)transMap.get(returnValue);
 		if(trans == null)
 			return returnValue;

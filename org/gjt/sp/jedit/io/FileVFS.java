@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.40 2003/07/28 18:54:13 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.41 2003/08/28 22:05:24 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -287,6 +287,7 @@ public class FileVFS extends VFS
 
 		String backupDirectory = jEdit.getProperty("backup.directory");
 
+		int backupTimeDistance = jEdit.getIntegerProperty("backup.minTime",0);
 		File file = new File(path);
 
 		// Check for backup.directory, and create that
@@ -310,7 +311,7 @@ public class FileVFS extends VFS
 		}
 
 		MiscUtilities.saveBackup(file,backups,backupPrefix,
-			backupSuffix,backupDirectory);
+			backupSuffix,backupDirectory,backupTimeDistance);
 	} //}}}
 
 	//{{{ _createInputStream() method

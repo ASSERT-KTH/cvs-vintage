@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.102 2003/08/12 01:40:16 spestov Exp $
+ * @version $Id: View.java,v 1.103 2003/08/28 22:05:24 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -477,7 +477,14 @@ public class View extends JFrame implements EBComponent
 			else if(inputHandler.isPrefixActive()
 				|| getTextArea().hasFocus())
 			{
-				inputHandler.keyTyped(evt);
+				KeyEventTranslator.Key keyStroke
+					= KeyEventTranslator
+					.translateKeyEvent(evt);
+				if(keyStroke != null)
+				{
+					if(inputHandler.handleKey(keyStroke))
+						evt.consume();
+				}
 			}
 
 			// we might have been closed as a result of
@@ -526,7 +533,14 @@ public class View extends JFrame implements EBComponent
 					prefixFocusOwner = null;
 				}
 
-				inputHandler.keyPressed(evt);
+				KeyEventTranslator.Key keyStroke
+					= KeyEventTranslator
+					.translateKeyEvent(evt);
+				if(keyStroke != null)
+				{
+					if(inputHandler.handleKey(keyStroke))
+						evt.consume();
+				}
 
 				// we might have been closed as a result of
 				// the above
@@ -561,8 +575,6 @@ public class View extends JFrame implements EBComponent
 		case KeyEvent.KEY_RELEASED:
 			if(keyEventInterceptor != null)
 				keyEventInterceptor.keyReleased(evt);
-			else
-				inputHandler.keyReleased(evt);
 			break;
 		}
 
