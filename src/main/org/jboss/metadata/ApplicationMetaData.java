@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ApplicationMetaData extends MetaData {
 	// Constants -----------------------------------------------------
@@ -209,7 +209,7 @@ public class ApplicationMetaData extends MetaData {
 		// all the tags are optional
 		
 		// find the container configurations (we need them first to use them in the beans)
-		Element confs = getUniqueChild(element, "container-configurations");
+		Element confs = getOptionalChild(element, "container-configurations");
 		if (confs != null) {
 			iterator = getChildrenByTagName(confs, "container-configuration");
 			while (iterator.hasNext()) {
@@ -221,7 +221,7 @@ public class ApplicationMetaData extends MetaData {
 		}
 		
 		// update the enterprise beans
-		Element entBeans = getUniqueChild(element, "enterprise-beans");
+		Element entBeans = getOptionalChild(element, "enterprise-beans");
 		if (entBeans != null) {
 			iterator = getChildrenByTagName(entBeans, "entity");
 			while (iterator.hasNext()) {
