@@ -26,16 +26,25 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class ExitAction extends FrameAction {
 
 	public ExitAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString("menu", "mainframe", "menu_file_exit"),
-			MailResourceLoader.getString("menu", "mainframe", "menu_file_exit"),
-			MailResourceLoader.getString("menu", "mainframe", "menu_file_exit"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_file_exit"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_file_exit"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_file_exit"),
 			"EXIT",
 			ImageLoader.getSmallImageIcon("stock_exit-16.png"),
 			ImageLoader.getImageIcon("stock_exit.png"),
@@ -53,5 +62,4 @@ public class ExitAction extends FrameAction {
 		FrameModel.saveAll();
 		MainInterface.shutdownManager.shutdown();
 	}
-
 }

@@ -18,21 +18,21 @@ package org.columba.core.gui.action;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class FindAgainAction extends FrameAction {
 
 	public FindAgainAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_findagain"),
 			null,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_findagain_tooltip"),
 			"FIND_AGAIN",
 			null,
@@ -41,5 +41,4 @@ public class FindAgainAction extends FrameAction {
 			null);
 		setEnabled(false);
 	}
-
 }

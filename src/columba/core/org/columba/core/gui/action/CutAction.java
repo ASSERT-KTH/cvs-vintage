@@ -24,29 +24,26 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class CutAction extends FrameAction {
 
-	/**
-	* 
-	*/
 	public CutAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"action",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_cut"),
-			MailResourceLoader.getString(
-				"action",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_cut"),
-			MailResourceLoader.getString(
-				"action",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_cut"),
-			"CUT_FOR_FUN",
+			"CUT",
 			ImageLoader.getSmallImageIcon("stock_cut-16.png"),
 			ImageLoader.getImageIcon("stock_cut.png"),
 			'T',
@@ -59,7 +56,5 @@ public class CutAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		
-		
 	}
-
 }

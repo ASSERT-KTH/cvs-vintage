@@ -24,18 +24,21 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class FindAction extends FrameAction {
 
 	public FindAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString("menu", "mainframe", "menu_edit_find"),
+			GlobalResourceLoader.getString(
+                                null,
+                                null,
+                                "menu_edit_find"),
 			null,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_edit_find_tooltip"),
 			"FIND",
 			ImageLoader.getSmallImageIcon("stock_search-16.png"),
@@ -44,5 +47,4 @@ public class FindAction extends FrameAction {
 		KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		setEnabled(false);
 	}
-
 }

@@ -22,7 +22,7 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * @author frd
@@ -45,9 +45,9 @@ public class AboutDialogAction extends FrameAction {
 	public AboutDialogAction(AbstractFrameController frameController) {
 		super(
 			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_help_about"),
 			null,
 			"ABOUT",
