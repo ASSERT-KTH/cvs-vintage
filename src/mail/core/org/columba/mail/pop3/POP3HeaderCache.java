@@ -72,7 +72,15 @@ public class POP3HeaderCache extends AbstractHeaderCache {
             }
         }
 
-        int capacity = ((Integer) reader.readObject()).intValue();
+
+        Integer c = (Integer) reader.readObject();
+        if ( c == null ) {
+            // not data in file
+            reader.close();
+            return;
+        }
+        
+        int capacity = c.intValue();
         LOG.fine("capacity=" + capacity);
 
         if (getObservable() != null) {

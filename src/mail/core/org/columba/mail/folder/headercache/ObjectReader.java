@@ -46,9 +46,13 @@ public class ObjectReader {
         this.file = file;
         istream = new FileInputStream(file.getPath());
         ois = new ObjectInputStream(new BufferedInputStream(istream));
+        
     }
 
     public Object readObject() throws Exception {
+        // if no data available
+        if (ois.available()==0) return null;
+        
         int classCode = ois.readInt();
 
         switch (classCode) {
