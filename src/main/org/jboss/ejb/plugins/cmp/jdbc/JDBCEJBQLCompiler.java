@@ -76,7 +76,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
 {
@@ -1825,10 +1825,6 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
          {
             selected = true;
          }
-      }
-      else
-      {
-         throw new IllegalStateException("Unexpected select object: " + selectObject);
       }
 
       return selected;
