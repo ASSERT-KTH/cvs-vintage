@@ -19,7 +19,7 @@
     classpath="${test.build}/classes"/>
 
   <typedef name="carolProtocols"
-    classname="org.objectweb.carol.ant.CarolConfig"
+    classname="org.objectweb.carol.ant.CarolProtocols"
     classpath="${test.build}/classes"/>
 
 

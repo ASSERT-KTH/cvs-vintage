@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolConfig.java,v 1.2 2005/02/08 22:45:36 el-vadimo Exp $
+ * $Id: CarolProtocols.java,v 1.1 2005/02/08 22:51:39 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -30,7 +30,7 @@ import java.util.Arrays;
 
 import org.apache.tools.ant.BuildException;
 
-public final class CarolConfig {
+public final class CarolProtocols {
     public final static String IIOP    = "iiop";
     public final static String JEREMIE = "jeremie";
     public final static String JRMP    = "jrmp";

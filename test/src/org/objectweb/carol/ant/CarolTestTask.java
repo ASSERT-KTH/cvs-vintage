@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolTestTask.java,v 1.2 2005/02/08 22:45:36 el-vadimo Exp $
+ * $Id: CarolTestTask.java,v 1.3 2005/02/08 22:51:39 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -65,8 +65,8 @@ public final class CarolTestTask extends Task {
         this.propSource = propSource;
     }
 
-    public CarolConfig createCarolProtocols() {
-        CarolConfig config = new CarolConfig();
+    public CarolProtocols createCarolProtocols() {
+        CarolProtocols config = new CarolProtocols();
         configs.add(config);
         return config;
     }
@@ -96,7 +96,7 @@ public final class CarolTestTask extends Task {
         assertIsDirectory("propSource", propSourceDir);
 
         for (Iterator ii=configs.iterator(); ii.hasNext(); ) {
-            CarolConfig config = (CarolConfig) ii.next();
+            CarolProtocols config = (CarolProtocols) ii.next();
             if (config.getProto2() == null) {
                 executeSingle(config.getProto1());
             } else {
@@ -134,7 +134,7 @@ public final class CarolTestTask extends Task {
         targetProps.setProperty("client.properties.file.name1", clientPropsFilename);
         targetProps.setProperty("server.properties.file.name", clientPropsFilename);
 
-        int nVariations = CarolConfig.JRMP.equals(proto) ? 2 : 1;
+        int nVariations = CarolProtocols.JRMP.equals(proto) ? 2 : 1;
 
         // in the case of JRMP, we need to test two variations:
         // "jrmp 1.1" and "jrmp 1.2"
@@ -166,7 +166,7 @@ public final class CarolTestTask extends Task {
                 Property antProp = ant.createProperty();
                 StringBuffer testname = new StringBuffer(proto);
 
-                if (CarolConfig.JRMP.equals(proto)) {
+                if (CarolProtocols.JRMP.equals(proto)) {
                     testname.append("1.").append(ii);
                 }
 
@@ -192,7 +192,7 @@ public final class CarolTestTask extends Task {
     }
 
     private static String alter(String proto, int variation, String name, String value) {
-        if (!CarolConfig.JRMP.equals(proto)) {
+        if (!CarolProtocols.JRMP.equals(proto)) {
             return value;
         }
         String suffix = variation == 1 ? "1.1" : "1.2";
