@@ -264,31 +264,41 @@ public class IMAPFolder extends RemoteFolder {
 	 * @param flagsList
 	 */
 	protected void updateFlags(IMAPFlags[] flagsList) {
-		for (int i = 0; i < flagsList.length; i++) {
-			IMAPFlags flags = (IMAPFlags) flagsList[i];
-			ColumbaHeader header =
-				(ColumbaHeader) headerList.get(flags.getUid());
-			if (header == null)
-				continue;
 
-			if (flags.isSeen())
-				header.set("columba.flags.seen", Boolean.TRUE);
-			else
-				getMessageFolderInfo().incUnseen();
+      // ALP 04/29/03
+      // Reset the number of seen/resent/existing messages. Otherwise you
+      // just keep adding to the number.
+      org.columba.mail.folder.MessageFolderInfo info = getMessageFolderInfo();
+      info.setExists(0);
+      info.setRecent(0);
+      info.setUnseen(0);
+      // END ADDS ALP 04/29/03
 
-			if (flags.isAnswered())
-				header.set("columba.flags.answered", Boolean.TRUE);
-			if (flags.isDeleted())
-				header.set("columba.flags.expunged", Boolean.TRUE);
-			if (flags.isFlagged())
-				header.set("columba.flags.flagged", Boolean.TRUE);
-			if (flags.isRecent()) {
-				header.set("columba.flags.recent", Boolean.TRUE);
-				getMessageFolderInfo().incRecent();
-			}
+      for (int i = 0; i < flagsList.length; i++) {
+        IMAPFlags flags = (IMAPFlags) flagsList[i];
+        ColumbaHeader header =
+          (ColumbaHeader) headerList.get(flags.getUid());
+        if (header == null)
+          continue;
 
-			getMessageFolderInfo().incExists();
-		}
+        if (flags.isSeen())
+          header.set("columba.flags.seen", Boolean.TRUE);
+        else
+          info.incUnseen();
+
+        if (flags.isAnswered())
+          header.set("columba.flags.answered", Boolean.TRUE);
+        if (flags.isDeleted())
+          header.set("columba.flags.expunged", Boolean.TRUE);
+        if (flags.isFlagged())
+          header.set("columba.flags.flagged", Boolean.TRUE);
+        if (flags.isRecent()) {
+          header.set("columba.flags.recent", Boolean.TRUE);
+          info.incRecent();
+        }
+
+        info.incExists();
+      }
 	}
 
 	/**
@@ -663,7 +673,7 @@ public class IMAPFolder extends RemoteFolder {
 		*/
 	}
 
-	
+
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
 	 */
@@ -675,7 +685,7 @@ public class IMAPFolder extends RemoteFolder {
 		return props;
 	}
 
-	
+
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
 	 */
@@ -686,7 +696,7 @@ public class IMAPFolder extends RemoteFolder {
 		return getRootFolder().tryToGetLock(locker);
 	}
 
-	
+
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
