@@ -19,6 +19,7 @@ package org.columba.mail.spam;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.CloneStreamMaster;
@@ -31,6 +32,7 @@ import org.macchiato.db.FrequencyDB;
 import org.macchiato.db.FrequencyDBImpl;
 import org.macchiato.db.FrequencyIO;
 import org.macchiato.db.MD5SumHelper;
+import org.macchiato.log.MacchiatoLogger;
 import org.macchiato.maps.ProbabilityMap;
 
 /**
@@ -86,6 +88,9 @@ public class SpamController {
         
         hasChanged = false;
 
+        // make Columba logger parent of macchiato logger
+        MacchiatoLogger.setParentLogger(Logger.getLogger("org.columba.mail.spam"));
+        
     }
 
     /**
