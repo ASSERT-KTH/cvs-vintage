@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.36 2001/08/18 00:08:49 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.37 2001/08/23 21:45:23 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -28,10 +28,6 @@
     -->
     <column name="TRANSACTION_ID" required="true" type="INTEGER"/>
     <!--
-        Comment added to modification.
-    -->
-    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"/>
-    <!--
         Value of option attribute before modification.
     -->
     <column name="OLD_OPTION_ID" required="false" type="INTEGER" />
@@ -56,9 +52,6 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_ATTACHMENT">
-        <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_TRANSACTION">
         <reference local="TRANSACTION_ID" foreign="TRANSACTION_ID"/>
@@ -846,6 +839,10 @@
     -->
     <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
+        Comment added to modification.
+    -->
+    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"/>
+    <!--
         Person that performed the transaction.
     -->
     <column name="CREATED_BY" required="false" type="INTEGER"></column>
@@ -856,6 +853,9 @@
 
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="CREATED_BY" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ATTACHMENT">
+        <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
     </foreign-key>
 </table>
 
@@ -1032,7 +1032,7 @@
     <!--
         The query string.
     -->
-    <column name="VALUE" required="true" type="VARCHAR" size="255" />
+    <column name="VALUE" required="true" type="LONGVARCHAR"  />
 
     <!--
         Type.
