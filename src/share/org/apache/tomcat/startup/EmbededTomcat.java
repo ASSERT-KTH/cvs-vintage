@@ -474,7 +474,7 @@ public class EmbededTomcat {
 
 	setModuleProperty( mid, "port", Integer.toString(port) );
 	if( addr != null )
-	    setModuleProperty( mid, "address", addr.toString());
+	    setModuleProperty( mid, "address", addr.getHostAddress());
 	if( hostname != null )
 	    setModuleProperty( mid, "hostName",  hostname );
 	return mid;
