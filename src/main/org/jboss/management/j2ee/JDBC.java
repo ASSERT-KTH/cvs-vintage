@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBC JDBC}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -112,7 +112,7 @@ public class JDBC
             // Now check if the JDBC Manager does not contains another DataSources
             ObjectName[] lDataSources = (ObjectName[]) pServer.getAttribute(
                lJDBC,
-               "DataSources"
+               "JdbcDataSources"
             );
             if( lDataSources.length == 0 ) {
                // Remove it because it does not reference any JDBC DataSources
@@ -121,9 +121,7 @@ public class JDBC
          }
       }
       catch( Exception e ) {
-       
-       // marcf 
-       // lLog.error( "Could not destroy JSR-77 JDBC Manager", e );
+       lLog.error( "Could not destroy JSR-77 JDBC Manager", e );
       }
    }
    
