@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.1 1999/10/09 00:20:36 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.2 1999/10/17 18:40:06 mandar Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/17 18:40:06 $
  *
  * ====================================================================
  * 
@@ -148,6 +148,15 @@ public class IncludeGenerator
 	    writer.println ("pageContext.include(" +
 			    JspUtil.getExpr(page) +
 			    ");");
-			    
+
+	// Now remove the parameters that were meant only for the inclusion.
+	if (params.size() > 0) {
+	    Enumeration en = params.keys();
+	    while (en.hasMoreElements()) {
+		String key = (String) en.nextElement();
+		writer.println("request.removeAttribute(\"" + key + "\");");
+	    }
+	}
+	
     }
 }
