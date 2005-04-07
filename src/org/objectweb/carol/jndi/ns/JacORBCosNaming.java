@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.10 2005/03/15 09:52:52 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.11 2005/04/07 15:07:07 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -39,7 +39,6 @@ import org.omg.CORBA.ORB;
 
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -95,9 +94,9 @@ public class JacORBCosNaming extends AbsRegistry implements NameService {
             TraceCarol.debugJndiCarol("start() on port : '" + getPort() + "'");
         }
         String ipAddr = null;
-        String hostCorbaLoc = RMIConfiguration.DEFAULT_HOST;
+        String hostCorbaLoc = CarolDefaultValues.DEFAULT_HOST;
         // Ip of the host is not the default host (localhost)
-        if (!getHost().equalsIgnoreCase(RMIConfiguration.DEFAULT_HOST)) {
+        if (!getHost().equalsIgnoreCase(CarolDefaultValues.DEFAULT_HOST)) {
             try {
                 ipAddr = InetAddress.getByName(getHost()).getHostAddress();
                 // Set the ip which was set in carol.properties (or if

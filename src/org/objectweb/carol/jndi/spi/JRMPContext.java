@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPContext.java,v 1.8 2005/03/15 09:57:03 benoitf Exp $
+ * $Id: JRMPContext.java,v 1.9 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -36,15 +36,14 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
+import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 import org.objectweb.carol.rmi.util.PortNumber;
-import org.objectweb.carol.util.configuration.CarolConfiguration;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * @author Guillaume Riviere
@@ -62,18 +61,12 @@ public class JRMPContext extends AbsContext implements Context {
 
     /**
      * @return the object port used for exporting object
-     * @throws NamingException if the port cannot be retrieved
      */
-    protected int getObjectPort() throws NamingException {
-        try {
-            RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jrmp");
+    protected int getObjectPort() {
+        Properties prop = ConfigurationRepository.getProperties();
+        if (prop != null) {
             String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
-            Properties p = rmiConfig.getConfigProperties();
-            if (p != null) {
-                return PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
-            }
-        } catch (Exception e) {
-            throw NamingExceptionHelper.create("Cannot get object port", e);
+            return PortNumber.strToint(prop.getProperty(propertyName, "0"), propertyName);
         }
         return 0;
     }
@@ -115,13 +108,15 @@ public class JRMPContext extends AbsContext implements Context {
                     // Only Serializable (not implementing Remote or Referenceable or
                     // Reference)
                     JNDIResourceWrapper irw = new JNDIResourceWrapper((Serializable) o);
-                    CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
+                    PortableRemoteObjectDelegate proDelegate = ConfigurationRepository.getCurrentConfiguration().getProtocol().getPortableRemoteObject();
+                    proDelegate.exportObject(irw);
+
                     Remote oldObj = (Remote) addToExported(name, irw);
                     if (oldObj != null) {
                         if (replace) {
-                            CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+                            proDelegate.unexportObject(oldObj);
                         } else {
-                            CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
+                            proDelegate.unexportObject(irw);
                             addToExported(name, oldObj);
                             throw new NamingException("Object '" + o + "' with name '" + name + "' is already bind");
                         }

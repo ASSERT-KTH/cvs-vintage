@@ -19,14 +19,14 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RmiUtility.java,v 1.2 2005/03/10 09:51:46 benoitf Exp $
+ * $Id: RmiUtility.java,v 1.3 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
 package org.objectweb.carol.rmi.exception;
 
 import org.objectweb.carol.rmi.iiop.exception.IiopUtility;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -52,9 +52,11 @@ public class RmiUtility {
     public static void rethrowRmiException(Exception e) {
 
         // get the current protocol
-        String protocol = CarolCurrentConfiguration.getCurrent().getCurrentRMIName();
+        String protocol = ConfigurationRepository.getCurrentConfiguration().getProtocol().getName();
 
-        TraceCarol.debugRmiCarol("Current protocol=" + protocol);
+        if (TraceCarol.isDebugRmiCarol()) {
+            TraceCarol.debugRmiCarol("Current protocol=" + protocol);
+        }
 
         // iiop case
         if (protocol.equals("iiop")) {

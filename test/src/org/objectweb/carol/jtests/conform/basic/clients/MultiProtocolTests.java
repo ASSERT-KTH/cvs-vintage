@@ -22,13 +22,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiProtocolTests.java,v 1.13 2005/03/11 14:53:05 benoitf Exp $
+ * $Id: MultiProtocolTests.java,v 1.14 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.clients;
 
 import java.util.Hashtable;
-import java.util.Properties;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -50,8 +49,8 @@ import org.objectweb.carol.jtests.conform.basic.server.BasicMultiObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicRemoteObject;
 import org.objectweb.carol.jtests.conform.basic.server.BasicSerializableObject;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Class <code>MultiProtocolTests</code> is a Junit BasicTest Test : Test The
@@ -101,7 +100,7 @@ public class MultiProtocolTests extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        org.objectweb.carol.util.configuration.CarolConfiguration.init();
+        ConfigurationRepository.init();
 
         ic = new InitialContext();
 
@@ -512,9 +511,7 @@ public class MultiProtocolTests extends TestCase {
      */
     public void testSingleInitialContext() {
         Hashtable testEnv = new Hashtable();
-        String protocolCurrent = CarolCurrentConfiguration.getCurrent().getCurrentRMIName();
-        Properties prop = CarolCurrentConfiguration.getCurrent().getRMIProperties(protocolCurrent);
-        String providerURL = prop.getProperty(Context.PROVIDER_URL);
+        String providerURL = ConfigurationRepository.getCurrentConfiguration().getProviderURL();
         testEnv.put(Context.PROVIDER_URL, providerURL);
 
         Context tmpContext = null;
@@ -548,7 +545,7 @@ public class MultiProtocolTests extends TestCase {
 
         // test with adding the JNDI factory now
         Hashtable testEnv2 = new Hashtable();
-        String initFactory = prop.getProperty(Context.INITIAL_CONTEXT_FACTORY);
+        String initFactory = ConfigurationRepository.getCurrentConfiguration().getProtocol().getInitialContextFactoryClassName();
         testEnv2.put(Context.PROVIDER_URL, providerURL);
         testEnv2.put(Context.INITIAL_CONTEXT_FACTORY, initFactory);
 
@@ -657,7 +654,7 @@ public class MultiProtocolTests extends TestCase {
         return new TestSuite(MultiProtocolTests.class);
         // In case of launching only one test
         /*TestSuite testSuite = new TestSuite();
-        testSuite.addTest(new MultiProtocolTests("testIctxEnvironment"));
-        return testSuite;*/
+        testSuite.addTest(new MultiProtocolTests("testStub"));
+        reurn testSuite;*/
     }
 }

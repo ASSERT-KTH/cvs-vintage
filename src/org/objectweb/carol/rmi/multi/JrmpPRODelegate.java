@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JrmpPRODelegate.java,v 1.15 2005/03/16 14:28:51 benoitf Exp $
+ * $Id: JrmpPRODelegate.java,v 1.16 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -40,11 +40,8 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
 import org.objectweb.carol.rmi.util.PortNumber;
-import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.RMIConfigurationException;
-import org.objectweb.carol.util.configuration.TraceCarol;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Class <code>JrmpPRODelegate</code> for the mapping between Rmi jrmp
@@ -69,30 +66,29 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Constructor
+     * @param usingCmi this prodelegate will be used for CMI protocol
      */
-    public JrmpPRODelegate() {
+    public JrmpPRODelegate(boolean usingCmi) {
         sis = JInterceptorStore.getLocalServerInterceptors();
         cis = JInterceptorStore.getLocalClientInterceptors();
-        try {
-            RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jrmp");
-            // Could be within cmi
-            if (rmiConfig != null) {
-                String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
-                Properties p = rmiConfig.getConfigProperties();
-                if (p != null) {
-                    this.port = PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
-                }
-            }
-        } catch (RMIConfigurationException rmice) {
-            TraceCarol.error("Could not get current carol configuration, rmi port will use random port.");
-            this.port = 0;
+        Properties prop = ConfigurationRepository.getProperties();
+        if (!usingCmi && prop != null) {
+            String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+            this.port = PortNumber.strToint(prop.getProperty(propertyName, "0"), propertyName);
         }
     }
 
     /**
-     * Makes a server object ready to receive remote calls. Note
-     * that subclasses of PortableRemoteObject do not need to call this
-     * method, as it is called by the constructor.
+     * By default, this class is not used for Cmi. Cmi has to instantiated the other constructor
+     */
+    public JrmpPRODelegate() {
+        this(false);
+    }
+
+    /**
+     * Makes a server object ready to receive remote calls. Note that subclasses
+     * of PortableRemoteObject do not need to call this method, as it is called
+     * by the constructor.
      * @param obj the server object to export.
      * @exception RemoteException if export fails.
      */
@@ -101,11 +97,11 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
     }
 
     /**
-     * Deregisters a server object from the runtime, allowing the object to become
-     * available for garbage collection.
+     * Deregisters a server object from the runtime, allowing the object to
+     * become available for garbage collection.
      * @param obj the object to unexport.
-     * @exception NoSuchObjectException if the remote object is not
-     * currently exported.
+     * @exception NoSuchObjectException if the remote object is not currently
+     *            exported.
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
         JUnicastRemoteObject.unexportObject(obj, true);
@@ -113,15 +109,15 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Makes a Remote object ready for remote communication. This normally
-     * happens implicitly when the object is sent or received as an argument
-     * on a remote method call, but in some circumstances it is useful to
-     * perform this action by making an explicit call.  See the
-     * {@link Stub#connect} method for more information.
+     * happens implicitly when the object is sent or received as an argument on
+     * a remote method call, but in some circumstances it is useful to perform
+     * this action by making an explicit call. See the {@link Stub#connect}
+     * method for more information.
      * @param target the object to connect.
      * @param source a previously connected object.
-     * @throws RemoteException if <code>source</code> is not connected
-     * or if <code>target</code> is already connected to a different ORB than
-     * <code>source</code>.
+     * @throws RemoteException if <code>source</code> is not connected or if
+     *         <code>target</code> is already connected to a different ORB
+     *         than <code>source</code>.
      */
     public void connect(Remote target, Remote source) throws RemoteException {
         // do nothing
@@ -139,17 +135,19 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
         if (narrowTo.isAssignableFrom(narrowFrom.getClass())) {
             return narrowFrom;
         } else {
-            throw new ClassCastException("Cannot cast '" + narrowFrom.getClass().getName() + "' in '" + narrowTo.getName() + "'.");
+            throw new ClassCastException("Cannot cast '" + narrowFrom.getClass().getName() + "' in '"
+                    + narrowTo.getName() + "'.");
         }
     }
 
     /**
      * Returns a stub for the given server object.
-     * @param obj the server object for which a stub is required. Must either be a subclass
-     * of PortableRemoteObject or have been previously the target of a call to
-     * {@link #exportObject}.
+     * @param obj the server object for which a stub is required. Must either be
+     *        a subclass of PortableRemoteObject or have been previously the
+     *        target of a call to {@link #exportObject}.
      * @return the most derived stub for the object.
-     * @exception NoSuchObjectException if a stub cannot be located for the given server object.
+     * @exception NoSuchObjectException if a stub cannot be located for the
+     *            given server object.
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
         return RemoteObject.toStub(obj);

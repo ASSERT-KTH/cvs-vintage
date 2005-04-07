@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
@@ -73,7 +73,7 @@ class SunLowerOrb {
             // Init failed
         }
     }
-    
+
     public static boolean isValid() {
         return init;
     }
@@ -83,7 +83,7 @@ class SunLowerOrb {
         Object lr = liveref_cons.newInstance(p0);
         Object[] p1 = { lr };
         Object usr = usref_cons.newInstance(p1);
-        Object[] p2 = { obj, null, new Boolean(true) }; 
+        Object[] p2 = { obj, null, new Boolean(true) };
         Object ret = usref_export.invoke(usr, p2);
         return (Remote)ret;
     }
@@ -110,7 +110,7 @@ class GcjLowerOrb {
             // Init failed
         }
     }
-    
+
     public static boolean isValid() {
         return init;
     }
@@ -130,7 +130,7 @@ public class LowerOrb {
     public static final int DEFAULT_CREG_PORT = 1099;
     public static final int REG_ID = 0xC2C91901;
     private static ObjID id = new ObjID(REG_ID);
-    private static PortableRemoteObjectDelegate rmi = new JrmpPRODelegate();
+    private static PortableRemoteObjectDelegate rmi = new JrmpPRODelegate(true);
 
     public static Remote toStub(Remote obj) throws NoSuchObjectException {
         return rmi.toStub(obj);

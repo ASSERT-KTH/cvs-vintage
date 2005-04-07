@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameServiceManager.java,v 1.10 2005/03/10 12:21:46 benoitf Exp $
+ * $Id: NameServiceManager.java,v 1.11 2005/04/07 15:07:07 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -30,8 +30,9 @@ package org.objectweb.carol.jndi.ns;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.objectweb.carol.util.configuration.CarolConfiguration;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
+import org.objectweb.carol.util.configuration.Protocol;
+import org.objectweb.carol.util.configuration.ProtocolConfiguration;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -63,25 +64,28 @@ public class NameServiceManager {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("NameServiceManager.NameServiceManager()");
         }
-        try {
-            nsTable = new Hashtable();
-            //get rmi configuration hashtable
-            Hashtable allRMIConfiguration = CarolConfiguration.getAllRMIConfiguration();
-            //int nbProtocol = allRMIConfiguration.size();
-            for (Enumeration e = allRMIConfiguration.elements(); e.hasMoreElements();) {
-                RMIConfiguration currentConf = (RMIConfiguration) e.nextElement();
-                String rmiName = currentConf.getName();
-                NameService nsC = (NameService) Class.forName(currentConf.getNameService()).newInstance();
-                nsC.setPort(currentConf.getPort());
-                nsC.setHost(currentConf.getHost());
-                nsC.setConfigProperties(currentConf.getConfigProperties());
-                // get the Name Service
-                nsTable.put(rmiName, nsC);
+
+        // List of current name server
+        nsTable = new Hashtable();
+        ProtocolConfiguration[] protocolConfigurations = ConfigurationRepository.getConfigurations();
+        for (int c = 0; c < protocolConfigurations.length; c++) {
+            ProtocolConfiguration protocolConfiguration = protocolConfigurations[c];
+            String configurationName = protocolConfiguration.getName();
+            Protocol protocol = protocolConfiguration.getProtocol();
+            NameService nsC = null;
+            try {
+                nsC = (NameService) Class.forName(protocol.getRegistryClassName()).newInstance();
+            } catch (Exception e) {
+                String msg = "Cannot instantiate registry class '" + protocol.getRegistryClassName() + "'";
+                TraceCarol.error(msg, e);
             }
-        } catch (Exception e) {
-            String msg = "NameServiceManager.NameServiceManager() fail";
-            TraceCarol.error(msg, e);
+            nsC.setPort(protocolConfiguration.getPort());
+            nsC.setHost(protocolConfiguration.getHost());
+            nsC.setConfigProperties(protocolConfiguration.getProperties());
+            // Add the NameService in the list of configurations
+            nsTable.put(configurationName, nsC);
         }
+
     }
 
     /**
@@ -108,7 +112,7 @@ public class NameServiceManager {
             String k = (String) e.nextElement();
             NameService currentNS = (NameService) nsTable.get(k);
             if (currentNS.isStarted()) {
-                throw new NameServiceException("The " + k + " name service is allready started");
+                throw new NameServiceException("The " + k + " name service is already started");
             }
         }
         // Start all name services

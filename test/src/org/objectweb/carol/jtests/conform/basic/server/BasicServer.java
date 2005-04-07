@@ -22,21 +22,22 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicServer.java,v 1.9 2005/02/11 11:02:51 benoitf Exp $
+ * $Id: BasicServer.java,v 1.10 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
-import org.objectweb.carol.util.configuration.RMIConfigurationException;
-
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.IOException;
 import java.util.Arrays;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.objectweb.carol.util.configuration.ConfigurationException;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Class <code>BasicServer</code> is a Server for Junit tests Test The
@@ -109,8 +110,8 @@ public class BasicServer {
         startedSuccessfully = true;
 
         try {
-            org.objectweb.carol.util.configuration.CarolConfiguration.init();
-        } catch (RMIConfigurationException ex) {
+            ConfigurationRepository.init();
+        } catch (ConfigurationException ex) {
             System.err.println("carol is misconfigured");
             ex.printStackTrace();
             startedSuccessfully = false;

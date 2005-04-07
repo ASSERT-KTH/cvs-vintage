@@ -22,13 +22,15 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiContext.java,v 1.8 2005/03/11 14:38:56 benoitf Exp $
+ * $Id: MultiContext.java,v 1.9 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -36,7 +38,9 @@ import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
+import org.objectweb.carol.util.configuration.ProtocolConfiguration;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -55,20 +59,14 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 public class MultiContext implements Context {
 
     /**
-     * The ProtocolCurrent for management of active Context
+     * InitialContext for each protocol configuration
      */
-    private CarolCurrentConfiguration currentConfig = null;
+    private Map contextsOfConfigurations = null;
 
     /**
-     * Active Contexts, this variable is just a cache of the protocol current
-     * context array
+     * Current Initial Context
      */
-    private Hashtable activesInitialsContexts = null;
-
-    /**
-     * String for rmi name
-     */
-    private String rmiName = null;
+    private Context currentInitialContext = null;
 
 
     /**
@@ -86,8 +84,28 @@ public class MultiContext implements Context {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("MultiContext.MultiContext(env), env = " + env);
         }
-        currentConfig = CarolCurrentConfiguration.getCurrent();
-        activesInitialsContexts = currentConfig.getNewContextHashtable(env);
+
+        // Get active configuration name
+        String activeConfigName = null;
+        try {
+            activeConfigName = ConfigurationRepository.getCurrentConfiguration().getName();
+        } catch (Error err) {
+            throw NamingExceptionHelper.create("Could not get a configuration", err);
+        }
+
+        // Build InitialContext for each configuration
+        ProtocolConfiguration[] protocolConfigurations = ConfigurationRepository.getConfigurations();
+        contextsOfConfigurations = new HashMap();
+        for (int i = 0; i < protocolConfigurations.length; i++) {
+            Context ctx = protocolConfigurations[i].getInitialContext(env);
+            if (protocolConfigurations[i].getName().equals(activeConfigName)) {
+                currentInitialContext = ctx;
+            }
+            contextsOfConfigurations.put(protocolConfigurations[i], ctx);
+        }
+        if (currentInitialContext == null) {
+            throw new NamingException("No current initial context was set. Active environment was '" + activeConfigName + "'. Error in carol with environment = " + env);
+        }
     }
 
     /**
@@ -97,7 +115,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Object lookup(String name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().lookup(name);
+        return currentInitialContext.lookup(name);
     }
 
     /**
@@ -107,7 +125,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Object lookup(Name name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().lookup(name);
+        return currentInitialContext.lookup(name);
     }
 
     /**
@@ -117,11 +135,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void bind(String name, Object obj) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).bind(name, obj);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).bind(name, obj);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -132,11 +150,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void bind(Name name, Object obj) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).bind(name, obj);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).bind(name, obj);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -147,11 +165,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void rebind(String name, Object obj) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).rebind(name, obj);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).rebind(name, obj);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -164,11 +182,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void rebind(Name name, Object obj) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).rebind(name, obj);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).rebind(name, obj);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -178,11 +196,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void unbind(String name) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).unbind(name);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).unbind(name);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -194,11 +212,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void unbind(Name name) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).unbind(name);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).unbind(name);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -210,11 +228,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void rename(String oldName, String newName) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).rename(oldName, newName);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).rename(oldName, newName);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -227,11 +245,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void rename(Name oldName, Name newName) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).rename(oldName, newName);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).rename(oldName, newName);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -245,7 +263,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public NamingEnumeration list(String name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().list(name);
+        return currentInitialContext.list(name);
     }
 
     /**
@@ -259,7 +277,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public NamingEnumeration list(Name name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().list(name);
+        return currentInitialContext.list(name);
     }
 
     /**
@@ -271,7 +289,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public NamingEnumeration listBindings(String name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().listBindings(name);
+        return currentInitialContext.listBindings(name);
     }
 
     /**
@@ -283,7 +301,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public NamingEnumeration listBindings(Name name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().listBindings(name);
+        return currentInitialContext.listBindings(name);
     }
 
     /**
@@ -292,11 +310,11 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void destroySubcontext(String name) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).destroySubcontext(name);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).destroySubcontext(name);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
 
@@ -308,14 +326,13 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void destroySubcontext(Name name) throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).destroySubcontext(name);
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).destroySubcontext(name);
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
     }
-
     /**
      * Creates and binds a new context.
      * @param name the name of the context to create; may not be empty
@@ -323,7 +340,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Context createSubcontext(String name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().createSubcontext(name);
+        return currentInitialContext.createSubcontext(name);
     }
 
     /**
@@ -333,7 +350,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Context createSubcontext(Name name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().createSubcontext(name);
+        return currentInitialContext.createSubcontext(name);
     }
 
     /**
@@ -345,7 +362,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Object lookupLink(String name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().lookupLink(name);
+        return currentInitialContext.lookupLink(name);
     }
 
     /**
@@ -357,7 +374,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Object lookupLink(Name name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().lookupLink(name);
+        return currentInitialContext.lookupLink(name);
     }
 
     /**
@@ -368,7 +385,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public NameParser getNameParser(String name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().getNameParser(name);
+        return currentInitialContext.getNameParser(name);
     }
 
     /**
@@ -379,7 +396,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public NameParser getNameParser(Name name) throws NamingException {
-        return currentConfig.getCurrentInitialContext().getNameParser(name);
+        return currentInitialContext.getNameParser(name);
     }
 
     /**
@@ -401,7 +418,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Name composeName(Name name, Name prefix) throws NamingException {
-        return currentConfig.getCurrentInitialContext().composeName(name, prefix);
+        return currentInitialContext.composeName(name, prefix);
     }
 
     /**
@@ -449,12 +466,13 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public void close() throws NamingException {
-        for (Enumeration e = activesInitialsContexts.keys(); e.hasMoreElements();) {
-            rmiName = (String) e.nextElement();
-            currentConfig.setRMI(rmiName);
-            ((Context) activesInitialsContexts.get(rmiName)).close();
-            currentConfig.setDefault();
+        for (Iterator it = contextsOfConfigurations.keySet().iterator(); it.hasNext();) {
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) it.next();
+            ProtocolConfiguration old = ConfigurationRepository.setCurrentConfiguration(protocolConfiguration);
+            ((Context) contextsOfConfigurations.get(protocolConfiguration)).close();
+            ConfigurationRepository.setCurrentConfiguration(old);
         }
+
     }
 
     /**
@@ -463,7 +481,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public String getNameInNamespace() throws NamingException {
-        return currentConfig.getCurrentInitialContext().getNameInNamespace();
+        return currentInitialContext.getNameInNamespace();
     }
 
 }

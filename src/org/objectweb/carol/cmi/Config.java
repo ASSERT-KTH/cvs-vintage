@@ -5,12 +5,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
@@ -22,8 +22,6 @@ import java.net.InetAddress;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
-import org.objectweb.carol.util.configuration.RMIConfigurationException;
 
 public class Config {
     private static boolean configured = false;
@@ -51,9 +49,9 @@ public class Config {
      * @param pr
      */
     public static synchronized void setProperties(Properties pr)
-        throws RMIConfigurationException {
+        throws Exception {
         if (configured) {
-            throw new RMIConfigurationException("Cmi already configured");
+            throw new Exception("Cmi already configured");
         }
         Iterator i = pr.entrySet().iterator();
         while (i.hasNext()) {
@@ -73,8 +71,8 @@ public class Config {
                     multicastAddress = a;
                     multicastPort = p;
                 } catch (Exception ex) {
-                    throw new RMIConfigurationException(
-                        "Invalid multicast address (" + s + ")");
+                    throw new Exception(
+                        "Invalid multicast address (" + s + ")", ex);
                 }
             } else if (k.equals(MULTICAST_GROUPNAME_PROPERTY)) {
                 multicastGroupName = s.trim();

@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.7 2005/03/10 10:05:01 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.8 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -36,6 +36,7 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 import javax.rmi.PortableRemoteObject;
+import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 import javax.rmi.CORBA.Util;
 
 import org.omg.CORBA.ORB;
@@ -49,7 +50,7 @@ import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 import org.objectweb.carol.util.csiv2.SasComponent;
 import org.objectweb.carol.util.csiv2.SasPolicy;
 
@@ -170,13 +171,15 @@ public class JacORBIIOPContext extends AbsContext implements Context {
             }
 
             // Object has been wrapped, need to export it
-            CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(wrappedObject);
+            PortableRemoteObjectDelegate proDelegate = ConfigurationRepository.getCurrentConfiguration().getProtocol().getPortableRemoteObject();
+            proDelegate.exportObject(wrappedObject);
+
             Remote oldObj = (Remote) addToExported(name, wrappedObject);
             if (oldObj != null) {
                 if (replace) {
-                    CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+                    proDelegate.unexportObject(oldObj);
                 } else {
-                    CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(wrappedObject);
+                    proDelegate.unexportObject(wrappedObject);
                     addToExported(name, oldObj);
                     throw new NamingException("Object '" + o + "' with name '" + name + "' is already bind");
                 }

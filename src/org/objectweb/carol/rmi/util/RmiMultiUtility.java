@@ -1,7 +1,7 @@
 /**
- * JOnAS : Java(TM) OpenSource Application Server
- * Copyright (C) 1999-2004 Bull S.A.
- * Contact: jonas-team@objectweb.org
+ * Copyright (C) 2004 - Bull S.A.
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RmiMultiUtility.java,v 1.1 2004/12/20 10:04:19 pelletib Exp $
+ * $Id: RmiMultiUtility.java,v 1.2 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -28,8 +28,7 @@ package org.objectweb.carol.rmi.util;
 import java.io.IOException;
 
 import org.objectweb.carol.rmi.iiop.util.RmiIiopUtility;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
-import org.objectweb.carol.util.configuration.TraceCarol;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Utility class for the rmi protocols
@@ -54,9 +53,7 @@ public class RmiMultiUtility {
     public static void reconnectStub2Orb(Object object) throws IOException {
 
         // get the current protocol
-        String protocol = CarolCurrentConfiguration.getCurrent().getCurrentRMIName();
-
-        TraceCarol.debugRmiCarol("Current protocol=" + protocol);
+        String protocol = ConfigurationRepository.getCurrentConfiguration().getProtocol().getName();
 
         // iiop case
         if (protocol.equals("iiop")) {

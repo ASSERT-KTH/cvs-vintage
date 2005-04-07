@@ -22,21 +22,21 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiOrbInitialContextFactory.java,v 1.9 2005/03/11 14:04:53 benoitf Exp $
+ * $Id: MultiOrbInitialContextFactory.java,v 1.10 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
 import java.util.Hashtable;
-import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
+import org.objectweb.carol.util.configuration.Protocol;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -84,14 +84,15 @@ public class MultiOrbInitialContextFactory implements InitialContextFactory {
             }
             if (initFactory == null) {
                 String protocolName = CarolDefaultValues.getRMIProtocol(providerURL);
-                Properties protocolConfig = CarolCurrentConfiguration.getCurrent().getRMIProperties(protocolName);
-                if (protocolConfig == null) {
-                    throw new NamingException("No configuration in carol for protocol '" + protocolName + "'.");
+                // found InitialContext factory classname
+                Protocol protocol = ConfigurationRepository.getProtocol(protocolName);
+                if (protocol == null) {
+                    throw new NamingException("The protocol '" + protocolName + "' is not available within carol.");
                 }
-                initFactory = (String) protocolConfig.get(Context.INITIAL_CONTEXT_FACTORY);
+                initFactory = protocol.getInitialContextFactoryClassName();
                 env.put(Context.INITIAL_CONTEXT_FACTORY, initFactory);
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol("No INITIAL_CONTEXT_FACTORY, use '" + initFactory + "' as InitialContex factory.");
+                    TraceCarol.debugJndiCarol("No INITIAL_CONTEXT_FACTORY, use '" + initFactory + "' as InitialContext factory.");
                 }
             }
             return new InitialContext(env);

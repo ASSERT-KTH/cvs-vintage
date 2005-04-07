@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremiePRODelegate.java,v 1.17 2005/03/11 14:02:11 benoitf Exp $
+ * $Id: JeremiePRODelegate.java,v 1.18 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -39,12 +39,8 @@ import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 import org.objectweb.carol.rmi.exception.NoSuchObjectExceptionHelper;
 import org.objectweb.carol.rmi.exception.RemoteExceptionHelper;
 import org.objectweb.carol.rmi.util.PortNumber;
-import org.objectweb.carol.util.configuration.CarolConfiguration;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
-import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.RMIConfigurationException;
-import org.objectweb.carol.util.configuration.TraceCarol;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * class <code>JeremiePRODelegate</code> for the mapping between Jeremie
@@ -81,21 +77,15 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Empty constructor for instanciate this class
-     * @throws ClassNotFoundException if the class  JEREMIE_UNICAST_CLASS cannot be loaded
+     * @throws ClassNotFoundException if the class JEREMIE_UNICAST_CLASS cannot be loaded
      */
     public JeremiePRODelegate() throws ClassNotFoundException {
         // class for name
         unicastClass = Thread.currentThread().getContextClassLoader().loadClass(JEREMIE_UNICAST_CLASS);
-        try {
-            RMIConfiguration rmiConfig = CarolConfiguration.getRMIConfiguration("jeremie");
+        Properties prop = ConfigurationRepository.getProperties();
+        if (prop != null) {
             String propertyName = CarolDefaultValues.SERVER_JEREMIE_PORT;
-            Properties p = rmiConfig.getConfigProperties();
-            if (p != null) {
-                this.port = PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
-            }
-        } catch (RMIConfigurationException rmice) {
-            TraceCarol.error("Could not get current carol configuration, rmi port will use random port.");
-            this.port = 0;
+            this.port = PortNumber.strToint(prop.getProperty(propertyName, "0"), propertyName);
         }
     }
 
@@ -204,7 +194,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
 
         if (nbProtocols == 0) {
             // need to init number of protocols
-            nbProtocols = CarolCurrentConfiguration.getCurrent().getPortableRemoteObjectHashtable().size();
+            nbProtocols = ConfigurationRepository.getActiveConfigurationsNumber();
         }
 
         // No check on single protocol

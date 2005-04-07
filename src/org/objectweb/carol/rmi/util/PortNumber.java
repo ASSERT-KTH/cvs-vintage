@@ -1,7 +1,7 @@
 /**
- * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 2005 Bull S.A.
- * Contact: jonas-team@objectweb.org
+ * Copyright (C) 2005 - Bull S.A.
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: PortNumber.java,v 1.1 2005/03/03 16:08:37 benoitf Exp $
+ * $Id: PortNumber.java,v 1.2 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.util;

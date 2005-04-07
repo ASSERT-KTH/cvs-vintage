@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NamingExceptionHelper.java,v 1.1 2005/03/10 09:51:16 benoitf Exp $
+ * $Id: NamingExceptionHelper.java,v 1.2 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.exception;
@@ -49,6 +49,18 @@ public class NamingExceptionHelper {
     public static NamingException create(String message, Exception originalException) {
         NamingException ne = new NamingException(message);
         ne.initCause(originalException);
+        return ne;
+    }
+
+    /**
+     * Build a new exception with the given error by wrapping it in a NamingException
+     * @return built exception
+     * @param message text error for the exception
+     * @param t original error
+     */
+    public static NamingException create(String message, Throwable t) {
+        NamingException ne = new NamingException(message);
+        ne.initCause(t);
         return ne;
     }
 

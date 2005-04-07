@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JEREMIEContext.java,v 1.10 2005/03/15 09:57:03 benoitf Exp $
+ * $Id: JEREMIEContext.java,v 1.11 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -35,10 +35,11 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
+import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * @author Guillaume Riviere
@@ -85,13 +86,15 @@ public class JEREMIEContext extends AbsContext implements Context {
                 // Only Serializable (not implementing Remote or Referenceable or
                 // Reference)
                 JNDIResourceWrapper irw = new JNDIResourceWrapper((Serializable) o);
-                CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
+                PortableRemoteObjectDelegate proDelegate = ConfigurationRepository.getCurrentConfiguration().getProtocol().getPortableRemoteObject();
+                proDelegate.exportObject(irw);
+
                 Remote oldObj = (Remote) addToExported(name, irw);
                 if (oldObj != null) {
                     if (replace) {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+                        proDelegate.unexportObject(oldObj);
                     } else {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
+                        proDelegate.unexportObject(irw);
                         addToExported(name, oldObj);
                         throw new NamingException("Object '" + o + "' with name '" + name + "' is already bind");
                     }

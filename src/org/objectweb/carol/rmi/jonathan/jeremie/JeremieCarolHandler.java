@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremieCarolHandler.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JeremieCarolHandler.java,v 1.8 2005/04/07 15:07:09 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jonathan.jeremie;
@@ -33,7 +33,7 @@ import org.objectweb.jeremie.services.handler.api.Service;
 import org.objectweb.jonathan.apis.kernel.Context;
 import org.objectweb.jonathan.apis.kernel.JonathanException;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Class <code>CarolHandler</code> is the CAROL Handler for Jonathan server
@@ -76,7 +76,7 @@ public class JeremieCarolHandler implements Service {
      * @param context the service context of the request;
      */
     public void handleRequestContext(ServiceContext context, int id, boolean r, byte[] key, Context k) {
-        CarolCurrentConfiguration.getCurrent().setRMI(name);
+        ConfigurationRepository.setCurrentConfiguration(ConfigurationRepository.getConfiguration(name));
 
     }
 

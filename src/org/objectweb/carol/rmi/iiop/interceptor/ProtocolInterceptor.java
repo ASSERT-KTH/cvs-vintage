@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProtocolInterceptor.java,v 1.6 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: ProtocolInterceptor.java,v 1.7 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.iiop.interceptor;
@@ -33,7 +33,7 @@ import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Class <code>ProtocolInterceptor</code> is the CAROL JNDI IIOP Interceptor
@@ -71,7 +71,7 @@ public class ProtocolInterceptor extends LocalObject implements ServerRequestInt
      * @exception ForwardRequest if an exception occur with the ObjectOutput
      */
     public void receive_request(ServerRequestInfo jri) throws ForwardRequest {
-        CarolCurrentConfiguration.getCurrent().setRMI("iiop");
+        ConfigurationRepository.setCurrentConfiguration(ConfigurationRepository.getConfiguration("iiop"));
     }
 
     /**

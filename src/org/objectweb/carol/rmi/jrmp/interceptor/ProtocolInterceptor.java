@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProtocolInterceptor.java,v 1.4 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: ProtocolInterceptor.java,v 1.5 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
@@ -30,7 +30,7 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 //java import
 import java.io.IOException;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * Class <code>ProtocolInterceptor</code> is the CAROL JRMP Client Interceptor
@@ -67,7 +67,7 @@ public class ProtocolInterceptor implements JServerRequestInterceptor {
      * @exception IOException if an exception occur with the ObjectOutput
      */
     public void receive_request(JServerRequestInfo jri) throws IOException {
-        CarolCurrentConfiguration.getCurrent().setRMI("jrmp");
+        ConfigurationRepository.setCurrentConfiguration(ConfigurationRepository.getConfiguration("jrmp"));
     }
 
     /**

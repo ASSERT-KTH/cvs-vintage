@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiPRODelegate.java,v 1.13 2005/03/11 13:59:10 benoitf Exp $
+ * $Id: MultiPRODelegate.java,v 1.14 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -30,12 +30,16 @@ package org.objectweb.carol.rmi.multi;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
+import org.objectweb.carol.util.configuration.ProtocolConfiguration;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -56,25 +60,22 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
     private Hashtable exported = new Hashtable();
 
     /**
-     * Standard Hashtable PortableRemoteObjectDelegates
+     * Prodelegate object available
      */
-    private Hashtable activesProtocols = null;
-
-    /**
-     * Current Protocol
-     */
-    private CarolCurrentConfiguration carolConfig = null;
+    private List proDelegates = null;
 
     /**
      * constructor for this PortableRemoteObjectDelegateProxy
      */
     public MultiPRODelegate() {
-        // Get carol configuration
-        carolConfig = CarolCurrentConfiguration.getCurrent();
 
-        // list of PortableRemoteObject for each protocol
-        activesProtocols = carolConfig.getPortableRemoteObjectHashtable();
-
+        // Build a PortableRemoteObjectDelegate object for each protocol configuration
+        ProtocolConfiguration[] protocolConfigurations = ConfigurationRepository.getConfigurations();
+        proDelegates = new ArrayList();
+        for (int i = 0; i < protocolConfigurations.length; i++) {
+            PortableRemoteObjectDelegate proDelegate = protocolConfigurations[i].getProtocol().getPortableRemoteObject();
+            proDelegates.add(proDelegate);
+        }
     }
 
     /**
@@ -85,8 +86,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException if export fails.
      */
     public void exportObject(Remote obj) throws RemoteException {
-        for (Enumeration e = activesProtocols.elements(); e.hasMoreElements();) {
-            ((PortableRemoteObjectDelegate) e.nextElement()).exportObject(obj);
+        for (Iterator it = proDelegates.iterator(); it.hasNext();) {
+            ((PortableRemoteObjectDelegate) it.next()).exportObject(obj);
         }
         if (TraceCarol.isDebugExportCarol()) {
             TraceCarol.debugExportCarol("Export object " + obj.getClass().getName());
@@ -102,8 +103,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      *            exported.
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
-        for (Enumeration e = activesProtocols.elements(); e.hasMoreElements();) {
-            ((PortableRemoteObjectDelegate) e.nextElement()).unexportObject(obj);
+        for (Iterator it = proDelegates.iterator(); it.hasNext();) {
+            ((PortableRemoteObjectDelegate) it.next()).unexportObject(obj);
         }
         if (TraceCarol.isDebugExportCarol()) {
             TraceCarol.debugExportCarol("Unexport object " + obj.getClass().getName());
@@ -124,8 +125,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      *         than <code>source</code>.
      */
     public void connect(Remote target, Remote source) throws RemoteException {
-        for (Enumeration e = activesProtocols.elements(); e.hasMoreElements();) {
-            ((PortableRemoteObjectDelegate) e.nextElement()).connect(target, source);
+        for (Iterator it = proDelegates.iterator(); it.hasNext();) {
+            ((PortableRemoteObjectDelegate) it.next()).connect(target, source);
         }
     }
 
@@ -138,7 +139,7 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @throws ClassCastException if narrowFrom cannot be cast to narrowTo.
      */
     public Object narrow(Object narrowFrom, Class narrowTo) throws ClassCastException {
-        return carolConfig.getCurrentPortableRemoteObject().narrow(narrowFrom, narrowTo);
+        return ConfigurationRepository.getCurrentConfiguration().getProtocol().getPortableRemoteObject().narrow(narrowFrom, narrowTo);
     }
 
     /**
@@ -151,7 +152,7 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      *            given server object.
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
-        return carolConfig.getCurrentPortableRemoteObject().toStub(obj);
+        return ConfigurationRepository.getCurrentConfiguration().getProtocol().getPortableRemoteObject().toStub(obj);
     }
 
     /**

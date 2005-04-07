@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.18 2005/03/10 17:03:41 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.19 2005/04/07 15:07:07 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -36,6 +36,16 @@ import java.util.StringTokenizer;
  * properties
  */
 public class CarolDefaultValues {
+
+    /**
+     * Carol default configuration file
+     */
+    public static final String CAROL_DEFAULT_CONFIGURATION_FILE = "carol-defaults.properties";
+
+    /**
+     * Carol configuration file
+     */
+    public static final String CAROL_CONFIGURATION_FILE = "carol.properties";
 
     /**
      * Carol prefix
@@ -71,6 +81,11 @@ public class CarolDefaultValues {
      * Default ssl port value
      */
     public static final int DEFAULT_SSL_PORT = 2003;
+
+    /**
+     * Default hostname
+     */
+    public static final String DEFAULT_HOST = "localhost";
 
     /**
      * JNDI Prefix

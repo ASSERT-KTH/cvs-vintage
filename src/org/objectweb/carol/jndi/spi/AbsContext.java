@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: AbsContext.java,v 1.3 2005/04/01 09:58:33 benoitf Exp $
+ * $Id: AbsContext.java,v 1.4 2005/04/07 15:07:08 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -37,7 +37,7 @@ import javax.naming.NamingException;
 
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
-import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.ConfigurationRepository;
 
 /**
  * This abstract class define the common methods used for all existing protocol
@@ -115,9 +115,8 @@ public abstract class AbsContext implements Context {
     /**
      * Get the object port to use (0 by default, declare this method in a subclass if you want to change value)
      * @return object port to use
-     * @throws NamingException if the port cannot be retrieved
      */
-    protected int getObjectPort() throws NamingException {
+    protected int getObjectPort() {
         return 0;
 
     }
@@ -207,7 +206,7 @@ public abstract class AbsContext implements Context {
         try {
             wrappedContext.unbind(encode(name));
             if (exportedObjects.containsKey(name)) {
-                CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(
+                ConfigurationRepository.getCurrentConfiguration().getProtocol().getPortableRemoteObject().unexportObject(
                         (Remote) exportedObjects.remove(name));
             }
         } catch (Exception e) {
