@@ -10,7 +10,10 @@
 package org.jboss.ejb.plugins.jms;
 
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.naming.Context;
 import javax.jms.Session;
@@ -52,7 +55,8 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * <p>
  * The JMS property JBOSS_ORIG_DESTINATION in the resent message is set
- * to the name of the original destination (Destionation.toString()).
+ * to the name of the original destination (Destination.toString())
+ * if it is present.
  *
  * <p>
  * The JMS property JBOSS_ORIG_MESSAGEID in the resent message is set
@@ -60,9 +64,10 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @version <tt>$Revision: 1.17 $</tt>
- * @author ???
+ * @version <tt>$Revision: 1.18 $</tt>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author Scott.Stark@jboss.org
+ * @author Adrian Brock
  */
 public class DLQHandler
    extends ServiceMBeanSupport
@@ -156,17 +161,6 @@ public class DLQHandler
 
          dlq = (Queue) ctx.lookup(destinationJNDI);
          log.debug("Using Queue: " + dlq);
-      }
-      catch (Exception e)
-      {
-         if (e instanceof JMSException)
-            throw e;
-         else
-         {
-            JMSException x = new JMSException("Error creating the dlq connection: " + e.getMessage());
-            x.setLinkedException(e);
-            throw x;
-         }
       }
       finally
       {
@@ -361,7 +355,7 @@ public class DLQHandler
     */
    protected Message makeWritable(Message msg, boolean trace) throws JMSException
    {
-      Hashtable tmp = new Hashtable();
+      HashMap tmp = new HashMap();
 
       // Save properties
       for (Enumeration en = msg.getPropertyNames(); en.hasMoreElements();)
@@ -373,13 +367,14 @@ public class DLQHandler
       // Make them writable
       msg.clearProperties();
 
-      Enumeration keys = tmp.keys();
-      while (keys.hasMoreElements())
+      Iterator i = tmp.entrySet().iterator();
+      while (i.hasNext())
       {
-         String key = (String) keys.nextElement();
+         Map.Entry me = (Map.Entry)i.next();
+         String key = (String) me.getKey();
          try
          {
-            msg.setObjectProperty(key, tmp.get(key));
+            msg.setObjectProperty(key, me.getValue());
          }
          catch (JMSException ignored)
          {
@@ -438,7 +433,7 @@ public class DLQHandler
          " }";
    }
 
-   private class BufferEntry
+   private static class BufferEntry
    {
       int count;
       String id;
