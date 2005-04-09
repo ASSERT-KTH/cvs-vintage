@@ -1,4 +1,4 @@
-<!-- $Id: index.html,v 1.52 2005/04/01 22:56:25 dabbous Exp $ -->
+<!-- $Id: index.html,v 1.53 2005/04/09 21:17:03 dabbous Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -7,53 +7,195 @@
 </head>
 <body bgcolor="#F0F0F0">
 <table border="0" cellpadding="2" width="98%" bgcolor="#ffffff" >
+
+    <tr>
+      <td width="100%" style="background-color: yellow">
+        <span style="color: red">
+        <p><b>
+        The Scarab developers comunity proudly announces the availability
+        of our new release Scarab-1.0 alpha-20. 
+        Although it is named alpha, this release is reasonably stable and
+        solves a huge amount of defects known from earlier releases.
+        </b></p>
+        <p><b>If you plan to use Scarab for production, we recommend you to 
+        wait at least until the upcoming release Scarab-1.0 beta 20, 
+        which will be available shortly.</b>
+        </p>
+        </span>
+      </td>
+    </tr>
+
     <tr>
         <td width="100%" bgcolor="#cccc99">
             <b><font face="Arial, Helvetica, sans-serif" color="#000033">
-            Scarab: Flexible artifact management</font></b>
+            The goal:</font></b>
         </td>
     </tr>
+
+
     <tr>
-        <td bgcolor="#f0f0f0">
-        <br />
-        <h2>2004-04-13:
-        <a href="http://scarab.tigris.org/servlets/ProjectDownloadList">Scarab 1.0 Beta 19</a>
-        </h2>
-        <br />
+      <td width="100%" bgcolor="#f0f0f0">
+        <p>
+          The goal of the Scarab project is to build a highly
+          customizable Artifact tracking system.
+        </p>
+      </td>
+    </tr>
+
+
+    <tr>
+        <td width="100%" bgcolor="#cccc99">
+            <b><font face="Arial, Helvetica, sans-serif" color="#000033">
+            Scarab downloads:</font></b>
+        </td>
+    </tr>
+
+
+    <tr>
+      <td bgcolor="#f0f0f0">
+        
+        <table border="0">
+          <tr>
+            <td>
+              <b>2005-04-10</b>
+            </td>
+            <td>
+              <a href="#http://scarab.tigris.org/servlets/ProjectDownloadList">Scarab 1.0 Alpha 20</a>
+            </td>
+            <td>
+             (source download)
+            </td>
+            <td>
+              <a target="_new" href="http://www.solitone.org/scarab/issues/curmodule/100/tqk/0/template/IssueList.vm/action/Search?nextTemplate=Index.vm&go=1074&eventSubmit_doSelectquery=foo">
+              open defects
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>2004-04-13</b>
+            </td>
+            <td>
+              <a href="http://scarab.tigris.org/servlets/ProjectDocumentList">Scarab 1.0 Beta 19</a>
+            </td>
+            <td>
+             (source download)
+            </td>
+          </tr>
+        </table>
+      </td>
+   </tr>
+
+    <tr>
+        <td width="100%" bgcolor="#cccc99">
+            <b><font face="Arial, Helvetica, sans-serif" color="#000033">
+            Scarab documentation sets:</font></b>
         </td>
     </tr>
     <tr>
         <td bgcolor="#f0f0f0">
             <p>
-            The goal of the Scarab project is to build an
-            Artifact tracking system that has the following
-            features:
+            The following documentation sets are available online:
             </p>
 
             <ul>
-                <li>A full feature set similar to those found in other Artifact tracking
-                    systems: data entry, queries, reports, notifications to interested
-                    parties, collaborative accumulation of comments, dependency
-                    tracking</li>
-                <li>In addition to the standard features, Scarab has fully
+              <li><a href="http://www.solitone.org/scarab_doc/">HEAD Documentation</a></li>
+              <li><a href="http://scarab-gen.tigris.org/nonav/b18/">Beta 18 Documentation</a></li>
+            </ul>
+            <br/>
+        </td>
+    </tr>
+
+
+   <tr>
+    <td>
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff" >
+      <tr>
+        <td width="100%" bgcolor="#cccc99">
+          <b><font face="Arial, Helvetica, sans-serif" color="#000033">
+		  Scarab code repository:</font></b>
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#f0f0f0">
+          <p>
+            You need a <a href="http://subversion.tigris.org">subversion</a> client
+            to access our code base. A copy of the sources can be obtained with
+          </p>
+	      <pre>    svn co http://svn.collab.net/repos/scarab/trunk scarab</pre>
+	      <p>
+	        That will check out a copy of the Scarab source tree into a
+		    directory named scarab on your local machine.
+		  </p>
+	    </td>
+      </tr>
+      </table>
+    </td>
+    </tr>
+
+    <tr>
+        <td width="100%" bgcolor="#cccc99">
+            <b><font face="Arial, Helvetica, sans-serif" color="#000033">
+            Scarab feature list:</font></b>
+        </td>
+    </tr>
+
+
+   <tr>
+     <td bgcolor="#f0f0f0">
+
+            <ul>
+                <li><strong>Standard features</strong><br/>
+                    data entry, queries,
+                    reports, notifications to interested parties, 
+                    collaborative accumulation of comments,
+                    dependency tracking.<br/>
+                 </li>
+                <li><strong>Fully customizable</strong><br/>
+                    Scarab has fully and free
                     customizable and unlimited numbers of
-                    Modules (your various projects),
-                    Artifact types (Defect, Enhancement, Requirement, etc),
-                    Attributes (Operating System, Status, Priority, etc),
-                    Attribute options (P1, P2, P3) which can all be defined
+                    <ul>
+                      <li>Modules (e.g. your various projects)</li>
+                      <li>Artifact types (e.g. "Defect", "Enhancement", "Requirement", etc)>/li>
+                      <li>Attributes (e.g. "Operating System", "Status", "Priority", etc)</li>
+                      <li>Attribute options</li>
+                    </ul>
+                    All aspects of your artefact management can be defined
                     on a per Module basis so that each of your modules is
-                    configured for your specific tracking requirements.
-                <li>Built using Java Servlet technology for speed, scalability,
-                    maintainability, and ease of installation.</li>
-                <li>Import/Export ability via XML allowing for easy migration
-                    from other systems (e.g. Bugzilla).</li>
-                <li>Modular code design that allows manageable modifications of
-                    existing and new features over time.</li>
-                <li>Fully customizable through a set of administrative pages.</li>
-                <li>Easily modified UI look and feel.</li>
-                <li>Can be integrated into larger systems by re-implementing
-                    key interfaces.</li>
-                <li>Is a ready to use issue management system</li>
+                    configured for your specific tracking requirements.<br/>
+                </li>
+                <li><strong>Multi lingual</strong><br/>
+                    Scarab uses java resource bundle technology and is shipped
+                    with the language localizations for de, en, es, fr, it, ja, 
+                    ko, nl, pl, pt, ru and zh. The used languages are all available
+                    simultaneously. Users can choose their individual language
+                    based on their browser language preference settings.<br/>
+                </li>
+                <li><strong>Based on application server technologies</strong><br/>
+                    Scarab is built using Java Servlet technology for speed, 
+                    scalability, maintainability, and ease of installation.<br/>
+                </li>
+                <li><strong>Import/Export interface via XML</strong><br/>
+                    That allows an easy migration
+                    from other tracking systems (e.g. Bugzilla).<br/>
+                </li>
+                <li><strong>Modular code design</strong><br/>
+                    That allows manageable modifications of
+                    existing and new features over time.<br/>
+                </li>
+                <li><strong>Integrated customization UI</strong><br/>
+                    Scarab is fully customizable through a set of administrative 
+                    pages.<br/>
+                </li>
+                <li>Easily modified UI look and feel.<br/>
+                </li>
+                <li><strong>Integrateable</strong><br/>
+                    Scarab can be integrated into larger systems by 
+                    re-implementing key interfaces.<br/>
+                </li>
+                <li><strong>Self contained</strong><br/>
+                   Scarab is a ready to use issue management system<br/>
+                </li>
             </ul>          
 
             <p>
@@ -83,25 +225,6 @@
               
             </ul>
         </td>
-    </tr>
-</table>
-<table border="0" cellpadding="2" width="98%" bgcolor="#ffffff" >
-    <tr>
-        <td width="100%" bgcolor="#cccc99">
-            <b><font face="Arial, Helvetica, sans-serif" color="#000033">
-		How do I check out the Scarab code?</font></b>
-        </td>
-    </tr>
-    <tr>
-        <td bgcolor="#f0f0f0">
-            <p>Use a <a href="http://subversion.tigris.org">subversion</a> client:</p>
-	    <pre>
-		$ svn co http://svn.collab.net/repos/scarab/trunk scarab
-	    </pre>
-
-	    <p>That will check out a copy of the Scarab source tree into a
-		directory named scarab on your local machine.</p>
-	</td>
     </tr>
 </table>
 </body>
