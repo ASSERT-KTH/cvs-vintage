@@ -6,6 +6,14 @@
  */
 package org.jboss.invocation.unified.interfaces;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.StreamCorruptedException;
+import java.rmi.MarshalledObject;
+import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.unified.marshall.InvocationMarshaller;
@@ -13,14 +21,6 @@ import org.jboss.invocation.unified.marshall.InvocationUnMarshaller;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.rmi.MarshalledObject;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
 /**
  * This represents the client side of the EJB invoker.  This invoker uses
@@ -34,6 +34,9 @@ public class UnifiedInvokerProxy implements Invoker, Externalizable
    private InvokerLocator locator;
 
    protected final Logger log = Logger.getLogger(getClass());
+
+   static final int VERSION_5_0 = 500;
+   static final int CURRENT_VERSION = VERSION_5_0;
 
 
    public UnifiedInvokerProxy()
@@ -137,6 +140,8 @@ public class UnifiedInvokerProxy implements Invoker, Externalizable
    public void writeExternal(final ObjectOutput out)
          throws IOException
    {
+      out.writeInt(CURRENT_VERSION);
+
       out.writeObject(locator);
    }
 
@@ -146,8 +151,18 @@ public class UnifiedInvokerProxy implements Invoker, Externalizable
    public void readExternal(final ObjectInput in)
          throws IOException, ClassNotFoundException
    {
-      locator = (InvokerLocator) in.readObject();
-      init(locator);
+      int version = in.readInt();
+      // Read in and map the version of the serialized data seen
+      switch(version)
+      {
+         case VERSION_5_0:
+            {
+               locator = (InvokerLocator) in.readObject();
+               init(locator);
+            }
+         default:
+            throw new StreamCorruptedException("Unknown version seen: " + version);
+      }
    }
 
 }
