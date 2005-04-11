@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.120 2005/03/22 00:33:59 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.121 2005/04/11 00:39:29 spestov Exp $
  */
 public class DisplayManager
 {
@@ -513,12 +513,7 @@ public class DisplayManager
 		if(initialized)
 		{
 			if(buffer.isLoaded())
-			{
 				resetAnchors();
-
-				textArea.updateScrollBar();
-				textArea.recalculateLastPhysicalLine();
-			}
 		}
 		else
 		{
@@ -548,33 +543,19 @@ public class DisplayManager
 			if(firstLine.callReset)
 				firstLine.reset();
 			else if(firstLine.callChanged)
-			{
 				firstLine.changed();
-
-				if(!scrollLineCount.callChanged
-					&& !scrollLineCount.callReset)
-				{
-					textArea.updateScrollBar();
-					textArea.recalculateLastPhysicalLine();
-				}
-				else
-				{
-					// ScrollLineCount.changed() does the same
-					// thing
-				}
-			}
 
 			if(scrollLineCount.callReset)
 			{
 				scrollLineCount.reset();
 				firstLine.ensurePhysicalLineIsVisible();
-
-				textArea.recalculateLastPhysicalLine();
-				textArea.updateScrollBar();
 			}
 			else if(scrollLineCount.callChanged)
-			{
 				scrollLineCount.changed();
+			
+			if(firstLine.callChanged || scrollLineCount.callReset
+				|| scrollLineCount.callChanged)
+			{
 				textArea.updateScrollBar();
 				textArea.recalculateLastPhysicalLine();
 			}

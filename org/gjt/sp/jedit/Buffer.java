@@ -68,7 +68,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.230 2005/03/22 00:33:57 spestov Exp $
+ * @version $Id: Buffer.java,v 1.231 2005/04/11 00:39:28 spestov Exp $
  */
 public class Buffer
 {
@@ -155,7 +155,7 @@ public class Buffer
 
 	//{{{ load() method
 	/**
-	 * Loads the buffer from disk, even if it is loaded already.
+	 * Loads the buffer from disk.
 	 * @param view The view
 	 * @param reload If true, user will not be asked to recover autosave
 	 * file, if any
@@ -1359,10 +1359,6 @@ public class Buffer
 	 */
 	public void beginCompoundEdit()
 	{
-		// Why?
-		//if(getFlag(TEMPORARY))
-		//	return;
-
 		try
 		{
 			writeLock();
@@ -1384,10 +1380,6 @@ public class Buffer
 	 */
 	public void endCompoundEdit()
 	{
-		// Why?
-		//if(getFlag(TEMPORARY))
-		//	return;
-
 		try
 		{
 			writeLock();

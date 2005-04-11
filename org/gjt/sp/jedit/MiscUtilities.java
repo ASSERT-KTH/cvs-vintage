@@ -71,7 +71,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.80 2005/03/09 23:46:07 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.81 2005/04/11 00:39:29 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -308,21 +308,33 @@ public class MiscUtilities
 			return parent + File.separator + path;
 	} //}}}
 
+	//{{{ getLastSeparatorIndex() method
+	/**
+	 * Return the last index of either / or the OS-specific file
+	 * separator.
+	 * @param path The path
+	 * @since jEdit 4.3pre3
+	 */
+	public static int getLastSeparatorIndex(String path)
+	{
+		return Math.max(path.lastIndexOf('/'),
+			path.lastIndexOf(File.separatorChar));
+	} //}}}
+	
 	//{{{ getFileExtension() method
 	/**
 	 * Returns the extension of the specified filename, or an empty
 	 * string if there is none.
-	 * @param name The file name or path
+	 * @param path The path
 	 */
-	public static String getFileExtension(String name)
+	public static String getFileExtension(String path)
 	{
-		int fsIndex = Math.max(name.indexOf('/'),
-			name.indexOf(File.separatorChar));
-		int index = name.indexOf('.',fsIndex);
+		int fsIndex = getLastSeparatorIndex(path);
+		int index = path.indexOf('.',fsIndex);
 		if(index == -1)
 			return "";
 		else
-			return name.substring(index);
+			return path.substring(index);
 	} //}}}
 
 	//{{{ getFileName() method
@@ -401,8 +413,7 @@ public class MiscUtilities
 	 */
 	public static boolean isURL(String str)
 	{
-		int fsIndex = Math.max(str.indexOf(File.separatorChar),
-			str.indexOf('/'));
+		int fsIndex = getLastSeparatorIndex(str);
 		if(fsIndex == 0) // /etc/passwd
 			return false;
 		else if(fsIndex == 2) // C:\AUTOEXEC.BAT
