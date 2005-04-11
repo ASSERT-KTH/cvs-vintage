@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="externals/jeremie/kilim.jar"/>
 	<classpathentry kind="lib" path="externals/jgroups-all.jar"/>
 	<classpathentry kind="lib" path="externals/commons-logging-api.jar"/>
+	<classpathentry kind="lib" path="externals/mx4j.jar"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>

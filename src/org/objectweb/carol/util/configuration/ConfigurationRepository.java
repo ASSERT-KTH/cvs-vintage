@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.1 2005/04/07 15:07:07 benoitf Exp $
+ * $Id: ConfigurationRepository.java,v 1.2 2005/04/11 12:39:20 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -37,6 +37,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.objectweb.carol.util.mbean.MBeanUtils;
 
 /**
  * This class handle all rmi configuration available at runtime for carol.<br>
@@ -76,19 +78,20 @@ public class ConfigurationRepository {
     private static InheritableThreadLocal threadLocal = null;
 
     /**
-     * Default configuration to fallback when there is a missing config in thread
+     * Default configuration to fallback when there is a missing config in
+     * thread
      */
-   private static ProtocolConfiguration defaultConfiguration = null;
+    private static ProtocolConfiguration defaultConfiguration = null;
 
-   /**
-    * Properties of the carol configuration
-    */
-   private static Properties properties = null;
+    /**
+     * Properties of the carol configuration
+     */
+    private static Properties properties = null;
 
-   /**
-    * Initialization is done
-    */
-   private static boolean initDone = false;
+    /**
+     * Initialization is done
+     */
+    private static boolean initDone = false;
 
     /**
      * No public constructor, singleton
@@ -107,13 +110,13 @@ public class ConfigurationRepository {
                 }
                 init();
             } catch (ConfigurationException ce) {
-                IllegalStateException ise = new IllegalStateException("Configuration of carol was not done and when trying to initialize it, it fails.");
+                IllegalStateException ise = new IllegalStateException(
+                        "Configuration of carol was not done and when trying to initialize it, it fails.");
                 ise.initCause(ce);
                 throw ise;
             }
         }
     }
-
 
     /**
      * Checks that carol is initialized
@@ -143,8 +146,6 @@ public class ConfigurationRepository {
 
     }
 
-
-
     /**
      * Gets a configuration with the given name
      * @param configName name of the configuration
@@ -165,8 +166,6 @@ public class ConfigurationRepository {
         return (Protocol) managedProtocols.get(protocolName);
     }
 
-
-
     /**
      * Build a new configuration for a given protocol
      * @param configurationName the name of the configuration
@@ -174,13 +173,15 @@ public class ConfigurationRepository {
      * @return a new configuration object for a given protocol
      * @throws ConfigurationException if no configuration can be built
      */
-    public static ProtocolConfiguration newConfiguration(String configurationName, String protocolName) throws ConfigurationException {
+    public static ProtocolConfiguration newConfiguration(String configurationName, String protocolName)
+            throws ConfigurationException {
         checkConfigured();
         Protocol p = null;
 
         // Check that there is no configuration existing with the same name
         if (managedConfigurations.get(configurationName) != null) {
-            throw new ConfigurationException("There is an existing configuration with the name '" + configurationName + "'. Use another name.");
+            throw new ConfigurationException("There is an existing configuration with the name '" + configurationName
+                    + "'. Use another name.");
         }
 
         // Get configured protocol
@@ -213,7 +214,7 @@ public class ConfigurationRepository {
         checkConfigured();
         Object o = threadLocal.get();
         if (o != null) {
-                return (ProtocolConfiguration) o;
+            return (ProtocolConfiguration) o;
         } else {
             return defaultConfiguration;
         }
@@ -225,6 +226,29 @@ public class ConfigurationRepository {
      * @throws ConfigurationException if no properties can be loaded
      */
     public static void init(URL carolPropertiesFileURL) throws ConfigurationException {
+        init(carolPropertiesFileURL, null, null);
+    }
+
+    /**
+     * Initialize Carol configurations with MBeans
+     * @param idMbeanServer the identifier to retrieve MBeanServer object
+     * @param serverName the name of the server for creating mbeans
+     * @throws ConfigurationException if no properties can be loaded
+     */
+    public static void init(String idMbeanServer, String serverName) throws ConfigurationException {
+        init(Thread.currentThread().getContextClassLoader().getResource(CarolDefaultValues.CAROL_CONFIGURATION_FILE),
+                idMbeanServer, serverName);
+    }
+
+    /**
+     * } Initialize Carol configurations with the carol.properties URL
+     * @param carolPropertiesFileURL URL rerencing the configuration file
+     * @param idMbeanServer the identifier to retrieve MBeanServer object
+     * @param serverName the name of the server for creating mbeans
+     * @throws ConfigurationException if no properties can be loaded
+     */
+    public static void init(URL carolPropertiesFileURL, String idMbeanServer, String serverName)
+            throws ConfigurationException {
         if (initDone) {
             return;
         }
@@ -317,14 +341,32 @@ public class ConfigurationRepository {
 
         // set the default configuration to the first available protocol
         if (protocolsArray[0] != null) {
-            defaultConfiguration =  (ProtocolConfiguration) managedConfigurations.get(protocolsArray[0]);
+            defaultConfiguration = (ProtocolConfiguration) managedConfigurations.get(protocolsArray[0]);
+        }
+
+        if (idMbeanServer != null && serverName != null) {
+            initMbeans(idMbeanServer, serverName);
         }
 
         initDone = true;
     }
 
     /**
-     * Gets server configuration (made with carol-default.properties and carol.properties file)
+     * Add a configuration
+     * @param protocolConfiguration the configuration to add
+     * @throws ConfigurationException if the configuration exists
+     */
+    public static void addConfiguration(ProtocolConfiguration protocolConfiguration) throws ConfigurationException {
+        String protocolConfigName = protocolConfiguration.getName();
+        if (managedConfigurations.get(protocolConfigName) != null) {
+            throw new ConfigurationException("The configuration named '" + protocolConfigName + "' already exist.");
+        }
+        managedConfigurations.put(protocolConfigName, protocolConfiguration);
+    }
+
+    /**
+     * Gets server configuration (made with carol-default.properties and
+     * carol.properties file)
      * @return server configuration
      */
     public static ServerConfiguration getServerConfiguration() {
@@ -380,7 +422,10 @@ public class ConfigurationRepository {
      */
     protected static Properties getPropertiesFromURL(URL url) throws ConfigurationException {
         if (url == null) {
-            throw new ConfigurationException("Cannot use null URL.");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Return empty properties, URL is null");
+            }
+            return new Properties();
         }
 
         // Get inputStream + invalid cache
@@ -419,7 +464,6 @@ public class ConfigurationRepository {
         return p;
     }
 
-
     /**
      * @return the default Configuration when no thread local is set.
      */
@@ -427,7 +471,6 @@ public class ConfigurationRepository {
         checkConfigured();
         return defaultConfiguration;
     }
-
 
     /**
      * @return the properties used by Carol configuration.
@@ -449,7 +492,6 @@ public class ConfigurationRepository {
         }
     }
 
-
     /**
      * Add interceptor at runtime for a given protocol
      * @param protocolName protocol name
@@ -464,6 +506,25 @@ public class ConfigurationRepository {
             throw new ConfigurationException("Cannot add interceptor on an unknown protocol '" + protocolName + "'.");
         }
         protocol.addInterceptor(interceptorInitializer);
+    }
+
+    /**
+     * Init the MBean for each configuration
+     * @param idMbeanServer the identifier to retrieve MBeanServer object
+     * @param serverName the name of the server for creating mbeans
+     * @throws ConfigurationException if MBeans are not created
+     */
+    protected static void initMbeans(String idMbeanServer, String serverName) throws ConfigurationException {
+
+        for (Iterator it = managedConfigurations.keySet().iterator(); it.hasNext();) {
+            String key = (String) it.next();
+            ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) managedConfigurations.get(key);
+            if (protocolConfiguration instanceof ProtocolConfigurationImplMBean) {
+                MBeanUtils.registerProtocolConfigurationMBean((ProtocolConfigurationImplMBean) protocolConfiguration,
+                        logger, idMbeanServer, serverName);
+            }
+        }
+
     }
 
 }

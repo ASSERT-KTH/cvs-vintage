@@ -19,24 +19,28 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProtocolConfigurationImpl.java,v 1.1 2005/04/07 15:07:07 benoitf Exp $
+ * $Id: ProtocolConfigurationImpl.java,v 1.2 2005/04/11 12:39:20 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 /**
  * This class manage a rmi configuration used by carol.<br>
  * The configuration is based on a protocol which contains required values and non modified values
  */
-public class ProtocolConfigurationImpl implements ProtocolConfiguration {
+public class ProtocolConfigurationImpl implements ProtocolConfiguration, ProtocolConfigurationImplMBean {
 
     /**
      * Name of this configuration
@@ -261,6 +265,33 @@ public class ProtocolConfigurationImpl implements ProtocolConfiguration {
      */
     public Hashtable getJndiEnv() {
         return jndiEnv;
+    }
+
+    /**
+     * MBean method : Gets the InitialContextFactory classname (Context.INITIAL_CONTEXT_FACTORY)
+     * @return the InitialContextFactory classname
+     */
+    public String getInitialContextFactoryClassName() {
+        return protocol.getInitialContextFactoryClassName();
+    }
+
+    /**
+     * Gets JNDI names of the context with this configuration
+     * @return JNDI names
+     * @throws NamingException if the names cannot be listed
+     */
+    public List getNames() throws NamingException {
+        Context ctx = getInitialContext(getJndiEnv());
+
+        List names = new ArrayList();
+        NamingEnumeration ne = ctx.list("");
+        String n = null;
+        while (ne.hasMore()) {
+            NameClassPair ncp = (NameClassPair) ne.next();
+            n = ncp.getName();
+            names.add(n);
+        }
+        return names;
     }
 
 
