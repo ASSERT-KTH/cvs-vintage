@@ -22,11 +22,12 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.13 $
+ * @version   $Revision: 1.14 $
  */
 public class StdServerSessionPoolFactory
        implements ServerSessionPoolFactory, Serializable
 {
+   static final long serialVersionUID = 4969432475779524576L;
    /** The name of this factory. */
    private String name;
 
