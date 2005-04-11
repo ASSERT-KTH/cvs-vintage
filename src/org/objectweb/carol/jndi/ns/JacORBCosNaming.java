@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.11 2005/04/07 15:07:07 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.12 2005/04/11 13:39:40 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -182,7 +182,9 @@ public class JacORBCosNaming extends AbsRegistry implements NameService {
 
                     public void run() {
                         try {
-                            JacORBCosNaming.this.stop();
+                            if (JacORBCosNaming.this.isStarted()) {
+                                JacORBCosNaming.this.stop();
+                            }
                         } catch (Exception e) {
                             TraceCarol.error("JacORBCosNaming ShutdownHook problem", e);
                         }
