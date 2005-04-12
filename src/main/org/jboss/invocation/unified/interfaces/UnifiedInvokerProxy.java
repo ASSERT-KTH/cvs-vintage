@@ -30,6 +30,8 @@ import org.jboss.remoting.InvokerLocator;
  */
 public class UnifiedInvokerProxy implements Invoker, Externalizable
 {
+   static final long serialVersionUID = -1108158470271861548L;
+
    private transient Client client;
    private InvokerLocator locator;
 
