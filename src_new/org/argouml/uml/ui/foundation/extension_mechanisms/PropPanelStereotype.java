@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.47 2005/01/09 14:59:10 linus Exp $
+// $Id: PropPanelStereotype.java,v 1.48 2005/04/12 23:34:20 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         addField(Translator.localize("label.base-class"), baseClass);
 
         addField(Translator.localize("label.namespace"),
-                 getNamespaceComboBox());
+                 getNamespaceSelector());
 
 
         JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3,

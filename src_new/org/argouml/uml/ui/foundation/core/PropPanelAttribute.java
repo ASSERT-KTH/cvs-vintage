@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.55 2005/01/09 14:59:08 linus Exp $
+// $Id: PropPanelAttribute.java,v 1.56 2005/04/12 23:34:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.owner"),
                 getOwnerScroll());
         addField(Translator.localize("label.multiplicity"),

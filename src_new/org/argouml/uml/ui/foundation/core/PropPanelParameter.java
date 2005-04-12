@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.59 2005/01/29 20:08:22 linus Exp $
+// $Id: PropPanelParameter.java,v 1.60 2005/04/12 23:34:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class PropPanelParameter extends PropPanelModelElement {
                 getNameTextField());
 
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
 
         addField(Translator.localize("label.owner"),
                 getBehavioralFeatureScroll());

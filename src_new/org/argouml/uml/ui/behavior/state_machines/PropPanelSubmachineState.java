@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.18 2005/02/02 21:18:08 mvw Exp $
+// $Id: PropPanelSubmachineState.java,v 1.19 2005/04/12 23:34:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         JComboBox submachineBox = new UMLComboBox2(

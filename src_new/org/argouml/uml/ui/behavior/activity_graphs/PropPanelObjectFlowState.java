@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.9 2005/01/09 14:59:04 linus Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.10 2005/04/12 23:34:20 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,7 @@ public class PropPanelObjectFlowState extends PropPanelState {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
 

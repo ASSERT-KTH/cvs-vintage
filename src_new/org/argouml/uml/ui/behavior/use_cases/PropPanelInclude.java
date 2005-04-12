@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.36 2005/02/20 21:55:19 linus Exp $
+// $Id: PropPanelInclude.java,v 1.37 2005/04/12 23:34:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         addField(Translator.localize("label.name"),
 		 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
 		 getNamespaceScroll());
 

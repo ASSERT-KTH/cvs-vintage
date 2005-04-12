@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.41 2005/01/30 20:47:47 linus Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.42 2005/04/12 23:34:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
 
         // Our location (a String). We can pass in the get and set methods from
         // NSUML associated with the NSUML type. Allow the location label to

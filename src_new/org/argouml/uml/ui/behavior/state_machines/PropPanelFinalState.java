@@ -1,4 +1,4 @@
-// $Id: PropPanelFinalState.java,v 1.17 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelFinalState.java,v 1.18 2005/04/12 23:34:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class PropPanelFinalState extends PropPanelState {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         addField(Translator.localize("label.entry"),

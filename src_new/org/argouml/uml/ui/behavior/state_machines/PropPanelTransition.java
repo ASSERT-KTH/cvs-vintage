@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.35 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelTransition.java,v 1.36 2005/04/12 23:34:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class PropPanelTransition extends PropPanelModelElement {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         JList statemachineList = new UMLLinkedList(
                 new UMLTransitionStatemachineListModel());
         statemachineList.setVisibleRowCount(1);

@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.65 2005/01/30 20:48:32 linus Exp $
+// $Id: PropPanelPackage.java,v 1.66 2005/04/12 23:34:20 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,9 +95,9 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
-                getNamespaceComboBox());
+                getNamespaceSelector());
 
         add(getNamespaceVisibilityPanel());
 

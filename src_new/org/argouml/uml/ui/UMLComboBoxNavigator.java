@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxNavigator.java,v 1.11 2005/02/21 20:48:15 mvw Exp $
+// $Id: UMLComboBoxNavigator.java,v 1.12 2005/04/12 23:34:03 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,9 +59,9 @@ public class UMLComboBoxNavigator extends JPanel implements ActionListener {
      *  @param box Associated combo box
      */
     public UMLComboBoxNavigator(
-        UMLUserInterfaceContainer container,
-        String tooltip,
-        JComboBox box) {
+            UMLUserInterfaceContainer container,
+            String tooltip,
+            JComboBox box) {
         super(new BorderLayout());
         theButton = new JButton(icon);
         theContainer = container;

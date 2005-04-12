@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.20 2005/01/09 14:59:08 linus Exp $
+// $Id: PropPanelComment.java,v 1.21 2005/04/12 23:34:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class PropPanelComment extends PropPanelModelElement {
         uptd.putProperty("filterNewlines", Boolean.FALSE);
 
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
 
         addField(Translator.localize("label.annotated-elements"),
             new JScrollPane(new UMLLinkedList(

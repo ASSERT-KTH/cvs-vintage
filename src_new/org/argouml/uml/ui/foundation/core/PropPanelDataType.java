@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.63 2005/02/28 22:31:40 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.64 2005/04/12 23:34:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,9 +70,9 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
-                getNamespaceComboBox());
+                getNamespaceSelector());
         add(getModifiersPanel());
 
         addSeperator();

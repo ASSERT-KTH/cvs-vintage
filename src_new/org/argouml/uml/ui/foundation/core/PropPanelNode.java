@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.43 2005/01/30 20:47:34 linus Exp $
+// $Id: PropPanelNode.java,v 1.44 2005/04/12 23:34:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,9 +58,9 @@ public class PropPanelNode extends PropPanelClassifier {
                 getNameTextField());
 
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
-                getNamespaceComboBox());
+                getNamespaceSelector());
 
         add(getModifiersPanel());
 

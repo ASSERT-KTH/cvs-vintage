@@ -1,4 +1,4 @@
-// $Id: PropPanelSynchState.java,v 1.3 2005/01/26 16:02:15 mvw Exp $
+// $Id: PropPanelSynchState.java,v 1.4 2005/04/12 23:34:18 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class PropPanelSynchState extends PropPanelStateVertex {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
         addField(Translator.localize("label.bound"),

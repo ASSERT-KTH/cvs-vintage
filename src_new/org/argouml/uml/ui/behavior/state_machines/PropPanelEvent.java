@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.40 2005/02/01 15:00:56 mkl Exp $
+// $Id: PropPanelEvent.java,v 1.41 2005/04/12 23:34:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
         addField(Translator.localize("label.name"),
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
-                getStereotypeBox());
+                getStereotypeSelector());
         addField(Translator.localize("label.namespace"),
                 getNamespaceScroll());
         
