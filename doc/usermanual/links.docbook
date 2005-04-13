@@ -15,21 +15,33 @@
       </indexentry>
       <indexentry>
         <primaryie>
-          <ulink url="http://www.objectweb.org/carol">CAROL</ulink>
+          <ulink url="http://carol.objectweb.org">CAROL</ulink>
         </primaryie>
         <secondaryie>CAROL ObjectWeb web site</secondaryie>
       </indexentry>
       <indexentry>
         <primaryie>
-          <ulink url="http://www.objectweb.org/jonathan">JONATHAN</ulink>
+          <ulink url="http://jonathan.objectweb.org">JONATHAN</ulink>
         </primaryie>
         <secondaryie>JONATHAN ObjectWeb web site</secondaryie>
       </indexentry>
       <indexentry>
         <primaryie>
-          <ulink url="http://www.objectweb.org/monolog">Monolog</ulink>
+          <ulink url="http://java.sun.com/products/JavaManagement/">JMX Management</ulink>
         </primaryie>
-        <secondaryie>Monolog ObjectWeb web site</secondaryie>
+        <secondaryie>JMX Management web site</secondaryie>
+      </indexentry>
+      <indexentry>
+        <primaryie>
+          <ulink url="http://mx4j.sourceforge.net">MX4J</ulink>
+        </primaryie>
+        <secondaryie>MX4J web site</secondaryie>
+      </indexentry>
+      <indexentry>
+        <primaryie>
+          <ulink url="http://jakarta.apache.org/commons/logging">Commons logging</ulink>
+        </primaryie>
+        <secondaryie>Commons Logging web site</secondaryie>
       </indexentry>
     </indexdiv>
     <indexdiv>
