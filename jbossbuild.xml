@@ -65,7 +65,7 @@
          <include input="wsdl4j"/>
 
          <include input="j2se-project"/>
-         <include input="jmx-project"/>
+         <include input="mbeans-project"/>
          <include input="common-project"/>
          <include input="j2ee-project"/>
          <include input="naming-project"/>

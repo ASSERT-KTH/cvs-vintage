@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.186 2005/03/22 03:13:20 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.187 2005/04/13 04:08:21 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -96,7 +96,7 @@
       <path refid="jboss.common.classpath"/>
       <path refid="jboss.system.classpath"/>
       <path refid="jboss.j2se.classpath"/>
-      <path refid="jboss.jmx.classpath"/>
+      <path refid="jboss.mbeans.classpath"/>
       <path refid="jboss.naming.classpath"/>
       <path refid="jboss.transaction.classpath"/>
       <path refid="jboss.remoting.classpath"/>
