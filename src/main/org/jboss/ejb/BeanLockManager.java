@@ -48,8 +48,8 @@ public class BeanLockManager
       {
          InitialContext ctx = new InitialContext();
          EntityLockMonitor elm = (EntityLockMonitor) ctx.lookup(EntityLockMonitor.JNDI_NAME);
-         String ejbName = container.getBeanMetaData().getEjbName();
-         monitor = elm.getEntityLockMonitor(ejbName);
+         String jndiName = container.getBeanMetaData().getContainerObjectNameJndiName();
+         monitor = elm.getEntityLockMonitor(jndiName);
       }
       catch (Exception ignored)
       {

@@ -6,97 +6,107 @@
  */
 package org.jboss.monitor;
 
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import javax.management.MBeanRegistration;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
+import java.util.Set;
+import java.util.TreeSet;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
-import org.jboss.logging.Logger;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
- *
- * @see Monitorable
+ * MBean implementation for providing Locking Stats for EntityBeans
+ * 
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.7 $
+ * @author <a href="mailto:dimitris@jboss.org">Dimitris Andreadis</a>
+ * @version $Revision: 1.8 $
  */
-public class EntityLockMonitor
-   extends ServiceMBeanSupport
-   implements EntityLockMonitorMBean, MBeanRegistration
+public class EntityLockMonitor  extends ServiceMBeanSupport
+   implements EntityLockMonitorMBean
 {
    // Constants ----------------------------------------------------
+   
    public static final String JNDI_NAME = "EntityLockMonitor";
-   // Attributes ---------------------------------------------------
-   static Logger log = Logger.getLogger(EntityLockMonitor.class);
-   MBeanServer m_mbeanServer;
-   // Static -------------------------------------------------------
    
-   // Constructors -------------------------------------------------
-   public EntityLockMonitor()
-   {}
+   // Protected -----------------------------------------------------
    
-   // Public -------------------------------------------------------
-   
-   // MBeanRegistration implementation -----------------------------------
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-   throws Exception
-   {
-      m_mbeanServer = server;
-      return name;
-   }
-   
-   public void postRegister(Boolean registrationDone)
-   {}
-   public void preDeregister() throws Exception
-   {}
-   public void postDeregister()
-   {}
-
-   protected HashMap monitor = new HashMap();
+   protected HashMap monitorMap = new HashMap();
    protected long contenders = 0;
    protected long maxContenders = 0;
    protected ArrayList times = new ArrayList();
    protected long contentions = 0;
-   protected long total_time = 0;
+   protected long totalTime = 0;
    protected long sumContenders = 0;
    
+   // Constructors -------------------------------------------------
    
-   public synchronized void incrementContenders()
+   public EntityLockMonitor()
    {
-      contentions++;
-      contenders++;
-      if (contenders > maxContenders) maxContenders = contenders;
-      sumContenders += contenders;
+      // empty
    }
-   public synchronized void decrementContenders(long time)
+   
+   // ServiceMBeanSupport overrides ---------------------------------
+   
+   protected void startService()
+      throws Exception
    {
-      times.add(new Long(time));
-      contenders--;
+      bind();
+
+     log.info("EntityLockMonitor started");
    }
+
+   protected void stopService() {
+      try
+      {
+         unbind();
+      }
+      catch (Exception ignored) {}
+
+     log.info("EntityLockMonitor stopped");
+   }
+   
+   // Attributes ----------------------------------------------------
+   
+   /**
+    * @jmx.managed-attribute
+    */
    public synchronized long getAverageContenders()
    {
-      if (contentions == 0) return 0;
-      return sumContenders / contentions;
+      if (contentions == 0)
+      {
+         return 0;
+      }
+      else
+      {
+         return sumContenders / contentions;
+      }
    }
+
+   /**
+    * @jmx.managed-attribute
+    */
    public synchronized long getMaxContenders()
    {
       return maxContenders;
    }
 
+   /**
+    * @jmx.managed-attribute
+    */
    public synchronized long getMedianWaitTime()
    {
-      if (times.size() < 1) return 0;
+      if (times.size() < 1)
+      {
+         return 0;
+      }
 
       Long[] alltimes = (Long[])times.toArray(new Long[times.size()]);
       long[] thetimes = new long[alltimes.length];
@@ -108,103 +118,136 @@ public class EntityLockMonitor
       return thetimes[thetimes.length / 2];
    }
 
+   /**
+    * @jmx.managed-attribute
+    */
    public synchronized long getTotalContentions()
    {
       return contentions;
    }
-
-   public LockMonitor getEntityLockMonitor(String ejbName)
+   
+   // Operations ----------------------------------------------------
+   
+   /**
+    * @jmx.managed-operation
+    */
+   public Set listMonitoredBeans()
    {
-      LockMonitor lm = null;
-      synchronized(monitor)
+      synchronized(monitorMap)
       {
-         lm = (LockMonitor)monitor.get(ejbName);
-         if (lm == null)
-         {
-            lm = new LockMonitor(this);
-            monitor.put(ejbName, lm);
-         }
+         return new TreeSet(monitorMap.keySet());
       }
-      return lm;
    }
-
+   
+   /**
+    * @jmx.managed-operation
+    * 
+    * @return the LockMonitor that corresponds to the jndiName or null
+    */
+   public LockMonitor getLockMonitor(String jndiName)
+   {
+      synchronized(monitorMap)
+      {
+         return (LockMonitor)monitorMap.get(jndiName);
+      }
+   }
+   
+   /**
+    * @jmx.managed-operation
+    */
    public String printLockMonitor()
    {
       StringBuffer rtn = new StringBuffer();
       rtn.append("<table width=\"1\" border=\"1\">");
-      rtn.append("<tr><td><b>EJB NAME</b></td><td><b>Total Lock Time</b></td><td><b>Num Contentions</b></td><td><b>Time Outs</b></td></tr>");
-      synchronized(monitor)
+      rtn.append("<tr><td><b>EJB JNDI-NAME</b></td><td><b>Total Lock Time</b></td><td><b>Num Contentions</b></td><td><b>Time Outs</b></td><td><b>Max Contenders</b></td></tr>");
+      synchronized(monitorMap)
       {
-         Iterator it = monitor.keySet().iterator();
+         Iterator it = monitorMap.keySet().iterator();
          while (it.hasNext())
          {
             rtn.append("<tr>");
-            String ejbName = (String)it.next();
+            String jndiName = (String)it.next();
             rtn.append("<td>");
-            rtn.append(ejbName);
+            rtn.append(jndiName);
             rtn.append("</td>");
-            LockMonitor lm = (LockMonitor)monitor.get(ejbName);
+            LockMonitor lm = (LockMonitor)monitorMap.get(jndiName);
             rtn.append("<td>");
-            rtn.append(("" + lm.total_time));
-            rtn.append("</td>");
-            rtn.append("<td>");
-            rtn.append(("" + lm.num_contentions));
-            rtn.append("</td>");
-            rtn.append("<td>");
-            rtn.append(("" + lm.timeouts));
-            rtn.append("</td>");
-            rtn.append("</tr>");
+            rtn.append(("" + lm.getTotalTime()));
+            rtn.append("</td><td>");
+            rtn.append(("" + lm.getNumContentions()));
+            rtn.append("</td><td>");
+            rtn.append(("" + lm.getTimeouts()));
+            rtn.append("</td><td>");
+            rtn.append(("" + lm.getMaxContenders()));
+            rtn.append("</td></tr>");
          }
       }
       rtn.append("</table>");
       return rtn.toString();
    }
    
+   /**
+    * @jmx.managed-operation
+    */
    public synchronized void clearMonitor()
    {
       contenders = 0;
       maxContenders = 0;
       times.clear();
       contentions = 0;
-      total_time = 0;
+      totalTime = 0;
       sumContenders = 0;
 
-      synchronized(monitor)
+      synchronized(monitorMap)
       {
-         Iterator it = monitor.keySet().iterator();
+         Iterator it = monitorMap.keySet().iterator();
          while (it.hasNext())
          {
-            String ejbName = (String)it.next();
-            LockMonitor lm = (LockMonitor)monitor.get(ejbName);
-            synchronized (lm)
-            {
-               lm.timeouts = 0;
-               lm.total_time = 0;
-               lm.num_contentions = 0;
-            }
+            String jndiName = (String)it.next();
+            LockMonitor lm = (LockMonitor)monitorMap.get(jndiName);
+            lm.reset();
          }
       }
    }
    
-
-   protected void startService()
-      throws Exception
+   // Public -------------------------------------------------------
+   
+   public synchronized void incrementContenders()
    {
-      bind();
-
-	  log.info("EntityLockMonitor started");
-   }
-
-   protected void stopService() {
-      try
+      ++contenders;
+      ++contentions;
+      sumContenders += contenders;
+      
+      if (contenders > maxContenders)
       {
-         unbind();
+         maxContenders = contenders;
       }
-      catch (Exception ignored) {}
-
-	  log.info("EntityLockMonitor stopped");
+   }
+   
+   public synchronized void decrementContenders(long time)
+   {
+      times.add(new Long(time));
+      --contenders;
    }
 
+   public LockMonitor getEntityLockMonitor(String jndiName)
+   {
+      LockMonitor lm = null;
+      
+      synchronized(monitorMap)
+      {
+         lm = (LockMonitor)monitorMap.get(jndiName);
+         if (lm == null)
+         {
+            lm = new LockMonitor(this);
+            monitorMap.put(jndiName, lm);
+         }
+      }
+      return lm;
+   }
+   
+   // Private -------------------------------------------------------
+   
    private void bind() throws NamingException
    {
       Context ctx = new InitialContext();
@@ -224,7 +267,5 @@ public class EntityLockMonitor
       new InitialContext().unbind(JNDI_NAME);
       NonSerializableFactory.unbind(JNDI_NAME);
    }
-
-   // Inner classes -------------------------------------------------
+   
 }
-

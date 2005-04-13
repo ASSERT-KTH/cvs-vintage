@@ -48,7 +48,7 @@ import org.jboss.util.deadlock.DeadlockDetector;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -244,10 +244,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          {
             if (lockMonitor != null && isTxExpired(miTx))
             {
-               synchronized (lockMonitor)
-               {
-                  lockMonitor.timeouts++;
-               }
+               lockMonitor.increaseTimeouts();
             }
             if (lockMonitor != null)
             {
