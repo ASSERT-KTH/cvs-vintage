@@ -53,10 +53,7 @@ public class UnifiedInvoker extends ServiceMBeanSupport implements ServerInvocat
     */
    protected void startService() throws Exception
    {
-      if(log.isDebugEnabled())
-      {
-         log.debug("Starting unified invoker service.");
-      }
+      log.debug("Starting unified invoker service.");
 
       InitialContext ctx = new InitialContext();
 

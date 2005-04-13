@@ -52,7 +52,7 @@ import org.jboss.util.id.UID;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.43 $</tt>
+ * @version <tt>$Revision: 1.44 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -181,8 +181,6 @@ public class StatefulSessionFilePersistenceManager
     */
    protected void createService() throws Exception
    {
-      boolean debug = log.isDebugEnabled();
-
       // Initialize the dataStore
 
       String ejbName = con.getBeanMetaData().getEjbName();
@@ -196,10 +194,7 @@ public class StatefulSessionFilePersistenceManager
       dir = new File(dir, ejbName + "-" + new UID().toString());
       storeDir = dir;
 
-      if( debug )
-      {
-         log.debug("Storing sessions for '" + ejbName + "' in: " + storeDir);
-      }
+      log.debug("Storing sessions for '" + ejbName + "' in: " + storeDir);
 
       // if the directory does not exist then try to create it
       if( !storeDir.exists() )
@@ -302,19 +297,19 @@ public class StatefulSessionFilePersistenceManager
    public void activateSession(final StatefulSessionEnterpriseContext ctx)
       throws RemoteException
    {
-      boolean debug = log.isDebugEnabled();
-      if( debug )
+      boolean trace = log.isTraceEnabled();
+      if( trace )
       {
-         log.debug("Attempting to activate; ctx=" + ctx);
+         log.trace("Attempting to activate; ctx=" + ctx);
       }
 
       Object id = ctx.getId();
       
       // Load state
       File file = getFile(id);
-      if( debug )
+      if( trace )
       {
-         log.debug("Reading session state from: " + file);
+         log.trace("Reading session state from: " + file);
       }
 
       try
@@ -326,7 +321,10 @@ public class StatefulSessionFilePersistenceManager
          try
          {
             Object obj = in.readObject();
-            log.debug("Session state: " + obj);
+            if ( trace )
+            {
+               log.trace("Session state: " + obj);
+            }
 
             ctx.setInstance(obj);
          }
@@ -347,9 +345,9 @@ public class StatefulSessionFilePersistenceManager
       SessionBean bean = (SessionBean) ctx.getInstance();
       bean.ejbActivate();
 
-      if( debug )
+      if( trace )
       {
-         log.debug("Activation complete; ctx=" + ctx);
+         log.trace("Activation complete; ctx=" + ctx);
       }
    }
 
@@ -360,10 +358,10 @@ public class StatefulSessionFilePersistenceManager
    public void passivateSession(final StatefulSessionEnterpriseContext ctx)
       throws RemoteException
    {
-      boolean debug = log.isDebugEnabled();
-      if( debug )
+      boolean trace = log.isTraceEnabled();
+      if( trace )
       {
-         log.debug("Attempting to passivate; ctx=" + ctx);
+         log.trace("Attempting to passivate; ctx=" + ctx);
       }
 
       // Instruct the bean to perform passivation logic
@@ -373,9 +371,9 @@ public class StatefulSessionFilePersistenceManager
       // Store state
       
       File file = getFile(ctx.getId());
-      if( debug )
+      if( trace )
       {
-         log.debug("Saving session state to: " + file);
+         log.trace("Saving session state to: " + file);
       }
 
       try
@@ -385,9 +383,9 @@ public class StatefulSessionFilePersistenceManager
             new BufferedOutputStream(fos));
 
          Object obj = ctx.getInstance();
-         if( debug )
+         if( trace )
          {
-            log.debug("Writing session state: " + obj);
+            log.trace("Writing session state: " + obj);
          }
 
          try
@@ -404,9 +402,9 @@ public class StatefulSessionFilePersistenceManager
          throw new EJBException("Could not passivate; failed to save state", e);
       }
 
-      if( debug )
+      if( trace )
       {
-         log.debug("Passivation complete; ctx=" + ctx);
+         log.trace("Passivation complete; ctx=" + ctx);
       }
    }
 
@@ -416,19 +414,19 @@ public class StatefulSessionFilePersistenceManager
    public void removeSession(final StatefulSessionEnterpriseContext ctx)
       throws RemoteException, RemoveException
    {
-      boolean debug = log.isDebugEnabled();
-      if( debug )
+      boolean trace = log.isTraceEnabled();
+      if( trace )
       {
-         log.debug("Attempting to remove; ctx=" + ctx);
+         log.trace("Attempting to remove; ctx=" + ctx);
       }
       
       // Instruct the bean to perform removal logic
       SessionBean bean = (SessionBean) ctx.getInstance();
       bean.ejbRemove();
 
-      if( debug )
+      if( trace )
       {
-         log.debug("Removal complete; ctx=" + ctx);
+         log.trace("Removal complete; ctx=" + ctx);
       }
    }
 
@@ -437,16 +435,16 @@ public class StatefulSessionFilePersistenceManager
     */
    public void removePassivated(final Object id)
    {
-      boolean debug = log.isDebugEnabled();
+      boolean trace = log.isTraceEnabled();
 
       File file = getFile(id);
 
       // only attempt to delete if the file exists
       if( file.exists() )
       {
-         if( debug )
+         if( trace )
          {
-            log.debug("Removing passivated state file: " + file);
+            log.trace("Removing passivated state file: " + file);
          }
 
          if( DeleteFileAction.delete(file) == false )

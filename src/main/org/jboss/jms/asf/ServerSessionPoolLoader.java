@@ -39,7 +39,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -150,9 +150,8 @@ public class ServerSessionPoolLoader
       poolFactory = (ServerSessionPoolFactory)cls.newInstance();
       poolFactory.setName(name);
       poolFactory.setXidFactory(xidFactoryObj);
-
-      if (log.isDebugEnabled())
-         log.debug("initialized with pool factory: " + poolFactory);
+      log.debug("initialized with pool factory: " + poolFactory);
+      
       InitialContext ctx = new InitialContext();
       String name = poolFactory.getName();
       String jndiname = "java:/" + name;

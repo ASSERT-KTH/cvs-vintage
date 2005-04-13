@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCDeleteRelationsCommand
 {
@@ -55,8 +55,7 @@ public final class JDBCDeleteRelationsCommand
       try
       {
          // create the statement
-         if(log.isDebugEnabled())
-            log.debug("Executing SQL: " + sql);
+         log.debug("Executing SQL: " + sql);
 
          // get the connection
          DataSource dataSource = cmrField.getDataSource();
@@ -68,8 +67,7 @@ public final class JDBCDeleteRelationsCommand
 
          // execute statement
          int rowsAffected = ps.executeUpdate();
-         if(log.isDebugEnabled())
-            log.debug("Rows affected = " + rowsAffected);
+         log.debug("Rows affected = " + rowsAffected);
       }
       catch(Exception e)
       {

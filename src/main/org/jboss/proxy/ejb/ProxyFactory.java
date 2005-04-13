@@ -69,7 +69,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -208,11 +208,7 @@ public class ProxyFactory
          isStatelessSession, //Stateless
          new HomeHandleImpl(jndiBinding)
       );
-
-      if(log.isDebugEnabled())
-      {
-         log.debug("Proxy Factory for " + jndiBinding + " initialized");
-      }
+      log.debug("Proxy Factory for " + jndiBinding + " initialized");
 
       initInterceptorClasses();
    }

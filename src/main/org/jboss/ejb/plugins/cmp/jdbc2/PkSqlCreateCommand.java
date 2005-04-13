@@ -25,7 +25,7 @@ import java.sql.PreparedStatement;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class PkSqlCreateCommand
    implements CreateCommand
@@ -53,10 +53,7 @@ public class PkSqlCreateCommand
       {
          throw new DeploymentException("pk-sql attribute must be set for entity " + entityBridge.getEntityName());
       }
-      if(log.isDebugEnabled())
-      {
-         log.debug("entity-command generate pk sql: " + pkSql);
-      }
+      log.debug("entity-command generate pk sql: " + pkSql);
    }
 
    public Object execute(Method m, Object[] args, EntityEnterpriseContext ctx) throws CreateException
@@ -70,10 +67,7 @@ public class PkSqlCreateCommand
          ResultSet rs = null;
          try
          {
-            if(log.isDebugEnabled())
-            {
-               log.debug("executing sql: " + pkSql);
-            }
+            log.debug("executing sql: " + pkSql);
 
             con = entityBridge.getDataSource().getConnection();
             ps = con.prepareStatement(pkSql);

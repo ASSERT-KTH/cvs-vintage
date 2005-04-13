@@ -27,7 +27,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class SecurityRolesInterceptor extends AbstractInterceptor
 {
@@ -84,7 +84,7 @@ public class SecurityRolesInterceptor extends AbstractInterceptor
       throws Exception
    {
       Principal principal = mi.getPrincipal();
-      boolean trace = log.isInfoEnabled();
+      boolean trace = log.isTraceEnabled();
 
       if (realmMapping == null)
       {

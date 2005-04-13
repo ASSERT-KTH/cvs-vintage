@@ -65,7 +65,7 @@ import org.jboss.util.file.FilenameSuffixFilter;
  * jason: disabled because XDoclet can not handle \u0000 right now
  * _@_jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.23 $</tt>
+ * @version <tt>$Revision: 1.24 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -176,8 +176,6 @@ public class CMPFilePersistenceManager
    
    protected void createService() throws Exception
    {
-      boolean debug = log.isDebugEnabled();
-
       // Initialize the dataStore
 
       String ejbName = con.getBeanMetaData().getEjbName();
@@ -196,9 +194,7 @@ public class CMPFilePersistenceManager
       dir = new File(dir, ejbName);
       storeDir = dir;
       
-      if (debug) {
-         log.debug("Storing entity state for '" + ejbName + "' in: " + storeDir);
-      }
+      log.debug("Storing entity state for '" + ejbName + "' in: " + storeDir);
 
       // if the directory does not exist then try to create it
       if (!storeDir.exists()) {
@@ -219,7 +215,7 @@ public class CMPFilePersistenceManager
 
       // Get the ID field
       idField = con.getBeanClass().getField("id");
-      if (debug) log.debug("Using id field: " + idField);
+      log.debug("Using id field: " + idField);
 
       // Lookup the isModified method if it exists
       try
@@ -230,7 +226,7 @@ public class CMPFilePersistenceManager
             log.warn("Found isModified method, but return type is not boolean; ignoring");
          }
          else {
-            if (debug) log.debug("Using isModified method: " + isModified);
+            log.debug("Using isModified method: " + isModified);
          }
       }
       catch (NoSuchMethodException ignored) {}

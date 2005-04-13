@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCQueryManager
 {
@@ -155,8 +155,7 @@ public final class JDBCQueryManager
             );
             knownQueries.put(method, factory.createFindByPrimaryKeyQuery(q));
 
-            if(log.isDebugEnabled())
-               log.debug("Added findByPrimaryKey query command for home interface");
+            log.debug("Added findByPrimaryKey query command for home interface");
          } catch(NoSuchMethodException e)
          {
             throw new DeploymentException("Home interface does not have a findByPrimaryKey method");
@@ -185,8 +184,7 @@ public final class JDBCQueryManager
          JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method, readAhead, entity.getMetaData().getQLCompiler(), false);
          knownQueries.put(method, factory.createFindByPrimaryKeyQuery(q));
 
-         if(log.isDebugEnabled())
-            log.debug("Added findByPrimaryKey query command for local home interface");
+         log.debug("Added findByPrimaryKey query command for local home interface");
       }
 
       //
@@ -215,8 +213,7 @@ public final class JDBCQueryManager
                   // got it add it to known finders
                   knownQueries.put(interfaceMethod, new JDBCCustomFinderQuery(manager, m));
 
-                  if(log.isDebugEnabled())
-                     log.debug("Added custom finder " + methodName + " on home interface");
+                  log.debug("Added custom finder " + methodName + " on home interface");
                } catch(NoSuchMethodException e)
                {
                   // this is ok method may not be defined on this interface
@@ -235,8 +232,7 @@ public final class JDBCQueryManager
                   // got it add it to known finders
                   knownQueries.put(interfaceMethod, new JDBCCustomFinderQuery(manager, m));
 
-                  if(log.isDebugEnabled())
-                     log.debug("Added custom finder " + methodName + " on local home interface");
+                  log.debug("Added custom finder " + methodName + " on local home interface");
                } catch(NoSuchMethodException e)
                {
                   // this is ok method may not be defined on this interface

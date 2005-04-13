@@ -7,24 +7,20 @@
 
 package org.jboss.ejb;
 
-import org.jboss.ejb.txtimer.TimedObjectInvoker;
-import org.jboss.invocation.Invocation;
-import org.jboss.proxy.ejb.EJBMetaDataImpl;
-import org.jboss.util.UnreachableStatementException;
-
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.RemoveException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.ejb.CreateException;
+import javax.ejb.EJBException;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBObject;
+import javax.ejb.Handle;
+import javax.ejb.RemoveException;
+
+import org.jboss.invocation.Invocation;
+import org.jboss.util.UnreachableStatementException;
 
 /**
  * The container for <em>stateless</em> session beans.
@@ -33,7 +29,7 @@ import java.util.Map;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  */
 public class StatelessSessionContainer extends SessionContainer
         implements EJBProxyFactoryContainer, InstancePoolContainer
@@ -110,8 +106,6 @@ public class StatelessSessionContainer extends SessionContainer
    protected void setupHomeMapping()
            throws NoSuchMethodException
    {
-      boolean debug = log.isDebugEnabled();
-
       Map map = new HashMap();
 
       if (homeInterface != null)
@@ -120,8 +114,7 @@ public class StatelessSessionContainer extends SessionContainer
          for (int i = 0; i < m.length; i++)
          {
             // Implemented by container
-            if (debug)
-               log.debug("Mapping " + m[i].getName());
+            log.debug("Mapping " + m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName() + "Home", m[i].getParameterTypes()));
          }
       }
@@ -131,8 +124,7 @@ public class StatelessSessionContainer extends SessionContainer
          for (int i = 0; i < m.length; i++)
          {
             // Implemented by container
-            if (debug)
-               log.debug("Mapping " + m[i].getName());
+            log.debug("Mapping " + m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName() + "LocalHome", m[i].getParameterTypes()));
          }
       }

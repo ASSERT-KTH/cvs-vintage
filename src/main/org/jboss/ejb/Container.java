@@ -92,7 +92,7 @@ import java.util.HashSet;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.167 $
+ * @version $Revision: 1.168 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -938,15 +938,12 @@ public abstract class Container
     */
    private void setupEnvironment() throws Exception
    {
-      boolean debug = log.isDebugEnabled();
       BeanMetaData beanMetaData = getBeanMetaData();
 
-      if (debug)
-      {
-         log.debug("Begin java:comp/env for EJB: " + beanMetaData.getEjbName());
-         ClassLoader tcl = SecurityActions.getContextClassLoader();
-         log.debug("TCL: " + tcl);
-      }
+      // debug
+      log.debug("Begin java:comp/env for EJB: " + beanMetaData.getEjbName());
+      ClassLoader tcl = SecurityActions.getContextClassLoader();
+      log.debug("TCL: " + tcl);
 
       ORB orb = null;
       HandleDelegate hd = null;
@@ -982,11 +979,8 @@ public abstract class Container
          while (i.hasNext())
          {
             EnvEntryMetaData entry = (EnvEntryMetaData) i.next();
-            if (debug)
-            {
-               log.debug("Binding env-entry: " + entry.getName() + " of type: " +
-                       entry.getType() + " to value:" + entry.getValue());
-            }
+            log.debug("Binding env-entry: " + entry.getName() + " of type: " +
+                  entry.getType() + " to value:" + entry.getValue());
 
             EnvEntryMetaData.bindEnvEntry(envCtx, entry);
          }
@@ -998,19 +992,16 @@ public abstract class Container
          while (i.hasNext())
          {
             EjbRefMetaData ref = (EjbRefMetaData) i.next();
-            if (debug)
-               log.debug("Binding an EJBReference " + ref.getName());
+            log.debug("Binding an EJBReference " + ref.getName());
 
             if (ref.getLink() != null)
             {
                // Internal link
                String linkName = ref.getLink();
                String jndiName = EjbUtil.findEjbLink(server, di, linkName);
-               if (debug)
-               {
-                  log.debug("Binding " + ref.getName() +
-                          " to ejb-link: " + linkName + " -> " + jndiName);
-               }
+               log.debug("Binding " + ref.getName() +
+                     " to ejb-link: " + linkName + " -> " + jndiName);
+               
                if (jndiName == null)
                {
                   String msg = "Failed to resolve ejb-link: " + linkName
@@ -1175,8 +1166,7 @@ public abstract class Container
                   }
                   catch (Exception e)
                   {
-                     if (debug)
-                        log.debug("failed to lookup DefaultDS; ignoring", e);
+                     log.debug("failed to lookup DefaultDS; ignoring", e);
                   }
                   finally
                   {
@@ -1225,11 +1215,8 @@ public abstract class Container
             else
             {
                // Resource Manager bindings, should validate the type...
-               if (debug)
-               {
-                  log.debug("Binding resource manager: " + ref.getRefName() +
-                          " to JDNI ENC as: " + finalName);
-               }
+               log.debug("Binding resource manager: " + ref.getRefName() +
+                     " to JDNI ENC as: " + finalName);
                Util.bind(envCtx, ref.getRefName(), new LinkRef(finalName));
             }
          }
@@ -1245,11 +1232,8 @@ public abstract class Container
             String encName = resRef.getRefName();
             String jndiName = resRef.getJndiName();
             // Should validate the type...
-            if (debug)
-            {
-               log.debug("Binding env resource: " + encName +
-                       " to JDNI ENC as: " + jndiName);
-            }
+            log.debug("Binding env resource: " + encName +
+                  " to JDNI ENC as: " + jndiName);
             Util.bind(envCtx, encName, new LinkRef(jndiName));
          }
       }
@@ -1303,11 +1287,8 @@ public abstract class Container
          securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
       if (securityDomain != null)
       {
-         if (debug)
-         {
-            log.debug("Binding securityDomain: " + securityDomain +
-                    " to JDNI ENC as: security/security-domain");
-         }
+         log.debug("Binding securityDomain: " + securityDomain +
+            " to JDNI ENC as: security/security-domain");
 
          Util.bind(
                  envCtx,
@@ -1319,8 +1300,7 @@ public abstract class Container
                  new LinkRef(securityDomain + "/subject"));
       }
 
-      if (debug)
-         log.debug("End java:comp/env for EJB: " + beanMetaData.getEjbName());
+      log.debug("End java:comp/env for EJB: " + beanMetaData.getEjbName());
    }
    
    public MessageDestinationMetaData getMessageDestination(String link)

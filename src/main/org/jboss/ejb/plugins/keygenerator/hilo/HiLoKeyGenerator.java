@@ -5,7 +5,6 @@
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.keygenerator.hilo;
-
 import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.logging.Logger;
@@ -17,10 +16,9 @@ import javax.transaction.SystemException;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
-
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class HiLoKeyGenerator
    implements KeyGenerator
@@ -139,9 +137,9 @@ public class HiLoKeyGenerator
       Connection con = null;
       PreparedStatement updateHi = null;
 
-      if(log.isDebugEnabled())
+      if(log.isTraceEnabled())
       {
-         log.debug("Executing SQL: " + updateHiSql + ", [" + highestHi + "]");
+         log.trace("Executing SQL: " + updateHiSql + ", [" + highestHi + "]");
       }
 
       try
@@ -162,4 +160,4 @@ public class HiLoKeyGenerator
          JDBCUtil.safeClose(con);
       }
    }
-}
+}

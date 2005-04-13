@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.11 $</tt>
+ * @version <tt>$Revision: 1.12 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -1232,10 +1232,7 @@ public class JDBCCMRFieldBridge2
          ResultSet rs = null;
          try
          {
-            if(log.isDebugEnabled())
-            {
-               log.debug("executing: " + loadSql);
-            }
+            log.debug("executing: " + loadSql);
 
             con = relatedTable.getDataSource().getConnection();
             ps = con.prepareStatement(loadSql);
@@ -1331,10 +1328,7 @@ public class JDBCCMRFieldBridge2
          ResultSet rs = null;
          try
          {
-            if(log.isDebugEnabled())
-            {
-               log.debug("executing: " + loadSql);
-            }
+            log.debug("executing: " + loadSql);
 
             con = relatedTable.getDataSource().getConnection();
             ps = con.prepareStatement(loadSql);

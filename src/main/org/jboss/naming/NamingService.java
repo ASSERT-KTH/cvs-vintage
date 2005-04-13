@@ -39,7 +39,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *  extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -189,8 +189,6 @@ public class NamingService
    protected void startService()
       throws Exception
    {
-      boolean debug = log.isDebugEnabled();
-
       // Read jndi.properties into system properties
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       InputStream is = loader.getResourceAsStream("jndi.properties");
@@ -210,10 +208,7 @@ public class NamingService
       {
          String key = (String) keys.nextElement();
          String value = props.getProperty(key);
-         if (debug)
-         {
-            log.debug("System.setProperty, key="+key+", value="+value);
-         }
+         log.debug("System.setProperty, key="+key+", value="+value);
          System.setProperty(key, value);
       }
       if( proxyFactory != null )
@@ -226,16 +221,14 @@ public class NamingService
       */
       InitialContext iniCtx = new InitialContext();
       Hashtable env = iniCtx.getEnvironment();
-      if (debug)
-         log.debug("InitialContext Environment:");
+      log.debug("InitialContext Environment:");
       String providerURL = null;
       for (Enumeration keys = env.keys(); keys.hasMoreElements(); )
       {
          String key = (String) keys.nextElement();
          String value = (String) env.get(key);
-         if (debug) {
-            log.debug("key="+key+", value="+value);
-         }
+         log.debug("key="+key+", value="+value);
+         
          if( key.equals(Context.PROVIDER_URL) )
             providerURL = value;
       }

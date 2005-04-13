@@ -7,26 +7,25 @@
 
 package org.jboss.web;
 
-import java.io.BufferedReader;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.ServerSocket;
-import java.net.UnknownHostException;
+import java.net.Socket;
 import java.net.URL;
-import java.util.HashMap;
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.StringPropertyReplacer;
-import org.jboss.util.threadpool.BasicThreadPoolMBean;
 import org.jboss.util.threadpool.BasicThreadPool;
+import org.jboss.util.threadpool.BasicThreadPoolMBean;
 
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
@@ -42,7 +41,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * It is configured by calling any methods programmatically prior to startup.
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  * @see WebClassLoader
  */
 public class WebServer
@@ -199,8 +198,7 @@ public class WebServer
       try
       {
          server = new ServerSocket(port, backlog, bindAddress);
-         if (log.isDebugEnabled())
-            log.debug("Started server: " + server);
+         log.debug("Started server: " + server);
          listen();
       }
       catch(java.net.BindException be)
@@ -493,8 +491,7 @@ public class WebServer
    protected byte[] getBytes(URL url) throws IOException
    {
       InputStream in = new BufferedInputStream(url.openStream());
-      if (log.isDebugEnabled())
-         log.debug("Retrieving " + url);
+      log.debug("Retrieving " + url);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       byte[] tmp = new byte[1024];
       int bytes;

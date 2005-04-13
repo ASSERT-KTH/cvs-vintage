@@ -10,19 +10,14 @@ package org.jboss.naming;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Properties;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -32,7 +27,6 @@ import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
-import javax.naming.StringRefAddr;
 import javax.naming.ldap.Control;
 import javax.naming.spi.ObjectFactory;
 
@@ -49,7 +43,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * 
  * @see org.jboss.naming.NonSerializableFactory
  * 
- * @version <tt>$Revision: 1.17 $</tt>
+ * @version <tt>$Revision: 1.18 $</tt>
  * @author  Scott.Stark@jboss.org
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -249,17 +243,16 @@ public class ExternalContext
 
    private void rebind() throws Exception
    {
-      boolean debug = log.isDebugEnabled();
       Context ctx = contextInfo.newContext();
       Context rootCtx = (Context) new InitialContext();
-      if (debug)
-         log.debug("ctx="+ctx+", env="+ctx.getEnvironment());
+
+      log.debug("ctx="+ctx+", env="+ctx.getEnvironment());
       
       // Get the parent context into which we are to bind
       String jndiName = contextInfo.getJndiName();
       Name fullName = rootCtx.getNameParser("").parse(jndiName);
-      if (debug)
-         log.debug("fullName="+fullName);
+
+      log.debug("fullName="+fullName);
       
       Name parentName = fullName;
       if( fullName.size() > 1 )
@@ -267,12 +260,11 @@ public class ExternalContext
       else
          parentName = new CompositeName();
       
-      if (debug)
-         log.debug("parentName="+parentName);
+      log.debug("parentName="+parentName);
       
       Context parentCtx = createContext(rootCtx, parentName);
-      if (debug)
-         log.debug("parentCtx="+parentCtx);
+      
+      log.debug("parentCtx="+parentCtx);
       
       Name atomName = fullName.getSuffix(fullName.size()-1);
       String atom = atomName.get(0);

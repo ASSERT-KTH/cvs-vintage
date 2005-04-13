@@ -33,7 +33,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -75,8 +75,7 @@ public final class JDBCLoadRelationCommand
          String sql = getSQL(cmrField, preloadMask, loadKeys.size());
 
          // create the statement
-         if(log.isDebugEnabled())
-            log.debug("load relation SQL: " + sql);
+         log.debug("load relation SQL: " + sql);
 
          // get the connection
          con = cmrField.getDataSource().getConnection();

@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  * A helper for creating connections from jms connection factories.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ConnectionFactoryHelper
 {
@@ -52,14 +52,9 @@ public class ConnectionFactoryHelper
       if (factory == null)
          throw new IllegalArgumentException("factory is null");
 
-      boolean debug = log.isDebugEnabled();
-      if (debug)
-      {
-         log.debug("using connection factory: " + factory);
-         log.debug("using username/password: " +
-                   String.valueOf(username) + "/" +
-                   String.valueOf(password));
-      }
+      log.debug("using connection factory: " + factory);
+      log.debug("using username/password: " + String.valueOf(username) +
+                                        "/" + String.valueOf(password));
 
       Connection connection;
 
@@ -70,8 +65,8 @@ public class ConnectionFactoryHelper
             connection = qFactory.createXAConnection(username, password);
          else
             connection = qFactory.createXAConnection();
-         if (debug)
-            log.debug("created XAConnection: " + connection);
+         
+         log.debug("created XAConnection: " + connection);
       }
       else if (factory instanceof ConnectionFactory)
       {
@@ -80,8 +75,8 @@ public class ConnectionFactoryHelper
             connection = qFactory.createConnection(username, password);
          else
             connection = qFactory.createConnection();
-         if (debug)
-            log.debug("created Connection: " + connection);
+
+         log.debug("created Connection: " + connection);
       }
       else {
          throw new IllegalArgumentException("factory is invalid");
@@ -129,14 +124,9 @@ public class ConnectionFactoryHelper
       if (factory == null)
          throw new IllegalArgumentException("factory is null");
 
-      boolean debug = log.isDebugEnabled();
-      if (debug)
-      {
-         log.debug("using connection factory: " + factory);
-         log.debug("using username/password: " +
-                   String.valueOf(username) + "/" +
-                   String.valueOf(password));
-      }
+      log.debug("using connection factory: " + factory);
+      log.debug("using username/password: " + String.valueOf(username) +
+                                        "/" + String.valueOf(password));
 
       QueueConnection connection;
 
@@ -147,8 +137,8 @@ public class ConnectionFactoryHelper
             connection = qFactory.createXAQueueConnection(username, password);
          else
             connection = qFactory.createXAQueueConnection();
-         if (debug)
-            log.debug("created XAQueueConnection: " + connection);
+
+         log.debug("created XAQueueConnection: " + connection);
       }
       else if (factory instanceof QueueConnectionFactory)
       {
@@ -157,8 +147,8 @@ public class ConnectionFactoryHelper
             connection = qFactory.createQueueConnection(username, password);
          else
             connection = qFactory.createQueueConnection();
-         if (debug)
-            log.debug("created QueueConnection: " + connection);
+
+         log.debug("created QueueConnection: " + connection);
       }
       else
          throw new IllegalArgumentException("factory is invalid");
@@ -205,14 +195,9 @@ public class ConnectionFactoryHelper
       if (factory == null)
          throw new IllegalArgumentException("factory is null");
 
-      boolean debug = log.isDebugEnabled();
-      if (debug)
-      {
-         log.debug("using connection factory: " + factory);
-         log.debug("using username/password: " +
-                   String.valueOf(username) + "/" +
-                   String.valueOf(password));
-      }
+      log.debug("using connection factory: " + factory);
+      log.debug("using username/password: " + String.valueOf(username) +
+                                        "/" + String.valueOf(password));
 
       TopicConnection connection;
 
@@ -223,8 +208,8 @@ public class ConnectionFactoryHelper
             connection = tFactory.createXATopicConnection(username, password);
          else
             connection = tFactory.createXATopicConnection();
-         if (debug)
-            log.debug("created XATopicConnection: " + connection);
+
+         log.debug("created XATopicConnection: " + connection);
       }
       else if (factory instanceof TopicConnectionFactory)
       {
@@ -233,8 +218,8 @@ public class ConnectionFactoryHelper
             connection = tFactory.createTopicConnection(username, password);
          else
             connection = tFactory.createTopicConnection();
-         if (debug)
-            log.debug("created TopicConnection: " + connection);
+
+         log.debug("created TopicConnection: " + connection);
       }
       else
          throw new IllegalArgumentException("factory is invalid");

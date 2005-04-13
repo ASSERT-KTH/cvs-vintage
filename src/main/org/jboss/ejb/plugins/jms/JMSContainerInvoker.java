@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.69 $</tt>
+ * @version <tt>$Revision: 1.70 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JMSContainerInvoker
@@ -367,8 +367,7 @@ public class JMSContainerInvoker
     */
    public void setOptimized(final boolean optimize)
    {
-      if (log.isDebugEnabled())
-         log.debug("Container Invoker optimize set to " + optimize);
+      log.debug("Container Invoker optimize set to " + optimize);
 
       this.optimize = optimize;
    }
@@ -440,8 +439,7 @@ public class JMSContainerInvoker
     */
    public boolean isOptimized()
    {
-      if (log.isDebugEnabled())
-         log.debug("Optimize in action: " + optimize);
+      log.debug("Optimize in action: " + optimize);
 
       return optimize;
    }

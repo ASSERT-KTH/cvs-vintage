@@ -53,7 +53,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.18 $</tt>
+ * @version <tt>$Revision: 1.19 $</tt>
  */
 public class EntityTable
    implements Table
@@ -459,10 +459,7 @@ public class EntityTable
       ResultSet rs = null;
       try
       {
-         if(log.isDebugEnabled())
-         {
-            log.debug("executing sql: " + selectSql);
-         }
+         log.debug("executing sql: " + selectSql);
 
          con = dataSource.getConnection();
          ps = con.prepareStatement(selectSql);
@@ -598,10 +595,7 @@ public class EntityTable
       PreparedStatement ps = null;
       try
       {
-         if(log.isDebugEnabled())
-         {
-            log.debug("executing : " + deleteSql);
-         }
+         log.debug("executing : " + deleteSql);
 
          con = dataSource.getConnection();
          ps = con.prepareStatement(deleteSql);
@@ -658,10 +652,7 @@ public class EntityTable
       PreparedStatement ps = null;
       try
       {
-         if(log.isDebugEnabled())
-         {
-            log.debug("executing : " + updateSql);
-         }
+         log.debug("executing : " + updateSql);
 
          con = dataSource.getConnection();
          ps = con.prepareStatement(updateSql);
@@ -732,10 +723,7 @@ public class EntityTable
       PreparedStatement ps = null;
       try
       {
-         if(log.isDebugEnabled())
-         {
-            log.debug("executing : " + insertSql);
-         }
+         log.debug("executing : " + insertSql);
 
          con = dataSource.getConnection();
          ps = con.prepareStatement(insertSql);
@@ -1305,10 +1293,8 @@ public class EntityTable
                         PreparedStatement s = ps[c];
                         if(s == null)
                         {
-                           if(log.isDebugEnabled())
-                           {
-                              log.debug("nullifying fk: " + cons[c].nullFkSql);
-                           }
+                           log.debug("nullifying fk: " + cons[c].nullFkSql);
+                           
                            s = con.prepareStatement(cons[c].nullFkSql);
                            ps[c] = s;
                         }
@@ -1651,10 +1637,7 @@ public class EntityTable
             */
 
             // insert
-            if(log.isDebugEnabled())
-            {
-               log.debug("executing : " + insertSql);
-            }
+            log.debug("executing : " + insertSql);
 
             insertPs = con.prepareStatement(insertSql);
 
@@ -1760,10 +1743,8 @@ public class EntityTable
          }
 
          nullFkSql = buf.toString();
-         if(log.isDebugEnabled())
-         {
-            log.debug("update foreign key sql: " + nullFkSql);
-         }
+
+         log.debug("update foreign key sql: " + nullFkSql);
       }
    }
 }

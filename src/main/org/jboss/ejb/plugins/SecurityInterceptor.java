@@ -31,7 +31,7 @@ import javax.security.auth.Subject;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -156,7 +156,7 @@ public class SecurityInterceptor extends AbstractInterceptor
    {
       Principal principal = mi.getPrincipal();
       Object credential = mi.getCredential();
-      boolean trace = log.isInfoEnabled();
+      boolean trace = log.isTraceEnabled();
 
       // If there is not a security manager then there is no authentication required
       if (mi.getMethod() == null || securityManager == null || container == null)

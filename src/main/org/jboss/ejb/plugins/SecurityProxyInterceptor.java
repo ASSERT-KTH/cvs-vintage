@@ -28,7 +28,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -111,8 +111,7 @@ public class SecurityProxyInterceptor
             {
                log.error("Failed to initialze SecurityProxy", e);
             }
-            if (log.isInfoEnabled())
-               log.info("Initialized SecurityProxy=" + securityProxy);
+            log.info("Initialized SecurityProxy=" + securityProxy);
          }
       }
    }

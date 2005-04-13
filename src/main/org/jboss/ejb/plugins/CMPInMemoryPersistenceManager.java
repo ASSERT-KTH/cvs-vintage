@@ -37,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @see org.jboss.ejb.EntityPersistenceStore
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.9 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
@@ -90,14 +90,12 @@ public class CMPInMemoryPersistenceManager
     */
    protected void createService() throws Exception
    {
-      boolean debug = log.isDebugEnabled();
-      
       this.beans = new HashMap(1000);
       
       String ejbName = con.getBeanMetaData ().getEjbName ();
       
       idField = con.getBeanClass ().getField ("id");
-      if (debug) log.debug("Using id field: " + idField);
+      log.debug("Using id field: " + idField);
 
       // Lookup the isModified method if it exists
       try
@@ -108,7 +106,7 @@ public class CMPInMemoryPersistenceManager
             log.warn("Found isModified method, but return type is not boolean; ignoring");
          }
          else {
-            if (debug) log.debug("Using isModified method: " + isModified);
+            log.debug("Using isModified method: " + isModified);
          }
       }
       catch (NoSuchMethodException ignored) {}

@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.89 $
+ @version $Revision: 1.90 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -286,11 +286,9 @@ public abstract class AbstractWebContainer
          }
          // Get the war URL
          URL warURL = di.localUrl != null ? di.localUrl : di.url;
-         if (log.isDebugEnabled())
-         {
-            log.debug("webContext: " + webContext);
-            log.debug("warURL: " + warURL);
-         }
+
+         log.debug("webContext: " + webContext);
+         log.debug("warURL: " + warURL);
 
          // Parse the web.xml and jboss-web.xml descriptors
          parseMetaData(webContext, warURL, di.shortName, metaData);

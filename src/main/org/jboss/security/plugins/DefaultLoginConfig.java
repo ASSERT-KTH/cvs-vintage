@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -16,7 +17,6 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.ReflectionException;
 import javax.security.auth.login.Configuration;
-import javax.security.auth.login.AppConfigurationEntry;
 
 import org.jboss.logging.Logger;
 
@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  implementation. 
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
  */
 public class DefaultLoginConfig implements DynamicMBean
 {
@@ -56,12 +56,11 @@ public class DefaultLoginConfig implements DynamicMBean
       if( loginConfig != null )
       {
          System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-         if (log.isInfoEnabled())
-            log.info("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
+         log.info("Using JAAS LoginConfig: " + loginConfig.toExternalForm());
       }
       else
       {
-         log.warn("Resource: "+authConfig+" not found");
+         log.warn("Resource: " + authConfig + " not found");
       }
    }
 

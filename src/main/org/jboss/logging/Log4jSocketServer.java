@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Log4jSocketServer
@@ -190,11 +190,7 @@ public class Log4jSocketServer
          {
             lock.notifyAll();
          }
-
-         if (log.isDebugEnabled())
-         {
-            log.debug("Notified that enabled: " + enabled);
-         }
+         log.debug("Notified that enabled: " + enabled);
       }
 
       public void shutdown()
@@ -206,11 +202,7 @@ public class Log4jSocketServer
          {
             lock.notifyAll();
          }
-
-         if (log.isDebugEnabled())
-         {
-            log.debug("Notified to shutdown");
-         }
+         log.debug("Notified to shutdown");
       }
       
       public void run()

@@ -41,7 +41,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.26 $
+ * @version   $Revision: 1.27 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -237,11 +237,7 @@ public class StdServerSessionPool
          // ThreadPool won't leave any more threads out.
          closing = true;
 
-         if (log.isDebugEnabled())
-         {
-            log.debug("Clearing " + sessionPool.size() +
-                  " from ServerSessionPool");
-         }
+         log.debug("Clearing " + sessionPool.size() + " from ServerSessionPool");
 
          Iterator iter = sessionPool.iterator();
          while (iter.hasNext())
@@ -330,16 +326,13 @@ public class StdServerSessionPool
 
    private void create() throws JMSException
    {
-      boolean debug = log.isDebugEnabled();
-
       for (int index = 0; index < poolSize; index++)
       {
          // Here is the meat, that MUST follow the spec
          Session ses = null;
          XASession xaSes = null;
 
-         if (debug)
-            log.debug("initializing with connection: " + con);
+         log.debug("initializing with connection: " + con);
 
          if (destination instanceof Topic && con instanceof XATopicConnection)
          {
@@ -375,8 +368,8 @@ public class StdServerSessionPool
 
          sessionPool.add(serverSession);
          numServerSessions++;
-         if (debug)
-            log.debug("added server session to the pool: " + serverSession);
+
+         log.debug("added server session to the pool: " + serverSession);
       }
    }
 

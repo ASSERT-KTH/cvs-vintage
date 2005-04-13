@@ -15,10 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.ejb.CreateException;
-import javax.ejb.FinderException;
 import javax.management.MalformedObjectNameException;
-import javax.sql.DataSource;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -59,7 +58,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    public void init(JDBCStoreManager manager) throws DeploymentException
    {
       log = Logger.getLogger(getClass().getName() + '.' + manager.getMetaData().getName());
-      debug = log.isDebugEnabled();
+      debug = true;
       trace = log.isTraceEnabled();
 
       entity = (JDBCEntityBridge) manager.getEntityBridge();

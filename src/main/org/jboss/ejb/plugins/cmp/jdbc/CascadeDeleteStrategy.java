@@ -32,7 +32,7 @@ import java.rmi.RemoteException;
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class CascadeDeleteStrategy
 {
@@ -245,8 +245,7 @@ public abstract class CascadeDeleteStrategy
       int rowsAffected = 0;
       try
       {
-         if(log.isDebugEnabled())
-            log.debug("Executing SQL: " + sql);
+         log.debug("Executing SQL: " + sql);
 
          // get the connection
          con = entity.getDataSource().getConnection();
@@ -276,8 +275,7 @@ public abstract class CascadeDeleteStrategy
          throw new RemoveException("Could not remove entity");
       }
 
-      if(log.isDebugEnabled())
-         log.debug("Remove: Rows affected = " + rowsAffected);
+      log.debug("Remove: Rows affected = " + rowsAffected);
    }
 
    public void invokeRemoveRelated(Object relatedId) throws RemoveException, RemoteException

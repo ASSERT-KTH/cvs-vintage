@@ -8,27 +8,24 @@
 package org.jboss.cache.invalidation.bridges;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Iterator;
 
-import javax.jms.MessageListener;
-import javax.jms.TopicConnection;
-import javax.jms.TopicSession;
-import javax.jms.Topic;
-import javax.jms.TopicSubscriber;
-import javax.jms.TopicPublisher;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-import javax.jms.TopicConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
+import javax.jms.TopicSubscriber;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.naming.Context;
 
-import org.jboss.cache.invalidation.InvalidationManager;
-import org.jboss.cache.invalidation.InvalidationBridgeListener;
 import org.jboss.cache.invalidation.BatchInvalidation;
+import org.jboss.cache.invalidation.InvalidationBridgeListener;
+import org.jboss.cache.invalidation.InvalidationManager;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -40,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author  <a href="mailto:bill@jboss.org">Bill Burke</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b>
  *
@@ -396,8 +393,7 @@ public class JMSCacheInvalidationBridge
       }
       else
       {
-         if (log.isDebugEnabled()) 
-            log.debug("Using Context.PROVIDER_URL: " + providerUrl);
+         log.debug("Using Context.PROVIDER_URL: " + providerUrl);
 
          java.util.Properties props = new java.util.Properties(System.getProperties());
          props.put(Context.PROVIDER_URL, providerUrl);

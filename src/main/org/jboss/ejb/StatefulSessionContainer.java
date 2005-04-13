@@ -34,7 +34,7 @@ import org.jboss.util.UnreachableStatementException;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.76 $</tt>
+ * @version <tt>$Revision: 1.77 $</tt>
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
 
@@ -237,14 +237,9 @@ public class StatefulSessionContainer
       final StatefulSessionEnterpriseContext ctx)
       throws Exception
    {
-      boolean debug = log.isDebugEnabled();
-
       // Create a new ID and set it
       Object id = getPersistenceManager().createId(ctx);
-      if (debug)
-      {
-         log.debug("Created new session ID: " + id);
-      }
+      log.debug("Created new session ID: " + id);
       ctx.setId(id);
 
       // Invoke ejbCreate<METHOD>()
@@ -257,10 +252,7 @@ public class StatefulSessionContainer
          Object instance = ctx.getInstance();
          String ejbCreateName = "ejbC" + createName.substring(1);
          Method createMethod = instance.getClass().getMethod(ejbCreateName, m.getParameterTypes());
-         if (debug)
-         {
-            log.debug("Using create method for session: " + createMethod);
-         }
+         log.debug("Using create method for session: " + createMethod);
          createMethod.invoke(instance, args);
          createCount++;
       }

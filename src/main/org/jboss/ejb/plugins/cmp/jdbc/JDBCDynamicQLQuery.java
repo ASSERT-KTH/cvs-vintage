@@ -30,7 +30,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
@@ -49,10 +49,8 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       throws FinderException
    {
       String dynamicQL = (String)args[0];
-      if(getLog().isDebugEnabled())
-      {
-         getLog().debug("DYNAMIC-QL: " + dynamicQL);
-      }
+
+      getLog().debug("DYNAMIC-QL: " + dynamicQL);
 
       QLCompiler compiler = null;
       try

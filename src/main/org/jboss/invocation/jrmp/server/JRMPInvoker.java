@@ -52,7 +52,7 @@ import org.jboss.tm.TransactionPropagationContextUtil;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JRMPInvoker
@@ -318,27 +318,24 @@ public class JRMPInvoker
    {
       loadCustomSocketFactories();
 
-      if (log.isDebugEnabled())
-      {
-         log.debug("RMI Port='" +
+      log.debug("RMI Port='" +
             (rmiPort == ANONYMOUS_PORT ? "Anonymous" :
             Integer.toString(rmiPort)) + "'");
 
-         log.debug("Client SocketFactory='" +
+      log.debug("Client SocketFactory='" +
             (clientSocketFactory == null ? "Default" :
             clientSocketFactory.toString()) + "'");
 
-         log.debug("Server SocketFactory='" +
+      log.debug("Server SocketFactory='" +
             (serverSocketFactory == null ? "Default" :
             serverSocketFactory.toString()) + "'");
 
-         log.debug("Server SocketAddr='" +
+      log.debug("Server SocketAddr='" +
             (serverAddress == null ? "Default" :
             serverAddress) + "'");
-         log.debug("SecurityDomain='" +
+      log.debug("SecurityDomain='" +
             (sslDomain == null ? "Default" :
             sslDomain) + "'");
-      }
 
       InitialContext ctx = new InitialContext();
 

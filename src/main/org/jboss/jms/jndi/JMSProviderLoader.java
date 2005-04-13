@@ -11,15 +11,11 @@ package org.jboss.jms.jndi;
 
 import java.util.Properties;
 
-import javax.management.ObjectName;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-
 import javax.naming.Context;
-import javax.naming.Name;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.naming.Name;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.system.ServiceMBeanSupport;
@@ -35,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -237,8 +233,7 @@ public class JMSProviderLoader
    private void bind(Context ctx, String name, Object val)
       throws NamingException
    {
-      if (log.isDebugEnabled())
-         log.debug("attempting to bind " + val + " to " + name);
+      log.debug("attempting to bind " + val + " to " + name);
 
       // Bind val to name in ctx, and make sure that all
       // intermediate contexts exist

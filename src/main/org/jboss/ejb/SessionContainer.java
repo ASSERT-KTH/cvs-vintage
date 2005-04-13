@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb;
 
-// $Id: SessionContainer.java,v 1.11 2004/08/08 23:06:08 starksm Exp $
+// $Id: SessionContainer.java,v 1.12 2005/04/13 18:24:18 andd Exp $
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
@@ -37,7 +37,7 @@ import java.util.Map;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 30.10.2003
  */
 public abstract class SessionContainer extends Container
@@ -197,8 +197,7 @@ public abstract class SessionContainer extends Container
                throw new NoSuchMethodException("Not found in bean class: " + m);
             }
 
-            if (log.isDebugEnabled())
-               log.debug("Mapped " + m.getName() + " HASH " + m.hashCode() + "to " + map.get(m));
+            log.debug("Mapped " + m.getName() + " HASH " + m.hashCode() + "to " + map.get(m));
          }
          else
          {
@@ -213,8 +212,7 @@ public abstract class SessionContainer extends Container
                throw new NoSuchMethodException("Not found in container class: " + m);
             }
 
-            if (log.isDebugEnabled())
-               log.debug("Mapped Container method " + m.getName() + " HASH " + m.hashCode());
+            log.debug("Mapped Container method " + m.getName() + " HASH " + m.hashCode());
          }
       }
    }

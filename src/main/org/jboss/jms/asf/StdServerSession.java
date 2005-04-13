@@ -31,7 +31,7 @@ import org.jboss.tm.XidFactoryMBean;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.18 $
+ * @version   $Revision: 1.19 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -106,8 +106,7 @@ public class StdServerSession
       this.useLocalTX = useLocalTX;
       this.xidFactory = xidFactory;
 
-      if (log.isDebugEnabled())
-         log.debug("initializing (pool, session, xaSession, useLocalTX): " +
+      log.debug("initializing (pool, session, xaSession, useLocalTX): " +
             pool + ", " + session + ", " + xaSession + ", " + useLocalTX);
       
       // Set out self as message listener
