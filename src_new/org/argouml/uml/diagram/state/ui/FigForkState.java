@@ -1,4 +1,4 @@
-// $Id: FigForkState.java,v 1.15 2005/01/10 16:24:18 mvw Exp $
+// $Id: FigForkState.java,v 1.16 2005/04/13 20:59:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class FigForkState extends FigStateVertex {
     private static final int X = 10;
     private static final int Y = 10;
     private static final int WIDTH = 80;
-    private static final int HEIGHT = 9;
+    private static final int HEIGHT = 7;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -101,9 +101,9 @@ public class FigForkState extends FigStateVertex {
     public void setBounds(int x, int y, int w, int h) {
         Rectangle oldBounds = getBounds();
         if (w > h)
-            h = 9;
+            h = HEIGHT;
         else
-            w = 9;
+            w = HEIGHT;
         getBigPort().setBounds(x, y, w, h);
         head.setBounds(x, y, w, h);
 
