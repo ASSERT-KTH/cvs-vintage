@@ -78,7 +78,7 @@
         <para>Sun JDK 1.4 RMI IIOP</para>
       </listitem>
       <listitem>
-        <para>CAROL LMI implementation</para>
+        <para>JacORB IIOP implementation</para>
       </listitem>
       <listitem>
         <para>CAROL CMI implementation</para>
