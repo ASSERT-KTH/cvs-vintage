@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public final class JDBCXmlFileLoader {
    private final ApplicationMetaData application;
@@ -58,8 +58,9 @@ public final class JDBCXmlFileLoader {
          throw new DeploymentException("No standardjbosscmp-jdbc.xml found");
       }
 
-      log.debug("Loading standardjbosscmp-jdbc.xml : " + stdJDBCUrl.toString());
-      
+      boolean debug = log.isDebugEnabled();
+      if (debug)
+         log.debug("Loading standardjbosscmp-jdbc.xml : " + stdJDBCUrl.toString());
       Element stdJDBCElement = XmlFileLoader.getDocument(stdJDBCUrl, true).getDocumentElement();
 
       // first create the metadata
@@ -68,7 +69,8 @@ public final class JDBCXmlFileLoader {
       // Load jbosscmp-jdbc.xml if provided
       URL jdbcUrl = localClassLoader.getResource("META-INF/jbosscmp-jdbc.xml");
       if(jdbcUrl != null) {
-         log.debug(jdbcUrl.toString() + " found. Overriding defaults");
+         if (debug)
+            log.debug(jdbcUrl.toString() + " found. Overriding defaults");
          Element jdbcElement = XmlFileLoader.getDocument(jdbcUrl, true).getDocumentElement();
          jamd = new JDBCApplicationMetaData(jdbcElement, jamd);
       }

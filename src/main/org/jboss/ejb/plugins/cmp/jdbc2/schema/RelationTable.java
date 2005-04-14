@@ -22,7 +22,7 @@ import java.sql.PreparedStatement;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class RelationTable
    implements Table
@@ -163,7 +163,10 @@ public class RelationTable
       PreparedStatement ps = null;
       try
       {
-         log.debug("executing : " + deleteSql);
+         if(log.isDebugEnabled())
+         {
+            log.debug("executing : " + deleteSql);
+         }
 
          con = ds.getConnection();
          ps = con.prepareStatement(deleteSql);
@@ -235,7 +238,10 @@ public class RelationTable
       PreparedStatement ps = null;
       try
       {
-         log.debug("executing : " + insertSql);
+         if(log.isDebugEnabled())
+         {
+            log.debug("executing : " + insertSql);
+         }
 
          con = ds.getConnection();
          ps = con.prepareStatement(insertSql);

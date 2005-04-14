@@ -20,7 +20,7 @@ import java.util.Collections;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @jmx:mbean name="jboss.jdbc:service=metadata"
  * extends="org.jboss.system.ServiceMBean"
  */
@@ -56,8 +56,11 @@ public class MetaDataLibrary
          throw new DeploymentException("No standardjbosscmp-jdbc.xml found");
       }
 
-      log.debug("Loading standardjbosscmp-jdbc.xml : " + stdJDBCUrl.toString());
-      
+      boolean debug = log.isDebugEnabled();
+      if(debug)
+      {
+         log.debug("Loading standardjbosscmp-jdbc.xml : " + stdJDBCUrl.toString());
+      }
       Element stdJDBCElement = XmlFileLoader.getDocument(stdJDBCUrl, true).getDocumentElement();
 
       Element typeMaps = MetaData.getOptionalChild(stdJDBCElement, "type-mappings");

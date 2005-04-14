@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCInsertRelationsCommand {
    private final Logger log;
@@ -45,7 +45,9 @@ public final class JDBCInsertRelationsCommand {
       try {
          // get the sql
          String sql = getSQL(relationData);
-         log.debug("Executing SQL: " + sql);
+         boolean debug = log.isDebugEnabled();
+         if(debug)
+            log.debug("Executing SQL: " + sql);
 
          // get the connection
          DataSource dataSource = cmrField.getDataSource();

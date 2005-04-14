@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="mailto:joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public final class JDBCStartCommand
 {
@@ -204,7 +204,10 @@ public final class JDBCStartCommand
          }
          else
          {
-            log.debug("Indices for table " + entity.getQualifiedTableName() + "not created as table existed");
+            if(log.isDebugEnabled())
+            {
+               log.debug("Indices for table " + entity.getQualifiedTableName() + "not created as table existed");
+            }
          }
 
 
@@ -479,7 +482,8 @@ public final class JDBCStartCommand
       }
 
       // success
-      log.debug("Table altered successfully.");
+      if ( log.isDebugEnabled() )
+         log.debug("Table altered successfully.");
    }
 
    private void createTable(DataSource dataSource, String tableName, String sql)
@@ -513,7 +517,10 @@ public final class JDBCStartCommand
          try
          {
             // execute sql
-            log.debug("Executing SQL: " + sql);
+            if(log.isDebugEnabled())
+            {
+               log.debug("Executing SQL: " + sql);
+            }
 
             con = dataSource.getConnection();
             statement = con.createStatement();
@@ -586,8 +593,10 @@ public final class JDBCStartCommand
          try
          {
             // execute sql
-            log.debug("Executing SQL: " + sql);
-            
+            if(log.isDebugEnabled())
+            {
+               log.debug("Executing SQL: " + sql);
+            }
             con = dataSource.getConnection();
             statement = con.createStatement();
             statement.executeUpdate(sql);
@@ -1046,8 +1055,10 @@ public final class JDBCStartCommand
          Statement statement = null;
          try
          {
-            log.debug("Executing SQL: " + sql);
-            
+            if(log.isDebugEnabled())
+            {
+               log.debug("Executing SQL: " + sql);
+            }
             con = dataSource.getConnection();
             statement = con.createStatement();
             statement.executeUpdate(sql);

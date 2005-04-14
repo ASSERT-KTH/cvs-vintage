@@ -59,7 +59,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.71 $
+ * @version $Revision: 1.72 $
  */
 public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
@@ -396,7 +396,8 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
     */
    private void initStoreManager() throws Exception
    {
-      log.debug("Initializing CMP plugin for " + container.getBeanMetaData().getEjbName());
+      if(log.isDebugEnabled())
+         log.debug("Initializing CMP plugin for " + container.getBeanMetaData().getEjbName());
 
       // get the transaction manager
       tm = container.getTransactionManager();

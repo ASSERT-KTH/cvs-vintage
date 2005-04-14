@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -194,10 +194,13 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       try
       {
          // create the statement
-         log.debug("Executing SQL: " + sql);
-         if(limit != 0 || offset != 0)
+         if(log.isDebugEnabled())
          {
-            log.debug("Query offset=" + offset + ", limit=" + limit);
+            log.debug("Executing SQL: " + sql);
+            if(limit != 0 || offset != 0)
+            {
+               log.debug("Query offset=" + offset + ", limit=" + limit);
+            }
          }
 
          // if metadata is false, the getconnection is done inside this try catch block
@@ -264,8 +267,10 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    protected void setSQL(String sql)
    {
       this.sql = sql;
-
-      log.debug("SQL: " + sql);
+      if(log.isDebugEnabled())
+      {
+         log.debug("SQL: " + sql);
+      }
    }
 
    protected void setParameterList(List p)
@@ -761,7 +766,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                }
             }
 
-            if(limit != 0 && count == 0)
+            if(log.isDebugEnabled() && limit != 0 && count == 0)
             {
                log.debug("Query result was limited to " + limit + " row(s)");
             }

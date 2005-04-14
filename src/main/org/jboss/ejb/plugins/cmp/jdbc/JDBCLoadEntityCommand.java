@@ -37,7 +37,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public final class JDBCLoadEntityCommand
 {
@@ -137,7 +137,10 @@ public final class JDBCLoadEntityCommand
       try
       {
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (log.isDebugEnabled())
+         {
+            log.debug("Executing SQL: " + sql);
+         }
 
          // get the connection
          con = entity.getDataSource().getConnection();

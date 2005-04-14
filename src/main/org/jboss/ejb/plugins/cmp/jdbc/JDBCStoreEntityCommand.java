@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public final class JDBCStoreEntityCommand
 {
@@ -100,7 +100,10 @@ public final class JDBCStoreEntityCommand
       try
       {
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if(log.isDebugEnabled())
+         {
+            log.debug("Executing SQL: " + sql);
+         }
 
          // get the connection
          con = entity.getDataSource().getConnection();

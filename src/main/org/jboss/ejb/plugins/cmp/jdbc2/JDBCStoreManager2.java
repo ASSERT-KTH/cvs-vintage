@@ -6,46 +6,47 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc2;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
-
-import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EjbModule;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.GenericEntityObjectFactory;
-import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStartCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStopCommand;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityCommandMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityCommandMetaData;
+import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
-import org.jboss.ejb.plugins.cmp.jdbc2.schema.EntityTable;
 import org.jboss.ejb.plugins.cmp.jdbc2.schema.Schema;
+import org.jboss.ejb.plugins.cmp.jdbc2.schema.EntityTable;
 import org.jboss.logging.Logger;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.tm.TransactionLocal;
+
+import javax.ejb.DuplicateKeyException;
+import javax.ejb.FinderException;
+import javax.ejb.EJBException;
+import javax.ejb.CreateException;
+import javax.ejb.RemoveException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
+import java.sql.SQLException;
 
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.13 $</tt>
+ * @version <tt>$Revision: 1.14 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -405,7 +406,10 @@ public class JDBCStoreManager2
 
    protected void initStoreManager() throws Exception
    {
-      log.debug("Initializing CMP plugin for " + container.getBeanMetaData().getEjbName());
+      if(log.isDebugEnabled())
+      {
+         log.debug("Initializing CMP plugin for " + container.getBeanMetaData().getEjbName());
+      }
 
       metaData = loadJDBCEntityMetaData();
 

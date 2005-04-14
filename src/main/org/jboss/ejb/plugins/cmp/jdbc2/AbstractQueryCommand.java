@@ -30,7 +30,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public abstract class AbstractQueryCommand implements QueryCommand
 {
@@ -124,7 +124,10 @@ public abstract class AbstractQueryCommand implements QueryCommand
       }
       try
       {
-         log.debug("executing: " + sql);
+         if(log.isDebugEnabled())
+         {
+            log.debug("executing: " + sql);
+         }
 
          // if metadata is false, the getconnection is done inside this try catch block
          if ( ! throwRuntimeExceptions)
@@ -193,7 +196,10 @@ public abstract class AbstractQueryCommand implements QueryCommand
       }
       try
       {
-         log.debug("executing: " + sql);
+         if(log.isDebugEnabled())
+         {
+            log.debug("executing: " + sql);
+         }
 
          // if metadata is false, the getconnection is done inside this try catch block
          if ( ! throwRuntimeExceptions)

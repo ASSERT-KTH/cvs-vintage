@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="mailto:john-jboss@freeborg.com">John Freeborg</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCCustomFinderQuery implements JDBCQueryCommand
 {
@@ -71,7 +71,8 @@ public final class JDBCCustomFinderQuery implements JDBCQueryCommand
          "." +
          finderMethod.getName());
 
-      log.debug("Finder: Custom finder " + finderMethod.getName());
+      if(log.isDebugEnabled())
+         log.debug("Finder: Custom finder " + finderMethod.getName());
    }
 
    public JDBCStoreManager getSelectManager()
