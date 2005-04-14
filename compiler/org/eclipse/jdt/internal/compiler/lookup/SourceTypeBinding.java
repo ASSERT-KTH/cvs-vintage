@@ -500,8 +500,8 @@ public int kind() {
 	if (this.typeVariables != NoTypeVariables) return Binding.GENERIC_TYPE;
 	return Binding.TYPE;
 }
-public char[] computeUniqueKey() {
-	char[] uniqueKey = super.computeUniqueKey();
+public char[] computeUniqueKey(boolean withAccessFlags) {
+	char[] uniqueKey = super.computeUniqueKey(withAccessFlags);
 	if (uniqueKey.length == 2) return uniqueKey; // problem type's unique key is "L;"
 	int start = CharOperation.lastIndexOf('/', this.fileName) + 1;
 	int end = CharOperation.lastIndexOf('.', this.fileName);
@@ -951,8 +951,8 @@ public MethodBinding[] methods() {
 							 // colllision when parameters are identical & type variable erasures match
 							if (!method.areParametersEqual(method2))
 								continue nextMethod;
-							if (!method.areTypeVariableErasuresEqual(method2))
-								if (method.typeVariables != NoTypeVariables && method2.typeVariables != NoTypeVariables)
+							if (method.typeVariables != NoTypeVariables && method2.typeVariables != NoTypeVariables)
+								if (!method.areTypeVariableErasuresEqual(method2))
 									continue nextMethod;
 						} else if (!method.areParameterErasuresEqual(method2)) { // colllision when parameter & return type erasures match
 							continue nextMethod;
