@@ -1,4 +1,4 @@
-// $Id: SelectionState.java,v 1.26 2005/03/18 13:34:26 mkl Exp $
+// $Id: SelectionState.java,v 1.27 2005/04/14 18:29:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,7 +157,7 @@ public class SelectionState extends SelectionWButtons {
 	}
 	int cx = _content.getX(), cy = _content.getY();
 	int cw = _content.getWidth(), ch = _content.getHeight();
-	Object edgeType= null;
+	Object edgeType = null;
 	Object nodeType = Model.getMetaTypes().getState();
 
 	Editor ce = Globals.curEditor();

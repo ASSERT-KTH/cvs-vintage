@@ -1,4 +1,4 @@
-// $Id: UMLSynchStateBoundDocument.java,v 1.2 2005/01/30 20:47:43 linus Exp $
+// $Id: UMLSynchStateBoundDocument.java,v 1.3 2005/04/14 18:29:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 
 /**
+ * The Document/model for the bound of a synch state.
+ * 
  * @author pepargouml@yahoo.es
  */
-
 public class UMLSynchStateBoundDocument extends UMLPlainTextDocument {
 
     /**
@@ -65,8 +66,12 @@ public class UMLSynchStateBoundDocument extends UMLPlainTextDocument {
             return String.valueOf(bound);
     }
 
+    /**
+     * @see javax.swing.text.Document#insertString(int, java.lang.String, 
+     * javax.swing.text.AttributeSet)
+     */
     public void insertString(int offset, String str, AttributeSet a)
-            throws BadLocationException {
+        throws BadLocationException {
         try {
             //If it is not entered a digit, an exception must be thrown
             int aux = Integer.parseInt(str);

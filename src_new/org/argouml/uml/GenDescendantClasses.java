@@ -1,4 +1,4 @@
-// $Id: GenDescendantClasses.java,v 1.10 2005/01/30 20:47:43 linus Exp $
+// $Id: GenDescendantClasses.java,v 1.11 2005/04/14 18:29:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,9 @@ public class GenDescendantClasses implements ChildGenerator {
      */
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
-	if (!(Model.getFacade().isAGeneralizableElement(o))) return res.elements();
+	if (!(Model.getFacade().isAGeneralizableElement(o))) {
+                return res.elements();
+        }
 
 	Object cls = /*(MGeneralizableElement)*/ o;
 	Collection gens = Model.getFacade().getSpecializations(cls);

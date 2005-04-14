@@ -1,4 +1,4 @@
-// $Id: XmlInputStream.java,v 1.6 2005/02/20 21:55:17 linus Exp $
+// $Id: XmlInputStream.java,v 1.7 2005/04/14 18:29:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -287,6 +287,7 @@ public class XmlInputStream extends BufferedInputStream {
                     // back to that child tag.
                     mark(1000);
                     while (realRead() != '<') {
+                            /* do nothing */ ;
 		    }
                     tagName = "";
                     char ch;

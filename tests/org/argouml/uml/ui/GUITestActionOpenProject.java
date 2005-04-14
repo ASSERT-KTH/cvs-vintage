@@ -1,4 +1,4 @@
-// $Id: GUITestActionOpenProject.java,v 1.6 2005/01/16 02:06:40 bobtarling Exp $
+// $Id: GUITestActionOpenProject.java,v 1.7 2005/04/14 18:29:47 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui;
 
 import java.io.File;
-import java.net.URL;
 
 import junit.framework.TestCase;
 

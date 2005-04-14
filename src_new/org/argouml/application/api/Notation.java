@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.58 2005/03/03 19:31:28 mvw Exp $
+// $Id: Notation.java,v 1.59 2005/04/14 18:29:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -829,6 +829,7 @@ public final class Notation implements PropertyChangeListener {
     //                   and should be uncommented by those initially
     //                   incorporating this code into production,
     //                   only using those methods that are necessary.
+    //                   See issue 1183.
     ////////////////////////////////////////////////////////////////
 
     // public static void parseExtensionPointCompartment(NotationContext ctx,

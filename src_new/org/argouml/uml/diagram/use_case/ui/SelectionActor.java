@@ -1,4 +1,4 @@
-// $Id: SelectionActor.java,v 1.27 2005/01/30 01:21:55 bobtarling Exp $
+// $Id: SelectionActor.java,v 1.28 2005/04/14 18:29:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,9 +187,9 @@ public class SelectionActor extends SelectionWButtons {
      */
     protected Object createEdgeLeft(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-            // TODO Remove when GEF with this fixed and incorporated
+            // TODO: Remove when GEF with this fixed and incorporated
             // http://gef.tigris.org/issues/show_bug.cgi?id=203
-			  (Class)Model.getMetaTypes().getAssociation());
+		  (Class) Model.getMetaTypes().getAssociation());
     }
 
     /**
@@ -198,7 +198,7 @@ public class SelectionActor extends SelectionWButtons {
      */
     protected Object createEdgeRight(MutableGraphModel gm, Object newNode) {
         return gm.connect(_content.getOwner(), newNode ,
-            // TODO Remove when GEF with this fixed and incorporated
+            // TODO: Remove when GEF with this fixed and incorporated
             // http://gef.tigris.org/issues/show_bug.cgi?id=203
 			  (Class) Model.getMetaTypes().getAssociation());
     }

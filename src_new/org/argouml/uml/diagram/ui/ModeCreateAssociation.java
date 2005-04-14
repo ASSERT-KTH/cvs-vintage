@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.10 2005/01/30 20:47:54 linus Exp $
+// $Id: ModeCreateAssociation.java,v 1.11 2005/04/14 18:29:43 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,10 +208,10 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                 }
                 if (edgeType != null) {
                     setNewEdge(mutableGraphModel.connect(
-                                    getStartPort(), foundPort, (Class) edgeType));
+                           getStartPort(), foundPort, (Class) edgeType));
                 } else {
                     setNewEdge(mutableGraphModel.connect(
-                                    getStartPort(), foundPort));
+                           getStartPort(), foundPort));
                 }
 
                 // Calling connect() will add the edge to the GraphModel and

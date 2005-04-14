@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.20 2005/03/11 09:43:03 mkl Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.21 2005/04/14 18:29:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,8 +100,8 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
     public ListSet computeOffenders(UMLDeploymentDiagram deploymentDiagram) {
 
 	Collection figs = deploymentDiagram.getLayer().getContents(null);
-	ListSet offs = null;
-    Iterator figIter = figs.iterator();
+        ListSet offs = null;
+        Iterator figIter = figs.iterator();
 	while (figIter.hasNext()) {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigComponentInstance)) continue;

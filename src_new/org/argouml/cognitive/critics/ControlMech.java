@@ -1,4 +1,4 @@
-// $Id: ControlMech.java,v 1.7 2005/03/09 14:34:34 mkl Exp $
+// $Id: ControlMech.java,v 1.8 2005/04/14 18:29:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public interface ControlMech  {
      * @param d the designer
      * @return true f the critic is relevant for the given designer
      */
-    boolean isRelevant(Critic c, Designer d) ;
+    boolean isRelevant(Critic c, Designer d);
 } // end interface ControlMech
 
 

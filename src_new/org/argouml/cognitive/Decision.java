@@ -1,4 +1,4 @@
-// $Id: Decision.java,v 1.14 2005/03/11 10:04:10 mkl Exp $
+// $Id: Decision.java,v 1.15 2005/04/14 18:29:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,6 +83,8 @@ public class Decision {
     /**
      * Two decisions are considered to be equal if their names are equal. The
      * priority is not considered.
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object d2) {
         if (!(d2 instanceof Decision)) {

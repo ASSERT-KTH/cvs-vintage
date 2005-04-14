@@ -1,4 +1,4 @@
-// $Id: ActionPageSetup.java,v 1.4 2005/03/07 21:54:04 bobtarling Exp $
+// $Id: ActionPageSetup.java,v 1.5 2005/04/14 18:29:46 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ class ActionPageSetup extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	    PrintManager.getInstance().showPageSetupDialog();
+        PrintManager.getInstance().showPageSetupDialog();
     }
 } /* end class ActionPageSetup */
 

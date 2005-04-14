@@ -1,4 +1,4 @@
-// $Id: GenAncestorClasses.java,v 1.9 2005/01/30 20:47:43 linus Exp $
+// $Id: GenAncestorClasses.java,v 1.10 2005/04/14 18:29:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,9 @@ public class GenAncestorClasses implements ChildGenerator {
     public Enumeration gen(Object cls) {
 	Vector res = new Vector();
 
-	if (!(Model.getFacade().isAGeneralizableElement(cls))) return res.elements();
+	if (!(Model.getFacade().isAGeneralizableElement(cls))) {
+                return res.elements();
+        }
 	Collection gens = Model.getFacade().getGeneralizations(cls);
 	if (gens == null) return res.elements();
 	accumulateAncestors(cls, res);

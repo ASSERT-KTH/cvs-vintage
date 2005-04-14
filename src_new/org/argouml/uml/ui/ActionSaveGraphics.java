@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.31 2005/02/22 23:23:07 bobtarling Exp $
+// $Id: ActionSaveGraphics.java,v 1.32 2005/04/14 18:29:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,11 +158,10 @@ public class ActionSaveGraphics
                             || suffix.equals(PNG_SFX)
                             || suffix.equals(SVG_SFX))) {
                 		// add the selected filter suffix
-                		FileFilter filter = chooser.getFileFilter();
-                		suffix = FileFilters.getSuffix(filter);
-                		theFile =
-                		    new File(theFile.getParentFile(),
-                			     theFile.getName() + "." + suffix);
+        		FileFilter filter = chooser.getFileFilter();
+              		suffix = FileFilters.getSuffix(filter);
+               		theFile = new File(theFile.getParentFile(),
+       			     theFile.getName() + "." + suffix);
                     }
                     // end new code
                 
@@ -171,8 +170,8 @@ public class ActionSaveGraphics
             }
         } catch (OutOfMemoryError e) {
             JDialog dialog = new ExceptionDialog(ProjectBrowser.getInstance(),
-                "You have run out of memory. " +
-                "Close down ArgoUML and restart with a larger heap size.", e);
+                "You have run out of memory. " 
+                + "Close down ArgoUML and restart with a larger heap size.", e);
         } catch (Exception e) {
             JDialog dialog
                 = new ExceptionDialog(ProjectBrowser.getInstance(), e);

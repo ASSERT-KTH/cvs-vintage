@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.7 2005/03/18 13:27:16 mkl Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.8 2005/04/14 18:29:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,8 @@ public class ExtensionMechanismsFactoryImpl
 	extends AbstractUmlModelFactory
 	implements ExtensionMechanismsFactory {
 
-    private static final Logger LOG = Logger.getLogger(ExtensionMechanismsFactoryImpl.class);
+    private static final Logger LOG = 
+            Logger.getLogger(ExtensionMechanismsFactoryImpl.class);
     
     /**
      * The model implementation.

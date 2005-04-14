@@ -1,4 +1,4 @@
-// $Id: ActionNavigability.java,v 1.9 2005/01/30 20:47:50 linus Exp $
+// $Id: ActionNavigability.java,v 1.10 2005/04/14 18:29:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,8 +90,10 @@ public class ActionNavigability extends UMLAction {
     private static String getDescription(Object assocStart,
 					 Object assocEnd,
 					 int nav) {
-        String startName = Model.getFacade().getName(Model.getFacade().getType(assocStart));
-        String endName = Model.getFacade().getName(Model.getFacade().getType(assocEnd));
+        String startName = 
+            Model.getFacade().getName(Model.getFacade().getType(assocStart));
+        String endName = 
+            Model.getFacade().getName(Model.getFacade().getType(assocEnd));
 
         if (startName == null || startName.length() == 0) startName = "anon";
         if (endName == null || endName.length() == 0) endName = "anon";

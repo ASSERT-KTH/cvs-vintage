@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.37 2005/02/08 18:59:04 bobtarling Exp $
+// $Id: FigMessage.java,v 1.38 2005/04/14 18:29:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,8 +99,8 @@ public class FigMessage extends FigNodeModelElement {
 	arrowDirections.addElement("East");
 	arrowDirections.addElement("West");
 
-    getBigPort().setFilled(false);
-    getBigPort().setLineWidth(0);
+        getBigPort().setFilled(false);
+        getBigPort().setLineWidth(0);
 	// add Figs to the FigNode in back-to-front order
         addFig(getBigPort());
 	addFig(getNameFig());

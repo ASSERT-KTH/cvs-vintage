@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.18 2005/03/05 10:37:19 mvw Exp $
+// $Id: SelectionClassifierRole.java,v 1.19 2005/04/14 18:29:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.diagram.collaboration.ui;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 

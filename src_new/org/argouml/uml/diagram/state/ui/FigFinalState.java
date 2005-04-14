@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.26 2005/01/30 20:48:12 linus Exp $
+// $Id: FigFinalState.java,v 1.27 2005/04/14 18:29:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,8 @@ public class FigFinalState extends FigStateVertex {
         Selection sel = null;
         if (getOwner() != null) {
             pstate = getOwner();
-            if (Model.getFacade().isAActivityGraph(Model.getFacade().getStateMachine(
+            if (Model.getFacade().isAActivityGraph(
+                            Model.getFacade().getStateMachine(
                             Model.getFacade().getContainer(pstate)))) {
                 sel = new SelectionActionState(this);
                 ((SelectionActionState) sel).setOutgoingButtonEnabled(false);

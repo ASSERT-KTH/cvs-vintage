@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.18 2005/02/20 18:50:13 bobtarling Exp $
+// $Id: WizAddConstructor.java,v 1.19 2005/04/14 18:29:44 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileException;
-import org.argouml.uml.ProfileJava;
 
 /**
  * A wizard to add a constructor to a classifier.

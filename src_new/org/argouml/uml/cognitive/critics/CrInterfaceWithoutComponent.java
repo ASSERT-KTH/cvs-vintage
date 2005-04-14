@@ -1,4 +1,4 @@
-// $Id: CrInterfaceWithoutComponent.java,v 1.22 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.23 2005/04/14 18:29:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,7 @@ public class CrInterfaceWithoutComponent extends CrUML {
     public ListSet computeOffenders(UMLDeploymentDiagram dd) {
 	Collection figs = dd.getLayer().getContents(null);
 	ListSet offs = null;
-    Iterator figIter = figs.iterator();
+        Iterator figIter = figs.iterator();
 	while (figIter.hasNext()) {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigInterface)) continue;

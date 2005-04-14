@@ -1,5 +1,5 @@
-// $Id: NameGenerator.java,v 1.4 2005/03/19 10:27:48 kscr Exp $
-// Copyright (c) 2004, 2005 The Regents of the University of California. All
+// $Id: NameGenerator.java,v 1.5 2005/04/14 18:28:53 mvw Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -192,10 +192,8 @@ public final class NameGenerator {
 
         if (iMajorVersion < 5 && !(Model.getFacade().isPublic(modelElement))) {
             return "_" + sAttributeName;
-        } else {
-            return sAttributeName;
-        }
-
+        } 
+        return sAttributeName;
     }
 
     /**
@@ -217,9 +215,8 @@ public final class NameGenerator {
 
         if (iMajorVersion < 5 && !(Model.getFacade().isPublic(modelElement))) {
             return "_" + sOperationName;
-        } else {
-            return sOperationName;
         }
+        return sOperationName;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: OCLUtil.java,v 1.14 2005/01/30 20:48:45 linus Exp $
+// $Id: OCLUtil.java,v 1.15 2005/04/14 18:29:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,8 +87,8 @@ public final class OCLUtil {
 		Object mp = i.next(); //MParameter
 
 		if (Model.getFacade().isReturn(mp)) {
-		    sReturnType =
-		        Model.getFacade().getName(Model.getFacade().getType(mp));
+		    sReturnType = Model.getFacade().getName(
+                                    Model.getFacade().getType(mp));
                 } else {
 		    if (fFirstParam) {
 			fFirstParam = false;

@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.9 2005/03/18 13:27:16 mkl Exp $
+// $Id: NSUMLModelImplementation.java,v 1.10 2005/04/14 18:29:45 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -364,7 +364,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
      * @see org.argouml.model.ModelImplementation#getXmiWriter()
      */
     public XmiWriter getXmiWriter(Object model, Writer writer)
-            throws UmlException {
+        throws UmlException {
         return new XmiWriterImpl(model, writer);
     }
     

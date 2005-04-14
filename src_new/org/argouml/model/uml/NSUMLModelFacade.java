@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.7 2005/03/19 22:05:08 linus Exp $
+// $Id: NSUMLModelFacade.java,v 1.8 2005/04/14 18:29:45 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4546,9 +4546,8 @@ public class NSUMLModelFacade implements Facade {
     protected String getClassNull(Object handle) {
 	if (handle == null) {
 	    return "[null]";
-	} else {
-	    return "[" + handle + "/" + handle.getClass() + "]";
-	}
+	} 
+        return "[" + handle + "/" + handle.getClass() + "]";
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.93 2005/04/12 23:34:17 bobtarling Exp $
+// $Id: PropPanelModelElement.java,v 1.94 2005/04/14 18:29:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,12 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.BorderLayout;
 import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;

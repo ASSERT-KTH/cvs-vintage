@@ -1,4 +1,4 @@
-// $Id: GUITestActionGotoDiagram.java,v 1.4 2005/01/16 02:06:40 bobtarling Exp $
+// $Id: GUITestActionGotoDiagram.java,v 1.5 2005/04/14 18:29:47 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,10 @@
 package org.argouml.ui.cmd;
 
 import java.io.File;
-import java.net.URL;
-
-import org.argouml.util.CheckMain;
 
 import junit.framework.TestCase;
+
+import org.argouml.util.CheckMain;
 
 /**
  * Tests the change of diagram from the command line.

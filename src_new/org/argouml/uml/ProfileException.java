@@ -1,4 +1,4 @@
-// $Id: ProfileException.java,v 1.1 2005/02/20 18:46:27 bobtarling Exp $
+// $Id: ProfileException.java,v 1.2 2005/04/14 18:29:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,19 +46,19 @@ public class ProfileException extends Exception {
      * The constructor.
      *
      * @param message the message to show
-     * @param cause the cause for the exception
+     * @param theCause the cause for the exception
      */
-    public ProfileException(String message, Throwable cause) {
-        super(message, cause);
+    public ProfileException(String message, Throwable theCause) {
+        super(message, theCause);
     }
 
     /**
      * The constructor.
      *
-     * @param cause the cause for the exception
+     * @param theCause the cause for the exception
      */
-    public ProfileException(Throwable cause) {
-        super(cause);
+    public ProfileException(Throwable theCause) {
+        super(theCause);
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.26 2005/02/18 01:29:03 bobtarling Exp $
+// $Id: GUITestPropertyPanels.java,v 1.27 2005/04/14 18:29:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.persistence.TestZargoFilePersister;
 import org.argouml.persistence.ZargoFilePersister;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.cognitive.critics.ChildGenUML;
@@ -147,7 +146,8 @@ public class GUITestPropertyPanels extends TestCase {
 			  + "for all known model elements");
 
         p = ProjectManager.getManager().makeEmptyProject();
-        URL url = GUITestPropertyPanels.class.getResource("/testmodels/GUITestPropertyPanels.zargo");
+        URL url = GUITestPropertyPanels.class.getResource(
+                        "/testmodels/GUITestPropertyPanels.zargo");
 
         File testfile = new File(url.getFile());
 

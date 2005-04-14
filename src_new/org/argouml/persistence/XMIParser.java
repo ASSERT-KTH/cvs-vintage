@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.7 2005/03/18 12:07:41 mkl Exp $
+// $Id: XMIParser.java,v 1.8 2005/04/14 18:29:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,7 +105,8 @@ public class XMIParser {
      * @param url the URL
      * @throws OpenException when there is an IO error
      */
-    public synchronized void readModels(Project p, URL url) throws OpenException {
+    public synchronized void readModels(Project p, URL url) 
+        throws OpenException {
 
         proj = p;
 
