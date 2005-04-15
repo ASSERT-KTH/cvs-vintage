@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.24 2005/03/11 09:48:07 mkl Exp $
+// $Id: CrConsiderSingleton.java,v 1.25 2005/04/15 09:46:59 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,6 +94,11 @@ public class CrConsiderSingleton extends CrUML {
         // Only look at classes...
 
         if (!(Model.getFacade().isAClass(dm))) {
+            return NO_PROBLEM;
+        }
+        
+        // and not association classes
+        if (Model.getFacade().isAAssociationClass(dm)) {
             return NO_PROBLEM;
         }
 
