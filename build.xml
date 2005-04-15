@@ -85,6 +85,9 @@
 
   <property name="tomcat-jk.home" location="${jakarta-tomcat-connectors}/jk" />
   <property name="jtc.util.home" location="${jakarta-tomcat-connectors}/util"/>
+  <property name="jtc.jni.home" location="${jakarta-tomcat-connectors}/jni" />
+  <property name="tomcat-jni.jar" 
+            location="${jtc.jni.home}/dist/tomcat-native-1.0.0.jar" />
   <property name="jtc.util.build" location="${jtc.util.home}/build"/>
   <property name="tomcat-util.jar"
             location="${jtc.util.build}/lib/tomcat-util.jar"/>
@@ -240,6 +243,9 @@
   <target name="uptodate">
     <uptodate property="tomcat-util.is.uptodate" targetfile="${tomcat-util.jar}">
       <srcfiles dir="${jtc.util.home}" includes="java/**,build.xml"/>
+    </uptodate>
+    <uptodate property="tomcat-jni.is.uptodate" targetfile="${tomcat-jni.jar}">
+      <srcfiles dir="${jtc.jni.home}" includes="java/**,build.xml"/>
     </uptodate>
   </target>
 
@@ -416,7 +422,14 @@
     </move>
   </target>
 
+  <target name="dep.tomcat-jni" unless="tomcat-jni.is.uptodate"
+         description="Build j-t-c jni which j-t-c util depends on.">
+     <ant dir="${jtc.jni.home}" target="jar" >
+       <property name="version" value="1.0.0" />
+     </ant>
+  </target>
   <target name="dep.tomcat-util" unless="tomcat-util.is.uptodate"
+          depends="dep.tomcat-jni"
           description="Build j-t-c util which we depend on. To be called before main">
     <ant dir="${jtc.util.home}" />
   </target>
@@ -432,6 +445,7 @@
             <property name="commons-logging.jar" value="${commons-logging.jar}"/>
             <property name="commons-modeler.jar" value="${commons-modeler.jar}"/>
             <property name="jmx.jar" value="${jmx.jar}"/>
+            <property name="tomcat-jni.jar" value="${tomcat-jni.jar}" />
         </ant>
             
         <ant dir="${jtc.jk.home}" target="build-jk">
