@@ -1,5 +1,7 @@
 Welcome to ArgoUML!
 
+(This file was last updated by $Author: linus $ on $Date: 2005/04/16 19:53:44 $.)
+
 In case you just downloaded and unzipped your ArgoUML distribution,
 here's how to proceed.
 
