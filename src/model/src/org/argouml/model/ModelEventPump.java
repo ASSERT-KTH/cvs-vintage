@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.2 2005/02/26 00:58:02 bobtarling Exp $
+// $Id: ModelEventPump.java,v 1.3 2005/04/16 09:34:04 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,7 +200,8 @@ public interface ModelEventPump {
     void setSaveAction(Action saveAction);
     
     /**
-     * Get the action that is registered with the pump that is used to perform saving.
+     * Get the action that is registered with the pump 
+     * that is used to perform saving.
      * @return the relevant Action or null.
      */
     Action getSaveAction();

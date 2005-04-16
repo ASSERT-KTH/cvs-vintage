@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.3 2005/02/24 23:08:29 bobtarling Exp $
+// $Id: Model.java,v 1.4 2005/04/16 09:30:59 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -413,11 +413,13 @@ public final class Model {
     /**
      * Getter for the XmiWriter object
      * 
+     * @param model the project member model
+     * @param writer the writer
      * @return the object implementing the XmiWriter interface
      * @throws UmlException on any error while writing
      */
     public static XmiWriter getXmiWriter(Object model, Writer writer)
-            throws UmlException {
+        throws UmlException {
         return impl.getXmiWriter(model, writer);
     }
     

@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.3 2005/02/24 23:08:29 bobtarling Exp $
+// $Id: ModelImplementation.java,v 1.4 2005/04/16 09:34:04 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -277,6 +277,8 @@ public interface ModelImplementation {
     /**
      * Getter for the XmiWriter object
      * 
+     * @param model the project member model
+     * @param writer the writer
      * @return the object implementing the XmiWriter interface
      * @throws UmlException on any error while writing
      */

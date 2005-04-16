@@ -1,4 +1,4 @@
-// $Id: EventAdapter.java,v 1.1 2005/02/24 23:08:29 bobtarling Exp $
+// $Id: EventAdapter.java,v 1.2 2005/04/16 09:34:04 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,14 @@ import java.beans.PropertyChangeListener;
  * @author Bob Tarling
  */
 public interface EventAdapter {
+        
+    /**
+     * @param pcl the property change listener to be added
+     */
     void addPropertyChangeListener(PropertyChangeListener pcl);
+    
+    /**
+     * @param pcl the property change listener to be removed
+     */
     void removePropertyChangeListener(PropertyChangeListener pcl);
 }
