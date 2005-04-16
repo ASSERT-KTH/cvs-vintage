@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.54 2005/02/20 15:47:14 bobtarling Exp $
+// $Id: UmlModelEventPump.java,v 1.55 2005/04/16 14:01:21 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -247,13 +247,12 @@ public final class UmlModelEventPump implements MElementListener {
         String name = inputClass.getName();
         if (name.endsWith("Impl")) {
             return inputClass;
-        } else {
-            try {
-                Class returnClass = Class.forName(name + "Impl");
-                return returnClass;
-            } catch (ClassNotFoundException ignorable) {
-                // cannot happen
-            }
+        }
+        try {
+            Class returnClass = Class.forName(name + "Impl");
+            return returnClass;
+        } catch (ClassNotFoundException ignorable) {
+            // cannot happen
         }
         return null;
 
@@ -1247,9 +1246,8 @@ class EventListenerHashMap {
         EventListenerList list = (EventListenerList) listenerMap.get(element);
         if (list == null) {
             return NULL_ARRAY;
-        } else {
-            return list.getListeners(key);
         }
+        return list.getListeners(key);
     }
 
     /**
@@ -1346,9 +1344,8 @@ class ClassListenerHashMap {
         EventListenerList list = (EventListenerList) listenerMap.get(element);
         if (list == null) {
             return NULL_ARRAY;
-        } else {
-            return list.getListeners(key);
         }
+        return list.getListeners(key);
     }
 
     /**
@@ -1586,13 +1583,12 @@ class EventTreeDefinition {
         String name = inputClass.getName();
         if (name.endsWith("Impl")) {
             return inputClass;
-        } else {
-            try {
-                Class returnClass = Class.forName(name + "Impl");
-                return returnClass;
-            } catch (ClassNotFoundException ignorable) {
-                // cannot happen
-            }
+        }
+        try {
+            Class returnClass = Class.forName(name + "Impl");
+            return returnClass;
+        } catch (ClassNotFoundException ignorable) {
+            // cannot happen
         }
         return null;
     }

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.8 2005/02/03 20:40:52 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.9 2005/04/16 14:01:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,12 +243,11 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
         if (getMetaModelName(clazz)
                 .equals(nsmodel.getFacade().getBaseClass(stereo))) {
             return true;
-        } else {
-            if (getMetaModelName(clazz).equals("ModelElement")) {
-                return false;
-            }
-            return isValidStereoType(clazz.getSuperclass(), stereo);
         }
+        if (getMetaModelName(clazz).equals("ModelElement")) {
+            return false;
+        }
+        return isValidStereoType(clazz.getSuperclass(), stereo);
     }
 
     /**

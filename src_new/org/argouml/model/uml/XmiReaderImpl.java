@@ -1,4 +1,4 @@
-// $Id: XmiReaderImpl.java,v 1.2 2005/04/14 18:29:45 mvw Exp $
+// $Id: XmiReaderImpl.java,v 1.3 2005/04/16 14:01:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.log4j.Logger;
+
 import org.argouml.model.UmlException;
 import org.argouml.model.XmiReader;
 import org.xml.sax.InputSource;
@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
  * @author Bob Tarling
  */
 public class XmiReaderImpl implements XmiReader {
-    private static final Logger LOG = Logger.getLogger(XmiReader.class);
 
     private NsumlXmiReader nsumlXmiReader;
 

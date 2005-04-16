@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperImpl.java,v 1.10 2005/02/05 18:49:26 mvw Exp $
+// $Id: StateMachinesHelperImpl.java,v 1.11 2005/04/16 14:01:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,9 +105,8 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
             if (state instanceof MState
 		&& ((MState) state).getStateMachine() != null) {
                 return ((MState) state).getStateMachine();
-            } else {
-                return getStateMachine(state.getContainer());
-            }
+            } 
+            return getStateMachine(state.getContainer());
         }
         if (handle instanceof MTransition) {
             Object sm = ((MTransition) handle).getStateMachine();
@@ -319,10 +318,8 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
                 retList.add(subState);
             }
             return retList;
-        } else {
-            throw new IllegalArgumentException(
-                    "Argument is not a composite state");
         }
+        throw new IllegalArgumentException("Argument is not a composite state");
     }
 
     /**
