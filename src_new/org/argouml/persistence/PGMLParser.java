@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.20 2005/03/05 10:37:22 mvw Exp $
+// $Id: PGMLParser.java,v 1.21 2005/04/17 22:34:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -744,6 +744,36 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
         super.handlePGML(attrList);
         LOG.info("Diagram name is " + _diagram.getName());
     }
+    
+    ////////////////////////////////////////////////////////////////
+    // internal methods
+    // TODO: This code is identical to GEF other than the IllegalStatException,
+    // so move to GEF.
+    protected void initDiagram(String diagDescr) throws SAXException {
+        String clsName = diagDescr;
+        String initStr = null;
+        int bar = diagDescr.indexOf("|");
+        if (bar != -1) {
+            clsName = diagDescr.substring(0, bar);
+            initStr = diagDescr.substring(bar + 1);
+        }
+
+        String newClassName = translateClassName(clsName);
+        try {
+            Class cls = Class.forName(newClassName);
+            _diagram = (Diagram)cls.newInstance();
+            if(initStr != null && !initStr.equals("")) {
+                Object owner = findOwner(initStr);
+                if (owner == null) {
+                    throw new IllegalStateException("The owner of the diagram can not be found UUID = " + initStr);
+                }
+                _diagram.initialize(owner);
+            }
+        } catch(Exception ex) {
+            throw new SAXException(ex);
+        }
+    }
+
     
     /**
      * @see org.tigris.gef.xml.pgml.PGMLParser#privateStateEndElement(java.lang.String)
