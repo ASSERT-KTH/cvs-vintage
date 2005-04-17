@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.21 2005/01/09 14:58:38 linus Exp $
+// $Id: SequenceDiagramLayout.java,v 1.22 2005/04/17 07:31:06 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -231,6 +231,11 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
         }
     }
 
+    /**
+     * Update Activations.
+     * First removes all current activation boxes, then adds new ones
+     * to all figobject depending on the state of the nodes.
+     */
     public void updateActivations() {
         Iterator it = getContentsNoEdges().iterator();
         while (it.hasNext()) {
