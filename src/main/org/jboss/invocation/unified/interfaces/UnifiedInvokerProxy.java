@@ -158,10 +158,9 @@ public class UnifiedInvokerProxy implements Invoker, Externalizable
       switch(version)
       {
          case VERSION_5_0:
-            {
-               locator = (InvokerLocator) in.readObject();
-               init(locator);
-            }
+           locator = (InvokerLocator) in.readObject();
+           init(locator);
+		   break;
          default:
             throw new StreamCorruptedException("Unknown version seen: " + version);
       }
