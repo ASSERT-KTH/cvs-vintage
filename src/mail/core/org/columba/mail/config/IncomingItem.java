@@ -36,7 +36,7 @@ public class IncomingItem extends DefaultItem {
 	public static final String HOST = "host";
 	public static final String PASSWORD = "password";
 	public static final String USER = "user";
-	public static final String SMTPSERVER = "smtpserver";
+	public static final String IMAPSERVER = "imapserver";
 	public static final String POPSERVER = "popserver";
 	
 	public static final int IMAPS_POP3S = 0;

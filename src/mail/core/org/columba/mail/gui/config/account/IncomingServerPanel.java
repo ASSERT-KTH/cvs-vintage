@@ -137,11 +137,7 @@ public class IncomingServerPanel extends DefaultPanel implements
     }
     
     public boolean isPopAccount() {
-        return accountItem.getElement(IncomingItem.POPSERVER) != null;
-    }
-    
-    public boolean isSmtpAccount() {
-        return accountItem.getElement(IncomingItem.SMTPSERVER) != null;
+        return accountItem.isPopAccount();
     }
     
     protected void updateComponents(boolean b) {

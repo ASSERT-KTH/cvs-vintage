@@ -39,7 +39,7 @@ Fixed bugs:
 - #1098057, scale image when showing attachments inline
 - #1098058, show controls, if showing rfc822message inline
 - #1098059, add hide/show button for inline viewer
-
+- #1120945, configuration messed up
 
 Columba v1.0 RC2
 
