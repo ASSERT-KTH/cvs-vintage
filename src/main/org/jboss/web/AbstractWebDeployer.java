@@ -147,7 +147,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.26 $
+@version $Revision: 1.27 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -954,7 +954,20 @@ public abstract class AbstractWebDeployer
                   while (roles.hasNext())
                   {
                      String role = (String) roles.next();
-                     pc.addToRole(role, p);
+                     if( role.equals("*") )
+                     {
+                        // The wildcard ref maps to all declared security-role names
+                        Iterator allRoles = metaData.getSecurityRoleNames().iterator();
+                        while( allRoles.hasNext() )
+                        {
+                           role = (String) allRoles.next();
+                           pc.addToRole(role, p);
+                        }
+                     }
+                     else
+                     {
+                        pc.addToRole(role, p);
+                     }
                   }
                   pc.addToUncheckedPolicy(p2);
                   // Track the incomplete coverage of http methods
