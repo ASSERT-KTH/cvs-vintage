@@ -18,7 +18,7 @@
   -->
   <property file="mybuild.properties"/>
   
-  <property name="build.classes" value="${dest.dir}"/>
+  <property name="build.classes" value="${dest.dir}/bin"/>
   <property name="build.jar.name" value="jhotdraw.jar"/>
   <property name="build.jar" value="${dest.dir}/${build.jar.name}"/>
   <property name="deploy.dir" value="${dest.dir}/deploy"/>
@@ -265,7 +265,7 @@
   <!-- in their package structure, such as .gif, .properties, .html, etc.  -->
   <!-- =================================================================== -->
   <target name="copy_resources">
-    <copy toDir="${dest.dir}">
+    <copy toDir="${build.classes}">
       <fileset dir="${src.dir}">
          <include name ="**/*.gif" />
          <include name ="**/*.html" />
