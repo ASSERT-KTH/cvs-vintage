@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JUnicastRemoteObject.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JUnicastRemoteObject.java,v 1.8 2005/04/19 16:47:04 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.server;
@@ -135,7 +135,7 @@ public class JUnicastRemoteObject extends RemoteServer {
      */
     public static boolean unexportObject(Remote obj, boolean force) throws NoSuchObjectException {
         if (localO) {
-            JUnicastRef remoteref = (JUnicastRef) ObjectTable.getStub(obj).getRef();
+            JUnicastRef remoteref = (JUnicastRef) ((RemoteStub) ObjectTable.getStub(obj)).getRef();
             JLocalObjectStore.removeObject(remoteref.getLocalId());
         }
         return ObjectTable.unexportObject(obj, force);

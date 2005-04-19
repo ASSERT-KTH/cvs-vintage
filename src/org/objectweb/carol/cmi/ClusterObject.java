@@ -71,7 +71,7 @@ public final class ClusterObject {
             InvocationTargetException {
         Class config_class = getClusterConfigClass(obj);
         java.lang.reflect.Method mth =
-            config_class.getMethod("getClusterConfig", null);
-        return (ClusterConfig) mth.invoke(null, null);
+            config_class.getMethod("getClusterConfig", (Class[]) null);
+        return (ClusterConfig) mth.invoke(null, (Object[]) null);
     }
 }
