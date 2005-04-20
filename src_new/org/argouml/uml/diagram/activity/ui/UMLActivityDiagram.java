@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.71 2005/04/20 23:05:08 bobtarling Exp $
+// $Id: UMLActivityDiagram.java,v 1.72 2005/04/20 23:52:28 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -197,15 +197,15 @@ public class UMLActivityDiagram extends UMLDiagram {
         return gm.getNamespace();
     }
     
-    /**
-     * @see org.tigris.gef.base.Diagram#setGraphModel(org.tigris.gef.graph.GraphModel)
-     */
-    public void setGraphModel(GraphModel gm) {
-        if (!(gm instanceof ActivityDiagramGraphModel)) {
-            throw new IllegalArgumentException("A UMLActivityDiagram can only be backed by an ActivityDiagramGraphModel, received a " + gm.getClass().getName());
-        }
-        super.setGraphModel(gm);
-    }
+//    /**
+//     * @see org.tigris.gef.base.Diagram#setGraphModel(org.tigris.gef.graph.GraphModel)
+//     */
+//    public void setGraphModel(GraphModel gm) {
+//        if (!(gm instanceof ActivityDiagramGraphModel)) {
+//            throw new IllegalArgumentException("A UMLActivityDiagram can only be backed by an ActivityDiagramGraphModel, received a " + gm.getClass().getName());
+//        }
+//        super.setGraphModel(gm);
+//    }
 
     /**
      * @return the statemachine
