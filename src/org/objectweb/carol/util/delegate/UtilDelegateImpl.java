@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: UtilDelegateImpl.java,v 1.1 2005/04/13 12:05:36 benoitf Exp $
+ * $Id: UtilDelegateImpl.java,v 1.2 2005/04/20 16:36:16 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -32,6 +32,8 @@ import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.rmi.CORBA.Stub;
 import javax.rmi.CORBA.Tie;
@@ -43,8 +45,6 @@ import org.omg.CORBA.SystemException;
 import org.omg.CORBA.portable.InputStream;
 import org.omg.CORBA.portable.OutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class smoothes out incompatibilities between JDKs provided by different
@@ -57,7 +57,7 @@ public final class UtilDelegateImpl implements UtilDelegate {
     /**
      * Logger
      */
-    private static Log logger = LogFactory.getLog(UtilDelegateImpl.class);
+    private static Logger logger = Logger.getLogger(UtilDelegateImpl.class.getName());
 
     /**
      * Wrapper on UtilDelegate implementation of the JVM used at runtime
@@ -81,8 +81,8 @@ public final class UtilDelegateImpl implements UtilDelegate {
                 clz = Class.forName(vendorDelegates[ii]);
                 break;
             } catch (ClassNotFoundException ex) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("The class '" + vendorDelegates[ii] + "' was not found.", ex);
+                if (logger.isLoggable(Level.FINEST)) {
+                    logger.log(Level.FINEST, "The class '" + vendorDelegates[ii] + "' was not found.", ex);
                 }
             }
         }
