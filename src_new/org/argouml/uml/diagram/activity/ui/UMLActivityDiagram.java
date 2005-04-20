@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.70 2005/01/30 20:48:14 linus Exp $
+// $Id: UMLActivityDiagram.java,v 1.71 2005/04/20 23:05:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
+import org.tigris.gef.graph.GraphModel;
 
 /**
  * The Activity diagram.<p>
@@ -194,6 +195,16 @@ public class UMLActivityDiagram extends UMLDiagram {
             return sm;
         }
         return gm.getNamespace();
+    }
+    
+    /**
+     * @see org.tigris.gef.base.Diagram#setGraphModel(org.tigris.gef.graph.GraphModel)
+     */
+    public void setGraphModel(GraphModel gm) {
+        if (!(gm instanceof ActivityDiagramGraphModel)) {
+            throw new IllegalArgumentException("A UMLActivityDiagram can only be backed by an ActivityDiagramGraphModel, received a " + gm.getClass().getName());
+        }
+        super.setGraphModel(gm);
     }
 
     /**
