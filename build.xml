@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.41 2005/04/07 15:09:01 benoitf Exp $
+ - $Id: build.xml,v 1.42 2005/04/20 16:37:43 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -322,7 +322,7 @@
     <delete dir="${tmp}" />
   </target>
 
-  <target name="package.src" depends="clean" if="version">
+  <target name="package.src" depends="clean" if="carol.version">
     <mkdir dir="${tmp}" />
     <copy todir="${tmp}/carol-${carol.version}-src" includeEmptyDirs="no">
       <fileset dir="${basedir}" />
