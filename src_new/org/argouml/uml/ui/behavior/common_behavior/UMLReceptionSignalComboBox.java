@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBox.java,v 1.9 2005/01/30 20:47:59 linus Exp $
+// $Id: UMLReceptionSignalComboBox.java,v 1.10 2005/04/21 16:12:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ public class UMLReceptionSignalComboBox extends UMLComboBox2 {
     public UMLReceptionSignalComboBox(
         UMLUserInterfaceContainer container,
         UMLComboBoxModel2 arg0) {
+        // TODO: This super constructor has been deprecated
         super(arg0);
     }
 
