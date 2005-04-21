@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.50 2005/01/11 11:26:50 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.51 2005/04/21 20:38:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -435,9 +435,8 @@ class ArgoJGraph extends JGraph {
     public int hashCode() {
         if (getCurrentDiagramId() == null) {
             return 0;
-        } else {
-            return getCurrentDiagramId().hashCode();
         }
+        return getCurrentDiagramId().hashCode();
     }
 
     /**

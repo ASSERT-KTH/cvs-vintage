@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.64 2005/02/03 21:50:40 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.65 2005/04/21 20:38:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,8 @@ import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 /**
  * This class defines a bridge between the UML meta-model representation of the
- * design and the GraphModel interface used by GEF. This class handles only UML
- * MState Digrams.
+ * design and the GraphModel interface used by GEF. This class handles UML
+ * Statemachine Diagrams, and is also used for Activity diagrams.
  */
 public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         VetoableChangeListener {
@@ -235,7 +235,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      * @see org.tigris.gef.graph.MutableGraphModel#addNode(java.lang.Object)
      */
     public void addNode(Object node) {
-        LOG.debug("adding statechart diagram node: " + node);
+        LOG.debug("adding statechart/activity diagram node: " + node);
         if (!canAddNode(node)) {
             return;
         }
@@ -259,7 +259,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      * @see org.tigris.gef.graph.MutableGraphModel#addEdge(java.lang.Object)
      */
     public void addEdge(Object edge) {
-        LOG.debug("adding statechart diagram edge!!!!!!");
+        LOG.debug("adding statechart/activity diagram edge!!!!!!");
 
         if (!canAddEdge(edge)) {
             return;
