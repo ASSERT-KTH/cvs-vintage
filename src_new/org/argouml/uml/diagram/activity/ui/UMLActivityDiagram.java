@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.73 2005/04/21 20:38:46 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.74 2005/04/21 20:42:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,10 +118,13 @@ public class UMLActivityDiagram extends UMLDiagram {
         if (!(Model.getFacade().isAActivityGraph(o)))
             return;
         Object context = Model.getFacade().getContext(o);
-        if (context != null
-            && Model.getFacade().isANamespace(context))
-            setup(context, o);
-        else
+        if (context != null) {
+            if (Model.getFacade().isABehavioralFeature(context)) {
+                setup(Model.getFacade().getOwner(context), o);    
+            } else {
+                setup(context, o);
+            }
+        } else
             LOG.debug("ActivityGraph without context not yet possible :-(");
     }
 
