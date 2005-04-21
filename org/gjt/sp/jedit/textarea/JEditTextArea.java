@@ -64,7 +64,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.353 2005/03/27 20:28:10 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.354 2005/04/21 22:40:24 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3420,7 +3420,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			buffer.beginCompoundEdit();
 			
 			int start,end;
-			for (int i=lines.length-1;i>=0;i--)
+			for (int i = lines.length - 1; i >= 0; i--)
 			{
 				start = getLineStartOffset(lines[i]);
 				end = getLineEndOffset(lines[i]);
@@ -3451,7 +3451,6 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			int offset = chunkCache.xToSubregionOffset(caretLine,0,x,true);
 			setCaretPosition(getLineStartOffset(caretLine) + offset);
 		}
-
 	} //}}}
 
 	//{{{ deleteParagraph() method
