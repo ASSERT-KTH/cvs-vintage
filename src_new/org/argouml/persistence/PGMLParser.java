@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.21 2005/04/17 22:34:56 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.22 2005/04/21 22:51:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -596,17 +596,11 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
             setStyleAttributes(f, attributeMap);
             LOG.info("Created a " + f.getClass().getName());
         } catch (IllegalAccessException e) {
-            // TODO: Change to SAXException on next release of GEF
-            LOG.error("IllegalAccessException caught ", e);
-            throw new IllegalStateException();
+            throw new SAXException(e);
         } catch (InstantiationException e) {
-            // TODO: Change to SAXException on next release of GEF
-            LOG.error("InstantiationException caught ", e);
-            throw new IllegalStateException();
+            throw new SAXException(e);
         } catch (ClassNotFoundException e) {
-            // TODO: Change to SAXException on next release of GEF
-            LOG.error("ClassNotFoundException caught ", e);
-            throw new IllegalStateException();
+            throw new SAXException(e);
         }
             // End block
     /*
