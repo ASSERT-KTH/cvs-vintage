@@ -29,6 +29,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -42,7 +43,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.25 2005/03/12 18:40:14 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.26 2005/04/21 20:32:29 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -396,27 +397,17 @@ public class VFSDirectoryEntryTable extends JTable
 	private boolean doTypeSelect(String str, int start, int end,
 		boolean dirsOnly)
 	{
-		for(int i = start; i < end; i++)
+		VFSFile[] files = ((VFSDirectoryEntryTableModel)
+			getModel()).getFiles();
+		
+		int index = VFSFile.findCompletion(files,start,end,str,dirsOnly);
+		if(index != -1)
 		{
-			VFSDirectoryEntryTableModel.Entry entry =
-				(VFSDirectoryEntryTableModel.Entry)getValueAt(i,1);
-			if(dirsOnly && entry.dirEntry.getType()
-				== VFSFile.FILE)
-			{
-				continue;
-			}
-
-			String matchAgainst = (MiscUtilities.isAbsolutePath(str)
-				? entry.dirEntry.getPath() : entry.dirEntry.getName());
-			if(matchAgainst.regionMatches(true,
-				0,str,0,str.length()))
-			{
-				setSelectedRow(i);
-				return true;
-			}
+			setSelectedRow(index);
+			return true;
 		}
-
-		return false;
+		else
+			return false;
 	} //}}}
 
 	//{{{ resizeColumns() method

@@ -39,7 +39,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.46 2005/03/09 23:46:07 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.47 2005/04/21 20:32:29 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -495,11 +495,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 			}
 			catch(IOException e)
 			{
-				Log.log(Log.ERROR,this,e);
-				VFSManager.error(browser,path,
-					"ioerror",
-					new String[]
-					{ e.toString() });
+				VFSManager.error(e,path,browser);
 				return;
 			}
 			finally
@@ -512,11 +508,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 				}
 				catch(IOException e)
 				{
-					Log.log(Log.ERROR,this,e);
-					VFSManager.error(browser,path,
-						"ioerror",
-						new String[]
-						{ e.toString() });
+					VFSManager.error(e,path,browser);
 					return;
 				}
 			}
