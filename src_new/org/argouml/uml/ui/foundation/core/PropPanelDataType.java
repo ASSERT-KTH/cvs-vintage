@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.64 2005/04/12 23:34:17 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.65 2005/04/22 18:24:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,7 @@ import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
- * TODO: this property panel needs refactoring to remove dependency on old gui
- * components.
+ * The properties panel for a Datatype.
  */
 public class PropPanelDataType extends PropPanelClassifier {
 
@@ -198,7 +197,7 @@ public class PropPanelDataType extends PropPanelClassifier {
                             if (!match) {
                                 stereo =
                                     Model.getExtensionMechanismsFactory()
-                                        .buildStereotype("enumeration");
+                                        .buildStereotype("enumeration", model);
                                 Model.getCoreHelper().addOwnedElement(
                                         model,
                                         stereo);
