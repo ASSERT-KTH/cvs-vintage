@@ -1,4 +1,4 @@
-// $Id: SynchronizeDialog.java,v 1.7 2005/01/09 14:58:00 linus Exp $
+// $Id: SynchronizeDialog.java,v 1.8 2005/04/22 18:06:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -338,7 +338,7 @@ public class SynchronizeDialog extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        new SynchronizeDialog(new javax.swing.JFrame(), true).show();
+        new SynchronizeDialog(new javax.swing.JFrame(), true).setVisible(true);
     }
 
 

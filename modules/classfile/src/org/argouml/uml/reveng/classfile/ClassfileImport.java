@@ -1,4 +1,4 @@
-// $Id: ClassfileImport.java,v 1.14 2005/01/09 21:10:36 linus Exp $
+// $Id: ClassfileImport.java,v 1.15 2005/04/22 18:00:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,8 +47,8 @@ import org.argouml.util.SuffixFilter;
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.14 $
- * $Date: 2005/01/09 21:10:36 $
+ * $Revision: 1.15 $
+ * $Date: 2005/04/22 18:00:33 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -153,24 +153,22 @@ public class ClassfileImport extends FileImportSupport {
     private int countFiles(File f, boolean subdirectories) throws Exception {
 	if ( f.isDirectory() && subdirectories) {
 	    return countDirectory(f);
-	} else {
-	    if (f.getName().endsWith(".class")) {
-		return 1;
-	    } else {
-		int total = 0;
-		if (f.getName().endsWith(".jar")) {
-		    for ( Enumeration e =
-		            (new JarFile(f)).entries(); e.hasMoreElements(); ) {
-			ZipEntry entry = (ZipEntry) e.nextElement();
-			if ( !entry.isDirectory()
-			        && entry.getName().endsWith(".class")) {
-			    total++;
-			}
-		    }
-		}
-		return total;
-	    }
 	}
+        if (f.getName().endsWith(".class")) {
+        	return 1;
+        }
+        int total = 0;
+        if (f.getName().endsWith(".jar")) {
+            for ( Enumeration e =
+                    (new JarFile(f)).entries(); e.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) e.nextElement();
+                if ( !entry.isDirectory()
+                                && entry.getName().endsWith(".class")) {
+                    total++;
+                }
+            }
+        }
+        return total;
     }
 
     /**

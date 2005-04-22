@@ -1,4 +1,4 @@
-// $Id: ModelTableModel.java,v 1.14 2005/01/30 20:48:35 linus Exp $
+// $Id: ModelTableModel.java,v 1.15 2005/04/22 18:06:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,7 @@ package org.argouml.language.java.ui;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
-import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 
 import org.argouml.kernel.ProjectManager;
@@ -42,10 +40,6 @@ import org.argouml.uml.generator.Generator2;
  * @author  thn
  */
 public class ModelTableModel extends DefaultTableModel implements Runnable {
-
-    private Object root = null;
-    private JSplitPane mainPane;
-    private Vector results = new Vector();
 
     /**
      * Creates a new instance of ModelTableModel.
@@ -143,8 +137,7 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
                 packagePath,
                 codePath,
             };
-        } else {
-            return null;
         }
+        return null;
     }
 }

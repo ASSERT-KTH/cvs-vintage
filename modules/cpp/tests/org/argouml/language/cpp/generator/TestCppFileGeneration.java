@@ -1,4 +1,4 @@
-// $Id: TestCppFileGeneration.java,v 1.12 2005/02/07 03:03:20 euluis Exp $
+// $Id: TestCppFileGeneration.java,v 1.13 2005/04/22 18:02:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.model.UUIDManager;
 
@@ -44,10 +43,6 @@ import org.argouml.model.UUIDManager;
  * @since 0.17.3
  */
 public class TestCppFileGeneration extends BaseTestGeneratorCpp {
-
-    /** The Logger for this class */
-    private static final Logger LOG = Logger.getLogger(
-        TestCppFileGeneration.class);
 
     /**
      * System newline separator.
