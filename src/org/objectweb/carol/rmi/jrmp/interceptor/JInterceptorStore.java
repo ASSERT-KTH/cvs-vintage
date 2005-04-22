@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JInterceptorStore.java,v 1.6 2005/03/11 13:55:52 benoitf Exp $
+ * $Id: JInterceptorStore.java,v 1.7 2005/04/22 16:37:20 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
@@ -109,6 +109,7 @@ public class JInterceptorStore {
                 rcis = cis;
                 uid = JInterceptorHelper.getSpaceID();
                 address = JInterceptorHelper.getInetAddress();
+                init = true;
             } catch (Exception e) {
                 //we did not found the interceptor do nothing but a trace ?
                 TraceCarol.error("JrmpPRODelegate(), No interceptors found", e);
@@ -136,24 +137,25 @@ public class JInterceptorStore {
      * @return JRMP Initializers enuumeration
      */
     public static String[] getJRMPInitializers() {
-        if (!init) {
-            ArrayList ins = new ArrayList();
-            Properties sys = System.getProperties();
-            for (Enumeration e = System.getProperties().propertyNames(); e.hasMoreElements();) {
-                String pkey = (String) e.nextElement();
-                if (pkey.startsWith(INTIALIZER_PREFIX)) {
-                    ins.add(pkey.substring(INTIALIZER_PREFIX.length() + 1));
-                }
-            }
-            int sz = ins.size();
-            initializers = new String[sz];
-            for (int i = 0; i < sz; i++) {
-                initializers[i] = (String) ins.get(i);
-            }
-            return initializers;
-        } else {
+        // if exists, return it
+        if (initializers != null) {
             return initializers;
         }
+        // else, compute it.
+        ArrayList ins = new ArrayList();
+        Properties sys = System.getProperties();
+        for (Enumeration e = System.getProperties().propertyNames(); e.hasMoreElements();) {
+            String pkey = (String) e.nextElement();
+            if (pkey.startsWith(INTIALIZER_PREFIX)) {
+                ins.add(pkey.substring(INTIALIZER_PREFIX.length() + 1));
+            }
+        }
+        int sz = ins.size();
+        initializers = new String[sz];
+        for (int i = 0; i < sz; i++) {
+            initializers[i] = (String) ins.get(i);
+        }
+        return initializers;
     }
 
     /**
