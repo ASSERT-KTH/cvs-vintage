@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.34 2005/02/08 22:29:12 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.35 2005/04/22 18:09:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -901,13 +901,11 @@ public class GeneratorCSharp extends Generator2
 	    sDocComment += "\n" + INDENT + " */";
 
 	    return sDocComment;
-	} else {
-	    if (sDocComment != null) {
-	        return sDocComment;
-	    } else {
-	        return "";
-	    }
 	}
+	if (sDocComment != null) {
+	    return sDocComment;
+	}
+        return "";
     }
 
     /**
@@ -950,9 +948,8 @@ public class GeneratorCSharp extends Generator2
 	if (cConstraints.size() == 0) {
 	    if (sDocComment != null) {
 	        return sDocComment;
-	    } else {
-	        return "";
 	    }
+            return "";
 	}
 
 	// Prepare doccomment
@@ -1305,9 +1302,8 @@ public class GeneratorCSharp extends Generator2
 	if (Model.getScopeKind().getClassifier().equals(scope)) {
 	    if (VERBOSE) {
 	        return "/* static */ ";
-	    } else {
-	        return "";
 	    }
+	    return "";
 	}
 	return "";
     }
@@ -1334,9 +1330,8 @@ public class GeneratorCSharp extends Generator2
     private String generateChangeability(Object op) {
 	if (Model.getFacade().isLeaf(op)) {
 	    return " sealed ";
-	} else {
-	    return "";
-	}
+	} 
+        return "";
     }
 
     private String generateChangability(Object sf) {
