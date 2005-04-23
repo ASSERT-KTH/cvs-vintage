@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.8 2005/04/14 18:29:45 mvw Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.9 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,10 +48,12 @@ import ru.novosoft.uml.model_management.MModel;
 public class ExtensionMechanismsFactoryImpl
 	extends AbstractUmlModelFactory
 	implements ExtensionMechanismsFactory {
-
-    private static final Logger LOG = 
+    /**
+     * Logger.
+     */
+    private static final Logger LOG =
             Logger.getLogger(ExtensionMechanismsFactoryImpl.class);
-    
+
     /**
      * The model implementation.
      */
@@ -64,23 +66,6 @@ public class ExtensionMechanismsFactoryImpl
      */
     ExtensionMechanismsFactoryImpl(NSUMLModelImplementation implementation) {
         nsmodel = implementation;
-    }
-
-    /**
-     * Create an empty but initialized instance of a UML Stereotype.
-     *
-     * @return an initialized UML Stereotype instance.
-     * @deprecated this is not used in the code but removing it currently
-     * breaks tests ran by (grrr) reflection.
-     * We do not want a public method that will create an un-named
-     * stereotype with no namespace.
-     */
-    public Object createStereotype() {
-        LOG.error("Creating a stereotype with a deprecated method");
-        MStereotype modelElement =
-	    MFactory.getDefaultFactory().createStereotype();
-    	super.initialize(modelElement);
-        return modelElement;
     }
 
     /**
@@ -175,7 +160,7 @@ public class ExtensionMechanismsFactoryImpl
         }
         return stereo;
     }
-    
+
     /**
      * Builds an initialized stereotype with no namespace.
      * @deprecated Bob Tarling 28/2/2005 Presumably a stereotype

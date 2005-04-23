@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: MetaTypes.java,v 1.2 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -416,11 +416,4 @@ public interface MetaTypes {
      * @return Returns the VisibilityKind.
      */
     Object getVisibilityKind();
-
-    /**
-     * @return Returns the StateImpl.
-     * @deprecated by Linus Tolke as of 0.17.3. This is implementation
-     *             creaping out! Use {@link #getState()} instead.
-     */
-    Object getStateImpl();
 }

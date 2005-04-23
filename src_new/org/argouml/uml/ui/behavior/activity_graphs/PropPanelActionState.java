@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.25 2005/04/12 23:34:20 bobtarling Exp $
+// $Id: PropPanelActionState.java,v 1.26 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,14 +28,14 @@ import javax.swing.ImageIcon;
 
 import org.argouml.i18n.Translator;
 import org.tigris.swidgets.Orientation;
-import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
+import org.argouml.uml.ui.behavior.state_machines.AbstractPropPanelState;
 import org.argouml.util.ConfigLoader;
 
 /**
  * User interface panel shown at the bottom of the screen that allows the user
  * to edit the properties of the selected UML model element.
  */
-public class PropPanelActionState extends PropPanelState {
+public class PropPanelActionState extends AbstractPropPanelState {
 
     /**
      * The constructor.

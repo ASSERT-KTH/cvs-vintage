@@ -1,4 +1,4 @@
-// $Id: DataTypesFactoryImpl.java,v 1.4 2005/03/19 22:05:08 linus Exp $
+// $Id: DataTypesFactoryImpl.java,v 1.5 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import ru.novosoft.uml.foundation.data_types.MActionExpression;
 import ru.novosoft.uml.foundation.data_types.MArgListsExpression;
 import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 import ru.novosoft.uml.foundation.data_types.MExpression;
-import ru.novosoft.uml.foundation.data_types.MExpressionEditor;
 import ru.novosoft.uml.foundation.data_types.MIterationExpression;
 import ru.novosoft.uml.foundation.data_types.MMappingExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
@@ -110,23 +109,6 @@ public class DataTypesFactoryImpl
         MBooleanExpression expression = new MBooleanExpression(language, body);
 	super.initialize(expression);
 	return expression;
-    }
-
-    /**
-     * Create an UML ExpressionEditor based on a given expression.
-     *
-     * @param expr Object MExpression the given expression
-     * @return an initialized ExpressionEditor instance.
-     * @deprecated as of 0.18.beta1 by Linus Tolke.
-     *             This is NSUML-implementation creaping out.
-     */
-    public Object createExpressionEditor(Object expr) {
-        MExpressionEditor editor = new MExpressionEditor();
-        MExpression expression = (MExpression) expr;
-	super.initialize(editor);
-        editor.setBody(expression.getBody());
-        editor.setLanguage(expression.getLanguage());
-	return editor;
     }
 
     /**

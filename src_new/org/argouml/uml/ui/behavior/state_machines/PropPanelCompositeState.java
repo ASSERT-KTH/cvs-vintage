@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.27 2005/04/12 23:34:19 bobtarling Exp $
+// $Id: PropPanelCompositeState.java,v 1.28 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.tigris.swidgets.Orientation;
  *
  * @author 5heyden
  */
-public class PropPanelCompositeState extends PropPanelState {
+public class PropPanelCompositeState extends AbstractPropPanelState {
 
     private JList subverticesList = null;
 

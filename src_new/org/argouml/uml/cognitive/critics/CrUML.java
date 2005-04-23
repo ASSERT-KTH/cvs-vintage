@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.39 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrUML.java,v 1.40 2005/04/23 16:30:46 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrUML.java,v 1.39 2005/03/11 09:43:04 mkl Exp $
+// $Id: CrUML.java,v 1.40 2005/04/23 16:30:46 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
@@ -49,6 +49,9 @@ import org.tigris.gef.ocl.ExpansionException;
  * @author jrobbins
  */
 public class CrUML extends Critic {
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(CrUML.class);
 
     /**
@@ -72,24 +75,17 @@ public class CrUML extends Critic {
     }
 
     /**
+     * @see org.argouml.cognitive.critics.Critic#setHeadline(java.lang.String)
+     *
      * Set up the locale specific text for the critic headline
      * (the one liner that appears in the to-do pane)
      * and the critic description (the detailed explanation that
      * appears in the to-do tab of the details pane).
      *
      * MVW: Maybe we can make it part of the constructor CrUML()?
-     *
-     * @deprecated by mvw, as of ArgoUML V0.17.5.
-     * Since the parameter is ignored, replaced by {@link #setupHeadAndDesc()}.
-     *
-     * @see org.argouml.cognitive.critics.Critic#setHeadline(java.lang.String)
      */
     public final void setHeadline(String s) {
-	//
-	//   current implementation ignores the argument
-	//     and triggers setResource()
-	String className = getClass().getName();
-	setResource(className.substring(className.lastIndexOf('.') + 1));
+        setupHeadAndDesc();
     }
 
     /**
@@ -190,9 +186,7 @@ public class CrUML extends Critic {
     }
 
     /**
-     * create a new UMLToDoItem.
-     *
-     * @see org.argouml.uml.cognitive.UMLToDoItem
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(Object, Designer)
      */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	return new UMLToDoItem(this, dm, dsgr);

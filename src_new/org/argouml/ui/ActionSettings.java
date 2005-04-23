@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.26 2005/01/09 14:58:11 linus Exp $
+// $Id: ActionSettings.java,v 1.27 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,25 +59,6 @@ public class ActionSettings extends UMLAction
      * Logger.
      */
     private static final Logger LOG = Logger.getLogger(Translator.class);
-
-    /**
-     * One and only instance.
-     *
-     * @deprecated by Linus Tolke as of 0.17.1. Create your own instance of this
-     *             action.
-     */
-    private static final ActionSettings SINGLETON = new ActionSettings();
-
-    /**
-     * Get the instance.
-     *
-     * @return The instance.
-     * @deprecated by Linus Tolke as of 0.17.1. Create your own instance of this
-     *             action.
-     */
-    public static ActionSettings getInstance() {
-        return SINGLETON;
-    }
 
     ////////////////////////////////////////////////////////////////
     // constructors

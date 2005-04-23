@@ -1,4 +1,4 @@
-// $Id: DataTypesFactory.java,v 1.2 2005/03/19 22:05:08 linus Exp $
+// $Id: DataTypesFactory.java,v 1.3 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,16 +60,6 @@ public interface DataTypesFactory {
      * @return an initialized UML BooleanExpression instance.
      */
     Object createBooleanExpression(String language, String body);
-
-    /**
-     * Create an UML ExpressionEditor based on a given expression.
-     *
-     * @param expr Expression the given expression.
-     * @return an initialized ExpressionEditor instance.
-     * @deprecated as of 0.18.beta1 by Linus Tolke. This is an internal NSUML
-     *             solution creaping out.
-     */
-    Object createExpressionEditor(Object expr);
 
     /**
      * Create an empty but initialized instance of a UML Expression.

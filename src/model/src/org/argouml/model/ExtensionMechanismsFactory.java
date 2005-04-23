@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.2 2005/02/28 22:31:41 bobtarling Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.3 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,17 +81,6 @@ public interface ExtensionMechanismsFactory {
     Object buildStereotype(Object theModelElementObject, String theName,
             Object model, Collection models);
 
-    /**
-     * Create an empty but initialized instance of a UML Stereotype.
-     *
-     * @return an initialized UML Stereotype instance.
-     * @deprecated this is not used in the code but removing it currently
-     * breaks tests ran by (grrr) reflection.
-     * We do not want a public method that will create an un-named
-     * stereotype with no namespace.
-     */
-    public Object createStereotype();
-    
     /**
      * Builds an initialized stereotype with no namespace.
      * @deprecated Bob Tarling 28/2/2005 Presumably a stereotype

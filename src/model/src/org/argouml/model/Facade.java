@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.2 2005/03/19 22:05:08 linus Exp $
+// $Id: Facade.java,v 1.3 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -941,16 +941,6 @@ public interface Facade {
      * @return true if handle has classifier scope.
      */
     boolean isClassifierScope(Object handle);
-
-    /**
-     * Recognizer for concurent composite state.
-     * @deprecated in 0.17.2 by Bob Tarling use isConcurrent(Object)
-     * which covers up the mis-spelling by NSUML
-     *
-     * @param handle composite state
-     * @return true if concurent.
-     */
-    boolean isConcurent(Object handle);
 
     /**
      * Recognizer for concurrent composite state.
@@ -2582,16 +2572,6 @@ public interface Facade {
     Object lookupIn(Object handle, String name);
 
     ////////////////////////////////////////////////////////////////
-
-    /**
-     * Gets the language attribute of an Expression.<p>
-     *
-     * @param handle is the Expression of which the language is retrieved
-     * @return String the language
-     * @deprecated as of 0.18.beta1 by Linus Tolke.
-     *             Use {@link DataTypesHelper#getLanguage(Object)}.
-     */
-    String getLanguage(Object handle);
 
     /**
      * Returns the name of the UML Model class, e.g. it it will return

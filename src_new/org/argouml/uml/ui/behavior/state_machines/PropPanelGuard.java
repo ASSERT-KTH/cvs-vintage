@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.37 2005/04/12 23:34:19 bobtarling Exp $
+// $Id: PropPanelGuard.java,v 1.38 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,8 @@ public class PropPanelGuard extends PropPanelModelElement {
         addField(Translator.localize("label.namespace"),
                 getNamespaceScroll());
 
-        JList transitionList = new UMLLinkedList(
+        JList transitionList =
+            new UMLLinkedList(
                 new UMLGuardTransitionListModel());
         transitionList.setVisibleRowCount(1);
         addField(Translator.localize("label.transition"),
@@ -89,5 +90,5 @@ public class PropPanelGuard extends PropPanelModelElement {
                 lookupIcon("Delete")));
     }
 
-} /* end class PropPanelState */
+} /* end class PropPanelGuard */
 

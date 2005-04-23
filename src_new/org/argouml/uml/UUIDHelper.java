@@ -1,4 +1,4 @@
-// $Id: UUIDHelper.java,v 1.4 2005/01/30 20:47:43 linus Exp $
+// $Id: UUIDHelper.java,v 1.5 2005/04/23 16:30:45 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,23 +24,19 @@
 
 package org.argouml.uml;
 
-import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 /**
  * @stereotype singleton
  */
-public class UUIDHelper {
-
-    /**
-     * The logger.
-     */
-    private static final Logger LOG = Logger.getLogger(UUIDHelper.class);
-
+public final class UUIDHelper {
     ////////////////////////////////////////////////////////////////
     // static variables
 
+    /**
+     * The singleton.
+     */
     private static final UUIDHelper INSTANCE = new UUIDHelper();
 
     ////////////////////////////////////////////////////////////////
@@ -49,11 +45,8 @@ public class UUIDHelper {
     /**
      * Constructor for the UUIDManager. This is private to make sure that
      * we are a proper singleton.
-     *
-     * @deprecated by Linus Tolke as of 0.15.4. Will be made private.
-     * Use the UUIDManager singleton instead.
      */
-    protected UUIDHelper() { }
+    private UUIDHelper() { }
 
     /**
      * Return the UUIDManager singleton.

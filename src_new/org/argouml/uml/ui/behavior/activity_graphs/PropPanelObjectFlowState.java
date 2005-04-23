@@ -1,4 +1,4 @@
-// $Id: PropPanelObjectFlowState.java,v 1.10 2005/04/12 23:34:20 bobtarling Exp $
+// $Id: PropPanelObjectFlowState.java,v 1.11 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import javax.swing.JComboBox;
 import org.argouml.i18n.Translator;
 import org.tigris.swidgets.Orientation;
 import org.argouml.uml.ui.UMLSearchableComboBox;
-import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
+import org.argouml.uml.ui.behavior.state_machines.AbstractPropPanelState;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -38,7 +38,7 @@ import org.argouml.util.ConfigLoader;
  * @author mkl
  *
  */
-public class PropPanelObjectFlowState extends PropPanelState {
+public class PropPanelObjectFlowState extends AbstractPropPanelState {
 
     private JComboBox classifierComboBox;
 

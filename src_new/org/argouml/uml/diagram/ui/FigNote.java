@@ -1,4 +1,4 @@
-// $Id: FigNote.java,v 1.14 2005/01/09 14:58:56 linus Exp $
+// $Id: FigNote.java,v 1.15 2005/04/23 16:30:45 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.tigris.gef.presentation.FigRect;
  *             {@link org.argouml.uml.diagram.static_structure.ui.FigComment
  *             FigComment}
  * TODO: When can this be removed? What do we need to do to remove this?
+ * See issue 2285. 
  */
 public class FigNote extends FigNodeModelElement {
 

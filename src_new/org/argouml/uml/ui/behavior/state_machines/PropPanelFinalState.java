@@ -1,4 +1,4 @@
-// $Id: PropPanelFinalState.java,v 1.18 2005/04/12 23:34:19 bobtarling Exp $
+// $Id: PropPanelFinalState.java,v 1.19 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.argouml.util.ConfigLoader;
  *
  * @author 5heyden
  */
-public class PropPanelFinalState extends PropPanelState {
+public class PropPanelFinalState extends AbstractPropPanelState {
 
     /**
      * The constructor.

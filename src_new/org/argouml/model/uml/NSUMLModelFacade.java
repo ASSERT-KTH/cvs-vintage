@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.8 2005/04/14 18:29:45 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.9 2005/04/23 16:30:44 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1357,21 +1357,6 @@ public class NSUMLModelFacade implements Facade {
             return MScopeKind.CLASSIFIER.equals(f.getOwnerScope());
         }
         // ...
-	return illegalArgumentBoolean(handle);
-    }
-
-    /**
-     * Recognizer for concurent composite state.
-     * @deprecated in 0.17.2 by Bob Tarling use isConcurrent(Object)
-     * which covers up the mis-spelling by NSUML
-     *
-     * @param handle composite state
-     * @return true if concurent.
-     */
-    public boolean isConcurent(Object handle) {
-        if (handle instanceof MCompositeState) {
-            return ((MCompositeState) handle).isConcurent();
-        }
 	return illegalArgumentBoolean(handle);
     }
 
@@ -4495,20 +4480,7 @@ public class NSUMLModelFacade implements Facade {
     }
 
     ////////////////////////////////////////////////////////////////
-    // Model modifying methods
-
-    /**
-     * Gets the language attribute of an Expression.
-     *
-     * @param handle is the Expression of which the language is retrieved
-     * @return String the language
-     */
-    public String getLanguage(Object handle) {
-        if (handle instanceof MExpression) {
-            return ((MExpression) handle).getLanguage();
-        }
-	return illegalArgumentString(handle);
-    }
+    // Getter methods
 
     /**
      * Returns the name of the UML Model class, e.g. it it will return
@@ -4546,7 +4518,7 @@ public class NSUMLModelFacade implements Facade {
     protected String getClassNull(Object handle) {
 	if (handle == null) {
 	    return "[null]";
-	} 
+	}
         return "[" + handle + "/" + handle.getClass() + "]";
     }
 
