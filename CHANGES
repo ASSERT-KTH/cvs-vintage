@@ -40,6 +40,8 @@ Fixed bugs:
 - #1098058, show controls, if showing rfc822message inline
 - #1098059, add hide/show button for inline viewer
 - #1120945, configuration messed up
+- #1188639, edit draft message, creates message duplicate
+- #1106616, sent later saves email in draft folder
 
 Columba v1.0 RC2
 

@@ -21,9 +21,12 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.ComposerCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.command.ExpungeFolderCommand;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
@@ -69,6 +72,17 @@ public class SaveAsDraftAction extends AbstractColumbaAction {
         int destUid = Integer.parseInt(str);
         AbstractMessageFolder destFolder = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(destUid);
    
+        // check if we are currently editing a draft message
+        if ( model.getMessage().getHeader().getFlags().getDraft() ) {
+        	// -> we need to replace old message
+        	
+        	// delete source message
+        	MailFolderCommandReference r = model.getSourceReference();
+        	r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+        	CommandProcessor.getInstance().addOp(new MarkMessageCommand(r));
+        	CommandProcessor.getInstance().addOp(new ExpungeFolderCommand(r));
+        }
+        
         // mark as read, mark as draft
         Flags flags = new Flags();
         flags.setSeen(true);

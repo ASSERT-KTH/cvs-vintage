@@ -40,6 +40,7 @@ import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.BasicHeader;
+import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.Message;
@@ -105,6 +106,10 @@ public class OpenMessageWithComposerCommand extends Command {
 		Message message = MessageParser.parse(tempSource);
 
 		initHeader(message);
+		
+		// get message flags
+		Flags flags = folder.getFlags(uid);
+		model.getMessage().getHeader().setFlags(flags);
 
 		// select the account this mail was received from
 		Integer accountUid = (Integer) folder.getAttribute(uids[0],
@@ -120,6 +125,9 @@ public class OpenMessageWithComposerCommand extends Command {
 				.booleanValue();
 
 		initBody(message, preferHtml);
+		
+		// store reference to source message
+		model.setSourceReference(new MailFolderCommandReference(folder, new Object[] {uid}));
 	}
 
 	private void initBody(Message message, boolean preferHtml) throws Exception {

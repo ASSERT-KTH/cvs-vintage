@@ -87,6 +87,9 @@ public class SendLaterAction extends AbstractColumbaAction {
 			CommandProcessor.getInstance().addOp(c1);
 		}
 
-		composerController.getContainer().close();
+		// close composer view
+		if (composerController.getView().getFrame() != null) {
+			composerController.getView().getFrame().setVisible(false);
+		}
 	}
 }
