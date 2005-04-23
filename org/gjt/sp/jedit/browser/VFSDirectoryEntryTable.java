@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.26 2005/04/21 20:32:29 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.27 2005/04/23 20:29:12 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -281,19 +281,16 @@ public class VFSDirectoryEntryTable extends JTable
 				{
 					if(model.files[row].expanded)
 					{
-						model.collapse(
-							VFSManager.getVFSForPath(
-							model.files[row].dirEntry.getPath()),
-							row);
-						break;
+						toggleExpanded(row);
+						return;
 					}
 
 					for(int i = row - 1; i >= 0; i--)
 					{
-						if(model.files[i].expanded)
+						if((model.files[i].expanded) && (model.files[i].level < model.files[row].level))
 						{
 							setSelectedRow(i);
-							break;
+							return;
 						}
 					}
 				}

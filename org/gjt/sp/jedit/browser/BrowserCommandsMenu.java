@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.27 2005/02/05 20:34:39 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.28 2005/04/23 20:29:12 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -150,7 +150,8 @@ public class BrowserCommandsMenu extends JPopupMenu
 			addSeparator();
 			add(createEncodingMenu());
 		}
-
+		addSeparator();
+		add(createPluginMenu(browser));
 		update();
 	} //}}}
 
@@ -267,6 +268,16 @@ public class BrowserCommandsMenu extends JPopupMenu
 		return encodingMenu;
 	} //}}}
 
+	//{{{ createPluginsMenu() method
+	private JMenu createPluginMenu(VFSBrowser browser)
+	{
+		JMenu pluginMenu = new JMenu(jEdit.getProperty(
+			"vfs.browser.plugins.label"));
+		return (JMenu)browser.createPluginsMenu(pluginMenu,false);
+		
+	} //}}}
+
+	
 	//}}}
 
 	//{{{ ActionHandler class
