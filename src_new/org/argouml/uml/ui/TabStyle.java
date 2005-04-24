@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.31 2005/03/05 10:37:20 mvw Exp $
+// $Id: TabStyle.java,v 1.32 2005/04/24 14:26:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,7 @@ import org.tigris.gef.presentation.Fig;
  *
  * According the decision taken in issue 502, this tab is renamed "Presentation"
  * for the user. And the Presentation tab shall contain presentation options,
- * and no semantic UML properties (which belong inthe "Properties" panel).
+ * and no semantic UML properties (which belong in the "Properties" panel).
  * In contrast, the diagram pop-up menu for a model element
  * may access both presentation options as well as semantic UML properties. <p>
  *
@@ -132,7 +132,7 @@ public class TabStyle extends TabSpawnable implements TabFigTarget,
     }
 
     /**
-     * construct a default stylepanel with basenames <code>StylePanel</code>
+     * Construct a default stylepanel with basenames <code>StylePanel</code>
      * and <code>SP</code>, resulting in the lookup order described above.
      */
     public TabStyle() {
@@ -186,10 +186,9 @@ public class TabStyle extends TabSpawnable implements TabFigTarget,
                 Collection col = p.findFigsForMember(t);
                 if (col == null || col.isEmpty()) {
                     return;
-                } else {
-                    t = col.iterator().next();
-                    if (!(t instanceof Fig)) return;
                 }
+                t = col.iterator().next();
+                if (!(t instanceof Fig)) return;
             } else {
                 return;
             }
