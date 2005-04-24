@@ -1,4 +1,4 @@
-// $Id: XmiWriter.java,v 1.1 2005/02/20 20:10:14 bobtarling Exp $
+// $Id: XmiWriter.java,v 1.2 2005/04/24 20:07:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ public interface XmiWriter {
 
     /**
      * Write XMI to registered writer
-     * @throws SAXException if it goes wrong
+     * @throws UmlException if it goes wrong
      */
     public void write() throws UmlException;
 }
