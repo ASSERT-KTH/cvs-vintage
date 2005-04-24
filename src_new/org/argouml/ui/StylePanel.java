@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.21 2005/01/30 20:47:47 linus Exp $
+// $Id: StylePanel.java,v 1.22 2005/04/24 15:26:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
-import java.util.Collection;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -46,7 +45,7 @@ import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
 
 /**
- * The style panel.
+ * The Presentation panel - formerly called style panel.
  *
  */
 public class StylePanel extends TabSpawnable implements TabFigTarget,
@@ -93,14 +92,10 @@ public class StylePanel extends TabSpawnable implements TabFigTarget,
 	    if (Model.getFacade().isABase(t)) {
 		Project p = ProjectManager.getManager()
 		    .getCurrentProject();
-		Collection col = p.findFigsForMember(t);
-		if (col == null || col.isEmpty()) {
+                ArgoDiagram diagram = p.getActiveDiagram();
+                t = diagram.presentationFor(t);
+		if (!(t instanceof Fig)) {
 		    return;
-		} else {
-		    t = col.iterator().next();
-		    if (!(t instanceof Fig)) {
-		        return;
-		    }
 		}
 	    } else {
 		return;
