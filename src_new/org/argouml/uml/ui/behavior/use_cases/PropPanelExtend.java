@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.52 2005/04/12 23:34:16 bobtarling Exp $
+// $Id: PropPanelExtend.java,v 1.53 2005/04/24 16:40:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,65 +120,6 @@ public class PropPanelExtend extends PropPanelModelElement {
         addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));
     }
-
-
-    /**
-     * Get the condition associated with the extend relationship.<p>
-     *
-     * The condition is actually of type {@link
-     * ru.novosoft.uml.foundation.data_types.MBooleanExpression},
-     * which defines both a language and a body. We are only
-     * interested in the body, which is just a string.<p>
-     *
-     * @return The body of the {@link
-     * ru.novosoft.uml.foundation.data_types.MBooleanExpression} which
-     * is the condition associated with this extend relationship, or
-     * <code>null</code> if there is none.
-     */
-    public String getCondition() {
-        String condBody = null;
-        Object target   = getTarget();
-
-        if (Model.getFacade().isAExtend(target)) {
-            Object condition = Model.getFacade().getCondition(target);
-
-            if (condition != null) {
-                condBody = (String) Model.getFacade().getBody(condition);
-            }
-        }
-
-        return condBody;
-    }
-
-
-    /**
-     * Set the condition associated with the extend relationship.<p>
-     *
-     * The condition is actually of type {@link
-     * ru.novosoft.uml.foundation.data_types.MBooleanExpression},
-     * which defines both a language and a body. We are only
-     * interested in setting the body, which is just a string.<p>
-     *
-     * @param condBody  The body of the condition to associate with this
-     *                  extend relationship.
-     */
-    public void setCondition(String condBody) {
-
-        // Give up if we are not an extend relationship
-
-        Object target = getTarget();
-
-        if (!(Model.getFacade().isAExtend(target))) {
-            return;
-        }
-
-        // Set the condition body.
-
-        Model.getUseCasesHelper().setCondition(target,
-				 Model.getDataTypesFactory()
-				     .createBooleanExpression(null, condBody));
-    }
-
 
     /**
      * Invoked by the "New Extension Point" toolbar button to create a new
