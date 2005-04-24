@@ -1,4 +1,4 @@
-// $Id: SPFigEdgeModelElement.java,v 1.15 2005/04/24 20:13:48 mvw Exp $
+// $Id: SPFigEdgeModelElement.java,v 1.16 2005/04/24 20:21:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.awt.event.ItemListener;
 
 import javax.swing.text.Document;
 
-import org.apache.log4j.Logger;
 import org.argouml.swingext.SpacerPanel;
 import org.argouml.ui.StylePanelFig;
 import org.tigris.gef.ui.ColorRenderer;

@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.37 2005/02/18 20:24:00 mvw Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.38 2005/04/24 20:21:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -386,9 +386,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
                         destFigNode.updateEdges();
                     }
                     return;
-                } else {
-                    LOG.warn("connection return null");
                 }
+                LOG.warn("connection return null");
             } else {
                 LOG.warn("in dest node but no port");
             }
