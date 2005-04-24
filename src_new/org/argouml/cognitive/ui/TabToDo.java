@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.29 2005/04/24 20:06:35 mvw Exp $
+// $Id: TabToDo.java,v 1.30 2005/04/24 20:13:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.cognitive.ToDoItem;
@@ -93,7 +94,7 @@ public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
 
         setLayout(new BorderLayout());
 
-        JToolBar toolBar = new ToolBar(JToolBar.VERTICAL);
+        JToolBar toolBar = new ToolBar(SwingConstants.VERTICAL);
         toolBar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         toolBar.add(actionNewToDoItem);
         toolBar.add(actionResolve);

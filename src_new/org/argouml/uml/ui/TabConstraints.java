@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.48 2005/04/24 20:06:35 mvw Exp $
+// $Id: TabConstraints.java,v 1.49 2005/04/24 20:13:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -343,9 +343,8 @@ public class TabConstraints extends AbstractArgoJPanel
             public String getName() {
                 if (theMMcConstraint == null) {
                     return "newConstraint";
-                } else {
-                    return Model.getFacade().getName(theMMcConstraint);
                 }
+                return Model.getFacade().getName(theMMcConstraint);
             }
 
             /**
@@ -354,10 +353,9 @@ public class TabConstraints extends AbstractArgoJPanel
             public String getData() {
                 if (theMMcConstraint == null) {
                     return OCLUtil.getContextString(theMMmeiTarget);
-                } else {
-                    return (String) Model.getFacade().getBody(
-                            Model.getFacade().getBody(theMMcConstraint));
                 }
+                return (String) Model.getFacade().getBody(
+                        Model.getFacade().getBody(theMMcConstraint));
             }
 
             /**
@@ -614,9 +612,8 @@ public class TabConstraints extends AbstractArgoJPanel
 
             if (mc != null) {
                 return new CR(mc, nIdx);
-            } else {
-                return new CR(nIdx);
             }
+            return new CR(nIdx);
         }
 
         /**

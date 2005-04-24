@@ -1,4 +1,4 @@
-// $Id: TabText.java,v 1.23 2005/04/24 20:06:35 mvw Exp $
+// $Id: TabText.java,v 1.24 2005/04/24 20:13:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -90,7 +91,7 @@ public class TabText
         if (withToolbar) {
             toolbar = new ToolBar();
             toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
-            toolbar.setOrientation(JToolBar.HORIZONTAL);
+            toolbar.setOrientation(SwingConstants.HORIZONTAL);
             add(toolbar, BorderLayout.NORTH);
         }
     }

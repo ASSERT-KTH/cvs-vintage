@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.42 2005/04/24 20:06:35 mvw Exp $
+// $Id: TabTaggedValues.java,v 1.43 2005/04/24 20:13:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,10 +64,6 @@ import org.tigris.toolbar.ToolBar;
  */
 public class TabTaggedValues extends AbstractArgoJPanel
     implements TabModelTarget {
-    ////////////////////////////////////////////////////////////////
-    // constants
-    private static final String DEFAULT_NAME = "tag";
-    private static final String DEFAULT_VALUE = "value";
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -195,10 +191,9 @@ public class TabTaggedValues extends AbstractArgoJPanel
         if (!(Model.getFacade().isAModelElement(t))) {
             shouldBeEnabled = false;
             return shouldBeEnabled;
-        } else {
-            shouldBeEnabled = true;
-            return true;
         }
+        shouldBeEnabled = true;
+        return true;
     }
 
     /**
