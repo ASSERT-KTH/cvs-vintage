@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.28 2005/02/19 23:18:58 mvw Exp $
+// $Id: TabToDo.java,v 1.29 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import javax.swing.JToolBar;
 
 import org.argouml.application.api.Configuration;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.cmd.ActionEmailExpert;
 import org.argouml.ui.cmd.ActionNewToDoItem;
 import org.argouml.ui.cmd.ActionResolve;
@@ -48,7 +48,7 @@ import org.tigris.toolbar.ToolBar;
  * The ToDo Tab.
  *
  */
-public class TabToDo extends TabSpawnable implements TabToDoTarget {
+public class TabToDo extends AbstractArgoJPanel implements TabToDoTarget {
     ////////////////////////////////////////////////////////////////
     // static variables
     private static int numHushes = 0;

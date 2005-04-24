@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.32 2005/04/24 14:26:32 mvw Exp $
+// $Id: TabStyle.java,v 1.33 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.StylePanel;
 import org.argouml.ui.TabFigTarget;
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.uml.util.namespace.Namespace;
@@ -94,7 +94,7 @@ import org.tigris.gef.presentation.Fig;
  * on different tabs.
  *
  */
-public class TabStyle extends TabSpawnable implements TabFigTarget,
+public class TabStyle extends AbstractArgoJPanel implements TabFigTarget,
         PropertyChangeListener, DelayedVChangeListener {
 
     private static final Logger LOG = Logger.getLogger(TabStyle.class);

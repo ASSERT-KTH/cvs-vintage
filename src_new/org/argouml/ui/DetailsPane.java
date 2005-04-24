@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.51 2005/03/05 10:37:19 mvw Exp $
+// $Id: DetailsPane.java,v 1.52 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,8 +158,8 @@ public class DetailsPane
         for (int i = 0; i < tabPanelList.size(); i++) {
             String title = "tab";
             JPanel t = (JPanel) tabPanelList.elementAt(i);
-            if (t instanceof TabSpawnable) {
-                title = ((TabSpawnable) t).getTitle();
+            if (t instanceof AbstractArgoJPanel) {
+                title = ((AbstractArgoJPanel) t).getTitle();
             }
             title = Translator.localize(title);
             if (t instanceof TabToDoTarget) {
@@ -423,13 +423,13 @@ public class DetailsPane
      * @param tabClass the given class
      * @return the tab instance for the given class
      */
-    public TabSpawnable getTab(Class tabClass) {
+    public AbstractArgoJPanel getTab(Class tabClass) {
         Iterator iter = tabPanelList.iterator();
         Object o;
         while (iter.hasNext()) {
             o = iter.next();
             if (o.getClass().equals(tabClass)) {
-                return (TabSpawnable) o;
+                return (AbstractArgoJPanel) o;
             }
         }
         return null;
@@ -508,8 +508,8 @@ public class DetailsPane
                 + topLevelTabbedPane.getComponentAt(tab).toString());
 //        JPanel t = (JPanel) tabPanelList.elementAt(tab);
         // Currently this feature is disabled for ArgoUML.
-//        if (t instanceof TabSpawnable)
-//	    ((TabSpawnable) t).spawn();
+//        if (t instanceof AbstractArgoJPanel)
+//	    ((AbstractArgoJPanel) t).spawn();
     }
 
     /**

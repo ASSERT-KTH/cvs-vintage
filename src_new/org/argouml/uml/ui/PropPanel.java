@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.111 2005/04/23 16:30:45 linus Exp $
+// $Id: PropPanel.java,v 1.112 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -72,7 +72,7 @@ import ru.novosoft.uml.MElementListener;
  * inheritance hierarchy that matches the UML 1.3 metamodel.
  */
 public abstract class PropPanel
-    extends TabSpawnable
+    extends AbstractArgoJPanel
     implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
     ////////////////////////////////////////////////////////////////
     // instance vars

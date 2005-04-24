@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.22 2005/04/24 15:26:34 mvw Exp $
+// $Id: StylePanel.java,v 1.23 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ import org.tigris.gef.presentation.Fig;
  * The Presentation panel - formerly called style panel.
  *
  */
-public class StylePanel extends TabSpawnable implements TabFigTarget,
+public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
                 ItemListener, DocumentListener, ListSelectionListener,
                 ActionListener {
     private static final Logger LOG = Logger.getLogger(StylePanel.class);

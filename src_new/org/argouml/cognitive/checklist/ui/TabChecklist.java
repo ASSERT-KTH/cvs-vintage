@@ -1,4 +1,4 @@
-// $Id: TabChecklist.java,v 1.27 2005/01/30 20:48:43 linus Exp $
+// $Id: TabChecklist.java,v 1.28 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ import org.argouml.cognitive.checklist.Checklist;
 import org.argouml.cognitive.checklist.ChecklistStatus;
 import org.argouml.model.Model;
 import org.argouml.ui.LookAndFeelMgr;
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.ui.TabModelTarget;
 import org.tigris.gef.presentation.Fig;
@@ -58,7 +58,7 @@ import org.tigris.gef.presentation.Fig;
 /**
  * Tab to show the checklist for a certain element.
  */
-public class TabChecklist extends TabSpawnable
+public class TabChecklist extends AbstractArgoJPanel
     implements TabModelTarget, ActionListener, ListSelectionListener {
 
     ////////////////////////////////////////////////////////////////

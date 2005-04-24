@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.33 2005/01/29 20:08:30 linus Exp $
+// $Id: FindDialog.java,v 1.34 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -570,11 +570,12 @@ public class FindDialog extends ArgoDialog
      */
     public void myDoubleClick(int tab) {
         JPanel t = (JPanel) resultTabs.elementAt(tab);
-        if (t instanceof TabSpawnable) {
-            if (((TabSpawnable) t).spawn() != null) {
+        if (t instanceof AbstractArgoJPanel) {
+            if (((AbstractArgoJPanel) t).spawn() != null) {
                 resultTabs.removeElementAt(tab);
                 //TODO: This next line does not work...
-                location.removeItem("In Tab:" + ((TabSpawnable) t).getTitle());
+                location.removeItem("In Tab:" 
+                                + ((AbstractArgoJPanel) t).getTitle());
             }
         }
     }

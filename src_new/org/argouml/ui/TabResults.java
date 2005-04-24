@@ -1,4 +1,4 @@
-// $Id: TabResults.java,v 1.25 2005/03/18 09:45:38 mkl Exp $
+// $Id: TabResults.java,v 1.26 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ import org.tigris.gef.util.ChildGenerator;
  *
  */
 public class TabResults
-        extends TabSpawnable
+        extends AbstractArgoJPanel
         implements
                 Runnable,
                 MouseListener,
@@ -196,9 +196,9 @@ public class TabResults
     }
 
     /**
-     * @see org.argouml.ui.TabSpawnable#spawn()
+     * @see org.argouml.ui.AbstractArgoJPanel#spawn()
      */
-    public TabSpawnable spawn() {
+    public AbstractArgoJPanel spawn() {
 	TabResults newPanel = (TabResults) super.spawn();
 	if (newPanel != null) {
 	    newPanel.setResults(results, diagrams);

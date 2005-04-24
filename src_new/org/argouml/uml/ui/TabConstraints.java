@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.47 2005/01/30 20:47:49 linus Exp $
+// $Id: TabConstraints.java,v 1.48 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.ocl.ArgoFacade;
 import org.argouml.ocl.OCLUtil;
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
 
@@ -62,7 +62,8 @@ import tudresden.ocl.parser.node.TName;
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
   */
-public class TabConstraints extends TabSpawnable implements TabModelTarget {
+public class TabConstraints extends AbstractArgoJPanel 
+    implements TabModelTarget {
 
     private static final Logger LOG = Logger.getLogger(TabConstraints.class);
 

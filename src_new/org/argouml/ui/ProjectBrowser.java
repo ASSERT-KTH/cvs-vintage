@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.145 2005/02/16 23:47:16 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.146 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -524,14 +524,14 @@ public class ProjectBrowser
      * @param tabClass the given class
      * @return the tabpage
      */
-    public TabSpawnable getTab(Class tabClass) {
+    public AbstractArgoJPanel getTab(Class tabClass) {
         // In theory there can be multiple details pane (work in
         // progress). It must first be determined which details
         // page contains the properties tab. Bob Tarling 7 Dec 2002
         Iterator it = detailsPanesByCompassPoint.values().iterator();
         while (it.hasNext()) {
             DetailsPane detailsPane = (DetailsPane) it.next();
-            TabSpawnable tab = detailsPane.getTab(tabClass);
+            AbstractArgoJPanel tab = detailsPane.getTab(tabClass);
             if (tab != null) {
                 return tab;
             }

@@ -1,4 +1,4 @@
-// $Id: PropPanelString.java,v 1.14 2005/01/09 14:58:56 linus Exp $
+// $Id: PropPanelString.java,v 1.15 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.ui.TabModelTarget;
 
@@ -44,7 +44,7 @@ import org.tigris.gef.presentation.FigText;
  *
  */
 public class PropPanelString
-    extends TabSpawnable
+    extends AbstractArgoJPanel
     implements TabModelTarget, PropertyChangeListener, DocumentListener {
     ////////////////////////////////////////////////////////////////
     // instance vars

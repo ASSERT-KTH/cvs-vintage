@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.41 2005/03/05 10:37:20 mvw Exp $
+// $Id: TabTaggedValues.java,v 1.42 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.Model;
 import org.argouml.ui.LookAndFeelMgr;
-import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.AbstractArgoJPanel;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.toolbar.ToolBar;
@@ -62,7 +62,7 @@ import org.tigris.toolbar.ToolBar;
 /**
  * Table view of a Model Element's Tagged Values.
  */
-public class TabTaggedValues extends TabSpawnable
+public class TabTaggedValues extends AbstractArgoJPanel
     implements TabModelTarget {
     ////////////////////////////////////////////////////////////////
     // constants

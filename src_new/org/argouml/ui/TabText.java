@@ -1,4 +1,4 @@
-// $Id: TabText.java,v 1.22 2005/02/16 21:06:46 mvw Exp $
+// $Id: TabText.java,v 1.23 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.tigris.toolbar.ToolBar;
  * A tab that contains textual information.
  */
 public class TabText
-    extends TabSpawnable
+    extends AbstractArgoJPanel
     implements TabModelTarget, DocumentListener {
     ////////////////////////////////////////////////////////////////
     // instance variables

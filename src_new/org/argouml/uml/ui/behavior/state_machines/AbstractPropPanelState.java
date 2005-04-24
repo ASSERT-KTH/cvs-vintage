@@ -1,4 +1,4 @@
-// $Id: AbstractPropPanelState.java,v 1.1 2005/04/23 16:30:44 linus Exp $
+// $Id: AbstractPropPanelState.java,v 1.2 2005/04/24 20:06:35 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,8 @@ public abstract class AbstractPropPanelState extends PropPanelStateVertex {
      * @param icon the icon to be shown next to the name
      * @param orientation the orientation of the panel
      */
-    public AbstractPropPanelState(String name, ImageIcon icon, Orientation orientation)
+    public AbstractPropPanelState(
+                    String name, ImageIcon icon, Orientation orientation)
     {
         super(name, icon, orientation);
 
