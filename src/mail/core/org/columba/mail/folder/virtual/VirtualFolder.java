@@ -67,41 +67,12 @@ public class VirtualFolder extends AbstractMessageFolder {
 
 	protected HeaderList headerList;
 
-	//TODO (@author fdietz): Reduce redundancy in both constructors, eventually
-	// create
-	// private method that cares for the missing XmlElement.
 	public VirtualFolder(FolderItem item, String path) {
 		super(item, path);
 
 		headerList = new HeaderList();
 
-		XmlElement filterElement = node.getElement("filter");
-
-		if (filterElement == null) {
-			/*
-			 * filterElement = new XmlElement("filter");
-			 */
-			XmlElement filter = new XmlElement("filter");
-			filter.addAttribute("description", "new filter");
-			filter.addAttribute("enabled", "true");
-
-			XmlElement rules = new XmlElement("rules");
-			rules.addAttribute("condition", "matchall");
-
-			XmlElement criteria = new XmlElement("criteria");
-			criteria.addAttribute("type", "Subject");
-			criteria.addAttribute("headerfield", "Subject");
-			criteria.addAttribute("criteria", "contains");
-			criteria.addAttribute("pattern", "pattern");
-			rules.addElement(criteria);
-			filter.addElement(rules);
-
-			Filter f = new Filter(filter);
-
-			getConfiguration().getRoot().addElement(f.getRoot());
-		}
-
-		//searchFilter = new Search(this);
+		ensureValidFilterElement();
 	}
 
 	public VirtualFolder(String name, String type, String path) {
@@ -115,16 +86,24 @@ public class VirtualFolder extends AbstractMessageFolder {
 
 		headerList = new HeaderList();
 
-		XmlElement filterElement = node.getElement("filter");
+		ensureValidFilterElement();
+	}
 
-		if (filterElement == null) {
-			/*
-			 * filterElement = new XmlElement("filter");
-			 */
-			XmlElement filter = new XmlElement("filter");
+	/**
+	 * Ensures that there is at least one valid filter entry in the
+	 * VFolder.
+	 */
+	private void ensureValidFilterElement() {		
+		XmlElement filter = getConfiguration().getRoot().getElement("filter");
+		
+		if (filter == null) {
+			filter = new XmlElement("filter");
 			filter.addAttribute("description", "new filter");
 			filter.addAttribute("enabled", "true");
-
+			getConfiguration().getRoot().addElement(filter);
+		} 
+		
+		if( filter.count() == 0 ) {
 			XmlElement rules = new XmlElement("rules");
 			rules.addAttribute("condition", "matchall");
 
@@ -135,12 +114,9 @@ public class VirtualFolder extends AbstractMessageFolder {
 			criteria.addAttribute("pattern", "pattern");
 			rules.addElement(criteria);
 			filter.addElement(rules);
-
-			Filter f = new Filter(filter);
-
-			getConfiguration().getRoot().addElement(f.getRoot());
 		}
 	}
+	
 
 	protected Object generateNextUid() {
 		return new Integer(nextUid++);
