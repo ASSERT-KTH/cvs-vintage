@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.30 2005/02/10 21:10:37 mvw Exp $
+// $Id: ExplorerTree.java,v 1.31 2005/04/25 19:51:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,8 +252,7 @@ public class ExplorerTree
         }
         if (value != null)
             return value.toString();
-        else
-            return "-";
+        return "-";
     }
 
     /**
@@ -381,9 +380,8 @@ public class ExplorerTree
                     if (!e.isAddedPath(i)) {
                         callSetTarget = false;
                         break;
-                    } else {
-                        addedElements.add(element);
                     }
+                    addedElements.add(element);
                 }
 
                 if (callSetTarget && addedElements.size()

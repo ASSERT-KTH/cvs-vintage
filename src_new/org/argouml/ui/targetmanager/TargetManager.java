@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.42 2005/02/13 12:30:32 mvw Exp $
+// $Id: TargetManager.java,v 1.43 2005/04/25 19:51:39 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -463,8 +463,8 @@ public final class TargetManager {
 		    || (first && targ != getTarget())) {
 		    oldTargets = targets.toArray();
 		    break;
-		} else
-		    first = false;
+		}
+                first = false;
 	    }
 	} else
 	    oldTargets = targets.toArray();

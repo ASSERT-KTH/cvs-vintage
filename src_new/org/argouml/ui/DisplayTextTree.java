@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.48 2005/01/16 11:14:10 mvw Exp $
+// $Id: DisplayTextTree.java,v 1.49 2005/04/25 19:51:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,10 +113,10 @@ public class DisplayTextTree extends JTree {
         if (value instanceof ToDoList) {
             return "ToDoList";
         }
-        if (value != null)
+        if (value != null) {
             return value.toString();
-        else
-            return "-";
+        }
+        return "-";
     }
 
     /**
