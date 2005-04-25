@@ -34,6 +34,7 @@ import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.IHeaderListStorage;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -759,10 +760,15 @@ public class VirtualFolder extends AbstractMessageFolder {
 		return (newFolderType.equals(getType()));
 	}
 
-	/**
-	 * Not implemented.
-	 */
-	public void innerCopy(IMailbox destFolder, Object[] uids) {
+	public void innerCopy(IMailbox destFolder, Object[] uids) throws Exception {
+		for( int i=0; i<uids.length; i ++) {
+			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
+			AbstractMessageFolder sourceFolder = h.getSrcFolder();
+			Object sourceUid = h.getSrcUid();
+			
+			sourceFolder.innerCopy(destFolder, new Object[] {sourceUid});
+		}
+		
 	}
 
 	public void setAttribute(Object uid, String key, Object value)
@@ -869,5 +875,11 @@ public class VirtualFolder extends AbstractMessageFolder {
 			recursiveExpunge(folder);
 		}
 		
+	}
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.IMailFolder#getRootFolder()
+	 */
+	public IMailFolder getRootFolder() {
+		return getSourceFolder().getRootFolder();		
 	}
 }
