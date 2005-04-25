@@ -34,7 +34,6 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.event.FolderEvent;
-import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderListener;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.IHeaderList;
@@ -183,7 +182,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// update treenode
 		fireFolderPropertyChanged();
 
-		FolderEvent e = new FolderEvent(this, null);
+		FolderEvent e = new FolderEvent(this, uid);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 
@@ -202,17 +201,20 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 */
 	public void fireMessageRemoved(Object uid, Flags flags) {
 		getMessageFolderInfo().decExists();
-		if (!flags.getSeen()) {
-			getMessageFolderInfo().decUnseen();
+		
+		if( flags != null) {
+			if (!flags.getSeen()) {
+				getMessageFolderInfo().decUnseen();
+			}
+			if (flags.getRecent()) {
+				getMessageFolderInfo().decRecent();
+			}
 		}
-		if (flags.getRecent()) {
-			getMessageFolderInfo().decRecent();
-		}
+
 		try {
 			getHeaderListStorage().removeMessage(uid);
 		} catch (Exception e) {
 		}
-
 		setChanged(true);
 
 		//      update treenode
@@ -241,12 +243,10 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// -> Moved code for updating mailfolderinfo to markMessage()
 		// intentionally!
 		//
-
 		setChanged(true);
 
-		
-
 		FolderEvent e = new FolderEvent(this, uid);
+		
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 
@@ -544,10 +544,11 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		updateMailFolderInfo(uid, variant);
 
 		Flags flags = getFlags(uid);
-
+		
 		if (flags == null) {
 			return;
 		}
+		Flags oldValue = (Flags) flags.clone();
 
 		switch (variant) {
 		case MarkMessageCommand.MARK_AS_READ: {
