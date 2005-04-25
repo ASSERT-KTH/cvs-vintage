@@ -85,7 +85,7 @@
 			<pathelement path="${lib.macchiato}"/>
 			<pathelement path="${lib.frapuccino}"/>
 			<pathelement path="${lib.lucene}"/>			
-			<pathelement path="${lib.looks}"/>			
+			<pathelement path="${lib.plastic}"/>			
 			<pathelement path="${native.win32}/${lib.jniwrap}"/>
 			<pathelement path="${native.win32}/${lib.winpack}"/>			
 			<pathelement path="${lib.jdom}"/>			
@@ -146,7 +146,7 @@
 			<include name="${lib.macchiato}"/>
 			<include name="${lib.frapuccino}"/>
 			<include name="${lib.lucene}"/>			
-			<include name="${lib.looks}"/>			
+			<include name="${lib.plastic}"/>			
 			<include name="${lib.jdom}"/>			
 			<include name="${lib.jpim}"/>			
 			<include name="${lib.je}"/>
@@ -252,7 +252,7 @@
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main" />
-				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.looks} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
+				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -310,7 +310,7 @@
 				<include name="${lib.macchiato}"/>
 				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
-				<include name="${lib.looks}"/>			
+				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>						
@@ -354,7 +354,7 @@
 				<include name="${lib.macchiato}"/>
 				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
-				<include name="${lib.looks}"/>			
+				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
@@ -451,7 +451,7 @@
 				<include name="${lib.macchiato}"/>
 				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
-				<include name="${lib.looks}"/>			
+				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
@@ -500,7 +500,7 @@
 			<replacefilter token="@codebase@" value="${webstart.codebase}"/>			
 			<replacefilter token="@ristretto@" value="${lib.ristretto}"/>			
 			<replacefilter token="@jargs@" value="${lib.jargs}"/>			
-			<replacefilter token="@looks@" value="${lib.looks}"/>			
+			<replacefilter token="@plastic@" value="${lib.plastic}"/>			
 			<replacefilter token="@usermanual@" value="${manual.jar}"/>			
 			<replacefilter token="@forms@" value="${lib.forms}"/>			
 			<replacefilter token="@jscf@" value="${lib.jscf}"/>			
@@ -579,7 +579,7 @@
 				<include name="${lib.macchiato}"/>
 				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
-				<include name="${lib.looks}"/>			
+				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>
@@ -629,7 +629,7 @@
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
 			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.looks}" />
+			<arg value="/dPLASTIC=${lib.plastic}" />
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
@@ -652,7 +652,7 @@
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
 			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.looks}" />
+			<arg value="/dPLASTIC=${lib.plastic}" />
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
@@ -684,7 +684,7 @@
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
 			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.looks}" />
+			<arg value="/dPLASTIC=${lib.plastic}" />
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
@@ -708,7 +708,7 @@
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
 			<arg value="/dJWIZZ=${lib.jwizz}" />
-			<arg value="/dPLASTIC=${lib.looks}" />
+			<arg value="/dPLASTIC=${lib.plastic}" />
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
