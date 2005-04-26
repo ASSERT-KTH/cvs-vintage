@@ -334,6 +334,18 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 					header.setAttributes(sourceFolder.getAttributes(sourceUid));
 					header.setFlags(sourceFolder.getFlags(sourceUid));
 					add((ColumbaHeader) header, sourceFolder, sourceUid);
+
+					if (!header.getFlags().getSeen()) {
+						getMessageFolderInfo().incUnseen();
+					}
+
+					if (header.getFlags().getRecent()) {
+						getMessageFolderInfo().incRecent();
+					}
+
+					getMessageFolderInfo().incExists();
+
+
 				} else {
 					Header h = folder.getHeaderFields(resultUids[i],
 							headerfields);
@@ -341,6 +353,16 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 					header.setAttributes(folder.getAttributes(resultUids[i]));
 					header.setFlags(folder.getFlags(resultUids[i]));
 					add(header, folder, resultUids[i]);
+
+					if (!header.getFlags().getSeen()) {
+						getMessageFolderInfo().incUnseen();
+					}
+
+					if (header.getFlags().getRecent()) {
+						getMessageFolderInfo().incRecent();
+					}
+
+					getMessageFolderInfo().incExists();				
 				}
 
 			}
@@ -374,7 +396,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		return new Filter(getConfiguration().getRoot().getElement("filter"));
 	}
 
-	public void add(ColumbaHeader header, AbstractMessageFolder f, Object uid)
+	public Object add(ColumbaHeader header, AbstractMessageFolder f, Object uid)
 			throws Exception {
 		Object newUid = generateNextUid();
 
@@ -384,19 +406,9 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		//virtualHeader.set("columba.uid", newUid);
 		virtualHeader.setVirtualUid(newUid);
 
-		if (!header.getFlags().getSeen()) {
-			getMessageFolderInfo().incUnseen();
-		}
-
-		if (header.getFlags().getRecent()) {
-			getMessageFolderInfo().incRecent();
-		}
-
-		getMessageFolderInfo().incExists();
-
 		headerList.add(virtualHeader, newUid);
 		
-		fireMessageAdded(newUid);
+		return newUid;
 	}
 
 	/**
@@ -436,8 +448,10 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		// remove from source folder
 		sourceFolder.removeMessage(sourceUid);
 
-		//		 remove from virtual folder
-		headerList.remove(uid);
+		// (tstich) we don't do this anymore to avoid problems
+		// when the uid reference is still needed!
+		// remove from virtual folder
+		// headerList.remove(uid);
 	}
 
 	/**
@@ -904,7 +918,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 				ColumbaHeader header = new ColumbaHeader(h);
 				header.setAttributes(folder.getAttributes(resultUids[0]));
 				header.setFlags(folder.getFlags(resultUids[0]));
-				add(header, folder, resultUids[0]);				
+				
+				fireMessageAdded(add(header, folder, resultUids[0]));
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -934,6 +949,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	public void messageFlagChanged(IFolderEvent e) {
 		//Shall we do another search and maybe remove the message?
 		
+		//fire updates
+		fireMessageFlagChanged(srcUidToVirtualUid((IMailFolder)e.getSource(), e.getChanges()));
 	}
 
 	/* (non-Javadoc)
