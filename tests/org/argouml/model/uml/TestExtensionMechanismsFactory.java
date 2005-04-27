@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.5 2005/01/31 20:54:35 linus Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.6 2005/04/27 20:44:42 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,8 @@ public class TestExtensionMechanismsFactory extends TestCase {
     public void testCreates() {
 
 	String[] objs = {
-	    "Stereotype", "TaggedValue", null,
+	    "TaggedValue",
+	    null,
 	};
 
 	CheckUMLModelHelper.createAndRelease(
