@@ -25,6 +25,7 @@ import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
@@ -78,13 +79,16 @@ public class SendLaterAction extends AbstractColumbaAction {
 		//      -> get source reference of message
 		// when replying this is the original sender's message
 		// you selected and replied to
-		MailFolderCommandReference ref2 = composerController.getModel()
-				.getSourceReference();
-		if (ref2 != null) {
-			// mark message as answered
-			ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-			MarkMessageCommand c1 = new MarkMessageCommand(ref2);
-			CommandProcessor.getInstance().addOp(c1);
+		try {
+			MailFolderCommandReference ref2 = composerController.getModel()
+					.getSourceReference();
+			if (ref2 != null && ((IMailbox)ref2.getSourceFolder()).exists(ref2.getUids()[0])) {
+				// mark message as answered
+				ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+				MarkMessageCommand c1 = new MarkMessageCommand(ref2);
+				CommandProcessor.getInstance().addOp(c1);
+			}
+		} catch (Exception e) {
 		}
 
 		// close composer view

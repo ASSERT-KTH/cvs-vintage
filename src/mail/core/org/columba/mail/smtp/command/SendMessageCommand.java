@@ -35,6 +35,7 @@ import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -255,7 +256,7 @@ public class SendMessageCommand extends Command {
 			// when replying this is the original sender's message
 			// you selected and replied to
 			MailFolderCommandReference ref2 = model.getSourceReference();
-			if (ref2 != null) {
+			if (ref2 != null && ((IMailbox)ref2.getSourceFolder()).exists(ref2.getUids()[0])) {
 				// mark message as answered
 				ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
 				MarkMessageCommand c1 = new MarkMessageCommand(ref2);
