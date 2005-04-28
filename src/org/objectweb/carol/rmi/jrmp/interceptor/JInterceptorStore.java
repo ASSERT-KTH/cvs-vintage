@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JInterceptorStore.java,v 1.8 2005/04/28 18:17:54 el-vadimo Exp $
+ * $Id: JInterceptorStore.java,v 1.9 2005/04/28 18:21:51 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
@@ -127,7 +127,7 @@ public class JInterceptorStore {
      * Get Intializers method
      * @return JRMP Initializers enuumeration
      */
-    public static String[] getJRMPInitializers() {
+    public synchronized static String[] getJRMPInitializers() {
         // if exists, return it
         if (initializers != null) {
             return initializers;
