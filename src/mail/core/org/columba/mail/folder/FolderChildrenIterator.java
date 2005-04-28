@@ -26,14 +26,14 @@ import javax.swing.tree.TreeNode;
  */
 public class FolderChildrenIterator {
 
-	private IMailFolder parent;
-	private IMailFolder nextChild;
+	private AbstractFolder parent;
+	private AbstractFolder nextChild;
 	
-	public FolderChildrenIterator(IMailFolder parent) {
+	public FolderChildrenIterator(AbstractFolder parent) {
 		this.parent = parent;
 		
 		if( parent.getChildCount() > 0 ) {
-			nextChild = (IMailFolder) findNext(parent.getChildAt(0));
+			nextChild = (AbstractFolder) findNext(parent.getChildAt(0));
 		}
 	}
 	
@@ -61,9 +61,9 @@ public class FolderChildrenIterator {
 		return nextChild != null;
 	}
 
-	public IMailFolder nextChild() {
-		IMailFolder result = nextChild;
-		nextChild = (IMailFolder) findNext(nextChild);
+	public AbstractFolder nextChild() {
+		AbstractFolder result = nextChild;
+		nextChild = (AbstractFolder) findNext(nextChild);
 		
 		return result;
 	}
