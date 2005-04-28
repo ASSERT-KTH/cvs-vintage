@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.19 2005/01/16 11:14:09 mvw Exp $
+// $Id: ExplorerTreeModel.java,v 1.20 2005/04/28 17:46:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,19 +25,28 @@
 package org.argouml.ui.explorer;
 
 import java.awt.EventQueue;
-import java.util.*;
-
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeNode;
-
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
@@ -659,9 +668,8 @@ public class ExplorerTreeModel extends DefaultTreeModel
 
 	if (nodes == null) {
 	    return Collections.EMPTY_LIST;
-	} else {
-	    return nodes;
 	}
+        return nodes;
     }
 
     /**
