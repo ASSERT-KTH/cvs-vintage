@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.2 2005/04/28 20:34:43 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,7 +183,7 @@ public interface StateMachinesHelper {
      * Sets the Bound of some SynchState.
      *
      * @param handle Synch State
-     * @param bound A positive integer or the value “unlimited” specifying
+     * @param bound A positive integer or the value "unlimited" specifying
      *              the maximal count of the SynchState. The count is the
      *              difference between the number of times the incoming
      *              and outgoing transitions of the synch state are fired.
