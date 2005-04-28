@@ -179,7 +179,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 			//  -> this is already the final folder
 			// if folder doesn't exist already
 			AbstractFolder subFolder = (AbstractFolder) parent
-					.findChildWithName(name, false);
+					.findChildWithName(name, false, IMAPFolder.class );
 
 			if (subFolder == null) {
 				subFolder = new IMAPFolder(name, "IMAPFolder", getParentPath());
