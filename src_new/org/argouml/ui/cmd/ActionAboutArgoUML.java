@@ -1,4 +1,4 @@
-// $Id: ActionAboutArgoUML.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionAboutArgoUML.java,v 1.4 2005/04/28 20:42:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ class ActionAboutArgoUML extends UMLAction {
 	AboutBox box = new AboutBox(jframe, true);
 
 	box.setLocationRelativeTo(jframe);
-	box.show();
+	box.setVisible(true);
     }
 
 

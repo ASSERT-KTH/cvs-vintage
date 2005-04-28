@@ -1,4 +1,4 @@
-// $Id: ExceptionDialog.java,v 1.2 2005/02/10 21:28:40 mvw Exp $
+// $Id: ExceptionDialog.java,v 1.3 2005/04/28 20:45:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     }
 
     private void disposeDialog() {
-        hide(); 
+        setVisible(false); 
         dispose();
     }
 }

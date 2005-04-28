@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.75 2005/02/25 18:36:13 mvw Exp $
+// $Id: Import.java,v 1.76 2005/04/28 20:39:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,9 +122,6 @@ public class Import {
     private JComponent configPanel;
 
     private JCheckBox descend;
-
-    /** The files that needs a second RE pass. */
-    private Vector secondPassFiles;
 
     private JCheckBox createDiagrams;
 
@@ -396,7 +393,7 @@ public class Import {
         SwingUtilities.invokeLater(
 				   new ImportRun(files, b,
 						 layoutDiagrams.isSelected()));
-        iss.show();
+        iss.setVisible(true);
     }
 
     /**
@@ -440,8 +437,7 @@ public class Import {
     public boolean isCreateDiagramsChecked() {
         if (createDiagrams != null)
             return createDiagrams.isSelected();
-        else
-            return true;
+        return true;
     }
 
     /**
@@ -452,8 +448,7 @@ public class Import {
     public boolean isDiscendDirectoriesRecursively() {
         if (descend != null)
             return descend.isSelected();
-        else
-            return true;
+        return true;
     }
 
     /**
@@ -464,8 +459,7 @@ public class Import {
     public boolean isMinimiseFigsChecked() {
         if (minimiseFigs != null)
             return minimiseFigs.isSelected();
-        else
-            return false;
+        return false;
     }
 
     /**
@@ -785,7 +779,7 @@ public class Import {
             cancelButton.addActionListener(al);
         }
 
-        public void done() { hide(); dispose(); }
+        public void done() { setVisible(false); dispose(); }
     }
 
 
@@ -844,7 +838,7 @@ public class Import {
         }
 
         public void disposeDialog() {
-            hide(); dispose();
+            setVisible(false); dispose();
         }
     }
 }
@@ -1023,7 +1017,7 @@ class ImportClasspathDialog extends JDialog {
 		}
 	    });
 
-	    int retval = chooser.showOpenDialog(ProjectBrowser.getInstance());
+	    chooser.showOpenDialog(ProjectBrowser.getInstance());
         }
     }
 }

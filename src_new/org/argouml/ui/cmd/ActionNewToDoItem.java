@@ -1,4 +1,4 @@
-// $Id: ActionNewToDoItem.java,v 1.5 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionNewToDoItem.java,v 1.6 2005/04/28 20:42:11 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public class ActionNewToDoItem extends UMLAction {
     public void actionPerformed(ActionEvent ae) {
         AddToDoItemDialog dialog = new AddToDoItemDialog(
                 new UMLListCellRenderer2(true));
-        dialog.show();
+        dialog.setVisible(true);
     }
 } /* end class ActionNewToDoItem */
 

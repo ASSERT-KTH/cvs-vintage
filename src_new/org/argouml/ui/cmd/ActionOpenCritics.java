@@ -1,4 +1,4 @@
-// $Id: ActionOpenCritics.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionOpenCritics.java,v 1.4 2005/04/28 20:42:11 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ class ActionOpenCritics extends UMLAction {
      */
     public void actionPerformed(ActionEvent ae) {
 	CriticBrowserDialog dialog = new CriticBrowserDialog();
-	dialog.show();
+	dialog.setVisible(true);
     }
 
 } /* end class ActionOpenCritics */

@@ -1,4 +1,4 @@
-// $Id: ActionGenerationSettings.java,v 1.10 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionGenerationSettings.java,v 1.11 2005/04/28 20:49:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class ActionGenerationSettings extends UMLAction {
      */
     public void actionPerformed(ActionEvent ae) {
 	SourcePathDialog cgd = new SourcePathDialog();
-	cgd.show();
+	cgd.setVisible(true);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionOpenGoals.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionOpenGoals.java,v 1.4 2005/04/28 20:45:04 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ class ActionOpenGoals extends UMLAction {
      */
     public void actionPerformed(ActionEvent ae) {
 	GoalsDialog d = new GoalsDialog(ProjectBrowser.getInstance());
-	d.show();
+	d.setVisible(true);
     }
 } /* end class ActionOpenGoals */
 

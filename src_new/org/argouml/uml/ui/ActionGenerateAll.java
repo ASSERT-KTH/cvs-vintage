@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.26 2005/01/30 20:47:49 linus Exp $
+// $Id: ActionGenerateAll.java,v 1.27 2005/04/28 20:49:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,7 @@ public class ActionGenerateAll extends UMLAction {
 	    }
 	}
 	ClassGenerationDialog cgd = new ClassGenerationDialog(classes);
-	cgd.show();
+	cgd.setVisible(true);
     }
 
     /**
