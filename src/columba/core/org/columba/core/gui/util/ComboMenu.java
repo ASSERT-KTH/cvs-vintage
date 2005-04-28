@@ -133,6 +133,13 @@ public class ComboMenu extends JButton implements ActionListener {
 	public void addItemListener(ItemListener l) {
 		listeners.add(l);
 	}
+	
+	public void setSelectedItem( int nr ) {
+		JRadioButtonMenuItem item = (JRadioButtonMenuItem)popupMenu.getComponent(0);
+		
+		setText(item.getText());
+		fireItemStateChanged(new ItemEvent(this, 0, item.getActionCommand(), ItemEvent.SELECTED));
+	}
 
 	protected void fireItemStateChanged(ItemEvent event) {
 		Iterator it = listeners.iterator();

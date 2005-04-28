@@ -36,10 +36,13 @@ import javax.swing.event.DocumentListener;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.folder.IFolder;
+import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CTextField;
 import org.columba.core.gui.util.ComboMenu;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -60,7 +63,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author fdietz
  */
 public class FilterToolbar extends JPanel implements ActionListener,
-		ItemListener {
+		ItemListener, ISelectionListener {
 
 	public JButton clearButton;
 
@@ -75,13 +78,17 @@ public class FilterToolbar extends JPanel implements ActionListener,
 	private TableController tableController;
 
 	private IFolder sourceFolder;
-
+	
 	private String selectedItem;
 
+	private boolean active;
+	
 	String[] strs = new String[] { "subject_contains", "from_contains",
 			"to_contains", "cc_contains", "bcc_contains", "body_contains",
 			"separator", "unread_messages", "flagged_messages",
 			"high_priority", "spam_message", "separator", "custom_search" };
+
+	private IFolder selectedFolder;
 
 	public FilterToolbar(TableController headerTableViewer) {
 		super();
@@ -91,6 +98,9 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 		initComponents();
 		layoutComponents();
+
+		
+		headerTableViewer.getFrameController().getSelectionManager().registerSelectionListener("mail.tree", this);
 
 		//textField.getDocument().addDocumentListener(new
 		// MyDocumentListener());
@@ -145,11 +155,13 @@ public class FilterToolbar extends JPanel implements ActionListener,
 				"mainframe", "filtertoolbar_clear_tooltip"));
 		clearButton.setActionCommand("CLEAR");
 		clearButton.addActionListener(this);
-
+		clearButton.setEnabled(false);
+		
 		searchButton = new JButton("Search");
 		searchButton.setActionCommand("SEARCH");
 		searchButton.addActionListener(this);
 		searchButton.setDefaultCapable(true);
+		searchButton.setEnabled(false);
 	}
 
 	public void layoutComponents() {
@@ -189,14 +201,11 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		String action = e.getActionCommand();
 
 		if (action.equals("SEARCH")) {
-
-			clearButton.setEnabled(true);
-
 			executeSearch();
 
 		} else if (action.equals("CLEAR")) {
 
-			clearButton.setEnabled(false);
+			resetToolbar();
 
 			// select search folder
 			MailFolderCommandReference r = new MailFolderCommandReference(
@@ -214,22 +223,31 @@ public class FilterToolbar extends JPanel implements ActionListener,
 	}
 
 	/**
+	 * 
+	 */
+	private void resetToolbar() {
+		active = false;
+		clearButton.setEnabled(false);
+
+		textField.setText("");
+	}
+
+	/**
 	 * Execute search.
 	 */
 	private void executeSearch() {
-
+		clearButton.setEnabled(true);		
+		active = true;
+		
 		// get selected search criteria
 		int index = getIndex(selectedItem);
 
 		// create filter criteria based on selected type
 		FilterCriteria c = createFilterCriteria(index);
 
-		// get currently selected folder
-		IFolder h = ((MailFrameMediator) tableController.getFrameController())
-				.getTreeSelection().getSourceFolder();
 
-		if (h.getUid() != 106)
-			sourceFolder = h;
+		if (selectedFolder.getUid() != 106)
+			sourceFolder = selectedFolder;
 
 		// set criteria for search folder
 		VirtualFolder searchFolder = prepareSearchFolder(c, sourceFolder);
@@ -287,6 +305,8 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		// set source folder UID
 		searchFolder.getConfiguration().setInteger("property", "source_uid", uid);
 
+		searchFolder.deactivate();
+		
 		return searchFolder;
 	}
 
@@ -409,6 +429,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		// execute custom search
 		if (selectedItem.equals("custom_search")) {
 			executeCustomSearch();
+			criteriaComboMenu.setSelectedItem(0);
 			return;
 		}
 
@@ -443,5 +464,26 @@ public class FilterToolbar extends JPanel implements ActionListener,
 
 		SearchFrame frame = new SearchFrame(tableController
 				.getFrameController(), searchFolder, folder);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		// get currently selected folder
+		IMailFolderCommandReference ref = ((MailFrameMediator) tableController.getFrameController())
+				.getTreeSelection();
+		
+		if( ref != null ) {
+			selectedFolder = ref.getSourceFolder();
+			searchButton.setEnabled(true);
+		} else {
+			searchButton.setEnabled(false);
+		}
+		
+		if( active ) {
+			resetToolbar();
+			active = false;
+		}
 	}
 }

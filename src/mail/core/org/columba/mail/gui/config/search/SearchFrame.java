@@ -375,6 +375,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 			setVisible(false);
 
 			try {
+				// Deactivate this vFolder because changes are about to happen
+				// and the search needs to be redone.
+				((VirtualFolder) destFolder).deactivate();
 				((VirtualFolder) destFolder).addSearchToHistory();
 			} catch (Exception ex) {
 				ex.printStackTrace();

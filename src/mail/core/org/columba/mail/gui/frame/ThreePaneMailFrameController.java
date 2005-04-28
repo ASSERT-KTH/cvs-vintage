@@ -92,7 +92,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableController = new TableController(this);
 		folderInfoPanel = new FolderInfoPanel();
 
-		filterToolbar = new FilterToolbar(tableController);
 
 		// create selection handlers
 		TableSelectionHandler tableHandler = new TableSelectionHandler(
@@ -110,6 +109,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// for updating the title
 		treeHandler.addSelectionListener(this);
 
+		filterToolbar = new FilterToolbar(tableController);
+		
+		
 		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
 		// Register F2 hotkey for renaming folder when the message panel has
