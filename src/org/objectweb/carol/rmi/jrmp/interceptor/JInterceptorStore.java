@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JInterceptorStore.java,v 1.7 2005/04/22 16:37:20 benoitf Exp $
+ * $Id: JInterceptorStore.java,v 1.8 2005/04/28 18:17:54 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
@@ -47,11 +47,6 @@ public class JInterceptorStore {
      * Initilazer class prefix
      */
     public static final String INTIALIZER_PREFIX = "org.objectweb.PortableInterceptor.JRMPInitializerClass";
-
-    /**
-     * private boolean for intialisation
-     */
-    private static boolean init = false;
 
     /**
      * private Interceptor for Context propagation
@@ -92,30 +87,26 @@ public class JInterceptorStore {
      * Intialize interceptors for a carol server
      */
     static {
-        if (!init) {
-            // Load the Interceptors
-            try {
-                JInitInfo jrmpInfo = new JRMPInitInfoImpl();
-                String[] ins = getJRMPInitializers();
-                for (int i = 0; i < ins.length; i++) {
-                    JInitializer jinit = (JInitializer) Thread.currentThread().getContextClassLoader()
-                            .loadClass(ins[i]).newInstance();
-                    jinit.pre_init(jrmpInfo);
-                    jinit.post_init(jrmpInfo);
-                }
-                sis = jrmpInfo.getServerRequestInterceptors();
-                cis = jrmpInfo.getClientRequestInterceptors();
-                // fisrt remote reference = local reference
-                rcis = cis;
-                uid = JInterceptorHelper.getSpaceID();
-                address = JInterceptorHelper.getInetAddress();
-                init = true;
-            } catch (Exception e) {
-                //we did not found the interceptor do nothing but a trace ?
-                TraceCarol.error("JrmpPRODelegate(), No interceptors found", e);
+        // Load the Interceptors
+        try {
+            JInitInfo jrmpInfo = new JRMPInitInfoImpl();
+            String[] ins = getJRMPInitializers();
+            for (int i = 0; i < ins.length; i++) {
+                JInitializer jinit = (JInitializer) Thread.currentThread().getContextClassLoader()
+                    .loadClass(ins[i]).newInstance();
+                jinit.pre_init(jrmpInfo);
+                jinit.post_init(jrmpInfo);
             }
+            sis = jrmpInfo.getServerRequestInterceptors();
+            cis = jrmpInfo.getClientRequestInterceptors();
+            // fisrt remote reference = local reference
+            rcis = cis;
+            uid = JInterceptorHelper.getSpaceID();
+            address = JInterceptorHelper.getInetAddress();
+        } catch (Exception e) {
+            //we did not found the interceptor do nothing but a trace ?
+            TraceCarol.error("JrmpPRODelegate(), No interceptors found", e);
         }
-
     }
 
     /**
