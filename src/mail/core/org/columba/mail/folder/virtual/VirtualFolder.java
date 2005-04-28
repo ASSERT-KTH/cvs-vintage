@@ -31,6 +31,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderChildrenIterator;
 import org.columba.mail.folder.FolderFactory;
@@ -95,7 +96,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	}
 
 	private void registerWithSource() {
-		IMailFolder folder = getSourceFolder();
+		AbstractFolder folder = getSourceFolder();
 		
 		folder.addFolderListener(this);
 		
@@ -112,6 +113,24 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		}
 	}
 	
+	private void unregisterWithSource() {
+		AbstractFolder folder = getSourceFolder();
+		
+		folder.removeFolderListener(this);
+		
+		if( isRecursive() ) {
+			FolderChildrenIterator it = new FolderChildrenIterator(folder);
+		
+			while( it.hasMoreChildren() ) {
+				IMailFolder next = it.nextChild();
+				
+				if( !(next instanceof VirtualFolder) ) {
+					next.removeFolderListener(this);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Ensures that there is at least one valid filter entry in the
 	 * VFolder.
@@ -158,16 +177,10 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	}
 
 	public IHeaderList getHeaderList() throws Exception {
-		headerList.clear();
-		getMessageFolderInfo().reset();
-
-		applySearch();
-		
 		if( !active ) {
-			registerWithSource();
+			activate();
 		}
 		
-		active = true;
 		return headerList;
 	}
 
@@ -180,9 +193,11 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			return;
 		}
 
-		// we only want 10 subfolders
+		// (tstich) reduced to 3 because all need to be
+		// search when activated on startup
+		// we only want 3 subfolders
 		// -> if more children exist remove them
-		if (searchFolder.getChildCount() >= 10) {
+		if (searchFolder.getChildCount() >= 3) {
 			AbstractMessageFolder child = (AbstractMessageFolder) searchFolder
 					.getChildAt(0);
 			child.removeFolder();
@@ -448,10 +463,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		// remove from source folder
 		sourceFolder.removeMessage(sourceUid);
 
-		// (tstich) we don't do this anymore to avoid problems
-		// when the uid reference is still needed!
 		// remove from virtual folder
-		// headerList.remove(uid);
+		headerList.remove(uid);
 	}
 
 	/**
@@ -583,7 +596,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 */
 	public boolean tryToGetLock(Object locker) {
 		// We need to get the locks of all folders		
-		IMailFolder folder = getSourceFolder();
+		AbstractFolder folder = getSourceFolder();
 		
 		boolean success = true;
 		success &= folder.tryToGetLock(locker);
@@ -611,7 +624,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.mail.folder.AbstractFolder#releaseLock(java.lang.Object)
 	 */
 	public void releaseLock(Object locker) {
-		IMailFolder folder = getSourceFolder();
+		AbstractFolder folder = getSourceFolder();
 		
 		folder.releaseLock(locker);
 		
@@ -977,4 +990,32 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		AbstractMessageFolder folder = (AbstractMessageFolder) e.getChanges();
 		folder.removeFolderListener(this);
 	}
+
+	/**
+	 * 
+	 */
+	public void activate() throws Exception {		
+		applySearch();
+		registerWithSource();		
+		active = true;
+	}
+	
+	public void deactivate() {
+		active = false;
+		headerList.clear();
+		getMessageFolderInfo().reset();
+		
+		unregisterWithSource();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.IMailFolder#removeFolder()
+	 */
+	public void removeFolder() throws Exception {
+		if(active) {
+			deactivate();
+		}
+		super.removeFolder();
+	}
+	
 }
