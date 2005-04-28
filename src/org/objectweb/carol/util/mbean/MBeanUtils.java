@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MBeanUtils.java,v 1.1 2005/04/11 12:39:20 benoitf Exp $
+ * $Id: MBeanUtils.java,v 1.2 2005/04/28 11:37:26 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.mbean;
@@ -102,6 +102,10 @@ public class MBeanUtils {
         } catch (MalformedObjectNameException e) {
             throw new ConfigurationException("Cannot build ObjectName for configuration '" + protocolConfiguration.getName() + "'", e);
         }
+
+        // Set the objectname
+        protocolConfiguration.setobjectName(on.toString());
+
         try {
             mbeanServer.registerMBean(protocolConfiguration, on);
         } catch (Exception e) {

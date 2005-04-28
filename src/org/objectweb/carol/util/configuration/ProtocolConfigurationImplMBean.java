@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProtocolConfigurationImplMBean.java,v 1.2 2005/04/12 08:27:58 benoitf Exp $
+ * $Id: ProtocolConfigurationImplMBean.java,v 1.3 2005/04/28 11:37:26 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -59,5 +59,36 @@ public interface ProtocolConfigurationImplMBean {
      * @return the name of the configuration
      */
     String getName();
+
+
+    /**
+     * @return Object Name
+     */
+    String getobjectName();
+
+
+    /**
+     * Sets the object name of this mbean
+     * @param name the Object Name
+     */
+    void setobjectName(String name);
+
+    /**
+     * @return true if it is an event provider
+     */
+    boolean iseventProvider();
+
+    /**
+     * @return true if this managed object implements J2EE State Management
+     *         Model
+     */
+    boolean isstateManageable();
+
+    /**
+     * @return true if this managed object implements the J2EE StatisticProvider
+     *         Model
+     */
+    boolean isstatisticsProvider();
+
 
 }

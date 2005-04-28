@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProtocolConfigurationImpl.java,v 1.2 2005/04/11 12:39:20 benoitf Exp $
+ * $Id: ProtocolConfigurationImpl.java,v 1.3 2005/04/28 11:37:26 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -71,6 +71,11 @@ public class ProtocolConfigurationImpl implements ProtocolConfiguration, Protoco
      * port number for this protocol name servce
      */
     private int port = 0;
+
+    /**
+     * Object name
+     */
+    private String objectName = null;
 
     /**
      * Build a new configuration with given parameters
@@ -294,5 +299,42 @@ public class ProtocolConfigurationImpl implements ProtocolConfiguration, Protoco
         return names;
     }
 
+    /**
+     * @return Object Name
+     */
+    public String getobjectName() {
+        return objectName;
+    }
+
+    /**
+     * Sets the object name of this mbean
+     * @param name the Object Name
+     */
+    public void setobjectName(String name) {
+        this.objectName = name;
+    }
+
+    /**
+     * @return true if it is an event provider
+     */
+    public boolean iseventProvider() {
+        return false;
+    }
+
+    /**
+     * @return true if this managed object implements J2EE State Management
+     *         Model
+     */
+    public boolean isstateManageable() {
+        return false;
+    }
+
+    /**
+     * @return true if this managed object implements the J2EE StatisticProvider
+     *         Model
+     */
+    public boolean isstatisticsProvider() {
+        return false;
+    }
 
 }
