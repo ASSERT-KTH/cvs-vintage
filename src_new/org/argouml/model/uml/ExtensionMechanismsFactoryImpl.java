@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.9 2005/04/23 16:30:44 linus Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.10 2005/04/28 20:32:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,15 +163,14 @@ public class ExtensionMechanismsFactoryImpl
 
     /**
      * Builds an initialized stereotype with no namespace.
-     * @deprecated Bob Tarling 28/2/2005 Presumably a stereotype
+     * A stereotype
      * must have a namespace so this method is unsafe. Use
-     * buildStereotype(String, Object).  Not willing to do this
-     * close to 0.18 release.
+     * buildStereotype(String, Object). 
      *
      * @param text is the name of the stereotype
      * @return an initialized stereotype.
      */
-    public Object buildStereotype(String text) {
+    private Object buildStereotype(String text) {
         MStereotype stereotype =
             MFactory.getDefaultFactory().createStereotype();
         super.initialize(stereotype);

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.3 2005/04/23 16:30:44 linus Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.4 2005/04/28 20:32:22 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,17 +80,6 @@ public interface ExtensionMechanismsFactory {
      */
     Object buildStereotype(Object theModelElementObject, String theName,
             Object model, Collection models);
-
-    /**
-     * Builds an initialized stereotype with no namespace.
-     * @deprecated Bob Tarling 28/2/2005 Presumably a stereotype
-     * must have a namespace so this method is unsafe. Use
-     * buildStereotype(String, Onject).
-     *
-     * @param text is the name of the stereotype
-     * @return an initialized stereotype.
-     */
-    Object buildStereotype(String text);
 
     /**
      * Builds an initialized stereotype.
