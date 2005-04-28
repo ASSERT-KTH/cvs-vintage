@@ -362,8 +362,15 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	}
 
 	public AbstractFolder findChildWithName(String str, boolean recurse) {
+		return findChildWithName(str, recurse, null);
+	}
+
+	public AbstractFolder findChildWithName(String str, boolean recurse, Class type) {
 		for (int i = 0; i < getChildCount(); i++) {
 			AbstractFolder child = (AbstractFolder) getChildAt(i);
+			// Check the type
+			if( type != null && !type.equals(child.getClass()) ) continue;				
+			
 			String name = child.getName();
 
 			if (name.equalsIgnoreCase(str)) {
