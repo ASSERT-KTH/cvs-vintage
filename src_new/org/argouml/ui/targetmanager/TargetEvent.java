@@ -1,4 +1,4 @@
-// $Id: TargetEvent.java,v 1.9 2005/01/09 14:58:33 linus Exp $
+// $Id: TargetEvent.java,v 1.10 2005/04/29 18:05:10 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@ package org.argouml.ui.targetmanager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
@@ -120,7 +121,7 @@ public class TargetEvent extends EventObject {
      * Gets the targets that are removed from the selection
      * @return the removed targets
      */
-    public Object[] getRemovedTargets() {
+    public Collection getRemovedTargetCollection() {
         List removedTargets = new ArrayList();
         List oldTargets = Arrays.asList(theOldTargets);
         List newTargets = Arrays.asList(theNewTargets);
@@ -131,14 +132,22 @@ public class TargetEvent extends EventObject {
                 removedTargets.add(o);
             }
         }
-        return removedTargets.toArray();
+        return removedTargets;
+    }
+    
+    /**
+     * Gets the targets that are removed from the selection
+     * @return the removed targets
+     */
+    public Object[] getRemovedTargets() {
+        return getRemovedTargetCollection().toArray();
     }
 
     /**
      * Returns the targets that are added to the selection
      * @return the added targets
      */
-    public Object[] getAddedTargets() {
+    public Collection getAddedTargetCollection() {
         List addedTargets = new ArrayList();
         List oldTargets = Arrays.asList(theOldTargets);
         List newTargets = Arrays.asList(theNewTargets);
@@ -149,7 +158,15 @@ public class TargetEvent extends EventObject {
                 addedTargets.add(o);
             }
         }
-        return addedTargets.toArray();
+        return addedTargets;
+    }
+    
+    /**
+     * Returns the targets that are added to the selection
+     * @return the added targets
+     */
+    public Object[] getAddedTargets() {
+        return getAddedTargetCollection().toArray();
     }
 }
 
