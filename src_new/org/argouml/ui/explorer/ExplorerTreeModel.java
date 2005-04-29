@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.20 2005/04/28 17:46:18 mvw Exp $
+// $Id: ExplorerTreeModel.java,v 1.21 2005/04/29 17:58:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,6 +50,7 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
+import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * The model for the Explorer tree view of the uml model.
@@ -167,8 +168,14 @@ public class ExplorerTreeModel extends DefaultTreeModel
 		updateChildren(new TreePath(getPathToRoot(node)));
 	    }
 
-	    if (!done)
+	    if (!done) {
 		schedule();
+            } else {
+                /* This solves issue 2287. */
+                Collection c = TargetManager.getInstance().getTargets();
+                TargetManager.getInstance().setTarget(null);
+                TargetManager.getInstance().setTargets(c);
+            }
 	}
     }
 
