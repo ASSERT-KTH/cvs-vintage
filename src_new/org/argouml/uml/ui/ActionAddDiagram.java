@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.34 2005/04/28 20:49:32 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.35 2005/04/29 17:48:23 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.ui;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
 import org.apache.log4j.Logger;
@@ -72,28 +71,7 @@ public abstract class ActionAddDiagram extends UMLAction {
             //TODO: make the explorer listen to project member property
             //changes...  to eliminate coupling on gui.
             ExplorerEventAdaptor.getInstance().modelElementAdded(ns);
-            class P implements Runnable {
-                private Object o;
-                P(Object obj) {
-                    o = obj;
-                }
-                public void run() {
-                    TargetManager.getInstance().setTarget(o);
-                }
-            }
-            EventQueue.invokeLater(new P(diagram));
-
-//            synchronized (e) {
-//                while (EventQueue.getCurrentEvent() != null) {
-//                    try {
-//                        e.wait(10);
-//                    } catch (InterruptedException e1) {
-//                        // TODO: Auto-generated catch block
-//                        e1.printStackTrace();
-//                    }
-//                }
-//            }
-//            TargetManager.getInstance().setTarget(diagram);
+            TargetManager.getInstance().setTarget(diagram);
             
             super.actionPerformed(e);
         } else {
