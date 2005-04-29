@@ -24,7 +24,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 -->
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.xml,v 1.112 2005/02/01 20:56:50 linus Exp $ -->
+<!-- $Id: cookbook.xml,v 1.113 2005/04/29 18:54:40 mvw Exp $ -->
 
 <!ENTITY changelog SYSTEM "changelog.xml">
 <!ENTITY building SYSTEM "building.xml">
@@ -2034,6 +2034,14 @@ standard Java Swing implementation.
 The explorer perspectives provide the different views of the project. They are
 implemented by sets of PerspectiveRules that get the child nodes for any
 parent node in the tree.
+</para>
+
+<para>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/cookbook/explorer-architecture.gif" format="GIF"/>
+    </imageobject>
+  </mediaobject>
 </para>
 
 	<para>
