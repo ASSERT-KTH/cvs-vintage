@@ -19,6 +19,8 @@ New features:
 - sending messages can now be canceled
 - more progress updates on IMAP operations
 - updated to JGoodies Looks 1.3.1
+- updated to JGoodes Forms 1.0.5
+- cleanup of Filter Editing Dialog
 
 Fixed bugs:
 - #1097936, textviewer should be initialized empty

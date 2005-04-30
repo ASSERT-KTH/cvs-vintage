@@ -24,8 +24,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -48,6 +46,10 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.util.MailResourceLoader;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 public class FilterDialog extends JDialog implements ActionListener {
 
 	private JTextField nameTextField;
@@ -65,6 +67,19 @@ public class FilterDialog extends JDialog implements ActionListener {
 	private JComboBox condList;
 
 	private FrameMediator mediator;
+
+	private JLabel nameLabel;
+
+	private JLabel executeActionLabel;
+
+	private JButton addCriteriaButton;
+
+	/*
+	 * private TitledBorderLabel m_titledborderlabel1 = new TitledBorderLabel();
+	 * 
+	 * private TitledBorderLabel m_titledborderlabel2 = new TitledBorderLabel();
+	 */
+
 	/**
 	 * Boolean stating whetever the dialog was cancelled or not. Default value
 	 * is <code>true</code>.
@@ -75,7 +90,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 		super(mediator.getView().getFrame(), true);
 
 		this.mediator = mediator;
-		
+
 		setTitle(MailResourceLoader.getString("dialog", "filter",
 				"dialog_title"));
 		this.filter = filter;
@@ -88,73 +103,108 @@ public class FilterDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
+	private JPanel createPanel() {
+
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:NONE,6DLU,FILL:DEFAULT:GROW(1.0),CENTER:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,CENTER:DEFAULT:NONE,6DLU,CENTER:DEFAULT:NONE,3DLU,FILL:DEFAULT:GROW(1.0),6DLU,CENTER:DEFAULT:NONE,3DLU,FILL:DEFAULT:GROW(1.0),CENTER:DEFAULT:NONE");
+
+		CellConstraints cc = new CellConstraints();
+		PanelBuilder builder = new PanelBuilder(formlayout1);
+
+		builder.add(createPanel1(), cc.xywh(2, 2, 2, 1));
+
+		builder.addSeparator(MailResourceLoader.getString("dialog", "filter",
+				"if"), cc.xywh(2, 4, 2, 1));
+
+		builder.add(createPanel2(), cc.xy(3, 6));
+
+		builder.addSeparator(MailResourceLoader.getString("dialog", "filter",
+				"then"), cc.xywh(2, 8, 2, 1));
+
+		builder.add(createPanel3(), cc.xy(3, 10));
+
+		builder.setDefaultDialogBorder();
+
+		return builder.getPanel();
+	}
+
+	private JPanel createPanel1() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"LEFT:DEFAULT:NONE,3DLU,FILL:DEFAULT:GROW(1.0)",
+				"FILL:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		jpanel1.add(nameLabel, cc.xy(1, 1));
+
+		jpanel1.add(nameTextField, cc.xy(3, 1));
+
+		return jpanel1;
+	}
+
+	private JPanel createPanel2() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:NONE,FILL:DEFAULT:GROW(1.0),FILL:DEFAULT:NONE,3DLU,FILL:DEFAULT:NONE",
+				"FILL:DEFAULT:NONE,3DLU,FILL:DEFAULT:GROW(1.0)");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		//jpanel1.add(addCriteriaButton, cc.xy(1, 1));
+
+		jpanel1.add(executeActionLabel, cc.xy(3, 1));
+
+		jpanel1.add(condList, cc.xy(5, 1));
+
+		jpanel1.add(criteriaList, cc.xywh(1, 3, 5, 1));
+
+		return jpanel1;
+	}
+
+	private JPanel createPanel3() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:NONE,FILL:DEFAULT:GROW(1.0)",
+				"FILL:DEFAULT:NONE,3DLU,FILL:DEFAULT:GROW(1.0)");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		//jpanel1.add(addActionButton, cc.xy(1, 1));
+
+		jpanel1.add(actionList, cc.xywh(1, 3, 2, 1));
+
+		return jpanel1;
+	}
+
 	private void initComponents() {
-		JPanel namePanel = new JPanel();
-		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-
-		JLabel nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-				"dialog", "filter", "filter_description"));
-		namePanel.add(nameLabel);
-		namePanel.add(Box.createHorizontalStrut(5));
-		nameTextField = new JTextField(22);
-		nameLabel.setLabelFor(nameTextField);
-		namePanel.add(nameTextField);
-		getContentPane().add(namePanel, BorderLayout.NORTH);
-
-		JPanel centerPanel = new JPanel(new BorderLayout(0, 0));
-		centerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createEmptyBorder(0, 12, 10, 11), BorderFactory
-				.createCompoundBorder(BorderFactory
-						.createTitledBorder(MailResourceLoader.getString(
-								"dialog", "filter", "if")), BorderFactory
-						.createEmptyBorder(10, 10, 10, 10))));
-
-		JPanel middleIfPanel = new JPanel(new BorderLayout());
-		centerPanel.add(middleIfPanel, BorderLayout.CENTER);
-
-		JPanel ifPanel = new JPanel();
-		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
-
-		ifPanel.add(Box.createHorizontalGlue());
+		setLayout(new BorderLayout());
 
 		nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-				"dialog", "filter", "execute_actions"));
+				"dialog", "filter", "filter_description"));
 
-		ifPanel.add(nameLabel);
+		nameTextField = new JTextField(22);
+		nameLabel.setLabelFor(nameTextField);
 
-		ifPanel.add(Box.createHorizontalStrut(5));
+		executeActionLabel = new LabelWithMnemonic(MailResourceLoader
+				.getString("dialog", "filter", "execute_actions"));
 
 		String[] cond = {
 				MailResourceLoader
 						.getString("dialog", "filter", "all_criteria"),
 				MailResourceLoader
-						.getString("dialog", "filter", "any_criteria")};
+						.getString("dialog", "filter", "any_criteria") };
 		condList = new JComboBox(cond);
-		nameLabel.setLabelFor(condList);
-		ifPanel.add(condList);
+		executeActionLabel.setLabelFor(condList);
 
-		middleIfPanel.add(ifPanel, BorderLayout.NORTH);
-
-		//middleIfPanel.add(Box.createRigidArea(new java.awt.Dimension(0,
-		// 10)));
 		criteriaList = new CriteriaList(filter);
 
-		//JScrollPane scrollPane = new JScrollPane( criteriaList );
-		middleIfPanel.add(criteriaList, BorderLayout.CENTER);
-
-		//rootPanel.add(middleIfPanel);
-		//rootPanel.add( Box.createRigidArea( new java.awt.Dimension(0,10) ) );
-		JPanel middleThenPanel = new JPanel(new BorderLayout());
-		centerPanel.add(middleThenPanel, BorderLayout.SOUTH);
-
-		//middleThenPanel.setBorder(border);
-		//middleThenPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5)
-		// ) );
-		JPanel thenPanel = new JPanel();
-		thenPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-		thenPanel.setLayout(new BoxLayout(thenPanel, BoxLayout.X_AXIS));
+		addCriteriaButton = new ButtonWithMnemonic(MailResourceLoader
+				.getString("dialog", "filter", "add_criteria"));
+		addCriteriaButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
+		addCriteriaButton.addActionListener(this);
+		addCriteriaButton.setActionCommand("ADD_CRITERIA");
 
 		addActionButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"dialog", "filter", "add_action"));
@@ -162,24 +212,20 @@ public class FilterDialog extends JDialog implements ActionListener {
 		addActionButton.addActionListener(this);
 		addActionButton.setActionCommand("ADD_ACTION");
 
-		//thenPanel.add(addActionButton);
-		//thenPanel.add( Box.createRigidArea( new java.awt.Dimension(5,0) ) );
 		JLabel actionLabel = new LabelWithMnemonic(MailResourceLoader
 				.getString("dialog", "filter", "action_list"));
-		thenPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
-		thenPanel.add(actionLabel);
 
-		thenPanel.add(Box.createHorizontalGlue());
-
-		middleThenPanel.add(thenPanel, BorderLayout.NORTH);
-
-		//middleThenPanel.add(Box.createRigidArea(new java.awt.Dimension(0,
-		// 10)));
 		actionList = new ActionList(mediator, filter, frame);
-		middleThenPanel.add(actionList);
 
-		getContentPane().add(centerPanel);
+		add(createPanel(), BorderLayout.CENTER);
 
+		createBottomPanel();
+	}
+
+	/**
+	 *  
+	 */
+	private void createBottomPanel() {
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
