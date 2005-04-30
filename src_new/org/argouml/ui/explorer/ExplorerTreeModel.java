@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.22 2005/04/30 08:18:08 mvw Exp $
+// $Id: ExplorerTreeModel.java,v 1.23 2005/04/30 08:50:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,6 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
-import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * The model for the Explorer tree view of the uml model.
@@ -96,6 +95,8 @@ public class ExplorerTreeModel extends DefaultTreeModel
      * currently pending nodes.
      */
     private ExplorerUpdater nodeUpdater = new ExplorerUpdater();
+    
+    private ExplorerTree tree;
 
     /**
      * Help class to semi-lazily update nodes in the tree.
@@ -170,24 +171,23 @@ public class ExplorerTreeModel extends DefaultTreeModel
 
 	    if (!done) {
 		schedule();
-//            } else {
+            } else {
                 /* This solves issue 2287. */
-                /* But breaks text entry in the proppanel :-( */
-//                Collection c = TargetManager.getInstance().getTargets();
-//                TargetManager.getInstance().setTarget(null);
-//                TargetManager.getInstance().setTargets(c);
+                tree.refreshSelection();
             }
 	}
     }
 
     /**
-     * Creates a new instance of ExplorerTreeModel.
-     *
+     * The constructor of ExplorerTreeModel.
+     * 
      * @param root an object to place at the root
+     * @param myTree the tree
      */
-    public ExplorerTreeModel(Object root) {
+    public ExplorerTreeModel(Object root, ExplorerTree myTree) {
 	super(new DefaultMutableTreeNode());
 
+        tree = myTree;
 	setRoot(new ExplorerTreeNode(root, this));
 	setAsksAllowsChildren(false);
 	modelElementMap = new HashMap();

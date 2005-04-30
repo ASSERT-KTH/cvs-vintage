@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.31 2005/04/25 19:51:39 mvw Exp $
+// $Id: ExplorerTree.java,v 1.32 2005/04/30 08:50:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class ExplorerTree
             .addPropertyChangeListener(new ProjectPropertyChangeListener());
 
         this.setModel(new ExplorerTreeModel(ProjectManager.getManager()
-					        .getCurrentProject()));
+			                    .getCurrentProject(), this));
         this.addMouseListener(new NavigatorMouseListener(this));
         this.addTreeSelectionListener(new NavigationTreeSelectionListener());
         this.addTreeWillExpandListener(new ExplorerTreeWillExpandListener());
@@ -304,12 +305,23 @@ public class ExplorerTree
     }
 
     /**
+     * Refresh the selection of the tree nodes.
+     * This does not cause new events to be fired to the TargetManager.
+     */
+    public void refreshSelection() {
+        Collection targets = TargetManager.getInstance().getTargets();
+        updatingSelectionViaTreeSelection = true;
+        setSelection(targets.toArray());
+        updatingSelectionViaTreeSelection = false;
+    }
+    
+    /**
      * Sets the selection state for a given set of targets.
      */
     private void setSelection(Object[] targets) {
+        updatingSelectionViaTreeSelection = true;
 
         this.clearSelection();
-
         int rows = getRowCount();
         for (int i = 0; i < targets.length; i++) {
             Object target = targets[i];
@@ -324,7 +336,8 @@ public class ExplorerTree
                 }
             }
         }
-
+        updatingSelectionViaTreeSelection = false;
+        
         if (this.getSelectionCount() > 0) {
             scrollRowToVisible(this.getSelectionRows()[0]);
         }
