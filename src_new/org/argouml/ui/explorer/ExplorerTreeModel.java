@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.21 2005/04/29 17:58:55 mvw Exp $
+// $Id: ExplorerTreeModel.java,v 1.22 2005/04/30 08:18:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -170,11 +170,12 @@ public class ExplorerTreeModel extends DefaultTreeModel
 
 	    if (!done) {
 		schedule();
-            } else {
+//            } else {
                 /* This solves issue 2287. */
-                Collection c = TargetManager.getInstance().getTargets();
-                TargetManager.getInstance().setTarget(null);
-                TargetManager.getInstance().setTargets(c);
+                /* But breaks text entry in the proppanel :-( */
+//                Collection c = TargetManager.getInstance().getTargets();
+//                TargetManager.getInstance().setTarget(null);
+//                TargetManager.getInstance().setTargets(c);
             }
 	}
     }
