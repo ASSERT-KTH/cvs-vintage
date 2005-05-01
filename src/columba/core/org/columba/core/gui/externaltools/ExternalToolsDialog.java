@@ -18,11 +18,7 @@
 package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -31,8 +27,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -59,6 +53,9 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Shows a list of external tools used in Columba.
@@ -133,102 +130,21 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 				actionPerformed(new ActionEvent(list, 0, "CONFIG"));
 			}
 		});
-		// top panel
-		JPanel topPanel = new JPanel();
-
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-
-		//topPanel.setLayout( );
-		JPanel topBorderPanel = new JPanel();
-		topBorderPanel.setLayout(new BorderLayout());
-
-		//topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
-		// 0));
-		topBorderPanel.add(topPanel);
-
-		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
-		JLabel nameLabel = new JLabel("name");
-		nameLabel.setEnabled(false);
-		topPanel.add(nameLabel);
-
-		topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		topPanel.add(Box.createHorizontalGlue());
-
-		Component glue = Box.createVerticalGlue();
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		gridBagLayout.setConstraints(glue, c);
-
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(configButton, c);
-		eastPanel.add(configButton);
-
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
-
-		gridBagLayout.setConstraints(infoButton, c);
-		eastPanel.add(infoButton);
-
-		glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
-
-		// centerpanel
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
-
-		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setPreferredSize(new Dimension(250, 150));
-		scrollPane.getViewport().setBackground(Color.white);
-		centerPanel.add(scrollPane);
-
-		mainPanel.add(centerPanel);
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
-
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-
-		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-				GlobalResourceLoader.getString("global", "global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
-
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-				GlobalResourceLoader.getString("global", "global", "help"));
-
-		buttonPanel.add(helpButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
 		getContentPane()
 				.add(
-						new DialogHeaderPanel(GlobalResourceLoader
-								.getString(RESOURCE_PATH, "externaltools",
-										"header_title"), GlobalResourceLoader
-								.getString(RESOURCE_PATH, "externaltools",
-										"header_description"), ImageLoader
-								.getImageIcon("programs-development-32.png")),
+						new DialogHeaderPanel(
+								GlobalResourceLoader.getString(RESOURCE_PATH,
+										"externaltools", "header_title"),
+								GlobalResourceLoader.getString(RESOURCE_PATH,
+										"externaltools", "header_description"),
+								ImageLoader
+										.getImageIcon("programs-development-32.png")),
 						BorderLayout.NORTH);
+
+		getContentPane().add(createPanel(), BorderLayout.CENTER);
+		getContentPane().add(createBottomPanel(), BorderLayout.SOUTH);
+
 		getRootPane().setDefaultButton(closeButton);
 		getRootPane().registerKeyboardAction(this, "CLOSE",
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
@@ -239,6 +155,65 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 				"extending_columba_2");
 		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
 				"extending_columba_2");
+	}
+
+	private JPanel createPanel() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:GROW(1.0),3DLU,FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,1DLU,FILL:DEFAULT:GROW(1.0),3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		jpanel1.setLayout(formlayout1);
+
+		JLabel jlabel1 = new JLabel();
+		jlabel1.setText("External Tools:");
+		jpanel1.add(jlabel1, cc.xy(1, 1));
+
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setPreferredSize(new Dimension(250, 150));
+		jpanel1.add(scrollPane, cc.xy(1, 3));
+
+		jpanel1.add(createPanel1(), new CellConstraints(3, 3, 1, 1,
+				CellConstraints.DEFAULT, CellConstraints.TOP));
+
+		return jpanel1;
+	}
+
+	private JPanel createPanel1() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout("FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		jpanel1.add(configButton, cc.xy(1, 1));
+
+		jpanel1.add(infoButton, cc.xy(1, 3));
+
+		return jpanel1;
+	}
+
+	private JPanel createBottomPanel() {
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+		closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+				"global", "global", "close"));
+		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
+
+		helpButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+				"global", "global", "help"));
+
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+
+		return bottomPanel;
 	}
 
 	public void actionPerformed(ActionEvent e) {

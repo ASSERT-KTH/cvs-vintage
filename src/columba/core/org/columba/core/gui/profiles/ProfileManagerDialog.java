@@ -19,11 +19,7 @@
 package org.columba.core.gui.profiles;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -33,8 +29,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -64,6 +58,9 @@ import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Profile chooser dialog.
@@ -117,106 +114,73 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 		layoutComponents();
 
 		pack();
+
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
 	protected void layoutComponents() {
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-		//		 top panel
-		JPanel topPanel = new JPanel();
+		getContentPane().add(createPanel(), BorderLayout.CENTER);
 
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		JPanel bottomPanel = createBottomPanel();
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
+		getContentPane().add(
+				new DialogHeaderPanel(GlobalResourceLoader.getString(
+						RESOURCE_PATH, "profiles", "header_title"),
+						GlobalResourceLoader.getString(RESOURCE_PATH,
+								"profiles", "header_description"), ImageLoader
+								.getImageIcon("system-config-users-32.png")),
+				BorderLayout.NORTH);
+	}
 
-		//topPanel.setLayout( );
-		JPanel topBorderPanel = new JPanel();
-		topBorderPanel.setLayout(new BorderLayout());
+	private JPanel createPanel() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:GROW(1.0),3DLU,FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,1DLU,FILL:DEFAULT:GROW(1.0),3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		jpanel1.setLayout(formlayout1);
 
-		//topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
-		// 0));
-		topBorderPanel.add(topPanel);
-
-		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
-
-		topPanel.add(nameLabel);
-
-		topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		topPanel.add(Box.createHorizontalGlue());
-
-		Component glue = Box.createVerticalGlue();
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		gridBagLayout.setConstraints(glue, c);
-
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(addButton, c);
-		eastPanel.add(addButton);
-
-		Component strut1 = Box.createRigidArea(new Dimension(30, 6));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
-
-		gridBagLayout.setConstraints(editButton, c);
-		eastPanel.add(editButton);
-
-		Component strut2 = Box.createRigidArea(new Dimension(30, 6));
-		gridBagLayout.setConstraints(strut2, c);
-		eastPanel.add(strut2);
-
-		gridBagLayout.setConstraints(removeButton, c);
-		eastPanel.add(removeButton);
-
-		/*
-		 * Component strut3 = Box.createRigidArea(new Dimension(30, 12));
-		 * gridBagLayout.setConstraints(strut3, c); eastPanel.add(strut3);
-		 * 
-		 * gridBagLayout.setConstraints(importButton, c);
-		 * eastPanel.add(importButton);
-		 * 
-		 * Component strut4 = Box.createRigidArea(new Dimension(30, 6));
-		 * gridBagLayout.setConstraints(strut4, c); eastPanel.add(strut4);
-		 * 
-		 * gridBagLayout.setConstraints(exportButton, c);
-		 * eastPanel.add(exportButton);
-		 */
-
-		glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
-
-		// centerpanel
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
+		JLabel jlabel1 = new JLabel();
+		jlabel1.setText("Profiles:");
+		jpanel1.add(jlabel1, cc.xy(1, 1));
 
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.setPreferredSize(new Dimension(250, 150));
-		scrollPane.getViewport().setBackground(Color.white);
-		centerPanel.add(scrollPane, BorderLayout.CENTER);
+		jpanel1.add(scrollPane, cc.xy(1, 3));
 
-		centerPanel.add(checkBox, BorderLayout.SOUTH);
+		jpanel1.add(checkBox, cc.xy(1, 5));
 
-		mainPanel.add(topPanel, BorderLayout.NORTH);
+		jpanel1.add(createPanel1(), new CellConstraints(3, 3, 1, 1,
+				CellConstraints.DEFAULT, CellConstraints.TOP));
 
-		mainPanel.add(centerPanel);
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
+		return jpanel1;
+	}
 
+	private JPanel createPanel1() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE,3DLU, CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		jpanel1.add(addButton, cc.xy(1, 1));
+
+		jpanel1.add(editButton, cc.xy(1, 3));
+
+		jpanel1.add(removeButton, cc.xy(1, 5));
+
+		return jpanel1;
+	}
+
+	/**
+	 * @return
+	 */
+	private JPanel createBottomPanel() {
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
@@ -227,15 +191,7 @@ public class ProfileManagerDialog extends JDialog implements ActionListener,
 
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-
-		getContentPane().add(
-				new DialogHeaderPanel(GlobalResourceLoader.getString(
-						RESOURCE_PATH, "profiles", "header_title"),
-						GlobalResourceLoader.getString(RESOURCE_PATH,
-								"profiles", "header_description"), ImageLoader
-								.getImageIcon("system-config-users-32.png")),
-				BorderLayout.NORTH);
+		return bottomPanel;
 	}
 
 	protected void initComponents() {

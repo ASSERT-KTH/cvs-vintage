@@ -17,11 +17,7 @@
 package org.columba.mail.gui.config.export;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,11 +31,12 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -65,6 +62,9 @@ import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.checkabletree.CheckableItem;
 import org.frapuccino.checkabletree.CheckableTree;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * ExportDialog lets you select a number of folders for exporting messages into
  * the MBOX format.
@@ -74,7 +74,13 @@ import org.frapuccino.checkabletree.CheckableTree;
 public class ExportDialog extends JDialog implements ActionListener {
 	private ButtonWithMnemonic exportButton;
 
+	private ButtonWithMnemonic selectAllButton;
+
 	private JTree tree;
+
+	private JButton helpButton;
+
+	private JButton closeButton;
 
 	public ExportDialog(JFrame parent) {
 		super(parent, MailResourceLoader.getString("dialog", "export",
@@ -110,8 +116,8 @@ public class ExportDialog extends JDialog implements ActionListener {
 		exportButton.setActionCommand("EXPORT");
 		exportButton.addActionListener(this);
 
-		ButtonWithMnemonic selectAllButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("dialog", "export", "select_all"));
+		selectAllButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "export", "select_all"));
 		selectAllButton.setActionCommand("SELECTALL");
 		selectAllButton.addActionListener(this);
 
@@ -130,67 +136,9 @@ public class ExportDialog extends JDialog implements ActionListener {
 		tree.expandRow(0);
 		tree.expandRow(1);
 
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
+		getContentPane().add(createPanel(), BorderLayout.CENTER);
 
-		/*
-		 * mainPanel.add(new JLabel(MailResourceLoader.getString("dialog",
-		 * "export", "info")), BorderLayout.NORTH);
-		 */
-
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(exportButton, c);
-		eastPanel.add(exportButton);
-
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
-
-		gridBagLayout.setConstraints(selectAllButton, c);
-		eastPanel.add(selectAllButton);
-
-		Component glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
-
-		// centerpanel
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-
-		JScrollPane scrollPane = new JScrollPane(tree);
-		scrollPane.setPreferredSize(new Dimension(300, 300));
-		scrollPane.getViewport().setBackground(Color.white);
-		centerPanel.add(scrollPane);
-
-		mainPanel.add(centerPanel);
-
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-
-		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
-
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		buttonPanel.add(helpButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getContentPane().add(createBottomPanel(), BorderLayout.SOUTH);
 
 		getContentPane().add(
 				new DialogHeaderPanel(MailResourceLoader.getString("dialog",
@@ -207,6 +155,64 @@ public class ExportDialog extends JDialog implements ActionListener {
 				"organising_and_managing_your_email_5");
 		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
 				"organising_and_managing_your_email_5");
+	}
+
+	private JPanel createPanel() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:GROW(1.0),3DLU,FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,1DLU,FILL:DEFAULT:GROW(1.0),3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		jpanel1.setLayout(formlayout1);
+
+		JLabel jlabel1 = new JLabel();
+		jlabel1.setText("Select Folders:");
+		jpanel1.add(jlabel1, cc.xy(1, 1));
+
+		JScrollPane scrollPane = new JScrollPane(tree);
+		scrollPane.setPreferredSize(new Dimension(350, 250));
+		jpanel1.add(scrollPane, cc.xy(1, 3));
+
+		jpanel1.add(createPanel1(), new CellConstraints(3, 3, 1, 1,
+				CellConstraints.DEFAULT, CellConstraints.TOP));
+
+		return jpanel1;
+	}
+
+	private JPanel createPanel1() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout("FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		jpanel1.add(exportButton, cc.xy(1, 1));
+
+		jpanel1.add(selectAllButton, cc.xy(1, 3));
+
+		return jpanel1;
+	}
+
+	private JPanel createBottomPanel() {
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+		closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"global", "close"));
+		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
+
+		helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"global", "help"));
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+
+		return bottomPanel;
 	}
 
 	private void getTreeNodeIteration(TreeNode parent, List l) {

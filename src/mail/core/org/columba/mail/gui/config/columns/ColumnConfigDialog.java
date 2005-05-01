@@ -17,24 +17,19 @@
 package org.columba.mail.gui.config.columns;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -57,6 +52,9 @@ import org.columba.mail.util.MailResourceLoader;
 import org.frapuccino.checkablelist.CheckableItemImpl;
 import org.frapuccino.checkablelist.CheckableItemListTableModel;
 import org.frapuccino.checkablelist.CheckableList;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Configurabe visible columns of the table.
@@ -144,11 +142,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 	}
 
 	public void initComponents() {
-		getContentPane().setLayout(new BorderLayout());
-
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout(5, 0));
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		
 
 		showButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"dialog", "columns", "show"));
@@ -162,72 +156,68 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 		hideButton.setEnabled(false);
 		hideButton.addActionListener(this);
 
-		// top panel
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		
+		getContentPane().add(createPanel(), BorderLayout.CENTER);
 
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-
-		JPanel topBorderPanel = new JPanel();
-		topBorderPanel.setLayout(new BorderLayout());
-		topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		topBorderPanel.add(topPanel, BorderLayout.CENTER);
-
-		Component glue = Box.createVerticalGlue();
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-
-		gridBagLayout.setConstraints(glue, c);
-
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(showButton, c);
-		eastPanel.add(showButton);
-
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
-
-		gridBagLayout.setConstraints(hideButton, c);
-		eastPanel.add(hideButton);
-
-		Component strut = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut, c);
-		eastPanel.add(strut);
-
-		glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
-
-		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setPreferredSize(new Dimension(200, 200));
-		scrollPane.getViewport().setBackground(Color.white);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		getContentPane().add(mainPanel);
-
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-
-		JPanel buttonPanel = createButtonPanel();
-
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getContentPane().add(createBottomPanel(), BorderLayout.SOUTH);
 
 		getContentPane().add(
 				new DialogHeaderPanel(MailResourceLoader.getString("dialog",
 						"columns", "header_title"), MailResourceLoader
 						.getString("dialog", "columns", "header_description")),
 				BorderLayout.NORTH);
+	}
+	
+	private JPanel createPanel() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:GROW(1.0),3DLU,FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,1DLU,FILL:DEFAULT:GROW(1.0),3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		jpanel1.setLayout(formlayout1);
+
+		JLabel jlabel1 = new JLabel();
+		jlabel1.setText("Columns:");
+		jpanel1.add(jlabel1, cc.xy(1, 1));
+
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setPreferredSize(new Dimension(250, 200));
+		jpanel1.add(scrollPane, cc.xy(1, 3));
+
+		jpanel1.add(createPanel1(), new CellConstraints(3, 3, 1, 1,
+				CellConstraints.DEFAULT, CellConstraints.TOP));
+
+		return jpanel1;
+	}
+
+	private JPanel createPanel1() {
+		JPanel jpanel1 = new JPanel();
+		FormLayout formlayout1 = new FormLayout(
+				"FILL:DEFAULT:NONE",
+				"CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE,3DLU,CENTER:DEFAULT:NONE");
+		CellConstraints cc = new CellConstraints();
+		jpanel1.setLayout(formlayout1);
+
+		jpanel1.add(showButton, cc.xy(1, 1));
+
+		jpanel1.add(hideButton, cc.xy(1, 3));
+
+		return jpanel1;
+	}
+
+	/**
+	 * 
+	 */
+	private JPanel createBottomPanel() {
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+
+		JPanel buttonPanel = createButtonPanel();
+
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		
+		return bottomPanel;
 	}
 
 	private XmlElement findColumn(XmlElement parent, String name) {
