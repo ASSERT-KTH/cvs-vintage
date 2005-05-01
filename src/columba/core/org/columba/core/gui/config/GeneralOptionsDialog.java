@@ -48,6 +48,7 @@ import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -374,6 +375,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		getRootPane().registerKeyboardAction(this, "CANCEL",
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
+		
+		contentPane.add(new DialogHeaderPanel(GlobalResourceLoader.getString(
+				RESOURCE_PATH, "general", "title_header"), GlobalResourceLoader.getString(
+						RESOURCE_PATH, "general", "title_description")), BorderLayout.NORTH);
 	}
 
 	protected void initComponents() {

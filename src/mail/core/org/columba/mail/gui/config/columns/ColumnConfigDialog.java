@@ -45,6 +45,7 @@ import javax.swing.event.ListSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -65,268 +66,286 @@ import org.frapuccino.checkablelist.CheckableList;
  * @author fdietz
  */
 public class ColumnConfigDialog extends JDialog implements ActionListener,
-    ListSelectionListener {
-   
-    private JButton showButton;
-    private JButton hideButton;
-    private CheckableList list;
-    private int index;
-    private XmlElement columns;
-    private CheckableItemImpl selection;
-    private MailFrameMediator mediator;
+		ListSelectionListener {
 
-    public ColumnConfigDialog(MailFrameMediator mediator, XmlElement columns) {
-        super((JFrame) mediator.getView().getFrame(), MailResourceLoader.getString(
-            "dialog", "columns", "title"), true);
-        this.mediator = mediator;
-        this.columns = columns;
+	private JButton showButton;
 
-        list = new CheckableList();
-        list.getSelectionModel().addListSelectionListener(this);
+	private JButton hideButton;
 
-        initComponents();
-        updateComponents(true);
+	private CheckableList list;
 
-        getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
+	private int index;
 
-    protected JPanel createButtonPanel() {
-        JPanel bottom = new JPanel();
-        bottom.setLayout(new BorderLayout());
+	private XmlElement columns;
 
-        bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+	private CheckableItemImpl selection;
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
-            MailResourceLoader.getString("global", "cancel"));
+	private MailFrameMediator mediator;
 
-        //$NON-NLS-1$ //$NON-NLS-2$
-        cancelButton.addActionListener(this);
-        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+	public ColumnConfigDialog(MailFrameMediator mediator, XmlElement columns) {
+		super((JFrame) mediator.getView().getFrame(), MailResourceLoader
+				.getString("dialog", "columns", "title"), true);
+		this.mediator = mediator;
+		this.columns = columns;
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(
-            MailResourceLoader.getString("global", "ok"));
+		list = new CheckableList();
+		list.getSelectionModel().addListSelectionListener(this);
 
-        //$NON-NLS-1$ //$NON-NLS-2$
-        okButton.addActionListener(this);
-        okButton.setActionCommand("OK"); //$NON-NLS-1$
-        okButton.setDefaultCapable(true);
-        getRootPane().setDefaultButton(okButton);
+		initComponents();
+		updateComponents(true);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-            MailResourceLoader.getString("global", "help"));
+		getRootPane().registerKeyboardAction(this, "CLOSE",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
 
-        // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-            "configuring_columba");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
-            "configuring_columba");
+	protected JPanel createButtonPanel() {
+		JPanel bottom = new JPanel();
+		bottom.setLayout(new BorderLayout());
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-        buttonPanel.add(helpButton);
+		bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        bottom.add(buttonPanel, BorderLayout.EAST);
-        return bottom;
-    }
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 
-    public void initComponents() {
-        getContentPane().setLayout(new BorderLayout());
+		//$NON-NLS-1$ //$NON-NLS-2$
+		cancelButton.addActionListener(this);
+		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout(5, 0));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader
+				.getString("global", "ok"));
 
-        showButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-            "dialog", "columns", "show"));
-        showButton.setActionCommand("SHOW");
-        showButton.addActionListener(this);
-        showButton.setEnabled(false);
+		//$NON-NLS-1$ //$NON-NLS-2$
+		okButton.addActionListener(this);
+		okButton.setActionCommand("OK"); //$NON-NLS-1$
+		okButton.setDefaultCapable(true);
+		getRootPane().setDefaultButton(okButton);
 
-        hideButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-            "dialog", "columns", "hide"));
-        hideButton.setActionCommand("HIDE");
-        hideButton.setEnabled(false);
-        hideButton.addActionListener(this);
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 
-        // top panel
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		// associate with JavaHelp
+		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+				"configuring_columba");
+		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+				"configuring_columba");
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
+		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+		buttonPanel.add(helpButton);
 
-        JPanel topBorderPanel = new JPanel();
-        topBorderPanel.setLayout(new BorderLayout());
-        topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        topBorderPanel.add(topPanel, BorderLayout.CENTER);
+		bottom.add(buttonPanel, BorderLayout.EAST);
+		return bottom;
+	}
 
-        Component glue = Box.createVerticalGlue();
-        c.anchor = GridBagConstraints.EAST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
+	public void initComponents() {
+		getContentPane().setLayout(new BorderLayout());
 
-        gridBagLayout.setConstraints(glue, c);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout(5, 0));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        gridBagLayout = new GridBagLayout();
-        c = new GridBagConstraints();
+		showButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "columns", "show"));
+		showButton.setActionCommand("SHOW");
+		showButton.addActionListener(this);
+		showButton.setEnabled(false);
 
-        JPanel eastPanel = new JPanel(gridBagLayout);
-        mainPanel.add(eastPanel, BorderLayout.EAST);
+		hideButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "columns", "hide"));
+		hideButton.setActionCommand("HIDE");
+		hideButton.setEnabled(false);
+		hideButton.addActionListener(this);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagLayout.setConstraints(showButton, c);
-        eastPanel.add(showButton);
+		// top panel
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
-        Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-        gridBagLayout.setConstraints(strut1, c);
-        eastPanel.add(strut1);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
 
-        gridBagLayout.setConstraints(hideButton, c);
-        eastPanel.add(hideButton);
+		JPanel topBorderPanel = new JPanel();
+		topBorderPanel.setLayout(new BorderLayout());
+		topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		topBorderPanel.add(topPanel, BorderLayout.CENTER);
 
-        Component strut = Box.createRigidArea(new Dimension(30, 5));
-        gridBagLayout.setConstraints(strut, c);
-        eastPanel.add(strut);
+		Component glue = Box.createVerticalGlue();
+		c.anchor = GridBagConstraints.EAST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
 
-        glue = Box.createVerticalGlue();
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 1.0;
-        gridBagLayout.setConstraints(glue, c);
-        eastPanel.add(glue);
+		gridBagLayout.setConstraints(glue, c);
 
-        JScrollPane scrollPane = new JScrollPane(list);
-        scrollPane.setPreferredSize(new Dimension(200, 200));
-        scrollPane.getViewport().setBackground(Color.white);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
-        getContentPane().add(mainPanel);
+		gridBagLayout = new GridBagLayout();
+		c = new GridBagConstraints();
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		JPanel eastPanel = new JPanel(gridBagLayout);
+		mainPanel.add(eastPanel, BorderLayout.EAST);
 
-        JPanel buttonPanel = createButtonPanel();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagLayout.setConstraints(showButton, c);
+		eastPanel.add(showButton);
 
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-    }
+		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+		gridBagLayout.setConstraints(strut1, c);
+		eastPanel.add(strut1);
 
-    private XmlElement findColumn(XmlElement parent, String name) {
-        for (int i = 0; i < parent.count(); i++) {
-            XmlElement child = parent.getElement(i);
-            if (child.getAttribute("name").equals(name)) {
-                return child;
-            }
-        }
-        return null;
-    }
+		gridBagLayout.setConstraints(hideButton, c);
+		eastPanel.add(hideButton);
 
-    public void updateComponents(boolean b) {
-        if (b) {
-            CheckableItemListTableModel model = new CheckableItemListTableModel();
-            String[] stringList = ColumnOptionsPlugin.getColumns();
+		Component strut = Box.createRigidArea(new Dimension(30, 5));
+		gridBagLayout.setConstraints(strut, c);
+		eastPanel.add(strut);
 
-            for (int j = 0; j < stringList.length; j++) {
-                String c = stringList[j];
-                CheckableItemImpl item = new CheckableItemImpl(c);
-                XmlElement element = findColumn(columns, c);
-                item.setSelected(element != null);
-                model.addElement(item);
-            }
+		glue = Box.createVerticalGlue();
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0;
+		gridBagLayout.setConstraints(glue, c);
+		eastPanel.add(glue);
 
-            list.setModel(model);
-        } else {
-            CheckableItemListTableModel model = ((CheckableItemListTableModel) list.getModel());
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setPreferredSize(new Dimension(200, 200));
+		scrollPane.getViewport().setBackground(Color.white);
+		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		getContentPane().add(mainPanel);
 
-            for (int i = 0; i < model.count(); i++) {
-                // get column of list
-                CheckableItemImpl column = (CheckableItemImpl) model.getElement(i);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-                // find colum
-                XmlElement element = findColumn(columns, column.toString());
+		JPanel buttonPanel = createButtonPanel();
 
-                if (element != null) {
-                    // remove disabled column
-                    if (!column.isSelected()) {
-                        element.removeFromParent();
-                    }
-                } else {
-                    if (column.isSelected()) {
-                        XmlElement newElement = new XmlElement("column");
-                        newElement.addAttribute("name", column.toString());
-                        newElement.addAttribute("width", "100");
-                        columns.addElement(newElement);
-                    }
-                }
-            }
-        }
-    }
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
-    public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-            return;
-        }
+		getContentPane().add(
+				new DialogHeaderPanel(MailResourceLoader.getString("dialog",
+						"columns", "header_title"), MailResourceLoader
+						.getString("dialog", "columns", "header_description")),
+				BorderLayout.NORTH);
+	}
 
-        DefaultListSelectionModel theList = (DefaultListSelectionModel) e.getSource();
-        if (!theList.isSelectionEmpty()) {
-            index = theList.getAnchorSelectionIndex();
+	private XmlElement findColumn(XmlElement parent, String name) {
+		for (int i = 0; i < parent.count(); i++) {
+			XmlElement child = parent.getElement(i);
+			if (child.getAttribute("name").equals(name)) {
+				return child;
+			}
+		}
+		return null;
+	}
 
-            selection = (CheckableItemImpl) ((CheckableItemListTableModel) 
-                list.getModel()).getElement(index);
+	public void updateComponents(boolean b) {
+		if (b) {
+			CheckableItemListTableModel model = new CheckableItemListTableModel();
+			String[] stringList = ColumnOptionsPlugin.getColumns();
 
-            updateButtonState();
-        }
-    }
+			for (int j = 0; j < stringList.length; j++) {
+				String c = stringList[j];
+				CheckableItemImpl item = new CheckableItemImpl(c);
+				XmlElement element = findColumn(columns, c);
+				item.setSelected(element != null);
+				model.addElement(item);
+			}
 
-    private void updateButtonState() {
-        if (selection.isSelected()) {
-            hideButton.setEnabled(true);
-            showButton.setEnabled(false);
-        } else {
-            showButton.setEnabled(true);
-            hideButton.setEnabled(false);
-        }
-    }
+			list.setModel(model);
+		} else {
+			CheckableItemListTableModel model = ((CheckableItemListTableModel) list
+					.getModel());
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+			for (int i = 0; i < model.count(); i++) {
+				// get column of list
+				CheckableItemImpl column = (CheckableItemImpl) model
+						.getElement(i);
 
-        if (action.equals("OK")) {
-            updateComponents(false);
+				// find colum
+				XmlElement element = findColumn(columns, column.toString());
 
-            setVisible(false);
+				if (element != null) {
+					// remove disabled column
+					if (!column.isSelected()) {
+						element.removeFromParent();
+					}
+				} else {
+					if (column.isSelected()) {
+						XmlElement newElement = new XmlElement("column");
+						newElement.addAttribute("name", column.toString());
+						newElement.addAttribute("width", "100");
+						columns.addElement(newElement);
+					}
+				}
+			}
+		}
+	}
 
-            ColumnOptionsPlugin plugin = (ColumnOptionsPlugin) 
-                ((FolderOptionsController)mediator.getFolderOptionsController()).getPlugin("ColumnOptions");
+	public void valueChanged(ListSelectionEvent e) {
+		if (e.getValueIsAdjusting()) {
+			return;
+		}
 
-            // make sure this configuration is also visually working immediately
-            IMailFolderCommandReference r = mediator.getTreeSelection();
-            plugin.loadOptionsFromXml((AbstractMessageFolder) r.getSourceFolder());
-        } else if (action.equals("CANCEL")) {
-            setVisible(false);
-        } else if (action.equals("SHOW")) {
-            if (selection != null) {
-                selection.setSelected(!selection.isSelected());
-                ((CheckableItemListTableModel) list.getModel()).updateRow(selection);
+		DefaultListSelectionModel theList = (DefaultListSelectionModel) e
+				.getSource();
+		if (!theList.isSelectionEmpty()) {
+			index = theList.getAnchorSelectionIndex();
 
-                //list.repaint();
-                updateButtonState();
-            }
-        } else if (action.equals("HIDE")) {
-            // disable selected item
-            if (selection != null) {
-                selection.setSelected(!selection.isSelected());
-                ((CheckableItemListTableModel) list.getModel()).updateRow(selection);
+			selection = (CheckableItemImpl) ((CheckableItemListTableModel) list
+					.getModel()).getElement(index);
 
-                //list.repaint();
-                updateButtonState();
-            }
-        }
-    }
+			updateButtonState();
+		}
+	}
+
+	private void updateButtonState() {
+		if (selection.isSelected()) {
+			hideButton.setEnabled(true);
+			showButton.setEnabled(false);
+		} else {
+			showButton.setEnabled(true);
+			hideButton.setEnabled(false);
+		}
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
+
+		if (action.equals("OK")) {
+			updateComponents(false);
+
+			setVisible(false);
+
+			ColumnOptionsPlugin plugin = (ColumnOptionsPlugin) ((FolderOptionsController) mediator
+					.getFolderOptionsController()).getPlugin("ColumnOptions");
+
+			// make sure this configuration is also visually working immediately
+			IMailFolderCommandReference r = mediator.getTreeSelection();
+			plugin.loadOptionsFromXml((AbstractMessageFolder) r
+					.getSourceFolder());
+		} else if (action.equals("CANCEL")) {
+			setVisible(false);
+		} else if (action.equals("SHOW")) {
+			if (selection != null) {
+				selection.setSelected(!selection.isSelected());
+				((CheckableItemListTableModel) list.getModel())
+						.updateRow(selection);
+
+				//list.repaint();
+				updateButtonState();
+			}
+		} else if (action.equals("HIDE")) {
+			// disable selected item
+			if (selection != null) {
+				selection.setSelected(!selection.isSelected());
+				((CheckableItemListTableModel) list.getModel())
+						.updateRow(selection);
+
+				//list.repaint();
+				updateButtonState();
+			}
+		}
+	}
 }

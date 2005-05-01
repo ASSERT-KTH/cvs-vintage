@@ -40,6 +40,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.ComposerItem;
@@ -354,6 +355,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		getRootPane().registerKeyboardAction(this, "CANCEL",
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
+		
+		contentPane.add(new DialogHeaderPanel("Mail Options", "Change email-specific options"), BorderLayout.NORTH);
+		
 	}
 
 	public void actionPerformed(ActionEvent event) {

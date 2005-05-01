@@ -40,7 +40,6 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -55,6 +54,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogHeaderPanel;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -133,8 +133,10 @@ public class ExportDialog extends JDialog implements ActionListener {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
-		mainPanel.add(new JLabel(MailResourceLoader.getString("dialog",
-				"export", "info")), BorderLayout.NORTH);
+		/*
+		 * mainPanel.add(new JLabel(MailResourceLoader.getString("dialog",
+		 * "export", "info")), BorderLayout.NORTH);
+		 */
 
 		gridBagLayout = new GridBagLayout();
 		c = new GridBagConstraints();
@@ -189,6 +191,12 @@ public class ExportDialog extends JDialog implements ActionListener {
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+		getContentPane().add(
+				new DialogHeaderPanel(MailResourceLoader.getString("dialog",
+						"export", "header_title"), MailResourceLoader
+						.getString("dialog", "export", "header_description")),
+				BorderLayout.NORTH);
 		getRootPane().setDefaultButton(closeButton);
 		getRootPane().registerKeyboardAction(this, "CLOSE",
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
@@ -282,7 +290,8 @@ public class ExportDialog extends JDialog implements ActionListener {
 				r.setDestFile(destFile);
 
 				//              execute the command
-				CommandProcessor.getInstance().addOp(new ExportFolderCommand(r));
+				CommandProcessor.getInstance()
+						.addOp(new ExportFolderCommand(r));
 			}
 
 		}
