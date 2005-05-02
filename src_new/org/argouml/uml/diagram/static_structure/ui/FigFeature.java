@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.10 2005/03/05 10:37:20 mvw Exp $
+// $Id: FigFeature.java,v 1.11 2005/05/02 14:51:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,17 @@
 // $header$
 package org.argouml.uml.diagram.static_structure.ui;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
+import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
+import org.tigris.gef.presentation.FigText;
 import org.tigris.gef.presentation.Handle;
 
 /**
@@ -115,6 +118,12 @@ public class FigFeature extends CompartmentFigText {
     */
     public FigFeature(int x, int y, int w, int h, Fig aFig) {
         super(x, y, w, h, aFig);
+        setFilled(false);
+        setLineWidth(0);
+        setFont(FigNodeModelElement.getLabelFont());
+        setTextColor(Color.black);
+        setJustification(FigText.JUSTIFY_LEFT);
+        setMultiLine(false);
     }
 
     /**
@@ -126,4 +135,5 @@ public class FigFeature extends CompartmentFigText {
         return new SelectionFeature(this);
     }
 
+    
 }
