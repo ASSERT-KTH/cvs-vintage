@@ -16,6 +16,11 @@
 
 package org.columba.mail.folder;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.swing.tree.TreeNode;
 
 
@@ -25,47 +30,35 @@ import javax.swing.tree.TreeNode;
  * @author tstich
  */
 public class FolderChildrenIterator {
-
-	private AbstractFolder parent;
-	private AbstractFolder nextChild;
+	private List folderList;
+	Iterator folderIterator;
 	
 	public FolderChildrenIterator(AbstractFolder parent) {
-		this.parent = parent;
-		
-		if( parent.getChildCount() > 0 ) {
-			nextChild = (AbstractFolder) findNext(parent.getChildAt(0));
+		folderList = new ArrayList();
+		Enumeration childEnum = parent.children();
+		while( childEnum.hasMoreElements() ) {
+			appendAllChildren(folderList, (TreeNode)childEnum.nextElement());
 		}
+		
+		folderIterator = folderList.iterator();
 	}
 	
-	/**
-	 * @param f
-	 */
-	private TreeNode findNext(TreeNode f) {
-		if( f == parent ) return null;
-		
-		if( f.getChildCount() > 0 ) {
-			return f.getChildAt(0);
-		} else {
-			TreeNode parent = f.getParent();
-			int childIndex = parent.getIndex(f);
-			
-			if( childIndex < parent.getChildCount()-1 ) {
-				return parent.getChildAt(childIndex + 1);
-			} else {
-				return findNext(parent);
+	private void appendAllChildren(List folderList, TreeNode folder) {		
+		folderList.add(folder);		
+		if( folder.getChildCount() > 0) {
+			Enumeration childEnum = folder.children();
+			while( childEnum.hasMoreElements() ) {
+				appendAllChildren(folderList, (TreeNode) childEnum.nextElement());
 			}
 		}
 	}
-
+	
 	public boolean hasMoreChildren() {
-		return nextChild != null;
+		return folderIterator.hasNext();
 	}
 
 	public AbstractFolder nextChild() {
-		AbstractFolder result = nextChild;
-		nextChild = (AbstractFolder) findNext(nextChild);
-		
-		return result;
+		return (AbstractFolder) folderIterator.next();
 	}
 	
 }
