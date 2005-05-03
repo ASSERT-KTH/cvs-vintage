@@ -237,7 +237,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * Propagates an event to all registered listeners notifying them of a
 	 * message removal.
 	 */
-	public void fireMessageFlagChanged(Object uid) {
+	public void fireMessageFlagChanged(Object uid, Flags oldFlags, int variant) {
 
 		// @author fdietz
 		// -> Moved code for updating mailfolderinfo to markMessage()
@@ -245,7 +245,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		//
 		setChanged(true);
 
-		FolderEvent e = new FolderEvent(this, uid);
+		FolderEvent e = new FolderEvent(this, uid, oldFlags, variant);
 		
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -461,11 +461,9 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		return false;
 	}
 
-	protected void updateMailFolderInfo(Object uid, int variant)
+	protected void updateMailFolderInfo(Flags flags, int variant)
 			throws Exception {
 		boolean updated = false;
-		
-		Flags flags = getFlags(uid);
 
 		if (flags == null) {
 			return;
@@ -540,15 +538,14 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 	 * @throws Exception
 	 */
 	protected void markMessage(Object uid, int variant) throws Exception {
-
-		updateMailFolderInfo(uid, variant);
-
 		Flags flags = getFlags(uid);
+		
+		updateMailFolderInfo(flags, variant);
 		
 		if (flags == null) {
 			return;
 		}
-		Flags oldValue = (Flags) flags.clone();
+		Flags oldFlags = (Flags) flags.clone();
 
 		switch (variant) {
 		case MarkMessageCommand.MARK_AS_READ: {
@@ -637,8 +634,8 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		}
 		}
 		setChanged(true);
-
-		fireMessageFlagChanged(uid);
+		
+		fireMessageFlagChanged(uid, oldFlags, variant);
 	}
 
 	/**

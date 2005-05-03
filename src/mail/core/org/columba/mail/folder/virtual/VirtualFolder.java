@@ -440,10 +440,11 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			AbstractMessageFolder sourceFolder = h.getSrcFolder();
 			Object sourceUid = h.getSrcUid();
 
+			/*
 			// virtual folder: update mailfolderinfo -> fire treenode change
-			updateMailFolderInfo(uids[i], variant);
+			updateMailFolderInfo(getFlags(uids[i]), variant);
 			// virtual folder: fire message flag changed
-			fireMessageFlagChanged(uids[i]);
+			fireMessageFlagChanged(uids[i], variant);*/
 
 			// mark message in source folder
 			sourceFolder.markMessage(new Object[] { sourceUid }, variant);
@@ -662,7 +663,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		return uids;
 	}
 
-	public Object srcUidToVirtualUid(IMailFolder srcFolder, Object uid) {
+	protected Object srcUidToVirtualUid(IMailFolder srcFolder, Object uid) {
 		Enumeration uids = headerList.keys();
 		while( uids.hasMoreElements() ) {
 			VirtualHeader h = (VirtualHeader) headerList.get(uids.nextElement());
@@ -963,10 +964,38 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.mail.folder.event.IFolderListener#messageFlagChanged(org.columba.mail.folder.event.IFolderEvent)
 	 */
 	public void messageFlagChanged(IFolderEvent e) {
-		//Shall we do another search and maybe remove the message?
+		Object virtualUid = srcUidToVirtualUid((IMailFolder)e.getSource(), e.getChanges());
+
+		if( virtualUid == null ) {
+			// Maybe add the message			
+			AbstractMessageFolder folder = (AbstractMessageFolder)e.getSource();
+			try {
+				Object[] resultUids = folder.searchMessages(getFilter(), new Object[] {e.getChanges()});
+				
+				if( resultUids.length > 0 ) {
+					Header h = folder.getHeaderFields(resultUids[0],
+							CachedHeaderfields.getDefaultHeaderfields());
+					ColumbaHeader header = new ColumbaHeader(h);
+					header.setAttributes(folder.getAttributes(resultUids[0]));
+					header.setFlags(folder.getFlags(resultUids[0]));
+					
+					fireMessageAdded(add(header, folder, resultUids[0]));
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			
+			return;
+		}
+		
+		try {
+			//Shall we do another search and maybe remove the message?
+			updateMailFolderInfo(e.getOldFlags(), e.getParameter());
+		} catch (Exception e1) {
+		}
 		
 		//fire updates
-		fireMessageFlagChanged(srcUidToVirtualUid((IMailFolder)e.getSource(), e.getChanges()));
+		fireMessageFlagChanged(virtualUid, e.getOldFlags(), e.getParameter());
 	}
 
 	/* (non-Javadoc)

@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder.event;
 
+import org.columba.ristretto.message.Flags;
+
 /**
  * @author fdietz
  *
@@ -28,4 +30,7 @@ public interface IFolderEvent {
 	Object getChanges();
 	
 	Object getSource();
+	
+	Flags getOldFlags();
+	int getParameter();
 }

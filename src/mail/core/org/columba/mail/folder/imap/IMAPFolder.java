@@ -505,6 +505,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			Object uid = uids.nextElement();
 			IColumbaHeader header = headerList.get(uid);
 			Flags flag = header.getFlags();
+			Flags oldFlag = (Flags)flag.clone();
+			
 			testInfo.incExists();
 
 			flag.setSeen(Collections.binarySearch(remoteUnseenUids, uid) < 0);
@@ -523,7 +525,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			header.getAttributes().put("columba.spam", new Boolean(Collections.binarySearch(
 					remoteJunkUids, uid) >= 0));
 
-			fireMessageFlagChanged(uid);
+			fireMessageFlagChanged(uid, oldFlag, 0);
 		}
 
 		// Ensure that the messageFolderInfo is up to date.

@@ -19,6 +19,7 @@ package org.columba.mail.folder.event;
 import java.util.EventObject;
 
 import org.columba.mail.folder.IMailFolder;
+import org.columba.ristretto.message.Flags;
 
 /**
  * Passed to listeners to notify them of changes.
@@ -26,6 +27,20 @@ import org.columba.mail.folder.IMailFolder;
 public class FolderEvent extends EventObject implements IFolderEvent {
     protected Object changes;
     
+    protected int parameter;
+    protected Flags oldFlags;
+    
+	/**
+	 * @param source
+	 * @param changes
+	 * @param parameter
+	 */
+	public FolderEvent(Object source, Object changes, Flags oldFlags, int parameter) {
+		super(source);
+		this.changes = changes;
+		this.parameter = parameter;
+		this.oldFlags = oldFlags;
+	}
     /**
      * Creates a new event for the given folder.
      */
@@ -47,4 +62,16 @@ public class FolderEvent extends EventObject implements IFolderEvent {
     public Object getChanges() {
         return changes;
     }
+	/**
+	 * @return Returns the parameter.
+	 */
+	public int getParameter() {
+		return parameter;
+	}
+	/**
+	 * @return Returns the oldFlags.
+	 */
+	public Flags getOldFlags() {
+		return oldFlags;
+	}
 }
