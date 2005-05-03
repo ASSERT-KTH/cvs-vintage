@@ -27,12 +27,14 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.main.ColumbaCmdLineParser;
+import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -42,11 +44,14 @@ import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.virtual.ActivateAllVirtualFoldersCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.nativ.defaultmailclient.SystemDefaultMailClientHandler;
 import org.columba.mail.parser.MailUrlParser;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
@@ -190,6 +195,10 @@ public class MailMain implements IComponentPlugin {
 	 *  
 	 */
 	public void postStartup() {
+		// Check Internet Connection		
+		ConnectionStateImpl.getInstance().setTestConnection("www.google.org", 80);
+		ConnectionStateImpl.getInstance().checkPhysicalState();
+		
 		// Check default mail client
 		checkDefaultClient();
 
@@ -197,6 +206,10 @@ public class MailMain implements IComponentPlugin {
 		if (MailConfig.getInstance().getAccountList().count() == 0) {
 			new AccountWizardLauncher().launchWizard(true);
 		}
+		
+		// Activate all Virtual Folders
+		MailFolderCommandReference ref = new MailFolderCommandReference((AbstractFolder)FolderTreeModel.getInstance().getRoot());
+		CommandProcessor.getInstance().addOp(new ActivateAllVirtualFoldersCommand(ref));
 	}
 
 	private void checkDefaultClient() {

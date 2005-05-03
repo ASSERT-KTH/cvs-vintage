@@ -331,6 +331,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		Object[] resultUids = folder.searchMessages(filter);
 		String[] headerfields = CachedHeaderfields.getDefaultHeaderfields();
 
+		getMessageFolderInfo().reset();
+		
 		if (resultUids != null) {
 			for (int i = 0; i < resultUids.length; i++) {
 				ColumbaHeader header = null;
@@ -382,8 +384,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 
 			}
 		}
-
-
+		
 		if (isRecursive()) {
 			for (Enumeration e = parent.children(); e.hasMoreElements();) {
 				folder = (AbstractMessageFolder) e.nextElement();
@@ -395,6 +396,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 				applySearch(folder, filter);
 			}
 		}
+		
+		fireFolderPropertyChanged();
 	}
 	
 	private boolean isRecursive() {
