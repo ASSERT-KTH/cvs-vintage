@@ -1,6 +1,7 @@
 Columba v1.0 RC3
 
 New features:
+- vFolders are now active and reflect changes of the folders
 - cleanup of message viewer component
 - added show attachments inline viewer for message viewer
 - added plugin-based viewers for various contents types
