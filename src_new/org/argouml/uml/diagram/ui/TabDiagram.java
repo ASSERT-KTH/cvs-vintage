@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.53 2005/04/24 20:06:35 mvw Exp $
+// $Id: TabDiagram.java,v 1.54 2005/05/03 17:14:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -443,8 +443,7 @@ class ArgoEditor extends Editor {
     }
 
     /**
-     * Invoked when the mouse button has been moved (with no buttons
-     * no down).
+     * Invoked when the mouse has been moved (with no buttons down).
      *
      * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
      * @param me The {@link MouseEvent}.
