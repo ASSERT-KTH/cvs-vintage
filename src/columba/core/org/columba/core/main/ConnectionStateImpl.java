@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
+import java.net.Socket;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -34,8 +36,24 @@ public class ConnectionStateImpl implements ConnectionState {
 	protected ChangeEvent e;
 	private static ConnectionStateImpl instance;
 
+	protected String connectionName;
+	protected int connectionPort;
+	
 	public ConnectionStateImpl() {
 		e = new ChangeEvent(this);
+	}
+	
+	public void checkPhysicalState() {
+		if( connectionName != null ) {
+			try {
+				Socket testSocket = new Socket(connectionName,connectionPort);
+				testSocket.close();
+				
+				setOnline(true);
+			}  catch (Exception e) {
+				setOnline(false);
+			}			
+		}
 	}
 	
 	public static ConnectionStateImpl getInstance() {
@@ -68,5 +86,10 @@ public class ConnectionStateImpl implements ConnectionState {
 				}
 			}
 		}
+	}
+	
+	public void setTestConnection(String name, int port) {
+		connectionName = name;
+		connectionPort = port;
 	}
 }
