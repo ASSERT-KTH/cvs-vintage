@@ -210,12 +210,12 @@ public class SearchFrame extends JDialog implements ActionListener {
 		criteriaList = new CriteriaList(destFolder.getFilter());
 		criteriaList.setPreferredSize(new Dimension(500, 100));
 
-		setLayout(new BorderLayout());
-		add(createPanel(), BorderLayout.CENTER);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(createPanel(), BorderLayout.CENTER);
 
-		add(createBottomPanel(), BorderLayout.SOUTH);
+		getContentPane().add(createBottomPanel(), BorderLayout.SOUTH);
 
-		add(new DialogHeaderPanel(MailResourceLoader.getString("dialog",
+		getContentPane().add(new DialogHeaderPanel(MailResourceLoader.getString("dialog",
 				"filter", "header_title"), MailResourceLoader.getString(
 				"dialog", "filter", "header_description"), ImageLoader
 				.getSmallImageIcon("system-search-32.png")), BorderLayout.NORTH);
