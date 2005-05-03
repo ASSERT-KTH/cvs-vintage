@@ -46,6 +46,7 @@ import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.OutgoingItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.virtual.ActivateAllVirtualFoldersCommand;
 import org.columba.mail.gui.composer.ComposerController;
@@ -195,10 +196,6 @@ public class MailMain implements IComponentPlugin {
 	 *  
 	 */
 	public void postStartup() {
-		// Check Internet Connection		
-		ConnectionStateImpl.getInstance().setTestConnection("www.google.org", 80);
-		ConnectionStateImpl.getInstance().checkPhysicalState();
-		
 		// Check default mail client
 		checkDefaultClient();
 
@@ -206,6 +203,14 @@ public class MailMain implements IComponentPlugin {
 		if (MailConfig.getInstance().getAccountList().count() == 0) {
 			new AccountWizardLauncher().launchWizard(true);
 		}
+
+		// Check Internet Connection
+		if( MailConfig.getInstance().getAccountList().count() > 0 ) {
+			OutgoingItem testConnection = MailConfig.getInstance().getAccountList().get(0).getSmtpItem();
+			ConnectionStateImpl.getInstance().setTestConnection(testConnection.get("host"), testConnection.getInteger("port"));
+			ConnectionStateImpl.getInstance().checkPhysicalState();
+		}
+		
 		
 		// Activate all Virtual Folders
 		MailFolderCommandReference ref = new MailFolderCommandReference((AbstractFolder)FolderTreeModel.getInstance().getRoot());
