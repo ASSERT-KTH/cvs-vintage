@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.StatusObservable;
+import org.columba.core.filter.Filter;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -202,12 +203,22 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
 	 */
 	public IHeaderList getHeaderList() throws Exception {
+		ensureFolderIsSynced();
+
+		return headerList;
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws IMAPException
+	 * @throws CommandCancelledException
+	 * @throws Exception
+	 */
+	private void ensureFolderIsSynced() throws IOException, IMAPException, CommandCancelledException, Exception {
 		if (headerList == null || !getServer().isSelected(this)) {
 			synchronizeHeaderlist();
 			synchronizeFlags();
 		}
-
-		return headerList;
 	}
 
 	protected ImapItem getImapItem() {
@@ -1064,5 +1075,20 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			return headerCache;
 		}
 
+	}
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.AbstractMessageFolder#searchMessages(org.columba.core.filter.Filter, java.lang.Object[])
+	 */
+	public Object[] searchMessages(Filter filter, Object[] uids)
+			throws Exception {
+		ensureFolderIsSynced();		
+		return super.searchMessages(filter, uids);
+	}
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.AbstractMessageFolder#searchMessages(org.columba.core.filter.Filter)
+	 */
+	public Object[] searchMessages(Filter filter) throws Exception {
+		ensureFolderIsSynced();
+		return super.searchMessages(filter);
 	}
 }
