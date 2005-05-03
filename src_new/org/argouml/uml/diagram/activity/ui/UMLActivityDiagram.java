@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.75 2005/05/03 16:19:54 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.76 2005/05/03 17:15:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -409,4 +409,13 @@ public class UMLActivityDiagram extends UMLDiagram {
         }
         return false;
     }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#getDependentElement()
+     */
+    public Object getDependentElement() {
+        return getStateMachine(); /* The ActivityGraph. */
+    }
+    
+    
 } /* end class UMLActivityDiagram */

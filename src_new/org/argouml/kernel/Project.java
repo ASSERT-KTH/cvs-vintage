@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.156 2005/03/09 21:29:02 bobtarling Exp $
+// $Id: Project.java,v 1.157 2005/05/03 17:15:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -788,16 +788,12 @@ public class Project implements java.io.Serializable, TargetListener {
     protected void removeDiagram(ArgoDiagram d) {
         d.removeVetoableChangeListener(new Vcl());
         diagrams.removeElement(d);
-        // if the diagram is a statechart,
-        // remove its associated statemachine model elements
-        if (d instanceof UMLStateDiagram) {
-            UMLStateDiagram statediagram = (UMLStateDiagram) d;
-            // if the statemachine has already been deleted,
-            // and is now null,
-            // don't attempt to delete it!
-            if (statediagram.getStateMachine() != null) {
-                this.moveToTrash(statediagram.getStateMachine());
-            }
+        if (d instanceof UMLDiagram) {
+            /* If this is a UML diagram, then remove the dependent 
+             * modelelements, such as the statemachine 
+             * for a statechartdiagram. */
+            Object o = ((UMLDiagram)d).getDependentElement();
+            if (o != null) moveToTrash(o);
         }
     }
 

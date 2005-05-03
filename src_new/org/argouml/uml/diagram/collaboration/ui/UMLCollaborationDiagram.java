@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.74 2005/03/07 21:34:45 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.75 2005/05/03 17:15:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -369,4 +369,12 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         }
         return actionMessage;
     }
+
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#getDependentElement()
+     */
+    public Object getDependentElement() {
+        return getNamespace(); /* The collaboration. */
+    }
+    
 } /* end class UMLCollaborationDiagram */

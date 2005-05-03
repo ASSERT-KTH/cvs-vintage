@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.69 2005/02/06 21:30:16 mvw Exp $
+// $Id: UMLDiagram.java,v 1.70 2005/05/03 17:15:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -610,6 +610,18 @@ public abstract class UMLDiagram
     public boolean needsToBeRemoved() {
         return Model.getUmlFactory().isRemoved(namespace) 
         || Model.getUmlFactory().isRemoved(getOwner());
+    }
+    
+    /**
+     * This method shall return any UML modelelements 
+     * that should be deleted when the diagram gets deleted,
+     * or null if there are none. The default implementation returns null; 
+     * e.g. a statechart diagram should return its statemachine.
+     * 
+     * @author mvw@tigris.org
+     */
+    public Object getDependentElement() {
+        return null;
     }
 
 } /* end class UMLDiagram */
