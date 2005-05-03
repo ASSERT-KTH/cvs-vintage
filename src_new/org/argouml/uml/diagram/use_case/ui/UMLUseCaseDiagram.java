@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.53 2005/01/30 20:48:35 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.54 2005/05/03 20:23:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -197,7 +197,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         super.setNamespace(m);
 
         UseCaseDiagramGraphModel gm = new UseCaseDiagramGraphModel();
-        gm.setNamespace(m);
+        gm.setHomeModel(m);
         LayerPerspective lay =
             new LayerPerspectiveMutable(Model.getFacade().getName(m), gm);
         UseCaseDiagramRenderer rend = new UseCaseDiagramRenderer();

@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.53 2005/02/23 16:56:43 mvw Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.54 2005/05/03 20:23:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,28 +47,6 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     private static final Logger LOG =
         Logger.getLogger(CollabDiagramGraphModel.class);
 
-    /** The "home" UML model of this diagram, not all ModelElements in this
-     *  graph are in the home model, but if they are added and don't
-     *  already have a model, they are placed in the "home model".
-     *  Also, elements from other models will have their FigNodes add a
-     *  line to say what their model is. */
-
-    /** The collaboration / interaction we are diagramming */
-    private Object collab;
-    private Object interaction;
-
-    ////////////////////////////////////////////////////////////////
-    // accessors
-
-    /**
-     * This is not the collaboration itself, but its namespace!
-     * 
-     * @see org.argouml.uml.diagram.UMLMutableGraphSupport#getNamespace()
-     */
-    public Object getNamespace() { 
-        return Model.getFacade().getNamespace(collab); 
-    }
-
     /**
      * @param collaboration the collaboration to be set for this diagram
      */
@@ -87,7 +65,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
             LOG.error("Illegal Argument to setCollaboration", e);
             throw e;
         }
-        collab = collaboration;
+        setHomeModel(collaboration);
     }
 
 
@@ -216,7 +194,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	getNodes().add(node);
 	// TODO: assumes public, user pref for default visibility?
 	if (Model.getFacade().isAClassifier(node)) {
-	    Model.getCoreHelper().addOwnedElement(collab, node);
+	    Model.getCoreHelper().addOwnedElement(getHomeModel(), node);
 	    // ((MClassifier)node).setNamespace(_collab.getNamespace());
 	}
 
@@ -235,7 +213,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
         // TODO: assumes public
         if (Model.getFacade().isAModelElement(edge)
 	    && Model.getFacade().getNamespace(edge) == null) {
-            Model.getCoreHelper().addOwnedElement(collab, edge);
+            Model.getCoreHelper().addOwnedElement(getHomeModel(), edge);
         }
         fireEdgeAdded(edge);
     }
@@ -330,10 +308,4 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	}
     }
 
-    /**
-     * @return returns the collaboration
-     */
-    public Object getCollaboration() {
-        return collab;
-    }
 } /* end class CollabDiagramGraphModel */

@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.68 2005/01/30 20:48:02 linus Exp $
+// $Id: UMLClassDiagram.java,v 1.69 2005/05/03 20:23:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,7 +111,7 @@ public class UMLClassDiagram extends UMLDiagram {
         }
         super.setNamespace(ns);
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
-        gm.setNamespace(ns);
+        gm.setHomeModel(ns);
         LayerPerspective lay =
             new LayerPerspectiveMutable(Model.getFacade().getName(ns), gm);
         ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton

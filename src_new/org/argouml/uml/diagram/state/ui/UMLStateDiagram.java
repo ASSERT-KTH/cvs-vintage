@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.75 2005/05/03 17:15:37 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.76 2005/05/03 20:23:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,7 +200,7 @@ public class UMLStateDiagram extends UMLDiagram {
         theStateMachine = sm;
 
         StateDiagramGraphModel gm = new StateDiagramGraphModel();
-        gm.setNamespace(namespace);
+        gm.setHomeModel(namespace);
         if (sm != null) {
             gm.setMachine(sm);
         }
