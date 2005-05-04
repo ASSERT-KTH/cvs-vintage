@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.1 2005/04/28 19:37:17 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.2 2005/05/04 10:52:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class PGMLStackParser implements HandlerStack, HandlerFactory
 {
-    private static final Log LOG = LogFactory.getLog(PGMLHandler.class);
+    private static final Log LOG = LogFactory.getLog(PGMLStackParser.class);
     private static HashMap USED_COLORS = new HashMap();
 
     private Stack _handlerStack;
@@ -79,6 +79,8 @@ public class PGMLStackParser implements HandlerStack, HandlerFactory
     private Map _ownerRegistry;
     private Diagram _diagram;
     private HashMap _figRegistry;
+    
+    protected HashMap translationTable = new HashMap();
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -214,15 +216,19 @@ public class PGMLStackParser implements HandlerStack, HandlerFactory
      * Some elements or attributes in the PGML file may contain class names.
      * Before these names are interpreted to create object instances, they
      * are passed through this method.  The default implementation of the
-     * method passes the name through unchanged, but sub-classes may
-     * override this method to translate class names to reflect re-factoring
-     * in different versions of the software.
+     * method passes the names through by a map in order to determine if
+     * translation is required.
      * @param inputName Class name as it appears in PGML file
      * @return Class name appropriate for the current code base
      */
-    public String translateClassName( String inputName)
-    {
-        return inputName;
+    public String translateClassName(String oldName) {
+        String translated = (String) translationTable.get(oldName);
+
+        if (translated == null) {
+            return oldName;
+        }
+
+        return translated;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -525,7 +531,7 @@ public class PGMLStackParser implements HandlerStack, HandlerFactory
         }
 
         if (name.indexOf(' ') > 0) {
-            // The color is in the format "red green blue"
+            // The color assumed to be in the PGML standard format "red green blue"
             return getColor(name);
         }
 

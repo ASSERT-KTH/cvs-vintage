@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.96 2005/05/02 16:03:20 bobtarling Exp $
+// $Id: FigInterface.java,v 1.97 2005/05/04 10:52:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,8 +179,6 @@ public class FigInterface extends FigNodeModelElement
         addFig(getNameFig());
         addFig(stereoLineBlinder);
         addFig(operVec);
-        
-        setOperationsVisible(false);
         
         setSuppressCalcBounds(false);
 

@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.142 2005/05/02 16:03:20 bobtarling Exp $
+// $Id: FigClass.java,v 1.143 2005/05/04 10:52:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -205,9 +204,6 @@ public class FigClass extends FigNodeModelElement
         addFig(operationsFigCompartment);
         addFig(attributesFigCompartment);
 
-        setAttributesVisible(false);
-        setOperationsVisible(false);
-        
         setSuppressCalcBounds(false);
         // Set the bounds of the figure to the total of the above (hardcoded)
         setBounds(10, 10, 60, 22 + 2 * ROWHEIGHT);
