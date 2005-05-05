@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.28 2005/05/05 08:21:38 mvw Exp $
+// $Id: PropPanelDiagram.java,v 1.29 2005/05/05 08:22:50 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,6 @@ public class PropPanelDiagram extends PropPanel {
         addField(Translator.localize("label.name"), field);
         
         JList lst = new OneRowLinkedList(new UMLDiagramHomeModelListModel());
-        lst.setVisibleRowCount(1);
         addField(Translator.localize("label.home-model"), new JScrollPane(lst));
         
 
@@ -214,6 +213,7 @@ class OneRowLinkedList extends JList {
             UMLLinkMouseListener mouseListener = new UMLLinkMouseListener(this);
             setFont(LookAndFeelMgr.getInstance().getSmallFont());
             addMouseListener(mouseListener);
+            setVisibleRowCount(1);
         }
 
     }
