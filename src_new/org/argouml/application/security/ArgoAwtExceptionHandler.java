@@ -1,4 +1,4 @@
-// $Id: ArgoAwtExceptionHandler.java,v 1.9 2005/01/09 14:58:04 linus Exp $
+// $Id: ArgoAwtExceptionHandler.java,v 1.10 2005/05/05 07:36:53 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,13 +54,6 @@ public final class ArgoAwtExceptionHandler {
      *                   to "eat" it.
      */
     public void handle(Throwable t) throws Throwable {
-	if (t.getClass().equals(ExitSecurityException.class)) {
-	    // do nothing
-            // _cat.error("Uncaught ArgoSecurityException:" + t);
-	    return;
-	} else {
-            // _cat.error("Uncaught - throwable:" + t);
-	    throw t;
-	}
+        throw t;
     }
 }

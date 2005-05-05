@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.24 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionExit.java,v 1.25 2005/05/05 07:36:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.JOptionPane;
 
 import org.argouml.application.api.CommandLineInterface;
 import org.argouml.application.api.Configuration;
-import org.argouml.application.security.ExitSecurityManager;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -51,9 +50,10 @@ public class ActionExit extends UMLAction
      */
     public static final ActionExit SINGLETON = new ActionExit();
 
-    /** remember if this form is already active, so that it does
-        not popup twice.
-    */
+    /**
+     * Remember if this form is already active, so that it does
+     * not popup twice.
+     */
     private boolean active = false;
 
     ////////////////////////////////////////////////////////////////
@@ -122,7 +122,6 @@ public class ActionExit extends UMLAction
      * @return true if it is OK.
      */
     public boolean doCommand(String argument) {
-        ExitSecurityManager.getInstance().setAllowExit (true);
         System.exit (0);
 	return true;
     }
