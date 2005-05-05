@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.23 2005/04/22 18:00:59 mvw Exp $
+// $Id: PGMLParser.java,v 1.24 2005/05/05 11:17:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -778,62 +778,52 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
      * @see org.tigris.gef.xml.pgml.PGMLParser#privateStateEndElement(java.lang.String)
      */
     protected void privateStateEndElement(String tagName) {
-        try {
-            if (_currentNode != null) {
-                if (_currentEdge != null) {
-                    _currentEdge = null;
-                }
-
-                String body = _textBuf.toString();
-                StringTokenizer st2 = new StringTokenizer(body, "=\"' \t\n");
-                while (st2.hasMoreElements()) {
-                    String t = st2.nextToken();
-                    String v = "no such fig";
-                    if (st2.hasMoreElements()) {
-                        v = st2.nextToken();
-                    }
-
-                    if (t.equals("enclosingFig")) {
-                        _currentEncloser = findFig(v);
-                    }
-                }
+        if (_currentNode != null) {
+            if (_currentEdge != null) {
+                _currentEdge = null;
             }
 
-            if (_currentEdge != null) {
-                Fig spf = null;
-                Fig dpf = null;
-                FigNode sfn = null;
-                FigNode dfn = null;
-                String body = _textBuf.toString();
-                StringTokenizer st2 = new StringTokenizer(body, "=\"' \t\n");
-                while (st2.hasMoreElements()) {
-                    String t = st2.nextToken();
-                    String v = st2.nextToken();
-
-                    if (t.equals("sourceFigNode")) {
-                        sfn = (FigNodeModelElement) _figRegistry.get(v);
-                        spf = (Fig) sfn.getPortFigs().get(0);
-                    }
-
-                    if (t.equals("destFigNode")) {
-                        dfn = (FigNodeModelElement) _figRegistry.get(v);
-                        dpf = (Fig) dfn.getPortFigs().get(0);
-                    }
+            String body = _textBuf.toString();
+            StringTokenizer st2 = new StringTokenizer(body, "=\"' \t\n");
+            while (st2.hasMoreElements()) {
+                String t = st2.nextToken();
+                String v = "no such fig";
+                if (st2.hasMoreElements()) {
+                    v = st2.nextToken();
                 }
 
-                if (spf == null || dpf == null || sfn == null || dfn == null) {
-                    setDetectedFailure(true);
-                }
-                else {
-                    _currentEdge.setSourcePortFig(spf);
-                    _currentEdge.setDestPortFig(dpf);
-                    _currentEdge.setSourceFigNode(sfn);
-                    _currentEdge.setDestFigNode(dfn);
+                if (t.equals("enclosingFig")) {
+                    _currentEncloser = findFig(v);
                 }
             }
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
+
+        if (_currentEdge != null) {
+            Fig spf = null;
+            Fig dpf = null;
+            FigNode sfn = null;
+            FigNode dfn = null;
+            String body = _textBuf.toString();
+            StringTokenizer st2 = new StringTokenizer(body, "=\"' \t\n");
+            while (st2.hasMoreElements()) {
+                String t = st2.nextToken();
+                String v = st2.nextToken();
+
+                if (t.equals("sourceFigNode")) {
+                    sfn = (FigNodeModelElement) _figRegistry.get(v);
+                    spf = (Fig) sfn.getPortFigs().get(0);
+                }
+
+                if (t.equals("destFigNode")) {
+                    dfn = (FigNodeModelElement) _figRegistry.get(v);
+                    dpf = (Fig) dfn.getPortFigs().get(0);
+                }
+            }
+
+            _currentEdge.setSourcePortFig(spf);
+            _currentEdge.setDestPortFig(dpf);
+            _currentEdge.setSourceFigNode(sfn);
+            _currentEdge.setDestFigNode(dfn);
         }
     }
     
