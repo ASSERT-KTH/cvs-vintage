@@ -1,4 +1,4 @@
-// $Id: AbstractModelEventPump.java,v 1.2 2005/05/05 22:35:46 linus Exp $
+// $Id: AbstractModelEventPump.java,v 1.3 2005/05/05 22:51:23 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 package org.argouml.model;
 
 import java.beans.PropertyChangeListener;
+
+import javax.swing.Action;
 
 /**
  * Abstract class that implements the convenience methods of the
@@ -175,5 +177,32 @@ public abstract class AbstractModelEventPump {
                 		      modelClass,
                 		      new String[] {eventName, });
 
+    }
+
+    /**
+     * The saveAction.
+     */
+    private Action saveAction;
+
+    /**
+     * Register an Action with the pump that is used to perform saving.
+     * This action will be enabled by any change to the model.
+     * The param saveAction is the action to enable on change to model.
+     *
+     * @see org.argouml.model.ModelEventPump#setSaveAction(javax.swing.Action)
+     *
+     * @param theSaveAction The saveAction to set (or <code>null</code>).
+     */
+    public void setSaveAction(Action theSaveAction) {
+        saveAction = theSaveAction;
+    }
+
+    /**
+     * The saveAction is updated (if needed).
+     */
+    public void fireAction() {
+        if (saveAction != null && !saveAction.isEnabled()) {
+            saveAction.setEnabled(true);
+        }
     }
 }
