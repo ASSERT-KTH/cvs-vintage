@@ -45,18 +45,6 @@ public class FetchSubFolderListCommand extends Command {
 	}
 
 	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-        // remove all subfolders that are not marked as existonserver
-        
-        if( imapRoot != null ) {
-        	imapRoot.removeNotMarkedSubfolders(imapRoot);
-        }
-
-	}
-
-	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
@@ -67,11 +55,8 @@ public class FetchSubFolderListCommand extends Command {
 		}
 
 		if (r.getSourceFolder() instanceof IMAPRootFolder) {
-			imapRoot = (IMAPRootFolder) r.getSourceFolder();
-			
+			imapRoot = (IMAPRootFolder) r.getSourceFolder();			
 			imapRoot.syncSubscribedFolders();
-			
-			// The update of the treemodell follows in the updategui method
 		}
 	}
 }

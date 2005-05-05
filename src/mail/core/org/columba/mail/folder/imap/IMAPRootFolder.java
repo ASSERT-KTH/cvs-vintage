@@ -147,7 +147,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 			String subchild = name.substring(0, name.indexOf(server
 					.getDelimiter()));
 			AbstractFolder subFolder = (AbstractFolder) parent
-					.findChildWithName(subchild, false);
+					.findChildWithName(subchild, false, IMAPFolder.class);
 
 			// if folder doesn't exist already
 			if (subFolder == null) {
@@ -215,14 +215,17 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		for (int i = 0; i < parent.getChildCount(); i++) {
 			child = (AbstractFolder) parent.getChildAt(i);
 
-			if (child instanceof IMAPFolder) {
-				((IMAPFolder) child).existsOnServer = value;
+			if (child instanceof IMAPFolder) {				
 				markAllSubfoldersAsExistOnServer(child, value);
 			}
 		}
+		
+		if( parent instanceof IMAPFolder ) {
+			((IMAPFolder) parent).existsOnServer = value;
+		}
 	}
 
-	public void removeNotMarkedSubfolders(AbstractFolder parent)
+	private boolean removeNotMarkedSubfolders(AbstractFolder parent)
 			throws Exception {
 		AbstractFolder child;
 
@@ -231,7 +234,11 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 			child = (AbstractFolder) parent.getChildAt(i);
 
 			if (child instanceof IMAPFolder) {
-				removeNotMarkedSubfolders(child);
+				if( removeNotMarkedSubfolders(child) ) {
+					// A child got removed -> stay at this position to
+					// get the next
+					i--;
+				}
 			}
 		}
 
@@ -240,8 +247,11 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 			if (!((IMAPFolder) parent).existsOnServer) {
 				FolderTreeModel.getInstance().removeNodeFromParent(parent);
 				parent.removeFolder();
+				return true;
 			}
 		}
+		
+		return false;
 	}
 
 	
@@ -276,7 +286,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		}
 	}
 
-	public void syncSubscribedFolders() {
+	public void syncSubscribedFolders() throws Exception{
 		// first clear all flags
 		markAllSubfoldersAsExistOnServer(this, false);
 
@@ -304,6 +314,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		// which sets the \Noselect flag on INBOX
 		inbox.getConfiguration().setString("selectable", "true");
 
+		removeNotMarkedSubfolders(this);
+		
 		findSpecialFolders();
 	}
 
