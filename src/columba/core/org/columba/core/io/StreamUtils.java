@@ -102,6 +102,26 @@ public class StreamUtils {
         return result;
     }
     
+    /**
+     * Reads a InputStream of chars into a StringBuffer.
+     *
+     * @param in the InputStream to read from
+     * @return the interpreted InputStream
+     * @throws IOException
+     */
+    public static StringBuffer readCharacterStream(InputStream in)
+        throws IOException {
+    	StringBuffer result = new StringBuffer(in.available());
+        int read = in.read();
+
+        while (read > 0) {
+            result.append((char) read);
+            read = in.read();
+        }
+
+        return result;
+    }
+
     public static byte[] readInByteArray(InputStream in) throws IOException {
     	byte[] result = new byte[in.available()];
     	

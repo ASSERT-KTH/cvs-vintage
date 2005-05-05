@@ -43,7 +43,6 @@ import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.command.MailFolderCommandReference;

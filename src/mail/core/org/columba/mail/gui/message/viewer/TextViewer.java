@@ -227,14 +227,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 		bodyStream = decodeBodyStream(charset, bodyPart, bodyStream);
 
 		// Read Stream in String
-		StringBuffer text = StreamUtils.readInString(bodyStream);
-
-		/*
-		 * StringBuffer text = new StringBuffer(); int next = bodyStream.read();
-		 * 
-		 * while (next != -1) { text.append((char) next); next =
-		 * bodyStream.read(); }
-		 */
+		StringBuffer text = StreamUtils.readCharacterStream(bodyStream);
 
 		// if HTML stripping is enabled
 		if (isHTMLStrippingEnabled()) {
