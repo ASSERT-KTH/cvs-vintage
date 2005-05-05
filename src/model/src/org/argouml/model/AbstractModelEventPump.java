@@ -1,4 +1,4 @@
-// $Id: AbstractModelEventPump.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: AbstractModelEventPump.java,v 1.2 2005/05/05 22:35:46 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,6 @@ import java.beans.PropertyChangeListener;
 /**
  * Abstract class that implements the convenience methods of the
  * {@link ModelEventPump} interface.
- *
- * The default visibility is to guarantee that it is not seen outside the
- * model component.
  *
  * @author Linus Tolke
  */
