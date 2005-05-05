@@ -368,7 +368,10 @@ public class SMTPServer  {
 		try {
 			capas = protocol.ehlo(InetAddress.getLocalHost());
 		} catch (SMTPException e1) {
-			// EHLO not supported -> AUTH not supported
+			// EHLO not supported -> AUTH not supported			
+			if( protocol.getState() < SMTPProtocol.PLAIN ) {
+				protocol.openPort();
+			}
 			protocol.helo(InetAddress.getLocalHost());
 			capas = new String[] {};
 		}
