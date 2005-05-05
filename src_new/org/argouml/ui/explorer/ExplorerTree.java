@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.32 2005/04/30 08:50:16 mvw Exp $
+// $Id: ExplorerTree.java,v 1.33 2005/05/05 15:08:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,8 +99,8 @@ public class ExplorerTree
 
         this.setModel(new ExplorerTreeModel(ProjectManager.getManager()
 			                    .getCurrentProject(), this));
-        this.addMouseListener(new NavigatorMouseListener(this));
-        this.addTreeSelectionListener(new NavigationTreeSelectionListener());
+        this.addMouseListener(new ExplorerMouseListener(this));
+        this.addTreeSelectionListener(new ExplorerTreeSelectionListener());
         this.addTreeWillExpandListener(new ExplorerTreeWillExpandListener());
         this.addTreeExpansionListener(new ExplorerTreeExpansionListener());
 
@@ -116,11 +116,11 @@ public class ExplorerTree
      * Listens to mouse events coming from the *JTree*,
      * on right click, brings up the pop-up menu.
      */
-    class NavigatorMouseListener extends MouseAdapter {
+    class ExplorerMouseListener extends MouseAdapter {
 
         private JTree mLTree;
 
-        public NavigatorMouseListener(JTree newtree) {
+        public ExplorerMouseListener(JTree newtree) {
             super();
             mLTree = newtree;
         }
@@ -172,7 +172,7 @@ public class ExplorerTree
             }
         }
 
-    } /* end class NavigatorMouseListener */
+    } /* end class ExplorerMouseListener */
 
     /**
      * Override default JTree implementation to display the
@@ -347,10 +347,10 @@ public class ExplorerTree
      * Manages selecting the item to show in Argo's other
      * views based on the highlighted row.
      */
-    class NavigationTreeSelectionListener implements TreeSelectionListener {
+    class ExplorerTreeSelectionListener implements TreeSelectionListener {
 
         /**
-         * Change in nav tree selection -> set target in target manager.
+         * Change in explorer tree selection -> set target in target manager.
          */
         public void valueChanged(TreeSelectionEvent e) {
 
