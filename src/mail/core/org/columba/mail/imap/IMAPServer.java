@@ -1049,7 +1049,7 @@ public class IMAPServer implements IMAPListener {
 			ensureSelectedState(folder);
 			if (selectedStatus.getMessages() - startIdx >= 0) {
 				SequenceSet set = new SequenceSet();
-				set.addRightOpen(startIdx);
+				set.addOpenRange(startIdx);
 
 				SequenceSet[] packs = divide(set);
 				
