@@ -181,7 +181,11 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 			else if (columnTypes[j] == Date.class) {
 				writer.writeLong(((Date) o).getTime());
 			} else if (columnTypes[j] == String.class)
-				writer.writeString((String) o);
+				if( o==null ) {
+					writer.writeString("");
+				} else {
+					writer.writeString((String) o);
+				}
 		}
     }
 	/**
