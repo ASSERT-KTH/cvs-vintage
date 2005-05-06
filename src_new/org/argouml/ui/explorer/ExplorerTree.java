@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.33 2005/05/05 15:08:09 mvw Exp $
+// $Id: ExplorerTree.java,v 1.34 2005/05/06 21:14:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -366,7 +366,7 @@ public class ExplorerTree
                     Object element = ((DefaultMutableTreeNode) selectedPaths[i]
                                    .getLastPathComponent()).getUserObject();
                     elementsAsList.add(element);
-//                  // scan the visible rows for duplicates of
+                    // scan the visible rows for duplicates of
                     // this elem and select them
                     int rows = getRowCount();
                     for (int row = 0; row < rows; row++) {
@@ -382,8 +382,6 @@ public class ExplorerTree
                 }
 
                 // check which targetmanager method to call
-
-
                 boolean callSetTarget = true;
                 List addedElements = new ArrayList();
                 for (int i = 0; i < addedOrRemovedPaths.length; i++) {
@@ -416,8 +414,8 @@ public class ExplorerTree
                             removedTargets.add(element);
                         }
                     }
-                    // we can't remove the targets one by one, we have to
-                    // do it in one go.
+                    // we can't remove the targets in one go, we have to
+                    // do it one by one.
                     if (!removedTargets.isEmpty()) {
                         Iterator it = removedTargets.iterator();
                         while (it.hasNext()) {
