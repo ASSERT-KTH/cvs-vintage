@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.157 2005/05/03 17:15:36 mvw Exp $
+// $Id: Project.java,v 1.158 2005/05/06 21:17:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,7 +212,7 @@ public class Project implements java.io.Serializable, TargetListener {
         addMember(new UMLUseCaseDiagram(model));
         addMember(new ProjectMemberTodoList("", this));
         ProjectManager.getManager().setNeedsSave(false);
-        setActiveDiagram((ArgoDiagram) getDiagrams().get(0));
+        setActiveDiagram((ArgoDiagram) diagrams.get(0));
     }
 
     /**
@@ -616,7 +616,7 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public Collection findFigsForMember(Object member) {
         Collection figs = new ArrayList();
-        Iterator it = getDiagrams().iterator();
+        Iterator it = diagrams.iterator();
         while (it.hasNext()) {
             ArgoDiagram diagram = (ArgoDiagram) it.next();
             Object fig = diagram.getContainingFig(member);
@@ -1121,7 +1121,7 @@ public class Project implements java.io.Serializable, TargetListener {
      * it's not valid.
      */
     public boolean isValidDiagramName(String name) {
-        Iterator it = getDiagrams().iterator();
+        Iterator it = diagrams.iterator();
         boolean rv = true;
         while (it.hasNext()) {
             ArgoDiagram diagram = (ArgoDiagram) it.next();
