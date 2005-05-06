@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.168 2005/02/23 21:03:14 linus Exp $
+<!-- $Id: build.xml,v 1.169 2005/05/06 10:09:01 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -480,6 +480,12 @@ Property files to be searched:
         <include name="JavaRecognizer.java"/>
         <include name="JavaTokenTypes.java"/>
         <include name="JavaTokenTypes.txt"/>
+      </fileset>
+      <fileset dir="../modules/cpp/src/org/argouml/language/cpp/reveng">
+        <include name="CPPLexer.java"/>
+        <include name="CPPParser.java"/>
+        <include name="STDCTokenTypes.java"/>
+        <include name="STDCTokenTypes.txt"/>
       </fileset>
     </delete>
   </target>
@@ -1444,7 +1450,7 @@ you will have to resurrect them using cvs update.
          <filter token="VERSION" 
                  value="${argo.build.version}"/>
          <filter token="URLROOT"
-                 value="http://argouml.tigris.org/files/documents/4/0/argouml-${argo.build.version}"/>
+                 value="http://argouml-downloads.tigris.org/nonav/argouml-${argo.build.version}"/>
        </filterset>
      </copy>
 
