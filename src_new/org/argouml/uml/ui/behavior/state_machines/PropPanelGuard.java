@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.38 2005/04/23 16:30:44 linus Exp $
+// $Id: PropPanelGuard.java,v 1.39 2005/05/06 20:53:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionNavigateTransition;
@@ -60,8 +61,6 @@ public class PropPanelGuard extends PropPanelModelElement {
                 getNameTextField());
         addField(Translator.localize("label.stereotype"),
                 getStereotypeSelector());
-        addField(Translator.localize("label.namespace"),
-                getNamespaceScroll());
 
         JList transitionList =
             new UMLLinkedList(
@@ -76,8 +75,8 @@ public class PropPanelGuard extends PropPanelModelElement {
             new UMLExpressionExpressionModel(this, "expression");
         addField(Translator.localize("label.expression"),
             new JScrollPane(new UMLExpressionBodyField(expressionModel, true),
-            JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         addField(Translator.localize("label.language"),
                 new UMLExpressionLanguageField(expressionModel, true));
 
