@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.10 2005/05/05 11:17:02 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.11 2005/05/07 06:14:47 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,29 +32,19 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.ocl.TemplateReader;
-import org.xml.sax.SAXException;
 
 /**
  * The file persister for the diagram members.
  * @author Bob Tarling
  */
 public class DiagramMemberFilePersister extends MemberFilePersister {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOG =
-        Logger.getLogger(ModelMemberFilePersister.class);
-
     /**
      * The tee file for persistence.
      */
@@ -72,14 +62,15 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
             // keyed by their UUID. This is used to allocate
             // figs to their owner using the "href" attribute
             // in PGML.
-            //PGMLStackParser parser = new PGMLStackParser(project.getUUIDRefs());
+            // PGMLStackParser parser =
+            //     new PGMLStackParser(project.getUUIDRefs());
             PGMLParser parser = new PGMLParser(project.getUUIDRefs());
             Diagram d = parser.readDiagram(inputStream, false);
             inputStream.close();
             project.addMember(d);
         } catch (Exception e) {
             if (e instanceof OpenException) {
-                throw (OpenException)e;
+                throw (OpenException) e;
             }
             throw new OpenException(e);
         }
