@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.6 2005/05/02 14:51:53 bobtarling Exp $
+// $Id: FigFeaturesCompartment.java,v 1.7 2005/05/07 06:28:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,9 @@ import org.tigris.gef.presentation.FigRect;
 
 /**
  * Presentation logic which is common to both an operations
- * compartment and an attributes compartment.
+ * compartment and an attributes compartment.<p>
+ *
+ * TODO: Investicate if this could be renamed to AbstractFigFeaturesCompartment?
  * @author Bob Tarling
  */
 public abstract class FigFeaturesCompartment extends FigCompartment {
@@ -80,7 +82,7 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
     public Fig getBigPort() {
         return bigPort;
     }
-    
+
     /**
      * If a features compartment is set to invisible then remove all its
      * children.
@@ -104,18 +106,24 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
             }
         }
     }
-    
-    
+
     /**
      * @see org.tigris.gef.presentation.FigGroup#addFig(org.tigris.gef.presentation.Fig)
      */
     public void addFig(Fig fig) {
         if (fig != bigPort && !(fig instanceof FigFeature)) {
             LOG.error("Illegal Fig added to a FigFeature");
-            throw new IllegalArgumentException("A FigFeaturesCompartment can only contain FigFeatures, received a " + fig.getClass().getName());
+            throw new IllegalArgumentException(
+                    "A FigFeaturesCompartment can only contain FigFeatures, "
+                    + "received a " + fig.getClass().getName());
         }
         super.addFig(fig);
     }
-    
-    abstract public void populate();
+
+    /**
+     * Fills the Fig by adding all figs within.<p>
+     *
+     * TODO: Check that this is correct?
+     */
+    public abstract void populate();
 }
