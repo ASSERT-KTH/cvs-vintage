@@ -168,7 +168,7 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		setBorder(BorderFactory.createEmptyBorder(1, 0, 1, 0));
 
 		FormLayout l = new FormLayout(
-				"default, 1dlu, fill:default:grow, 3dlu, default, 3dlu, default",
+				"default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",
 				"fill:default:grow");
 		PanelBuilder b = new PanelBuilder(this, l);
 
