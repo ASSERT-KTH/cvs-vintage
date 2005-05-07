@@ -79,7 +79,10 @@ public class ApplyFilterCommand extends Command {
 
 			// get filter
 			Filter filter = list.get(i);
-
+			
+			// skip, if filter is disabled
+			if ( filter.getEnabled() == false) continue;
+			
 			// search all messages which match this filter
 			Object[] result = srcFolder.searchMessages(filter);
 
