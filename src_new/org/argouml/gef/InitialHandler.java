@@ -1,4 +1,4 @@
-// $Id: InitialHandler.java,v 1.1 2005/04/28 19:37:17 bobtarling Exp $
+// $Id: InitialHandler.java,v 1.2 2005/05/07 07:52:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,26 +33,33 @@ import org.xml.sax.helpers.DefaultHandler;
  * The default intitial content handler used by PGMLStackParser, corresponding
  * to the whole PGML document.
  */
-public class InitialHandler extends DefaultHandler
-{
-    private PGMLStackParser _parser;
+public class InitialHandler extends DefaultHandler {
     /**
-     * @param parser The PGMLStackParser object associated with the diagram
+     * The parser for this handler.
+     */
+    private PGMLStackParser parser;
+
+    /**
+     * @param theParser The PGMLStackParser object associated with the diagram
      * that is to be read.
      */
-    InitialHandler( PGMLStackParser parser)
-    {
-        _parser=parser;
+    InitialHandler(PGMLStackParser theParser) {
+        parser = theParser;
     }
 
     /**
      * Creates a PGMLHandler object to parse a PGML element corresponding
      * to a diagram in a PGML file.
+     *
+     * @see org.xml.sax.ContentHandler#startElement(
+     *         java.lang.String, java.lang.String, java.lang.String,
+     *         org.xml.sax.Attributes)
      */
-    public void startElement( String uri, String localname, String qname,
-        Attributes attributes) throws SAXException
-    {
-        if ( qname.equals( "pgml"))
-            _parser.pushHandlerStack( new PGMLHandler( _parser, attributes));
+    public void startElement(String uri, String localname, String qname,
+        Attributes attributes)
+    	throws SAXException {
+        if (qname.equals("pgml")) {
+            parser.pushHandlerStack(new PGMLHandler(parser, attributes));
+        }
     }
 }

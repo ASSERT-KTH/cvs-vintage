@@ -1,4 +1,4 @@
-// $Id: HandlerStack.java,v 1.1 2005/04/28 19:37:17 bobtarling Exp $
+// $Id: HandlerStack.java,v 1.2 2005/05/07 07:52:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,21 +31,22 @@ import org.xml.sax.helpers.DefaultHandler;
  * the stack of ContentHandler objects in response to {@link #pushHandlerStack}
  * and {@link #popHandlerStack} calls, and for making sure that the SAX parser
  * is always using the ContentHandler object at the top of the stack.
+ *
  * @author Michael MacDonald
  */
-public interface HandlerStack
-{
+public interface HandlerStack {
     /**
      * Pushes a new ContentHandler on the stack and insures that the
      * SAX parser uses that handler for further events.
+     *
      * @param handler ContentHandler to be pushed on the handler stack
      */
-    public void pushHandlerStack( DefaultHandler handler);
+    void pushHandlerStack(DefaultHandler handler);
 
     /**
      * Removes the top handler from the stack and insures that
      * the SAX parser calls the previously underlying, now top ContentHandler
      * object for further events.
      */
-    public void popHandlerStack( );
+    void popHandlerStack();
 }

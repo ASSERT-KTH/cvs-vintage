@@ -1,4 +1,4 @@
-// $Id: Container.java,v 1.1 2005/04/28 19:37:17 bobtarling Exp $
+// $Id: Container.java,v 1.2 2005/05/07 07:52:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,12 @@ import org.xml.sax.SAXException;
  * Implementing this interface allows the handler for an element to accept
  * content from sub-elements that it will contain.
  */
-public interface Container
-{
-    public void addObject( Object toAdd) throws SAXException;
+public interface Container {
+    /**
+     * Add an object to the container.
+     *
+     * @param toAdd The object to add.
+     * @throws SAXException if there was a problem.
+     */
+    void addObject(Object toAdd) throws SAXException;
 }

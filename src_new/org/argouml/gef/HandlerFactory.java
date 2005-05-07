@@ -1,4 +1,4 @@
-// $Id: HandlerFactory.java,v 1.1 2005/04/28 19:37:17 bobtarling Exp $
+// $Id: HandlerFactory.java,v 1.2 2005/05/07 07:52:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,17 +33,25 @@ import org.xml.sax.helpers.DefaultHandler;
  * Classes implementing this interface are able to create and initialize
  * a ContentHandler given the information about a new PGML file element.
  */
-public interface HandlerFactory
-{
+public interface HandlerFactory {
     /**
      * Return a ContentHandler appropriate for the element with the given
      * name and attributes.  If you aren't interested in the content
      * or any sub-elements of the element, return null, and a
      * default handler will be used (which usually mean that the contents
      * and sub-elements are just thrown away).
+     *
+     * @param stack
+     * @param container
+     * @param uri
+     * @param localname
+     * @param qname
+     * @param attributes
+     * @return
+     * @throws SAXException
      */
-	public DefaultHandler getHandler( HandlerStack stack,
-        Object container,
-		String uri, String localname, String qname,
-		Attributes attributes) throws SAXException;
+    DefaultHandler getHandler(HandlerStack stack,
+            Object container,
+            String uri, String localname, String qname,
+            Attributes attributes) throws SAXException;
 }
