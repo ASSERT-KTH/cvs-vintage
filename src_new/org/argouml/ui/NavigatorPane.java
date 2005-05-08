@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.78 2005/01/16 09:16:49 mvw Exp $
+// $Id: NavigatorPane.java,v 1.79 2005/05/08 07:32:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,11 +85,12 @@ public class NavigatorPane
     /**
      * Allow setting of the navigator pane instance.
      * Currently this is only applicable for unit tests that sets it to
-     * <tt>null</tt>.
+     * <tt>null</tt>.<p>
+     * 
+     * TODO: To be deprecated when there is a replacement - this is 
+     * a temporary hack until the model is cleaned up
      *
      * @param pane A new NavigatorPane or <tt>null</tt>.
-     * @deprecated without replacement - this is a temporary hack
-     * until the model is cleaned up
      */
     public static void setInstance(NavigatorPane pane) {
 	theInstance = pane;
