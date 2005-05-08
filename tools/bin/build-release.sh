@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: build-release.sh,v 1.6 2005/05/06 09:51:52 linus Exp $
+# $Id: build-release.sh,v 1.7 2005/05/08 15:31:17 linus Exp $
 
 # The purpose of this shellscript is to make all the release work.
 
@@ -115,13 +115,13 @@ do
 done
 
 echo $BUILD copying to the svn directory
-cp -r $directoryname ../../svn/argouml-downloads/trunk/www
+cp -r $directoryname ../../../svn/argouml-downloads/trunk/www
 
 echo Add and commit the newly created directory
 echo ../svn/argouml-downloads/trunk/www/$directoryname
 
 echo Update the index.html in the argouml-downloads project.
 
-echo Copy the index file to the download directory (argouml/www/download)
+echo "Copy the index file to the download directory (argouml/www/download)"
 echo and add and commit it there. This is not in the tagged version but
 echo in the echo original version.
