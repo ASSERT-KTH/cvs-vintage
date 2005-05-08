@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.36 2005/05/06 16:56:03 linus Exp $ -->
+<!-- $Id: building.xml,v 1.37 2005/05/08 15:44:41 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -1820,6 +1820,26 @@ This is under rework now that the distribution is to be done using
 a svn project.
 </para>
     </note>
+
+    <para>
+The artefacts in play here are
+<filename>argouml/src_new/build.xml</filename>,
+<filename>argouml/tools/bin/build-release.sh</filename>, and
+other <filename>build.xml</filename> files.
+The plan for the future is that the <filename>build.xml</filename>
+files will not contain any rules on how to package things.
+
+That will be taken care of by the
+<filename>build-release.sh</filename> script.
+
+The <filename>build.xml</filename> will have rules that places the
+complete runnable release in
+<filename class="directory">argouml/build</filename>
+and the
+<filename>build-release.sh</filename> script takes it from there.
+</para>
+
+
 
     <para>
 Prerequisites (what you need to be able to do this):
