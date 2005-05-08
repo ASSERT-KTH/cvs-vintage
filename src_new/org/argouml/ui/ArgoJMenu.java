@@ -1,4 +1,4 @@
-// $Id: ArgoJMenu.java,v 1.11 2005/01/09 14:58:12 linus Exp $
+// $Id: ArgoJMenu.java,v 1.12 2005/05/08 06:29:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,10 @@ package org.argouml.ui;
 
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.SwingConstants;
 
 import org.argouml.i18n.Translator;
 
@@ -86,8 +86,8 @@ public class ArgoJMenu extends JMenu {
 				  (selected == null
 				   || selected.booleanValue()));
 	// End of block
-	mi.setHorizontalTextPosition(JButton.RIGHT);
-	mi.setVerticalTextPosition(JButton.CENTER);
+	mi.setHorizontalTextPosition(SwingConstants.RIGHT);
+	mi.setVerticalTextPosition(SwingConstants.CENTER);
 	mi.setEnabled(a.isEnabled());
 	mi.addActionListener(a);
 	add(mi);
