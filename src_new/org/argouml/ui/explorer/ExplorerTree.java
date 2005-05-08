@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.34 2005/05/06 21:14:28 mvw Exp $
+// $Id: ExplorerTree.java,v 1.35 2005/05/08 07:09:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -472,7 +472,9 @@ public class ExplorerTree
                             getPathForRow(j).getLastPathComponent())
                             .getUserObject();
                         if (rowItem == target) {
+                            updatingSelectionViaTreeSelection = true;
                             addSelectionRow(j);
+                            updatingSelectionViaTreeSelection = false;
                         }
                     }
                 }
@@ -505,7 +507,9 @@ public class ExplorerTree
                             getPathForRow(j).getLastPathComponent())
                                 .getUserObject();
                         if (rowItem == target) {
+                            updatingSelectionViaTreeSelection = true;
                             removeSelectionRow(j);
+                            updatingSelectionViaTreeSelection = false;
                         }
                     }
                 }

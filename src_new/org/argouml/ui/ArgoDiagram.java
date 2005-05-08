@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.36 2005/01/30 20:47:47 linus Exp $
+// $Id: ArgoDiagram.java,v 1.37 2005/05/08 07:09:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,15 +136,7 @@ public class ArgoDiagram extends Diagram {
 		|| Model.getFacade().isAAttribute(obj)) {
 
                 // get all the classes from the diagram
-                Iterator it = getNodes(null).iterator();
-                while (it.hasNext()) {
-                    Object o = it.next();
-                    if (Model.getFacade().isAClassifier(o)) {
-                        if (Model.getFacade().getFeatures(o).contains(obj)) {
-                            return presentationFor(o);
-                        }
-                    }
-                }
+                return presentationFor(Model.getFacade().getOwner(obj));
             }
         }
         return fig;

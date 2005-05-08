@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.59 2005/01/30 20:48:35 linus Exp $
+// $Id: FigUseCase.java,v 1.60 2005/05/08 07:09:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -911,7 +911,6 @@ public class FigUseCase extends FigNodeModelElement {
         Rectangle r = new Rectangle(me.getX() - 1, me.getY() - 1, 2, 2);
         Fig f = hitFig(r);
 
-        boolean targetIsSet = false;
 
         if (f == epVec) {
 
@@ -931,18 +930,11 @@ public class FigUseCase extends FigNodeModelElement {
             // bigPort itself.
 
             if ((i >= 0) && (i < (v.size() - 1))) {
-                targetIsSet = true;
                 f = (Fig) v.elementAt(i + 1);
 
                 highlightedFigText = (CompartmentFigText) f;
                 highlightedFigText.setHighlighted(true);
             }
-        }
-
-        // If we didn't get the EP compartment, we just select ourself.
-
-        if (!targetIsSet) {
-            TargetManager.getInstance().setTarget(getOwner());
         }
     }
 

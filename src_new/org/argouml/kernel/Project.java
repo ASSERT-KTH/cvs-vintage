@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.159 2005/05/07 06:14:47 linus Exp $
+// $Id: Project.java,v 1.160 2005/05/08 07:09:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -957,6 +957,8 @@ public class Project implements java.io.Serializable, TargetListener {
      * @param obj the object to be thrown away
      */
     protected void trashInternal(Object obj) {
+        if (Model.getFacade().isAModel(obj)) return; //Can not delete the model
+        
         boolean needSave = false;
         if (obj != null) {
             TargetManager.getInstance().removeTarget(obj);
