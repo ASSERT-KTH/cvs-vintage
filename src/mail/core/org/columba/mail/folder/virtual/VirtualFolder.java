@@ -27,6 +27,8 @@ import javax.swing.JDialog;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
@@ -179,9 +181,53 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	public IHeaderList getHeaderList() throws Exception {
 		if( !active ) {
 			activate();
+		} else {
+			revalidateSearch();
 		}
 		
 		return headerList;
+	}
+
+	/**
+	 * 
+	 */
+	private void revalidateSearch() {
+		VirtualHeader h;
+		
+		// Analyze the Filter
+		Filter filter = (Filter) getFilter().clone();
+		FilterRule rule = filter.getFilterRule();
+		for( int i=0;i <rule.count(); i++) {
+			FilterCriteria c = rule.get(i);
+			if( ! c.getTypeString().equalsIgnoreCase("flags")) {
+				rule.remove(i);
+				i--;
+			}
+		}
+		
+		
+		// If no flags filter the seach is still valid
+		if( rule.count() == 0) {
+			return;
+		}
+		
+		// redo the seach for the flags criteria		
+		Enumeration uids = headerList.keys();
+		while( uids.hasMoreElements()) {
+			h = (VirtualHeader) headerList.get(uids.nextElement());
+			
+			try {
+				if( h.getSrcFolder().searchMessages(filter, new Object[] {h.getSrcUid()}).length == 0) {
+					headerList.remove(h.getVirtualUid());
+
+					// notify listeners
+					fireMessageRemoved(h.getVirtualUid(), null);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void addSearchToHistory() throws Exception {
@@ -331,7 +377,6 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		Object[] resultUids = folder.searchMessages(filter);
 		String[] headerfields = CachedHeaderfields.getDefaultHeaderfields();
 
-		getMessageFolderInfo().reset();
 		
 		if (resultUids != null) {
 			for (int i = 0; i < resultUids.length; i++) {
@@ -350,36 +395,15 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 					header = new ColumbaHeader(h);
 					header.setAttributes(sourceFolder.getAttributes(sourceUid));
 					header.setFlags(sourceFolder.getFlags(sourceUid));
-					add((ColumbaHeader) header, sourceFolder, sourceUid);
-
-					if (!header.getFlags().getSeen()) {
-						getMessageFolderInfo().incUnseen();
-					}
-
-					if (header.getFlags().getRecent()) {
-						getMessageFolderInfo().incRecent();
-					}
-
-					getMessageFolderInfo().incExists();
-
-
+					fireMessageAdded(add((ColumbaHeader) header, sourceFolder, sourceUid));
 				} else {
 					Header h = folder.getHeaderFields(resultUids[i],
 							headerfields);
 					header = new ColumbaHeader(h);
 					header.setAttributes(folder.getAttributes(resultUids[i]));
 					header.setFlags(folder.getFlags(resultUids[i]));
-					add(header, folder, resultUids[i]);
+					fireMessageAdded(add(header, folder, resultUids[i]));
 
-					if (!header.getFlags().getSeen()) {
-						getMessageFolderInfo().incUnseen();
-					}
-
-					if (header.getFlags().getRecent()) {
-						getMessageFolderInfo().incRecent();
-					}
-
-					getMessageFolderInfo().incExists();				
 				}
 
 			}
@@ -396,8 +420,6 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 				applySearch(folder, filter);
 			}
 		}
-		
-		fireFolderPropertyChanged();
 	}
 	
 	private boolean isRecursive() {
@@ -957,7 +979,6 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			// notify listeners
 			fireMessageRemoved(vUid, null);
 		}
-		
 	}
 
 	/* (non-Javadoc)
@@ -1027,6 +1048,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * 
 	 */
 	public void activate() throws Exception {		
+		getMessageFolderInfo().reset();
 		applySearch();
 		registerWithSource();		
 		active = true;
