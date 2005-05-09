@@ -120,6 +120,6 @@ public class CheckForNewMessagesCommand extends Command {
 	 */
 	public void updateGUI() throws Exception {
 		// Reenable the action
-		action.setEnabled(true);
+		if( action != null) action.setEnabled(true);
 	}
 }
