@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.11 2005/05/07 06:14:47 linus Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.12 2005/05/09 21:21:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
             // in PGML.
             // PGMLStackParser parser =
             //     new PGMLStackParser(project.getUUIDRefs());
-            PGMLParser parser = new PGMLParser(project.getUUIDRefs());
+            PGMLStackParser parser = new PGMLStackParser(project.getUUIDRefs());
             Diagram d = parser.readDiagram(inputStream, false);
             inputStream.close();
             project.addMember(d);
