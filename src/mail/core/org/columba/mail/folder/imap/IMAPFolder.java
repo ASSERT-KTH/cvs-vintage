@@ -284,13 +284,32 @@ public class IMAPFolder extends AbstractRemoteFolder {
 						.get(localUids.size() - 1)).intValue();
 
 				// Find the index of the largest local Uid
-				// TODO: search in packs instead of single queries
 				int position = localUids.size() - 1;
-				while (largestLocalUidIndex == -1 && position >= 0) {
+				while (largestLocalUidIndex == -1 && position >= localUids.size() - 10) {
 					largestLocalUidIndex = getServer().getIndex(
 							(Integer) localUids.get(position--), this);
 				}
 
+				//Still not found -> do a binary search
+				if (largestLocalUidIndex == -1) {
+					int a, b, c;
+					int index;
+					a = 0;
+					b = position;
+					while (b - a > 1) {
+						c = (b - a) >> 1 + a;
+
+						index = getServer().getIndex(
+								(Integer) localUids.get(c), this);
+						if (index == -1) {
+							b = c;
+						} else {
+							a = c;
+							largestLocalUidIndex = index;
+						}
+					}
+				}
+				
 				// Check if all local uids have been deleted
 				if (largestLocalUidIndex == -1) {
 					newMessages = status.getMessages();
