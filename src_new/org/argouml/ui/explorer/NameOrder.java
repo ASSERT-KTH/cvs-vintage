@@ -1,4 +1,4 @@
-// $Id: NameOrder.java,v 1.10 2005/01/30 20:48:15 linus Exp $
+// $Id: NameOrder.java,v 1.11 2005/05/10 20:19:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Comparator;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.argouml.model.Model;
+import org.argouml.i18n.Translator;
 import org.tigris.gef.base.Diagram;
 
 /**
@@ -108,7 +109,6 @@ public class NameOrder
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "Order By Name";
-        // TODO: i18n
+        return Translator.localize("combobox.order-by-name");
     }
 }

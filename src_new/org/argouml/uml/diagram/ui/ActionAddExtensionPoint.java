@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.12 2005/04/14 18:29:43 mvw Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.13 2005/05/10 20:19:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,7 @@ public final class ActionAddExtensionPoint extends UMLAction {
      * singleton. Make use of the access funtion.<p>
      */
     public ActionAddExtensionPoint() {
-        super("New Extension Point", true, HAS_ICON);
+        super("button.new-extension-point", true, HAS_ICON);
     }
 
 
