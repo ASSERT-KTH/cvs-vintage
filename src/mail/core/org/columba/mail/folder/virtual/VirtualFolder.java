@@ -459,6 +459,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		for (int i = 0; i < uids.length; i++) {
 			// get source folder reference
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
+			if( h == null ) continue;
+			
 			AbstractMessageFolder sourceFolder = h.getSrcFolder();
 			Object sourceUid = h.getSrcUid();
 
