@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: build.xml,v 1.24 2005/03/30 04:50:30 linus Exp $ -->
+<!-- $Id: build.xml,v 1.25 2005/05/10 13:14:00 bobtarling Exp $ -->
 <!-- ===========================================================================
 
 !!!!!!!!!!!!!!!!  Now requires ANT 1.2   !!!!!!!!!!!!!!!!!!!!!
@@ -262,7 +262,7 @@ doesn't find it's own XML-libs. You need to set ANT_HOME in your shell.
                 <include name="nsuml-0.4.20_modified.jar" />
                 <include name="antlrall-2.7.2.jar" />
                 <include name="log4j-1.2.6.jar" />
-                <include name="gef-0.10.14.jar" />
+                <include name="gef-0.11.jar" />
             </fileset>
         </classpath>
      </javac>
