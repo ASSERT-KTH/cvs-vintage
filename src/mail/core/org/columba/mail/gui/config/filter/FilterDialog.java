@@ -179,7 +179,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 	}
 
 	private void initComponents() {
-		setLayout(new BorderLayout());
+		getContentPane().setLayout(new BorderLayout());
 
 		nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
 				"dialog", "filter", "filter_description"));
@@ -217,7 +217,7 @@ public class FilterDialog extends JDialog implements ActionListener {
 
 		actionList = new ActionList(mediator, filter, frame);
 
-		add(createPanel(), BorderLayout.CENTER);
+		getContentPane().add(createPanel(), BorderLayout.CENTER);
 
 		createBottomPanel();
 	}
