@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.29 2005/05/03 20:23:42 mvw Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.30 2005/05/11 18:28:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -465,6 +465,9 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             } catch (UmlException ex) {
                 // fail silently as we expect users to accidentally drop
                 // on to wrong component
+            } catch (IllegalArgumentException iae) {
+                // idem, e.g. for a generalization with leaf/root object
+                // TODO: but showing the message in the statusbar would help
             }
         }
         return connection;
