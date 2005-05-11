@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.18 2005/01/31 21:03:00 mvw Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.19 2005/05/11 14:35:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,7 +132,6 @@ public class ActionDeleteFromDiagram extends UMLAction {
                     } else {
                         graph.removeFig(f);
                     }
-                    TargetManager.getInstance().removeHistoryElement(f);
                 }
             }
         } catch (Exception ex) {
