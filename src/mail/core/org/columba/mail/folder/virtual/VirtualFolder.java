@@ -500,7 +500,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 *      IMAPFolder)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
-
+		if( !exists(uid)) return null;
+		
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
 		AbstractMessageFolder sourceFolder = h.getSrcFolder();
 		Object sourceUid = h.getSrcUid();
