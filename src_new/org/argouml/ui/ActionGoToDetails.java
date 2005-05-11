@@ -1,4 +1,4 @@
-// $Id: ActionGoToDetails.java,v 1.14 2005/01/09 14:58:11 linus Exp $
+// $Id: ActionGoToDetails.java,v 1.15 2005/05/11 18:35:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,9 @@ import org.argouml.uml.ui.TabModelTarget;
 import org.argouml.uml.ui.UMLAction;
 
 /**
- * Action to display a tab in the DetailsPane by name, eg "Properties".
+ * Action to display a tab in the DetailsPane by name, eg "Properties".<p>
+ * 
+ * TODO: This class is never used. Do we have an application for it?
  */
 public class ActionGoToDetails extends UMLAction {
 
