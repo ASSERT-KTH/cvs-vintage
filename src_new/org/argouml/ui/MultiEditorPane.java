@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.48 2005/04/24 20:06:35 mvw Exp $
+// $Id: MultiEditorPane.java,v 1.49 2005/05/11 15:59:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -44,7 +45,6 @@ import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.TabModelTarget;
 import org.argouml.util.ConfigLoader;
-import org.tigris.gef.base.Editor;
 import org.tigris.swidgets.Horizontal;
 
 /**
@@ -63,9 +63,7 @@ public class MultiEditorPane
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private Object target;
-    private JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
-    private Editor ed;
+    private JTabbedPane tabs = new JTabbedPane(SwingConstants.BOTTOM);
 
     private Vector tabPanels = new Vector();
     private Component lastTab;
