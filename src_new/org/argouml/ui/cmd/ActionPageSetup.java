@@ -1,4 +1,4 @@
-// $Id: ActionPageSetup.java,v 1.5 2005/04/14 18:29:46 mvw Exp $
+// $Id: ActionPageSetup.java,v 1.6 2005/05/11 18:55:55 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,17 @@ import javax.swing.AbstractAction;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 
-/** Page setup for printing.
+/**
+ * Page setup for printing.
  */
 class ActionPageSetup extends AbstractAction {
 
+    /**
+     * Constructor.
+     */
     public ActionPageSetup() {
-        super(Translator.localize("action.page-setup"), ResourceLoaderWrapper
-                .lookupIconResource(Translator.getImageBinding("PageSetup"),
-                        Translator.localize("action.page-setup")));
+        super(Translator.localize("action.page-setup"),
+                ResourceLoaderWrapper.lookupIcon("action.page-setup"));
     }
 
     /**

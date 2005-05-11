@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.48 2005/02/24 17:58:02 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.49 2005/05/11 18:55:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,10 +38,11 @@ import org.argouml.kernel.ProjectManager;
  * Action that saves the project.
  *
  * @see ActionOpenProject
- * @stereotype singleton
  */
 public class ActionSaveProject extends AbstractActionSaveProject {
-    /** logger */
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(ActionSaveProject.class);
 
     ////////////////////////////////////////////////////////////////
@@ -66,9 +67,8 @@ public class ActionSaveProject extends AbstractActionSaveProject {
      * The constructor.
      */
     protected ActionSaveProject() {
-        super(Translator.localize("action.save-project"), ResourceLoaderWrapper
-                .lookupIconResource(Translator.getImageBinding("SaveProject"),
-                        Translator.localize("SaveProject")));
+        super(Translator.localize("action.save-project"),
+                ResourceLoaderWrapper.lookupIcon("action.save-project"));
     }
 
     /**
@@ -79,7 +79,7 @@ public class ActionSaveProject extends AbstractActionSaveProject {
     protected ActionSaveProject(String name, Icon icon) {
         super(name, icon);
     }
-    
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */

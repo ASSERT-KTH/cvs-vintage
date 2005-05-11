@@ -1,4 +1,4 @@
-// $Id: ActionPrint.java,v 1.5 2005/03/18 13:31:20 mkl Exp $
+// $Id: ActionPrint.java,v 1.6 2005/05/11 18:55:55 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,8 @@ import org.argouml.i18n.Translator;
 
 ////////////////////////////////////////////////////////////////
 // file menu actions
-/** print the current active diagram.
+/**
+ * Print the current active diagram.
  */
 public class ActionPrint extends AbstractAction {
 
@@ -42,9 +43,8 @@ public class ActionPrint extends AbstractAction {
      * The constructor.
      */
     public ActionPrint() {
-        super(Translator.localize("action.print"), ResourceLoaderWrapper
-                .lookupIconResource(Translator.getImageBinding("Print"),
-                        Translator.localize("action.print")));
+        super(Translator.localize("action.print"),
+                ResourceLoaderWrapper.lookupIcon("action.print"));
     }
 
     /**

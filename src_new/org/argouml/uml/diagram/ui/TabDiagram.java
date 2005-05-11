@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.55 2005/05/08 07:09:03 mvw Exp $
+// $Id: TabDiagram.java,v 1.56 2005/05/11 18:55:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,6 +259,9 @@ public class TabDiagram
             updatingSelection = true;
             Vector sels = gse.getSelections(); // the new selection
             ActionCut.getInstance().setEnabled(sels != null && !sels.isEmpty());
+
+            // TODO: If ActionCopy is no longer a singleton, how shall 
+            //       this work? 
             ActionCopy.getInstance()
                     .setEnabled(sels != null && !sels.isEmpty());
             /*

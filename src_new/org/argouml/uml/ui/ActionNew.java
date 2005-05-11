@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.30 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionNew.java,v 1.31 2005/05/11 18:55:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,9 +58,8 @@ public class ActionNew extends ActionFileOperations {
      * The constructor.
      */
     protected ActionNew() {
-        super(Translator.localize("action.new"), ResourceLoaderWrapper
-                .lookupIconResource(Translator.getImageBinding("New"),
-                        Translator.localize("New")));
+        super(Translator.localize("action.new"),
+                ResourceLoaderWrapper.lookupIcon("action.new"));
     }
 
     ////////////////////////////////////////////////////////////////
@@ -72,7 +71,9 @@ public class ActionNew extends ActionFileOperations {
     public void actionPerformed(ActionEvent e) {
         Project p = ProjectManager.getManager().getCurrentProject();
 
-        if (!askConfirmationAndSave()) return;
+        if (!askConfirmationAndSave()) {
+            return;
+        }
 
         // TODO: yuk! Why is this needed? In fact how can anyone select
         // the new action if there is a dialog?

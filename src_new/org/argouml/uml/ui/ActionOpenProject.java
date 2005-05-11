@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.59 2005/02/23 00:06:25 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.60 2005/05/11 18:55:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,9 @@ import org.tigris.gef.base.Globals;
  */
 public class ActionOpenProject extends ActionFileOperations
     implements CommandLineInterface {
-
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(ActionOpenProject.class);
 
@@ -62,9 +64,8 @@ public class ActionOpenProject extends ActionFileOperations
      * Constructor for this action.
      */
     public ActionOpenProject() {
-        super(Translator.localize("action.open-project"), ResourceLoaderWrapper
-                .lookupIconResource(Translator.getImageBinding("OpenProject"),
-                        Translator.localize("OpenProject")));
+        super(Translator.localize("action.open-project"),
+                ResourceLoaderWrapper.lookupIcon("action.open-project"));
     }
 
     ////////////////////////////////////////////////////////////////
@@ -81,7 +82,9 @@ public class ActionOpenProject extends ActionFileOperations
         Project p = ProjectManager.getManager().getCurrentProject();
         PersistenceManager pm = PersistenceManager.getInstance();
 
-        if (!askConfirmationAndSave()) return;
+        if (!askConfirmationAndSave()) {
+            return;
+        }
 
         try {
             // next line does give user.home back but this is not
@@ -116,12 +119,16 @@ public class ActionOpenProject extends ActionFileOperations
                 File theFile = chooser.getSelectedFile();
                 if (!theFile.canRead()) {
                     /* Try adding the default extension. */
-                    File n = new File(theFile.getPath() + "."
-                            + pm.getDefaultExtension());
+                    File n =
+                        new File(theFile.getPath() + "."
+                                + pm.getDefaultExtension());
                     /* The above could have been the selected extension
                      * in the chooser, but I have no direct means
-                     * of getting the extension of a FileFilter... */
-                    if (n.canRead()) theFile = n;
+                     * of getting the extension of a FileFilter...
+                     */
+                    if (n.canRead()) {
+                        theFile = n;
+                    }
                 }
                 if (theFile != null) {
                     String path = theFile.getParent();
