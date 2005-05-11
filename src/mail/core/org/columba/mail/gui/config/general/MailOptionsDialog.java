@@ -119,12 +119,15 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			boolean enable = optionsItem.getBooleanWithDefault(
 					OptionsItem.MARKASREAD, OptionsItem.ENABLED_BOOL, true);
 
+			markCheckBox.setSelected(enable);
 			markSpinner.setValue(new Integer(delay));
 
 			boolean enableSmilies = optionsItem.getBooleanWithDefault(
 					OptionsItem.MESSAGEVIEWER_SMILIES,
 					OptionsItem.ENABLED_BOOL, true);
 
+			enableSmiliesCheckBox.setSelected(enableSmilies);
+			
 			boolean preferHtml = optionsItem.getBooleanWithDefault(
 					OptionsItem.HTML, OptionsItem.PREFER_BOOL, true);
 
@@ -133,6 +136,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			boolean disablehtml = optionsItem.getBooleanWithDefault(
 					OptionsItem.HTML, OptionsItem.DISABLE_BOOL, true);
 
+			disableHtmlCheckBox.setSelected(disablehtml);
+			
 			boolean askSubject = composerItem.getBooleanWithDefault(
 					ComposerItem.SUBJECT, ComposerItem.ASK_IF_EMPTY_BOOL, true);
 
