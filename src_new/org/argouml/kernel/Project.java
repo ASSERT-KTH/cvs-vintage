@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.161 2005/05/09 18:57:41 mvw Exp $
+// $Id: Project.java,v 1.162 2005/05/11 14:45:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -948,6 +948,7 @@ public class Project implements java.io.Serializable, TargetListener {
      * - Move to trash for enclosed objects, i.e. graphically drawn on top of
      * - Move to trash subdiagrams for the object
      * - Saveguard that there is always at least 1 diagram left
+     * - If the current diagram has been deleted, select a new one to show
      * - Trigger the explorer when a diagram is deleted
      * - Set the needsSave (dirty) flag of the projectmanager
      * </pre>
