@@ -1,4 +1,4 @@
-// $Id: FigTextGroup.java,v 1.13 2005/01/10 16:24:18 mvw Exp $
+// $Id: FigTextGroup.java,v 1.14 2005/05/12 21:12:13 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,13 +66,13 @@ public class FigTextGroup extends FigGroup implements MouseListener {
         int height = 0;
         while (it.hasNext()) {
             FigText fig = (FigText) it.next();
+            int figHeight;
             if (fig.getText().equals("")) {
-                fig.setHeight(0);
+                figHeight = 0;
             } else {
-                fig.setHeight(ROWHEIGHT);
+                figHeight = ROWHEIGHT;
             }
-            fig.setX(getX());
-            fig.setY(getY() + height);
+            fig.setBounds(getX(), getY() + height, fig.getWidth(), figHeight);
             fig.endTrans();
             height += fig.getHeight();
         }

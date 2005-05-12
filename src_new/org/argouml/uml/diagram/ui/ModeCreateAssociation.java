@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.11 2005/04/14 18:29:43 mvw Exp $
+// $Id: ModeCreateAssociation.java,v 1.12 2005/05/12 21:12:13 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,8 +168,9 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                     f.removeFromDiagram();
                     mutableGraphModel.addNode(assoc);
                     FigNode figNode = (FigNode) lay.presentationFor(assoc);
-                    figNode.setX(x - figNode.getWidth() / 2);
-                    figNode.setY(y - figNode.getHeight() / 2);
+                    figNode.setLocation(
+                            x - figNode.getWidth() / 2,
+                            y - figNode.getHeight() / 2);
                     editor.add(figNode);
                     associationEnds = Model.getFacade().getConnections(assoc);
                     Iterator it = associationEnds.iterator();
@@ -316,8 +317,9 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
         GraphNodeRenderer renderer = editor.getGraphNodeRenderer();
         Layer lay = editor.getLayerManager().getActiveLayer();
         figNode = renderer.getFigNodeFor(gm, lay, association, null);
-        figNode.setX(me.getX() - figNode.getWidth() / 2);
-        figNode.setY(me.getY() - figNode.getHeight() / 2);
+        figNode.setLocation(
+                me.getX() - figNode.getWidth() / 2,
+                me.getY() - figNode.getHeight() / 2);
         figNode.setVisible(false);
         editor.add(figNode);
         editor.getSelectionManager().deselectAll();
