@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.17 2005/05/08 07:09:03 mvw Exp $
+// $Id: TestTargetManager.java,v 1.18 2005/05/12 22:53:36 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigRect;
 
 /**
  * @author gebruiker
@@ -443,7 +444,7 @@ public class TestTargetManager extends TestCase {
      */
     public void testGetFigTarget() {
 	final Object owner = new Object();
-	final Fig fig = new Fig(); fig.setOwner(owner);
+	final Fig fig = new FigRect(0, 0, 12, 12); fig.setOwner(owner);
 	Object test = new Object();
 	ArgoDiagram diag = new ArgoDiagram() {
 	    public Fig getContainingFig(Object obj) {
@@ -542,7 +543,7 @@ public class TestTargetManager extends TestCase {
      */
     public void testGetModelTarget() {
 	Object owner = Model.getCoreFactory().buildClass();
-	Fig fig = new Fig(); fig.setOwner(owner);
+	Fig fig = new FigRect(0, 0, 12, 12); fig.setOwner(owner);
 	Object test = new Object();
 
 	List list1 = new ArrayList();
