@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.5 2005/05/12 21:12:13 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.6 2005/05/12 23:24:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -646,7 +646,7 @@ public class PGMLStackParser implements HandlerStack, HandlerFactory {
         String visState = attrList.getValue("shown");
         if (visState != null && !visState.equals("")) {
             int visStateInt = Integer.parseInt(visState);
-            f.setVisState(visStateInt);
+            f.setVisible(visStateInt != 0);
         }
 
         String single = attrList.getValue("single");
