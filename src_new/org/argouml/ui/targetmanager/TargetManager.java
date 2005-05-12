@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.44 2005/05/08 07:09:04 mvw Exp $
+// $Id: TargetManager.java,v 1.45 2005/05/12 18:41:54 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -307,6 +307,25 @@ public final class TargetManager {
             if (oldCurrentTarget != currentTarget) {
                 Actions.updateAllEnabled(); /*TODO: (MVW) Why? Actions is
                 * listening to target changes already... */
+            }
+        }
+
+        private void checkForRemovedModelElements() {
+            Collection toBeRemoved = new ArrayList();
+            Iterator i = history.iterator();
+            while (i.hasNext()) {
+                WeakReference ref = (WeakReference) i.next();
+                Object historyObject = ref.get();
+                if (Model.getFacade().isABase(historyObject)) {
+                    if (Model.getUmlFactory().isRemoved(historyObject)) {
+                        toBeRemoved.add(historyObject);
+                    }
+                }
+            }
+            i = toBeRemoved.iterator();
+            while (i.hasNext()) {
+                Object o = i.next();
+                removeHistoryTarget(o);
             }
         }
 
@@ -853,6 +872,14 @@ public final class TargetManager {
      */
     public void removeHistoryElement(Object o) {
         historyManager.removeHistoryTarget(o);
+    }
+    
+    /**
+     * This routine checks the list of history items for 
+     * UML modelelements that were removed.
+     */
+    public void checkForRemovedModelElements() {
+         historyManager.checkForRemovedModelElements();
     }
 
 }

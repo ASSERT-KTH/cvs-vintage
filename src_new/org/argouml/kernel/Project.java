@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.162 2005/05/11 14:45:34 mvw Exp $
+// $Id: Project.java,v 1.163 2005/05/12 18:41:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -983,7 +983,13 @@ public class Project implements java.io.Serializable, TargetListener {
             removeFigs(allFigs);
 
             Model.getUmlFactory().delete(obj);
-
+            
+            /* Since the above step also removes 
+             * some other dependent modelelements,
+             * we have to make sure that they are removed 
+             * from the target history list, too.*/
+            TargetManager.getInstance().checkForRemovedModelElements();
+            
             if (obj instanceof ProjectMember
                     && members.contains(obj)) {
                 members.remove(obj);
