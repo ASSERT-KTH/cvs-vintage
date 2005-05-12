@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.159 2005/05/02 14:51:53 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.160 2005/05/12 23:12:17 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -304,17 +304,6 @@ public abstract class FigNodeModelElement
      */
     public void finalize() {
         ArgoEventPump.removeListener(ArgoEvent.ANY_NOTATION_EVENT, this);
-    }
-
-    /**
-     * USED BY PGML.tee.
-     * @see org.tigris.gef.presentation.Fig#classNameAndBounds()
-     */
-    public String classNameAndBounds() {
-        if (isVisible()) {
-            return super.classNameAndBounds();
-        }
-        return getClass().getName() + "[]";
     }
 
     /**
