@@ -1,4 +1,4 @@
-// $Id: StylePanelFigMessage.java,v 1.13 2005/01/09 14:58:57 linus Exp $
+// $Id: StylePanelFigMessage.java,v 1.14 2005/05/13 19:43:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,6 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 
 import javax.swing.JComboBox;
@@ -55,19 +53,13 @@ public class StylePanelFigMessage extends StylePanelFigNodeModelElement {
      */
     public StylePanelFigMessage() {
         super();
-        GridBagLayout gb = (GridBagLayout) getLayout();
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.ipadx = 0;
-        c.ipady = 0;
 
         arrowField.addItemListener(this);
-        c.gridy = 4;
-        gb.setConstraints(arrowLabel, c);
-        add(arrowLabel);
 
-        gb.setConstraints(arrowField, c);
+        arrowLabel.setLabelFor(arrowField);
+        add(arrowLabel);
         add(arrowField);
+
         arrowField.setSelectedIndex(0);
 
         remove(getFillField());

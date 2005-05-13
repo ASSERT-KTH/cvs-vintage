@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.23 2005/04/24 20:06:35 mvw Exp $
+// $Id: StylePanel.java,v 1.24 2005/05/13 19:43:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,6 @@
 
 package org.argouml.ui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -43,6 +41,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
+import org.tigris.swidgets.LabelledLayout;
 
 /**
  * The Presentation panel - formerly called style panel.
@@ -62,16 +61,16 @@ public class StylePanel extends AbstractArgoJPanel implements TabFigTarget,
      */
     public StylePanel(String title) {
 	super(title);
-	GridBagLayout gb = new GridBagLayout();
-	setLayout(gb);
-	GridBagConstraints c = new GridBagConstraints();
-	c.fill = GridBagConstraints.BOTH;
-	c.weightx = 0.0;
-	c.weighty = 0.0;
-	c.ipadx = 3;
-	c.ipady = 3;
+        setLayout(new LabelledLayout());
     }
 
+    /**
+     * Add a seperator.
+     */
+    protected final void addSeperator() {
+        add(LabelledLayout.getSeperator());
+    }
+    
     /**
      * This method must be overriden by implementors if they don't want to
      * refresh the whole stylepanel every time a property change events is

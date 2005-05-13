@@ -1,4 +1,4 @@
-// $Id: StylePanelFigRRect.java,v 1.9 2005/01/09 14:58:13 linus Exp $
+// $Id: StylePanelFigRRect.java,v 1.10 2005/05/13 19:43:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,9 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.ui;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -54,25 +51,12 @@ public class StylePanelFigRRect extends StylePanelFig {
      */
     public StylePanelFigRRect() {
         super();
-        GridBagLayout gb = (GridBagLayout) getLayout();
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.ipadx = 0;
-        c.ipady = 0;
 
         Document roundingDoc = roundingField.getDocument();
         roundingDoc.addDocumentListener(this);
 
-        c.weightx = 0.0;
-        c.gridx = 3;
-        c.gridy = 1;
-        gb.setConstraints(roundingLabel, c);
+        roundingLabel.setLabelFor(roundingField);
         add(roundingLabel);
-
-        c.weightx = 1.0;
-        c.gridx = 4;
-        c.gridy = 1;
-        gb.setConstraints(roundingField, c);
         add(roundingField);
     }
 
