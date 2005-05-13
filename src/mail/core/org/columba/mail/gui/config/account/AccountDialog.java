@@ -138,7 +138,9 @@ public class AccountDialog extends JDialog implements ActionListener {
         tp.add(MailResourceLoader.getString("dialog", "account", "security"),
                 securityPanel);
 
-        tp.add("Spam Filter", spamPanel);
+        // @author: fdietz
+        // disable spam panel
+        //tp.add("Spam Filter", spamPanel);
 
         //$NON-NLS-1$
         mainPanel.add(tp, BorderLayout.CENTER);
