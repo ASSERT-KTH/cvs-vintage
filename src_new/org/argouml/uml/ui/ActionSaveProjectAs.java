@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.42 2005/05/11 18:55:55 linus Exp $
+// $Id: ActionSaveProjectAs.java,v 1.43 2005/05/13 14:44:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,8 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         if (f == null) {
             return false;
         }
-        boolean success = trySave(overwrite, f);
+        
+        boolean success = ProjectBrowser.getInstance().trySave(overwrite, f);
         if (success) {
             ProjectBrowser.getInstance().setTitle(
                 ProjectManager.getManager().getCurrentProject().getName());

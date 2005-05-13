@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.14 2005/01/16 22:18:45 mvw Exp $
+// $Id: ActionRevertToSaved.java,v 1.15 2005/05/13 14:44:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.text.MessageFormat;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.argouml.i18n.Translator;
@@ -40,7 +41,7 @@ import org.argouml.ui.ProjectBrowser;
  *
  * @see ActionOpenProject
  */
-public class ActionRevertToSaved extends ActionFileOperations {
+public class ActionRevertToSaved extends AbstractAction {
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -85,7 +86,7 @@ public class ActionRevertToSaved extends ActionFileOperations {
                   JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
-            loadProject(new File(p.getURL().getFile()), true);
+            ProjectBrowser.getInstance().loadProject(new File(p.getURL().getFile()), true);
         }
     }
 }

@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.21 2005/02/24 17:58:03 bobtarling Exp $
+// $Id: ActionExportXMI.java,v 1.22 2005/05/13 14:44:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileFilter;
@@ -35,14 +36,13 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.log4j.Logger;
 import org.argouml.application.api.PluggableMenu;
 import org.argouml.i18n.Translator;
-import org.argouml.uml.ui.AbstractActionSaveProject;
 
 /**
  * Exports the xmi of a project to a file choosen by the user.
  * @author jaap.branderhorst@xs4all.nl
  * Jun 7, 2003
  */
-public final class ActionExportXMI extends AbstractActionSaveProject
+public final class ActionExportXMI extends AbstractAction
         implements PluggableMenu {
 
     /** logger */
@@ -205,7 +205,7 @@ public final class ActionExportXMI extends AbstractActionSaveProject
                     file = new File(file.getParent(), name + ".xmi");
                 }
             }
-            super.trySave(false, file);
+            ProjectBrowser.getInstance().trySave(false, file);
         }
     }
 }

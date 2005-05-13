@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.31 2005/05/11 18:55:55 linus Exp $
+// $Id: ActionNew.java,v 1.32 2005/05/13 14:44:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.uml.ui;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
@@ -41,7 +43,7 @@ import org.argouml.ui.targetmanager.TargetManager;
  *
  * @stereotype singleton
  */
-public class ActionNew extends ActionFileOperations {
+public class ActionNew extends AbstractAction {
 
     ////////////////////////////////////////////////////////////////
     // static variables
@@ -71,7 +73,7 @@ public class ActionNew extends ActionFileOperations {
     public void actionPerformed(ActionEvent e) {
         Project p = ProjectManager.getManager().getCurrentProject();
 
-        if (!askConfirmationAndSave()) {
+        if (!ProjectBrowser.getInstance().askConfirmationAndSave()) {
             return;
         }
 

@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.25 2005/05/05 07:36:54 linus Exp $
+// $Id: ActionExit.java,v 1.26 2005/05/13 14:44:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,7 @@ public class ActionExit extends UMLAction
 		boolean safe = false;
 
 		if (ActionSaveProject.getInstance().isEnabled()) {
-		    safe = ActionSaveProject.getInstance().trySave (true);
+		    safe = ProjectBrowser.getInstance().trySave (true);
 		}
 		if (!safe) {
 		    safe = ActionSaveProjectAs.SINGLETON.trySave (false);

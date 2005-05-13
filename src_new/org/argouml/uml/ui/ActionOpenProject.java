@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.60 2005/05/11 18:55:55 linus Exp $
+// $Id: ActionOpenProject.java,v 1.61 2005/05/13 14:44:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
@@ -49,7 +50,7 @@ import org.tigris.gef.base.Globals;
  *
  * @see ActionSaveProject
  */
-public class ActionOpenProject extends ActionFileOperations
+public class ActionOpenProject extends AbstractAction
     implements CommandLineInterface {
     /**
      * Logger.
@@ -82,7 +83,7 @@ public class ActionOpenProject extends ActionFileOperations
         Project p = ProjectManager.getManager().getCurrentProject();
         PersistenceManager pm = PersistenceManager.getInstance();
 
-        if (!askConfirmationAndSave()) {
+        if (!ProjectBrowser.getInstance().askConfirmationAndSave()) {
             return;
         }
 
@@ -137,7 +138,7 @@ public class ActionOpenProject extends ActionFileOperations
                     // only for Diagrams. Bob Tarling 15 Jan 2004.
                     Globals.setLastDirectory(path);
 
-                    if (loadProject(theFile, true)) {
+                    if (ProjectBrowser.getInstance().loadProject(theFile, true)) {
                         // notification of menu bar
                         GenericArgoMenuBar menuBar =
                             (GenericArgoMenuBar) pb.getJMenuBar();
@@ -158,7 +159,7 @@ public class ActionOpenProject extends ActionFileOperations
      * @return true if it is OK.
      */
     public boolean doCommand(String argument) {
-        return loadProject(new File(argument), false);
+        return ProjectBrowser.getInstance().loadProject(new File(argument), false);
     }
 
 } /* end class ActionOpenProject */
