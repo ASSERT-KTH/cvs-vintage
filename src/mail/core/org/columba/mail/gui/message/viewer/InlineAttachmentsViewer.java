@@ -111,11 +111,12 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		MimeType mt = parent.getHeader().getMimeType();
 
-		if (mt.equalsIgnoreCase("multipart/mixed")) {
+		if (mt.getType().equals("multipart")) {
+			if( mt.getSubtype().equals("alternative")) {
+				traverseAlternativePart(parent, ref);
+			} else {
 			traverseChildren(parent, ref);
-		} else if (mt.equalsIgnoreCase("multipart/alternative")) {
-			traverseAlternativePart(parent, ref);
-
+			}
 		} else
 			createChild(parent, ref);
 	}
@@ -135,10 +136,13 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		for (int i = 0; i < list.size(); i++) {
 			MimePart mp = (MimePart) list.get(i);
 
-			if (mp.getHeader().getMimeType()
-					.equalsIgnoreCase("multipart/mixed")) {
+			if (mp.getHeader().getMimeType().getType().equals("multipart")) {
 				ref.setAddress(mp.getAddress());
-				traverseChildren(mp, ref);
+				if( mp.getHeader().getMimeType().getSubtype().equals("alternative")) {
+					traverseAlternativePart(mp,ref);
+				} else {
+					traverseChildren(mp, ref);
+				}
 			} else {
 
 				ref.setAddress(mp.getAddress());
