@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.11 2005/05/13 19:43:38 mvw Exp $
+// $Id: StylePanelFigUseCase.java,v 1.12 2005/05/13 20:45:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,6 +88,8 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
     /**
      * Refresh the display. This means setting the check box from the target use
      * case fig.
+     *
+     * @see org.argouml.ui.TabTarget#refresh()
      */
     public void refresh() {
 
@@ -109,6 +111,8 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
      *
      * @param e
      *            The event that triggeed us.
+     *
+     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
      */
     public void itemStateChanged(ItemEvent e) {
         if (!refreshTransaction) {
