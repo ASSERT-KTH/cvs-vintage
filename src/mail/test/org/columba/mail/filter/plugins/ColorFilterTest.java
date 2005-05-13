@@ -19,52 +19,49 @@ package org.columba.mail.filter.plugins;
 
 import java.awt.Color;
 
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.MailboxTstFactory;
-
 
 /**
  * @author fdietz
- *
+ *  
  */
 public class ColorFilterTest extends AbstractFilterTst {
 
-	 /**
-     * @param arg0
-     */
-    public ColorFilterTest(String arg0) {
-        super(arg0);
-        
-    }
-    
-    /**
-     * @param arg0
-     */
-    public ColorFilterTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
-        
-    }
+	/**
+	 * @param arg0
+	 */
+	public ColorFilterTest(String arg0) {
+		super(arg0);
 
-    public void test() throws Exception {
-        // add message to folder
-        Object uid = addMessage();
-        getSourceFolder().setAttribute(uid, "columba.color", Color.red);
-        
-        // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Color");
-        criteria.setCriteria("is");
-        criteria.set("rgb", Color.red.getRGB());
+	}
 
-        // create filter
-        ColorFilter filter = new ColorFilter();
+	/**
+	 * @param arg0
+	 */
+	public ColorFilterTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
 
-        // init configuration
-        filter.setUp(criteria);
+	}
 
-        // execute filter
-        boolean result = filter.process(getSourceFolder(), uid);
-        assertEquals("filter result", true, result);
-    }
+	public void test() throws Exception {
+		// add message to folder
+		Object uid = addMessage();
+		getSourceFolder().setAttribute(uid, "columba.color", Color.red);
+
+		// create filter configuration
+		MailFilterCriteria criteria = MailFilterFactory.createColorIs(Color.red
+				.getRGB());
+
+		// create filter
+		ColorFilter filter = new ColorFilter();
+
+		// init configuration
+		filter.setUp(criteria);
+
+		// execute filter
+		boolean result = filter.process(getSourceFolder(), uid);
+		assertEquals("filter result", true, result);
+	}
 }

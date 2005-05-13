@@ -67,6 +67,8 @@ public class LearnMessageAsHamCommand extends Command {
 			worker.setDisplayText("Training messages...");
 			worker.setProgressBarMaximum(uids.length);
 		}
+		
+		long startTime = System.currentTimeMillis();
 
 		InputStream istream = null;
 		for (int j = 0; j < uids.length; j++) {
@@ -112,6 +114,10 @@ public class LearnMessageAsHamCommand extends Command {
 				}
 			}
 		}
+		
+		long endTime = System.currentTimeMillis();
+		
+		System.out.println("took me="+(endTime-startTime)+ "ms");
 
 	}
 }

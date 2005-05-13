@@ -19,7 +19,6 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.File;
 
-import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;

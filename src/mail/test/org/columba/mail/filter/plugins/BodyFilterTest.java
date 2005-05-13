@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 
 
@@ -49,10 +49,7 @@ public class BodyFilterTest extends AbstractFilterTst {
         Object uid = addMessage();
 
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Body");
-        criteria.setPattern("message");
-        criteria.setCriteria("contains");
+        MailFilterCriteria criteria = MailFilterFactory.createBodyContains("message");
 
         // create filter
         BodyFilter filter = new BodyFilter();

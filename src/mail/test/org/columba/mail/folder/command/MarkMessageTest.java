@@ -21,12 +21,11 @@ package org.columba.mail.folder.command;
 import java.io.ByteArrayInputStream;
 
 import org.columba.core.command.NullWorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * @author fdietz
@@ -51,7 +50,7 @@ public class MarkMessageTest extends AbstractFolderTst {
 	public void testMarkAsReadMessage() throws Exception {
 
 		//    	 create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+		MailFolderCommandReference ref = new MailFolderCommandReference(
 				getSourceFolder(), new Object[] { uid });
 		ref.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
@@ -71,7 +70,7 @@ public class MarkMessageTest extends AbstractFolderTst {
 	public void testMarkAsFlaggedMessage() throws Exception {
 
 		//    	 create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+		MailFolderCommandReference ref = new MailFolderCommandReference(
 				getSourceFolder(), new Object[] { uid });
 
 		ref.setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
@@ -93,7 +92,7 @@ public class MarkMessageTest extends AbstractFolderTst {
 	public void testMarkAsExpungedMessage() throws Exception {
 
 		//   	 create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+		MailFolderCommandReference ref = new MailFolderCommandReference(
 				getSourceFolder(), new Object[] { uid });
 		ref.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 

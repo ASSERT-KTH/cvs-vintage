@@ -36,6 +36,27 @@ public class MailFilterFactory {
 		return c;
 	}
 
+	public static MailFilterCriteria createSubjectContainsNot(String pattern) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.SUBJECT);
+		c.setCriteria(MailFilterCriteria.CONTAINS_NOT);
+		c.setPatternString(pattern);
+		c.setHeaderfieldString("Subject");
+
+		return c;
+	}
+
+	public static MailFilterCriteria createCustomHeaderfieldContains(
+			String headerfield, String pattern) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.CUSTOM_HEADERFIELD);
+		c.setCriteria(MailFilterCriteria.CONTAINS);
+		c.setPatternString(pattern);
+		c.setHeaderfieldString(headerfield);
+
+		return c;
+	}
+
 	public static MailFilterCriteria createFromContains(String pattern) {
 		MailFilterCriteria c = new MailFilterCriteria();
 		c.setType(MailFilterCriteria.FROM);
@@ -84,6 +105,66 @@ public class MailFilterFactory {
 
 		return c;
 	}
+	
+	public static MailFilterCriteria createSizeIsBigger(int size) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.SIZE);
+		c.setCriteria(MailFilterCriteria.SIZE_BIGGER);
+		c.setPatternString(Integer.toString(size));
+
+		return c;
+	}
+	
+	public static MailFilterCriteria createSizeIsSmaller(int size) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.SIZE);
+		c.setCriteria(MailFilterCriteria.SIZE_SMALLER);
+		c.setPatternString(Integer.toString(size));
+
+		return c;
+	}
+	
+	public static MailFilterCriteria createDateBefore(String datePattern) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.DATE);
+		c.setCriteria(MailFilterCriteria.DATE_BEFORE);
+		c.setPatternString(datePattern);
+
+		return c;
+	}
+	
+	public static MailFilterCriteria createDateAfter(String datePattern) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.DATE);
+		c.setCriteria(MailFilterCriteria.DATE_AFTER);
+		c.setPatternString(datePattern);
+
+		return c;
+	}
+	
+	/**
+	 * use Color.getRGB();
+	 * 
+	 * @param rgb
+	 * @return
+	 */
+	public static MailFilterCriteria createColorIs(int rgb) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.COLOR);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString(Integer.toString(rgb));
+
+		return c;
+	}
+	
+	public static MailFilterCriteria createAccountIs(int accountUid) {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.ACCOUNT);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString(Integer.toString(accountUid));
+
+		return c;
+	}
 
 	public static MailFilterCriteria createUnreadMessages() {
 		MailFilterCriteria c = new MailFilterCriteria();
@@ -102,7 +183,43 @@ public class MailFilterFactory {
 
 		return c;
 	}
-	
+
+	public static MailFilterCriteria createExpungedMessages() {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.FLAGS);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString("Deleted");
+
+		return c;
+	}
+
+	public static MailFilterCriteria createIsNotSeenMessages() {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.FLAGS);
+		c.setCriteria(MailFilterCriteria.IS_NOT);
+		c.setPatternString("Seen");
+
+		return c;
+	}
+
+	public static MailFilterCriteria createIsSeenMessages() {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.FLAGS);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString("Seen");
+
+		return c;
+	}
+
+	public static MailFilterCriteria createIsRecentMessages() {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.FLAGS);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString("Recent");
+
+		return c;
+	}
+
 	public static MailFilterCriteria createSpamMessages() {
 		MailFilterCriteria c = new MailFilterCriteria();
 		c.setType(MailFilterCriteria.FLAGS);
@@ -126,6 +243,24 @@ public class MailFilterFactory {
 		c.setType(MailFilterCriteria.PRIORITY);
 		c.setCriteria(MailFilterCriteria.IS);
 		c.setPatternString("High");
+
+		return c;
+	}
+
+	public static MailFilterCriteria createNormalPriority() {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.PRIORITY);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString("Normal");
+
+		return c;
+	}
+	
+	public static MailFilterCriteria createLowestPriority() {
+		MailFilterCriteria c = new MailFilterCriteria();
+		c.setType(MailFilterCriteria.PRIORITY);
+		c.setCriteria(MailFilterCriteria.IS);
+		c.setPatternString("Lowest");
 
 		return c;
 	}

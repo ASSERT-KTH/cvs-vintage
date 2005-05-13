@@ -22,10 +22,10 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
 import org.columba.core.command.NullWorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
-import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.MailboxTstFactory;
 
 /**
  * @author redsolo
@@ -71,7 +71,7 @@ public class MarkFolderAsReadCommandTest extends AbstractFolderTst {
         assertNotNull("Flags for msg 3 was null", folder.getFlags(uid3));
         assertFalse("Msg 3 is read", folder.getFlags(uid3).getSeen());
 
-        FolderCommandReference references = new FolderCommandReference(folder);
+        MailFolderCommandReference references = new MailFolderCommandReference(folder);
         MarkFolderAsReadCommand command = new MarkFolderAsReadCommand(references);
         command.execute(NullWorkerStatusController.getInstance());
 

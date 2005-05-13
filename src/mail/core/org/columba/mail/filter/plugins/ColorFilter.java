@@ -67,7 +67,14 @@ public class ColorFilter extends AbstractFilter {
  * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
  */
     public void setUp(FilterCriteria f) {
-        criteriaRGB = f.getInteger("rgb");
+    	String colorString = f.getPatternString();
+    	criteriaRGB = 0;
+		try {
+			criteriaRGB = Integer.parseInt(colorString);
+		} catch (NumberFormatException e) {
+			criteriaRGB = 0;
+		}
+
         criteriaCondition = f.getCriteria();
     }
 }

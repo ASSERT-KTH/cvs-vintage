@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.columba.core.command.NullWorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -57,7 +57,7 @@ public class ForwardInlineCommandTest extends AbstractComposerTst {
         Object uid = getSourceFolder().addMessage(inputStream);
 
 //      create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+        MailFolderCommandReference ref = new MailFolderCommandReference(
 				getSourceFolder(), new Object[] { uid });
 
         // create copy command
@@ -84,7 +84,7 @@ public class ForwardInlineCommandTest extends AbstractComposerTst {
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
 //      create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+        MailFolderCommandReference ref = new MailFolderCommandReference(
 				getSourceFolder(), new Object[] { uid });
         // create copy command
         ForwardInlineCommand command = new ForwardInlineCommand(ref);

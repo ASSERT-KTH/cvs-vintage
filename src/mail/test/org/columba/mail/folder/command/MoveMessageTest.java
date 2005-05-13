@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.columba.core.command.NullWorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
@@ -52,7 +52,7 @@ public class MoveMessageTest extends AbstractFolderTst {
         Object uid = getSourceFolder().addMessage(inputStream);
 
 //      create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+        MailFolderCommandReference ref = new MailFolderCommandReference(
 				getSourceFolder(), getDestFolder(), new Object[] { uid });
 
         // create copy command

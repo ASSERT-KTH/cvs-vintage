@@ -20,94 +20,89 @@ package org.columba.mail.filter.plugins;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.MailboxTstFactory;
-
 
 /**
  * @author fdietz
- *
+ *  
  */
 public class DateFilterTest extends AbstractFilterTst {
 
 	/**
-     * @param arg0
-     */
-    public DateFilterTest(String arg0) {
-        super(arg0);
-        
-    }
-    
-    /**
-     * @param arg0
-     */
-    public DateFilterTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
-        
-    }
+	 * @param arg0
+	 */
+	public DateFilterTest(String arg0) {
+		super(arg0);
 
-    /**
-     * Test date before.
-     * 
-     * @throws Exception
-     */
-    public void testBefore() throws Exception {
-        // add message to folder
-        Object uid = addMessage();
-       
-        GregorianCalendar c = new GregorianCalendar();
-        c.set(2004,5,10);
-        Date date = c.getTime();
-        getSourceFolder().setAttribute(uid, "columba.date", date);
-        
-        // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Date");
-        criteria.setCriteria("before");
-        criteria.setPattern("Mar 17, 2005");
-        
-        // create filter
-        DateFilter filter = new DateFilter();
+	}
 
-        // init configuration
-        filter.setUp(criteria);
+	/**
+	 * @param arg0
+	 */
+	public DateFilterTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
 
-        // execute filter
-        boolean result = filter.process(getSourceFolder(), uid);
-        
-        // TODO: fix testcase
-        //assertEquals("filter result", true, result);
-    }
-    
-    /**
-     * Test date after.
-     * 
-     * @throws Exception
-     */
-    public void testAfter() throws Exception {
-        // add message to folder
-        Object uid = addMessage();
-       
-        GregorianCalendar c = new GregorianCalendar();
-        c.set(2004,5,10);
-        Date date = c.getTime();
-        getSourceFolder().setAttribute(uid, "columba.date", date);
-        
-        // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Date");
-        criteria.setCriteria("after");
-        criteria.setPattern("Mar 17, 2005");
-        
-        // create filter
-        DateFilter filter = new DateFilter();
+	}
 
-        // init configuration
-        filter.setUp(criteria);
+	/**
+	 * Test date before.
+	 * 
+	 * @throws Exception
+	 */
+	public void testBefore() throws Exception {
+		// add message to folder
+		Object uid = addMessage();
 
-        // execute filter
-        boolean result = filter.process(getSourceFolder(), uid);
-        assertEquals("filter result", false, result);
-    }
+		GregorianCalendar c = new GregorianCalendar();
+		c.set(2004, 5, 10);
+		Date date = c.getTime();
+		getSourceFolder().setAttribute(uid, "columba.date", date);
+
+		// create filter configuration
+		MailFilterCriteria criteria = MailFilterFactory
+				.createDateBefore("Mar 17, 2005");
+
+		// create filter
+		DateFilter filter = new DateFilter();
+
+		// init configuration
+		filter.setUp(criteria);
+
+		// execute filter
+		boolean result = filter.process(getSourceFolder(), uid);
+
+		// TODO: fix testcase
+		//assertEquals("filter result", true, result);
+	}
+
+	/**
+	 * Test date after.
+	 * 
+	 * @throws Exception
+	 */
+	public void testAfter() throws Exception {
+		// add message to folder
+		Object uid = addMessage();
+
+		GregorianCalendar c = new GregorianCalendar();
+		c.set(2004, 5, 10);
+		Date date = c.getTime();
+		getSourceFolder().setAttribute(uid, "columba.date", date);
+
+		// create filter configuration
+		MailFilterCriteria criteria = MailFilterFactory
+				.createDateAfter("Mar 17, 2005");
+
+		// create filter
+		DateFilter filter = new DateFilter();
+
+		// init configuration
+		filter.setUp(criteria);
+
+		// execute filter
+		boolean result = filter.process(getSourceFolder(), uid);
+		assertEquals("filter result", false, result);
+	}
 }

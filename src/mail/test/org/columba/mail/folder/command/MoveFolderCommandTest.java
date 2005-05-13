@@ -16,10 +16,10 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.NullWorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTst;
-import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.temp.TempFolder;
 
@@ -60,7 +60,7 @@ public class MoveFolderCommandTest extends AbstractFolderTst {
 		folderToBeMoved.moveTo(rootFolder);
 
 		//      create Command reference
-		FolderCommandReference ref = new FolderCommandReference(
+		MailFolderCommandReference ref = new MailFolderCommandReference(
 				folderToBeMoved, destinationFolder);
 
 		MoveFolderCommand command = new MoveFolderCommand(ref);

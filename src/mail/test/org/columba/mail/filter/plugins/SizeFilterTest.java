@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.filter.MailFilterFactory;
 
 
 /**
@@ -47,10 +47,7 @@ public class SizeFilterTest extends AbstractFilterTst {
         // !!! Size = 12
         // create filter configuration
         // -> check if <Subject> <contains> pattern <test>
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Size");
-        criteria.setPattern("12");
-        criteria.setCriteria("bigger");
+        MailFilterCriteria criteria = MailFilterFactory.createSizeIsBigger(12);
 
         // create filter
         SizeFilter filter = new SizeFilter();

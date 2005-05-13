@@ -20,50 +20,58 @@ import org.columba.core.filter.FilterCriteria;
 import org.columba.core.folder.IFolder;
 import org.columba.mail.folder.IMailbox;
 
-
 /**
  * Filter for account's uid.
- *
+ * 
  * @author redsolo
  */
 public class AccountFilter extends AbstractFilter {
-    int criteriaCondition;
-    int criteriaAccountUid;
+	int criteriaCondition;
 
-    /**
- * @param f the filter criteria
- */
-    public AccountFilter() {
-        super();
-    }
+	int criteriaAccountUid;
 
-    /** {@inheritDoc} */
-    public boolean process(IFolder folder, Object uid) throws Exception {
-        boolean result = false;
+	/**
+	 * @param f
+	 *            the filter criteria
+	 */
+	public AccountFilter() {
+		super();
+	}
 
-        Integer messageAccountUid = (Integer) ((IMailbox)folder).getAttribute(uid,
-                "columba.accountuid");
+	/** {@inheritDoc} */
+	public boolean process(IFolder folder, Object uid) throws Exception {
+		boolean result = false;
 
-        if ((messageAccountUid != null) && (criteriaAccountUid != -1)) {
-            int id = messageAccountUid.intValue();
+		Integer messageAccountUid = (Integer) ((IMailbox) folder).getAttribute(
+				uid, "columba.accountuid");
 
-            if ((criteriaCondition == FilterCriteria.IS) &&
-                    (criteriaAccountUid == id)) {
-                result = true;
-            } else if ((criteriaCondition == FilterCriteria.IS_NOT) &&
-                    (criteriaAccountUid != id)) {
-                result = true;
-            }
-        }
+		if ((messageAccountUid != null) && (criteriaAccountUid != -1)) {
+			int id = messageAccountUid.intValue();
 
-        return result;
-    }
+			if ((criteriaCondition == FilterCriteria.IS)
+					&& (criteriaAccountUid == id)) {
+				result = true;
+			} else if ((criteriaCondition == FilterCriteria.IS_NOT)
+					&& (criteriaAccountUid != id)) {
+				result = true;
+			}
+		}
 
-    /**
- * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
- */
-    public void setUp(FilterCriteria f) {
-        criteriaCondition = f.getCriteria();
-        criteriaAccountUid = f.getIntegerWithDefault("account.uid", -1);
-    }
+		return result;
+	}
+
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
+		criteriaCondition = f.getCriteria();
+		String uidString = f.getPatternString();
+		criteriaAccountUid = -1;
+		try {
+			criteriaAccountUid = Integer.parseInt(uidString);
+		} catch (NumberFormatException e) {
+			criteriaAccountUid = -1;
+		}
+
+	}
 }

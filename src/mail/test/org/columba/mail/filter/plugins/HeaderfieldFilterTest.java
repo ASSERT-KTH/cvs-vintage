@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 
 /**
@@ -26,7 +26,7 @@ import org.columba.mail.folder.MailboxTstFactory;
  *  
  */
 public class HeaderfieldFilterTest extends AbstractFilterTst {
-	
+
 	/**
 	 * Constructor for HeaderfieldFilterTest.
 	 * 
@@ -36,7 +36,7 @@ public class HeaderfieldFilterTest extends AbstractFilterTst {
 		super(arg0);
 
 	}
-	
+
 	/**
 	 * Constructor for HeaderfieldFilterTest.
 	 * 
@@ -59,11 +59,8 @@ public class HeaderfieldFilterTest extends AbstractFilterTst {
 		// !!! Subject: test
 		// create filter configuration
 		// -> check if <Subject> <contains> pattern <test>
-		FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-		criteria.setType("Subject");
-		criteria.setPattern("test");
-		criteria.setHeaderItem("Subject");
-		criteria.setCriteria("contains");
+		MailFilterCriteria criteria = MailFilterFactory
+				.createSubjectContains("test");
 
 		// create filter
 		HeaderfieldFilter filter = new HeaderfieldFilter();
@@ -88,11 +85,8 @@ public class HeaderfieldFilterTest extends AbstractFilterTst {
 		// !!! Subject: test
 		// create filter configuration
 		// -> check if <Subject> <contains> pattern <test>
-		FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-		criteria.setType("Subject");
-		criteria.setPattern("pudding");
-		criteria.setHeaderItem("Subject");
-		criteria.setCriteria("contains");
+		MailFilterCriteria criteria = MailFilterFactory
+				.createSubjectContains("pudding");
 
 		// create filter
 		HeaderfieldFilter filter = new HeaderfieldFilter();
@@ -117,11 +111,8 @@ public class HeaderfieldFilterTest extends AbstractFilterTst {
 		// !!! Subject: test
 		// create filter configuration
 		// -> check if <Subject> <contains> pattern <test>
-		FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-		criteria.setType("Subject");
-		criteria.setPattern("pudding");
-		criteria.setHeaderItem("Subject");
-		criteria.setCriteria("contains not");
+		MailFilterCriteria criteria = MailFilterFactory
+				.createSubjectContainsNot("pudding");
 
 		// create filter
 		HeaderfieldFilter filter = new HeaderfieldFilter();
@@ -147,11 +138,8 @@ public class HeaderfieldFilterTest extends AbstractFilterTst {
 		// !!! From: alice@mail.org
 		// create filter configuration
 		// -> check if <From> <contains> pattern <alice@mail.org>
-		FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-		criteria.setType("From");
-		criteria.setPattern("alice@mail.org");
-		criteria.setHeaderItem("From");
-		criteria.setCriteria("contains");
+		MailFilterCriteria criteria = MailFilterFactory
+				.createFromContains("alice@mail.org");
 
 		// create filter
 		HeaderfieldFilter filter = new HeaderfieldFilter();
@@ -176,11 +164,8 @@ public class HeaderfieldFilterTest extends AbstractFilterTst {
 		// !!! From: alice@mail.org
 		// create filter configuration
 		// -> check if <From> <contains> pattern <alice@mail.org>
-		FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-		criteria.setType("Custom Headerfield");
-		criteria.setPattern("Columba");
-		criteria.setHeaderItem("X-Mailer");
-		criteria.setCriteria("contains");
+		MailFilterCriteria criteria = MailFilterFactory
+				.createCustomHeaderfieldContains("X-Mailer", "Columba");
 
 		// create filter
 		HeaderfieldFilter filter = new HeaderfieldFilter();

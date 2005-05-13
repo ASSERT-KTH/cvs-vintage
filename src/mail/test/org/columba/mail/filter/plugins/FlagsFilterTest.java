@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
 
@@ -53,10 +53,7 @@ public class FlagsFilterTest extends AbstractFilterTst {
         flags.setSeen(true);
         
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Flags");
-        criteria.setCriteria("is");
-        criteria.setPattern("Seen");
+        MailFilterCriteria criteria = MailFilterFactory.createIsSeenMessages();
         
         // create filter
         FlagsFilter filter = new FlagsFilter();
@@ -77,10 +74,7 @@ public class FlagsFilterTest extends AbstractFilterTst {
         flags.setSeen(true);
         
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Flags");
-        criteria.setCriteria("is not");
-        criteria.setPattern("Seen");
+        MailFilterCriteria criteria = MailFilterFactory.createIsNotSeenMessages();
         
         // create filter
         FlagsFilter filter = new FlagsFilter();
@@ -101,10 +95,7 @@ public class FlagsFilterTest extends AbstractFilterTst {
         flags.setDeleted(true);
         
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Flags");
-        criteria.setCriteria("is");
-        criteria.setPattern("Deleted");
+        MailFilterCriteria criteria = MailFilterFactory.createExpungedMessages();
         
         // create filter
         FlagsFilter filter = new FlagsFilter();
@@ -125,10 +116,7 @@ public class FlagsFilterTest extends AbstractFilterTst {
         flags.setFlagged(true);
         
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Flags");
-        criteria.setCriteria("is");
-        criteria.setPattern("Flagged");
+        MailFilterCriteria criteria = MailFilterFactory.createFlaggedMessages();
         
         // create filter
         FlagsFilter filter = new FlagsFilter();
@@ -149,10 +137,7 @@ public class FlagsFilterTest extends AbstractFilterTst {
         flags.setRecent(true);
         
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Flags");
-        criteria.setCriteria("is");
-        criteria.setPattern("Recent");
+        MailFilterCriteria criteria = MailFilterFactory.createIsRecentMessages();
         
         // create filter
         FlagsFilter filter = new FlagsFilter();
@@ -172,10 +157,7 @@ public class FlagsFilterTest extends AbstractFilterTst {
        getSourceFolder().setAttribute(uid, "columba.spam", Boolean.TRUE);
         
         // create filter configuration
-        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
-        criteria.setType("Flags");
-        criteria.setCriteria("is");
-        criteria.setPattern("Spam");
+       MailFilterCriteria criteria = MailFilterFactory.createSpamMessages();
         
         // create filter
         FlagsFilter filter = new FlagsFilter();

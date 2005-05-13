@@ -50,9 +50,13 @@ public class MailFilterCriteria extends FilterCriteria {
 	public final static int PRIORITY = 9;
 
 	public final static int CUSTOM_HEADERFIELD = 10;
+	
+	public final static int COLOR = 11;
+	
+	public final static int ACCOUNT = 12;
 
 	private final String[] type = { "Subject", "From", "To", "Cc", "Bcc",
-			"Date", "Size", "Body", "Flags", "Priority", "Custom Headerfield" };
+			"Date", "Size", "Body", "Flags", "Priority", "Custom Headerfield", "Color", "Account" };
 
 	public MailFilterCriteria() {
 		super();
