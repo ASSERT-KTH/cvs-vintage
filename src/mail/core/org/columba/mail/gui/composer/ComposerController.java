@@ -130,8 +130,7 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	public ComposerController(ComposerModel model) {
-		this(model, FrameModel.getInstance()
-				.createCustomViewItem("Composer"));
+		this(model, FrameModel.getInstance().createCustomViewItem("Composer"));
 	}
 
 	public ComposerController(ViewItem viewItem) {
@@ -288,11 +287,12 @@ public class ComposerController extends DefaultFrameController implements
 			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
 			// set splitpane position based on configuration settings
-			
+
 			ViewItem viewItem = getViewItem();
-			
+
 			// default value is 200 pixel
-			int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment", 200);
+			int pos = viewItem.getIntegerWithDefault("splitpanes",
+					"attachment", 200);
 			attachmentSplitPane.setDividerLocation(pos);
 		} else {
 			// no attachments
@@ -344,7 +344,9 @@ public class ComposerController extends DefaultFrameController implements
 				"center:max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
 
 				// 2 columns
-				"fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
+				//"fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu,
+				// fill:default, 3dlu");
+				"fill:default:grow");
 
 		// 3 row
 		PanelBuilder builder = new PanelBuilder(topPanel, layout);
@@ -352,13 +354,17 @@ public class ComposerController extends DefaultFrameController implements
 
 		layout.setColumnGroups(new int[][] { { 1 } });
 
-		layout.setRowGroups(new int[][] { { 1, 5, 7 } });
+		//layout.setRowGroups(new int[][] { { 1, 5, 7 } });
 
 		builder.add(smtpLabel, cc.xy(1, 1));
 
+		builder.appendRow("3dlu");
+		builder.appendRow("fill:default:grow");
+
 		JPanel smtpPanel = new JPanel();
+
 		FormLayout l = new FormLayout(
-				"default, 3dlu, right:default:grow, 3dlu, right:default",
+				"fill:default:grow, 6dlu, right:default:grow, 3dlu, right:default:grow",
 				"fill:default:grow");
 		PanelBuilder b = new PanelBuilder(smtpPanel, l);
 
@@ -368,20 +374,29 @@ public class ComposerController extends DefaultFrameController implements
 		b.add(getPriorityController().getView(), c.xy(5, 1));
 
 		builder.add(smtpPanel, cc.xy(3, 1));
-
+		builder.appendRow("3dlu");
+		builder.appendRow("fill:default:grow");
 		builder.add(getHeaderController().getView(), cc.xywh(1, 3, 4, 1));
-
+		builder.appendRow("3dlu");
+		builder.appendRow("fill:default:grow");
 		builder.add(subjectLabel, cc.xy(1, 5));
+		builder.appendRow("3dlu");
+		builder.appendRow("fill:default:grow");
 		builder.add(getSubjectController().getView(), cc.xy(3, 5));
 
-		builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
+		/*
+		 * builder.appendRow("6dlu"); builder.appendRow("fill:default:grow");
+		 * builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
+		 */
 
-		// *20030907, karlpeder* getViewUIComponent returns view
-		//            already encapsulated in a scroll pane.
-		//JScrollPane scrollPane =
-		//	new JScrollPane(controller.getEditorController().view);
-		//editorPanel.add(scrollPane, BorderLayout.CENTER);
-		editorPanel.add(getEditorController().getViewUIComponent());
+		layout.setRowGroups(new int[][] { { 1, 5 } });
+
+		htmlToolbar.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
+
+		//editorPanel.add(htmlToolbar, BorderLayout.NORTH);
+
+		editorPanel.add(getEditorController().getViewUIComponent(),
+				BorderLayout.CENTER);
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		centerPanel.setLayout(new BorderLayout());
@@ -403,7 +418,8 @@ public class ComposerController extends DefaultFrameController implements
 		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
 		ViewItem viewItem = getViewItem();
-		int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment", 200);
+		int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment",
+				200);
 		attachmentSplitPane.setDividerLocation(pos);
 
 	}
@@ -725,15 +741,23 @@ public class ComposerController extends DefaultFrameController implements
 
 				// switch editor and resync view with model
 				switchEditor(composerModel.isHtml());
+
 				updateComponents(true);
 			}
+
+			if (html) {
+				editorPanel.add(htmlToolbar, BorderLayout.NORTH);
+			} else {
+				editorPanel.remove(htmlToolbar);
+			}
+			
+			editorPanel.validate();
 		}
 	}
 
 	public void savePositions(ViewItem viewItem) {
 		super.savePositions(viewItem);
 
-		
 		viewItem = getViewItem();
 
 		// splitpanes

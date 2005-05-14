@@ -74,7 +74,8 @@ class AccountListRenderer extends JLabel implements ListCellRenderer {
             Address identity = item.getIdentity().getAddress();
 
             setText(accountName + ":   " + identity.toString());
-
+            //setText(accountName);
+            
             if (item.isPopAccount()) {
                 setIcon(image1);
             } else {
