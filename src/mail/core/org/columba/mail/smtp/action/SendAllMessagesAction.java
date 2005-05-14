@@ -55,7 +55,8 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
 
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
+		// no shortcut here, because F10 conflicts with system accelerator key
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
 	}
 
 	/**
