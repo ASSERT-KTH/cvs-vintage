@@ -1,4 +1,4 @@
-// $Id: StylePanelFigInterface.java,v 1.15 2005/05/13 20:45:39 mvw Exp $
+// $Id: StylePanelFigInterface.java,v 1.16 2005/05/14 07:42:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.awt.event.ItemEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.DocumentEvent;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.StylePanelFigNodeModelElement;

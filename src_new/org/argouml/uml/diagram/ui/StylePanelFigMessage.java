@@ -1,4 +1,4 @@
-// $Id: StylePanelFigMessage.java,v 1.15 2005/05/13 20:45:39 mvw Exp $
+// $Id: StylePanelFigMessage.java,v 1.16 2005/05/14 07:42:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ItemEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.event.DocumentEvent;
 
 import org.argouml.ui.StylePanelFigNodeModelElement;
 import org.tigris.gef.util.Converter;
