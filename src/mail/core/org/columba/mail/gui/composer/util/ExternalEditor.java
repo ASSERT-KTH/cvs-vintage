@@ -103,7 +103,7 @@ public class ExternalEditor {
 
 		// execute application, enabling blocking
 		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
-		Action action = association.getActionByVerb("edit");
+		Action action = association.getActionByVerb("open");
 		
 		
 		Process child = Runtime.getRuntime().exec(
