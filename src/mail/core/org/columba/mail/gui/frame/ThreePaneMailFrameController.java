@@ -50,7 +50,8 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.ITreeController;
 import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.action.ApplyFilterAction;
+import org.columba.mail.gui.tree.action.MoveDownAction;
+import org.columba.mail.gui.tree.action.MoveUpAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
@@ -92,7 +93,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableController = new TableController(this);
 		folderInfoPanel = new FolderInfoPanel();
 
-
 		// create selection handlers
 		TableSelectionHandler tableHandler = new TableSelectionHandler(
 				tableController);
@@ -110,8 +110,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		treeHandler.addSelectionListener(this);
 
 		filterToolbar = new FilterToolbar(tableController);
-		
-		
+
 		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
 		// Register F2 hotkey for renaming folder when the message panel has
@@ -126,26 +125,38 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		treeController.getView().getInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 
-		ApplyFilterAction applyFilterAction = new ApplyFilterAction(this);
-
-		// Register ALT-A hotkey for apply filter on folder when the folder tree
-		// itself has focus
-		treeController.getView().getActionMap().put("ALT_A", applyFilterAction);
-		treeController.getView().getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK),
-				"ALT_A");
-		tableController.getView().getActionMap()
-				.put("ALT_A", applyFilterAction);
+		// Register Alt-Up hotkey for moving up folder when folder tree or
+		// table have focus
+		MoveUpAction moveUpAction = new MoveUpAction(this);
+		tableController.getView().getActionMap().put("ALT_UP", moveUpAction);
 		tableController.getView().getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK),
-				"ALT_A");
+				KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_MASK),
+				"ALT_UP");
+
+		treeController.getView().getActionMap().put("ALT_UP", moveUpAction);
+		treeController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_MASK),
+				"ALT_UP");
+
+		// Register Alt-Down hotkey for moving up folder when folder tree or
+		// table have focus
+		MoveDownAction moveDownAction = new MoveDownAction(this);
+		tableController.getView().getActionMap().put("ALT_DOWN", moveDownAction);
+		tableController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_MASK),
+				"ALT_DOWN");
+
+		treeController.getView().getActionMap().put("ALT_DOWN", moveDownAction);
+		treeController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_MASK),
+				"ALT_DOWN");
+	
 
 		//register the markasread timer as selection listener
 		((MailFrameMediator) tableController.getFrameController())
 				.registerTableSelectionListener(tableController
 						.getMarkAsReadTimer());
 
-		//getContainer().setContentPane(this);
 	}
 
 	public void enableMessagePreview(boolean enable) {
@@ -164,12 +175,12 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			mainSplitPane.add(tablePanel, JSplitPane.RIGHT);
 		}
 
-		mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault("splitpanes",
-				"main", 100));
+		mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault(
+				"splitpanes", "main", 100));
 
 		if (enable)
-			rightSplitPane.setDividerLocation(viewItem.getIntegerWithDefault("splitpanes",
-					"header", 100));
+			rightSplitPane.setDividerLocation(viewItem.getIntegerWithDefault(
+					"splitpanes", "header", 100));
 
 		getContainer().getFrame().validate();
 	}
@@ -237,7 +248,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 
-		if (viewItem.getBooleanWithDefault("splitpanes", "header_enabled", true)) {
+		if (viewItem
+				.getBooleanWithDefault("splitpanes", "header_enabled", true)) {
 
 			rightSplitPane = new UIFSplitPane();
 			rightSplitPane.setBorder(null);
@@ -258,12 +270,13 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			//pack();
 			rightSplitPane.setDividerLocation(150);
 		} else {
-			mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault("splitpanes",
-					"main", 100));
+			mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault(
+					"splitpanes", "main", 100));
 
-			if (viewItem.getBooleanWithDefault("splitpanes", "header_enabled", true))
-				rightSplitPane.setDividerLocation(viewItem.getIntegerWithDefault(
-						"splitpanes", "header", 100));
+			if (viewItem.getBooleanWithDefault("splitpanes", "header_enabled",
+					true))
+				rightSplitPane.setDividerLocation(viewItem
+						.getIntegerWithDefault("splitpanes", "header", 100));
 		}
 
 		try {
@@ -273,11 +286,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
-		
+
 		getContainer().extendMenuFromFile(this,
 				"org/columba/mail/action/menu.xml");
-
-		
 
 		getContainer().extendToolbar(
 				this,
@@ -307,12 +318,14 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		super.savePositions(viewItem);
 
 		// splitpanes
-		viewItem.setInteger("splitpanes", "main", mainSplitPane.getDividerLocation());
+		viewItem.setInteger("splitpanes", "main", mainSplitPane
+				.getDividerLocation());
 
 		if (rightSplitPane != null)
 			viewItem.setInteger("splitpanes", "header", rightSplitPane
 					.getDividerLocation());
-		viewItem.setBoolean("splitpanes", "header_enabled", rightSplitPane != null);
+		viewItem.setBoolean("splitpanes", "header_enabled",
+				rightSplitPane != null);
 
 		IMailFolderCommandReference r = getTreeSelection();
 

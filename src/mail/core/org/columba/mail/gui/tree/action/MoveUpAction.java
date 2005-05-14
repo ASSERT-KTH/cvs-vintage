@@ -25,13 +25,13 @@ import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Move selected folder up for one row.
  * <p>
- * TODO (@author redsolo):fix re-selection of moved folder
  *
  * @author fdietz
  * @author redsolo
@@ -65,6 +65,9 @@ public class MoveUpAction extends AbstractMoveFolderAction {
         ((AbstractFolder) folder.getParent()).insert(folder, newIndex);
 
         FolderTreeModel.getInstance().nodeStructureChanged(folder.getParent());
+        
+        // select folder again after move operation
+        ((TreeViewOwner) frameMediator).getTreeController().setSelected(folder);
     }
 
     /** {@inheritDoc} */
