@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.19 2005/04/07 15:07:07 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.20 2005/05/14 00:03:58 rhs Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -61,6 +61,11 @@ public class CarolDefaultValues {
      * Port number to use in server mode case (iiop)
      */
     public static final String  SERVER_IIOP_PORT = CAROL_PREFIX + ".iiop.server.port";
+
+    /**
+     * Port number to use in server mode case (irmi)
+     */
+    public static final String  SERVER_IRMI_PORT = CAROL_PREFIX + ".irmi.server.port";
 
     /**
      * Port number to use in server mode case (jrmp)

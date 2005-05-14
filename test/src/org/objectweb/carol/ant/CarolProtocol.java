@@ -20,7 +20,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolProtocol.java,v 1.4 2005/02/14 09:34:05 benoitf Exp $
+ * $Id: CarolProtocol.java,v 1.5 2005/05/14 00:03:58 rhs Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -44,12 +44,22 @@ final class CarolProtocol {
     /**
      * JRMP protocol (v 1.1)
      */
-    public static final CarolProtocol JRMP11 = protocol("jrmp", "1.1");
+    public static final CarolProtocol JRMP11 = protocol("jrmp", "1.1", true);
 
     /**
      * JRMP protocol (v 1.2)
      */
-    public static final CarolProtocol JRMP12 = protocol("jrmp", "1.2");
+    public static final CarolProtocol JRMP12 = protocol("jrmp", "1.2", true);
+
+    /**
+     * IRMI protocol (v 1.1)
+     */
+    public static final CarolProtocol IRMI11 = protocol("irmi", "1.1", true);
+
+    /**
+     * IRMI protocol (v 1.2)
+     */
+    public static final CarolProtocol IRMI12 = protocol("irmi", "1.2", true);
 
     /**
      * Name of the protocol
@@ -62,17 +72,24 @@ final class CarolProtocol {
     private final String version;
 
     /**
+     * True if the protocol uses sun stubs
+     */
+    private final boolean sunStubs;
+
+    /**
      * Build a new carol protocol with the given name and its version
      * @param name of the protocol
      * @param version of the protocol (JRMP)
+     * @param sunStubs true if the protocol uses sun stubs
      */
-    private CarolProtocol(String name, String version) {
+    private CarolProtocol(String name, String version, boolean sunStubs) {
         this.name = name;
         if (version == null) {
             this.version = name;
         } else {
             this.version = name + version;
         }
+        this.sunStubs = sunStubs;
     }
 
     /**
@@ -81,7 +98,7 @@ final class CarolProtocol {
      * @return the protocol built
      */
     private static CarolProtocol protocol(String name) {
-        return new CarolProtocol(name, null);
+        return new CarolProtocol(name, null, false);
     }
 
     /**
@@ -91,7 +108,18 @@ final class CarolProtocol {
      * @return the protocol built
      */
     private static CarolProtocol protocol(String name, String version) {
-        return new CarolProtocol(name, version);
+        return new CarolProtocol(name, version, false);
+    }
+
+    /**
+     * Build a new carol protocol with a given version
+     * @param name of the protocol
+     * @param version of the protocol
+     * @param sunStubs true if the protocol uses sun stubs
+     * @return the protocol built
+     */
+    private static CarolProtocol protocol(String name, String version, boolean sunStubs) {
+        return new CarolProtocol(name, version, sunStubs);
     }
 
     /**
@@ -106,5 +134,12 @@ final class CarolProtocol {
      */
     public String getNameVersion() {
         return version;
+    }
+
+    /**
+     * @return true if this protocol requires sun stubs
+     */
+    public boolean useSunStubs() {
+        return sunStubs;
     }
 }

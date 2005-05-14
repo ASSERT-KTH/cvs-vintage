@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolTestTask.java,v 1.8 2005/02/11 12:06:54 benoitf Exp $
+ * $Id: CarolTestTask.java,v 1.9 2005/05/14 00:03:58 rhs Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -208,7 +208,7 @@ public final class CarolTestTask extends Task {
     }
 
     private static String alter(CarolProtocol proto, String name, String value) {
-        if (proto != CarolProtocol.JRMP11 && proto != CarolProtocol.JRMP12) {
+        if (!proto.useSunStubs()) {
             return value;
         }
         if (!name.startsWith("stub.jar.name")) {
@@ -306,8 +306,11 @@ public final class CarolTestTask extends Task {
 
         public static Iterator supportedConfigurations() {
             List configs = new LinkedList();
-            CarolProtocol[] protos = new CarolProtocol[] {CarolProtocol.IIOP, CarolProtocol.JEREMIE,
-                    CarolProtocol.JRMP11, CarolProtocol.JRMP12};
+            CarolProtocol[] protos = new CarolProtocol[] {
+                CarolProtocol.IIOP, CarolProtocol.JEREMIE,
+                CarolProtocol.IRMI11, CarolProtocol.IRMI12,
+                CarolProtocol.JRMP11, CarolProtocol.JRMP12,
+            };
 
             for (int ii = 0; ii < protos.length; ii++) {
                 configs.add(new Config(protos[ii], null, true));
@@ -320,6 +323,10 @@ public final class CarolTestTask extends Task {
             configs.add(new Config(CarolProtocol.IIOP, CarolProtocol.JRMP11, false));
             configs.add(new Config(CarolProtocol.IIOP, CarolProtocol.JRMP12, true));
             configs.add(new Config(CarolProtocol.IIOP, CarolProtocol.JRMP12, false));
+            configs.add(new Config(CarolProtocol.IRMI11, CarolProtocol.IIOP, true));
+            configs.add(new Config(CarolProtocol.IRMI11, CarolProtocol.IIOP, false));
+            configs.add(new Config(CarolProtocol.IRMI12, CarolProtocol.IIOP, true));
+            configs.add(new Config(CarolProtocol.IRMI12, CarolProtocol.IIOP, false));
             configs.add(new Config(CarolProtocol.JRMP11, CarolProtocol.IIOP, true));
             configs.add(new Config(CarolProtocol.JRMP11, CarolProtocol.IIOP, false));
             configs.add(new Config(CarolProtocol.JRMP12, CarolProtocol.IIOP, true));
