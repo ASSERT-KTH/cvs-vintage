@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.160 2005/05/12 23:12:17 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.161 2005/05/14 13:12:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,6 +252,16 @@ public abstract class FigNodeModelElement
      * be removed from the diagram.
      */
     private boolean removeFromDiagram = true;
+    
+    /**
+     * Set this to force a repaint of the shadow. 
+     * Normally repainting only happens 
+     * when the outside boundaries change 
+     * (for performance reasons (?)). 
+     * In some cases this does not
+     * suffice, and you can set this attribute to force the update.
+     */
+    private boolean forceRepaint;
 
     /**
      * The main constructor.
@@ -780,9 +790,18 @@ public abstract class FigNodeModelElement
             int x = getX();
             int y = getY();
 
-            // Only create new shadow image if figure size has changed.
+            /* Only create a new shadow image if figure size has changed.
+             * Which does not catch all cases: 
+             * consider show/hide toggle of a stereotype on a package: 
+             * in this case the total size remains, but the notch 
+             * at the corner increases/decreases. 
+             * Hence also check the "forceRepaint" attribute. 
+             */
             if (width != cachedWidth
-                    || height != cachedHeight) {
+                    || height != cachedHeight
+                    || forceRepaint) {
+                forceRepaint = false;
+                
                 cachedWidth = width;
                 cachedHeight = height;
 
@@ -1501,9 +1520,8 @@ public abstract class FigNodeModelElement
         int cornersHit = countCornersContained(r.x, r.y, r.width, r.height);
         if (_filled) {
             return cornersHit > 0 || intersects(r);
-        } else {
-            return (cornersHit > 0 && cornersHit < 4) || intersects(r);
-	}
+        }
+        return (cornersHit > 0 && cornersHit < 4) || intersects(r);
     }
 
     /**
@@ -1712,5 +1730,13 @@ public abstract class FigNodeModelElement
     protected void allowRemoveFromDiagram(boolean allowed) {
         this.removeFromDiagram = allowed;
     }
+
+    /**
+     * Force painting the shadow.
+     */
+    public void forceRepaintShadow() {
+        forceRepaint = true;
+    }
+    
 } /* end class FigNodeModelElement */
 
