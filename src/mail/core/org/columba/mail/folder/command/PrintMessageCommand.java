@@ -199,6 +199,8 @@ public class PrintMessageCommand extends Command {
             ColumbaMessage message = new ColumbaMessage();
             Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
 
+            setupMessageBodyPart(uid, srcFolder, worker);
+            
             // Does the user prefer html or plain text?
             XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                                                   .getRoot().getElement("/options/html");
