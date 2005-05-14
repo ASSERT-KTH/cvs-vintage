@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.36 2005/01/09 14:58:03 linus Exp $
+// $Id: Argo.java,v 1.37 2005/05/14 07:12:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,8 @@ import java.util.ArrayList;
 
 import javax.swing.Icon;
 
+import org.apache.log4j.Category;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.application.modules.ModuleLoader;
 
@@ -365,7 +365,7 @@ public class Argo {
 
     static {
 	if (System.getProperty(ARGO_CONSOLE_SUPPRESS) != null) {
-            Logger.getRoot().getLoggerRepository().setThreshold(Level.OFF);
+            Category.getRoot().getLoggerRepository().setThreshold(Level.OFF);
 	}
     }
 }

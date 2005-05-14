@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.119 2005/05/13 14:44:46 bobtarling Exp $
+// $Id: Main.java,v 1.120 2005/05/14 07:12:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,6 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionExit;
-import org.argouml.uml.ui.ActionOpenProject;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
 
@@ -710,7 +709,8 @@ class PreloadClasses implements Runnable {
     public void run() {
 
         Class c = null;
-        LOG.info("preloading...");
+        if (c == null) // otherwise anoying warning
+            LOG.info("preloading...");
 
 	// Alphabetic order
         c = org.argouml.kernel.DelayedChangeNotify.class;
