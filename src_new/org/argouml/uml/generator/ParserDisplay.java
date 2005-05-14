@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.161 2005/05/14 16:59:53 linus Exp $
+// $Id: ParserDisplay.java,v 1.162 2005/05/14 19:52:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -391,7 +391,7 @@ public final class ParserDisplay extends Parser {
 
     /**
      * Parses a model element, ie reads a string on the format:<pre>
-     *     [ &lt;&lt; stereotype &gt;&gt;] [name]
+     *     [ &lt;&lt; stereotype &gt;&gt;] [+|-|#] [name]
      * </pre> and assigns the properties to the passed MModelElement.
      *
      * @param me   The ModelElement <em>text</em> describes.
@@ -470,6 +470,19 @@ public final class ParserDisplay extends Parser {
             throw new ParseException("Qualified names must end with a name", 0);
         }
 
+        if (name.startsWith("+")) {
+                name = name.substring(1).trim();
+                Model.getCoreHelper().setVisibility(me, Model.getVisibilityKind().getPublic());
+        }
+        if (name.startsWith("-")) {
+                name = name.substring(1).trim();
+                Model.getCoreHelper().setVisibility(me, Model.getVisibilityKind().getPrivate());
+        }
+        if (name.startsWith("#")) {
+                name = name.substring(1).trim();
+                Model.getCoreHelper().setVisibility(me, Model.getVisibilityKind().getProtected());
+        }
+        
         if (name != null) {
             Model.getCoreHelper().setName(me, name);
         }
