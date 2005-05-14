@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.59 2005/05/14 13:12:25 mvw Exp $
+// $Id: FigPackage.java,v 1.60 2005/05/14 20:21:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ArgoJMenu;
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -641,6 +642,16 @@ public class FigPackage extends FigNodeModelElement
         stereotypeVisible = isVisible;
         renderingChanged();
         damage();
+    }
+
+    /**
+     * TODO: i18n.
+     * 
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEditStarted(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEditStarted(FigText ft) {
+        ProjectBrowser.getInstance().getStatusBar().showStatus(
+            "Enter text according: [ <<stereotype>> ] [ + | - | # ] [ name ]");        
     }
     
 } /* end class FigPackage */
