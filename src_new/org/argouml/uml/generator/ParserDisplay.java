@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.162 2005/05/14 19:52:39 mvw Exp $
+// $Id: ParserDisplay.java,v 1.163 2005/05/14 20:09:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -470,15 +470,15 @@ public final class ParserDisplay extends Parser {
             throw new ParseException("Qualified names must end with a name", 0);
         }
 
-        if (name.startsWith("+")) {
+        if (name != null && name.startsWith("+")) {
                 name = name.substring(1).trim();
                 Model.getCoreHelper().setVisibility(me, Model.getVisibilityKind().getPublic());
         }
-        if (name.startsWith("-")) {
+        if (name != null && name.startsWith("-")) {
                 name = name.substring(1).trim();
                 Model.getCoreHelper().setVisibility(me, Model.getVisibilityKind().getPrivate());
         }
-        if (name.startsWith("#")) {
+        if (name != null && name.startsWith("#")) {
                 name = name.substring(1).trim();
                 Model.getCoreHelper().setVisibility(me, Model.getVisibilityKind().getProtected());
         }
