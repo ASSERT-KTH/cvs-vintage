@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.86 2005/02/16 21:06:44 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.87 2005/05/14 19:51:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -342,37 +342,11 @@ public class GeneratorDisplay extends Generator2 {
      * @see org.argouml.application.api.NotationProvider2#generatePackage(java.lang.Object)
      */
     public String generatePackage(Object p) {
-        String s = "package ";
-        String packName = generateName(Model.getFacade().getName(p));
-
-        Stack stack = new Stack();
-        Object ns = Model.getFacade().getNamespace(p);
-        while (ns != null) {
-            stack.push(Model.getFacade().getName(ns));
-            ns = Model.getFacade().getNamespace(ns);
-        }
-        while (!stack.isEmpty()) {
-            s += (String) stack.pop() + ".";
-        }
-
-        if (s.endsWith(".")) {
-            int lastIndex = s.lastIndexOf(".");
-            s = s.substring(0, lastIndex);
-        }
-        s += "." + packName + " {\n";
-
-        Collection ownedElements = Model.getFacade().getOwnedElements(p);
-        if (ownedElements != null) {
-            Iterator ownedEnum = ownedElements.iterator();
-            while (ownedEnum.hasNext()) {
-                s += generate(/*(MModelElement)*/ ownedEnum.next());
-                s += "\n\n";
-            }
-        } else {
-            s += "(no elements)";
-        }
-        s += "\n}\n";
-        return s;
+        String s = generateStereotype( Model.getFacade().getStereotypes(p));
+        s += " ";
+        s += generateVisibility(Model.getFacade().getVisibility(p));
+        s += generateName(Model.getFacade().getName(p));
+        return s.trim();
     }
 
     /**
