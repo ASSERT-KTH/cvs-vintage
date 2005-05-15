@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: build.sh,v 1.9 2003/04/29 19:31:07 alexb Exp $
+# $Id: build.sh,v 1.10 2005/05/15 22:04:01 bobtarling Exp $
 #
  
 # +-------------------------------------------------------------------------+
@@ -17,7 +17,7 @@ fi
 #
 # build.sh always calls the version of ant distributed with ArgoUML
 #
-ANT_HOME=../tools/ant-1.4.1
+ANT_HOME=../tools/ant-1.6.2
 
 echo ANT_HOME is: $ANT_HOME
 echo
