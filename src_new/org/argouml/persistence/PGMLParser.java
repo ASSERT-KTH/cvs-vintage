@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.25 2005/05/14 07:42:42 mvw Exp $
+// $Id: PGMLParser.java,v 1.26 2005/05/15 11:10:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.diagram.ui.StereotypeContainer;
+import org.argouml.uml.diagram.ui.VisibilityContainer;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
@@ -687,6 +688,9 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
             } else if ("stereotypeVisible".equals(name)) {
                     ((StereotypeContainer) fig)
                     .setStereotypeVisible(value.equalsIgnoreCase("true"));
+            } else if ("visibilityVisible".equals(name)) {
+                    ((VisibilityContainer) fig)
+                    .setVisibilityVisible(value.equalsIgnoreCase("true"));
             }
         }
     }
