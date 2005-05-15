@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.173 2005/05/15 09:56:45 bobtarling Exp $
+<!-- $Id: build.xml,v 1.174 2005/05/15 18:01:05 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -260,6 +260,7 @@ Property files to be searched:
   <target name="ant.optional.init" depends="init">
     <path id="ant.optional.classpath">
       <pathelement location="${ant.home}/optional.jar"/>
+      <pathelement location="${ant.home}/libopt/ant-junit.jar"/>
       <pathelement location="${junit.jar.path}"/>
       <pathelement location="${jdepend.jar.path}"/>
       <pathelement location="${ant-xerces.jar.path}"/>
@@ -275,12 +276,6 @@ Property files to be searched:
     </taskdef>
 
     <taskdef classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator" name="junitreport">
-      <classpath>
-	 <path refid="ant.optional.classpath"/>
-      </classpath>
-    </taskdef>
-
-    <taskdef classname="org.apache.tools.ant.taskdefs.optional.jdepend.JDependTask" name="jdepend">
       <classpath>
 	 <path refid="ant.optional.classpath"/>
       </classpath>
