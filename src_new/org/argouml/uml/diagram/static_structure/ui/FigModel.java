@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.16 2005/04/14 18:29:49 mvw Exp $
+// $Id: FigModel.java,v 1.17 2005/05/15 08:55:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.16 2005/04/14 18:29:49 mvw Exp $
+// $Id: FigModel.java,v 1.17 2005/05/15 08:55:06 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -66,11 +66,6 @@ public class FigModel extends FigPackage {
     public FigModel(GraphModel gm, Object node) {
         this();
         setOwner(node);
-
-        if (Model.getFacade().isAModel(node) 
-                        && Model.getFacade().getName(node) != null) {
-            getNameFig().setText(Model.getFacade().getName(node));
-        }
     }
 
     /**

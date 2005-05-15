@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.98 2005/05/12 20:17:57 mvw Exp $
+// $Id: FigInterface.java,v 1.99 2005/05/15 08:55:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -188,13 +188,7 @@ public class FigInterface extends FigNodeModelElement
 
     /**
      * Constructor for use if this figure is created for an
-     * existing interface node in the metamodel.<p>
-     *
-     * Set the figure's name according to this node. This is used when the
-     * user click's on 'add to diagram' in the navpane.  Don't know if this
-     * should rather be done in one of the super classes, since similar code
-     * is used in FigClass.java etc.  Andreas Rueckert
-     * &lt;a_rueckert@gmx.net&gt;<p>
+     * existing interface node in the metamodel.
      *
      * @param gm   Not actually used in the current implementation
      *
@@ -204,10 +198,6 @@ public class FigInterface extends FigNodeModelElement
         this();
         setOwner(node);
         enableSizeChecking(true);
-        if (Model.getFacade().isAInterface(node)
-                && (Model.getFacade().getName(node) != null)) {
-            getNameFig().setText(Model.getFacade().getName(node));
-        }
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.143 2005/05/04 10:52:02 bobtarling Exp $
+// $Id: FigClass.java,v 1.144 2005/05/15 08:55:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,13 +211,7 @@ public class FigClass extends FigNodeModelElement
 
     /**
      * Constructor for use if this figure is created for an existing class
-     * node in the metamodel.<p>
-     *
-     * Set the figure's name according to this node. This is used when the
-     * user click's on 'add to diagram' in the navpane.  Don't know if this
-     * should rather be done in one of the super classes, since similar code
-     * is used in FigInterface.java etc.  Andreas Rueckert
-     * &lt;a_rueckert@gmx.net&gt;<p>
+     * node in the metamodel.
      *
      * @param gm   Not actually used in the current implementation
      *
@@ -227,10 +221,6 @@ public class FigClass extends FigNodeModelElement
         this();
         enableSizeChecking(true);
         setOwner(node);
-        if ((Model.getFacade().isAClassifier(node))
-                && (Model.getFacade().getName(node) != null)) {
-            setName(Model.getFacade().getName(node));
-        }
     }
 
     /**
