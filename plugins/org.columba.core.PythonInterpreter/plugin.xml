@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Python Interpreter" description="adds python plugin support" id="org.columba.core.PythonInterpreter" version="1.0" category="Interpreter Language" enabled="true">
-  <extension name="org.columba.core.interpreter">
-    <interpreter main_class="org.columba.core.scripting.PythonInterpreterPlugin" name="python"></interpreter>
-  </extension>
-  <!--<runtime type="java" jar="PythonInterpreter.jar"></runtime>-->
-<runtime type="java"></runtime>
-</plugin>
