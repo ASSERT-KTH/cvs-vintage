@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementVisibility.java,v 1.14 2005/01/30 20:47:34 linus Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.15 2005/05/15 08:53:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,6 @@ public class ActionSetModelElementVisibility extends UMLAction {
             Object target = ((UMLRadioButtonPanel)
                     source.getParent()).getTarget();
             if (Model.getFacade().isAModelElement(target)) {
-                Object m = /*(MModelElement)*/ target;
                 Object kind = null;
                 if (actionCommand.equals(PUBLIC_COMMAND)) {
                     kind = Model.getVisibilityKind().getPublic();
@@ -85,7 +84,7 @@ public class ActionSetModelElementVisibility extends UMLAction {
                 } else {
                     kind = Model.getVisibilityKind().getPrivate();
                 }
-                Model.getCoreHelper().setVisibility(m, kind);
+                Model.getCoreHelper().setVisibility(target, kind);
 
             }
         }
