@@ -47,7 +47,6 @@ import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
 import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.gui.table.dnd.HeaderTableDnd;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
@@ -88,10 +87,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	private HeaderTableMouseListener headerTableMouseListener;
 
-	/**
-	 * Drag'n'drop handling of messages
-	 */
-	private HeaderTableDnd headerTableDnd;
+	
 
 	/**
 	 * table view

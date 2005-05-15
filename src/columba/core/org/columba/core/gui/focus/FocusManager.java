@@ -131,7 +131,8 @@ public class FocusManager implements FocusListener {
 	 *  
 	 */
 	public void updateActions() {
-		enableActions(getCurrentOwner());
+		// TODO: fix updateActions
+		//enableActions(getCurrentOwner());
 	}
 
 	/**

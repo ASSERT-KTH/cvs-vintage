@@ -53,6 +53,9 @@ public class PasteAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
+		
+		// TODO:
+		/*
 		MailFolderCommandReference ref = (MailFolderCommandReference) ClipboardManager.getInstance()
 				.getSelection();
 
@@ -76,6 +79,8 @@ public class PasteAction extends AbstractColumbaAction {
 			ClipboardManager.getInstance().clearSelection();
 		}
 
-		CommandProcessor.getInstance().addOp(c);
+
+				CommandProcessor.getInstance().addOp(c);
+				*/
 	}
 }

@@ -1,24 +1,33 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.TransferHandler;
+import javax.swing.text.DefaultEditorKit;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.focus.FocusManager;
@@ -26,45 +35,86 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
+public class CopyAction extends AbstractColumbaAction implements
+		PropertyChangeListener {
 
-public class CopyAction extends AbstractColumbaAction {
-    public CopyAction(FrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null, "menu_edit_copy"));
+	private JComponent focusOwner = null;
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null, "menu_edit_copy_tooltip")
-                                .replaceAll("&", ""));
+	private Action internalAction = new DefaultEditorKit.CopyAction();
 
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_copy-16.png"));
+	public CopyAction(FrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_edit_copy"));
 
-        // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_copy.png"));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"menu_edit_copy_tooltip").replaceAll("&", ""));
 
-        // short cut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+		// small icon for menu
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_copy-16.png"));
 
-        // disable toolbar text
-        setShowToolBarText(false);
+		// large icon for toolbar
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_copy.png"));
 
-        setEnabled(false);
-        FocusManager.getInstance().setCopyAction(this);
-    }
+		// short cut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				ActionEvent.CTRL_MASK));
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-    	FocusManager.getInstance().copy();
-    }
+		// disable toolbar text
+		setShowToolBarText(false);
 
-    /* (non-Javadoc)
-             * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
-             */
-    public boolean isSingleton() {
-        return true;
-    }
+		setEnabled(true);
+		
+		FocusManager.getInstance().setCopyAction(this);
+
+		putValue(Action.ACTION_COMMAND_KEY, (String) TransferHandler
+				.getCopyAction().getValue(Action.NAME));
+
+		KeyboardFocusManager manager = KeyboardFocusManager
+				.getCurrentKeyboardFocusManager();
+		manager.addPropertyChangeListener("permanentFocusOwner", this);
+
+	}
+
+	public void propertyChange(PropertyChangeEvent e) {
+		Object o = e.getNewValue();
+		if (o instanceof JComponent) {
+			focusOwner = (JComponent) o;
+			System.out
+					.println("focus owner=" + focusOwner.getClass().getName());
+
+		} else {
+			focusOwner = null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent e) {
+		//FocusManager.getInstance().copy();
+
+		//internalAction.actionPerformed(evt);
+
+		if (focusOwner == null)
+			return;
+		String action = (String) e.getActionCommand();
+		Action a = focusOwner.getActionMap().get(action);
+		if (a != null) {
+			a.actionPerformed(new ActionEvent(focusOwner,
+					ActionEvent.ACTION_PERFORMED, null));
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
+	 */
+	public boolean isSingleton() {
+		return true;
+	}
 }

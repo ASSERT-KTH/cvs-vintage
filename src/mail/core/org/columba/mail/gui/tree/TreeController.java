@@ -26,15 +26,12 @@ import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.IMailFolder;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
@@ -84,7 +81,7 @@ public class TreeController implements TreeWillExpandListener,
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
 		view.setCellRenderer(renderer);
 
-		getView().setTransferHandler(new TreeViewTransferHandler());
+		getView().setTransferHandler(new TreeViewTransferHandler(controller));
 		getView().setDragEnabled(true);
 
 		/*

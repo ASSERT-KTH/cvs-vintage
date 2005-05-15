@@ -42,10 +42,13 @@ public class CopyAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
+    	
+    	/*
         // add current selection to clipboard
         // copy action
     	ClipboardManager.getInstance().setOperation(ClipboardManager.COPY_ACTION);
 
     	ClipboardManager.getInstance().setSelection((MailFolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
+    	*/
     }
 }

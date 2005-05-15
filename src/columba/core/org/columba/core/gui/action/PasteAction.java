@@ -18,7 +18,9 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import javax.swing.Action;
 import javax.swing.KeyStroke;
+import javax.swing.text.DefaultEditorKit;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.focus.FocusManager;
@@ -28,6 +30,9 @@ import org.columba.core.util.GlobalResourceLoader;
 
 
 public class PasteAction extends AbstractColumbaAction {
+	
+	private Action internalAction = new DefaultEditorKit.PasteAction();
+	
     public PasteAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_edit_paste"));
@@ -43,22 +48,28 @@ public class PasteAction extends AbstractColumbaAction {
         // large icon for toolbar
         putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
 
+        
         // shortcut key
         putValue(ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-
+            
+        
         // disable toolbar text
         setShowToolBarText(false);
 
         setEnabled(false);
+        
         FocusManager.getInstance().setPasteAction(this);
     }
-
+    
+   
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-    	FocusManager.getInstance().paste();
+    	//FocusManager.getInstance().paste();
+    	
+    	internalAction.actionPerformed(evt);
     }
 
     /* (non-Javadoc)

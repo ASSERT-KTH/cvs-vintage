@@ -22,60 +22,117 @@ import java.io.IOException;
 
 import org.columba.mail.command.IMailFolderCommandReference;
 
-
 /**
  * A Transferable for moving message references.
+ * 
  * @author redsolo
  */
 public class MessageReferencesTransfer implements Transferable {
-    /** The only <code>DataFlavor</code> that this transfer allows. */
-    public static DataFlavor FLAVOR;
+	/** The only <code>DataFlavor</code> that this transfer allows. */
+	public static DataFlavor FLAVOR;
 
-    static {
-        try {
-            FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
-                    "-" + MessageReferencesTransfer.class.getName());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+	static {
+		try {
+			FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "-"
+					+ MessageReferencesTransfer.class.getName());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    private IMailFolderCommandReference reference;
+	private IMailFolderCommandReference reference;
+	
+	private int action;
+	
+	/**
+	 * true, if operation is a drag'n'drop operation
+	 */
+	private boolean isDragOperation;
+	
+	/**
+	 * true, if operation is a cut/copy/paste accelerator key operation
+	 * using the clipboard
+	 */
+	private boolean isClipboardOperation;
 
-    /**
- * Creates a message transferable
- * @param ref message references.
- */
-    public MessageReferencesTransfer(IMailFolderCommandReference ref) {
-        super();
-        reference = ref;
-    }
+	/**
+	 * Creates a message transferable
+	 * 
+	 * @param ref
+	 *            message references.
+	 */
+	public MessageReferencesTransfer(IMailFolderCommandReference ref) {
+		super();
+		reference = ref;
+		
+		isDragOperation = false;
+		isClipboardOperation = false;
+	}
 
-    /**
- * Returns the message references for this transfer.
- * @return the message references for this transfer.
- */
-    public IMailFolderCommandReference getFolderReferences() {
-        return reference;
-    }
+	
+	/**
+	 * @return Returns the action.
+	 */
+	public int getAction() {
+		return action;
+	}
+	
+	/**
+	 * @param action The action to set.
+	 */
+	public void setAction(int action) {
+		this.action = action;
+	}
+	/**
+	 * Returns the message references for this transfer.
+	 * 
+	 * @return the message references for this transfer.
+	 */
+	public IMailFolderCommandReference getFolderReferences() {
+		return reference;
+	}
 
-    /** {@inheritDoc} */
-    public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[] { FLAVOR };
-    }
+	/** {@inheritDoc} */
+	public DataFlavor[] getTransferDataFlavors() {
+		return new DataFlavor[] { FLAVOR };
+	}
 
-    /** {@inheritDoc} */
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return FLAVOR.equals(flavor);
-    }
+	/** {@inheritDoc} */
+	public boolean isDataFlavorSupported(DataFlavor flavor) {
+		return FLAVOR.equals(flavor);
+	}
 
-    /** {@inheritDoc} */
-    public Object getTransferData(DataFlavor flavor)
-        throws UnsupportedFlavorException, IOException {
-        if (!isDataFlavorSupported(flavor)) {
-            throw new UnsupportedFlavorException(flavor);
-        }
+	/** {@inheritDoc} */
+	public Object getTransferData(DataFlavor flavor)
+			throws UnsupportedFlavorException, IOException {
+		if (!isDataFlavorSupported(flavor)) {
+			throw new UnsupportedFlavorException(flavor);
+		}
 
-        return this;
-    }
+		return this;
+	}
+	/**
+	 * @return Returns the isClipboardOperation.
+	 */
+	public boolean isClipboardOperation() {
+		return isClipboardOperation;
+	}
+	/**
+	 * @param isClipboardOperation The isClipboardOperation to set.
+	 */
+	public void setClipboardOperation(boolean isClipboardOperation) {
+		this.isClipboardOperation = isClipboardOperation;
+	}
+	/**
+	 * @return Returns the isDragOperation.
+	 */
+	public boolean isDragOperation() {
+		return isDragOperation;
+	}
+	/**
+	 * @param isDragOperation The isDragOperation to set.
+	 */
+	public void setDragOperation(boolean isDragOperation) {
+		this.isDragOperation = isDragOperation;
+	}
 }

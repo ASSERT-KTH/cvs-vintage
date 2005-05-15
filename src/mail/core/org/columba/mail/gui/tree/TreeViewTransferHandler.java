@@ -24,19 +24,22 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
-import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.MessageReferencesTransfer;
 
 /**
  * A Transferhandler for the TreeView. This handler will only work with a
  * treeview component. The only type of folders that can be moved in the
- * treeview are <code>VirtualFolder</code> and <code>AbstractLocalFolder</code>
+ * treeview are <code>VirtualFolder</code> and
+ * <code>AbstractLocalFolder</code>
  * <p>
  * The handler supports
  * <ul>
@@ -48,6 +51,13 @@ import org.columba.mail.gui.table.MessageReferencesTransfer;
  * @author redsolo
  */
 public class TreeViewTransferHandler extends TransferHandler {
+
+	private FrameMediator frameMediator;
+
+	public TreeViewTransferHandler(FrameMediator frameMediator) {
+		this.frameMediator = frameMediator;
+	}
+
 	/** {@inheritDoc} */
 	public boolean importData(JComponent comp, Transferable transferProxy) {
 		boolean dataWasImported = false;
@@ -125,14 +135,31 @@ public class TreeViewTransferHandler extends TransferHandler {
 			MessageReferencesTransfer transferable) {
 		boolean dataWasImported = false;
 
-		AbstractMessageFolder destFolder = (AbstractMessageFolder) treeView
-				.getDropTargetFolder();
+		AbstractMessageFolder destFolder = null;
+
+		if (transferable.isDragOperation())
+			destFolder = (AbstractMessageFolder) treeView.getDropTargetFolder();
+		else if ( transferable.isClipboardOperation())
+			destFolder = (AbstractMessageFolder) ((MailFrameMediator) frameMediator)
+					.getTableSelection().getSourceFolder();
 
 		IMailFolderCommandReference result = transferable.getFolderReferences();
 		result.setDestinationFolder(destFolder);
 
-		CopyMessageCommand command = new MoveMessageCommand(result);
-		CommandProcessor.getInstance().addOp(command);
+		if (transferable.getAction() == TransferHandler.MOVE) {
+			// move
+			MoveMessageCommand command = new MoveMessageCommand(result);
+			CommandProcessor.getInstance().addOp(command);
+		} else if (transferable.getAction() == TransferHandler.COPY) {
+			// copy
+			CopyMessageCommand command = new CopyMessageCommand(result);
+			CommandProcessor.getInstance().addOp(command);
+		}
+
+		/*
+		 * // copy CopyMessageCommand command = new CopyMessageCommand(result);
+		 * CommandProcessor.getInstance().addOp(command);
+		 */
 		dataWasImported = true;
 
 		return dataWasImported;
@@ -161,8 +188,15 @@ public class TreeViewTransferHandler extends TransferHandler {
 	 *            the folder to move.
 	 */
 	private void exportFolder(TreeView treeView, AbstractMessageFolder folder) {
-		MailFolderCommandReference commandRef = new MailFolderCommandReference(folder);
-		commandRef.setDestinationFolder(treeView.getDropTargetFolder());
+		MailFolderCommandReference commandRef = new MailFolderCommandReference(
+				folder);
+		AbstractFolder destFolder = (AbstractFolder) treeView
+				.getDropTargetFolder();
+
+		if (folder.equals(destFolder))
+			return;
+
+		commandRef.setDestinationFolder(destFolder);
 		treeView.resetDropTargetFolder();
 
 		CommandProcessor.getInstance().addOp(new MoveFolderCommand(commandRef));
@@ -191,7 +225,8 @@ public class TreeViewTransferHandler extends TransferHandler {
 					.getLastPathComponent();
 
 			if (folderNode.supportsMove()) {
-				exportObject = new FolderTransfer((AbstractMessageFolder) folderNode);
+				exportObject = new FolderTransfer(
+						(AbstractMessageFolder) folderNode);
 			}
 		}
 
