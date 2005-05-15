@@ -1,4 +1,4 @@
-// $Id: LifeLinePort.java,v 1.3 2005/01/09 14:58:38 linus Exp $
+// $Id: ActionAddClassifierRole.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,19 +22,50 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.sequence;
+package org.argouml.uml.diagram.sequence.ui;
+
+import org.argouml.model.Model;
+import org.argouml.ui.CmdCreateNode;
+import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;
+import org.tigris.gef.base.Editor;
+import org.tigris.gef.base.Globals;
+import org.tigris.gef.graph.GraphModel;
 
 /**
- * @author : jaap.branderhorst@xs4all.nl
+ * Action to add an object to a sequence diagram.
+ *
+ * @author jaap.branderhorst@xs4all.nl
+ * @since Aug 11, 2003
  */
-public class LifeLinePort {
+public class ActionAddClassifierRole extends CmdCreateNode {
 
     /**
-     * Constructor.
+     * The constructor.
      */
-    public LifeLinePort() {
-        super();
-        // TODO: Auto-generated constructor stub
+    public ActionAddClassifierRole() {
+        super(Model.getMetaTypes().getClassifierRole(), false, "ClassifierRole");
+    }
+
+    /**
+     * @see org.tigris.gef.graph.GraphFactory#makeNode()
+     */
+    public Object makeNode() {
+        Object node=null;
+        Editor ce = Globals.curEditor();
+        GraphModel gm = ce.getGraphModel();
+        if (gm instanceof SequenceDiagramGraphModel) {
+            Object collaboration=((SequenceDiagramGraphModel)gm).getCollaboration();
+            node=Model.getCollaborationsFactory().buildClassifierRole(
+                collaboration);
+            /*
+            Model.getCoreHelper().setNamespace( node,
+                                                Model.getFacade().getNamespace( collaboration));
+            */
+        } else {
+            throw new IllegalStateException("Graphmodel is not a "
+					    + "sequence diagram graph model");
+        }
+        return node;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.5 2005/05/14 07:42:42 mvw Exp $
+// $Id: PGMLStackParser.java,v 1.6 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,11 +29,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.argouml.gef.FigGroupHandler;
-import org.argouml.gef.HandlerStack;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.diagram.ui.StereotypeContainer;
+import org.tigris.gef.persistence.pgml.FigGroupHandler;
+import org.tigris.gef.persistence.pgml.HandlerStack;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 import org.tigris.gef.presentation.FigNode;
@@ -44,7 +44,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * The PGML Parser.
  */
-public class PGMLStackParser extends org.argouml.gef.PGMLStackParser {
+public class PGMLStackParser extends org.tigris.gef.persistence.pgml.PGMLStackParser {
     /**
      * Constructor.
      * @param modelElementsByUuid a map of model elements indexed

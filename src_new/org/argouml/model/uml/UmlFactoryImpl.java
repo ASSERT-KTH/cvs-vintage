@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.29 2005/03/01 23:57:22 bobtarling Exp $
+// $Id: UmlFactoryImpl.java,v 1.30 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -248,6 +248,7 @@ class UmlFactoryImpl
         {MAssociationClass.class, MClass.class, },
         {MAssociationEnd.class,   MClass.class,
          MAssociation.class, },
+         {MMessage.class, MClassifierRole.class},
     };
 
     /**

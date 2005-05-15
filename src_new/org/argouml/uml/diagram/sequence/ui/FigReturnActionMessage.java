@@ -1,4 +1,4 @@
-// $Id: HandlerStack.java,v 1.2 2005/05/07 07:52:59 linus Exp $
+// $Id: FigReturnActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,31 +22,44 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.gef;
+package org.argouml.uml.diagram.sequence.ui;
 
-import org.xml.sax.helpers.DefaultHandler;
+import java.util.List;
+
+import org.tigris.gef.presentation.ArrowHeadGreater;
+import org.tigris.gef.presentation.Fig;
+
+import org.argouml.uml.diagram.sequence.MessageNode;
 
 /**
- * A class that implements this interface is responsible for maintaining
- * the stack of ContentHandler objects in response to {@link #pushHandlerStack}
- * and {@link #popHandlerStack} calls, and for making sure that the SAX parser
- * is always using the ContentHandler object at the top of the stack.
- *
- * @author Michael MacDonald
+ * @author Jaap
  */
-public interface HandlerStack {
-    /**
-     * Pushes a new ContentHandler on the stack and insures that the
-     * SAX parser uses that handler for further events.
-     *
-     * @param handler ContentHandler to be pushed on the handler stack
-     */
-    void pushHandlerStack(DefaultHandler handler);
+public class FigReturnActionMessage extends FigMessage {
 
     /**
-     * Removes the top handler from the stack and insures that
-     * the SAX parser calls the previously underlying, now top ContentHandler
-     * object for further events.
+     * @param owner The owner of the link.
      */
-    void popHandlerStack();
+    public FigReturnActionMessage(Object owner) {
+        super(owner);
+        setDestArrowHead(new ArrowHeadGreater());
+        setDashed(true);
+    }
+
+    /**
+     * Override to make sure dashed is preserved across saves
+     *
+     * @see org.tigris.gef.presentation.FigEdge#setFig
+     */
+    public void setFig( Fig f)
+    {
+        super.setFig( f);
+        setDashed( true);
+    }
+
+    /**
+     *
+     */
+    public FigReturnActionMessage() {
+        this( null);
+    }
 }

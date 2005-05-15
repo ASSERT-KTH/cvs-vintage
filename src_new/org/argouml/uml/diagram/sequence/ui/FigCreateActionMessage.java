@@ -1,4 +1,4 @@
-// $Id: Node.java,v 1.4 2005/01/09 14:58:38 linus Exp $
+// $Id: FigCreateActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,21 +22,38 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// Created on Nov 29, 2003
+package org.argouml.uml.diagram.sequence.ui;
 
-package org.argouml.uml.diagram.sequence;
+import org.tigris.gef.presentation.ArrowHeadGreater;
 
 /**
- * An abstract Node for the sequence diagram.
- *
+ * @author jaap.branderhorst
  */
-public abstract class Node {
+public class FigCreateActionMessage extends FigMessage {
+
+    /**
+     * @param owner the owner object
+     */
+    public FigCreateActionMessage(Object owner) {
+        super(owner);
+        setDestArrowHead(new ArrowHeadGreater());
+        setDashed(false);
+    }
 
     /**
      * The constructor.
      *
      */
-    public Node() {
+    public FigCreateActionMessage() {
+        this(null);
+    }
+
+    /**
+     * @see org.argouml.uml.diagram.sequence.ui.FigMessage#layoutActivations()
+     */
+    protected void layoutActivations() {
+        // TODO: Auto-generated method stub
+
     }
 
 }

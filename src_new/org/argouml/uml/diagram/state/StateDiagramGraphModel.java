@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.66 2005/05/03 20:23:42 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.67 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -298,7 +298,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      * java.lang.Object, java.lang.Class)
      */
     public Object connect(Object fromPort, Object toPort,
-			  Class edgeClass) {
+			  Object edgeClass) {
 
         if (Model.getFacade().isAFinalState(fromPort)) {
 	    return null;

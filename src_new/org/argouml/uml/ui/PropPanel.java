@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.112 2005/04/24 20:06:35 mvw Exp $
+// $Id: PropPanel.java,v 1.113 2005/05/15 09:56:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -603,6 +603,8 @@ public abstract class PropPanel
     }
 
     private void fireTargetSet(TargetEvent targetEvent) {
+      if ( listenerList==null)
+        listenerList=registrateTargetListeners( this);
 	//          Guaranteed to return a non-null array
 	Object[] listeners = listenerList.getListenerList();
 	for (int i = listeners.length - 2; i >= 0; i -= 2) {
@@ -614,6 +616,8 @@ public abstract class PropPanel
     }
 
     private void fireTargetAdded(TargetEvent targetEvent) {
+        if ( listenerList==null)
+          listenerList=registrateTargetListeners( this);
 	// Guaranteed to return a non-null array
 	Object[] listeners = listenerList.getListenerList();
 
@@ -626,6 +630,8 @@ public abstract class PropPanel
     }
 
     private void fireTargetRemoved(TargetEvent targetEvent) {
+      if ( listenerList==null)
+        listenerList=registrateTargetListeners( this);
 	// Guaranteed to return a non-null array
 	Object[] listeners = listenerList.getListenerList();
 	for (int i = listeners.length - 2; i >= 0; i -= 2) {

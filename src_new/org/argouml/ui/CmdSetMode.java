@@ -1,4 +1,4 @@
-// $Id: CmdSetMode.java,v 1.8 2005/01/09 14:58:12 linus Exp $
+// $Id: CmdSetMode.java,v 1.9 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,6 +115,7 @@ public class CmdSetMode extends org.tigris.gef.base.CmdSetMode {
     public CmdSetMode(Class modeClass, Hashtable modeArgs, String name) {
     	super(modeClass, name);
     	_modeArgs = modeArgs;
+        putToolTip(name);
     }
 
     /**

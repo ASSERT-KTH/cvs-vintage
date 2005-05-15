@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.12 2005/05/09 21:21:43 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.13 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
         try {
             expander =
                 new OCLExpander(TemplateReader.getInstance().read(PGML_TEE));
-        } catch (FileNotFoundException e) {
+        } catch (ExpansionException e) {
             throw new SaveException(e);
         }
         if (indent == null) {

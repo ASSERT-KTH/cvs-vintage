@@ -1,5 +1,5 @@
-// $Id: LinkNode.java,v 1.6 2005/01/09 14:58:38 linus Exp $
-// Copyright (c) 2003-2005 The Regents of the University of California. All
+// $Id: FigAssociationClassTee.java,v 1.1 2005/05/15 09:56:46 bobtarling Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,75 +22,46 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.sequence;
+package org.argouml.uml.diagram.ui;
 
-import org.argouml.uml.diagram.sequence.ui.FigLinkPort;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigCircle;
 
 /**
- * A Link Node for the sequence diagram.
- *
+ * The T juntion joining the dashed edge to a solid edge of an association
+ * class.
+ * @author Bob Tarling
  */
-public class LinkNode extends ActivationNode implements LinkPort {
-    private FigLinkPort figLinkPort;
-    private Object ownerObject;
-    private boolean destroyed;
 
-    /**
-     * The constructor.
-     *
-     * @param owner the owner object
-     */
-    public LinkNode(Object owner) {
-        this(owner, null);
+public class FigAssociationClassTee extends FigNodeModelElement {
+    private FigCircle bigPort;
+    public FigAssociationClassTee() {
+        bigPort = new FigCircle(0, 0, 10, 10, Color.black, Color.white);
+        addFig(bigPort);
     }
-
-    /**
-     * The constructor.
-     *
-     * @param owner the owner object
-     * @param flp the figlinkport
-     */
-    public LinkNode(Object owner, FigLinkPort flp) {
-        super();
-        ownerObject = owner;
-        setFigLinkPort(flp);
+    
+    public boolean hit(Rectangle r) {
+        return false;
     }
-
-    /**
-     * @return the figLinkPort
-     */
-    public FigLinkPort getFigLinkPort() {
-        return figLinkPort;
+    
+    public Object deepHitPort(int x, int y) {
+        return null;
     }
-
-    /**
-     * @param flp the figlinkport
-     */
-    public void setFigLinkPort(FigLinkPort flp) {
-        figLinkPort = flp;
-	if (flp != null)
-	    flp.setOwner(this);
+    
+    public Object hitPort(int x, int y) {
+        return null;
     }
-
-    /**
-     * @see org.argouml.uml.diagram.sequence.LinkPort#getObject()
-     */
-    public Object getObject() {
-        return ownerObject;
+    
+    public Fig hitFig(Rectangle r) {
+        return null;
     }
-
-    /**
-     * @return destroyed
-     */
-    public boolean isDestroyed() {
-        return destroyed;
+    
+    public boolean isSelectable() {
+        return false;
     }
-
-    /**
-     * @param b destroyed
-     */
-    public void setDestroyed(boolean b) {
-        destroyed = b;
-    }
-
+    
 }

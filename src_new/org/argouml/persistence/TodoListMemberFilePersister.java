@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.8 2005/02/09 19:20:26 bobtarling Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.9 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,7 +99,7 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
         try {
             expander =
                 new OCLExpander(TemplateReader.getInstance().read(TO_DO_TEE));
-        } catch (FileNotFoundException e) {
+        } catch (ExpansionException e) {
             throw new SaveException(e);
         }
 

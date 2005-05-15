@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.172 2005/05/14 12:15:21 linus Exp $
+<!-- $Id: build.xml,v 1.173 2005/05/15 09:56:45 bobtarling Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -129,11 +129,6 @@ Property files to be searched:
     <tstamp>
         <format pattern="yyyy" property="year"/>
     </tstamp>
-    <condition property="javadoc.dstamp" value="${DSTAMP}">
-      <not>
-	<isset property="javadoc.dstamp"/>
-      </not>
-    </condition>
 
     <property name="argo.dist.dir" value="../DIST"/>
 

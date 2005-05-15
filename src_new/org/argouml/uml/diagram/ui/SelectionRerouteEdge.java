@@ -1,4 +1,4 @@
-// $Id: SelectionRerouteEdge.java,v 1.7 2005/01/09 14:58:57 linus Exp $
+// $Id: SelectionRerouteEdge.java,v 1.8 2005/05/15 09:56:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -181,7 +181,8 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
         // last is the top fig.
         while (figs.hasMoreElements()) {
             Fig candidateFig = (Fig) figs.nextElement();
-            if (candidateFig instanceof FigNodeModelElement) {
+            if (candidateFig instanceof FigNodeModelElement
+                    && candidateFig.isSelectable()) {
                 newFig = (FigNodeModelElement) candidateFig;
             }
         }
@@ -193,7 +194,7 @@ public class SelectionRerouteEdge extends SelectionEdgeClarifiers {
         }
 
         UMLMutableGraphSupport mgm =
-	    (UMLMutableGraphSupport) editor.getGraphModel();
+            (UMLMutableGraphSupport) editor.getGraphModel();
         FigNodeModelElement oldFig = null;
         boolean isSource = false;
         if (pointIndex == 0) {

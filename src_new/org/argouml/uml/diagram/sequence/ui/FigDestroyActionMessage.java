@@ -1,4 +1,4 @@
-// $Id: HandlerFactory.java,v 1.2 2005/05/07 07:52:59 linus Exp $
+// $Id: FigDestroyActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,36 +22,34 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.gef;
+package org.argouml.uml.diagram.sequence.ui;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import org.xml.sax.helpers.DefaultHandler;
+import org.tigris.gef.presentation.ArrowHeadGreater;
 
 /**
- * Classes implementing this interface are able to create and initialize
- * a ContentHandler given the information about a new PGML file element.
+ * @author Jaap
+ *
+ * To change the template for this generated type comment go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ *
+ * @author jaap.branderhorst
  */
-public interface HandlerFactory {
+public class FigDestroyActionMessage extends FigMessage {
+
     /**
-     * Return a ContentHandler appropriate for the element with the given
-     * name and attributes.  If you aren't interested in the content
-     * or any sub-elements of the element, return null, and a
-     * default handler will be used (which usually mean that the contents
-     * and sub-elements are just thrown away).
-     *
-     * @param stack
-     * @param container
-     * @param uri
-     * @param localname
-     * @param qname
-     * @param attributes
-     * @return
-     * @throws SAXException
+     * @param owner the owner object
      */
-    DefaultHandler getHandler(HandlerStack stack,
-            Object container,
-            String uri, String localname, String qname,
-            Attributes attributes) throws SAXException;
+    public FigDestroyActionMessage(Object owner) {
+        super(owner);
+        setDestArrowHead(new ArrowHeadGreater());
+        setDashed(false);
+    }
+
+    /**
+     * The constructor.
+     *
+     */
+    public FigDestroyActionMessage() {
+        this(null);
+    }
 }

@@ -1,4 +1,4 @@
-// $Id: FigCreateActionLink.java,v 1.4 2005/01/09 14:58:38 linus Exp $
+// $Id: FigCallActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,34 +24,32 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
+import java.util.List;
+
+import org.argouml.uml.diagram.sequence.MessageNode;
+
+import org.tigris.gef.presentation.ArrowHeadTriangle;
+
 /**
- * @author jaap.branderhorst
+ * Fig that represents a link on a sequence diagram that has a callaction
+ *
+ * @author jaap.branderhorst@xs4all.nl
  */
-public class FigCreateActionLink extends FigLink {
+public class FigCallActionMessage extends FigMessage {
 
     /**
      * @param owner the owner object
      */
-    public FigCreateActionLink(Object owner) {
+    public FigCallActionMessage(Object owner) {
         super(owner);
-        // TODO: Auto-generated constructor stub
+        setDestArrowHead(new ArrowHeadTriangle());
+        setDashed(false);
     }
 
     /**
-     * The constructor.
      *
      */
-    public FigCreateActionLink() {
-        super();
-        // TODO: Auto-generated constructor stub
+    public FigCallActionMessage() {
+        this(null);
     }
-
-    /**
-     * @see org.argouml.uml.diagram.sequence.ui.FigLink#layoutActivations()
-     */
-    protected void layoutActivations() {
-        // TODO: Auto-generated method stub
-
-    }
-
 }
