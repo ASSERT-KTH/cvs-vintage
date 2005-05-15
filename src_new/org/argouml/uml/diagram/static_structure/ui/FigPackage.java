@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.61 2005/05/15 11:10:22 mvw Exp $
+// $Id: FigPackage.java,v 1.62 2005/05/15 17:57:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -746,7 +746,7 @@ public class FigPackage extends FigNodeModelElement
      */
     protected void textEditStarted(FigText ft) {
         ProjectBrowser.getInstance().getStatusBar().showStatus(
-            "Enter text according: [ <<stereotype>> ] [ + | - | # ] [ name ]");
+            "Enter text according: [ <<stereotype>> ] [ + | - | # ] [ full_pathname :: ] [ name ]");
 //        String s = GeneratorDisplay.getInstance().generate(getOwner());
 //        ft.setText(s);
     }
