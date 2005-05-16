@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IRMIContext.java,v 1.1 2005/05/14 00:03:58 rhs Exp $
+ * $Id: IRMIContext.java,v 1.2 2005/05/16 08:51:12 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -36,10 +36,8 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
-import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
-import org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
 import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
