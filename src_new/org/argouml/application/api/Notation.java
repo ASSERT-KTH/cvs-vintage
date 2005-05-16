@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.61 2005/05/16 09:10:44 mvw Exp $
+// $Id: Notation.java,v 1.62 2005/05/16 11:10:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -815,13 +815,6 @@ public final class Notation implements PropertyChangeListener {
                 + pce.getNewValue());
         ArgoEventPump.fireEvent(
             new ArgoNotationEvent(ArgoEventTypes.NOTATION_CHANGED, pce));
-    }
-
-    /**
-     * @return the provider
-     */
-    public static NotationProvider2 getDefaultProvider() {
-        return NotationProviderFactory.getInstance().getDefaultProvider();
     }
 
     ////////////////////////////////////////////////////////////////

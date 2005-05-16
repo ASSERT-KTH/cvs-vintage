@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory.java,v 1.15 2005/05/16 09:10:44 mvw Exp $
+// $Id: NotationProviderFactory.java,v 1.16 2005/05/16 11:10:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,8 +67,7 @@ public final class NotationProviderFactory
     public static NotationProviderFactory getInstance() { return SINGLETON; }
 
     private List providers = new ArrayList();
-    private NotationProvider2 defaultProvider;
-
+    
     /**
      * Constructor to disallow other to create this.
      */
@@ -121,7 +120,7 @@ public final class NotationProviderFactory
 	        return np;
 	    }
 	}
-        return getDefaultProvider();
+        return GeneratorDisplay.getInstance();
     }
 
     /**
@@ -140,19 +139,6 @@ public final class NotationProviderFactory
 	    nots.add(np.getNotation());
 	}
         return nots;
-    }
-
-    /**
-     * @return the default notation provider
-     */
-    public NotationProvider2 getDefaultProvider() {
-	if (defaultProvider == null) {
-	    defaultProvider = GeneratorDisplay.getInstance();
-	    // TODO:  This must be the provider pointed to by the configuration,
-	    // or UML 13 if none.
-	    //
-	}
-	return defaultProvider;
     }
 
     /**
