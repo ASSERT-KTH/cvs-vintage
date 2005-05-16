@@ -32,6 +32,10 @@
       <listitem>
         <para>Cluster Method Invocation (CMI) for clustered rmi server</para>
       </listitem>
+      <listitem>
+        <para>Intercepting RMI (IRMI). This is a drop in replacement
+        for the Sun specific portions of the JRMP protocol.</para>
+      </listitem>
     </itemizedlist>
 
     <para>
@@ -87,12 +91,11 @@
       </title>
 
       <para>
-        The <filename>carol.properties</filename> file is a standard Java
-        properties file. All properties, in this file, follow the rules below
-        (we suppose that XXX is the RMI name like 'jrmp', 'iiop','jeremie' or
-        'cmi'. For all those defaults provided RMI protocol, please use those
-        names.
-      </para>
+        The <filename>carol.properties</filename> file is a standard
+        Java properties file. All properties, in this file, follow the
+        rules below (we suppose that XXX is the RMI name like 'jrmp',
+        'iiop','jeremie', 'cmi', or 'irmi'. For all those defaults
+        provided RMI protocol, please use those names. </para>
 
       <table>
         <title>Carol general properties</title>
@@ -178,19 +181,18 @@
               <row>
                 <entry>carol.XXX .PortableRemoteObjectClass</entry>
                 <entry>'XXX portable remote object class name'</entry>
-                <entry>The portable remote object delegate class name for this
-                  RMI (CAROL provide implementation of those classes for RMI
-                  JRMP,JEREMIE and CMI, see below)
-                </entry>
+                <entry>The portable remote object delegate class name
+                  for this RMI (CAROL provides the implementation of
+                  this class for JRMP, JEREMIE, CMI, and IRMI. See
+                  below.)</entry>
                 <entry>No, There is a default for each RMI provided by carol</entry>
               </row>
               <row>
                 <entry>carol.XXX .NameServiceClass</entry>
                 <entry>'XXX carol Name Service class name'</entry>
-                <entry>The Name Service class name for this RMI (CAROL provide
-                  implementation of those classes for RMI JRMP, RMI IIOP and
-                  JEREMIE, see below)
-                </entry>
+                <entry>The Name Service class name for this RMI (CAROL
+                  provides the implementation of this class for JRMP,
+                  JEREMIE, CMI, and IRMI. See below.)</entry>
                 <entry>No, this property is only necessary for automatically
                   start a Name Service for this protocol and there is a default
                   for each RMI provided by carol
@@ -228,12 +230,12 @@
       <title>RMI JRMP configuration</title>
 
       <para>
-        One of the SPI personality provided by CAROL is the standard Sun RMI
-        JRMP. This personality can be used with all standard RMI JRMP
-        features. CAROL allow implicit context propagation with RMI JRMP (like a
-        transactional or a security context) via a RMI IIOP Interceptors like
-        mechanism. The example below explains the general way for CAROL RMI JRMP
-        configuration:
+        One of the SPI personality provided by CAROL is the standard
+        Sun RMI JRMP. This personality can be used with all standard
+        RMI JRMP features. CAROL allows implicit context propagation
+        with RMI JRMP (like a transactional or a security context) via
+        a RMI IIOP Interceptors like mechanism. The example below
+        explains the general way for CAROL RMI JRMP configuration:
       </para>
 
       <example>
@@ -302,12 +304,12 @@
       <title>RMI IIOP configuration</title>
 
       <para>
-        One of the SPI personality provided by CAROL is the standard Sun RMI
-        IIOP. This personality can be used with all standard RMI IIOP
-        features. CAROL allow implicit context propagation with RMI IIOP (like a
-        transactional or a security context) via a RMI IIOP Interceptors
-        mechanism. The example below explains the general way for CAROL RMI IIOP
-        configuration:
+        One of the SPI personalities provided by CAROL is the standard
+        Sun RMI IIOP. This personality can be used with all standard
+        RMI IIOP features. CAROL allow implicit context propagation
+        with RMI IIOP (like a transactional or a security context) via
+        a RMI IIOP Interceptors mechanism. The example below explains
+        the general way for CAROL RMI IIOP configuration:
       </para>
 
       <example>
@@ -372,13 +374,14 @@
       <title>RMI JEREMIE personality configuration</title>
 
       <para>
-        One of the SPI personality available/provided by CAROL is the ObjectWeb
-        Jonathan JEREMIE personality. This personality can be used with all
-        standard JEREMIE features. CAROL also allow JEREMIE to propagate
-        implicitly a context (like a transactionnal or a security context) via a
-        JEREMIE handler mechanism. This section explains the general way for
-        CAROL JEREMIE configuration in the two jonathan.xml and carol.properties
-        files:
+        One of the SPI personalities available/provided by CAROL is
+        the ObjectWeb Jonathan JEREMIE personality. This personality
+        can be used with all standard JEREMIE features. CAROL also
+        allow JEREMIE to propagate implicitly a context (like a
+        transactionnal or a security context) via a JEREMIE handler
+        mechanism. This section explains the general way for CAROL
+        JEREMIE configuration in the two jonathan.xml and
+        carol.properties files:
       </para>
 
 
@@ -446,6 +449,22 @@
           </tbody>
         </tgroup>
       </table>
+    </sect2>
+
+    <sect2>
+      <title>IRMI configuration</title>
+
+      <para>
+        The IRMI protocol is an alternative to the Sun specific JRMP
+        protocol. It is intended as a drop in replacement for the sun
+        specific portions of the JRMP protocol and so supports
+        interceptor configuration through exactly the same APIs and
+        properties as the JRMP protocol with the following exceptions.
+        The default registry port is 1098 instead of port 1099, and
+        the server port is configured through the
+        "carol.irmi.server.port" property instead of
+        "carol.jrmp.server.port".
+      </para>
     </sect2>
 
     <sect2>

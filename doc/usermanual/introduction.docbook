@@ -83,6 +83,9 @@
       <listitem>
         <para>CAROL CMI implementation</para>
       </listitem>
+      <listitem>
+        <para>CAROL Intercepting RMI (IRMI) implementation</para>
+      </listitem>
     </itemizedlist>
 
     <para>
