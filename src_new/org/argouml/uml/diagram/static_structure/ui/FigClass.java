@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.144 2005/05/15 08:55:06 mvw Exp $
+// $Id: FigClass.java,v 1.145 2005/05/16 09:08:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1310,12 +1310,9 @@ public class FigClass extends FigNodeModelElement
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateNameText()
      */
     protected void updateNameText() {
-
         super.updateNameText();
         calcBounds();
         setBounds(getBounds());
-
-        // setBounds(rect.x, rect.y, rect.width, rect.height);
     }
 
     /**
