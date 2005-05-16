@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.30 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: UmlFactoryImpl.java,v 1.31 2005/05/16 13:51:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -307,7 +307,7 @@ class UmlFactoryImpl
      * this to connect two other existing UML model elements.
      * This only works for UML elements. If a diagram contains
      * elements of another type then it is the responsibility
-     * of the diagram manage those items and not call this
+     * of the diagram to manage those items and not call this
      * method. It also only works for UML model elements that
      * are represented in diagrams by an edge, hence the
      * requirement to state the connecting ends.
