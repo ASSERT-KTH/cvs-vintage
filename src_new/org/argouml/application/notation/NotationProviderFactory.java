@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory.java,v 1.14 2005/01/09 14:58:04 linus Exp $
+// $Id: NotationProviderFactory.java,v 1.15 2005/05/16 09:10:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ public final class NotationProviderFactory
     public NotationProvider2 getProvider(NotationName nn) {
         NotationName n = nn;
         if (nn == null) {
-            n = Notation.getDefaultNotation();
+            n = Notation.getConfigueredNotation();
         }
 
 	LOG.debug ("looking for " + n);

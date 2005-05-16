@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.60 2005/05/14 07:13:48 mvw Exp $
+// $Id: Notation.java,v 1.61 2005/05/16 09:10:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,7 +176,7 @@ public final class Notation implements PropertyChangeListener {
      * 
      * @return the default NotationName
      */
-    public static NotationName getDefaultNotation() {
+    public static NotationName getConfigueredNotation() {
         NotationName n =
             NotationNameImpl.findNotation(
                 Configuration.getString(

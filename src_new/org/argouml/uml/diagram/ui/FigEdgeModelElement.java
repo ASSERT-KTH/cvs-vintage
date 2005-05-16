@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.92 2005/03/08 19:51:08 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.93 2005/05/16 09:10:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,7 +169,7 @@ public abstract class FigEdgeModelElement
         setBetweenNearestPoints(true);
         ((FigPoly) _fig).setRectilinear(false);
         ArgoEventPump.addListener(ArgoEvent.ANY_NOTATION_EVENT, this);
-        currentNotationName = Notation.getDefaultNotation();
+        currentNotationName = Notation.getConfigueredNotation();
     }
 
     /**
@@ -677,7 +677,7 @@ public abstract class FigEdgeModelElement
             (PropertyChangeEvent) event.getSource();
         if (changeEvent.getPropertyName().equals("argo.notation.only.uml")) {
             if (changeEvent.getNewValue().equals("true")) { 
-                setContextNotation(Notation.getDefaultNotation());
+                setContextNotation(Notation.getConfigueredNotation());
             }
         } else {
             setContextNotation(

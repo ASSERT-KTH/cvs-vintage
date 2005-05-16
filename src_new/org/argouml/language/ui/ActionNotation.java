@@ -1,4 +1,4 @@
-// $Id: ActionNotation.java,v 1.9 2004/12/26 11:14:47 mvw Exp $
+// $Id: ActionNotation.java,v 1.10 2005/05/16 09:10:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,7 +106,7 @@ public class ActionNotation extends UMLAction
      * @see javax.swing.event.MenuListener#menuSelected(javax.swing.event.MenuEvent)
      */
     public void menuSelected(MenuEvent me) {
-        NotationName dflt = Notation.getDefaultNotation();
+        NotationName dflt = Notation.getConfigueredNotation();
         menu.removeAll();
         List list = Notation.getAvailableNotations();
         ListIterator iterator = list.listIterator();

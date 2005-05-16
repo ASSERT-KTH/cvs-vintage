@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.47 2005/02/21 22:16:26 bobtarling Exp $
+// $Id: ClassGenerationDialog.java,v 1.48 2005/05/16 09:10:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -442,7 +442,7 @@ public class ClassGenerationDialog
                         checked[j].add(cls);
 		    } else if (
                         ((NotationName) languages.get(j)).sameNotationAs(
-                            Notation.getDefaultNotation())) {
+                            Notation.getConfigueredNotation())) {
                         checked[j].add(cls);
                     }
                 }

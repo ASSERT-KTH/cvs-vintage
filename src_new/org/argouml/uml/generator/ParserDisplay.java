@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.163 2005/05/14 20:09:00 mvw Exp $
+// $Id: ParserDisplay.java,v 1.164 2005/05/16 09:10:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1198,7 +1198,7 @@ public final class ParserDisplay extends Parser {
                 Object initExpr =
                     Model.getDataTypesFactory()
                         .createExpression(
-                                Notation.getDefaultNotation().toString(),
+                                Notation.getConfigueredNotation().toString(),
                                 value.trim());
                 Model.getCoreHelper().setDefaultValue(p, initExpr);
             }
@@ -1519,7 +1519,7 @@ public final class ParserDisplay extends Parser {
         if (value != null) {
             Object initExpr =
                 Model.getDataTypesFactory()
-                    .createExpression(Notation.getDefaultNotation().toString(),
+                    .createExpression(Notation.getConfigueredNotation().toString(),
                             value.trim());
             Model.getCoreHelper().setInitialValue(attr, initExpr);
         }
@@ -2924,7 +2924,7 @@ public final class ParserDisplay extends Parser {
             }
             Object expr =
                 Model.getDataTypesFactory().createIterationExpression(
-                        Notation.getDefaultNotation().toString(), guard);
+                        Notation.getConfigueredNotation().toString(), guard);
             Model.getCommonBehaviorHelper().setRecurrence(
                     Model.getFacade().getAction(mes), expr);
         }
@@ -2994,7 +2994,7 @@ public final class ParserDisplay extends Parser {
                 Object e =
                     Model.getDataTypesFactory()
                         .createActionExpression(
-                                Notation.getDefaultNotation().toString(),
+                                Notation.getConfigueredNotation().toString(),
                                 expr.trim());
                 Model.getCommonBehaviorHelper().setScript(
                         Model.getFacade().getAction(mes), e);
@@ -3025,7 +3025,7 @@ public final class ParserDisplay extends Parser {
                     Object e =
                         Model.getDataTypesFactory()
                             .createExpression(
-                                    Notation.getDefaultNotation().toString(),
+                                    Notation.getConfigueredNotation().toString(),
                                     value.trim());
                     Model.getCommonBehaviorHelper().setValue(arg, e);
                 }

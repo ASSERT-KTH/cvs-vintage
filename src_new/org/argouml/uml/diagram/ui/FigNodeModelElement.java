@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.163 2005/05/16 08:51:55 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.164 2005/05/16 09:10:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -291,7 +291,7 @@ public abstract class FigNodeModelElement
 
         readyToEdit = false;
         ArgoEventPump.addListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);
-        currentNotationName = Notation.getDefaultNotation();
+        currentNotationName = Notation.getConfigueredNotation();
     }
 
     /**
@@ -1403,7 +1403,7 @@ public abstract class FigNodeModelElement
 	    (PropertyChangeEvent) event.getSource();
         if (changeEvent.getPropertyName().equals("argo.notation.only.uml")) {
             if (changeEvent.getNewValue().equals("true")) {
-                setContextNotation(Notation.getDefaultNotation());
+                setContextNotation(Notation.getConfigueredNotation());
             }
         } else {
             setContextNotation(
