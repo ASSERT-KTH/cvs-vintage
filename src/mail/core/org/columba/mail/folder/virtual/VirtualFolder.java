@@ -825,10 +825,12 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	public void innerCopy(IMailbox destFolder, Object[] uids) throws Exception {
 		for( int i=0; i<uids.length; i ++) {
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			AbstractMessageFolder sourceFolder = h.getSrcFolder();
-			Object sourceUid = h.getSrcUid();
+			if( h != null ) {
+				AbstractMessageFolder sourceFolder = h.getSrcFolder();
+				Object sourceUid = h.getSrcUid();
 			
-			sourceFolder.innerCopy(destFolder, new Object[] {sourceUid});
+				sourceFolder.innerCopy(destFolder, new Object[] {sourceUid});
+			}
 		}
 		
 	}
