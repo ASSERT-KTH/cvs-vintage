@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.79 2005/05/08 07:32:09 mvw Exp $
+// $Id: NavigatorPane.java,v 1.80 2005/05/17 21:05:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,63 +52,13 @@ import org.tigris.toolbar.ToolBar;
  * The model can be viewed from different tree "Perspectives".<p>
  *
  * Perspectives are now built in the Perspective Manager.<p>
- *
- * @stereotype singleton
  */
-public class NavigatorPane
+class NavigatorPane
     extends JPanel
     implements QuadrantPanel {
+
     ////////////////////////////////////////////////////////////////
     // constructors
-
-    /**
-     * The NavigatorPane instance. This can be a NavigatorPane or
-     * <tt>null</tt>.
-     */
-    private static NavigatorPane theInstance = null;
-    private static boolean theInstanceIsSet = false;
-
-    /**
-     * Don't automatically instantiate the instance.
-     *
-     * @return the singleton or <tt>null</tt> if the NavigatorPane was
-     * 	       explicitly set to <tt>null</tt>.
-     */
-    public static NavigatorPane getInstance() {
-	if (!theInstanceIsSet) {
-	    theInstance = new NavigatorPane();
-	    theInstanceIsSet = true;
-	}
-	return theInstance;
-    }
-
-    /**
-     * Allow setting of the navigator pane instance.
-     * Currently this is only applicable for unit tests that sets it to
-     * <tt>null</tt>.<p>
-     * 
-     * TODO: To be deprecated when there is a replacement - this is 
-     * a temporary hack until the model is cleaned up
-     *
-     * @param pane A new NavigatorPane or <tt>null</tt>.
-     */
-    public static void setInstance(NavigatorPane pane) {
-	theInstance = pane;
-	theInstanceIsSet = true;
-    }
-
-    /**
-     * Constructs a new navigator panel.<p>
-     *
-     * This panel consists of a Combobox to select a navigation
-     * perspective, a JTree to display the UML model, some history
-     * (back and forward arrows) buttons that are currently disabled,
-     * and a configuration dialog to tailor the perspectives (but this
-     * is not saved).
-     */
-    private NavigatorPane() {
-        this(SplashScreen.getDoSplash());
-    }
 
     /**
      * Constructs a new navigator panel.<p>
@@ -118,7 +68,7 @@ public class NavigatorPane
      * a JTree to display the UML model,
      * and a configuration dialog to tailor the perspectives.
      */
-    private NavigatorPane(boolean doSplash) {
+    public NavigatorPane(SplashScreen splash) {
 
         JComboBox perspectiveCombo = new PerspectiveComboBox();
         JComboBox orderByCombo = new JComboBox();
@@ -149,9 +99,8 @@ public class NavigatorPane
         add(toolbarpanel, BorderLayout.NORTH);
         add(new JScrollPane(tree), BorderLayout.CENTER);
 
-        if (doSplash) {
-            SplashScreen splash = SplashScreen.getInstance();
-	    splash.getStatusBar().showStatus(Translator.localize(
+        if (splash != null) {
+            splash.getStatusBar().showStatus(Translator.localize(
 		    "statusmsg.bar.making-navigator-pane-perspectives"));
             splash.getStatusBar().showProgress(25);
         }

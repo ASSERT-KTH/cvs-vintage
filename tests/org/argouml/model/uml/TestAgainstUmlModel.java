@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.14 2005/02/05 19:18:50 mvw Exp $
+// $Id: TestAgainstUmlModel.java,v 1.15 2005/05/17 21:05:20 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.argouml.model.Model;
-import org.argouml.ui.NavigatorPane;
 import org.argouml.util.CheckUMLModelHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -314,8 +313,8 @@ public class TestAgainstUmlModel extends TestCase {
          * navigator pane.  This is a temporary hack until the object
          * model is cleaned up.
          */
-        NavigatorPane.setInstance(null);
-        assertNull("Still getting NavigatorPane", NavigatorPane.getInstance());
+//        NavigatorPane.setInstance(null);
+//        assertNull("Still getting NavigatorPane", NavigatorPane.getInstance());
     }
 
     /**

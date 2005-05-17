@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.12 2005/05/10 20:17:36 mvw Exp $
+// $Id: GUITestProjectBrowser.java,v 1.13 2005/05/17 21:05:20 mvw Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,18 +78,6 @@ public class GUITestProjectBrowser extends TestCase {
 
 	pb.setAppName("Gurkburk");
 	assertEquals("Gurkburk", pb.getAppName());
-    }
-
-    /**
-     * Tests the existance of public methods and public static methods for
-     * accessing the splashscreen.
-     *
-     * Since ProjectBrowser is a singleton without possibilities to remove it
-     * and the existance of the SplashScreen is determined when initially
-     * creating it, it is not possible to test it.
-     */
-    public void compileTestSplashScreen() {
-	ProjectBrowser.setSplash(true);
     }
 
     /**

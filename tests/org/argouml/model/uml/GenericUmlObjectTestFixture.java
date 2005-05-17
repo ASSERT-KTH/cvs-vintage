@@ -1,4 +1,4 @@
-// $Id: GenericUmlObjectTestFixture.java,v 1.11 2005/01/30 20:47:58 linus Exp $
+// $Id: GenericUmlObjectTestFixture.java,v 1.12 2005/05/17 21:05:20 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.HashMap;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.ui.NavigatorPane;
 
 /**
  * @author Thierry Lach
@@ -58,7 +57,7 @@ public abstract class GenericUmlObjectTestFixture extends TestCase {
      */
     protected void setUp() throws Exception {
 	super.setUp();
-	NavigatorPane.setInstance(null);
+//	NavigatorPane.setInstance(null);
     }
 
     /**
