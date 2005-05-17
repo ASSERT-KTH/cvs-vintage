@@ -983,6 +983,18 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			fireMessageRemoved(vUid, null);
 		}
 	}
+	
+	protected boolean hasFlagsCriteria() {
+		boolean result = false;
+		
+		FilterRule rule = getFilter().getFilterRule();
+		
+		for( int i=0; i < rule.count() && !result; i++) {
+			result = rule.get(i).getTypeString().equalsIgnoreCase("FLAGS");
+		}
+		
+		return result;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.event.IFolderListener#messageFlagChanged(org.columba.mail.folder.event.IFolderEvent)
@@ -990,8 +1002,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	public void messageFlagChanged(IFolderEvent e) {
 		Object virtualUid = srcUidToVirtualUid((IMailFolder)e.getSource(), e.getChanges());
 
-		if( virtualUid == null ) {
-			// Maybe add the message			
+		if( virtualUid == null && hasFlagsCriteria()) {
+			
 			AbstractMessageFolder folder = (AbstractMessageFolder)e.getSource();
 			try {
 				Object[] resultUids = folder.searchMessages(getFilter(), new Object[] {e.getChanges()});
@@ -1010,10 +1022,9 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			}
 			
 			return;
-		}
+		} 
 		
 		try {
-			//Shall we do another search and maybe remove the message?
 			updateMailFolderInfo(e.getOldFlags(), e.getParameter());
 		} catch (Exception e1) {
 		}
