@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.164 2005/05/16 09:10:44 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.165 2005/05/17 17:51:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -709,7 +709,8 @@ public abstract class FigNodeModelElement
 					  owningModelelement)))) {
                 Model.getCoreHelper().setModelElementContainer(getOwner(),
 						     owningModelelement);
-                // TODO: move the associations to the correct owner (namespace)
+                /* TODO: move the associations to the correct owner (namespace)
+                 * i.e. issue 2151*/
             }
         }
 	if (newEncloser != encloser) {
