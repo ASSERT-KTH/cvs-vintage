@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.12 2005/02/10 20:38:40 mvw Exp $
+// $Id: TestGeneratorCpp.java,v 1.13 2005/05/17 22:43:09 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -324,5 +324,32 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
             .generate(createAttrWithMultiplicity(
                     "myAttr", Model.getMultiplicities().get01()));
         assertTrue(code.matches(re));
+    }
+
+
+    private Object buildConstructor(Object cls) {
+	String name = Model.getFacade().getName(cls);
+        Object voidType =
+            ProjectManager.getManager().getCurrentProject().findType("void");
+        Collection propertyChangeListeners = getPropertyChangeListeners(cls);
+        Object c = Model.getCoreFactory().buildOperation(cls,
+                getModel(), voidType, name, propertyChangeListeners);
+        Object stereo = Model.getExtensionMechanismsFactory()
+	    .buildStereotype(c, "create", getModel());
+        Model.getExtensionMechanismsHelper()
+            .setBaseClass(stereo, "BehavioralFeature");
+        return c;
+    }
+
+    /**
+     * Test of cppGenerate method for constructors.
+     */
+    public void testGenerateConstructor() {
+        // generate AClass::AClass()
+        String strConstr =
+	    getGenerator().generate(buildConstructor(getAClass()));
+        assertNotNull(strConstr);
+        LOG.debug("generated constructor is '" + strConstr + "'");
+        assertEquals("AClass()", strConstr.trim());
     }
 }
