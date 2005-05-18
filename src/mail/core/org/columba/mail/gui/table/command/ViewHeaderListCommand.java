@@ -21,6 +21,8 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -30,25 +32,28 @@ import org.columba.mail.message.IHeaderList;
  * @author Timo Stich (tstich@users.sourceforge.net)
  *  
  */
-public class ViewHeaderListCommand extends Command {
+public class ViewHeaderListCommand extends Command implements ISelectionListener {
 	private IHeaderList headerList;
 
 	private AbstractMessageFolder folder;
+
+	private boolean updateGui;
 
 	public ViewHeaderListCommand(FrameMediator frame,
 			ICommandReference reference) {
 		super(frame, reference);
 
 		priority = Command.REALTIME_PRIORITY;
-
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		//Update only if the selected folder is still this folder
-		if( ((MailFolderCommandReference) frameMediator.getSelectionManager().getSelection("mail.tree")).getSourceFolder().equals(folder) ) {
+		frameMediator.getSelectionManager().getHandler("mail.tree").removeSelectionListener(this);
+
+		//Update only if the selection did not change
+		if( updateGui ) {
 			((TableViewOwner) frameMediator).getTableController().showHeaderList(
 					folder, headerList);
 		}
@@ -59,16 +64,28 @@ public class ViewHeaderListCommand extends Command {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
+		// Register as SelectionListener to track the selection
+		// of the tree
+		updateGui = true;
+		frameMediator.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
+		
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		folder = (AbstractMessageFolder) r.getSourceFolder();
-
+		
 		//		register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		// fetch the headerlist
 		headerList = (folder).getHeaderList();
-		//TODO: Handle CommandCancelledException
+		
+		updateGui &= !worker.cancelled();
+	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.selection.ISelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		updateGui = false;
 	}
 }
