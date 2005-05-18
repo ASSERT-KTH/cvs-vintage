@@ -101,4 +101,11 @@ public abstract class SelectionHandler {
 	 *            new selection
 	 */
 	public abstract void setSelection(ICommandReference selection);
+
+	/**
+	 * @param command
+	 */
+	public void removeSelectionListener(ISelectionListener l) {
+		selectionListener.remove(l);
+	}
 }
