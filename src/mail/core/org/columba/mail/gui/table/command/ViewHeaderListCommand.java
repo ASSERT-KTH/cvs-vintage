@@ -47,9 +47,11 @@ public class ViewHeaderListCommand extends Command {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-
-		((TableViewOwner) frameMediator).getTableController().showHeaderList(
-				folder, headerList);
+		//Update only if the selected folder is still this folder
+		if( ((MailFolderCommandReference) frameMediator.getSelectionManager().getSelection("mail.tree")).getSourceFolder().equals(folder) ) {
+			((TableViewOwner) frameMediator).getTableController().showHeaderList(
+					folder, headerList);
+		}
 
 	}
 
