@@ -3,7 +3,7 @@
 <project name="addressbook.test" default="test">
 	<target name="compile">
 		<echo message="Compile Addressbook test"/>
-		<javac srcdir="${src.addressbook.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
+		<javac target="1.4" srcdir="${src.addressbook.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
 			<classpath refid="compile.test.classpath"/>
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>

@@ -3,7 +3,7 @@
 <project name="columba.test" default="compile">
 	<target name="compile">
 		<echo message="Compile Columba test"/>
-		<javac srcdir="${src.columba.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
+		<javac target="1.4" srcdir="${src.columba.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
 			<classpath refid="compile.test.classpath"/>
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>
