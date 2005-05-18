@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.26 2005/05/13 14:44:46 bobtarling Exp $
+// $Id: ActionExit.java,v 1.1 2005/05/18 20:27:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.ui.cmd;
 
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
@@ -35,9 +35,13 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.uml.ui.ActionSaveProject;
+import org.argouml.uml.ui.ActionSaveProjectAs;
+import org.argouml.uml.ui.UMLAction;
 
 /**
  * Action to exit ArgoUML.
+ * If the project is dirty, then ask the user if he wants to save first.
  */
 public class ActionExit extends UMLAction
     implements CommandLineInterface {
@@ -46,15 +50,10 @@ public class ActionExit extends UMLAction
     // static variables
 
     /**
-     * The singleton.
-     */
-    public static final ActionExit SINGLETON = new ActionExit();
-
-    /**
      * Remember if this form is already active, so that it does
      * not popup twice.
      */
-    private boolean active = false;
+    private static boolean active = false;
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -71,6 +70,8 @@ public class ActionExit extends UMLAction
     // main methods
 
     /**
+     * See ProjectBrowser.askConfirmationAndSave() for a very similar procedure!
+     * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed (ActionEvent ae) {
@@ -120,6 +121,8 @@ public class ActionExit extends UMLAction
      *
      * @param argument is not used.
      * @return true if it is OK.
+     *
+     * @see org.argouml.application.api.CommandLineInterface#doCommand(java.lang.String)
      */
     public boolean doCommand(String argument) {
         System.exit (0);

@@ -1,4 +1,4 @@
-// $Id: GUITestActionCollaborationDiagram.java,v 1.5 2005/02/13 00:21:21 linus Exp $
+// $Id: GUITestActionCollaborationDiagram.java,v 1.6 2005/05/18 20:27:00 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class GUITestActionCollaborationDiagram
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
      */
     protected ActionAddDiagram getAction() {
-        return ActionCollaborationDiagram.SINGLETON;
+        return new ActionCollaborationDiagram();
     }
 
     /**

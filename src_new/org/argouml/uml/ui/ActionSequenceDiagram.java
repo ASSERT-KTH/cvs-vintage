@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.38 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: ActionSequenceDiagram.java,v 1.39 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
@@ -49,19 +48,13 @@ public final class ActionSequenceDiagram extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    /**
-     * The singleton.
-     */
-    public static final ActionSequenceDiagram SINGLETON =
-        new ActionSequenceDiagram();
-
     ////////////////////////////////////////////////////////////////
     // constructors
 
     /**
      * Constructor.
      */
-    private ActionSequenceDiagram() {
+    public ActionSequenceDiagram() {
         super("action.sequence-diagram", true, true);
     }
 

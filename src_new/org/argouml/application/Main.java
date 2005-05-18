@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.122 2005/05/17 21:05:20 mvw Exp $
+// $Id: Main.java,v 1.123 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ import org.argouml.ui.Actions;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
-import org.argouml.uml.ui.ActionExit;
+import org.argouml.ui.cmd.ActionExit;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
 
@@ -253,7 +253,7 @@ public class Main {
 	    commands = null;
 
 	    System.out.println("Exiting because we are running in batch.");
-	    ActionExit.SINGLETON.actionPerformed(null);
+	    new ActionExit().actionPerformed(null);
 	    return;
 	}
 
@@ -285,7 +285,7 @@ public class Main {
             System.err.println("The filename is " + filename);
             System.err.println("The file is " + file);
             System.err.println("File.exists = " + file.exists());
-            ProjectBrowser.getInstance().loadProject(file, true);
+            pb.loadProject(file, true);
         }
 
         ProjectManager.getManager().makeEmptyProject();

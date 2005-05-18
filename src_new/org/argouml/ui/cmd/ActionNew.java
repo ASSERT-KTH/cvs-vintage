@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.32 2005/05/13 14:44:46 bobtarling Exp $
+// $Id: ActionNew.java,v 1.1 2005/05/18 20:27:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,9 +22,8 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui;
+package org.argouml.ui.cmd;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -34,24 +33,13 @@ import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.FindDialog;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * Action to trigger creation of a new project.
- *
- * @stereotype singleton
  */
-public class ActionNew extends AbstractAction {
-
-    ////////////////////////////////////////////////////////////////
-    // static variables
-
-    /**
-     * The singleton.
-     */
-    public static final ActionNew SINGLETON = new ActionNew();
+class ActionNew extends AbstractAction {
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -59,7 +47,7 @@ public class ActionNew extends AbstractAction {
     /**
      * The constructor.
      */
-    protected ActionNew() {
+    public ActionNew() {
         super(Translator.localize("action.new"),
                 ResourceLoaderWrapper.lookupIcon("action.new"));
     }
@@ -77,23 +65,13 @@ public class ActionNew extends AbstractAction {
             return;
         }
 
-        // TODO: yuk! Why is this needed? In fact how can anyone select
-        // the new action if there is a dialog?
-	// We should remove all open dialogs. They have as parent the
-	// ProjectBrowser
-	Window[] windows = ProjectBrowser.getInstance().getOwnedWindows();
-	for (int i = 0; i < windows.length; i++) {
-	    windows[i].dispose();
-	}
-
+        ProjectBrowser.getInstance().clearDialogs();
 	Designer.disableCritiquing();
 	Designer.clearCritiquing();
 	// clean the history
 	TargetManager.getInstance().cleanHistory();
         p.remove();
 	p = ProjectManager.getManager().makeEmptyProject();
-	FindDialog.getInstance().doClearTabs();
-	FindDialog.getInstance().doResetFields();
 	TargetManager.getInstance().setTarget(p.getDiagrams().toArray()[0]);
 	Designer.enableCritiquing();
     }

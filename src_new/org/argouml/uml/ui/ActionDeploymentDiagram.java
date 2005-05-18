@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.23 2005/01/30 20:47:49 linus Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.24 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,19 +30,13 @@ import org.argouml.model.Model;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** Action to trigger creation of a deployment diagram.
- *  @stereotype singleton
+/** 
+ * Action to trigger creation of a deployment diagram.
  */
 public class ActionDeploymentDiagram extends ActionAddDiagram {
 
     ////////////////////////////////////////////////////////////////
     // static variables
-
-    /**
-     * The singleton.
-     */
-    public static final ActionDeploymentDiagram SINGLETON =
-        new ActionDeploymentDiagram();
 
     private static final Logger LOG =
         Logger.getLogger(ActionDeploymentDiagram.class);
@@ -53,7 +47,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
     /**
      * Constructor.
      */
-    private ActionDeploymentDiagram() {
+    public ActionDeploymentDiagram() {
         super("action.deployment-diagram");
     }
 

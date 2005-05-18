@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.18 2005/01/20 23:20:37 linus Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.19 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,19 +31,11 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 
 /**
- * @stereotype singleton
+ * Add a new package at the top level, i.e. a model.<p>
+ * 
+ * TODO: ArgoUML currently only supports one model. 
  */
 public class ActionAddTopLevelPackage extends UMLAction {
-
-    ////////////////////////////////////////////////////////////////
-    // static variables
-
-    /**
-     * The singleton.
-     */
-    public static final ActionAddTopLevelPackage SINGLETON =
-	new ActionAddTopLevelPackage();
-
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -71,7 +63,7 @@ public class ActionAddTopLevelPackage extends UMLAction {
         Model.getCoreHelper().setName(model, nameStr);
         p.addMember(model);
         super.actionPerformed(ae);
-        ActionClassDiagram.SINGLETON.actionPerformed(ae);
+        new ActionClassDiagram().actionPerformed(ae);
 
 
     }

@@ -1,4 +1,4 @@
-// $Id: GUITestActionStateDiagram.java,v 1.3 2005/01/09 21:10:39 linus Exp $
+// $Id: GUITestActionStateDiagram.java,v 1.4 2005/05/18 20:27:00 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class GUITestActionStateDiagram
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
      */
     protected ActionAddDiagram getAction() {
-        return ActionStateDiagram.SINGLETON;
+        return new ActionStateDiagram();
     }
 
     /**

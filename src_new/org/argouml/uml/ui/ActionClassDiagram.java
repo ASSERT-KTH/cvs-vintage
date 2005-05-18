@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.20 2005/01/30 20:47:48 linus Exp $
+// $Id: ActionClassDiagram.java,v 1.21 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,25 +29,21 @@ import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** Action to trigger creation of new class diagram.
- *  @stereotype singleton
+/** 
+ * Action to trigger creation of new class diagram.
  */
 public class ActionClassDiagram extends ActionAddDiagram {
-    private static final Logger LOG =
-        Logger.getLogger(ActionClassDiagram.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    /**
-     * The singleton.
-     */
-    public static final ActionClassDiagram SINGLETON = new ActionClassDiagram();
+    private static final Logger LOG =
+                Logger.getLogger(ActionClassDiagram.class);
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    private ActionClassDiagram() {
+    public ActionClassDiagram() {
         super("action.class-diagram");
     }
 

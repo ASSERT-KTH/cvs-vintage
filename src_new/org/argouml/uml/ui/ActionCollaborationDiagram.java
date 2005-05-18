@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.44 2005/02/06 16:08:01 mvw Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.45 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** Action to trigger creation of new collaboration diagram.
- *  @stereotype singleton
+/** 
+ * Action to trigger creation of new collaboration diagram.
  */
 public class ActionCollaborationDiagram extends ActionAddDiagram {
 
@@ -38,15 +38,9 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         Logger.getLogger(ActionCollaborationDiagram.class);
 
     /**
-     * The singleton.
-     */
-    public static final ActionCollaborationDiagram SINGLETON =
-        new ActionCollaborationDiagram();
-
-    /**
      * Constructor.
      */
-    private ActionCollaborationDiagram() {
+    public ActionCollaborationDiagram() {
         super("action.collaboration-diagram");
     }
 

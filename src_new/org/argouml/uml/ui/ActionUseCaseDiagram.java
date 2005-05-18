@@ -1,4 +1,4 @@
-// $Id: ActionUseCaseDiagram.java,v 1.21 2005/01/30 20:47:48 linus Exp $
+// $Id: ActionUseCaseDiagram.java,v 1.22 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,21 +29,15 @@ import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 
-/** Action to create a new use case diagram.
- *  @stereotype singleton
+/** 
+ * Action to create a new use case diagram.
  */
 public class ActionUseCaseDiagram extends ActionAddDiagram {
-
-    /**
-     * The singleton.
-     */
-    public static final ActionUseCaseDiagram SINGLETON =
-        new ActionUseCaseDiagram();
 
     private static final Logger LOG =
         Logger.getLogger(ActionUseCaseDiagram.class);
 
-    private ActionUseCaseDiagram() {
+    public ActionUseCaseDiagram() {
         super("action.usecase-diagram");
     }
 

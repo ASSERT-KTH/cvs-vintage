@@ -1,4 +1,4 @@
-// $Id: GUITestActionClassDiagram.java,v 1.1 2003/05/11 14:13:51 linus Exp $
+// $Id: GUITestActionClassDiagram.java,v 1.2 2005/05/18 20:27:00 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class GUITestActionClassDiagram extends AbstractTestActionAddDiagram {
      * @see org.argouml.uml.ui.AbstractTestActionAddDiagram#getAction()
      */
     protected ActionAddDiagram getAction() {
-	return ActionClassDiagram.SINGLETON;
+	return new ActionClassDiagram();
     }
 
     /**

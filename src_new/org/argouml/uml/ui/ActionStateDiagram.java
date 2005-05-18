@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.38 2005/01/30 20:47:49 linus Exp $
+// $Id: ActionStateDiagram.java,v 1.39 2005/05/18 20:27:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,18 +30,13 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** Action to create a new statechart diagram.
- * @stereotype singleton
+/** 
+ * Action to create a new statechart diagram.
  */
 public class ActionStateDiagram extends ActionAddDiagram {
 
     ////////////////////////////////////////////////////////////////
     // static variables
-
-    /**
-     * The singleton.
-     */
-    public static final ActionStateDiagram SINGLETON = new ActionStateDiagram();
 
     private static final Logger LOG =
         Logger.getLogger(ActionStateDiagram.class);
@@ -49,7 +44,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    private ActionStateDiagram() {
+    public ActionStateDiagram() {
         super("action.state-diagram");
     }
 
