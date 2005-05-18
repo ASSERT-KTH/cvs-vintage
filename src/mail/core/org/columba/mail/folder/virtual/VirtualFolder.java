@@ -1022,9 +1022,9 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			
-			return;
 		} 
+		
+		if( virtualUid != null ) {
 		
 		try {
 			updateMailFolderInfo(e.getOldFlags(), e.getParameter());
@@ -1033,6 +1033,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		
 		//fire updates
 		fireMessageFlagChanged(virtualUid, e.getOldFlags(), e.getParameter());
+		}
 	}
 
 	/* (non-Javadoc)
