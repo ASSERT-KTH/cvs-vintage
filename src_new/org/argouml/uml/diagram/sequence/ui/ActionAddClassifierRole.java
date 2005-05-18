@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRole.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: ActionAddClassifierRole.java,v 1.2 2005/05/18 21:12:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,23 +43,27 @@ public class ActionAddClassifierRole extends CmdCreateNode {
      * The constructor.
      */
     public ActionAddClassifierRole() {
-        super(Model.getMetaTypes().getClassifierRole(), false, "ClassifierRole");
+        super(Model.getMetaTypes().getClassifierRole(),
+                false, "button.new-classifierrole");
     }
 
     /**
      * @see org.tigris.gef.graph.GraphFactory#makeNode()
      */
     public Object makeNode() {
-        Object node=null;
+        Object node = null;
         Editor ce = Globals.curEditor();
         GraphModel gm = ce.getGraphModel();
         if (gm instanceof SequenceDiagramGraphModel) {
-            Object collaboration=((SequenceDiagramGraphModel)gm).getCollaboration();
-            node=Model.getCollaborationsFactory().buildClassifierRole(
-                collaboration);
+            Object collaboration =
+                ((SequenceDiagramGraphModel) gm).getCollaboration();
+            node =
+                Model.getCollaborationsFactory().buildClassifierRole(
+                        collaboration);
             /*
-            Model.getCoreHelper().setNamespace( node,
-                                                Model.getFacade().getNamespace( collaboration));
+            Model.getCoreHelper().setNamespace(
+            	node,
+            	Model.getFacade().getNamespace( collaboration));
             */
         } else {
             throw new IllegalStateException("Graphmodel is not a "

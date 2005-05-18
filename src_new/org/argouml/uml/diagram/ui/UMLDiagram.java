@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.70 2005/05/03 17:15:37 mvw Exp $
+// $Id: UMLDiagram.java,v 1.71 2005/05/18 21:12:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,14 +125,14 @@ public abstract class UMLDiagram
             ModeCreatePolyEdge.class,
             "edgeClass",
             CommentEdge.class,
-            "CommentLink"));
+            "button.new-commentlink"));
 
 
     private static Action actionSelect =
-        new CmdSetMode(ModeSelect.class, "Select");
+        new CmdSetMode(ModeSelect.class, "button.select");
 
     private static Action actionBroom =
-        new CmdSetMode(ModeBroom.class, "Broom");
+        new CmdSetMode(ModeBroom.class, "button.broom");
 
     private static Action actionRectangle =
         new RadioAction(new CmdSetMode(ModeCreateFigRect.class, "Rectangle",

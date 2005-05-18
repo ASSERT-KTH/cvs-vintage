@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.43 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.44 2005/05/18 21:12:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Hashtable;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;
 import org.argouml.uml.diagram.ui.RadioAction;
@@ -137,19 +136,18 @@ public class UMLSequenceDiagram extends UMLDiagram {
             actions = new Object[7];
             actions[0] =
                 new ActionAddClassifierRole();
-	    int offset = 1;
+            int offset = 1;
 
-	    Object[][] actionList = {
-                {
-                Model.getMetaTypes().getCallAction(), "CallAction"}
-                , {
-                Model.getMetaTypes().getReturnAction(), "ReturnAction"}
-                , {
-                Model.getMetaTypes().getCreateAction(), "CreateAction"}
-                , {
-                Model.getMetaTypes().getDestroyAction(), "DestroyAction"}
-                ,
-	    };
+            Object[][] actionList = {
+                {Model.getMetaTypes().getCallAction(),
+                    "button.new-callaction", },
+                {Model.getMetaTypes().getReturnAction(),
+                    "button.new-returnaction", },
+                {Model.getMetaTypes().getCreateAction(),
+                    "button.new-createaction", },
+                {Model.getMetaTypes().getDestroyAction(),
+                    "button.new-destroyaction", },
+            };
 
 	    for (int i = 0; i < actionList.length; i++) {
 		Hashtable args = new Hashtable();
