@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.12 2005/05/18 20:27:00 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.13 2005/05/19 20:34:45 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,7 @@ import org.argouml.uml.ui.ActionOpenProject;
 import org.argouml.uml.ui.ActionPaste;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.ActionRevertToSaved;
+import org.argouml.uml.ui.ActionSaveAllGraphics;
 import org.argouml.uml.ui.ActionSaveGraphics;
 import org.argouml.uml.ui.ActionSaveProject;
 import org.argouml.uml.ui.ActionSaveProjectAs;
@@ -443,6 +444,7 @@ public class GenericArgoMenuBar extends JMenuBar
         setAccelerator(printItem, ctrlP);
         fileToolbar.add((new ActionPrint()));
         JMenuItem saveGraphicsItem = file.add(new ActionSaveGraphics());
+        JMenuItem saveAllGraphicsItem = file.add(new ActionSaveAllGraphics());
         setMnemonic(saveGraphicsItem, "SaveGraphics");
         file.addSeparator();
         JMenuItem saveConfiguration =
