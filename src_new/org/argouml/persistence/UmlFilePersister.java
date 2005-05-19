@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.27 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.28 2005/05/19 22:00:47 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -353,11 +353,9 @@ public class UmlFilePersister extends AbstractFilePersister
             inputStream.realClose();
             p.postLoad();
             return p;
-        } catch (IOException e) {
-            LOG.error("IOException", e);
-            throw new OpenException(e);
-        } catch (SAXException e) {
-            LOG.error("SAXException", e);
+        } catch (OpenException e) {
+            throw e;
+        } catch (Exception e) {
             throw new OpenException(e);
         } finally {
             if (inputStream != null) {

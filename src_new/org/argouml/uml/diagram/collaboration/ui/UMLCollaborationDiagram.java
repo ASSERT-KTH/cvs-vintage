@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.76 2005/05/18 21:12:15 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.77 2005/05/19 22:00:47 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,6 +194,11 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
         super.postLoad();
 
+        if (getNamespace() == null) {
+            throw new IllegalStateException(
+                    "The namespace of the collaboration diagram is not set");
+        }
+        
         Collection messages;
         Iterator msgIterator;
         Collection ownedElements =
