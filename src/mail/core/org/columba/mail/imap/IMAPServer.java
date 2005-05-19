@@ -45,6 +45,7 @@ import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.Blowfish;
 import org.columba.core.util.ListTools;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.IncomingItem;
 import org.columba.mail.filter.MailFilterCriteria;
@@ -1192,7 +1193,8 @@ public class IMAPServer implements IMAPListener {
 
 			header.getAttributes().put("columba.uid", uid);
 			header.getAttributes().put("columba.size", headers[i].getSize());
-
+			header.getAttributes().put("columba.accountuid", getAccountUid());
+			
 			// set the attachment flag
 			String contentType = (String) header.get("Content-Type");
 
@@ -1208,6 +1210,11 @@ public class IMAPServer implements IMAPListener {
 		}
 	}
 
+	protected Integer getAccountUid() {
+		AccountItem accountItem = new AccountItem(item.getRoot().getParent());
+		return new Integer(accountItem.getInteger("uid"));
+	}
+	
 	protected void ensureConnectedState() throws CommandCancelledException,
 			IOException, IMAPException {
 		int actState;
