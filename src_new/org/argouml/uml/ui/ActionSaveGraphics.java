@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.33 2005/05/19 19:59:29 mvw Exp $
+// $Id: ActionSaveGraphics.java,v 1.34 2005/05/19 20:33:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,6 +129,7 @@ public class ActionSaveGraphics
                 chooser = new JFileChooser();
             }
         
+            //TODO: i18n
             chooser.setDialogTitle("Save Diagram as Graphics: " + defaultName);
             // Only specified format are allowed.
             chooser.removeChoosableFileFilter(chooser.
