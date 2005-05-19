@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.123 2005/05/18 20:27:01 mvw Exp $
+// $Id: Main.java,v 1.124 2005/05/19 19:59:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -253,7 +253,7 @@ public class Main {
 	    commands = null;
 
 	    System.out.println("Exiting because we are running in batch.");
-	    new ActionExit().actionPerformed(null);
+	    new ActionExit().doCommand(null);
 	    return;
 	}
 
