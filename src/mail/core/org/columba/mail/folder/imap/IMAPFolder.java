@@ -214,7 +214,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 * @throws CommandCancelledException
 	 * @throws Exception
 	 */
-	private void ensureFolderIsSynced() throws IOException, IMAPException, CommandCancelledException, Exception {
+	private synchronized void ensureFolderIsSynced() throws IOException, IMAPException, CommandCancelledException, Exception {
 		if (headerList == null || !getServer().isSelected(this)) {
 			synchronizeHeaderlist();
 			synchronizeFlags();
