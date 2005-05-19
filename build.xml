@@ -168,7 +168,7 @@
 		   version="${version}" >
 		</jreleaseinfo>
 		
-		<javac target="1.4" srcdir="${src.columba.core}/org/columba/core/main/" includes="ColumbaVersionInfo.java" destdir="${dest}" />
+		<javac target="1.4" source="1.4" srcdir="${src.columba.core}/org/columba/core/main/" includes="ColumbaVersionInfo.java" destdir="${dest}" />
 		
 		<delete file="${src.columba.core}/org/columba/core/main/ColumbaVersionInfo.java"/>
 	</target>
@@ -210,7 +210,7 @@
 		<ant dir="${src.columba.core}" target="compile" inheritrefs="true" />
 	
 		<!-- Compile the APIs -->
-		<javac destdir="${dest}" target="1.4">
+		<javac destdir="${dest}" target="1.4" source="1.4">
 			<src path="${src.mail.api}"/>
 			<src path="${src.addressbook.api}"/>
 			<classpath refid="compile.classpath" />
