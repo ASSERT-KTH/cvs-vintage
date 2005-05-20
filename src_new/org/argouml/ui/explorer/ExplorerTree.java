@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.35 2005/05/08 07:09:02 mvw Exp $
+// $Id: ExplorerTree.java,v 1.36 2005/05/20 16:52:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,10 +158,19 @@ public class ExplorerTree
         /** builds a pop-up menu for extra functionality for the Tree*/
         public void showPopupMenu(MouseEvent me) {
 
-            if (getLastSelectedPathComponent() == null) {
+            TreePath path = getPathForLocation( me.getX(), me.getY() );
+            if ( path == null ) {
                 return;
-	    }
-
+            }
+            
+            /* We preserve the current (multiple) selection, 
+             * if we are over part of it ...
+             */
+            if ( !isPathSelected( path ) ) {
+                /* ... otherwise we select the item below the mousepointer. */
+                getSelectionModel().setSelectionPath( path );
+            }
+            
             Object selectedItem =
                 ((DefaultMutableTreeNode) getLastSelectedPathComponent())
                         .getUserObject();
