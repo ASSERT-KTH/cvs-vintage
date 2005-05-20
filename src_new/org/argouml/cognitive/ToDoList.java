@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.27 2005/03/10 20:23:40 mvw Exp $
+// $Id: ToDoList.java,v 1.28 2005/05/20 09:29:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -427,17 +427,6 @@ public class ToDoList extends Observable implements Runnable, Serializable {
         addE(item);
     }
 
-    /**
-     * @param list the todo items to be added
-     */
-    public synchronized void addAll(ToDoList list) {
-        Enumeration cur = list.elements();
-        while (cur.hasMoreElements()) {
-            ToDoItem item = (ToDoItem) cur.nextElement();
-            addElement(item);
-        }
-        fireToDoListChanged();
-    }
 
     /**
      * @param list the todo items to be removed

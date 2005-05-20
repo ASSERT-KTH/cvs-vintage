@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.43 2005/03/11 08:55:27 mkl Exp $
+// $Id: Designer.java,v 1.44 2005/05/20 09:29:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -679,15 +679,15 @@ public final class Designer
         return toDoList;
     }
 
-    /**
-     * Add all the items in the given list to my list.
-     *
-     * @param list the items to be added
-     */
-    public void addToDoItems(ToDoList list) {
-        toDoList.addAll(list);
-    }
-
+//    /**
+//     * Add all the items in the given list to my list.
+//     *
+//     * @param list the items to be added
+//     */
+//    public void addToDoItems(ToDoList list) {
+//        toDoList.addAll(list);
+//    }
+//
     /**
      * Remove all the items in the given list from my list.
      *
