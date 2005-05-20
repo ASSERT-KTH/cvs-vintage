@@ -108,13 +108,14 @@ public class ProfileManager {
 	 * @return return profile if available. Otherwise, return null
 	 */
 	public Profile getProfileForName(String name) {
-		if( name.equalsIgnoreCase("default")) {
+		if (name.equalsIgnoreCase("default")) {
 			return new Profile("Default", location);
 		}
-		
+
 		XmlElement profile = getXmlElementForName(name);
-		if ( profile == null ) return null;
-		
+		if (profile == null)
+			return null;
+
 		String n = profile.getAttribute("name");
 
 		location = new File(profile.getAttribute("location"));
@@ -125,7 +126,8 @@ public class ProfileManager {
 	/**
 	 * Remove profile xml-element from "profiles.xml"
 	 * 
-	 * @param name		name of profile
+	 * @param name
+	 *            name of profile
 	 */
 	protected void removeProfileXmlElement(String name) {
 		XmlElement child = getXmlElementForName(name);
@@ -186,12 +188,12 @@ public class ProfileManager {
 
 			// try name first
 			currentProfile = getProfileForName(location);
-			
-			if( currentProfile == null ) {
+
+			if (currentProfile == null) {
 				// try directory
 				currentProfile = getProfileForLocation(location);
 			}
-			
+
 			if (currentProfile == null) {
 				// create profile
 				XmlElement profileElement = new XmlElement("profile");
@@ -398,7 +400,7 @@ public class ProfileManager {
 	public Profile getCurrentProfile() {
 		return currentProfile;
 	}
-	
+
 	public void setCurrentProfile(String path) {
 		currentProfile = getProfile(path);
 	}
@@ -420,22 +422,26 @@ public class ProfileManager {
 
 		File location = p.getLocation();
 
-		// delete all directories
-		for (int i = 0; i < folders.length; i++) {
-			//	delete directory recursivly
-			DiskIO.deleteDirectory(new File(location, folders[i]));
+		// Is the location still existing?
+		if (location.exists()) {
+
+			// delete all directories
+			for (int i = 0; i < folders.length; i++) {
+				//	delete directory recursivly
+				DiskIO.deleteDirectory(new File(location, folders[i]));
+			}
+
+			// delete all files
+			for (int i = 0; i < files.length; i++) {
+				new File(location, files[i]).delete();
+			}
+
+			// if config-folder is really empty
+			// -> delete folder
+			if (location.listFiles().length == 0)
+				location.delete();
 		}
 
-		// delete all files
-		for (int i = 0; i < files.length; i++) {
-			new File(location, files[i]).delete();
-		}
-
-		// if config-folder is really empty
-		// -> delete folder
-		if (location.listFiles().length == 0)
-			location.delete();
-		
 		// remove profile xml-element
 		removeProfileXmlElement(profile);
 	}
