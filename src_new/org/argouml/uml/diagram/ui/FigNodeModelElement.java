@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.166 2005/05/21 10:37:26 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.167 2005/05/21 14:50:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,6 @@ import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationContext;
 import org.argouml.application.api.NotationName;
-import org.argouml.application.events.ArgoEvent;
 import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoNotationEvent;
@@ -1064,7 +1063,8 @@ public abstract class FigNodeModelElement
      * @param ft the FigText that will be edited and contains the start-text
      */
     protected void textEditStarted(FigText ft) {
-
+        ProjectBrowser.getInstance().getStatusBar().showStatus(
+            Translator.localize("parsing.help.fig-nodemodelelement"));
     }
     
     /**
