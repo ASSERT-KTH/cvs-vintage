@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.20 2005/03/10 20:18:20 mvw Exp $
+// $Id: ToDoItem.java,v 1.21 2005/05/21 12:48:27 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,25 +169,6 @@ public class ToDoItem implements Serializable, WizardItem {
 	theMoreInfoURL = c.getMoreInfoURL(theOffenders, dsgr);
 	theWizard = c.makeWizard(this);
     }
-
-    /**
-     * The constructor.
-     *
-     * @param c the poster (critic)
-     * @param offs the offenders
-     * @param dsgr the designer
-     */
-    public ToDoItem(Critic c, ListSet offs, Designer dsgr) {
-	thePoster = c;
-	theHeadline = c.getHeadline(offs, dsgr);
-	theOffenders = offs;
-	thePriority = c.getPriority(theOffenders, dsgr);
-	theDescription = c.getDescription(theOffenders, dsgr);
-	theMoreInfoURL = c.getMoreInfoURL(theOffenders, dsgr);
-	theWizard = c.makeWizard(this);
-    }
-
-
 
     /**
      * The constructor.
