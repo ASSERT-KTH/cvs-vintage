@@ -1,4 +1,4 @@
-// $Id: ListSet.java,v 1.4 2005/05/21 12:43:45 bobtarling Exp $
+// $Id: ListSet.java,v 1.5 2005/05/21 17:46:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.tigris.gef.util.PredicateTrue;
  * An Ordered, non-duplicated collecton of objects (not exactly a
  * mathemetical set because it is ordered).
  */
-public class ListSet implements Serializable, Set {
+public class ListSet implements Serializable, Set, List {
     ////////////////////////////////////////////////////////////////
     // constants
     private static final int TC_LIMIT = 50;
