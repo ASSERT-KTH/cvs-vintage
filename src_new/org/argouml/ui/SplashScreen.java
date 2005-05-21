@@ -1,4 +1,4 @@
-// $Id: SplashScreen.java,v 1.17 2005/05/17 21:05:19 mvw Exp $
+// $Id: SplashScreen.java,v 1.18 2005/05/21 07:55:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,9 @@ public class SplashScreen extends JWindow implements IStatusBar {
 
     private StatusBar statusBar = new StatusBar();
 
+    /**
+     * The constructor.
+     */
     public SplashScreen() {
         this("Loading ArgoUML...", "Splash");
     }
