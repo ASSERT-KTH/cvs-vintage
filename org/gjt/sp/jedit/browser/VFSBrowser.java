@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.114 2005/04/23 20:29:12 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.115 2005/05/21 20:51:43 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -486,6 +486,15 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		});
 	} //}}}
 
+	//{{{ getRootDirectory() method
+	public static String getRootDirectory()
+	{
+		if(OperatingSystem.isMacOS() || OperatingSystem.isDOSDerived())
+			return FileRootsVFS.PROTOCOL + ":";
+		else
+			return "/";
+	} //}}}
+	
 	//{{{ rootDirectory() method
 	/**
 	 * Goes to the local drives directory.
@@ -493,10 +502,7 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 	 */
 	public void rootDirectory()
 	{
-		if(OperatingSystem.isMacOS() || OperatingSystem.isDOSDerived())
-			setDirectory(FileRootsVFS.PROTOCOL + ":");
-		else
-			setDirectory("/");
+		setDirectory(getRootDirectory());
 	} //}}}
 
 	//{{{ reloadDirectory() method

@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.248 2005/03/20 20:36:49 spestov Exp $
+ * @version $Id: jEdit.java,v 1.249 2005/05/21 20:51:43 spestov Exp $
  */
 public class jEdit
 {
@@ -2300,7 +2300,7 @@ public class jEdit
 		int before = (int) (rt.freeMemory() / 1024);
 		System.gc();
 		int after = (int) (rt.freeMemory() / 1024);
-		int total = (int) (rt.totalMemory() / 1024);
+		int total = (int) (rt.maxMemory() / 1024);
 
 		JProgressBar progress = new JProgressBar(0,total);
 		progress.setValue(total - after);

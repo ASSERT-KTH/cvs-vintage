@@ -53,7 +53,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.65 2004/07/12 19:25:07 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.66 2005/05/21 20:51:43 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -649,7 +649,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		{
 			Runtime runtime = Runtime.getRuntime();
 			int freeMemory = (int)(runtime.freeMemory() / 1024);
-			int totalMemory = (int)(runtime.totalMemory() / 1024);
+			int totalMemory = (int)(runtime.maxMemory() / 1024);
 			int usedMemory = (totalMemory - freeMemory);
 			Integer[] args = { new Integer(usedMemory),
 				new Integer(totalMemory) };
