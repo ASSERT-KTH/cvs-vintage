@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.44 2005/05/20 09:29:21 bobtarling Exp $
+// $Id: Designer.java,v 1.45 2005/05/21 08:14:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ import org.tigris.gef.util.EnumerationEmpty;
  */
 public final class Designer
      implements Poster,
-         Runnable, // TODO: remove/refactor per issue 1024
+         Runnable, 
          PropertyChangeListener,
          java.io.Serializable {
     /**

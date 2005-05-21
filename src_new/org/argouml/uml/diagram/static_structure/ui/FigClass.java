@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.145 2005/05/16 09:08:41 mvw Exp $
+// $Id: FigClass.java,v 1.146 2005/05/21 08:19:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1179,7 +1179,8 @@ public class FigClass extends FigNodeModelElement
         if (!isAttributesVisible()) {
             return;
         }
-        FigAttributesCompartment attributesCompartment = (FigAttributesCompartment) getAttributesFig();
+        FigAttributesCompartment attributesCompartment = 
+                (FigAttributesCompartment) getAttributesFig();
         attributesCompartment.populate();
         Fig attrPort = attributesCompartment.getBigPort();
         int xpos = attrPort.getX();
@@ -1279,7 +1280,8 @@ public class FigClass extends FigNodeModelElement
         if (!isOperationsVisible()) {
             return;
         }
-        FigOperationsCompartment operationsCompartment = ((FigOperationsCompartment) getFigAt(OPERATIONS_POSN));
+        FigOperationsCompartment operationsCompartment = 
+                ((FigOperationsCompartment) getFigAt(OPERATIONS_POSN));
         operationsCompartment.populate();
         Fig operPort = operationsCompartment.getBigPort();
 

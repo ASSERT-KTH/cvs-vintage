@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.62 2005/05/15 17:57:44 mvw Exp $
+// $Id: FigPackage.java,v 1.63 2005/05/21 08:19:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ import org.tigris.gef.presentation.FigText;
  */
 public class FigPackage extends FigNodeModelElement
     implements StereotypeContainer, VisibilityContainer 
-    {
+{
     private static final Logger LOG = Logger.getLogger(FigPackage.class);
 
     ////////////////////////////////////////////////////////////////
@@ -562,7 +562,7 @@ public class FigPackage extends FigNodeModelElement
 	    });
         }
         if (!visibilityVisible) {
-                showMenu.add(new UMLAction(
+            showMenu.add(new UMLAction(
                         Translator.localize("menu.popup.show.show-visibility"),
                         UMLAction.NO_ICON)
             {
@@ -576,8 +576,8 @@ public class FigPackage extends FigNodeModelElement
                     damage();
                 }
             });
-            } else {
-                showMenu.add(new UMLAction(
+        } else {
+            showMenu.add(new UMLAction(
                         Translator.localize("menu.popup.show.hide-visibility"),
                         UMLAction.NO_ICON)
             {
@@ -591,7 +591,7 @@ public class FigPackage extends FigNodeModelElement
                     damage();
                 }
             });
-            }
+        }
         popUpActions.insertElementAt(showMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
 

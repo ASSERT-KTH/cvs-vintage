@@ -1,4 +1,4 @@
-// $Id: FigSubsystem.java,v 1.14 2005/05/15 08:55:06 mvw Exp $
+// $Id: FigSubsystem.java,v 1.15 2005/05/21 08:19:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigSubsystem.java,v 1.14 2005/05/15 08:55:06 mvw Exp $
+// $Id: FigSubsystem.java,v 1.15 2005/05/21 08:19:39 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -30,7 +30,6 @@ import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-import org.argouml.model.Model;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
 

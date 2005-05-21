@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.99 2005/05/15 08:55:06 mvw Exp $
+// $Id: FigInterface.java,v 1.100 2005/05/21 08:19:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -661,7 +661,7 @@ public class FigInterface extends FigNodeModelElement
         new ActionAddOperation().actionPerformed(null);
         List figList = fg.getFigs();
         CompartmentFigText ft =
-                (CompartmentFigText) figList.get(figList.size()-1);
+                (CompartmentFigText) figList.get(figList.size() - 1);
         if (ft != null) {
             ft.startTextEditor(ie);
             ft.setHighlighted(true);
@@ -850,7 +850,8 @@ public class FigInterface extends FigNodeModelElement
         if (!isOperationsVisible()) {
             return;
         }
-        FigOperationsCompartment operationsCompartment = ((FigOperationsCompartment) getFigAt(OPERATIONS_POSN));
+        FigOperationsCompartment operationsCompartment = 
+                ((FigOperationsCompartment) getFigAt(OPERATIONS_POSN));
         operationsCompartment.populate();
         Fig operPort = operationsCompartment.getBigPort();
 
