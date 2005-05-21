@@ -1,4 +1,4 @@
-// $Id: FigEdgeAssociationClass.java,v 1.4 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: FigEdgeAssociationClass.java,v 1.5 2005/05/21 20:24:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,10 +91,6 @@ public class FigEdgeAssociationClass
         computeRoute();
     }
     
-    public String getTipString(MouseEvent me) {
-        return "From " + getSourceFigNode().getClass().getName() + " " + getSourceFigNode().getId() + " to " + getDestFigNode().getId();
-    }
-    
     ////////////////////////////////////////////////////////////////
     // accessors
 
@@ -163,21 +159,4 @@ public class FigEdgeAssociationClass
         TargetManager.getInstance().removeHistoryElement(this);
     }
 
-//    /**
-//     * Override the ancestor to do nothing.
-//     * The dashed edge of an association edge currently has no source FigNode
-//     * as it is actually attached to a Fig Edge.
-//     * We must override this method otherwise the ancestor would throw an
-//     * exception on this condition.
-//     */
-//    public void setSourceFigNode(FigNode fromFig) {
-//    }
-//    
-//    /**
-//     * Override the ancestor to return the port.
-//     */
-//    public Fig getSourceFigNode() {
-//        return getSourcePortFig();
-//    }
-    
 } /* end class FigEdgeAssociationClass */
