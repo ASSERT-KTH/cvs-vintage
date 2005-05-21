@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.13 2005/01/09 14:58:34 linus Exp $
+// $Id: ProjectMemberTodoList.java,v 1.14 2005/05/21 12:52:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,9 @@
 
 package org.argouml.uml.cognitive;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import org.argouml.cognitive.Designer;
@@ -102,19 +105,22 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
      * @return Vector conaining the resolved critics list
      */
     public Vector getResolvedCriticsList() {
-    	Vector in, out;
+    	LinkedHashSet in;
+        Vector out;
     	ResolvedCritic rci;
     	Designer dsgr;
     	int i;
 
     	dsgr = Designer.theDesigner();
     	in = dsgr.getToDoList().getResolvedItems();
+        
     	out = new Vector();
-    	for (i = 0; i < in.size(); i++) {
+    	for (Iterator it = in.iterator(); it.hasNext(); ) {
+            Object o = it.next();
     	    try {
-        	rci = (ResolvedCritic) in.elementAt(i);
-        	if (rci == null) {
-        		    continue;
+                rci = (ResolvedCritic) o;
+                if (rci == null) {
+                    continue;
                 }
     	    }
     	    catch (ClassCastException e) {
@@ -124,6 +130,4 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
     	}
     	return out;
     }
-
 }
-

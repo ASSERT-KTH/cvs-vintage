@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.28 2005/05/20 09:29:21 bobtarling Exp $
+// $Id: ToDoList.java,v 1.29 2005/05/21 12:52:51 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,8 @@ package org.argouml.cognitive;
 
 import java.io.Serializable;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Observable;
 import java.util.Vector;
 import javax.swing.event.EventListenerList;
@@ -90,7 +92,7 @@ public class ToDoList extends Observable implements Runnable, Serializable {
      *
      * TODO: generalize into a design rationale logging facility.
      */
-    private Vector resolvedItems;
+    private LinkedHashSet resolvedItems;
 
     /**
      * A Thread that keeps checking if the items on the list are
@@ -130,7 +132,7 @@ public class ToDoList extends Observable implements Runnable, Serializable {
     public ToDoList() {
 
 	items = new Vector(100);
-	resolvedItems = new Vector(100);
+	resolvedItems = new LinkedHashSet(100);
 	listenerList = new EventListenerList();
 	longestToDoList = 0;
 	numNotValid = 0;
@@ -322,7 +324,7 @@ public class ToDoList extends Observable implements Runnable, Serializable {
     /**
      * @return the resolved items
      */
-    public Vector getResolvedItems() { return resolvedItems; }
+    public LinkedHashSet getResolvedItems() { return resolvedItems; }
 
     /**
      * @return the set of offenders
@@ -396,10 +398,10 @@ public class ToDoList extends Observable implements Runnable, Serializable {
             try {
                 rc = new ResolvedCritic((Critic) item.getPoster(),
                                         item.getOffenders(), false);
-                Enumeration elems = resolvedItems.elements();
+                Iterator elems = resolvedItems.iterator();
                 //cat.debug("Checking for inhibitors " + rc);
-                while (elems.hasMoreElements()) {
-                    if (elems.nextElement().equals(rc)) {
+                while (elems.hasNext()) {
+                    if (elems.next().equals(rc)) {
                         LOG.debug("ToDoItem not added because it was resolved");
                         return;
                     }
@@ -502,9 +504,14 @@ public class ToDoList extends Observable implements Runnable, Serializable {
         ResolvedCritic rc = new ResolvedCritic((Critic) item.getPoster(),
 					       item.getOffenders());
         boolean res = resolve(item);
-        resolvedItems.addElement(rc);
-//        History.TheHistory.addItemResolution(item, reason);
+        if (res) {
+            res = addResolvedCritic(rc);
+        }
         return res;
+    }
+    
+    public boolean addResolvedCritic(ResolvedCritic rc) {
+        return resolvedItems.add(rc);
     }
 
     /**
