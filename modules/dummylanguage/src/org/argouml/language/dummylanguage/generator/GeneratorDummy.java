@@ -1,4 +1,4 @@
-// $Id: GeneratorDummy.java,v 1.13 2005/02/08 22:15:48 mvw Exp $
+// $Id: GeneratorDummy.java,v 1.14 2005/05/21 18:16:30 mvw Exp $
 // Copyright (c) 2001-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -285,5 +285,5 @@ public final class GeneratorDummy
     public String getModuleKey() {
 	return "module.language.generator.dummylanguage";
     }
-} /* end class GeneratorJava */
+} /* end class GeneratorDummy */
 

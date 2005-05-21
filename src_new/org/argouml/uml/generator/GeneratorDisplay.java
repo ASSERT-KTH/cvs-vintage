@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.88 2005/05/16 11:10:49 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.89 2005/05/21 18:16:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,13 @@ import org.argouml.application.api.Notation;
 import org.argouml.model.Model;
 
 /**
- * Generator2 subclass to generate code for display in diagrams in
+ * Generator2 subclass to generate notation for display in diagrams in
  * text fields in the ArgoUML user interface.  The generated code
- * looks a lot like (invalid) Java. <p>
+ * is UML. <p>
+ * 
+ * In contrary to its name, this is not the only class 
+ * to generate for the "Display". Similarely to the GeneratorJava class,
+ * this class would better have been named GeneratorUML. 
  *
  * TODO: always check for null!!!
  *
