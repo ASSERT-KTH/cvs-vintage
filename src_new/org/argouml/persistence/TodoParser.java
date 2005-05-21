@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.5 2005/02/16 23:47:10 bobtarling Exp $
+// $Id: TodoParser.java,v 1.6 2005/05/21 12:46:27 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -325,16 +325,15 @@ public class TodoParser extends SAXParserBase {
      * @param e the element
      */
     protected void handleIssueEnd(XMLElement e) {
-	Designer dsgr;
-	ResolvedCritic item;
-
-	if (critic == null)
-	    return;
-
-	item = new ResolvedCritic(critic, offenders);
-	dsgr = Designer.theDesigner();
-	dsgr.getToDoList().getResolvedItems().addElement(item);
-	// cat.debug("Added ResolvedCritic: " + item);
+        Designer dsgr;
+        ResolvedCritic item;
+        
+        if (critic == null)
+            return;
+        
+        item = new ResolvedCritic(critic, offenders);
+        dsgr = Designer.theDesigner();
+        dsgr.getToDoList().addResolvedCritic(item);
     }
 
     /**
@@ -343,7 +342,7 @@ public class TodoParser extends SAXParserBase {
      * @param e the element
      */
     protected void handlePoster(XMLElement e) {
-	critic = decode(e.getText()).trim();
+        critic = decode(e.getText()).trim();
     }
 
     /**
