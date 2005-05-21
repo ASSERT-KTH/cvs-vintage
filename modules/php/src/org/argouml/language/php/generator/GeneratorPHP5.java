@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP5.java,v 1.4 2005/01/09 21:10:45 linus Exp $
+// $Id: GeneratorPHP5.java,v 1.5 2005/05/21 18:17:01 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.language.php.generator;
 
-import org.apache.log4j.Logger;
 
 /**
  * Generator class for PHP 5.x source code
@@ -33,10 +32,6 @@ import org.apache.log4j.Logger;
  * @since  ArgoUML 0.15.5
  */
 public final class GeneratorPHP5 extends GeneratorPHP4 {
-    /**
-     * The log4j logger to log messages to
-     */
-    private static final Logger LOG = Logger.getLogger(GeneratorPHP5.class);
 
     /**
      * The major version of the language this module generates source code for
