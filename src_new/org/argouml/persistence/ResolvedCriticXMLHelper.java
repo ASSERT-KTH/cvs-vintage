@@ -1,4 +1,4 @@
-// $Id: ResolvedCriticXMLHelper.java,v 1.2 2005/01/09 14:58:08 linus Exp $
+// $Id: ResolvedCriticXMLHelper.java,v 1.3 2005/05/21 12:51:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,10 +47,10 @@ public class ResolvedCriticXMLHelper {
      * @param	rc	The ResolvedCritic to expose.
      */
     public ResolvedCriticXMLHelper(ResolvedCritic rc) {
-	if (rc == null) {
-	    throw new NullPointerException();
-	}
-	item = rc;
+        if (rc == null) {
+            throw new IllegalArgumentException("There must be a ResolvedCritic supplied.");
+        }
+        item = rc;
     }
 
     /**
@@ -62,7 +62,7 @@ public class ResolvedCriticXMLHelper {
      * @return	The encoded critic.
      */
     public String getCritic() {
-	return TodoParser.encode(item.getCritic());
+        return item.getCritic();
     }
 
     /**

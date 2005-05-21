@@ -1,4 +1,4 @@
-// $Id: OffenderXMLHelper.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: OffenderXMLHelper.java,v 1.2 2005/05/21 12:51:08 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,13 +43,13 @@ public class OffenderXMLHelper
      * described by item.
      *
      * @param	offender	A description of an offender.
-     * @throws	NullPointerException if item is null.
+     * @throws	IllegalArgumentException if item is null.
      */
-    public OffenderXMLHelper(String offender)
-    {
-	if (offender == null)
-	    throw new NullPointerException();
-	item = offender;
+    public OffenderXMLHelper(String offender) {
+        if (offender == null) {
+            throw new IllegalArgumentException("An offender string must be supplied");
+        }
+        item = offender;
     }
 
     /**
@@ -59,7 +59,7 @@ public class OffenderXMLHelper
      */
     public String getOffender()
     {
-	return TodoParser.encode(item);
+        return item;
     }
 }
 
