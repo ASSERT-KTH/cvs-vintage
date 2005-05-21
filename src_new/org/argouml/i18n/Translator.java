@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.31 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: Translator.java,v 1.32 2005/05/21 08:33:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,9 +97,9 @@ public final class Translator {
      * @return The localized String.
      */
     public static String localize(String key) {
-        if ( key.indexOf('.')== -1)
+        if ( key.indexOf('.') == -1)
         {
-            key=org.tigris.gef.util.Localizer.localize( "UMLMenu", key);
+            key = org.tigris.gef.util.Localizer.localize( "UMLMenu", key);
         }
         return org.workingfrog.i18n.util.Translator.localize(key, key);
     }
