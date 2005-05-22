@@ -26,7 +26,7 @@
 // File: FigEdgeLine.java
 // Classes: FigEdgeLine
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RoutingStrategyLine.java,v 1.1 2005/05/22 02:06:41 bobtarling Exp $
+// $Id: RoutingStrategyLine.java,v 1.2 2005/05/22 20:43:02 bobtarling Exp $
 
 package org.argouml.gef;
 
@@ -37,6 +37,7 @@ import java.awt.Point;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigLine;
+
 
 /** An FigEdge that shows a straight line from the source port
  *  to the destination port. */

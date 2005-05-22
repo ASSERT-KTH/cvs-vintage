@@ -26,7 +26,7 @@
 // File: FigEdgeRectiline.java
 // Classes: FigEdgeRectiline
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RoutingStrategyRectiline.java,v 1.1 2005/05/22 02:06:41 bobtarling Exp $
+// $Id: RoutingStrategyRectiline.java,v 1.2 2005/05/22 20:43:02 bobtarling Exp $
 
 package org.argouml.gef;
 
@@ -35,6 +35,7 @@ import java.awt.*;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigPoly;
+
 
 /** 
  * A Fig that paints edges between ports. This version

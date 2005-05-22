@@ -24,7 +24,7 @@
 // File: FigEdgeLineDotted.java
 // Classes: FigEdgeLineDotted
 // Original Author: abonner@ics.uci.edu
-// $Id: RoutingStrategyLineDotted.java,v 1.1 2005/05/22 02:06:41 bobtarling Exp $
+// $Id: RoutingStrategyLineDotted.java,v 1.2 2005/05/22 20:43:02 bobtarling Exp $
 
 package org.argouml.gef;
 
@@ -32,6 +32,7 @@ import java.awt.Color;
 
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigLine;
+
 
 /** An FigEdge that shows a straight line from the source port
  *  to the destination port. */

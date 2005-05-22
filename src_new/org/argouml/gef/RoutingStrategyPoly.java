@@ -24,7 +24,7 @@
 // File: FigEdgePoly.java
 // Classes: FigEdgePoly
 // Original Author: agauthie@ics.uci.edu
-// $Id: RoutingStrategyPoly.java,v 1.1 2005/05/22 02:06:41 bobtarling Exp $
+// $Id: RoutingStrategyPoly.java,v 1.2 2005/05/22 20:43:02 bobtarling Exp $
 
 package org.argouml.gef;
 
@@ -38,6 +38,7 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.Handle;
+
 
 
 /** A Fig that paints edges between ports. This version

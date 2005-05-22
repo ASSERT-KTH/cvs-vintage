@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.94 2005/05/22 02:51:06 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.95 2005/05/22 20:43:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,8 +83,8 @@ import org.tigris.gef.presentation.FigText;
  * look like lines and that have editable names.
  */
 public abstract class FigEdgeModelElement
-    extends FigEdgePoly
-    //extends FigEdge // TODO RoutingStrategy, replaces above line
+//    extends FigEdgePoly
+    extends FigEdge // TODO RoutingStrategy, replaces above line
     implements
         VetoableChangeListener,
         DelayedVChangeListener,
@@ -150,7 +150,7 @@ public abstract class FigEdgeModelElement
      *  _name element that holds the name of the model element and adds
      *  itself as a listener. */
     public FigEdgeModelElement() {
-        //super(RoutingStrategyFactory.getPolyStrategy()); // TODO RoutingStrategy
+        super(RoutingStrategyFactory.getPolyStrategy()); // TODO RoutingStrategy
         name = new FigText(10, 30, 90, 20);
         name.setFont(LABEL_FONT);
         name.setTextColor(Color.black);
