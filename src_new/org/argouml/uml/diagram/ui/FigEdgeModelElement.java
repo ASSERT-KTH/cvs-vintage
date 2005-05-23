@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.95 2005/05/22 20:43:02 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.96 2005/05/23 00:58:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ItemUID;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
-import org.argouml.gef.FigEdge;
+import org.argouml.gef.FigEdgeRoutable;
 import org.argouml.gef.RoutingStrategyFactory;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
@@ -84,7 +84,7 @@ import org.tigris.gef.presentation.FigText;
  */
 public abstract class FigEdgeModelElement
 //    extends FigEdgePoly
-    extends FigEdge // TODO RoutingStrategy, replaces above line
+    extends FigEdgeRoutable // TODO RoutingStrategy, replaces above line
     implements
         VetoableChangeListener,
         DelayedVChangeListener,
