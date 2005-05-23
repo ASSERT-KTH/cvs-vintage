@@ -26,7 +26,7 @@
 // File: FigEdgeLine.java
 // Classes: FigEdgeLine
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RoutingStrategyLine.java,v 1.3 2005/05/23 00:58:03 bobtarling Exp $
+// $Id: RoutingStrategyLine.java,v 1.4 2005/05/23 01:12:29 bobtarling Exp $
 
 package org.argouml.gef;
 
@@ -64,17 +64,8 @@ public class RoutingStrategyLine extends RoutingStrategy {
             dstPt = destPortFig.connectionPoint(srcPt);
         }
 
-        ((FigLine) _fig).setShape(srcPt, dstPt);
+        ((FigLine) edge.getFig()).setShape(srcPt, dstPt);
         edge.calcBounds();
-    }
-
-
-    public void paint(FigEdgeRoutable edge, Graphics g) {
-        edge.paint(g);
-        if (_highlight) {
-            FigLine f = (FigLine) edge.getFig();
-            paintHighlightLine(g, f.getX1(), f.getY1(), f.getX2(), f.getY2());
-        }
     }
 } /* end class FigEdgeLine */
 

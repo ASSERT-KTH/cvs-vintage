@@ -24,7 +24,7 @@
 // File: FigEdgePoly.java
 // Classes: FigEdgePoly
 // Original Author: agauthie@ics.uci.edu
-// $Id: RoutingStrategyPoly.java,v 1.3 2005/05/23 00:58:03 bobtarling Exp $
+// $Id: RoutingStrategyPoly.java,v 1.4 2005/05/23 01:12:29 bobtarling Exp $
 
 package org.argouml.gef;
 
@@ -409,16 +409,4 @@ public class RoutingStrategyPoly extends RoutingStrategy {
         }
     }
 
-    public void paint(FigEdgeRoutable edge, Graphics g) {
-        edge.paint(g);
-        if (_highlight) {
-            FigPoly f = (FigPoly) edge.getFig();
-            int nPoints = f.getNumPoints();
-            int xs[] = f.getXs();
-            int ys[] = f.getYs();
-            for (int i = 1; i < nPoints; i++) {
-                paintHighlightLine(g, xs[i - 1], ys[i - 1], xs[i], ys[i]);
-            }
-        }
-    }
 } /* end class FigEdgePoly */
