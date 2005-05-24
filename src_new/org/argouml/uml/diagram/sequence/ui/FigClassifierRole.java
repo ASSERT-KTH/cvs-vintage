@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.2 2005/05/24 00:06:05 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ import org.argouml.uml.diagram.ui.FigNodeModelElement;
 
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
+import org.tigris.gef.base.Selection;
 import org.tigris.gef.persistence.pgml.Container;
 import org.tigris.gef.persistence.pgml.FigGroupHandler;
 import org.tigris.gef.persistence.pgml.HandlerFactory;
@@ -1268,6 +1269,11 @@ public class FigClassifierRole extends FigNodeModelElement
             }
         }
         calcBounds();
+    }
+    
+    
+    public Selection makeSelection() {
+        return new SelectionClassifierRole(this);
     }
 
     static class TempFig extends FigLine
