@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.2 2005/05/24 00:06:05 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.3 2005/05/24 22:59:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -366,12 +366,8 @@ public class FigClassifierRole extends FigNodeModelElement
         firePropChange("bounds", oldBounds, getBounds());
     }
 
-    public void superTranslate( int dx, int dy)
-    {
-        Rectangle new_bounds=getBounds( null);
-        new_bounds.x+=dx;
-        new_bounds.y+=dy;
-        setBounds( new_bounds);
+    public void superTranslate( int dx, int dy) {
+        setBounds(getX()+dx, getY(), getWidth(), getHeight());
     }
 
     /**
@@ -1272,6 +1268,12 @@ public class FigClassifierRole extends FigNodeModelElement
     }
     
     
+    
+    /**
+    /**
+     * Override to return a custom SelectionResize class that will not allow
+     * handles on the north edge to be dragged.
+     */
     public Selection makeSelection() {
         return new SelectionClassifierRole(this);
     }
