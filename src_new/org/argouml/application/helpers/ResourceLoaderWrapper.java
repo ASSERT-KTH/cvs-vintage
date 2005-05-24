@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.30 2005/05/23 21:09:16 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.31 2005/05/24 21:56:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -378,11 +378,8 @@ public final class ResourceLoaderWrapper {
         images.put("button.new-usage", "Usage");
         images.put("button.new-usecase", "UseCase");
         images.put("button.select", "Select");
-    }
-
-    static {
-        images.put("button.sequencecontract", "SequenceContract");
-        images.put("button.sequenceexpand", "SequenceExpand");
+        images.put("button.sequence-expand", "SequenceExpand");
+        images.put("button.sequence-contract", "SequenceContract");
     }
 
     /**

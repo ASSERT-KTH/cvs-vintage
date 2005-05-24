@@ -1,4 +1,4 @@
-// $Id: ModeCreateMessage.java,v 1.2 2005/05/23 13:03:24 bobtarling Exp $
+// $Id: ModeCreateMessage.java,v 1.3 2005/05/24 21:56:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,14 +96,12 @@ public class ModeCreateMessage extends ModeCreate {
             Globals.getPrefs().getRubberbandColor());
     }
 
-// Commented out by Bob Tarling 22 May 2005. The i18n package throws an
-// exception. Will raise an issue.
-//    /**
-//     * @see org.tigris.gef.base.FigModifyingMode#instructions()
-//     */
-//    public String instructions() {
-//        return Translator.localize( "action.sequence.new."+getArg( "actionName"));
-//    }
+    /**
+     * @see org.tigris.gef.base.FigModifyingMode#instructions()
+     */
+    public String instructions() {
+        return Translator.localize( "action.sequence.new."+getArg( "actionName"));
+    }
 
     /**
      * On mousePressed determine what port the user is dragging from.
