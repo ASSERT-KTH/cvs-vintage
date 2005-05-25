@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.46 2005/05/16 19:19:56 rhs Exp $
+ - $Id: build.xml,v 1.47 2005/05/25 09:33:34 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -237,6 +237,8 @@
     <subant target="dist.jar" inheritall="true">
       <fileset dir="${archive}" includes="*.xml" />
     </subant>
+    <!-- copy extra lib (irmi) -->
+    <copy file="externals/irmi.jar" todir="${dist.lib}" />
   </target>
 
 
@@ -296,6 +298,8 @@
   <!-- *********     CLEAN       **********-->
   <!-- ************************************-->
   <target name="clean" description="Make a clean (carol and carol tests)">
+    <delete dir="eclipse-bin" />
+    <delete dir="test/orb.db" />
     <delete dir="${build}" />
     <delete dir="${dist}" />
   </target>
@@ -304,14 +308,25 @@
   <!-- *********          PACKAGE              *******-->
   <!-- ***********************************************-->
   <target name="packages"
-          depends="clean,package.src,package.jar"
+          depends="clean,package.src,package.jar, package.doc"
           description="--> create two packages (source and binaries)
-    (version is specified by -Dversion=x.y.z)" />
+    (version is specified by -Dversion=x.y.z)">
+
+    <!-- generate md5 -->
+    <echo file="${dist}/../carol-${carol.version}.md5" append="false">#Md5 for Carol ${carol.version}
+      carol-${carol.version}.tgz ${bin-package.MD5}
+      carol-${carol.version}-doc.tgz ${doc-package.MD5}
+      carol-${carol.version}-src.tgz ${src-package.MD5}
+    </echo>
+
+  </target>
 
   <target name="package.jar" depends="dist">
     <mkdir dir="${tmp}" />
     <copy todir="${tmp}/carol-${carol.version}" includeEmptyDirs="no">
-      <fileset dir="${dist}" />
+      <fileset dir="${dist}">
+        <exclude name="doc/**" />
+      </fileset>
     </copy>
     <tar tarfile="${tmp}/carol-${carol.version}.tar"
          longfile="gnu"
@@ -320,6 +335,8 @@
     <gzip zipfile="${dist}/../carol-${carol.version}.tgz"
           src="${tmp}/carol-${carol.version}.tar" />
     <delete dir="${tmp}" />
+    <checksum file="${dist}/../carol-${carol.version}.tgz"
+              property="bin-package.MD5" />
   </target>
 
   <target name="package.src" depends="clean" if="carol.version">
@@ -334,6 +351,27 @@
     <gzip zipfile="${dist}/../carol-${carol.version}-src.tgz"
           src="${tmp}/carol-${carol.version}-src.tar" />
     <delete dir="${tmp}" />
+    <checksum file="${dist}/../carol-${carol.version}-src.tgz"
+              property="src-package.MD5" />
+  </target>
+
+  <target name="package.doc" depends="clean" if="carol.version">
+    <mkdir dir="${tmp}" />
+    <exec dir="${doc}" executable="/usr/bin/make" os="Linux">
+      <arg line="docbook-html" />
+    </exec>
+    <copy todir="${tmp}/carol-${carol.version}-doc" includeEmptyDirs="no">
+      <fileset dir="${build}/usermanual" />
+    </copy>
+    <tar tarfile="${tmp}/carol-${carol.version}-doc.tar"
+         longfile="gnu"
+         basedir="${tmp}/"
+         includes="carol-${carol.version}-doc/**" />
+    <gzip zipfile="${dist}/../carol-${carol.version}-doc.tgz"
+          src="${tmp}/carol-${carol.version}-doc.tar" />
+    <delete dir="${tmp}" />
+    <checksum file="${dist}/../carol-${carol.version}-doc.tgz"
+              property="doc-package.MD5" />
   </target>
 
 
@@ -352,4 +390,12 @@
     <echo message="  dist.test:  launch all tests distributions of the product into ${dist.test}" />
   </target>
 
+  <!-- Copy files to OW server -->
+  <target name="scp" depends="packages">
+    <scp todir="${user.name}@carol.forge.objectweb.org:incoming">
+      <fileset dir="${dist}/../">
+        <include name="carol-${carol.version}*" />
+      </fileset>
+    </scp>
+  </target>
 </project>
