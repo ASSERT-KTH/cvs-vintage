@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.10 2005/04/14 18:29:45 mvw Exp $
+// $Id: NSUMLModelImplementation.java,v 1.11 2005/05/26 13:16:03 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.model.uml;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.io.Writer;
 
 import org.argouml.model.ActivityGraphsFactory;
@@ -35,6 +37,7 @@ import org.argouml.model.CollaborationsHelper;
 import org.argouml.model.CommonBehaviorFactory;
 import org.argouml.model.CommonBehaviorHelper;
 import org.argouml.model.ConcurrencyKind;
+import org.argouml.model.ContainerDispatcher;
 import org.argouml.model.CoreFactory;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.DataTypesFactory;
@@ -368,4 +371,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
         return new XmiWriterImpl(model, writer);
     }
     
+    public ContainerDispatcher createContainerDispatcher(Container container) {
+        return new ContainerDispatcherImpl(container);
+    }
 }

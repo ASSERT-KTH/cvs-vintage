@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.116 2005/05/26 11:09:06 bobtarling Exp $
+// $Id: PropPanel.java,v 1.117 2005/05/26 13:16:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import javax.swing.event.EventListenerList;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ContainerDispatcher;
 import org.argouml.model.Model;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.AbstractArgoJPanel;
@@ -84,7 +85,7 @@ public abstract class PropPanel
     private Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
 
     // TODO: This should request a ComponentDispatcher from the model component
-    ComponentDispatcher componentDispatcher = new ComponentDispatcher(this);
+    ContainerDispatcher componentDispatcher = Model.createContainerDispatcher(this);
     
     /**
      * Construct new PropPanel using LabelledLayout.<p>
@@ -129,7 +130,7 @@ public abstract class PropPanel
      * Get the ComponentDispatcher for thie prop panel.
      * @return the ComponentDispatcher
      */
-    public ComponentDispatcher getComponentDispatcher() {
+    public ContainerDispatcher getComponentDispatcher() {
         return componentDispatcher;
     }
 

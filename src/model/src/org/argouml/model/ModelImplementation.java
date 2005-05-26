@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.4 2005/04/16 09:34:04 mvw Exp $
+// $Id: ModelImplementation.java,v 1.5 2005/05/26 13:16:04 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,9 @@
 
 package org.argouml.model;
 
+import java.awt.Container;
 import java.io.Writer;
+
 
 
 /**
@@ -283,4 +285,12 @@ public interface ModelImplementation {
      * @throws UmlException on any error while writing
      */
     XmiWriter getXmiWriter(Object model, Writer writer) throws UmlException;
+
+    /**
+     * Factory for new ContainerDispatchers
+     * @param container The container to register with the ContainerDispatcher.
+     * 
+     * @return a new instance of a ContainerDispatcher.
+     */
+    ContainerDispatcher createContainerDispatcher(Container container);
 }
