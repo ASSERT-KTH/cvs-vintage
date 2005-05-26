@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.57 2005/05/26 10:49:07 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.58 2005/05/26 13:31:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,6 @@ import org.argouml.uml.ui.UMLStimulusActionTextProperty;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * The properties panel for a Stimulus.
@@ -90,13 +88,6 @@ public class PropPanelStimulus extends PropPanelModelElement {
         addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
         addButton(new PropPanelButton2(new ActionRemoveFromModel()));
-    }
-
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#removed(ru.novosoft.uml.MElementEvent)
-     */
-    public void removed(MElementEvent mee) {
     }
 
     /**
