@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextField.java,v 1.7 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLStimulusActionTextField.java,v 1.8 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,13 +26,14 @@ package org.argouml.uml.ui;
 import javax.swing.event.*;
 import javax.swing.*;
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /**
  * TODO: this class should be moved to package
  * org.argouml.uml.ui.behavior.common_behavior
  */
 public class UMLStimulusActionTextField extends JTextField
-    implements DocumentListener, UMLUserInterfaceComponent {
+    implements DocumentListener, UMLUserInterfaceComponent, MElementListener {
 
     private UMLUserInterfaceContainer theContainer;
     private UMLStimulusActionTextProperty theProperty;

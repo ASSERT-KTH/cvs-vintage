@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.19 2005/03/19 22:05:08 linus Exp $
+// $Id: UMLExpressionBodyField.java,v 1.20 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import javax.swing.event.DocumentListener;
 import org.apache.log4j.Logger;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 
 /**
@@ -38,7 +39,7 @@ import ru.novosoft.uml.MElementEvent;
  */
 public class UMLExpressionBodyField
     extends JTextArea
-    implements DocumentListener, UMLUserInterfaceComponent {
+    implements DocumentListener, UMLUserInterfaceComponent, MElementListener {
 
     /**
      * Logger.

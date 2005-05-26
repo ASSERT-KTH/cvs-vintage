@@ -1,4 +1,4 @@
-// $Id: UMLChangeDispatch.java,v 1.24 2005/01/30 20:47:48 linus Exp $
+// $Id: UMLChangeDispatch.java,v 1.25 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.uml.ui.behavior.common_behavior.PropPanelNodeInstance;
 import org.argouml.uml.ui.behavior.common_behavior.PropPanelObject;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /**
  * This class is used to dispatch a NSUML change event (which may
@@ -45,7 +46,8 @@ import ru.novosoft.uml.MElementEvent;
  * This class is updated to cope with changes to the targetchanged
  * mechanism.
  */
-public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
+public class UMLChangeDispatch
+        implements Runnable, UMLUserInterfaceComponent, MElementListener {
     private MElementEvent event;
     private int eventType;
     private Container container;
@@ -221,10 +223,10 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
         //      add a listener to our new target
         //
         if (eventType == -1 && container instanceof PropPanel
-	    && !((container instanceof PropPanelObject)
-		 || (container instanceof PropPanelNodeInstance)
-		 || (container instanceof PropPanelComponentInstance))) {
-	    PropPanel propPanel = (PropPanel) container;
+                && !((container instanceof PropPanelObject)
+                 || (container instanceof PropPanelNodeInstance)
+                 || (container instanceof PropPanelComponentInstance))) {
+            PropPanel propPanel = (PropPanel) container;
             Object t = propPanel.getTarget();
 
             if (Model.getFacade().isABase(t)) {
@@ -255,45 +257,45 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
             component = theAWTContainer.getComponent(i);
             if (component instanceof Container)
                 dispatch((Container) component);
-            if (component instanceof UMLUserInterfaceComponent) {
-                uiComp = (UMLUserInterfaceComponent) component;
-                if (uiComp instanceof Component
-		        && ((Component) uiComp).isVisible()) {
-		    switch(eventType) {
+            if (component instanceof Component
+                    && ((Component) component).isVisible() 
+                    && (component instanceof UMLUserInterfaceComponent 
+                        || component instanceof MElementListener)) {
+                
+                switch(eventType) {
                     case -1:
                     case 0:
-                        uiComp.targetChanged();
+                        ((UMLUserInterfaceComponent) component).targetChanged();
                         break;
 
                     case 1:
-                        uiComp.propertySet(event);
+                        ((MElementListener) component).propertySet(event);
                         break;
 
                     case 2:
-                        uiComp.listRoleItemSet(event);
+                        ((MElementListener) component).listRoleItemSet(event);
                         break;
 
                     case 3:
-                        uiComp.recovered(event);
+                        ((MElementListener) component).recovered(event);
                         break;
 
                     case 4:
-                        uiComp.removed(event);
+                        ((MElementListener) component).removed(event);
                         break;
 
                     case 5:
-                        uiComp.roleAdded(event);
+                        ((MElementListener) component).roleAdded(event);
                         break;
 
                     case 6:
-                        uiComp.roleRemoved(event);
+                        ((MElementListener) component).roleRemoved(event);
                         break;
 
                     case 7:
-                        uiComp.targetReasserted();
+                        ((UMLUserInterfaceComponent) component).targetReasserted();
                         break;
-		    }
-		}
+                }
             }
         }
     }

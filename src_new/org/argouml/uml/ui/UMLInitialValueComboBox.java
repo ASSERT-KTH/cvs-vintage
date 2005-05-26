@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.43 2005/01/30 20:47:49 linus Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.44 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import javax.swing.JComboBox;
 import org.argouml.model.Model;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /**
  * Handles communication between the initial value JComboBox and the
@@ -49,7 +50,7 @@ import ru.novosoft.uml.MElementEvent;
  * proppanels that used reflection a lot.
  */
 public class UMLInitialValueComboBox extends JComboBox
-             implements ActionListener, UMLUserInterfaceComponent {
+             implements ActionListener, UMLUserInterfaceComponent, MElementListener {
 
     private UMLUserInterfaceContainer theContainer;
 

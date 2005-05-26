@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.14 2005/01/09 14:59:02 linus Exp $
+// $Id: PropPanelButton2.java,v 1.15 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,13 +29,14 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /**
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
 public class PropPanelButton2 extends JButton
-        implements UMLUserInterfaceComponent {
+        implements UMLUserInterfaceComponent, MElementListener {
 
     /**
      * Constructor for PropPanelButton2.

@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceComponent.java,v 1.9 2005/01/09 14:59:04 linus Exp $
+// $Id: UMLUserInterfaceComponent.java,v 1.10 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,17 +24,14 @@
 
 package org.argouml.uml.ui;
 
-import ru.novosoft.uml.MElementListener;
-
 /**
- * This interface accepts all notifications signaled by NSUML's
- * MElementListener interface plus accepts notification that a
+ * This interface accepts notification that a
  * container's target model element has been changed (typically due to
  * navigation).
  *
  * @author Curt Arnold
  */
-public interface UMLUserInterfaceComponent extends MElementListener {
+public interface UMLUserInterfaceComponent {
     /**
      *  This method is called when the target of a UMLUserInterfaceContainer
      *  has been changed.

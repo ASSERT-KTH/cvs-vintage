@@ -1,4 +1,4 @@
-// $Id: UMLExpressionLanguageField.java,v 1.12 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLExpressionLanguageField.java,v 1.13 2005/05/26 13:47:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /**
  * This text field shows the language of a UML expression.
  */
 public class UMLExpressionLanguageField
     extends JTextField
-    implements DocumentListener, UMLUserInterfaceComponent {
+    implements DocumentListener, UMLUserInterfaceComponent, MElementListener {
 
     private UMLExpressionModel2 model;
     private boolean notifyModel;
