@@ -1,4 +1,4 @@
-// $Id: PropPanelSignalEvent.java,v 1.13 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: ActionDeleteModelElements.java,v 1.1 2005/05/26 20:35:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,42 +22,27 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.ui.behavior.state_machines;
+package org.argouml.uml.ui;
 
-import org.argouml.uml.ui.ActionDeleteSingleModelElement;
-import org.argouml.uml.ui.PropPanelButton2;
-import org.argouml.uml.ui.foundation.core.ActionNewParameter;
-import org.argouml.util.ConfigLoader;
+import org.argouml.ui.targetmanager.TargetManager;
 
 /**
- * The properties panel for a SignalEvent.
+ * Action for removing (moving to trash) objects from the model. Objects can be:
+ * - Modelelements (NSUML)
+ * - Diagrams (argodiagram and it's children)
+ * The root model and the last diagram in the project can not be removed. The
+ * reason for this is to prevent problems updating the detailspane and the
+ * navpane. Besides that, it is not possible to make a new root model.
  *
- *
- * @author oliver.heyden
+ * @author original author not known.
+ * @author jaap.branderhorst@xs4all.nl extensions
  */
-public class PropPanelSignalEvent extends PropPanelEvent {
+public class ActionDeleteModelElements extends ActionBaseDelete {
 
     /**
-     * The constructor.
-     *
+     * @return the complete array of targets
      */
-    public PropPanelSignalEvent() {
-        super("Signal event", lookupIcon("SignalEvent"),
-              ConfigLoader.getTabPropsOrientation());
+    protected Object[] getTargets() {
+        return TargetManager.getInstance().getTargets().toArray();
     }
-
-    /**
-     * @see org.argouml.uml.ui.behavior.state_machines.PropPanelEvent#initialize()
-     */
-    public void initialize() {
-        super.initialize();
-
-        addButton(new PropPanelButton2(new ActionNewParameter(),
-                lookupIcon("Parameter")));
-        addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
-                lookupIcon("Delete")));
-    }
-
-}
-
-
+} /* end class ActionRemoveFromModel */

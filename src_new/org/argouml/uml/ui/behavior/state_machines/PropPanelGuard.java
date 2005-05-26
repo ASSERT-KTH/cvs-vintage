@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.39 2005/05/06 20:53:25 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.40 2005/05/26 20:35:24 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import org.argouml.i18n.Translator;
+import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateTransition;
-import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionExpressionModel;
@@ -85,7 +86,7 @@ public class PropPanelGuard extends PropPanelModelElement {
                 lookupIcon("NavigateUp")));
 	addButton(new PropPanelButton2(new ActionNewStereotype(),
 	        lookupIcon("Stereotype")));
-	addButton(new PropPanelButton2(new ActionRemoveFromModel(),
+	addButton(new PropPanelButton2(new ActionDeleteSingleModelElement(),
                 lookupIcon("Delete")));
     }
 

@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.55 2005/04/16 14:01:21 mvw Exp $
+// $Id: UmlModelEventPump.java,v 1.56 2005/05/26 20:35:23 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -458,10 +458,17 @@ public final class UmlModelEventPump implements MElementListener {
         if (modelelement == null || !(modelelement instanceof MBase)) {
             return;
         }
-        if (listener == null
-            || modelelement == null
-            || !(listener instanceof MElementListener)) {
-            throw new IllegalArgumentException();
+        if (listener == null) {
+            throw new IllegalArgumentException("A listener must be supplied");
+        }
+        if (modelelement == null) {
+            throw new IllegalArgumentException(
+                    "A model element must be supplied");
+        }
+        if (!(listener instanceof MElementListener)) {
+            throw new IllegalArgumentException(
+                    "The listener must be an MElementListener - got a "
+                    + listener.getClass().getName());
         }
         EventKey[] keys = definition.getEventTypes(modelelement.getClass());
         for (int i = 0; i < keys.length; i++) {
