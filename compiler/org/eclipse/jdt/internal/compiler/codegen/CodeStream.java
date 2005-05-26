@@ -2049,6 +2049,7 @@ public void generateSyntheticBodyForSwitchTable(SyntheticMethodBinding methodBin
 public void generateSyntheticBodyForFieldReadAccess(SyntheticMethodBinding accessBinding) {
 	initializeMaxLocals(accessBinding);
 	FieldBinding fieldBinding = accessBinding.targetReadField;
+	TypeBinding type;
 	if (fieldBinding.isStatic())
 		this.getstatic(fieldBinding);
 	else {
