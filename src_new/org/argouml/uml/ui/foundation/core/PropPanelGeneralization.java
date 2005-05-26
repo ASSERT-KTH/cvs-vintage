@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.55 2005/04/12 23:34:17 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.56 2005/05/26 10:49:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
             Model.getMetaTypes().getClassifier(),
         };
 
-        setNameEventListening(namesToWatch);
+        getComponentDispatcher().setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
                 getNameTextField());

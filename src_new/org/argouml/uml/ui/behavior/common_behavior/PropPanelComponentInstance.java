@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.44 2005/04/14 18:29:48 mvw Exp $
+// $Id: PropPanelComponentInstance.java,v 1.45 2005/05/26 10:49:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class PropPanelComponentInstance extends PropPanelInstance {
             Model.getMetaTypes().getClassifier(),
 	};
 
-        setNameEventListening(namesToWatch);
+        getComponentDispatcher().setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"), getNameTextField());
 

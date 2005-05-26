@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.64 2005/04/12 23:34:20 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.65 2005/05/26 10:49:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,68 +53,68 @@ public class PropPanelMessage extends PropPanelModelElement {
      *
      */
     public PropPanelMessage() {
-	super("Message", ConfigLoader.getTabPropsOrientation());
-
-	Object[] namesToWatch = {
-	    Model.getMetaTypes().getStereotype(),
-	    Model.getMetaTypes().getClassifierRole(),
-	    Model.getMetaTypes().getAction(),
-	};
-
-	setNameEventListening(namesToWatch);
-
-	addField(Translator.localize("label.name"),
-            getNameTextField());
-	addField(Translator.localize("label.stereotype"),
-            getStereotypeSelector());
-	// a message does not have a namespace. removed therefore
-	// addField(Translator.localize("label.namespace"),
-	// getNamespaceScroll());
-	JList interactionList =
-	    new UMLLinkedList(new UMLMessageInteractionListModel());
-	interactionList.setVisibleRowCount(1);
-	addField(Translator.localize("label.interaction"),
-		 new JScrollPane(interactionList));
-
-	JList senderList = new UMLLinkedList(new UMLMessageSenderListModel());
-	senderList.setVisibleRowCount(1);
-	JScrollPane senderScroll = new JScrollPane(senderList);
-	addField(Translator.localize("label.sender"), senderScroll);
-
-	JList receiverList =
-	    new UMLLinkedList(new UMLMessageReceiverListModel());
-	receiverList.setVisibleRowCount(1);
-	JScrollPane receiverScroll = new JScrollPane(receiverList);
-	addField(Translator.localize("label.receiver"),
-            receiverScroll);
-
-	addSeperator();
-
-	addField(Translator.localize("label.activator"),
-		 new UMLMessageActivatorComboBox(this,
-			 new UMLMessageActivatorComboBoxModel()));
-
-	JList actionList =
-		 new UMLMutableLinkedList(new UMLMessageActionListModel(),
-		         null, ActionNewActionForMessage.getInstance());
-	actionList.setVisibleRowCount(1);
-	JScrollPane actionScroll = new JScrollPane(actionList);
-	addField(Translator.localize("label.action"), actionScroll);
-
-	JScrollPane predecessorScroll = new JScrollPane(
-            new UMLMutableLinkedList(new UMLMessagePredecessorListModel(),
-		ActionAddMessagePredecessor.getInstance(),
-		null));
-	addField(Translator.localize("label.predecessor"),
-		 predecessorScroll);
-
-        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionToolNewAction(),
-                lookupIcon("CallAction")));
-        addButton(new PropPanelButton2(new ActionNewStereotype(),
-                lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
-                lookupIcon("Delete")));
+        super("Message", ConfigLoader.getTabPropsOrientation());
+        
+        Object[] namesToWatch = {
+            Model.getMetaTypes().getStereotype(),
+            Model.getMetaTypes().getClassifierRole(),
+            Model.getMetaTypes().getAction(),
+        };
+        
+        getComponentDispatcher().setNameEventListening(namesToWatch);
+        
+        addField(Translator.localize("label.name"),
+                getNameTextField());
+        addField(Translator.localize("label.stereotype"),
+                getStereotypeSelector());
+        // a message does not have a namespace. removed therefore
+        // addField(Translator.localize("label.namespace"),
+        // getNamespaceScroll());
+        JList interactionList =
+            new UMLLinkedList(new UMLMessageInteractionListModel());
+        interactionList.setVisibleRowCount(1);
+        addField(Translator.localize("label.interaction"),
+        	 new JScrollPane(interactionList));
+        
+        JList senderList = new UMLLinkedList(new UMLMessageSenderListModel());
+        senderList.setVisibleRowCount(1);
+        JScrollPane senderScroll = new JScrollPane(senderList);
+        addField(Translator.localize("label.sender"), senderScroll);
+        
+        JList receiverList =
+            new UMLLinkedList(new UMLMessageReceiverListModel());
+        receiverList.setVisibleRowCount(1);
+        JScrollPane receiverScroll = new JScrollPane(receiverList);
+        addField(Translator.localize("label.receiver"),
+                receiverScroll);
+        
+        addSeperator();
+        
+        addField(Translator.localize("label.activator"),
+        	 new UMLMessageActivatorComboBox(this,
+        		 new UMLMessageActivatorComboBoxModel()));
+        
+        JList actionList =
+        	 new UMLMutableLinkedList(new UMLMessageActionListModel(),
+        	         null, ActionNewActionForMessage.getInstance());
+        actionList.setVisibleRowCount(1);
+        JScrollPane actionScroll = new JScrollPane(actionList);
+        addField(Translator.localize("label.action"), actionScroll);
+        
+        JScrollPane predecessorScroll = new JScrollPane(
+                new UMLMutableLinkedList(new UMLMessagePredecessorListModel(),
+        	ActionAddMessagePredecessor.getInstance(),
+        	null));
+        addField(Translator.localize("label.predecessor"),
+        	 predecessorScroll);
+        
+            addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+            addButton(new PropPanelButton2(new ActionToolNewAction(),
+                    lookupIcon("CallAction")));
+            addButton(new PropPanelButton2(new ActionNewStereotype(),
+                    lookupIcon("Stereotype")));
+            addButton(new PropPanelButton2(new ActionRemoveFromModel(),
+                    lookupIcon("Delete")));
     }
 
     private class ActionToolNewAction extends AbstractActionNewModelElement {
