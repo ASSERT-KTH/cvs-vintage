@@ -1,4 +1,4 @@
-// $Id: ContainerDispatcher.java,v 1.1 2005/05/26 13:16:04 bobtarling Exp $
+// $Id: ContainerDispatcher.java,v 1.2 2005/05/26 14:11:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model;
-
-import org.argouml.model.uml.UmlModelEventPump;
 
 /**
  * This listens for events on a component and dispatches the events to all its
