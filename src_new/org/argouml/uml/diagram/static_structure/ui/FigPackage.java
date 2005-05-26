@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.65 2005/05/21 14:50:35 mvw Exp $
+// $Id: FigPackage.java,v 1.66 2005/05/26 21:35:13 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -330,6 +330,7 @@ public class FigPackage extends FigNodeModelElement
             }
             String nameStr =
                 Notation.generate(this, Model.getFacade().getName(getOwner()));
+            nameStr = generatePath() + nameStr;
             Object v = Model.getFacade().getVisibility(getOwner());
             if (v == null) {
                 /* Initially, the visibility is not set in the model. 

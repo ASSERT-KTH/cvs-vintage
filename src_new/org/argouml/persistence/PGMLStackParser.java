@@ -1,4 +1,4 @@
-// $Id: PGMLStackParser.java,v 1.7 2005/05/19 20:32:15 bobtarling Exp $
+// $Id: PGMLStackParser.java,v 1.8 2005/05/26 21:35:14 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
+import org.argouml.uml.diagram.ui.PathContainer;
 import org.argouml.uml.diagram.ui.StereotypeContainer;
 import org.tigris.gef.persistence.pgml.Container;
 import org.tigris.gef.persistence.pgml.FigGroupHandler;
@@ -179,9 +180,12 @@ public class PGMLStackParser extends org.tigris.gef.persistence.pgml.PGMLStackPa
                 ((AttributesCompartmentContainer) fig)
                     .setAttributesVisible(value.equalsIgnoreCase("true"));
             } else if ("stereotypeVisible".equals(name)) {
-                    ((StereotypeContainer) fig)
+                ((StereotypeContainer) fig)
                     .setStereotypeVisible(value.equalsIgnoreCase("true"));
-            }
+            } else if ("pathVisible".equals(name)) {
+                ((PathContainer) fig)
+                    .setPathVisible(value.equalsIgnoreCase("true"));
+            }  
         }
     }
 }

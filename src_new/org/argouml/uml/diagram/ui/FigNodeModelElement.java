@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.167 2005/05/21 14:50:36 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.168 2005/05/26 21:35:13 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,7 @@ import java.beans.VetoableChangeListener;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Stack;
 import java.util.Vector;
 
 import javax.swing.Icon;
@@ -107,6 +108,7 @@ public abstract class FigNodeModelElement
         KeyListener,
         PropertyChangeListener,
         NotationContext,
+        PathContainer,
         ArgoNotationEventListener {
 
     /**
@@ -264,6 +266,12 @@ public abstract class FigNodeModelElement
      */
     private boolean forceRepaint;
 
+    /**
+     * Flag that indicates if the full namespace path should be shown 
+     * in front of the name.
+     */
+    private boolean pathVisible = false;
+    
     /**
      * The main constructor.
      *
@@ -1358,14 +1366,73 @@ public abstract class FigNodeModelElement
             if (getOwner() == null) {
                 return;
             }
-            String nameStr =
-                Notation.generate(this, Model.getFacade().getName(getOwner()));
-            name.setText(nameStr);
+            String packName =
+                Notation.generate(Notation.getConfigueredNotation(), 
+                                Model.getFacade().getName(getOwner()));
+            packName = generatePath() + packName;
+            name.setText(packName);
             updateBounds();
+        }
+    }
+    
+    /**
+     * TODO: this should move in some generic notation generation class, 
+     * supporting other languages.
+     * 
+     * @return a string which represents the path
+     */
+    protected String generatePath() {
+        String s = "";
+        if (pathVisible) {
+            Object p = getOwner();
+            Stack stack = new Stack();
+            Object ns = Model.getFacade().getNamespace(p);
+            while (ns != null && !Model.getFacade().isAModel(ns)) {
+                stack.push(Model.getFacade().getName(ns));
+                ns = Model.getFacade().getNamespace(ns);
+            }
+            while (!stack.isEmpty()) {
+                s += (String) stack.pop() + "::";
+            }
+            
+            if (s.length() > 0 && !s.endsWith(":")) {
+                s += "::";
+            }
+        }
+        return s;
+    }
+    
+
+    /**
+     * @see org.argouml.uml.diagram.ui.PathContainer#isPathVisible()
+     */
+    public boolean isPathVisible() {
+        return pathVisible;
+    }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.PathContainer#setPathVisible(boolean)
+     */
+    public void setPathVisible(boolean visible) {
+        pathVisible = visible;
+        if (readyToEdit) {
+            renderingChanged();
+            damage();
         }
     }
 
     /**
+     * USED BY PGML.tee.
+     * @return the class name and bounds together with compartment
+     * visibility.
+     */
+    public String classNameAndBounds() {
+        return super.classNameAndBounds()
+                + "pathVisible=" + isPathVisible()
+                + ";";
+    }   
+    
+/**
      * Implementations of this method should register/unregister the fig for all
      * (model)events. For FigNodeModelElement only the fig itself is registred
      * as listening to events fired by the owner itself. But for, for example,
