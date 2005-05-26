@@ -1,4 +1,4 @@
-// $Id: UMLChangeDispatch.java,v 1.25 2005/05/26 13:47:21 bobtarling Exp $
+// $Id: UMLChangeDispatch.java,v 1.26 2005/05/26 17:29:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -258,43 +258,49 @@ public class UMLChangeDispatch
             if (component instanceof Container)
                 dispatch((Container) component);
             if (component instanceof Component
-                    && ((Component) component).isVisible() 
-                    && (component instanceof UMLUserInterfaceComponent 
-                        || component instanceof MElementListener)) {
+                    && ((Component) component).isVisible()) {
                 
-                switch(eventType) {
-                    case -1:
-                    case 0:
-                        ((UMLUserInterfaceComponent) component).targetChanged();
-                        break;
-
-                    case 1:
-                        ((MElementListener) component).propertySet(event);
-                        break;
-
-                    case 2:
-                        ((MElementListener) component).listRoleItemSet(event);
-                        break;
-
-                    case 3:
-                        ((MElementListener) component).recovered(event);
-                        break;
-
-                    case 4:
-                        ((MElementListener) component).removed(event);
-                        break;
-
-                    case 5:
-                        ((MElementListener) component).roleAdded(event);
-                        break;
-
-                    case 6:
-                        ((MElementListener) component).roleRemoved(event);
-                        break;
-
-                    case 7:
-                        ((UMLUserInterfaceComponent) component).targetReasserted();
-                        break;
+                if (component instanceof UMLUserInterfaceComponent) {
+                
+                    switch(eventType) {
+                        case -1:
+                        case 0:
+                            ((UMLUserInterfaceComponent) component).targetChanged();
+                            break;
+    
+                        case 7:
+                            ((UMLUserInterfaceComponent) component).targetReasserted();
+                            break;
+                    }
+                }
+                
+                if (component instanceof MElementListener) {
+                
+                    switch(eventType) {
+                        case 1:
+                            ((MElementListener) component).propertySet(event);
+                            break;
+    
+                        case 2:
+                            ((MElementListener) component).listRoleItemSet(event);
+                            break;
+    
+                        case 3:
+                            ((MElementListener) component).recovered(event);
+                            break;
+    
+                        case 4:
+                            ((MElementListener) component).removed(event);
+                            break;
+    
+                        case 5:
+                            ((MElementListener) component).roleAdded(event);
+                            break;
+    
+                        case 6:
+                            ((MElementListener) component).roleRemoved(event);
+                            break;
+                    }
                 }
             }
         }
