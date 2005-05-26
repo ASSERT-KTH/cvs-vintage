@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.147 2005/05/21 10:37:45 mvw Exp $
+// $Id: FigClass.java,v 1.148 2005/05/26 21:15:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -327,6 +327,8 @@ public class FigClass extends FigNodeModelElement
     /**
      * Returns the status of the operation field.
      * @return true if the operations are visible, false otherwise
+     *
+     * @see org.argouml.uml.diagram.ui.OperationsCompartmentContainer#isOperationsVisible()
      */
     public boolean isOperationsVisible() {
         return getOperationsFig().isVisible();
@@ -335,6 +337,8 @@ public class FigClass extends FigNodeModelElement
     /**
      * Returns the status of the attribute field.
      * @return true if the attributes are visible, false otherwise
+     *
+     * @see org.argouml.uml.diagram.ui.AttributesCompartmentContainer#isAttributesVisible()
      */
     public boolean isAttributesVisible() {
         return getAttributesFig().isVisible();
@@ -342,6 +346,8 @@ public class FigClass extends FigNodeModelElement
 
     /**
      * @param isVisible true if the attribute compartment is visible
+     *
+     * @see org.argouml.uml.diagram.ui.AttributesCompartmentContainer#setAttributesVisible(boolean)
      */
     public void setAttributesVisible(boolean isVisible) {
         Rectangle rect = getBounds();
@@ -383,6 +389,8 @@ public class FigClass extends FigNodeModelElement
 
     /**
      * @param isVisible true if the operation compartment is visible
+     *
+     * @see org.argouml.uml.diagram.ui.OperationsCompartmentContainer#setOperationsVisible(boolean)
      */
     public void setOperationsVisible(boolean isVisible) {
         Rectangle rect = getBounds();
