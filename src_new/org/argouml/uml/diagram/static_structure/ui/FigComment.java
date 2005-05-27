@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.43 2005/04/23 16:30:46 linus Exp $
+// $Id: FigComment.java,v 1.44 2005/05/27 17:37:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -409,7 +409,7 @@ public class FigComment
      */
     public final void storeNote(String note) {
         if (getOwner() != null) {
-            Model.getCoreHelper().setName(getOwner(), note);
+            Model.getCoreHelper().setBody(getOwner(), note);
         }
     }
 
@@ -420,7 +420,7 @@ public class FigComment
      */
     public final String retrieveNote() {
         return (getOwner() != null)
-	    ? Model.getFacade().getName(getOwner())
+	    ? (String) Model.getFacade().getBody(getOwner())
 	    : null;
     }
 

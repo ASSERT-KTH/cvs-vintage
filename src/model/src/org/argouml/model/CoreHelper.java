@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.2 2005/03/19 22:05:08 linus Exp $
+// $Id: CoreHelper.java,v 1.3 2005/05/27 17:37:30 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -272,6 +272,14 @@ public interface CoreHelper {
      * @return MGeneralization
      */
     Object getGeneralization(Object achild, Object aparent);
+    
+    /**
+     * Gets the body of a comment. 
+     * 
+     * @param comment the comment
+     * @return the body of the comment
+     */
+    String getBody(Object comment);
 
     /**
      * Returns all flows from some source modelelement to a target
@@ -984,6 +992,14 @@ public interface CoreHelper {
      * @param name to set
      */
     void setName(Object handle, String name);
+    
+    /**
+     * Sets the body of a comment.
+     * 
+     * @param handle the comment
+     * @param body the string
+     */
+    void setBody(Object handle, String body);
 
     /**
      * Sets a namespace of some modelelement.

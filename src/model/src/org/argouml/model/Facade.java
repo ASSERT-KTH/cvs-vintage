@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.3 2005/04/23 16:30:44 linus Exp $
+// $Id: Facade.java,v 1.4 2005/05/27 17:37:30 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1240,7 +1240,7 @@ public interface Facade {
     Object getBehavioralFeature(Object handle);
 
     /**
-     * Get the body of an method/constraint/expression.<p>
+     * Get the body of an method/constraint/expression/comment.<p>
      *
      * If the argument is an expression, the body returned is a
      * {@link String} (or <code>null</code>). If you want a type-safe

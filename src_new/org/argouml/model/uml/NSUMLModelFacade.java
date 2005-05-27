@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.9 2005/04/23 16:30:44 linus Exp $
+// $Id: NSUMLModelFacade.java,v 1.10 2005/05/27 17:37:30 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1977,6 +1977,11 @@ public class NSUMLModelFacade implements Facade {
         }
         if (handle instanceof MExpression) {
             return ((MExpression) handle).getBody();
+        }
+        if (handle instanceof MComment) {
+            /* In UML 1.3, get it from the name.
+             * From UML 1.4, get it from the body.*/
+            return ((MComment) handle).getName();
         }
 	return illegalArgumentObject(handle);
     }

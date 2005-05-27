@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.22 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelComment.java,v 1.23 2005/05/27 17:37:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,9 @@ package org.argouml.uml.ui.foundation.core;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionDeleteSingleModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
-import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLPlainTextDocument;
@@ -41,7 +41,8 @@ import org.argouml.util.ConfigLoader;
  * Proppanel for comments (notes). <p>
  *
  * In UML 1.3, the text of the comment is kept
- * in the name of the MComment.
+ * in the name of the MComment.<p>
+ * 
  * In UML 1.4 and beyond, the MComment has a "body"
  * attribute, to contain the comment string.
  */
@@ -52,15 +53,7 @@ public class PropPanelComment extends PropPanelModelElement {
      */
     public PropPanelComment() {
         super("Comment", ConfigLoader.getTabPropsOrientation());
-        UMLPlainTextDocument uptd = getNameDocument();
-
-        /*
-         * TODO: This is probably not the right location for switching off the
-         * "filterNewlines". The setting gets lost after selecting a different
-         * ModelElement in the diagram. BTW, see how it is used in
-         * javax.swing.text.PlainDocument See issue 1812.
-         */
-        uptd.putProperty("filterNewlines", Boolean.FALSE);
+        UMLPlainTextDocument uptd = new UMLCommentBodyDocument();
 
         addField(Translator.localize("label.stereotype"),
                 getStereotypeSelector());
@@ -84,3 +77,38 @@ public class PropPanelComment extends PropPanelModelElement {
                 lookupIcon("Delete")));;
     }
 }
+
+class UMLCommentBodyDocument extends UMLPlainTextDocument {
+
+        /**
+         * Constructor for UMLModelElementNameDocument.
+         */
+        public UMLCommentBodyDocument() {
+            super("name"); // this may have to change to "body" for UML 1.4
+            /*
+             * TODO: This is probably not the right location 
+             * for switching off the "filterNewlines". 
+             * The setting gets lost after selecting a different
+             * ModelElement in the diagram. 
+             * BTW, see how it is used in
+             * javax.swing.text.PlainDocument.
+             * See issue 1812.
+             */
+            putProperty("filterNewlines", Boolean.FALSE);
+        }
+
+        /**
+         * @see org.argouml.uml.ui.UMLPlainTextDocument#setProperty(java.lang.String)
+         */
+        protected void setProperty(String text) {
+            Model.getCoreHelper().setBody(getTarget(), text);
+        }
+
+        /**
+         * @see org.argouml.uml.ui.UMLPlainTextDocument#getProperty()
+         */
+        protected String getProperty() {
+            return (String) Model.getFacade().getBody(getTarget());
+        }
+
+    }
