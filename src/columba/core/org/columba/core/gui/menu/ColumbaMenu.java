@@ -99,4 +99,18 @@ public class ColumbaMenu extends JMenuBar {
 		return null;
 	}
 
+    public JMenu findMenu(String menuId)
+    {
+    
+      for(int i=0;i<getMenuCount(); i++)
+      {
+        if (getComponent(i) instanceof CMenu &&
+            ((CMenu)getComponent(i)).getMenuId().equals(menuId))
+            return (CMenu)getComponent(i);
+      }
+      
+      return null;
+      
+    }
+    
 }
