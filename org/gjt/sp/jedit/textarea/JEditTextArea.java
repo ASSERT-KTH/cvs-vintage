@@ -64,7 +64,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.354 2005/04/21 22:40:24 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.355 2005/05/29 00:35:15 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -315,7 +315,8 @@ public class JEditTextArea extends JComponent
 				// dubious?
 				//setFirstLine(0);
 
-				selectNone();
+				if(buffer.isLoaded())
+					selectNone();
 				caretLine = caret = caretScreenLine = 0;
 				match = null;
 			}
