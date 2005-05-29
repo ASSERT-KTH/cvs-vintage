@@ -90,7 +90,7 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
      */
     public CharacterEncodingSubMenu(FrameMediator controller) {
         super(controller, MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_charset"));
+                "menu_view_charset"),"menu_view_charset");
 
         setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
 
@@ -110,7 +110,8 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
 
         for (int i = 0; i < groups.length; i++) {
             subsubMenu = new CMenu(MailResourceLoader.getString("menu",
-                    "mainframe", "menu_view_charset_" + groups[i]));
+                    "mainframe", "menu_view_charset_" + groups[i]),
+                    "menu_view_charset_" + groups[i]);
             add(subsubMenu);
 
             for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {

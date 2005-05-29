@@ -23,8 +23,8 @@ import org.columba.core.gui.menu.CMenu;
 public class IMenu extends CMenu {
 	protected FrameMediator controller;
 
-	public IMenu(FrameMediator controller, String caption) {
-		super(caption);
+	public IMenu(FrameMediator controller, String caption,String id) {
+		super(caption,id);
 		this.controller = controller;
 	}
 

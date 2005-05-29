@@ -61,7 +61,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 	 */
 	public ColorMessageMenu(FrameMediator controller) {
 		super(controller, MailResourceLoader.getString("dialog", "color",
-				"menu_color_message"));
+				"menu_color_message"),"menu_color_message");
 
 		createSubMenu();
 

@@ -44,7 +44,7 @@ public class FontSizeMenu extends IMenu {
     public FontSizeMenu(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "composer",
-                "menu_format_font_size"));
+                "menu_format_font_size"),"menu_format_font_size");
 
         initMenu();
 

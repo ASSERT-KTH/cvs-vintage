@@ -77,7 +77,7 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
     public ParagraphMenu(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "composer",
-                "menu_format_paragraph"));
+                "menu_format_paragraph"),"menu_format_paragraph");
 
         initMenu();
 

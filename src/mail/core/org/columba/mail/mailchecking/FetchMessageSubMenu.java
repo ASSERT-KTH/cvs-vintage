@@ -34,7 +34,7 @@ public class FetchMessageSubMenu extends IMenu implements Observer {
     public FetchMessageSubMenu(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",
-                "menu_file_checkmessage"));
+                "menu_file_checkmessage"),"menu_file_checkmessage");
 
         createMenu();
 

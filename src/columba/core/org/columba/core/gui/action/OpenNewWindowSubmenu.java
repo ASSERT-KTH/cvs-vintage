@@ -31,9 +31,9 @@ public class OpenNewWindowSubmenu extends IMenu {
  * @param controller
  * @param caption
  */
-    public OpenNewWindowSubmenu(FrameMediator controller, String caption) {
+    public OpenNewWindowSubmenu(FrameMediator controller, String caption,String id) {
         super(controller,
             GlobalResourceLoader.getString("global", "global",
-                "menu_file_opennewwindow"));
+                "menu_file_opennewwindow"),id);
     }
 }

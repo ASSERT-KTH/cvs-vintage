@@ -29,6 +29,7 @@ import org.columba.core.gui.util.MnemonicSetter;
  * Window>Preferences>Java>Code Generation.
  */
 public class CMenu extends JMenu {
+     private String menuId;
     /**
  * Creates a menu item with the specified text.
  * <br>
@@ -37,11 +38,17 @@ public class CMenu extends JMenu {
  *
  * @param        str                Menu text
  */
-    public CMenu(String str) {
+    public CMenu(String str,String id) {
         super();
-
+        
+        menuId = id;
         //super(str);
         // set menu text incl. mnemonic if specified
         MnemonicSetter.setTextWithMnemonic(this, str);
+    }
+    
+    public String getMenuId()
+    {
+        return menuId;      
     }
 }

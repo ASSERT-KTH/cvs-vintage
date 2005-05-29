@@ -56,7 +56,7 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 	 * @param caption
 	 */
 	public HeadersMenu(FrameMediator controller) {
-		super(controller, "Show Headers");
+		super(controller, "Show Headers","show_headers_menu");
 
 		ButtonGroup group = new ButtonGroup();
 

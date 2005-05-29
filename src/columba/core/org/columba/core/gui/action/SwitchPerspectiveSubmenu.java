@@ -59,7 +59,7 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 	 * @param caption
 	 */
 	public SwitchPerspectiveSubmenu(FrameMediator controller) {
-		super(controller, "Show View");
+		super(controller, "Show View",controller.getViewItem().get("id"));
 
 		String id = getFrameMediator().getViewItem().get("id");
 

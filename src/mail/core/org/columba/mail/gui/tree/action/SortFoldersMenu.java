@@ -63,7 +63,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
      * @param controller the controller.
      */
     public SortFoldersMenu(FrameMediator controller) {
-        super(controller, MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_tree"));
+        super(controller, MailResourceLoader.getString("menu", "mainframe", "menu_view_sort_tree"),"menu_view_sort_tree");
 
         createSubMenu();
         loadConfig();

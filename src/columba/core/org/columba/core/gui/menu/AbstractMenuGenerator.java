@@ -173,8 +173,11 @@ public abstract class AbstractMenuGenerator {
 
 		// *20031004, karlpeder* Changed from JMenu to CMenu to support
 		// mnemonics
-		CMenu menu = new CMenu(getString("menu", "mainframe", menuElement
-				.getAttribute("name")));
+		CMenu menu = 
+            new CMenu(getString("menu", 
+                                "mainframe", 
+                                menuElement.getAttribute("name")),
+                      menuElement.getAttribute("name"));
 
 		createMenuEntries(menu, it);
 
@@ -265,8 +268,10 @@ public abstract class AbstractMenuGenerator {
 		List childs = menuElement.getElements();
 		ListIterator it = childs.listIterator();
 
-		CMenu menu = new CMenu(getString("menu", "mainframe", menuElement
-				.getAttribute("name")));
+		CMenu menu = new CMenu(getString("menu", 
+                                        "mainframe", 
+                                        menuElement.getAttribute("name")),
+                              menuElement.getAttribute("name"));
 
 		createMenuEntries(menu, it);
 

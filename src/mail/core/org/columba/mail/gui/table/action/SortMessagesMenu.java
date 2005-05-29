@@ -59,7 +59,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener,
 
 	public SortMessagesMenu(FrameMediator controller) {
 		super(controller, MailResourceLoader.getString("menu", "mainframe",
-				"menu_view_sort"));
+				"menu_view_sort"),"menu_view_sort");
 
 		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
 
