@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.95 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelModelElement.java,v 1.96 2005/05/31 21:22:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -359,17 +359,6 @@ public abstract class PropPanelModelElement extends PropPanel {
                     Translator.localize("label.visibility"), true);
         }
         return namespaceVisibilityPanel;
-    }
-
-    /**
-     * @return a checkbox for the specialization
-     */
-    protected JCheckBox getSpecializationCheckBox() {
-        if (specializationCheckBox == null) {
-            specializationCheckBox =
-		new UMLElementOwnershipSpecificationCheckBox();
-        }
-        return specializationCheckBox;
     }
 
     /**
