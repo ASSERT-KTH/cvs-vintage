@@ -354,7 +354,7 @@ public class MessageComposer {
 			body = " ";
 		}
 
-		bodyPart.setBody(new CharSequenceSource(body));
+		bodyPart.setSource(new CharSequenceSource(body));
 
 		return bodyPart;
 	}
@@ -419,7 +419,7 @@ public class MessageComposer {
 			body = " ";
 		}
 
-		bodyPart.setBody(new CharSequenceSource(body));
+		bodyPart.setSource(new CharSequenceSource(body));
 
 		return bodyPart;
 	}
