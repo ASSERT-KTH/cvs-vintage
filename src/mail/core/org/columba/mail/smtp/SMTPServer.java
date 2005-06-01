@@ -69,12 +69,6 @@ import org.columba.ristretto.smtp.SMTPProtocol;
  */
 public class SMTPServer  {
 
-	private static final int CLOSED = 0;
-
-	private static final int CONNECTED = 1;
-
-	private static final int AUTHENTICTED = 2;
-
 	private String[] capas;
 
 	protected SMTPProtocol protocol;
@@ -84,8 +78,6 @@ public class SMTPServer  {
 	protected Identity identity;
 
 	protected String fromAddress;
-
-	private int state;
 
 	private boolean usingSSL;
 
@@ -98,12 +90,10 @@ public class SMTPServer  {
 		this.accountItem = accountItem;
 
 		identity = accountItem.getIdentity();
-		state = CLOSED;
-
 	}
 
 	private void ensureConnected() throws IOException, SMTPException {
-		if (state < CONNECTED) {
+		if (protocol.getState() == SMTPProtocol.NOT_CONNECTED) {
 			// initialise protocol layer
 			OutgoingItem smtpItem = accountItem.getSmtpItem();
 			String host = smtpItem.get("host");
@@ -114,8 +104,6 @@ public class SMTPServer  {
 			protocol.openPort();
 
 			initialize();
-
-			state = CONNECTED;
 		}
 	}
 
@@ -124,7 +112,7 @@ public class SMTPServer  {
 	 * 
 	 * @return true if connection was successful, false otherwise
 	 */
-	public void openConnection() throws IOException, SMTPException,
+	private void ensureAuthenticated() throws IOException, SMTPException,
 			CommandCancelledException {
 		String username;
 		char[] password = new char[0];
@@ -428,8 +416,6 @@ public class SMTPServer  {
 		// Close Port
 		try {
 			protocol.quit();
-
-			state = CLOSED;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -462,7 +448,9 @@ public class SMTPServer  {
 	 */
 	public void sendMessage(SendableMessage message,
 			WorkerStatusController workerStatusController)
-			throws SMTPException, IOException {
+			throws SMTPException, IOException, CommandCancelledException {
+		ensureAuthenticated();
+		
 		// send from address and recipient list to SMTP server
 		// ->all addresses have to be normalized
 		protocol.mail(identity.getAddress());
@@ -491,6 +479,5 @@ public class SMTPServer  {
 	
 	public void dropConnection() throws IOException {
 		protocol.dropConnection();
-		state = CLOSED;
 	}
 }
