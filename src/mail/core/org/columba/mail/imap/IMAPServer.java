@@ -484,7 +484,6 @@ public class IMAPServer implements IMAPListener {
 			// -> not necessary when password was stored
 			if (!first || password.length == 0) {
 				// Show the password dialog
-				if (password.length == 0)
 				dialog.showDialog(MessageFormat.format(MailResourceLoader
 						.getString("dialog", "password", "enter_password"),
 						new Object[] { item.get("user"), item.get("host") }),
