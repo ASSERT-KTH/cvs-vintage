@@ -1,4 +1,4 @@
-// $Id: UMLExpressionModel2.java,v 1.6 2005/03/19 22:05:08 linus Exp $
+// $Id: UMLExpressionModel2.java,v 1.7 2005/06/01 00:12:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,6 @@
 package org.argouml.uml.ui;
 
 import org.argouml.model.Model;
-
-import ru.novosoft.uml.MElementEvent;
 
 /**
  * @author mkl
@@ -57,20 +55,20 @@ public abstract class UMLExpressionModel2  {
         mustRefresh = true;
     }
 
-    /**
-     * @param event the event
-     * @return true if the property is affected
-     */
-    public boolean propertySet(MElementEvent event) {
-        boolean isAffected = false;
-        String eventName = event.getName();
-        if (eventName != null && eventName.equals(propertyName)) {
-            isAffected = true;
-            mustRefresh = true;
-        }
-        return isAffected;
-    }
-
+//    /**
+//     * @param event the event
+//     * @return true if the property is affected
+//     */
+//    public boolean propertySet(MElementEvent event) {
+//        boolean isAffected = false;
+//        String eventName = event.getName();
+//        if (eventName != null && eventName.equals(propertyName)) {
+//            isAffected = true;
+//            mustRefresh = true;
+//        }
+//        return isAffected;
+//    }
+//
     /**
      * @return the expression
      */
