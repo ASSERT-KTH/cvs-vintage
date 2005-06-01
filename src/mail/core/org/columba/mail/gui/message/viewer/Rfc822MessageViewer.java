@@ -39,6 +39,7 @@ import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.MimeType;
 
 /**
  * IViewer for a complete RFC822 message.
@@ -346,7 +347,8 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 
 	private boolean hasHtmlPart(MimePart mimeTypes) {
 
-		if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
+		if (mimeTypes.getHeader().getMimeType().equals(
+				new MimeType("text","plain")))
 			return true; //exit immediately
 
 		java.util.List children = mimeTypes.getChilds();

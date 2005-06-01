@@ -163,7 +163,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		MimeHeader parentHeader = child.getHeader();
 
 		if (parentHeader.getMimeType()
-				.equalsIgnoreCase("multipart/alternative")) {
+				.equals(
+						new MimeType("multipart","alternative"))) {
 			traverseAlternativePart(child, ref);
 		} else {
 			JPanel panel = createPanel(new MailFolderCommandReference(ref
@@ -187,8 +188,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			// search for HTML mimepart
 			for (int j = 0; j < mp.countChilds(); j++) {
 				MimePart alternativePart = mp.getChild(j);
-				if (alternativePart.getHeader().getMimeType().equalsIgnoreCase(
-						"text/html")) {
+				if (alternativePart.getHeader().getMimeType().equals(
+						new MimeType("text","html"))) {
 					ref.setAddress(alternativePart.getAddress());
 
 					panel = createPanel(ref);
@@ -200,8 +201,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			// search for text mimepart
 			for (int j = 0; j < mp.countChilds(); j++) {
 				MimePart alternativePart = mp.getChild(j);
-				if (alternativePart.getHeader().getMimeType().equalsIgnoreCase(
-						"text/plain")) {
+				if (alternativePart.getHeader().getMimeType().equals(
+						new MimeType("text","plain"))) {
 					ref.setAddress(alternativePart.getAddress());
 					panel = createPanel(ref);
 					attachmentPanels.add(panel);
@@ -334,7 +335,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	private boolean hasHtmlPart(MimePart mimeTypes) {
 
-		if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
+		if (mimeTypes.getHeader().getMimeType().equals(
+				new MimeType("text","html")))
 			return true; //exit immediately
 
 		java.util.List children = mimeTypes.getChilds();

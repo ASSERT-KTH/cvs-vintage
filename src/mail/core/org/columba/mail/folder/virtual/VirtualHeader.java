@@ -17,7 +17,6 @@ package org.columba.mail.folder.virtual;
 
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -26,7 +25,7 @@ import org.columba.ristretto.message.HeaderInterface;
  * Window>Preferences>Java>Templates. To enable and disable the creation of type
  * comments go to Window>Preferences>Java>Code Generation.
  */
-public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
+public class VirtualHeader extends ColumbaHeader {
 
 	protected AbstractMessageFolder srcFolder;
 
