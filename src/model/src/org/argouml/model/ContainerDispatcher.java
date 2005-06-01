@@ -1,4 +1,4 @@
-// $Id: ContainerDispatcher.java,v 1.2 2005/05/26 14:11:55 bobtarling Exp $
+// $Id: ContainerDispatcher.java,v 1.3 2005/06/01 17:20:54 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,13 @@
 
 package org.argouml.model;
 
+import java.beans.PropertyChangeListener;
+
 /**
  * This listens for events on a component and dispatches the events to all its
  * interested child components.
  */
-public interface ContainerDispatcher {
+public interface ContainerDispatcher extends PropertyChangeListener {
 
     /**
      * Calling this method with an array of metaclasses (for example,

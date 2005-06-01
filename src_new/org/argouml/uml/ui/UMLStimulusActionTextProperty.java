@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextProperty.java,v 1.12 2005/01/30 20:47:48 linus Exp $
+// $Id: UMLStimulusActionTextProperty.java,v 1.13 2005/06/01 17:20:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,9 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.model.Model;
+import java.beans.PropertyChangeEvent;
 
-import ru.novosoft.uml.MElementEvent;
+import org.argouml.model.Model;
 
 /**
  * TODO: this class should be moved to package
@@ -96,13 +96,11 @@ public class UMLStimulusActionTextProperty  {
         return value;
     }
 
-    boolean isAffected(MElementEvent event) {
-	String sourceName = event.getName();
-        if (thePropertyName == null
+    boolean isAffected(PropertyChangeEvent event) {
+        String sourceName = event.getPropertyName();
+        return (thePropertyName == null
                 || sourceName == null
-                || sourceName.equals(thePropertyName))
-            return true;
-        return false;
+                || sourceName.equals(thePropertyName));
     }
 
     void targetChanged() {

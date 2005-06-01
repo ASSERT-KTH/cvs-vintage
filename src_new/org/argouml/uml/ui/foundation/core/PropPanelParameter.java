@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.62 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelParameter.java,v 1.63 2005/06/01 17:20:54 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class PropPanelParameter extends PropPanelModelElement {
 	    Model.getMetaTypes().getClassifier(),
 	};
 
-        getComponentDispatcher().setNameEventListening(namesToWatch);
+        getContainerDispatcher().setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
                 getNameTextField());

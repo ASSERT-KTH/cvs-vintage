@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.118 2005/05/26 20:35:23 bobtarling Exp $
+// $Id: PropPanel.java,v 1.119 2005/06/01 17:20:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,7 +130,7 @@ public abstract class PropPanel
      * Get the ComponentDispatcher for thie prop panel.
      * @return the ComponentDispatcher
      */
-    public ContainerDispatcher getComponentDispatcher() {
+    public ContainerDispatcher getContainerDispatcher() {
         return componentDispatcher;
     }
 
