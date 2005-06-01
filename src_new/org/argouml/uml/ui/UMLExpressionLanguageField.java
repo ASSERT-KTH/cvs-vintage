@@ -1,4 +1,4 @@
-// $Id: UMLExpressionLanguageField.java,v 1.13 2005/05/26 13:47:21 bobtarling Exp $
+// $Id: UMLExpressionLanguageField.java,v 1.14 2005/06/01 00:14:32 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,8 @@ import ru.novosoft.uml.MElementListener;
  */
 public class UMLExpressionLanguageField
     extends JTextField
-    implements DocumentListener, UMLUserInterfaceComponent, MElementListener {
+    implements DocumentListener, UMLUserInterfaceComponent
+    {
 
     private UMLExpressionModel2 model;
     private boolean notifyModel;
@@ -66,45 +67,6 @@ public class UMLExpressionLanguageField
      * @see org.argouml.uml.ui.UMLUserInterfaceComponent#targetReasserted()
      */
     public void targetReasserted() {
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#roleAdded(ru.novosoft.uml.MElementEvent)
-     */
-    public void roleAdded(final MElementEvent p1) {
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#recovered(ru.novosoft.uml.MElementEvent)
-     */
-    public void recovered(final MElementEvent p1) {
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
-     */
-    public void roleRemoved(final MElementEvent p1) {
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#listRoleItemSet(ru.novosoft.uml.MElementEvent)
-     */
-    public void listRoleItemSet(final MElementEvent p1) {
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#removed(ru.novosoft.uml.MElementEvent)
-     */
-    public void removed(final MElementEvent p1) {
-    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#propertySet(ru.novosoft.uml.MElementEvent)
-     */
-    public void propertySet(final MElementEvent event) {
-        if (notifyModel && model.propertySet(event)) {
-            update();
-        }
     }
 
     private void update() {
