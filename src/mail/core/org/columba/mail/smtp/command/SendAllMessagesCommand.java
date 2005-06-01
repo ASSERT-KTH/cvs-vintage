@@ -123,8 +123,6 @@ public class SendAllMessagesCommand extends Command {
 
 				// open connection to SMTP server
 				smtpServer = new SMTPServer(accountItem);
-
-				smtpServer.openConnection();
 			}
 			smtpServer.sendMessage(message, worker);
 

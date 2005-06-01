@@ -90,16 +90,16 @@ public class SMTPServer  {
 		this.accountItem = accountItem;
 
 		identity = accountItem.getIdentity();
+
+		// initialise protocol layer
+		OutgoingItem smtpItem = accountItem.getSmtpItem();
+		String host = smtpItem.get("host");
+
+		protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
 	}
 
 	private void ensureConnected() throws IOException, SMTPException {
 		if (protocol.getState() == SMTPProtocol.NOT_CONNECTED) {
-			// initialise protocol layer
-			OutgoingItem smtpItem = accountItem.getSmtpItem();
-			String host = smtpItem.get("host");
-
-			protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
-
 			// Start login procedure
 			protocol.openPort();
 

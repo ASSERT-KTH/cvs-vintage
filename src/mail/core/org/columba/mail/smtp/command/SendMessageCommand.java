@@ -196,16 +196,6 @@ public class SendMessageCommand extends Command {
 		final SMTPServer server = new SMTPServer(item);
 
 
-		try {
-			server.openConnection();
-		} catch (Exception e2) {
-
-			//e2.printStackTrace();
-			showComposer = true;
-
-			throw e2;
-		}
-
 		// successfully connected and autenthenticated to SMTP server
 		try {
 			// display status message
