@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.16 2005/05/26 22:04:39 bobtarling Exp $
+// $Id: PropPanelButton2.java,v 1.17 2005/06/01 15:02:18 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,6 @@ package org.argouml.uml.ui;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
-
-import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.MElementListener;
 
 /**
  * @since Oct 3, 2002

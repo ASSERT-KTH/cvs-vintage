@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.18 2005/06/01 00:38:00 bobtarling Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.19 2005/06/01 15:02:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,14 +40,10 @@ import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 
 import org.argouml.model.Model;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
-
-import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.MElementListener;
 
 /**
  * A panel that shows a group of radiobuttons. An action can be added

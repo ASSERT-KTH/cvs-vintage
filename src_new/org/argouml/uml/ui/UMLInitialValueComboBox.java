@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.45 2005/06/01 00:41:50 bobtarling Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.46 2005/06/01 15:02:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,9 +30,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 
 import org.argouml.model.Model;
-
-import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.MElementListener;
 
 /**
  * Handles communication between the initial value JComboBox and the

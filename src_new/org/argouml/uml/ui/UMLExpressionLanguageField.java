@@ -1,4 +1,4 @@
-// $Id: UMLExpressionLanguageField.java,v 1.14 2005/06/01 00:14:32 bobtarling Exp $
+// $Id: UMLExpressionLanguageField.java,v 1.15 2005/06/01 15:02:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,6 @@ package org.argouml.uml.ui;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.MElementListener;
 
 /**
  * This text field shows the language of a UML expression.
