@@ -192,4 +192,15 @@ public void workerStatusChanged(WorkerStatusChangedEvent e) {
 
 		worker.addWorkerStatusChangeListener(this);
 	}
+
+	/**
+	 * @see java.awt.Component#setVisible(boolean)
+	 */
+	public void setVisible(boolean b) {
+		super.setVisible(b);
+		
+		if( !b && worker != null ) {
+			worker.removeWorkerStatusChangeListener(this);
+		}
+	}
 }
