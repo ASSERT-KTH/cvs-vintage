@@ -78,6 +78,7 @@ import org.columba.ristretto.imap.NamespaceCollection;
 import org.columba.ristretto.imap.SearchKey;
 import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.io.CharSequenceSource;
+import org.columba.ristretto.io.ConnectionDroppedException;
 import org.columba.ristretto.io.SequenceInputStream;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
@@ -114,8 +115,6 @@ public class IMAPServer implements IMAPListener {
 	private static final int STEP_SIZE = 50;
 	private static final int UID_FETCH_STEPS = 500;
 	
-
-	private static final int NOOP_INTERVAL = 30000;
 
 	private static final Logger LOG = Logger.getLogger("org.columba.mail.imap");
 
@@ -168,8 +167,11 @@ public class IMAPServer implements IMAPListener {
 
 	String[] capabilities;
 
-	private long lastNoop;
-
+	private long lastCommunication;
+	// minimal unchecked time is 3 Minutes
+	private int MIN_IDLE = 1000 * 60 * 3;
+	
+	
 	// Used to control the state in which
 	// the automatic updated mechanism is
 	private boolean updatesEnabled;
@@ -186,7 +188,7 @@ public class IMAPServer implements IMAPListener {
 		firstLogin = true;
 		usingSSL = false;
 
-		lastNoop = System.currentTimeMillis();
+		lastCommunication = System.currentTimeMillis();
 	}
 
 	/**
@@ -643,8 +645,9 @@ public class IMAPServer implements IMAPListener {
 				return selectedStatus;
 			} catch (IMAPDisconnectedException e1) {
 				//Do nothing special here
-			}
-
+			} catch (ConnectionDroppedException e1) {
+				//Do nothing special here
+			} 
 		}
 
 		try {
@@ -670,9 +673,13 @@ public class IMAPServer implements IMAPListener {
 		// make sure we are already logged in
 		ensureLoginState();
 
-		ListInfo[] listInfo = protocol.list("", "");
-
-		return listInfo[0].getDelimiter();
+		try {
+			ListInfo[] listInfo = protocol.list("", "");
+			return listInfo[0].getDelimiter();
+		} catch (IMAPDisconnectedException e1) {
+			ListInfo[] listInfo = protocol.list("", "");
+			return listInfo[0].getDelimiter();
+		} 
 	}
 
 	/**
@@ -685,8 +692,14 @@ public class IMAPServer implements IMAPListener {
 	 */
 	public ListInfo[] list(String reference, String pattern) throws Exception {
 		ensureLoginState();
-
-		return protocol.list(reference, pattern);
+		
+		try {
+			return protocol.list(reference, pattern);
+		} catch (IMAPDisconnectedException e ) {
+			return protocol.list(reference, pattern);
+		} catch (ConnectionDroppedException e ) {
+			return protocol.list(reference, pattern);
+		}
 
 	}
 
@@ -721,7 +734,8 @@ public class IMAPServer implements IMAPListener {
 		} catch (IMAPDisconnectedException e) {
 			// Try once again
 			return append(messageSource, folder);
-		}
+		} 
+		
 	}
 
 	/**
@@ -1218,6 +1232,14 @@ public class IMAPServer implements IMAPListener {
 			IOException, IMAPException {
 		int actState;
 
+		if( System.currentTimeMillis() - lastCommunication > MIN_IDLE ) {
+			try {
+				protocol.noop();
+			} catch (IOException e) {
+				// Now the state of the procotol is more certain correct
+			}
+		}
+		
 		actState = protocol.getState();
 
 		if (actState < IMAPProtocol.NON_AUTHENTICATED) {
@@ -1225,6 +1247,9 @@ public class IMAPServer implements IMAPListener {
 
 			actState = protocol.getState();
 		}
+		
+		// update this point of time as last communication
+		lastCommunication = System.currentTimeMillis();
 	}
 
 	/**
@@ -1237,7 +1262,7 @@ public class IMAPServer implements IMAPListener {
 		int actState;
 
 		ensureConnectedState();
-
+		
 		if (protocol.getState() < IMAPProtocol.AUTHENTICATED) {
 			login();
 		}
@@ -1383,6 +1408,8 @@ public class IMAPServer implements IMAPListener {
 			return new SequenceInputStream(headerSource, bodySource);
 		} catch (IMAPDisconnectedException e) {
 			return getMimePartSourceStream(uid, address, folder);
+		} catch (ConnectionDroppedException e) {
+			return getMimePartSourceStream(uid, address, folder);			
 		}
 	}
 
@@ -1407,6 +1434,8 @@ public class IMAPServer implements IMAPListener {
 			return protocol.uidFetchMessage(((Integer) uid).intValue());
 		} catch (IMAPDisconnectedException e) {
 			return getMessageSourceStream(uid, folder);
+		} catch (ConnectionDroppedException e) {
+			return getMessageSourceStream(uid, folder);		
 		}
 	}
 
