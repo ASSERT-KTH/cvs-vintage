@@ -175,7 +175,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
 		for (int j = 0; j < columnNames.length; j++) {
 			o = h.get(columnNames[j]);
-
+			
 			if (columnTypes[j] == Integer.class)
 				writer.writeInt(((Integer) o).intValue());
 			else if (columnTypes[j] == Date.class) {

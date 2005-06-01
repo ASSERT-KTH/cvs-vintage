@@ -103,9 +103,16 @@ public class POP3Server {
 	}
 
 	public void save() throws Exception {
-		// only save headercache if something changed
-		if (isCacheChanged())
-			headerCache.save();
+		// only save headercache if something changed and nothings
+		// happening at the moment
+		if (isCacheChanged() && tryToGetLock(this)) {
+			try {
+				headerCache.save();
+				setCacheChanged( false );
+			} finally {
+				releaseLock(this);
+			}
+		}
 	}
 
 	public File getConfigFile() {
@@ -238,26 +245,30 @@ public class POP3Server {
 		// Activate PreProcessor again with Source instead of String
 		// new goal:
 		// completely remove preprocessor -> we never change the message source!
-		Header header = HeaderParser.parse(source);
+		ColumbaMessage m;
+		try {
+			Header header = HeaderParser.parse(source);
 
-		ColumbaMessage m = new ColumbaMessage(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
+			m = new ColumbaMessage(header);
+			ColumbaHeader h = (ColumbaHeader) m.getHeader();
 
-		m.setSource(source);
-		h.getAttributes().put("columba.pop3uid", uid);
-		// message size should be at least 1 KB
-		int size = Math.max(source.length() / 1024, 1);
-		h.getAttributes().put("columba.size", new Integer(size));
+			m.setSource(source);
+			h.getAttributes().put("columba.pop3uid", uid);
+			// message size should be at least 1 KB
+			int size = Math.max(source.length() / 1024, 1);
+			h.getAttributes().put("columba.size", new Integer(size));
 
-		// set the attachment flag
-		String contentType = (String) header.get("Content-Type");
+			// set the attachment flag
+			h.getAttributes().put("columba.attachment", h.hasAttachments());
+			h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
+			h.getAttributes().put("columba.accountuid",
+					new Integer(accountItem.getInteger("uid")));
 
-		h.getAttributes().put("columba.attachment", h.hasAttachments());
-		h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
-		h.getAttributes().put("columba.accountuid",
-				new Integer(accountItem.getInteger("uid")));
-
-		headerCache.add(h);
+			headerCache.add(h);
+		} catch (ParserException e) {
+			LOG.severe("Skipped message: Error parsing message. Message source:\n " + source);
+			return null;
+		}
 
 		// set headercache dirty flag
 		setCacheChanged(true);
