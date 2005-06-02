@@ -135,7 +135,6 @@
  
  <!-- attachment -->
  <action name="OpenAttachment" class="org.columba.mail.gui.message.action.OpenAttachmentAction"/>
- <action name="OpenAttachmentWith" class="org.columba.mail.gui.message.action.OpenWithAttachmentAction"/>
  <action name="SaveAttachmentAs" class="org.columba.mail.gui.message.action.SaveAsAttachmentAction"/>
  
  
