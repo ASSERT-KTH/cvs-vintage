@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.119 2005/06/01 17:20:53 bobtarling Exp $
+// $Id: PropPanel.java,v 1.120 2005/06/02 10:00:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -266,8 +266,7 @@ public abstract class PropPanel
 
         } else {
             dispatch =
-                new UMLChangeDispatch(this,
-				      UMLChangeDispatch.TARGET_REASSERTED);
+                new UMLChangeDispatch(this, UMLChangeDispatch.TARGET_REASSERTED);
 
         }
         SwingUtilities.invokeLater(dispatch);
