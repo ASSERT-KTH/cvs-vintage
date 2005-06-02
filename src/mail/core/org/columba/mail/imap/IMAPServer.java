@@ -235,7 +235,13 @@ public class IMAPServer implements IMAPListener {
 	 * @throws Exception
 	 */
 	public void logout() throws Exception {
-		protocol.logout();
+		if( protocol.getState() != IMAPProtocol.NOT_CONNECTED) {
+			try {
+				protocol.logout();
+			} catch (Exception e) {
+				// don't care
+			} 
+		}
 	}
 
 	private void openConnection() throws IOException, IMAPException,
@@ -465,7 +471,8 @@ public class IMAPServer implements IMAPListener {
 	private void login() throws IOException, IMAPException,
 			CommandCancelledException {
 		PasswordDialog dialog = new PasswordDialog();
-
+		ensureConnectedState();
+		
 		boolean authenticated = false;
 		boolean first = true;
 
@@ -697,10 +704,7 @@ public class IMAPServer implements IMAPListener {
 			return protocol.list(reference, pattern);
 		} catch (IMAPDisconnectedException e ) {
 			return protocol.list(reference, pattern);
-		} catch (ConnectionDroppedException e ) {
-			return protocol.list(reference, pattern);
-		}
-
+		} 
 	}
 
 	/**
@@ -1237,6 +1241,8 @@ public class IMAPServer implements IMAPListener {
 				protocol.noop();
 			} catch (IOException e) {
 				// Now the state of the procotol is more certain correct
+			} catch (IMAPDisconnectedException e) {
+				
 			}
 		}
 		
@@ -1408,9 +1414,7 @@ public class IMAPServer implements IMAPListener {
 			return new SequenceInputStream(headerSource, bodySource);
 		} catch (IMAPDisconnectedException e) {
 			return getMimePartSourceStream(uid, address, folder);
-		} catch (ConnectionDroppedException e) {
-			return getMimePartSourceStream(uid, address, folder);			
-		}
+		} 
 	}
 
 	/**
@@ -1434,9 +1438,7 @@ public class IMAPServer implements IMAPListener {
 			return protocol.uidFetchMessage(((Integer) uid).intValue());
 		} catch (IMAPDisconnectedException e) {
 			return getMessageSourceStream(uid, folder);
-		} catch (ConnectionDroppedException e) {
-			return getMessageSourceStream(uid, folder);		
-		}
+		} 
 	}
 
 	/**
@@ -1862,6 +1864,8 @@ public class IMAPServer implements IMAPListener {
 	 */
 	public boolean isSelected(IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
+		ensureLoginState();
+		
 		return (protocol.getState() == IMAPProtocol.SELECTED && protocol
 				.getSelectedMailbox().equals(folder.getImapPath()));
 	}
