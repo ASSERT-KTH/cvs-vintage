@@ -67,9 +67,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
         try {
             reader = new ObjectReader(headerFile);
         } catch (Exception e) {
-            if (Main.DEBUG) {
-                e.printStackTrace();
-            }
+			LOG.warning("Could not open pop3 cache: " +e.getMessage());
         }
 
 
@@ -99,11 +97,13 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
             ColumbaHeader h = new ColumbaHeader();
 
-            loadHeader(h);
+            try {
+				loadHeader(h);
 
-            headerList.add(h, h.get("columba.pop3uid"));
-
-            //headerList.add(h, (String) h.get("columba.uid"));
+				headerList.add(h, h.get("columba.pop3uid"));
+			} catch (Exception e) {
+				LOG.severe("Could not load header "+i+"/"+capacity+" : " + e.getMessage());
+			}
         }
 
         // close stream
@@ -121,9 +121,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
         try {
             writer = new ObjectWriter(headerFile);
         } catch (Exception e) {
-            if (Main.DEBUG) {
-                e.printStackTrace();
-            }
+        	LOG.severe("Could not write pop3 cache: " + e.getMessage());
         }
 
         int count = headerList.count();
@@ -141,7 +139,11 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
             h = (ColumbaHeader) headerList.get(str);
 
-            saveHeader(h);
+            try {
+				saveHeader(h);
+			} catch (Exception e1) {
+				LOG.severe("Could not save header to pop3 cache. Header source:\n"+h.toString());
+			}
         }
 
         writer.close();
