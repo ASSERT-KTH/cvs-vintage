@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.18 2005/02/20 15:47:15 bobtarling Exp $
+// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.19 2005/06/04 11:30:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
         for (int i = 0; i < 10; i++) {
             bases[i] = Model.getUseCasesFactory().createUseCase();
             Model.getCoreHelper().addOwnedElement(m, bases[i]);
+            Model.getPump().addModelEventListener(model, bases[i]);
         }
         model.targetSet(new TargetEvent(this, "set", new Object[0],
                 new Object[] {elem}));
