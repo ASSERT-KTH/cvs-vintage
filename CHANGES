@@ -76,6 +76,9 @@ Fixed bugs:
   correctly if the flags change. Further a new search is triggered 
   if the flags change so that the VFolders get these changes. There 
   is still a good way missing for removing messages after a Flag change. (tstich)
+- #1211225, The delete key doesn't work in the 20050520 build
+- #1211662, New email crash
+- #1214713, folder tree CSS parser exception with Java5
 
 Columba v1.0 RC2
 
