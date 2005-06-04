@@ -158,7 +158,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 		//	if IMAP selectable folder
 		// -> lightgray font color and italic
 		if (selectable)
-			buf.append("<i><font color='lightgray'>");
+			buf.append("<i><font color='#333333'>");
 
 		if (info.getUnseen() > 0) {
 			// draw folder name and unseen count
