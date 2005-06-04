@@ -27,6 +27,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -54,6 +55,9 @@ public class NewMessageAction extends AbstractColumbaAction {
 
 	public void actionPerformed(ActionEvent evt) {
 
+		// if no account exists, return
+		if ( MailConfig.getInstance().getAccountList().count() == 0 ) return;
+		
 		ComposerController controller = new ComposerController();
 		new DefaultContainer(controller);
 
