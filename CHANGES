@@ -80,7 +80,7 @@ Fixed bugs:
 - #1211662, New email crash
 - #1214713, folder tree CSS parser exception with Java5
 - #1214736, composer window doesn't remember size
-
+- #958067, cut/copy/paste messages throws exception
 
 Columba v1.0 RC2
 

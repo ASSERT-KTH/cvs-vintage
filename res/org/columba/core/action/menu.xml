@@ -26,9 +26,13 @@
 		<separator/>
 		<menuitem action="Cut"/>			
 		<menuitem action="Copy"/>			
-		<menuitem action="Paste"/>			
-		<menuitem action="Delete"/>
-		<menuitem action="SelectAll"/>					
+		<menuitem action="Paste"/>	
+		
+				
+		<!-- <menuitem action="Delete"/> -->
+		
+		<!--<menuitem action="SelectAll"/> -->
+		
 		<separator/>
 		<menuitem action="Find"/>
 		<menuitem action="FindAgain"/>

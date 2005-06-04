@@ -27,10 +27,8 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
-import javax.swing.text.DefaultEditorKit;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
@@ -39,8 +37,6 @@ public class CopyAction extends AbstractColumbaAction implements
 		PropertyChangeListener {
 
 	private JComponent focusOwner = null;
-
-	private Action internalAction = new DefaultEditorKit.CopyAction();
 
 	public CopyAction(FrameMediator controller) {
 		super(controller, GlobalResourceLoader.getString(null, null,
@@ -64,8 +60,6 @@ public class CopyAction extends AbstractColumbaAction implements
 		setShowToolBarText(false);
 
 		setEnabled(true);
-		
-		FocusManager.getInstance().setCopyAction(this);
 
 		putValue(Action.ACTION_COMMAND_KEY, (String) TransferHandler
 				.getCopyAction().getValue(Action.NAME));
@@ -78,40 +72,29 @@ public class CopyAction extends AbstractColumbaAction implements
 
 	public void propertyChange(PropertyChangeEvent e) {
 		Object o = e.getNewValue();
-		if (o instanceof JComponent) {
+		if (o instanceof JComponent)
 			focusOwner = (JComponent) o;
-			System.out
-					.println("focus owner=" + focusOwner.getClass().getName());
-
-		} else {
+		else
 			focusOwner = null;
-		}
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		//FocusManager.getInstance().copy();
-
-		//internalAction.actionPerformed(evt);
 
 		if (focusOwner == null)
 			return;
 		String action = (String) e.getActionCommand();
 		Action a = focusOwner.getActionMap().get(action);
-		if (a != null) {
+		if (a != null)
 			a.actionPerformed(new ActionEvent(focusOwner,
 					ActionEvent.ACTION_PERFORMED, null));
-		}
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/** 
 	 * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
 	 */
 	public boolean isSingleton() {

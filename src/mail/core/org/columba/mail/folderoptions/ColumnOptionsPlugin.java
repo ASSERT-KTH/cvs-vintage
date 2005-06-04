@@ -94,6 +94,10 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 
 		Enumeration enumeration = view.getColumnModel().getColumns();
 
+		// check if there are columns which need to be saved
+		if ( view.getColumnModel().getColumnCount() == 0) 
+			return;
+		
 		// remove all child nodes
 		columns.removeAllElements();
 

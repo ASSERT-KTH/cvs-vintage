@@ -15,68 +15,87 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-import javax.swing.text.DefaultEditorKit;
+import javax.swing.TransferHandler;
 
 import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
+public class CutAction extends AbstractColumbaAction implements
+		PropertyChangeListener {
 
-public class CutAction extends AbstractColumbaAction {
-	
-	private Action internalAction = new DefaultEditorKit.CutAction();
-	
-    public CutAction(FrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null, "menu_edit_cut"));
+	private JComponent focusOwner = null;
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null, "menu_edit_cut_tooltip")
-                                .replaceAll("&", ""));
+	public CutAction(FrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_edit_cut"));
 
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_cut-16.png"));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"menu_edit_cut_tooltip").replaceAll("&", ""));
 
-        // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_cut.png"));
+		// small icon for menu
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_cut-16.png"));
 
-        // disable toolbar text
-        setShowToolBarText(false);
+		// large icon for toolbar
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_cut.png"));
 
-        
-        // short cut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
-            
-        
-        setEnabled(false);
-        FocusManager.getInstance().setCutAction(this);
-    }
+		// disable toolbar text
+		setShowToolBarText(false);
 
-   
-	
-    
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-    	//FocusManager.getInstance().cut();
-    	
-    	internalAction.actionPerformed(evt);
-    }
+		// short cut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				ActionEvent.CTRL_MASK));
 
-    /* (non-Javadoc)
-     * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
-     */
-    public boolean isSingleton() {
-        return true;
-    }
+		setEnabled(true);
+
+		putValue(Action.ACTION_COMMAND_KEY, (String) TransferHandler
+				.getCutAction().getValue(Action.NAME));
+
+		KeyboardFocusManager manager = KeyboardFocusManager
+				.getCurrentKeyboardFocusManager();
+		
+		manager.addPropertyChangeListener("permanentFocusOwner", this);
+	}
+
+	public void propertyChange(PropertyChangeEvent e) {
+		Object o = e.getNewValue();
+		if (o instanceof JComponent)
+			focusOwner = (JComponent) o;
+		else
+			focusOwner = null;
+
+	}
+
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent e) {
+
+		if (focusOwner == null)
+			return;
+		String action = (String) e.getActionCommand();
+		Action a = focusOwner.getActionMap().get(action);
+		if (a != null)
+			a.actionPerformed(new ActionEvent(focusOwner,
+					ActionEvent.ACTION_PERFORMED, null));
+
+	}
+
+	/**
+	 * @see org.columba.core.action.AbstractColumbaAction#isSingleton()
+	 */
+	public boolean isSingleton() {
+		return true;
+	}
 }

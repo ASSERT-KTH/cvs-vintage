@@ -15,9 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -25,29 +29,49 @@ import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
+public class SelectAllAction extends AbstractColumbaAction implements
+		PropertyChangeListener {
 
-public class SelectAllAction extends AbstractColumbaAction {
-    public SelectAllAction(FrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null, "menu_edit_selectall"));
+	private JComponent focusOwner = null;
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null,
-                "menu_edit_selectall_tooltip"));
+	public SelectAllAction(FrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_edit_selectall"));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"menu_edit_selectall_tooltip"));
 
-        setEnabled(false);
-        FocusManager.getInstance().setSelectAllAction(this);
-    }
+		// shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A,
+				ActionEvent.CTRL_MASK));
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-    	FocusManager.getInstance().selectAll();
-    }
+		setEnabled(true);
+
+		KeyboardFocusManager manager = KeyboardFocusManager
+				.getCurrentKeyboardFocusManager();
+
+		manager.addPropertyChangeListener("permanentFocusOwner", this);
+
+	}
+
+	public void propertyChange(PropertyChangeEvent e) {
+		Object o = e.getNewValue();
+		if (o instanceof JComponent)
+			focusOwner = (JComponent) o;
+		else
+			focusOwner = null;
+
+	}
+
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		if (focusOwner == null)
+			return;
+
+		
+		Object[] keys = focusOwner.getActionMap().keys();
+	}
 }
