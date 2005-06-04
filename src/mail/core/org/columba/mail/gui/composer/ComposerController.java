@@ -122,6 +122,8 @@ public class ComposerController extends DefaultFrameController implements
 	private JPanel topPanel;
 
 	private HtmlToolbar htmlToolbar;
+	
+	private boolean promptOnDialogClosing = true;
 
 	public ComposerController() {
 		this(new ComposerModel(), FrameModel.getInstance()
@@ -811,6 +813,10 @@ public class ComposerController extends DefaultFrameController implements
 	 * @see org.columba.core.gui.frame.FrameMediator#close()
 	 */
 	public void close() {
+		
+		// don't prompt user if composer should be closed
+		if ( isPromptOnDialogClosing() == false) return;
+		
 		//	only prompt user, if composer contains some text
 		if (editorController.getViewText().length() == 0) {
 			getContainer().getFrame().setVisible(false);
@@ -994,5 +1000,19 @@ public class ComposerController extends DefaultFrameController implements
 			getContainer().getFrame().setTitle(subject);
 		} catch (BadLocationException e) {
 		}
+	}
+
+	/**
+	 * @return Returns the promptOnDialogClosing.
+	 */
+	public boolean isPromptOnDialogClosing() {
+		return promptOnDialogClosing;
+	}
+
+	/**
+	 * @param promptOnDialogClosing The promptOnDialogClosing to set.
+	 */
+	public void setPromptOnDialogClosing(boolean promptOnDialogClosing) {
+		this.promptOnDialogClosing = promptOnDialogClosing;
 	}
 }

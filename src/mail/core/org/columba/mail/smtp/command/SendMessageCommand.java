@@ -290,6 +290,11 @@ public class SendMessageCommand extends Command {
 			// re-open composer view
 			composerController.getView().getFrame().setVisible(true);
 			composerController.getView().getFrame().requestFocus();
+		} else {
+			// do not prompt user if composer should be really closed
+			composerController.setPromptOnDialogClosing(false);
+			// save composer window state
+			composerController.getContainer().close();
 		}
 	}
 }
