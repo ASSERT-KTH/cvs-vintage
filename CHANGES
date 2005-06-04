@@ -21,8 +21,12 @@ New features:
 - more progress updates on IMAP operations
 - updated to JGoodies Looks 1.3.1
 - updated to JGoodes Forms 1.0.5
+- updated berkleydb je to version 1.7.1
 - cleanup of Filter Editing Dialog
+- Added more exception handling to the pop3 header cache. Should help 
+  in debugging any further errors. (tstich)
 
+  
 Fixed bugs:
 - #1097936, textviewer should be initialized empty
 - tablemodel didn't update if null, header-cache default fields were modified
@@ -45,6 +49,33 @@ Fixed bugs:
 - #1120945, configuration messed up
 - #1188639, edit draft message, creates message duplicate
 - #1106616, sent later saves email in draft folder
+- updated maven build scripts (waffel)
+- prevent StackOverflow, some ensureXXXstate calls where missing. (tstich)
+- Wrong attribute in LocalMimepart set. (tstich)
+- Remove references on the deleted OpenAttachmentWith Action (tstich)
+- Remove the WorkerListener when no longer needed. (tstich)
+- Smtp now also checks the correct state. Should fix the problems 
+  that marc encountered. (tstich)
+- profile manager: Check if the folder still exists before trying to 
+  delete it. (tstich)
+- IMAPFolder: Concurrency bug in the ensureSynchronized() method cause 
+  strange connection dropped exceptions. (tstich)
+- build-files: added the source/target attribute to the build.xmls to 
+  ensure java 1.4 compatibility. (tstich)
+- Change the table only if the selected folder in the tree did not change. (tstich)
+- VFolder: only do a search if the filter contains a FLAGS criteria. (tstich)
+- fixed all mail test-case compile errors, fixed many testcases (fdietz)  
+- MailOptions Dialog: Values were not set from the configuration! (tstich)
+- only execute filter if enabled==true (fdietz)
+- Converting the character inputstream into a StringBuffer 
+  went wrong for 16bit charsets. (tstich)
+- Synchronize Subsribed missed some deleted folders. Adjusted the traversing 
+  index when a child got removed from the list. (tstich)
+- Added more information on the messageFlagedChanged event. With this 
+  additional information it is now possible to update the VFolders 
+  correctly if the flags change. Further a new search is triggered 
+  if the flags change so that the VFolders get these changes. There 
+  is still a good way missing for removing messages after a Flag change. (tstich)
 
 Columba v1.0 RC2
 
