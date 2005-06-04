@@ -1,8 +1,4 @@
 <project
-  xmlns:j="jelly:core"
-  xmlns:m="maven"
-  xmlns:u="jelly:util"
-  xmlns:maven="jelly:maven"
   xmlns:ant="jelly:ant"
   xmlns:deploy="deploy"
   default="columba">
@@ -25,7 +21,7 @@
    </copy>
    
    <copy todir="${basedir}/maven/java/">
-    <fileset dir="${basedir}/src/addressbook/independent">
+    <fileset dir="${basedir}/src/addressbook/api">
      <exclude name="**/*build.xml*"/>
     </fileset>
    </copy>
@@ -37,7 +33,7 @@
    </copy>
   
    <copy todir="${basedir}/maven/java/">
-    <fileset dir="${basedir}/src/mail/independent">
+    <fileset dir="${basedir}/src/mail/api">
      <exclude name="**/*build.xml*"/>
     </fileset>
    </copy>
@@ -68,7 +64,7 @@
   </preGoal>
   
   <goal name="columba">
-    <!--attainGoal name="jar"/-->
+    <attainGoal name="jar"/>
     <deploy:copy-deps todir="${basedir}/lib" excludes="junit"/>
     <attainGoal name="site"/>
   </goal>

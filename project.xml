@@ -4,7 +4,7 @@
   <pomVersion>1</pomVersion>
   <id>columba</id>
   <name>columba</name>
-  <currentVersion>1.0M2-cvs</currentVersion>
+  <currentVersion>1.0RC2-cvs</currentVersion>
   <groupId>columba</groupId>
   <url>http://columba.sf.net</url>
   <siteAddress>www.ancoso-development.de</siteAddress>
@@ -161,71 +161,166 @@
    
    <dependencies>
      <dependency>
+       <groupId>commons</groupId>
+       <artifactId>commons</artifactId>
+       <version>1.0</version>
+       <type>jar</type>
+       <jar>lib/commons-cli-1.0.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
+     </dependency>
+     <dependency>
+       <groupId>looks</groupId>
+       <artifactId>looks</artifactId>
+       <version>1.3.1</version>
+       <type>jar</type>
+       <jar>lib/looks-1.3.1.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
+     </dependency>
+     <dependency>
+       <groupId>jdom</groupId>
+       <artifactId>jdom</artifactId>
+       <version>0.1</version>
+       <type>jar</type>
+       <jar>lib/jdom.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
+     </dependency>
+     <dependency>
+       <groupId>jpim</groupId>
+       <artifactId>jpim</artifactId>
+       <version>0.1</version>
+       <type>jar</type>
+       <jar>lib/jpim.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
+     </dependency>
+     <dependency>
+       <groupId>je</groupId>
+       <artifactId>je</artifactId>
+       <version>1.7.1</version>
+       <type>jar</type>
+       <jar>lib/je-1.7.1.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
+     </dependency>
+     <dependency>
+       <groupId>jdic</groupId>
+       <artifactId>jdic</artifactId>
+       <version>0.1</version>
+     </dependency>
+     <dependency>
+       <groupId>jniwrap</groupId>
+       <artifactId>jniwrap</artifactId>
+       <version>2.4</version>
+     </dependency>
+     <dependency>
+       <groupId>winpack</groupId>
+       <artifactId>winpack</artifactId>
+       <version>0.1</version>
+     </dependency>
+     <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>3.8.1</version>
         <url>http://sourceforge.net/projects/junit/</url>   
       </dependency>
       <dependency>
-        <groupId>columba</groupId>
-        <artifactId>ristretto</artifactId>
-        <version>1.0pre1</version>
-      </dependency>
-      <dependency>
         <groupId>jwizz</groupId>
         <artifactId>jwizz</artifactId>
-        <version>0.1.2</version>
-      </dependency>
-      <!--dependency>
-        <groupId>clover</groupId>
-        <artifactId>clover</artifactId>
-        <version>0.1</version>
-      </dependency-->
-      <dependency>
-        <groupId>jargs</groupId>
-        <artifactId>jargs</artifactId>
-        <version>0.1</version>
+        <version>0.1.3</version>
+        <type>jar</type>
+       <jar>lib/jwizz-0.1.3.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
       </dependency>
       <dependency>
         <groupId>jhall</groupId>
         <artifactId>jhall</artifactId>
         <version>0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>plastic</groupId>
-        <artifactId>plastic</artifactId>
-        <version>1.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>columba</groupId>
-        <artifactId>usermanual</artifactId>
-        <version>0.1</version>
+        <type>jar</type>
+        <jar>lib/jhall.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
       </dependency>
       <dependency>
         <groupId>forms</groupId>
         <artifactId>forms</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.5</version>
+       <type>jar</type>
+       <jar>lib/forms-1.0.5.jar</jar>
+       <properties>
+         <jar.manifest.classpath>true</jar.manifest.classpath>
+       </properties>
       </dependency>
       <dependency>
         <groupId>apache</groupId>
         <artifactId>lucene</artifactId>
         <version>1.3-final</version>
+        <type>jar</type>
+        <jar>lib/lucene-1.3-final.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
+      </dependency>
+      <dependency>
+        <groupId>columba</groupId>
+        <artifactId>usermanual</artifactId>
+        <version>0.1</version>
+        <type>jar</type>
+        <jar>lib/usermanual.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
       </dependency>
       <dependency>
         <groupId>columba</groupId>
         <artifactId>jscf</artifactId>
-        <version>0.1</version>
+        <version>0.2</version>
         <url>http://sourceforge.net/projects/columba</url>
+        <type>jar</type>
+        <jar>lib/jscf-0.2.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
       </dependency>
       <dependency>
         <groupId>columba</groupId>
         <artifactId>macchiato</artifactId>
         <version>1.0pre1</version>
+        <type>jar</type>
+        <jar>lib/macchiato-1.0pre1.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
       </dependency>
       <dependency>
         <groupId>cloumba</groupId>
-        <artifactId>frappucino</artifactId>
+        <artifactId>frapuccino</artifactId>
         <version>1.0pre1</version>
+        <type>jar</type>
+        <jar>lib/frapuccino-1.0pre1.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
+      </dependency>
+      <dependency>
+        <groupId>columba</groupId>
+        <artifactId>ristretto</artifactId>
+        <version>1.0_RC3</version>
+        <type>jar</type>
+        <jar>lib/ristretto-1.0_RC3.jar</jar>
+        <properties>
+          <jar.manifest.classpath>true</jar.manifest.classpath>
+        </properties>
       </dependency>
     </dependencies>
 
@@ -238,9 +333,6 @@
       </includes>
       <excludes/>
     </unitTest>
-    <integrationUnitTestSourceDirectory/>
-    <integrationUnitTest/>
-    <aspectSourceDirectory/>
     <resources>
       <resource>
         <directory>res</directory>
@@ -259,19 +351,14 @@
    </build>
    
    <reports>    
-    <report>maven-jdepend-plugin</report>    
-    <report>maven-checkstyle-plugin</report>
-    <report>maven-changelog-plugin</report>
-    <report>maven-developer-activity-plugin</report>
-    <report>maven-file-activity-plugin</report>
+    <!--report>maven-checkstyle-plugin</report-->
     <report>maven-javadoc-plugin</report>
-    <report>maven-jxr-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-jcoverage-plugin</report>
     <report>maven-simian-plugin</report>
-    <report>maven-multiproject-plugin</report>
     <report>maven-junit-report-plugin</report>
-    <report>maven-tasklist-plugin</report>
+    <!--report>maven-tasklist-plugin</report-->
+    <report>maven-cruisecontrol-plugin</report>
    </reports>
   
 </project>
