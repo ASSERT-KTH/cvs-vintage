@@ -46,6 +46,7 @@ import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.action.DeleteAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.ITreeController;
@@ -59,7 +60,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
 		implements TreeViewOwner, TableViewOwner, ContentPane,
@@ -141,7 +142,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// Register Alt-Down hotkey for moving up folder when folder tree or
 		// table have focus
 		MoveDownAction moveDownAction = new MoveDownAction(this);
-		tableController.getView().getActionMap().put("ALT_DOWN", moveDownAction);
+		tableController.getView().getActionMap()
+				.put("ALT_DOWN", moveDownAction);
 		tableController.getView().getInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_MASK),
 				"ALT_DOWN");
@@ -150,9 +152,15 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		treeController.getView().getInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_MASK),
 				"ALT_DOWN");
-	
 
-		//register the markasread timer as selection listener
+		DeleteAction deleteAction = new DeleteAction(this);
+		tableController.getView().getActionMap()
+				.put("DEL", deleteAction);
+		tableController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+				"DEL");
+
+		// register the markasread timer as selection listener
 		((MailFrameMediator) tableController.getFrameController())
 				.registerTableSelectionListener(tableController
 						.getMarkAsReadTimer());
@@ -223,7 +231,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		JScrollPane treeScrollPane = new JScrollPane(treeController.getView());
 
-		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
+		// treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
 		// 1));
 		mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
 
@@ -267,7 +275,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		int count = MailConfig.getInstance().getAccountList().count();
 
 		if (count == 0) {
-			//pack();
+			// pack();
 			rightSplitPane.setDividerLocation(150);
 		} else {
 			mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault(
