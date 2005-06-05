@@ -1,4 +1,4 @@
-// $Id: TestUMLAction.java,v 1.2 2005/01/07 13:37:53 linus Exp $
+// $Id: TestUMLAction.java,v 1.3 2005/06/05 15:13:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,15 +31,6 @@ import junit.framework.TestCase;
  *
  */
 public class TestUMLAction extends TestCase {
-
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() {
-        org.workingfrog.i18n.util.Translator.init();
-        org.workingfrog.i18n.util.Translator.setBundlesPath("org.argouml.i18n");
-    }
-
     /**
      * The constructor.
      *
