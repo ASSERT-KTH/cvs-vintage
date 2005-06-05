@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.52 2005/04/24 20:06:35 mvw Exp $
+// $Id: DetailsPane.java,v 1.53 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,12 +156,12 @@ public class DetailsPane
         add(topLevelTabbedPane, BorderLayout.CENTER);
 
         for (int i = 0; i < tabPanelList.size(); i++) {
-            String title = "tab";
+            String titleKey = "tab";
             JPanel t = (JPanel) tabPanelList.elementAt(i);
             if (t instanceof AbstractArgoJPanel) {
-                title = ((AbstractArgoJPanel) t).getTitle();
+                titleKey = ((AbstractArgoJPanel) t).getTitle();
             }
-            title = Translator.localize(title);
+            String title = Translator.localize(titleKey);
             if (t instanceof TabToDoTarget) {
                 topLevelTabbedPane.addTab(title, leftArrowIcon, t);
             } else if (t instanceof TabModelTarget) {
@@ -183,7 +183,7 @@ public class DetailsPane
                 break;
             }
             // default if there is no tabprops if there is no tabtodo
-            // either, this will result in lastNonNullTab = -1
+            // either, this will result in lastNonNullTab = -1;
             if (tabs[i] instanceof TabToDo) {
                 lastNonNullTab = i;
             }
@@ -546,7 +546,7 @@ public class DetailsPane
 
     /**
      * if(the mouse click is not in the bounds of the tabbed panel)
-     *      then call mySingleClick() or myDoubleClick()
+     *      then call mySingleClick() or myDoubleClick().
      *
      * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
      */

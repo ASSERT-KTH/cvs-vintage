@@ -1,4 +1,4 @@
-// $Id: AbstractActionNavigate.java,v 1.8 2005/01/30 20:47:48 linus Exp $
+// $Id: AbstractActionNavigate.java,v 1.9 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
-import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 
@@ -45,15 +44,15 @@ public abstract class AbstractActionNavigate extends UMLAction {
      * The constructor.
      */
     public AbstractActionNavigate() {
-        this(Translator.localize("button.go-up"), true);
+        this("button.go-up", true);
     }
 
     /**
-     * @param name the name of the action
+     * @param key The key (to be localized) of the name of the action.
      * @param hasIcon true if there is an icon for this action
      */
-    public AbstractActionNavigate(String name, boolean hasIcon) {
-        super(name, hasIcon);
+    public AbstractActionNavigate(String key, boolean hasIcon) {
+        super(key, hasIcon);
         putValue(Action.SMALL_ICON,
                  ResourceLoaderWrapper.lookupIconResource("NavigateUp"));
     }
@@ -84,7 +83,8 @@ public abstract class AbstractActionNavigate extends UMLAction {
         return ((target != null) && (navigateTo(target) != null));
     }
 
-    /** Perform the work the action is supposed to do.
+    /**
+     * Perform the work the action is supposed to do.
      *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */

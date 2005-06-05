@@ -1,5 +1,5 @@
-// $Id: ActionNotation.java,v 1.10 2005/05/16 09:10:43 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: ActionNotation.java,v 1.11 2005/06/05 13:07:30 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -72,7 +72,7 @@ public class ActionNotation extends UMLAction
      * Constructor - adds the Notation menu.
      */
     public ActionNotation() {
-        super(Translator.localize("menu.notation"), NO_ICON);
+        super("menu.notation", NO_ICON);
         menu = new JMenu(Translator.localize("menu.notation"));
         menu.add(this);
         menu.addMenuListener(this);

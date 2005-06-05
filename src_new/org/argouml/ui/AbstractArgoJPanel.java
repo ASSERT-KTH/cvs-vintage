@@ -1,4 +1,4 @@
-// $Id: AbstractArgoJPanel.java,v 1.1 2005/04/24 20:06:35 mvw Exp $
+// $Id: AbstractArgoJPanel.java,v 1.2 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,21 +41,21 @@ import org.tigris.swidgets.Orientation;
 /**
  * A subclass of JPanel that can act as a tab in the DetailsPane or
  * MultiEditorPane. Added functionality:<p>
- * 
+ *
  * Spawning: When the tab is double-clicked, this JPanel will generate a
  * separate window of the same size and with the same contents. This is almost
  * like "tearing off" a tab.<p>
- * 
+ *
  * TODO: Spawning of windows disabled in spawn()<p>
- * 
+ *
  * Title: This JPanel keeps track of its own title.<p>
- * 
+ *
  * Orientation: This JPanel is Orientable.<p>
- * 
+ *
  * Cloning: This JPanel may be cloned.<p>
- * 
- * This class used to be named TabSpawnable. 
- * Renamed since it is not a Tab, but a Panel, and being spawnable is  
+ *
+ * This class used to be named TabSpawnable.
+ * Renamed since it is not a Tab, but a Panel, and being spawnable is
  * not any more its main purpose.
  */
 public abstract class AbstractArgoJPanel extends JPanel
@@ -63,7 +63,7 @@ public abstract class AbstractArgoJPanel extends JPanel
     /**
      * Logger.
      */
-    private static final Logger LOG = 
+    private static final Logger LOG =
             Logger.getLogger(AbstractArgoJPanel.class);
 
     private static final int OVERLAPP = 30;
@@ -106,7 +106,7 @@ public abstract class AbstractArgoJPanel extends JPanel
     /**
      * The constructor.
      *
-     * @param tag the name
+     * @param tag The name (to be localized).
      * @param t if true, remove tab from parent JTabbedPane
      */
     public AbstractArgoJPanel(String tag, boolean t) {
@@ -143,14 +143,14 @@ public abstract class AbstractArgoJPanel extends JPanel
     // accessors
 
     /**
-     * @return the title
+     * @return The key (to be localized) for the title of the panel.
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @param t the title
+     * @param t The key (to be localized) of the title.
      */
     public void setTitle(String t) {
         title = t;

@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementVisibility.java,v 1.15 2005/05/15 08:53:25 mvw Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.16 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JRadioButton;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
@@ -39,7 +38,9 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  * @since Jan 4, 2003
  */
 public class ActionSetModelElementVisibility extends UMLAction {
-
+    /**
+     * The instance.
+     */
     private static final ActionSetModelElementVisibility SINGLETON =
         new ActionSetModelElementVisibility();
 
@@ -62,7 +63,7 @@ public class ActionSetModelElementVisibility extends UMLAction {
      * Constructor for ActionSetElementOwnershipSpecification.
      */
     protected ActionSetModelElementVisibility() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super("Set", true, NO_ICON);
     }
 
     /**
@@ -73,8 +74,8 @@ public class ActionSetModelElementVisibility extends UMLAction {
         if (e.getSource() instanceof JRadioButton) {
             JRadioButton source = (JRadioButton) e.getSource();
             String actionCommand = source.getActionCommand();
-            Object target = ((UMLRadioButtonPanel)
-                    source.getParent()).getTarget();
+            Object target =
+                ((UMLRadioButtonPanel) source.getParent()).getTarget();
             if (Model.getFacade().isAModelElement(target)) {
                 Object kind = null;
                 if (actionCommand.equals(PUBLIC_COMMAND)) {

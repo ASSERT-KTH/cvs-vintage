@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.17 2005/01/30 20:47:34 linus Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.18 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -37,7 +36,9 @@ import org.argouml.uml.ui.UMLComboBox2;
  * @stereotype singleton
  */
 public class ActionSetModelElementStereotype extends UMLAction {
-
+    /**
+     * The instance.
+     */
     private static final ActionSetModelElementStereotype SINGLETON =
         new ActionSetModelElementStereotype();
 
@@ -45,7 +46,7 @@ public class ActionSetModelElementStereotype extends UMLAction {
      * Constructor for ActionSetModelElementStereotype.
      */
     protected ActionSetModelElementStereotype() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super("Set", true, NO_ICON);
     }
 
     /**
@@ -58,22 +59,25 @@ public class ActionSetModelElementStereotype extends UMLAction {
         Object target = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
-            if (Model.getFacade().isAStereotype(combo.getSelectedItem()))
+            if (Model.getFacade().isAStereotype(combo.getSelectedItem())) {
                 newStereo = /*(MStereotype)*/ combo.getSelectedItem();
+            }
             if (Model.getFacade().isAModelElement(combo.getTarget())) {
                 target = /*(MModelElement)*/ combo.getTarget();
                 oldStereo = null;
                 if (Model.getFacade().getStereotypes(target).size() > 0) {
-                    oldStereo = Model.getFacade().getStereotypes(target)
-                        .iterator().next();
+                    oldStereo =
+                        Model.getFacade().getStereotypes(target)
+                        	.iterator().next();
                 }
             }
-	    if ("".equals(combo.getSelectedItem()))
-		newStereo = null;
+	    if ("".equals(combo.getSelectedItem())) {
+	        newStereo = null;
+	    }
         }
         if (newStereo != oldStereo && target != null) {
 	    if (newStereo != null) {
-		newStereo = /*(MStereotype)*/
+		newStereo =
 		    Model.getModelManagementHelper().getCorrespondingElement(
 				  newStereo,
 				  Model.getFacade().getModel(target));

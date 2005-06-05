@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementRoot.java,v 1.12 2005/01/30 20:47:34 linus Exp $
+// $Id: ActionSetGeneralizableElementRoot.java,v 1.13 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
@@ -37,7 +36,9 @@ import org.argouml.uml.ui.UMLCheckBox2;
  * @since Jan 27, 2003
  */
 public class ActionSetGeneralizableElementRoot extends UMLAction {
-
+    /**
+     * The instance.
+     */
     private static final ActionSetGeneralizableElementRoot SINGLETON =
         new ActionSetGeneralizableElementRoot();
 
@@ -45,7 +46,7 @@ public class ActionSetGeneralizableElementRoot extends UMLAction {
      * Constructor for ActionSetElementOwnershipSpecification.
      */
     protected ActionSetGeneralizableElementRoot() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super("Set", true, NO_ICON);
     }
 
     /**

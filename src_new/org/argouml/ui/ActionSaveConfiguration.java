@@ -1,4 +1,4 @@
-// $Id: ActionSaveConfiguration.java,v 1.15 2005/01/09 14:58:11 linus Exp $
+// $Id: ActionSaveConfiguration.java,v 1.16 2005/06/05 13:07:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.ui;
 
 import java.awt.event.ActionEvent;
-import org.argouml.i18n.Translator;
+
 import org.argouml.application.api.Configuration;
 import org.argouml.uml.ui.UMLAction;
 
@@ -40,7 +40,7 @@ public class ActionSaveConfiguration extends UMLAction {
      * Constructor.
      */
     public ActionSaveConfiguration() {
-        super(Translator.localize("action.save-configuration"), NO_ICON);
+        super("action.save-configuration", NO_ICON);
     }
 
     ////////////////////////////////////////////////////////////////
