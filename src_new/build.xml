@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.177 2005/06/05 15:13:08 linus Exp $
+<!-- $Id: build.xml,v 1.178 2005/06/05 15:21:35 linus Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -1602,13 +1602,6 @@ ArgoUML to JMI.
       <arg value="-c"/>
       <arg value="../tools/bin/i18n-find-undeclared-tags.sh"/>
     </exec>
-  </target>
-
-
-<!-- Attempts at generating code. -->
-
-  <target name="generate">
-    <style basedir="org/argouml/xml/generator" destdir="../build/generator" in="org/argouml/xml/generator/metamodel.xml" out="../build/generator/result.xxx" style="org/argouml/xml/generator/mf.xsl"/>
   </target>
 
 </project><!-- End of file -->
