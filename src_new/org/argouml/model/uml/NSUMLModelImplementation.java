@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.11 2005/05/26 13:16:03 bobtarling Exp $
+// $Id: NSUMLModelImplementation.java,v 1.12 2005/06/06 15:33:27 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model.uml;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.io.Writer;
 
@@ -217,14 +216,14 @@ public class NSUMLModelImplementation implements ModelImplementation {
     public ExtensionMechanismsHelper getExtensionMechanismsHelper() {
         return theExtensionMechanismsHelper;
     }
-    
+
     /**
-     * @see org.argouml.model.ModelImplementation#getExtensionMechanismsHelper()
+     * @see org.argouml.model.ModelImplementation#getEventAdapter()
      */
     public EventAdapter getEventAdapter() {
         return theEventAdapter;
     }
-    
+
     /**
      * @see org.argouml.model.ModelImplementation#getModelManagementFactory()
      */
@@ -355,22 +354,26 @@ public class NSUMLModelImplementation implements ModelImplementation {
     public VisibilityKind getVisibilityKind() {
         return theKindsObject;
     }
-    
+
     /**
      * @see org.argouml.model.ModelImplementation#getXmiReader()
      */
     public XmiReader getXmiReader() throws UmlException {
         return new XmiReaderImpl();
     }
-    
+
     /**
-     * @see org.argouml.model.ModelImplementation#getXmiWriter()
+     * @see org.argouml.model.ModelImplementation#getXmiWriter(
+     *         java.lang.Object, java.io.Writer)
      */
     public XmiWriter getXmiWriter(Object model, Writer writer)
         throws UmlException {
         return new XmiWriterImpl(model, writer);
     }
-    
+
+    /**
+     * @see org.argouml.model.ModelImplementation#createContainerDispatcher(java.awt.Container)
+     */
     public ContainerDispatcher createContainerDispatcher(Container container) {
         return new ContainerDispatcherImpl(container);
     }
