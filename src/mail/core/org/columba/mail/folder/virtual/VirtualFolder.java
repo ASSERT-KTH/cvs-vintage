@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 
@@ -69,6 +70,10 @@ import org.columba.ristretto.message.MimeTree;
  *  
  */
 public class VirtualFolder extends AbstractMessageFolder implements FolderListener {
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.virtual");
+
 	protected int nextUid;
 
 	protected HeaderList headerList;
@@ -624,10 +629,13 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
 	 */
 	public boolean tryToGetLock(Object locker) {
+		// First try to get the lock of the virtual folder
+		boolean success = super.tryToGetLock(locker);
+		if( !success ) return false;
+		
 		// We need to get the locks of all folders		
 		AbstractFolder folder = getSourceFolder();
 		
-		boolean success = true;
 		success &= folder.tryToGetLock(locker);
 		
 		if( success && isRecursive() ) {
@@ -653,6 +661,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.mail.folder.AbstractFolder#releaseLock(java.lang.Object)
 	 */
 	public void releaseLock(Object locker) {
+		super.releaseLock(locker);
+		
 		AbstractFolder folder = getSourceFolder();
 		
 		folder.releaseLock(locker);
@@ -1064,7 +1074,10 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	/**
 	 * 
 	 */
-	public void activate() throws Exception {		
+	public void activate() throws Exception {
+		if( active ) return; 
+		
+		LOG.severe("Activating virtual folder " + getName());
 		getMessageFolderInfo().reset();
 		applySearch();
 		registerWithSource();		
