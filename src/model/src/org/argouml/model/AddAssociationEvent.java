@@ -1,4 +1,4 @@
-//$Id: InstanceChangeEvent.java,v 1.2 2005/06/06 19:18:59 bobtarling Exp $
+//$Id: AddAssociationEvent.java,v 1.1 2005/06/06 19:18:59 bobtarling Exp $
 //Copyright (c) 2004-2005 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -27,16 +27,16 @@ package org.argouml.model;
 import java.util.EventObject;
 
 /**
- * A change event due to change in the lifetime of a model element instance.
- * That is, it is created or deleted.
+ * A change event due to adding an association between one model element
+ * and another (eg notifys that an association has been added between an exisitng
+ * generization element and a an existing class element.
  * 
  * @author Bob Tarling
  */
-public abstract class InstanceChangeEvent extends UmlChangeEvent {
+public class AddAssociationEvent extends AssociationChangeEvent {
 
-    public InstanceChangeEvent(Object source, String propertyName, Object oldValue,
+    public AddAssociationEvent(Object source, String propertyName, Object oldValue,
             Object newValue, EventObject originalEvent) {
         super(source, propertyName, oldValue, newValue, originalEvent);
     }
-
 }

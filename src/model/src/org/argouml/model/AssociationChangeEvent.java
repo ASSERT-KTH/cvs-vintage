@@ -1,4 +1,4 @@
-//$Id: AssociationChangeEvent.java,v 1.1 2005/06/06 09:56:33 bobtarling Exp $
+//$Id: AssociationChangeEvent.java,v 1.2 2005/06/06 19:18:59 bobtarling Exp $
 //Copyright (c) 2004-2005 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -29,8 +29,10 @@ import java.util.EventObject;
 /**
  * A change event due to change in an association between one model element
  * and another.
+ * TODO: Break down into subclasses AddAssociationEvent and
+ * RemoveAssociationEvent
  * 
- * @author BTarling
+ * @author Bob Tarling
  */
 public class AssociationChangeEvent extends UmlChangeEvent {
 
@@ -38,5 +40,4 @@ public class AssociationChangeEvent extends UmlChangeEvent {
             Object newValue, EventObject originalEvent) {
         super(source, propertyName, oldValue, newValue, originalEvent);
     }
-
 }

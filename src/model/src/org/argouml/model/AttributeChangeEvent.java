@@ -1,4 +1,4 @@
-//$Id: AttributeChangeEvent.java,v 1.1 2005/06/06 09:56:33 bobtarling Exp $
+//$Id: AttributeChangeEvent.java,v 1.2 2005/06/06 19:18:59 bobtarling Exp $
 //Copyright (c) 2004-2005 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -27,9 +27,10 @@ package org.argouml.model;
 import java.util.EventObject;
 
 /**
- * A change event due to chane in a property of a model element.
+ * A change event due to change in an attribute of a model element
+ * (eg the name of a model element has changed).
  * 
- * @author BTarling
+ * @author Bob Tarling
  */
 public class AttributeChangeEvent extends UmlChangeEvent {
 
