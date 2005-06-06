@@ -805,12 +805,9 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		// IMAP Folders have no own lock ,but share the lock from the Root
 		// to ensure that only one operation can be processed simultanous
 		IMailFolder root = getRootFolder();
-
-		if (root != null) {
-			return root.tryToGetLock(locker);
-		} else {
-			return false;
-		}
+		if( root == null ) throw new IllegalArgumentException("IMAPRoot is null");
+		
+		return root.tryToGetLock(locker);
 	}
 
 	/**
@@ -818,10 +815,9 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 */
 	public void releaseLock(Object locker) {
 		IMailFolder root = getRootFolder();
+		if( root == null ) throw new IllegalArgumentException("IMAPRoot is null");
 
-		if (root != null) {
-			root.releaseLock(locker);
-		}
+		root.releaseLock(locker);
 	}
 
 	/*
