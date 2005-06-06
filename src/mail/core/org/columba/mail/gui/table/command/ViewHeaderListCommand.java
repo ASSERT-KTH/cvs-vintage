@@ -42,6 +42,10 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 	public ViewHeaderListCommand(FrameMediator frame,
 			ICommandReference reference) {
 		super(frame, reference);
+		
+		// Register as listener to the SelectionManger
+		// to check for selection changes
+		frame.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
 
 		priority = Command.REALTIME_PRIORITY;
 	}
@@ -67,13 +71,12 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 		// Register as SelectionListener to track the selection
 		// of the tree
 		updateGui = true;
-		frameMediator.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
 		
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		folder = (AbstractMessageFolder) r.getSourceFolder();
 		
-		//		register for status events
+		//	register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		// fetch the headerlist
