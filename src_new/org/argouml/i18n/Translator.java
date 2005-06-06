@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.33 2005/06/05 15:13:08 linus Exp $
+// $Id: Translator.java,v 1.34 2005/06/06 19:32:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,6 +168,12 @@ public final class Translator {
         loadBundle(name);
 
         ResourceBundle bundle = (ResourceBundle) bundles.get(name);
+        if (bundle == null) {
+            LOG.debug("Bundle (" + name + ") for resource "
+                    + key + " not found.");
+            return key;
+        }
+
         try {
             return bundle.getString(key);
         } catch (MissingResourceException e) {
