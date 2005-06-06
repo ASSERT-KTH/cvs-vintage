@@ -72,16 +72,20 @@ public class ViewMessageSourceCommand extends Command {
 		if( association == null ) {
 			JOptionPane.showMessageDialog(null, GlobalResourceLoader
 					.getString("dialog", "error", "no_viewer"), "Error",
-					JOptionPane.ERROR_MESSAGE);
-			
+					JOptionPane.ERROR_MESSAGE);			
 			return;
 		}
 		
 		Action action = association.getActionByVerb("open");
+		if( action != null ) {
+			Process child = Runtime.getRuntime().exec(
+					action.getCommand() + " " + tempFile.toString());			
+		} else {
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader
+					.getString("dialog", "error", "no_viewer"), "Error",
+					JOptionPane.ERROR_MESSAGE);			
+		}
 		
-		
-		Process child = Runtime.getRuntime().exec(
-				action.getCommand() + " " + tempFile.toString());
     }
 
     /**
