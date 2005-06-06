@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.32 2005/02/21 20:25:59 mvw Exp $
+// $Id: ProfileJava.java,v 1.33 2005/06/06 20:34:24 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -345,7 +345,8 @@ public class ProfileJava extends Profile {
         if (is != null) {
             try {
                 XmiReader xmiReader = Model.getXmiReader();
-                return xmiReader.parseToModel(new InputSource(is));
+                InputSource inputSource = new InputSource(is);
+                return xmiReader.parseToModel(inputSource);
             } catch (UmlException e) {
                 throw new ProfileException(e);
             }
