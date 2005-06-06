@@ -22,7 +22,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Insert_Buffer_Properties.bsh,v 1.5 2004/03/08 04:29:11 spestov Exp $
+ * $Id: Insert_Buffer_Properties.bsh,v 1.6 2005/06/06 19:08:56 orutherfurd Exp $
  */
 
 import java.awt.BorderLayout;
@@ -185,7 +185,7 @@ BufferLocalPropertiesDialog(View view){
 					value = "";
 			}
 			buff.append(":");
-			buff.append(name).append("=").append(value);
+			buff.append(name).append("=").append(""+value);
 		}
 
 		jEdit.setProperty("macro.insert-buffer-properties." + mode,
