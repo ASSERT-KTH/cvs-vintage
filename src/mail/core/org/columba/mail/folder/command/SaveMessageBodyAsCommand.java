@@ -592,14 +592,14 @@ public class SaveMessageBodyAsCommand extends Command {
         List valueList = new ArrayList();
         BasicHeader basicHeader = new BasicHeader(header);
 
-        String from = (header.get("columba.from")).toString();
+        String from = basicHeader.getFrom().toString();
         String to = (basicHeader.getTo()[0]).toString();
 
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
                 DateFormat.MEDIUM);
         String date = df.format(basicHeader.getDate());
 
-        String subject = (String) header.get("columba.subject");
+        String subject = basicHeader.getSubject();
 
         // loop over all headers
         Enumeration keys = header.getKeys();
@@ -618,10 +618,7 @@ public class SaveMessageBodyAsCommand extends Command {
                         || key.equals("MIME-Version")) {
                 // ignore
             } else if (key.startsWith("columba")) {
-                if (key.equals("columba.date")) {
-                } else {
-                    // ignore
-                }
+                   // ignore
             } else {
                 if (inclAll) {
                     // all headers should be included
