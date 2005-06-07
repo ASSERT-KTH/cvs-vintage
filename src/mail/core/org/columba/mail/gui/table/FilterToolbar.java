@@ -267,8 +267,9 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			*/
 		
 		MailFolderCommandReference r = new MailFolderCommandReference(searchFolder);
+		/*
 		((MailFrameMediator) tableController.getFrameController())
-				.setTreeSelection(r);
+				.setTreeSelection(r);*/
 		((MailFrameMediator) tableController.getFrameController())
 		.setTableSelection(r);
 

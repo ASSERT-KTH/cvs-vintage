@@ -318,12 +318,13 @@ public class TableController implements FocusOwner, ListSelectionListener,
 
 		// update infopanel (gray panel below the toolbar)
 		// showing total/unread/recent messages count
+		/*
 		if (getFrameController() instanceof MailFrameMediator) {
 			if (srcFolder != null) {
 				((ThreePaneMailFrameController) getFrameController())
 						.getFolderInfoPanel().setFolder((IMailFolder) srcFolder);
 			}
-		}
+		}*/
 
 		// only update table if, this folder is the same
 		// as the currently selected
@@ -444,8 +445,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		 
 		getHeaderTableModel().set(headerList);
 		
+		/*
 		((ThreePaneMailFrameController) getFrameController())
-		.getFolderInfoPanel().setFolder((IMailFolder) folder);
+		.getFolderInfoPanel().setFolder((IMailFolder) folder);*/
 
 		// load options of newly selected folder
 		((MailFrameMediator) getFrameController()).getFolderOptionsController()

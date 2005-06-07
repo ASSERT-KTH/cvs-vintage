@@ -364,9 +364,6 @@ public class SearchFrame extends JDialog implements ActionListener {
 			MailFolderCommandReference r = new MailFolderCommandReference(
 					destFolder);
 			((MailFrameMediator) frameController).setTreeSelection(r);
-
-			((TreeViewOwner) frameController).getTreeController().setSelected(
-					(IMailFolder) r.getSourceFolder());
 		}
 	}
 }

@@ -54,11 +54,15 @@ public class TreeSelectionHandler extends SelectionHandler implements
 
 	private LinkedList selectedFolders;
 
+	private boolean setSelection;
+	
 	public TreeSelectionHandler(TreeView view) {
 		super("mail.tree");
 		this.view = view;
 		view.addTreeSelectionListener(this);
 		selectedFolders = new LinkedList();
+		
+		setSelection = false;
 	}
 
 	/*
@@ -91,6 +95,11 @@ public class TreeSelectionHandler extends SelectionHandler implements
 			return;
 		}
 
+		if( setSelection ) {
+			selectedFolders.clear();
+			setSelection = false;
+		}
+		
 		for (int i = 0; i < e.getPaths().length; i++) {
 			if (e.getPaths()[i].getLastPathComponent() instanceof AbstractFolder) {
 				AbstractFolder folder = (AbstractFolder) e.getPaths()[i]
@@ -116,9 +125,7 @@ public class TreeSelectionHandler extends SelectionHandler implements
 		
 		selectedFolders.clear();
 		
-		// FIXME
-		/*
-		if ( ((MailFolderCommandReference) selection).getSourceFolder()  == null ) {
+		if ( selection == null || ((MailFolderCommandReference) selection).getSourceFolder()  == null ) {
 			view.clearSelection();
 		} else {
 		
@@ -126,7 +133,13 @@ public class TreeSelectionHandler extends SelectionHandler implements
 				.getSelectionTreePath();
 		view.setSelectionPath(path);
 		view.expandPath(path);
+		selectedFolders.add(((MailFolderCommandReference) selection).getSourceFolder());
 		}
-		*/
+		
+		setSelection = true;
+		
+		fireSelectionChanged(new TreeSelectionChangedEvent(
+				(AbstractFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
+	
 	}
 }

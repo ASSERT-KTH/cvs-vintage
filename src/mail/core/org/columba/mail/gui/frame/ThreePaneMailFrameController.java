@@ -92,7 +92,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		treeController = new TreeController(this, FolderTreeModel.getInstance());
 		tableController = new TableController(this);
-		folderInfoPanel = new FolderInfoPanel();
 
 		// create selection handlers
 		TableSelectionHandler tableHandler = new TableSelectionHandler(
@@ -103,6 +102,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 				treeController.getView());
 		getSelectionManager().addSelectionHandler(treeHandler);
 
+		folderInfoPanel = new FolderInfoPanel(this);		
+		
 		// table registers interest in tree selection events
 		treeHandler.addSelectionListener(tableHandler);
 
@@ -379,6 +380,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		AbstractFolder[] selectedFolders = event.getSelected();
 		if (selectedFolders.length == 1 && selectedFolders[0] != null) {
 			getContainer().getFrame().setTitle(selectedFolders[0].getName());
+		} else {
+			getContainer().getFrame().setTitle("");			
 		}
 	}
 }

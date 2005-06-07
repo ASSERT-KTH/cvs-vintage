@@ -26,6 +26,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 import org.columba.mail.message.IHeaderList;
 
 /**
@@ -80,7 +81,19 @@ public class ViewHeaderListCommand extends Command implements ISelectionListener
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		// fetch the headerlist
-		headerList = (folder).getHeaderList();
+		try {
+			headerList = (folder).getHeaderList();
+		} catch (Exception e) {
+			updateGui = false;
+			
+			// Reset the selection			
+			frameMediator.getSelectionManager().getHandler("mail.tree").setSelection(null);
+			new ViewHeaderListAction(frameMediator).actionPerformed(null);
+			
+			//((TableViewOwner) frameMediator).getTableController().clear();
+			
+			throw e;
+		}
 		
 		updateGui &= !worker.cancelled();
 	}

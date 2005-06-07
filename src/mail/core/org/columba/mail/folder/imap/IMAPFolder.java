@@ -204,7 +204,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 */
 	public IHeaderList getHeaderList() throws Exception {
 		ensureFolderIsSynced();
-
+		
 		return headerList;
 	}
 
@@ -216,8 +216,14 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	 */
 	private synchronized void ensureFolderIsSynced() throws IOException, IMAPException, CommandCancelledException, Exception {
 		if (headerList == null || !getServer().isSelected(this)) {
-			synchronizeHeaderlist();
-			synchronizeFlags();
+			try {
+				synchronizeHeaderlist();
+				synchronizeFlags();
+			} catch (IOException e) {
+				// If an exception occurs we are in some unknown state
+				
+			} catch (IMAPException e) {
+			}
 		}
 	}
 

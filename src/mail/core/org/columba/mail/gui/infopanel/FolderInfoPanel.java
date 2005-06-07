@@ -16,7 +16,6 @@
 
 package org.columba.mail.gui.infopanel;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.columba.core.gui.frame.ContainerInfoPanel;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.config.IFolderItem;
@@ -47,7 +47,13 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
     private MailboxInfo info;
     private IFolderItem item;
 
-    public void initComponents() {
+    public FolderInfoPanel(FrameMediator controller) {
+		super();
+    	
+    	controller.getSelectionManager().getHandler("mail.tree").addSelectionListener(this);
+	}
+
+	public void initComponents() {
         super.initComponents();
 
         leftLabel = new JLabel("Total: Unseen:");
@@ -183,6 +189,8 @@ public void folderSelectionChanged(AbstractFolder newFolder) {
         // -> casting here to Folder
         if (treeEvent.getSelected()[0] != null) {
             setFolder((AbstractMessageFolder) treeEvent.getSelected()[0]);
+        } else {
+        	resetRenderer();
         }
     }
 }

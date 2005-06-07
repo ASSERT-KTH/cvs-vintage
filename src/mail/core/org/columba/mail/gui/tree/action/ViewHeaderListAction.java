@@ -47,9 +47,7 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 		MailFolderCommandReference references = (MailFolderCommandReference) getFrameMediator()
 				.getSelectionManager().getSelection("mail.tree");
 
-		if ( references == null ) return;
-		
-		if ((references.getSourceFolder() instanceof AbstractMessageFolder)) {
+		if (references != null && (references.getSourceFolder() instanceof AbstractMessageFolder)) {
 			// view message list
 			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 					getFrameMediator(), references));
@@ -63,6 +61,8 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 			// clear message-list selection
 			c.clearSelection();
 
+			// clear the folder info bar
+			
 
 			// clear message-viewer
 			IMessageController m = ((MessageViewOwner) getFrameMediator())

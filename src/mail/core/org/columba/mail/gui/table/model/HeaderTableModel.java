@@ -239,7 +239,8 @@ public class HeaderTableModel extends AbstractTreeTableModel implements IHeaderT
 	public Object getValueAt(int row, int col) {
 		//if ( col == 0 ) return tree;
 		TreePath treePath = getTree().getPathForRow(row);
-
+		if( treePath == null) return null;
+		
 		return (MessageNode) treePath.getLastPathComponent();
 	}
 
