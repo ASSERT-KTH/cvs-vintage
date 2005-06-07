@@ -531,9 +531,14 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 			throws Exception {
+		if( !active ) {
+			activate();
+		} else {
+			revalidateSearch();
+		}
 
 		List list = new ArrayList();
-
+		//TODO (tstich):do some binning to speed up search
 		for (int i = 0; i < uids.length; i++) {
 			// get source folder reference
 			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
@@ -1077,7 +1082,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	public void activate() throws Exception {
 		if( active ) return; 
 		
-		LOG.severe("Activating virtual folder " + getName());
+		LOG.fine("Activating virtual folder " + getName());
 		getMessageFolderInfo().reset();
 		applySearch();
 		registerWithSource();		
