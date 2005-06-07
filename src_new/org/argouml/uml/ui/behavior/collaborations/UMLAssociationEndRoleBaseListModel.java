@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndRoleBaseListModel.java,v 1.16 2005/01/30 20:47:50 linus Exp $
+// $Id: UMLAssociationEndRoleBaseListModel.java,v 1.17 2005/06/07 07:20:00 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ public class UMLAssociationEndRoleBaseListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
+        removeAllElements();
         if (getTarget() != null
                 && Model.getFacade().getBase(getTarget()) != null) {
             addElement(Model.getFacade().getBase(getTarget()));

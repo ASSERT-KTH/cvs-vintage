@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.25 2005/01/30 20:47:46 linus Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.26 2005/06/07 07:20:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.argouml.model.Model;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
@@ -44,7 +43,7 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
         // there is a bug in NSUML so this model
         // listens for addition modelevents
         super("addition", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this,
+        Model.getPump().addClassModelEventListener(this,
                 Model.getMetaTypes().getNamespace(), "ownedElement");
     }
 

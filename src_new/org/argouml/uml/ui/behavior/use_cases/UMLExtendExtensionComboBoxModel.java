@@ -1,4 +1,4 @@
-// $Id: UMLExtendExtensionComboBoxModel.java,v 1.25 2005/01/30 20:47:47 linus Exp $
+// $Id: UMLExtendExtensionComboBoxModel.java,v 1.26 2005/06/07 07:20:00 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.model.Model;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -83,7 +82,7 @@ public class UMLExtendExtensionComboBoxModel extends UMLComboBoxModel2 {
      */
     public void targetRemoved(TargetEvent e) {
         // if (e.getNewTarget() != getTarget())
-        UmlModelEventPump.getPump().removeClassModelEventListener(this,
+        Model.getPump().removeClassModelEventListener(this,
                     Model.getMetaTypes().getNamespace(), "ownedElement");
         super.targetRemoved(e);
     }
@@ -91,7 +90,7 @@ public class UMLExtendExtensionComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        UmlModelEventPump.getPump().addClassModelEventListener(this,
+        Model.getPump().addClassModelEventListener(this,
                 Model.getMetaTypes().getNamespace(), "ownedElement");
         super.targetSet(e);
     }

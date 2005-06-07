@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.11 2005/06/06 19:18:59 bobtarling Exp $
+// $Id: NSUMLModelEventPump.java,v 1.12 2005/06/07 07:19:59 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,13 +36,15 @@ import java.util.WeakHashMap;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.AbstractModelEventPump;
-import org.argouml.model.AssociationChangeEvent;
+import org.argouml.model.AddAssociationEvent;
 import org.argouml.model.AttributeChangeEvent;
 import org.argouml.model.DeleteInstanceEvent;
 import org.argouml.model.ModelEventPump;
+import org.argouml.model.RemoveAssociationEvent;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
 
 /**
@@ -105,7 +107,7 @@ class NSUMLModelEventPump
 
         register(modelEventListeners,
                  new NSUMLModelEventListener(listener,
-					     modelelement, eventNames, this));
+                         (MModelElement)modelelement, eventNames, this));
     }
 
     /**
@@ -132,7 +134,7 @@ class NSUMLModelEventPump
                   + listener + ", "
                   + modelelement + ")");
         register(modelEventListeners,
-                 new NSUMLModelEventListener(listener, modelelement, this));
+                 new NSUMLModelEventListener(listener, (MModelElement)modelelement, this));
     }
 
     /**
@@ -253,6 +255,45 @@ class NSUMLModelEventPump
         if (relay != null) {
             unregister(classEventListeners, relay);
             relay.delete();
+        }
+    }
+    
+    public void startPumpingEvents() {
+        Iterator iter = modelEventListeners.keySet().iterator();
+        while (iter.hasNext()) {
+            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
+            theListener.startPumpingEvents();
+        }
+        iter = classEventListeners.keySet().iterator();
+        while (iter.hasNext()) {
+            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
+            theListener.startPumpingEvents();
+        }
+    }
+    
+    public void stopPumpingEvents() {
+        Iterator iter = modelEventListeners.keySet().iterator();
+        while (iter.hasNext()) {
+            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
+            theListener.stopPumpingEvents();
+        }
+        iter = classEventListeners.keySet().iterator();
+        while (iter.hasNext()) {
+            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
+            theListener.stopPumpingEvents();
+        }
+    }
+    
+    public void flushModelEvents() {
+        Iterator iter = modelEventListeners.keySet().iterator();
+        while (iter.hasNext()) {
+            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
+            theListener.flushModelEvents();
+        }
+        iter = classEventListeners.keySet().iterator();
+        while (iter.hasNext()) {
+            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
+            theListener.flushModelEvents();
         }
     }
 }
@@ -385,8 +426,9 @@ abstract class NSUMLEventListener implements MElementListener {
      *         ru.novosoft.uml.MElementEvent)
      */
     public void roleAdded(MElementEvent event) {
-        fire(new AssociationChangeEvent(event.getSource(), event.getName(),
-                event.getOldValue(), event.getNewValue(), event));
+        fire(new AddAssociationEvent(event.getSource(), event.getName(),
+                event.getOldValue(), event.getNewValue(),
+                event.getAddedValue(), event));
     }
 
     /**
@@ -394,8 +436,9 @@ abstract class NSUMLEventListener implements MElementListener {
      *         ru.novosoft.uml.MElementEvent)
      */
     public void roleRemoved(MElementEvent event) {
-        fire(new AssociationChangeEvent(event.getSource(), event.getName(),
-                event.getOldValue(), event.getNewValue(), event));
+        fire(new RemoveAssociationEvent(event.getSource(), event.getName(),
+                event.getOldValue(), event.getNewValue(),
+                event.getRemovedValue(), event));
     }
 
     /**
@@ -403,8 +446,6 @@ abstract class NSUMLEventListener implements MElementListener {
      *         ru.novosoft.uml.MElementEvent)
      */
     public void listRoleItemSet(MElementEvent event) {
-        fire(new PropertyChangeEvent(event.getSource(), event.getName(),
-                event.getOldValue(), event.getNewValue()));
     }
 
     /**
@@ -421,8 +462,19 @@ abstract class NSUMLEventListener implements MElementListener {
      *         ru.novosoft.uml.MElementEvent)
      */
     public void recovered(MElementEvent arg0) {
-        fire(new PropertyChangeEvent(arg0.getSource(), arg0.getName(),
-                		     arg0.getOldValue(), arg0.getNewValue()));
+    }
+    
+    
+    public void startPumpingEvents() {
+        pump.startPumpingEvents();
+    }
+    
+    public void stopPumpingEvents() {
+        pump.stopPumpingEvents();
+    }
+    
+    public void flushModelEvents() {
+        pump.flushModelEvents();
     }
 }
 

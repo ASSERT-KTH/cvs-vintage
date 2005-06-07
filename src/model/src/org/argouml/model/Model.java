@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.6 2005/06/06 15:33:27 linus Exp $
+// $Id: Model.java,v 1.7 2005/06/07 07:19:59 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ public final class Model {
         String className =
             System.getProperty(
                     "argouml.model.implementation",
+            	   // "org.argouml.model.mdr.MDRModelImplementation");
             	    "org.argouml.model.uml.DefaultModelImplementation");
 
         try {

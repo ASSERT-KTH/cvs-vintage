@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.56 2005/05/26 20:35:23 bobtarling Exp $
+// $Id: UmlModelEventPump.java,v 1.57 2005/06/07 07:19:59 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -455,15 +455,18 @@ public final class UmlModelEventPump implements MElementListener {
     public void addModelEventListener(Object listener, Object modelelement) {
         // we just return if the modelelement to add is not a NSUML class.
         // we don't support other event listeners yet.
-        if (modelelement == null || !(modelelement instanceof MBase)) {
-            return;
-        }
         if (listener == null) {
-            throw new IllegalArgumentException("A listener must be supplied");
+            throw new IllegalArgumentException(
+                    "A listener must be supplied");
         }
         if (modelelement == null) {
             throw new IllegalArgumentException(
                     "A model element must be supplied");
+        }
+        if (!(modelelement instanceof MBase)) {
+            throw new IllegalArgumentException(
+                    "The model element must be an MBase got a "
+                    + modelelement.getClass().getName());
         }
         if (!(listener instanceof MElementListener)) {
             throw new IllegalArgumentException(
@@ -671,12 +674,12 @@ public final class UmlModelEventPump implements MElementListener {
     public void listRoleItemSet(MElementEvent e) {
         MElementListener[] listeners = getListenerList(e);
         for (int i = 0; i < listeners.length; i++) {
-	    try {
-		listeners[i].listRoleItemSet(e);
-	    } catch (Exception re) {
-		LOG.error("Listener " + listeners[i]
-			  + " threw an unhandled Exception", re);
-	    }
+            try {
+                listeners[i].listRoleItemSet(e);
+            } catch (Exception re) {
+                LOG.error("Listener " + listeners[i]
+                	  + " threw an unhandled Exception", re);
+            }
         }
     }
 

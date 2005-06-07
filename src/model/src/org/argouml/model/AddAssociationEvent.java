@@ -1,4 +1,4 @@
-//$Id: AddAssociationEvent.java,v 1.1 2005/06/06 19:18:59 bobtarling Exp $
+//$Id: AddAssociationEvent.java,v 1.2 2005/06/07 07:19:59 bobtarling Exp $
 //Copyright (c) 2004-2005 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import java.util.EventObject;
 public class AddAssociationEvent extends AssociationChangeEvent {
 
     public AddAssociationEvent(Object source, String propertyName, Object oldValue,
-            Object newValue, EventObject originalEvent) {
-        super(source, propertyName, oldValue, newValue, originalEvent);
+            Object newValue, Object changedValue, EventObject originalEvent) {
+        super(source, propertyName, oldValue, newValue, changedValue, originalEvent);
     }
 }
