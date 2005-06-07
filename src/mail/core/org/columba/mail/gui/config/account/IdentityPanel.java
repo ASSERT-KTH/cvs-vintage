@@ -35,6 +35,8 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
@@ -111,7 +113,19 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
                 identity.setSignature(null);
             }
 
-            account.setName(accountnameTextField.getText());
+            if( !account.getName().equals(accountnameTextField.getText())) {
+            	account.setName(accountnameTextField.getText());
+            	if( !account.isPopAccount()) {
+            		// Account is an IMAP account -> change root folder name
+            		
+            		IMAPRootFolder imapRoot = (IMAPRootFolder) FolderTreeModel.getInstance().getImapFolder(account.getUid());
+            		try {
+						imapRoot.setName(accountnameTextField.getText());
+						FolderTreeModel.getInstance().nodeStructureChanged(imapRoot);
+					} catch (Exception e) {
+					}
+            	}
+            }
 
             if (defaultAccountCheckBox.isSelected()) {
             	MailConfig.getInstance().getAccountList().setDefaultAccount(

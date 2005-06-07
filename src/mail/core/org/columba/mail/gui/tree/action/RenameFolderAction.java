@@ -68,7 +68,7 @@ public class RenameFolderAction extends AbstractColumbaAction
     }
 
     public void selectionChanged(SelectionChangedEvent evt) {
-        if (((TreeSelectionChangedEvent) evt).getSelected().length > 0) {
+        if (((TreeSelectionChangedEvent) evt).getSelected().length > 0 && ((TreeSelectionChangedEvent) evt).getSelected()[0] instanceof AbstractMessageFolder) {
             AbstractFolder folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
 
             if ((folder != null) && folder instanceof AbstractMessageFolder) {
