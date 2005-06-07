@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.34 2005/06/06 19:32:07 linus Exp $
+// $Id: Translator.java,v 1.35 2005/06/07 21:27:02 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,9 @@ public final class Translator {
      * @return The localized String.
      */
     public static String localize(String key) {
-        assert key != null;
+        if (key == null) {
+            throw new IllegalArgumentException("null");
+        }
 
         String name = getName(key);
         if (name == null) {
