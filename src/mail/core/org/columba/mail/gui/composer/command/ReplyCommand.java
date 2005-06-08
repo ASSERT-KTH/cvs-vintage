@@ -19,6 +19,7 @@ package org.columba.mail.gui.composer.command;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.DateFormat;
 import java.util.logging.Logger;
 
@@ -155,7 +156,11 @@ public class ReplyCommand extends Command {
         String charset = bodyHeader.getContentParameter("charset");
 
         if (charset != null) {
-            model.setCharset(Charset.forName(charset));
+        	try {
+        		model.setCharset(Charset.forName(charset));
+        	} catch( UnsupportedCharsetException e ) {
+        		// Stick with the default charset
+        	}
         }
     }
 
@@ -208,7 +213,11 @@ public class ReplyCommand extends Command {
         }
         String charset = header.getContentParameter("charset");
         if( charset != null ) {
-        	bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
+        	try {
+        		bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
+        	} catch( UnsupportedCharsetException e ) {
+        		// 	Stick with the default charset
+        	}
         }
         
         String quotedBody;
