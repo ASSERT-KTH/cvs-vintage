@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import org.columba.core.command.ICommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
@@ -57,6 +58,11 @@ public class ReplyToAllCommand extends ReplyCommand {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
+        // From which account is this mail?
+        Integer accountUid = (Integer) folder.getAttribute(uids[0], "columba.accountuid");
+        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
+        Address accountAddress = MailConfig.getInstance().getAccountList().uidGet(accountUid.intValue()).getIdentity().getAddress();
+        
         BasicHeader rfcHeader = new BasicHeader(header);
 
         // set subject
@@ -80,7 +86,8 @@ public class ReplyToAllCommand extends ReplyCommand {
         while (it.hasNext()) {
             Address act = (Address) it.next();
 
-            if (last.equals(act)) {
+            // Remove duplicates or the mail address from the receiver account
+            if (last.equals(act) || accountAddress.equals(act) ) {
                 it.remove();
             } else {
                 last = act;
@@ -100,9 +107,6 @@ public class ReplyToAllCommand extends ReplyCommand {
         MessageBuilderHelper.createMailingListHeaderItems(header, model);
 
         // select the account this mail was received from
-        Integer accountUid = (Integer) folder.getAttribute(uids[0],
-                "columba.accountuid");
-        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
         model.setAccountItem(accountItem);
     }
 }
