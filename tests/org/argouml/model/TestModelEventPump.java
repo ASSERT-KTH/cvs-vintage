@@ -1,4 +1,4 @@
-// $Id: TestModelEventPump.java,v 1.8 2005/01/20 23:20:35 linus Exp $
+// $Id: TestModelEventPump.java,v 1.9 2005/06/08 20:49:01 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -181,24 +181,6 @@ public class TestModelEventPump extends TestCase {
                 elem,
                 Model.getCoreFactory().createParameter());
         assertTrue(!eventcalled);
-    }
-
-    /**
-     * Tests if a listener that registred for a ListRoleItemSet event really
-     * receive the event.
-     */
-    public void testListRoleItemSet() {
-        Model.getCoreHelper().addFeature(
-                elem,
-                Model.getCoreFactory().createOperation());
-        Model.getPump().addModelEventListener(listener,
-                			      elem,
-                			      new String[] {
-                				  "feature",
-        				      });
-        Model.getCoreHelper().setFeature(
-                elem, 0, Model.getCoreFactory().createOperation());
-        assertTrue(eventcalled);
     }
 
     /**
