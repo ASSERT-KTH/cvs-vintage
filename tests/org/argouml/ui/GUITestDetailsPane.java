@@ -1,4 +1,4 @@
-// $Id: GUITestDetailsPane.java,v 1.9 2005/01/09 14:59:15 linus Exp $
+// $Id: GUITestDetailsPane.java,v 1.10 2005/06/08 07:29:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,15 @@ public class GUITestDetailsPane extends TestCase {
         super(arg0);
     }
 
+    /**
+     * Test that we actually got the tabs by name in setUp.
+     */
+    public void testGetNamedTab() {
+        assertNotNull(todoPane);
+        assertNotNull(propertyPane);
+        assertNotNull(docPane);
+    }
+    
     /**
      * Test setting a target.
      */
@@ -110,6 +119,7 @@ public class GUITestDetailsPane extends TestCase {
     }
 
 
+    
     /**
      * @see junit.framework.TestCase#setUp()
      */
