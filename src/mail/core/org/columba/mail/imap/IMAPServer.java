@@ -657,7 +657,13 @@ public class IMAPServer implements IMAPListener {
 				// Do nothing special here
 			}
 		}
-
+		
+		if( selectedFolder == null ) {
+			// if none selected select this folder instead of getting the status
+			ensureSelectedState(folder);
+			return selectedStatus;
+		}
+		
 		printStatusMessage(MessageFormat.format(MailResourceLoader.getString(
 				"statusbar", "message", "status"), new Object[] { folder
 				.getName() }));
