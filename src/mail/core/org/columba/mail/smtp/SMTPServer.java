@@ -98,12 +98,14 @@ public class SMTPServer  {
 		protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
 	}
 
-	private void ensureConnected() throws IOException, SMTPException {
+	private void ensureConnected() throws IOException, SMTPException, CommandCancelledException {
 		if (protocol.getState() == SMTPProtocol.NOT_CONNECTED) {
 			// Start login procedure
 			protocol.openPort();
 
 			initialize();
+			
+			doSSL();
 		}
 	}
 
@@ -149,65 +151,6 @@ public class SMTPServer  {
 
 		ensureConnected();
 
-		if (smtpItem.getBoolean("enable_ssl")) {
-			if (isSupported("STARTTLS")) {
-				try {
-					protocol.startTLS();
-					usingSSL = true;
-				} catch (Exception e) {
-					Object[] options = new String[] {
-							MailResourceLoader.getString("", "global", "ok")
-									.replaceAll("&", ""),
-							MailResourceLoader
-									.getString("", "global", "cancel")
-									.replaceAll("&", "") };
-
-					int result = JOptionPane.showOptionDialog(null,
-							MailResourceLoader.getString("dialog", "error",
-									"ssl_handshake_error")
-									+ ": "
-									+ e.getLocalizedMessage()
-									+ "\n"
-									+ MailResourceLoader.getString("dialog",
-											"error", "ssl_turn_off"),
-							"Warning", JOptionPane.DEFAULT_OPTION,
-							JOptionPane.WARNING_MESSAGE, null, options,
-							options[0]);
-
-					if (result == 1) {
-						throw new CommandCancelledException();
-					}
-
-					// turn off SSL for the future
-					smtpItem.setBoolean("enable_ssl", false);
-
-					protocol.openPort();
-
-					initialize();
-				}
-			} else {
-				Object[] options = new String[] {
-						MailResourceLoader.getString("", "global", "ok")
-								.replaceAll("&", ""),
-						MailResourceLoader.getString("", "global", "cancel")
-								.replaceAll("&", "") };
-				int result = JOptionPane.showOptionDialog(null,
-						MailResourceLoader.getString("dialog", "error",
-								"ssl_not_supported")
-								+ "\n"
-								+ MailResourceLoader.getString("dialog",
-										"error", "ssl_turn_off"), "Warning",
-						JOptionPane.DEFAULT_OPTION,
-						JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-
-				if (result == 1) {
-					throw new CommandCancelledException();
-				}
-
-				// turn off SSL for the future
-				smtpItem.setBoolean("enable_ssl", false);
-			}
-		}
 
 		if (!authenticated) {
 			username = smtpItem.get("user");
@@ -313,6 +256,76 @@ public class SMTPServer  {
 	}
 
 	/**
+	 * @param smtpItem
+	 * @throws CommandCancelledException
+	 * @throws IOException
+	 * @throws SMTPException
+	 */
+	private void doSSL() throws CommandCancelledException, IOException, SMTPException {
+		OutgoingItem smtpItem = accountItem.getSmtpItem();
+
+		if (smtpItem.getBoolean("enable_ssl")) {
+			if (isSupported("STARTTLS")) {
+				try {
+					protocol.startTLS();
+					usingSSL = true;
+				} catch (Exception e) {
+					Object[] options = new String[] {
+							MailResourceLoader.getString("", "global", "ok")
+									.replaceAll("&", ""),
+							MailResourceLoader
+									.getString("", "global", "cancel")
+									.replaceAll("&", "") };
+
+					int result = JOptionPane.showOptionDialog(null,
+							MailResourceLoader.getString("dialog", "error",
+									"ssl_handshake_error")
+									+ ": "
+									+ e.getLocalizedMessage()
+									+ "\n"
+									+ MailResourceLoader.getString("dialog",
+											"error", "ssl_turn_off"),
+							"Warning", JOptionPane.DEFAULT_OPTION,
+							JOptionPane.WARNING_MESSAGE, null, options,
+							options[0]);
+
+					if (result == 1) {
+						throw new CommandCancelledException();
+					}
+
+					// turn off SSL for the future
+					smtpItem.setBoolean("enable_ssl", false);
+
+					protocol.openPort();
+
+					initialize();
+				}
+			} else {
+				Object[] options = new String[] {
+						MailResourceLoader.getString("", "global", "ok")
+								.replaceAll("&", ""),
+						MailResourceLoader.getString("", "global", "cancel")
+								.replaceAll("&", "") };
+				int result = JOptionPane.showOptionDialog(null,
+						MailResourceLoader.getString("dialog", "error",
+								"ssl_not_supported")
+								+ "\n"
+								+ MailResourceLoader.getString("dialog",
+										"error", "ssl_turn_off"), "Warning",
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+
+				if (result == 1) {
+					throw new CommandCancelledException();
+				}
+
+				// turn off SSL for the future
+				smtpItem.setBoolean("enable_ssl", false);
+			}
+		}
+	}
+
+	/**
 	 * @param string
 	 * @return
 	 */
@@ -328,9 +341,10 @@ public class SMTPServer  {
 
 	/**
 	 * @return
+	 * @throws CommandCancelledException 
 	 */
 	public List checkSupportedAuthenticationMethods() throws IOException,
-			SMTPException {
+			SMTPException, CommandCancelledException {
 		ensureConnected();
 
 		List supportedMechanisms = new ArrayList();
@@ -349,6 +363,11 @@ public class SMTPServer  {
 			}
 		}
 
+		if( supportedMechanisms.size() == 0) {
+			// Add a default PLAIN login as fallback
+			supportedMechanisms.add(new Integer(AuthenticationManager.USER));
+		}
+		
 		return supportedMechanisms;
 	}
 
@@ -368,8 +387,9 @@ public class SMTPServer  {
 	/**
 	 * @param authType
 	 * @return
+	 * @throws CommandCancelledException 
 	 */
-	private int getLoginMethod() throws IOException, SMTPException {
+	private int getLoginMethod() throws IOException, SMTPException, CommandCancelledException {
 		String authType = accountItem.getSmtpItem().get("login_method");
 		int method = 0;
 
