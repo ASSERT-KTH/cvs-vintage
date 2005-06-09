@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ConfigurationRepository.java,v 1.2 2005/04/11 12:39:20 benoitf Exp $
+ * $Id: ConfigurationRepository.java,v 1.3 2005/06/09 11:42:32 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -231,23 +231,23 @@ public class ConfigurationRepository {
 
     /**
      * Initialize Carol configurations with MBeans
-     * @param idMbeanServer the identifier to retrieve MBeanServer object
+     * @param domainName the name of the JOnAS domain
      * @param serverName the name of the server for creating mbeans
      * @throws ConfigurationException if no properties can be loaded
      */
-    public static void init(String idMbeanServer, String serverName) throws ConfigurationException {
+    public static void init(String domainName, String serverName) throws ConfigurationException {
         init(Thread.currentThread().getContextClassLoader().getResource(CarolDefaultValues.CAROL_CONFIGURATION_FILE),
-                idMbeanServer, serverName);
+                domainName, serverName);
     }
 
     /**
      * } Initialize Carol configurations with the carol.properties URL
      * @param carolPropertiesFileURL URL rerencing the configuration file
-     * @param idMbeanServer the identifier to retrieve MBeanServer object
+     * @param domainName the name of the JOnAS domain
      * @param serverName the name of the server for creating mbeans
      * @throws ConfigurationException if no properties can be loaded
      */
-    public static void init(URL carolPropertiesFileURL, String idMbeanServer, String serverName)
+    public static void init(URL carolPropertiesFileURL, String domainName, String serverName)
             throws ConfigurationException {
         if (initDone) {
             return;
@@ -344,8 +344,8 @@ public class ConfigurationRepository {
             defaultConfiguration = (ProtocolConfiguration) managedConfigurations.get(protocolsArray[0]);
         }
 
-        if (idMbeanServer != null && serverName != null) {
-            initMbeans(idMbeanServer, serverName);
+        if (domainName != null && serverName != null) {
+            initMbeans(domainName, serverName);
         }
 
         initDone = true;
@@ -510,18 +510,18 @@ public class ConfigurationRepository {
 
     /**
      * Init the MBean for each configuration
-     * @param idMbeanServer the identifier to retrieve MBeanServer object
+     * @param domainName the name of the JOnAS domain
      * @param serverName the name of the server for creating mbeans
      * @throws ConfigurationException if MBeans are not created
      */
-    protected static void initMbeans(String idMbeanServer, String serverName) throws ConfigurationException {
+    protected static void initMbeans(String domainName, String serverName) throws ConfigurationException {
 
         for (Iterator it = managedConfigurations.keySet().iterator(); it.hasNext();) {
             String key = (String) it.next();
             ProtocolConfiguration protocolConfiguration = (ProtocolConfiguration) managedConfigurations.get(key);
             if (protocolConfiguration instanceof ProtocolConfigurationImplMBean) {
                 MBeanUtils.registerProtocolConfigurationMBean((ProtocolConfigurationImplMBean) protocolConfiguration,
-                        logger, idMbeanServer, serverName);
+                        logger, domainName, serverName);
             }
         }
 

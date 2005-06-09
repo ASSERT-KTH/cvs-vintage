@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MBeanUtils.java,v 1.2 2005/04/28 11:37:26 benoitf Exp $
+ * $Id: MBeanUtils.java,v 1.3 2005/06/09 11:42:31 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.mbean;
@@ -59,13 +59,12 @@ public class MBeanUtils {
     /**
      * Init MBeanServer
      * @param logger the logger to use to log messages
-     * @param idMbeanServer the MBeanServer ID
      * @throws ConfigurationException if the registration failed
      */
-    protected static void initMBeanServer(Log logger, String idMbeanServer) throws ConfigurationException {
-        List mbeanServers = MBeanServerFactory.findMBeanServer(idMbeanServer);
+    protected static void initMBeanServer(Log logger) throws ConfigurationException {
+        List mbeanServers = MBeanServerFactory.findMBeanServer(null);
         if (mbeanServers.size() == 0) {
-            throw new ConfigurationException("No MBean Servers were found with id '" + idMbeanServer + "'");
+            throw new ConfigurationException("No MBean Servers were found.");
         }
         if (mbeanServers.size() > 1) {
             if (logger.isDebugEnabled()) {
@@ -80,17 +79,17 @@ public class MBeanUtils {
      * Register a ProtocolConfiguration object in MBeanServer
      * @param protocolConfiguration the configuration to register
      * @param logger the logger to use to log messages
-     * @param idMbeanServer the MBeanServer ID
+     * @param domainName the name of the JOnAS domain
      * @param serverName the name of the server (for ObjectName)
      * @throws ConfigurationException if the registration failed
      */
-    public static void registerProtocolConfigurationMBean(ProtocolConfigurationImplMBean protocolConfiguration, Log logger, String idMbeanServer, String serverName) throws ConfigurationException {
+    public static void registerProtocolConfigurationMBean(ProtocolConfigurationImplMBean protocolConfiguration, Log logger, String domainName, String serverName) throws ConfigurationException {
 
         // get MBeanServer if not present
         if (mbeanServer == null) {
-            initMBeanServer(logger, idMbeanServer);
+            initMBeanServer(logger);
         }
-        StringBuffer sb = new StringBuffer(mbeanServer.getDefaultDomain());
+        StringBuffer sb = new StringBuffer(domainName);
         sb.append(":j2eeType=JNDIResource");
         sb.append(",name=");
         sb.append(protocolConfiguration.getName());
