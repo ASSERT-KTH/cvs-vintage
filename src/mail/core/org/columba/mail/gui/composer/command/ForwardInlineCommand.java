@@ -20,6 +20,7 @@ package org.columba.mail.gui.composer.command;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -167,9 +168,13 @@ public class ForwardInlineCommand extends ForwardCommand {
 		// Select the charset of the original message
 		String charset = bodyHeader.getContentParameter("charset");
 
-		if (charset != null) {
-			model.setCharset(Charset.forName(charset));
-		}
+        if (charset != null) {
+        	try {
+        		model.setCharset(Charset.forName(charset));
+        	} catch( UnsupportedCharsetException e ) {
+        		// Stick with the default charset
+        	}
+        }
 	}
 
 	private void initHeader(AbstractMessageFolder folder, Object[] uids)

@@ -18,6 +18,7 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -164,9 +165,13 @@ public class OpenMessageWithComposerCommand extends Command {
 	        	}
 	        }
 	        String charset = header.getContentParameter("charset");
-	        if( charset != null ) {
-	        	bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
-	        	model.setCharset(Charset.forName(charset));
+	        if (charset != null) {
+	        	try {
+	        		bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
+	        		model.setCharset(Charset.forName(charset));
+	        	} catch( UnsupportedCharsetException e ) {
+	        		// Stick with the default charset
+	        	}
 	        }
 
 			model.setBodyText(StreamUtils.readInString(
