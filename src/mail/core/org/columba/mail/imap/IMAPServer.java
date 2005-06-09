@@ -658,7 +658,7 @@ public class IMAPServer implements IMAPListener {
 			}
 		}
 		
-		if( selectedFolder == null ) {
+		if( selectedFolder == null || protocol.getState() < IMAPProtocol.SELECTED) {
 			// if none selected select this folder instead of getting the status
 			ensureSelectedState(folder);
 			return selectedStatus;
