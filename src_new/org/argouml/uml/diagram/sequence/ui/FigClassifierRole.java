@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.4 2005/05/24 23:10:40 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.5 2005/06/10 18:42:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -559,6 +559,7 @@ public class FigClassifierRole extends FigNodeModelElement
                     {
                         if ( lastState==MessageNode.INITIAL || lastState==MessageNode.CREATED ||
                              lastState==MessageNode.IMPLICIT_CREATED ||
+                             lastState==MessageNode.IMPLICIT_RETURNED ||
                              lastState==MessageNode.RETURNED)
                             lastState=MessageNode.CALLED;
                         if ( callers==null)
