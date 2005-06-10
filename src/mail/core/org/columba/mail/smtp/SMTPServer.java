@@ -196,11 +196,41 @@ public class SMTPServer  {
 								.getSaslName(authMethod), username, password);
 						authenticated = true;
 					} catch (AuthenticationException e) {
-						// If the cause is a IMAPExcpetion then only password
+						// If the cause is a SMTPExcpetion then only password
 						// wrong
 						// else bogus authentication mechanism
-						if (e.getCause() instanceof SMTPException)
+						if (e.getCause() instanceof SMTPException) {
+							int errorCode = ((SMTPException) e.getCause()).getCode();
+							
+							// Authentication is not supported
+							if( errorCode == 504 ) {
+								//TODO: Add dialog to inform user that the smtp server
+								// does not support authentication
+								JOptionPane
+								.showMessageDialog(
+										FrameModel.getInstance()
+												.getActiveFrame(),
+										new MultiLineLabel(
+												MailResourceLoader
+																.getString(
+																		"dialog",
+																		"error",
+																		"authentication_not_supported")),
+										MailResourceLoader.getString("dialog",
+												"error",
+												"authentication_process_error"),
+										JOptionPane.INFORMATION_MESSAGE);
+								
+								//Turn off authentication for the future
+								smtpItem.setString("login_method", Integer
+										.toString(AuthenticationManager.NONE));
+								
+								return;
+							}
+							
+						} else {
 							throw (SMTPException) e.getCause();
+						} 
 
 						// Some error in the client/server communication
 						//  --> fall back to default login process
@@ -228,6 +258,7 @@ public class SMTPServer  {
 						} else {
 							throw new CommandCancelledException();
 						}
+						
 					}
 				} catch (SMTPException e) {
 					passDialog.showDialog(MessageFormat.format(
@@ -365,7 +396,7 @@ public class SMTPServer  {
 
 		if( supportedMechanisms.size() == 0) {
 			// Add a default PLAIN login as fallback
-			supportedMechanisms.add(new Integer(AuthenticationManager.USER));
+			supportedMechanisms.add(new Integer(AuthenticationManager.SASL_PLAIN));
 		}
 		
 		return supportedMechanisms;
