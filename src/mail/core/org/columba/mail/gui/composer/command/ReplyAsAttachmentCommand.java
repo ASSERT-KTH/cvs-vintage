@@ -69,6 +69,7 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
 		// initialize MimeHeader as RFC822-compliant-message
 		MimeHeader mimeHeader = new MimeHeader();
 		mimeHeader.setMimeType(new MimeType("message", "rfc822"));
+		mimeHeader.setContentDescription((String)folder.getAttribute(uids[0],"columba.subject"));
 
 		// add mimepart to model
 

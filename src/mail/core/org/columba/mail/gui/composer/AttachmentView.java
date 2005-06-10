@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 
 import javax.swing.DefaultListModel;
@@ -64,6 +66,25 @@ public class AttachmentView extends IconPanel {
 
 		attachmentIconLoader = new AttachmentImageIconLoader();
 		
+		setDoubleClickAction(new OpenAttachmentAction(this));
+		
+		//TODO Let the AttachmentViewer get the focus so that this works
+		addKeyListener( new KeyListener() {
+
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_DELETE) {
+					removeSelected();
+				}
+				
+			}
+
+			public void keyReleased(KeyEvent e) {
+				
+			}
+
+			public void keyTyped(KeyEvent e) {
+			}});
+		
 		//setModel(listModel);
 
 		//setCellRenderer(new ListRenderer());
@@ -106,7 +127,15 @@ public class AttachmentView extends IconPanel {
 				.getType(), mimeType.getSubtype());
 
 		String text = header.getFileName();
-
+		if( text==null || text.length() == 0 ) {
+			if( header.getContentDescription() != null) {
+				text = header.getContentDescription();
+			} else {
+				text = mimeType.toString();
+			}			
+		}
+		
+		
 		//      Get Tooltip for Icon
 		StringBuffer tooltip = new StringBuffer();
 		tooltip.append("<html><body>");
