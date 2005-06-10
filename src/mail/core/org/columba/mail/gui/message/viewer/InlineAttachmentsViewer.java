@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +58,7 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
+import org.columba.ristretto.parser.MimeTypeParser;
 
 /**
  * @author fdietz
@@ -230,10 +232,22 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		Integer[] address = ref.getAddress();
 		MimePart mp = folder.getMimePartTree(uid).getFromAddress(address);
 		MimeHeader h = mp.getHeader();
+
+		
 		String type = h.getMimeType().getType();
 		String subtype = h.getMimeType().getSubtype();
 		//Integer[] address = mp.getAddress();
 
+		if (type.equals("application") && (subtype.equals("octet-stream") ) && h.getFileName() != null) {
+			// Try to find out MIME type from Filename
+			String extension = h.getFileName();
+			extension = extension.substring(extension.lastIndexOf('.')+1);
+			
+			MimeType systemMimeType = MimeTypeParser.parse((org.columba.core.mimetype.MimeType.lookupByExtension(extension)));
+			type = systemMimeType.getType();
+			subtype = systemMimeType.getSubtype();
+		}
+		
 		JPanel panel = null;
 		if (type.equalsIgnoreCase("message")) {
 			// rfc822 message

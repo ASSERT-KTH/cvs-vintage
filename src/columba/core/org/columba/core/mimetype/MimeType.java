@@ -36,16 +36,30 @@ public class MimeType {
 	 * @see org.columba.core.nativ.mimetype.LookupMimetype#lookup(java.io.File)
 	 */
 	public static String lookup(File file) {
-		String mimetype = "application/octetstream";
+		String mimetype = "application/octet-stream";
 		
 		try {
 			Association a = associationService.getAssociationByContent( file.toURL());
-			
-			return a.getMimeType();
+			if( a != null) {
+				return a.getMimeType();
+			}
 		} catch (MalformedURLException e) {
 		}
 		
 		return mimetype;
 	}
 
+	/**
+	 * @see org.columba.core.nativ.mimetype.LookupMimetype#lookup(java.io.File)
+	 */
+	public static String lookupByExtension(String extension) {
+		String mimetype = "application/octet-stream";
+		
+		Association a = associationService.getFileExtensionAssociation( extension );
+		if( a != null) {
+			return a.getMimeType();
+		}
+		
+		return mimetype;
+	}
 }
