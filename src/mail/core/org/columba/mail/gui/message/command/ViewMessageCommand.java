@@ -16,6 +16,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
+import java.net.SocketException;
+
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
@@ -50,6 +52,8 @@ public class ViewMessageCommand extends Command {
 	private IMailbox srcFolder;
 
 	private Object uid;
+
+	private static final boolean debug = true;
 
 	/**
 	 * Constructor for ViewMessageCommand.
@@ -95,7 +99,9 @@ public class ViewMessageCommand extends Command {
 		try {
 			// get attachment structure
 			mimePartTree = srcFolder.getMimePartTree(uid);
-
+			
+			if( debug) throw new SocketException();
+			
 			if (mimePartTree == null)
 				return;
 

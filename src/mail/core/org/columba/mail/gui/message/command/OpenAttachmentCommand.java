@@ -106,7 +106,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 				Desktop.open(tempFile);
 			} catch (DesktopException e) {
 				JOptionPane.showMessageDialog(null, GlobalResourceLoader
-						.getString("dialog", "error", "no_viewer"), "Error",
+						.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
 						JOptionPane.ERROR_MESSAGE);
 				
 				File saveToFile = getDestinationFile(header);

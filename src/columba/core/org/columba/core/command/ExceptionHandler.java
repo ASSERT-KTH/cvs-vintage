@@ -36,6 +36,8 @@ import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.io.ConnectionDroppedException;
 
+import sun.net.ConnectionResetException;
+
 /**
  * Handles all exceptions catched by Worker.construct(). Opens error dialogs.
  * 
@@ -43,6 +45,7 @@ import org.columba.ristretto.io.ConnectionDroppedException;
  * @author fdietz
  */
 public class ExceptionHandler {
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
 	/**
 	 * Handle all kinds of exceptions.
@@ -81,11 +84,10 @@ public class ExceptionHandler {
 		}
 
 		if (exception instanceof IMAPDisconnectedException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
-					"imap_disconnected_error")
-					+ serverResponse;
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
+					"imap_disconnected_error");
 		} else {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
 					"imap_error")
 					+ serverResponse;
 		}
@@ -102,18 +104,21 @@ public class ExceptionHandler {
 	private void processSocketException(SocketException e) {
 		String errorMessage = "";
 
-		if (e instanceof BindException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
-					"bind_error");
-		} else if (e instanceof ConnectException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
+		if (e instanceof ConnectException) {
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
 					"connect_error");
 		} else if (e instanceof NoRouteToHostException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
 					"no_route_to_host_error");
 		} else if (e instanceof PortUnreachableException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
 					"port_unreachable_error");
+		} else if (e instanceof ConnectionResetException) {
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
+			"connection_reset");
+		} else {
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
+			"generic_socket_error");			
 		}
 
 		showErrorDialog(errorMessage, e);
@@ -128,25 +133,19 @@ public class ExceptionHandler {
 	private void processIOException(IOException e) {
 		String errorMessage = e.getMessage();
 
-		if (e instanceof ProtocolException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
-					"protocol_error");
-		} else if (e instanceof SocketException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
-					"socket_error");
-		} else if (e instanceof SocketTimeoutException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
+		if (e instanceof SocketTimeoutException) {
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
 					"socket_timeout_error");
 		} else if (e instanceof UnknownHostException) {
 			errorMessage = MessageFormat.format(GlobalResourceLoader.getString(
-					"dialog", "error", "unknown_host_error"), new Object[] { e
+					RESOURCE_PATH, "error", "unknown_host_error"), new Object[] { e
 					.getMessage() });
-		} else if (e instanceof UnknownServiceException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
-					"unknown_service_error");
 		} else if (e instanceof ConnectionDroppedException) {
-			errorMessage = GlobalResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
 					"connection_dropped_error");
+		} else {
+			errorMessage = GlobalResourceLoader.getString(RESOURCE_PATH, "error",
+			"generic_io_error");			
 		}
 
 		showErrorDialog(errorMessage, e);

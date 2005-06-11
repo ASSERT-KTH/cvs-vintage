@@ -97,8 +97,8 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		this.message = message;
 		this.ex = ex;
 
-		// TODO (@author fdietz): i18n
-		setTitle("An error occured");
+		setTitle(GlobalResourceLoader.getString("org.columba.core.i18n.dialog", "error",
+		"error_title"));
 
 		initComponents();
 		layoutComponents();
@@ -119,8 +119,8 @@ public class ErrorDialog extends JDialog implements ActionListener {
 		CellConstraints cc = new CellConstraints();
 		centerPanel.add(imageLabel, cc.xy(1, 1));
 
-		//centerPanel.add(messageMultiLineLabel, cc.xywh(3, 1, 1, 1));
-		centerPanel.add(label, cc.xywh(3, 1, 1, 1));
+		centerPanel.add(messageMultiLineLabel, cc.xywh(3, 1, 1, 1));
+		//centerPanel.add(label, cc.xywh(3, 1, 1, 1));
 
 		centerPanel.add(detailsButton, cc.xywh(1, 3, 1, 1));
 		if (showDetails) {

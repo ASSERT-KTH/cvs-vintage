@@ -112,7 +112,9 @@ public class Worker extends SwingWorker implements WorkerStatusController {
         } catch (Exception e) {
 
             // exception handler should handle all error handling stuff
-            new ExceptionHandler().processException(e);
+            //if( e.getCause()!=null && e.getCause() instanceof Exception)
+            	//new ExceptionHandler().processException((Exception)e.getCause());
+        	new ExceptionHandler().processException(e);
         }
 
         returnLocks(operationMode);

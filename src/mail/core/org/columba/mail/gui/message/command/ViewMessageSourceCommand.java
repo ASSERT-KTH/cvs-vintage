@@ -71,7 +71,7 @@ public class ViewMessageSourceCommand extends Command {
 		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
 		if( association == null ) {
 			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("dialog", "error", "no_viewer"), "Error",
+					.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
 					JOptionPane.ERROR_MESSAGE);			
 			return;
 		}
@@ -82,7 +82,7 @@ public class ViewMessageSourceCommand extends Command {
 					action.getCommand() + " " + tempFile.toString());			
 		} else {
 			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("dialog", "error", "no_viewer"), "Error",
+					.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
 					JOptionPane.ERROR_MESSAGE);			
 		}
 		

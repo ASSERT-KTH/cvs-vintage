@@ -302,7 +302,7 @@ public class MessageController extends JScrollPane implements
 					Desktop.browse(url);
 				} catch (DesktopException e) {
 					JOptionPane.showMessageDialog(null, GlobalResourceLoader
-							.getString("dialog", "error", "no_browser"),
+							.getString("org.columba.core.i18n.dialog", "error", "no_browser"),
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}

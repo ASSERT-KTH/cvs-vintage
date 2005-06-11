@@ -66,7 +66,7 @@ public class OpenAction extends AbstractColumbaAction implements Observer {
 			Desktop.browse(url.getRealURL());
 		} catch (DesktopException e) {
 			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("dialog", "error", "no_browser"), "Error",
+					.getString("org.columba.core.i18n.dialog", "error", "no_browser"), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
