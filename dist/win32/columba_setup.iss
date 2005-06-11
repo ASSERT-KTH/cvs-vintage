@@ -10,7 +10,7 @@
 
 ;The JRE which gets bundled is expected to be in
 ;the extras directory
-#define JRE_SRC_PATH="extras\"
+;#define JRE_SRC_PATH="extras\"
 
 [Setup]
 AppName=Columba
@@ -68,7 +68,7 @@ Source: native\win32\lib\jniwrap.dll; DestDir: {app}\native\win32\lib\
 Source: native\win32\lib\tray.dll; DestDir: {app}\native\win32\lib\
 Source: native\win32\lib\jdic.dll; DestDir: {app}\native\win32\lib\
 #ifdef BUNDLE_JRE
-Source: {#JRE_SRC_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
+Source: {#JRE_SRC_PATH}\{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
 #endif
 
 [UninstallDelete]
@@ -103,11 +103,9 @@ Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\shell\open\command; ValueType:
 
 [Code]
 var
-  Label1: TLabel;
+  Page: TWizardPage;
   jreVersion: TLabel;
-  installButton: TButton;
-  Label2: TLabel;
-  Label3: TLabel;
+  InstallJREPage: TInputQueryWizardPage;
 
 //* Getting Java version from registry *//
 function getJavaVersion(): String;
@@ -136,6 +134,8 @@ begin
           Result := False;
           end
      end;
+     
+     Result := False;
 end;
 
 procedure updateLAPfile();
@@ -150,55 +150,39 @@ begin
 	SaveStringToFile(ExpandConstant('{app}\columba.lap'), lapString, false);
 end;
 
+
+#ifdef BUNDLE_JRE
 procedure InstallJRE(Sender: TObject);
 var
-AppPath, Parameters, WorkingDirectory: String;WaitTerminated,
-WaitIdle: Boolean;ShowCmd, ResultCode: Integer;
+AppPath, Parameters, WorkingDirectory: String;ResultCode: Integer;
 LogFile : String;
 
 begin
-	if ExtractTemporaryFile('{#JRE_FILE}') then
-	begin
-		LogFile := ExpandConstant('{tmp}\setup.log');
-		AppPath := ExpandConstant( '{tmp}\{#JRE_FILE}');
-		WorkingDirectory := ExpandConstant( '{tmp}');
-		WaitTerminated := True;
-		WaitIdle := True;
-		ShowCmd := 0;
-		//Parameters := '/v"/qn ADDLOCAL=ALL REBOOT=Suppress"';
-		InstExec( AppPath, Parameters, WorkingDirectory,
-		WaitTerminated,WaitIdle, ShowCmd, ResultCode);
+	ExtractTemporaryFile('{#JRE_FILE}')
+	LogFile := ExpandConstant('{tmp}\setup.log');
+	AppPath := ExpandConstant( '{tmp}\{#JRE_FILE}');
+	WorkingDirectory := ExpandConstant( '{tmp}');
+	//Parameters := '/v"/qn ADDLOCAL=ALL REBOOT=Suppress"';
+	Exec( AppPath, Parameters, WorkingDirectory, SW_SHOW, ewWaitUntilTerminated,  ResultCode);
 
-		BringToFrontAndRestore();
-		jreVersion.Caption := getJavaVersion();
-	end;
-
-	WizardForm.NextButton.Enabled := CheckJRE();
+	BringToFrontAndRestore();
 	jreVersion.Caption := getJavaVersion();
 end;
 
-{ ScriptDlgPages }
-
-function ScriptDlgPages(CurPage: Integer; BackClicked: Boolean): Boolean;
+procedure CreateJREInstallPage;
 var
+  InstallButton, OKButton, CancelButton: TButton;
+  Label1, Label2, Label3: TLabel;
   Next: Boolean;
 
 begin
-  #ifdef BUNDLE_JRE
-  { place JRE Install Page between 'Welcome' and 'License' }
-  if (not CheckJRE()) and ((not BackClicked and (CurPage = wpWelcome)) or (BackClicked and (CurPage = wpLicense))) then
-  begin
-    ScriptDlgPageOpen();
-    ScriptDlgPageClearCustom();
-
-    ScriptDlgPageSetCaption('Java Not Found');
-    ScriptDlgPageSetSubCaption1('A JRE Version 1.4 or above must be installed!');
+	Page := CreateCustomPage(wpWelcome, 'Java Not Found', 'A JRE Version 1.4 or above must be installed!');
 
 	{ Label1 }
-	Label1 := TLabel.Create(WizardForm.ScriptDlgPanel);
+	Label1 := TLabel.Create(Page);
 	with Label1 do
 	begin
-	  Parent := WizardForm.ScriptDlgPanel;
+	  Parent := Page.Surface;
 	  Left := 24;
 	  Top := 16;
 	  Width := 107;
@@ -207,10 +191,10 @@ begin
 	end;
 
 	{ jreVersion }
-	jreVersion := TLabel.Create(WizardForm.ScriptDlgPanel);
+	jreVersion := TLabel.Create(Page);
 	with jreVersion do
 	begin
-	  Parent := WizardForm.ScriptDlgPanel;
+	  Parent := Page.Surface;
 	  Left := 150;
 	  Top := 16;
 	  Width := 30;
@@ -219,10 +203,10 @@ begin
 	end;
 
 	{ Label3 }
-	Label3 := TLabel.Create(WizardForm.ScriptDlgPanel);
+	Label3 := TLabel.Create(Page);
 	with Label3 do
 	begin
-	  Parent := WizardForm.ScriptDlgPanel;
+	  Parent := Page.Surface;
 	  Left := 24;
 	  Top := 58;
 	  Width := 120;
@@ -231,10 +215,10 @@ begin
 	end;
 
 	{ installButton }
-	installButton := TButton.Create(WizardForm.ScriptDlgPanel);
+	installButton := TButton.Create(Page);
 	with installButton do
 	begin
-	  Parent := WizardForm.ScriptDlgPanel;
+	  Parent := Page.Surface;
 	  Caption := 'Install JRE';
 	  Left := 150;
 	  Top := 50;
@@ -245,10 +229,10 @@ begin
 	end;
 
 	{ Label2 }
-	Label2 := TLabel.Create(WizardForm.ScriptDlgPanel);
+	Label2 := TLabel.Create(Page);
 	with Label2 do
 	begin
-	  Parent := WizardForm.ScriptDlgPanel;
+	  Parent := Page.Surface;
 	  Left := 24;
 	  Top := 90;
 	  Width := 200;
@@ -256,34 +240,37 @@ begin
 	  Caption := 'Note: Do *not* restart after installation!';
 	end;
 
-
-	WizardForm.NextButton.Enabled := CheckJRE();
-
-    Next := ScriptDlgPageProcessCustom(installButton);
-
-    { check main-page navigation }
-    if not BackClicked then
-      Result := Next
-    else
-      Result := not Next;
-    ScriptDlgPageClose(not Result);
-  end
-  { return default }
-  else
-  #endif
-    Result := True;
 end;
 
-{ NextButtonClick }
-
-function NextButtonClick(CurPage: Integer): Boolean;
+function NextButtonClick(CurPageID: Integer): Boolean; 
 begin
-  Result := ScriptDlgPages(CurPage, False);
+	Result := True;
+	if CurPageId = page.ID then
+	begin
+		if not checkJRE() then
+		begin
+			MsgBox('You need to install a JRE first!', mbError, MB_OK);
+			Result := False;
+		end;
+	end;
 end;
 
-{ BackButtonClick }
+#endif
 
-function BackButtonClick(CurPage: Integer): Boolean;
+procedure InitializeWizard();
+var 
+	ErrorCode: Integer;
 begin
-  Result := ScriptDlgPages(CurPage, True);
+	if not checkJRE() then	
+	#ifdef BUNDLE_JRE
+	begin
+		createJREInstallPage();
+	end;		
+	#else
+	begin
+		MsgBox('You need to install a JRE first!', mbError, MB_OK);
+		ShellExec('open','http://www.java.com/en/download/windows_automatic.jsp','','',SW_SHOW,ewNoWait,ErrorCode);
+		Abort();
+	end;
+	#endif
 end;
