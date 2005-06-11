@@ -380,7 +380,7 @@
 	<target name="source-unix" depends="init,linefeeds-unix"
 	description="Creates packaged Columba release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
-		<tar tarfile="${release.base}/columba-unix-${version}-src.tar" compression="bz2">
+		<tar tarfile="${release.base}/columba-unix-${version}-src.tar" compression="bzip2">
 			<tarfileset dir="." prefix="columba-unix-${version}-src">
 				<include name="**/*.java"/>
 				<include name="**/*.jar"/>
