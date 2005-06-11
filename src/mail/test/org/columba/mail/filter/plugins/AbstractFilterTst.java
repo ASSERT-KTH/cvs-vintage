@@ -27,10 +27,10 @@ import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginManager;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.main.MailMain;
 
 /**
@@ -94,7 +94,7 @@ public class AbstractFilterTst extends TestCase {
 		//		 init mail component
 		new MailMain().init();
 
-		//new AddressbookMain();
+		new AddressbookMain().init();
 
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();

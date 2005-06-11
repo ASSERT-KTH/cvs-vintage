@@ -89,6 +89,7 @@ public class AllTests {
         TestSuite suite = new TestSuite("Test for org.columba.mail.folder");
 
         setup(suite, new MHFolderFactory());
+        setup(suite, new MBOXFolderTstFactory());
         setup(suite, new TempFolderFactory());
         setup(suite, new IMAPTstFactory());
 

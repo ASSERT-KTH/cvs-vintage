@@ -93,9 +93,8 @@ public class AbstractFolderTst extends TestCase {
 		ColumbaLogger.createDefaultHandler();
 
 		//		 init mail component
-		new MailMain();
-
-		//new AddressbookMain();
+		new MailMain().init();
+		new AddressbookMain().init();
 
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
