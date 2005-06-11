@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin name="Altura Messenger" description="Altura Instant Messenger" id="org.columba.chat.altura.AlturaMessenger" version="1.0" category="Application" enabled="true">
   <extension name="org.columba.core.component">
-   <component name="AlturaMessenger" class="org.columba.chat.AlturaComponent"/>
+    <component name="AlturaMessenger" class="org.columba.chat.AlturaComponent"></component>
   </extension>
   <extension name="org.columba.core.frame">
-    <frame name="AlturaFrame" managed="true" class="org.columba.chat.frame.AlturaFrameController"></frame>
+    <frame managed="true" name="AlturaFrame" class="org.columba.chat.frame.AlturaFrameController"></frame>
   </extension>
   <runtime jar="AlturaMessenger.jar" type="java"></runtime>
 </plugin>

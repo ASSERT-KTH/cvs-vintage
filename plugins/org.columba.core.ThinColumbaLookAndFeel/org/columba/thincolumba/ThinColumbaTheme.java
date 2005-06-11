@@ -17,6 +17,7 @@
 
 
 package org.columba.thincolumba;
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.ImageIcon;
@@ -27,7 +28,6 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
-import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.util.ImageLoader;
 
 public class ThinColumbaTheme extends DefaultMetalTheme {
@@ -59,9 +59,8 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 		GuiItem item = Config.getInstance().getOptionsConfig().getGuiItem();
 		mainFontResource = new FontUIResource("Default", Font.PLAIN, 12);
 		messageFontResource = new FontUIResource("Default", Font.PLAIN, 12);
-		ThemeItem themeItem = new ThemeItem(item.getElement("theme"));
-		foreground = new ColorUIResource(themeItem.getForeground());
-		background = new ColorUIResource(themeItem.getBackground());
+		foreground = new ColorUIResource(Color.WHITE);
+		background = new ColorUIResource(Color.BLUE);
 	}
 
 	// menu border, labels

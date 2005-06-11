@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="My Hello World Plugin" description="Simple Example" id="org.columba.example.HelloWorldAction" version="1.0" category="Examples" enabled="false">
+<plugin name="My Hello World Plugin" description="Simple Example" id="org.columba.example.HelloWorldAction" version="1.0" category="Examples" enabled="true">
   <extension name="org.columba.core.action">
     <action name="HelloWorld" class="com.mycom.HelloWorldAction"></action>
   </extension>
