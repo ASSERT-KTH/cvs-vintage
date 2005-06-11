@@ -33,8 +33,6 @@
 		<ant target="release" inheritall="false" dir="./org.columba.example.CSVAddressbookImportFilter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.example.HelloWorldAction"/>
 		<ant target="release" inheritall="false" dir="./org.columba.example.MBOXMailImportFilter"/>
-		<ant target="release" inheritall="false" dir="./org.columba.example.PythonHelloWorldAction"/>
-		<ant target="release" inheritall="false" dir="./org.columba.example.PythonHelloWorldFilterAction"/>
 	</target>
 	
 	<target name="all" depends="core,mail,examples"/>
