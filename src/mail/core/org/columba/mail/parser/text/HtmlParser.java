@@ -504,11 +504,12 @@ case '\'':
 
                         break;
 
+                        /*
                     case '\'':
                         sb.append("&apos;");
                         i++;
 
-                        break;
+                        break;*/
 
                     case ' ':
 
