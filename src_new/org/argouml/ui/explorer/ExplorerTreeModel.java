@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.24 2005/06/11 06:13:12 mvw Exp $
+// $Id: ExplorerTreeModel.java,v 1.25 2005/06/11 06:17:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ import org.argouml.ui.explorer.rules.PerspectiveRule;
  *
  * provides:
  *  - receives events from the uml model and updates itself and the tree ui.
- *  - responds to changes in perspetive and ordering.
+ *  - responds to changes in perspective and ordering.
  *
  * @author  alexb
  * @since 0.15.2
@@ -343,20 +343,25 @@ public class ExplorerTreeModel extends DefaultTreeModel
 		if (lastObj != null && order.compare(lastObj, obj) > 0) {
 		    /*
 		     * If a node to be moved is currently selected, 
-		     * move its predecessors instead so don't lose selection
-		     * fixes http://argouml.tigris.org/issues/show_bug.cgi?id=3249
-		     * NOTE: this does not deal with the case where multiple nodes
-		     * are selected and they are out of order with respect to each
-		     * other, but I don't think more than one node is ever reordered
+		     * move its predecessors instead so don't lose selection.
+		     * This fixes issue 3249.
+		     * NOTE: this does not deal with the case where 
+                     * multiple nodes are selected and they are out 
+                     * of order with respect to each other, but I 
+                     * don't think more than one node is ever reordered
 		     * at a time - tfm
 		     */
-		    if(!tree.isPathSelected(new TreePath(getPathToRoot((DefaultMutableTreeNode)child)))) {
+		    if (!tree.isPathSelected(new TreePath(
+                            getPathToRoot((DefaultMutableTreeNode) child)))) {
 			reordered.add(child);			
 		    } else {
-			DefaultMutableTreeNode prev = ((DefaultMutableTreeNode)child).getPreviousSibling();
-			while ( prev != null && order.compare(prev.getUserObject(), obj) >= 0 ) {
+			DefaultMutableTreeNode prev = 
+                                ((DefaultMutableTreeNode) child)
+                                        .getPreviousSibling();
+			while ( prev != null 
+                            && order.compare(prev.getUserObject(), obj) >= 0 ) {
 			    reordered.add(prev);
-			    children.removeElementAt(children.size()-1);
+			    children.removeElementAt(children.size() - 1);
 			    prev = prev.getPreviousSibling();
 			}
 			children.add(obj);
