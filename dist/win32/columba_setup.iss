@@ -134,8 +134,6 @@ begin
           Result := False;
           end
      end;
-     
-     Result := False;
 end;
 
 procedure updateLAPfile();
