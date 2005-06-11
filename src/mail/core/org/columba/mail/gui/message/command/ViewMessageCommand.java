@@ -53,8 +53,6 @@ public class ViewMessageCommand extends Command {
 
 	private Object uid;
 
-	private static final boolean debug = true;
-
 	/**
 	 * Constructor for ViewMessageCommand.
 	 * 
@@ -99,8 +97,6 @@ public class ViewMessageCommand extends Command {
 		try {
 			// get attachment structure
 			mimePartTree = srcFolder.getMimePartTree(uid);
-			
-			if( debug) throw new SocketException();
 			
 			if (mimePartTree == null)
 				return;
