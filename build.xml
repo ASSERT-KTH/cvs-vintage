@@ -612,7 +612,7 @@
 		<echo message="NOTE: This task will work only if InnoSetup 4.2.7 or above are installed!" />
 		
 		<exec os="Linux, Solaris" executable="wine">
-			<arg value="C:\\Program Files\\Inno Setup 4\\iscc" />
+			<arg value="C:\\Program Files\\Inno Setup 5\\iscc" />
 			<arg value="${dist.win32}/columba_setup.iss" />
 			<arg value="/dVERSION=${version}" />
 			<arg value="/dJRE_FILE=none" />
