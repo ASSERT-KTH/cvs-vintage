@@ -434,8 +434,8 @@
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="bin-unix,bin-win32,source-unix,source-win32, rpm, winsetup, winsetup-bundlejre"
-	description="Builds a complete Columba rellease"/>
+	<target name="release" depends="bin-unix,bin-win32,source-unix,source-win32, rpm, winsetup, winsetup-bundlejre, webstart"
+	description="Builds a complete Columba release"/>
 
 	<target name="webstart" depends="init-webstart, jar" description="Signs all jars for use with Java Webstart">
 		<copy toDir="${release.base}/webstart">
