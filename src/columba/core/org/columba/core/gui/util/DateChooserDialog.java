@@ -108,19 +108,15 @@ public class DateChooserDialog extends JDialog implements ActionListener {
         return success;
     }
     
-    public void setVisible(boolean b) {
-        dialog.setVisible(b);
-    }
-    
     public void actionPerformed(ActionEvent ev) {
         String action = ev.getActionCommand();
         
         if (action.equals("OK")) {
             success = true;
-            dialog.setVisible(false);
+            setVisible(false);
         } else if (action.equals("CANCEL")) {
             success = false;
-            dialog.setVisible(false);
+            setVisible(false);
         }
     }
 }

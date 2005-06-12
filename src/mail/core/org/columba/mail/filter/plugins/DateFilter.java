@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -25,6 +24,7 @@ import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.folder.IFolder;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.config.filter.plugins.DateCriteriaRow;
 
 /**
  * 
@@ -43,15 +43,14 @@ public class DateFilter extends AbstractFilter {
 	private int condition;
 
 	protected Date transformDate(String pattern) {
-		DateFormat df = DateFormat.getDateInstance();
-
 		Date searchPattern = null;
 
 		try {
-			searchPattern = df.parse(pattern);
+			searchPattern = DateCriteriaRow.dateFormat.parse(pattern);
 		} catch (java.text.ParseException ex) {
 			// should never happen
-			ex.printStackTrace();
+			LOG.severe("Date unparsable: "+pattern);
+			searchPattern = new Date();
 		}
 
 		return searchPattern;

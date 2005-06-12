@@ -62,7 +62,7 @@ public class DateFilterTest extends AbstractFilterTst {
 
 		// create filter configuration
 		MailFilterCriteria criteria = MailFilterFactory
-				.createDateBefore("Mar 17, 2005");
+				.createDateBefore("Jan 17, 2005");
 
 		// create filter
 		DateFilter filter = new DateFilter();
@@ -93,7 +93,7 @@ public class DateFilterTest extends AbstractFilterTst {
 
 		// create filter configuration
 		MailFilterCriteria criteria = MailFilterFactory
-				.createDateAfter("Mar 17, 2005");
+				.createDateAfter("Jan 17, 2005");
 
 		// create filter
 		DateFilter filter = new DateFilter();
