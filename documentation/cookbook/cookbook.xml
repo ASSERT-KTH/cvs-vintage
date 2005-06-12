@@ -24,7 +24,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 -->
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.xml,v 1.116 2005/05/08 13:13:35 linus Exp $ -->
+<!-- $Id: cookbook.xml,v 1.117 2005/06/12 14:32:35 linus Exp $ -->
 
 <!ENTITY changelog SYSTEM "changelog.xml">
 <!ENTITY building SYSTEM "building.xml">
@@ -2027,7 +2027,7 @@ and the SPIs represent plug-ins.
 </para>
       </sect2>
 
-      <sect2>
+      <sect2 id="explorer-implementation-details">
 	<title>Details of the Explorer Implementation</title>
 
 	<para>
