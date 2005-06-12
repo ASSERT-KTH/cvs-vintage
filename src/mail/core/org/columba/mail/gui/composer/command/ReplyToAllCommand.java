@@ -87,7 +87,7 @@ public class ReplyToAllCommand extends ReplyCommand {
             Address act = (Address) it.next();
 
             // Remove duplicates or the mail address from the receiver account
-            if (last.equals(act) || accountAddress.equals(act) ) {
+            if (last.equals(act) || (accountAddress != null && accountAddress.equals(act)) ) {
                 it.remove();
             } else {
                 last = act;
