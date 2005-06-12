@@ -21,20 +21,24 @@ package org.columba.mail.gui.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Opens the composer window for creating a new message.
  */
 public class NewMessageAction extends AbstractColumbaAction {
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
 	public NewMessageAction() {
 		super(null, "New Message Action");
@@ -56,7 +60,13 @@ public class NewMessageAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent evt) {
 
 		// if no account exists, return
-		if ( MailConfig.getInstance().getAccountList().count() == 0 ) return;
+		if ( MailConfig.getInstance().getAccountList().count() == 0 ) {
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader.getString(RESOURCE_PATH, "error",
+			"no_account_defined"),"",JOptionPane.INFORMATION_MESSAGE);
+			
+			new AccountWizardLauncher().launchWizard(true);
+			return;
+		}
 		
 		ComposerController controller = new ComposerController();
 		new DefaultContainer(controller);
