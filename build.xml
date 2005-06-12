@@ -358,7 +358,7 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
-				<include name="${native.win32}/lib*.jar"/>
+				<include name="${native.win32}/lib/*.jar"/>
 				<include name="${native.win32}/lib/*.dll"/>
 				<include name="Columba.lap" />
 				<include name="Columbaw.lap" />
