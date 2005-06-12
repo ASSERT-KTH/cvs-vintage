@@ -100,6 +100,11 @@ public class SpamController {
 	private boolean alreadyLoaded = false;
 
 	/**
+	 * switch to enable/disable spam feature globally
+	 */
+	private boolean ENABLED = false;
+	
+	/**
 	 * private constructor
 	 */
 	private SpamController() throws Exception {
@@ -147,6 +152,8 @@ public class SpamController {
 	 * @param istream
 	 */
 	public void trainMessageAsSpam(InputStream istream, List list) {
+		if ( !ENABLED ) return;
+		
 		// load database from file
 		load();
 
@@ -191,6 +198,8 @@ public class SpamController {
 	 * @param list
 	 */
 	public void trainMessageAsHam(InputStream istream, List list) {
+		if ( !ENABLED ) return;
+		
 		// load database from file
 		load();
 
@@ -238,6 +247,8 @@ public class SpamController {
 	 * @return true, if message is spam. False, otherwise.
 	 */
 	public boolean scoreMessage(InputStream istream, ProbabilityMap map) {
+		if ( !ENABLED ) return false;
+		
 		// load database from file
 		load();
 
