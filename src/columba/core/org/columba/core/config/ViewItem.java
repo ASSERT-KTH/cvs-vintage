@@ -70,11 +70,7 @@ public class ViewItem extends DefaultItem {
 		// initialize default view options
 		XmlElement defaultView = new XmlElement(ViewItem.VIEW);
 		XmlElement window = new XmlElement(WINDOW);
-		window.addAttribute(POSITION_X_INT, "0");
-		window.addAttribute(POSITION_Y_INT, "0");
-		window.addAttribute(WIDTH_INT, "640");
-		window.addAttribute(HEIGHT_INT, "480");
-		window.addAttribute(MAXIMIZED_BOOL, "true");
+		// tstich: Default values are set in the loadPostions() method
 		defaultView.addElement(window);
 
 		XmlElement toolbars = new XmlElement(TOOLBARS);

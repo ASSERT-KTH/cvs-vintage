@@ -19,7 +19,9 @@ package org.columba.core.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -49,6 +51,11 @@ import org.columba.core.xml.XmlElement;
 public class DefaultContainer extends JFrame implements Container,
 		WindowListener {
 
+	protected static final int DEFAULT_WIDTH = (int)Math.round(Toolkit.getDefaultToolkit().getScreenSize().width * .66);
+	protected static final int DEFAULT_HEIGHT = (int)Math.round(Toolkit.getDefaultToolkit().getScreenSize().height * .66);
+	private static final int DEFAULT_X = (int)Math.round(Toolkit.getDefaultToolkit().getScreenSize().width * .16);
+	private static final int DEFAULT_Y = (int)Math.round(Toolkit.getDefaultToolkit().getScreenSize().height * .16);
+	
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.gui.frame");
 
@@ -310,34 +317,40 @@ public class DefaultContainer extends JFrame implements Container,
 	 *  
 	 */
 	public void loadPositions(ViewItem viewItem) {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();			
 
 		// *20030831, karlpeder* Also location is restored
-		int x = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.POSITION_X_INT, 0);
-		int y = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.POSITION_Y_INT, 0);
-		int w = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.WIDTH_INT, 900);
-		int h = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.HEIGHT_INT, 700);
-		boolean maximized = viewItem.getBooleanWithDefault(ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, true);
+		int x = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.POSITION_X_INT, DEFAULT_X);
+		int y = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.POSITION_Y_INT, DEFAULT_Y);
+		int w = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.WIDTH_INT, DEFAULT_WIDTH);
+		int h = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.HEIGHT_INT, DEFAULT_HEIGHT);
+		final boolean maximized = viewItem.getBooleanWithDefault(ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, false);
 
 		//if (WindowMaximizer.isWindowMaximized(this) == false) {
 		// if window is maximized -> ignore the window size
 		// properties
-		if (maximized) {
-			WindowMaximizer.maximize(this);
-		} else {
 			// otherwise, use window size property
-			Dimension dim = new Dimension(w, h);
-			Point p = new Point(x, y);
-			setSize(dim);
-			setLocation(p);
-
+			// but ensure that the window is completly visible on the
+			// desktop
+			x = Math.max(x,0);
+			y = Math.max(y,0);
+			
+			final Dimension dim = new Dimension(Math.min(w,screenSize.width-x), Math.min(h,screenSize.height-y));
+			
+			final Point p = new Point(x, y);
+			final Frame frame = this;
+			
 			// awt-event-thread
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					validate();
+					frame.setLocation(p);
+					frame.setSize(dim);
+					if( maximized ) {
+						WindowMaximizer.maximize(frame);
+					}
 				}
 			});
-
-		}
+			
 		//}
 
 		getFrameMediator().loadPositions(viewItem);
@@ -355,15 +368,17 @@ public class DefaultContainer extends JFrame implements Container,
 
 		ViewItem item = getViewItem();
 
-		// *20030831, karlpeder* Now also location is stored
-		item.setInteger(ViewItem.WINDOW, ViewItem.POSITION_X_INT, loc.x);
-		item.setInteger(ViewItem.WINDOW, ViewItem.POSITION_Y_INT, loc.y);
-		item.setInteger(ViewItem.WINDOW, ViewItem.WIDTH_INT, d.width);
-		item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
-
 		boolean isMaximized = WindowMaximizer.isWindowMaximized(this);
-
 		item.setBoolean(ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, isMaximized);
+
+		if( !isMaximized ) {
+		// *20030831, karlpeder* Now also location is stored
+			item.setInteger(ViewItem.WINDOW, ViewItem.POSITION_X_INT, loc.x);
+			item.setInteger(ViewItem.WINDOW, ViewItem.POSITION_Y_INT, loc.y);
+			item.setInteger(ViewItem.WINDOW, ViewItem.WIDTH_INT, d.width);
+			item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
+		}
+
 
 		getFrameMediator().savePositions(viewItem);
 	}

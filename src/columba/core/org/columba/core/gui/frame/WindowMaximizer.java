@@ -33,18 +33,16 @@ public class WindowMaximizer {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.gui.frame");
 
-	public static void maximize(Object obj) {
-		//We can use the Java way to maximize the window
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Frame frame = (Frame) obj;
-		frame.setSize(screenSize);
-
+	public static void maximize(Frame frame) {
+		//Can we use the Java way to maximize the window
 		if (Toolkit.getDefaultToolkit().isFrameStateSupported(
-				Frame.MAXIMIZED_BOTH) == false)
-			LOG.severe("System doesn't support maximize frame state.");
-
-		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-
+				Frame.MAXIMIZED_BOTH) == false) {
+			LOG.warning("System doesn't support maximize frame state.");
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			frame.setSize(screenSize);
+		} else {	
+			frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+		}
 	}
 
 	public static boolean isWindowMaximized(Object obj) {
