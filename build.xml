@@ -315,7 +315,7 @@
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>						
 				<include name="${manual.jar}"/>
-				<include name="${native.linux}/${lib.jdic}" />
+				<include name="${native.linux}/lib/*.jar" />
 				<include name="${native.linux}/lib/*.so"/>
 			</tarfileset>
 			<tarfileset dir="${basedir}" mode="755" prefix="columba-unix-${version}-bin">
@@ -358,9 +358,7 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
-				<include name="${native.win32}/${lib.jniwrap}"/>
-				<include name="${native.win32}/${lib.winpack}"/>
-				<include name="${native.win32}/${lib.jdic}" />
+				<include name="${native.win32}/lib*.jar"/>
 				<include name="${native.win32}/lib/*.dll"/>
 				<include name="Columba.lap" />
 				<include name="Columbaw.lap" />
@@ -380,7 +378,7 @@
 	<target name="source-unix" depends="init,linefeeds-unix"
 	description="Creates packaged Columba release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
-		<tar tarfile="${release.base}/columba-unix-${version}-src.tar" compression="bzip2">
+		<tar tarfile="${release.base}/columba-unix-${version}-src.tar.bz2" compression="bzip2">
 			<tarfileset dir="." prefix="columba-unix-${version}-src">
 				<include name="**/*.java"/>
 				<include name="**/*.jar"/>
