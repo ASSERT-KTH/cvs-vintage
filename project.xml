@@ -4,7 +4,7 @@
   <pomVersion>1</pomVersion>
   <id>columba</id>
   <name>columba</name>
-  <currentVersion>1.0RC2-cvs</currentVersion>
+  <currentVersion>1.0RC3-cvs</currentVersion>
   <groupId>columba</groupId>
   <url>http://columba.sf.net</url>
   <siteAddress>www.ancoso-development.de</siteAddress>
@@ -284,10 +284,10 @@
       <dependency>
         <groupId>columba</groupId>
         <artifactId>jscf</artifactId>
-        <version>0.2</version>
+        <version>0.3</version>
         <url>http://sourceforge.net/projects/columba</url>
         <type>jar</type>
-        <jar>lib/jscf-0.2.jar</jar>
+        <jar>lib/jscf-0.3.jar</jar>
         <properties>
           <jar.manifest.classpath>true</jar.manifest.classpath>
         </properties>
