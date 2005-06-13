@@ -1,4 +1,4 @@
-// $Id: ActionVisibilityPrivate.java,v 1.1 2005/06/12 18:50:03 mvw Exp $
+// $Id: ActionVisibilityPrivate.java,v 1.2 2005/06/13 18:39:15 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ class ActionVisibilityPrivate extends AbstractActionRadioMenuItem {
         super("checkbox.visibility.private-uc", NO_ICON);
         putValue("SELECTED", new Boolean(
             Model.getVisibilityKind().getPrivate()
-                .equals(Model.getFacade().getVisibility(o))));
+                .equals(valueOfTarget(o))));
     }
     
     /**
@@ -49,9 +49,13 @@ class ActionVisibilityPrivate extends AbstractActionRadioMenuItem {
     }
     
     /**
+     * Make use of the default visibility, which is public...
+     * TODO: centralise this knowledge.
+     * 
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement.AbstractActionRadioMenuItem#valueOfTarget(java.lang.Object)
      */
     Object valueOfTarget(Object t) {
-        return Model.getFacade().getVisibility(t);
+        Object v = Model.getFacade().getVisibility(t);
+        return v == null ? Model.getVisibilityKind().getPublic() : v;
     }
 }
