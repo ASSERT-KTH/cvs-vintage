@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.10 2005/05/27 17:37:30 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.11 2005/06/14 19:22:04 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4008,7 +4008,7 @@ public class NSUMLModelFacade implements Facade {
      * @param mclassifier the classifier you want to have the operations for
      * @return a collection of the operations
      */
-    protected Collection getOperations(MClassifier mclassifier) {
+    private Collection getOperations(MClassifier mclassifier) {
         Collection result = new ArrayList();
         Iterator features = mclassifier.getFeatures().iterator();
         while (features.hasNext()) {
