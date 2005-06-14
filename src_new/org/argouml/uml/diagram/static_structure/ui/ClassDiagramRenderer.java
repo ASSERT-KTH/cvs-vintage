@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.37 2005/02/22 00:45:46 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.38 2005/06/14 19:20:24 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,6 +89,9 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
      */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay,
 				 Object node, Map styleAttributes) {
+        if (node == null) {
+            throw new IllegalArgumentException("A node must be supplied");
+        }
         if (Model.getFacade().isAClass(node)) {
             return new FigClass(gm, node);
         } else if (Model.getFacade().isAInterface(node)) {
@@ -107,7 +110,9 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
             return new FigNodeAssociation(gm, node);
         }
         LOG.error("TODO: ClassDiagramRenderer getFigNodeFor " + node);
-        return null;
+        throw new IllegalArgumentException(
+                "Node is not a recognised type. Received "
+                + node.getClass().getName());
     }
 
     /**
