@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.37 2005/05/14 07:12:53 mvw Exp $
+// $Id: Argo.java,v 1.38 2005/06/14 20:39:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -241,6 +241,12 @@ public class Argo {
      */
     public static final ConfigurationKey KEY_USER_EXPLORER_PERSPECTIVES =
 	Configuration.makeKey("explorer", "perspectives");
+
+    /**
+     * Key for selecting the locale. 
+     */
+    public static final ConfigurationKey KEY_LOCALE =
+        Configuration.makeKey("locale");
 
     /**
      * Standard definition of the logging category for the console.

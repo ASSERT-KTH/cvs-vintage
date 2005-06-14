@@ -1,4 +1,4 @@
-// $Id: SettingsTabAppearance.java,v 1.6 2005/01/09 14:58:13 linus Exp $
+// $Id: SettingsTabAppearance.java,v 1.7 2005/06/14 20:39:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,11 @@ package org.argouml.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -40,6 +45,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
+import org.argouml.i18n.Translator;
 import org.tigris.swidgets.LabelledLayout;
 
 /**
@@ -55,8 +61,11 @@ public class SettingsTabAppearance
 
     private JComboBox	lookAndFeel;
     private JComboBox	metalTheme;
+    private JComboBox   language;
     private JLabel      metalLabel;
     private JCheckBox   smoothEdges;
+    
+    private Locale locale = null;
 
     /**
      * The constructor.
@@ -99,6 +108,21 @@ public class SettingsTabAppearance
         top.add(emptyLabel);
         top.add(smoothEdges);
 
+        JLabel languageLabel = createLabel("label.language");
+        Collection c = MyLocale.getLocales();
+        language = new JComboBox(c.toArray());
+        Object o = MyLocale.getDefault(c);
+        if (o != null) language.setSelectedItem(o);
+        language.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JComboBox combo = (JComboBox) e.getSource();
+                locale = ((MyLocale) combo.getSelectedItem()).getLocale();
+            }
+        });
+        languageLabel.setLabelFor(language);
+        top.add(languageLabel);
+        top.add(language);
+        
         top.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(top, BorderLayout.CENTER);
 
@@ -153,6 +177,10 @@ public class SettingsTabAppearance
 
         Configuration.setBoolean(Argo.KEY_SMOOTH_EDGES,
             smoothEdges.isSelected());
+
+        if (locale != null) {
+            Configuration.setString(Argo.KEY_LOCALE, locale.toString());
+        }
     }
 
     /**
@@ -189,4 +217,55 @@ public class SettingsTabAppearance
      * @see org.argouml.application.api.SettingsTabPanel#getTabKey()
      */
     public String getTabKey() { return "tab.appearance"; }
+}
+
+class MyLocale {
+    private Locale myLocale;
+
+    /**
+     * The constructor.
+     * 
+     * @param locale the Locale
+     */
+    MyLocale(Locale locale) {
+        myLocale = locale;
+    }
+    
+    /**
+     * @return returns the locale
+     */
+    Locale getLocale() {
+        return myLocale;
+    }
+    
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return myLocale.toString() + " (" 
+            + myLocale.getDisplayLanguage(myLocale) + " " 
+            + myLocale.getDisplayCountry(myLocale) + ")";
+    }
+
+    static Collection getLocales() {
+        Iterator i = Arrays.asList(Translator.getLocales()).iterator();
+        Collection c = new ArrayList();
+        while (i.hasNext()) {
+            Locale locale = (Locale) i.next();
+            c.add(new MyLocale(locale));
+        }
+        return c;
+    }
+
+    static MyLocale getDefault(Collection c) {
+        Locale locale = Locale.getDefault();
+        Iterator i = c.iterator();
+        while (i.hasNext()) {
+            MyLocale ml = (MyLocale) i.next();
+            if (locale.equals(ml.getLocale())) {
+                return ml;
+            }
+        }
+        return null;
+    }
 }
