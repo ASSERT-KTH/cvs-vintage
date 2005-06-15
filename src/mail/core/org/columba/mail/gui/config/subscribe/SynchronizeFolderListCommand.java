@@ -151,7 +151,7 @@ public class SynchronizeFolderListCommand extends Command {
 		DefaultMutableTreeNode root = new CheckableItemImpl();
 
 		// Initialize the Pattern
-		String pattern = "([^\\" + store.getDelimiter() + "]+)\\"
+		String pattern = "([^\\Q" + store.getDelimiter() + "]+)\\E"
 				+ store.getDelimiter() + "?";
 		delimiterPattern = Pattern.compile(pattern);
 		delimiter = store.getDelimiter();

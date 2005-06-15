@@ -173,7 +173,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 			// recursively go on
 			syncFolder(subFolder, name.substring(name.indexOf(server
-					.getDelimiter()) + 1), info);
+					.getDelimiter()) + server
+					.getDelimiter().length()), info);
 		} else {
 			// no delimiter found
 			//  -> this is already the final folder
