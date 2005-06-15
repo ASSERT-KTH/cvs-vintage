@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.36 2005/06/14 20:39:16 mvw Exp $
+// $Id: Translator.java,v 1.37 2005/06/15 17:27:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,11 @@ public final class Translator {
      * Store bundles for current Locale.
      */
     private static Map bundles;
+    
+    /**
+     * Used to make this class self-initialising when needed.
+     */
+    private static boolean initialised = false;
 
     /**
      * This class should only be used in a static constant so make
@@ -157,12 +162,17 @@ public final class Translator {
 
 
     /**
-     * Helper for those that don't want to give the bundle.<p>
+     * The main function of this class that localizes strings.
      *
      * @param key The key to localize.
      * @return The localized String.
      */
     public static String localize(String key) {
+        if (!initialised) {
+            initialised = true;
+            init();
+        }
+        
         if (key == null) {
             throw new IllegalArgumentException("null");
         }

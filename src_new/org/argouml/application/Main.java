@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.124 2005/05/19 19:59:29 mvw Exp $
+// $Id: Main.java,v 1.125 2005/06/15 17:27:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,8 +111,6 @@ public class Main {
         String directory = Argo.getDirectory();
         org.tigris.gef.base.Globals.setLastDirectory(directory);
 
-        // load i18n bundles
-        Translator.init();
         // create an anonymous class as a kind of adaptor for the cognitive
         // System to provide proper translation/i18n.
         org.argouml.cognitive.Translator.setTranslator(
