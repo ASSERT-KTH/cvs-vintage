@@ -27,32 +27,58 @@ package org.columba.core.util;
 public class Lock {
     private boolean locked;
     private Object locker;
-
+    private Mutex mutex;
+    
     public Lock() {
         locked = false;
+        mutex = new Mutex();
     }
 
-    public synchronized boolean tryToGetLock(Object locker) {
-        // Is it already locked from locker ?
+    public synchronized void getLock(Object locker) {    	
+    	mutex.lock();
+    	if( this.locker == locker) {
+    		mutex.release();
+    		return;
+    	}
+		mutex.release();
+    	
+    	while( !tryToGetLock(locker) ) {
+    		try {
+				wait();
+			} catch (InterruptedException e) {
+			}
+    	}
+    }
+    
+    public boolean tryToGetLock(Object locker) {
+    	mutex.lock();
+    	// Is it already locked from locker ?
         if ((this.locker == locker) && (locker != null)) {
+        	mutex.release();
             return true;
         }
 
         // Check if locked
         if (locked) {
+        	mutex.release();
             return false;
         } else {
             locked = true;
             this.locker = locker;
+        	mutex.release();
 
             return true;
         }
     }
 
-    public void release(Object locker) {
+    public synchronized void release(Object locker) {
+    	mutex.lock();
         if ((this.locker == locker) || (this.locker == null)) {
             locked = false;
             locker = null;
         }
+        notify();
+        
+        mutex.release();
     }
 }

@@ -103,15 +103,18 @@ public class POP3Server {
 	}
 
 	public void save() throws Exception {
+		lock.getLock(Thread.currentThread());
 		// only save headercache if something changed and nothings
 		// happening at the moment
-		if (isCacheChanged() && tryToGetLock(this)) {
+		if (isCacheChanged()) {
 			try {
 				headerCache.save();
 				setCacheChanged( false );
 			} finally {
-				releaseLock(this);
+				releaseLock(Thread.currentThread());
 			}
+		} else {
+			releaseLock(Thread.currentThread());
 		}
 	}
 
