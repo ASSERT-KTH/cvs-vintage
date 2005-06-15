@@ -23,9 +23,11 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -36,6 +38,28 @@ import org.columba.core.xml.XmlElement;
  * @author fdietz
  */
 public class ColumbaMenu extends JMenuBar {
+	/**
+	 * menu id
+	 */
+	public static final String MENU_FILE = "menu_file";
+	public static final String MENU_EDIT = "menu_edit";
+	public static final String MENU_VIEW = "menu_view";
+	public static final String MENU_UTILITIES = "menu_utilities";
+	public static final String MENU_HELP = "menu_help";
+	
+	/**
+	 * placeholder/menu extension point
+	 * <p>
+	 * These should be unique for each menu
+	 * <p>
+	 * TODO: We should consider making them unique globally.
+	 *       This way the user only has to lookup on const.
+	 *       
+	 * @see org.columba.core.action.menu.xml
+	 */
+	public static final String PLACEHOLDER_BOTTOM = "bottom";
+	public static final String PLACEHOLDER_TOP = "top";
+	
 	private MouseAdapter handler;
 
 	String menuRoot;
@@ -86,6 +110,53 @@ public class ColumbaMenu extends JMenuBar {
 
 	}
 
+	/**
+	 * Add a new JMenuItem entry to the menubar.
+	 * 
+	 * @param actionId
+	 *            unique action id
+	 * @param action
+	 *            underlying Swing action
+	 * @param menuId
+	 *            id of menu, where the menuitem should be inserted
+	 * @param menuExtensionPointId
+	 *            id of place where the menuitem should be inserted in the menu
+	 */
+	public void addMenuItem(String actionId, AbstractColumbaAction action,
+			String menuId, String menuExtensionPointId) {
+
+		// register new action at action pluginhandler
+		// -> this action plugin handler is used by the menu generator
+		// -> to lookup actions and instanciating them
+		try {
+			((ActionPluginHandler) PluginManager.getInstance().getHandler(
+					"org.columba.core.action")).addAction(actionId, action);
+		} catch (PluginHandlerNotFoundException ex) {
+			ex.printStackTrace();
+		}
+
+		// create xml element describing the menu extension point
+		// Example:
+
+		// <menu name="menu_utilities" extensionpoint="bottom">
+		// <menuitem action="HelloWorld" />
+		// </menu>
+		XmlElement element = new XmlElement("menu");
+		element.addAttribute("name", menuId);
+		element.addAttribute("extensionpoint", menuExtensionPointId);
+		XmlElement itemElement = new XmlElement("menuitem");
+		itemElement.addAttribute("action", actionId);
+		element.addElement(itemElement);
+
+		// now extend the menu
+		extendMenu(element);
+		
+		// re-generate the menu UI
+		// TODO: this should be called after all actions have been added
+		//       -> slows things down if adding many entries
+		populateMenu();
+	}
+
 	public JMenu getMenu(String id) {
 		for (int i = 0; i < getMenuCount(); i++) {
 			JMenu menu = (JMenu) getComponent(i);
@@ -99,18 +170,16 @@ public class ColumbaMenu extends JMenuBar {
 		return null;
 	}
 
-    public JMenu findMenu(String menuId)
-    {
-    
-      for(int i=0;i<getMenuCount(); i++)
-      {
-        if (getComponent(i) instanceof CMenu &&
-            ((CMenu)getComponent(i)).getMenuId().equals(menuId))
-            return (CMenu)getComponent(i);
-      }
-      
-      return null;
-      
-    }
-    
+	public JMenu findMenu(String menuId) {
+
+		for (int i = 0; i < getMenuCount(); i++) {
+			if (getComponent(i) instanceof CMenu
+					&& ((CMenu) getComponent(i)).getMenuId().equals(menuId))
+				return (CMenu) getComponent(i);
+		}
+
+		return null;
+
+	}
+
 }

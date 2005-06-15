@@ -43,7 +43,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 	 * this includes: - cut - copy - paste - delete - select all - undo - redo
 	 * 
 	 * @see isSingleton(String name)
-	 *  
+	 * 
 	 */
 	Map map;
 
@@ -71,13 +71,13 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 	 *         etc.
 	 * 
 	 * false, is the default (which is the correct value for almost all actions)
-	 *  
+	 * 
 	 */
 	public boolean isSingleton(String name) {
 		return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
 	}
 
-	public AbstractColumbaAction getAction(String name, FrameMediator controller) {	
+	public AbstractColumbaAction getAction(String name, FrameMediator controller) {
 		if (isSingleton(name)) {
 			// their should be only one shared instance
 			if (map.containsKey(name)) {
@@ -94,7 +94,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 							new Object[] { controller });
 					map.put(name, a);
 				} catch (PluginLoadingFailedException e) {
-					//					 exception already handled
+					// exception already handled
 				}
 
 				return a;
@@ -116,6 +116,24 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 	public IMenu getIMenu(String name, FrameMediator controller)
 			throws Exception {
 		return (IMenu) getPlugin(name, new Object[] { controller });
+	}
+
+	/**
+	 * Register new action.
+	 * 
+	 * @param actionId
+	 *            unique action id
+	 * @param action
+	 *            new action
+	 */
+	public void addAction(String actionId, AbstractColumbaAction action) {
+		// generate xml element describing action
+		XmlElement element = new XmlElement("action");
+		element.addAttribute("name", actionId);
+		String clazzString = action.getClass().getCanonicalName();
+		element.addAttribute("class", clazzString);
+
+		parentNode.addElement(element);
 	}
 
 	public void addActionList(String actionXml) {
