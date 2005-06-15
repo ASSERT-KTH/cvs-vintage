@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.logging.Logger;
@@ -102,7 +103,6 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
 				headerList.add(h, h.get("columba.pop3uid"));
 			} catch (Exception e) {
-				LOG.severe("Could not load header "+i+"/"+capacity+" : " + e.getMessage());
 			}
         }
 
@@ -153,23 +153,29 @@ public class POP3HeaderCache extends AbstractHeaderCache {
         String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
         Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
 
-		for (int j = 0; j < columnNames.length; j++) {
-			Object value = null;
+		
+			for (int j = 0; j < columnNames.length; j++) {
+		        try {
+				Object value = null;
 
-			if (columnTypes[j] == Integer.class) {
-				value = new Integer(reader.readInt());
-			} else if (columnTypes[j] == Date.class) {
-				value = new Date(reader.readLong());
-			} else if (columnTypes[j] == String.class) {
-				value = reader.readString();
-			} else {
-				value = reader.readObject();
-			}
+				if (columnTypes[j] == Integer.class) {
+					value = new Integer(reader.readInt());
+				} else if (columnTypes[j] == Date.class) {
+					value = new Date(reader.readLong());
+				} else if (columnTypes[j] == String.class) {
+					value = reader.readString();
+				} else {
+					value = reader.readObject();
+				}
 
-			if (value != null) {
-				h.set(columnNames[j], value);
+				if (value != null) {
+					h.set(columnNames[j], value);
+				}
+				} catch (Exception e) {
+					LOG.severe("Could not load headerfield "+columnNames[j]);
+					e.printStackTrace();
+				}
 			}
-		}
     }
 
     protected void saveHeader(ColumbaHeader h) throws Exception {
