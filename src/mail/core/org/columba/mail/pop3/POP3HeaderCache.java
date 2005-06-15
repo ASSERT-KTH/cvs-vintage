@@ -162,6 +162,8 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 				value = new Date(reader.readLong());
 			} else if (columnTypes[j] == String.class) {
 				value = reader.readString();
+			} else {
+				value = reader.readObject();
 			}
 
 			if (value != null) {
@@ -178,16 +180,27 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		for (int j = 0; j < columnNames.length; j++) {
 			o = h.get(columnNames[j]);
 			
-			if (columnTypes[j] == Integer.class)
-				writer.writeInt(((Integer) o).intValue());
-			else if (columnTypes[j] == Date.class) {
-				writer.writeLong(((Date) o).getTime());
-			} else if (columnTypes[j] == String.class)
+			if (columnTypes[j] == Integer.class) {
+				if( o == null ) {
+					writer.writeInt(0);										
+				} else {
+					writer.writeInt(((Integer) o).intValue());					
+				}
+			} else if (columnTypes[j] == Date.class) {
+				if( o ==null ) {
+					writer.writeLong(System.currentTimeMillis());
+				} else {
+					writer.writeLong(((Date) o).getTime());					
+				}
+			} else if (columnTypes[j] == String.class) {
 				if( o==null ) {
 					writer.writeString("");
 				} else {
 					writer.writeString((String) o);
 				}
+			} else {
+				writer.writeObject(o);
+			}
 		}
     }
 	/**
