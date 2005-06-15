@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.125 2005/06/15 17:27:03 mvw Exp $
+// $Id: Main.java,v 1.126 2005/06/15 20:06:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,7 +175,7 @@ public class Main {
                     doSplash = false;
                 } else if (args[i].equalsIgnoreCase("-noedem")) {
 		    // TODO: document use. Ref. 2/2
-                    // useEDEM = false;
+                    /* useEDEM = false*/;
                 } else if (args[i].equalsIgnoreCase("-nopreload")) {
                     preload = false;
                 } else if (args[i].equalsIgnoreCase("-profileload")) {
