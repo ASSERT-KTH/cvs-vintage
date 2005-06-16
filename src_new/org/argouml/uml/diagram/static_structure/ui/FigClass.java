@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.148 2005/05/26 21:15:08 mvw Exp $
+// $Id: FigClass.java,v 1.149 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,6 +58,7 @@ import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.generator.ParserDisplay;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -839,10 +840,8 @@ public class FigClass extends FigNodeModelElement
         }
 
         Rectangle rect = getBounds();
-        Object stereo = null;
-        if (Model.getFacade().getStereotypes(me).size() > 0) {
-            stereo = Model.getFacade().getStereotypes(me).iterator().next();
-        }
+        Object stereo = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(me));
 
         if ((stereo == null)
                 || (Model.getFacade().getName(stereo) == null)

@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.66 2005/05/26 20:35:24 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.67 2005/06/16 10:41:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,7 @@ import org.argouml.uml.ui.ActionDeleteModelElements;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
+import org.argouml.util.CollectionUtil;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -164,12 +165,8 @@ public class PropPanelDataType extends PropPanelClassifier {
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
             if (Model.getFacade().isAClassifier(target)) {
-                Object stereo = null;
-                if (Model.getFacade().getStereotypes(target).size() > 0) {
-                    stereo =
-                        Model.getFacade().getStereotypes(target)
-                        	.iterator().next();
-                }
+                Object stereo = CollectionUtil.getFirstItemOrNull(
+                        Model.getFacade().getStereotypes(target));
                 if (stereo == null) {
                     //  if there is not an enumeration stereotype as
                     //     an immediate child of the model, add one

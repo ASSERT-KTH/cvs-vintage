@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.18 2005/05/27 17:37:30 mvw Exp $
+// $Id: CoreHelperImpl.java,v 1.19 2005/06/16 10:41:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.CoreHelper;
+import org.argouml.model.Model;
 import org.argouml.model.UmlException;
+import org.argouml.util.CollectionUtil;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
@@ -533,11 +535,8 @@ class CoreHelperImpl implements CoreHelper {
         Iterator depIterator = deps.iterator();
         while (depIterator.hasNext()) {
             Object dep = depIterator.next();
-            Object stereo = null;
-            if (nsmodel.getFacade().getStereotypes(dep).size() > 0) {
-                stereo =
-                    nsmodel.getFacade().getStereotypes(dep).iterator().next();
-            }
+            Object stereo = CollectionUtil.getFirstItemOrNull(
+                    Model.getFacade().getStereotypes(dep));
             if ((dep instanceof MAbstraction)
                 && stereo != null
                 && nsmodel.getFacade().getName(stereo) != null
@@ -699,13 +698,8 @@ class CoreHelperImpl implements CoreHelper {
         while (it.hasNext()) {
             Object clientDependency = it.next();
             if (clientDependency instanceof MAbstraction) {
-                Object stereo = null;
-                if (nsmodel.getFacade().getStereotypes(clientDependency).size()
-                        > 0) {
-                    stereo =
-			nsmodel.getFacade().getStereotypes(clientDependency)
-				.iterator().next();
-                }
+                Object stereo = CollectionUtil.getFirstItemOrNull(
+                        Model.getFacade().getStereotypes(clientDependency));
                 if (stereo != null
                         && nsmodel.getFacade().getBaseClass(stereo) != null
                         && nsmodel.getFacade().getName(stereo) != null

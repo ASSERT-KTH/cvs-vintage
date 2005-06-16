@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.4 2005/05/27 17:37:30 mvw Exp $
+// $Id: Facade.java,v 1.5 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2196,7 +2196,7 @@ public interface Facade {
      * @param handle The model element.
      * @return a Collection with all stereotypes or empty if none.
      */
-    List getStereotypes(Object handle);
+    Collection getStereotypes(Object handle);
 
     /**
      * Returns the stimuli belonging to some given link.

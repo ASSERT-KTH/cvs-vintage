@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.29 2005/03/05 10:37:20 mvw Exp $
+// $Id: FigMNode.java,v 1.30 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.application.api.Notation;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
@@ -234,23 +235,17 @@ public class FigMNode extends FigNodeModelElement {
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
      */
     protected void updateStereotypeText() {
-	Object me = /*(MModelElement)*/ getOwner();
-	if (me == null) return;
-	Object stereo = null;
-	if (Model.getFacade().getStereotypes(me).size() > 0) {
-            stereo = Model.getFacade().getStereotypes(me).iterator().next();
+        Object me = /*(MModelElement)*/ getOwner();
+        if (me == null) return;
+        Object stereo = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(me));
+        if (stereo == null
+                || Model.getFacade().getName(stereo) == null
+                || Model.getFacade().getName(stereo).length() == 0) {
+            setStereotype("");
+        } else {
+            setStereotype(Notation.generateStereotype(this, stereo));
         }
-	if (stereo == null
-	    || Model.getFacade().getName(stereo) == null
-	    || Model.getFacade().getName(stereo).length() == 0) {
-
-	    setStereotype("");
-
-	} else {
-
-	    setStereotype(Notation.generateStereotype(this, stereo));
-
-	}
     }
 
     /**

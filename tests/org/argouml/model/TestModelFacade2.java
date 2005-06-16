@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.12 2005/01/30 20:48:11 linus Exp $
+// $Id: TestModelFacade2.java,v 1.13 2005/06/16 10:41:13 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 package org.argouml.model;
 
 import java.util.Collection;
+
+import org.argouml.util.CollectionUtil;
 
 import junit.framework.TestCase;
 
@@ -112,23 +114,25 @@ public class TestModelFacade2 extends TestCase {
      * Test the stereotypes.
      */
     public void testGetStereotypes() {
-	Object cls = Model.getCoreFactory().buildClass();
-
-	Collection coll1 = Model.getFacade().getStereotypes(cls);
-	assertEquals(0, coll1.size());
-
-	Object stereotype =
-	    Model.getExtensionMechanismsFactory().buildStereotype(
-	            "TestStereotype",
-	            Model.getFacade().getNamespace(cls));
-
-	Model.getCoreHelper().setStereotype(cls, stereotype);
-
-	Collection coll2 = Model.getFacade().getStereotypes(cls);
-
-	assertEquals(1, coll2.size());
-	assertTrue(coll2.contains(stereotype));
-	assertEquals(stereotype,
-	             Model.getFacade().getStereotypes(cls).iterator().next());
+        Object cls = Model.getCoreFactory().buildClass();
+        
+        Collection coll1 = Model.getFacade().getStereotypes(cls);
+        assertEquals(0, coll1.size());
+        
+        Object stereotype =
+            Model.getExtensionMechanismsFactory().buildStereotype(
+                    "TestStereotype",
+                    Model.getFacade().getNamespace(cls));
+        
+        Model.getCoreHelper().setStereotype(cls, stereotype);
+        
+        Collection coll2 = Model.getFacade().getStereotypes(cls);
+        
+        assertEquals(1, coll2.size());
+        assertTrue(coll2.contains(stereotype));
+        assertEquals(
+            stereotype,
+            CollectionUtil.getFirstItemOrNull(
+                    Model.getFacade().getStereotypes(cls)));
     }
 }

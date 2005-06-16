@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.87 2005/03/10 19:08:59 mvw Exp $
+// $Id: FigAssociation.java,v 1.88 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.base.PathConvPercentPlusConst;
@@ -295,7 +296,6 @@ public class FigAssociation extends FigEdgeModelElement {
 	String name = Model.getFacade().getName(end);
 	Object order = Model.getFacade().getOrdering(end);
         String visi = "";
-        Object stereo = null;
         Object et = Model.getFacade().getType(end);
         if (Model.getFacade().isNavigable(end)
 	    && (Model.getFacade().isAClass(et) 
@@ -303,9 +303,8 @@ public class FigAssociation extends FigEdgeModelElement {
 	    visi = 
 	        Notation.generate(this, Model.getFacade().getVisibility(end));
         }
-        if (Model.getFacade().getStereotypes(end).size() > 0) {
-            stereo = Model.getFacade().getStereotypes(end).iterator().next();
-        }
+        Object stereo = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(end));
 
 	multiToUpdate.setText(Notation.generate(this, multi));
 	orderingToUpdate.setText(getOrderingName(order));

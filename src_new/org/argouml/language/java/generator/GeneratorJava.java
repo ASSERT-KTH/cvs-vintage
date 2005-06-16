@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.116 2005/05/16 11:10:48 mvw Exp $
+// $Id: GeneratorJava.java,v 1.117 2005/06/16 10:41:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import org.argouml.ocl.ArgoFacade;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
+import org.argouml.util.CollectionUtil;
 
 import tudresden.ocl.OclTree;
 import tudresden.ocl.parser.analysis.DepthFirstAdapter;
@@ -455,10 +456,8 @@ public class GeneratorJava
         StringBuffer sb = new StringBuffer(80);
         String nameStr = null;
         boolean constructor = false;
-        Object/*MStereotype*/ stereo = null;
-        if (Model.getFacade().getStereotypes(op).size() > 0) {
-            stereo = Model.getFacade().getStereotypes(op).iterator().next();
-        }
+        Object stereo = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(op));
         if (stereo != null
                 && Model.getFacade().getName(stereo).equals("create")) {
             // constructor

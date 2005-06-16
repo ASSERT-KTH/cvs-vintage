@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.66 2005/05/26 21:35:13 mvw Exp $
+// $Id: FigPackage.java,v 1.67 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import org.argouml.uml.diagram.ui.StereotypeContainer;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.ui.VisibilityContainer;
 import org.argouml.uml.ui.UMLAction;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
@@ -281,18 +282,16 @@ public class FigPackage extends FigNodeModelElement
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#updateStereotypeText()
      */
     protected void updateStereotypeText() {
-        Object me = /*(MModelElement)*/ getOwner();
+        Object modelElement = getOwner();
 
-        if (me == null) {
+        if (modelElement == null) {
             return;
         }
 
         Rectangle rect = getBounds();
 
-        Object stereo = null;
-        if (Model.getFacade().getStereotypes(me).size() > 0) {
-            stereo = Model.getFacade().getStereotypes(me).iterator().next();
-        }
+        Object stereo = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(modelElement));
 
         /* check if stereotype is defined */
         if ((stereo == null)

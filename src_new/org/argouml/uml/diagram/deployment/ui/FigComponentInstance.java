@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.36 2005/03/05 10:37:20 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.37 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigComponentInstance.java,v 1.36 2005/03/05 10:37:20 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.37 2005/06/16 10:41:15 bobtarling Exp $
 package org.argouml.uml.diagram.deployment.ui;
 
 import java.awt.Color;
@@ -37,6 +37,7 @@ import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -324,10 +325,8 @@ public class FigComponentInstance extends FigNodeModelElement {
         Object me = /*(MModelElement)*/ getOwner();
         if (me == null)
             return;
-        Object stereo = null;
-        if (Model.getFacade().getStereotypes(me).size() > 0) {
-            stereo = Model.getFacade().getStereotypes(me).iterator().next();
-        }
+        Object stereo = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(me));
         if (stereo == null
                 || Model.getFacade().getName(stereo) == null
                 || Model.getFacade().getName(stereo).length() == 0) {

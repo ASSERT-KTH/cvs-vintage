@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.18 2005/06/05 13:07:30 linus Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.19 2005/06/16 10:41:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
+import org.argouml.util.CollectionUtil;
 
 /**
  * @since Oct 10, 2002
@@ -64,12 +65,8 @@ public class ActionSetModelElementStereotype extends UMLAction {
             }
             if (Model.getFacade().isAModelElement(combo.getTarget())) {
                 target = /*(MModelElement)*/ combo.getTarget();
-                oldStereo = null;
-                if (Model.getFacade().getStereotypes(target).size() > 0) {
-                    oldStereo =
-                        Model.getFacade().getStereotypes(target)
-                        	.iterator().next();
-                }
+                oldStereo = CollectionUtil.getFirstItemOrNull(
+                        Model.getFacade().getStereotypes(target));
             }
 	    if ("".equals(combo.getSelectedItem())) {
 	        newStereo = null;

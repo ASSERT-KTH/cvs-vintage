@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.11 2005/06/14 19:22:04 bobtarling Exp $
+// $Id: NSUMLModelFacade.java,v 1.12 2005/06/16 10:41:13 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3664,7 +3664,7 @@ public class NSUMLModelFacade implements Facade {
      * @param handle The model element.
      * @return a Collection with all stereotypes or empty if none.
      */
-    public List getStereotypes(Object handle) {
+    public Collection getStereotypes(Object handle) {
         if (isAModelElement(handle)) {
             // This returns a collection as we have an eye on the future
             // and multiple stereotypes in UML1.5

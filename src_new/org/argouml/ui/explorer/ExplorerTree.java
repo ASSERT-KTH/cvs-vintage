@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.37 2005/05/21 18:01:21 mvw Exp $
+// $Id: ExplorerTree.java,v 1.38 2005/06/16 10:41:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.generator.GeneratorDisplay;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
@@ -236,11 +237,8 @@ public class ExplorerTree
 
             // Look for stereotype
             if (showStereotype) {
-                Object stereo = null;
-                if (Model.getFacade().getStereotypes(value).size() > 0) {
-                    stereo = Model.getFacade().getStereotypes(value)
-                        .iterator().next();
-                }
+                Object stereo = CollectionUtil.getFirstItemOrNull(
+                        Model.getFacade().getStereotypes(value));
                 if (stereo != null) {
                     name += " " + GeneratorDisplay.getInstance()
                         .generate(stereo);

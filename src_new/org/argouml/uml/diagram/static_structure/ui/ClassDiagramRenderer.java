@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.38 2005/06/14 19:20:24 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.39 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.uml.diagram.ui.FigNodeAssociation;
 import org.argouml.uml.diagram.ui.FigPermission;
 import org.argouml.uml.diagram.ui.FigRealization;
 import org.argouml.uml.diagram.ui.FigUsage;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigEdge;
@@ -179,12 +180,8 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
         } else if (Model.getFacade().isAAbstraction(edge)) {
             newEdge = new FigRealization(edge);
         } else if (Model.getFacade().isADependency(edge)) {
-            Object stereotype = null;
-
-            if (Model.getFacade().getStereotypes(edge).size() > 0) {
-                stereotype =
-                    Model.getFacade().getStereotypes(edge).iterator().next();
-            }
+            Object stereotype = CollectionUtil.getFirstItemOrNull(
+                    Model.getFacade().getStereotypes(edge));
             if (stereotype != null
                     && Model.getExtensionMechanismsHelper().isStereotypeInh(
                             stereotype, "realize", "Abstraction")) {

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.100 2005/06/06 19:18:59 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.101 2005/06/16 10:41:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,6 +69,7 @@ import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
+import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
@@ -600,11 +601,8 @@ public abstract class FigEdgeModelElement
         if ((getOwner() == null) || (getOwner() instanceof CommentEdge)) {
             return;
         }
-        Object stereotype = null;
-        if (Model.getFacade().getStereotypes(getOwner()).size() > 0) {
-            stereotype =
-		Model.getFacade().getStereotypes(getOwner()).iterator().next();
-        }
+        Object stereotype = CollectionUtil.getFirstItemOrNull(
+                Model.getFacade().getStereotypes(getOwner()));
         if (stereotype == null) {
             stereo.setText("");
             return;
