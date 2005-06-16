@@ -1,4 +1,4 @@
-// $Id: CheckResourceBundle.java,v 1.6 2005/01/09 14:59:18 linus Exp $
+// $Id: CheckResourceBundle.java,v 1.7 2005/06/16 18:49:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class CheckResourceBundle {
 	     e.hasMoreElements();
 	     ) {
 	    Object c = e.nextElement();
-	    TestCase.assertTrue("Duplicate key \""
+	    Assert.assertTrue("Duplicate key \""
 				+ c
 				+ "\" in "
 				+ b.getClass().getName(),
@@ -83,7 +83,7 @@ public class CheckResourceBundle {
 					    ResourceBundle b,
 					    String[] tags) {
 	for (int i = 0; i < tags.length; i++)
-	    TestCase.assertTrue("Can't find tag \"" + tags[i]
+	    Assert.assertTrue("Can't find tag \"" + tags[i]
 				+ "\" in "
 				+ b.getClass().getName(),
 				bundleContains(b, tags[i]));
@@ -99,7 +99,7 @@ public class CheckResourceBundle {
 	     e.hasMoreElements();
 	     ) {
 	    String tag = (String) e.nextElement();
-	    TestCase.assertTrue("Missing tag \""
+	    Assert.assertTrue("Missing tag \""
 				+ tag
 				+ "\" in "
 				+ locb.getClass().getName()
@@ -120,7 +120,7 @@ public class CheckResourceBundle {
 	     e.hasMoreElements();
 	     ) {
 	    String tag = (String) e.nextElement();
-	    TestCase.assertTrue("Extra tag \""
+	    Assert.assertTrue("Extra tag \""
 				+ tag
 				+ "\" in "
 				+ locb.getClass().getName()
@@ -246,7 +246,7 @@ public class CheckResourceBundle {
 
 	    ResourceBundle locb = ResourceBundle.getBundle(bname, l);
 
-	    TestCase.assertTrue("Resource bundle "
+	    Assert.assertTrue("Resource bundle "
 				+ bname
 				+ " does not exist for "
 				+ l.toString(),
