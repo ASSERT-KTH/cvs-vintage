@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.60 2005/04/24 20:06:35 mvw Exp $
+// $Id: TabProps.java,v 1.61 2005/06/16 13:44:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -349,13 +349,24 @@ public class TabProps
         LOG.info("Trying to locate panel for: " + targetClassName);
         int lastDot = targetClassName.lastIndexOf(".");
 
-        //remove "ru.novosoft.uml"
-        if (lastDot > 0) {
-            base = targetClassName.substring(16, lastDot + 1);
+        if (targetClassName.startsWith("ru.novosoft.uml.")) {
+            //remove "ru.novosoft.uml."
+            if (lastDot > 0) {
+                base = targetClassName.substring(16, lastDot + 1);
+            } else {
+                base = targetClassName.substring(16);
+            }
         } else {
-            base = targetClassName.substring(16);
+            //remove "org.omg.uml."
+            if (lastDot > 0) {
+                base = targetClassName.substring(12, lastDot + 1);
+            } else {
+                base = targetClassName.substring(12);
+            }
         }
 
+        
+        
         if (lastDot > 0) {
             targetClassName = targetClassName.substring(lastDot + 1);
         }
@@ -367,6 +378,16 @@ public class TabProps
             targetClassName =
                 targetClassName.substring(0, targetClassName.length() - 4);
         }
+        
+        if (targetClassName.startsWith("Uml")) {
+            targetClassName = targetClassName.substring(3); //remove Uml
+        }
+        if (targetClassName.indexOf('$') > 0) {
+            targetClassName =
+                targetClassName.substring(0, targetClassName.indexOf('$'));
+        }
+        
+        
         //remove Impl
 
         // This doesn't work for panel property tabs - they are being put in the
