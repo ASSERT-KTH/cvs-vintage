@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.12 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: NSUMLModelFacade.java,v 1.13 2005/06/16 14:00:19 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1876,10 +1876,6 @@ public class NSUMLModelFacade implements Facade {
     public Collection getAttributes(Object handle) {
         if (handle instanceof MClassifier) {
             MClassifier c = (MClassifier) handle;
-            // TODO: We are converting back and forth between collections and
-            // iterators. I (Linus) prefer iterators.
-            //return getStructuralFeatures(c).iterator();
-            //...But I (thn) got CVS conflicts, so:
             return getStructuralFeatures(c);
         }
 
