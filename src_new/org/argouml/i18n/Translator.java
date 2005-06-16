@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.37 2005/06/15 17:27:03 mvw Exp $
+// $Id: Translator.java,v 1.38 2005/06/16 18:39:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,9 +74,10 @@ public final class Translator {
      * Default Locale is set and resources Bundles are loaded.
      */
     public static void init () {
+        initialised = true;
         String s = Configuration.getString(Argo.KEY_LOCALE);
         if ((s != "") && (s != null)) {
-            setLocale(new Locale(s));
+            setLocale(s);
         } else {
             setLocale(new Locale(
                     System.getProperty("user.language", "en"),
@@ -109,6 +110,27 @@ public final class Translator {
             new Locale("zh", ""),
             new Locale("en", "GB"),
         };
+    }
+
+    /**
+     * Change the current Locale. The string with the name follows 
+     * this BNF format: <p>
+     *     language [ "_" country ]
+     *
+     * @param name the name of the new locale
+     */
+    public static void setLocale(String name) {
+        if (!initialised) {
+            init();
+        }
+        String language = name;
+        String country = "";
+        int i = name.indexOf("_");
+        if ((i > 0) && (name.length() > i + 1)) {
+            language = name.substring(0, i);
+            country = name.substring(i + 1);
+        }
+        setLocale(new Locale(language, country));
     }
 
     /**
@@ -169,7 +191,6 @@ public final class Translator {
      */
     public static String localize(String key) {
         if (!initialised) {
-            initialised = true;
             init();
         }
         
