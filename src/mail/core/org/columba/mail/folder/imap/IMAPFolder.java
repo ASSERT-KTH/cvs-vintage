@@ -886,7 +886,9 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 		// get header with UID
 		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
-
+		
+		if( header == null ) return new Header(); 
+		
 		Header result = new Header();
 
 		// if only one headerfield wasn't found in cache
