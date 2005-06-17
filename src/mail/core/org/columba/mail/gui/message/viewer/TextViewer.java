@@ -266,9 +266,9 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		// Which Charset shall we use ?
 		Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
-		charset = extractCharset(charset, bodyPart);
+		charset = MessageParser.extractCharset(charset, bodyPart);
 
-		bodyStream = decodeBodyStream(charset, bodyPart, bodyStream);
+		bodyStream = MessageParser.decodeBodyStream(charset, bodyPart, bodyStream);
 
 		// Read Stream in String
 		StringBuffer text = StreamUtils.readCharacterStream(bodyStream);
@@ -298,7 +298,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		} else {
 			// this is a text/plain message
 
-			body = transformTextToHTML(text.toString());
+			body = MessageParser.transformTextToHTML(text.toString(), css, enableSmilies);
 
 			// setText(body);
 
@@ -317,80 +317,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		return Boolean.valueOf(html.getAttribute("disable")).booleanValue();
 	}
 
-	/**
-	 * @param bodyPart
-	 * @param bodyStream
-	 * @return
-	 */
-	private InputStream decodeBodyStream(Charset charset, MimePart bodyPart,
-			InputStream bodyStream) throws Exception {
-
-		// default encoding is plain
-		int encoding = MimeHeader.PLAIN;
-
-		if (bodyPart != null) {
-			encoding = bodyPart.getHeader().getContentTransferEncoding();
-		}
-
-		switch (encoding) {
-		case MimeHeader.QUOTED_PRINTABLE: {
-			bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-
-			break;
-		}
-
-		case MimeHeader.BASE64: {
-			bodyStream = new Base64DecoderInputStream(bodyStream);
-
-			break;
-		}
-		}
-
-		bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
-
-		return bodyStream;
-	}
-
-	/**
-	 * @param mediator
-	 * @param bodyPart
-	 * @return
-	 */
-	private Charset extractCharset(Charset charset, MimePart bodyPart) {
-
-		// no charset specified -> automatic mode
-		// -> try to determine charset based on content parameter
-		if (charset == null) {
-			String charsetName = null;
-
-			if (bodyPart != null) {
-				charsetName = bodyPart.getHeader().getContentParameter(
-						"charset");
-			}
-
-			if (charsetName == null) {
-				// There is no charset info -> the default system charset is
-				// used
-				charsetName = System.getProperty("file.encoding");
-				charset = Charset.forName(charsetName);
-			} else {
-				try {
-					charset = Charset.forName(charsetName);
-				} catch (UnsupportedCharsetException e) {
-					charsetName = System.getProperty("file.encoding");
-					charset = Charset.forName(charsetName);
-				} catch (IllegalCharsetNameException e) {
-					charsetName = System.getProperty("file.encoding");
-					charset = Charset.forName(charsetName);
-				}
-			}
-
-			// ((CharsetOwnerInterface) mediator).setCharset(charset);
-
-		}
-		return charset;
-	}
-
+	
 	/**
 	 * 
 	 * read text-properties from configuration and create a stylesheet for the
@@ -406,52 +333,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 				+ ".quoting {color:#949494;}; --></style>";
 	}
 
-	/**
-	 * @param bodyText
-	 * @throws Exception
-	 */
-	private String transformTextToHTML(String bodyText) throws Exception {
-		String body = null;
-
-		// substitute special characters like:
-		// <,>,&,\t,\n
-		body = HtmlParser.substituteSpecialCharacters(bodyText);
-
-		// parse for urls and substite with HTML-code
-		body = HtmlParser.substituteURL(body);
-
-		// parse for email addresses and substite with HTML-code
-		body = HtmlParser.substituteEmailAddress(body);
-
-		// parse for quotings and color the darkgray
-		body = parser.markQuotings(body);
-
-		// add smilies
-		if (enableSmilies == true) {
-			body = parser.addSmilies(body);
-		}
-
-		// encapsulate bodytext in html-code
-		body = transformToHTML(new StringBuffer(body));
-
-		return body;
-	}
-
-	/*
-	 * 
-	 * encapsulate bodytext in HTML code
-	 * 
-	 */
-	protected String transformToHTML(StringBuffer buf) {
-		// prepend
-		buf.insert(0, "<HTML><HEAD>" + css
-				+ "</HEAD><BODY class=\"bodytext\"><P>");
-
-		// append
-		buf.append("</P></BODY></HTML>");
-
-		return buf.toString();
-	}
+	
 
 	/*
 	 * (non-Javadoc)
