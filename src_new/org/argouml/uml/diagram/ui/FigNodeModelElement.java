@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.173 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.174 2005/06/17 19:57:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -146,7 +146,7 @@ public abstract class FigNodeModelElement
      * should be inserted by concrete figures.
      * See #getPopUpActions()
      */
-    protected static final int POPUP_ADD_OFFSET = 3;
+    protected static int popupAddOffset;
 
     // Fields used in paint() for painting shadows
     private BufferedImage           shadowImage = null;
@@ -433,7 +433,16 @@ public abstract class FigNodeModelElement
      */
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
-        /* Check if multiple items are selected. */
+        
+        // popupAddOffset should be equal to the number of items added here:
+        popUpActions.addElement(new JSeparator());
+        popupAddOffset = 1;
+        if (removeFromDiagram) {
+            popUpActions.addElement(ActionDeleteFromDiagram.getSingleton());
+            popupAddOffset++;
+        }
+
+        /* Check if multiple items are selected: */
         boolean ms = TargetManager.getInstance().getTargets().size() > 1;
         if (!ms) {
             ToDoList list = Designer.theDesigner().getToDoList();
@@ -457,12 +466,7 @@ public abstract class FigNodeModelElement
                 popUpActions.insertElementAt(critiques, 0);
             }
         }
-        // POPUP_ADD_OFFSET should be equal to the number of items added here:
-        popUpActions.addElement(new JSeparator());
-        popUpActions.addElement(ActionProperties.getSingleton());
-        if (removeFromDiagram) {
-            popUpActions.addElement(ActionDeleteFromDiagram.getSingleton());
-        }
+
         return popUpActions;
     }
 

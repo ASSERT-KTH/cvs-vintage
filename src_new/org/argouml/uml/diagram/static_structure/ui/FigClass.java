@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.149 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: FigClass.java,v 1.150 2005/06/17 19:57:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,7 +259,7 @@ public class FigClass extends FigNodeModelElement
         addMenu.add(new ActionAddOperation());
         addMenu.add(new ActionAddNote());
         popUpActions.insertElementAt(addMenu,
-            popUpActions.size() - POPUP_ADD_OFFSET);
+            popUpActions.size() - popupAddOffset);
 
         // Show ...
         ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
@@ -281,16 +281,16 @@ public class FigClass extends FigNodeModelElement
         showMenu.add(ActionEdgesDisplay.getShowEdges());
         showMenu.add(ActionEdgesDisplay.getHideEdges());
         popUpActions.insertElementAt(showMenu,
-            popUpActions.size() - POPUP_ADD_OFFSET);
+            popUpActions.size() - popupAddOffset);
 
         // Modifiers ...
         popUpActions.insertElementAt(
                 buildModifierPopUp(ABSTRACT | LEAF | ROOT | ACTIVE),
-                popUpActions.size() - POPUP_ADD_OFFSET);
+                popUpActions.size() - popupAddOffset);
 
         // Visibility ...
         popUpActions.insertElementAt(buildVisibilityPopUp(),
-                popUpActions.size() - POPUP_ADD_OFFSET);
+                popUpActions.size() - popupAddOffset);
 
         return popUpActions;
     }

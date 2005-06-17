@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.25 2005/01/30 20:48:35 linus Exp $
+// $Id: FigActor.java,v 1.26 2005/06/17 19:57:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -152,7 +152,7 @@ public class FigActor extends FigNodeModelElement {
         // Modifiers ...
         popUpActions.insertElementAt(
                 buildModifierPopUp(ABSTRACT | LEAF | ROOT),
-                popUpActions.size() - POPUP_ADD_OFFSET);
+                popUpActions.size() - popupAddOffset);
         return popUpActions;
     }
 
