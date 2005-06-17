@@ -1,4 +1,4 @@
-// $Id: ActionCompartmentDisplay.java,v 1.8 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.9 2005/06/17 20:51:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,17 +220,16 @@ public class ActionCompartmentDisplay extends UMLAction {
 
 
     /**
-     * <p>Indicate whether this action should be enabled.</p>
+     * Indicate whether this action should be enabled.<p>
      *
-     * <p>Always returns <code>true</code> in this implementation.</p>
+     * Always returns <code>true</code> in this implementation.
      *
-     * @return  <code>true</code> if the action should be enabled,
-     *          <code>false</code> otherwise. Always returns <code>true</code>
-     *          in this implementation.
+     * @return  <code>true</code>  
      */
 
     public boolean shouldBeEnabled() {
-	return true;
+        Vector sels = Globals.curEditor().getSelectionManager().selections();
+	return sels.size() == 1;
     }
 
 

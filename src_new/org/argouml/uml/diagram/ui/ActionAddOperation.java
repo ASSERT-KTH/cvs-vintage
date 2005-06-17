@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.19 2005/04/23 16:30:45 linus Exp $
+// $Id: ActionAddOperation.java,v 1.20 2005/06/17 20:51:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,6 +99,11 @@ public class ActionAddOperation extends UMLAction {
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
+        /* Check if multiple items are selected: */
+        if (TargetManager.getInstance().getTargets().size() > 1) {
+            return false;
+        }
+
 	Object target = TargetManager.getInstance().getModelTarget();
 	return super.shouldBeEnabled()
 	    && (Model.getFacade().isAClassifier(target)

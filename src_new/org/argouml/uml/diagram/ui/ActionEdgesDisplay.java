@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.10 2005/01/30 20:47:50 linus Exp $
+// $Id: ActionEdgesDisplay.java,v 1.11 2005/06/17 20:51:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,8 +54,7 @@ public class ActionEdgesDisplay extends UMLAction {
     // compartments
     private static UMLAction showEdges = new ActionEdgesDisplay(true,
                 Translator.localize("menu.popup.show.all-edges"));
-    private static UMLAction hideEdges
-        = new ActionEdgesDisplay(false,
+    private static UMLAction hideEdges = new ActionEdgesDisplay(false,
                 Translator.localize("menu.popup.hide.all-edges"));
 
     private boolean show;
@@ -88,7 +87,6 @@ public class ActionEdgesDisplay extends UMLAction {
         MutableGraphModel mgm = (MutableGraphModel) ce.getGraphModel();
 
         Enumeration e = ce.getSelectionManager().selections().elements();
-        // note: multiple selection not currently supported (2002-04-05)
         while (e.hasMoreElements()) {
             Selection sel = (Selection) e.nextElement();
             Object owner = sel.getContent().getOwner();
