@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
@@ -24,7 +25,7 @@ import org.jdesktop.jdic.browser.WebBrowser;
  * @author Frederik Dietz
  * 
  */
-public class JDICHTMLViewerPlugin extends JComponent implements
+public class JDICHTMLViewerPlugin extends JPanel implements
 		IHTMLViewerPlugin {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -38,17 +39,23 @@ public class JDICHTMLViewerPlugin extends JComponent implements
 
 		try {
 			browser = new WebBrowser();
-			
+
 			setLayout(new BorderLayout());
 			add(browser, BorderLayout.CENTER);
-			
+
 		} catch (Error e) {
-			LOG.severe("Error while initializing JDIC native browser: " + e.getMessage());
+			LOG.severe("Error while initializing JDIC native browser: "
+					+ e.getMessage());
+			if (Main.DEBUG)
+				e.printStackTrace();
+		} catch (Exception e) {
+			LOG
+					.severe("Exception error while initializing JDIC native browser: "
+							+ e.getMessage());
 			if (Main.DEBUG)
 				e.printStackTrace();
 		}
 
-		
 	}
 
 	public void view(String htmlSource) {
@@ -91,10 +98,10 @@ public class JDICHTMLViewerPlugin extends JComponent implements
 	public boolean initialized() {
 		// TODO: update JDIC to version 0.9 and check status with
 		// WebBrowser.isInitialized() instead
-		
-		if ( browser != null)
+
+		if (browser != null)
 			return browser.getStatus().isInitialized();
-		
+
 		return false;
 	}
 }

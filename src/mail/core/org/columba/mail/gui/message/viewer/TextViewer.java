@@ -140,12 +140,13 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			// in case of an error -> fall-back to Swing's built-in JTextPane
 			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false)) {
 				LOG.severe("Error while trying to load JDIC based html viewer -> falling back to Swing's JTextPane instead");
-				
+
 				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
 			}
 		} else {
 			viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
 		}
+
 	}
 
 	private IHTMLViewerPlugin createHTMLViewerPluginInstance(String pluginId) {
@@ -188,7 +189,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		}
 
 		messageviewer.addObserver(this);
-		
+
 		smilies = messageviewer.getElement("smilies");
 
 		if (smilies == null) {
@@ -268,7 +269,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 		charset = MessageParser.extractCharset(charset, bodyPart);
 
-		bodyStream = MessageParser.decodeBodyStream(charset, bodyPart, bodyStream);
+		bodyStream = MessageParser.decodeBodyStream(charset, bodyPart,
+				bodyStream);
 
 		// Read Stream in String
 		StringBuffer text = StreamUtils.readCharacterStream(bodyStream);
@@ -298,7 +300,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		} else {
 			// this is a text/plain message
 
-			body = MessageParser.transformTextToHTML(text.toString(), css, enableSmilies);
+			body = MessageParser.transformTextToHTML(text.toString(), css,
+					enableSmilies);
 
 			// setText(body);
 
@@ -317,7 +320,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		return Boolean.valueOf(html.getAttribute("disable")).booleanValue();
 	}
 
-	
 	/**
 	 * 
 	 * read text-properties from configuration and create a stylesheet for the
@@ -333,8 +335,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 				+ ".quoting {color:#949494;}; --></style>";
 	}
 
-	
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -348,7 +348,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		size = new Integer(font.getSize()).toString();
 
 		initStyleSheet();
-		
+
 		initHTMLViewerPlugin();
 	}
 
