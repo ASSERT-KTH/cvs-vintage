@@ -42,101 +42,89 @@ import org.jdesktop.jdic.filetypes.Action;
 import org.jdesktop.jdic.filetypes.Association;
 import org.jdesktop.jdic.filetypes.AssociationService;
 
-
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class ViewMessageSourceCommand extends Command {
-    protected File tempFile;
+	protected File tempFile;
 
-    /**
- * Constructor for ViewMessageSourceCommand.
- * @param frameMediator
- * @param references
- */
-    public ViewMessageSourceCommand(FrameMediator frameMediator,
-    		ICommandReference reference) {
-        super(frameMediator, reference);
-    }
+	/**
+	 * Constructor for ViewMessageSourceCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public ViewMessageSourceCommand(FrameMediator frameMediator,
+			ICommandReference reference) {
+		super(frameMediator, reference);
+	}
 
-    /**
- * @see org.columba.core.command.Command#updateGUI()
- */
-    public void updateGUI() throws Exception {
-		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
-		if( association == null ) {
-			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
-					JOptionPane.ERROR_MESSAGE);			
-			return;
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		try {
+			Desktop.open(tempFile);
+		} catch (DesktopException e) {
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader.getString(
+					"org.columba.core.i18n.dialog", "error", "no_viewer"),
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		Action action = association.getActionByVerb("open");
-		if( action != null ) {
-			Process child = Runtime.getRuntime().exec(
-					action.getCommand() + " " + tempFile.toString());			
-		} else {
-			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
-					JOptionPane.ERROR_MESSAGE);			
+	}
+
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
+
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+
+		Object[] uids = r.getUids();
+
+		AbstractMessageFolder folder = (AbstractMessageFolder) r
+				.getSourceFolder();
+
+		// register for status events
+		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+
+		Object[] destUids = new Object[uids.length];
+		Object uid = uids[0];
+
+		InputStream in = null;
+		OutputStream out = null;
+
+		try {
+			in = new BufferedInputStream(folder.getMessageSourceStream(uid));
+			tempFile = TempFileStore.createTempFileWithSuffix("txt");
+			out = new BufferedOutputStream(new FileOutputStream(tempFile));
+
+			byte[] buffer = new byte[1024];
+			int read;
+
+			while ((read = in.read(buffer, 0, buffer.length)) > 0) {
+				out.write(buffer, 0, read);
+			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException ioe) {
+				}
+			}
+
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException ioe) {
+				}
+			}
 		}
-		
-    }
-
-    /**
- * @see org.columba.core.command.Command#execute(Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
-
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
-
-        Object[] uids = r.getUids();
-
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
-
-        //		register for status events
-        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
-
-        Object[] destUids = new Object[uids.length];
-        Object uid = uids[0];
-
-        InputStream in = null;
-        OutputStream out = null;
-
-        try {
-            in = new BufferedInputStream(folder.getMessageSourceStream(uid));
-            tempFile = TempFileStore.createTempFileWithSuffix("txt");
-            out = new BufferedOutputStream(new FileOutputStream(tempFile));
-
-            byte[] buffer = new byte[1024];
-            int read;
-
-            while ((read = in.read(buffer, 0, buffer.length)) > 0) {
-                out.write(buffer, 0, read);
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ioe) {
-                }
-            }
-
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ioe) {
-                }
-            }
-        }
-    }
+	}
 }
