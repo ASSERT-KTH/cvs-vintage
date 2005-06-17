@@ -85,6 +85,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 	protected CheckBoxWithMnemonic showAttachmentsInlineCheckBox;
 
+	protected CheckBoxWithMnemonic useSystemDefaultBrowserCheckBox;
+	
 	protected LabelWithMnemonic forwardLabel;
 
 	protected JComboBox forwardComboBox;
@@ -114,6 +116,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					.getBooleanWithDefault(OptionsItem.MESSAGEVIEWER,
 							OptionsItem.INLINE_ATTACHMENTS_BOOL, false));
 
+			useSystemDefaultBrowserCheckBox.setSelected(optionsItem
+					.getBooleanWithDefault(OptionsItem.MESSAGEVIEWER,
+							OptionsItem.USE_SYSTEM_DEFAULT_BROWSER, false));
+			
 			int delay = optionsItem.getIntegerWithDefault(
 					OptionsItem.MARKASREAD, OptionsItem.DELAY_INT, 2);
 			boolean enable = optionsItem.getBooleanWithDefault(
@@ -173,6 +179,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			optionsItem.setBoolean(OptionsItem.MESSAGEVIEWER,
 					OptionsItem.INLINE_ATTACHMENTS_BOOL,
 					showAttachmentsInlineCheckBox.isSelected());
+			
+			optionsItem.setBoolean(OptionsItem.MESSAGEVIEWER,
+					OptionsItem.USE_SYSTEM_DEFAULT_BROWSER,
+					useSystemDefaultBrowserCheckBox.isSelected());
 
 			// send notification event
 			// @see org.columba.mail.gui.message.TextViewer
@@ -256,6 +266,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		showAttachmentsInlineCheckBox.setActionCommand("ATTACHMENTS_INLINE");
 		showAttachmentsInlineCheckBox.addActionListener(this);
 
+		useSystemDefaultBrowserCheckBox = new CheckBoxWithMnemonic("Use System Default Browser");
+		useSystemDefaultBrowserCheckBox.setActionCommand("USE_DEFAULT_BROWSER");
+		useSystemDefaultBrowserCheckBox.addActionListener(this);
+		
 		// button panel
 		okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"global", "ok"));
@@ -312,6 +326,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.append(showAttachmentsInlineCheckBox, 4);
 		builder.nextLine();
 
+		builder.append(useSystemDefaultBrowserCheckBox, 4);
+		builder.nextLine();
+
+		
 		// its maybe better to leave this option out of the dialog
 		// -> make it configurable in the xml file anyway
 		/*

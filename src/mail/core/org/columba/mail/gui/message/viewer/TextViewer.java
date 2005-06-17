@@ -17,15 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.viewer;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.Insets;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
@@ -35,27 +31,28 @@ import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
-import javax.swing.JTextPane;
+import javax.swing.JPanel;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
+import org.columba.core.main.Main;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.HTMLViewerPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.OptionsItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
@@ -70,25 +67,23 @@ import org.columba.ristretto.message.MimeTree;
  * IViewer displays message body text.
  * 
  * @author fdietz
- *  
+ * 
  */
-public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
+public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		CaretListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.message.viewer");
 
-	//  parser to transform text to html
+	// parser to transform text to html
 	private DocumentParser parser;
-
-	private HTMLEditorKit htmlEditorKit;
 
 	// stylesheet is created dynamically because
 	// user configurable fonts are used
 	private String css = "";
 
-	//  enable/disable smilies configuration
+	// enable/disable smilies configuration
 	private XmlElement smilies;
 
 	private boolean enableSmilies;
@@ -113,27 +108,68 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 
 	private MessageController mediator;
 
+	private IHTMLViewerPlugin viewerPlugin;
+
 	public TextViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
 
-		setMargin(new Insets(5, 5, 5, 5));
-		setEditable(false);
+		initHTMLViewerPlugin();
 
-		setDocument(new AsynchronousHTMLDocument());
-		htmlEditorKit = new HTMLEditorKit();
-		setEditorKit(htmlEditorKit);
-
-		setContentType("text/html");
+		setLayout(new BorderLayout());
+		add(viewerPlugin.getView(), BorderLayout.CENTER);
 
 		initConfiguration();
 
 		initStyleSheet();
 
-		FocusManager.getInstance().registerComponent(new MyFocusOwner());
-		
-		mediator.addMouseListener(this);
+		// FocusManager.getInstance().registerComponent(new MyFocusOwner());
+
+		// mediator.addMouseListener(this);
+	}
+
+	private void initHTMLViewerPlugin() {
+		OptionsItem optionsItem = MailConfig.getInstance().getOptionsItem();
+		boolean useSystemDefaultBrowser = optionsItem.getBooleanWithDefault(
+				OptionsItem.MESSAGEVIEWER,
+				OptionsItem.USE_SYSTEM_DEFAULT_BROWSER, false);
+
+		if (useSystemDefaultBrowser) {
+			viewerPlugin = createHTMLViewerPluginInstance("JDICHTMLViewerPlugin");
+			// in case of an error -> fall-back to Swing's built-in JTextPane
+			if ((viewerPlugin == null) || (viewerPlugin.initialized() == false))
+				viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
+		} else {
+			viewerPlugin = createHTMLViewerPluginInstance("JavaHTMLViewerPlugin");
+		}
+	}
+
+	private IHTMLViewerPlugin createHTMLViewerPluginInstance(String pluginId) {
+		IHTMLViewerPlugin plugin = null;
+		try {
+
+			HTMLViewerPluginHandler handler = (HTMLViewerPluginHandler) PluginManager
+					.getInstance().getHandler("org.columba.core.htmlviewer");
+
+			plugin = (IHTMLViewerPlugin) handler.getPlugin(pluginId, null);
+
+			return plugin;
+		} catch (PluginHandlerNotFoundException e) {
+			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
+			if (Main.DEBUG)
+				e.printStackTrace();
+		} catch (PluginLoadingFailedException e) {
+			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
+			if (Main.DEBUG)
+				e.printStackTrace();
+		} catch (Exception e) {
+			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
+			if (Main.DEBUG)
+				e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
@@ -148,6 +184,8 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 			messageviewer = gui.addSubElement("messageviewer");
 		}
 
+		messageviewer.addObserver(this);
+		
 		smilies = messageviewer.getElement("smilies");
 
 		if (smilies == null) {
@@ -195,12 +233,15 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 		// register interest on configuratin changes
 		fonts.addObserver(this);
 	}
-	
+
 	/**
-	 * @see org.columba.mail.gui.message.viewer.IMimePartViewer#view(org.columba.mail.folder.IMailbox, java.lang.Object, java.lang.Integer[], org.columba.mail.gui.frame.MailFrameMediator)
+	 * @see org.columba.mail.gui.message.viewer.IMimePartViewer#view(org.columba.mail.folder.IMailbox,
+	 *      java.lang.Object, java.lang.Integer[],
+	 *      org.columba.mail.gui.frame.MailFrameMediator)
 	 */
-	public void view(IMailbox folder, Object uid, Integer[] address, MailFrameMediator mediator) throws Exception {
-		
+	public void view(IMailbox folder, Object uid, Integer[] address,
+			MailFrameMediator mediator) throws Exception {
+
 		MimePart bodyPart = null;
 		InputStream bodyStream;
 
@@ -242,21 +283,21 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 
 			// this is a HTML message
 
-			//			 create temporary file
+			// create temporary file
 			File inputFile = TempFileStore.createTempFileWithSuffix("html");
 			// save bodytext to file
 			DiskIO.saveStringInFile(inputFile, text.toString());
 			// get URL of file
 			url = inputFile.toURL();
 
-			//setPage(url);
+			// setPage(url);
 
 		} else {
 			// this is a text/plain message
 
 			body = transformTextToHTML(text.toString());
 
-			//setText(body);
+			// setText(body);
 
 			LOG.finest("validated bodytext:\n" + body);
 
@@ -266,14 +307,12 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 
 	}
 
-
 	private boolean isHTMLStrippingEnabled() {
 		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 
 		return Boolean.valueOf(html.getAttribute("disable")).booleanValue();
 	}
-
 
 	/**
 	 * @param bodyPart
@@ -283,7 +322,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 	private InputStream decodeBodyStream(Charset charset, MimePart bodyPart,
 			InputStream bodyStream) throws Exception {
 
-		//	default encoding is plain
+		// default encoding is plain
 		int encoding = MimeHeader.PLAIN;
 
 		if (bodyPart != null) {
@@ -343,7 +382,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 				}
 			}
 
-			//((CharsetOwnerInterface) mediator).setCharset(charset);
+			// ((CharsetOwnerInterface) mediator).setCharset(charset);
 
 		}
 		return charset;
@@ -353,7 +392,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 	 * 
 	 * read text-properties from configuration and create a stylesheet for the
 	 * html-document
-	 *  
+	 * 
 	 */
 	private void initStyleSheet() {
 		// read configuration from options.xml file
@@ -372,7 +411,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 		String body = null;
 
 		// substitute special characters like:
-		//  <,>,&,\t,\n
+		// <,>,&,\t,\n
 		body = HtmlParser.substituteSpecialCharacters(bodyText);
 
 		// parse for urls and substite with HTML-code
@@ -398,7 +437,7 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 	/*
 	 * 
 	 * encapsulate bodytext in HTML code
-	 *  
+	 * 
 	 */
 	protected String transformToHTML(StringBuffer buf) {
 		// prepend
@@ -424,6 +463,12 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 		size = new Integer(font.getSize()).toString();
 
 		initStyleSheet();
+		
+		initHTMLViewerPlugin();
+	}
+
+	public String getSelectedText() {
+		return viewerPlugin.getSelectedText();
 	}
 
 	/**
@@ -438,66 +483,16 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 	 */
 	public void updateGUI() throws Exception {
 		// clear text viewer
-		setText("");
-		
+		viewerPlugin.view("");
+
 		if (!htmlMessage) {
 			// display bodytext
-			setText(body);
+			viewerPlugin.view(body);
 		} else {
 			// this call has to happen in the awt-event dispatcher thread
-			setPage(url);
+			viewerPlugin.view(url);
 		}
 
-		// setup base url in order to be able to display images
-		// in html-component
-		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-		LOG.info(baseUrl.toString());
-		((HTMLDocument) getDocument()).setBase(baseUrl);
-
-		// scroll window to the beginning
-		setCaretPosition(0);
-	}
-
-	/**
-	 * Setting HTMLDocument to be an asynchronize model.
-	 * <p>
-	 * JTextPane therefore uses a background thread to display the message. This
-	 * dramatically improves the performance of displaying a message.
-	 * <p>
-	 * Trick is to overwrite the getAsynchronousLoadPriority() to return a
-	 * decent value.
-	 * 
-	 * @author fdietz
-	 */
-	public class AsynchronousHTMLDocument extends HTMLDocument {
-
-		/**
-		 *  
-		 */
-		public AsynchronousHTMLDocument() {
-			super();
-
-		}
-
-		public AsynchronousHTMLDocument(StyleSheet styles) {
-			super(styles);
-		}
-
-		/**
-		 * From the JDK1.4 reference:
-		 * <p>
-		 * This may load either synchronously or asynchronously depending upon
-		 * the document returned by the EditorKit. If the Document is of type
-		 * AbstractDocument and has a value returned by
-		 * AbstractDocument.getAsynchronousLoadPriority that is greater than or
-		 * equal to zero, the page will be loaded on a separate thread using
-		 * that priority.
-		 * 
-		 * @see javax.swing.text.AbstractDocument#getAsynchronousLoadPriority()
-		 */
-		public int getAsynchronousLoadPriority() {
-			return 0;
-		}
 	}
 
 	/**
@@ -509,177 +504,175 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 
 	/** ***************** FocusOwner interface ********************** */
 
-	class MyFocusOwner implements FocusOwner {
-		/**
-		 * @see javax.swing.text.JTextComponent#copy()
-		 */
-		public void copy() {
-			int start = getSelectionStart();
-			int stop = getSelectionEnd();
-
-			StringWriter htmlSelection = new StringWriter();
-
-			try {
-				htmlEditorKit.write(htmlSelection, getDocument(), start, stop
-						- start);
-
-				Clipboard clipboard = getToolkit().getSystemClipboard();
-
-				// Conversion of html text to plain
-				//TODO (@author karlpeder): make a DataFlavor that can handle
-				// HTML
-				// text
-				StringSelection selection = new StringSelection(HtmlParser
-						.htmlToText(htmlSelection.toString(), true));
-				clipboard.setContents(selection, selection);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#cut()
-		 */
-		public void cut() {
-			// not supported
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#delete()
-		 */
-		public void delete() {
-			// not supported
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-		 */
-		public JComponent getComponent() {
-			return TextViewer.this;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-		 */
-		public boolean isCopyActionEnabled() {
-
-			if (getSelectedText() == null) {
-				return false;
-			}
-
-			if (getSelectedText().length() > 0) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-		 */
-		public boolean isCutActionEnabled() {
-			// action not support
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-		 */
-		public boolean isDeleteActionEnabled() {
-			// action not supported
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-		 */
-		public boolean isPasteActionEnabled() {
-			// action not supported
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-		 */
-		public boolean isRedoActionEnabled() {
-			// action not supported
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-		 */
-		public boolean isSelectAllActionEnabled() {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-		 */
-		public boolean isUndoActionEnabled() {
-			// action not supported
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#paste()
-		 */
-		public void paste() {
-			// action not supported
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#redo()
-		 */
-		public void redo() {
-			// action not supported
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-		 */
-		public void selectAll() {
-
-			selectAll();
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.columba.core.gui.focus.FocusOwner#undo()
-		 */
-		public void undo() {
-
-		}
-	}
-
-	
+	// class MyFocusOwner implements FocusOwner {
+	// /**
+	// * @see javax.swing.text.JTextComponent#copy()
+	// */
+	// public void copy() {
+	// int start = getSelectionStart();
+	// int stop = getSelectionEnd();
+	//
+	// StringWriter htmlSelection = new StringWriter();
+	//
+	// try {
+	// htmlEditorKit.write(htmlSelection, getDocument(), start, stop
+	// - start);
+	//
+	// Clipboard clipboard = getToolkit().getSystemClipboard();
+	//
+	// // Conversion of html text to plain
+	// //TODO (@author karlpeder): make a DataFlavor that can handle
+	// // HTML
+	// // text
+	// StringSelection selection = new StringSelection(HtmlParser
+	// .htmlToText(htmlSelection.toString(), true));
+	// clipboard.setContents(selection, selection);
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// } catch (BadLocationException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#cut()
+	// */
+	// public void cut() {
+	// // not supported
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#delete()
+	// */
+	// public void delete() {
+	// // not supported
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	// */
+	// public JComponent getComponent() {
+	// return TextViewer.this;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	// */
+	// public boolean isCopyActionEnabled() {
+	//
+	// if (getSelectedText() == null) {
+	// return false;
+	// }
+	//
+	// if (getSelectedText().length() > 0) {
+	// return true;
+	// }
+	//
+	// return false;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	// */
+	// public boolean isCutActionEnabled() {
+	// // action not support
+	// return false;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	// */
+	// public boolean isDeleteActionEnabled() {
+	// // action not supported
+	// return false;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	// */
+	// public boolean isPasteActionEnabled() {
+	// // action not supported
+	// return false;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	// */
+	// public boolean isRedoActionEnabled() {
+	// // action not supported
+	// return false;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	// */
+	// public boolean isSelectAllActionEnabled() {
+	// return true;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	// */
+	// public boolean isUndoActionEnabled() {
+	// // action not supported
+	// return false;
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#paste()
+	// */
+	// public void paste() {
+	// // action not supported
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#redo()
+	// */
+	// public void redo() {
+	// // action not supported
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	// */
+	// public void selectAll() {
+	//
+	// selectAll();
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see org.columba.core.gui.focus.FocusOwner#undo()
+	// */
+	// public void undo() {
+	//
+	// }
+	// }
 }

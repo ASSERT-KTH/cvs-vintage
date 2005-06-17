@@ -278,6 +278,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 			} else if (type.equalsIgnoreCase("text")) {
 
+				// TODO: try to re-use instances of TextViewer
 				viewer = new TextViewer(mediator);
 
 				panel = createFileAttachmentPanel(description, viewer, ref);
