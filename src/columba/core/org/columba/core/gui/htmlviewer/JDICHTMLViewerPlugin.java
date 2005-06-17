@@ -36,10 +36,19 @@ public class JDICHTMLViewerPlugin extends JComponent implements
 	public JDICHTMLViewerPlugin() {
 		super();
 
-		browser = new WebBrowser();
+		try {
+			browser = new WebBrowser();
+			
+			setLayout(new BorderLayout());
+			add(browser, BorderLayout.CENTER);
+			
+		} catch (Error e) {
+			LOG.severe("Error while initializing JDIC native browser: " + e.getMessage());
+			if (Main.DEBUG)
+				e.printStackTrace();
+		}
 
-		setLayout(new BorderLayout());
-		add(browser, BorderLayout.CENTER);
+		
 	}
 
 	public void view(String htmlSource) {
@@ -82,6 +91,10 @@ public class JDICHTMLViewerPlugin extends JComponent implements
 	public boolean initialized() {
 		// TODO: update JDIC to version 0.9 and check status with
 		// WebBrowser.isInitialized() instead
-		return browser.getStatus().isInitialized();
+		
+		if ( browser != null)
+			return browser.getStatus().isInitialized();
+		
+		return false;
 	}
 }
