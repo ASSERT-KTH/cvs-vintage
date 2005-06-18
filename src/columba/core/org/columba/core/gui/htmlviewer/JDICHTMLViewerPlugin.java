@@ -19,6 +19,14 @@ import org.jdesktop.jdic.browser.WebBrowser;
  * JDIC-enabled web browser component used by the Message Viewer in component
  * mail.
  * <p>
+ * Note: Java Proxy support/configuration doesn't has any effect. This component
+ * uses your system's proxy settings. For example, when using Firefox, you have
+ * to set your proxy in Firefox and these same options are also used in Columba.
+ * <p>
+ * Javascript support can be used to access DOM. This way we can for example
+ * print the HTML page using: 
+ * <code>webBrowser.executeScript("window.print();");</code>
+ * <p>  
  * TODO: how to use images in Message Viewer, we can't set a base URL and load
  * images from columba.jar?
  * 
