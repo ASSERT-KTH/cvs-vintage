@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.30 2005/05/11 18:28:11 mvw Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.31 2005/06/18 06:51:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,6 +174,8 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
 
     /**
      * Get the homemodel.
+     *
+     * @return the homemodel
      */
     public Object getHomeModel() { 
         return homeModel; 
