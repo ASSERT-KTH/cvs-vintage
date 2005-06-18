@@ -1,3 +1,4 @@
+package org.columba.mail.spam.spamassassin;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.util.OSInfo;
 

@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.macchiato.maps.ProbabilityMap;
 import org.macchiato.maps.ProbabilityMapImpl;
 import org.macchiato.tokenizer.Token;
@@ -34,56 +34,57 @@ import org.macchiato.tokenizer.Token;
  * future.
  * 
  * @author fdietz
- *  
+ * 
  */
 public class RuleList {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.spam.rules");
-	
-    private List list;
 
-    private static RuleList instance;
+	private List list;
 
-    public RuleList() {
-        list = new ArrayList();
+	private static RuleList instance;
 
-        addRule(new SubjectWhitespaceRule());
-        addRule(new OnlyHTMLMimepartRule());
-        addRule(new SubjectIsAllCapitalsRule());
-        addRule(new MixedCharactersAddressRule());
-        addRule(new MissingToHeaderRule());
-        addRule(new SubjectContainsSpamRule());
-    }
+	public RuleList() {
+		list = new ArrayList();
 
-    public static RuleList getInstance() {
-        if (instance == null) instance = new RuleList();
+		addRule(new SubjectWhitespaceRule());
+		addRule(new OnlyHTMLMimepartRule());
+		addRule(new SubjectIsAllCapitalsRule());
+		addRule(new MixedCharactersAddressRule());
+		addRule(new MissingToHeaderRule());
+		addRule(new SubjectContainsSpamRule());
+	}
 
-        return instance;
-    }
+	public static RuleList getInstance() {
+		if (instance == null)
+			instance = new RuleList();
 
-    public ProbabilityMap getProbabilities(AbstractMessageFolder folder, Object uid)
-            throws Exception {
+		return instance;
+	}
 
-        ProbabilityMap map = new ProbabilityMapImpl();
+	public ProbabilityMap getProbabilities(IMailbox folder, Object uid)
+			throws Exception {
 
-        Iterator it = list.iterator();
+		ProbabilityMap map = new ProbabilityMapImpl();
 
-        while (it.hasNext()) {
-            Rule rule = (Rule) it.next();
-            LOG.info("rule "+rule.getName());
-            
-            float score = rule.score(folder, uid);
-            LOG.info("score="+score);
+		Iterator it = list.iterator();
 
-            map.addToken(new Token(rule.getName()), score);
-        }
+		while (it.hasNext()) {
+			Rule rule = (Rule) it.next();
+			LOG.info("rule " + rule.getName());
 
-        return map;
-    }
+			float score = rule.score(folder, uid);
+			LOG.info("score=" + score);
 
-    public void addRule(Rule rule) {
-        list.add(rule);
-    }
+			map.addToken(new Token(rule.getName()), score);
+		}
+
+		return map;
+	}
+
+	public void addRule(Rule rule) {
+		list.add(rule);
+	}
 }

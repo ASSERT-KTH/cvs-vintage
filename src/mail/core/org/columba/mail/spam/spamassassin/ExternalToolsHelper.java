@@ -1,3 +1,4 @@
+package org.columba.mail.spam.spamassassin;
 import java.io.File;
 
 import org.columba.core.plugin.PluginManager;

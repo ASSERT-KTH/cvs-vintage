@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.spam.rules;
 
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 
 /**
@@ -33,10 +33,10 @@ public class SubjectIsAllCapitalsRule extends AbstractRule {
     }
 
     /**
-     * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.AbstractMessageFolder,
+     * @see org.columba.mail.spam.rules.Rule#score(IMailbox,
      *      java.lang.Object)
      */
-    public float score(AbstractMessageFolder folder, Object uid) throws Exception {
+    public float score(IMailbox folder, Object uid) throws Exception {
         Header header = folder.getHeaderFields(uid, new String[] { "Subject"});
         String subject = header.get("Subject");
         if (subject == null) return NEARLY_ZERO;

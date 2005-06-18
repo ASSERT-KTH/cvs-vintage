@@ -19,7 +19,7 @@ package org.columba.mail.spam.rules;
 
 import java.util.Iterator;
 
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -38,10 +38,10 @@ public class OnlyHTMLMimepartRule extends AbstractRule {
     }
 
     /**
-     * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.AbstractMessageFolder,
+     * @see org.columba.mail.spam.rules.Rule#score(IMailbox,
      *      java.lang.Object)
      */
-    public float score(AbstractMessageFolder folder, Object uid) throws Exception {
+    public float score(IMailbox folder, Object uid) throws Exception {
         MimeTree tree = folder.getMimePartTree(uid);
 
         Iterator it = tree.getAllLeafs().iterator();

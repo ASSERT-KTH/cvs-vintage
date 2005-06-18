@@ -1,3 +1,4 @@
+package org.columba.mail.spam.spamassassin;
 import org.columba.core.io.StreamUtils;
 
 import java.io.BufferedReader;

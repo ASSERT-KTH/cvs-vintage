@@ -10,4 +10,5 @@
  <handler id="org.columba.mail.menu" class="org.columba.mail.plugin.MailMenuPluginHandler"/>
  <handler id="org.columba.mail.composer.menu" class="org.columba.mail.plugin.ComposerMenuPluginHandler"/>
  <handler id="org.columba.mail.viewer" class="org.columba.mail.plugin.ViewerPluginHandler"/>
+ <handler id="org.columba.mail.spam" class="org.columba.mail.plugin.SpamPluginHandler"/>
 </handlerlist>

@@ -18,9 +18,6 @@ package org.columba.mail.spam.command;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
@@ -30,8 +27,6 @@ import org.columba.core.main.Main;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.spam.SpamController;
-import org.columba.ristretto.message.Header;
-import org.macchiato.Message;
 
 /**
  * Learn selected messages as spam.
@@ -59,44 +54,29 @@ public class LearnMessageAsSpamCommand extends Command {
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r
+				.getSourceFolder();
 
-		//	update status message
+		// register for status events
+		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+
+		// update status message
 		if (uids.length > 1) {
-			//TODO (@author fdietz): i18n
+			// TODO (@author fdietz): i18n
 			worker.setDisplayText("Training messages...");
 			worker.setProgressBarMaximum(uids.length);
 		}
 
-		InputStream istream = null;
 		for (int j = 0; j < uids.length; j++) {
 			if (worker.cancelled()) {
 				break;
 			}
 
 			try {
-				// register for status events
-				((StatusObservableImpl) srcFolder.getObservable())
-						.setWorker(worker);
 
-				// get inputstream of message body
-				istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
-
-				// get headers
-				Header h = srcFolder.getHeaderFields(uids[j],
-						Message.HEADERFIELDS);
-
-				// put headers in list
-				Enumeration e = h.getKeys();
-				List list = new ArrayList();
-
-				while (e.hasMoreElements()) {
-					String key = (String) e.nextElement();
-					list.add(h.get(key));
-				}
-
-				//train message as spam
-				SpamController.getInstance().trainMessageAsSpam(istream, list);
+				// train message as spam
+				SpamController.getInstance().trainMessageAsSpam(srcFolder,
+						uids[j]);
 
 				if (uids.length > 1) {
 					worker.setProgressBarValue(j);
@@ -104,11 +84,6 @@ public class LearnMessageAsSpamCommand extends Command {
 			} catch (Exception e) {
 				if (Main.DEBUG) {
 					e.printStackTrace();
-				}
-			} finally {
-				try {
-					istream.close();
-				} catch (IOException ioe) {
 				}
 			}
 		}

@@ -25,7 +25,7 @@ import java.util.Vector;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.Header;
@@ -55,7 +55,7 @@ public final class CommandHelper {
 	 * @return inputstream of message bodypart
 	 * @throws Exception
 	 */
-	public static InputStream getBodyPart(AbstractMessageFolder folder, Object uid)
+	public static InputStream getBodyPart(IMailbox folder, Object uid)
 			throws Exception {
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
 
@@ -90,14 +90,17 @@ public final class CommandHelper {
 	 * <p>
 	 * Additionally decode inputstream.
 	 * 
-	 * @param folder		selected folder
-	 * @param uid			selected message UID
-	 * @param mp			selected Mimepart
-	 * @return				decoded inputstream
+	 * @param folder
+	 *            selected folder
+	 * @param uid
+	 *            selected message UID
+	 * @param mp
+	 *            selected Mimepart
+	 * @return decoded inputstream
 	 * @throws Exception
 	 */
-	private static InputStream getBodyPartStream(AbstractMessageFolder folder,
-			Object uid, MimePart mp) throws Exception {
+	private static InputStream getBodyPartStream(IMailbox folder, Object uid,
+			MimePart mp) throws Exception {
 		InputStream bodyStream = folder.getMimePartBodyStream(uid, mp
 				.getAddress());
 
@@ -130,8 +133,8 @@ public final class CommandHelper {
 	 * @return account item
 	 * @throws Exception
 	 */
-	public static AccountItem retrieveAccountItem(AbstractMessageFolder folder,
-			Object uid) throws Exception {
+	public static AccountItem retrieveAccountItem(IMailbox folder, Object uid)
+			throws Exception {
 		AccountItem item = null;
 
 		Object accountUid = folder.getAttribute(uid, "columba.accountuid");
@@ -154,7 +157,8 @@ public final class CommandHelper {
 		if (item == null) {
 			// use default account as fallback
 
-			item = MailConfig.getInstance().getAccountList().getDefaultAccount();
+			item = MailConfig.getInstance().getAccountList()
+					.getDefaultAccount();
 		}
 
 		return item;

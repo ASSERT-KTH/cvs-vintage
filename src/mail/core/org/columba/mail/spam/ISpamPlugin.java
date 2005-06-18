@@ -15,33 +15,41 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.spam.rules;
+package org.columba.mail.spam;
 
 import org.columba.mail.folder.IMailbox;
-import org.columba.ristretto.message.Header;
 
+public interface ISpamPlugin {
 
-/**
- * Check if To: header is missing.
- * 
- * @author fdietz
- *
- */
-public class MissingToHeaderRule extends AbstractRule {
-
-    public MissingToHeaderRule() {
-        super("MissingToHeaderRule");
-    }
-    /**
-     * @see org.columba.mail.spam.rules.Rule#score(IMailbox, java.lang.Object)
-     */
-    public float score(IMailbox folder, Object uid) throws Exception {
-        Header header = folder.getHeaderFields(uid, new String[] { "To"});
-        String from = header.get("To");
-        if (from == null) return MAX_PROBABILITY;
-        if (from.length() == 0) return MAX_PROBABILITY;
-        
-        return NEARLY_ZERO;
-    }
-
+	/**
+	 * Score message. Check if message is spam or non spam.
+	 * 
+	 * @param mailbox
+	 * @param uid
+	 * @return
+	 * @throws Exception TODO
+	 */
+	boolean scoreMessage(IMailbox mailbox, Object uid) throws Exception;
+	
+	/**
+	 * Add this message to the token database as spam.
+	 * 
+	 * @param mailbox
+	 * @param uid
+	 * @throws Exception TODO
+	 */
+	void trainMessageAsSpam(IMailbox mailbox, Object uid) throws Exception;
+	
+	/**
+	 * Add this message to the token database as ham.
+	 * 
+	 * @param mailbox
+	 * @param uid
+	 * @throws Exception TODO
+	 */
+	void trainMessageAsHam(IMailbox mailbox, Object uid) throws Exception;
+	
+	void save();
+	
+	void load();
 }

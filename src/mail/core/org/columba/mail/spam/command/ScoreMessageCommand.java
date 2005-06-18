@@ -18,17 +18,13 @@
 package org.columba.mail.spam.command;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.Main;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -36,10 +32,6 @@ import org.columba.mail.filter.plugins.AddressbookFilter;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.spam.SpamController;
-import org.columba.mail.spam.rules.RuleList;
-import org.columba.ristretto.message.Header;
-import org.macchiato.Message;
-import org.macchiato.maps.ProbabilityMap;
 
 /**
  * Score selected messages as spam, meaning calculate the likelyhood that the
@@ -52,10 +44,6 @@ public class ScoreMessageCommand extends Command {
 	private Object[] uids;
 
 	private AbstractMessageFolder srcFolder;
-
-	private WorkerStatusController worker;
-
-	private CloneStreamMaster master;
 
 	private MarkMessageCommand markAsSpamCommand;
 
@@ -90,8 +78,6 @@ public class ScoreMessageCommand extends Command {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		this.worker = worker;
-
 		// get source reference
 		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
@@ -105,7 +91,7 @@ public class ScoreMessageCommand extends Command {
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
 		// update status message
-		//TODO (@author fdietz): i18n
+		// TODO (@author fdietz): i18n
 		worker.setDisplayText("Scoring messages ...");
 		worker.setProgressBarMaximum(uids.length);
 
@@ -118,11 +104,9 @@ public class ScoreMessageCommand extends Command {
 			}
 
 			try {
-				// apply additional handcrafted rules
-				ProbabilityMap map = applyAdditionalRules(j);
 
 				// score message
-				boolean result = scoreMessage(j, map);
+				boolean result = scoreMessage(j);
 
 				// if message is spam
 				if (result) {
@@ -150,8 +134,8 @@ public class ScoreMessageCommand extends Command {
 
 		// mark spam messages
 		if (spamList.size() != 0) {
-			MailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
-					spamList.toArray());
+			MailFolderCommandReference ref = new MailFolderCommandReference(
+					srcFolder, spamList.toArray());
 			ref.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 			markAsSpamCommand = new MarkMessageCommand(ref);
 			markAsSpamCommand.execute(worker);
@@ -159,20 +143,13 @@ public class ScoreMessageCommand extends Command {
 
 		// mark non spam messages
 		if (nonspamList.size() != 0) {
-			MailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
-					nonspamList.toArray());
+			MailFolderCommandReference ref = new MailFolderCommandReference(
+					srcFolder, nonspamList.toArray());
 			ref.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
 			markAsNotSpamCommand = new MarkMessageCommand(ref);
 			markAsNotSpamCommand.execute(worker);
 		}
 
-	}
-
-	private ProbabilityMap applyAdditionalRules(int j) throws Exception {
-		ProbabilityMap map = RuleList.getInstance().getProbabilities(srcFolder,
-				uids[j]);
-
-		return map;
 	}
 
 	/**
@@ -184,23 +161,11 @@ public class ScoreMessageCommand extends Command {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private boolean scoreMessage(int j, ProbabilityMap map) throws Exception,
-			IOException {
-		// get inputstream of message body
-		InputStream istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
+	private boolean scoreMessage(int j) throws Exception, IOException {
 
-		// we are using this inpustream multiple times
-		// --> istream will be closed by CloneStreamMaster
-		master = new CloneStreamMaster(istream);
-
-		// get stream
-		istream = master.getClone();
 		// calculate message score
-		boolean result = SpamController.getInstance()
-				.scoreMessage(istream, map);
-
-		// close stream
-		istream.close();
+		boolean result = SpamController.getInstance().scoreMessage(srcFolder,
+				uids[j]);
 
 		// message belongs to which account?
 		AccountItem item = CommandHelper
@@ -226,28 +191,13 @@ public class ScoreMessageCommand extends Command {
 	 * @throws Exception
 	 */
 	private void trainMessage(int j, boolean result) throws Exception {
-		// get headers
-		Header h = srcFolder.getHeaderFields(uids[j], Message.HEADERFIELDS);
-
-		// put headers in list
-		Enumeration e = h.getKeys();
-		List list = new ArrayList();
-
-		while (e.hasMoreElements()) {
-			String key = (String) e.nextElement();
-			list.add(h.get(key));
-		}
-
-		// get another inputstream
-		InputStream istream = master.getClone();
 
 		// add this message to frequency database
 		if (result) {
-			SpamController.getInstance().trainMessageAsSpam(istream, list);
+			SpamController.getInstance().trainMessageAsSpam(srcFolder, uids[j]);
 		} else {
-			SpamController.getInstance().trainMessageAsHam(istream, list);
+			SpamController.getInstance().trainMessageAsHam(srcFolder, uids[j]);
 		}
-		// close stream
-		istream.close();
+
 	}
 }
