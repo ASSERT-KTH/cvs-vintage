@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.15 2005/01/28 21:41:38 linus Exp $
+// $Id: TestTabDiagram.java,v 1.16 2005/06/18 17:52:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.graph.presentation.JGraph;
@@ -137,7 +137,7 @@ public class TestTabDiagram extends TestCase {
                     diagrams[i] = new UMLClassDiagram(project.getRoot());
                     diagrams[i].add(
                         new FigClass(diagrams[i].getGraphModel(), clazz));
-                    ProjectBrowser.getInstance().setTarget(diagrams[i]);
+                    TargetManager.getInstance().setTarget(diagrams[i]);
                 }
 
                 // real test

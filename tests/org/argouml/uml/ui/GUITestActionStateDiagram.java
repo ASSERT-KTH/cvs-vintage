@@ -1,4 +1,4 @@
-// $Id: GUITestActionStateDiagram.java,v 1.4 2005/05/18 20:27:00 mvw Exp $
+// $Id: GUITestActionStateDiagram.java,v 1.5 2005/06/18 17:52:07 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 
 import ru.novosoft.uml.foundation.core.MClassifierImpl;
 import ru.novosoft.uml.foundation.core.MNamespace;
@@ -38,11 +38,11 @@ import ru.novosoft.uml.foundation.core.MNamespace;
  * @since Jan 9, 2003
  */
 public class GUITestActionStateDiagram
-    extends AbstractTestActionAddDiagram
-{
+    extends AbstractTestActionAddDiagram {
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param arg0 test case name
      */
     public GUITestActionStateDiagram(String arg0) {
@@ -77,7 +77,7 @@ public class GUITestActionStateDiagram
      */
     protected void setUp() {
         super.setUp();
-        ProjectBrowser.getInstance().setTarget(new MClassifierImpl());
+        TargetManager.getInstance().setTarget(new MClassifierImpl());
     }
 
 }
