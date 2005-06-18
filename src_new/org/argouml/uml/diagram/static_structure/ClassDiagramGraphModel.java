@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.75 2005/05/03 20:23:40 mvw Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.76 2005/06/18 06:50:52 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -393,13 +393,12 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
             Collection ends = Model.getFacade().getAssociationEnds(node);
             Iterator iter = ends.iterator();
             while (iter.hasNext()) {
-                Object associationEnd = iter.next();
-                if (!Model.getFacade().isANaryAssociation(
-                        Model.getFacade().getAssociation(associationEnd))
-                    && canAddEdge(
-                        Model.getFacade().getAssociation(associationEnd))) {
+                Object association = 
+                        Model.getFacade().getAssociation(iter.next());
+                if (!Model.getFacade().isANaryAssociation(association)
+                    && canAddEdge(association)) {
 
-                    addEdge(Model.getFacade().getAssociation(associationEnd));
+                    addEdge(association);
                 }
             }
         }
