@@ -130,7 +130,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 		// generate xml element describing action
 		XmlElement element = new XmlElement("action");
 		element.addAttribute("name", actionId);
-		String clazzString = action.getClass().getCanonicalName();
+		String clazzString = action.getClass().getName();
 		element.addAttribute("class", clazzString);
 
 		parentNode.addElement(element);
