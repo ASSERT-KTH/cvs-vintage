@@ -428,7 +428,7 @@
        <property name="version" value="1.0.0" />
      </ant>
   </target>
-  <target name="dep.tomcat-util" unless="tomcat-util.is.uptodate"
+  <target name="dep.tomcat-util"  unless="tomcat-util.is.uptodate"
           depends="dep.tomcat-jni"
           description="Build j-t-c util which we depend on. To be called before main">
     <ant dir="${jtc.util.home}" />
@@ -448,9 +448,13 @@
             <property name="tomcat-jni.jar" value="${tomcat-jni.jar}" />
         </ant>
             
-        <ant dir="${jtc.jk.home}" target="build-jk">
+        <ant dir="${jtc.jk.home}" target="build-jk" inheritAll="false">
             <property name="tomcat33.home" value="${tomcat.build}"/>
             <property name="servlet-api.jar" value="${basedir}/${servlet22.jar}"/>
+            <property name="tomcat-apr.jar" value="${tomcat-jni.jar}" />
+            <property name="jmx.jar" value="${jmx.jar}" />
+            <property name="commons-modeler.jar" value="${commons-modeler.jar}" />
+            <property name="commons-logging.jar" value="${commons-logging.jar}" />
         </ant>
   </target>
 
@@ -1236,6 +1240,7 @@
     <ant dir="${jakarta-tomcat-connectors}/coyote" target="clean" />
     <ant dir="${jakarta-tomcat-connectors}/http11" target="clean" />
     <ant dir="${jakarta-tomcat-connectors}/jk" target="clean" />
+    <ant dir="${jakarta-tomcat-connectors}/jni" target="clean" />
   </target>
 
   <target name="all" depends="clean,dist"/>
