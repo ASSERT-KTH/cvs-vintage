@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.2 2005/06/11 20:13:49 bobtarling Exp $
+// $Id: UmlFactory.java,v 1.3 2005/06/18 16:13:00 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,7 +123,7 @@ public interface UmlFactory {
      * @return true if removed
      */
     boolean isRemoved(Object o);
-    
+
     /**
      * Adds all interested (and centralized) listeners to the given
      * modelelement handle.

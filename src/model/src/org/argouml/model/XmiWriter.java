@@ -1,4 +1,4 @@
-// $Id: XmiWriter.java,v 1.2 2005/04/24 20:07:55 mvw Exp $
+// $Id: XmiWriter.java,v 1.3 2005/06/18 16:13:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,9 @@ package org.argouml.model;
 public interface XmiWriter {
 
     /**
-     * Write XMI to registered writer
+     * Write XMI to registered writer.
+     *
      * @throws UmlException if it goes wrong
      */
-    public void write() throws UmlException;
+    void write() throws UmlException;
 }

@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactory.java,v 1.2 2005/02/20 15:47:15 bobtarling Exp $
+// $Id: ModelManagementFactory.java,v 1.3 2005/06/18 16:13:00 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,17 +38,19 @@ public interface ModelManagementFactory {
     Object createModel();
 
     /**
-     * Sets the root model of the project
+     * Sets the root model of the project.
+     *
      * @param rootModel the new root model.
      */
-    public void setRootModel(Object rootModel);
-    
+    void setRootModel(Object rootModel);
+
     /**
-     * Gets the root model of the project
+     * Gets the root model of the project.
+     *
      * @return the current root model.
      */
-    public Object getRootModel();
-    
+    Object getRootModel();
+
     /**
      * Create an empty but initialized instance of a UML ElementImport.
      *

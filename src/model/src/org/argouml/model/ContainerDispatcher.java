@@ -1,4 +1,4 @@
-// $Id: ContainerDispatcher.java,v 1.3 2005/06/01 17:20:54 bobtarling Exp $
+// $Id: ContainerDispatcher.java,v 1.4 2005/06/18 16:13:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,5 +58,5 @@ public interface ContainerDispatcher extends PropertyChangeListener {
      *
      * @param metaclasses  The metaclass array we wish to listen to.
      */
-    public void setNameEventListening(Object[] metaclasses);
+    void setNameEventListening(Object[] metaclasses);
 }

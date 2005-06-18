@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.5 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: Facade.java,v 1.6 2005/06/18 16:13:00 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.model;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Facade object for the Model subsystem in ArgoUML.<p>

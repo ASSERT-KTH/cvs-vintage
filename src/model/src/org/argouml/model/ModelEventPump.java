@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.7 2005/06/09 16:00:50 bobtarling Exp $
+// $Id: ModelEventPump.java,v 1.8 2005/06/18 16:13:00 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,17 +204,17 @@ public interface ModelEventPump {
      * @param saveAction the action to enable on change to model.
      */
     void setSaveAction(Action saveAction);
-    
+
     /**
      * Start the ModelEventPump firing events.
      */
     void startPumpingEvents();
-    
+
     /**
      * Stop the ModelEventPump firing events.
      */
     void stopPumpingEvents();
-    
+
     /**
      * Flush events from the ModelEventPump.
      */
