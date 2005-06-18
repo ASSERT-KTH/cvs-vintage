@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.22 2005/06/15 20:19:15 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.23 2005/06/18 13:47:23 mvw Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -56,6 +56,17 @@ Change to XXX.
       </tbody>
       -->
 
+      <tbody valign="top">
+        <row>
+          <entry>2005-06-18</entry>
+          <entry> Restructured: all main chapters are now in seperate files. No
+            content changes.
+          </entry>
+          <entry>Michiel van der Wulp</entry>
+        </row>
+      </tbody>
+      
+      
       <tbody valign="top">
         <row>
           <entry>2005-06-15</entry>
