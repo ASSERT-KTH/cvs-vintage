@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.11 2005/06/17 20:51:31 mvw Exp $
+// $Id: ActionEdgesDisplay.java,v 1.12 2005/06/18 06:53:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Editor;
@@ -53,9 +54,9 @@ public class ActionEdgesDisplay extends UMLAction {
 
     // compartments
     private static UMLAction showEdges = new ActionEdgesDisplay(true,
-                Translator.localize("menu.popup.show.all-edges"));
+                Translator.localize("menu.popup.add.all-relations"));
     private static UMLAction hideEdges = new ActionEdgesDisplay(false,
-                Translator.localize("menu.popup.hide.all-edges"));
+                Translator.localize("menu.popup.remove.all-relations"));
 
     private boolean show;
 
@@ -78,6 +79,9 @@ public class ActionEdgesDisplay extends UMLAction {
     // main methods
 
     /**
+     * TODO: Support commentEdges.
+     * TODO: Support associations to self.
+     * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
@@ -106,6 +110,9 @@ public class ActionEdgesDisplay extends UMLAction {
                 Iterator e2 = edges.iterator();
                 while (e2.hasNext()) {
                     Object edge = e2.next();
+                    if (Model.getFacade().isAAssociationEnd(edge)) {
+                        edge = Model.getFacade().getAssociation(edge);
+                    }
                     Fig fig = d.presentationFor(edge);
                     if (fig != null)
                         fig.removeFromDiagram();

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.101 2005/06/17 19:57:38 mvw Exp $
+// $Id: FigInterface.java,v 1.102 2005/06/18 06:53:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
+import org.argouml.uml.diagram.ui.ActionEdgesDisplay;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
@@ -245,6 +246,8 @@ public class FigInterface extends FigNodeModelElement
         ArgoJMenu addMenu = new ArgoJMenu("menu.popup.add");
         addMenu.add(new ActionAddOperation());
         addMenu.add(new ActionAddNote());
+        addMenu.add(ActionEdgesDisplay.getShowEdges());
+        addMenu.add(ActionEdgesDisplay.getHideEdges());
         popUpActions.insertElementAt(addMenu,
                 popUpActions.size() - popupAddOffset);
 
