@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.178 2005/06/05 15:21:35 linus Exp $
+<!-- $Id: build.xml,v 1.179 2005/06/19 12:29:03 linus Exp $
 This requires ANT 1.6.2
 
 if you get a message like:
@@ -1561,30 +1561,6 @@ ArgoUML to JMI.
        </classpath>
     </javac>
 
-  </target>
-
-
-  <!-- =================================================================== -->
-  <!-- Finds usages of deprecated classes and methods.                     -->
-  <!-- This requires that the deprecation property is on in your property  -->
-  <!-- file.                                                               -->
-  <!-- Unluckily Linus doesn't know how to write this in a                 -->
-  <!-- platform-independant way (i.e. with just ant-calls) so it will only -->
-  <!-- be working for unix/shell enabled platforms. If you know how to     -->
-  <!-- solve this within ant, please go ahead.                             -->
-  <!-- Unluckily 2 This uses a very tedious algorithm. On Linus' computer  -->
-  <!-- it takes almost three hours to complete.                            -->
-  <!-- If you could think of a better way to do this, please go ahead.     -->
-  <!-- =================================================================== -->
-
-  <target name="compile-find-deprecated"
-          depends="compile"
-          description="Compiles every class by itself so that we will find all uses of deprecated classes and methods.">
-    <exec executable="sh">
-      <arg value="-c"/>
-      <arg value="find ${argo.build.classes} -name \*.class -print | while read filename; do rm -v $$filename; ./build.sh -emacs compile; done"/>
-    </exec>
-    <antcall target="clean"/>
   </target>
 
 
