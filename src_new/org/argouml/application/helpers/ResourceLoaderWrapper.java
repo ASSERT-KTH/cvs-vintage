@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.32 2005/06/18 18:38:56 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.33 2005/06/19 08:42:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,7 +187,7 @@ public final class ResourceLoaderWrapper {
     /**
      * Find the Icon for a given model element.
      *
-     * @return The Icon.
+     * @return The Icon or <code>null</code> if there is no Icon.
      * @param value The model element.
      *
      * TODO: This should not use string matching on classnames to do this
@@ -200,7 +200,11 @@ public final class ResourceLoaderWrapper {
                     "Attempted to get an icon given a null key");
         }
 
-	Icon icon = (Icon) iconCache.get(value.getClass());
+        if (value instanceof String) {
+            return null;
+        }
+
+        Icon icon = (Icon) iconCache.get(value.getClass());
 
         if (Model.getFacade().isAPseudostate(value)) {
 
