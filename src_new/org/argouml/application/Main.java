@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.127 2005/06/16 18:39:22 mvw Exp $
+// $Id: Main.java,v 1.128 2005/06/19 12:47:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,6 +100,7 @@ public class Main {
      * @param args command line parameters
      */
     public static void main(String[] args) {
+	LOG.info("ArgoUML Started.");
 
         checkJVMVersion();
         checkHostsFile();
