@@ -187,7 +187,7 @@ public void folderSelectionChanged(AbstractFolder newFolder) {
         // we are only interested in folders containing messages 
         // meaning of instance AbstractMessageFolder and not of instance FolderTreeNode
         // -> casting here to Folder
-        if (treeEvent.getSelected()[0] != null) {
+        if (treeEvent.getSelected()[0] != null && treeEvent.getSelected()[0] instanceof AbstractMessageFolder) {
             setFolder((AbstractMessageFolder) treeEvent.getSelected()[0]);
         } else {
         	resetRenderer();
