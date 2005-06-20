@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.165 2005/05/17 17:53:46 mvw Exp $
+// $Id: Project.java,v 1.166 2005/06/20 22:24:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1052,7 +1052,9 @@ public class Project implements java.io.Serializable, TargetListener {
     public void setDefaultModel(Object theDefaultModel) {
 
         if (!Model.getFacade().isAModel(theDefaultModel)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    "The default model must be a Model type. Received a "
+                    + theDefaultModel.getClass().getName());
         }
 
         defaultModel = theDefaultModel;
