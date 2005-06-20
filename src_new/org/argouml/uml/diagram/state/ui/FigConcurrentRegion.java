@@ -1,4 +1,4 @@
-// $Id: FigConcurrentRegion.java,v 1.3 2005/02/01 20:42:17 mvw Exp $
+// $Id: FigConcurrentRegion.java,v 1.4 2005/06/20 18:02:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,15 +174,15 @@ public class FigConcurrentRegion extends FigState
      * @see org.tigris.gef.ui.PopupGenerator#getPopUpActions(java.awt.event.MouseEvent)
      */
     public Vector getPopUpActions(MouseEvent me) {
-        Vector concurrentRegionpopUpActions = super.getPopUpActions(me);
-        concurrentRegionpopUpActions.remove(
+        Vector popUpActions = super.getPopUpActions(me);
+        popUpActions.remove(
                 ActionDeleteFromDiagram.getSingleton());
-        concurrentRegionpopUpActions.add(new JSeparator());
-        concurrentRegionpopUpActions.addElement(
+        popUpActions.add(new JSeparator());
+        popUpActions.addElement(
                 ActionAddConcurrentRegion.getSingleton());
-        concurrentRegionpopUpActions.addElement(
+        popUpActions.addElement(
                 ActionDeleteConcurrentRegion.getSingleton());
-        return concurrentRegionpopUpActions;
+        return popUpActions;
     }
 
 
