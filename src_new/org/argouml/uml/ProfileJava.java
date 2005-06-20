@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.33 2005/06/06 20:34:24 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.34 2005/06/20 22:27:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.model.UmlException;
 import org.argouml.model.XmiReader;
+import org.argouml.model.uml.NSUMLModelFacade;
 import org.xml.sax.InputSource;
 
 /**
@@ -287,71 +288,81 @@ public class ProfileJava extends Profile {
      * @return the model object
      * @throws ProfileException if failed to load profile
      */
-    public Object/*MModel*/ loadProfileModel() throws ProfileException {
-        //
-        //    get a file name for the default model
-        //
-        String defaultModelFileName =
-            System.getProperty("argo.defaultModel");
-        
-        //
-        //   if the property was set
-        //
-        InputStream is = null;
-        if (defaultModelFileName != null) {
+    public Object/* MModel */loadProfileModel() throws ProfileException {
+        // TODO: We need to put this NSUML/MDR dependent code
+        // behind a method in the model interface
+        // Will create an issue to discuss best solution.
+        if (Model.getFacade() instanceof NSUMLModelFacade) {
+            // NSUML implementation
             //
-            //  try to find a file with that name
+            //    get a file name for the default model
             //
-            try {
-                is = new FileInputStream(defaultModelFileName);
-            } catch (FileNotFoundException ex) {
+            String defaultModelFileName = System
+                    .getProperty("argo.defaultModel");
+
+            //
+            //   if the property was set
+            //
+            InputStream is = null;
+            if (defaultModelFileName != null) {
                 //
-                //   no file found, try looking in the resources
+                //  try to find a file with that name
                 //
-                is = new Object().getClass()
-                    .getResourceAsStream(defaultModelFileName);
-                if (is == null) {
-                    LOG.error(
-                	      "Value of property argo.defaultModel ("
-                	      + defaultModelFileName
-                	      + ") did not correspond to an available file.\n");
-                }
-            }
-        }
-        
-        //
-        //   either no name specified or file not found
-        //        load the default
-        if (is == null) {
-            defaultModelFileName = "/org/argouml/default.xmi";
-        
-            // Notice that the class that we run getClass() in needs to be
-            // in the same ClassLoader that the default.xmi.
-            // If we run using Java Web Start then we have every ArgoUML
-            // file in the same jar (i.e. the same ClassLoader).
-            is = new Object() { }
-                .getClass().getResourceAsStream(defaultModelFileName);
-        
-            if (is == null) {
                 try {
-                    is =
-                	new FileInputStream(defaultModelFileName.substring(1));
+                    is = new FileInputStream(defaultModelFileName);
                 } catch (FileNotFoundException ex) {
-                    throw new ProfileException(ex);
+                    //
+                    //   no file found, try looking in the resources
+                    //
+                    is = new Object().getClass().getResourceAsStream(
+                            defaultModelFileName);
+                    if (is == null) {
+                        LOG
+                                .error("Value of property argo.defaultModel ("
+                                        + defaultModelFileName
+                                        + ") did not correspond to an available file.\n");
+                    }
                 }
             }
-        }
-        
-        if (is != null) {
-            try {
-                XmiReader xmiReader = Model.getXmiReader();
-                InputSource inputSource = new InputSource(is);
-                return xmiReader.parseToModel(inputSource);
-            } catch (UmlException e) {
-                throw new ProfileException(e);
+
+            //
+            //   either no name specified or file not found
+            //        load the default
+            if (is == null) {
+                defaultModelFileName = "/org/argouml/default.xmi";
+
+                // Notice that the class that we run getClass() in needs to be
+                // in the same ClassLoader that the default.xmi.
+                // If we run using Java Web Start then we have every ArgoUML
+                // file in the same jar (i.e. the same ClassLoader).
+                is = new Object() {
+                }.getClass().getResourceAsStream(defaultModelFileName);
+
+                if (is == null) {
+                    try {
+                        is = new FileInputStream(defaultModelFileName
+                                .substring(1));
+                    } catch (FileNotFoundException ex) {
+                        throw new ProfileException(ex);
+                    }
+                }
             }
+
+            if (is != null) {
+                try {
+                    XmiReader xmiReader = Model.getXmiReader();
+                    InputSource inputSource = new InputSource(is);
+                    return xmiReader.parseToModel(inputSource);
+                } catch (UmlException e) {
+                    throw new ProfileException(e);
+                }
+            }
+
+            return null;
         }
-        
-        return null;
+        // MDR implementation
+        Object model = Model.getModelManagementFactory().createModel();
+        assert model != null : "A model should have been created";
+        return model;
     }
 }
