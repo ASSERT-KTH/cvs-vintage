@@ -1,8 +1,8 @@
 package org.columba.core.gui.htmlviewer;
 
 import java.awt.BorderLayout;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -10,10 +10,10 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.columba.core.io.DiskIO;
-import org.columba.core.io.TempFileStore;
 import org.columba.core.main.Main;
 import org.jdesktop.jdic.browser.WebBrowser;
+import org.jdesktop.jdic.browser.WebBrowserEvent;
+import org.jdesktop.jdic.browser.WebBrowserListener;
 
 /**
  * JDIC-enabled web browser component used by the Message Viewer in component
@@ -42,15 +42,20 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 
 	private WebBrowser browser;
 
+	private JPanel myInstance;
+	
 	public JDICHTMLViewerPlugin() {
 		super();
-
+		myInstance	= this;
+		
 		try {
+			WebBrowser.setDebug(true);
+			
 			browser = new WebBrowser();
-
+			browser.setSize(500,500);
+			
 			setLayout(new BorderLayout());
 			add(browser, BorderLayout.CENTER);
-
 		} catch (Error e) {
 			LOG.severe("Error while initializing JDIC native browser: "
 					+ e.getMessage());
@@ -64,31 +69,34 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 				e.printStackTrace();
 		}
 
+		addComponentListener(new ComponentListener() {
+
+			public void componentHidden(ComponentEvent e) {
+				browser.setVisible(false);
+				browser = null;
+			}
+
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void componentResized(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 	}
 
 	public void view(String htmlSource) {
-		// TODO: update JDIC to version 0.9 which has a setContent(String)
-		// implementation
-		try {
-			// create temporary file
-			File inputFile = TempFileStore.createTempFileWithSuffix("html");
-			// save bodytext to file
-			DiskIO.saveStringInFile(inputFile, htmlSource);
-			// get URL of file
-			URL url = inputFile.toURL();
-
-			// browser.setContent(htmlSource);
-
-			browser.setURL(url);
-		} catch (MalformedURLException e) {
-			LOG.severe("Error while viewing HTML page: " + e.getMessage());
-			if (Main.DEBUG)
-				e.printStackTrace();
-		} catch (IOException e) {
-			LOG.severe("Error while viewing HTML page: " + e.getMessage());
-			if (Main.DEBUG)
-				e.printStackTrace();
-		}
+		browser.setContent(htmlSource);
 	}
 
 	public void view(URL url) {
@@ -104,12 +112,6 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 	}
 
 	public boolean initialized() {
-		// TODO: update JDIC to version 0.9 and check status with
-		// WebBrowser.isInitialized() instead
-
-		if (browser != null)
-			return browser.getStatus().isInitialized();
-
-		return false;
+		return true;
 	}
 }
