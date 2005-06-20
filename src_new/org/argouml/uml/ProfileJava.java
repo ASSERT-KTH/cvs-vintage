@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.34 2005/06/20 22:27:04 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.35 2005/06/20 23:50:21 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class ProfileJava extends Profile {
         try {
             getProfileModel();
         } catch (ProfileException e) {
-            // TODO: How are we going to handl3e exception here.
+            // TODO: How are we going to handle exception here.
             // I think the profiles need some rethinking - Bob.
             LOG.error("Exception in ProfileJava constructor", e);
         }
@@ -363,6 +363,15 @@ public class ProfileJava extends Profile {
         // MDR implementation
         Object model = Model.getModelManagementFactory().createModel();
         assert model != null : "A model should have been created";
+        // TODO: Here we should code what is to be added to the model as part
+        // of the java profile. Not attempt to load a predesigned file.
+        // If that had been done for NSUML then there would have been no
+        // need for the NSUML based if block above. Setting to the Java profile
+        // would have been independent of model implementation calling only
+        // model interface methods to add java datatypes etc.
+        // What is to be done? Set datatypes? Is that all?
+        // Once this is done we can in theory remove the NSUML based if block
+        // above.
         return model;
     }
 }
