@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.102 2005/06/17 19:57:39 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.103 2005/06/20 17:59:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,7 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.util.CollectionUtil;
@@ -243,26 +244,30 @@ public abstract class FigEdgeModelElement
             popupAddOffset++;
         }
         
-        ToDoList list = Designer.theDesigner().getToDoList();
-        Vector items = (Vector) list.elementsForOffender(getOwner()).clone();
-        if (items != null && items.size() > 0) {
-            ArgoJMenu critiques = new ArgoJMenu("menu.popup.critiques");
-            ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
-            if (itemUnderMouse != null) {
-                critiques.add(new ActionGoToCritique(itemUnderMouse));
-                critiques.addSeparator();
+        /* Check if multiple items are selected: */
+        boolean ms = TargetManager.getInstance().getTargets().size() > 1;
+        if (!ms) {
+            ToDoList list = Designer.theDesigner().getToDoList();
+            Vector items = 
+                (Vector) list.elementsForOffender(getOwner()).clone();
+            if (items != null && items.size() > 0) {
+                ArgoJMenu critiques = new ArgoJMenu("menu.popup.critiques");
+                ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
+                if (itemUnderMouse != null) {
+                    critiques.add(new ActionGoToCritique(itemUnderMouse));
+                    critiques.addSeparator();
+                }
+                int size = items.size();
+                for (int i = 0; i < size; i++) {
+                    ToDoItem item = (ToDoItem) items.elementAt(i);
+                    if (item == itemUnderMouse)
+                        continue;
+                    critiques.add(new ActionGoToCritique(item));
+                }
+                popUpActions.insertElementAt(new JSeparator(), 0);
+                popUpActions.insertElementAt(critiques, 0);
             }
-            int size = items.size();
-            for (int i = 0; i < size; i++) {
-                ToDoItem item = (ToDoItem) items.elementAt(i);
-                if (item == itemUnderMouse)
-                    continue;
-                critiques.add(new ActionGoToCritique(item));
-            }
-            popUpActions.insertElementAt(new JSeparator(), 0);
-            popUpActions.insertElementAt(critiques, 0);
         }
-
         return popUpActions;
     }
 
