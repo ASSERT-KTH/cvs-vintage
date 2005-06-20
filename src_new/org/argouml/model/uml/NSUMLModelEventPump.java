@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.14 2005/06/09 16:00:50 bobtarling Exp $
+// $Id: NSUMLModelEventPump.java,v 1.15 2005/06/20 13:54:27 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,48 +262,21 @@ class NSUMLModelEventPump
      * @see org.argouml.model.ModelEventPump#startPumpingEvents()
      */
     public void startPumpingEvents() {
-        Iterator iter = modelEventListeners.keySet().iterator();
-        while (iter.hasNext()) {
-            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
-            theListener.startPumpingEvents();
-        }
-        iter = classEventListeners.keySet().iterator();
-        while (iter.hasNext()) {
-            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
-            theListener.startPumpingEvents();
-        }
+        UmlModelEventPump.getPump().startPumpingEvents();
     }
     
     /**
      * @see org.argouml.model.ModelEventPump#stopPumpingEvents()
      */
     public void stopPumpingEvents() {
-        Iterator iter = modelEventListeners.keySet().iterator();
-        while (iter.hasNext()) {
-            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
-            theListener.stopPumpingEvents();
-        }
-        iter = classEventListeners.keySet().iterator();
-        while (iter.hasNext()) {
-            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
-            theListener.stopPumpingEvents();
-        }
+        UmlModelEventPump.getPump().stopPumpingEvents();
     }
     
     /**
      * @see org.argouml.model.ModelEventPump#stopPumpingEvents()
      */
     public void flushModelEvents() {
-        Iterator iter = modelEventListeners.keySet().iterator();
-        while (iter.hasNext()) {
-            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
-            theListener.flushModelEvents();
-        }
-        iter = classEventListeners.keySet().iterator();
-        while (iter.hasNext()) {
-            NSUMLEventListener theListener = (NSUMLEventListener) iter.next();
-            theListener.flushModelEvents();
-        }
+        UmlModelEventPump.getPump().flushModelEvents();
     }
 }
 
@@ -471,33 +444,6 @@ abstract class NSUMLEventListener implements MElementListener {
      *         ru.novosoft.uml.MElementEvent)
      */
     public void recovered(MElementEvent arg0) {
-    }
-    
-    /**
-     * Delegates any request to start the event pump to the actual
-     * implementation.
-     * @see org.argouml.model.uml.NSUMLModelEventPump#startPumpingEvents()
-     */
-    public void startPumpingEvents() {
-        pump.startPumpingEvents();
-    }
-    
-    /**
-     * Delegates any request to stop the event pump to the actual
-     * implementation.
-     * @see org.argouml.model.uml.NSUMLModelEventPump#stopPumpingEvents()
-     */
-    public void stopPumpingEvents() {
-        pump.stopPumpingEvents();
-    }
-    
-    /**
-     * Delegates any request to flush the event pump to the actual
-     * implementation.
-     * @see org.argouml.model.uml.NSUMLModelEventPump#flushModelEvents()
-     */
-    public void flushModelEvents() {
-        pump.flushModelEvents();
     }
 }
 
