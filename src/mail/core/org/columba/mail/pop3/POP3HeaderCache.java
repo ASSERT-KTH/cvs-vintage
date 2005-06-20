@@ -30,132 +30,140 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Header caching facility very similar to the ones used by folders.
  * <p>
- * We need this for the managing server/messages remotely feature, which shows
- * a messagelist of all messages on the POP3 server to the user.
- *
+ * We need this for the managing server/messages remotely feature, which shows a
+ * messagelist of all messages on the POP3 server to the user.
+ * 
  * @author freddy
  */
 public class POP3HeaderCache extends AbstractHeaderCache {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.pop3");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger.getLogger("org.columba.mail.pop3");
 
-    protected POP3Server server;
+	protected POP3Server server;
 
-    /**
-     * Constructor for POP3HeaderCache.
-     *
-     * @param folder
-     */
-    public POP3HeaderCache(POP3Server server) {
-        super(server.getConfigFile());
+	/**
+	 * Constructor for POP3HeaderCache.
+	 * 
+	 * @param folder
+	 */
+	public POP3HeaderCache(POP3Server server) {
+		super(server.getConfigFile());
 
-        this.server = server;
-    }
+		this.server = server;
+	}
 
-    public StatusObservable getObservable() {
-        return server.getObservable();
-    }
+	public StatusObservable getObservable() {
+		return server.getObservable();
+	}
 
-    public void load() throws Exception {
-        LOG.fine("loading header-cache=" + headerFile);
-        headerList = new HeaderList();
+	public void load() throws Exception {
+		LOG.severe(server.getAccountItem().getName() + " loading header-cache=" + headerFile);
+		headerList = new HeaderList();
 
-        try {
-            reader = new ObjectReader(headerFile);
-        } catch (Exception e) {
-			LOG.warning("Could not open pop3 cache: " +e.getMessage());
-        }
+		try {
+			reader = new ObjectReader(headerFile);
+		} catch (Exception e) {
+			LOG.severe("Could not open pop3 cache: " + e.getMessage());
+		}
 
+		Integer c = (Integer) reader.readObject();
+		if (c == null) {
+			LOG.warning("Headercache is empty!");
+			// no data in file
+			reader.close();
+			return;
+		}
 
-        Integer c = (Integer) reader.readObject();
-        if ( c == null ) {
-            // not data in file
-            reader.close();
-            return;
-        }
-        
-        int capacity = c.intValue();
-        LOG.fine("capacity=" + capacity);
+		int capacity = c.intValue();
+		LOG.info("capacity=" + capacity);
 
-        if (getObservable() != null) {
-            getObservable().setMessage(MailResourceLoader.getString(
-                    "statusbar", "message", "load_headers"));
-        }
+		if (getObservable() != null) {
+			getObservable().setMessage(
+					MailResourceLoader.getString("statusbar", "message",
+							"load_headers"));
+		}
 
-        if (getObservable() != null) {
-            getObservable().setMax(capacity);
-        }
+		if (getObservable() != null) {
+			getObservable().setMax(capacity);
+		}
 
-        for (int i = 1; i <= capacity; i++) {
-            if (getObservable() != null) {
-                getObservable().setCurrent(i);
-            }
-
-            ColumbaHeader h = new ColumbaHeader();
-
-            try {
-				loadHeader(h);
-
-				headerList.add(h, h.get("columba.pop3uid"));
-			} catch (Exception e) {
+		for (int i = 1; i <= capacity; i++) {
+			if (getObservable() != null) {
+				getObservable().setCurrent(i);
 			}
-        }
 
-        // close stream
-        reader.close();
-    }
+			ColumbaHeader h = new ColumbaHeader();
 
-    public void save() throws Exception {
-        // we didn't load any header to save
-        if (!isHeaderCacheLoaded()) {
-            return;
-        }
+			try {
+				loadHeader(h);
+				
+				if( h.get("columba.pop3uid") == null ) {
+					LOG.severe("No POP3Uid found in header!");
+					LOG.severe(h.toString());
+				} else {					
+					headerList.add(h, h.get("columba.pop3uid"));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOG.warning("Could not load header " + i + " / " + capacity);
+			}
+		}
 
-        LOG.fine("saving header-cache=" + headerFile);
+		// close stream
+		reader.close();
+	}
 
-        try {
-            writer = new ObjectWriter(headerFile);
-        } catch (Exception e) {
-        	LOG.severe("Could not write pop3 cache: " + e.getMessage());
-        }
+	public void save() throws Exception {
+		// we didn't load any header to save
+		if (!isHeaderCacheLoaded()) {
+			return;
+		}
 
-        int count = headerList.count();
+		LOG.fine("saving pop3 header-cache=" + headerFile);
 
-        if (count == 0) {
-            return;
-        }
+		try {
+			writer = new ObjectWriter(headerFile);
+		} catch (Exception e) {
+			LOG.severe("Could not write pop3 cache: " + e.getMessage());
+		}
 
-        writer.writeObject(new Integer(count));
+		int count = headerList.count();
 
-        ColumbaHeader h;
+		if (count == 0) {
+			return;
+		}
 
-        for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-            String str = (String) e.nextElement();
+		writer.writeObject(new Integer(count));
 
-            h = (ColumbaHeader) headerList.get(str);
+		ColumbaHeader h;
 
-            try {
+		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+			String str = (String) e.nextElement();
+
+			h = (ColumbaHeader) headerList.get(str);
+
+			try {
 				saveHeader(h);
 			} catch (Exception e1) {
-				LOG.severe("Could not save header to pop3 cache. Header source:\n"+h.toString());
+				LOG
+						.severe("Could not save header to pop3 cache. Header source:\n"
+								+ h.toString());
 			}
-        }
+		}
 
-        writer.close();
-    }
+		writer.close();
+	}
 
-    protected void loadHeader(ColumbaHeader h) throws Exception {
-        String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
-        Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
+	protected void loadHeader(ColumbaHeader h) throws Exception {
+		String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
+		Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
 
-		
-			for (int j = 0; j < columnNames.length; j++) {
-		        try {
+		for (int j = 0; j < columnNames.length; j++) {
+			try {
 				Object value = null;
 
 				if (columnTypes[j] == Integer.class) {
@@ -171,35 +179,35 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 				if (value != null) {
 					h.set(columnNames[j], value);
 				}
-				} catch (Exception e) {
-					LOG.severe("Could not load headerfield "+columnNames[j]);
-					e.printStackTrace();
-				}
+			} catch (Exception e) {
+				LOG.severe("Could not load headerfield " + columnNames[j]);
+				e.printStackTrace();
 			}
-    }
+		}
+	}
 
-    protected void saveHeader(ColumbaHeader h) throws Exception {
-        String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
-        Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
+	protected void saveHeader(ColumbaHeader h) throws Exception {
+		String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
+		Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
 		Object o;
 
 		for (int j = 0; j < columnNames.length; j++) {
 			o = h.get(columnNames[j]);
-			
+
 			if (columnTypes[j] == Integer.class) {
-				if( o == null ) {
-					writer.writeInt(0);										
+				if (o == null) {
+					writer.writeInt(0);
 				} else {
-					writer.writeInt(((Integer) o).intValue());					
+					writer.writeInt(((Integer) o).intValue());
 				}
 			} else if (columnTypes[j] == Date.class) {
-				if( o ==null ) {
+				if (o == null) {
 					writer.writeLong(System.currentTimeMillis());
 				} else {
-					writer.writeLong(((Date) o).getTime());					
+					writer.writeLong(((Date) o).getTime());
 				}
 			} else if (columnTypes[j] == String.class) {
-				if( o==null ) {
+				if (o == null) {
 					writer.writeString("");
 				} else {
 					writer.writeString((String) o);
@@ -208,16 +216,19 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 				writer.writeObject(o);
 			}
 		}
-    }
+	}
+
 	/**
 	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#add(org.columba.mail.message.ColumbaHeader)
 	 */
-	public void add(ColumbaHeader header)  {
+	public void add(ColumbaHeader header) {
 		ColumbaHeader strippedHeader = new ColumbaHeader();
-		for( int i=0; i < CachedHeaderfields.POP3_HEADERFIELDS.length; i++) {
-			strippedHeader.set(CachedHeaderfields.POP3_HEADERFIELDS[i], header.get(CachedHeaderfields.POP3_HEADERFIELDS[i]));
+		for (int i = 0; i < CachedHeaderfields.POP3_HEADERFIELDS.length; i++) {
+			strippedHeader.set(CachedHeaderfields.POP3_HEADERFIELDS[i], header
+					.get(CachedHeaderfields.POP3_HEADERFIELDS[i]));
 		}
-		
-		headerList.add(strippedHeader, strippedHeader.getAttributes().get("columba.pop3uid"));
+
+		headerList.add(strippedHeader, strippedHeader.getAttributes().get(
+				"columba.pop3uid"));
 	}
 }

@@ -184,7 +184,7 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			((AbstractLocalFolder) folder).setNextMessageUid(nextUid);
 
 		} catch (Exception e) {
-			LOG.severe(e.getMessage());
+			LOG.severe("Error loading local header cache!");
 
 			if (Main.DEBUG) {
 				e.printStackTrace();

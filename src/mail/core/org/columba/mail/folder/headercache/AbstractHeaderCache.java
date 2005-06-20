@@ -145,33 +145,39 @@ public abstract class AbstractHeaderCache {
 				try {
 					load();
 				} catch (Exception e) {
-					if (Main.DEBUG)
-						e.printStackTrace();
-
+					LOG.severe(e.getMessage());
+					LOG.severe("Could not open headercache file: " + headerFile.toString());
+					LOG.severe("Falling back to backup file.");
 					// failed to load original header-cache file
 					// -> use ".old" file as fallback
 
 					File oldFile = headerFile;
 
 					headerFile = new File(headerFile.getAbsolutePath() + ".old");
+					if( !headerFile.exists() ) {
+						LOG.severe("No Cache found.");
+						headerCacheLoaded = true;
+						headerList = new HeaderList();
+						
+						return headerList;
+					}
+					
 					try {
 						load();
-
-						oldFile.delete();
-
-						headerFile.renameTo(oldFile);
-
 					} catch (Exception e2) {
-						if (Main.DEBUG)
-							e2.printStackTrace();
+						LOG.severe(e2.getMessage());
+
+					} finally {					
+						oldFile.delete();
+						headerFile.delete();
+						
+						headerFile = oldFile;
 
 						headerCacheLoaded = true;
 						headerList = new HeaderList();
-
-						return headerList;
-
 					}
 
+					return headerList;
 				}
 			}
 

@@ -147,6 +147,10 @@ public class POP3Server {
 		LinkedList headerUids = new LinkedList();
 		Enumeration keys = headerCache.getHeaderList().keys();
 
+		if( headerCache.getHeaderList().count() == 0 ){
+			LOG.severe(accountItem.getName() + " - POP3 Headerlist is empty!");
+		}
+		
 		while (keys.hasMoreElements()) {
 			headerUids.add(keys.nextElement());
 		}
