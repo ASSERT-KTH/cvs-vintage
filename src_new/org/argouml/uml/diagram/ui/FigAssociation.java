@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.89 2005/06/17 19:57:39 mvw Exp $
+// $Id: FigAssociation.java,v 1.90 2005/06/20 17:23:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.util.CollectionUtil;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
@@ -54,7 +55,7 @@ import org.tigris.gef.presentation.FigText;
 
 
 /**
- * This class represents an association Fig on a diagram.
+ * This class represents the Fig of a binary association on a diagram.
  *
  */
 public class FigAssociation extends FigEdgeModelElement {
@@ -408,6 +409,12 @@ public class FigAssociation extends FigEdgeModelElement {
      */
     public Vector getPopUpActions(MouseEvent me) {
 	Vector popUpActions = super.getPopUpActions(me);
+        /* Check if multiple items are selected: */
+        boolean ms = TargetManager.getInstance().getTargets().size() > 1;
+        /* None of the menu-items below apply 
+         * when multiple modelelements are selected:*/
+        if (ms) return popUpActions; 
+
 	// x^2 + y^2 = r^2  (equation of a circle)
 	Point firstPoint = this.getFirstPoint();
 	Point lastPoint = this.getLastPoint();
