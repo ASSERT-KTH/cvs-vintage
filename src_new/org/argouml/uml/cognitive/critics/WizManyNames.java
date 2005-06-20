@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.19 2005/06/05 08:18:33 linus Exp $
+// $Id: WizManyNames.java,v 1.20 2005/06/20 07:42:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,12 +72,12 @@ public class WizManyNames extends UMLWizard {
      * @param m the offenders
      */
     public void setMEs(Vector m) {
-        assert m.size() <= 0
-        	|| Model.getFacade().isAModelElement(m.elementAt(0));
-        assert m.size() <= 1
-        	|| Model.getFacade().isAModelElement(m.elementAt(1));
-        assert m.size() <= 2
-        	|| Model.getFacade().isAModelElement(m.elementAt(2));
+        int mSize = m.size();
+        for (int i=0; i < 3 && i <= mSize; ++i) {
+            if (!Model.getFacade().isAModelElement(m.get(i))) {
+                throw new IllegalArgumentException("The vector should contain model elements in the first 3 positions");
+            }
+        }
 
         mes = m;
     }
