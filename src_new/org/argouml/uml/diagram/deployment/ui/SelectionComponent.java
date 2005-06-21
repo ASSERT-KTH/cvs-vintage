@@ -1,4 +1,4 @@
-// $Id: SelectionComponent.java,v 1.26 2005/01/30 20:48:33 linus Exp $
+// $Id: SelectionComponent.java,v 1.27 2005/06/21 07:37:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
-import org.argouml.uml.diagram.ui.SelectionWButtons;
+import org.argouml.uml.diagram.ui.SelectionNodeClarifiers;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.ModeManager;
@@ -49,7 +49,7 @@ import org.tigris.gef.presentation.Handle;
  * The selection buttons for a component.
  *
  */
-public class SelectionComponent extends SelectionWButtons {
+public class SelectionComponent extends SelectionNodeClarifiers {
 
     private static final Logger LOG =
         Logger.getLogger(SelectionComponent.class);

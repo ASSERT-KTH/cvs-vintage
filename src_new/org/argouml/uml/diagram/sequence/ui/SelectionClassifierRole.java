@@ -1,4 +1,4 @@
-//$Id: SelectionClassifierRole.java,v 1.1 2005/05/24 00:06:05 bobtarling Exp $
+//$Id: SelectionClassifierRole.java,v 1.2 2005/06/21 07:37:16 bobtarling Exp $
 //Copyright (c) 1996-2005 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.SelectionNodeClarifiers;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.Handle;
@@ -58,4 +59,12 @@ public class SelectionClassifierRole extends SelectionNodeClarifiers {
         
         super.dragHandle(mX, mY, anX, anY, hand);
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
+     */
+    protected Object getNewNode(int buttonCode) {
+        return null;
+    }
+
 }

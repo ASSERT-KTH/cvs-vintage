@@ -1,4 +1,4 @@
-// $Id: SelectionNodeClarifiers.java,v 1.8 2005/01/09 14:58:57 linus Exp $
+// $Id: SelectionNodeClarifiers.java,v 1.9 2005/06/21 07:37:15 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SelectionNodeClarifiers.java,v 1.8 2005/01/09 14:58:57 linus Exp $
+// $Id: SelectionNodeClarifiers.java,v 1.9 2005/06/21 07:37:15 bobtarling Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Graphics;
 
-import org.tigris.gef.base.SelectionResize;
+import org.tigris.gef.base.SelectionButtons;
 import org.tigris.gef.presentation.Fig;
 
 /**
@@ -36,7 +36,7 @@ import org.tigris.gef.presentation.Fig;
  *
  * @author jrobbins
  */
-public class SelectionNodeClarifiers extends SelectionResize {
+public class SelectionNodeClarifiers extends SelectionButtons {
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -58,6 +58,19 @@ public class SelectionNodeClarifiers extends SelectionResize {
     public void paint(Graphics g) {
         ((FigNodeModelElement) _content).paintClarifiers(g);
         super.paint(g);
+    }
+
+    /**
+     * @see org.tigris.gef.base.SelectionButtons#paintButtons(java.awt.Graphics)
+     */
+    public void paintButtons(Graphics g) {
+    }
+
+    /**
+     * @see org.tigris.gef.base.SelectionButtons#getNewNode(int)
+     */
+    protected Object getNewNode(int arg0) {
+        return null;
     }
 
 } /* end class SelectionNodeClarifiers */
