@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: pack-release.sh,v 1.2 2005/06/10 22:27:45 linus Exp $
+# $Id: pack-release.sh,v 1.3 2005/06/21 19:28:15 linus Exp $
 
 BUILD=PACKRELEASE:
 
@@ -47,6 +47,11 @@ mkdir DIST
   cd argouml/build;
   $JAVA_HOME/bin/jar cvf ../../DIST/ArgoUML-$releasename-modules.zip ext/*.jar
   tar cvf ../../DIST/ArgoUML-$releasename-modules.tar ext/*.jar
+)
+(
+  SRCDIRS="argouml/src_new argouml/src/*/src argouml/src/i18n/*/src argouml/modules/cpp/src argouml/modules/classfile/src argouml/modules/idl/src argouml/modules/php/src argouml-*/src"
+  $JAVA_HOME/bin/jar cvf DIST/ArgoUML-$releasename-src.zip $SRCDIRS
+  tar cvf DIST/ArgoUML-$releasename-src.tar --exclude="CVS" $SRCDIRS
 )
 ( cd DIST && gzip -v *.tar )
 cp argouml/build/*.pdf DIST
