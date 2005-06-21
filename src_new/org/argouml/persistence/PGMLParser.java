@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.27 2005/05/26 21:35:14 mvw Exp $
+// $Id: PGMLParser.java,v 1.28 2005/06/21 14:02:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
 
 /**
  * The PGML parser.
- *
+ * @deprecated use PGMLStackParser
  */
 public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
 
@@ -78,8 +78,6 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
     private StringBuffer privateText = new StringBuffer();
     ////////////////////////////////////////////////////////////////
     // static variables
-
-    //    private static final PGMLParser INSTANCE = new PGMLParser();
 
     private HashMap translationTable = new HashMap();
 
