@@ -1,4 +1,4 @@
-// $Id: SelectionNode.java,v 1.23 2005/06/21 07:37:16 bobtarling Exp $
+// $Id: SelectionNode.java,v 1.24 2005/06/21 12:12:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
-import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
+import org.tigris.gef.base.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionNodeClarifiers;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;

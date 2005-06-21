@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.129 2005/06/21 07:37:16 bobtarling Exp $
+// $Id: Main.java,v 1.130 2005/06/21 12:12:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -729,7 +729,7 @@ class PreloadClasses implements Runnable {
         c = org.argouml.uml.diagram.ui.FigAssociation.class;
         c = org.argouml.uml.diagram.ui.FigGeneralization.class;
         c = org.argouml.uml.diagram.ui.FigRealization.class;
-        c = org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode.class;
+        c = org.tigris.gef.base.ModeCreateEdgeAndNode.class;
         c = org.argouml.uml.diagram.ui.SPFigEdgeModelElement.class;
         c = org.argouml.uml.diagram.ui.SelectionNodeClarifiers.class;
         c = org.argouml.uml.ui.foundation.core.PropPanelAssociation.class;
