@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.12 2005/05/12 21:12:13 bobtarling Exp $
+// $Id: ModeCreateAssociation.java,v 1.13 2005/06/22 13:40:21 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -307,6 +307,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                 mutableGraphModel.addNode(association);
             }
         }
+        super.endAttached();
     }
 
     private FigNode placeTempNode(MouseEvent me) {
