@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.3 2005/06/18 16:13:00 linus Exp $
+// $Id: UmlFactory.java,v 1.4 2005/06/22 19:37:52 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,9 +129,10 @@ public interface UmlFactory {
      * modelelement handle.
      *
      * TODO: Why is this method needed? Isn't this implementation creaping out?
-     *       It is currently only used from
-     *       {@link org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode}.
+     *       It is currently not used.
      *
+     * @deprecated by Linus Tolke as of 0.19.3. This is not used and poor
+     *       design so strive to remove it.
      * @param handle the modelelement the listeners are interested in
      */
     void addListenersToModelElement(Object handle);
