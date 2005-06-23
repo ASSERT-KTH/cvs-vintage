@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.102 2005/06/18 06:53:46 mvw Exp $
+// $Id: FigInterface.java,v 1.103 2005/06/23 19:39:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import javax.swing.Action;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
@@ -253,10 +255,9 @@ public class FigInterface extends FigNodeModelElement
 
         // Show ...
         ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
-        if (operFig.isVisible()) {
-            showMenu.add(ActionCompartmentDisplay.hideOperCompartment());
-        } else {
-            showMenu.add(ActionCompartmentDisplay.showOperCompartment());
+        Iterator i = ActionCompartmentDisplay.getActions().iterator();
+        while(i.hasNext()) {
+            showMenu.add((Action) i.next());
         }
         popUpActions.insertElementAt(showMenu,
                 popUpActions.size() - popupAddOffset);

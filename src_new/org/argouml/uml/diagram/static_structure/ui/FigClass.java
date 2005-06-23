@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.151 2005/06/18 06:53:46 mvw Exp $
+// $Id: FigClass.java,v 1.152 2005/06/23 19:39:03 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import javax.swing.Action;
 
 import org.argouml.application.api.Notation;
 import org.argouml.i18n.Translator;
@@ -265,20 +267,9 @@ public class FigClass extends FigNodeModelElement
 
         // Show ...
         ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");
-        if (isAttributesVisible() && isOperationsVisible()) {
-            showMenu.add(ActionCompartmentDisplay.hideAllCompartments());
-        } else if (!isAttributesVisible() && !isOperationsVisible()) {
-            showMenu.add(ActionCompartmentDisplay.showAllCompartments());
-        }
-        if (isAttributesVisible()) {
-            showMenu.add(ActionCompartmentDisplay.hideAttrCompartment());
-        } else {
-            showMenu.add(ActionCompartmentDisplay.showAttrCompartment());
-        }
-        if (isOperationsVisible()) {
-            showMenu.add(ActionCompartmentDisplay.hideOperCompartment());
-        } else {
-            showMenu.add(ActionCompartmentDisplay.showOperCompartment());
+        Iterator i = ActionCompartmentDisplay.getActions().iterator();
+        while(i.hasNext()) {
+            showMenu.add((Action) i.next());
         }
         popUpActions.insertElementAt(showMenu,
             popUpActions.size() - popupAddOffset);
