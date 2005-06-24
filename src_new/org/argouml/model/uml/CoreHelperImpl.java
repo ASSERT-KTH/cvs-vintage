@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.19 2005/06/16 10:41:13 bobtarling Exp $
+// $Id: CoreHelperImpl.java,v 1.20 2005/06/24 13:41:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.Model;
+import org.argouml.model.ModelMemento;
 import org.argouml.model.UmlException;
 import org.argouml.util.CollectionUtil;
 
@@ -2882,6 +2883,7 @@ class CoreHelperImpl implements CoreHelper {
             // The cause is
             // not known and the best fix available for the moment is to remove
             // the corruptions as they are found.
+            
             int pos = 0;
             while ((pos = name.indexOf(0xffff)) >= 0) {
                 name =
@@ -2894,7 +2896,25 @@ class CoreHelperImpl implements CoreHelper {
                     LOG.warn("0xFFFF detected in element name", e);
                 }
             }
-            ((MModelElement) handle).setName(name);
+            final String safeName = name;
+            
+            final MModelElement modelElement = (MModelElement) handle;
+
+            // Create a memento. This automatically queues the memento
+            // and executes its redo method.
+            ModelMemento memento = new ModelMemento() {
+                String oldName;
+                public void init() {
+                    oldName = modelElement.getName();
+                }
+                public void undo() {
+                    modelElement.setName(oldName);
+                }
+                public void redo() {
+                    modelElement.setName(safeName);
+                }
+            };
+            
             return;
         }
         throw new IllegalArgumentException("handle: " + handle

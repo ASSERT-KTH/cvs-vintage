@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.12 2005/06/06 15:33:27 linus Exp $
+// $Id: NSUMLModelImplementation.java,v 1.13 2005/06/24 13:41:14 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,7 @@ import org.argouml.model.EventAdapter;
 import org.argouml.model.ExtensionMechanismsFactory;
 import org.argouml.model.ExtensionMechanismsHelper;
 import org.argouml.model.Facade;
+import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.MetaTypes;
 import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelImplementation;
@@ -111,6 +112,8 @@ public class NSUMLModelImplementation implements ModelImplementation {
     private EventAdapter theEventAdapter = new ExplorerNSUMLEventAdaptor();
 
     private KindsImpl theKindsObject = new KindsImpl();
+
+    private MementoCreationObserver mementoCreationObserver;
 
     /**
      * @see org.argouml.model.ModelImplementation#getFacade()
@@ -372,9 +375,26 @@ public class NSUMLModelImplementation implements ModelImplementation {
     }
 
     /**
-     * @see org.argouml.model.ModelImplementation#createContainerDispatcher(java.awt.Container)
+     * @see org.argouml.model.ModelImplementation#createContainerDispatcher(
+     *         java.awt.Container)
      */
     public ContainerDispatcher createContainerDispatcher(Container container) {
         return new ContainerDispatcherImpl(container);
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#setMementoCreationObserver(
+     *         org.argouml.model.MementoCreationObserver)
+     */
+    public void setMementoCreationObserver(MementoCreationObserver observer) {
+        mementoCreationObserver = observer;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getMementoCreationObserver(
+     *         org.argouml.model.MementoCreationObserver)
+     */
+    public MementoCreationObserver getMementoCreationObserver() {
+        return mementoCreationObserver;
     }
 }

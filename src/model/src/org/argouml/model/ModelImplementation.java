@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.6 2005/06/06 15:33:27 linus Exp $
+// $Id: ModelImplementation.java,v 1.7 2005/06/24 13:41:14 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -293,4 +293,17 @@ public interface ModelImplementation {
      * @return a new instance of a ContainerDispatcher.
      */
     ContainerDispatcher createContainerDispatcher(Container container);
+    
+    /**
+     * Allows an external system to register itself to recieve mementos created
+     * by the model subsystem
+     * @param observer the interested party
+     */
+    void setMementoCreationObserver(MementoCreationObserver observer);
+    
+    /**
+     * Gets the external class responsible for handling mementos.
+     * @return the MementoCreationObserver
+     */
+    MementoCreationObserver getMementoCreationObserver();
 }
