@@ -124,8 +124,9 @@ public class SpamAssassinPlugin implements ISpamPlugin {
 		IPCHelper ipcHelper = new IPCHelper();
 
 		LOG.info("creating process..");
+		// --no-rebuild option is deprecated in recent SpamAssassin versions
 		ipcHelper.executeCommand(ExternalToolsHelper.getSALearn()
-				+ " --no-rebuild --ham --single");
+				+ " --no-sync --ham --single");
 
 		LOG.info("sending to stdin..");
 
