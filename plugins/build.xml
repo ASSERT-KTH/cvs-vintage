@@ -11,7 +11,7 @@
 	<target name="mail" description="Builds all mail plugins">
 		
 		<ant target="release" inheritall="false" dir="./org.columba.mail.EudoraMailImportFilter"/>
-		<ant target="release" inheritall="false" dir="./org.columba.mail.SpamAssassin"/>
+		<!-- ant target="release" inheritall="false" dir="./org.columba.mail.SpamAssassin"/ !-->
 		<ant target="release" inheritall="false" dir="./org.columba.mail.ToOrCcFilter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.mail.MozillaMailImportFilter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.mail.PlaySoundFilterAction"/>
