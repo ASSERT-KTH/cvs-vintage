@@ -19,6 +19,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.filter.MailFilterFactory;
+import org.columba.mail.folder.MailboxTstFactory;
 
 
 /**
@@ -26,7 +27,7 @@ import org.columba.mail.filter.MailFilterFactory;
  *  
  */
 public class SizeFilterTest extends AbstractFilterTst {
-    /**
+ /**
  * @param arg0
  */
     public SizeFilterTest(String arg0) {
@@ -34,6 +35,16 @@ public class SizeFilterTest extends AbstractFilterTst {
         
     }
 
+	/**
+	 * Constructor for SizeFilterTest.
+	 *  
+	 * @param arg0
+	 */
+	public SizeFilterTest(MailboxTstFactory factory, String arg0) {
+		super(factory, arg0);
+
+	}
+	
     public void testSizeFilter() throws Exception {
         // add message to folder
         Object uid = addMessage();
