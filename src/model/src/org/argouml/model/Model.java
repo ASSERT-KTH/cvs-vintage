@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.9 2005/06/24 13:41:14 bobtarling Exp $
+// $Id: Model.java,v 1.10 2005/06/24 16:04:37 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -459,5 +459,18 @@ public final class Model {
      */
     public static MementoCreationObserver getMementoCreationObserver() {
         return impl.getMementoCreationObserver();
+    }
+    
+    /**
+     * Notify the 
+     * @return the MementoCreationObserver
+     */
+    public static ModelMemento notifyMementoCreationObserver(
+            ModelMemento memento) {
+        MementoCreationObserver mco = getMementoCreationObserver();
+        if (mco != null) {
+            Model.getMementoCreationObserver().mementoCreated(memento);
+        }
+        return memento;
     }
 }

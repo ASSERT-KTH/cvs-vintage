@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.20 2005/06/24 13:41:14 bobtarling Exp $
+// $Id: CoreHelperImpl.java,v 1.21 2005/06/24 16:04:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2900,20 +2900,18 @@ class CoreHelperImpl implements CoreHelper {
             
             final MModelElement modelElement = (MModelElement) handle;
 
-            // Create a memento. This automatically queues the memento
-            // and executes its redo method.
-            ModelMemento memento = new ModelMemento() {
-                String oldName;
-                public void init() {
-                    oldName = modelElement.getName();
+            Model.notifyMementoCreationObserver(
+                new ModelMemento() {
+                    String oldName = modelElement.getName();
+                    public void undo() {
+                        modelElement.setName(oldName);
+                    }
+                    public void redo() {
+                        modelElement.setName(safeName);
+                    }
                 }
-                public void undo() {
-                    modelElement.setName(oldName);
-                }
-                public void redo() {
-                    modelElement.setName(safeName);
-                }
-            };
+            );
+            modelElement.setName(safeName);
             
             return;
         }
