@@ -38,6 +38,12 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.ristretto.message.MailboxInfo;
 
+/**
+ * Shows summary information of the currently selected folder.
+ * 
+ * @author fdietz
+ *
+ */
 public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionListener {
     private JLabel leftLabel;
     private JLabel readLabel;

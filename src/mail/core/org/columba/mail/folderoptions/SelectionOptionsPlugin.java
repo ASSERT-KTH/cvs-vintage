@@ -112,9 +112,9 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 			Object uid = null;
 
 			if (ascending) {
-				uid = view.selectLastRow();
+				uid = tableController.selectLastRow();
 			} else {
-				uid = view.selectFirstRow();
+				uid = tableController.selectFirstRow();
 			}
 
 			// no messages in this folder
@@ -139,9 +139,9 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 			if (((HeaderTableModel)tableController.getHeaderTableModel()).getMessageNode(uid) == null) {
 
 				if (ascending) {
-					uid = view.selectLastRow();
+					uid = tableController.selectLastRow();
 				} else {
-					uid = view.selectFirstRow();
+					uid = tableController.selectFirstRow();
 				}
 
 			} else {

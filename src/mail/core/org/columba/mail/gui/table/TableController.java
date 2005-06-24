@@ -20,7 +20,6 @@ package org.columba.mail.gui.table;
 import java.util.Observable;
 import java.util.logging.Logger;
 
-import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -30,9 +29,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.folder.IFolder;
 import org.columba.core.folder.IFolderCommandReference;
-import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.mail.command.IMailFolderCommandReference;
@@ -41,11 +38,6 @@ import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.table.action.CopyAction;
-import org.columba.mail.gui.table.action.CutAction;
-import org.columba.mail.gui.table.action.DeleteAction;
-import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -66,10 +58,27 @@ import org.frapuccino.treetable.Tree;
  * Folder-specific configuration options are handled by
  * {@link FolderOptionsController}and can be configured by the user in the
  * AbstractMessageFolder Options Dialog.
+ * <p>
+ * fdietz: Selection handling was using Selection Framework from core. A
+ * SelectionListener was used to display a message in the message viewer. This
+ * had the side-effect that even opening a context-menu leads to showing the
+ * message I've changed this now as a first start in the following:
+ * HeaderTableMouseListener is anyways responsible for opening the context-menu.
+ * This class also views the message. Additionally, a KeyListener is used to
+ * view the message on any pressed key including arrow up, arrow down, first
+ * row, last row. Also, when doing selection changes using
+ * setSelected(Object[]), selectRow(int), selectFirstRow(), selectedLastRow()
+ * also view the message. TableController.tableChanged() selects a new message
+ * and also directly views the message. Note, that this is a very hackish way of
+ * handling selection which is difficult to maintain.
+ * <p>
+ * It would be much nicer to simply remove the selection listener from the
+ * JTable when opening the context menu. This way a view message command would
+ * not be triggered.
  * 
  * @author fdietz
  */
-public class TableController implements FocusOwner, ListSelectionListener,
+public class TableController implements ListSelectionListener,
 		TableModelChangedListener, ITableController {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -86,8 +95,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * selecting the column headers of the table
 	 */
 	private HeaderTableMouseListener headerTableMouseListener;
-
-	
 
 	/**
 	 * table view
@@ -176,9 +183,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		// MouseListener sorts table when clicking on a column header
 		new TableHeaderMouseListener(this, getTableModelSorter());
 
-		// register at focus manager
-		FocusManager.getInstance().registerComponent(this);
-
 		// we need this for the focus manager
 		getView().getSelectionModel().addListSelectionListener(this);
 
@@ -198,7 +202,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * org.columba.mail.i18n.header.header.properties.
 	 * 
 	 * @see org.columba.mail.folderoptions.ColumnOptionsPlugin
-	 *  
+	 * 
 	 */
 	public void initTooltips() {
 		tips.clear();
@@ -252,7 +256,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		MessageNode[] nodes = new MessageNode[uids.length];
 
 		for (int i = 0; i < uids.length; i++) {
-			nodes[i] = ((HeaderTableModel)getHeaderTableModel()).getMessageNode(uids[i]);
+			nodes[i] = ((HeaderTableModel) getHeaderTableModel())
+					.getMessageNode(uids[i]);
 		}
 
 		int[] rows = new int[nodes.length];
@@ -319,12 +324,11 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		// update infopanel (gray panel below the toolbar)
 		// showing total/unread/recent messages count
 		/*
-		if (getFrameController() instanceof MailFrameMediator) {
-			if (srcFolder != null) {
-				((ThreePaneMailFrameController) getFrameController())
-						.getFolderInfoPanel().setFolder((IMailFolder) srcFolder);
-			}
-		}*/
+		 * if (getFrameController() instanceof MailFrameMediator) { if
+		 * (srcFolder != null) { ((ThreePaneMailFrameController)
+		 * getFrameController()) .getFolderInfoPanel().setFolder((IMailFolder)
+		 * srcFolder); } }
+		 */
 
 		// only update table if, this folder is the same
 		// as the currently selected
@@ -338,10 +342,10 @@ public class TableController implements FocusOwner, ListSelectionListener,
 
 			// FIXME threaded-view auto collapse
 			/*
-			 * if (getTableModelThreadedView().isEnabled()) {
-			 *  // expand all unread message nodes for (int i = 0; i <
-			 * getView().getRowCount(); i++) { System.out.println("i=" + i + "
-			 * count=" + getView().getRowCount());
+			 * if (getTableModelThreadedView().isEnabled()) { // expand all
+			 * unread message nodes for (int i = 0; i < getView().getRowCount();
+			 * i++) { System.out.println("i=" + i + " count=" +
+			 * getView().getRowCount());
 			 * 
 			 * TreePath path = getView().getTree().getPathForRow(i); MessageNode
 			 * node = (MessageNode) path .getLastPathComponent(); IColumbaHeader
@@ -379,8 +383,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 			// only re-select if only a single row was formerly selected
 			if ((previouslySelectedRows.length == 1)
 					&& (previouslySelectedNodes.length > 0)) {
-				int row = ((HeaderTableModel)getHeaderTableModel()).getRow(
-						previouslySelectedNodes[0]);
+				int row = ((HeaderTableModel) getHeaderTableModel())
+						.getRow(previouslySelectedNodes[0]);
 
 				// if message was removed from JTable
 				if (row == -1)
@@ -438,16 +442,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		((MailFrameMediator) getFrameController()).getFolderOptionsController()
 				.load(folder, FolderOptionsController.STATE_BEFORE);
 
-		// send an update notification to the table model
-		
-		  //TableModelChangedEvent ev = new TableModelChangedEvent(
-		  //TableModelChangedEvent.SET, folder, headerList); tableChanged(ev);
-		 
 		getHeaderTableModel().set(headerList);
-		
-		/*
-		((ThreePaneMailFrameController) getFrameController())
-		.getFolderInfoPanel().setFolder((IMailFolder) folder);*/
 
 		// load options of newly selected folder
 		((MailFrameMediator) getFrameController()).getFolderOptionsController()
@@ -459,7 +454,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 
 	/**
 	 * Show empty messagelist with no elements.
-	 *  
+	 * 
 	 */
 	public void clear() {
 		// clear model
@@ -480,169 +475,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public TableModelThreadedView getTableModelThreadedView() {
 		return tableModelThreadedView;
-	}
-
-	/** ******************* FocusOwner interface *********************** */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#copy()
-	 */
-	public void copy() {
-		new CopyAction(getFrameController()).actionPerformed(null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#cut()
-	 */
-	public void cut() {
-		new CutAction(getFrameController()).actionPerformed(null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#delete()
-	 */
-	public void delete() {
-		new DeleteAction(getFrameController()).actionPerformed(null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-	 */
-	public JComponent getComponent() {
-		return getView();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-	 */
-	public boolean isCopyActionEnabled() {
-		if (getView().getSelectedNodes().length > 0) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-	 */
-	public boolean isCutActionEnabled() {
-		if (getView().getSelectedNodes().length > 0) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-	 */
-	public boolean isDeleteActionEnabled() {
-		if (getView().getSelectedNodes().length > 0) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-	 */
-	public boolean isPasteActionEnabled() {
-		if (ClipboardManager.getInstance().getSelection() == null) {
-			return false;
-		}
-
-		if (ClipboardManager.getInstance().getSelection() != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-	 */
-	public boolean isRedoActionEnabled() {
-		// action not supported
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-	 */
-	public boolean isSelectAllActionEnabled() {
-		if (getView().getRowCount() > 0) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-	 */
-	public boolean isUndoActionEnabled() {
-		// action not supported
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#paste()
-	 */
-	public void paste() {
-		new PasteAction(getFrameController()).actionPerformed(null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#redo()
-	 */
-	public void redo() {
-		// action not supported
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-	 */
-	public void selectAll() {
-		getView().selectAll();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.focus.FocusOwner#undo()
-	 */
-	public void undo() {
-		// todo is not supported
 	}
 
 	/** ************************* ListSelectionListener interface ************* */
@@ -697,14 +529,18 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * @see org.columba.mail.gui.table.ITableController#selectFirstRow()
 	 */
 	public Object selectFirstRow() {
-		return getView().selectFirstRow();
+		Object result = getView().selectFirstRow();
+
+		return result;
 	}
 
 	/**
 	 * @see org.columba.mail.gui.table.ITableController#selectLastRow()
 	 */
 	public Object selectLastRow() {
-		return getView().selectLastRow();
+		Object result = getView().selectLastRow();
+
+		return result;
 	}
 
 	/**
@@ -712,6 +548,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public void selectRow(int row) {
 		getView().selectRow(row);
+
 	}
 
 	/**
@@ -734,7 +571,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 			getHeaderTableModel().update();
 
 		if (enableThreadedMode) {
-			//			 expand all unread message nodes
+			// expand all unread message nodes
 			for (int i = 0; i < getView().getRowCount(); i++) {
 				System.out.println("i=" + i + " count="
 						+ getView().getRowCount());
@@ -777,7 +614,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public void setSortingOrder(boolean order) {
 		getTableModelSorter().setSortingOrder(order);
-		//getHeaderTableModel().update();
+		// getHeaderTableModel().update();
 	}
 
 	/**
@@ -785,7 +622,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 */
 	public void setSortingColumn(String column) {
 		getTableModelSorter().setSortingColumn(column);
-		//getHeaderTableModel().update();
+		// getHeaderTableModel().update();
 	}
 
 	/**
@@ -808,4 +645,5 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	public boolean getSortingOrder() {
 		return getTableModelSorter().getSortingOrder();
 	}
+
 }

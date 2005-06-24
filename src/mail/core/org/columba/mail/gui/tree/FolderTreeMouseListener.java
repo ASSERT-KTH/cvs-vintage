@@ -25,6 +25,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+
 /**
  * Mouse mouselistener responsible for opening the context menu.
  * 
@@ -54,7 +56,6 @@ public class FolderTreeMouseListener extends MouseAdapter {
 	}
 
 	public void mouseClicked(MouseEvent event) {
-
 	}
 
 	private void maybeShowPopup(MouseEvent e) {
@@ -65,8 +66,12 @@ public class FolderTreeMouseListener extends MouseAdapter {
 			TreePath path = treeController.getView().getClosestPathForLocation(
 					point.x, point.y);
 
+			treeController.getView().removeTreeSelectionListener(treeController);
+			
 			treeController.getView().setSelectionPath(path);
 
+			treeController.getView().addTreeSelectionListener(treeController);
+			
 			SwingUtilities.invokeLater(new Runnable() {
 
 				public void run() {

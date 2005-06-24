@@ -48,6 +48,11 @@ public class HeaderTableMouseListener extends MouseAdapter {
     }
 
     protected void processPopup(final MouseEvent event) {
+    	
+    	// remove selection listener, we don't want to view the message when
+    	// opening the context-menu
+    	headerTableViewer.getView().getSelectionModel().removeListSelectionListener(headerTableViewer);
+    	
         int selectedRows = headerTableViewer.getView().getSelectedRowCount();
 
         if (selectedRows <= 1) {
@@ -57,6 +62,9 @@ public class HeaderTableMouseListener extends MouseAdapter {
             headerTableViewer.getView().setRowSelectionInterval(row, row);
         }
 
+        // re-add the selection listener
+        headerTableViewer.getView().getSelectionModel().addListSelectionListener(headerTableViewer);
+        
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -64,6 +72,8 @@ public class HeaderTableMouseListener extends MouseAdapter {
                         event.getX(), event.getY());
             }
         });
+        
+       
     }
 
     public void mousePressed(MouseEvent event) {
@@ -75,6 +85,8 @@ public class HeaderTableMouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
             processDoubleClick();
+        } else {
+        	new ViewMessageAction(headerTableViewer.getFrameController()).actionPerformed(null);
         }
     }
 
