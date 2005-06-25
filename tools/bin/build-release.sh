@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: build-release.sh,v 1.9 2005/06/10 22:27:45 linus Exp $
+# $Id: build-release.sh,v 1.10 2005/06/25 23:34:45 linus Exp $
 
 # The purpose of this shellscript is to make all the release work.
 
@@ -95,6 +95,16 @@ else
 fi
 ( cd argouml/documentation && ../tools/ant-1.6.2/bin/ant pdf ) &
 
+# 4. Test the release!
+echo "$BUILD Will test the release."
+( cd argouml/src_new && ./build.sh alltests
+
+echo "$BUILD Starting ArgoUML for you to do the manual testing in modules/junit"
+echo "$BUILD Give the test case TestAll, uncheck Reload at every run"
+echo "$BUILD When done, Exit the tool."
+( cd argouml/modules/junit && ../../tools/ant-1.6.2/bin/ant run )
+echo "$BUILD Tests done."
+
 echo "$BUILD sign the files for Java Web Start"
 echo "$BUILD (all files distributed will be signed)."
 (
@@ -106,25 +116,6 @@ echo "$BUILD (all files distributed will be signed)."
     $JAVA_HOME/bin/jarsigner -storepass secret $jarname argouml
   done
 )
-
-
-# 4. Test the release!
-echo "$BUILD Will test the release."
-( cd argouml/src_new && ./build.sh alltests
-
-echo "$BUILD Starting ArgoUML for you to do the manual testing in modules/junit"
-echo "$BUILD Give the test case TestAll, uncheck Reload at every run"
-echo "$BUILD When done, Exit the tool."
-( cd argouml/modules/junit && ../../tools/ant-1.6.2/bin/ant run )
-echo "$BUILD Tests done."
-echo "$BUILD No more input."
-
-# 5. Tag with the release tag
-for proj in argouml $CHILDPROJECTS
-do
-    ( cd $proj && cvs tag $releasetag )
-done
-wait
 
 releasename=`sed '/^argo.core.version=/!d;s/argo.core.version=//' < argouml/documentation/default.properties`
 for pdffile in argouml/build/documentation/pdf/*/*.pdf
