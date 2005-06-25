@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.44 2005/05/27 17:37:30 mvw Exp $
+// $Id: FigComment.java,v 1.45 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -450,7 +450,7 @@ public class FigComment
     /**
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int px, int py, int w, int h) {
+    protected void setBoundsInternal(int px, int py, int w, int h) {
         if (text == null) {
             return;
         }

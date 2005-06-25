@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.38 2005/06/17 19:57:37 mvw Exp $
+// $Id: FigComponent.java,v 1.39 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -185,7 +185,7 @@ public class FigComponent extends FigNodeModelElement {
     /**
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
 
         Rectangle oldBounds = getBounds();
         getBigPort().setBounds(x + BIGPORT_X, y, w - BIGPORT_X, h);

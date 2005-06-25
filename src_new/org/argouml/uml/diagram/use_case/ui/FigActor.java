@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.26 2005/06/17 19:57:39 mvw Exp $
+// $Id: FigActor.java,v 1.27 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,7 +176,7 @@ public class FigActor extends FigNodeModelElement {
     /**
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
         int middle = w / 2;
         h = _h;
         Rectangle oldBounds = getBounds();

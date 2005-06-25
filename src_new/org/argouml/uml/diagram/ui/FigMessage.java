@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.38 2005/04/14 18:29:43 mvw Exp $
+// $Id: FigMessage.java,v 1.39 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,28 +260,28 @@ public class FigMessage extends FigNodeModelElement {
     /** Override setBounds to keep shapes looking right
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
-	if (getNameFig() == null) {
-	    return;
-	}
-
-	Rectangle oldBounds = getBounds();
-
-	Dimension nameMin = getNameFig().getMinimumSize();
-
-	int ht = 0;
-
-	if (nameMin.height > figPoly.getHeight())
-	    ht = (nameMin.height - figPoly.getHeight()) / 2;
-
-	getNameFig().setBounds(x, y, w - figPoly.getWidth(), nameMin.height);
-	getBigPort().setBounds(x, y, w - figPoly.getWidth(), nameMin.height);
-	figPoly.setBounds(x + getNameFig().getWidth(), y + ht,
-			   figPoly.getWidth(), figPoly.getHeight());
-
-	firePropChange("bounds", oldBounds, getBounds());
-	calcBounds(); //_x = x; _y = y; _w = w; _h = h;
-	updateEdges();
+    protected void setBoundsInternal(int x, int y, int w, int h) {
+        if (getNameFig() == null) {
+            return;
+        }
+        
+        Rectangle oldBounds = getBounds();
+        
+        Dimension nameMin = getNameFig().getMinimumSize();
+        
+        int ht = 0;
+        
+        if (nameMin.height > figPoly.getHeight())
+            ht = (nameMin.height - figPoly.getHeight()) / 2;
+        
+        getNameFig().setBounds(x, y, w - figPoly.getWidth(), nameMin.height);
+        getBigPort().setBounds(x, y, w - figPoly.getWidth(), nameMin.height);
+        figPoly.setBounds(x + getNameFig().getWidth(), y + ht,
+        		   figPoly.getWidth(), figPoly.getHeight());
+        
+        firePropChange("bounds", oldBounds, getBounds());
+        calcBounds(); //_x = x; _y = y; _w = w; _h = h;
+        updateEdges();
     }
 
     /**

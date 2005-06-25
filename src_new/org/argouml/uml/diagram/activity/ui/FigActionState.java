@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.25 2005/01/30 20:48:14 linus Exp $
+// $Id: FigActionState.java,v 1.26 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,7 +133,7 @@ public class FigActionState extends FigStateVertex {
      * Override setBounds to keep shapes looking right
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
         if (getNameFig() == null) return;
         Rectangle oldBounds = getBounds();
 

@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.6 2005/03/05 08:53:29 mvw Exp $
+// $Id: FigNodeAssociation.java,v 1.7 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,7 @@ public class FigNodeAssociation extends FigNodeModelElement {
     /**
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
         Rectangle oldBounds = getBounds();
         getBigPort().setBounds(x, y, w, h);
         head.setBounds(x, y, w, h);

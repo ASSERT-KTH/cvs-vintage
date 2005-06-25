@@ -1,4 +1,4 @@
-// $Id: AbstractActionCheckBoxMenuItem.java,v 1.1 2005/06/12 18:50:03 mvw Exp $
+// $Id: AbstractActionCheckBoxMenuItem.java,v 1.2 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,12 +84,12 @@ abstract class AbstractActionCheckBoxMenuItem extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public final void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
         Iterator i = TargetManager.getInstance().getTargets().iterator();
         while (i.hasNext()) {
             Object t = i.next();
             toggleValueOfTarget(t);
         }
-        super.actionPerformed(e);
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.5 2005/06/10 18:42:16 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.6 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -325,7 +325,7 @@ public class FigClassifierRole extends FigNodeModelElement
      *
      * @see Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    public void setBoundsInternal(int x, int y, int w, int h) {
         Rectangle oldBounds = getBounds();
         if (getNameFig().getWidth() > w) {
             w = getNameFig().getWidth() + 2 * MARGIN;

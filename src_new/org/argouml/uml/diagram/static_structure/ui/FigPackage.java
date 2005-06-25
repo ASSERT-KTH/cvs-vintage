@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.70 2005/06/21 17:49:57 mvw Exp $
+// $Id: FigPackage.java,v 1.71 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -449,7 +449,7 @@ public class FigPackage extends FigNodeModelElement
      *
      * @param h  Desired height of the FigClass
      */
-    public void setBounds(int xa, int ya, int w, int h) {
+    protected void setBoundsInternal(int xa, int ya, int w, int h) {
         // Save our old boundaries (needed later), and get minimum size
         // info. "aSize will be used to maintain a running calculation of our
         // size at various points.

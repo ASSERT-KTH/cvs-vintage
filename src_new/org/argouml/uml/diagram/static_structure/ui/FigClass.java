@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.152 2005/06/23 19:39:03 mvw Exp $
+// $Id: FigClass.java,v 1.153 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -915,7 +915,7 @@ public class FigClass extends FigNodeModelElement
      *
      * @param h  Desired height of the FigClass
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
 
         // Save our old boundaries (needed later), and get minimum size
         // info. "aSize will be used to maintain a running calculation of our

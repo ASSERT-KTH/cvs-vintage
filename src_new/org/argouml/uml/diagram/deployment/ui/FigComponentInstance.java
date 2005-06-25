@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.37 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: FigComponentInstance.java,v 1.38 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigComponentInstance.java,v 1.37 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: FigComponentInstance.java,v 1.38 2005/06/25 10:00:41 bobtarling Exp $
 package org.argouml.uml.diagram.deployment.ui;
 
 import java.awt.Color;
@@ -158,7 +158,7 @@ public class FigComponentInstance extends FigNodeModelElement {
     /**
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
         if (getNameFig() == null) {
             return;
         }

@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.64 2005/06/23 19:39:03 mvw Exp $
+// $Id: FigUseCase.java,v 1.65 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -634,7 +634,7 @@ public class FigUseCase extends FigNodeModelElement
      * @param h  height of bounding box
      */
 
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
 
         // Remember where we are at present, so we can tell GEF later. Then
         // check we are as big as the minimum size

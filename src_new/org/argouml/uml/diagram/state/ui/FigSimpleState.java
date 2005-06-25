@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.19 2005/02/01 20:42:17 mvw Exp $
+// $Id: FigSimpleState.java,v 1.20 2005/06/25 10:00:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,7 +147,7 @@ public class FigSimpleState extends FigState {
     /** Override setBounds to keep shapes looking right
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    public void setBounds(int x, int y, int w, int h) {
+    protected void setBoundsInternal(int x, int y, int w, int h) {
 	if (getNameFig() == null) {
 	    return;
 	}
