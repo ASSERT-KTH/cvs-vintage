@@ -17,9 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Observable;
 import java.util.logging.Logger;
 
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -58,23 +61,6 @@ import org.frapuccino.treetable.Tree;
  * Folder-specific configuration options are handled by
  * {@link FolderOptionsController}and can be configured by the user in the
  * AbstractMessageFolder Options Dialog.
- * <p>
- * fdietz: Selection handling was using Selection Framework from core. A
- * SelectionListener was used to display a message in the message viewer. This
- * had the side-effect that even opening a context-menu leads to showing the
- * message I've changed this now as a first start in the following:
- * HeaderTableMouseListener is anyways responsible for opening the context-menu.
- * This class also views the message. Additionally, a KeyListener is used to
- * view the message on any pressed key including arrow up, arrow down, first
- * row, last row. Also, when doing selection changes using
- * setSelected(Object[]), selectRow(int), selectFirstRow(), selectedLastRow()
- * also view the message. TableController.tableChanged() selects a new message
- * and also directly views the message. Note, that this is a very hackish way of
- * handling selection which is difficult to maintain.
- * <p>
- * It would be much nicer to simply remove the selection listener from the
- * JTable when opening the context menu. This way a view message command would
- * not be triggered.
  * 
  * @author fdietz
  */
@@ -193,6 +179,7 @@ public class TableController implements ListSelectionListener,
 
 		// register interest on folder events
 		FolderEventDelegator.getInstance().addTableListener(this);
+		
 	}
 
 	/**
