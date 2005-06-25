@@ -44,7 +44,7 @@ public class ShowFAQAction extends AbstractColumbaAction {
         URLController c = new URLController();
 
         try {
-            c.open(new URL("http://columba.sourceforge.net/faq_user.php"));
+            c.open(new URL("http://columba.sourceforge.net/index.php?option=com_content&task=section&id=3&Itemid=40"));
         } catch (MalformedURLException mue) {
         }
     }

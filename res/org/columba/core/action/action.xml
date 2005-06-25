@@ -39,4 +39,5 @@
  <action name="ShowProjectPage" class="org.columba.core.gui.action.ShowProjectPageAction"/>
  <action name="AboutDialog" class="org.columba.core.gui.action.AboutDialogAction"/>
  <action name="ShowContextSpecificHelp" class="org.columba.core.gui.action.ShowContextSpecificHelpAction" />
+ <action name="Donate" class="org.columba.core.gui.action.DonateAction" />
 </actionlist>

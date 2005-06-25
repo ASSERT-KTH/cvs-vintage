@@ -78,6 +78,7 @@
 	 <separator/>
 	 <menuitem action="ShowFAQ"/>
 	 <menuitem action="ShowBugDatabase"/>
+	 <menuitem action="Donate" />
 	 <menuitem action="ShowLicense"/>
 	 <menuitem action="ShowHomepage"/>
 	 <menuitem action="ShowProjectPage"/>
