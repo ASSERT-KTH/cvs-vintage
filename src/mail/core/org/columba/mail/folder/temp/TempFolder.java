@@ -65,7 +65,7 @@ public class TempFolder extends AbstractMessageFolder {
      * @param path                example: /home/donald/mail/
      */
     public TempFolder(String path) {
-        super();
+        super("temp-folder-name", "temp", path);
 
         String dir = path + "temp";
 
