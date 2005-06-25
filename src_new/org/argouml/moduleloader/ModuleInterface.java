@@ -1,4 +1,4 @@
-// $Id: ModuleInterface.java,v 1.2 2005/01/09 14:58:07 linus Exp $
+// $Id: ModuleInterface.java,v 1.3 2005/06/25 19:16:34 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public interface ModuleInterface {
      * </ul>
      *
      * If a module does not provide a specific piece of information,
-     * <tt>null</tt> can be returned. Hence the normal implementation
+     * <code>null</code> can be returned. Hence the normal implementation
      * should be:<pre>
      * public String getInfo(int type) {
      *     switch (type) {
