@@ -1,4 +1,4 @@
-// $Id: AbstractCoreHelper.java,v 1.1 2005/06/24 22:16:59 linus Exp $
+// $Id: AbstractCoreHelper.java,v 1.2 2005/06/25 07:47:23 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,19 +45,20 @@ public abstract class AbstractCoreHelper implements CoreHelper {
      * @param flag is true if it should be abstract
      */
     public void setAbstract(final Object handle, final boolean flag) {
-        ModelMemento memento =
-            Model.notifyMementoCreationObserver(new ModelMemento() {
-                private boolean oldValue =
-                    Model.getFacade().isAbstract(handle);
-                public void undo() {
-                    realSetAbstract(handle, oldValue);
+        if (Model.getFacade().isAbstract(handle) != flag) {
+            ModelMemento memento =
+                Model.notifyMementoCreationObserver(new ModelMemento() {
+                    private boolean oldValue =
+                        Model.getFacade().isAbstract(handle);
+                    public void undo() {
+                        realSetAbstract(handle, oldValue);
+                    }
+                    public void redo() {
+                        realSetAbstract(handle, flag);
+                    }
                 }
-                public void redo() {
-                    realSetAbstract(handle, flag);
-                }
-            }
-            );
-
-        memento.redo();
+                );
+            memento.redo();
+        }
     }
 }
