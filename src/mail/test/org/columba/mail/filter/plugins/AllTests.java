@@ -25,8 +25,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.columba.mail.folder.IMAPTstFactory;
+import org.columba.mail.folder.MBOXFolderTstFactory;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
+import org.columba.mail.folder.TempFolderFactory;
 
 /**
  * @author fdietz
@@ -94,25 +96,13 @@ public class AllTests {
         TestSuite suite = new TestSuite("Test for org.columba.mail.folder");
 
         setup(suite, new MHFolderFactory());
-        setup(suite, new IMAPTstFactory());
+        setup(suite, new MBOXFolderTstFactory());
+        setup(suite, new TempFolderFactory());
+		// disabled IMAP folder tests as they require connection
+		// to remote IMAP server
+		// setup(suite, new IMAPTstFactory());
 
         return suite;
     }
-/*
-public static Test suite() {
-        TestSuite suite = new TestSuite(
-            "Test for org.columba.mail.filter.plugins");
-        //$JUnit-BEGIN$
-        suite.addTestSuite(DateFilterTest.class);
-        suite.addTestSuite(ColorFilterTest.class);
-        suite.addTestSuite(HeaderfieldFilterTest.class);
-        suite.addTestSuite(FlagsFilterTest.class);
-        suite.addTestSuite(BodyFilterTest.class);
-        suite.addTestSuite(PriorityFilterTest.class);
-        suite.addTestSuite(AccountFilterTest.class);
-        suite.addTestSuite(SizeFilterTest.class);
-        //$JUnit-END$
-        return suite;
-    }
-    */
+
 }

@@ -90,8 +90,10 @@ public class AllTests {
 
         setup(suite, new MHFolderFactory());
         setup(suite, new MBOXFolderTstFactory());
-        setup(suite, new TempFolderFactory());
-        setup(suite, new IMAPTstFactory());
+		setup(suite, new TempFolderFactory());
+        // disabled IMAP folder tests as they require connection
+        // to remote IMAP server
+        //setup(suite, new IMAPTstFactory());
 
         return suite;
     }

@@ -25,78 +25,84 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.columba.mail.folder.IMAPTstFactory;
+import org.columba.mail.folder.MBOXFolderTstFactory;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.TempFolderFactory;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class AllTests {
 
-    private static String[] list = { "CopyMessageCommandTest",
-           "MarkMessageTest",  "MoveMessageTest",  "MoveFolderCommandTest"};
+	private static String[] list = { "CopyMessageCommandTest",
+			"MarkMessageTest", "MoveMessageTest", "MoveFolderCommandTest" };
 
-    /**
-     * Add all testcases to the passed testsuite, using a the folder type as
-     * created in the factory.
-     * 
-     * @param suite
-     *            test suite
-     * @param factory
-     *            factory which creates the folder instances
-     */
-    private static void setup(TestSuite suite, MailboxTstFactory factory) {
-        try {
-            for (int j = 0; j < list.length; j++) {
-                Class clazz = Class.forName("org.columba.mail.folder.command."
-                        + list[j]);
+	/**
+	 * Add all testcases to the passed testsuite, using a the folder type as
+	 * created in the factory.
+	 * 
+	 * @param suite
+	 *            test suite
+	 * @param factory
+	 *            factory which creates the folder instances
+	 */
+	private static void setup(TestSuite suite, MailboxTstFactory factory) {
+		try {
+			for (int j = 0; j < list.length; j++) {
+				Class clazz = Class.forName("org.columba.mail.folder.command."
+						+ list[j]);
 
-                Method[] methods = clazz.getDeclaredMethods();
-                for (int i = 0; i < methods.length; i++) {
-                    if (methods[i].getName().startsWith("test")) {
+				Method[] methods = clazz.getDeclaredMethods();
+				for (int i = 0; i < methods.length; i++) {
+					if (methods[i].getName().startsWith("test")) {
 
-                        suite.addTest((TestCase) clazz.getConstructor(
-                                new Class[] { MailboxTstFactory.class,
-                                        String.class}).newInstance(
-                                new Object[] { factory, methods[i].getName()}));
-                    }
-                }
-            }
-        } catch (SecurityException e) {
+						suite
+								.addTest((TestCase) clazz.getConstructor(
+										new Class[] { MailboxTstFactory.class,
+												String.class }).newInstance(
+										new Object[] { factory,
+												methods[i].getName() }));
+					}
+				}
+			}
+		} catch (SecurityException e) {
 
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
 
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
 
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
 
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
 
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
 
-            e.printStackTrace();
-        }
-    }
+			e.printStackTrace();
+		}
+	}
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(
-                "Test for org.columba.mail.folder.command");
+	public static Test suite() {
+		TestSuite suite = new TestSuite(
+				"Test for org.columba.mail.folder.command");
 
-        setup(suite, new MHFolderFactory());
-        setup(suite, new TempFolderFactory());
-        setup(suite, new IMAPTstFactory());
+		setup(suite, new MHFolderFactory());
+		setup(suite, new TempFolderFactory());
+		setup(suite, new MBOXFolderTstFactory());
+		// disabled IMAP folder tests as they require connection
+		// to remote IMAP server
+		// setup(suite, new IMAPTstFactory());
 
-        return suite;
-    }
+		return suite;
+	}
 
 }

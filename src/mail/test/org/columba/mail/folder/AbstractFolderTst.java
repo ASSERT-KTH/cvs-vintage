@@ -92,7 +92,7 @@ public class AbstractFolderTst extends TestCase {
 		Main.DEBUG = true;
 		ColumbaLogger.createDefaultHandler();
 
-		//		 init mail component
+		// init mail component
 		new MailMain().init();
 		new AddressbookMain().init();
 
