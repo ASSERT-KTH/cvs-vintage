@@ -80,14 +80,11 @@ public final class ColumbaLogger {
             //use handlers in the parent logger.
             LOG.setUseParentHandlers(false);
             
-            //LOG.setLevel(Level.ALL);
-
-            //TODO (@author fdietz): only add console handler if command line option is given
             // init console handler
             consoleHandler = new ConsoleHandler();
 
             consoleHandler.setFormatter(new OneLineFormatter());
-            consoleHandler.setLevel(Level.SEVERE);
+            consoleHandler.setLevel(Level.ALL);
 
             LOG.addHandler(consoleHandler);
         }
@@ -97,6 +94,8 @@ public final class ColumbaLogger {
         if (debug) {
             consoleHandler.setFormatter(new DebugFormatter());
             consoleHandler.setLevel(Level.ALL);
+            
+            LOG.setLevel(Level.ALL);
             //System.setProperty("javax.net.debug", "ssl,handshake,data,trustmanager"); // init java.net.ssl debugging
 
             //TODO Ristretto should handle the logging of streams in another way.
@@ -104,6 +103,8 @@ public final class ColumbaLogger {
         } else {
             consoleHandler.setFormatter(new OneLineFormatter());
             consoleHandler.setLevel(Level.SEVERE);
+            
+            LOG.setLevel(Level.SEVERE);
         }    	
     }
 
