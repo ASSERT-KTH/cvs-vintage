@@ -3,7 +3,7 @@
 <project name="columba" basedir="." default="build">
 	<description> 
 		This is the Columba build system. 
-		The buildfiles ars separated into this file and a 
+		The buildfiles are separated into this file and a 
 		buildfile for each component's core and test.  
 		
 		Quickstart:
@@ -30,7 +30,7 @@
 	</taskdef>	
 	
 	
-	<target name="checkstyle" description="Checks the sources against our coding guidelines">
+	<target name="checkstyle" description="Checks the source against our coding guidelines">
 		<checkstyle config="${basedir}/sun_checks.xml" >
 			<fileset dir="${src.base}" includes="**/*.java"/>
 		</checkstyle>
@@ -38,13 +38,13 @@
 
 	
 	<!-- validates the xml resources -->
-	<target name="validate-xml-resources" description="Valdidates the XML resources">
+	<target name="validate-xml-resources" description="Validates the XML resources">
 		<xmlvalidate failonerror="no" warn="yes">
 			<fileset dir="${res.base}" includes="**/*.xml"/>
 		</xmlvalidate>
 	</target>
 	
-	<target name="init-native" description="Initialises platform dependant stuff" >
+	<target name="init-native" description="Initialises platform dependent stuff" >
 		<condition property="native.base" value="${native.win32}" >
 			<os family="windows"/>			
 		</condition>
@@ -173,10 +173,10 @@
 		<delete file="${src.columba.core}/org/columba/core/main/ColumbaVersionInfo.java"/>
 	</target>
 	
-	<target name="update" description="Updates the sources when checked out via CVS">
+	<target name="update" description="Updates the source when checked out via CVS">
 		<cvs command="update -d"/>
 		
-		<!-- Run clean to ensure that everything is build correctly after the update! (tstich) -->
+		<!-- Run clean to ensure that everything is built correctly after the update! (tstich) -->
 		<ant target="clean" />
 	</target>
 
@@ -195,7 +195,7 @@
 	</target>
 
 	
-	<target name="copy-resources" description="Copies all resources to the classes folder">
+	<target name="copy-resources" description="Copies all resources to the classes/ folder">
 		<copy todir="${dest}">
 			<fileset dir="${res.base}">
 				<include name="**"/>
@@ -259,7 +259,7 @@
 	</target>
 
 	<!-- convert line-endings -->
-	<target name="linefeeds-win32" description="Converts the line-endings">
+	<target name="linefeeds-win32" description="Converts the line-endings to win32 format">
 		<fixcrlf srcdir="${dest}"
        eol="crlf"
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.bat, run_source.bat"
@@ -267,7 +267,7 @@
 	</target>
 
 	<!-- convert line-endings -->
-	<target name="linefeeds-unix" description="Converts the line-endings">
+	<target name="linefeeds-unix" description="Converts the line-endings to *nix format">
 		<fixcrlf srcdir="${dest}"
        eol="lf"
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh"
@@ -281,7 +281,7 @@
 		<ant dir="${src.addressbook.test}" target="test" inheritrefs="true"/>		
 	</target>
 
-	<target name="test-report" depends="test" description="Runs all Unit tests. Html-report in report/">
+	<target name="test-report" depends="test" description="Runs all Unit tests. XML reports in report/ and Html-report in report/html/">
 		<junitreport todir="${report.base}">
 		  <fileset dir="${report.base}">
 		    <include name="TEST-*.xml"/>
@@ -293,7 +293,7 @@
 	<!-- create a release zip file for linux and unix flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a binary release -->
 	<target name="bin-unix" depends="jar, linefeeds-unix"
-	description="Creates packaged Columba release">
+	description="Creates packaged *nix Columba release">
 		<tar tarfile="${release.base}/columba-unix-${version}-bin.tar.bz2" compression="bzip2">
 			<tarfileset dir="${basedir}" prefix="columba-unix-${version}-bin">
 				<include name="README"/>
@@ -327,7 +327,7 @@
 	<!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a binary release -->
 	<target name="bin-win32" depends="jar, linefeeds-win32"
-	description="Creates packaged Columba release">
+	description="Creates packaged win32 Columba release">
 		
 		<copy file="${native.win32}/Columba.lap" todir="${basedir}"/>
 		
@@ -376,7 +376,7 @@
 	<!-- create a source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
 	<target name="source-unix" depends="init,linefeeds-unix"
-	description="Creates packaged Columba release">
+	description="Creates packaged *nix Columba source release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<tar tarfile="${release.base}/columba-unix-${version}-src.tar.bz2" compression="bzip2">
 			<tarfileset dir="." prefix="columba-unix-${version}-src">
@@ -404,7 +404,7 @@
 	<!-- create a source zip file for windows flavors, containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
 	<target name="source-win32" depends="init,linefeeds-win32"
-	description="Creates packaged Columba release">
+	description="Creates packaged win32 Columba source release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<zip zipfile="${release.base}/columba-win32-${version}-src.zip" update="true">
 			<zipfileset dir="." prefix="columba-win32-${version}-src">
@@ -433,7 +433,7 @@
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
 	<target name="release" depends="bin-unix,bin-win32,source-unix,source-win32, rpm, winsetup, winsetup-bundlejre, webstart"
-	description="Builds a complete Columba release"/>
+	description="Builds a complete set of Columba release archives"/>
 
 	<target name="webstart" depends="init-webstart, jar" description="Signs all jars for use with Java Webstart">
 		<copy toDir="${release.base}/webstart">
@@ -527,9 +527,9 @@
 		</java>
 	</target>
 
-	<target name="run-debug" depends="init-native,compile"  description="Starts Columba with the --debug option">
+	<target name="run-debug" depends="init-native,compile"  description="Starts Columba with the -debug option">
 		<java classname="org.columba.core.main.Main" fork="yes">
-			<arg value="--debug"/>
+			<arg value="-debug"/>
 			<classpath refid="run.classpath" />
 		</java>
 	</target>
@@ -607,7 +607,7 @@
 	
 	<target name="winsetup" depends="linefeeds-win32, jar" description="Creates a Setup.exe with InnoSetup" >		
 		<fixcrlf eol="crlf" srcdir="${dist.win32}" includes="columba_setup.iss" />
-		<echo message="NOTE: This task will work only if InnoSetup 4.2.7 or above are installed!" />
+		<echo message="NOTE: This task will only work if InnoSetup 4.2.7 or above is installed!" />
 		
 		<exec os="Linux, Solaris" executable="wine">
 			<arg value="C:\\Program Files\\Inno Setup 5\\iscc" />
@@ -662,7 +662,7 @@
 		<property file="jrebundle.properties" />	
 		
 		<fixcrlf eol="crlf" srcdir="${dist.win32}" includes="columba_setup.iss" />
-		<echo message="NOTE: This task will work only if InnoSetup 4.2.7 or above are installed!" />
+		<echo message="NOTE: This task will only work if InnoSetup 4.2.7 or above is installed!" />
 		<echo message="!!Specify the JRE in jrebundle.properties!!" />
 		<exec os="Linux, Solaris" executable="wine">
 			<arg value="C:\\Program Files\\Inno Setup 5\\iscc" />
