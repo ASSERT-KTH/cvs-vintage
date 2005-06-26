@@ -126,7 +126,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 		// FocusManager.getInstance().registerComponent(new MyFocusOwner());
 
-		// mediator.addMouseListener(this);
+		mediator.addMouseListener(viewerPlugin.getView());
 	}
 
 	private void initHTMLViewerPlugin() {
