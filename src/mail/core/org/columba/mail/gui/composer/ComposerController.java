@@ -936,7 +936,10 @@ public class ComposerController extends DefaultFrameController implements
 				MailConfig.getInstance().get("composer_toolbar").getElement(
 						"toolbar"));
 
-		getContainer().setInfoPanel(getIdentityInfoPanel());
+		// @author: fdietz
+		// disabled identity infopanel because it contains
+		// only duplicate information
+		//getContainer().setInfoPanel(getIdentityInfoPanel());
 
 		getContainer().getFrame().setFocusTraversalPolicy(
 				new ComposerFocusTraversalPolicy());
