@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.10 2005/06/24 16:04:37 bobtarling Exp $
+// $Id: Model.java,v 1.11 2005/06/27 15:32:04 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,8 @@ public final class Model {
      * Logger.
      */
     private static final Logger LOG = Logger.getLogger(Model.class);
+    
+    private static CoreHelperProxy coreHelperProxy;
 
     /**
      * Constructor to prohibit creation.
@@ -77,6 +79,7 @@ public final class Model {
         } catch (IllegalAccessException e) {
             reportError(e);
         }
+        coreHelperProxy = new CoreHelperProxy(impl);
     }
 
     /**
@@ -189,7 +192,7 @@ public final class Model {
      * @return The helper.
      */
     public static CoreHelper getCoreHelper() {
-        return impl.getCoreHelper();
+        return coreHelperProxy;
     }
 
     /**
