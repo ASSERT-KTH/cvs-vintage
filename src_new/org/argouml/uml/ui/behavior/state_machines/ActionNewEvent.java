@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.11 2005/01/30 20:47:43 linus Exp $
+// $Id: ActionNewEvent.java,v 1.12 2005/06/27 18:01:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,9 +79,18 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         Object event = createEvent();
+        Object trans = getTarget();
         if (getValue(ROLE).equals(Roles.TRIGGER)) {
             Model.getStateMachinesHelper()
-                        .setEventAsTrigger(getTarget(), event);
+                        .setEventAsTrigger(trans, event);
+        }
+        Object enclosing = Model.getStateMachinesHelper().getStateMachine(trans);
+        while ((!Model.getFacade().isAPackage(enclosing))
+                && (enclosing != null)) {
+            enclosing = Model.getFacade().getNamespace(enclosing);
+        }
+        if (enclosing != null) {
+            Model.getCoreHelper().setNamespace(event, enclosing);
         }
         TargetManager.getInstance().setTarget(event);
     }
