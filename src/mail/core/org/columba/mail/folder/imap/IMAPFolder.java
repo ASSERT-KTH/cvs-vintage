@@ -33,6 +33,7 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.filter.Filter;
+import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -41,10 +42,10 @@ import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractHeaderListStorage;
+import org.columba.mail.folder.AbstractRemoteFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.folder.AbstractRemoteFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
@@ -70,7 +71,6 @@ import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 public class IMAPFolder extends AbstractRemoteFolder {
@@ -666,15 +666,6 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object,
-	 *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
-	 * @TODO dont use deprecated method
-	 */
-	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
-		return null;
-	}
-
-	/**
 	 * Copies a set of messages from this folder to a destination folder.
 	 * <p>
 	 * The IMAP copy command also keeps the flags intact. So, there's no need to
@@ -897,22 +888,12 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		boolean parsingNeeded = false;
 
 		// cached headerfield list
-		List list = Arrays.asList(CachedHeaderfields.getDefaultHeaderfields());
+		List cachedList = Arrays.asList(CachedHeaderfields.getDefaultHeaderfields());
+		
+		List keyList = new ArrayList(Arrays.asList(keys));
+		ListTools.substract(keyList, cachedList);
 
-		for (int i = 0; i < keys.length; i++) {
-			if (header.get(keys[i]) != null) {
-				// headerfield found
-				result.set(keys[i], header.get(keys[i]));
-			} else {
-				// check if this headerfield is in the cache
-				// -> if its not a cached headerfield, we need to fetch it
-				if (!list.contains(keys[i])) {
-					parsingNeeded = true;
-				}
-			}
-		}
-
-		if (parsingNeeded) {
+		if (keyList.size() > 0) {
 			return getServer().getHeaders(uid, keys, this);
 		} else {
 			return result;
@@ -939,15 +920,20 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		return getServer().getMimePartSourceStream(uid, address, this);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 *
 	 * 
 	 * @see org.columba.mail.folder.IMailbox#getMimePartBodyStream(java.lang.Object,
 	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
 			throws Exception {
-		return getServer().getMimePartBodyStream(uid, address, this);
+		InputStream result = IMAPCache.getInstance().getMimeBody(this,uid, address);
+		if( result == null ) {
+			LOG.fine("Cache miss - fetching from server");
+			result = IMAPCache.getInstance().addMimeBody(this,uid, address, getServer().getMimePartBodyStream(uid, address, this));
+		}
+		return result;
 	}
 
 	/*
