@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.50 2005/06/24 13:41:14 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.51 2005/06/27 12:56:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -246,6 +246,7 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
         firePropertyChanged(CURRENT_PROJECT_PROPERTY_NAME, 
                             oldProject, currentProject);
         creatingCurrentProject = false;
+        UndoManager.getInstance().empty();
         return currentProject;
     }
 
