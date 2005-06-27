@@ -131,7 +131,7 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 		case 0:
 			// default
 			headers = new String[] { "Subject", "Date", "From", "To",
-					"Reply-To", "Cc", "Bcc" };
+					 "Cc" };
 
 			// get header from folder
 			header = folder.getHeaderFields(uid, headers);
