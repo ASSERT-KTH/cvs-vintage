@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.11 2005/06/27 15:32:04 bobtarling Exp $
+// $Id: Model.java,v 1.12 2005/06/27 15:42:03 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,11 +34,8 @@ import org.apache.log4j.Logger;
  * This is the root class of the Model subsystem. All other subsystems
  * can retreive the correct version of the API from this class.<p>
  *
- * Currently these API:s are hard-coded to work with NSUML but eventually
- * another model component will replace them and then all these API:s
- * will instead work against that component.<p>
- *
- * Notice that all API:s returned from this class are to be NSUML-free.<p>
+ * Notice that all API's returned from this class are to be independant
+ * of and specific UML model implementation.<p>
  *
  * @stereotype utility
  * @since 0.15.5
@@ -79,7 +76,7 @@ public final class Model {
         } catch (IllegalAccessException e) {
             reportError(e);
         }
-        coreHelperProxy = new CoreHelperProxy(impl);
+        coreHelperProxy = new CoreHelperProxy(impl.getCoreHelper());
     }
 
     /**
