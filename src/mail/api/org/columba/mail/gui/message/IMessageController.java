@@ -19,7 +19,7 @@ package org.columba.mail.gui.message;
 
 import java.util.Observer;
 
-import javax.swing.JTextPane;
+import javax.swing.JComponent;
 
 import org.columba.mail.folder.IMailbox;
 
@@ -56,5 +56,5 @@ public interface IMessageController {
 	
 	void addURLObserver(Observer observer);
 	
-	void addMouseListener(JTextPane textPane);
+	void addMouseListener(JComponent c);
 }

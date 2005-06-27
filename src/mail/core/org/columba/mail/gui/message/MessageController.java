@@ -23,12 +23,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Observer;
 
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -332,7 +332,7 @@ public class MessageController extends JScrollPane implements
 	/**
 	 * @see org.columba.mail.gui.message.IMessageController#addMouseListener(javax.swing.JTextPane)
 	 */
-	public void addMouseListener(JTextPane textPane) {
-		textPane.addMouseListener(mouseListener);
+	public void addMouseListener(JComponent c) {
+		c.addMouseListener(mouseListener);
 	}
 }
