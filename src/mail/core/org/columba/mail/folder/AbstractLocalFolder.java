@@ -179,21 +179,6 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	public abstract IDataStorage getDataStorageInstance();
 
 	/**
-	 * @see org.columba.mail.folder.IMailbox#getMimePart(java.lang.Object,
-	 *      java.lang.Integer[])
-	 * @TODO dont use deprecated method
-	 */
-	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
-		// get message with UID
-		IColumbaMessage message = getMessage(uid);
-
-		// get mimepart of message
-		MimePart mimePart = message.getMimePartTree().getFromAddress(address);
-
-		return mimePart;
-	}
-
-	/**
 	 * @see org.columba.mail.folder.IMailbox#getMimePartTree(java.lang.Object)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
