@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.70 2005/05/18 21:12:14 linus Exp $
+// $Id: UMLClassDiagram.java,v 1.71 2005/06/28 07:44:37 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,10 +130,11 @@ public class UMLClassDiagram extends UMLDiagram {
         Object[] actions = {
             getActionPackage(),
             getActionClass(),
-            getAssociationActions(),
-            getActionGeneralization(),
-            null,
             getActionInterface(),
+            null,
+            getAssociationActions(),
+            getAggregationActions(),
+            getActionGeneralization(),
             getActionRealization(),
             null,
             getDependencyActions(),
@@ -164,12 +165,19 @@ public class UMLClassDiagram extends UMLDiagram {
      * pattern of which to build a popup toolbutton.
      */
     private Object[] getDependencyActions() {
-        Object[][] actions = {
-            {getActionDependency()},
-            {getActionPermission()},
-            {getActionUsage()},
+        Object[] actions = {
+            getActionDependency(),
+            getActionPermission(),
+            getActionUsage()
         };
-
+        return actions;
+    }
+    
+    private Object[][] getAggregationActions() {
+        Object[][] actions = {
+            {getActionUniAggregation(), getActionUniComposition()},
+            {getActionAggregation(), getActionComposition()}
+        };
         return actions;
     }
 
@@ -183,16 +191,14 @@ public class UMLClassDiagram extends UMLDiagram {
         // This is because any number of action getters could have
         // been overridden in a descendent and it is the action from
         // that overridden method that should be returned in the array.
-        Object[][] actions = {
-            {getActionAssociation(), getActionUniAssociation()},
-            {getActionAggregation(), getActionUniAggregation()},
-            {getActionComposition(), getActionUniComposition()},
+        Object[] actions = {
+            getActionUniAssociation(),
+            getActionAssociation()
         };
 
         return actions;
     }
-
-
+    
     /**
      * Creates a new diagramname.
      * @return String
