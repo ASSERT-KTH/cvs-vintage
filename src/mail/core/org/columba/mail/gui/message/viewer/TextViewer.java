@@ -305,8 +305,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 
 			// setText(body);
 
-			LOG.finest("validated bodytext:\n" + body);
-
 		}
 
 		bodyStream.close();

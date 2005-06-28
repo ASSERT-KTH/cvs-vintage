@@ -633,8 +633,6 @@ case '\'':
             return substituteEmailAddress(s);
         }
 
-        LOG.info("Source:\n" + s);
-
         // initialisation
         Matcher noLinkMatcher = EMAIL_PATTERN.matcher(s);
         Matcher withLinkMatcher = EMAIL_PATTERN_INC_LINK.matcher(s);
@@ -737,8 +735,6 @@ case '\'':
             // Do not take existing link tags into account
             return substituteURL(s);
         }
-
-        LOG.info("Source:\n" + s);
 
         // initialisation
         Matcher noLinkMatcher = URL_PATTERN.matcher(s);
