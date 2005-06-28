@@ -3,7 +3,7 @@
 # Author: Kunle Odutola
 #         May 2001
 #
-# $Id: build.sh,v 1.1 2002/12/13 21:31:40 thn Exp $
+# $Id: build.sh,v 1.2 2005/06/28 14:56:44 aslo Exp $
 #
  
 # +-------------------------------------------------------------------------+
@@ -47,7 +47,7 @@ fi
 #
 # build.sh always calls the version of ant distributed with ArgoUML
 #
-ANT_HOME=../../tools/ant-1.4.1
+ANT_HOME=../../tools/ant-1.6.2
 
 # 	+--------------------------------------------------------------------+
 # 	| Add required .jar files to local classpath string                  |
