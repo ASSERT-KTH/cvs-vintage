@@ -16,6 +16,7 @@
 package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
+import java.util.Iterator;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
@@ -23,6 +24,7 @@ import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.ComposerCommandReference;
+import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -30,6 +32,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Address;
 
 /**
  * @author freddy
@@ -64,6 +67,8 @@ public class SaveMessageCommand extends Command {
 			message = new MessageComposer(((ComposerModel) composerController
 					.getModel())).compose(worker);
 		}
+		
+		
 		folder = (AbstractMessageFolder) r.getSourceFolder();
 
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
@@ -74,5 +79,8 @@ public class SaveMessageCommand extends Command {
 		folder.addMessage(sourceStream, message.getHeader().getAttributes(),
 				message.getHeader().getFlags());
 		sourceStream.close();
+		
+		// Add all recipients to the collected addresses 
+		MessageBuilderHelper.addAddressesToAddressbook((Address[]) message.getRecipients().toArray(new Address[0]));
 	}
 }
