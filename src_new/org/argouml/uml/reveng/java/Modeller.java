@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.121 2005/06/28 10:56:28 bobtarling Exp $
+// $Id: Modeller.java,v 1.122 2005/06/28 13:14:44 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1338,7 +1338,7 @@ public class Modeller {
             Iterator iter = stereos.iterator();
             while (iter.hasNext()) {
                 Object stereotype = iter.next();
-                if (Model.getUmlHelper().getExtensionMechanisms()
+                if (Model.getExtensionMechanismsHelper()
                         .isStereotypeInh(stereotype, name, baseClass)) {
                     LOG.info("Returning the existing stereotype of <<"
                             + Model.getFacade().getName(stereotype) + ">>");
