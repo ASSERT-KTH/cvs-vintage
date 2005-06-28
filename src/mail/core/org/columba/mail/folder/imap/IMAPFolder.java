@@ -879,13 +879,6 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 		
 		if( header == null ) return new Header(); 
-		
-		Header result = new Header();
-
-		// if only one headerfield wasn't found in cache
-		// -> call IMAPStore.getHeader() to fetch the
-		// -> missing headerfields
-		boolean parsingNeeded = false;
 
 		// cached headerfield list
 		List cachedList = Arrays.asList(CachedHeaderfields.getDefaultHeaderfields());
@@ -896,7 +889,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		if (keyList.size() > 0) {
 			return getServer().getHeaders(uid, keys, this);
 		} else {
-			return result;
+			return (Header) header.getHeader().clone();
 		}
 	}
 
