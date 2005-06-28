@@ -1,4 +1,4 @@
-// $Id: SettingsTabCpp.java,v 1.2 2005/06/25 20:19:04 aslo Exp $
+// $Id: SettingsTabCpp.java,v 1.3 2005/06/28 14:53:20 aslo Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ import org.argouml.language.cpp.generator.GeneratorCpp;
 public class SettingsTabCpp extends SettingsTabHelper
     implements SettingsTabPanel
 {
-    private static final Logger LOG = Logger.getLogger(GeneratorCpp.class);
+    private static final Logger LOG = Logger.getLogger(SettingsTabCpp.class);
 
     private JSpinner indent;
     private JCheckBox verboseDocs;
@@ -132,7 +132,7 @@ public class SettingsTabCpp extends SettingsTabHelper
         GeneratorCpp cpp = GeneratorCpp.getInstance();
         cpp.setLfBeforeCurly(lfBeforeCurly.isSelected());
         cpp.setVerboseDocs(verboseDocs.isSelected());
-        cpp.setIndent(((Integer)indent.getValue()).intValue());
+        cpp.setIndent(((Integer) indent.getValue()).intValue());
         // TODO: save to disk!
     }
 
