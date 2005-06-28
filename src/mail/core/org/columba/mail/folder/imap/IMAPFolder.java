@@ -297,7 +297,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 					a = 0;
 					b = position;
 					while (b > a && b - a > 1) {
-						c = ((int)Math.floor((b - a) * 0.5f )) + a;
+						c = Math.round((b - a) * 0.5f ) + a;
 
 						index = getServer().getIndex(
 								(Integer) localUids.get(c), this);
