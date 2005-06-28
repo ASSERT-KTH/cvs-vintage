@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.165 2005/05/21 10:37:45 mvw Exp $
+// $Id: ParserDisplay.java,v 1.166 2005/06/28 10:56:27 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1254,14 +1254,22 @@ public final class ParserDisplay extends Parser {
         Model.getCoreHelper().setType(param, type);
     }
 
-    private void setParamKind(Object p, String s) {
-        if ("out".equalsIgnoreCase(s)) {
-            Model.getCoreHelper().setKindToOut(p);
-        } else if ("inout".equalsIgnoreCase(s)) {
-            Model.getCoreHelper().setKindToInOut(p);
+    /**
+     * Set a parameters kind according to a string description of
+     * that kind.
+     * @param parameter the parameter
+     * @param description the string description
+     */
+    private void setParamKind(Object parameter, String description) {
+        Object kind;
+        if ("out".equalsIgnoreCase(description)) {
+            kind = Model.getDirectionKind().getOutParameter();
+        } else if ("inout".equalsIgnoreCase(description)) {
+            kind = Model.getDirectionKind().getInOutParameter();
         } else {
-            Model.getCoreHelper().setKindToIn(p);
+            kind = Model.getDirectionKind().getInParameter();
         }
+        Model.getCoreHelper().setKind(parameter, kind);
     }
 
 

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.120 2005/04/17 08:20:48 mvw Exp $
+// $Id: Modeller.java,v 1.121 2005/06/28 10:56:28 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -792,8 +792,10 @@ public class Modeller {
 		    .getCurrentProject().findFigsForMember(mOperation);
 		mParameter = Model.getCoreFactory().buildParameter(
 		        mOperation, mdl, voidType, propertyChangeListeners);
-		Model.getCoreHelper().setName(mParameter, "return");
-		Model.getCoreHelper().setKindToReturn(mParameter);
+                Model.getCoreHelper().setName(mParameter, "return");
+                Model.getCoreHelper().setKind(
+                        mParameter,
+                        Model.getDirectionKind().getReturnParameter());
 
                 Model.getCoreHelper().setType(mParameter, mClassifier);
 	    } catch (ClassifierNotFoundException e) {
@@ -825,7 +827,9 @@ public class Modeller {
                         mOperation, mdl, voidType, propertyChangeListeners);
 		Model.getCoreHelper().setName(mParameter,
 				    (String) parameter.elementAt(2));
-		Model.getCoreHelper().setKindToIn(mParameter);
+		Model.getCoreHelper().setKind(
+                mParameter,
+                Model.getDirectionKind().getInParameter());
                 if (Model.getFacade().isAClassifier(mClassifier)) {
                     Model.getCoreHelper().setType(mParameter, mClassifier);
                 } else {
