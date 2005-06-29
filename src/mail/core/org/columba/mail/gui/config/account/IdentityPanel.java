@@ -59,7 +59,8 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
     private JButton selectSignatureButton;
     private JCheckBox attachsignatureCheckBox;
     private AccountItem account;
-
+    private JButton editSignatureButton;
+    
     //private ConfigFrame frame;
     public IdentityPanel(AccountItem account) {
         super();
@@ -85,7 +86,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
             organisationTextField.setText(identity.getOrganisation());
             File signature = identity.getSignature();
             selectSignatureButton.setText(
-                    signature == null ? "~/.signature" : signature.getPath());
+                    signature == null ? new File(System.getProperty("user.home"), ".signature").getPath() : signature.getPath());
 
             attachsignatureCheckBox.setSelected(signature != null);
 
@@ -170,6 +171,8 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
         selectSignatureButton = new JButton("~/.signature");
         selectSignatureButton.setActionCommand("CHOOSE");
         selectSignatureButton.addActionListener(this);
+        
+        editSignatureButton = new JButton(new EditSignatureAction(null,account));
     }
 
     protected void layoutComponents() {
@@ -226,15 +229,15 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
         
 
         JPanel panel = new JPanel();
-        FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
+        FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default), 3dlu, left:max(50dlu;default)",
                 
-            // 2 columns
+            // 3 columns
             "fill:default:grow"); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
         
-        b.append(attachsignatureCheckBox, selectSignatureButton);
+        b.append(attachsignatureCheckBox, selectSignatureButton, editSignatureButton);
 
         //b.append(selectSignatureButton);
         builder.append(panel, 3);
@@ -403,6 +406,10 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 
         if (action.equals("CHOOSE")) {
             JFileChooser fc = new JFileChooser();
+            if( account.getIdentity().getSignature() != null ) {
+            	fc.setSelectedFile(account.getIdentity().getSignature());
+            }
+            
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {

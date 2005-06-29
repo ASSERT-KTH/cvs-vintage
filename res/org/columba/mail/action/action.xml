@@ -117,6 +117,7 @@
  <action name="SignMessage" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
  <action name="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
  <action name="ViewAccountInfoPanel" class="org.columba.mail.gui.composer.action.ViewAccountInfoPanelAction" />
+ <action name="EditSignature" class="org.columba.mail.gui.config.account.EditSignatureAction" />
  
  <!-- composer html support -->
  <action name="BoldFormatAction" class="org.columba.mail.gui.composer.html.action.BoldFormatAction" />

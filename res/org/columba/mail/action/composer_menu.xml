@@ -16,6 +16,8 @@
 	
 	<menu name="menu_edit" extensionpoint="bottom">
 		<menuitem action="ExternalEditor"/>	
+		<separator/>
+		<menuitem action="MailAccount"/>
 		<extensionpoint name="top" />	
 		<extensionpoint name="bottom" />
 	</menu>
@@ -50,6 +52,7 @@
 	</menu>
 	
 	<menu name="menu_message">
+		<menuitem action="EditSignature"/>	 
 		<menuitem action="AttachFile"/>	 
 		<menuitem action="Spellcheck"/>	
 		<separator />

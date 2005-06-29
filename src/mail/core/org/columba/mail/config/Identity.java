@@ -17,8 +17,10 @@
 package org.columba.mail.config;
 
 import java.io.File;
+import java.util.Observer;
 
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.config.account.EditSignatureAction;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
@@ -108,5 +110,15 @@ public class Identity {
         } else {
             e.getAttributes().remove(Identity.SIGNATURE_FILE);
         }
+        
+        e.notifyObservers(signature);
     }
+    
+    public void addObserver(Observer observer) {
+    	e.addObserver(observer);
+    }
+
+	public void removeObserver(Observer observer) {
+		e.deleteObserver(observer);
+	}
 }
