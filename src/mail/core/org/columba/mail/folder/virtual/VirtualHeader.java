@@ -30,13 +30,14 @@ public class VirtualHeader extends ColumbaHeader {
 	protected AbstractMessageFolder srcFolder;
 
 	protected Object virtualUid;
-
+	protected Object srcUid;
+	
 	public VirtualHeader(ColumbaHeader header, AbstractMessageFolder srcFolder,
 			Object srcUid) {
 		super(header);
 
 		this.srcFolder = srcFolder;
-		this.virtualUid = srcUid;
+		this.srcUid = srcUid;
 	}
 
 	/**
@@ -66,6 +67,10 @@ public class VirtualHeader extends ColumbaHeader {
 	}
 	
 	public Object getSrcUid() {
-		return get("columba.uid");
+		return srcUid;
+	}
+
+	public void setSrcUid(Object uid) {
+		srcUid = uid;
 	}
 }

@@ -20,6 +20,9 @@ package org.columba.mail.folder.virtual;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
@@ -372,6 +375,12 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		int uid = getConfiguration().getInteger("property", "source_uid");
 		AbstractMessageFolder srcFolder = (AbstractMessageFolder) FolderTreeModel
 				.getInstance().getFolder(uid);
+		
+		/*
+		while( srcFolder instanceof VirtualFolder ) {
+			srcFolder = ((VirtualFolder) srcFolder).getSourceFolder();
+		}*/
+		
 		return srcFolder;
 	}
 
@@ -441,14 +450,13 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 		return new Filter(getConfiguration().getRoot().getElement("filter"));
 	}
 
-	public Object add(ColumbaHeader header, AbstractMessageFolder f, Object uid)
+	public Object add(ColumbaHeader header, AbstractMessageFolder source, Object uid)
 			throws Exception {
 		Object newUid = generateNextUid();
 
 		//VirtualMessage m = new VirtualMessage(f, uid, index);
 		VirtualHeader virtualHeader = new VirtualHeader((ColumbaHeader) header,
-				f, uid);
-		//virtualHeader.set("columba.uid", newUid);
+				source, uid);
 		virtualHeader.setVirtualUid(newUid);
 
 		headerList.add(virtualHeader, newUid);
@@ -537,29 +545,108 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 			revalidateSearch();
 		}
 
-		List list = new ArrayList();
-		//TODO (tstich):do some binning to speed up search
-		for (int i = 0; i < uids.length; i++) {
-			// get source folder reference
-			VirtualHeader h = (VirtualHeader) headerList.get(uids[i]);
-			AbstractMessageFolder sourceFolder = h.getSrcFolder();
-			Object sourceUid = h.getSrcUid();
+		if(uids.length == 0 ) return new Object[0];
 
-			Object[] result = sourceFolder.searchMessages(filter,
-					new Object[] { sourceUid });
+		List list = new ArrayList(Arrays.asList(uids));
 
-			if ((result != null) && (result.length > 0)) {
-				list.add(h.getVirtualUid());
+		Collections.sort(list, new Comparator() {
+
+			public int compare(Object o1, Object o2) {
+				VirtualHeader h = (VirtualHeader) headerList.get(o1);
+				int oV1 = h.getSrcFolder().getUid();
+				
+				h = (VirtualHeader) headerList.get(o2);
+				int oV2 = h.getSrcFolder().getUid();
+				
+				if( oV1 < oV2) {
+					return -1;
+				} else {
+					return oV1 == oV2 ? 0 : 1;
+				}
+			}});
+		
+		List resultList = new ArrayList();
+		
+		List virtualHeader = new ArrayList();
+		VirtualHeader h = (VirtualHeader) headerList.get(list.get(0));
+		AbstractMessageFolder sourceFolder = h.getSrcFolder();
+		virtualHeader.add(h);
+		
+		
+		for (int i = 1; i < uids.length; i++) {
+			h = (VirtualHeader) headerList.get(list.get(i));
+			
+			if( h.getSrcFolder() != sourceFolder || i == uids.length - 1){
+				// Now we can search this folder since no mail from
+				// this folder will come in the list
+				
+				Object[] srcUids = new Object[virtualHeader.size()];
+				
+				// Create a src uid array
+				for( int j=0; j< virtualHeader.size(); j++ ) {
+					srcUids[j] = ((VirtualHeader)virtualHeader.get(j)).getSrcUid();
+				}
+				
+				// search the src folder with the src uid array
+				Object[] resultUids = sourceFolder.searchMessages(filter,
+						srcUids);
+				
+				
+				// Convert the src uids back to virtual uids
+				if ((resultUids != null) && (resultUids.length > 0)) {
+					Object[] virtualUids = new Object[resultUids.length];
+					for( int j=0;j<resultUids.length;j++) {
+						virtualUids[j] = srcUidToVirtualUid(sourceFolder, resultUids[j]);
+					}
+					
+					// Add all found virtual uids to the result
+					resultList.addAll(Arrays.asList(virtualUids));
+				}
+				
+				virtualHeader.clear();
 			}
+			
+			// Add this header to the list for later searching
+			virtualHeader.add(h);
+			sourceFolder = h.getSrcFolder();
 		}
-
-		return list.toArray();
+		if( virtualHeader.size() > 0) {
+			// Now we can search this folder since no mail from
+			// this folder will come in the list
+			
+			Object[] srcUids = new Object[virtualHeader.size()];
+			
+			// Create a src uid array
+			for( int j=0; j< virtualHeader.size(); j++ ) {
+				srcUids[j] = ((VirtualHeader)virtualHeader.get(j)).getSrcUid();
+			}
+			
+			// search the src folder with the src uid array
+			Object[] resultUids = sourceFolder.searchMessages(filter,
+					srcUids);
+			
+			
+			// Convert the src uids back to virtual uids
+			if ((resultUids != null) && (resultUids.length > 0)) {
+				Object[] virtualUids = new Object[resultUids.length];
+				for( int j=0;j<resultUids.length;j++) {
+					virtualUids[j] = srcUidToVirtualUid(sourceFolder, resultUids[j]);
+				}
+				
+				// Add all found virtual uids to the result
+				resultList.addAll(Arrays.asList(virtualUids));
+			}
+			
+			virtualHeader.clear();
+		}
+		
+		
+		return resultList.toArray();
 	}
 
 	public Object[] searchMessages(Filter filter) throws Exception {
-		Object[] uids = getUids();
-
-		return searchMessages(filter, uids);
+		
+		return searchMessages(filter, getUids());
 	}
 
 	/**
@@ -692,6 +779,10 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] getUids() throws Exception {
+		if( !active ) {
+			activate();
+		}
+		
 		int count = headerList.count();
 		Object[] uids = new Object[count];
 		int i = 0;
@@ -705,6 +796,8 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 
 	protected Object srcUidToVirtualUid(IMailFolder srcFolder, Object uid) {
 		Enumeration uids = headerList.keys();
+		
+		
 		while( uids.hasMoreElements() ) {
 			VirtualHeader h = (VirtualHeader) headerList.get(uids.nextElement());
 			if( h.getSrcUid().equals(uid) && h.getSrcFolder().equals(srcFolder) ) {
@@ -749,6 +842,7 @@ public class VirtualFolder extends AbstractMessageFolder implements FolderListen
 
 		VirtualHeader h = (VirtualHeader) headerList.get(uid);
 		AbstractMessageFolder sourceFolder = h.getSrcFolder();
+		
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getFlags(sourceUid);
