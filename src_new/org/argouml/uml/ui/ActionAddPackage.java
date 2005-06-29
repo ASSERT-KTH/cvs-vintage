@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.15 2005/05/18 20:27:01 mvw Exp $
+// $Id: ActionAddPackage.java,v 1.16 2005/06/29 18:24:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,7 @@ public class ActionAddPackage  extends UMLAction {
      * Creates a new instance of ActionAddPackage.
      */
     public ActionAddPackage() {
-
-        super("Add package", NO_ICON);
+        super("action.add-package", NO_ICON);
     }
 
     /**
