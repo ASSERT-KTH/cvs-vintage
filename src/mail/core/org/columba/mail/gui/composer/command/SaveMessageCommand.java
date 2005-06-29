@@ -16,7 +16,7 @@
 package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.List;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
@@ -33,6 +33,8 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
+import org.columba.ristretto.parser.AddressParser;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * @author freddy
@@ -81,6 +83,18 @@ public class SaveMessageCommand extends Command {
 		sourceStream.close();
 		
 		// Add all recipients to the collected addresses 
-		MessageBuilderHelper.addAddressesToAddressbook((Address[]) message.getRecipients().toArray(new Address[0]));
+		List recipients = message.getRecipients();
+		if( recipients != null && recipients.size() > 0 ) {
+			Address[] addresses = new Address[recipients.size()];
+			for( int i=0;i <recipients.size(); i++) {
+				try {
+					addresses[i]  = AddressParser.parseAddress((String)recipients.get(i));
+				} catch (ParserException e) {
+					addresses[i] = addresses[i-1];
+				}
+			}
+			
+			MessageBuilderHelper.addAddressesToAddressbook(addresses);
+		}
 	}
 }
