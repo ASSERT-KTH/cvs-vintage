@@ -31,6 +31,7 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -45,6 +46,7 @@ import org.columba.mail.gui.util.SendMessageDialog;
 import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Flags;
 import org.waffel.jscf.JSCFException;
 
@@ -171,6 +173,7 @@ public class SendMessageCommand extends Command {
 		try {
 			// compose the message suitable for sending
 			message = new MessageComposer(model).compose(worker);
+
 		} catch (JSCFException e1) {
 			if (e1 instanceof CancelledException) {
 				// user cancelled sending operation
