@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.89 2005/05/21 18:16:30 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.90 2005/06/29 16:47:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,9 +220,15 @@ public class GeneratorDisplay extends Generator2 {
         if ((nameStr != null) && (nameStr.length() > 0)) {
             genStr.append(nameStr);
         }
-        genStr.append(parameterStr).append(" ");
-        if ((returnParasSb != null) && (returnParasSb.length() > 0)) {
-            genStr.append(returnParasSb).append(" ");
+        /* The "show types" defaults to TRUE, to stay compatible with older
+         * ArgoUML versions that did not have this setting: */
+        if (Configuration.getBoolean(Notation.KEY_SHOW_TYPES, true)) {
+            genStr.append(parameterStr).append(" ");
+            if ((returnParasSb != null) && (returnParasSb.length() > 0)) {
+                genStr.append(returnParasSb).append(" ");
+            }
+        } else {
+            genStr.append("()");
         }
         if ((propertySb != null)
             && (propertySb.length() > 0)
@@ -238,7 +244,7 @@ public class GeneratorDisplay extends Generator2 {
      *          visibility name [multiplicity] : type-expression =
      *                          initial-value {property-string}
      * Depending on settings in Notation, visibility, multiplicity,
-     * initial value and properties are shown/not shown.
+     * type-expression, initial value and properties are shown/not shown.
      *
      * @see org.argouml.application.api.NotationProvider2#generateAttribute(
      *          Object, boolean)
@@ -293,7 +299,10 @@ public class GeneratorDisplay extends Generator2 {
             && Configuration.getBoolean(Notation.KEY_SHOW_MULTIPLICITY)) {
             sb.append("[").append(multiplicity).append("]").append(" ");
         }
-        if ((type != null) && (type.length() > 0)) {
+        if ((type != null) && (type.length() > 0)
+            /* The "show types" defaults to TRUE, to stay compatible with older
+             * ArgoUML versions that did not have this setting: */
+            && Configuration.getBoolean(Notation.KEY_SHOW_TYPES, true)) {
             sb.append(": ").append(type).append(" ");
         }
         if ((initialValue != null)
