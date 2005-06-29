@@ -99,6 +99,8 @@ public class StreamUtils {
             read = in.read(buffer.array());
         }
 
+        in.close();
+        
         return result;
     }
     
@@ -119,6 +121,8 @@ public class StreamUtils {
             read = in.read();
         }
 
+        in.close();
+        
         return result;
     }
 
@@ -126,6 +130,8 @@ public class StreamUtils {
     	byte[] result = new byte[in.available()];
     	
     	in.read(result);
+    	
+    	in.close();
     	
     	return result;
     }

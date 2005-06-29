@@ -99,6 +99,8 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		}
 
 		data = StreamUtils.readInByteArray(bodyStream);
+		
+		bodyStream.close();
 	}
 
 	/**

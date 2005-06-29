@@ -346,7 +346,6 @@ public class MessageBuilderHelper {
 		}
 
 		String bodyMsg = StreamUtils.readInString(body).toString();
-		body.close();
 		return bodyMsg;
 	}
 
