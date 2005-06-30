@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.12 2005/06/27 18:01:40 mvw Exp $
+// $Id: ActionNewEvent.java,v 1.13 2005/06/30 20:06:56 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,10 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
             Model.getStateMachinesHelper()
                         .setEventAsTrigger(trans, event);
         }
-        Object enclosing = Model.getStateMachinesHelper().getStateMachine(trans);
+        /* TODO: move this method of setting the event's namespace 
+         * into the model subsystem, since it is mandatory. */
+        Object enclosing = 
+        	Model.getStateMachinesHelper().getStateMachine(trans);
         while ((!Model.getFacade().isAPackage(enclosing))
                 && (enclosing != null)) {
             enclosing = Model.getFacade().getNamespace(enclosing);
