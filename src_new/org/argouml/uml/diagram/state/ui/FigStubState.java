@@ -1,4 +1,4 @@
-// $Id: FigStubState.java,v 1.3 2005/06/25 10:00:41 bobtarling Exp $
+// $Id: FigStubState.java,v 1.4 2005/06/30 23:57:45 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -207,7 +207,7 @@ public class FigStubState extends FigStateVertex {
     /**
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    protected void setBoundsInternal(int theX, int theY, int theW, int theH) {
+    protected void setBoundsImpl(int theX, int theY, int theW, int theH) {
         Rectangle oldBounds = getBounds();
         theW = 60;
 

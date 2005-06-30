@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.40 2005/06/25 10:00:40 bobtarling Exp $
+// $Id: UMLAction.java,v 1.41 2005/06/30 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.Actions;
-import org.tigris.gef.base.UndoableAction;
+import org.tigris.gef.undo.UndoableAction;
 
 /**
  * The prototype of all actions within ArgoUML.

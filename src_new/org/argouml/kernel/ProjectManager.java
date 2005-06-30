@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.51 2005/06/27 12:56:31 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.52 2005/06/30 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,9 @@ import org.argouml.uml.cognitive.ProjectMemberTodoList;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.ui.ActionSaveProject;
-import org.tigris.gef.base.Memento;
-import org.tigris.gef.base.UndoManager;
 import org.tigris.gef.graph.MutableGraphSupport;
+import org.tigris.gef.undo.Memento;
+import org.tigris.gef.undo.UndoManager;
 
 /**
  * This class manages the projects loaded in argouml.

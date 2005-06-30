@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.19 2005/06/25 10:00:41 bobtarling Exp $
+// $Id: FigModel.java,v 1.20 2005/06/30 23:57:45 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.19 2005/06/25 10:00:41 bobtarling Exp $
+// $Id: FigModel.java,v 1.20 2005/06/30 23:57:45 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -71,7 +71,7 @@ public class FigModel extends FigPackage {
      *
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    protected void setBoundsInternal(int x, int y, int w, int h) {
+    protected void setBoundsImpl(int x, int y, int w, int h) {
 
         if (figPoly != null) {
             Rectangle oldBounds = getBounds();

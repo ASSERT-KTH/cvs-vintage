@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.14 2005/06/25 10:00:41 bobtarling Exp $
+// $Id: FigInstance.java,v 1.15 2005/06/30 23:57:45 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,7 +124,7 @@ public class FigInstance extends FigNodeModelElement {
      *
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
-    protected void setBoundsInternal(int x, int y, int w, int h) {
+    protected void setBoundsImpl(int x, int y, int w, int h) {
 	if (getNameFig() == null) return;
 	Rectangle oldBounds = getBounds();
 

@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.154 2005/06/28 18:36:27 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.155 2005/06/30 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,10 +79,10 @@ import org.argouml.uml.ui.ActionSaveProjectAs;
 import org.argouml.uml.ui.TabProps;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Globals;
-import org.tigris.gef.base.RedoAction;
-import org.tigris.gef.base.UndoAction;
-import org.tigris.gef.base.UndoManager;
 import org.tigris.gef.ui.IStatusBar;
+import org.tigris.gef.undo.RedoAction;
+import org.tigris.gef.undo.UndoAction;
+import org.tigris.gef.undo.UndoManager;
 import org.tigris.swidgets.BorderSplitPane;
 import org.tigris.swidgets.Horizontal;
 import org.tigris.swidgets.Orientation;

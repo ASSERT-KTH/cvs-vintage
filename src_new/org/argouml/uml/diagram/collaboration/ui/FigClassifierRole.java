@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.42 2005/06/25 10:00:42 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.43 2005/06/30 23:57:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -388,7 +388,7 @@ public class FigClassifierRole extends FigNodeModelElement {
      *         allow for stereotype as well.
      */
 
-    protected void setBoundsInternal(int x, int y, int w, int h) {
+    protected void setBoundsImpl(int x, int y, int w, int h) {
 
         // In the rather unlikely case that we have no name, we give up.
 
