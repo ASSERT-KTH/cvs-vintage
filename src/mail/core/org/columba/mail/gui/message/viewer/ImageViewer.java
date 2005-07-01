@@ -124,7 +124,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 			image = new ImageIcon(image.getImage()
 					.getScaledInstance((int) (image.getIconWidth() * scaling),
 							(int) (image.getIconHeight() * scaling),
-							Image.SCALE_SMOOTH));
+							Image.SCALE_FAST));
 		}
 
 		JLabel label = new JLabel(image);
