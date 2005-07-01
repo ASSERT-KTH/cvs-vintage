@@ -1,4 +1,4 @@
-// $Id: CoreHelperProxy.java,v 1.6 2005/06/28 10:46:42 bobtarling Exp $
+// $Id: CoreHelperProxy.java,v 1.7 2005/07/01 16:17:46 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -852,7 +852,7 @@ public class CoreHelperProxy implements CoreHelper {
             public void set(String value) {
                 impl.setBody(handle, value);
             }
-        }, body, Model.getDataTypesHelper().getBody(handle));
+        }, body, Model.getCoreHelper().getBody(handle));
     }
 
     /**
