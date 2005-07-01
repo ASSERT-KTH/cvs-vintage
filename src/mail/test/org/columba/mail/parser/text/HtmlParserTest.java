@@ -17,10 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.parser.text;
 
+import java.nio.charset.Charset;
+
 import junit.framework.TestCase;
 
 public class HtmlParserTest extends TestCase {
 
+	public Charset testCharset = Charset.forName("iso-8859-1");
+	
     public void testSubstituteURL1() {
         String input = "This page http://columba.sourceforge.net is net!";
 
@@ -82,30 +86,30 @@ public class HtmlParserTest extends TestCase {
     public void restoreSpecialCharacters1() {
     	String input = "this &#59; is encoded!";
     	
-    	assertEquals("this ; is encoded!", HtmlParser.restoreSpecialCharacters(input));
+    	assertEquals("this ; is encoded!", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
     public void restoreSpecialCharacters2() {
     	String input = "this &auml; is encoded!";
     	
-    	assertEquals(";", HtmlParser.restoreSpecialCharacters(input));
+    	assertEquals(";", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
     public void restoreSpecialCharacters3() {
     	String input = "this is &frac12; encoded &#59; !";
     	
-    	assertEquals("this is \u00bd encoded ; !", HtmlParser.restoreSpecialCharacters(input));
+    	assertEquals("this is \u00bd encoded ; !", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
     public void restoreSpecialCharacters4() {
     	String input = "this is&lt;encoded&gt;!";
     	
-    	assertEquals("this is<encoded>!", HtmlParser.restoreSpecialCharacters(input));
+    	assertEquals("this is<encoded>!", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 
     public void restoreSpecialCharacters5() {
     	String input = "&frac12; this is &#160;this is &#59;this is &#59;this is &#59;\nthis is &#59;\nthis is &#59;";
     	
-    	assertEquals("\u00bd his is \u00a0this is ;this is ;this is ;\nthis is ;\nthis is ;", HtmlParser.restoreSpecialCharacters(input));
+    	assertEquals("\u00bd his is \u00a0this is ;this is ;this is ;\nthis is ;\nthis is ;", HtmlParser.restoreSpecialCharacters(testCharset, input));
     }
 }

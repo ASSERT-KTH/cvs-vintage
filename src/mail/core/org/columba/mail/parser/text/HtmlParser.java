@@ -139,6 +139,11 @@ prot + "://  protocol and ://
 			};
 
     private static final Pattern SPECIAL_PATTERN = Pattern.compile("&#(\\d)+;");    
+
+	private static final Pattern CHARSET_PATTERN=Pattern.compile("\\bcharset=[^\\w-_\\d]+\\b");
+	
+    
+    
     /**
      * Strips html tags and removes extra spaces which occurs due
      * to e.g. indentation of the html and the head section, which does
@@ -240,7 +245,7 @@ prot + "://  protocol and ://
      * @author  karlpeder, 20030623
      *                         (moved from org.columba.mail.gui.message.util.DocumentParser)
      */
-    public static String restoreSpecialCharacters(String s) {
+    public static String restoreSpecialCharacters(Charset charset, String s) {
 
     	//First replace all special entities
     	for( int i=0; i<SPECIAL_ENTITIES.length; i++) {
@@ -250,12 +255,11 @@ prot + "://  protocol and ://
     	StringBuffer result = new StringBuffer(s.length());
     	int pos = 0;
     	
-    	Charset isoCharset = Charset.forName("iso-8859-1");
     	//replace the other entities
     	Matcher matcher = SPECIAL_PATTERN.matcher(s);
     	while( matcher.find()) {
     		result.append(s.substring(pos,matcher.start()));
-    		result.append(isoCharset.decode( ByteBuffer.wrap(new byte[]{ (byte) Integer.parseInt(matcher.group(1))})));
+    		result.append(charset.decode( ByteBuffer.wrap(new byte[]{ (byte) Integer.parseInt(matcher.group(1))})));
     		
     		pos = matcher.end();
     	}
@@ -266,6 +270,18 @@ prot + "://  protocol and ://
     	return result.toString().replaceAll("    ","\t");
     }
 
+    public static Charset getHtmlCharset(String htmlSource) {
+    	Matcher matcher = CHARSET_PATTERN.matcher(htmlSource);
+    	if( matcher.find() ) {
+    		try {
+				return Charset.forName(matcher.group());
+			} catch (RuntimeException e) {
+			}
+    	}
+    	
+    	return Charset.forName(System.getProperty("file.encoding"));
+    }
+    
     /**
      * Strips html tags. and replaces special entities with their
      * "normal" counter parts, e.g. <code>&gt; => ></code>.<br>
@@ -280,15 +296,19 @@ prot + "://  protocol and ://
      */
     public static String htmlToText(String html) {
         // stripHtmlTags called with true ~ p & br => newlines
-        String text = stripHtmlTags(html);
+        Charset charset = getHtmlCharset(html);
+    	
+    	String text = stripHtmlTags(html);
 
-        return restoreSpecialCharacters(text);
+        return restoreSpecialCharacters(charset, text);
     }
     public static String htmlToText(String html, boolean saveNewlines) {
         // stripHtmlTags called with true ~ p & br => newlines
+        Charset charset = getHtmlCharset(html);
+
         String text = stripHtmlTags(html, saveNewlines);
 
-        return restoreSpecialCharacters(text);
+        return restoreSpecialCharacters(charset, text);
     }
 
     /**
