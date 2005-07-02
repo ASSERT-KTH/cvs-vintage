@@ -1,4 +1,4 @@
-// $Id: ActionSaveDiagramToClipboard.java,v 1.4 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionSaveDiagramToClipboard.java,v 1.5 2005/07/02 12:38:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,8 +119,7 @@ public class ActionSaveDiagramToClipboard
  */
 class ImageSelection implements Transferable {
 
-    private static DataFlavor imageFlavor;
-    private DataFlavor [] supportedFlavors = {imageFlavor};
+    private DataFlavor [] supportedFlavors = {DataFlavor.imageFlavor};
 
     // the diagram image data
     private Image diagramImage;
@@ -128,10 +127,6 @@ class ImageSelection implements Transferable {
     public ImageSelection(Image newDiagramImage) {
 
         diagramImage = newDiagramImage;
-        // hack in order to be able to compile in java1.3
-        imageFlavor =
-	    new DataFlavor("image/x-java-image; class=java.awt.Image",
-			   "Image");
     }
 
     public synchronized DataFlavor [] getTransferDataFlavors() {
@@ -143,9 +138,9 @@ class ImageSelection implements Transferable {
 
         // hack in order to be able to compile in java1.3
         return (parFlavor.getMimeType().
-                    equals(imageFlavor.getMimeType())
-		&& parFlavor.getHumanPresentableName()
-                       .equals(imageFlavor.getHumanPresentableName()));
+                    equals(DataFlavor.imageFlavor.getMimeType())
+            && parFlavor.getHumanPresentableName()
+                   .equals(DataFlavor.imageFlavor.getHumanPresentableName()));
 
     }
 
@@ -155,9 +150,7 @@ class ImageSelection implements Transferable {
         if (isDataFlavorSupported(parFlavor)) {
             return (diagramImage);
         }
-        else {
-            throw new UnsupportedFlavorException(imageFlavor);
-        }
+        throw new UnsupportedFlavorException(DataFlavor.imageFlavor);
 
     }
 }
