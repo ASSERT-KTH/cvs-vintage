@@ -1,4 +1,4 @@
-// $Id: CppImport.java,v 1.1 2005/05/18 00:16:08 euluis Exp $
+// $Id: CppImport.java,v 1.2 2005/07/02 18:38:07 euluis Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,9 @@
 
 package org.argouml.language.cpp.reveng;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.uml.reveng.DiagramInterface;
@@ -45,32 +48,46 @@ public class CppImport extends FileImportSupport {
 
     /** logger */
     private static final Logger LOG = Logger.getLogger(CppImport.class);
-    
+
     /**
      * @see org.argouml.application.api.PluggableImport#parseFile(
-     * org.argouml.kernel.Project, java.lang.Object, 
-     * org.argouml.uml.reveng.DiagramInterface, org.argouml.uml.reveng.Import)
+     *      org.argouml.kernel.Project, java.lang.Object,
+     *      org.argouml.uml.reveng.DiagramInterface,
+     *      org.argouml.uml.reveng.Import)
      */
     public void parseFile(Project p, Object o, DiagramInterface diagram,
             Import theImport) throws Exception {
-        // TODO: implement.
-        LOG.warn("Not implemented yet!");
+        LOG.warn("Not fully implemented yet!");
+        if (o instanceof File) {
+            File f = (File) o;
+            FileInputStream in = new FileInputStream(f);
+            try {
+                Modeler modeler = new ModelerImpl();
+                CPPLexer lexer = new CPPLexer(in);
+                CPPParser parser = new CPPParser(lexer);
+                parser.translation_unit(modeler);
+            } finally {
+                in.close();
+            }
+        } else
+            LOG.error("o isn't a File!");
     }
-    
-    /**
-     * The suffix filters for C++.
-     * TODO: I think all the possible C++ file extensions should be returned, 
-     * even the empty (non-existing) file extendion for C++ standard library 
-     * headers.
-     */
-    private static final SuffixFilter[] CPP_SUFFIX_FILTERS = {
-        new SuffixFilter("cpp", "C++ source files"),
-        new SuffixFilter("h", "C++ header files"),
-    };
 
     /**
-     * TODO: I would like that an option to have all suffix applied to exist. 
+     * The suffix filters for C++ files. Header sufixes are left out, since the
+     * module should deal with files that originate translation units.
+     */
+    private static final SuffixFilter[] CPP_SUFFIX_FILTERS = {
+        new SuffixFilter("cxx", "C++ source files"),
+        new SuffixFilter("c++", "C++ source files"),
+        new SuffixFilter("C++", "C++ source files"),
+        new SuffixFilter("CPP", "C++ source files"),
+        new SuffixFilter("cpp", "C++ source files"), };
+
+    /**
+     * TODO: I would like that an option to have all suffix applied to exist.
      * Maybe this has to be fixed within ArgoUML...
+     * 
      * @see org.argouml.uml.reveng.FileImportSupport#getSuffixFilters()
      */
     public SuffixFilter[] getSuffixFilters() {
@@ -104,7 +121,7 @@ public class CppImport extends FileImportSupport {
     public String getModuleAuthor() {
         return "Luis Sergio Oliveira (euluis)";
     }
-    
+
     /**
      * @see org.argouml.application.api.ArgoModule#getModuleVersion()
      */
