@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.1 2005/07/02 18:57:30 mvw Exp $
+// $Id: DnDJGraph.java,v 1.2 2005/07/02 21:10:31 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,6 +132,7 @@ class DnDJGraph
             return;
         }
         
+        dropTargetDropEvent.acceptDrop(dropTargetDropEvent.getDropAction());
         //get the model elements that are being transfered.
         Collection modelElements;
         MutableGraphModel gm = (MutableGraphModel) ProjectManager.getManager().
@@ -151,6 +152,7 @@ class DnDJGraph
                     }
                 }
             }
+            dropTargetDropEvent.getDropTargetContext().dropComplete(true);
         } catch (UnsupportedFlavorException e) {
             e.printStackTrace();
         } catch (IOException e) {
