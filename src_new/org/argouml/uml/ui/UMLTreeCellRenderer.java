@@ -1,4 +1,4 @@
-// $Id: UMLTreeCellRenderer.java,v 1.35 2005/01/30 20:47:49 linus Exp $
+// $Id: UMLTreeCellRenderer.java,v 1.36 2005/07/02 17:13:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,11 +38,11 @@ import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 /**
- * UMTreeCellRenderer determines how the entries in the Navigationpane
+ * UMTreeCellRenderer determines how the entries in the Explorerpane
  * and ToDoList will be represented graphically.<p>
  *
- * In particular it makes decisions about the icons
- * to use in order to display a Navigationpane artifact depending on the kind
+ * In particular it makes decisions about the icons to use,
+ * in order to display an Explorerpane artifact depending on the kind
  * of object to be displayed.<p>
  *
  * This class must be efficient as it is called many 1000's of times.
