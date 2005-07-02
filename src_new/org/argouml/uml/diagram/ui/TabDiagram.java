@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.57 2005/05/15 09:56:46 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.58 2005/07/02 18:57:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +125,7 @@ public class TabDiagram
     public TabDiagram(String tag) {
         super(tag);
         setLayout(new BorderLayout());
-        graph = new JGraph();
+        graph = new DnDJGraph();
         graph.setDrawingSize((612 - 30) * 2, (792 - 55 - 20) * 2);
         // TODO: should update to size of diagram contents
 
