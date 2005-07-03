@@ -1,4 +1,4 @@
-// $Id: DiagramHelper.java,v 1.8 2005/01/09 14:58:03 linus Exp $
+// $Id: DiagramHelper.java,v 1.9 2005/07/03 19:45:03 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.helpers;
+
 import java.util.Vector;
 
 import javax.swing.JMenuItem;
@@ -32,7 +33,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.ui.ArgoDiagram;
 
 /**
- * Helper object for Diagrams
+ * Helper object for Diagrams.
  *
  * @author Thomas Neustupny
  * @since 0.9.5
@@ -41,21 +42,15 @@ public abstract class DiagramHelper extends ArgoDiagram
     implements PluggableDiagram {
 
     /**
-     * Default localization key for diagrams
+     * Default localization key for diagrams.
      */
     public static final String DIAGRAM_BUNDLE = "DiagramType";
-
-    /**
-     * String naming the resource bundle to use for localization.
-     */
-    private String bundle = "";
 
     /**
      * The constructor.
      *
      */
     public DiagramHelper() {
-        bundle = getDiagramResourceBundleKey();
     }
 
     /**
