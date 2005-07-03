@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperProxy.java,v 1.1 2005/06/28 13:14:44 bobtarling Exp $
+// $Id: StateMachinesHelperProxy.java,v 1.2 2005/07/03 09:48:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -310,6 +310,13 @@ public class StateMachinesHelperProxy implements StateMachinesHelper {
      */
     public void setReferenceState(Object o, String referenced) {
         impl.setReferenceState(o, referenced);
+    }
+    
+    /**
+     * @see org.argouml.model.StateMachinesHelper#findNamespaceForEvent(java.lang.Object)
+     */
+    public Object findNamespaceForEvent(Object trans, Object model) {
+        return impl.findNamespaceForEvent(trans, model);
     }
 
 }

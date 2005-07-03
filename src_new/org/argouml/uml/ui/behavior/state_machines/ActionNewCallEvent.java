@@ -1,4 +1,4 @@
-// $Id: ActionNewCallEvent.java,v 1.10 2005/01/02 16:43:40 linus Exp $
+// $Id: ActionNewCallEvent.java,v 1.11 2005/07/03 09:48:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 
 /**
@@ -45,13 +44,10 @@ public class ActionNewCallEvent extends ActionNewEvent {
     }
 
     /**
-     * @see org.argouml.uml.ui.behavior.state_machines.ActionNewEvent#createEvent()
+     * @see org.argouml.uml.ui.behavior.state_machines.ActionNewEvent#createEvent(java.lang.Object)
      */
-    protected Object createEvent() {
-        Object model =
-            ProjectManager.getManager().getCurrentProject().getModel();
-
-        return Model.getStateMachinesFactory().buildCallEvent(model);
+    protected Object createEvent(Object ns) {
+        return Model.getStateMachinesFactory().buildCallEvent(ns);
     }
 
     /**

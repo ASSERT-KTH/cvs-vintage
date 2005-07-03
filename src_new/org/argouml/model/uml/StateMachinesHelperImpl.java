@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperImpl.java,v 1.12 2005/04/28 20:35:49 mvw Exp $
+// $Id: StateMachinesHelperImpl.java,v 1.13 2005/07/03 09:48:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,18 @@ import org.argouml.model.Model;
 import org.argouml.model.StateMachinesHelper;
 
 import ru.novosoft.uml.behavior.common_behavior.MAction;
-import ru.novosoft.uml.behavior.state_machines.*;
+import ru.novosoft.uml.behavior.state_machines.MChangeEvent;
+import ru.novosoft.uml.behavior.state_machines.MCompositeState;
+import ru.novosoft.uml.behavior.state_machines.MEvent;
+import ru.novosoft.uml.behavior.state_machines.MGuard;
+import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.behavior.state_machines.MStateMachine;
+import ru.novosoft.uml.behavior.state_machines.MStateVertex;
+import ru.novosoft.uml.behavior.state_machines.MStubState;
+import ru.novosoft.uml.behavior.state_machines.MSubmachineState;
+import ru.novosoft.uml.behavior.state_machines.MSynchState;
+import ru.novosoft.uml.behavior.state_machines.MTimeEvent;
+import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -681,5 +692,31 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
             return;
         }
         throw new IllegalArgumentException("handle: " + o);
+    }
+
+    /**
+     * Find the correct namespace for an event.
+     * This explained by the following
+     * quote from the UML spec:
+     * "The event declaration has scope within
+     * the package it appears in and may be used in
+     * state diagrams for classes that have visibility
+     * inside the package. An event is not local to
+     * a single class."
+     * 
+     * @param trans the transition of which the event is a trigger
+     * @param model the default namespace is the root-model
+     * @return the enclosing namespace for the event
+     */
+    public Object findNamespaceForEvent(Object trans, Object model) {
+        Object enclosing = getStateMachine(trans);
+        while ((!Model.getFacade().isAPackage(enclosing))
+                && (enclosing != null)) {
+            enclosing = Model.getFacade().getNamespace(enclosing);
+        }
+        if (enclosing == null) {
+        	enclosing = model;
+        }
+        return enclosing;
     }
 }
