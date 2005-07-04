@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.121 2005/04/11 00:39:29 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.122 2005/07/04 05:53:03 spestov Exp $
  */
 public class DisplayManager
 {
@@ -520,7 +520,7 @@ public class DisplayManager
 			initialized = true;
 			folds = new RangeMap();
 			if(buffer.isLoaded())
-				bufferChangeHandler.foldHandlerChanged(buffer);
+				bufferHandler.foldHandlerChanged(buffer);
 			else
 				folds.reset(buffer.getLineCount());
 			notifyScreenLineChanges();
@@ -705,7 +705,7 @@ public class DisplayManager
 	private boolean inUse;
 	private Buffer buffer;
 	private JEditTextArea textArea;
-	private BufferChangeHandler bufferChangeHandler;
+	private BufferHandler bufferHandler;
 
 	//{{{ DisplayManager constructor
 	private DisplayManager(Buffer buffer, JEditTextArea textArea,
@@ -718,11 +718,9 @@ public class DisplayManager
 		scrollLineCount = new ScrollLineCount(this,textArea);
 		firstLine = new FirstLine(this,textArea);
 
-		bufferChangeHandler = new BufferChangeHandler(
-			this,textArea,buffer);
+		bufferHandler = new BufferHandler(this,textArea,buffer);
 		// this listener priority thing is a bad hack...
-		buffer.addBufferChangeListener(bufferChangeHandler,
-			Buffer.HIGH_PRIORITY);
+		buffer.addBufferListener(bufferHandler, JEditBuffer.HIGH_PRIORITY);
 
 		if(copy != null)
 		{
@@ -742,7 +740,7 @@ public class DisplayManager
 	//{{{ dispose() method
 	private void dispose()
 	{
-		buffer.removeBufferChangeListener(bufferChangeHandler);
+		buffer.removeBufferListener(bufferHandler);
 	} //}}}
 
 	//{{{ showLineRange() method

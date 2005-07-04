@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2004 Slava Pestov
+ * Copyright (C) 2001, 2005 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,13 +34,13 @@ import org.gjt.sp.util.Log;
  * directly.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.36 2004/10/17 04:36:32 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.37 2005/07/04 05:53:02 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
 {
 	//{{{ PositionManager constructor
-	public PositionManager(Buffer buffer)
+	public PositionManager(JEditBuffer buffer)
 	{
 		this.buffer = buffer;
 	} //}}}
@@ -101,7 +101,7 @@ public class PositionManager
 	boolean iteration;
 
 	//{{{ Private members
-	private Buffer buffer;
+	private JEditBuffer buffer;
 	private SortedMap positions = new TreeMap();
 	//}}}
 

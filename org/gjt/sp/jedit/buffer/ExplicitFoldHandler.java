@@ -30,7 +30,7 @@ import org.gjt.sp.jedit.Buffer;
  * embedded in the text.
  *
  * @author Slava Pestov
- * @version $Id: ExplicitFoldHandler.java,v 1.8 2003/11/18 20:51:57 spestov Exp $
+ * @version $Id: ExplicitFoldHandler.java,v 1.9 2005/07/04 05:53:02 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ExplicitFoldHandler extends FoldHandler
@@ -51,7 +51,7 @@ public class ExplicitFoldHandler extends FoldHandler
 	 * @return The fold level of the specified line
 	 * @since jEdit 4.0pre1
 	 */
-	public int getFoldLevel(Buffer buffer, int lineIndex, Segment seg)
+	public int getFoldLevel(JEditBuffer buffer, int lineIndex, Segment seg)
 	{
 		if(lineIndex == 0)
 			return 0;

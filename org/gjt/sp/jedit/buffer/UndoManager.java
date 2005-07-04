@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2003 Slava Pestov
+ * Copyright (C) 2001, 2005 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,13 +35,13 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.26 2005/01/09 00:33:05 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.27 2005/07/04 05:53:02 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
 {
 	//{{{ UndoManager constructor
-	public UndoManager(Buffer buffer)
+	public UndoManager(JEditBuffer buffer)
 	{
 		this.buffer = buffer;
 	} //}}}
@@ -234,7 +234,7 @@ public class UndoManager
 	//{{{ Private members
 
 	//{{{ Instance variables
-	private Buffer buffer;
+	private JEditBuffer buffer;
 
 	// queue of undos. last is most recent, first is oldest
 	private Edit undosFirst;

@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
 /**
  * A fold handler that does nothing.
  * @author Slava Pestov
- * @version $Id: DummyFoldHandler.java,v 1.3 2002/02/09 09:13:20 spestov Exp $
+ * @version $Id: DummyFoldHandler.java,v 1.4 2005/07/04 05:53:02 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class DummyFoldHandler extends FoldHandler
@@ -50,7 +50,7 @@ public class DummyFoldHandler extends FoldHandler
 	 * @return The fold level of the specified line
 	 * @since jEdit 4.0pre1
 	 */
-	public int getFoldLevel(Buffer buffer, int lineIndex, Segment seg)
+	public int getFoldLevel(JEditBuffer buffer, int lineIndex, Segment seg)
 	{
 		return 0;
 	} //}}}

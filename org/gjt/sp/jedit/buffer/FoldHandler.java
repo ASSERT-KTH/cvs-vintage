@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2003 Slava Pestov
+ * Copyright (C) 2001, 2005 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,8 +42,8 @@ import org.gjt.sp.util.Log;
  * See {@link org.gjt.sp.jedit.ServiceManager} for details.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.15 2005/01/09 01:47:38 spestov Exp $
- * @since jEdit 4.0pre1
+ * @version $Id: FoldHandler.java,v 1.16 2005/07/04 05:53:02 spestov Exp $
+ * @since jEdit 4.3pre3
  */
 public abstract class FoldHandler
 {
@@ -75,7 +75,7 @@ public abstract class FoldHandler
 	 * @return The fold level of the specified line
 	 * @since jEdit 4.0pre1
 	 */
-	public abstract int getFoldLevel(Buffer buffer, int lineIndex, Segment seg);
+	public abstract int getFoldLevel(JEditBuffer buffer, int lineIndex, Segment seg);
 	//}}}
 
 	//{{{ equals() method

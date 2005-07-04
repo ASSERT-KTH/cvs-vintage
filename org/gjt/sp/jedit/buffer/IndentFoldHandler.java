@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
 /**
  * A fold handler that folds lines based on their indent level.
  * @author Slava Pestov
- * @version $Id: IndentFoldHandler.java,v 1.5 2002/03/17 01:28:43 spestov Exp $
+ * @version $Id: IndentFoldHandler.java,v 1.6 2005/07/04 05:53:02 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class IndentFoldHandler extends FoldHandler
@@ -48,7 +48,7 @@ public class IndentFoldHandler extends FoldHandler
 	 * @return The fold level of the specified line
 	 * @since jEdit 4.0pre1
 	 */
-	public int getFoldLevel(Buffer buffer, int lineIndex, Segment seg)
+	public int getFoldLevel(JEditBuffer buffer, int lineIndex, Segment seg)
 	{
 		int tabSize = buffer.getTabSize();
 

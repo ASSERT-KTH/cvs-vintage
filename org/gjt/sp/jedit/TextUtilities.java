@@ -24,6 +24,7 @@ package org.gjt.sp.jedit;
 //{{{ Imports
 import java.util.*;
 import javax.swing.text.Segment;
+import org.gjt.sp.jedit.buffer.JEditBuffer;
 import org.gjt.sp.jedit.syntax.*;
 //}}}
 
@@ -40,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.49 2005/03/05 04:25:52 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.50 2005/07/04 05:53:02 spestov Exp $
  */
 public class TextUtilities
 {
@@ -103,7 +104,7 @@ public class TextUtilities
 	 * @param offset The offset within that line
 	 * @since jEdit 2.6pre1
 	 */
-	public static int findMatchingBracket(Buffer buffer, int line, int offset)
+	public static int findMatchingBracket(JEditBuffer buffer, int line, int offset)
 	{
 		if(offset < 0 || offset >= buffer.getLineLength(line))
 		{
