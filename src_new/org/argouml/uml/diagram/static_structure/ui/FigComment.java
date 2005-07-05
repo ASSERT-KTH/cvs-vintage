@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.47 2005/07/05 21:14:09 bobtarling Exp $
+// $Id: FigComment.java,v 1.48 2005/07/05 21:43:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.Model;
+import org.argouml.uml.diagram.ui.FigMultiLineText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
@@ -119,17 +120,7 @@ public class FigComment
         getBigPort().setFilled(false);
         getBigPort().setLineWidth(0);
 
-        text = new FigText(2, 2, width - 2 - gapY, height - 4, true);
-        text.setFont(getLabelFont());
-        text.setTextColor(Color.black);
-        text.setMultiLine(true);
-        text.setLineSeparator("\n");
-        text.setAllowsTab(false);
-        // _text.setText(placeString());
-        text.setJustification(FigText.JUSTIFY_LEFT);
-        text.setFilled(false);
-        text.setLineWidth(0);
-        //_text.setLineColor(Color.white);
+        text = new FigMultiLineText(2, 2, width - 2 - gapY, height - 4, true);
 
         // add Figs to the FigNode in back-to-front order
         addFig(getBigPort());
