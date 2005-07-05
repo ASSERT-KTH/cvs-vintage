@@ -1,4 +1,4 @@
-// $Id: DnDJGraph.java,v 1.2 2005/07/02 21:10:31 mvw Exp $
+// $Id: DnDJGraph.java,v 1.3 2005/07/05 20:03:32 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,6 +144,7 @@ class DnDJGraph
             while (i.hasNext()) {
                 Object me = i.next();
                 if (Model.getFacade().isAModelElement(me)) { 
+                	/* TODO: Find a better way to do this! */
                     if (gm.canAddEdge(me)) { 
                         gm.addEdge(me);
                     } else if (gm.canAddNode(me)) { 
