@@ -108,17 +108,18 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 			uid = newRefs.getUids()[0];
 		}
 
-		MimeTree mimePartTree = folder.getMimePartTree(uid);
-		MimePart mp = chooseBodyPart(mimePartTree);
-		if (mp != null)
-			getBodytextViewer().view(folder, uid, mp.getAddress(), mediator);
-
 		getHeaderController().view(folder, uid, mediator);
 
-		if (showAttachmentsInlineEnabled())
+		if (showAttachmentsInlineEnabled()) {
 			inlineAttachmentsViewer.view(folder, uid, mediator);
-		else
+		} else {
+			MimeTree mimePartTree = folder.getMimePartTree(uid);
+			MimePart mp = chooseBodyPart(mimePartTree);
+			if (mp != null)
+				getBodytextViewer().view(folder, uid, mp.getAddress(), mediator);
+
 			attachmentsViewer.view(folder, uid, mediator);
+		}
 
 		getSpamStatusViewer().view(folder, uid, mediator);
 		getSecurityInformationViewer().view(folder, uid, mediator);

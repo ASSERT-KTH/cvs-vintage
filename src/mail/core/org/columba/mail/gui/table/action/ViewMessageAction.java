@@ -32,7 +32,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
 
-    protected Object oldUid;
+    protected static Object oldUid;
 
     /**
      * @param controller
@@ -52,7 +52,9 @@ public class ViewMessageAction extends AbstractColumbaAction {
 
         if (uids.length == 1) {
         	// one message is selected
-            if (oldUid == uids[0]) {
+        	
+        	
+        	if (oldUid == uids[0]) {
                 LOG.info("this message was already selected, don't fire any event");
 
                 return;
