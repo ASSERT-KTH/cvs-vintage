@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.7 2005/06/24 13:41:14 bobtarling Exp $
+// $Id: ModelImplementation.java,v 1.8 2005/07/05 14:02:10 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -269,7 +269,8 @@ public interface ModelImplementation {
     VisibilityKind getVisibilityKind();
 
     /**
-     * Getter for the XmiReader object.
+     * A factory method that creates a new instance of an XmiReader on each
+     * call.
      *
      * @return the object implementing the XmiReader interface
      * @throws UmlException on any error while reading
@@ -277,7 +278,8 @@ public interface ModelImplementation {
     XmiReader getXmiReader() throws UmlException;
 
     /**
-     * Getter for the XmiWriter object.
+     * A factory method that creates a new instance of an XmiWriter on each
+     * call.
      *
      * @param model the project member model
      * @param writer the writer

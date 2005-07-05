@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.1 2005/02/20 20:10:14 bobtarling Exp $
+// $Id: XmiReader.java,v 1.2 2005/07/05 14:01:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,10 @@ import org.xml.sax.InputSource;
 /**
  * A wrapper around the genuine XmiReader that provides public
  * access with no knowledge of actual UML implementation.
+ * Unlike many of the interfaces to the model there is no control to force
+ * a single instance of an XmiReader. This is to allow work objects generated
+ * by the imlementation to be garbage collected when an XmiReader instance
+ * falls out of scope.
  *
  * @author Bob Tarling
  */
