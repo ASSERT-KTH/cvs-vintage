@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.8 2005/02/20 21:55:17 linus Exp $
+// $Id: ModelMemberFilePersister.java,v 1.9 2005/07/05 17:03:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,13 @@
 
 package org.argouml.persistence;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
@@ -131,7 +134,11 @@ public class ModelMemberFilePersister extends MemberFilePersister {
             try {
                 tempFile = File.createTempFile("xmi", null);
                 tempFile.deleteOnExit();
-                writer = new FileWriter(tempFile);
+                
+                writer = new BufferedWriter(
+                        new OutputStreamWriter(
+                                new FileOutputStream(tempFile), "UTF-8"));
+                //writer = new FileWriter(tempFile);
             } catch (IOException e) {
                 throw new SaveException(e);
             }
