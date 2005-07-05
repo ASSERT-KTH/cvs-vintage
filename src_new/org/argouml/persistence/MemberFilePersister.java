@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.4 2005/01/09 21:10:37 linus Exp $
+// $Id: MemberFilePersister.java,v 1.5 2005/07/05 19:38:30 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,12 @@ package org.argouml.persistence;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
 
@@ -85,7 +87,7 @@ public abstract class MemberFilePersister {
                 "                                          "
                 	.substring(0, indent);
             BufferedReader reader =
-                new BufferedReader(new FileReader(file));
+                new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
             // Skip the <?xml... first line
             String line = reader.readLine();
