@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.62 2005/06/16 15:16:53 bobtarling Exp $
+// $Id: TabProps.java,v 1.63 2005/07/05 23:55:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -356,18 +356,6 @@ public class TabProps
             } else {
                 base = targetClassName.substring(16);
             }
-            
-            if (lastDot > 0) {
-                targetClassName = targetClassName.substring(lastDot + 1);
-            }
-
-            if (targetClassName.startsWith("M")) {
-                targetClassName = targetClassName.substring(1); //remove M
-            }
-            if (targetClassName.endsWith("Impl")) {
-                targetClassName =
-                    targetClassName.substring(0, targetClassName.length() - 4);
-            }
         } else {
             //remove "org.omg.uml."
             if (lastDot > 0) {
@@ -375,19 +363,9 @@ public class TabProps
             } else {
                 base = targetClassName.substring(12);
             }
-            
-            if (lastDot > 0) {
-                targetClassName = targetClassName.substring(lastDot + 1);
-            }
-
-            if (targetClassName.startsWith("Uml")) {
-                targetClassName = targetClassName.substring(3); //remove Uml
-            }
-            if (targetClassName.indexOf('$') > 0) {
-                targetClassName =
-                    targetClassName.substring(0, targetClassName.indexOf('$'));
-            }
         }
+        
+        targetClassName = Model.getMetaTypes().getName(targetClass);
 
         // This doesn't work for panel property tabs - they are being put in the
         // wrong place. Really we should have defined these are preloaded them
