@@ -174,7 +174,7 @@ public class OpenMessageWithComposerCommand extends Command {
 	        	}
 	        }
 
-			model.setBodyText(StreamUtils.readInString(
+			model.setBodyText(StreamUtils.readCharacterStream(
 					bodyStream)
 					.toString());
 
