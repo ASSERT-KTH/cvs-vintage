@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.72 2005/07/01 18:03:14 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.73 2005/07/05 20:11:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
+import org.tigris.gef.graph.GraphModel;
 
 /**
  * @author jrobbins@ics.uci.edy
@@ -109,15 +110,23 @@ public class UMLClassDiagram extends UMLDiagram {
             			       + "Object " + ns
             			       + " is not a namespace");
         }
+        boolean init = (null == getNamespace());
         super.setNamespace(ns);
-        ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
+        ClassDiagramGraphModel gm;
+        if (init) {
+                gm = new ClassDiagramGraphModel();
+        }else {
+        	gm = (ClassDiagramGraphModel) this.getGraphModel();
+        }
         gm.setHomeModel(ns);
-        LayerPerspective lay =
-            new LayerPerspectiveMutable(Model.getFacade().getName(ns), gm);
-        ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
-        lay.setGraphNodeRenderer(rend);
-        lay.setGraphEdgeRenderer(rend);
-        setLayer(lay);
+        if (init) {
+        	LayerPerspective lay =
+        		new LayerPerspectiveMutable(Model.getFacade().getName(ns), gm);
+        	ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
+        	lay.setGraphNodeRenderer(rend);
+        	lay.setGraphEdgeRenderer(rend);
+        	setLayer(lay);
+        }
     }
 
     /**
@@ -483,4 +492,20 @@ public class UMLClassDiagram extends UMLDiagram {
         }
         return actionOperation;
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
+     */
+    public boolean isRelocationAllowed(Object base)  {
+    	return Model.getFacade().isANamespace(base);
+    }
+
+	/**
+	 * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
+	 */
+	public boolean relocate(Object base) {
+		setNamespace(base);
+		this.damage();
+		return true;
+	}
 } /* end class UMLClassDiagram */

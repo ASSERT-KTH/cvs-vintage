@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.50 2005/05/18 21:12:14 linus Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.51 2005/07/05 20:11:46 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -450,4 +450,21 @@ public class UMLDeploymentDiagram extends UMLDiagram {
         }
         return actionUniComposition;
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
+     */
+    public boolean isRelocationAllowed(Object base)  {
+    	return false; 
+		/* TODO: We may return the following when the 
+		 * relocate() has been implemented. */
+//    	base == ProjectManager.getManager().getCurrentProject().getModel();
+    }
+
+	/**
+	 * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
+	 */
+	public boolean relocate(Object base) {
+		return false;
+	}
 } /* end class UMLDeploymentDiagram */

@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.72 2005/06/05 13:07:31 linus Exp $
+// $Id: UMLDiagram.java,v 1.73 2005/07/05 20:11:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -245,6 +245,9 @@ public abstract class UMLDiagram
             LOG.error("Not a namespace");
             LOG.error(ns);
             throw new IllegalArgumentException("Given object not a namespace");
+        }
+        if ((namespace != null) && (namespace != ns)) {
+        	Model.getPump().removeModelEventListener(this, namespace);
         }
         namespace = ns;
         // add the diagram as a listener to the namspace so
@@ -628,6 +631,28 @@ public abstract class UMLDiagram
     public Object getDependentElement() {
         return null;
     }
+    
+    /**
+     * This function should return true if it is allowed to relocate 
+     * this type of diagram to the given modelelement.
+     * 
+     * @param base the given modelelement
+     * @return true if adding a diagram here is allowed
+     */
+    public abstract boolean isRelocationAllowed(Object base);
 
+    /**
+     * Relocate this diagram, 
+     * e.g. for a class diagram assign it a new namespace, 
+     * e.g. for a statechart move it together with the 
+     * statemachine to a new operation/classifier. <p>
+     * 
+     * Precondition: isRelocationAllowed(base) is true. 
+     * 
+     * @param base the new location, i.e. base modelelement
+     * @return true if successful
+     */
+    public abstract boolean relocate(Object base);
+    
 } /* end class UMLDiagram */
 

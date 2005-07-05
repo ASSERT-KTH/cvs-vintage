@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.46 2005/05/24 21:56:07 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.47 2005/07/05 20:11:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -203,5 +203,23 @@ public class UMLSequenceDiagram extends UMLDiagram {
         ProjectManager.getManager().getCurrentProject().moveToTrash(collab);
 */
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
+     */
+    public boolean isRelocationAllowed(Object base)  {
+    	return false; 
+		/* TODO: We may return the following when the 
+		 * relocate() has been implemented. */
+//    	Model.getFacade().isAClassifier(base)
+//        	|| Model.getFacade().isAOperation(base);
+    }
+
+	/**
+	 * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
+	 */
+	public boolean relocate(Object base) {
+		return false;
+	}
 
 } /* end class UMLSequenceDiagram */

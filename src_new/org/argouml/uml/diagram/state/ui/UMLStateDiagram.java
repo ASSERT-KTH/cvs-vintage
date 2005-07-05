@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.77 2005/05/18 21:12:14 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.78 2005/07/05 20:11:47 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -481,4 +481,22 @@ public class UMLStateDiagram extends UMLDiagram {
             return getStateMachine(); /* The StateMachine. */
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#isRelocationAllowed(java.lang.Object)
+     */
+    public boolean isRelocationAllowed(Object base)  {
+    	return false; 
+		/* TODO: We may return the following when the 
+		 * relocate() has been implemented. */
+//    	Model.getStateMachinesHelper()
+//        	.isAddingStatemachineAllowed(base);
+    }
+
+	/**
+	 * @see org.argouml.uml.diagram.ui.UMLDiagram#relocate(java.lang.Object)
+	 */
+	public boolean relocate(Object base) {
+		return false;
+	}
+    
 } /* end class UMLStateDiagram */
