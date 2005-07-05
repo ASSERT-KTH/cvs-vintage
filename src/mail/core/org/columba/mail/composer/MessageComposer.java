@@ -24,6 +24,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -61,6 +66,8 @@ public class MessageComposer {
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.composer");
 
+	private static final Charset headerCharset = Charset.forName("UTF-8");
+	
 	private ComposerModel model;
 
 	private int accountUid;
@@ -71,22 +78,22 @@ public class MessageComposer {
 
 	protected SendableHeader initHeader() {
 		SendableHeader header = new SendableHeader();
-
-		
 		
 		// RFC822 - Header
 		if (model.getToList() != null) {
 			String s = ListParser.createStringFromList(ListBuilder
 					.createFlatList(model.getToList()));
 			if ( s.length() != 0 )
-			header.set("To",s );
+				header.set("To",EncodedWord.encode(s,
+						headerCharset, EncodedWord.QUOTED_PRINTABLE).toString() );
 		}
 
 		if (model.getCcList() != null) {
 			String s = ListParser.createStringFromList(ListBuilder
 					.createFlatList(model.getCcList()));
 			if ( s.length() != 0 )
-			header.set("Cc",s );
+			header.set("Cc",EncodedWord.encode(s,
+					headerCharset, EncodedWord.QUOTED_PRINTABLE).toString() );
 		}
 
 
@@ -97,7 +104,7 @@ public class MessageComposer {
 		//		Charset.forName(model.getCharsetName()),
 		//		EncodedWord.QUOTED_PRINTABLE).toString());
 		header.set("Subject", EncodedWord.encode(model.getSubject(),
-				model.getCharset(), EncodedWord.QUOTED_PRINTABLE).toString());
+				headerCharset, EncodedWord.QUOTED_PRINTABLE).toString());
 
 		AccountItem item = model.getAccountItem();
 		Identity identity = item.getIdentity();
@@ -105,11 +112,14 @@ public class MessageComposer {
 		//mod: 20040629 SWITT for redirecting feature
 		//If FROM value was set, take this as From, else take Identity
 		if (model.getMessage().getHeader().getHeader().get("From") != null) {
-			header.set("From", model.getMessage().getHeader().getHeader().get(
-					"From"));
+			header.set("From", EncodedWord.encode(model.getMessage().getHeader().getHeader().get(
+					"From"), headerCharset, EncodedWord.QUOTED_PRINTABLE).toString());
 		} else {
-			header.set("From", identity.getAddress().toString());
+			header.set("From", EncodedWord.encode(identity.getAddress().toString(),
+					headerCharset, EncodedWord.QUOTED_PRINTABLE).toString());
 		}
+		
+		
 
 		header.set("X-Priority", model.getPriority());
 
@@ -132,7 +142,8 @@ public class MessageComposer {
 		Address replyAddress = identity.getReplyToAddress();
 
 		if (replyAddress != null) {
-			header.set("Reply-To", replyAddress.getMailAddress());
+			header.set("Reply-To", EncodedWord.encode(replyAddress.getMailAddress(),
+					headerCharset, EncodedWord.QUOTED_PRINTABLE).toString());
 		}
 
 		String messageID = MessageIDGenerator.generate();
@@ -141,7 +152,8 @@ public class MessageComposer {
 		String inreply = model.getHeaderField("In-Reply-To");
 
 		if (inreply != null) {
-			header.set("In-Reply-To", inreply);
+			header.set("In-Reply-To", EncodedWord.encode(inreply,
+					headerCharset, EncodedWord.QUOTED_PRINTABLE).toString());
 		}
 
 		String references = model.getHeaderField("References");
