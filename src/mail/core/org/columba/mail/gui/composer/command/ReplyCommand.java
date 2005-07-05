@@ -255,7 +255,7 @@ public class ReplyCommand extends Command {
             buf.append("</p>");
             buf.append(HtmlParser.removeComments(// comments are not displayed
                                                  // correctly in composer
-                    HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
+                    HtmlParser.getHtmlBody(StreamUtils.readCharacterStream(bodyStream)
                             .toString())));
             buf.append("<p>");
             buf.append(MailResourceLoader.getString("dialog", "composer",
@@ -265,7 +265,7 @@ public class ReplyCommand extends Command {
             quotedBody = buf.toString();
         } else {
             // Text: Addition of > before each line
-            quotedBody = StreamUtils.readInString(new QuoteFilterInputStream(bodyStream)).toString();
+            quotedBody = StreamUtils.readCharacterStream(new QuoteFilterInputStream(bodyStream)).toString();
         }
 
         bodyStream.close();

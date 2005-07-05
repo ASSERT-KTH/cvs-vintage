@@ -246,7 +246,7 @@ public class ForwardInlineCommand extends ForwardCommand {
 			buf.append("</p>");
 			buf.append(HtmlParser.removeComments( // comments are not displayed
 					// correctly in composer
-					HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
+					HtmlParser.getHtmlBody(StreamUtils.readCharacterStream(bodyStream)
 							.toString())));
 			buf.append("<p>");
 			buf.append(MailResourceLoader.getString("dialog", "composer",
@@ -256,7 +256,7 @@ public class ForwardInlineCommand extends ForwardCommand {
 			quotedBody = buf.toString();
 		} else {
 			// Text: Addition of > before each line
-			quotedBody = StreamUtils.readInString(
+			quotedBody = StreamUtils.readCharacterStream(
 					new QuoteFilterInputStream(bodyStream)).toString();
 		}
 

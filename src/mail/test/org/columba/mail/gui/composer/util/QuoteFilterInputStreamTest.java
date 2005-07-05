@@ -29,7 +29,7 @@ public class QuoteFilterInputStreamTest extends TestCase {
         String line = "This is a test";
         InputStream in = new ByteArrayInputStream(line.getBytes());
 
-        StringBuffer result = StreamUtils.readInString(new QuoteFilterInputStream(
+        StringBuffer result = StreamUtils.readCharacterStream(new QuoteFilterInputStream(
                     in));
         assertTrue(result.toString().equals(line.replaceAll("(?m)^(.*)$", "> $1")));
     }
@@ -38,7 +38,7 @@ public class QuoteFilterInputStreamTest extends TestCase {
         String line = "This is a test\nForget the rest\n\n";
         InputStream in = new ByteArrayInputStream(line.getBytes());
 
-        StringBuffer result = StreamUtils.readInString(new QuoteFilterInputStream(
+        StringBuffer result = StreamUtils.readCharacterStream(new QuoteFilterInputStream(
                     in));
         assertTrue(result.toString().equals(line.replaceAll("(?m)^(.*)$", "> $1")));
     }
@@ -47,7 +47,7 @@ public class QuoteFilterInputStreamTest extends TestCase {
         String line = "This is a test\nForget the rest\n\n\n";
         InputStream in = new ByteArrayInputStream(line.getBytes());
 
-        StringBuffer result = StreamUtils.readInString(new QuoteFilterInputStream(
+        StringBuffer result = StreamUtils.readCharacterStream(new QuoteFilterInputStream(
                     in));
         assertTrue(result.toString().equals(line.replaceAll("(?m)^(.*)$", "> $1")));
     }
@@ -56,7 +56,7 @@ public class QuoteFilterInputStreamTest extends TestCase {
         String line = "\nThis is a test\nForget the rest\n\n\n";
         InputStream in = new ByteArrayInputStream(line.getBytes());
 
-        StringBuffer result = StreamUtils.readInString(new QuoteFilterInputStream(
+        StringBuffer result = StreamUtils.readCharacterStream(new QuoteFilterInputStream(
                     in));
         assertTrue(result.toString().equals(line.replaceAll("(?m)^(.*)$", "> $1")));
     }

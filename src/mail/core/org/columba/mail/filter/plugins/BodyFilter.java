@@ -43,7 +43,7 @@ public class BodyFilter extends AbstractFilter {
 		// get message body
 
 		InputStream messageSourceStream = ((IMailbox)folder).getMessageSourceStream(uid);
-		StringBuffer body = StreamUtils.readInString(messageSourceStream);
+		StringBuffer body = StreamUtils.readCharacterStream(messageSourceStream);
 		String bodyText = pattern;
 
 		boolean result = false;

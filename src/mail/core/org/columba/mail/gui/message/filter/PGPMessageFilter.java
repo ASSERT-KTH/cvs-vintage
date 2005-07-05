@@ -219,7 +219,7 @@ public class PGPMessageFilter extends AbstractFilter {
 				if (res.isError()) {
 					LOG.fine("the result set contains errors ");
 					pgpMode = EncryptionStatusViewer.DECRYPTION_FAILURE;
-					pgpMessage = StreamUtils.readInString(res.getErrorStream())
+					pgpMessage = StreamUtils.readCharacterStream(res.getErrorStream())
 							.toString();
 					LOG.fine("error message: " + pgpMessage);
 					decryptedStream = res.getResultStream();
@@ -244,7 +244,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			// if the pgp mode is active we should get the decrypted part
 			if (pgpActive) {
 				// TODO (@author fdietz): should be removed if we only use Streams!
-				decryptedBodyPart = StreamUtils.readInString(decryptedStream);
+				decryptedBodyPart = StreamUtils.readCharacterStream(decryptedStream);
 				// check if the returned String is has a length != 0
 				if (decryptedBodyPart.length() == 0) {
 					LOG
@@ -275,7 +275,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			InputStream messageSourceStream = folder
 					.getMessageSourceStream(uid);
 			message.setSource(new CharSequenceSource(StreamUtils
-					.readInString(messageSourceStream)));
+					.readCharacterStream(messageSourceStream)));
 			messageSourceStream.close();
 
 			encryptedMessage = true;
@@ -337,11 +337,11 @@ public class PGPMessageFilter extends AbstractFilter {
 					micalg);
 			if (res.isError()) {
 				pgpMode = EncryptionStatusViewer.VERIFICATION_FAILURE;
-				pgpMessage = StreamUtils.readInString(res.getErrorStream())
+				pgpMessage = StreamUtils.readCharacterStream(res.getErrorStream())
 						.toString();
 			} else {
 				pgpMode = EncryptionStatusViewer.VERIFICATION_SUCCESS;
-				pgpMessage = StreamUtils.readInString(res.getResultStream())
+				pgpMessage = StreamUtils.readCharacterStream(res.getResultStream())
 						.toString();
 			}
 

@@ -388,7 +388,7 @@ public class SaveMessageBodyAsCommand extends Command {
 
         bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
 
-        return StreamUtils.readInString(bodyStream).toString();
+        return StreamUtils.readCharacterStream(bodyStream).toString();
     }
 
     /**

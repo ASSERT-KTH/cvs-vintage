@@ -141,7 +141,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 		InputStream bodyStream = templateFolder.getMimePartBodyStream(uid, mp
 				.getAddress());
 
-		String body = StreamUtils.readInString(bodyStream).toString();
+		String body = StreamUtils.readCharacterStream(bodyStream).toString();
 
 		bodyStream.close();
 		return body;

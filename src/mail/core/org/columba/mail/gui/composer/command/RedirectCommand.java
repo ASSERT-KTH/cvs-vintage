@@ -197,14 +197,14 @@ public class RedirectCommand extends ForwardCommand {
 			buf.append("<html><body>");
 			buf.append(HtmlParser.removeComments( // comments are not displayed
 												  // correctly in composer
-					HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
+					HtmlParser.getHtmlBody(StreamUtils.readCharacterStream(bodyStream)
 							.toString())));
 			buf.append("</body></html>");
 
 			quotedBody = buf.toString();
 		} else {
 			// Text: take org. message; mod:20040629 SWITT
-			quotedBody = StreamUtils.readInString(bodyStream).toString();
+			quotedBody = StreamUtils.readCharacterStream(bodyStream).toString();
 
 		}
 

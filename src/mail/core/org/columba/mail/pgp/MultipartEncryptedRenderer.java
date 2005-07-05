@@ -106,7 +106,7 @@ JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("pa
 
         if (res.isError()) {
             JOptionPane.showMessageDialog(null,
-                StreamUtils.readInString(res.getErrorStream()).toString());
+                StreamUtils.readCharacterStream(res.getErrorStream()).toString());
         }
 
         encryptedPart = new InputStreamMimePart(encryptedHeader,

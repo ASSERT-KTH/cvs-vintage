@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
 /**
@@ -29,8 +30,6 @@ import java.nio.charset.Charset;
  */
 public class StreamUtils {
     private static final int BUFFERSIZE = 8000;
-    private static final Charset _8BitCharset = Charset.forName("ISO-8859-1");
-
     /**
      * Copies length bytes from an InputStream to an OutputStream.
      *
@@ -77,33 +76,6 @@ public class StreamUtils {
         return copied;
     }
 
-    /**
-     * Reads a InputStream into a StringBuffer.
-     * This method is 8bit safe.
-     *
-     * @param in the InputStream to read from
-     * @return the interpreted InputStream
-     * @throws IOException
-     */
-    public static StringBuffer readInString(InputStream in)
-        throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(BUFFERSIZE);
-        StringBuffer result = new StringBuffer();
-        int read = in.read(buffer.array());
-
-        while (read > 0) {
-            buffer.limit(read);
-            result.append(_8BitCharset.decode(buffer));
-
-            buffer.clear();
-            read = in.read(buffer.array());
-        }
-
-        in.close();
-        
-        return result;
-    }
-    
     /**
      * Reads a InputStream of chars into a StringBuffer.
      *

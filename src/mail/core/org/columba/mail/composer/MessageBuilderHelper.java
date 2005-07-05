@@ -345,7 +345,7 @@ public class MessageBuilderHelper {
 			body = new CharsetDecoderInputStream(body, charset);
 		}
 
-		String bodyMsg = StreamUtils.readInString(body).toString();
+		String bodyMsg = StreamUtils.readCharacterStream(body).toString();
 		return bodyMsg;
 	}
 
