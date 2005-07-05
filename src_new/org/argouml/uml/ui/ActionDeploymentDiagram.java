@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.24 2005/05/18 20:27:01 mvw Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.25 2005/07/05 20:00:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,11 +85,10 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 					       "The argument " + handle
 					       + "is not a namespace.");
         }
-        Object/*MNamespace*/ ns = handle;
         // may only occur as child of the model or in a package
         return (
-		ns == ProjectManager.getManager().getCurrentProject().getModel()
-                || Model.getFacade().isAPackage(ns));
+		handle == ProjectManager.getManager().getCurrentProject().getModel()
+                || Model.getFacade().isAPackage(handle));
     }
 
 } /* end class ActionDeploymentDiagram */
