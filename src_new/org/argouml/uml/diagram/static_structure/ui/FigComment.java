@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.46 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigComment.java,v 1.47 2005/07/05 21:14:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,6 +123,7 @@ public class FigComment
         text.setFont(getLabelFont());
         text.setTextColor(Color.black);
         text.setMultiLine(true);
+        text.setLineSeparator("\n");
         text.setAllowsTab(false);
         // _text.setText(placeString());
         text.setJustification(FigText.JUSTIFY_LEFT);
