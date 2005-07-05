@@ -1,4 +1,4 @@
-// $Id: MetaTypesImpl.java,v 1.3 2005/04/23 16:30:44 linus Exp $
+// $Id: MetaTypesImpl.java,v 1.4 2005/07/05 23:35:18 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,6 +119,21 @@ public final class MetaTypesImpl implements MetaTypes {
     MetaTypesImpl() {
     }
 
+    /**
+     * Given a model element instance returns the name of its meta type.
+     */
+    public String getName(Object modelElement) {
+        String name = modelElement.getClass().getName();
+        name = name.substring(name.lastIndexOf('.')+1);
+        if (name.startsWith("M")) {
+            name = name.substring(1);
+        }
+        if (name.endsWith("Impl")) {
+            name = name.substring(0, name.length() - 4);
+        }
+        return name;
+    }
+    
     /**
      * @return Returns the Abstraction.
      */

@@ -1,4 +1,4 @@
-// $Id: MetaTypes.java,v 1.2 2005/04/23 16:30:44 linus Exp $
+// $Id: MetaTypes.java,v 1.3 2005/07/05 23:35:18 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,12 @@ package org.argouml.model;
  * @see org.argouml.model.UmlFactory#buildNode(Object)
  */
 public interface MetaTypes {
+    
+    /**
+     * Given a model element instance returns the name of its meta type.
+     */
+    String getName(Object modelElement);
+    
     /**
      * @return Returns the Abstraction.
      */
