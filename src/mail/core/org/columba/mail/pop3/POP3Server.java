@@ -227,6 +227,18 @@ public class POP3Server {
 			date -= days * DAY_IN_MS;
 
 			deleteMessagesOlderThan(new Date(date));
+		} else if( !item.getBooleanWithDefault("leave_messages_on_server", false)) {
+			removeAllDownloadedMessages();
+		}
+	}
+
+	
+	private void removeAllDownloadedMessages() throws IOException, CommandCancelledException, POP3Exception  {
+		HeaderList headerList = headerCache.getHeaderList();
+		Enumeration uids = headerList.keys();
+		while (uids.hasMoreElements()) {
+			Object uid = uids.nextElement();
+			deleteMessage(uid);
 		}
 	}
 
