@@ -29,10 +29,13 @@ import javax.swing.JFrame;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.ViewItem;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.main.Main;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.FramePluginHandler;
+import org.columba.core.plugin.exception.PluginException;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
+import org.columba.core.pluginhandler.FrameExtensionHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 
@@ -42,7 +45,7 @@ import org.columba.core.xml.XmlElement;
  * 
  * Frame controllers are plugins.
  * 
- * @see FramePluginHandler
+ * @see FrameExtensionHandler
  * 
  * @author fdietz
  */
@@ -62,7 +65,7 @@ public class FrameModel {
 	protected XmlElement defaultViews = Config.getInstance().get("views")
 			.getElement("/views/defaultviews");
 
-	protected FramePluginHandler handler;
+	protected FrameExtensionHandler handler;
 
 	private static FrameModel instance = new FrameModel();
 
@@ -81,14 +84,14 @@ public class FrameModel {
 
 		// get plugin handler for handling frames
 		try {
-			handler = (FramePluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.frame");
+			handler = (FrameExtensionHandler) PluginManager.getInstance()
+					.getHandler(FrameExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
 
-		//this is executed on shutdown: store all open frames so that they
-		//can be restored on the next start
+		// this is executed on shutdown: store all open frames so that they
+		// can be restored on the next start
 		ShutdownManager.getShutdownManager().register(new Runnable() {
 			public void run() {
 				storeViews();
@@ -105,7 +108,7 @@ public class FrameModel {
 	 * <p>
 	 * This is necessary when updating translations, adding new plugins which
 	 * extend the menu and probably also look and feel changes.
-	 *  
+	 * 
 	 */
 	public void refresh() {
 		storeViews();
@@ -114,33 +117,33 @@ public class FrameModel {
 
 	/**
 	 * Store all open frames so that they can be restored on next startup.
-	 *  
+	 * 
 	 */
 	public void storeViews() {
-		//used to temporarily store the values while the original
-		//viewList gets modified by the close method
+		// used to temporarily store the values while the original
+		// viewList gets modified by the close method
 		List newViewList = new LinkedList();
 
 		ViewItem v;
 
-		//we cannot use an iterator here because the close method
-		//manipulates the list
+		// we cannot use an iterator here because the close method
+		// manipulates the list
 		while (activeFrameCtrls.size() > 0) {
 			Container c = (Container) activeFrameCtrls.get(0);
 			v = c.getViewItem();
 
-			//store every open frame in our temporary list
+			// store every open frame in our temporary list
 			newViewList.add(v.getRoot());
 
-			//close every open frame
+			// close every open frame
 			c.close();
 		}
 
-		//if not we haven't actually closed a frame, leave viewList as is
+		// if not we haven't actually closed a frame, leave viewList as is
 		if (newViewList.size() > 0) {
-			//the close method manipulates the viewList so we have to
-			//remove the existing element and fill in our temporarily
-			//stored ones
+			// the close method manipulates the viewList so we have to
+			// remove the existing element and fill in our temporarily
+			// stored ones
 			viewList.removeAllElements();
 
 			for (Iterator it = newViewList.iterator(); it.hasNext();) {
@@ -164,7 +167,7 @@ public class FrameModel {
 			try {
 				c = createFrameMediator(new ViewItem(view));
 			} catch (PluginLoadingFailedException plfe) {
-				//should not occur
+				// should not occur
 				continue;
 			}
 
@@ -213,8 +216,8 @@ public class FrameModel {
 	/**
 	 * @param viewItem
 	 * @param id
-	 * @return @throws
-	 *         PluginLoadingFailedException
+	 * @return
+	 * @throws PluginLoadingFailedException
 	 */
 	private FrameMediator instanciateFrameMediator(ViewItem viewItem)
 			throws PluginLoadingFailedException {
@@ -232,7 +235,16 @@ public class FrameModel {
 			Object[] args = { viewItem };
 			// create new instance
 			// -> get frame controller using the plugin handler found above
-			frame = (FrameMediator) handler.getPlugin(id, args);
+
+			try {
+				IExtension extension = handler.getExtension(id);
+				frame = (FrameMediator) extension.instanciateExtension(args);
+			} catch (PluginException e) {
+				LOG.severe(e.getMessage());
+				if (Main.DEBUG)
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+			}
 		}
 		return frame;
 	}
@@ -286,7 +298,7 @@ public class FrameModel {
 
 		// Create a frame controller for this view
 
-		//	save old framemediator in cache (use containers's old id)
+		// save old framemediator in cache (use containers's old id)
 		frameMediatorCache.put(c.getViewItem().get("id"), c.getFrameMediator());
 
 		FrameMediator frame = instanciateFrameMediator(view);
@@ -378,7 +390,7 @@ public class FrameModel {
 			activeFrameCtrls.remove(c);
 
 			if (activeFrameCtrls.size() == 0) {
-				//this is the last frame so store its data in the viewList
+				// this is the last frame so store its data in the viewList
 				viewList.removeAllElements();
 				viewList.addElement(v.getRoot());
 			}
@@ -394,17 +406,19 @@ public class FrameModel {
 	}
 
 	public ViewItem createCustomViewItem(String id) {
-		XmlElement parent = Config.getInstance().get("views").getElement("views");
+		XmlElement parent = Config.getInstance().get("views").getElement(
+				"views");
 		XmlElement custom = parent.getElement("custom");
-		if ( custom == null )
+		if (custom == null)
 			custom = parent.addSubElement("custom");
 
-		for ( int i=0; i<custom.count(); i++) {
+		for (int i = 0; i < custom.count(); i++) {
 			XmlElement child = custom.getElement(i);
 			String name = child.getAttribute("id");
-			if ( name.equals(id) ) return new ViewItem(child); 
+			if (name.equals(id))
+				return new ViewItem(child);
 		}
-		
+
 		ViewItem viewItem = ViewItem.createDefault(id);
 		custom.addElement(viewItem.getRoot());
 

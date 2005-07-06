@@ -32,7 +32,8 @@ import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
@@ -56,7 +57,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	private MimeTree mimePartTree;
 
-	private ColumbaPopupMenu menu;
+	private ExtendablePopupMenu menu;
 
 	private AttachmentModel model;
 
@@ -186,8 +187,8 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	public void createPopupMenu() {
 		//menu = new AttachmentMenu(getFrameController());
-		menu = new ColumbaPopupMenu(mediator.getFrameController(),
-				"org/columba/mail/action/attachment_contextmenu.xml");
+		menu = new MenuXMLDecoder(mediator.getFrameController())
+				.createPopupMenu("org/columba/mail/action/attachment_contextmenu.xml");
 
 	}
 

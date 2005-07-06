@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="My Hello World Plugin" description="Simple Example" id="org.columba.example.HelloWorldAction" version="1.0" category="Examples" enabled="true">
-  <extension name="org.columba.core.action">
-    <action name="HelloWorld" class="com.mycom.HelloWorldAction"></action>
-  </extension>
-  <extension name="org.columba.core.menu">
-    <menu name="menu_utilities" extensionpoint="bottom">
-      <menu name="Hello World SubMenu">
-        <menuitem action="HelloWorld"></menuitem>
-        <separator></separator>
-      </menu>
-    </menu>
-  </extension>
-  <runtime jar="HelloWorldAction.jar" type="java"></runtime>
+<plugin name="My Hello World Plugin" 
+        description="Simple Example" 
+        id="org.columba.example.HelloWorldAction" 
+        version="1.0" 
+        category="Examples" 
+        enabled="true">
+  <extensionlist id="org.columba.core.action">
+    <extension id="HelloWorld" class="com.mycom.HelloWorldAction">
+     <properties menuid="menu_utilities" placeholderid="bottom"/>
+    </extension>
+  </extensionlist>
+  <runtime jar="HelloWorldAction.jar" type="java" />
 </plugin>

@@ -27,7 +27,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
@@ -53,7 +54,7 @@ public class TreeController implements TreeWillExpandListener,
 
 	private FrameMediator frameController;
 
-	private ColumbaPopupMenu menu;
+	private ExtendablePopupMenu menu;
 
 	/**
 	 * Constructor for tree controller.
@@ -133,7 +134,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * Creates a Popup menu.
 	 */
 	public void createPopupMenu() {
-		menu = new ColumbaPopupMenu(frameController,
+		menu = new MenuXMLDecoder(frameController).createPopupMenu(
 				"org/columba/mail/action/tree_contextmenu.xml");
 	}
 

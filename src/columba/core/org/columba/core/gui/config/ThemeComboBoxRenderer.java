@@ -23,40 +23,44 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ThemePluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ThemeExtensionHandler;
 
 /**
  * Renders UI themes.
  */
 public class ThemeComboBoxRenderer extends DefaultListCellRenderer {
-    protected ThemePluginHandler pluginHandler;
+	protected ThemeExtensionHandler pluginHandler;
 
-    public ThemeComboBoxRenderer() {
-        super();
+	public ThemeComboBoxRenderer() {
+		super();
 
-        try {
-            pluginHandler = (ThemePluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.core.theme");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
-    }
+		try {
+			pluginHandler = (ThemeExtensionHandler) PluginManager.getInstance()
+					.getHandler(ThemeExtensionHandler.NAME);
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
+	}
 
-    /* (non-Javadoc)
- * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
- */
-    public Component getListCellRendererComponent(JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList,
+	 *      java.lang.Object, int, boolean, boolean)
+	 */
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean isSelected, boolean cellHasFocus) {
 
-        JLabel label = (JLabel) super.getListCellRendererComponent(list,
-                value, index, isSelected, cellHasFocus);
-        // id = org.columba.example.HelloWorld$HelloWorldPlugin
-        String id = (String) value;
-        String userVisibleName = pluginHandler.getUserVisibleName(id);
-        label.setText(userVisibleName);
-        return label;
-    }
+		JLabel label = (JLabel) super.getListCellRendererComponent(list, value,
+				index, isSelected, cellHasFocus);
+		// id = org.columba.example.HelloWorld$HelloWorldPlugin
+		String id = (String) value;
+		//String userVisibleName = pluginHandler.getUserVisibleName(id);
+		String userVisibleName = id;
+		label.setText(userVisibleName);
+		return label;
+	}
 }

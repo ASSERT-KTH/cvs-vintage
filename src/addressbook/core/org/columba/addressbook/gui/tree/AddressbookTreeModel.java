@@ -29,11 +29,12 @@ import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.plugin.FolderPluginHandler;
+import org.columba.addressbook.plugin.FolderExtensionHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
 public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel {
@@ -57,8 +58,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 	}
 
 	public ISelectFolderDialog getSelectAddressbookFolderDialog() {
-		ISelectFolderDialog dialog = new SelectAddressbookFolderDialog(
-				this);
+		ISelectFolderDialog dialog = new SelectAddressbookFolderDialog(this);
 
 		return dialog;
 	}
@@ -95,7 +95,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		// i18n stuff
 		String name = item.getString("property", "name");
 
-		//XmlElement.printNode(item.getRoot(), "");
+		// XmlElement.printNode(item.getRoot(), "");
 		int uid = item.getInteger("uid");
 
 		if (AddressbookTreeNode.getNextFolderUid() <= uid)
@@ -106,11 +106,11 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
 		Object[] args = { item };
 
-		FolderPluginHandler handler = null;
+		FolderExtensionHandler handler = null;
 
 		try {
-			handler = (FolderPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.addressbook.folder");
+			handler = (FolderExtensionHandler) PluginManager.getInstance()
+					.getHandler(FolderExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
@@ -119,7 +119,8 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		AddressbookTreeNode folder = null;
 
 		try {
-			folder = (AddressbookTreeNode) handler.getPlugin(type, args);
+			IExtension extension = handler.getExtension(type);
+			folder = (AddressbookTreeNode) extension.instanciateExtension(args);
 			parentFolder.add(folder);
 		} catch (Exception ex) {
 			ex.printStackTrace();

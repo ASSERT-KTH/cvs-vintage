@@ -2,7 +2,7 @@ package org.columba.mail.spam.spamassassin;
 import java.io.File;
 
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
+import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 
 
 /**
@@ -22,10 +22,10 @@ public class ExternalToolsHelper {
     }
 
     public static String get(String name) {
-        ExternalToolsPluginHandler handler = null;
+        ExternalToolsExtensionHandler handler = null;
 
         try {
-            handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
+            handler = (ExternalToolsExtensionHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.externaltools");
             File file = handler.getLocationOfExternalTool(name);
             

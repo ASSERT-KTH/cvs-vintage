@@ -43,24 +43,33 @@ import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
-import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import org.columba.mail.plugin.FilterExtensionHandler;
+import org.columba.mail.plugin.FilterUIExtensionHandler;
 
-public class CriteriaList extends JPanel implements ActionListener, ItemListener {
+public class CriteriaList extends JPanel implements ActionListener,
+		ItemListener {
 	private Filter filter;
+
 	private List list;
+
 	private JPanel panel;
-	private AbstractPluginHandler pluginHandler;
+
+	private FilterExtensionHandler pluginHandler;
+
+	private FilterUIExtensionHandler pluginUIHandler;
 
 	public CriteriaList(Filter filter) {
 		super();
 
 		try {
-			pluginHandler = PluginManager.getInstance()
-					.getHandler("org.columba.mail.filter");
+			pluginHandler = (FilterExtensionHandler) PluginManager.getInstance()
+					.getHandler(FilterExtensionHandler.NAME);
+			pluginUIHandler = (FilterUIExtensionHandler) PluginManager
+					.getInstance().getHandler(FilterUIExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
@@ -135,11 +144,15 @@ public class CriteriaList extends JPanel implements ActionListener, ItemListener
 			c.insets = new Insets(0, 0, 0, 0);
 			c.gridwidth = 1;
 
-			Object[] args = {pluginHandler, this, criteria};
+			Object[] args = { pluginHandler, this, criteria };
 
 			try {
-				column = (DefaultCriteriaRow) ((AbstractFilterPluginHandler) pluginHandler)
-						.getGuiPlugin(type, args);
+				IExtension extension = pluginHandler.getExtension(type);
+				String uiId = extension.getMetadata().getAttribute("ui");
+				IExtension uiExtension = pluginUIHandler.getExtension(uiId);
+
+				column = (DefaultCriteriaRow) uiExtension
+						.instanciateExtension(args);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -147,8 +160,12 @@ public class CriteriaList extends JPanel implements ActionListener, ItemListener
 			// fall-back if error occurs
 			if (column == null) {
 				try {
-					column = (DefaultCriteriaRow) ((AbstractFilterPluginHandler) pluginHandler)
-							.getGuiPlugin("Subject", args);
+					IExtension extension = pluginHandler.getExtension("Subject");
+					String uiId = extension.getMetadata().getAttribute("ui");
+					IExtension uiExtension = pluginUIHandler.getExtension(uiId);
+
+					column = (DefaultCriteriaRow) uiExtension
+							.instanciateExtension(args);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -209,7 +226,7 @@ public class CriteriaList extends JPanel implements ActionListener, ItemListener
 		updateComponents(false);
 		update();
 	}
-	
+
 	/**
 	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
 	 */

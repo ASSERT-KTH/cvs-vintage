@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<menu name="table_menu">
- 	<menuitem action="OpenMessageWithComposer"/>
- 	<menuitem action="OpenMessageWithMessageFrame" />
- 	<menuitem action="SaveMessageBodyAs" />
+<menu id="table_menu">
+ 	<menuitem id="OpenMessageWithComposer"/>
+ 	<menuitem id="OpenMessageWithMessageFrame" />
+ 	<menuitem id="SaveMessageBodyAs" />
  	
- 	<menuitem action="Print"/>
+ 	<menuitem id="Print"/>
  	<separator/>
- 	<menuitem action="Reply" />
- 	<menuitem action="ReplyToAll" />
- 	<menuitem action="ReplyToList" />
- 	<menuitem action="ReplyAsAttachment"/>
- 	<menuitem action="ReplyWithTemplate"/>
-	<menuitem action="Forward" />
-	 <menu name="menu_message_forward_as">
-	  <menuitem action="ForwardInline" />
-	  <menuitem action="ForwardAsAttachment" />
+ 	<menuitem id="Reply" />
+ 	<menuitem id="ReplyToAll" />
+ 	<menuitem id="ReplyToList" />
+ 	<menuitem id="ReplyAsAttachment"/>
+ 	<menuitem id="ReplyWithTemplate"/>
+	<menuitem id="Forward" />
+	 <menu id="menu_message_forward_as">
+	  <menuitem id="ForwardInline" />
+	  <menuitem id="ForwardAsAttachment" />
 	  <separator/>
-	  <menuitem action="Redirect" />
+	  <menuitem id="Redirect" />
 	 </menu>
 	<separator />
-	<menuitem action="CopyMessage" />
-	<menuitem action="MoveMessage" />
-	<menuitem action="DeleteMessage" />
+	<menuitem id="CopyMessage" />
+	<menuitem id="MoveMessage" />
+	<menuitem id="DeleteMessage" />
 	<separator/>
-	<menuitem action="AddSenderToAddressbook"/>
-	<menuitem action="AddAllSendersToAddressbook"/>
+	<menuitem id="AddSenderToAddressbook"/>
+	<menuitem id="AddAllSendersToAddressbook"/>
 	<separator/>
-	<menuitem imenu="ColorMessageMenu"/>
+	<imenu id="ColorMessageMenu"/>
 		<separator/>
-		<menu name="menu_message_mark">
-		 <menuitem action="ToggleReadFlag"/>
-		 <menuitem action="ToggleAnsweredFlag"/>
-		 <menuitem action="ToggleDraftFlag"/>
-		 <menuitem action="ToggleFlaggedFlag"/>
-		 <menuitem action="ToggleExpungedFlag"/>
-		 <menuitem action="ToggleSpamFlag"/>
+		<menu id="menu_message_mark">
+		 <menuitem id="ToggleReadFlag"/>
+		 <menuitem id="ToggleAnsweredFlag"/>
+		 <menuitem id="ToggleDraftFlag"/>
+		 <menuitem id="ToggleFlaggedFlag"/>
+		 <menuitem id="ToggleExpungedFlag"/>
+		 <menuitem id="ToggleSpamFlag"/>
 		</menu>	
 </menu>
 

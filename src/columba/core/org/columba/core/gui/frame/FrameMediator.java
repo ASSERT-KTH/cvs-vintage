@@ -19,6 +19,7 @@ package org.columba.core.gui.frame;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
+import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -42,7 +43,7 @@ import org.columba.core.gui.selection.SelectionManager;
  * 
  * @author fdietz
  */
-public interface FrameMediator {
+public interface FrameMediator extends IExtensionInterface{
 
 	/**
 	 * forwarded from Container.getViewItem()

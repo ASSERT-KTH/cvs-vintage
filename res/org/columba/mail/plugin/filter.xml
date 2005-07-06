@@ -1,65 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--<!DOCTYPE filterlist SYSTEM "filter.dtd">-->
 
-<filterlist type="local" >
- <filter 
- 	name="Subject" 
- 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter 
- 	name="From" 
- 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter 
- 	name="To" 
- 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter 
- 	name="Cc" 
- 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter 
- 	name="Bcc" 
- 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter 
- 	name="Custom Headerfield" 
- 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.CustomHeaderfieldCriteriaRow" />
- <filter 
- 	name="Body" 
- 	main_class="org.columba.mail.filter.plugins.BodyFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.BodyCriteriaRow" />
- <filter 
- 	name="Date" 
- 	main_class="org.columba.mail.filter.plugins.DateFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.DateCriteriaRow" />
- <filter 
- 	name="Flags" 
- 	main_class="org.columba.mail.filter.plugins.FlagsFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.FlagsCriteriaRow" />
- <filter 
- 	name="Priority" 
- 	main_class="org.columba.mail.filter.plugins.PriorityFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.PriorityCriteriaRow" />
- <filter 
- 	name="Size" 
- 	main_class="org.columba.mail.filter.plugins.SizeFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.SizeCriteriaRow" />
- <filter 
- 	name="Color" 
- 	main_class="org.columba.mail.filter.plugins.ColorFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.ColorCriteriaRow" />
- <filter 
- 	name="Account" 
- 	main_class="org.columba.mail.filter.plugins.AccountFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.AccountCriteriaRow" />
- <filter 
- 	name="Match all" 
- 	main_class="org.columba.mail.filter.plugins.MatchAllFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
- <filter 
- 	name="Sender is in Addressbook" 
- 	main_class="org.columba.mail.filter.plugins.AddressbookFilter" 
- 	gui_class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
-</filterlist>
+<extensionlist type="local" >
+ <extension 
+ 	id="Subject" 
+ 	class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+  >
+ 	<properties ui="default"/>
+ </extension>
+ <extension 
+ 	id="From" 
+ 	class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	 >
+ 	<properties ui="default"/>
+ 	</extension>
+ <extension 
+ 	id="To" 
+ 	class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	 >
+ 	<properties ui="default"/>
+ 	</extension>
+ <extension 
+ 	id="Cc" 
+ 	class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	 >
+ 	<properties ui="default"/>
+ 	</extension>
+ <extension 
+ 	id="Bcc" 
+ 	class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	 >
+ 	<properties ui="default"/>
+ 	</extension>
+ <extension 
+ 	id="Custom Headerfield" 
+ 	class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	 >
+ 	<properties ui="Custom Headerfield"/>
+ 	</extension>
+ <extension 
+ 	id="Body" 
+ 	class="org.columba.mail.filter.plugins.BodyFilter" 
+ 	 >
+ 	<properties ui="Body"/>
+ 	</extension>
+ 	
+ <extension 
+ 	id="Date" 
+ 	class="org.columba.mail.filter.plugins.DateFilter" 
+ 	 >
+ 	<properties ui="Date"/>
+ 	</extension>
+ <extension 
+ 	id="Flags" 
+ 	class="org.columba.mail.filter.plugins.FlagsFilter" 
+ 	 >
+ 	<properties ui="Flags"/>
+ 	</extension>
+ <extension 
+ 	id="Priority" 
+ 	class="org.columba.mail.filter.plugins.PriorityFilter" 
+ 	 >
+ 	<properties ui="Priority"/>
+ 	</extension>
+ <extension 
+ 	id="Size" 
+ 	class="org.columba.mail.filter.plugins.SizeFilter" 
+ 	 >
+ 	<properties ui="Size"/>
+ 	</extension>
+ <extension 
+ 	id="Color" 
+ 	class="org.columba.mail.filter.plugins.ColorFilter" 
+ 	 >
+ 	<properties ui="Color"/>
+ 	</extension>
+ <extension 
+ 	id="Account" 
+ 	class="org.columba.mail.filter.plugins.AccountFilter" 
+ 	 >
+ 	<properties ui="Account"/>
+ 	</extension>
+ <extension 
+ 	id="Match all" 
+ 	class="org.columba.mail.filter.plugins.MatchAllFilter" >
+ 	<properties ui="default"/>
+ 	</extension>
+ <extension 
+ 	id="Sender is in Addressbook" 
+ 	class="org.columba.mail.filter.plugins.AddressbookFilter" 
+ 	 >
+ 	<properties ui="default"/>
+ 	</extension>
+</extensionlist>

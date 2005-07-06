@@ -684,6 +684,13 @@ public class XmlElement extends Observable implements Cloneable {
 
 		return hashCode;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return getName();
+	}
 }
 
 // END public class XmlElement

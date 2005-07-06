@@ -17,9 +17,10 @@
 //All Rights Reserved.
 package org.columba.mail.spam;
 
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.mail.folder.IMailbox;
 
-public interface ISpamPlugin {
+public interface ISpamPlugin extends IExtensionInterface{
 
 	/**
 	 * Score message. Check if message is spam or non spam.

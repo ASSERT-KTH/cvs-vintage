@@ -53,11 +53,12 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ConfigPluginHandler;
-import org.columba.core.pluginhandler.ThemePluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
+import org.columba.core.pluginhandler.ConfigExtensionHandler;
+import org.columba.core.pluginhandler.ThemeExtensionHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
@@ -86,7 +87,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	private String theme = null;
 
-	private ThemePluginHandler handler;
+	private ThemeExtensionHandler handler;
 
 	// fonts
 	protected JCheckBox overwriteCheckBox;
@@ -115,7 +116,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	protected JFrame frame;
 
-	protected ConfigPluginHandler configHandler;
+	protected ConfigExtensionHandler configHandler;
 
 	// HTTP proxy
 	protected JLabel proxyLabel;
@@ -137,16 +138,16 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		try {
 			// get theme plugin-handler
-			handler = (ThemePluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.theme");
+			handler = (ThemeExtensionHandler) PluginManager.getInstance()
+					.getHandler(ThemeExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
 
 		try {
 			// get config plugin-handler
-			configHandler = (ConfigPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.config");
+			configHandler = (ConfigExtensionHandler) PluginManager.getInstance()
+					.getHandler(ConfigExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
@@ -161,7 +162,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	}
 
 	public void updateComponents(boolean b) {
-		
+
 		GuiItem item = Config.getInstance().getOptionsConfig().getGuiItem();
 
 		if (b) {
@@ -268,7 +269,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 						false);
 
 			} else {
-				item.setBoolean(GuiItem.TOOLBAR, GuiItem.ENABLE_TEXT_BOOL,
+				item
+						.setBoolean(GuiItem.TOOLBAR, GuiItem.ENABLE_TEXT_BOOL,
 								true);
 
 				item.setBoolean(GuiItem.TOOLBAR, GuiItem.TEXT_POSITION_BOOL,
@@ -276,9 +278,9 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 			}
 
-			XmlElement options = Config.getInstance().get("options").getElement(
-			"/options");
-			
+			XmlElement options = Config.getInstance().get("options")
+					.getElement("/options");
+
 			XmlElement proxy = options.getElement("proxy");
 			if (proxyHost != null && proxyPort > 0) {
 				System.setProperty("http.proxyHost", proxyHost);
@@ -375,10 +377,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		getRootPane().registerKeyboardAction(this, "CANCEL",
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
-		
+
 		contentPane.add(new DialogHeaderPanel(GlobalResourceLoader.getString(
-				RESOURCE_PATH, "general", "title_header"), GlobalResourceLoader.getString(
-						RESOURCE_PATH, "general", "title_description")), BorderLayout.NORTH);
+				RESOURCE_PATH, "general", "title_header"), GlobalResourceLoader
+				.getString(RESOURCE_PATH, "general", "title_description")),
+				BorderLayout.NORTH);
 	}
 
 	protected void initComponents() {
@@ -491,7 +494,9 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			// theme selection changed
 			String theme = (String) lfComboBox.getSelectedItem();
 
-			configID = handler.getAttribute(theme, "config");
+			IExtension extension = handler.getExtension(theme);
+			
+			configID = extension.getMetadata().getAttribute( "config");
 
 			lfButton.setEnabled(configID != null);
 		} else if (action.equals("THEME_OPTIONS")) {

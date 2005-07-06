@@ -29,340 +29,353 @@ import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.filter.FilterRule;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.util.ListTools;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
-import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import org.columba.mail.plugin.FilterExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * Divides search requests and passes them along to the
- * optimized {@link QueryEngine} for execution.
+ * Divides search requests and passes them along to the optimized
+ * {@link QueryEngine} for execution.
  * <p>
- * Search requests which can't be performed by the
- * {@link QueryEngine}, are executed by DefaultSearchEngine
- * using the plugin mechanism.
- *
+ * Search requests which can't be performed by the {@link QueryEngine}, are
+ * executed by DefaultSearchEngine using the plugin mechanism.
+ * 
  * @author tstich, fdietz
  */
 public class DefaultSearchEngine {
-    /**
- * Filter plugins are cached and reused, instead of re-instanciated
- * all the time
- */
-    private static Hashtable filterCache;
+	/**
+	 * Filter plugins are cached and reused, instead of re-instanciated all the
+	 * time
+	 */
+	private static Hashtable filterCache;
 
-    /**
- * AbstractMessageFolder on which the search is applied
- */
-    private AbstractMessageFolder folder;
+	/**
+	 * AbstractMessageFolder on which the search is applied
+	 */
+	private AbstractMessageFolder folder;
 
-    /**
- * The default query engine used by the search-engine
- */
-    private QueryEngine nonDefaultEngine;
+	/**
+	 * The default query engine used by the search-engine
+	 */
+	private QueryEngine nonDefaultEngine;
 
-    /**
- * Constructor
- *
- * @param folder        folder on which the search is applied
- */
-    public DefaultSearchEngine(AbstractMessageFolder folder) {
-        this.folder = folder;
-        filterCache = new Hashtable();
-        nonDefaultEngine = new DummyQueryEngine();
-        folder.addFolderListener(new FolderListener() {
-            public void messageAdded(IFolderEvent e) {
-                try {
-                    getNonDefaultEngine().messageAdded(e.getChanges());
-                } catch (Exception ex) {}
-            }
-            
-            public void messageRemoved(IFolderEvent e) {
-                try {
-                    getNonDefaultEngine().messageRemoved(e.getChanges());
-                } catch (Exception ex) {}
-            }
-            
-            public void folderPropertyChanged(IFolderEvent e) {}
-            public void folderAdded(IFolderEvent e) {}
-            public void folderRemoved(IFolderEvent e) {}
+	/**
+	 * Constructor
+	 * 
+	 * @param folder
+	 *            folder on which the search is applied
+	 */
+	public DefaultSearchEngine(AbstractMessageFolder folder) {
+		this.folder = folder;
+		filterCache = new Hashtable();
+		nonDefaultEngine = new DummyQueryEngine();
+		folder.addFolderListener(new FolderListener() {
+			public void messageAdded(IFolderEvent e) {
+				try {
+					getNonDefaultEngine().messageAdded(e.getChanges());
+				} catch (Exception ex) {
+				}
+			}
+
+			public void messageRemoved(IFolderEvent e) {
+				try {
+					getNonDefaultEngine().messageRemoved(e.getChanges());
+				} catch (Exception ex) {
+				}
+			}
+
+			public void folderPropertyChanged(IFolderEvent e) {
+			}
+
+			public void folderAdded(IFolderEvent e) {
+			}
+
+			public void folderRemoved(IFolderEvent e) {
+			}
 
 			public void messageFlagChanged(IFolderEvent e) {
 				// not needed
-				
+
 			}
-        });
-    }
+		});
+	}
 
-    public StatusObservable getObservable() {
-        return folder.getObservable();
-    }
+	public StatusObservable getObservable() {
+		return folder.getObservable();
+	}
 
-    protected synchronized AbstractFilter getFilter(
-        FilterCriteria filterCriteria, String type) {
-        // try to re-use already instanciated class
-        if (filterCache.containsKey(type) == true) {
-            AbstractFilter f = (AbstractFilter) filterCache.get(type);
+	protected synchronized AbstractFilter getFilter(
+			FilterCriteria filterCriteria, String type) {
+		// try to re-use already instanciated class
+		if (filterCache.containsKey(type) == true) {
+			AbstractFilter f = (AbstractFilter) filterCache.get(type);
 
-            // setup filter configuration
-            f.setUp(filterCriteria);
+			// setup filter configuration
+			f.setUp(filterCriteria);
 
-            return f;
-        }
+			return f;
+		}
 
-        AbstractFilter instance = null;
+		AbstractFilter instance = null;
 
-        try {
-            AbstractFilterPluginHandler handler = (AbstractFilterPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.mail.filter");
-            instance = (AbstractFilter) handler.getActionPlugin(type, null);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
-                "Error while trying to load filter plugin =" + type);
-            ex.printStackTrace();
-        }
+		try {
+			FilterExtensionHandler handler = (FilterExtensionHandler) PluginManager
+					.getInstance().getHandler(FilterExtensionHandler.NAME);
+			IExtension extension = handler.getExtension(type);
 
-        // setup filter configuration
-        instance.setUp(filterCriteria);
+			instance = (AbstractFilter) extension.instanciateExtension(null);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error while trying to load filter plugin =" + type);
+			ex.printStackTrace();
+		}
 
-        if (instance != null) {
-            filterCache.put(type, instance);
-        }
+		// setup filter configuration
+		instance.setUp(filterCriteria);
 
-        return instance;
-    }
+		if (instance != null) {
+			filterCache.put(type, instance);
+		}
 
-    protected boolean processRule(Object uid, FilterCriteria criteria,
-        String type) throws Exception {
-        if (type == null) {
-            JOptionPane.showMessageDialog(null,
-                "Filter type couldn't been found", "Error occured",
-                JOptionPane.ERROR_MESSAGE);
+		return instance;
+	}
 
-            return false;
-        }
+	protected boolean processRule(Object uid, FilterCriteria criteria,
+			String type) throws Exception {
+		if (type == null) {
+			JOptionPane.showMessageDialog(null,
+					"Filter type couldn't been found", "Error occured",
+					JOptionPane.ERROR_MESSAGE);
 
-        AbstractFilter instance = getFilter(criteria, type);
+			return false;
+		}
 
-        if (instance == null) {
-            return false;
-        }
+		AbstractFilter instance = getFilter(criteria, type);
 
-        return instance.process(folder, uid);
-    }
+		if (instance == null) {
+			return false;
+		}
 
-    protected List processCriteria(FilterRule rule, List uids)
-        throws Exception {
-        LinkedList result = new LinkedList();
-        boolean b;
+		return instance.process(folder, uid);
+	}
 
-        int match = rule.getConditionInt();
+	protected List processCriteria(FilterRule rule, List uids) throws Exception {
+		LinkedList result = new LinkedList();
+		boolean b;
 
-        ListIterator it = uids.listIterator();
+		int match = rule.getConditionInt();
 
-        Object uid;
+		ListIterator it = uids.listIterator();
 
-        // MATCH_ALL
-        if (match == FilterRule.MATCH_ALL) {
-            while (it.hasNext()) {
-                b = true;
-                uid = it.next();
+		Object uid;
 
-                for (int i = 0; (i < rule.count()) && b; i++) {
-                    FilterCriteria criteria = rule.get(i);
+		// MATCH_ALL
+		if (match == FilterRule.MATCH_ALL) {
+			while (it.hasNext()) {
+				b = true;
+				uid = it.next();
 
-                    String type = criteria.getTypeString();
+				for (int i = 0; (i < rule.count()) && b; i++) {
+					FilterCriteria criteria = rule.get(i);
 
-                    b &= processRule(uid, criteria, type);
-                }
+					String type = criteria.getTypeString();
 
-                if (b) {
-                    result.add(uid);
-                }
-            }
-        } else { // MATCH ANY
+					b &= processRule(uid, criteria, type);
+				}
 
-            while (it.hasNext()) {
-                b = false;
-                uid = it.next();
+				if (b) {
+					result.add(uid);
+				}
+			}
+		} else { // MATCH ANY
 
-                for (int i = 0; (i < rule.count()) && !b; i++) {
-                    FilterCriteria criteria = rule.get(i);
+			while (it.hasNext()) {
+				b = false;
+				uid = it.next();
 
-                    String type = criteria.getTypeString();
+				for (int i = 0; (i < rule.count()) && !b; i++) {
+					FilterCriteria criteria = rule.get(i);
 
-                    b = processRule(uid, criteria, type);
-                }
+					String type = criteria.getTypeString();
 
-                if (b) {
-                    result.add(uid);
-                }
-            }
-        }
+					b = processRule(uid, criteria, type);
+				}
 
-        //		result = mergeFilterResult(v, uids, match);
-        // only for debugging purpose
-        //printList( result );
-        return result;
-    }
+				if (b) {
+					result.add(uid);
+				}
+			}
+		}
 
-    protected void divideFilterRule(FilterRule filterRule,
-        FilterRule notDefaultEngine, FilterRule defaultEngine) {
-        FilterCriteria actCriteria;
+		// result = mergeFilterResult(v, uids, match);
+		// only for debugging purpose
+		// printList( result );
+		return result;
+	}
 
-        String[] caps = getNonDefaultEngine().getCaps();
+	protected void divideFilterRule(FilterRule filterRule,
+			FilterRule notDefaultEngine, FilterRule defaultEngine) {
+		FilterCriteria actCriteria;
 
-        List capList = Arrays.asList(caps);
+		String[] caps = getNonDefaultEngine().getCaps();
 
-        notDefaultEngine.setCondition(filterRule.getCondition());
-        defaultEngine.setCondition(filterRule.getCondition());
+		List capList = Arrays.asList(caps);
 
-        for (int i = 0; i < filterRule.count(); i++) {
-            actCriteria = filterRule.get(i);
+		notDefaultEngine.setCondition(filterRule.getCondition());
+		defaultEngine.setCondition(filterRule.getCondition());
 
-            if (capList.contains(actCriteria.getTypeString())) {
-                // search request isn't covered by query engine
-                // -> fall back to default search engine
-                defaultEngine.add(actCriteria);
-            } else {
-                // this search request is covered by the query engine
-                notDefaultEngine.add(actCriteria);
-            }
-        }
-    }
+		for (int i = 0; i < filterRule.count(); i++) {
+			actCriteria = filterRule.get(i);
 
-    /**
- * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
- */
-    public Object[] searchMessages(Filter filter, Object[] uids)
-        throws Exception {
-        if (!filter.getEnabled()) {
-            // filter is disabled
-            return new Object[] {  };
-        }
+			if (capList.contains(actCriteria.getTypeString())) {
+				// search request isn't covered by query engine
+				// -> fall back to default search engine
+				defaultEngine.add(actCriteria);
+			} else {
+				// this search request is covered by the query engine
+				notDefaultEngine.add(actCriteria);
+			}
+		}
+	}
 
-        long startTime = System.currentTimeMillis();
+	/**
+	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter,
+	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] searchMessages(Filter filter, Object[] uids)
+			throws Exception {
+		if (!filter.getEnabled()) {
+			// filter is disabled
+			return new Object[] {};
+		}
 
-        List notDefaultEngineResult = null;
-        List defaultEngineResult = new LinkedList();
+		long startTime = System.currentTimeMillis();
 
-        FilterRule filterRule = filter.getFilterRule();
+		List notDefaultEngineResult = null;
+		List defaultEngineResult = new LinkedList();
 
-        FilterRule notDefaultEngine = new FilterRule();
-        FilterRule defaultEngine = new FilterRule();
+		FilterRule filterRule = filter.getFilterRule();
 
-        divideFilterRule(filterRule, notDefaultEngine, defaultEngine);
+		FilterRule notDefaultEngine = new FilterRule();
+		FilterRule defaultEngine = new FilterRule();
 
-        if (defaultEngine.count() > 0) {
-            if (uids != null) {
-                defaultEngineResult = getNonDefaultEngine().queryEngine(defaultEngine,
-                        uids);
-            } else {
-                defaultEngineResult = getNonDefaultEngine().queryEngine(defaultEngine);
-            }
-        }
+		divideFilterRule(filterRule, notDefaultEngine, defaultEngine);
 
-        if (notDefaultEngine.count() == 0) {
-            notDefaultEngineResult = defaultEngineResult;
-        } else {
-            // MATCH_ALL
-            if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
-                if (defaultEngine.count() > 0) {
-                    notDefaultEngineResult = processCriteria(notDefaultEngine,
-                            defaultEngineResult);
-                } else {
-                    if (uids != null) {
-                        notDefaultEngineResult = processCriteria(notDefaultEngine,
-                                Arrays.asList(uids));
-                    } else {
-                        notDefaultEngineResult = processCriteria(notDefaultEngine,
-                                Arrays.asList(folder.getUids()));
-                    }
-                }
-            }
-            // MATCH_ANY
-            else {
-                if (uids != null) {
-                    List uidList = new LinkedList(Arrays.asList(uids));
-                    ListTools.substract(uidList, defaultEngineResult);
+		if (defaultEngine.count() > 0) {
+			if (uids != null) {
+				defaultEngineResult = getNonDefaultEngine().queryEngine(
+						defaultEngine, uids);
+			} else {
+				defaultEngineResult = getNonDefaultEngine().queryEngine(
+						defaultEngine);
+			}
+		}
 
-                    notDefaultEngineResult = processCriteria(notDefaultEngine,
-                            uidList);
+		if (notDefaultEngine.count() == 0) {
+			notDefaultEngineResult = defaultEngineResult;
+		} else {
+			// MATCH_ALL
+			if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
+				if (defaultEngine.count() > 0) {
+					notDefaultEngineResult = processCriteria(notDefaultEngine,
+							defaultEngineResult);
+				} else {
+					if (uids != null) {
+						notDefaultEngineResult = processCriteria(
+								notDefaultEngine, Arrays.asList(uids));
+					} else {
+						notDefaultEngineResult = processCriteria(
+								notDefaultEngine, Arrays.asList(folder
+										.getUids()));
+					}
+				}
+			}
+			// MATCH_ANY
+			else {
+				if (uids != null) {
+					List uidList = new LinkedList(Arrays.asList(uids));
+					ListTools.substract(uidList, defaultEngineResult);
 
-                    notDefaultEngineResult.addAll(defaultEngineResult);
-                } else {
-                    notDefaultEngineResult = processCriteria(notDefaultEngine,
-                            Arrays.asList(folder.getUids()));
-                }
-            }
-        }
+					notDefaultEngineResult = processCriteria(notDefaultEngine,
+							uidList);
 
-        /*
-worker.setDisplayText(
-        "Search Result: "
-                + notDefaultEngineResult.size()
-                + " messages found in "
-                + (System.currentTimeMillis() - startTime)
-                + " ms");
-*/
-        return notDefaultEngineResult.toArray();
-    }
+					notDefaultEngineResult.addAll(defaultEngineResult);
+				} else {
+					notDefaultEngineResult = processCriteria(notDefaultEngine,
+							Arrays.asList(folder.getUids()));
+				}
+			}
+		}
 
-    /**
- * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
- */
-    public Object[] searchMessages(Filter filter) throws Exception {
-        if (getObservable() != null) {
-            getObservable().setMessage(MailResourceLoader.getString(
-                    "statusbar", "message", "search"));
-        }
+		/*
+		 * worker.setDisplayText( "Search Result: " +
+		 * notDefaultEngineResult.size() + " messages found in " +
+		 * (System.currentTimeMillis() - startTime) + " ms");
+		 */
+		return notDefaultEngineResult.toArray();
+	}
 
-        //return searchMessages(filter, null);
-        Object[] result = searchMessages(filter, null);
+	/**
+	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] searchMessages(Filter filter) throws Exception {
+		if (getObservable() != null) {
+			getObservable().setMessage(
+					MailResourceLoader.getString("statusbar", "message",
+							"search"));
+		}
 
-        if (getObservable() != null) {
-            // clear status bar message now we are done (with a delay)
-            getObservable().clearMessageWithDelay();
-        }
+		// return searchMessages(filter, null);
+		Object[] result = searchMessages(filter, null);
 
-        return result;
-    }
+		if (getObservable() != null) {
+			// clear status bar message now we are done (with a delay)
+			getObservable().clearMessageWithDelay();
+		}
 
-    /**
-         * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object, org.columba.core.command.WorkerStatusController)
-         */
-    protected List queryEngine(FilterRule filter, Object[] uids)
-        throws Exception {
-        return processCriteria(filter, Arrays.asList(uids));
-    }
+		return result;
+	}
 
-    /**
- * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
- */
-    protected List queryEngine(FilterRule filter) throws Exception {
-        Object[] uids = folder.getUids();
+	/**
+	 * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule,
+	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	protected List queryEngine(FilterRule filter, Object[] uids)
+			throws Exception {
+		return processCriteria(filter, Arrays.asList(uids));
+	}
 
-        return processCriteria(filter, Arrays.asList(uids));
-    }
+	/**
+	 * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	protected List queryEngine(FilterRule filter) throws Exception {
+		Object[] uids = folder.getUids();
 
-    /**
- * @return
- */
-    public QueryEngine getNonDefaultEngine() {
-        return nonDefaultEngine;
-    }
+		return processCriteria(filter, Arrays.asList(uids));
+	}
 
-    /**
- * @param engine
- */
-    public void setNonDefaultEngine(QueryEngine engine) {
-        nonDefaultEngine = engine;
-    }
+	/**
+	 * @return
+	 */
+	public QueryEngine getNonDefaultEngine() {
+		return nonDefaultEngine;
+	}
 
-    public void sync() throws Exception {
-        getNonDefaultEngine().sync();
-    }
+	/**
+	 * @param engine
+	 */
+	public void setNonDefaultEngine(QueryEngine engine) {
+		nonDefaultEngine = engine;
+	}
+
+	public void sync() throws Exception {
+		getNonDefaultEngine().sync();
+	}
 }

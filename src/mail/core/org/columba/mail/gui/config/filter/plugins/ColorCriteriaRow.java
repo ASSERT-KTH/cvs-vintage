@@ -22,62 +22,67 @@ import javax.swing.JComboBox;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.util.ColorComboBox;
 import org.columba.core.gui.util.ColorItem;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.gui.config.filter.CriteriaList;
-
+import org.columba.mail.plugin.FilterExtensionHandler;
 
 /**
  * A criteria row for Color filter.
- *
+ * 
  * The user can select that either the message has or has not a specific color.
- *
+ * 
  * @author redsolo
  */
 public class ColorCriteriaRow extends DefaultCriteriaRow {
-    private ColorComboBox colorComboBox;
-    private JComboBox matchComboBox;
+	private ColorComboBox colorComboBox;
 
-    /**
- * A criteria row for the color filter.
- * @param pluginHandler a plugin handler
- * @param criteriaList the criteria list
- * @param c the filter criteria to load/save data
- */
-    public ColorCriteriaRow(AbstractPluginHandler pluginHandler,
-        CriteriaList criteriaList, FilterCriteria c) {
-        super(pluginHandler, criteriaList, c);
-    }
+	private JComboBox matchComboBox;
 
-    /** {@inheritDoc} */
-    public void initComponents() {
-        super.initComponents();
+	/**
+	 * A criteria row for the color filter.
+	 * 
+	 * @param pluginHandler
+	 *            a plugin handler
+	 * @param criteriaList
+	 *            the criteria list
+	 * @param c
+	 *            the filter criteria to load/save data
+	 */
+	public ColorCriteriaRow(FilterExtensionHandler pluginHandler,
+			CriteriaList criteriaList, FilterCriteria c) {
+		super(pluginHandler, criteriaList, c);
+	}
 
-        matchComboBox = new JComboBox();
-        matchComboBox.addItem("is");
-        matchComboBox.addItem("is not");
+	/** {@inheritDoc} */
+	public void initComponents() {
+		super.initComponents();
 
-        colorComboBox = new ColorComboBox();
+		matchComboBox = new JComboBox();
+		matchComboBox.addItem("is");
+		matchComboBox.addItem("is not");
 
-        addComponent(matchComboBox);
-        addComponent(colorComboBox);
-    }
+		colorComboBox = new ColorComboBox();
 
-    /** {@inheritDoc} */
-    public void updateComponents(boolean b) {
-        super.updateComponents(b);
+		addComponent(matchComboBox);
+		addComponent(colorComboBox);
+	}
 
-        if (b) {
-            matchComboBox.setSelectedItem(criteria.getCriteriaString());
+	/** {@inheritDoc} */
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
 
-            colorComboBox.setSelectedColor(criteria.getPatternString());
-            colorComboBox.setCustomColor(criteria.getIntegerWithDefault("rgb",
-                    Color.black.getRGB()));
-        } else {
-            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
+		if (b) {
+			matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
-            ColorItem item = colorComboBox.getSelectedColorItem();
-            criteria.setPatternString(item.getName());
-            criteria.setInteger("rgb", item.getColor().getRGB());
-        }
-    }
+			colorComboBox.setSelectedColor(criteria.getPatternString());
+			colorComboBox.setCustomColor(criteria.getIntegerWithDefault("rgb",
+					Color.black.getRGB()));
+		} else {
+			criteria
+					.setCriteriaString((String) matchComboBox.getSelectedItem());
+
+			ColorItem item = colorComboBox.getSelectedColorItem();
+			criteria.setPatternString(item.getName());
+			criteria.setInteger("rgb", item.getColor().getRGB());
+		}
+	}
 }

@@ -26,9 +26,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -67,8 +67,11 @@ public class ReceiveSendAction extends AbstractColumbaAction {
 
 		try {
 			// send all unsent messages found in Outbox
-			Action sendAllAction  = ((ActionPluginHandler)PluginManager.getInstance().getHandler("org.columba.core.action")).getAction("SendAll", getFrameMediator());
-			if( sendAllAction.isEnabled()) sendAllAction.actionPerformed(evt);
+			Action sendAllAction = ((ActionExtensionHandler) PluginManager
+					.getInstance().getHandler(ActionExtensionHandler.NAME))
+					.getAction("SendAll", getFrameMediator());
+			if (sendAllAction.isEnabled())
+				sendAllAction.actionPerformed(evt);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

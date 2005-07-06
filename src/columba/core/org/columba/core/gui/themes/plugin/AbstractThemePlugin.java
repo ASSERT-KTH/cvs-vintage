@@ -15,27 +15,26 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.plugin;
 
-import org.columba.core.plugin.DefaultPlugin;
-
+import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * @author frd
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract class AbstractThemePlugin extends DefaultPlugin {
-    public AbstractThemePlugin() {
-        super();
-    }
+public abstract class AbstractThemePlugin implements IExtensionInterface {
+	public AbstractThemePlugin() {
+		super();
+	}
 
-    /**
- *
- * load your theme here:
- *
- * UIManager.setLookAndFeel(
-                                                         "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
- *
- */
-    public abstract void setLookAndFeel() throws Exception;
+	/**
+	 * 
+	 * load your theme here:
+	 * 
+	 * UIManager.setLookAndFeel(
+	 * "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
+	 * 
+	 */
+	public abstract void setLookAndFeel() throws Exception;
 }

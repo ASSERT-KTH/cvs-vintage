@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE actionlist SYSTEM "filter_actions.dtd">
 
-<actionlist>
- <action name="Move Message" main_class="org.columba.mail.filter.plugins.MoveMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />
- <action name="Copy Message" main_class="org.columba.mail.filter.plugins.CopyMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />
- <action name="Delete Message" main_class="org.columba.mail.filter.plugins.DeleteMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
- <action name="Mark Message" main_class="org.columba.mail.filter.plugins.MarkMessageAsReadAction" gui_class="org.columba.mail.gui.config.filter.plugins.MarkActionRow" />
- <action name="Color Message" main_class="org.columba.mail.filter.plugins.ColorMessageFilterAction" gui_class="org.columba.mail.gui.config.filter.plugins.ColorActionConfig" />
- <action name="Score Message" main_class="org.columba.mail.filter.plugins.ScoreMessageFilterAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
-</actionlist>
+<extensionlist>
+ <extension id="Move Message" 
+ 			class="org.columba.mail.filter.plugins.MoveMessageAction" 
+ 			 >
+ 			<properties ui="Move Message"/>
+ </extension> 
+ <extension id="Copy Message" 
+ 			class="org.columba.mail.filter.plugins.CopyMessageAction" 	
+ 		 >
+ 			<properties 	ui="Copy Message"/>
+ </extension> 
+ <extension id="Delete Message" 
+ 			class="org.columba.mail.filter.plugins.DeleteMessageAction" 
+ 			 >
+ 			<properties ui="Delete Message"/>
+ </extension> 
+ <extension id="Mark Message" 
+ 			class="org.columba.mail.filter.plugins.MarkMessageAsReadAction" 
+ 		 >
+ 			<properties 	ui="Mark Message"/>
+ </extension> 
+ <extension id="Color Message" 
+ 			class="org.columba.mail.filter.plugins.ColorMessageFilterAction" 
+ 			 >
+ 			<properties ui="Color Message"/>
+ </extension> 
+ <extension id="Score Message" 
+ 			class="org.columba.mail.filter.plugins.ScoreMessageFilterAction" 
+ 			 >
+  <properties ui="Score Message"/>
+ </extension> 
+</extensionlist>

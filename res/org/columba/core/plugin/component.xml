@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<componentlist>
- <component name="MailComponent" class="org.columba.mail.main.MailMain" />
- <component name="AddressbookComponent" class="org.columba.addressbook.main.AddressbookMain" />
-</componentlist>
+<extensionlist>
+ <extension id="MailComponent" class="org.columba.mail.main.MailMain" />
+ <extension id="AddressbookComponent" class="org.columba.addressbook.main.AddressbookMain" />
+</extensionlist>

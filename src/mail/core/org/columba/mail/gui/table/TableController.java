@@ -17,12 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.Observable;
 import java.util.logging.Logger;
 
-import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -34,7 +31,8 @@ import org.columba.core.folder.IFolder;
 import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
@@ -100,7 +98,7 @@ public class TableController implements ListSelectionListener,
 	/**
 	 * table view context menu
 	 */
-	protected ColumbaPopupMenu menu;
+	protected ExtendablePopupMenu menu;
 
 	/**
 	 * sorting model
@@ -262,7 +260,8 @@ public class TableController implements ListSelectionListener,
 	 * create the PopupMenu
 	 */
 	public void createPopupMenu() {
-		menu = new ColumbaPopupMenu(frameController,
+		menu = new MenuXMLDecoder(getFrameController())
+		.createPopupMenu(
 				"org/columba/mail/action/table_contextmenu.xml");
 	}
 

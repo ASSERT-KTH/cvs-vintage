@@ -19,8 +19,9 @@ package org.columba.core.action;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CMenu;
+import org.columba.core.plugin.IExtensionInterface;
 
-public class IMenu extends CMenu {
+public class IMenu extends CMenu implements IExtensionInterface{
 	protected FrameMediator controller;
 
 	public IMenu(FrameMediator controller, String caption,String id) {

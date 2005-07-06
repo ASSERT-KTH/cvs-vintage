@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configlist>
- <config name="PlasticConfigPlugin" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelConfigPlugin" />
-</configlist>
+<extensionlist>
+ <extension id="PlasticConfigPlugin" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelConfigPlugin" />
+</extensionlist>

@@ -56,328 +56,339 @@ import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ConfigPluginHandler;
+import org.columba.core.plugin.PluginMetadata;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
+import org.columba.core.pluginhandler.ConfigExtensionHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
 /**
  * @author fdietz
- *
- * This dialog lets you view all installed plugins in a
- * categorized tree view.
- *
- * There are buttons which let you:
- * - install new plugins
- * - remove plugins
- * - enable/disable plugins
- * - view plugin info (readme.txt in plugin folder)
+ * 
+ * This dialog lets you view all installed plugins in a categorized tree view.
+ * 
+ * There are buttons which let you: - install new plugins - remove plugins -
+ * enable/disable plugins - view plugin info (readme.txt in plugin folder)
  */
-public class PluginManagerDialog extends JDialog
-implements ActionListener, TreeSelectionListener {
-    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-    
-    protected JButton installButton;
-    protected JButton removeButton;
-    protected JButton optionsButton;
-    protected JButton infoButton;
-    protected JButton helpButton;
-    protected JButton closeButton;
-    protected PluginTree table;
-    protected ConfigPluginHandler configHandler;
-    protected PluginNode selectedNode;
+public class PluginManagerDialog extends JDialog implements ActionListener,
+		TreeSelectionListener {
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
-    public PluginManagerDialog() {
-        // modal JDialog
-        super((JFrame)null, GlobalResourceLoader.getString(
-                RESOURCE_PATH, "pluginmanager", "title"), true);
+	protected JButton installButton;
 
-        try {
-            configHandler = (ConfigPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.core.config");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+	protected JButton removeButton;
 
-        initComponents();
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
+	protected JButton optionsButton;
 
-    protected void initComponents() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        getContentPane().add(mainPanel);
+	protected JButton infoButton;
 
-        installButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    RESOURCE_PATH, "pluginmanager", "install"));
-        installButton.setActionCommand("INSTALL");
-        installButton.addActionListener(this);
+	protected JButton helpButton;
 
-        removeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    RESOURCE_PATH, "pluginmanager", "remove"));
-        removeButton.setActionCommand("REMOVE");
-        removeButton.setEnabled(false);
-        removeButton.addActionListener(this);
+	protected JButton closeButton;
 
-        optionsButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    RESOURCE_PATH, "pluginmanager", "options"));
-        optionsButton.setActionCommand("OPTIONS");
-        optionsButton.setEnabled(false);
-        optionsButton.addActionListener(this);
+	protected PluginTree table;
 
-        infoButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    RESOURCE_PATH, "pluginmanager", "info"));
-        infoButton.setActionCommand("INFO");
-        infoButton.setEnabled(false);
-        infoButton.addActionListener(this);
+	protected ConfigExtensionHandler configHandler;
 
-        // top panel
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+	protected PluginNode selectedNode;
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+	public PluginManagerDialog() {
+		// modal JDialog
+		super((JFrame) null, GlobalResourceLoader.getString(RESOURCE_PATH,
+				"pluginmanager", "title"), true);
 
-        //topPanel.setLayout( );
-        JPanel topBorderPanel = new JPanel();
-        topBorderPanel.setLayout(new BorderLayout());
+		try {
+			configHandler = (ConfigExtensionHandler) PluginManager.getInstance()
+					.getHandler(ConfigExtensionHandler.NAME);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-        //topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        topBorderPanel.add(topPanel);
+		initComponents();
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
 
-        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
-        JLabel nameLabel = new JLabel("name");
-        nameLabel.setEnabled(false);
-        topPanel.add(nameLabel);
+	protected void initComponents() {
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		getContentPane().add(mainPanel);
 
-        topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        topPanel.add(Box.createHorizontalGlue());
+		installButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+				RESOURCE_PATH, "pluginmanager", "install"));
+		installButton.setActionCommand("INSTALL");
+		installButton.addActionListener(this);
 
-        Component glue = Box.createVerticalGlue();
-        c.anchor = GridBagConstraints.EAST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
+		removeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+				RESOURCE_PATH, "pluginmanager", "remove"));
+		removeButton.setActionCommand("REMOVE");
+		removeButton.setEnabled(false);
+		removeButton.addActionListener(this);
 
-        //c.fill = GridBagConstraints.HORIZONTAL;
-        gridBagLayout.setConstraints(glue, c);
+		optionsButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+				RESOURCE_PATH, "pluginmanager", "options"));
+		optionsButton.setActionCommand("OPTIONS");
+		optionsButton.setEnabled(false);
+		optionsButton.addActionListener(this);
 
-        gridBagLayout = new GridBagLayout();
-        c = new GridBagConstraints();
+		infoButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+				RESOURCE_PATH, "pluginmanager", "info"));
+		infoButton.setActionCommand("INFO");
+		infoButton.setEnabled(false);
+		infoButton.addActionListener(this);
 
-        JPanel eastPanel = new JPanel(gridBagLayout);
-        mainPanel.add(eastPanel, BorderLayout.EAST);
+		// top panel
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagLayout.setConstraints(installButton, c);
-        eastPanel.add(installButton);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
 
-        Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-        gridBagLayout.setConstraints(strut1, c);
-        eastPanel.add(strut1);
+		// topPanel.setLayout( );
+		JPanel topBorderPanel = new JPanel();
+		topBorderPanel.setLayout(new BorderLayout());
 
-        gridBagLayout.setConstraints(removeButton, c);
-        eastPanel.add(removeButton);
+		// topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
+		// 0));
+		topBorderPanel.add(topPanel);
 
-        Component strut = Box.createRigidArea(new Dimension(30, 5));
-        gridBagLayout.setConstraints(strut, c);
-        eastPanel.add(strut);
+		// mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+		JLabel nameLabel = new JLabel("name");
+		nameLabel.setEnabled(false);
+		topPanel.add(nameLabel);
 
-        gridBagLayout.setConstraints(optionsButton, c);
-        eastPanel.add(optionsButton);
+		topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		topPanel.add(Box.createHorizontalGlue());
 
-        Component strut3 = Box.createRigidArea(new Dimension(30, 5));
-        gridBagLayout.setConstraints(strut3, c);
-        eastPanel.add(strut3);
+		Component glue = Box.createVerticalGlue();
+		c.anchor = GridBagConstraints.EAST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
 
-        gridBagLayout.setConstraints(infoButton, c);
-        eastPanel.add(infoButton);
+		// c.fill = GridBagConstraints.HORIZONTAL;
+		gridBagLayout.setConstraints(glue, c);
 
-        strut = Box.createRigidArea(new Dimension(30, 20));
-        gridBagLayout.setConstraints(strut, c);
-        eastPanel.add(strut);
+		gridBagLayout = new GridBagLayout();
+		c = new GridBagConstraints();
 
-        glue = Box.createVerticalGlue();
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 1.0;
-        gridBagLayout.setConstraints(glue, c);
-        eastPanel.add(glue);
+		JPanel eastPanel = new JPanel(gridBagLayout);
+		mainPanel.add(eastPanel, BorderLayout.EAST);
 
-        // centerpanel
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagLayout.setConstraints(installButton, c);
+		eastPanel.add(installButton);
 
-        /*
-        listView = new FilterListTable(filterList, this);
-        listView.getSelectionModel().addListSelectionListener(this);
-        JScrollPane scrollPane = new JScrollPane(listView);
-        scrollPane.setPreferredSize(new Dimension(300, 250));
-        scrollPane.getViewport().setBackground(Color.white);
-        centerPanel.add(scrollPane);
-        */
-        table = new PluginTree();
-        table.getTree().addTreeSelectionListener(this);
+		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+		gridBagLayout.setConstraints(strut1, c);
+		eastPanel.add(strut1);
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(350, 300));
-        scrollPane.getViewport().setBackground(Color.white);
-        centerPanel.add(scrollPane);
+		gridBagLayout.setConstraints(removeButton, c);
+		eastPanel.add(removeButton);
 
-        mainPanel.add(centerPanel);
+		Component strut = Box.createRigidArea(new Dimension(30, 5));
+		gridBagLayout.setConstraints(strut, c);
+		eastPanel.add(strut);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		gridBagLayout.setConstraints(optionsButton, c);
+		eastPanel.add(optionsButton);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		Component strut3 = Box.createRigidArea(new Dimension(30, 5));
+		gridBagLayout.setConstraints(strut3, c);
+		eastPanel.add(strut3);
 
-        JButton closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    "global", "global", "close"));
-        closeButton.setActionCommand("CLOSE");
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton);
+		gridBagLayout.setConstraints(infoButton, c);
+		eastPanel.add(infoButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    "global", "global", "help"));
-        buttonPanel.add(helpButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+		strut = Box.createRigidArea(new Dimension(30, 20));
+		gridBagLayout.setConstraints(strut, c);
+		eastPanel.add(strut);
 
-        // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-            "extending_columba_1");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
-            "extending_columba_1");
-    }
+		glue = Box.createVerticalGlue();
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0;
+		gridBagLayout.setConstraints(glue, c);
+		eastPanel.add(glue);
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		// centerpanel
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-        if (action.equals("CLOSE")) {
-            setVisible(false);
-        } else if (action.equals("INFO")) {
-            String id = selectedNode.getId();
+		/*
+		 * listView = new FilterListTable(filterList, this);
+		 * listView.getSelectionModel().addListSelectionListener(this);
+		 * JScrollPane scrollPane = new JScrollPane(listView);
+		 * scrollPane.setPreferredSize(new Dimension(300, 250));
+		 * scrollPane.getViewport().setBackground(Color.white);
+		 * centerPanel.add(scrollPane);
+		 */
+		table = new PluginTree();
+		table.getTree().addTreeSelectionListener(this);
 
-            URL url = PluginManager.getInstance().getInfoURL(id);
-            if (url != null) {
-                try {
-                    new InfoViewerDialog(url);
-                } catch (IOException ioe) {}
-            }
-        } else if (action.equals("OPTIONS")) {
-            String id = selectedNode.getId();
-            id = id.substring(id.lastIndexOf(".") + 1, id.length());
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(350, 300));
+		scrollPane.getViewport().setBackground(Color.white);
+		centerPanel.add(scrollPane);
 
-            try {
-                ConfigurationDialog dialog = new ConfigurationDialog(id);
-                dialog.setVisible(true);
-            } catch (PluginHandlerNotFoundException phnfe) {
-            } catch (PluginLoadingFailedException plfe) {}
-        } else if (action.equals("REMOVE")) {
-            // get plugin directory
-            File directory = PluginManager.getInstance().getFolder(
-                selectedNode.getId());
+		mainPanel.add(centerPanel);
 
-            // delete plugin from disk
-            DirectoryIO.delete(directory);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-            // remove plugin from view
-            table.removePluginNode(selectedNode);
-        } else if (action.equals("INSTALL")) {
-            JFileChooser chooser = new JFileChooser();
-            chooser.addChoosableFileFilter(new FileFilter() {
-                public boolean accept(File file) {
-                    return file.isDirectory() ||
-                        file.getName().toLowerCase().endsWith(".zip");
-                }
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-                public String getDescription() {
-                    return GlobalResourceLoader.getString(RESOURCE_PATH,
-                        "pluginmanager", "filefilter");
-                }
-            });
-            chooser.setAcceptAllFileFilterUsed(false);
+		JButton closeButton = new ButtonWithMnemonic(GlobalResourceLoader
+				.getString("global", "global", "close"));
+		closeButton.setActionCommand("CLOSE");
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
 
-            int result = chooser.showOpenDialog(this);
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "help"));
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(closeButton);
+		getRootPane().registerKeyboardAction(this, "CLOSE",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
+		// associate with JavaHelp
+		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+				"extending_columba_1");
+		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+				"extending_columba_1");
+	}
 
-                installPlugin(file);
-            }
-        }
-    }
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-    public void valueChanged(TreeSelectionEvent arg0) {
-        selectedNode = (PluginNode) arg0.getPath().getLastPathComponent();
+		if (action.equals("CLOSE")) {
+			setVisible(false);
+		} else if (action.equals("INFO")) {
+			String id = selectedNode.getId();
 
-        if (selectedNode == null) {
-            return;
-        }
+			URL url = PluginManager.getInstance().getInfoURL(id);
+			if (url != null) {
+				try {
+					new InfoViewerDialog(url);
+				} catch (IOException ioe) {
+				}
+			}
+		} else if (action.equals("OPTIONS")) {
+			String id = selectedNode.getId();
+			id = id.substring(id.lastIndexOf(".") + 1, id.length());
 
-        boolean isCategoryFolder = selectedNode.isCategory();
+			try {
+				ConfigurationDialog dialog = new ConfigurationDialog(id);
+				dialog.setVisible(true);
+			} catch (PluginHandlerNotFoundException phnfe) {
+			} catch (PluginLoadingFailedException plfe) {
+			}
+		} else if (action.equals("REMOVE")) {
+			// get plugin directory
+			File directory = PluginManager.getInstance().getPluginMetadata(
+					selectedNode.getId()).getDirectory();
 
-        if (isCategoryFolder) {
-            // this is just a folder
-            // ->disable all actions
-            removeButton.setEnabled(false);
-            infoButton.setEnabled(false);
+			// delete plugin from disk
+			DirectoryIO.delete(directory);
 
-            optionsButton.setEnabled(false);
-        } else {
-            removeButton.setEnabled(true);
-            infoButton.setEnabled(selectedNode.hasInfo());
+			// remove plugin from view
+			table.removePluginNode(selectedNode);
+		} else if (action.equals("INSTALL")) {
+			JFileChooser chooser = new JFileChooser();
+			chooser.addChoosableFileFilter(new FileFilter() {
+				public boolean accept(File file) {
+					return file.isDirectory()
+							|| file.getName().toLowerCase().endsWith(".zip");
+				}
 
-            if (selectedNode == null) {
-                return;
-            }
+				public String getDescription() {
+					return GlobalResourceLoader.getString(RESOURCE_PATH,
+							"pluginmanager", "filefilter");
+				}
+			});
+			chooser.setAcceptAllFileFilterUsed(false);
 
-            // if plugin has config extension point
-            String id = selectedNode.getId();
-            id = id.substring(id.lastIndexOf(".") + 1, id.length());
-            optionsButton.setEnabled(configHandler.exists(id));
-        }
-    }
+			int result = chooser.showOpenDialog(this);
 
-    /**
-     * Returns the currently selected node or null if none is selected.
-     */
-    public PluginNode getSelectedNode() {
-        return selectedNode;
-    }
+			if (result == JFileChooser.APPROVE_OPTION) {
+				File file = chooser.getSelectedFile();
 
-    protected void installPlugin(File file) {
-        // use user's config folder in his/her home-folder
-        File destination = new File(Config.getInstance().getConfigDirectory(),
-                "plugins");
+				installPlugin(file);
+			}
+		}
+	}
 
-        File pluginDirectory;
-        try {
-            // extract plugin
-            ZipFileIO.extract(file, destination);
+	public void valueChanged(TreeSelectionEvent arg0) {
+		selectedNode = (PluginNode) arg0.getPath().getLastPathComponent();
 
-            pluginDirectory = ZipFileIO.getFirstFile(file);
-        } catch (IOException ioe) {
-            JOptionPane.showMessageDialog(this, GlobalResourceLoader.getString(
-                RESOURCE_PATH, "pluginmanager", "errExtract.msg"),
-                GlobalResourceLoader.getString(RESOURCE_PATH, "pluginmanager",
-                "errExtract.title"), JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+		if (selectedNode == null) {
+			return;
+		}
 
-        if (pluginDirectory != null) {
-            String id = PluginManager.getInstance().addPlugin(pluginDirectory);
-            XmlElement e = PluginManager.getInstance().getPluginElement(id);
-            table.addPlugin(e);
-        } 
-    }
+		boolean isCategoryFolder = selectedNode.isCategory();
+
+		if (isCategoryFolder) {
+			// this is just a folder
+			// ->disable all actions
+			removeButton.setEnabled(false);
+			infoButton.setEnabled(false);
+
+			optionsButton.setEnabled(false);
+		} else {
+			removeButton.setEnabled(true);
+			infoButton.setEnabled(selectedNode.hasInfo());
+
+			if (selectedNode == null) {
+				return;
+			}
+
+			// if plugin has config extension point
+			String id = selectedNode.getId();
+			id = id.substring(id.lastIndexOf(".") + 1, id.length());
+			optionsButton.setEnabled(configHandler.exists(id));
+		}
+	}
+
+	/**
+	 * Returns the currently selected node or null if none is selected.
+	 */
+	public PluginNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	protected void installPlugin(File file) {
+		// use user's config folder in his/her home-folder
+		File destination = new File(Config.getInstance().getConfigDirectory(),
+				"plugins");
+
+		File pluginDirectory;
+		try {
+			// extract plugin
+			ZipFileIO.extract(file, destination);
+
+			pluginDirectory = ZipFileIO.getFirstFile(file);
+		} catch (IOException ioe) {
+			JOptionPane.showMessageDialog(this, GlobalResourceLoader.getString(
+					RESOURCE_PATH, "pluginmanager", "errExtract.msg"),
+					GlobalResourceLoader.getString(RESOURCE_PATH,
+							"pluginmanager", "errExtract.title"),
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (pluginDirectory != null) {
+			String id = PluginManager.getInstance().addPlugin(pluginDirectory);
+			PluginMetadata metadata = PluginManager.getInstance()
+					.getPluginMetadata(id);
+
+			table.addPlugin(metadata);
+		}
+	}
 }

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<themelist>
- <theme name="Metal" class="org.columba.core.gui.themes.plugin.MetalLookAndFeelPlugin" />
- <theme name="Windows" class="org.columba.core.gui.themes.plugin.WindowsLookAndFeelPlugin" />
- <theme name="Mac" class="org.columba.core.gui.themes.plugin.MacLookAndFeelPlugin" />
- <theme name="CDE/Motif" class="org.columba.core.gui.themes.plugin.MotifLookAndFeelPlugin" />
- <theme name="Gtk" class="org.columba.core.gui.themes.plugin.GtkLookAndFeelPlugin" />
- <theme name="Plastic" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelPlugin" config="PlasticConfigPlugin" />
-</themelist>
+<extensionlist>
+ <extension id="Metal" class="org.columba.core.gui.themes.plugin.MetalLookAndFeelPlugin" />
+ <extension id="Windows" class="org.columba.core.gui.themes.plugin.WindowsLookAndFeelPlugin" />
+ <extension id="Mac" class="org.columba.core.gui.themes.plugin.MacLookAndFeelPlugin" />
+ <extension id="CDE/Motif" class="org.columba.core.gui.themes.plugin.MotifLookAndFeelPlugin" />
+ <extension id="Gtk" class="org.columba.core.gui.themes.plugin.GtkLookAndFeelPlugin" />
+ <extension id="Plastic" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelPlugin"> 
+  <properties config="PlasticConfigPlugin" />
+ </extension>
+</extensionlist>

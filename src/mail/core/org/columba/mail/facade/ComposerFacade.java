@@ -17,7 +17,7 @@
 package org.columba.mail.facade;
 
 import org.columba.core.gui.frame.FrameModel;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
 
 /**
  * Message Composer functionality.

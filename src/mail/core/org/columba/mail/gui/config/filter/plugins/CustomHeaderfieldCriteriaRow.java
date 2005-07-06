@@ -19,56 +19,59 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import org.columba.core.filter.FilterCriteria;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
-
+import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class CustomHeaderfieldCriteriaRow extends DefaultCriteriaRow {
-    private JComboBox matchComboBox;
-    private JTextField patternTextField;
-    private JTextField headerTextField;
+	private JComboBox matchComboBox;
 
-    public CustomHeaderfieldCriteriaRow(AbstractPluginHandler pluginHandler,
-        CriteriaList criteriaList, FilterCriteria c) {
-        super(pluginHandler, criteriaList, c);
-    }
+	private JTextField patternTextField;
 
-    public void updateComponents(boolean b) {
-        super.updateComponents(b);
+	private JTextField headerTextField;
 
-        if (b) {
-            matchComboBox.setSelectedItem(criteria.getCriteriaString());
-            patternTextField.setText(criteria.getPatternString());
-            headerTextField.setText(new MailFilterCriteria(criteria).getHeaderfieldString());
-        } else {
-            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
-            criteria.setPatternString((String) patternTextField.getText());
-            new MailFilterCriteria(criteria).setHeaderfieldString((String) headerTextField.getText());
-        }
-    }
+	public CustomHeaderfieldCriteriaRow(FilterExtensionHandler pluginHandler,
+			CriteriaList criteriaList, FilterCriteria c) {
+		super(pluginHandler, criteriaList, c);
+	}
 
-    public void initComponents() {
-        super.initComponents();
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
 
-        headerTextField = new JTextField("header", 12);
+		if (b) {
+			matchComboBox.setSelectedItem(criteria.getCriteriaString());
+			patternTextField.setText(criteria.getPatternString());
+			headerTextField.setText(new MailFilterCriteria(criteria)
+					.getHeaderfieldString());
+		} else {
+			criteria
+					.setCriteriaString((String) matchComboBox.getSelectedItem());
+			criteria.setPatternString((String) patternTextField.getText());
+			new MailFilterCriteria(criteria)
+					.setHeaderfieldString((String) headerTextField.getText());
+		}
+	}
 
-        addComponent(headerTextField);
+	public void initComponents() {
+		super.initComponents();
 
-        matchComboBox = new JComboBox();
-        matchComboBox.addItem("contains");
-        matchComboBox.addItem("contains not");
+		headerTextField = new JTextField("header", 12);
 
-        /*
-matchComboBox.addItem("is");
-matchComboBox.addItem("is not");
-matchComboBox.addItem("begins with");
-matchComboBox.addItem("ends with");
-*/
-        addComponent(matchComboBox);
+		addComponent(headerTextField);
 
-        patternTextField = new JTextField("pattern", 12);
+		matchComboBox = new JComboBox();
+		matchComboBox.addItem("contains");
+		matchComboBox.addItem("contains not");
 
-        addComponent(patternTextField);
-    }
+		/*
+		 * matchComboBox.addItem("is"); matchComboBox.addItem("is not");
+		 * matchComboBox.addItem("begins with"); matchComboBox.addItem("ends
+		 * with");
+		 */
+		addComponent(matchComboBox);
+
+		patternTextField = new JTextField("pattern", 12);
+
+		addComponent(patternTextField);
+	}
 }

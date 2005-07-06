@@ -19,10 +19,7 @@ package org.columba.mail.gui.message.viewer;
 
 import javax.swing.JComponent;
 
-import org.columba.core.plugin.Plugin;
-import org.columba.mail.folder.IMailbox;
-import org.columba.mail.gui.frame.MailFrameMediator;
-
+import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * Implementing classes should retrieve the necessary information from the
@@ -32,26 +29,25 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * 
  * @author fdietz
  */
-public interface IViewer extends Plugin{
+public interface IViewer extends IExtensionInterface {
 
-    
-    /**
-     * Update ui to reflect the changes.
-     *
-     */
-    void updateGUI() throws Exception;
-    
-    /**
-     * Return view of component.
-     * 
-     * @return
-     */
-    JComponent getView();
-    
-    /**
-     * Check if component should be viewed.
-     * 
-     * @return		true, if component is visible. False, otherwise.
-     */
-    boolean isVisible();
+	/**
+	 * Update ui to reflect the changes.
+	 * 
+	 */
+	void updateGUI() throws Exception;
+
+	/**
+	 * Return view of component.
+	 * 
+	 * @return
+	 */
+	JComponent getView();
+
+	/**
+	 * Check if component should be viewed.
+	 * 
+	 * @return true, if component is visible. False, otherwise.
+	 */
+	boolean isVisible();
 }

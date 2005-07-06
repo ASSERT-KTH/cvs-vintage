@@ -42,7 +42,8 @@ import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.gui.menu.ExtendablePopupMenu;
+import org.columba.core.gui.menu.MenuXMLDecoder;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
@@ -58,7 +59,7 @@ import org.columba.mail.gui.message.viewer.Rfc822MessageViewer;
  */
 public class MessageController extends JScrollPane implements
 		HyperlinkListener, CharsetListener, IMessageController {
-	
+
 	private MailFrameMediator frameController;
 
 	private MouseListener listener;
@@ -71,7 +72,7 @@ public class MessageController extends JScrollPane implements
 
 	private URLObservable urlObservable;
 
-	private ColumbaPopupMenu menu;
+	private ExtendablePopupMenu menu;
 
 	private URLMouseListener mouseListener;
 
@@ -147,7 +148,7 @@ public class MessageController extends JScrollPane implements
 	 * Revalidate message viewer components.
 	 * <p>
 	 * Call this method after showMessage() to force a repaint():
-	 *  
+	 * 
 	 */
 	public void updateGUI() throws Exception {
 
@@ -176,7 +177,7 @@ public class MessageController extends JScrollPane implements
 	}
 
 	protected void processPopup(MouseEvent ev) {
-		//        final URL url = extractURL(ev);
+		// final URL url = extractURL(ev);
 		ColumbaURL mailto = extractMailToURL(ev);
 		urlObservable.setUrl(mailto);
 
@@ -280,7 +281,7 @@ public class MessageController extends JScrollPane implements
 
 			getUrlObservable().setUrl(new ColumbaURL(url));
 
-			//URLController c = new URLController();
+			// URLController c = new URLController();
 
 			if (url.getProtocol().equalsIgnoreCase("mailto")) {
 				// open composer
@@ -316,8 +317,8 @@ public class MessageController extends JScrollPane implements
 
 	public void createPopupMenu() {
 		if (menu == null)
-			menu = new ColumbaPopupMenu(getFrameController(),
-					"org/columba/mail/action/message_contextmenu.xml");
+			menu = new MenuXMLDecoder(getFrameController())
+					.createPopupMenu("org/columba/mail/action/message_contextmenu.xml");
 	}
 
 	/**

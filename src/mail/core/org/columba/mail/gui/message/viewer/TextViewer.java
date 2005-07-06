@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
@@ -44,10 +42,11 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.HTMLViewerPluginHandler;
+import org.columba.core.plugin.exception.PluginException;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.HTMLViewerExtensionHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.OptionsItem;
@@ -56,10 +55,6 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -153,17 +148,19 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		IHTMLViewerPlugin plugin = null;
 		try {
 
-			HTMLViewerPluginHandler handler = (HTMLViewerPluginHandler) PluginManager
-					.getInstance().getHandler("org.columba.core.htmlviewer");
+			HTMLViewerExtensionHandler handler = (HTMLViewerExtensionHandler) PluginManager
+					.getInstance().getHandler(HTMLViewerExtensionHandler.NAME);
 
-			plugin = (IHTMLViewerPlugin) handler.getPlugin(pluginId, null);
+			IExtension extension = handler.getExtension(pluginId);
+			
+			plugin = (IHTMLViewerPlugin) extension.instanciateExtension(null);
 
 			return plugin;
 		} catch (PluginHandlerNotFoundException e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
 			if (Main.DEBUG)
 				e.printStackTrace();
-		} catch (PluginLoadingFailedException e) {
+		} catch (PluginException e) {
 			LOG.severe("Error while loading viewer plugin: " + e.getMessage());
 			if (Main.DEBUG)
 				e.printStackTrace();

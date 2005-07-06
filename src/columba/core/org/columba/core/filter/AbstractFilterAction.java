@@ -17,7 +17,7 @@ package org.columba.core.filter;
 
 import org.columba.core.command.Command;
 import org.columba.core.folder.IFolder;
-import org.columba.core.plugin.Plugin;
+import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * Action which is executed if a filter found a matching set of messages.
@@ -30,7 +30,7 @@ import org.columba.core.plugin.Plugin;
  * 
  * @author fdietz
  */
-public abstract class AbstractFilterAction implements Plugin {
+public abstract class AbstractFilterAction implements IExtensionInterface {
 	/**
 	 * 
 	 * @param filterAction

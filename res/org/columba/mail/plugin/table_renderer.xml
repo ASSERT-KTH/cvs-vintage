@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<rendererlist>
- <renderer name="Status" size="fixed" icon="mail-new.png" class="org.columba.mail.gui.table.plugins.StatusRenderer" />
- <renderer name="Attachment" size="fixed" icon="attachment.png" class="org.columba.mail.gui.table.plugins.AttachmentRenderer" />
- <renderer name="Size" class="org.columba.mail.gui.table.plugins.SizeRenderer" />
- <renderer name="Date" class="org.columba.mail.gui.table.plugins.DateRenderer" />
- <renderer name="Flagged" size="fixed" icon="mark-as-important-16.png" class="org.columba.mail.gui.table.plugins.FlaggedRenderer" />
- <renderer name="Priority" size="fixed" icon="priority-high.png" class="org.columba.mail.gui.table.plugins.PriorityRenderer" />
- <renderer name="From" class="org.columba.mail.gui.table.plugins.FromRenderer" />
- <renderer name="Spam" size="fixed" icon="spam-16.png" class="org.columba.mail.gui.table.plugins.SpamRenderer" />
- <renderer name="To" class="org.columba.mail.gui.table.plugins.ToRenderer" />
- <renderer name="Cc" class="org.columba.mail.gui.table.plugins.CcRenderer" />
-</rendererlist>
+<extensionlist>
+ <extension id="Status"  class="org.columba.mail.gui.table.plugins.StatusRenderer">
+  <properties size="fixed" icon="mail-new.png" />
+ </extension>
+ <extension id="Attachment"  class="org.columba.mail.gui.table.plugins.AttachmentRenderer" >
+  <properties size="fixed" icon="attachment.png" />
+ </extension>
+ <extension id="Size" class="org.columba.mail.gui.table.plugins.SizeRenderer" >
+ </extension>
+ <extension id="Date" class="org.columba.mail.gui.table.plugins.DateRenderer" >
+ </extension>
+ <extension id="Flagged" class="org.columba.mail.gui.table.plugins.FlaggedRenderer" >
+  <properties size="fixed" icon="mark-as-important-16.png" />
+ </extension>
+ <extension id="Priority"  class="org.columba.mail.gui.table.plugins.PriorityRenderer" >
+  <properties size="fixed" icon="priority-high.png" />
+ </extension>
+ <extension id="From" class="org.columba.mail.gui.table.plugins.FromRenderer" >
+ </extension>
+ <extension id="Spam"  class="org.columba.mail.gui.table.plugins.SpamRenderer" >
+  <properties size="fixed" icon="spam-16.png"/>
+ </extension>
+ <extension id="To" class="org.columba.mail.gui.table.plugins.ToRenderer" >
+ </extension>
+ <extension id="Cc" class="org.columba.mail.gui.table.plugins.CcRenderer" >
+ </extension>
+</extensionlist>
 

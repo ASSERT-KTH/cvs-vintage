@@ -45,13 +45,14 @@ import org.columba.core.filter.FilterActionList;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
 import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
-import org.columba.mail.plugin.AbstractFilterPluginHandler;
-import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.mail.plugin.FilterActionExtensionHandler;
+import org.columba.mail.plugin.FilterActionUIExtensionHandler;
 
 public class ActionList extends JPanel implements ActionListener, ItemListener {
 	private Filter filter;
@@ -92,10 +93,10 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 				row.updateComponents(false);
 			}
 
-			//			for (int i = 0; i < list.size(); i++) {
-			//				DefaultActionRow row = (DefaultActionRow) list.get(i);
-			//				row.updateComponents(false);
-			//			}
+			// for (int i = 0; i < list.size(); i++) {
+			// DefaultActionRow row = (DefaultActionRow) list.get(i);
+			// row.updateComponents(false);
+			// }
 		}
 	}
 
@@ -138,11 +139,13 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 
 		panel.setLayout(gridbag);
 
-		FilterActionPluginHandler pluginHandler = null;
-
+		FilterActionExtensionHandler pluginHandler = null;
+		FilterActionUIExtensionHandler pluginUIHandler = null;
 		try {
-			pluginHandler = (FilterActionPluginHandler) PluginManager
-					.getInstance().getHandler("org.columba.mail.filteraction");
+			pluginHandler = (FilterActionExtensionHandler) PluginManager
+					.getInstance().getHandler(FilterActionExtensionHandler.NAME);
+			pluginUIHandler = (FilterActionUIExtensionHandler) PluginManager
+			.getInstance().getHandler(FilterActionUIExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			if (Main.DEBUG) {
 				ex.printStackTrace();
@@ -154,15 +157,18 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 		for (int i = 0; i < actionList.getChildCount(); i++) {
 			FilterAction action = actionList.get(i);
 
-			//int type = action.getActionInt();
+			// int type = action.getActionInt();
 			String name = action.getAction();
 			DefaultActionRow row = null;
 
 			Object[] args = { mediator, this, action };
 
 			try {
-				row = (DefaultActionRow) ((AbstractFilterPluginHandler) pluginHandler)
-						.getGuiPlugin(name, args);
+				IExtension extension = pluginHandler.getExtension(name);
+				String ui = extension.getMetadata().getAttribute("ui");
+				IExtension uiExtension = pluginUIHandler.getExtension(ui);
+				
+				row = (DefaultActionRow) uiExtension.instanciateExtension(args);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 
@@ -176,8 +182,8 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
 
 			if (row == null) {
 				// maybe the plugin wasn't loaded correctly
-				//  -> use default
-				//row = new MarkActionRow(this,action);
+				// -> use default
+				// row = new MarkActionRow(this,action);
 				row = new MarkActionRow(mediator, this, action);
 			}
 

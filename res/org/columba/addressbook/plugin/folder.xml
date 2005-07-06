@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
-<folderlist>
-  <folder   
-         name="Root"  
+<extensionlist>
+  <extension   
+         id="Root"  
          class="org.columba.addressbook.folder.Root" />   
-  <folder  
-         name="LocalRootFolder"  
+  <extension  
+         id="LocalRootFolder"  
          class="org.columba.addressbook.folder.LocalRootFolder" />  
-  <folder  
-         name="RemoteRootFolder"  
+  <extension  
+         id="RemoteRootFolder"  
          class="org.columba.addressbook.folder.RemoteRootFolder" />  
-  <folder  
-         name="AddressbookFolder"  
+  <extension  
+         id="AddressbookFolder"  
          class="org.columba.addressbook.folder.AddressbookFolder" />
-  <folder  
-         name="GroupFolder"  
+  <extension  
+         id="GroupFolder"  
          class="org.columba.addressbook.folder.GroupFolder" />  
- </folderlist>
+ </extensionlist>

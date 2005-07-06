@@ -49,9 +49,10 @@ import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.help.HelpManager;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.core.util.GlobalResourceLoader;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -69,7 +70,7 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
-	ExternalToolsPluginHandler handler;
+	ExternalToolsExtensionHandler handler;
 
 	protected JButton helpButton;
 
@@ -93,8 +94,8 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 		setTitle("External Tools");
 
 		try {
-			handler = (ExternalToolsPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.externaltools");
+			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
+					.getHandler(ExternalToolsExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -227,8 +228,10 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
 			AbstractExternalToolsPlugin plugin = null;
 
 			try {
-				plugin = (AbstractExternalToolsPlugin) handler.getPlugin(
-						selection, null);
+				IExtension extension = handler.getExtension(selection);
+
+				plugin = (AbstractExternalToolsPlugin) extension
+						.instanciateExtension(null);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

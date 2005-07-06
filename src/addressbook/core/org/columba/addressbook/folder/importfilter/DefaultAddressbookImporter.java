@@ -26,109 +26,115 @@ import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameModel;
-import org.columba.core.plugin.Plugin;
+import org.columba.core.plugin.IExtensionInterface;
 
 /**
  * Abstract base class for addressbook data importers.
  */
-public abstract class DefaultAddressbookImporter implements Plugin {
-    public static int TYPE_FILE = 0;
-    public static int TYPE_DIRECTORY = 1;
-    
-    protected AbstractFolder destinationFolder;
-    protected File sourceFile;
+public abstract class DefaultAddressbookImporter implements IExtensionInterface {
+	public static int TYPE_FILE = 0;
 
-    //protected AddressbookFolder tempFolder;
-    protected int counter;
+	public static int TYPE_DIRECTORY = 1;
 
-    public DefaultAddressbookImporter() {}
+	protected AbstractFolder destinationFolder;
 
-    public DefaultAddressbookImporter(File sourceFile, AbstractFolder destinationFolder) {
-        this.sourceFile = sourceFile;
-        this.destinationFolder = destinationFolder;
-    }
+	protected File sourceFile;
 
-    public void init() {
-        counter = 0;
+	// protected AddressbookFolder tempFolder;
+	protected int counter;
 
-        //tempFolder = new AddressbookFolder(null,addressbookInterface);
-    }
+	public DefaultAddressbookImporter() {
+	}
 
-    /** ********* override the following messages ************************* */
-    /**
-     * override this method to specify type the wizard dialog will open the
-     * correct file/directory dialog automatically
-     */
-    public int getType() {
-        return TYPE_FILE;
-    }
+	public DefaultAddressbookImporter(File sourceFile,
+			AbstractFolder destinationFolder) {
+		this.sourceFile = sourceFile;
+		this.destinationFolder = destinationFolder;
+	}
 
-    /**
-     * enter a description which will be shown to the user here
-     */
-    public String getDescription() {
-        return "";
-    }
+	public void init() {
+		counter = 0;
 
-    /**
-     * this method does all the import work
-     */
-    public abstract void importAddressbook(File file) throws Exception;
+		// tempFolder = new AddressbookFolder(null,addressbookInterface);
+	}
 
-    public void setSourceFile(File file) {
-        this.sourceFile = file;
-    }
+	/** ********* override the following messages ************************* */
+	/**
+	 * override this method to specify type the wizard dialog will open the
+	 * correct file/directory dialog automatically
+	 */
+	public int getType() {
+		return TYPE_FILE;
+	}
 
-    /**
-     * set destination folder
-     */
-    public void setDestinationFolder(AbstractFolder folder) {
-        destinationFolder = folder;
-    }
+	/**
+	 * enter a description which will be shown to the user here
+	 */
+	public String getDescription() {
+		return "";
+	}
 
-    /**
-     * counter for successfully imported messages
-     */
-    public int getCount() {
-        return counter;
-    }
+	/**
+	 * this method does all the import work
+	 */
+	public abstract void importAddressbook(File file) throws Exception;
 
-    /**
-     * this method calls your overridden importMailbox(File)-method and
-     * handles exceptions
-     */
-    public void run() {
-        try {
-            importAddressbook(sourceFile);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(FrameModel.getInstance().getActiveFrame(),
-                AddressbookResourceLoader.getString("dialog",
-                    "addressbookimport", "addressbook_import_failed"), "",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+	public void setSourceFile(File file) {
+		this.sourceFile = file;
+	}
 
-        if (getCount() == 0) {
-            JOptionPane.showMessageDialog(FrameModel.getInstance().getActiveFrame(), 
-                AddressbookResourceLoader.getString("dialog",
-                    "addressbookimport", "addressbook_import_failed_2"), "",
-                JOptionPane.ERROR_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(FrameModel.getInstance().getActiveFrame(),
-                AddressbookResourceLoader.getString("dialog",
-                    "addressbookimport", "addressbook_import_was_successfull"),
-                AddressbookResourceLoader.getString("dialog", "contact",
-                    "information"),
-                JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
+	/**
+	 * set destination folder
+	 */
+	public void setDestinationFolder(AbstractFolder folder) {
+		destinationFolder = folder;
+	}
 
-    /**
-     * use this method to save a message to the specified destination folder
-     */
-    protected void saveContact(IContact card) throws Exception {
-        destinationFolder.add(card);
+	/**
+	 * counter for successfully imported messages
+	 */
+	public int getCount() {
+		return counter;
+	}
 
-        counter++;
-    }
+	/**
+	 * this method calls your overridden importMailbox(File)-method and handles
+	 * exceptions
+	 */
+	public void run() {
+		try {
+			importAddressbook(sourceFile);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(FrameModel.getInstance()
+					.getActiveFrame(),
+					AddressbookResourceLoader.getString("dialog",
+							"addressbookimport", "addressbook_import_failed"),
+					"", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (getCount() == 0) {
+			JOptionPane.showMessageDialog(FrameModel.getInstance()
+					.getActiveFrame(), AddressbookResourceLoader.getString(
+					"dialog", "addressbookimport",
+					"addressbook_import_failed_2"), "",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(FrameModel.getInstance()
+					.getActiveFrame(), AddressbookResourceLoader.getString(
+					"dialog", "addressbookimport",
+					"addressbook_import_was_successfull"),
+					AddressbookResourceLoader.getString("dialog", "contact",
+							"information"), JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	/**
+	 * use this method to save a message to the specified destination folder
+	 */
+	protected void saveContact(IContact card) throws Exception {
+		destinationFolder.add(card);
+
+		counter++;
+	}
 }

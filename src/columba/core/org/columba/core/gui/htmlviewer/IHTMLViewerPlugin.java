@@ -4,12 +4,14 @@ import java.net.URL;
 
 import javax.swing.JComponent;
 
+import org.columba.core.plugin.IExtensionInterface;
+
 /**
  * HTML Viewer interface. 
  * 
  * @author Frederik Dietz
  */
-public interface IHTMLViewerPlugin {
+public interface IHTMLViewerPlugin extends IExtensionInterface{
 
 	/**
 	 * View HTML page using the source string.

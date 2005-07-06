@@ -30,92 +30,90 @@ import net.javaprog.ui.wizard.WizardModel;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
-
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 
 /**
  * Launches external tools wizard.
- *
+ * 
  * @author fdietz
  */
 public class ExternalToolsWizardLauncher {
-    protected DataModel data;
-    protected ExternalToolsWizardModelListener listener;
+	protected DataModel data;
 
-    public void launchWizard(final String pluginID, boolean firstTime) {
-        final AbstractExternalToolsPlugin plugin;
-        ExternalToolsPluginHandler handler = null;
+	protected ExternalToolsWizardModelListener listener;
 
-        try {
-            handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.core.externaltools");
-        } catch (PluginHandlerNotFoundException e) {
-            e.printStackTrace();
-        }
+	public void launchWizard(final String pluginID, boolean firstTime) {
+		final AbstractExternalToolsPlugin plugin;
+		ExternalToolsExtensionHandler handler = null;
 
-        try {
-            plugin = (AbstractExternalToolsPlugin) handler.getPlugin(pluginID,
-                    null);
-        } catch (Exception e1) {
-            e1.printStackTrace();
+		try {
+			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
+					.getHandler(ExternalToolsExtensionHandler.NAME);
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
 
-            return;
-        }
+		try {
+			IExtension extension = handler.getExtension(pluginID);
 
-        data = new DataModel();
-        data.registerDataLookup("id",
-            new DataLookup() {
-                public Object lookupData() {
-                    return pluginID;
-                }
-            });
+			plugin = (AbstractExternalToolsPlugin) extension
+					.instanciateExtension(null);
+		} catch (Exception e1) {
+			e1.printStackTrace();
 
-        data.registerDataLookup("Plugin",
-            new DataLookup() {
-                public Object lookupData() {
-                    return plugin;
-                }
-            });
+			return;
+		}
 
-        WizardModel model;
+		data = new DataModel();
+		data.registerDataLookup("id", new DataLookup() {
+			public Object lookupData() {
+				return pluginID;
+			}
+		});
 
-        if (firstTime) {
-            model = new DefaultWizardModel(new Step[] {
-                        new DescriptionStep(data), new LocationStep(data)
-                    });
-        } else {
-            model = new DefaultWizardModel(new Step[] {
-                        new InfoStep(), new DescriptionStep(data),
-                        new LocationStep(data)
-                    });
-        }
+		data.registerDataLookup("Plugin", new DataLookup() {
+			public Object lookupData() {
+				return plugin;
+			}
+		});
 
-        listener = new ExternalToolsWizardModelListener(data);
-        model.addWizardModelListener(listener);
+		WizardModel model;
 
-        // TODO (@author fdietz): i18n
-        Wizard wizard = new Wizard(model, "External Tools Configuration",
-                ImageLoader.getSmallImageIcon("stock_preferences.png"));
+		if (firstTime) {
+			model = new DefaultWizardModel(new Step[] {
+					new DescriptionStep(data), new LocationStep(data) });
+		} else {
+			model = new DefaultWizardModel(new Step[] { new InfoStep(),
+					new DescriptionStep(data), new LocationStep(data) });
+		}
 
-        CSH.setHelpIDString(wizard, "extending_columba_2");
-        JavaHelpSupport.enableHelp(wizard,
-            HelpManager.getHelpManager().getHelpBroker());
+		listener = new ExternalToolsWizardModelListener(data);
+		model.addWizardModelListener(listener);
 
-        wizard.pack();
-        wizard.setLocationRelativeTo(null);
-        wizard.setVisible(true);
-    }
+		// TODO (@author fdietz): i18n
+		Wizard wizard = new Wizard(model, "External Tools Configuration",
+				ImageLoader.getSmallImageIcon("stock_preferences.png"));
 
-    public boolean isFinished() {
-        return listener.isFinished();
-    }
+		CSH.setHelpIDString(wizard, "extending_columba_2");
+		JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpManager()
+				.getHelpBroker());
 
-    /**
- * @return
- */
-    public DataModel getData() {
-        return data;
-    }
+		wizard.pack();
+		wizard.setLocationRelativeTo(null);
+		wizard.setVisible(true);
+	}
+
+	public boolean isFinished() {
+		return listener.isFinished();
+	}
+
+	/**
+	 * @return
+	 */
+	public DataModel getData() {
+		return data;
+	}
 }

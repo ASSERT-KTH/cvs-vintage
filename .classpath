@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="lib/je-1.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.0_RC3.jar"/>
 	<classpathentry kind="lib" path="lib/jscf-0.3.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-all-1.0-jsr-02.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

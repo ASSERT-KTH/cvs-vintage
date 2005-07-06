@@ -15,423 +15,443 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.plugin;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.gui.plugin.AbstractConfigPlugin;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.Main;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.util.PluginFinder;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
 /**
- * 
- * The plugin manager is the central place for all plugin related operations.
- * <p>
- * It manages all plugin handlers. Plugin handlers need to register at the
- * plugin handler.
- * <p>
- * On startup the plugin manager goes through all plugins found in the plugins
- * directory and registers them at the plugin handlers.
- * <p>
- * It offers a common set of operations all plugins share. These are: -
- * enable/disable plugin - get URL of readme.txt/readme.html file shipped with
- * plugin - get folder of plugin - get plugin.xml configuration
- * <p>
- * It therefore saves all plugin id's in a list. Additionally it uses a HashMap
- * to save all plugin folders.
+ * Plugin manager is a singleton registry for all plugins and all
+ * extension handlers.
  * 
  * @author fdietz
+ *
  */
-public class PluginManager {
+public class PluginManager implements IPluginManager {
 
-    private static final Logger LOG = Logger
-            .getLogger("org.columba.core.plugin");
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.plugin");
 
-    protected Map elements;
+	private static final String XML_ELEMENT_EXTENSION = "extension";
 
-    /**
-     * 
-     * Save all plugin directories in this <interface>Map </interface>. Use
-     * plugin id as key, <class>File </class> storing the directory as value.
-     *  
-     */
-    protected Map folders;
+	private static final String XML_ELEMENT_EXTENSIONLIST = "extensionlist";
 
-    /**
-     * 
-     * Save all plugin id's in this <interface>List </interface>.
-     *  
-     */
-    protected List ids;
+	private static final String XML_ATTRIBUTE_TYPE = "type";
 
-    protected Map jarFiles;
+	private static final String XML_ELEMENT_JAR = "jar";
 
-    /**
-     * 
-     * Save all plugin handlers in this <interface>Map </interface>. Use plugin
-     * handler id as key, <interface>PluginHandler </interface> as value
-     *  
-     */
-    protected Hashtable pluginHandlers;
-    
-    private static PluginManager instance = new PluginManager();
+	private static final String XML_ELEMENT_RUNTIME = "runtime";
 
-    /**
-     * Constructor for PluginManager.
-     */
-    private PluginManager() {
-        super();
+	private static final String XML_ATTRIBUTE_DESCRIPTION = "description";
 
-        // init map
-        pluginHandlers = new Hashtable(10);
-        
-    	// load core plugin handlers
-        addHandlers("org/columba/core/plugin/pluginhandler.xml");
-    }
-    
-    public static PluginManager getInstance() {
-    	return instance;
-    }
+	private static final String XML_ATTRIBUTE_CATEGORY = "category";
 
-    public String addPlugin(File folder) {
-        LOG.fine("registering plugin: " + folder);
+	private static final String XML_ATTRIBUTE_VERSION = "version";
 
-        // load plugin.xml file
-        // skip if it doesn't exist
-        File xmlFile = new File(folder, "plugin.xml");
+	private static final String XML_ATTRIBUTE_NAME = "name";
 
-        if (xmlFile == null || !xmlFile.exists()) {
-            return null; 
-        }
+	private static final String FILENAME_PLUGIN_XML = "plugin.xml";
 
-        XmlIO config = new XmlIO();
+	private static final String XML_ELEMENT_HANDLERLIST = "handlerlist";
 
-        try {
-            config.setURL(xmlFile.toURL());
-        } catch (MalformedURLException mue) {}
-       
-        config.load();
+	private static final String FILENAME_CONFIG_XML = "config.xml";
 
-        // determine plugin ID
-        XmlElement element = config.getRoot().getElement("/plugin");
-        String id = element.getAttribute("id");
-        String enabled = element.getAttribute("enabled");
-        
-        // if plugin is disabled
-        if ((enabled != null) && enabled.equals("false")) {
-        	// don't add plugin
-        	return "";
-        }
-        
-        ids.add(id);
-        elements.put(id, element);
-        folders.put(id, folder);
-        jarFiles.put(id, folder);
+	private static final String XML_ATTRIBUTE_SINGLETON = "singleton";
 
-        XmlElement runtime = element.getElement("runtime");
+	private static final String XML_ATTRIBUTE_ENABLED = "enabled";
 
-        //String type = runtime.getAttribute("type");
-        String jar = runtime.getAttribute("jar");
+	private static final String XML_ATTRIBUTE_CLASS = "class";
 
-        if (jar != null) {
-            jarFiles.put(id, new File(folder, jar));
-        }
+	private static final String XML_ATTRIBUTE_ID = "id";
 
-        LOG.fine("id: " + id);
-        LOG.fine("jar: " + jar);
+	private static final String XML_ELEMENT_PROPERTIES = "properties";
 
-        XmlElement extension;
-        String extensionPoint;
+	private Hashtable handlerMap = new Hashtable();
 
-        // loop through all extensions this plugin uses
-        // -> search the corresponding plugin handler
-        // -> register the plugin at the plugin handler
-        for (int j = 0; j < element.count(); j++) {
-            extension = element.getElement(j);
+	private Hashtable pluginMap = new Hashtable();
 
-            if (extension.getName().equals("extension")) {
-                extensionPoint = extension.getAttribute("name");
-                if ( extensionPoint == null ) {
-                	LOG.severe("no extension point specified in plugin.xml");
-                	if ( Main.DEBUG )
-                		XmlElement.printNode(extension, " ");
-                	continue;
-                }
-                
-                if (pluginHandlers.containsKey(extensionPoint)) {
-                    // we have a plugin-handler for this kind of plugin
-                    try {
-                        AbstractPluginHandler handler = (AbstractPluginHandler) pluginHandlers
-                                .get(extensionPoint);
+	private static PluginManager instance = new PluginManager();
 
-                        File file = null;
-                        file = folder;
+	/**
+	 * 
+	 */
+	private PluginManager() {
+		// load core plugin handlers
+		addHandlers("org/columba/core/plugin/pluginhandler.xml");
+	}
 
-                        LOG.fine("debug: " + file.toString());
+	/**
+	 * @return
+	 */
+	public static IPluginManager getInstance() {
+		return instance;
+	}
 
-                        handler.addExtension(id, extension);
-                    } catch (Exception ex) {
-                        LOG.severe(ex.getMessage());
-                    }
-                } else {
-                    LOG.severe("No suitable plugin handler with name "
-                            + extensionPoint + " found");
-                }
-            }
-        }
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#addHandler(java.lang.String, org.columba.core.plugin.IExtensionHandler)
+	 */
+	public void addHandler(String id, IExtensionHandler handler) {
+		if (id == null)
+			throw new IllegalArgumentException("id == null");
+		if (handler == null)
+			throw new IllegalArgumentException("handler == null");
 
-        return id;
-    }
+		LOG.fine("adding extension handler " + id);
 
-    /**
-     * Gets top level tree xml node of config.xml
-     * <p>
-     * This can be used in conjunction with {@link AbstractConfigPlugin}as an
-     * easy way to configure plugins.
-     * 
-     * @param id
-     *            id of plugin
-     * @return top leve xml treenode
-     */
-    public XmlIO getConfiguration(String id) {
-        try {
-            File configFile = new File(getFolder(id), "config.xml");
-            XmlIO io = new XmlIO(configFile.toURL());
+		handlerMap.put(id, handler);
 
-            return io;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+	}
 
-        return null;
-    }
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#getHandler(java.lang.String)
+	 */
+	public IExtensionHandler getHandler(String id)
+			throws PluginHandlerNotFoundException {
+		if (id == null)
+			throw new IllegalArgumentException("id == null");
 
-    /**
-     * @param id
-     * 
-     * @return directory of this plugin
-     */
-    public File getFolder(String id) {
-        return (File) folders.get(id);
-    }
+		if (handlerMap.containsKey(id))
+			return (IExtensionHandler) handlerMap.get(id);
+		else
+			throw new PluginHandlerNotFoundException(id);
 
-    /**
-     * 
-     * get plugin handler
-     * 
-     * @param id
-     *            ID of plugin handler
-     * @return plugin handler
-     * @throws PluginHandlerNotFoundException
-     */
-    public AbstractPluginHandler getHandler(String id)
-            throws PluginHandlerNotFoundException {
-        if (pluginHandlers.containsKey(id)) {
-            return (AbstractPluginHandler) pluginHandlers.get(id);
-        } else {
-            LOG.severe("PluginHandler not found: " + id);
-            throw new PluginHandlerNotFoundException(id);
-        }
-    }
+	}
 
-    public Enumeration getHandlers() {
-        return pluginHandlers.elements();
-    }
+	/**
+	 * Add a list of handlers specified in path to the plugin manager.
+	 * 
+	 * @param path
+	 *            xml-file validating against pluginhandler.dtd
+	 */
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#addHandlers(java.lang.String)
+	 */
+	public void addHandlers(String xmlResource) {
+		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
+		xmlFile.load();
 
-    public List getIds() {
-        return ids;
-    }
+		XmlElement list = xmlFile.getRoot().getElement(
+				PluginManager.XML_ELEMENT_HANDLERLIST);
+		if (list == null) {
+			LOG.severe("element <handlerlist> expected.");
+			return;
+		}
 
-    /**
-     * @return URL of Readme.html, readme.txt, etc.
-     */
-    public URL getInfoURL(String id) {
-        File pluginDirectory = getFolder(id);
+		Iterator it = list.getElements().iterator();
+		while (it.hasNext()) {
+			XmlElement child = (XmlElement) it.next();
+			// skip non-matching elements
+			if (child.getName().equals("handler") == false)
+				continue;
+			String id = child.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
+			String clazz = child
+					.getAttribute(PluginManager.XML_ATTRIBUTE_CLASS);
 
-        if (pluginDirectory == null) {
-            return null; 
-        }
+			IExtensionHandler handler = null;
+			try {
+				Class c = Class.forName(clazz);
+				handler = (IExtensionHandler) c.newInstance();
+				addHandler(handler.getId(), handler);
+			} catch (ClassNotFoundException e) {
+				LOG.severe("Error while adding handler from " + xmlResource
+						+ ": " + e.getMessage());
+				if (Main.DEBUG)
+					e.printStackTrace();
+			} catch (InstantiationException e) {
+				LOG.severe("Error while adding handler from " + xmlResource
+						+ ": " + e.getMessage());
+				if (Main.DEBUG)
+					e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				LOG.severe("Error while adding handler from " + xmlResource
+						+ ": " + e.getMessage());
 
-        try {
-            // try all possible version of readme files...
-            File infoFile = new File(pluginDirectory, "readme.html");
+				if (Main.DEBUG)
+					e.printStackTrace();
+			}
+		}
+	}
 
-            if (!infoFile.exists()) {
-                infoFile = new File(pluginDirectory, "readme.txt");
-            }
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#addPlugin(java.io.File)
+	 */
+	public String addPlugin(File folder) {
+		LOG.fine("registering plugin: " + folder);
 
-            if (!infoFile.exists()) {
-                infoFile = new File(pluginDirectory, "Readme.html");
-            }
+		// load plugin.xml file
+		// skip if it doesn't exist
+		File xmlFile = new File(folder, FILENAME_PLUGIN_XML);
 
-            if (!infoFile.exists()) {
-                infoFile = new File(pluginDirectory, "Readme.txt");
-            }
+		if (xmlFile == null || !xmlFile.exists()) {
+			return null;
+		}
 
-            if (infoFile.exists()) {
-                LOG.fine("infofile-URL=" + infoFile.toURL());
+		XmlIO config = new XmlIO();
 
-                return infoFile.toURL();
-            }
-        } catch (MalformedURLException ex) {} //does not occur
+		try {
+			config.setURL(xmlFile.toURL());
+		} catch (MalformedURLException mue) {
+		}
 
-        return null;
-    }
+		config.load();
 
-    /**
-     * @param id
-     * 
-     * @return
-     */
-    public File getJarFile(String id) {
-        return (File) jarFiles.get(id);
-    }
+		// determine plugin ID
+		XmlElement element = config.getRoot().getElement("/plugin");
+		String id = element.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
+		String name = element.getAttribute(PluginManager.XML_ATTRIBUTE_NAME);
+		String version = element
+				.getAttribute(PluginManager.XML_ATTRIBUTE_VERSION);
+		String enabled = element
+				.getAttribute(PluginManager.XML_ATTRIBUTE_ENABLED);
+		String category = element
+				.getAttribute(PluginManager.XML_ATTRIBUTE_CATEGORY);
+		String description = element
+				.getAttribute(PluginManager.XML_ATTRIBUTE_DESCRIPTION);
 
-    /**
-     * @param id
-     * 
-     * @return parent xml treenode of "plugin.xml"
-     */
-    public XmlElement getPluginElement(String id) {
-        String searchId;
+		XmlElement runtime = element
+				.getElement(PluginManager.XML_ELEMENT_RUNTIME);
+		String jar = runtime.getAttribute(PluginManager.XML_ELEMENT_JAR);
+		String type = runtime.getAttribute(PluginManager.XML_ATTRIBUTE_TYPE);
 
-        /*
-         * int index = id.indexOf("$");
-         * 
-         * if (index != -1) searchId = id.substring(0, id.indexOf("$")); else
-         * searchId = id;
-         * 
-         * return (XmlElement) elements.get(searchId);
-         */
-        return (XmlElement) elements.get(id);
-    }
+		PluginMetadata pluginMetadata = new PluginMetadata(id, name,
+				description, version, category, new Boolean(enabled)
+						.booleanValue(), folder, type);
+		pluginMetadata.setRuntimeJar(jar);
+		
+		pluginMap.put(id, pluginMetadata);
 
-    /**
-     * Returns a string describing the plugin's type.
-     */
-    public String getPluginType(String id) {
-        XmlElement e = getPluginElement(id);
-        XmlElement runtime = e.getElement("runtime");
-        return runtime.getAttribute("type");
-    }
+		// loop through all extensions this plugin uses
+		// -> search the corresponding plugin handler
+		// -> register the plugin at the plugin handler
+		for (int j = 0; j < element.count(); j++) {
+			XmlElement extensionListXmlElement = element.getElement(j);
 
-    public void initPlugins() {
-        // find all possible plugin directories
-        File[] pluginFolders = PluginFinder.searchPlugins();
+			// skip if no <extensionlist> element found
+			if (extensionListXmlElement.getName().equals(
+					PluginManager.XML_ELEMENT_EXTENSIONLIST) == false)
+				continue;
 
-        folders = new HashMap();
-        elements = new HashMap();
-        jarFiles = new HashMap();
-        ids = new Vector();
+			String extensionId = extensionListXmlElement
+					.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
+			IExtensionHandler handler = null;
+			if (handlerMap.containsKey(extensionId)) {
+				// we have a plugin-handler for this kind of extension
+				try {
+					handler = getHandler(extensionId);
+				} catch (PluginHandlerNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				LOG.severe("No suitable extension handler with name "
+						+ extensionId + " found");
+				continue;
+			}
 
-        // if no plugin directory exists -> return
-        if (pluginFolders == null) { 
-            return; 
-        }
+			for (int k = 0; k < extensionListXmlElement.count(); k++) {
+				XmlElement extensionXmlElement = extensionListXmlElement
+						.getElement(k);
 
-        // try to load all plugins
-        for (int i = 0; i < pluginFolders.length; i++) {
-            File folder = pluginFolders[i];
-            addPlugin(folder);
-        }
-    }
+				// skip if no <extension> element found
+				if (extensionXmlElement.getName().equals(
+						PluginManager.XML_ELEMENT_EXTENSION) == false)
+					continue;
 
-    public void removeHandler(String id) {
-        if (pluginHandlers.containsKey(id)) {
-            AbstractPluginHandler h = (AbstractPluginHandler) pluginHandlers
-                    .get(id);
+				Extension extension = parseExtension(pluginMetadata,
+						extensionXmlElement);
+				if (extension == null)
+					continue;
 
-            pluginHandlers.remove(id);
-        }
-    }
+				handler
+						.addExtension(extension.getMetadata().getId(),
+								extension);
+			}
+		}
 
-    /**
-     * Add a list of handlers specified in path to the plugin manager.
-     * 
-     * @param path
-     *            xml-file validating against pluginhandler.dtd
-     */
-    public void addHandlers(String path) {
-        XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(path));
-        xmlFile.load();
+		return id;
+	}
 
-        XmlElement list = xmlFile.getRoot().getElement("handlerlist");
-        Iterator it = list.getElements().iterator();
-        while (it.hasNext()) {
-            XmlElement child = (XmlElement) it.next();
-            String id = child.getAttribute("id");
-            String clazz = child.getAttribute("class");
+	/**
+	 * @param pluginMetadata
+	 * @param extensionXmlElement
+	 */
+	/**
+	 * @param pluginMetadata
+	 * @param extensionXmlElement
+	 * @return
+	 */
+	private Extension parseExtension(PluginMetadata pluginMetadata,
+			XmlElement extensionXmlElement) {
+		String extensionId = extensionXmlElement
+				.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
+		String extensionClazz = extensionXmlElement
+				.getAttribute(PluginManager.XML_ATTRIBUTE_CLASS);
+		String extensionEnabled = extensionXmlElement
+				.getAttribute(PluginManager.XML_ATTRIBUTE_ENABLED);
+		String extensionSingleton = extensionXmlElement
+				.getAttribute(PluginManager.XML_ATTRIBUTE_SINGLETON);
+		XmlElement attributesElement = extensionXmlElement
+				.getElement(XML_ELEMENT_PROPERTIES);
+		Hashtable attributes = null;
+		if (attributesElement != null)
+			attributes = attributesElement.getAttributes();
 
-            AbstractPluginHandler handler = null;
-            try {
-                Class c = Class.forName(clazz);
-                handler = (AbstractPluginHandler) c.newInstance();
-                registerHandler(handler);
-            } catch (ClassNotFoundException e) {
-                if (Main.DEBUG) e.printStackTrace();
-            } catch (InstantiationException e1) {
-                if (Main.DEBUG) e1.printStackTrace();
-            } catch (IllegalAccessException e1) {
-                if (Main.DEBUG) e1.printStackTrace();
-            }
-        }
-    }
+		if (extensionId == null) {
+			LOG.severe("wrong extension point syntax specified in plugin.xml");
+			if (Main.DEBUG)
+				XmlElement.printNode(extensionXmlElement, " ");
+			return null;
+		}
 
-    /**
-     * Register plugin handler with plugin manager.
-     * 
-     * @param handler
-     */
-    public void registerHandler(AbstractPluginHandler handler) {
-        pluginHandlers.put(handler.getId(), handler);
-        handler.setPluginManager(this);
-    }
+		ExtensionMetadata extMetadata = null;
+		if (attributes != null)
+			extMetadata = new ExtensionMetadata(extensionId, extensionClazz,
+					attributes);
+		else
+			extMetadata = new ExtensionMetadata(extensionId, extensionClazz);
 
-    /**
-     * Enable/disable plugin and save changes in plugin.xml
-     * 
-     * @param b
-     */
-    public void setEnabled(String id, boolean b) {
-        //get directory of plugin
-        File folder = getFolder(id);
-        // this is an internal plugin -> no way to disable it!
-        if ( folder == null ) return;
-        
-        // get plugin.xml of plugin
-        File configFile = new File(folder, "plugin.xml");
+		if (extensionEnabled != null)
+			extMetadata
+					.setEnabled(new Boolean(extensionEnabled).booleanValue());
+		if (extensionSingleton != null)
+			extMetadata.setSingleton(new Boolean(extensionSingleton)
+					.booleanValue());
 
-        try {
-            XmlIO io = new XmlIO(configFile.toURL());
-            io.load();
+		Extension pluginExtension = new Extension(pluginMetadata, extMetadata);
 
-            //get xml tree node
-            XmlElement e = io.getRoot().getElement("/plugin");
+		return pluginExtension;
+	}
 
-            if (e == null) { return; }
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#initPlugins()
+	 */
+	public void initPlugins() {
+		// find all possible plugin directories
+		File[] pluginFolders = PluginFinder.searchPlugins();
 
-            // update XmlElement reference in HashMap cache
-            elements.put(id, e);
+		// if no plugin directory exists -> return
+		if (pluginFolders == null) {
+			return;
+		}
 
-            // set enabled attribute
-            e.addAttribute("enabled", Boolean.toString(b));
+		// try to load all plugins
+		for (int i = 0; i < pluginFolders.length; i++) {
+			File folder = pluginFolders[i];
+			addPlugin(folder);
+		}
+	}
 
-            io.save();
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-    }
+	/**
+	 * Gets top level tree xml node of config.xml
+	 * <p>
+	 * This can be used in conjunction with {@link AbstractConfigPlugin}as an
+	 * easy way to configure plugins.
+	 * 
+	 * @param id
+	 *            id of plugin
+	 * @return top leve xml treenode
+	 */
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#getConfiguration(java.lang.String)
+	 */
+	public XmlIO getConfiguration(String id) {
+		try {
+			PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
+			File directory = metadata.getDirectory();
+			File configFile = new File(directory, FILENAME_CONFIG_XML);
+			XmlIO io = new XmlIO(configFile.toURL());
+
+			return io;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#getPluginMetadata(java.lang.String)
+	 */
+	public PluginMetadata getPluginMetadata(String id) {
+		if ( id == null) throw new IllegalArgumentException("id == null");
+		
+		PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
+		return metadata;
+	}
+
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#getInfoURL(java.lang.String)
+	 */
+	public URL getInfoURL(String id) {
+		PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
+		File pluginDirectory = metadata.getDirectory();
+
+		if (pluginDirectory == null) {
+			return null;
+		}
+
+		try {
+			// try all possible version of readme files...
+			File infoFile = new File(pluginDirectory, "readme.html");
+
+			if (!infoFile.exists()) {
+				infoFile = new File(pluginDirectory, "readme.txt");
+			}
+
+			if (!infoFile.exists()) {
+				infoFile = new File(pluginDirectory, "Readme.html");
+			}
+
+			if (!infoFile.exists()) {
+				infoFile = new File(pluginDirectory, "Readme.txt");
+			}
+
+			if (infoFile.exists()) {
+				LOG.fine("infofile-URL=" + infoFile.toURL());
+
+				return infoFile.toURL();
+			}
+		} catch (MalformedURLException ex) {
+		} // does not occur
+
+		return null;
+	}
+
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#getPluginIds()
+	 */
+	public String[] getPluginIds() {
+		Vector result = new Vector();
+		Enumeration enum = pluginMap.elements();
+		while (enum.hasMoreElements()) {
+			PluginMetadata metadata = (PluginMetadata) enum.nextElement();
+
+			String id = metadata.getId();
+
+			result.add(id);
+		}
+
+		return (String[]) result.toArray(new String[0]);
+	}
+
+	/**
+	 * @see org.columba.core.plugin.IPluginManager#getPluginMetadataEnumeration()
+	 */
+	public Enumeration getPluginMetadataEnumeration() {
+		return pluginMap.elements();
+	}
+
 }

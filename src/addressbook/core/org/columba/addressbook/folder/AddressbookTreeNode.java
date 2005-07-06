@@ -26,10 +26,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 
-public abstract class AddressbookTreeNode extends DefaultMutableTreeNode implements IFolder {
+public abstract class AddressbookTreeNode extends DefaultMutableTreeNode
+		implements IFolder, IExtensionInterface {
 	protected final static ImageIcon collapsedIcon = ImageLoader
 			.getSmallImageIcon("folder.png");
 
@@ -167,7 +169,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode impleme
 		this.node = node;
 	}
 
-	//public abstract Class getDefaultChild();
+	// public abstract Class getDefaultChild();
 	public Class getDefaultChild() {
 		return null;
 	}
@@ -207,14 +209,14 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode impleme
 	 * @see javax.swing.tree.MutableTreeNode#removeFromParent()
 	 */
 	public void removeFromParent() {
-		
+
 		// remove xml config
 		getNode().removeFromParent();
-		
+
 		// remove node
 		super.removeFromParent();
 	}
-	
+
 	public String getName() {
 		String name = null;
 

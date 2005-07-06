@@ -28,7 +28,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.xml.XmlElement;
+import org.columba.core.plugin.PluginMetadata;
 
 
 /**
@@ -50,15 +50,16 @@ public class DescriptionTreeRenderer extends DefaultTreeCellRenderer {
         PluginNode node = (PluginNode) value;
 
         String id = node.getId();
-        XmlElement e = PluginManager.getInstance().getPluginElement(id);
+        
         String description = null;
-
-        if (e == null) {
-            description = id;
-        } else {
-            description = e.getAttribute("name");
-        }
-
+        
+        PluginMetadata metadata = PluginManager.getInstance().getPluginMetadata(id);
+        
+        if ( metadata != null)
+        	description = metadata.getDescription();
+        else
+        	description = id;
+        
         setText(description);
 
         String tooltip = node.getTooltip();

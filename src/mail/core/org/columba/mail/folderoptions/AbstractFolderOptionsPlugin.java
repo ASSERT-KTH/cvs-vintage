@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import org.columba.core.plugin.Plugin;
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.IMailbox;
@@ -41,7 +41,7 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * 
  * @author fdietz
  */
-public abstract class AbstractFolderOptionsPlugin implements Plugin {
+public abstract class AbstractFolderOptionsPlugin implements IExtensionInterface {
 	/**
 	 * mail frame mediator
 	 */
@@ -82,12 +82,14 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
 	 * 
 	 * <pre>
 	 * 
-	 *  &lt;toolbar enabled=&quot;true&quot; show_icon=&quot;true&quot; show_text=&quot;false&quot;&gt;
-	 *   &lt;button name=&quot;Cut&quot;/&gt;
-	 *   &lt;button name=&quot;Copy&quot;/&gt;
-	 *   &lt;button name=&quot;Paste&quot;/&gt;
-	 *   &lt;button name=&quot;Delete&quot;/&gt;
-	 *  &lt;/toolbar&gt;
+	 *  
+	 *   &lt;toolbar enabled=&quot;true&quot; show_icon=&quot;true&quot; show_text=&quot;false&quot;&gt;
+	 *    &lt;button name=&quot;Cut&quot;/&gt;
+	 *    &lt;button name=&quot;Copy&quot;/&gt;
+	 *    &lt;button name=&quot;Paste&quot;/&gt;
+	 *    &lt;button name=&quot;Delete&quot;/&gt;
+	 *   &lt;/toolbar&gt;
+	 *   
 	 *  
 	 * </pre>
 	 * 
@@ -126,7 +128,9 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
 	 * 
 	 * <pre>
 	 * 
-	 *   &lt;sorting column=&quot;Date&quot; order=&quot;true&quot; /&gt;
+	 *  
+	 *    &lt;sorting column=&quot;Date&quot; order=&quot;true&quot; /&gt;
+	 *   
 	 *  
 	 * </pre>
 	 * 

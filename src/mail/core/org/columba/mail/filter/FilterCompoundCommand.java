@@ -24,26 +24,26 @@ import org.columba.core.filter.Filter;
 import org.columba.core.filter.FilterAction;
 import org.columba.core.filter.FilterActionList;
 import org.columba.core.folder.IFolder;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.plugin.AbstractFilterPluginHandler;
-import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.mail.plugin.FilterActionExtensionHandler;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class FilterCompoundCommand extends CompoundCommand {
 
 	/**
-	 *  
+	 * 
 	 */
 	public FilterCompoundCommand(Filter filter, IFolder sourceFolder,
 			Object[] uids) throws Exception {
 		super();
 
 		// get plugin handler for filter actions
-		FilterActionPluginHandler pluginHandler = (FilterActionPluginHandler) PluginManager
+		FilterActionExtensionHandler pluginHandler = (FilterActionExtensionHandler) PluginManager
 				.getInstance().getHandler("org.columba.mail.filteraction");
 
 		// get list of all filter actions
@@ -59,8 +59,10 @@ public class FilterCompoundCommand extends CompoundCommand {
 
 			// try to get instance of FilterAction
 			try {
-				instance = (AbstractFilterAction) ((AbstractFilterPluginHandler) pluginHandler)
-						.getActionPlugin(name, null);
+				IExtension extension = pluginHandler.getExtension(name);
+
+				instance = (AbstractFilterAction) extension
+						.instanciateExtension(null);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

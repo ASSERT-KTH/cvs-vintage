@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <!DOCTYPE folderlist SYSTEM "import.dtd"> -->
 
-<spamlist>
- <spam name="Macchiato" class="org.columba.mail.spam.MacchiatoPlugin"/>
- <spam name="SpamAssassin" class="org.columba.mail.spam.spamassassin.SpamAssassinPlugin"/>
-</spamlist>
+<extensionlist>
+ <extension id="Macchiato" class="org.columba.mail.spam.MacchiatoPlugin"/>
+ <extension id="SpamAssassin" class="org.columba.mail.spam.spamassassin.SpamAssassinPlugin"/>
+</extensionlist>

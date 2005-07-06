@@ -20,11 +20,12 @@ package org.columba.mail.spam;
 import java.util.logging.Logger;
 
 import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginException;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.plugin.SpamPluginHandler;
+import org.columba.mail.plugin.SpamExtensionHandler;
 
 /**
  * High-level wrapper for the spam filter.
@@ -54,17 +55,19 @@ public class SpamController implements ISpamPlugin {
 	private SpamController() {
 
 		try {
-			SpamPluginHandler handler = (SpamPluginHandler) PluginManager
-					.getInstance().getHandler("org.columba.mail.spam");
+			SpamExtensionHandler handler = (SpamExtensionHandler) PluginManager
+					.getInstance().getHandler(SpamExtensionHandler.NAME);
 
-			spamPlugin = (ISpamPlugin) handler.getPlugin("SpamAssassin", null);
+			IExtension extension = handler.getExtension("SpamAssassin");
+
+			spamPlugin = (ISpamPlugin) extension.instanciateExtension(null);
 
 		} catch (PluginHandlerNotFoundException e) {
 			LOG.severe(e.getMessage());
 			if (Main.DEBUG)
 				e.printStackTrace();
 
-		} catch (PluginLoadingFailedException e) {
+		} catch (PluginException e) {
 			LOG.severe(e.getMessage());
 			if (Main.DEBUG)
 				e.printStackTrace();

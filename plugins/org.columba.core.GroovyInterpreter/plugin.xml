@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Groovy Interpreter" description="adds groovy plugin support" id="org.columba.core.GroovyInterpreter" version="1.0" category="Interpreter Language" enabled="true">
-  <extension name="org.columba.core.interpreter">
-    <interpreter main_class="GroovyInterpreter" name="groovy"/>
-  </extension>
-<runtime type="java" jar="GroovyInterpreter.jar"/>
-</plugin>

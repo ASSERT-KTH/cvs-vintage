@@ -40,9 +40,11 @@ import javax.swing.UIManager;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.io.ColumbaDesktop;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginException;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -53,7 +55,7 @@ import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.command.OpenAttachmentCommand;
 import org.columba.mail.gui.message.command.SaveAttachmentAsCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
-import org.columba.mail.plugin.ViewerPluginHandler;
+import org.columba.mail.plugin.ViewerExtensionHandler;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -62,7 +64,7 @@ import org.columba.ristretto.parser.MimeTypeParser;
 
 /**
  * @author fdietz
- *  
+ * 
  */
 public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
@@ -72,12 +74,12 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	private MessageController mediator;
 
-	private ViewerPluginHandler handler;
+	private ViewerExtensionHandler handler;
 
 	private int counter;
 
 	/**
-	 *  
+	 * 
 	 */
 	public InlineAttachmentsViewer(MessageController mediator) {
 		super();
@@ -87,8 +89,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		viewers = new Vector();
 
 		try {
-			handler = (ViewerPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.mail.viewer");
+			handler = (ViewerExtensionHandler) PluginManager.getInstance()
+					.getHandler(ViewerExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -114,10 +116,10 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		MimeType mt = parent.getHeader().getMimeType();
 
 		if (mt.getType().equals("multipart")) {
-			if( mt.getSubtype().equals("alternative")) {
+			if (mt.getSubtype().equals("alternative")) {
 				traverseAlternativePart(parent, ref);
 			} else {
-			traverseChildren(parent, ref);
+				traverseChildren(parent, ref);
 			}
 		} else
 			createChild(parent, ref);
@@ -140,8 +142,9 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 			if (mp.getHeader().getMimeType().getType().equals("multipart")) {
 				ref.setAddress(mp.getAddress());
-				if( mp.getHeader().getMimeType().getSubtype().equals("alternative")) {
-					traverseAlternativePart(mp,ref);
+				if (mp.getHeader().getMimeType().getSubtype().equals(
+						"alternative")) {
+					traverseAlternativePart(mp, ref);
 				} else {
 					traverseChildren(mp, ref);
 				}
@@ -164,9 +167,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		MimeHeader parentHeader = child.getHeader();
 
-		if (parentHeader.getMimeType()
-				.equals(
-						new MimeType("multipart","alternative"))) {
+		if (parentHeader.getMimeType().equals(
+				new MimeType("multipart", "alternative"))) {
 			traverseAlternativePart(child, ref);
 		} else {
 			JPanel panel = createPanel(new MailFolderCommandReference(ref
@@ -180,8 +182,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	/**
 	 * @param ref
 	 * @param mp
-	 * @return @throws
-	 *         Exception
+	 * @return
+	 * @throws Exception
 	 */
 	private void traverseAlternativePart(MimePart mp,
 			MailFolderCommandReference ref) throws Exception {
@@ -191,7 +193,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			for (int j = 0; j < mp.countChilds(); j++) {
 				MimePart alternativePart = mp.getChild(j);
 				if (alternativePart.getHeader().getMimeType().equals(
-						new MimeType("text","html"))) {
+						new MimeType("text", "html"))) {
 					ref.setAddress(alternativePart.getAddress());
 
 					panel = createPanel(ref);
@@ -204,7 +206,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			for (int j = 0; j < mp.countChilds(); j++) {
 				MimePart alternativePart = mp.getChild(j);
 				if (alternativePart.getHeader().getMimeType().equals(
-						new MimeType("text","plain"))) {
+						new MimeType("text", "plain"))) {
 					ref.setAddress(alternativePart.getAddress());
 					panel = createPanel(ref);
 					attachmentPanels.add(panel);
@@ -233,21 +235,22 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		MimePart mp = folder.getMimePartTree(uid).getFromAddress(address);
 		MimeHeader h = mp.getHeader();
 
-		
 		String type = h.getMimeType().getType();
 		String subtype = h.getMimeType().getSubtype();
-		//Integer[] address = mp.getAddress();
+		// Integer[] address = mp.getAddress();
 
-		if (type.equals("application") && (subtype.equals("octet-stream") ) && h.getFileName() != null) {
+		if (type.equals("application") && (subtype.equals("octet-stream"))
+				&& h.getFileName() != null) {
 			// Try to find out MIME type from Filename
 			String extension = h.getFileName();
-			extension = extension.substring(extension.lastIndexOf('.')+1);
-			
-			MimeType systemMimeType = MimeTypeParser.parse(ColumbaDesktop.getInstance().getMimeType(extension));
+			extension = extension.substring(extension.lastIndexOf('.') + 1);
+
+			MimeType systemMimeType = MimeTypeParser.parse(ColumbaDesktop
+					.getInstance().getMimeType(extension));
 			type = systemMimeType.getType();
 			subtype = systemMimeType.getSubtype();
 		}
-		
+
 		JPanel panel = null;
 		if (type.equalsIgnoreCase("message")) {
 			// rfc822 message
@@ -308,24 +311,30 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	 * @param mediator
 	 * @param type
 	 * @param subtype
-	 * @return @throws
-	 *         PluginLoadingFailedException
+	 * @return
+	 * @throws PluginLoadingFailedException
 	 */
 	private IMimePartViewer getViewer(String type, String subtype)
-			throws PluginLoadingFailedException {
+			throws PluginException {
 		IMimePartViewer viewer = null;
 
 		// try to be specific: use type/subtype
 		// -> example: "image/jpeg" or "text/html"
-		if (handler.exists(type + "/" + subtype))
-			viewer = (IMimePartViewer) handler.getPlugin(type + "/" + subtype,
-					new Object[] { mediator });
+		if (handler.exists(type + "/" + subtype)) {
+			IExtension extension = handler.getExtension(type + "/" + subtype);
+
+			viewer = (IMimePartViewer) extension
+					.instanciateExtension(new Object[] { mediator });
+		}
 
 		// use type-only instead
 		// -> example: "image" or "text"
-		if (handler.exists(type))
-			viewer = (IMimePartViewer) handler.getPlugin(type,
-					new Object[] { mediator });
+		if (handler.exists(type)) {
+			IExtension extension = handler.getExtension(type + "/" + subtype);
+
+			viewer = (IMimePartViewer) extension
+					.instanciateExtension(new Object[] { mediator });
+		}
 		return viewer;
 	}
 
@@ -351,8 +360,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	private boolean hasHtmlPart(MimePart mimeTypes) {
 
 		if (mimeTypes.getHeader().getMimeType().equals(
-				new MimeType("text","html")))
-			return true; //exit immediately
+				new MimeType("text", "html")))
+			return true; // exit immediately
 
 		java.util.List children = mimeTypes.getChilds();
 
@@ -450,7 +459,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setBackground(UIManager.getColor("TextArea.background"));
-		//buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+		// buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
 
 		JToggleButton hideButton = new JToggleButton("Hide/Show");
 		JButton openButton = new JButton("Open");

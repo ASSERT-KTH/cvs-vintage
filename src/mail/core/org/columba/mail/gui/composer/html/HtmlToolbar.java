@@ -34,9 +34,9 @@ import javax.swing.text.html.HTML;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.toolbar.ToggleToolbarButton;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
@@ -51,269 +51,274 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * JPanel with useful HTML related actions.
- *
+ * 
  * @author fdietz
  */
-public class HtmlToolbar extends JPanel
-implements ActionListener, Observer, ContainerListener {
+public class HtmlToolbar extends JPanel implements ActionListener, Observer,
+		ContainerListener {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG =
-        Logger.getLogger("org.columba.mail.gui.composer.html");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.composer.html");
 
-    private ComposerController controller;
-    private JComboBox paragraphComboBox;
-    private JComboBox sizeComboBox;
+	private ComposerController controller;
 
-    /**
-     * Flag indicating whether we are programatically changing the
-     * paragraph combobox, and therefore shall do nothing
-     * in actionPerformed.
-     */
-    private boolean ignoreFormatAction = false;
+	private JComboBox paragraphComboBox;
 
-    /**
-     *
-     */
-    public HtmlToolbar(ComposerController controller) {
-        super();
-        this.controller = controller;
+	private JComboBox sizeComboBox;
 
-        try {
-            initComponents();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	/**
+	 * Flag indicating whether we are programatically changing the paragraph
+	 * combobox, and therefore shall do nothing in actionPerformed.
+	 */
+	private boolean ignoreFormatAction = false;
 
-        // register for text selection changes
-        controller.getEditorController().addObserver(this);
+	/**
+	 * 
+	 */
+	public HtmlToolbar(ComposerController controller) {
+		super();
+		this.controller = controller;
 
-        // register for changes to the editor
-        controller.addContainerListenerForEditor(this);
+		try {
+			initComponents();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        // register for changes to editor type (text / html)
-        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
-                                                        .getElement("/options");
-        XmlElement htmlElement = optionsElement.getElement("html");
+		// register for text selection changes
+		controller.getEditorController().addObserver(this);
 
-        if (htmlElement == null) {
-            htmlElement = optionsElement.addSubElement("html");
-        }
+		// register for changes to the editor
+		controller.addContainerListenerForEditor(this);
 
-        String enableHtml = htmlElement.getAttribute("enable", "false");
-        htmlElement.addObserver(this);
-    }
+		// register for changes to editor type (text / html)
+		XmlElement optionsElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
 
-    protected void initComponents()
-        throws Exception {
-        CellConstraints cc = new CellConstraints();
+		if (htmlElement == null) {
+			htmlElement = optionsElement.addSubElement("html");
+		}
 
-        // we generate most buttons using the actions already instanciated
-        ActionPluginHandler handler = null;
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		htmlElement.addObserver(this);
+	}
 
-        try {
-            handler = (ActionPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.core.action");
-        } catch (PluginHandlerNotFoundException e) {
-            e.printStackTrace();
-        }
+	protected void initComponents() throws Exception {
+		CellConstraints cc = new CellConstraints();
 
-        // init components
-        LabelWithMnemonic paraLabel = new LabelWithMnemonic(
-            MailResourceLoader.getString("dialog", "composer", "style"));
-        paragraphComboBox = new JComboBox(ParagraphMenu.STYLE_TAGS);
-        paragraphComboBox.setRenderer(new ParagraphTagRenderer());
-        paragraphComboBox.setActionCommand("PARA");
-        paragraphComboBox.addActionListener(this);
-        paragraphComboBox.setFocusable(false);
+		// we generate most buttons using the actions already instanciated
+		ActionExtensionHandler handler = null;
 
-        LabelWithMnemonic sizeLabel = new LabelWithMnemonic(
-            MailResourceLoader.getString("dialog", "composer", "size"));
-        sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
-        sizeComboBox.setActionCommand("SIZE");
-        sizeComboBox.addActionListener(this);
-        sizeComboBox.setSelectedIndex(2);
-        sizeComboBox.setFocusable(false);
+		try {
+			handler = (ActionExtensionHandler) PluginManager.getInstance()
+					.getHandler(ActionExtensionHandler.NAME);
+		} catch (PluginHandlerNotFoundException e) {
+			e.printStackTrace();
+		}
 
-        // set initial enabled state of combo boxes
-        XmlElement optionsElement = MailConfig.getInstance().get("composer_options")
-                                                        .getElement("/options");
-        XmlElement htmlElement = optionsElement.getElement("html");
-        String s = htmlElement.getAttribute("enable", "false");
-        boolean enableHtml = Boolean.valueOf(s).booleanValue();
-        paragraphComboBox.setEnabled(enableHtml);
+		// init components
+		LabelWithMnemonic paraLabel = new LabelWithMnemonic(MailResourceLoader
+				.getString("dialog", "composer", "style"));
+		paragraphComboBox = new JComboBox(ParagraphMenu.STYLE_TAGS);
+		paragraphComboBox.setRenderer(new ParagraphTagRenderer());
+		paragraphComboBox.setActionCommand("PARA");
+		paragraphComboBox.addActionListener(this);
+		paragraphComboBox.setFocusable(false);
 
-        // TODO (@author javaprog):sizeComboBox can be enabled as paragraphComboBox when implemented
-        sizeComboBox.setEnabled(false);
+		LabelWithMnemonic sizeLabel = new LabelWithMnemonic(MailResourceLoader
+				.getString("dialog", "composer", "size"));
+		sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
+		sizeComboBox.setActionCommand("SIZE");
+		sizeComboBox.addActionListener(this);
+		sizeComboBox.setSelectedIndex(2);
+		sizeComboBox.setFocusable(false);
 
-        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("BoldFormatAction",
-            getFrameController()));
-        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("ItalicFormatAction",
-            getFrameController()));
-        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("UnderlineFormatAction",
-            getFrameController()));
-        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("StrikeoutFormatAction",
-            getFrameController()));
-        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("LeftJustifyAction",
-            getFrameController()));
-        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("CenterJustifyAction",
-            getFrameController()));
-        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(
-            (AbstractSelectableAction) handler.getAction("RightJustifyAction",
-            getFrameController()));
+		// set initial enabled state of combo boxes
+		XmlElement optionsElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		String s = htmlElement.getAttribute("enable", "false");
+		boolean enableHtml = Boolean.valueOf(s).booleanValue();
+		paragraphComboBox.setEnabled(enableHtml);
 
-        //builder.add(paraLabel, cc.xy(1, 7));
+		// TODO (@author javaprog):sizeComboBox can be enabled as
+		// paragraphComboBox when implemented
+		sizeComboBox.setEnabled(false);
 
-        // nested panel
-      
-        FormLayout layout = new FormLayout(
-                "default, 3dlu, default, 3dlu, default, 3dlu, "
-                + "default, 3dlu, default, 3dlu, default, 3dlu, "
-                + "default, 6dlu, default, 3dlu, default, 3dlu, "
-                + "default, 3dlu", "fill:default");
-        PanelBuilder b = new PanelBuilder(this, layout);
+		ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"BoldFormatAction", getFrameController()));
+		ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"ItalicFormatAction", getFrameController()));
+		ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"UnderlineFormatAction", getFrameController()));
+		ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"StrikeoutFormatAction", getFrameController()));
+		ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"LeftJustifyAction", getFrameController()));
+		ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"CenterJustifyAction", getFrameController()));
+		ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(
+				(AbstractSelectableAction) handler.getAction(
+						"RightJustifyAction", getFrameController()));
 
-        CellConstraints c = new CellConstraints();
+		// builder.add(paraLabel, cc.xy(1, 7));
 
-        b.add(paragraphComboBox, cc.xy(1, 1));
-        b.add(sizeLabel, cc.xy(3, 1));
-        b.add(sizeComboBox, cc.xy(5, 1));
-        b.add(boldFormatButton, cc.xy(7, 1));
-        b.add(italicFormatButton, cc.xy(9, 1));
-        b.add(underlineFormatButton, cc.xy(11, 1));
-        b.add(strikeoutFormatButton, cc.xy(13, 1));
-        b.add(leftJustifyButton, cc.xy(15, 1));
-        b.add(centerJustifyButton, cc.xy(17, 1));
-        b.add(rightJustifyButton, cc.xy(19, 1));
+		// nested panel
 
-        //builder.add(panel, cc.xy(1, 7));
-    }
+		FormLayout layout = new FormLayout(
+				"default, 3dlu, default, 3dlu, default, 3dlu, "
+						+ "default, 3dlu, default, 3dlu, default, 3dlu, "
+						+ "default, 6dlu, default, 3dlu, default, 3dlu, "
+						+ "default, 3dlu", "fill:default");
+		PanelBuilder b = new PanelBuilder(this, layout);
 
-    /**
-     * @return
-     */
-    public ComposerController getFrameController() {
-        return controller;
-    }
+		CellConstraints c = new CellConstraints();
 
-    /**
-     * Method is called when text selection has changed.
-     * <p>
-     * Set state of togglebutton / -menu to pressed / not pressed
-     * when selections change.
-     *
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void update(Observable arg0, Object arg1) {
-        if (arg0 instanceof HtmlEditorController) {
-            // Handling of paragraph combo box
-            // select the item in the combo box corresponding to present format
-            FormatInfo info = (FormatInfo) arg1;
+		b.add(paragraphComboBox, cc.xy(1, 1));
+		b.add(sizeLabel, cc.xy(3, 1));
+		b.add(sizeComboBox, cc.xy(5, 1));
+		b.add(boldFormatButton, cc.xy(7, 1));
+		b.add(italicFormatButton, cc.xy(9, 1));
+		b.add(underlineFormatButton, cc.xy(11, 1));
+		b.add(strikeoutFormatButton, cc.xy(13, 1));
+		b.add(leftJustifyButton, cc.xy(15, 1));
+		b.add(centerJustifyButton, cc.xy(17, 1));
+		b.add(rightJustifyButton, cc.xy(19, 1));
 
-            if (info.isHeading1()) {
-                selectInParagraphComboBox(HTML.Tag.H1);
-            } else if (info.isHeading2()) {
-                selectInParagraphComboBox(HTML.Tag.H2);
-            } else if (info.isHeading3()) {
-                selectInParagraphComboBox(HTML.Tag.H3);
-            } else if (info.isPreformattet()) {
-                selectInParagraphComboBox(HTML.Tag.PRE);
-            } else if (info.isAddress()) {
-                selectInParagraphComboBox(HTML.Tag.ADDRESS);
-            } else {
-                // select the "Normal" entry as default
-                selectInParagraphComboBox(HTML.Tag.P);
-            }
+		// builder.add(panel, cc.xy(1, 7));
+	}
 
-            // Font size combo box
-            // TODO (@author fdietz): Add handling for font size combo box
-        } else if (arg0 instanceof XmlElement) {
-            // possibly change btw. html and text
-            XmlElement e = (XmlElement) arg0;
+	/**
+	 * @return
+	 */
+	public ComposerController getFrameController() {
+		return controller;
+	}
 
-            if (e.getName().equals("html")) {
-                //paragraphComboBox should only be enabled in html mode
-                paragraphComboBox.setEnabled(Boolean.valueOf(e.getAttribute(
-                            "enable", "false")).booleanValue());
+	/**
+	 * Method is called when text selection has changed.
+	 * <p>
+	 * Set state of togglebutton / -menu to pressed / not pressed when
+	 * selections change.
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		if (arg0 instanceof HtmlEditorController) {
+			// Handling of paragraph combo box
+			// select the item in the combo box corresponding to present format
+			FormatInfo info = (FormatInfo) arg1;
 
-                //TODO (@author fdietz): Add handling for font size combo box
-            }
-        }
-    }
+			if (info.isHeading1()) {
+				selectInParagraphComboBox(HTML.Tag.H1);
+			} else if (info.isHeading2()) {
+				selectInParagraphComboBox(HTML.Tag.H2);
+			} else if (info.isHeading3()) {
+				selectInParagraphComboBox(HTML.Tag.H3);
+			} else if (info.isPreformattet()) {
+				selectInParagraphComboBox(HTML.Tag.PRE);
+			} else if (info.isAddress()) {
+				selectInParagraphComboBox(HTML.Tag.ADDRESS);
+			} else {
+				// select the "Normal" entry as default
+				selectInParagraphComboBox(HTML.Tag.P);
+			}
 
-    /**
-     * Private utility to select an item in the paragraph combo box,
-     * given the corresponding html tag.
-     * If such a sub menu does not exist - nothing happens
-     */
-    private void selectInParagraphComboBox(HTML.Tag tag) {
-        // need to change selection
-        // Set ignore flag
-        ignoreFormatAction = true;
+			// Font size combo box
+			// TODO (@author fdietz): Add handling for font size combo box
+		} else if (arg0 instanceof XmlElement) {
+			// possibly change btw. html and text
+			XmlElement e = (XmlElement) arg0;
 
-        paragraphComboBox.setSelectedItem(tag);
+			if (e.getName().equals("html")) {
+				// paragraphComboBox should only be enabled in html mode
+				paragraphComboBox.setEnabled(Boolean.valueOf(
+						e.getAttribute("enable", "false")).booleanValue());
 
-        // clear ignore flag
-        ignoreFormatAction = false;
-    }
+				// TODO (@author fdietz): Add handling for font size combo box
+			}
+		}
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        String action = arg0.getActionCommand();
+	/**
+	 * Private utility to select an item in the paragraph combo box, given the
+	 * corresponding html tag. If such a sub menu does not exist - nothing
+	 * happens
+	 */
+	private void selectInParagraphComboBox(HTML.Tag tag) {
+		// need to change selection
+		// Set ignore flag
+		ignoreFormatAction = true;
 
-        if (action.equals("PARA")) {
-            // selection in the paragraph combo box
-            if (!ignoreFormatAction) {
-                // only do something if ignore flag is not set
-                HtmlEditorController ctrl = (HtmlEditorController) getFrameController()
-                                                                       .getEditorController();
+		paragraphComboBox.setSelectedItem(tag);
 
-                // set paragraph formatting according to the selection
-                int selectedIndex = paragraphComboBox.getSelectedIndex();
-                HTML.Tag tag = ParagraphMenu.STYLE_TAGS[selectedIndex];
+		// clear ignore flag
+		ignoreFormatAction = false;
+	}
 
-                LOG.fine("Setting paragraph format to: " + tag.toString());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		String action = arg0.getActionCommand();
 
-                ctrl.setParagraphFormat(tag);
-            }
-        } else if (action.equals("SIZE")) {
-            int selectedIndex = sizeComboBox.getSelectedIndex();
+		if (action.equals("PARA")) {
+			// selection in the paragraph combo box
+			if (!ignoreFormatAction) {
+				// only do something if ignore flag is not set
+				HtmlEditorController ctrl = (HtmlEditorController) getFrameController()
+						.getEditorController();
 
-            // TODO (@author fdietz):: implement action for font size combo box!
-        }
-    }
+				// set paragraph formatting according to the selection
+				int selectedIndex = paragraphComboBox.getSelectedIndex();
+				HTML.Tag tag = ParagraphMenu.STYLE_TAGS[selectedIndex];
 
-    /**
-     * This event could mean that a the editor controller has changed.
-     * Therefore this object is re-registered as observer to keep
-     * getting information about format changes.
-     *
-     * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
-     */
-    public void componentAdded(ContainerEvent e) {
-        LOG.info("Re-registering as observer on editor controller");
-        controller.getEditorController().addObserver(this);
-    }
+				LOG.fine("Setting paragraph format to: " + tag.toString());
 
-    public void componentRemoved(ContainerEvent e) {}
-    
-    /**
-     * Cell renderer responsible for displaying localized strings in the combo box.
-     */
-    protected static class ParagraphTagRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(JList list, Object value,
-            int index, boolean selected, boolean hasFocus) {
-            return super.getListCellRendererComponent(list,
-                MailResourceLoader.getString("menu", "composer",
-                "menu_format_paragraph_" + value.toString()), index, selected, hasFocus);
-        }
-    }
+				ctrl.setParagraphFormat(tag);
+			}
+		} else if (action.equals("SIZE")) {
+			int selectedIndex = sizeComboBox.getSelectedIndex();
+
+			// TODO (@author fdietz):: implement action for font size combo box!
+		}
+	}
+
+	/**
+	 * This event could mean that a the editor controller has changed. Therefore
+	 * this object is re-registered as observer to keep getting information
+	 * about format changes.
+	 * 
+	 * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
+	 */
+	public void componentAdded(ContainerEvent e) {
+		LOG.info("Re-registering as observer on editor controller");
+		controller.getEditorController().addObserver(this);
+	}
+
+	public void componentRemoved(ContainerEvent e) {
+	}
+
+	/**
+	 * Cell renderer responsible for displaying localized strings in the combo
+	 * box.
+	 */
+	protected static class ParagraphTagRenderer extends DefaultListCellRenderer {
+		public Component getListCellRendererComponent(JList list, Object value,
+				int index, boolean selected, boolean hasFocus) {
+			return super.getListCellRendererComponent(list, MailResourceLoader
+					.getString("menu", "composer", "menu_format_paragraph_"
+							+ value.toString()), index, selected, hasFocus);
+		}
+	}
 }

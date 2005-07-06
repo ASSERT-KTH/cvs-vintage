@@ -53,7 +53,7 @@ public class PluginManagerTest extends TestCase {
 	}
 
 	public void test() {
-		PluginManager manager = PluginManager.getInstance();
+		IPluginManager manager = PluginManager.getInstance();
 		manager.initPlugins();
 	}
 

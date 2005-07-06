@@ -2,166 +2,170 @@
 
 	<menubar>
 	
-	<menu name="menu_file" extensionpoint="open">
-		<menuitem action="NewMessage"/>
+	<menu id="menu_file_new" placeholderid="open">
+		<menuitem id="NewMessage"/>
 	</menu>
 	
 	
-	<menu name="menu_file" extensionpoint="top">		
-		<menuitem imenu="ReceiveMenu" />
+	<menu id="menu_file" placeholderid="top">		
+		<imenu id="ReceiveMenu" />
 		<separator/>
-		<menuitem action="ReceiveSend"/>	
-		<menuitem action="Receive"/>	
-		<menuitem action="SendAll"/>
+		<menuitem id="ReceiveSend"/>	
+		<menuitem id="Receive"/>	
+		<menuitem id="SendAll"/>
 		
 		<separator/>
-		<menuitem action="Print"/>	
+		<menuitem id="Print"/>	
 		
 		<!--	
 		<separator/>
-		<menuitem imenu="ManageServerMenu" />-->
-		<separator/>
-		<menuitem action="SaveMessageSourceAs" />
+		<imenu id="ManageServerMenu" />-->
+		
+		<!--<separator/>-->
+		<menuitem id="SaveMessageSourceAs" />
         
 	</menu>
 
-	<menu name="menu_edit" extensionpoint="bottom">
-		<menuitem action="SearchMessage"/>
+	<menu id="menu_edit" placeholderid="bottom">
+		<menuitem id="SearchMessage"/>
 		<separator/>
-		<menuitem action="MailAccount"/>
-		<menuitem action="MailOptions"/>
+		<menuitem id="MailAccount"/>
+		<menuitem id="MailOptions"/>
+		<separator/>
 	</menu>
 	
-	<menu name="menu_view" extensionpoint="show_hide">
-		<menuitem checkboxaction="ShowMessagePreview" />
+	<menu id="menu_view_show_hide" placeholderid="show_hide">
+		<checkboxmenuitem id="ShowMessagePreview" />
 	</menu>
 	
-	<menu name="menu_view" extensionpoint="top">
-	    <menuitem action="ColumnDialog"/>
+	<menu id="menu_view" placeholderid="top">
+	    <menuitem id="ColumnDialog"/>
 		<separator/>	    
-		<menuitem imenu="SortMessagesMenu"/>	
-		<menuitem imenu="SortFoldersMenu"/>		
+		<imenu id="SortMessagesMenu"/>	
+		<imenu id="SortFoldersMenu"/>		
 		<separator/>
-		<menuitem imenu="HeadersMenu"/>
+		<imenu id="HeadersMenu"/>
 		<separator/>
-		<menuitem checkboxaction="ThreadedView"/>
+		<checkboxmenuitem id="ThreadedView"/>
 		<separator/>
 		
 		
-		<menu name="menu_view_next">
-			<menuitem action="NextMessage" />
-			<menuitem action="NextUnreadMessage" />
+		<menu id="menu_view_next">
+			<menuitem id="NextMessage" />
+			<menuitem id="NextUnreadMessage" />
 		</menu>
-		<menu name="menu_view_prev">
-			<menuitem action="PreviousMessage" />
-			<menuitem action="PreviousUnreadMessage" />
+		<menu id="menu_view_prev">
+			<menuitem id="PreviousMessage" />
+			<menuitem id="PreviousUnreadMessage" />
 		</menu>
 		<separator/>
 		
-		<menuitem imenu="CharacterEncodingMenu" />
+		<imenu id="CharacterEncodingMenu" />
 		<separator/>
-		<menuitem action="ViewMessageSource"/>
+		<menuitem id="ViewMessageSource"/>
 	</menu>
 	
-	<menu name="menu_folder">
-	 <menuitem action="CreateSubFolder"/>
-	 <menuitem action="CreateVirtualFolder"/>
+	<menu id="menu_folder">
+	 <menuitem id="CreateSubFolder"/>
+	 <menuitem id="CreateVirtualFolder"/>
 	 <separator/>
-	 <menuitem action="RenameFolder"/>
-	 <menuitem action="RemoveFolder"/>
+	 <menuitem id="RenameFolder"/>
+	 <menuitem id="RemoveFolder"/>
 	 <separator/>
-	 <menuitem action="ExpungeFolder"/>
-	 <menuitem action="MarkFolderAsRead"/>
+	 <menuitem id="ExpungeFolder"/>
+	 <menuitem id="MarkFolderAsRead"/>
 	 <!--
-	 <menuitem action="EmptyFolder"/>
+	 <menuitem id="EmptyFolder"/>
 	 -->
 	 <separator/>
 	 <!--
-	 <menuitem action="MoveUp"/>
-	 <menuitem action="MoveDown"/>
+	 <menuitem id="MoveUp"/>
+	 <menuitem id="MoveDown"/>
 	 <separator/>
 	 -->
-	 <menuitem action="ApplyFilter"/>
-	 <menuitem action="FilterPreferences"/>
-	 <extensionpoint name="top" />	
-	 <extensionpoint name="bottom" />	
+	 <menuitem id="ApplyFilter"/>
+	 <menuitem id="FilterPreferences"/>
+	 <placeholder id="top" />	
+	 <placeholder id="bottom" />	
 	 <separator/>
 	 <!--
-	 <menuitem action="SubscribeFolder"/>
+	 <menuitem id="SubscribeFolder"/>
 	 <separator/>
 	 -->
-	 <menuitem action="FolderOptions"/>
+	 <menuitem id="FolderOptions"/>
 	</menu>
 	
-	<menu name="menu_message">
-		<menuitem action="NewMessage" />
-		<menuitem action="OpenMessageWithComposer" />
+	<menu id="menu_message">
+		<menuitem id="NewMessage" />
+		<menuitem id="OpenMessageWithComposer" />
 		<!--
-		<menuitem action="OpenMessageWithMessageFrame" />
+		<menuitem id="OpenMessageWithMessageFrame" />
 		-->
-		<menuitem action="SaveMessageBodyAs" />
+		<menuitem id="SaveMessageBodyAs" />
 		<separator />
-		<menuitem action="Reply" />
-		<menuitem action="ReplyToAll" />
-		<menuitem action="ReplyToList" />
-		<menuitem action="ReplyAsAttachment"/>
-		<menuitem action="ReplyWithTemplate"/>
-		<menuitem action="Forward" />
-		 <menu name="menu_message_forward_as">
-	      <menuitem action="ForwardInline" />
-	      <menuitem action="ForwardAsAttachment" />
+		<menuitem id="Reply" />
+		<menuitem id="ReplyToAll" />
+		<menuitem id="ReplyToList" />
+		<menuitem id="ReplyAsAttachment"/>
+		<menuitem id="ReplyWithTemplate"/>
+		<menuitem id="Forward" />
+		 <menu id="menu_message_forward_as">
+	      <menuitem id="ForwardInline" />
+	      <menuitem id="ForwardAsAttachment" />
 	      <separator/>
-	      <menuitem action="Redirect" />
+	      <menuitem id="Redirect" />
 	     </menu>
 		<separator />
-		<menuitem action="CopyMessage" />
-		<menuitem action="MoveMessage" />
-		<menuitem action="DeleteMessage" />
+		<menuitem id="CopyMessage" />
+		<menuitem id="MoveMessage" />
+		<menuitem id="DeleteMessage" />
 		<separator/>
-		<menuitem action="AddSenderToAddressbook"/>
+		<menuitem id="AddSenderToAddressbook"/>
 		<!--
-		<menuitem action="AddAllSendersToAddressbook"/>
+		<menuitem id="AddAllSendersToAddressbook"/>
 		-->
-		<extensionpoint name="top" />	
-		<extensionpoint name="bottom" />	
+		<placeholder id="top" />	
+		<placeholder id="bottom" />	
 		<separator/>
 		 
-		<menuitem imenu="ColorMessageMenu"/>
+		<imenu id="ColorMessageMenu"/>
 		<separator/>
-		<menu name="menu_message_mark">
-		 <menuitem action="ToggleReadFlag"/>
-		 <menuitem action="ToggleAnsweredFlag"/>
-		 <menuitem action="ToggleDraftFlag"/>
-		 <menuitem action="ToggleFlaggedFlag"/>
-		 <menuitem action="ToggleExpungedFlag"/>
-		 <menuitem action="ToggleSpamFlag"/>
+		<menu id="menu_message_mark">
+		 <menuitem id="ToggleReadFlag"/>
+		 <menuitem id="ToggleAnsweredFlag"/>
+		 <menuitem id="ToggleDraftFlag"/>
+		 <menuitem id="ToggleFlaggedFlag"/>
+		 <menuitem id="ToggleExpungedFlag"/>
+		 <menuitem id="ToggleSpamFlag"/>
 		</menu>		
 	</menu>
 	
 	
-	<menu name="menu_utilities" extensionpoint="bottom">
+	<menu id="menu_utilities" placeholderid="bottom">
 	 
 	
-	  fdietz: disabled for stable release.
+	  <!-- fdietz: disabled for stable release.
 	   these actions are only available for macchiato developers
-	   TODO: add debug flag instead
-	 <menuitem action="TrainMessageAsSpam"/>
-	 <menuitem action="TrainMessageAsHam"/>
-	 <menuitem action="ScoreMessage"/>
+	   TODO: add debug flag instead -->
+	   <!--
+	 <menuitem id="TrainMessageAsSpam"/>
+	 <menuitem id="TrainMessageAsHam"/>
+	 <menuitem id="ScoreMessage"/>
 	 <separator/>
-	 
-	 <extensionpoint name="mail_bottom" />	
-	 <menu name="menu_message_filteronmessage">
-	      <menuitem action="CreateFilterOnSubject"/>
-	      <menuitem action="CreateFilterOnFrom"/>
-	      <menuitem action="CreateFilterOnTo"/>
+	 -->
+	 <placeholder id="mail_bottom" />
+	 <separator/>	
+	 <menu id="menu_message_filteronmessage">
+	      <menuitem id="CreateFilterOnSubject"/>
+	      <menuitem id="CreateFilterOnFrom"/>
+	      <menuitem id="CreateFilterOnTo"/>
 	      <separator/>
-	      <menuitem action="CreateVFolderOnSubject"/>
-	      <menuitem action="CreateVFolderOnFrom"/>
-	      <menuitem action="CreateVFolderOnTo"/>
+	      <menuitem id="CreateVFolderOnSubject"/>
+	      <menuitem id="CreateVFolderOnFrom"/>
+	      <menuitem id="CreateVFolderOnTo"/>
 	     </menu>
 	    <separator/>
-	  <menuitem action="ExportDialog"/>
-	  <menuitem action="MailImport"/>
+	  <menuitem id="ExportDialog"/>
+	  <menuitem id="MailImport"/>
 	</menu>
 	</menubar>

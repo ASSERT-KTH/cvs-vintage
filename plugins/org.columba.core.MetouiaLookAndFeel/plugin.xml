@@ -2,8 +2,8 @@
 
 
 <plugin id="org.columba.core.MetouiaLookAndFeel" name="Metouia Look And Feel" description="Metouia Look And Feel" category="Look and Feel"  version="1.0" enabled="true" >
- <extension name="org.columba.core.theme">
-  <theme name="Metouia" class="MetouiaLookAndFeelPlugin"/>
- </extension>
+ <extensionlist id="org.columba.core.theme">
+  <extension id="Metouia" class="MetouiaLookAndFeelPlugin"/>
+ </extensionlist>
  <runtime type="java" jar="MetouiaLookAndFeel.jar" import="lib/metouia.jar"/>
 </plugin>

@@ -19,36 +19,34 @@ import javax.swing.JMenu;
 
 import org.columba.core.gui.util.MnemonicSetter;
 
-
 /**
  * @author frd
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class CMenu extends JMenu {
-     private String menuId;
-    /**
- * Creates a menu item with the specified text.
- * <br>
- * If the textcontains &, the next character is used as
- * mnemonic. If not, no mnemonic is set.
- *
- * @param        str                Menu text
- */
-    public CMenu(String str,String id) {
-        super();
-        
-        menuId = id;
-        //super(str);
-        // set menu text incl. mnemonic if specified
-        MnemonicSetter.setTextWithMnemonic(this, str);
-    }
-    
-    public String getMenuId()
-    {
-        return menuId;      
-    }
+	private String menuId;
+
+	/**
+	 * Creates a menu item with the specified text. <br>
+	 * If the textcontains &, the next character is used as mnemonic. If not, no
+	 * mnemonic is set.
+	 * 
+	 * @param str
+	 *            Menu text
+	 */
+	public CMenu(String str, String id) {
+		super(str);
+
+		menuId = id;
+		// super(str);
+		// set menu text incl. mnemonic if specified
+		MnemonicSetter.setTextWithMnemonic(this, str);
+	}
+
+	public String getMenuId() {
+		return menuId;
+	}
 }

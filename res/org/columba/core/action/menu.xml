@@ -2,88 +2,90 @@
 
 <menubar>
 
-	<menu name="menu_file">
-	    <menu name="menu_file_new">
-	    	<menuitem action="OpenNewMailWindow"/>
-	    	<menuitem action="OpenNewAddressbookWindow"/>	    	
-	    	<extensionpoint name="open" />
+	<menu id="menu_file">
+	    <menu id="menu_file_new">
+	    	<menuitem id="OpenNewMailWindow"/>
+	    	<menuitem id="OpenNewAddressbookWindow"/>	    	
+	    	<placeholder id="open" />
 	    </menu>	    
 		<separator/>
-		<extensionpoint name="top" />	
+		<placeholder id="top" />	
 		
-		<!--<menuitem action="PrintSetup"/>
+		<!--<menuitem id="PrintSetup"/>
 		<separator/>-->
 		
-		<extensionpoint name="bottom" />
-                <menuitem checkboxaction="WorkOffline"/>
-		<menuitem action="Close"/>			
-		<menuitem action="Exit"/>			
+		<placeholder id="bottom" />
+		<separator/>
+        <checkboxmenuitem id="WorkOffline"/>
+        <separator/>
+		<menuitem id="Close"/>			
+		<menuitem id="Exit"/>			
 	</menu>
 	
-	<menu name="menu_edit">
-		<menuitem action="Undo"/>			
-		<menuitem action="Redo"/>			
+	<menu id="menu_edit">
+		<menuitem id="Undo"/>			
+		<menuitem id="Redo"/>			
 		<separator/>
-		<menuitem action="Cut"/>			
-		<menuitem action="Copy"/>			
-		<menuitem action="Paste"/>	
+		<menuitem id="Cut"/>			
+		<menuitem id="Copy"/>			
+		<menuitem id="Paste"/>	
 		
 				
-		<!-- <menuitem action="Delete"/> -->
+		<!-- <menuitem id="Delete"/> -->
 		
-		<!--<menuitem action="SelectAll"/> -->
+		<!--<menuitem id="SelectAll"/> -->
 		
 		<separator/>
-		<menuitem action="Find"/>
-		<menuitem action="FindAgain"/>
+		<menuitem id="Find"/>
+		<menuitem id="FindAgain"/>
 		<separator/>
-		<extensionpoint name="top"/>
-		<extensionpoint name="bottom"/>
-		<menuitem action="GlobalOptions"/>
+		<!--<placeholder id="top"/>-->
+		<placeholder id="bottom"/>
+		<menuitem id="GlobalOptions"/>
 	</menu>
 	
-	<menu name="menu_view">	
-		<menuitem action="Cancel"/>
+	<menu id="menu_view">	
+		<menuitem id="Cancel"/>
 		<separator/>
 		
-		<menuitem imenu="ChoosePerspectiveSubmenu"/>
+		<imenu id="ChoosePerspectiveSubmenu"/>
 		
-		<menu name="menu_view_show_hide">
-			<menuitem checkboxaction="ViewToolbar"/>
-			<menuitem checkboxaction="ViewFolderInfoPanel" />	
-			<extensionpoint name="show_hide"/>
+		<menu id="menu_view_show_hide">
+			<checkboxmenuitem id="ViewToolbar"/>
+			<checkboxmenuitem id="ViewFolderInfoPanel" />	
+			<placeholder id="show_hide"/>
 		</menu>
 		<separator/>
-		<extensionpoint name="top"/>
-		<extensionpoint name="bottom"/>
+		<placeholder id="top"/>
+		<placeholder id="bottom"/>
 	</menu>
 	
-	<menu name="menu_utilities">
+	<menu id="menu_utilities">
 	 <!--
-	 <menuitem action="OpenNewMailWindow"/>
-	 <menuitem action="OpenNewAddressbookWindow"/>
+	 <menuitem id="OpenNewMailWindow"/>
+	 <menuitem id="OpenNewAddressbookWindow"/>
 	 <separator/>
 	 -->
-	 <menuitem action="OpenProfileManagerDialog" />
-	 <menuitem action="PluginManagerDialog" />
-	 <menuitem action="OpenExternalToolsDialog" />
-	 <extensionpoint name="bottom"/>
+	 <menuitem id="OpenProfileManagerDialog" />
+	 <menuitem id="PluginManagerDialog" />
+	 <menuitem id="OpenExternalToolsDialog" />
+	 <placeholder id="bottom"/>
 	</menu>
 
-	<menu name="menu_help">
-	 <menuitem action="ShowHelp"/>
+	<menu id="menu_help">
+	 <menuitem id="ShowHelp"/>
 	 <!--
-	 <menuitem action="ShowContextSpecificHelp"/>
+	 <menuitem id="ShowContextSpecificHelp"/>
 	 -->
 	 <separator/>
-	 <menuitem action="ShowFAQ"/>
-	 <menuitem action="ShowBugDatabase"/>
-	 <menuitem action="Donate" />
-	 <menuitem action="ShowLicense"/>
-	 <menuitem action="ShowHomepage"/>
-	 <menuitem action="ShowProjectPage"/>
+	 <menuitem id="ShowFAQ"/>
+	 <menuitem id="ShowBugDatabase"/>
+	 <menuitem id="Donate" />
+	 <menuitem id="ShowLicense"/>
+	 <menuitem id="ShowHomepage"/>
+	 <menuitem id="ShowProjectPage"/>
 	 <separator/>
-	 <menuitem action="AboutDialog"/>
+	 <menuitem id="AboutDialog"/>
 	</menu>
 
 </menubar>

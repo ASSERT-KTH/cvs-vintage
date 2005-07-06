@@ -28,21 +28,27 @@ import org.columba.core.filter.FilterAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ComboMenu;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.Plugin;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.gui.config.filter.ActionList;
-import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.mail.plugin.FilterActionExtensionHandler;
 
-public class DefaultActionRow implements Plugin {
+public class DefaultActionRow implements IExtensionInterface {
 	protected JPanel panel;
+
 	protected FilterAction filterAction;
 
 	protected GridBagLayout gridbag = new GridBagLayout();
+
 	protected GridBagConstraints c = new GridBagConstraints();
+
 	protected ActionList actionList;
+
 	protected int count;
+
 	private FrameMediator mediator;
+
 	private ComboMenu comboMenu;
 
 	public DefaultActionRow(FrameMediator mediator, ActionList list,
@@ -78,11 +84,11 @@ public class DefaultActionRow implements Plugin {
 
 		panel.setLayout(gridbag);
 
-		FilterActionPluginHandler pluginHandler = null;
+		FilterActionExtensionHandler pluginHandler = null;
 
 		try {
-			pluginHandler = (FilterActionPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.mail.filteraction");
+			pluginHandler = (FilterActionExtensionHandler) PluginManager
+					.getInstance().getHandler(FilterActionExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
@@ -133,6 +139,7 @@ public class DefaultActionRow implements Plugin {
 	public void setFilterAction(FilterAction filterAction) {
 		this.filterAction = filterAction;
 	}
+
 	/**
 	 * @return Returns the mediator.
 	 */

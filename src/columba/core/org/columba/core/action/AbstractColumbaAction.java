@@ -18,7 +18,7 @@ package org.columba.core.action;
 import javax.swing.AbstractAction;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.plugin.Plugin;
+import org.columba.core.plugin.IExtensionInterface;
 
 
 /**
@@ -33,7 +33,7 @@ import org.columba.core.plugin.Plugin;
  * @author fdietz
  */
 public abstract class AbstractColumbaAction extends AbstractAction
-    implements Plugin {
+    implements IExtensionInterface {
     /**
      * special label for toolbar buttons which is smaller
      * than the regular label

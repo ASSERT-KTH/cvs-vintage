@@ -81,8 +81,11 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
             // enable/disable plugin
             String id = node.getId();
 
+            // TODO implement
+            /*
             PluginManager.getInstance().setEnabled(id,
                 ((Boolean) value).booleanValue());
+                */
         }
     }
 

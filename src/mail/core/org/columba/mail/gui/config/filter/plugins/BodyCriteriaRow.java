@@ -19,42 +19,43 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import org.columba.core.filter.FilterCriteria;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.gui.config.filter.CriteriaList;
-
+import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class BodyCriteriaRow extends DefaultCriteriaRow {
-    private JComboBox matchComboBox;
-    private JTextField textField;
+	private JComboBox matchComboBox;
 
-    public BodyCriteriaRow(AbstractPluginHandler pluginHandler,
-        CriteriaList criteriaList, FilterCriteria c) {
-        super(pluginHandler, criteriaList, c);
-    }
+	private JTextField textField;
 
-    public void updateComponents(boolean b) {
-        super.updateComponents(b);
+	public BodyCriteriaRow(FilterExtensionHandler pluginHandler,
+			CriteriaList criteriaList, FilterCriteria c) {
+		super(pluginHandler, criteriaList, c);
+	}
 
-        if (b) {
-            matchComboBox.setSelectedItem(criteria.getCriteriaString());
-            textField.setText(criteria.getPatternString());
-        } else {
-            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
-            criteria.setPatternString((String) textField.getText());
-        }
-    }
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
 
-    public void initComponents() {
-        super.initComponents();
+		if (b) {
+			matchComboBox.setSelectedItem(criteria.getCriteriaString());
+			textField.setText(criteria.getPatternString());
+		} else {
+			criteria
+					.setCriteriaString((String) matchComboBox.getSelectedItem());
+			criteria.setPatternString((String) textField.getText());
+		}
+	}
 
-        matchComboBox = new JComboBox();
-        matchComboBox.addItem("contains");
-        matchComboBox.addItem("contains not");
+	public void initComponents() {
+		super.initComponents();
 
-        addComponent(matchComboBox);
+		matchComboBox = new JComboBox();
+		matchComboBox.addItem("contains");
+		matchComboBox.addItem("contains not");
 
-        textField = new JTextField("body text", 12);
+		addComponent(matchComboBox);
 
-        addComponent(textField);
-    }
+		textField = new JTextField("body text", 12);
+
+		addComponent(textField);
+	}
 }

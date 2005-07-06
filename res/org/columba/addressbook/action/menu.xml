@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <menubar>
-	<menu name="menu_file" extensionpoint="open">
-		<menuitem action="AddContactCard"/>	
-		<menuitem action="AddGroupCard"/>	
+	<menu id="menu_file" placeholderid="open">
+		<menuitem id="AddContactCard"/>	
+		<menuitem id="AddGroupCard"/>	
 	</menu>
 	
-	<menu name="menu_file" extensionpoint="top">
-		<menuitem action="RemoveCard" />
-        <menuitem action="EditProperties" />
+	<menu id="menu_file" placeholderid="top">
+		<menuitem id="RemoveCard" />
+        <menuitem id="EditProperties" />
 		<separator/>
 	</menu>
 	
-	<menu name="menu_utilities" extensionpoint="bottom">
-        <menuitem action="AddVCard"/>
-        <menuitem action="ExportVCard" />
-	 	<menuitem action="AddressbookImport"/>
+	<menu id="menu_utilities" placeholderid="bottom">
+        <menuitem id="AddVCard"/>
+        <menuitem id="ExportVCard" />
+	 	<menuitem id="AddressbookImport"/>
 	</menu>
 	
 </menubar>

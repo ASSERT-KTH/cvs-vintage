@@ -20,48 +20,48 @@ import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
-import org.columba.addressbook.plugin.ImportPluginHandler;
-
+import org.columba.addressbook.plugin.ImportExtensionHandler;
+import org.columba.core.plugin.IExtension;
 
 class AddressbookImporter implements WizardModelListener {
-    protected DataModel data;
+	protected DataModel data;
 
-    public AddressbookImporter(DataModel data) {
-        this.data = data;
-    }
+	public AddressbookImporter(DataModel data) {
+		this.data = data;
+	}
 
-    public void wizardFinished(WizardModelEvent e) {
-        ImportPluginHandler pluginHandler = (ImportPluginHandler) data.getData(
-                "Plugin.handler");
-        DefaultAddressbookImporter importer = null;
-        Object[] args = new Object[] {
-                data.getData("Location.source"),
-                data.getData("Location.destination")
-            };
+	public void wizardFinished(WizardModelEvent e) {
+		ImportExtensionHandler pluginHandler = (ImportExtensionHandler) data
+				.getData("Plugin.handler");
+		DefaultAddressbookImporter importer = null;
+		Object[] args = new Object[] { data.getData("Location.source"),
+				data.getData("Location.destination") };
 
-        try {
-            String pluginID = (String) data.getData("Plugin.ID");
-            importer = (DefaultAddressbookImporter) pluginHandler.getPlugin(pluginID,
-                    args);
+		try {
+			String pluginID = (String) data.getData("Plugin.ID");
+			IExtension extension = pluginHandler.getExtension(pluginID);
 
-            importer.run();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+			importer = (DefaultAddressbookImporter) extension
+					.instanciateExtension(args);
 
-            if (ex.getCause() != null) {
-                ex.getCause().printStackTrace();
-            }
+			importer.run();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 
-            return;
-        }
-    }
+			if (ex.getCause() != null) {
+				ex.getCause().printStackTrace();
+			}
 
-    public void stepShown(WizardModelEvent e) {
-    }
+			return;
+		}
+	}
 
-    public void wizardCanceled(WizardModelEvent e) {
-    }
+	public void stepShown(WizardModelEvent e) {
+	}
 
-    public void wizardModelChanged(WizardModelEvent e) {
-    }
+	public void wizardCanceled(WizardModelEvent e) {
+	}
+
+	public void wizardModelChanged(WizardModelEvent e) {
+	}
 }

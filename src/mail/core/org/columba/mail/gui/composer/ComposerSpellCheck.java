@@ -18,50 +18,51 @@ package org.columba.mail.gui.composer;
 import java.io.File;
 
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
+import org.columba.core.pluginhandler.ExternalToolsExtensionHandler;
 import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;
 
-
 public class ComposerSpellCheck {
-    private ComposerController composerController;
-    private SpellcheckItem spellCheckConfig = null;
+	private ComposerController composerController;
 
-    public ComposerSpellCheck(ComposerController composerController) {
-        this.composerController = composerController;
+	private SpellcheckItem spellCheckConfig = null;
 
-        /*
-        spellCheckConfig =
-                MailInterface.config.getComposerOptionsConfig().getSpellcheckItem();
-        ASpellInterface.setAspellExeFilename(
-                spellCheckConfig.get("executable"));
-        */
-    }
+	public ComposerSpellCheck(ComposerController composerController) {
+		this.composerController = composerController;
 
-    public String checkText(String text) {
-        ExternalToolsPluginHandler handler = null;
+		/*
+		 * spellCheckConfig =
+		 * MailInterface.config.getComposerOptionsConfig().getSpellcheckItem();
+		 * ASpellInterface.setAspellExeFilename(
+		 * spellCheckConfig.get("executable"));
+		 */
+	}
 
-        try {
-            handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.core.externaltools");
+	public String checkText(String text) {
+		ExternalToolsExtensionHandler handler = null;
 
-            File externalToolFile = handler.getLocationOfExternalTool("aspell");
+		try {
+			handler = (ExternalToolsExtensionHandler) PluginManager.getInstance()
+					.getHandler(ExternalToolsExtensionHandler.NAME);
 
-            if (externalToolFile != null) {
-                ASpellInterface.setAspellExeFilename(externalToolFile.getPath());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			File externalToolFile = handler.getLocationOfExternalTool("aspell");
 
-        String checked = ASpellInterface.checkBuffer(text);
+			if (externalToolFile != null) {
+				ASpellInterface
+						.setAspellExeFilename(externalToolFile.getPath());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        if (checked == null) {
-            // Display error ?
-            // As it is inmutable
-            return text;
-        } else {
-            return checked;
-        }
-    }
+		String checked = ASpellInterface.checkBuffer(text);
+
+		if (checked == null) {
+			// Display error ?
+			// As it is inmutable
+			return text;
+		} else {
+			return checked;
+		}
+	}
 }

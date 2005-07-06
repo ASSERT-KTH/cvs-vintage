@@ -19,50 +19,51 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import org.columba.core.filter.FilterCriteria;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
-
+import org.columba.mail.plugin.FilterExtensionHandler;
 
 public class HeaderCriteriaRow extends DefaultCriteriaRow {
-    private JComboBox matchComboBox;
-    private JTextField textField;
+	private JComboBox matchComboBox;
 
-    public HeaderCriteriaRow(AbstractPluginHandler pluginHandler,
-        CriteriaList criteriaList, FilterCriteria c) {
-        super(pluginHandler, criteriaList, c);
-    }
+	private JTextField textField;
 
-    public void updateComponents(boolean b) {
-        super.updateComponents(b);
+	public HeaderCriteriaRow(FilterExtensionHandler pluginHandler,
+			CriteriaList criteriaList, FilterCriteria c) {
+		super(pluginHandler, criteriaList, c);
+	}
 
-        if (b) {
-            matchComboBox.setSelectedItem(criteria.getCriteriaString());
-            textField.setText(criteria.getPatternString());
-        } else {
-            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
-            criteria.setPatternString((String) textField.getText());
-            new MailFilterCriteria(criteria).setHeaderfieldString(criteria.getTypeString());
-        }
-    }
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
 
-    public void initComponents() {
-        super.initComponents();
+		if (b) {
+			matchComboBox.setSelectedItem(criteria.getCriteriaString());
+			textField.setText(criteria.getPatternString());
+		} else {
+			criteria
+					.setCriteriaString((String) matchComboBox.getSelectedItem());
+			criteria.setPatternString((String) textField.getText());
+			new MailFilterCriteria(criteria).setHeaderfieldString(criteria
+					.getTypeString());
+		}
+	}
 
-        matchComboBox = new JComboBox();
-        matchComboBox.addItem("contains");
-        matchComboBox.addItem("contains not");
+	public void initComponents() {
+		super.initComponents();
 
-        /*
-matchComboBox.addItem("is");
-matchComboBox.addItem("is not");
-matchComboBox.addItem("begins with");
-matchComboBox.addItem("ends with");
-*/
-        addComponent(matchComboBox);
+		matchComboBox = new JComboBox();
+		matchComboBox.addItem("contains");
+		matchComboBox.addItem("contains not");
 
-        textField = new JTextField("header", 10);
+		/*
+		 * matchComboBox.addItem("is"); matchComboBox.addItem("is not");
+		 * matchComboBox.addItem("begins with"); matchComboBox.addItem("ends
+		 * with");
+		 */
+		addComponent(matchComboBox);
 
-        addComponent(textField);
-    }
+		textField = new JTextField("header", 10);
+
+		addComponent(textField);
+	}
 }

@@ -16,147 +16,161 @@
 
 package org.columba.mail.folder;
 
-import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.ExtensionMetadata;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.xml.XmlElement;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.plugin.FolderPluginHandler;
+import org.columba.mail.plugin.FolderExtensionHandler;
 
 /**
- * Factory for creating subfolders.
- * Implemented as a singelton. Use {@link #getInstance()}.
- *
+ * Factory for creating subfolders. Implemented as a singelton. Use
+ * {@link #getInstance()}.
+ * 
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class FolderFactory {
-    // Groups are separated by at least one WS character
-    private static final Pattern groupPattern = Pattern.compile("([^\\s]+)\\s*");
-    private static FolderFactory instance;
-    private FolderPluginHandler handler;
-    private XmlElement folderlistElement;
+	// Groups are separated by at least one WS character
+	private static final Pattern groupPattern = Pattern
+			.compile("([^\\s]+)\\s*");
 
-    // parent directory for mail folders
-    // for example: ".columba/mail/"
-    private String path = MailConfig.getInstance().getConfigDirectory().getPath();
+	private static FolderFactory instance;
 
-    protected FolderFactory() throws PluginHandlerNotFoundException {
-        // Get the handler
-        handler = (FolderPluginHandler) PluginManager.getInstance().getHandler(
-                "org.columba.mail.folder");
-        // Get the parentNode
-        folderlistElement = handler.getParent();
-    }
+	private FolderExtensionHandler handler;
 
-    /**
-     * Singleton - pattern
-     *
-     * @return the instance of the factory
-     */
-    public static FolderFactory getInstance() {
-        if (instance == null) {
-            try {
-                instance = new FolderFactory();
-            } catch (PluginHandlerNotFoundException phnfe) {
-                throw new RuntimeException(phnfe);
-            }
-        }
-        return instance;
-    }
+	// parent directory for mail folders
+	// for example: ".columba/mail/"
+	private String path = MailConfig.getInstance().getConfigDirectory()
+			.getPath();
 
-    /**
-     * Gets a list of all possible child foldertypes.
-     *
-     * @param parent
-     * @return a list that contains Strings of foldertypes
-     */
-    public List getPossibleChilds(IMailFolder parent) {
-        List list = new LinkedList();
+	protected FolderFactory() throws PluginHandlerNotFoundException {
+		// Get the handler
+		handler = (FolderExtensionHandler) PluginManager.getInstance().getHandler(
+				FolderExtensionHandler.NAME);
 
-        // which parents are possible ?
-        IFolderItem item = parent.getConfiguration();
-        String parentType = item.get("type");
+	}
 
-        // the group of the given parent
-        String parentGroup = getGroup(parentType);
+	/**
+	 * Singleton - pattern
+	 * 
+	 * @return the instance of the factory
+	 */
+	public static FolderFactory getInstance() {
+		if (instance == null) {
+			try {
+				instance = new FolderFactory();
+			} catch (PluginHandlerNotFoundException phnfe) {
+				throw new RuntimeException(phnfe);
+			}
+		}
+		return instance;
+	}
 
-        // iterate through all foldertypes to find suitable ones
-        Iterator it = folderlistElement.getElements().iterator();
+	/**
+	 * Gets a list of all possible child foldertypes.
+	 * 
+	 * @param parent
+	 * @return a list that contains Strings of foldertypes
+	 */
+	public List getPossibleChilds(IMailFolder parent) {
+		List list = new LinkedList();
 
-        while (it.hasNext()) {
-            XmlElement next = (XmlElement) it.next();
-            String possibleParents = next.getAttribute("possible_parents");
+		// which parents are possible ?
+		IFolderItem item = parent.getConfiguration();
+		String parentType = item.get("type");
 
-            if (possibleParents != null) {
-                Matcher matcher = groupPattern.matcher(possibleParents);
+		// the group of the given parent
+		String parentGroup = getGroup(parentType);
 
-                while (matcher.find()) {
-                    if (matcher.group(1).equals(parentGroup) || matcher.group(1).equals("all")) {
-                        list.add(next.getAttribute("name"));
-                    }
-                }
-            }
-        }
+		// iterate through all foldertypes to find suitable ones
+		Enumeration e = handler.getExtensionEnumeration();
+		while (e.hasMoreElements()) {
+			ExtensionMetadata metadata = (ExtensionMetadata) e.nextElement();
+			String possibleParents = metadata.getAttribute("possible_parents");
+			String id = metadata.getId();
 
-        return list;
-    }
+			if (possibleParents != null) {
+				Matcher matcher = groupPattern.matcher(possibleParents);
 
-    /**
-     * Creates the default child for the given parent.
-     *
-     * @param parent the parent folder
-     * @return the childfolder
-     * @throws Exception
-     */
-    public IMailFolder createDefaultChild(IMailFolder parent, String name)
-        throws FolderCreationException {
-        List possibleChilds = getPossibleChilds(parent);
+				while (matcher.find()) {
+					if (matcher.group(1).equals(parentGroup)
+							|| matcher.group(1).equals("all")) {
+						list.add(id);
+					}
+				}
+			}
+		}
 
-        if (possibleChilds.size() > 0) {
-            String childType = (String) possibleChilds.get(0);
-            return createChild(parent, name, childType);
-        } else {
-            return null;
-        }
-    }
+		return list;
+	}
 
-    /**
-     * Creates a subfolder for the given folder with the given type.
-     *
-     * @param parent the parentfolder
-     * @param childType the type of the child (e.g. CachedMHFolder )
-     * @return the childfolder
-     * @throws Exception
-     */
-    public IMailFolder createChild(IMailFolder parent, String name,
-        String childType) throws FolderCreationException {
-    	IMailFolder child;
+	/**
+	 * Creates the default child for the given parent.
+	 * 
+	 * @param parent
+	 *            the parent folder
+	 * @return the childfolder
+	 * @throws Exception
+	 */
+	public IMailFolder createDefaultChild(IMailFolder parent, String name)
+			throws FolderCreationException {
+		List possibleChilds = getPossibleChilds(parent);
+
+		if (possibleChilds.size() > 0) {
+			String childType = (String) possibleChilds.get(0);
+			return createChild(parent, name, childType);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Creates a subfolder for the given folder with the given type.
+	 * 
+	 * @param parent
+	 *            the parentfolder
+	 * @param childType
+	 *            the type of the child (e.g. CachedMHFolder )
+	 * @return the childfolder
+	 * @throws Exception
+	 */
+	public IMailFolder createChild(IMailFolder parent, String name,
+			String childType) throws FolderCreationException {
+		IMailFolder child;
 		try {
-			child = (IMailFolder) handler.getPlugin(childType,
-			        new Object[] { name, childType, path });
+			IExtension extension = handler.getExtension(childType);
+
+			child = (IMailFolder) extension.instanciateExtension(new Object[] {
+					name, childType, path });
 
 			// Add child to parent
 			parent.addSubfolder(child);
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			throw new FolderCreationException(e);
 		}
-        return child;
-    }
+		return child;
+	}
 
-    public String getGroup(String parentType) {
-        Iterator it = folderlistElement.getElements().iterator();
-        while (it.hasNext()) {
-            XmlElement next = (XmlElement) it.next();
-            if (next.getAttribute("name").equals(parentType)) {
-                return next.getAttribute("group");
-            }
-        }
-        return null;
-    }
+	public String getGroup(String parentType) {
+		// iterate through all foldertypes to find suitable ones
+		Enumeration e = handler.getExtensionEnumeration();
+		while (e.hasMoreElements()) {
+			ExtensionMetadata metadata = (ExtensionMetadata) e.nextElement();
+			String id = metadata.getId();
+			String group = metadata.getAttribute("group");
+
+			if (id.equals(parentType))
+				return group;
+		}
+
+		return null;
+
+	}
 }

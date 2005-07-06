@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
@@ -30,7 +31,7 @@ import org.columba.ristretto.io.SourceInputStream;
 /**
  * This is the base class for mailbox importers.
  */
-public abstract class AbstractMailboxImporter {
+public abstract class AbstractMailboxImporter implements IExtensionInterface{
     public static final int TYPE_FILE = 0;
     public static final int TYPE_DIRECTORY = 1;
 

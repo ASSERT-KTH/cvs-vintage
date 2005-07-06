@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<!DOCTYPE filterlist SYSTEM "filter.dtd">-->
+
+<extensionlist type="local" >
+ <extension 
+ 	id="default" 
+ 	class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
+ <extension 
+ 	id="Custom Headerfield" 
+ 	class="org.columba.mail.gui.config.filter.plugins.CustomHeaderfieldCriteriaRow" />
+ <extension 
+ 	id="Body" 
+ 	class="org.columba.mail.gui.config.filter.plugins.BodyCriteriaRow" />
+ <extension 
+ 	id="Date" 
+ 	class="org.columba.mail.gui.config.filter.plugins.DateCriteriaRow" />
+ <extension 
+ 	id="Flags" 
+ 	class="org.columba.mail.gui.config.filter.plugins.FlagsCriteriaRow" />
+ <extension 
+ 	id="Priority" 
+ 	class="org.columba.mail.gui.config.filter.plugins.PriorityCriteriaRow" />
+ <extension 
+ 	id="Size" 
+ 	class="org.columba.mail.gui.config.filter.plugins.SizeCriteriaRow" />
+ <extension 
+ 	id="Color" 
+ 	class="org.columba.mail.gui.config.filter.plugins.ColorCriteriaRow" />
+ <extension 
+ 	id="Account" 
+ 	class="org.columba.mail.gui.config.filter.plugins.AccountCriteriaRow" />
+ <extension 
+ 	id="Match all" 
+ 	class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
+ <extension 
+ 	id="Sender is in Addressbook" 
+ 	class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
+</extensionlist>

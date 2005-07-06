@@ -25,12 +25,13 @@ import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.IExtension;
+import org.columba.core.plugin.exception.PluginException;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ImportMessageCommand;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
-import org.columba.mail.plugin.ImportPluginHandler;
+import org.columba.mail.plugin.ImportExtensionHandler;
 
 class MailboxImporter implements WizardModelListener {
 	protected DataModel data;
@@ -40,16 +41,19 @@ class MailboxImporter implements WizardModelListener {
 	}
 
 	public void wizardFinished(WizardModelEvent e) {
-		ImportPluginHandler pluginHandler = (ImportPluginHandler) data
+		ImportExtensionHandler pluginHandler = (ImportExtensionHandler) data
 				.getData("Plugin.handler");
 		AbstractMailboxImporter importer = null;
 		Object[] args = new Object[] { data.getData("Location.destination"),
 				data.getData("Location.source") };
 
 		try {
-			importer = (AbstractMailboxImporter) pluginHandler.getPlugin(
-					(String) data.getData("Plugin.ID"), args);
-		} catch (PluginLoadingFailedException e1) {
+			IExtension extension = pluginHandler.getExtension((String) data
+					.getData("Plugin.ID"));
+
+			importer = (AbstractMailboxImporter) extension
+					.instanciateExtension(args);
+		} catch (PluginException e1) {
 			if (Main.DEBUG)
 				e1.printStackTrace();
 

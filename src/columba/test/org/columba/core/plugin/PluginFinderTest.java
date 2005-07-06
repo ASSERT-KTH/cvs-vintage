@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
+import org.columba.core.plugin.util.PluginFinder;
 
 /**
  * @author fdietz

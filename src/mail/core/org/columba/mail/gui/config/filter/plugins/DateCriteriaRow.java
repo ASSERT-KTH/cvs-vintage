@@ -26,77 +26,80 @@ import javax.swing.JComboBox;
 
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.util.DateChooserDialog;
-import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.plugin.FilterExtensionHandler;
 
+public class DateCriteriaRow extends DefaultCriteriaRow implements
+		ActionListener {
+	private JComboBox matchComboBox;
 
-public class DateCriteriaRow extends DefaultCriteriaRow
-    implements ActionListener {
-    private JComboBox matchComboBox;
-    private JButton dateButton;
-    private Date date;
-    public static DateFormat dateFormat = DateFormat.getDateInstance();
-    
-    public DateCriteriaRow(AbstractPluginHandler pluginHandler,
-        CriteriaList criteriaList, FilterCriteria c) {
-        super(pluginHandler, criteriaList, c);
-    }
+	private JButton dateButton;
 
-    public void updateComponents(boolean b) {
-        super.updateComponents(b);
+	private Date date;
 
-        if (b) {
-            matchComboBox.setSelectedItem(criteria.getCriteriaString());
-            try {
+	public static DateFormat dateFormat = DateFormat.getDateInstance();
+
+	public DateCriteriaRow(FilterExtensionHandler pluginHandler,
+			CriteriaList criteriaList, FilterCriteria c) {
+		super(pluginHandler, criteriaList, c);
+	}
+
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
+
+		if (b) {
+			matchComboBox.setSelectedItem(criteria.getCriteriaString());
+			try {
 				date = dateFormat.parse(criteria.getPatternString());
 			} catch (ParseException e) {
 				// Fall back to today
 				date = new Date();
 			}
-            
-            //textField.setText(criteria.getPattern());
-            dateButton.setText(dateFormat.format(date));
-        } else {
-            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
 
-            //criteria.setPattern((String) textField.getText());
-            criteria.setPatternString((String) dateButton.getText());
-        }
-    }
+			// textField.setText(criteria.getPattern());
+			dateButton.setText(dateFormat.format(date));
+		} else {
+			criteria
+					.setCriteriaString((String) matchComboBox.getSelectedItem());
 
-    public void initComponents() {
-        super.initComponents();
+			// criteria.setPattern((String) textField.getText());
+			criteria.setPatternString((String) dateButton.getText());
+		}
+	}
 
-        matchComboBox = new JComboBox();
-        matchComboBox.addItem("before");
-        matchComboBox.addItem("after");
+	public void initComponents() {
+		super.initComponents();
 
-        addComponent(matchComboBox);
+		matchComboBox = new JComboBox();
+		matchComboBox.addItem("before");
+		matchComboBox.addItem("after");
 
-        dateButton = new JButton("date");
-        dateButton.setActionCommand("DATE");
-        dateButton.addActionListener(this);
+		addComponent(matchComboBox);
 
-        addComponent(dateButton);
-    }
+		dateButton = new JButton("date");
+		dateButton.setActionCommand("DATE");
+		dateButton.addActionListener(this);
 
-    public void actionPerformed(ActionEvent ev) {
-        String action = ev.getActionCommand();
+		addComponent(dateButton);
+	}
 
-        if (action.equals("DATE")) {
-            
-            DateChooserDialog dialog = new DateChooserDialog();
+	public void actionPerformed(ActionEvent ev) {
+		String action = ev.getActionCommand();
 
-            dialog.setDate(date);
-            dialog.setVisible(true);
+		if (action.equals("DATE")) {
 
-            if (dialog.success() == true) {
-                // Ok
-                date = dialog.getDate();
-                dateButton.setText(dateFormat.format(date));
-            } else {
-                // cancel
-            }
-        }
-    }
+			DateChooserDialog dialog = new DateChooserDialog();
+
+			dialog.setDate(date);
+			dialog.setVisible(true);
+
+			if (dialog.success() == true) {
+				// Ok
+				date = dialog.getDate();
+				dateButton.setText(dateFormat.format(date));
+			} else {
+				// cancel
+			}
+		}
+	}
 }

@@ -23,8 +23,9 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
@@ -37,7 +38,7 @@ import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.plugin.FolderPluginHandler;
+import org.columba.mail.plugin.FolderExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -161,11 +162,11 @@ public class FolderTreeModel extends DefaultTreeModel {
 
         // now instanciate the folder classes
         String type = item.get("type");
-        FolderPluginHandler handler = null;
+        FolderExtensionHandler handler = null;
 
         try {
-            handler = (FolderPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.mail.folder");
+            handler = (FolderExtensionHandler) PluginManager.getInstance().getHandler(
+            		FolderExtensionHandler.NAME);
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();
             d.showDialog(ex);
@@ -178,7 +179,9 @@ public class FolderTreeModel extends DefaultTreeModel {
         AbstractFolder folder = null;
 
         try {
-            folder = (AbstractFolder) handler.getPlugin(type, args);
+        	IExtension extension = handler.getExtension(type);
+        	
+            folder = (AbstractFolder) extension.instanciateExtension(args);
             parentFolder.add(folder);
         } catch (Exception ex) {
             ex.printStackTrace();

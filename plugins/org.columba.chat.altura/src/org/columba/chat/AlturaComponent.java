@@ -19,9 +19,9 @@ package org.columba.chat;
 
 import org.apache.commons.cli.CommandLine;
 import org.columba.core.main.IComponentPlugin;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.jivesoftware.smack.XMPPConnection;
 
 /**
@@ -45,9 +45,9 @@ public class AlturaComponent implements IComponentPlugin {
 	 */
 	public void init() {
 		try {
-			((ActionPluginHandler) PluginManager.getInstance().getHandler(
-					"org.columba.core.action"))
-					.addActionList("org/columba/chat/action/action.xml");
+			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
+					ActionExtensionHandler.NAME))
+					.loadExtensionsFromFile("org/columba/chat/action/action.xml");
 		} catch (PluginHandlerNotFoundException ex) {
 		}
 

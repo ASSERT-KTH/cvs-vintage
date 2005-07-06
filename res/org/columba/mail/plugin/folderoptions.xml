@@ -3,10 +3,10 @@
 <!-- !Attention!
 The order of the following plugins is intentional. Do not change the order of appeareance. -->
 
-<folderoptions>
- <folderoption state="before" name="ColumnOptions" class="org.columba.mail.folderoptions.ColumnOptionsPlugin" />
- <folderoption state="before" name="SortingOptions" class="org.columba.mail.folderoptions.SortingOptionsPlugin" />
- <!--<folderoption state="before" name="FilterOptions" class="org.columba.mail.folderoptions.FilterOptionsPlugin" />-->
- <folderoption state="before" name="ThreadedViewOptions" class="org.columba.mail.folderoptions.ThreadedViewOptionsPlugin" />
- <folderoption state="after" name="SelectionOptions" class="org.columba.mail.folderoptions.SelectionOptionsPlugin" />
-</folderoptions>
+<extensionlist>
+ <extension state="before" id="ColumnOptions" class="org.columba.mail.folderoptions.ColumnOptionsPlugin" />
+ <extension state="before" id="SortingOptions" class="org.columba.mail.folderoptions.SortingOptionsPlugin" />
+ <!--<folderoption state="before" id="FilterOptions" class="org.columba.mail.folderoptions.FilterOptionsPlugin" />-->
+ <extension state="before" id="ThreadedViewOptions" class="org.columba.mail.folderoptions.ThreadedViewOptionsPlugin" />
+ <extension state="after" id="SelectionOptions" class="org.columba.mail.folderoptions.SelectionOptionsPlugin" />
+</extensionlist>

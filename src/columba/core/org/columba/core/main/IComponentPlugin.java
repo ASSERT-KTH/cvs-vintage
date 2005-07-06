@@ -7,7 +7,7 @@
 package org.columba.core.main;
 
 import org.apache.commons.cli.CommandLine;
-import org.columba.core.plugin.Plugin;
+import org.columba.core.plugin.IExtensionInterface;
 
 
 /**
@@ -16,7 +16,7 @@ import org.columba.core.plugin.Plugin;
  * <p>
  * @author fdietz
  */
-public interface IComponentPlugin extends Plugin{
+public interface IComponentPlugin extends IExtensionInterface{
 	
 	public void init();
 	

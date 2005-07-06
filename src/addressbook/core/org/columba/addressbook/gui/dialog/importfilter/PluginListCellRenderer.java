@@ -21,20 +21,21 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
 
-import org.columba.addressbook.plugin.ImportPluginHandler;
+import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
 
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {
-    protected ImportPluginHandler pluginHandler;
+    protected ImportExtensionHandler pluginHandler;
 
     public PluginListCellRenderer() {
         super();
 
         try {
-            pluginHandler = (ImportPluginHandler) PluginManager.getInstance().getHandler(
+            pluginHandler = (ImportExtensionHandler) PluginManager.getInstance().getHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();
@@ -60,7 +61,8 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
 
         // id = org.columba.example.HelloWorld$HelloWorldPlugin
         String id = (String) value;
-        String userVisibleName = pluginHandler.getUserVisibleName(id);
+        IExtension extension = pluginHandler.getExtension(id);
+        String userVisibleName = extension.getMetadata().getId();
         setText(userVisibleName);
 
         return this;

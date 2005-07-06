@@ -26,8 +26,9 @@ import javax.swing.UIManager;
 import org.columba.core.config.Config;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
 import org.columba.core.main.Main;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ThemePluginHandler;
+import org.columba.core.pluginhandler.ThemeExtensionHandler;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -39,57 +40,60 @@ import org.columba.core.xml.XmlElement;
  * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin
  * 
  * @author fdietz
- *  
+ * 
  */
 public class ThemeSwitcher {
 
-    public static void setTheme() {
-        // get configuration
-        XmlElement themeConfig = Config.getInstance().get("options")
-                .getElement("/options/gui/theme");
+	public static void setTheme() {
+		// get configuration
+		XmlElement themeConfig = Config.getInstance().get("options")
+				.getElement("/options/gui/theme");
 
-        String pluginName = null;
-        try {
-            // get plugin-handler
-            ThemePluginHandler handler = (ThemePluginHandler) PluginManager.getInstance()
-                    .getHandler("org.columba.core.theme");
+		String pluginName = null;
+		try {
+			// get plugin-handler
+			ThemeExtensionHandler handler = (ThemeExtensionHandler) PluginManager
+					.getInstance().getHandler(ThemeExtensionHandler.NAME);
 
-            // if no theme available -> set "Plastic" as default
-            pluginName = themeConfig.getAttribute("name", "Plastic");
+			// if no theme available -> set "Plastic" as default
+			pluginName = themeConfig.getAttribute("name", "Plastic");
 
-            AbstractThemePlugin theme = null;
+			AbstractThemePlugin theme = null;
 
-            // instanciate theme
-            theme = (AbstractThemePlugin) handler.getPlugin(pluginName, null);
+			IExtension extension = handler.getExtension(pluginName);
+			
+			// instanciate theme
+			theme = (AbstractThemePlugin) extension.instanciateExtension(null);
 
-            // apply theme
-            theme.setLookAndFeel();
-        } catch (Exception ex) {
+			// apply theme
+			theme.setLookAndFeel();
+		} catch (Exception ex) {
 
-            if (Main.DEBUG) ex.printStackTrace();
+			if (Main.DEBUG)
+				ex.printStackTrace();
 
-            JOptionPane.showMessageDialog(null, "Error while trying to load "
-                    + pluginName
-                    + " Look and Feel.\nSwitching back to default.");
+			JOptionPane.showMessageDialog(null, "Error while trying to load "
+					+ pluginName
+					+ " Look and Feel.\nSwitching back to default.");
 
-            try {
-                // fall-back
-                UIManager.setLookAndFeel(UIManager
-                        .getCrossPlatformLookAndFeelClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+			try {
+				// fall-back
+				UIManager.setLookAndFeel(UIManager
+						.getCrossPlatformLookAndFeelClassName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-    public static void updateFrame(JFrame frame) {
-        final JFrame f = frame;
+	public static void updateFrame(JFrame frame) {
+		final JFrame f = frame;
 
-        SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                SwingUtilities.updateComponentTreeUI(f);
-            }
-        });
-    }
+			public void run() {
+				SwingUtilities.updateComponentTreeUI(f);
+			}
+		});
+	}
 }

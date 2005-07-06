@@ -22,7 +22,6 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -31,13 +30,9 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
-import org.columba.core.gui.menu.ColumbaMenu;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.UIFSplitPane;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractFolder;
@@ -49,7 +44,6 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.ITableController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.DeleteAction;
-import org.columba.mail.gui.table.action.ReplyAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.ITreeController;
@@ -289,13 +283,14 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						.getIntegerWithDefault("splitpanes", "header", 100));
 		}
 
-		try {
-			((MenuPluginHandler) PluginManager.getInstance().getHandler(
-					"org.columba.mail.menu")).insertPlugins(getContainer()
-					.getMenu());
-		} catch (PluginHandlerNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
+		// TODO implement
+		// try {
+		// ((MenuPluginHandler) PluginManager.getInstance().getHandler(
+		// MenuPluginHandler.NAME)).insertPlugins(getContainer()
+		// .getMenu());
+		// } catch (PluginHandlerNotFoundException ex) {
+		// throw new RuntimeException(ex);
+		// }
 
 		getContainer().extendMenuFromFile(this,
 				"org/columba/mail/action/menu.xml");
@@ -309,10 +304,11 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		treeController.createPopupMenu();
 		messageController.createPopupMenu();
 
-		JFrame frame = (JFrame) getContainer().getFrame();
-		ColumbaMenu menu = (ColumbaMenu) frame.getJMenuBar();
-		menu.addMenuItem("my_reply_action_id", new ReplyAction(this),
-				ColumbaMenu.MENU_VIEW, ColumbaMenu.PLACEHOLDER_BOTTOM);
+		// TODO: fixme
+//		JFrame frame = (JFrame) getContainer().getFrame();
+//		ColumbaMenu menu = (ColumbaMenu) frame.getJMenuBar();
+//		menu.addMenuItem("my_reply_action_id", new ReplyAction(this),
+//				ColumbaMenu.MENU_VIEW, ColumbaMenu.PLACEHOLDER_BOTTOM);
 
 		return panel;
 	}

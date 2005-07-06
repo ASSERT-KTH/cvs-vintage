@@ -36,10 +36,10 @@ import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
+import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -77,7 +77,7 @@ public class MailMain implements IComponentPlugin {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void init() {
 		// Init PGP
@@ -90,9 +90,8 @@ public class MailMain implements IComponentPlugin {
 				"org/columba/mail/plugin/pluginhandler.xml");
 
 		try {
-			((ActionPluginHandler) PluginManager.getInstance().getHandler(
-					"org.columba.core.action"))
-					.addActionList("org/columba/mail/action/action.xml");
+			PluginManager.getInstance().getHandler(ActionExtensionHandler.NAME)
+					.loadExtensionsFromFile("org/columba/mail/action/action.xml");
 		} catch (PluginHandlerNotFoundException ex) {
 			ex.printStackTrace();
 		}
@@ -155,7 +154,7 @@ public class MailMain implements IComponentPlugin {
 					ComposerModel model = new ComposerModel(MailUrlParser
 							.parse(commandLine.getOptionValue("mail")));
 
-					//new NewMessageAction().actionPerformed(null);
+					// new NewMessageAction().actionPerformed(null);
 					ComposerController controller = new ComposerController();
 					new DefaultContainer(controller);
 
@@ -180,7 +179,7 @@ public class MailMain implements IComponentPlugin {
 			ComposerModel model = new ComposerModel(MessageOptionParser
 					.parse(commandLine.getOptionValue("compose")));
 
-			//new NewMessageAction().actionPerformed(null);
+			// new NewMessageAction().actionPerformed(null);
 			ComposerController controller = new ComposerController();
 			new DefaultContainer(controller);
 
@@ -191,7 +190,7 @@ public class MailMain implements IComponentPlugin {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void postStartup() {
 		// Check default mail client
@@ -203,15 +202,19 @@ public class MailMain implements IComponentPlugin {
 		}
 
 		// Check Internet Connection
-		if( MailConfig.getInstance().getAccountList().count() > 0 ) {
-			OutgoingItem testConnection = MailConfig.getInstance().getAccountList().get(0).getSmtpItem();
-			ConnectionStateImpl.getInstance().setTestConnection(testConnection.get("host"), testConnection.getInteger("port"));
+		if (MailConfig.getInstance().getAccountList().count() > 0) {
+			OutgoingItem testConnection = MailConfig.getInstance()
+					.getAccountList().get(0).getSmtpItem();
+			ConnectionStateImpl.getInstance().setTestConnection(
+					testConnection.get("host"),
+					testConnection.getInteger("port"));
 			ConnectionStateImpl.getInstance().checkPhysicalState();
 		}
-		
-		
+
 		// Activate all Virtual Folders
-		ActivateVirtualFolderCommand.activateAll((AbstractFolder)FolderTreeModel.getInstance().getRoot());
+		ActivateVirtualFolderCommand
+				.activateAll((AbstractFolder) FolderTreeModel.getInstance()
+						.getRoot());
 	}
 
 	private void checkDefaultClient() {
@@ -220,8 +223,8 @@ public class MailMain implements IComponentPlugin {
 		IDefaultItem item = new DefaultItem(MailConfig.getInstance().get(
 				"options"));
 
-		boolean checkDefault = item.getBooleanWithDefault("options/defaultclient",
-				"check", true);
+		boolean checkDefault = item.getBooleanWithDefault(
+				"options/defaultclient", "check", true);
 
 		if (checkDefault
 				&& defaultClientHandler.platfromSupportsDefaultMailClient()) {
@@ -238,7 +241,7 @@ public class MailMain implements IComponentPlugin {
 				panel.add(askAgain, BorderLayout.CENTER);
 
 				// Some error in the client/server communication
-				//  --> fall back to default login process
+				// --> fall back to default login process
 				int result = JOptionPane.showConfirmDialog(FrameModel
 						.getInstance().getActiveFrame(), panel,
 						MailResourceLoader.getString("dialog", "defaultclient",

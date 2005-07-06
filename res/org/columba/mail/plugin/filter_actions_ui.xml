@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<extensionlist>
+ <extension id="Move Message" 
+ 			class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />
+ <extension id="Copy Message" 
+ 			class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />
+ <extension id="Delete Message" 
+ 			class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
+ <extension id="Mark Message" 
+ 			class="org.columba.mail.gui.config.filter.plugins.MarkActionRow" />
+ <extension id="Color Message" 
+ 			class="org.columba.mail.gui.config.filter.plugins.ColorActionConfig" />
+ <extension id="Score Message" 
+ 			class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
+</extensionlist>

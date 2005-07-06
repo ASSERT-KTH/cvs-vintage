@@ -27,26 +27,31 @@ import javax.swing.JPanel;
 
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.util.ComboMenu;
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.plugin.Plugin;
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.plugin.FilterExtensionHandler;
 
-public class DefaultCriteriaRow implements Plugin {
+public class DefaultCriteriaRow implements IExtensionInterface {
 
 	protected FilterCriteria criteria;
+
 	protected CriteriaList criteriaList;
+
 	protected JPanel panel;
 
 	protected JButton removeButton;
 
 	protected GridBagLayout gridbag = new GridBagLayout();
+
 	protected GridBagConstraints c = new GridBagConstraints();
-	AbstractPluginHandler pluginHandler;
+
+	FilterExtensionHandler pluginHandler;
+
 	protected int count;
 
 	private ComboMenu comboMenu;
 
-	public DefaultCriteriaRow(AbstractPluginHandler pluginHandler,
+	public DefaultCriteriaRow(FilterExtensionHandler pluginHandler,
 			CriteriaList criteriaList, FilterCriteria c) {
 		this.pluginHandler = pluginHandler;
 
@@ -121,7 +126,7 @@ public class DefaultCriteriaRow implements Plugin {
 	 * 
 	 * @return AbstractPluginHandler
 	 */
-	public AbstractPluginHandler getPluginHandler() {
+	public FilterExtensionHandler getPluginHandler() {
 		return pluginHandler;
 	}
 
@@ -131,7 +136,7 @@ public class DefaultCriteriaRow implements Plugin {
 	 * @param pluginHandler
 	 *            The pluginHandler to set
 	 */
-	public void setPluginHandler(AbstractPluginHandler pluginHandler) {
+	public void setPluginHandler(FilterExtensionHandler pluginHandler) {
 		this.pluginHandler = pluginHandler;
 	}
 

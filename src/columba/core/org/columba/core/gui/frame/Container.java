@@ -24,7 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.menu.ColumbaMenu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ColumbaToolBar;
 import org.columba.core.xml.XmlElement;
@@ -220,7 +219,7 @@ public interface Container {
 	 * 
 	 * @return current menu
 	 */
-	ColumbaMenu getMenu();
+	//
 
 	/**
 	 * Get the menubar of this container.

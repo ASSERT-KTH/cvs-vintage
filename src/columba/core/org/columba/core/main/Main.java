@@ -39,9 +39,9 @@ import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.JDICDesktop;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ComponentPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ComponentExtensionHandler;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.SessionController;
@@ -60,7 +60,7 @@ import sun.misc.URLClassPath;
 public class Main {
 	/** If true, enables debugging output from org.columba.core.logging */
 	public static boolean DEBUG = false;
-	
+
 	private static final Logger LOG = Logger.getLogger("org.columba.core.main");
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
@@ -87,37 +87,40 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		addNativeJarsToClasspath();
 		setLibraryPath();
-		
+
 		Main.getInstance().run(args);
 	}
 
 	/**
-	 * This hacks the classloader to adjust the library path
-	 * for convinient native support.
+	 * This hacks the classloader to adjust the library path for convinient
+	 * native support.
 	 * 
 	 * @author tstich
 	 * 
 	 * @throws Exception
 	 */
-	private static void setLibraryPath() throws Exception {		
-		if( OSInfo.isLinux() ) {
-			System.setProperty("java.library.path", System.getProperty("java.library.path") + ":native/linux/lib");		
+	private static void setLibraryPath() throws Exception {
+		if (OSInfo.isLinux()) {
+			System.setProperty("java.library.path", System
+					.getProperty("java.library.path")
+					+ ":native/linux/lib");
 		} else if (OSInfo.isWin32Platform()) {
-			System.setProperty("java.library.path", System.getProperty("java.library.path") + ";native\\win32\\lib");		
+			System.setProperty("java.library.path", System
+					.getProperty("java.library.path")
+					+ ";native\\win32\\lib");
 		}
 		// Platform maintainers: add your platform here
-		
-		
+
 		Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 		fieldSysPath.setAccessible(true);
 		if (fieldSysPath != null) {
-		fieldSysPath.set(System.class.getClassLoader(), null);
-		}		
+			fieldSysPath.set(System.class.getClassLoader(), null);
+		}
 	}
-	
+
 	/**
-	 * This hacks the classloader to adjust the classpath
-	 * for convinient native support.
+	 * This hacks the classloader to adjust the classpath for convinient native
+	 * support.
 	 * 
 	 * @author tstich
 	 * 
@@ -125,10 +128,10 @@ public class Main {
 	 */
 	private static void addNativeJarsToClasspath() throws Exception {
 		File nativeDir;
-		
+
 		// Setup the path
 		// Platform maintainers: add your platform here
-		if( OSInfo.isLinux() ) {
+		if (OSInfo.isLinux()) {
 			nativeDir = new File("native/linux/lib");
 			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
 			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
@@ -140,41 +143,43 @@ public class Main {
 			LOG.info("Native support for Platform not available.");
 			return;
 		}
-		
-		
+
 		// Find all native jars
 		File[] nativeJars = nativeDir.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				return name.endsWith("jar");
 			}
 		});
-		if( nativeJars == null ) return;		
-		
+		if (nativeJars == null)
+			return;
+
 		// Get the current classpath from the sysloader
 		// through reflection
-		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+		URLClassLoader sysloader = (URLClassLoader) ClassLoader
+				.getSystemClassLoader();
 		Class sysclass = URLClassLoader.class;
-		
+
 		Field ucp = URLClassLoader.class.getDeclaredField("ucp");
 		ucp.setAccessible(true);
 		URLClassPath currentCP = (URLClassPath) ucp.get(sysloader);
 		URL[] currentURLs = currentCP.getURLs();
-		
+
 		// add all native jars
 		List urlList = new ArrayList();
-		for( int i=0; i<nativeJars.length; i++) {
+		for (int i = 0; i < nativeJars.length; i++) {
 			urlList.add(nativeJars[i].toURL());
 		}
 
 		// add the old classpath
-		for( int i=0; i<currentURLs.length; i++) {
+		for (int i = 0; i < currentURLs.length; i++) {
 			urlList.add(currentURLs[i]);
-		}		
-		
+		}
+
 		// replace with the modified classpath
-		ucp.set(sysloader, new URLClassPath((URL[])urlList.toArray(new URL[0])));		
+		ucp.set(sysloader,
+				new URLClassPath((URL[]) urlList.toArray(new URL[0])));
 	}
-	
+
 	public void run(String args[]) {
 		ColumbaLogger.createDefaultHandler();
 		registerCommandLineArguments();
@@ -195,33 +200,33 @@ public class Main {
 		ColumbaLogger.createDefaultHandler();
 		ColumbaLogger.createDefaultFileHandler();
 
-		for ( int i=0; i<args.length; i++) {
-			LOG.info("arg["+i+"]="+args[i]);
+		for (int i = 0; i < args.length; i++) {
+			LOG.info("arg[" + i + "]=" + args[i]);
 		}
-		
+
 		SessionController.passToRunningSessionAndExit(args);
 
 		// enable debugging of repaint manager to track down swing gui
 		// access from outside the awt-event dispatcher thread
 		/*
-		if (Main.DEBUG)
-			RepaintManager.setCurrentManager(new DebugRepaintManager());
-			*/
-		
+		 * if (Main.DEBUG) RepaintManager.setCurrentManager(new
+		 * DebugRepaintManager());
+		 */
+
 		// show splash screen
 		StartUpFrame frame = null;
 		if (showSplashScreen) {
 			frame = new StartUpFrame();
 			frame.setVisible(true);
 		}
-		
+
 		// Add the tray icon to the System tray
 		ColumbaTrayIcon.getInstance().addToSystemTray();
 
 		// register protocol handler
-		System.setProperty("java.protocol.handler.pkgs", "org.columba.core.url|"+System.getProperty(
-				"java.protocol.handler.pkgs", "")
-				);
+		System.setProperty("java.protocol.handler.pkgs",
+				"org.columba.core.url|"
+						+ System.getProperty("java.protocol.handler.pkgs", ""));
 
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
@@ -229,20 +234,21 @@ public class Main {
 		SaveConfig task = new SaveConfig();
 		BackgroundTaskManager.getInstance().register(task);
 		ShutdownManager.getShutdownManager().register(task);
-		
-		ComponentPluginHandler handler = null;
+
+		ComponentExtensionHandler handler = null;
 		try {
-			handler = (ComponentPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.component");
+			handler = (ComponentExtensionHandler) PluginManager.getInstance()
+					.getHandler(ComponentExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		// init all components
-		handler.init();
-
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
+
+		// init all components
+		handler.init();
+		handler.registerCommandLineArguments();
 
 		// set Look & Feel
 		ThemeSwitcher.setTheme();
@@ -266,16 +272,15 @@ public class Main {
 		if (frame != null) {
 			frame.setVisible(false);
 		}
-		
+
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
 		handler.postStartup();
-		
-		
+
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void registerCommandLineArguments() {
 		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
@@ -297,14 +302,14 @@ public class Main {
 		parser.addOption(new Option("nosplash", GlobalResourceLoader.getString(
 				RESOURCE_PATH, "global", "cmdline_nosplash")));
 
-		ComponentPluginHandler handler = null;
-		try {
-			handler = (ComponentPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.component");
-			handler.registerCommandLineArguments();
-		} catch (PluginHandlerNotFoundException e) {
-			e.printStackTrace();
-		}
+		// ComponentPluginHandler handler = null;
+		// try {
+		// handler = (ComponentPluginHandler) PluginManager.getInstance()
+		// .getHandler("org.columba.core.component");
+		// handler.registerCommandLineArguments();
+		// } catch (PluginHandlerNotFoundException e) {
+		// e.printStackTrace();
+		// }
 
 	}
 
@@ -347,7 +352,7 @@ public class Main {
 
 		if (commandLine.hasOption("debug")) {
 			DEBUG = true;
-			ColumbaLogger.setDebugging(true);			
+			ColumbaLogger.setDebugging(true);
 		}
 
 		if (commandLine.hasOption("nosplash")) {

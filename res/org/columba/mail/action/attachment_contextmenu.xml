@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<menu name="attachment_menu">
-	<menuitem action="OpenAttachment"/>
+<menu id="attachment_menu">
+	<menuitem id="OpenAttachment"/>
  	<separator/>
- 	<menuitem action="SaveAttachmentAs" />
+ 	<menuitem id="SaveAttachmentAs" />
 </menu>
 

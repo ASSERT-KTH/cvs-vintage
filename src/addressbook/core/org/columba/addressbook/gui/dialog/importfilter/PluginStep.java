@@ -36,101 +36,106 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
-import org.columba.addressbook.plugin.ImportPluginHandler;
+import org.columba.addressbook.plugin.ImportExtensionHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.MultiLineLabel;
-
+import org.columba.core.plugin.IExtension;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
-    protected DataModel data;
-    private MultiLineLabel descriptionLabel;
-    private ImportPluginHandler pluginHandler;
+	protected DataModel data;
 
-    public PluginStep(DataModel data) {
-        super(AddressbookResourceLoader.getString("dialog",
-                "addressbookimport", "plugin"),
-            AddressbookResourceLoader.getString("dialog", "addressbookimport",
-                "plugin_description"));
-        this.data = data;
-        pluginHandler = (ImportPluginHandler)data.getData("Plugin.handler");
-    }
+	private MultiLineLabel descriptionLabel;
 
-    protected JComponent createComponent() {
-        JList list = new JList(pluginHandler.getPluginIdList());
-        list.setCellRenderer(new PluginListCellRenderer());
+	private ImportExtensionHandler pluginHandler;
 
-        descriptionLabel = new MultiLineLabel("description");
+	public PluginStep(DataModel data) {
+		super(AddressbookResourceLoader.getString("dialog",
+				"addressbookimport", "plugin"), AddressbookResourceLoader
+				.getString("dialog", "addressbookimport", "plugin_description"));
+		this.data = data;
+		pluginHandler = (ImportExtensionHandler) data.getData("Plugin.handler");
+	}
 
-        JComponent component = new JPanel(new BorderLayout());
-        component.setLayout(new BorderLayout(0, 30));
-        component.add(new MultiLineLabel(AddressbookResourceLoader.getString(
-                    "dialog", "addressbookimport", "plugin_text")),
-            BorderLayout.NORTH);
+	protected JComponent createComponent() {
+		JList list = new JList(pluginHandler.getPluginIdList());
+		list.setCellRenderer(new PluginListCellRenderer());
 
-        JPanel middlePanel = new JPanel();
-        middlePanel.setAlignmentX(1);
+		descriptionLabel = new MultiLineLabel("description");
 
-        GridBagLayout layout = new GridBagLayout();
-        middlePanel.setLayout(layout);
+		JComponent component = new JPanel(new BorderLayout());
+		component.setLayout(new BorderLayout(0, 30));
+		component.add(new MultiLineLabel(AddressbookResourceLoader.getString(
+				"dialog", "addressbookimport", "plugin_text")),
+				BorderLayout.NORTH);
 
-        Method method = null;
+		JPanel middlePanel = new JPanel();
+		middlePanel.setAlignmentX(1);
 
-        try {
-            method = list.getClass().getMethod("getSelectedValue", null);
-        } catch (NoSuchMethodException nsme) {
-        }
+		GridBagLayout layout = new GridBagLayout();
+		middlePanel.setLayout(layout);
 
-        data.registerDataLookup("Plugin.ID",
-            new DefaultDataLookup(list, method, null));
-        list.addListSelectionListener(this);
-        list.setSelectedIndex(0);
+		Method method = null;
 
-        JScrollPane scrollPane = new JScrollPane(list);
-        scrollPane.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		try {
+			method = list.getClass().getMethod("getSelectedValue", null);
+		} catch (NoSuchMethodException nsme) {
+		}
 
-        //scrollPane.setPreferredSize( new Dimension(200,200) );
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.NORTHWEST;
-        c.gridx = 0;
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 0.4;
+		data.registerDataLookup("Plugin.ID", new DefaultDataLookup(list,
+				method, null));
+		list.addListSelectionListener(this);
+		list.setSelectedIndex(0);
 
-        //c.gridwidth = GridBagConstraints.RELATIVE;
-        c.weighty = 1.0;
-        layout.setConstraints(scrollPane, c);
-        middlePanel.add(scrollPane);
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane
+				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.weightx = 0.6;
-        c.gridx = 1;
-        c.anchor = GridBagConstraints.NORTHWEST;
-        c.insets = new Insets(0, 10, 0, 0);
+		// scrollPane.setPreferredSize( new Dimension(200,200) );
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridx = 0;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.4;
 
-        JScrollPane scrollPane2 = new JScrollPane(descriptionLabel);
+		// c.gridwidth = GridBagConstraints.RELATIVE;
+		c.weighty = 1.0;
+		layout.setConstraints(scrollPane, c);
+		middlePanel.add(scrollPane);
 
-        scrollPane2.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        layout.setConstraints(scrollPane2, c);
-        middlePanel.add(scrollPane2);
-        component.add(middlePanel);
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.weightx = 0.6;
+		c.gridx = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.insets = new Insets(0, 10, 0, 0);
 
-        return component;
-    }
+		JScrollPane scrollPane2 = new JScrollPane(descriptionLabel);
 
-    public void valueChanged(ListSelectionEvent event) {
-        try {
-            //adjust description field
-            DefaultAddressbookImporter importer = (DefaultAddressbookImporter)
-                pluginHandler.getPlugin((String) data.getData("Plugin.ID"), null);
+		scrollPane2
+				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		layout.setConstraints(scrollPane2, c);
+		middlePanel.add(scrollPane2);
+		component.add(middlePanel);
 
-            String description = importer.getDescription();
-            descriptionLabel.setText(description);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ((JList)event.getSource()).clearSelection();
-        }
-    }
+		return component;
+	}
 
-    public void prepareRendering() {}
+	public void valueChanged(ListSelectionEvent event) {
+		try {
+			// adjust description field
+			IExtension extension = pluginHandler.getExtension((String) data
+					.getData("Plugin.ID"));
+
+			DefaultAddressbookImporter importer = (DefaultAddressbookImporter) extension
+					.instanciateExtension(null);
+
+			String description = importer.getDescription();
+			descriptionLabel.setText(description);
+		} catch (Exception e) {
+			e.printStackTrace();
+			((JList) event.getSource()).clearSelection();
+		}
+	}
+
+	public void prepareRendering() {
+	}
 }

@@ -22,14 +22,15 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.folder.IFolder;
+import org.columba.core.plugin.IExtensionInterface;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.event.IFolderListener;
 
 /**
  * @author fdietz
- *
+ * 
  */
-public interface IMailFolder extends MutableTreeNode, IFolder{
+public interface IMailFolder extends MutableTreeNode, IFolder, IExtensionInterface {
 	/**
 	 * Adds a listener.
 	 */
@@ -117,12 +118,14 @@ public interface IMailFolder extends MutableTreeNode, IFolder{
 	 * @return root parent folder of this folder
 	 */
 	IMailFolder getRootFolder();
-	
+
 	void fireFolderPropertyChanged();
+
 	void fireFolderAdded(IMailFolder folder);
+
 	void fireFolderRemoved();
-	
+
 	TreeNode[] getPath();
-	
+
 	String getTreePath();
 }

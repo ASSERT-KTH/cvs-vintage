@@ -27,10 +27,10 @@ import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.IComponentPlugin;
 import org.columba.core.main.Main;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
+import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
@@ -74,9 +74,9 @@ public class AddressbookMain implements IComponentPlugin {
 				"org/columba/addressbook/plugin/pluginhandler.xml");
 
 		try {
-			((ActionPluginHandler) PluginManager.getInstance().getHandler(
-					"org.columba.core.action"))
-					.addActionList("org/columba/addressbook/action/action.xml");
+			((ActionExtensionHandler) PluginManager.getInstance().getHandler(
+					ActionExtensionHandler.NAME))
+					.loadExtensionsFromFile("org/columba/addressbook/action/action.xml");
 		} catch (PluginHandlerNotFoundException ex) {
 		}
 

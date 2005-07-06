@@ -40,9 +40,6 @@ import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.util.UIFSplitPane;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.MenuPluginHandler;
 
 /**
  * 
@@ -124,15 +121,17 @@ public class AddressbookFrameController extends DefaultFrameController
 				treeScrollPane, panel);
 		splitPane.setBorder(null);
 
+		
 		getContainer().extendMenuFromFile(this,
 				"org/columba/addressbook/action/menu.xml");
-		try {
-			((MenuPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.addressbook.menu"))
-					.insertPlugins(getContainer().getMenu());
-		} catch (PluginHandlerNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
+		
+//		try {
+//			((MenuPluginHandler) PluginManager.getInstance()
+//					.getHandler("org.columba.addressbook.menu"))
+//					.insertPlugins(getContainer().getMenuBar());
+//		} catch (PluginHandlerNotFoundException ex) {
+//			throw new RuntimeException(ex);
+//		}
 
 		getContainer().extendToolbar(this, AddressbookConfig.getInstance().get(
 				"main_toolbar").getElement("toolbar"));

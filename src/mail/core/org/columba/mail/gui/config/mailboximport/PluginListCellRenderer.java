@@ -22,47 +22,51 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.plugin.ImportPluginHandler;
-
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.mail.plugin.ImportExtensionHandler;
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {
-    protected ImportPluginHandler pluginHandler;
+	protected ImportExtensionHandler pluginHandler;
 
-    public PluginListCellRenderer() {
-        super();
+	public PluginListCellRenderer() {
+		super();
 
-        try {
-            pluginHandler = (ImportPluginHandler) PluginManager.getInstance().getHandler(
-                    "org.columba.mail.import");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
-    }
+		try {
+			pluginHandler = (ImportExtensionHandler) PluginManager.getInstance()
+					.getHandler(ImportExtensionHandler.NAME);
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
+	}
 
-    /* (non-Javadoc)
- * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
- */
-    public Component getListCellRendererComponent(JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus) {
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-        } else {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-        }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList,
+	 *      java.lang.Object, int, boolean, boolean)
+	 */
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean isSelected, boolean cellHasFocus) {
+		if (isSelected) {
+			setBackground(list.getSelectionBackground());
+			setForeground(list.getSelectionForeground());
+		} else {
+			setBackground(list.getBackground());
+			setForeground(list.getForeground());
+		}
 
-        setBorder((cellHasFocus)
-            ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
+		setBorder((cellHasFocus) ? UIManager
+				.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 
-        // id = org.columba.example.HelloWorld$HelloWorldPlugin
-        String id = (String) value;
-        String userVisibleName = pluginHandler.getUserVisibleName(id);
-        setText(userVisibleName);
+		// id = org.columba.example.HelloWorld$HelloWorldPlugin
+		String id = (String) value;
+		IExtension extension = pluginHandler.getExtension(id);
+		String userVisibleName = extension.getMetadata().getId();
+		setText(userVisibleName);
 
-        return this;
-    }
+		return this;
+	}
 }

@@ -27,9 +27,8 @@ import javax.swing.JToolBar;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.pluginhandler.ActionExtensionHandler;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -45,9 +44,13 @@ public class ColumbaToolBar extends JToolBar {
 			.getLogger("org.columba.core.gui.toolbar");
 
 	ResourceBundle toolbarLabels;
+
 	GridBagConstraints gridbagConstraints;
+
 	GridBagLayout gridbagLayout;
+
 	int i;
+
 	XmlElement rootElement;
 
 	FrameMediator frameController;
@@ -95,14 +98,18 @@ public class ColumbaToolBar extends JToolBar {
 				buttonElement = (XmlElement) iterator.next();
 
 				if (buttonElement.getName().equals("button")) {
-					// skip creation of cancel button 
-					if ( buttonElement.getAttribute("action").equals("Cancel") ) continue;
-					
-					addButton(((ActionPluginHandler) PluginManager
-							.getInstance()
-							.getHandler("org.columba.core.action")).getAction(
+					// skip creation of cancel button
+					if (buttonElement.getAttribute("action").equals("Cancel"))
+						continue;
+
+					ActionExtensionHandler handler = (ActionExtensionHandler) PluginManager
+							.getInstance().getHandler(ActionExtensionHandler.NAME);
+
+					AbstractColumbaAction action = handler.getAction(
 							buttonElement.getAttribute("action"),
-							frameController));
+							frameController);
+					
+					addButton(action);
 				} else if (buttonElement.getName().equals("separator")) {
 					addSeparator();
 				}
@@ -124,13 +131,17 @@ public class ColumbaToolBar extends JToolBar {
 
 	private void createButtons() {
 
-		//add(Box.createHorizontalGlue());
+		// add(Box.createHorizontalGlue());
 
 		try {
-			addButton(((ActionPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.action")).getAction("Cancel",
-					frameController));
-		} catch (PluginHandlerNotFoundException e) {
+			ActionExtensionHandler handler = (ActionExtensionHandler) PluginManager
+					.getInstance().getHandler(ActionExtensionHandler.NAME);
+
+			AbstractColumbaAction action = handler.getAction("Cancel",
+					frameController);
+
+			addButton(action);
+		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
@@ -143,7 +154,8 @@ public class ColumbaToolBar extends JToolBar {
 	}
 
 	private void addButton(AbstractColumbaAction action) {
-
+		if (action == null)
+			throw new IllegalArgumentException("action == null");
 		ToolbarButton button = new ToolbarButton(action);
 		button.setRolloverEnabled(true);
 

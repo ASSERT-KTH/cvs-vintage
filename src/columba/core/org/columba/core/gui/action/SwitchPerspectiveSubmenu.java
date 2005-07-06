@@ -27,10 +27,10 @@ import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.FramePluginHandler;
+import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.exception.PluginLoadingFailedException;
+import org.columba.core.pluginhandler.FrameExtensionHandler;
 
 /**
  * @author fdietz
@@ -52,7 +52,7 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 	private ButtonGroup group;
 
-	private FramePluginHandler handler;
+	private FrameExtensionHandler handler;
 
 	/**
 	 * @param controller
@@ -69,8 +69,8 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		boolean isManagedFrame = false;
 
 		try {
-			handler = (FramePluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.frame");
+			handler = (FrameExtensionHandler) PluginManager.getInstance()
+					.getHandler(FrameExtensionHandler.NAME);
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}

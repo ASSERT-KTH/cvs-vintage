@@ -20,14 +20,13 @@ import java.io.File;
 import org.columba.core.config.Config;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.plugin.PluginResourceLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
 /**
  * @author fdietz
  * 
- *  
+ * 
  */
 public class Facade {
 	/**
@@ -71,8 +70,4 @@ public class Facade {
 		return PluginManager.getInstance().getConfiguration(pluginId);
 	}
 
-	public static PluginResourceLoader createPluginResourceLoader(
-			String pluginId) {
-		return new PluginResourceLoader(pluginId);
-	}
 }
