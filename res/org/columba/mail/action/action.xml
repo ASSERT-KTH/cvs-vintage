@@ -1,142 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
-<actionlist>
+<extensionlist>
 
  <!-- file menu -->
- <action name="NewMessage" singleton="true" class="org.columba.mail.gui.action.NewMessageAction"/>
- <action name="ReceiveSend" singleton="true" class="org.columba.mail.gui.action.ReceiveSendAction"/>
- <action name="SendAll" singleton="true" class="org.columba.mail.smtp.action.SendAllMessagesAction"/>
- <action name="Receive" singleton="true" class="org.columba.mail.gui.action.ReceiveMessagesAction"/>
- <action name="ReceiveMenu" singleton="true" class="org.columba.mail.mailchecking.FetchMessageSubMenu"/>
- <action name="ManageServerMenu" singleton="true" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
- <action name="SaveMessageSourceAs" class="org.columba.mail.gui.table.action.SaveMessageSourceAsAction"/>
- <action name="Print" class="org.columba.mail.gui.action.PrintAction"/> 
+ <extension id="NewMessage" singleton="true" class="org.columba.mail.gui.action.NewMessageAction"/>
+ <extension id="ReceiveSend" singleton="true" class="org.columba.mail.gui.action.ReceiveSendAction"/>
+ <extension id="SendAll" singleton="true" class="org.columba.mail.smtp.action.SendAllMessagesAction"/>
+ <extension id="Receive" singleton="true" class="org.columba.mail.gui.action.ReceiveMessagesAction"/>
+ <extension id="ReceiveMenu" singleton="true" class="org.columba.mail.mailchecking.FetchMessageSubMenu"/>
+ <extension id="ManageServerMenu" singleton="true" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
+ <extension id="SaveMessageSourceAs" class="org.columba.mail.gui.table.action.SaveMessageSourceAsAction"/>
+ <extension id="Print" class="org.columba.mail.gui.action.PrintAction"/> 
   
  <!-- edit menu -->
- <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
- <action name="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>
- <action name="MailOptions" class="org.columba.mail.gui.action.MailOptionsAction"/>
- <action name="ExportDialog" class="org.columba.mail.gui.action.ExportDialogAction"/>
+ <extension id="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
+ <extension id="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>
+ <extension id="MailOptions" class="org.columba.mail.gui.action.MailOptionsAction"/>
+ <extension id="ExportDialog" class="org.columba.mail.gui.action.ExportDialogAction"/>
  
  
  <!-- view menu -->
- <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
- <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
- <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
- <action name="CharacterEncodingMenu" class="org.columba.mail.gui.charset.CharacterEncodingSubMenu"/>
- <action name="ColumnDialog" class="org.columba.mail.gui.action.ColumnDialogAction"/>
- <action name="HeadersMenu" class="org.columba.mail.gui.message.action.HeadersMenu"/>
- <action name="ShowMessagePreview" class="org.columba.mail.gui.action.ShowMessagePreviewAction"/>
+ <extension id="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
+ <extension id="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
+ <extension id="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
+ <extension id="CharacterEncodingMenu" class="org.columba.mail.gui.charset.CharacterEncodingSubMenu"/>
+ <extension id="ColumnDialog" class="org.columba.mail.gui.action.ColumnDialogAction"/>
+ <extension id="HeadersMenu" class="org.columba.mail.gui.message.action.HeadersMenu"/>
+ <extension id="ShowMessagePreview" class="org.columba.mail.gui.action.ShowMessagePreviewAction"/>
  
  <!-- message menu -->
- <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
- <action name="OpenMessageWithMessageFrame" class="org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction"/>
- <action name="SaveMessageBodyAs" class="org.columba.mail.gui.table.action.SaveMessageBodyAsAction"/>
- <action name="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
- <action name="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>
- <action name="ReplyToAll" class="org.columba.mail.gui.table.action.ReplyToAllAction"/>
- <action name="ReplyAsAttachment" class="org.columba.mail.gui.table.action.ReplyAsAttachmentAction"/>
- <action name="ReplyWithTemplate" class="org.columba.mail.gui.table.action.ReplyWithTemplateAction"/>
- <action name="Forward" class="org.columba.mail.gui.table.action.ForwardAction"/>
- <action name="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
- <action name="ForwardAsAttachment" class="org.columba.mail.gui.table.action.ForwardAsAttachmentAction"/>
- <action name="Redirect" class="org.columba.mail.gui.table.action.RedirectAction"/>
- <action name="ToggleReadFlag" class="org.columba.mail.gui.table.action.ToggleReadFlagAction"/>
- <action name="ToggleFlaggedFlag" class="org.columba.mail.gui.table.action.ToggleFlaggedFlagAction"/>
- <action name="ToggleExpungedFlag" class="org.columba.mail.gui.table.action.ToggleExpungedFlagAction"/>
- <action name="ToggleSpamFlag" class="org.columba.mail.gui.table.action.ToggleSpamFlagAction"/>
- <action name="ToggleDraftFlag" class="org.columba.mail.gui.table.action.ToggleDraftFlagAction"/>
- <action name="ToggleAnsweredFlag" class="org.columba.mail.gui.table.action.ToggleAnsweredFlagAction"/>
- <action name="MarkAsRead" class="org.columba.mail.gui.table.action.MarkAsReadAction"/>
- <action name="MarkAsUnread" class="org.columba.mail.gui.table.action.MarkAsUnreadAction"/>
- <action name="MarkAsFlagged" class="org.columba.mail.gui.table.action.MarkAsFlaggedAction"/>
- <action name="MarkAsUnflagged" class="org.columba.mail.gui.table.action.MarkAsUnflaggedAction"/>
- <action name="MarkAsExpunged" class="org.columba.mail.gui.table.action.MarkAsExpungedAction"/>
- <action name="MarkAsUnexpunged" class="org.columba.mail.gui.table.action.MarkAsUnexpungedAction"/>
- <action name="MarkAsSpam" class="org.columba.mail.gui.table.action.MarkAsSpamAction"/>
- <action name="MarkAsNotSpam" class="org.columba.mail.gui.table.action.MarkAsNotSpamAction"/>
- <action name="CopyMessage" class="org.columba.mail.gui.table.action.CopyMessageAction"/>
- <action name="MoveMessage" class="org.columba.mail.gui.table.action.MoveMessageAction"/>
- <action name="DeleteMessage" class="org.columba.mail.gui.table.action.DeleteMessageAction"/>
- <action name="NextMessage" class="org.columba.mail.gui.table.action.NextMessageAction"/>
- <action name="PreviousMessage" class="org.columba.mail.gui.table.action.PreviousMessageAction"/>
- <action name="NextUnreadMessage" class="org.columba.mail.gui.table.action.NextUnreadMessageAction"/>
- <action name="PreviousUnreadMessage" class="org.columba.mail.gui.table.action.PreviousUnreadMessageAction"/>
- <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
- <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
- <action name="ColorMessageMenu" class="org.columba.mail.gui.table.action.ColorMessageMenu"/>
- <action name="TrainMessageAsSpam" class="org.columba.mail.gui.table.action.TrainMessageAsSpamAction"/>
- <action name="TrainMessageAsHam" class="org.columba.mail.gui.table.action.TrainMessageAsHamAction"/>
- <action name="ScoreMessage" class="org.columba.mail.gui.table.action.ScoreMessageAction"/>
+ <extension id="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
+ <extension id="OpenMessageWithMessageFrame" class="org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction"/>
+ <extension id="SaveMessageBodyAs" class="org.columba.mail.gui.table.action.SaveMessageBodyAsAction"/>
+ <extension id="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
+ <extension id="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>
+ <extension id="ReplyToAll" class="org.columba.mail.gui.table.action.ReplyToAllAction"/>
+ <extension id="ReplyAsAttachment" class="org.columba.mail.gui.table.action.ReplyAsAttachmentAction"/>
+ <extension id="ReplyWithTemplate" class="org.columba.mail.gui.table.action.ReplyWithTemplateAction"/>
+ <extension id="Forward" class="org.columba.mail.gui.table.action.ForwardAction"/>
+ <extension id="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
+ <extension id="ForwardAsAttachment" class="org.columba.mail.gui.table.action.ForwardAsAttachmentAction"/>
+ <extension id="Redirect" class="org.columba.mail.gui.table.action.RedirectAction"/>
+ <extension id="ToggleReadFlag" class="org.columba.mail.gui.table.action.ToggleReadFlagAction"/>
+ <extension id="ToggleFlaggedFlag" class="org.columba.mail.gui.table.action.ToggleFlaggedFlagAction"/>
+ <extension id="ToggleExpungedFlag" class="org.columba.mail.gui.table.action.ToggleExpungedFlagAction"/>
+ <extension id="ToggleSpamFlag" class="org.columba.mail.gui.table.action.ToggleSpamFlagAction"/>
+ <extension id="ToggleDraftFlag" class="org.columba.mail.gui.table.action.ToggleDraftFlagAction"/>
+ <extension id="ToggleAnsweredFlag" class="org.columba.mail.gui.table.action.ToggleAnsweredFlagAction"/>
+ <extension id="MarkAsRead" class="org.columba.mail.gui.table.action.MarkAsReadAction"/>
+ <extension id="MarkAsUnread" class="org.columba.mail.gui.table.action.MarkAsUnreadAction"/>
+ <extension id="MarkAsFlagged" class="org.columba.mail.gui.table.action.MarkAsFlaggedAction"/>
+ <extension id="MarkAsUnflagged" class="org.columba.mail.gui.table.action.MarkAsUnflaggedAction"/>
+ <extension id="MarkAsExpunged" class="org.columba.mail.gui.table.action.MarkAsExpungedAction"/>
+ <extension id="MarkAsUnexpunged" class="org.columba.mail.gui.table.action.MarkAsUnexpungedAction"/>
+ <extension id="MarkAsSpam" class="org.columba.mail.gui.table.action.MarkAsSpamAction"/>
+ <extension id="MarkAsNotSpam" class="org.columba.mail.gui.table.action.MarkAsNotSpamAction"/>
+ <extension id="CopyMessage" class="org.columba.mail.gui.table.action.CopyMessageAction"/>
+ <extension id="MoveMessage" class="org.columba.mail.gui.table.action.MoveMessageAction"/>
+ <extension id="DeleteMessage" class="org.columba.mail.gui.table.action.DeleteMessageAction"/>
+ <extension id="NextMessage" class="org.columba.mail.gui.table.action.NextMessageAction"/>
+ <extension id="PreviousMessage" class="org.columba.mail.gui.table.action.PreviousMessageAction"/>
+ <extension id="NextUnreadMessage" class="org.columba.mail.gui.table.action.NextUnreadMessageAction"/>
+ <extension id="PreviousUnreadMessage" class="org.columba.mail.gui.table.action.PreviousUnreadMessageAction"/>
+ <extension id="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
+ <extension id="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
+ <extension id="ColorMessageMenu" class="org.columba.mail.gui.table.action.ColorMessageMenu"/>
+ <extension id="TrainMessageAsSpam" class="org.columba.mail.gui.table.action.TrainMessageAsSpamAction"/>
+ <extension id="TrainMessageAsHam" class="org.columba.mail.gui.table.action.TrainMessageAsHamAction"/>
+ <extension id="ScoreMessage" class="org.columba.mail.gui.table.action.ScoreMessageAction"/>
  
  <!-- tree menu -->
- <action name="ApplyFilter" class="org.columba.mail.gui.tree.action.ApplyFilterAction"/>
- <action name="CreateSubFolder" class="org.columba.mail.gui.tree.action.CreateSubFolderAction"/>
- <action name="CreateVirtualFolder" class="org.columba.mail.gui.tree.action.CreateVirtualFolderAction"/>
- <action name="EmptyFolder" class="org.columba.mail.gui.tree.action.EmptyFolderAction"/>
- <action name="ExpungeFolder" class="org.columba.mail.gui.tree.action.ExpungeFolderAction"/>
- <action name="FilterPreferences" class="org.columba.mail.gui.tree.action.FilterPreferencesAction"/>
- <action name="RemoveFolder" class="org.columba.mail.gui.tree.action.RemoveFolderAction"/>
- <action name="RenameFolder" class="org.columba.mail.gui.tree.action.RenameFolderAction"/>
- <action name="SubscribeFolder" class="org.columba.mail.gui.tree.action.SubscribeFolderAction"/>
- <action name="FolderOptions" class="org.columba.mail.gui.tree.action.FolderOptionsAction"/>
- <action name="MoveUp" class="org.columba.mail.gui.tree.action.MoveUpAction"/>
- <action name="MoveDown" class="org.columba.mail.gui.tree.action.MoveDownAction"/>
- <action name="SortFoldersMenu" class="org.columba.mail.gui.tree.action.SortFoldersMenu"/>
- <action name="MarkFolderAsRead" class="org.columba.mail.gui.tree.action.MarkFolderAsReadAction"/>
+ <extension id="ApplyFilter" class="org.columba.mail.gui.tree.action.ApplyFilterAction"/>
+ <extension id="CreateSubFolder" class="org.columba.mail.gui.tree.action.CreateSubFolderAction"/>
+ <extension id="CreateVirtualFolder" class="org.columba.mail.gui.tree.action.CreateVirtualFolderAction"/>
+ <extension id="EmptyFolder" class="org.columba.mail.gui.tree.action.EmptyFolderAction"/>
+ <extension id="ExpungeFolder" class="org.columba.mail.gui.tree.action.ExpungeFolderAction"/>
+ <extension id="FilterPreferences" class="org.columba.mail.gui.tree.action.FilterPreferencesAction"/>
+ <extension id="RemoveFolder" class="org.columba.mail.gui.tree.action.RemoveFolderAction"/>
+ <extension id="RenameFolder" class="org.columba.mail.gui.tree.action.RenameFolderAction"/>
+ <extension id="SubscribeFolder" class="org.columba.mail.gui.tree.action.SubscribeFolderAction"/>
+ <extension id="FolderOptions" class="org.columba.mail.gui.tree.action.FolderOptionsAction"/>
+ <extension id="MoveUp" class="org.columba.mail.gui.tree.action.MoveUpAction"/>
+ <extension id="MoveDown" class="org.columba.mail.gui.tree.action.MoveDownAction"/>
+ <extension id="SortFoldersMenu" class="org.columba.mail.gui.tree.action.SortFoldersMenu"/>
+ <extension id="MarkFolderAsRead" class="org.columba.mail.gui.tree.action.MarkFolderAsReadAction"/>
  
  <!-- utilities menu -->
- <action name="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>
- <action name="CreateFilterOnFrom" class="org.columba.mail.gui.table.action.CreateFilterOnFromAction"/>
- <action name="CreateFilterOnTo" class="org.columba.mail.gui.table.action.CreateFilterOnToAction"/>
- <action name="CreateVFolderOnSubject" class="org.columba.mail.gui.table.action.CreateVFolderOnSubjectAction"/>
- <action name="CreateVFolderOnFrom" class="org.columba.mail.gui.table.action.CreateVFolderOnFromAction"/>
- <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnToAction"/>
+ <extension id="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>
+ <extension id="CreateFilterOnFrom" class="org.columba.mail.gui.table.action.CreateFilterOnFromAction"/>
+ <extension id="CreateFilterOnTo" class="org.columba.mail.gui.table.action.CreateFilterOnToAction"/>
+ <extension id="CreateVFolderOnSubject" class="org.columba.mail.gui.table.action.CreateVFolderOnSubjectAction"/>
+ <extension id="CreateVFolderOnFrom" class="org.columba.mail.gui.table.action.CreateVFolderOnFromAction"/>
+ <extension id="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnToAction"/>
  
- <action name="MailImport" class="org.columba.mail.gui.action.ImportAction"/>
+ <extension id="MailImport" class="org.columba.mail.gui.action.ImportAction"/>
  
  <!-- message viewer -->
- <action name="CopyLinkLocationAction" class="org.columba.mail.gui.message.action.CopyLinkLocationAction"/>
- <action name="AddToAddressbookAction" class="org.columba.mail.gui.message.action.AddToAddressbookAction"/>
- <action name="ComposeMessageAction" class="org.columba.mail.gui.message.action.ComposeMessageAction"/>
- <action name="OpenUrlAction" class="org.columba.mail.gui.message.action.OpenAction"/>
- <action name="OpenUrlWithAction" class="org.columba.mail.gui.message.action.OpenWithAction"/>
+ <extension id="CopyLinkLocationAction" class="org.columba.mail.gui.message.action.CopyLinkLocationAction"/>
+ <extension id="AddToAddressbookAction" class="org.columba.mail.gui.message.action.AddToAddressbookAction"/>
+ <extension id="ComposeMessageAction" class="org.columba.mail.gui.message.action.ComposeMessageAction"/>
+ <extension id="OpenUrlAction" class="org.columba.mail.gui.message.action.OpenAction"/>
+ <extension id="OpenUrlWithAction" class="org.columba.mail.gui.message.action.OpenWithAction"/>
      
  <!-- composer -->
- <action name="Addressbook" class="org.columba.mail.gui.composer.action.AddressbookAction"/>
- <action name="AttachFile" class="org.columba.mail.gui.composer.action.AttachFileAction"/>
- <action name="CloseComposer" class="org.columba.mail.gui.composer.action.CloseComposerAction"/>
- <action name="EncryptMessage" class="org.columba.mail.gui.composer.action.EncryptMessageAction"/>
- <action name="ExternalEditor" class="org.columba.mail.gui.composer.action.ExternalEditorAction"/>
- <action name="SaveAsDraft" class="org.columba.mail.gui.composer.action.SaveAsDraftAction"/>
- <action name="SaveAsTemplate" class="org.columba.mail.gui.composer.action.SaveAsTemplateAction"/>
- <action name="SaveMessage" class="org.columba.mail.gui.composer.action.SaveMessageAction"/>
- <action name="Send" class="org.columba.mail.gui.composer.action.SendAction"/>
- <action name="SendLater" class="org.columba.mail.gui.composer.action.SendLaterAction"/>
- <action name="SignMessage" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
- <action name="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
- <action name="ViewAccountInfoPanel" class="org.columba.mail.gui.composer.action.ViewAccountInfoPanelAction" />
- <action name="EditSignature" class="org.columba.mail.gui.config.account.EditSignatureAction" />
+ <extension id="Addressbook" class="org.columba.mail.gui.composer.action.AddressbookAction"/>
+ <extension id="AttachFile" class="org.columba.mail.gui.composer.action.AttachFileAction"/>
+ <extension id="CloseComposer" class="org.columba.mail.gui.composer.action.CloseComposerAction"/>
+ <extension id="EncryptMessage" class="org.columba.mail.gui.composer.action.EncryptMessageAction"/>
+ <extension id="ExternalEditor" class="org.columba.mail.gui.composer.action.ExternalEditorAction"/>
+ <extension id="SaveAsDraft" class="org.columba.mail.gui.composer.action.SaveAsDraftAction"/>
+ <extension id="SaveAsTemplate" class="org.columba.mail.gui.composer.action.SaveAsTemplateAction"/>
+ <extension id="SaveMessage" class="org.columba.mail.gui.composer.action.SaveMessageAction"/>
+ <extension id="Send" class="org.columba.mail.gui.composer.action.SendAction"/>
+ <extension id="SendLater" class="org.columba.mail.gui.composer.action.SendLaterAction"/>
+ <extension id="SignMessage" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
+ <extension id="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
+ <extension id="ViewAccountInfoPanel" class="org.columba.mail.gui.composer.action.ViewAccountInfoPanelAction" />
+ <extension id="EditSignature" class="org.columba.mail.gui.config.account.EditSignatureAction" />
  
  <!-- composer html support -->
- <action name="BoldFormatAction" class="org.columba.mail.gui.composer.html.action.BoldFormatAction" />
- <action name="ItalicFormatAction" class="org.columba.mail.gui.composer.html.action.ItalicFormatAction" />
- <action name="UnderlineFormatAction" class="org.columba.mail.gui.composer.html.action.UnderlineFormatAction" />
- <action name="StrikeoutFormatAction" class="org.columba.mail.gui.composer.html.action.StrikeoutFormatAction" />
- <action name="TeleTyperFormatAction" class="org.columba.mail.gui.composer.html.action.TeleTyperFormatAction" />
- <action name="LeftJustifyAction" class="org.columba.mail.gui.composer.html.action.LeftJustifyAction" />
- <action name="CenterJustifyAction" class="org.columba.mail.gui.composer.html.action.CenterJustifyAction" />
- <action name="RightJustifyAction" class="org.columba.mail.gui.composer.html.action.RightJustifyAction" />
- <action name="EnableHtmlAction" class="org.columba.mail.gui.composer.html.action.EnableHtmlAction" />
- <action name="FontSizeMenu" class="org.columba.mail.gui.composer.html.action.FontSizeMenu" />
- <action name="JustifyMenu" class="org.columba.mail.gui.composer.html.action.JustifyMenu" />
- <action name="ParagraphMenu" class="org.columba.mail.gui.composer.html.action.ParagraphMenu" />
- <action name="InsertBreakAction" class="org.columba.mail.gui.composer.html.action.InsertBreakAction" />
+ <extension id="BoldFormatAction" class="org.columba.mail.gui.composer.html.action.BoldFormatAction" />
+ <extension id="ItalicFormatAction" class="org.columba.mail.gui.composer.html.action.ItalicFormatAction" />
+ <extension id="UnderlineFormatAction" class="org.columba.mail.gui.composer.html.action.UnderlineFormatAction" />
+ <extension id="StrikeoutFormatAction" class="org.columba.mail.gui.composer.html.action.StrikeoutFormatAction" />
+ <extension id="TeleTyperFormatAction" class="org.columba.mail.gui.composer.html.action.TeleTyperFormatAction" />
+ <extension id="LeftJustifyAction" class="org.columba.mail.gui.composer.html.action.LeftJustifyAction" />
+ <extension id="CenterJustifyAction" class="org.columba.mail.gui.composer.html.action.CenterJustifyAction" />
+ <extension id="RightJustifyAction" class="org.columba.mail.gui.composer.html.action.RightJustifyAction" />
+ <extension id="EnableHtmlAction" class="org.columba.mail.gui.composer.html.action.EnableHtmlAction" />
+ <extension id="FontSizeMenu" class="org.columba.mail.gui.composer.html.action.FontSizeMenu" />
+ <extension id="JustifyMenu" class="org.columba.mail.gui.composer.html.action.JustifyMenu" />
+ <extension id="ParagraphMenu" class="org.columba.mail.gui.composer.html.action.ParagraphMenu" />
+ <extension id="InsertBreakAction" class="org.columba.mail.gui.composer.html.action.InsertBreakAction" />
  
  <!-- attachment -->
- <action name="OpenAttachment" class="org.columba.mail.gui.message.action.OpenAttachmentAction"/>
- <action name="SaveAttachmentAs" class="org.columba.mail.gui.message.action.SaveAsAttachmentAction"/>
+ <extension id="OpenAttachment" class="org.columba.mail.gui.message.action.OpenAttachmentAction"/>
+ <extension id="SaveAttachmentAs" class="org.columba.mail.gui.message.action.SaveAsAttachmentAction"/>
  
  
-</actionlist>
+</extensionlist>

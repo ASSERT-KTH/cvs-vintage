@@ -1,65 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <menubar>
-    <menu name="menu_file" extensionpoint="open">
-		<menuitem action="NewMessage"/>	
+    <menu id="menu_file" placeholderid="open">
+		<menuitem id="NewMessage"/>	
 	</menu>
 	
-	<menu name="menu_file" extensionpoint="top">
-		<!--<menuitem action="SaveMessage"/>-->
-		<menuitem action="SaveAsDraft"/>	
-		<menuitem action="SaveAsTemplate"/>	
+	<menu id="menu_file" placeholderid="top">
+		<!--<menuitem id="SaveMessage"/>-->
+		<menuitem id="SaveAsDraft"/>	
+		<menuitem id="SaveAsTemplate"/>	
 		<separator/>
-		<menuitem action="Send"/>	
-		<menuitem action="SendLater"/>		
+		<menuitem id="Send"/>	
+		<menuitem id="SendLater"/>		
 	</menu>
 	
-	<menu name="menu_edit" extensionpoint="bottom">
-		<menuitem action="ExternalEditor"/>	
-		<separator/>
-		<menuitem action="MailAccount"/>
-		<extensionpoint name="top" />	
-		<extensionpoint name="bottom" />
+	<menu id="menu_edit" placeholderid="bottom">
+		<menuitem id="ExternalEditor"/>	
+        <menuitem id="MailAccount"/> 
 	</menu>
 	
-	<menu name="menu_view" extensionpoint="bottom">
-		<menuitem imenu="CharacterEncodingMenu" />
-		<extensionpoint name="top" />	
-		<extensionpoint name="bottom" />
+	<menu id="menu_view" placeholderid="bottom">
+		<imenu id="CharacterEncodingMenu" />
 	</menu>
 	
-	<menu name="menu_format">
-		<menuitem checkboxaction="EnableHtmlAction" />
-		<menu name="menu_format_style">
-			<menuitem checkboxaction="TeleTyperFormatAction" />
+	<menu id="menu_format">
+		<checkboxmenuitem id="EnableHtmlAction" />
+		<menu id="menu_format_style">
+			<checkboxmenuitem id="TeleTyperFormatAction" />
 			<separator/>
-			<menuitem checkboxaction="BoldFormatAction" />
-			<menuitem checkboxaction="ItalicFormatAction" />
-			<menuitem checkboxaction="UnderlineFormatAction" />
-			<menuitem checkboxaction="StrikeoutFormatAction" />
+			<checkboxmenuitem id="BoldFormatAction" />
+			<checkboxmenuitem id="ItalicFormatAction" />
+			<checkboxmenuitem id="UnderlineFormatAction" />
+			<checkboxmenuitem id="StrikeoutFormatAction" />
 		</menu>
 		<separator/>
-		<menuitem imenu="FontSizeMenu" />
+		<imenu id="FontSizeMenu" />
 		<separator />
-		<menuitem imenu="ParagraphMenu" />
-		<menu name="menu_format_justification">
-			<menuitem checkboxaction="LeftJustifyAction" />
-			<menuitem checkboxaction="CenterJustifyAction" />
-			<menuitem checkboxaction="RightJustifyAction" />
+		<imenu id="ParagraphMenu" />
+		<menu id="menu_format_justification">
+			<checkboxmenuitem id="LeftJustifyAction" />
+			<checkboxmenuitem id="CenterJustifyAction" />
+			<checkboxmenuitem id="RightJustifyAction" />
 		</menu>
 		<separator />
-		<menuitem action="InsertBreakAction" />
+		<menuitem id="InsertBreakAction" />
 	</menu>
 	
-	<menu name="menu_message">
-		<menuitem action="EditSignature"/>	 
-		<menuitem action="AttachFile"/>	 
-		<menuitem action="Spellcheck"/>	
+	<menu id="menu_message">
+        <menuitem id="EditSignature"/>
+		<menuitem id="AttachFile"/>	 
+		<menuitem id="Spellcheck"/>	
 		<separator />
-		<menuitem checkboxaction="SignMessage"/>	
-		<menuitem checkboxaction="EncryptMessage"/>
-		<extensionpoint name="top" />	
-		<extensionpoint name="bottom" />
+		<checkboxmenuitem id="SignMessage"/>	
+		<checkboxmenuitem id="EncryptMessage"/>
+		<placeholder id="top" />	
+		<placeholder id="bottom" />
 	</menu>
 	
 </menubar>
