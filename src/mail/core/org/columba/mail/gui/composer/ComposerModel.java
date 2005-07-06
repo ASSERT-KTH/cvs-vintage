@@ -26,7 +26,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.columba.core.mimetype.MimeType;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -314,7 +314,7 @@ public class ComposerModel {
 	public void addFileAttachment(File file) {
    	 if (file.isFile()) {
 
-        String mimetype = MimeType.lookup(file);
+        String mimetype = ColumbaDesktop.getInstance().getMimeType(file);
 
          MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
          header.putContentParameter("name", file.getName());

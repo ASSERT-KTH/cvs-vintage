@@ -26,13 +26,11 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import org.columba.core.gui.util.FontProperties;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MimeHeader;
-import org.jdesktop.jdic.filetypes.Action;
-import org.jdesktop.jdic.filetypes.Association;
-import org.jdesktop.jdic.filetypes.AssociationService;
 
 public class ExternalEditor {
 	String Cmd;
@@ -102,28 +100,8 @@ public class ExternalEditor {
 				"extern_editor_using_msg"));
 
 		// execute application, enabling blocking
-		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
-		Action action = association.getActionByVerb("open");
+		ColumbaDesktop.getInstance().openAndWait(tmpFile);
 		
-		
-		Process child = Runtime.getRuntime().exec(
-				action.getCommand() + " " + tmpFile.toString());
-
-		if (child == null) {
-			return false;
-		}
-
-		try {
-			// Wait for external editor to quit
-			child.waitFor();
-
-		} catch (InterruptedException ex) {
-			JOptionPane.showMessageDialog(null,
-					"Error: External editor exited " + "abnormally.");
-
-			return false;
-		}
-
 		//EditView.setFont(OldFont);
 		EditCtrl.setViewFont(OldFont);
 

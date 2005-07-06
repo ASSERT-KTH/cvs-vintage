@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.ExternalEditor;
@@ -42,6 +43,8 @@ public class ExternalEditorAction extends AbstractColumbaAction {
         putValue(SHORT_DESCRIPTION,
             MailResourceLoader.getString("menu", "composer",
                 "menu_edit_extern_edit").replaceAll("&", ""));
+        
+        setEnabled(ColumbaDesktop.getInstance().supportsOpen());
     }
 
     /* (non-Javadoc)

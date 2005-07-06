@@ -23,24 +23,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.swing.JOptionPane;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
-import org.jdesktop.jdic.filetypes.Action;
-import org.jdesktop.jdic.filetypes.Association;
-import org.jdesktop.jdic.filetypes.AssociationService;
 
 /**
  * @author freddy
@@ -67,13 +60,7 @@ public class ViewMessageSourceCommand extends Command {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		try {
-			Desktop.open(tempFile);
-		} catch (DesktopException e) {
-			JOptionPane.showMessageDialog(null, GlobalResourceLoader.getString(
-					"org.columba.core.i18n.dialog", "error", "no_viewer"),
-					"Error", JOptionPane.ERROR_MESSAGE);
-		}
+		ColumbaDesktop.getInstance().open(tempFile);
 	}
 
 	/**

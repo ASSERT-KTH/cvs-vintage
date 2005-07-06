@@ -36,6 +36,8 @@ import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
+import org.columba.core.io.ColumbaDesktop;
+import org.columba.core.io.JDICDesktop;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
@@ -46,6 +48,7 @@ import org.columba.core.session.SessionController;
 import org.columba.core.shutdown.SaveConfig;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.trayicon.ColumbaTrayIcon;
+import org.columba.core.trayicon.JDICTrayIcon;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.util.OSInfo;
 
@@ -57,7 +60,7 @@ import sun.misc.URLClassPath;
 public class Main {
 	/** If true, enables debugging output from org.columba.core.logging */
 	public static boolean DEBUG = false;
-
+	
 	private static final Logger LOG = Logger.getLogger("org.columba.core.main");
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
@@ -127,10 +130,15 @@ public class Main {
 		// Platform maintainers: add your platform here
 		if( OSInfo.isLinux() ) {
 			nativeDir = new File("native/linux/lib");
+			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
+			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
 		} else if (OSInfo.isWin32Platform()) {
 			nativeDir = new File("native/win32/lib");
+			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
+			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
 		} else {
-			throw new Exception("Platform not supported!");
+			LOG.info("Native support for Platform not available.");
+			return;
 		}
 		
 		

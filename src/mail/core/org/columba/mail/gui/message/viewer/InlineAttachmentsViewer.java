@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +39,7 @@ import javax.swing.UIManager;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
@@ -243,7 +243,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			String extension = h.getFileName();
 			extension = extension.substring(extension.lastIndexOf('.')+1);
 			
-			MimeType systemMimeType = MimeTypeParser.parse((org.columba.core.mimetype.MimeType.lookupByExtension(extension)));
+			MimeType systemMimeType = MimeTypeParser.parse(ColumbaDesktop.getInstance().getMimeType(extension));
 			type = systemMimeType.getType();
 			subtype = systemMimeType.getSubtype();
 		}
@@ -499,6 +499,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				topPanel, hideButton));
 
 		openButton.addActionListener(new OpenActionListener(ref));
+		openButton.setEnabled(ColumbaDesktop.getInstance().supportsOpen());
 		saveButton.addActionListener(new SaveAsActionListener(ref));
 		return centerPanel;
 	}

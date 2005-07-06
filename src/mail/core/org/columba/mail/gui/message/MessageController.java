@@ -25,7 +25,6 @@ import java.util.Observer;
 
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -44,7 +43,7 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
@@ -53,8 +52,6 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.message.viewer.Rfc822MessageViewer;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * this class shows the messagebody
@@ -298,13 +295,7 @@ public class MessageController extends JScrollPane implements
 
 				controller.updateComponents(true);
 			} else {
-				try {
-					Desktop.browse(url);
-				} catch (DesktopException e) {
-					JOptionPane.showMessageDialog(null, GlobalResourceLoader
-							.getString("org.columba.core.i18n.dialog", "error", "no_browser"),
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
+				ColumbaDesktop.getInstance().browse(url);
 			}
 		}
 	}

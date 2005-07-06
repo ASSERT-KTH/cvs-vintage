@@ -21,12 +21,9 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.util.GlobalResourceLoader;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
+import org.columba.core.io.ColumbaDesktop;
 
 public class URLController implements ActionListener {
     private String address;
@@ -121,13 +118,7 @@ public class URLController implements ActionListener {
     }
 
     public void open(URL url) {
-    	try {
-			Desktop.browse(url);
-		} catch (DesktopException e) {
-			JOptionPane.showMessageDialog(null, GlobalResourceLoader
-					.getString("org.columba.core.i18n.dialog", "error", "no_browser"), "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
+    	ColumbaDesktop.getInstance().browse(url);
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -31,9 +31,9 @@ import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.util.cFileChooser;
 import org.columba.core.util.cFileFilter;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -44,8 +44,6 @@ import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * @author freddy
@@ -101,14 +99,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 			//inline = true;
 			//openInlineMessage(part, tempFile);
 		} else {
-			try {
-				//inline = false;
-				Desktop.open(tempFile);
-			} catch (DesktopException e) {
-				JOptionPane.showMessageDialog(null, GlobalResourceLoader
-						.getString("org.columba.core.i18n.dialog", "error", "no_viewer"), "Error",
-						JOptionPane.ERROR_MESSAGE);
-				
+			if( !ColumbaDesktop.getInstance().open(tempFile) ) {
 				File saveToFile = getDestinationFile(header);
 
 				if( saveToFile.exists() ) saveToFile.delete();

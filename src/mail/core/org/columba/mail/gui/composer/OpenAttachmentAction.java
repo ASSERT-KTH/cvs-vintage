@@ -5,13 +5,12 @@ import java.io.File;
 
 import javax.swing.AbstractAction;
 
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeType;
 import org.frapuccino.iconpanel.IconPanel;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
 
 public class OpenAttachmentAction extends AbstractAction {
 
@@ -21,6 +20,8 @@ public class OpenAttachmentAction extends AbstractAction {
 		super();
 		
 		this.view = view;
+		
+		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -33,11 +34,8 @@ public class OpenAttachmentAction extends AbstractAction {
 			//TODO: Handle also message attachments from OpenInComposer action
 		} else if( mimePart instanceof LocalMimePart && ((LocalMimePart)mimePart).getBody() instanceof FileSource){
 			File file = ((FileSource)((LocalMimePart)mimePart).getBody()).getFile();		
-		
-			try {
-				Desktop.open(file);
-			} catch (DesktopException e1) {
-			}
+			
+			ColumbaDesktop.getInstance().open(file);
 		}
 	}
 

@@ -9,12 +9,11 @@ import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
 
 public class EditSignatureAction extends AbstractColumbaAction implements Observer, ItemListener {
 
@@ -32,7 +31,7 @@ public class EditSignatureAction extends AbstractColumbaAction implements Observ
 
 		identity = composerController.getModel().getAccountItem().getIdentity();
 		
-		setEnabled(identity.getSignature() != null );		
+		setEnabled(identity.getSignature() != null && ColumbaDesktop.getInstance().supportsOpen());		
 		identity.addObserver(this);
 	}
 
@@ -50,14 +49,11 @@ public class EditSignatureAction extends AbstractColumbaAction implements Observ
 			signature = new File(System.getProperty("user.home"),".signature");
 		}
 		
-		try {
-			Desktop.open(signature);
-		} catch (DesktopException e1) {
-		}
+		ColumbaDesktop.getInstance().open(signature);
 	}
 
 	public void update(Observable o, Object arg) {
-		setEnabled(arg != null );
+		setEnabled(arg != null && ColumbaDesktop.getInstance().supportsOpen() );
 	}
 
 	public void itemStateChanged(ItemEvent e) {
@@ -67,7 +63,7 @@ public class EditSignatureAction extends AbstractColumbaAction implements Observ
             AccountItem item = (AccountItem) composerController.getAccountController().getView().getSelectedItem();
     		identity = item.getIdentity();
     		
-    		setEnabled(identity.getSignature() != null );		
+    		setEnabled(identity.getSignature() != null && ColumbaDesktop.getInstance().supportsOpen());		
     		identity.addObserver(this);
         }
 		

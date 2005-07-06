@@ -21,6 +21,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.io.ColumbaDesktop;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
@@ -45,7 +46,9 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
-		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));		
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+		
+		setEnabled(ColumbaDesktop.getInstance().supportsOpen());
 	}
 
 	/*
