@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.13 2005/06/16 14:00:19 bobtarling Exp $
+// $Id: NSUMLModelFacade.java,v 1.14 2005/07/06 18:23:06 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,8 @@ import ru.novosoft.uml.behavior.common_behavior.MReturnAction;
 import ru.novosoft.uml.behavior.common_behavior.MSendAction;
 import ru.novosoft.uml.behavior.common_behavior.MSignal;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
+import ru.novosoft.uml.behavior.common_behavior.MTerminateAction;
+import ru.novosoft.uml.behavior.common_behavior.MUninterpretedAction;
 import ru.novosoft.uml.behavior.state_machines.MCallEvent;
 import ru.novosoft.uml.behavior.state_machines.MChangeEvent;
 import ru.novosoft.uml.behavior.state_machines.MCompositeState;
@@ -1256,6 +1258,13 @@ public class NSUMLModelFacade implements Facade {
     public boolean isATaggedValue(Object handle) {
         return handle instanceof MTaggedValue;
     }
+    
+    /**
+     * @see org.argouml.model.Facade#isATerminateAction(java.lang.Object)
+     */
+    public boolean isATerminateAction(Object handle) {
+        return handle instanceof MTerminateAction;
+    }
 
     /**
      * Recognizer for Transition.
@@ -1277,6 +1286,13 @@ public class NSUMLModelFacade implements Facade {
         return handle instanceof MTimeEvent;
     }
 
+    /**
+     * @see org.argouml.model.Facade#isAUninterpretedAction(java.lang.Object)
+     */
+    public boolean isAUninterpretedAction(Object handle) {
+        return handle instanceof MUninterpretedAction;
+    }
+    
     /**
      * Recognizer for Usage.
      *
