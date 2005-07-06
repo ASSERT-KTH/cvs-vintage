@@ -1,4 +1,4 @@
-// $Id: MetaTypesImpl.java,v 1.6 2005/07/06 10:06:14 bobtarling Exp $
+// $Id: MetaTypesImpl.java,v 1.7 2005/07/06 18:59:59 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,7 +141,14 @@ public final class MetaTypesImpl implements MetaTypes {
             endName -= 4;
         }
         
-        return name.substring(startName, endName);
+        name = name.substring(startName, endName);
+        
+        if (name.startsWith("UML")) {
+            // a diagram...
+            name = name.substring(3);
+        }
+        
+        return name;
     }
     
     /**
