@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.35 2005/01/09 00:33:05 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.36 2005/07/06 02:47:27 copy_paste Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -78,7 +78,22 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 
 		resultTreeRoot = new DefaultMutableTreeNode();
 		resultTreeModel = new DefaultTreeModel(resultTreeRoot);
-		resultTree = new JTree(resultTreeModel);
+		resultTree = new JTree(resultTreeModel)
+		{
+		     public String getToolTipText(MouseEvent evt) 
+		     {
+		     	int currow = getRowForLocation(evt.getX(), evt.getY());
+		        if (currow == -1)
+		          return null;
+		        TreePath curPath = getPathForLocation(evt.getX(), evt.getY());
+		        Rectangle rb = getRowBounds(currow);
+				int treeWidth = HyperSearchResults.this.getSize().width;;
+		        if (rb.x + rb.width < treeWidth)
+		        	return null;
+		        return ((DefaultMutableTreeNode) curPath.getLastPathComponent()).getUserObject().toString();	            
+		      }			
+		};
+		resultTree.setToolTipText("");
 		resultTree.setCellRenderer(new ResultCellRenderer());
 		resultTree.setVisibleRowCount(16);
 		resultTree.setRootVisible(false);
