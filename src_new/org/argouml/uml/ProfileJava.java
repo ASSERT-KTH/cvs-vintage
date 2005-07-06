@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.35 2005/06/20 23:50:21 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.36 2005/07/06 10:57:42 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,6 +292,7 @@ public class ProfileJava extends Profile {
         // TODO: We need to put this NSUML/MDR dependent code
         // behind a method in the model interface
         // Will create an issue to discuss best solution.
+        // See http://argouml.tigris.org/issues/show_bug.cgi?id=3300
         if (Model.getFacade() instanceof NSUMLModelFacade) {
             // NSUML implementation
             //
