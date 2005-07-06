@@ -1,4 +1,4 @@
-// $Id: ActionBaseDelete.java,v 1.1 2005/05/26 20:35:23 bobtarling Exp $
+// $Id: ActionBaseDelete.java,v 1.2 2005/07/06 19:18:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,10 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Vector;
 
+import javax.swing.Action;
 import javax.swing.JOptionPane;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -62,6 +64,7 @@ public abstract class ActionBaseDelete extends UMLAction {
      */
     public ActionBaseDelete() {
         super("action.delete-from-model", true, HAS_ICON);
+        putValue(Action.SMALL_ICON, ResourceLoaderWrapper.lookupIcon("Delete"));
     }
 
 
