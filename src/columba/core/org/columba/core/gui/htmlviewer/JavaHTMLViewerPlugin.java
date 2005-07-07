@@ -7,6 +7,12 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.ElementIterator;
+import javax.swing.text.StyleContext;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
@@ -29,9 +35,9 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
 
-		setDocument(new AsynchronousHTMLDocument());
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
+		setDocument(new AsynchronousHTMLDocument());
 
 		setContentType("text/html");
 
@@ -110,12 +116,46 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 		 * @see javax.swing.text.AbstractDocument#getAsynchronousLoadPriority()
 		 */
 		public int getAsynchronousLoadPriority() {
-			return 0;
+			return 10;
+		}
+
+		public String getTextWithLineBreaks(int start, int end) throws BadLocationException {
+			StringBuffer result = new StringBuffer(end - start);
+			ElementIterator iter = new ElementIterator(this);
+
+			// First find the beginning element
+			for (iter.next(); iter.current() != null; iter.next()) {
+				Element e = iter.current();
+				if (e.isLeaf() && (e.getStartOffset() >= start || e.getEndOffset() >= start) && e.getStartOffset() <= end) { 
+					Object a = e.getAttributes().getAttribute(StyleContext.NamedStyle.NameAttribute);					
+					if( a == HTML.Tag.CONTENT) {
+						int as = Math.max(e.getStartOffset(), start);
+						int ae = Math.min(e.getEndOffset(),  end);
+						result.append(super.getText(as, ae-as));
+					} 
+					if( a == HTML.Tag.BR ) {					
+						result.append("\n");
+					}
+				}
+			}
+
+			return result.toString();
 		}
 	}
 
 	public boolean initialized() {
 		return true;
+	}
+
+	/**
+	 * @see javax.swing.text.JTextComponent#getSelectedText()
+	 */
+	public String getSelectedText() {
+		try {
+			return ((AsynchronousHTMLDocument)getDocument()).getTextWithLineBreaks(getSelectionStart(),getSelectionEnd());
+		} catch (BadLocationException e) {
+			return "";
+		}
 	}
 
 }
