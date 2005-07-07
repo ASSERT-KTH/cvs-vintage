@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.31 2005/06/18 06:51:11 mvw Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.32 2005/07/07 16:48:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -527,11 +527,10 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
                    && Model.getFacade().isAModelElement(toElement))
                  || (Model.getFacade().isAComment(toElement)
                    && Model.getFacade().isAModelElement(fromElement)));
-        } else {
-            return Model.getUmlFactory().isConnectionValid(
+        }
+        return Model.getUmlFactory().isConnectionValid(
                 edgeType,
                 fromElement,
                 toElement);
-        }
     }
 }
