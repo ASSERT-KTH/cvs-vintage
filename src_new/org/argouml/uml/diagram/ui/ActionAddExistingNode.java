@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingNode.java,v 1.19 2005/07/07 13:08:21 bobtarling Exp $
+// $Id: ActionAddExistingNode.java,v 1.20 2005/07/07 20:24:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,10 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
-import org.tigris.gef.base.Editor;
-import org.tigris.gef.base.Globals;
-import org.tigris.gef.base.ModePlace;
-import org.tigris.gef.graph.GraphFactory;
-import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.MutableGraphModel;
 
 /**
