@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.39 2005/06/16 10:41:15 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.40 2005/07/07 21:05:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,31 +213,30 @@ public class ClassDiagramRenderer extends UmlDiagramRenderer {
             throw new IllegalArgumentException(
                     "Don't know how to create FigEdge for model type "
                     + edge.getClass().getName());
-        } else {
-            if (newEdge.getSourcePortFig() == null) {
-                Object source;
-                if (edge instanceof CommentEdge) {
-                    source = ((CommentEdge) edge).getSource();
-                } else {
-                    source = Model.getUmlHelper().getSource(edge);
-                }
-                setSourcePort(newEdge, (FigNode) lay.presentationFor(source));
+        }
+        if (newEdge.getSourcePortFig() == null) {
+            Object source;
+            if (edge instanceof CommentEdge) {
+                source = ((CommentEdge) edge).getSource();
+            } else {
+                source = Model.getUmlHelper().getSource(edge);
             }
-            if (newEdge.getDestPortFig() == null) {
-                Object dest;
-                if (edge instanceof CommentEdge) {
-                    dest = ((CommentEdge) edge).getDestination();
-                } else {
-                    dest = Model.getUmlHelper().getDestination(edge);
-                }
-                setDestPort(newEdge, (FigNode) lay.presentationFor(dest));
+            setSourcePort(newEdge, (FigNode) lay.presentationFor(source));
+        }
+        if (newEdge.getDestPortFig() == null) {
+            Object dest;
+            if (edge instanceof CommentEdge) {
+                dest = ((CommentEdge) edge).getDestination();
+            } else {
+                dest = Model.getUmlHelper().getDestination(edge);
             }
-            if (newEdge.getSourcePortFig() == null
-                    || newEdge.getDestPortFig() == null) {
-                throw new IllegalStateException("Edge of type "
+            setDestPort(newEdge, (FigNode) lay.presentationFor(dest));
+        }
+        if (newEdge.getSourcePortFig() == null
+                || newEdge.getDestPortFig() == null) {
+            throw new IllegalStateException("Edge of type "
                     + newEdge.getClass().getName()
                     + " created with no source or destination port");
-            }
         }
         return newEdge;
     }
