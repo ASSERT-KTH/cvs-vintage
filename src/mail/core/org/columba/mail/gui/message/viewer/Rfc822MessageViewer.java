@@ -129,13 +129,16 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		getBodytextViewer().updateGUI();
+		
 		getHeaderController().updateGUI();
 
-		if (showAttachmentsInlineEnabled())
+		if (showAttachmentsInlineEnabled()) {
 			inlineAttachmentsViewer.updateGUI();
-		else
+		} else {
+			getBodytextViewer().updateGUI();
 			attachmentsViewer.updateGUI();
+		}
+			
 		getSpamStatusViewer().updateGUI();
 		getSecurityInformationViewer().updateGUI();
 

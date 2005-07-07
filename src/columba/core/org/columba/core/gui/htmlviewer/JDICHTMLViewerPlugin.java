@@ -3,17 +3,20 @@ package org.columba.core.gui.htmlviewer;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.core.io.StreamUtils;
+import org.columba.core.io.TempFileStore;
 import org.columba.core.main.Main;
 import org.jdesktop.jdic.browser.WebBrowser;
-import org.jdesktop.jdic.browser.WebBrowserEvent;
-import org.jdesktop.jdic.browser.WebBrowserListener;
 
 /**
  * JDIC-enabled web browser component used by the Message Viewer in component
@@ -99,9 +102,6 @@ public class JDICHTMLViewerPlugin extends JPanel implements
 		browser.setContent(htmlSource);
 	}
 
-	public void view(URL url) {
-		browser.setURL(url);
-	}
 
 	public JComponent getView() {
 		return this;

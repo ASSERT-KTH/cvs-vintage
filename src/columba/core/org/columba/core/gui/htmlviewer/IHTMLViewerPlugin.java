@@ -1,5 +1,7 @@
 package org.columba.core.gui.htmlviewer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.swing.JComponent;
@@ -18,14 +20,8 @@ public interface IHTMLViewerPlugin extends IExtensionInterface{
 	 * 
 	 * @param htmlSource	HTML source string
 	 */
-	void view(String htmlSource);
+	void view(String body);
 	
-	/**
-	 * View HTML page using the URL.
-	 * 
-	 * @param url	URL to HTML page
-	 */
-	void view(URL url);
 	
 	/**
 	 * Get selected text.

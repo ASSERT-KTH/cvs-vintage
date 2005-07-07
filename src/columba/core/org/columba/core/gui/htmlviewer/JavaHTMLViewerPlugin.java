@@ -2,12 +2,13 @@ package org.columba.core.gui.htmlviewer;
 
 import java.awt.Insets;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.ElementIterator;
@@ -18,7 +19,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.main.Main;
 
 public class JavaHTMLViewerPlugin extends JTextPane implements
 		IHTMLViewerPlugin {
@@ -29,6 +29,9 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 
 	private HTMLEditorKit htmlEditorKit;
 
+	private AsynchronousHTMLDocument doc;
+	
+	
 	public JavaHTMLViewerPlugin() {
 		super();
 
@@ -37,18 +40,18 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
-		setDocument(new AsynchronousHTMLDocument());
 
 		setContentType("text/html");
 
 	}
 
+	/*
 	public void view(String htmlSource) {
 
 		setText(htmlSource);
 
 		postView();
-	}
+	}*/
 
 	private void postView() {
 		// setup base url in order to be able to display images
@@ -61,19 +64,26 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 		setCaretPosition(0);
 	}
 
-	public void view(URL url) {
-
-		try {
-			setPage(url);
+	public void view(String text) {
+		if( text == null) return;
+		
+		doc = new AsynchronousHTMLDocument();
+		
+        Reader rd = new StringReader(text);
+        try {
+			htmlEditorKit.read(rd, doc, 0);		
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
-			LOG.severe("Error while viewing HTML page: " + e.getMessage());
-			if (Main.DEBUG)
-				e.printStackTrace();
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		postView();
+		setDocument(doc);
+		
+		postView();		
 	}
-
+	
 	public JComponent getView() {
 		return this;
 	}
@@ -152,7 +162,7 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 	 */
 	public String getSelectedText() {
 		try {
-			return ((AsynchronousHTMLDocument)getDocument()).getTextWithLineBreaks(getSelectionStart(),getSelectionEnd());
+			return doc.getTextWithLineBreaks(getSelectionStart(),getSelectionEnd());
 		} catch (BadLocationException e) {
 			return "";
 		}

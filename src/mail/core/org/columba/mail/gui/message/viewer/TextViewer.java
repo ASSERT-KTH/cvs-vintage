@@ -92,9 +92,11 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	// overwrite look and feel font settings
 	private boolean overwrite;
 
-	private String body;
+	/*private String body;
 
-	private URL url;
+	private URL url;*/
+	
+	private String body;
 
 	/**
 	 * if true, a html message is shown. Otherwise, plain/text
@@ -284,15 +286,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		if (htmlMessage) {
 
 			// this is a HTML message
-
-			// create temporary file
-			File inputFile = TempFileStore.createTempFileWithSuffix("html");
-			// save bodytext to file
-			DiskIO.saveStringInFile(inputFile, text.toString());
-			// get URL of file
-			url = inputFile.toURL();
-
-			// setPage(url);
+			
+			body = text.toString();
 
 		} else {
 			// this is a text/plain message
@@ -303,9 +298,6 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			// setText(body);
 
 		}
-
-		bodyStream.close();
-
 	}
 
 	private boolean isHTMLStrippingEnabled() {
@@ -362,17 +354,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		// clear text viewer
-		viewerPlugin.view("");
-
-		if (!htmlMessage) {
-			// display bodytext
-			viewerPlugin.view(body);
-		} else {
-			// this call has to happen in the awt-event dispatcher thread
-			viewerPlugin.view(url);
-		}
-
+		viewerPlugin.view(body);
 	}
 
 	/**
