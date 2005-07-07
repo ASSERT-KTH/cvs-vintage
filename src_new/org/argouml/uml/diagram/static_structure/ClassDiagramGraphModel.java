@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.76 2005/06/18 06:50:52 mvw Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.77 2005/07/07 16:13:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -222,6 +222,8 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	}
         if (Model.getFacade().isAAssociation(node)) {
             Collection ends = Model.getFacade().getConnections(node);
+            /* This only applies to N-ary associations (i.e. N > 2): */
+            if (ends.size() < 3) return false;
             Iterator iter = ends.iterator();
             boolean canAdd = true;
             while (iter.hasNext()) {
