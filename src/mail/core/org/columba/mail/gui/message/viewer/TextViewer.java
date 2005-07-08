@@ -55,6 +55,7 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -264,12 +265,16 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 					.getAddress());
 		}
 
-		// Which Charset shall we use ?
-		Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
-		charset = MessageParser.extractCharset(charset, bodyPart);
-
-		bodyStream = MessageParser.decodeBodyStream(charset, bodyPart,
+		bodyStream = MessageParser.decodeBodyStream(bodyPart,
 				bodyStream);
+
+		// Which Charset shall we use ?
+		if( !htmlMessage ) {
+			Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
+			charset = MessageParser.extractCharset(charset, bodyPart);
+
+			bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+		}
 
 		// Read Stream in String
 		StringBuffer text = StreamUtils.readCharacterStream(bodyStream);

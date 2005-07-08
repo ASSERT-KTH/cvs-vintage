@@ -106,11 +106,7 @@ public class JavaHTMLViewerPlugin extends JTextPane implements
 		 */
 		public AsynchronousHTMLDocument() {
 			super();
-
-		}
-
-		public AsynchronousHTMLDocument(StyleSheet styles) {
-			super(styles);
+			putProperty("IgnoreCharsetDirective", new Boolean(true));
 		}
 
 		/**

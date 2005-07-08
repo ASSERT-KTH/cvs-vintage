@@ -199,7 +199,11 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 					panel = createPanel(ref);
 					attachmentPanels.add(panel);
 					break;
+				} else if(alternativePart.getHeader().getMimeType().getType().equals("multipart") ) {
+					traverseChildren(alternativePart,ref);
 				}
+				
+				
 			}
 		} else {
 			// search for text mimepart
@@ -211,6 +215,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 					panel = createPanel(ref);
 					attachmentPanels.add(panel);
 					break;
+				} else if(alternativePart.getHeader().getMimeType().getType().equals("multipart") ) {
+					traverseChildren(alternativePart,ref);
 				}
 			}
 		}

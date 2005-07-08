@@ -74,7 +74,7 @@ public class MessageParser {
 	 * @param bodyStream
 	 * @return
 	 */
-	public static InputStream decodeBodyStream(Charset charset, MimePart bodyPart,
+	public static InputStream decodeBodyStream(MimePart bodyPart,
 			InputStream bodyStream) throws Exception {
 
 		// default encoding is plain
@@ -98,7 +98,6 @@ public class MessageParser {
 		}
 		}
 
-		bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
 
 		return bodyStream;
 	}
