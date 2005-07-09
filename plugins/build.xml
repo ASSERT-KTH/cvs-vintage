@@ -25,7 +25,7 @@
 		<ant target="release" inheritall="false" dir="./org.columba.core.LiquidLookAndFeel"/>
 		<ant target="release" inheritall="false" dir="./org.columba.core.LogDisplay"/>
 		<ant target="release" inheritall="false" dir="./org.columba.core.WinLAFLookAndFeel"/>
-		<ant target="release" inheritall="false" dir="./org.columba.core.GroovyInterpreter"/>
+		<!--ant target="release" inheritall="false" dir="./org.columba.core.GroovyInterpreter"/ !-->
 	</target>
 	
 	<target name="examples" description="Builds all example plugins">
