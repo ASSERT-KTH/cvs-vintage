@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.36 2005/07/06 10:57:42 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.37 2005/07/10 09:51:49 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -293,7 +293,9 @@ public class ProfileJava extends Profile {
         // behind a method in the model interface
         // Will create an issue to discuss best solution.
         // See http://argouml.tigris.org/issues/show_bug.cgi?id=3300
-        if (Model.getFacade() instanceof NSUMLModelFacade) {
+        if ("org.argouml.model.uml.NSUMLModelImplementation"
+                .equals(System.getProperty("argouml.model.implementation",
+                        "org.argouml.model.uml.NSUMLModelImplementation"))) {
             // NSUML implementation
             //
             //    get a file name for the default model
