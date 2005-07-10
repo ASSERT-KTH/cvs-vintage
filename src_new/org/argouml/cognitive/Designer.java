@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.45 2005/05/21 08:14:42 mvw Exp $
+// $Id: Designer.java,v 1.46 2005/07/10 09:13:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ import org.tigris.gef.util.EnumerationEmpty;
  */
 public final class Designer
      implements Poster,
-         Runnable, 
+         Runnable,
          PropertyChangeListener,
          java.io.Serializable {
     /**
@@ -264,8 +264,8 @@ public final class Designer
 
     /**
      * Continuously select and execute critics against this designer's
-     * design. spawnCritiquer is used to start a Thread that runs
-     * this.
+     * design. {@link #spawnCritiquer(Object)} is used to start a
+     * Thread that runs this.
      */
     public void run() {
 
@@ -905,6 +905,9 @@ public final class Designer
     class EmptyChildGenerator implements ChildGenerator {
         /**
          * Reply a Enumeration of the children of the given Object.
+	 *
+	 * @param o The object.
+	 * @return the Enumeration.
          */
         public Enumeration gen(Object o) {
                 return EnumerationEmpty.theInstance();

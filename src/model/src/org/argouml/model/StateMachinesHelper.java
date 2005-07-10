@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.3 2005/07/03 09:48:47 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.4 2005/07/10 09:13:25 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -316,9 +316,9 @@ public interface StateMachinesHelper {
     String getPath(Object o);
 
     /**
-     * Returns a state contained into container. path is the whole pathname
-     * of the state we are looking for.
-     * @param path the path the state
+     * Returns a state contained into container.
+     *
+     * @param path The whole pathname of the state we are looking for.
      * @param container of the state
      * @return Object
      */

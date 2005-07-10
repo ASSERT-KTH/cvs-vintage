@@ -1,4 +1,4 @@
-// $Id: Facade.java,v 1.7 2005/07/06 18:23:06 mvw Exp $
+// $Id: Facade.java,v 1.8 2005/07/10 09:13:25 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,7 @@ public interface Facade {
 
     /**
      * Recognizer for ActionExpression.
-     *a
+     *
      * @param handle candidate
      * @return true if handle is an ActionExpression
      */
@@ -2589,10 +2589,12 @@ public interface Facade {
     ////////////////////////////////////////////////////////////////
 
     /**
-     * Returns the name of the UML Model class, e.g. it it will return
-     * Class for an object of type MClass.
+     * Returns the name of the UML Model class.<p>
      *
-     * @param handle MBase
+     * E.g. For the NSUML implementation it will return Class for an
+     * object of type MClass.
+     *
+     * @param handle The object to check.
      * @return classname of modelelement
      */
     String getUMLClassName(Object handle);

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: ModelManagementHelper.java,v 1.2 2005/07/10 09:13:25 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public interface ModelManagementHelper {
     Collection getAllModelElementsOfKind(Object nsa, Object type);
 
     /**
-     * helper method for {@link #getAllModelElementsOfKind(Object, Class)}.
+     * helper method for {@link #getAllModelElementsOfKind(Object, Object)}.
      *
      * @param nsa namespace.
      * @param kind name of class to find, this implementation will add the "M"

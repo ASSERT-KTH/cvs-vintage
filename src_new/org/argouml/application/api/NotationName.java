@@ -1,4 +1,4 @@
-// $Id: NotationName.java,v 1.11 2005/05/16 11:10:49 mvw Exp $
+// $Id: NotationName.java,v 1.12 2005/07/10 09:13:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public interface NotationName {
     String getVersion();
 
     /**
-     * Returns a textual title for the notation (i.e. name & version).
+     * Returns a textual title for the notation. The name and version.
      *
      * @return a title for the language.
      */
