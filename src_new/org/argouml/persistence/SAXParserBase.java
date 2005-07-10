@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.3 2005/07/10 07:17:10 linus Exp $
+// $Id: SAXParserBase.java,v 1.4 2005/07/10 16:03:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public abstract class SAXParserBase extends DefaultHandler {
     /**
      * This acts as a stack of elements.<p>
      *
-     * {@link #startElement(String, String, String, Attribtes)} places
+     * {@link #startElement(String, String, String, Attributes)} places
      * an item on the stack end {@link #endElement(String, String, String)}
      * removes it.
      */
@@ -89,7 +89,7 @@ public abstract class SAXParserBase extends DefaultHandler {
     /**
      * This acts as a stack of elements.<p>
      *
-     * {@link #startElement(String, String, String, Attribtes)} places
+     * {@link #startElement(String, String, String, Attributes)} places
      * an item on the stack end {@link #endElement(String, String, String)}
      * removes it.
      */
