@@ -1,4 +1,4 @@
-// $Id: ToDoPerspective.java,v 1.10 2005/01/09 14:58:05 linus Exp $
+// $Id: ToDoPerspective.java,v 1.11 2005/07/10 07:17:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,26 +33,29 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.ui.TreeModelComposite;
 
 /**
+ * This class represents a todo tree model / perspective.<p>
  *
- *<pre>
- * This class represents:
- *   - a todo tree model / perspective (which is a collection of GoRules)
- *</pre>
- *
- * $Id: ToDoPerspective.java,v 1.10 2005/01/09 14:58:05 linus Exp $
+ * A todo tree model / perspective is a collection of GoRules.
  */
 public abstract class ToDoPerspective extends TreeModelComposite
     implements Serializable {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(ToDoPerspective.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    /** todoList specific */
+    /**
+     * todoList specific.
+     */
     private boolean flat;
 
-    /** todoList specific */
+    /**
+     * todoList specific.
+     */
     private Vector flatChildren;
 
     /**
@@ -107,17 +110,20 @@ public abstract class ToDoPerspective extends TreeModelComposite
     // ------------ other methods ------------
 
     /**
-     * todoList specific
+     * todoList specific.
+     *
      * @param b true if flat
      */
     public void setFlat(boolean b) {
         flat = false;
-        if (b) calcFlatChildren();
+        if (b) {
+	    calcFlatChildren();
+	}
         flat = b;
     }
 
     /**
-     * todoList specific
+     * todoList specific.
      *
      * @return the flatness: true if flat
      */
@@ -137,12 +143,15 @@ public abstract class ToDoPerspective extends TreeModelComposite
      * @param node the object to be added
      */
     public void addFlatChildren(Object node) {
-        if (node == null) return;
+        if (node == null) {
+	    return;
+	}
         LOG.debug("addFlatChildren");
         // hack for to do items only, should check isLeaf(node), but that
         // includes empty folders. Really I need alwaysLeaf(node).
-        if ((node instanceof ToDoItem) && !flatChildren.contains(node))
+        if ((node instanceof ToDoItem) && !flatChildren.contains(node)) {
             flatChildren.addElement(node);
+	}
 
         int nKids = getChildCount(node);
         for (int i = 0; i < nKids; i++) {

@@ -1,4 +1,4 @@
-// $Id: AbstractArgoJPanel.java,v 1.2 2005/06/05 13:07:30 linus Exp $
+// $Id: AbstractArgoJPanel.java,v 1.3 2005/07/10 07:17:19 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,7 +160,8 @@ public abstract class AbstractArgoJPanel extends JPanel
     // actions
 
     /**
-     * this should take its inspiration from org.tigris.gef.base.CmdSpawn<p>
+     * This should take its inspiration from
+     * {@link org.tigris.gef.base.CmdSpawn}.<p>
      *
      * The spawned/cloned tab will be a JFrame. Currently this feature is
      * disabled for ArgoUML, except for the find dialog.

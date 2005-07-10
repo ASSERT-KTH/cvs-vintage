@@ -1,4 +1,4 @@
-// $Id: Agency.java,v 1.18 2005/01/30 01:21:56 bobtarling Exp $
+// $Id: Agency.java,v 1.19 2005/07/10 07:16:56 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,9 @@ import org.argouml.cognitive.Designer;
  * @author Jason Robbins
  */
 public class Agency extends Observable { //implements java.io.Serialization
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(Agency.class);
 
     ////////////////////////////////////////////////////////////////
@@ -79,6 +82,7 @@ public class Agency extends Observable { //implements java.io.Serialization
     private ControlMech controlMech;
     private static int numCriticsApplied = 0;
     private static Hashtable singletonCritics = new Hashtable(40);
+
     ////////////////////////////////////////////////////////////////
     // constructor and singleton methdos
 
@@ -104,9 +108,10 @@ public class Agency extends Observable { //implements java.io.Serialization
 
     /**
      * Since Java does not really suport classes as first class
-     *  objects, there is one instance of Agency that is passed around as
-     *  needed. theAgency is actually stored in
-     *  <TT>Designer.theDesigner().</TT>
+     * objects, there is one instance of Agency that is passed around as
+     * needed.<p>
+     *
+     * theAgency is actually stored in <code>Designer.theDesigner()</code>.
      *
      * @see Designer#theDesigner
      */
@@ -122,7 +127,7 @@ public class Agency extends Observable { //implements java.io.Serialization
     // accessors
 
     /**
-     * Reply the registery.
+     * @return the registery.
      */
     private static Hashtable getCriticRegistry() {
         return criticRegistry;
