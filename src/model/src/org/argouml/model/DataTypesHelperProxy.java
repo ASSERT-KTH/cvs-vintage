@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperProxy.java,v 1.1 2005/06/28 13:14:44 bobtarling Exp $
+// $Id: DataTypesHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,20 +35,21 @@ package org.argouml.model;
 public class DataTypesHelperProxy implements DataTypesHelper {
 
     /**
-     * * The delegate
+     * The component.
      */
     private DataTypesHelper impl;
 
     /**
-     * 
+     * @param component The component to decorate.
      */
-    public DataTypesHelperProxy(DataTypesHelper implementation) {
-        impl = implementation;
+    public DataTypesHelperProxy(DataTypesHelper component) {
+        impl = component;
     }
 
     /**
-     * @see org.argouml.model.DataTypesHelper#copyTaggedValues(java.lang.Object,
-     *      java.lang.Object)
+     * @see org.argouml.model.DataTypesHelper#copyTaggedValues(
+     *         java.lang.Object,
+     *         java.lang.Object)
      */
     public void copyTaggedValues(Object from, Object to) {
         impl.copyTaggedValues(from, to);

@@ -1,4 +1,4 @@
-// $Id: UmlException.java,v 1.3 2005/07/05 13:36:23 bobtarling Exp $
+// $Id: UmlException.java,v 1.4 2005/07/10 15:56:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,13 +32,13 @@ package org.argouml.model;
 
 /**
  * An exception class to wrap any checked exceptions from the model subsystem.
- * 
+ *
  * @author Bob Tarling
  */
 public class UmlException extends Exception {
 
     /**
-     * Constructor the exception with a message
+     * Constructor the exception with a message.
      *
      * @param message the message
      */
@@ -47,7 +47,7 @@ public class UmlException extends Exception {
     }
 
     /**
-     * Constructor the exception with a message and a causing exception
+     * Constructor the exception with a message and a causing exception.
      *
      * @param message the message
      * @param c the cause of the exception
@@ -57,7 +57,7 @@ public class UmlException extends Exception {
     }
 
     /**
-     * Constructor the exception a causing exception
+     * Constructor the exception a causing exception.
      *
      * @param c the cause of the exception
      */

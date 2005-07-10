@@ -1,4 +1,4 @@
-// $Id: ModelMemento.java,v 1.2 2005/06/24 16:04:37 bobtarling Exp $
+// $Id: ModelMemento.java,v 1.3 2005/07/10 15:56:48 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,12 @@ package org.argouml.model;
 public abstract class ModelMemento {
 
     /**
-     * The method to undo this memento
+     * The method to undo this memento.
      */
     public abstract void undo();
+
     /**
-     * The method to redo this memento once undone
+     * The method to redo this memento once undone.
      */
     public abstract void redo();
     /**

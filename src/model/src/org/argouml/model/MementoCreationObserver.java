@@ -1,4 +1,4 @@
-// $Id: MementoCreationObserver.java,v 1.1 2005/06/24 13:41:14 bobtarling Exp $
+// $Id: MementoCreationObserver.java,v 1.2 2005/07/10 15:56:48 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.model;
 /**
  * An interface to be implemented by the class responsible for managing
  * or delegating mementos.
- * 
+ *
  * @author Bob Tarling
  */
 public interface MementoCreationObserver {

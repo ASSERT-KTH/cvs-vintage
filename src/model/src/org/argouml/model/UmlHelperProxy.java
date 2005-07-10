@@ -1,4 +1,4 @@
-// $Id: UmlHelperProxy.java,v 1.1 2005/06/28 13:14:44 bobtarling Exp $
+// $Id: UmlHelperProxy.java,v 1.2 2005/07/10 15:56:48 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,16 +37,16 @@ import java.util.Collection;
 public class UmlHelperProxy implements UmlHelper {
 
     /**
-     ** The delegate
+     * The component.
      */
     private UmlHelper impl;
 
 
     /**
-     * 
+     * @param component The component to decorate.
      */
-    public UmlHelperProxy(UmlHelper implementation) {
-        impl = implementation;
+    public UmlHelperProxy(UmlHelper component) {
+        impl = component;
     }
 
     /**
