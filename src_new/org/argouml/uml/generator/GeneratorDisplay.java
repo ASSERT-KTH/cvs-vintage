@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.90 2005/06/29 16:47:33 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.91 2005/07/11 17:23:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -658,6 +658,9 @@ public class GeneratorDisplay extends Generator2 {
             }
 
             action = generateAction(act);
+            /* Dirty fix for issue 1758 (Needs to be amended 
+             * when we start supporting parameters): */
+            if (!action.endsWith(")")) action = action + "()";
         }
 
         return predecessors + number + " : " + action;
