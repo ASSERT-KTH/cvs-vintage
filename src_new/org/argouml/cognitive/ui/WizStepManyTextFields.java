@@ -1,4 +1,4 @@
-// $Id: WizStepManyTextFields.java,v 1.8 2005/02/19 23:22:43 mvw Exp $
+// $Id: WizStepManyTextFields.java,v 1.9 2005/07/11 15:47:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,7 @@ public class WizStepManyTextFields extends WizStep {
 	// store wizard?
 	instructions.setText(instr);
 	instructions.setWrapStyleWord(true);
+        instructions.setLineWrap(true);
 	instructions.setEditable(false);
 	instructions.setBorder(null);
 	instructions.setBackground(getMainPanel().getBackground());

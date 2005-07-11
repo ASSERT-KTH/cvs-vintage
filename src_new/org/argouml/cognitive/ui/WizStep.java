@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.32 2005/03/05 10:37:21 mvw Exp $
+// $Id: WizStep.java,v 1.33 2005/07/11 15:47:59 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.Translator;
@@ -60,7 +59,6 @@ import org.argouml.util.osdep.StartBrowser;
 
 public class WizStep extends JPanel
     implements TabToDoTarget, ActionListener, DocumentListener {
-    private static final Logger LOG = Logger.getLogger(WizStep.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
