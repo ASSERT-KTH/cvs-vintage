@@ -87,7 +87,8 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		addNativeJarsToClasspath();
 		setLibraryPath();
-
+		initPlatformServices();
+		
 		Main.getInstance().run(args);
 	}
 
@@ -131,14 +132,11 @@ public class Main {
 
 		// Setup the path
 		// Platform maintainers: add your platform here
+		// see also initPlatformServices() method 
 		if (OSInfo.isLinux()) {
 			nativeDir = new File("native/linux/lib");
-			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
-			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
 		} else if (OSInfo.isWin32Platform()) {
 			nativeDir = new File("native/win32/lib");
-			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
-			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
 		} else {
 			LOG.info("Native support for Platform not available.");
 			return;
@@ -178,6 +176,21 @@ public class Main {
 		// replace with the modified classpath
 		ucp.set(sysloader,
 				new URLClassPath((URL[]) urlList.toArray(new URL[0])));
+		
+	}
+
+	/**
+	 * 
+	 */
+	private static void initPlatformServices() {
+		// Initilise system dependant stuff
+		if (OSInfo.isLinux()) {
+			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
+			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
+		} else if (OSInfo.isWin32Platform()) {
+			ColumbaDesktop.getInstance().setActiveDesktop(new JDICDesktop());
+			ColumbaTrayIcon.getInstance().setActiveIcon(new JDICTrayIcon());
+		}
 	}
 
 	public void run(String args[]) {
