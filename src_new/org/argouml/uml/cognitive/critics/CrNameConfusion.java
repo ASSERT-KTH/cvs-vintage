@@ -1,4 +1,4 @@
-// $Id: CrNameConfusion.java,v 1.22 2005/06/05 08:18:33 linus Exp $
+// $Id: CrNameConfusion.java,v 1.23 2005/07/11 15:41:08 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,7 +144,7 @@ public class CrNameConfusion extends CrUML {
     /**
      * @param stripped1 given string 1
      * @param stripped2 given string 2
-     * @return true if the both  iven strings are confusingly similar
+     * @return true if the both given strings are confusingly similar
      */
     public boolean confusable(String stripped1, String stripped2) {
 	int countDiffs = countDiffs(stripped1, stripped2);
