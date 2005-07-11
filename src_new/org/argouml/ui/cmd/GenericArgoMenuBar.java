@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.18 2005/06/27 12:56:31 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.19 2005/07/11 23:58:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.ZoomSliderButton;
 import org.argouml.ui.targetmanager.NavigateTargetBackAction;
 import org.argouml.ui.targetmanager.NavigateTargetForwardAction;
-import org.argouml.uml.diagram.ui.ActionDeleteFromDiagram;
+import org.argouml.uml.diagram.ui.ActionRemoveFromDiagram;
 import org.argouml.uml.ui.ActionActivityDiagram;
 import org.argouml.uml.ui.ActionClassDiagram;
 import org.argouml.uml.ui.ActionCollaborationDiagram;
@@ -505,20 +505,16 @@ public class GenericArgoMenuBar extends JMenuBar
         select.addSeparator();
         JMenuItem backItem =
 	    select.add(NavigateTargetBackAction.getInstance());
-	setMnemonic(backItem, "Navigate Back");
+        setMnemonic(backItem, "Navigate Back");
         //setAccelerator(backItem,altLeft);
         JMenuItem forwardItem =
 	    select.add(NavigateTargetForwardAction.getInstance());
-	setMnemonic(forwardItem, "Navigate Forward");
+        setMnemonic(forwardItem, "Navigate Forward");
         //setAccelerator(forwardItem,altRight);
         select.addSeparator();
 
         JMenuItem selectInvert = select.add(new CmdSelectInvert());
         setMnemonic(selectInvert, "Invert Selection");
-
-        // TODO: These are not yet implemented - Bob Tarling 12 Oct 2002
-        // _edit.add(Actions.Redo);
-        // editToolbar.add((Actions.Redo));
 
         edit.addSeparator();
 
@@ -537,7 +533,7 @@ public class GenericArgoMenuBar extends JMenuBar
         edit.addSeparator();
 
         
-        Action removeFromDiagram = ActionDeleteFromDiagram.getSingleton();
+        Action removeFromDiagram = ProjectBrowser.getInstance().getRemoveFromDiagramAction();
         JMenuItem removeItem = edit.add(removeFromDiagram);
         
         setMnemonic(removeItem, "Remove from Diagram");
@@ -546,14 +542,6 @@ public class GenericArgoMenuBar extends JMenuBar
         JMenuItem deleteItem = edit.add(new ActionDeleteModelElements());
         setMnemonic(deleteItem, "Delete from Model");
         setAccelerator(deleteItem, ctrlDel);
-        // TODO: Bob Tarling: no toolbarbutton till a new one is
-        // designed for Erase
-        //_editToolbar.add(ActionRemoveFromModel.SINGLETON);
-
-        // TODO: MVW: The trash is not yet implemented. Hence remove for now...
-        // See issue 2471.
-        //JMenuItem emptyItem = _edit.add(ActionEmptyTrash.SINGLETON);
-        //setMnemonic(emptyItem, "Empty Trash");
 
         edit.addSeparator();
 
@@ -812,7 +800,7 @@ public class GenericArgoMenuBar extends JMenuBar
             editToolbar.add(ActionCopy.getInstance());
             editToolbar.add(ActionPaste.getInstance());
             editToolbar.addFocusListener(ActionPaste.getInstance());
-            editToolbar.add(ActionDeleteFromDiagram.getSingleton());
+            editToolbar.add(ProjectBrowser.getInstance().getRemoveFromDiagramAction());
             editToolbar.add(NavigateTargetBackAction.getInstance());
             editToolbar.add(NavigateTargetForwardAction.getInstance());
         }

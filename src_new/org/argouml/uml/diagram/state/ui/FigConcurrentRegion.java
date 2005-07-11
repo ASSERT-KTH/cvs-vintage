@@ -1,4 +1,4 @@
-// $Id: FigConcurrentRegion.java,v 1.6 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigConcurrentRegion.java,v 1.7 2005/07/11 23:58:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ import org.argouml.model.Model;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.ActionAddConcurrentRegion;
 import org.argouml.uml.diagram.ui.ActionDeleteConcurrentRegion;
-import org.argouml.uml.diagram.ui.ActionDeleteFromDiagram;
+import org.argouml.uml.diagram.ui.ActionRemoveFromDiagram;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -176,7 +176,7 @@ public class FigConcurrentRegion extends FigState
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
         popUpActions.remove(
-                ActionDeleteFromDiagram.getSingleton());
+                ProjectBrowser.getInstance().getRemoveFromDiagramAction());
         popUpActions.add(new JSeparator());
         popUpActions.addElement(
                 ActionAddConcurrentRegion.getSingleton());
