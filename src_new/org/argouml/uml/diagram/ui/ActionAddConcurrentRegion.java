@@ -1,4 +1,4 @@
-// $Id: ActionAddConcurrentRegion.java,v 1.3 2005/03/10 19:06:44 mvw Exp $
+// $Id: ActionAddConcurrentRegion.java,v 1.4 2005/07/12 16:24:12 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,8 @@ public class ActionAddConcurrentRegion extends UMLAction {
             size = figs.size();
         } catch (Exception e) {
         }
-        return super.shouldBeEnabled() & (size > 0);
+        return super.shouldBeEnabled() && (size > 0) 
+            && (TargetManager.getInstance().getModelTargets().size() < 2);
     }
 
     /**
@@ -92,7 +93,7 @@ public class ActionAddConcurrentRegion extends UMLAction {
     public void actionPerformed(ActionEvent ae) {
         try {
             /*Here the actions to divide a region*/
-            Fig f = (Fig) TargetManager.getInstance().getTarget();
+            Fig f = (Fig) TargetManager.getInstance().getFigTarget();
 
             if (Model.getFacade().isAConcurrentRegion(f.getOwner()))
                 f = f.getEnclosingFig();
