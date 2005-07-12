@@ -90,14 +90,16 @@ public class DeleteMessageAction extends AbstractColumbaAction
         AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
         int uid = folder.getConfiguration().getInteger("uid");
         AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
-
+        
+        // Mark the messages as deleted
+    	CommandProcessor.getInstance().addOp(new MarkMessageCommand(r));
+    	
+    	
         //Folder trash = (AbstractMessageFolder) MainInterface.treeModel.getTrashFolder();
         // trash folder has uid==105
         if (uid == trash.getUid()) {
             // trash folder is selected
             //  -> delete message
-        	CommandProcessor.getInstance().addOp(new MarkMessageCommand(r));
-
         	CommandProcessor.getInstance().addOp(new ExpungeFolderCommand(r));
         } else {
             // -> move messages to trash
