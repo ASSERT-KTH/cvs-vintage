@@ -92,7 +92,8 @@ public class FolderFactory {
 		// iterate through all foldertypes to find suitable ones
 		Enumeration e = handler.getExtensionEnumeration();
 		while (e.hasMoreElements()) {
-			ExtensionMetadata metadata = (ExtensionMetadata) e.nextElement();
+			IExtension extension = (IExtension) e.nextElement();
+			ExtensionMetadata metadata = (ExtensionMetadata) extension.getMetadata();
 			String possibleParents = metadata.getAttribute("possible_parents");
 			String id = metadata.getId();
 
@@ -162,7 +163,8 @@ public class FolderFactory {
 		// iterate through all foldertypes to find suitable ones
 		Enumeration e = handler.getExtensionEnumeration();
 		while (e.hasMoreElements()) {
-			ExtensionMetadata metadata = (ExtensionMetadata) e.nextElement();
+			IExtension extension = (IExtension) e.nextElement();
+			ExtensionMetadata metadata = (ExtensionMetadata) extension.getMetadata();
 			String id = metadata.getId();
 			String group = metadata.getAttribute("group");
 

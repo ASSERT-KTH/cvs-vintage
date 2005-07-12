@@ -2,12 +2,28 @@
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
 <extensionlist>
- <extension id="Root" group="root" class="org.columba.mail.folder.Root"/>
- <extension id="LocalRootFolder" group="local" class="org.columba.mail.folder.LocalRootFolder"/>
- <extension id="IMAPRootFolder" group="imap" class="org.columba.mail.folder.imap.IMAPRootFolder"/>
- <extension id="MHFolder" group="local" possible_parents="local" class="org.columba.mail.folder.mh.CachedMHFolder"/>
- <extension id="MBOXFolder" group="local" possible_parents="local" class="org.columba.mail.folder.mbox.CachedMboxFolder"/>
- <extension id="IMAPFolder" group="imap" possible_parents="imap" class="org.columba.mail.folder.imap.IMAPFolder"/>
- <extension id="VirtualFolder" group="virtual" possible_parents="all" class="org.columba.mail.folder.virtual.VirtualFolder"/>
- <extension id="OutboxFolder" group="local" class="org.columba.mail.folder.outbox.OutboxFolder"/>
+ <extension id="Root"  class="org.columba.mail.folder.Root">
+  <properties group="root" />
+ </extension>
+ <extension id="LocalRootFolder" class="org.columba.mail.folder.LocalRootFolder">
+ <properties group="local"/>
+ </extension>
+ <extension id="IMAPRootFolder" class="org.columba.mail.folder.imap.IMAPRootFolder">
+ <properties group="imap"/>
+ </extension>
+ <extension  id="MHFolder"  class="org.columba.mail.folder.mh.CachedMHFolder">
+ <properties group="local" possible_parents="local"/>
+ </extension>
+ <extension  id="MBOXFolder"  class="org.columba.mail.folder.mbox.CachedMboxFolder">
+ <properties group="local" possible_parents="local"/>
+ </extension>
+ <extension  id="IMAPFolder"  class="org.columba.mail.folder.imap.IMAPFolder">
+ <properties group="imap" possible_parents="imap"/>
+ </extension>
+ <extension  id="VirtualFolder"  class="org.columba.mail.folder.virtual.VirtualFolder">
+ <properties group="virtual" possible_parents="all"/>
+ </extension>
+ <extension id="OutboxFolder"  class="org.columba.mail.folder.outbox.OutboxFolder">
+ <properties group="local" />
+ </extension>
 </extensionlist>
