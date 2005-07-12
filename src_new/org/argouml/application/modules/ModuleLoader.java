@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.24 2005/07/11 08:23:07 linus Exp $
+// $Id: ModuleLoader.java,v 1.25 2005/07/12 21:43:03 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,7 @@ import org.argouml.application.api.ArgoSingletonModule;
 import org.argouml.application.api.Pluggable;
 import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoModuleEvent;
+import org.argouml.i18n.Translator;
 
 /**
  * Handles loading of modules and plugins for ArgoUML.
@@ -294,6 +295,7 @@ public class ModuleLoader {
 			    new URLClassLoader(new URL[] {
 				file[i].toURL()
 			    });
+			Translator.addClassLoader(classloader);
 	                processJarFile(classloader, file[i]);
 		    }
 		} catch (IOException ioe) { }
