@@ -20,9 +20,7 @@ package org.columba.mail.gui.message.viewer;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Observable;
 import java.util.Observer;
@@ -38,9 +36,7 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.io.TempFileStore;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
@@ -55,7 +51,7 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.FallbackCharsetDecoderInputStream;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -273,7 +269,7 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 			Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 			charset = MessageParser.extractCharset(charset, bodyPart);
 
-			bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+			bodyStream = new FallbackCharsetDecoderInputStream(bodyStream, charset);
 		}
 
 		// Read Stream in String
