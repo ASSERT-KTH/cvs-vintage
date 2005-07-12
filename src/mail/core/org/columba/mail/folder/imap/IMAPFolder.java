@@ -66,6 +66,7 @@ import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.imap.IMAPFlags;
 import org.columba.ristretto.imap.MailboxStatus;
 import org.columba.ristretto.imap.SearchKey;
+import org.columba.ristretto.imap.SequenceEntry;
 import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
@@ -271,8 +272,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 				"sync_messages"));
 
 		if (status.getMessages() > 0) {
-			largestRemoteUid = getServer().fetchUids(
-					new SequenceSet(status.getMessages()), this)[0].intValue();
+			largestRemoteUid = getServer().fetchUid(
+					new SequenceSet(SequenceEntry.STAR), this).intValue();
 
 			printStatusMessage(MailResourceLoader.getString("statusbar",
 					"message", "sync_messages"));
@@ -1031,12 +1032,10 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	public void updateFlag(IMAPFlags flag) throws IOException, IMAPException,
 			CommandCancelledException {
 		if (getServer().isSelected(this)) {
-			Integer[] uids = getServer().fetchUids(
+			Integer uid = getServer().fetchUid(
 					new SequenceSet(flag.getIndex()), this);
-			if (uids.length == 1) {
-				flag.setUid(uids[0]);
-				setFlags(new Flags[] { flag });
-			}
+			flag.setUid(uid);
+			setFlags(new Flags[] { flag });
 		}
 	}
 

@@ -931,6 +931,21 @@ public class IMAPServer implements IMAPListener {
 	}
 
 	/**
+	 * Fetch the uid for the index.
+	 * 
+	 * @param index of the message
+	 * @param folder the IMAP mailbox
+	 * @return uid of the message
+	 * @throws IOException
+	 * @throws IMAPException
+	 * @throws CommandCancelledException
+	 */
+	public Integer fetchUid( SequenceSet set, IMAPFolder folder ) throws IOException, IMAPException, CommandCancelledException {
+		ensureSelectedState(folder);
+		return protocol.fetchUid(set)[0];
+	}
+	
+	/**
 	 * Fetch list of UIDs.
 	 * 
 	 * @param folder
