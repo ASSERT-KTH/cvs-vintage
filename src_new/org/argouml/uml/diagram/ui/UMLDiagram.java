@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.73 2005/07/05 20:11:47 mvw Exp $
+// $Id: UMLDiagram.java,v 1.74 2005/07/12 13:59:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -264,7 +264,7 @@ public abstract class UMLDiagram
         if (getOwner() == null) {
             return s;
         }
-        String id = UUIDHelper.getInstance().getUUID(getOwner());
+        String id = UUIDHelper.getUUID(getOwner());
         return s + "|" + id;
     }
 

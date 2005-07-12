@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.175 2005/07/11 23:58:11 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.176 2005/07/12 13:59:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1158,9 +1158,8 @@ public abstract class FigNodeModelElement
         updateListeners(own);
         super.setOwner(own);
         if (Model.getFacade().isAModelElement(own)
-                && UUIDHelper.getInstance().getUUID(own) == null) {
-            Model.getCoreHelper().setUUID(own,
-                    UUIDHelper.getInstance().getNewUUID());
+                && UUIDHelper.getUUID(own) == null) {
+            Model.getCoreHelper().setUUID(own, UUIDHelper.getNewUUID());
         }
         readyToEdit = true;
         if (own != null) {

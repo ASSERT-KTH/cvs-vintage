@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.104 2005/07/11 23:58:11 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.105 2005/07/12 13:59:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -641,9 +641,9 @@ public abstract class FigEdgeModelElement
             if (Model.getFacade().isAModelElement(newOwner)) {
                 Model.getPump().addModelEventListener(this, newOwner);
                 
-                if (UUIDHelper.getInstance().getUUID(newOwner) == null) {
+                if (UUIDHelper.getUUID(newOwner) == null) {
                     Model.getCoreHelper().setUUID(newOwner,
-                            UUIDHelper.getInstance().getNewUUID());
+                            UUIDHelper.getNewUUID());
                 }
             }
         }

@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.18 2005/01/30 20:48:34 linus Exp $
+// $Id: ItemUID.java,v 1.19 2005/07/12 13:59:25 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,7 +158,7 @@ public class ItemUID {
      */
     protected static String readObjectID(Object obj) {
         if (Model.getFacade().isABase(obj)) {
-            return UUIDHelper.getInstance().getUUID(obj);
+            return UUIDHelper.getUUID(obj);
         }
 	/*
 	// Want to use the "built in" UID of the MXxx instances
