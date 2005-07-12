@@ -4,9 +4,17 @@
 The order of the following plugins is intentional. Do not change the order of appeareance. -->
 
 <extensionlist>
- <extension state="before" id="ColumnOptions" class="org.columba.mail.folderoptions.ColumnOptionsPlugin" />
- <extension state="before" id="SortingOptions" class="org.columba.mail.folderoptions.SortingOptionsPlugin" />
+ <extension  id="ColumnOptions" class="org.columba.mail.folderoptions.ColumnOptionsPlugin" >
+  <properties state="before"/>
+ </extension>
+ <extension id="SortingOptions" class="org.columba.mail.folderoptions.SortingOptionsPlugin" >
+  <properties state="before"/>
+ </extension> 
  <!--<folderoption state="before" id="FilterOptions" class="org.columba.mail.folderoptions.FilterOptionsPlugin" />-->
- <extension state="before" id="ThreadedViewOptions" class="org.columba.mail.folderoptions.ThreadedViewOptionsPlugin" />
- <extension state="after" id="SelectionOptions" class="org.columba.mail.folderoptions.SelectionOptionsPlugin" />
+ <extension id="ThreadedViewOptions" class="org.columba.mail.folderoptions.ThreadedViewOptionsPlugin" >
+  <properties state="before"/>
+ </extension>
+ <extension  id="SelectionOptions" class="org.columba.mail.folderoptions.SelectionOptionsPlugin" >
+  <properties state="after"/>
+ </extension>
 </extensionlist>
