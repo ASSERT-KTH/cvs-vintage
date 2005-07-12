@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.7 2005/06/30 23:57:46 bobtarling Exp $
+// $Id: FigClassifierRole.java,v 1.8 2005/07/12 09:55:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class FigClassifierRole extends FigNodeModelElement
     implements MouseListener, HandlerFactory {
+    
     /**
     * The width of an activation box
     */
@@ -161,7 +162,7 @@ public class FigClassifierRole extends FigNodeModelElement
 				     "Dialog",
 				     12,
 				     false));
-        getStereotypeFigText().setAllowsTab(false);
+        getStereotypeFigText().setTabAction(FigText.IGNORE);
         getStereotypeFigText().setEditable(false);
         getStereotypeFig().setFilled(false);
         getStereotypeFig().setLineWidth(0);
@@ -174,7 +175,7 @@ public class FigClassifierRole extends FigNodeModelElement
 			       12,
 			       false));
         getNameFig().setEditable(false);
-        getNameFig().setAllowsTab(false);
+        getNameFig().setTabAction(FigText.IGNORE);
         getNameFig().setFilled(false);
         getNameFig().setLineWidth(0);
         lifeLine =
@@ -902,32 +903,29 @@ public class FigClassifierRole extends FigNodeModelElement
      * @see FigNodeModelElement#updateListeners(java.lang.Object)
      */
     protected void updateListeners(Object newOwner) {
-        if (Model.getFacade().isAClassifierRole(newOwner)) {
-            Object oldOwner = getOwner();
-            ModelEventPump pump = Model.getPump();
+        Object oldOwner = getOwner();
+        ModelEventPump pump = Model.getPump();
+        if ( oldOwner != null) {
             pump.removeModelEventListener(this, oldOwner);
-            pump.addModelEventListener(this,
-				       newOwner,
-				       new String[] {
-					   "name",
-					   "stereotype",
-                       "base"
-				       });
-            if ( oldOwner != null)
-            {
-                Iterator it = Model.getFacade().getBases(oldOwner).iterator();
-                while (it.hasNext()) {
-                    pump.removeModelEventListener(this, it.next());
-                }
+            Iterator it = Model.getFacade().getBases(oldOwner).iterator();
+            while (it.hasNext()) {
+                pump.removeModelEventListener(this, it.next());
             }
-			Iterator it = Model.getFacade().getBases( newOwner).iterator();
-			String[] names=new String[] { "name" };
-			while (it.hasNext()) {
-				Object base=it.next();
-				pump.removeModelEventListener( this, base);
-				pump.addModelEventListener( this, base, names);
-			}
         }
+        pump.addModelEventListener(this,
+			       newOwner,
+			       new String[] {
+				   "name",
+				   "stereotype",
+                   "base"
+			       });
+		Iterator it = Model.getFacade().getBases( newOwner).iterator();
+		String[] names=new String[] { "name" };
+		while (it.hasNext()) {
+			Object base=it.next();
+			pump.removeModelEventListener( this, base);
+			pump.addModelEventListener( this, base, names);
+		}
     }
 
     void growToSize( int nodeCount)
