@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.27 2005/04/14 18:28:53 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.28 2005/07/12 14:21:18 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1227,7 +1227,7 @@ public class GeneratorPHP4
      */
     private String generateSection(Object modelElement, String sIndent,
                                    String sSuffix) {
-        String uuid = UUIDHelper.getInstance().getUUID(modelElement);
+        String uuid = UUIDHelper.getUUID(modelElement);
         if (uuid == null) {
             uuid = (new UID().toString());
             Model.getCoreHelper().setUUID(modelElement, uuid);

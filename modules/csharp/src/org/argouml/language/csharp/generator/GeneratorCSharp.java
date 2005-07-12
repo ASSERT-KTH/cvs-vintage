@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.36 2005/05/16 11:10:49 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.37 2005/07/12 14:21:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1528,7 +1528,7 @@ public class GeneratorCSharp extends Generator2
     }
 
     private String generateSection(Object cls) {
-        String id = UUIDHelper.getInstance().getUUID(cls);
+        String id = UUIDHelper.getUUID(cls);
 	if (id == null) {
 	    id = (new UID().toString());
 	    // id = cls.getName() + "__" + static_count;
