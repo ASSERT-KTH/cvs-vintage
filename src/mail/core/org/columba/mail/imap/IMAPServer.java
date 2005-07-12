@@ -1496,10 +1496,10 @@ public class IMAPServer implements IMAPListener {
 				try {
 					result = protocol.uidSearch(charset, searchRequest);
 				} catch (IMAPException e) {
-					if (e.getResponse().isNO()) {
+					if (e.getResponse().isNO() && charset != null) {
 						// Server does not support UTF-8
 						// -> fall back to System default
-						if (charset.equals(UTF8)) {
+						if ( charset.equals(UTF8)) {
 							charset = DEFAULT;
 						} else if (charset == DEFAULT) {
 							// If this also does not work
