@@ -1,4 +1,4 @@
-// $Id: FigReturnActionMessage.java,v 1.1 2005/05/15 09:56:44 bobtarling Exp $
+// $Id: FigReturnActionMessage.java,v 1.2 2005/07/12 20:50:54 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,12 +24,8 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
-import java.util.List;
-
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.Fig;
-
-import org.argouml.uml.diagram.sequence.MessageNode;
 
 /**
  * @author Jaap
@@ -46,20 +42,19 @@ public class FigReturnActionMessage extends FigMessage {
     }
 
     /**
-     * Override to make sure dashed is preserved across saves
+     * Override to make sure dashed is preserved across saves.
      *
      * @see org.tigris.gef.presentation.FigEdge#setFig
      */
-    public void setFig( Fig f)
-    {
-        super.setFig( f);
-        setDashed( true);
+    public void setFig(Fig f) {
+        super.setFig(f);
+        setDashed(true);
     }
 
     /**
      *
      */
     public FigReturnActionMessage() {
-        this( null);
+        this(null);
     }
 }
