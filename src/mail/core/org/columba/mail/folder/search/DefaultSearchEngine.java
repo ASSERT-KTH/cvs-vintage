@@ -21,6 +21,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -37,6 +38,7 @@ import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
 import org.columba.mail.plugin.FilterExtensionHandler;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.imap.IMAPException;
 
 /**
  * Divides search requests and passes them along to the optimized
@@ -48,6 +50,11 @@ import org.columba.mail.util.MailResourceLoader;
  * @author tstich, fdietz
  */
 public class DefaultSearchEngine {
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.folder.search");
+
+	
 	/**
 	 * Filter plugins are cached and reused, instead of re-instanciated all the
 	 * time
@@ -267,12 +274,18 @@ public class DefaultSearchEngine {
 		divideFilterRule(filterRule, notDefaultEngine, defaultEngine);
 
 		if (defaultEngine.count() > 0) {
-			if (uids != null) {
-				defaultEngineResult = getNonDefaultEngine().queryEngine(
-						defaultEngine, uids);
-			} else {
-				defaultEngineResult = getNonDefaultEngine().queryEngine(
-						defaultEngine);
+			try {
+				if (uids != null) {
+					defaultEngineResult = getNonDefaultEngine().queryEngine(
+							defaultEngine, uids);
+				} else {
+					defaultEngineResult = getNonDefaultEngine().queryEngine(
+							defaultEngine);
+				}
+			} catch (Exception e) {
+				LOG.warning("NonDefaultSearch engine "+ nonDefaultEngine.toString()+"reported an error: falling back to default search:\n"+e.getMessage());
+				defaultEngine = new FilterRule();
+				notDefaultEngine = filter.getFilterRule();
 			}
 		}
 
