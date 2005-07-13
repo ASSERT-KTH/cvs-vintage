@@ -21,8 +21,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: HyperSearch_Results_to_Buffer.bsh,v 1.2 2005/06/08 22:33:27 orutherfurd Exp $
+ * $Id: HyperSearch_Results_to_Buffer.bsh,v 1.3 2005/07/13 03:24:30 copy_paste Exp $
  */
+
+
+traverseTree(javax.swing.tree.DefaultMutableTreeNode node, StringBuffer results){
+	if (node.getUserObject() instanceof org.gjt.sp.jedit.search.HyperSearchFileNode)
+	{
+		path = node.getUserObject().path;
+		match = node.getFirstChild();
+		while(match != null)
+		{
+			text = match.getUserObject().str;
+			results.append(path + " :" + text + "\n");
+			match = match.getNextSibling();
+		}
+	}
+	else
+	{
+		for (Enumeration e = node.children(); e.hasMoreElements();)
+			traverseTree(e.nextElement(), results);
+	}
+}
 
 writeHypersearchResultsToBuffer(View view){
 	hs = view.getDockableWindowManager().getDockableWindow("hypersearch-results");
@@ -44,21 +64,9 @@ writeHypersearchResultsToBuffer(View view){
 	{
 		node = node.getNextSibling();
 	}
-	node = node.getFirstChild();
 
 	results = new StringBuffer();
-	while(node != null)
-	{
-		path = node.getUserObject().toString();
-		match = node.getFirstChild();
-		while(match != null)
-		{
-			text = match.getUserObject().str;
-			results.append(path + " :" + text + "\n");
-			match = match.getNextSibling();
-		}
-		node = node.getNextSibling();
-	}
+	traverseTree(node, results);
 
 	text = results.toString();
 	if(text.length() > 0)
