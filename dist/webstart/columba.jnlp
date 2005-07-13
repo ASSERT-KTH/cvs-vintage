@@ -10,7 +10,7 @@
    <homepage href="http://columba.sourceforge.net/"/>
    <description>Columba Email Client</description>
    <description kind="short">Java Email Client</description>
-   <icon href="images/icon32.gif"/>
+   <icon href="images/icon64.gif"/>
    <offline-allowed/>
  </information>
  <security>

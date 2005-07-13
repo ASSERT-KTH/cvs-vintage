@@ -490,7 +490,7 @@
 
 		<copy toDir="${release.base}/webstart/images">
 			<fileset dir="${res.base}/org/columba/core/images">
-				<include name="icon32.gif"/>
+				<include name="icon64.gif"/>
 			</fileset>
 		</copy>
 		
