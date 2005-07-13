@@ -940,9 +940,14 @@ public class IMAPServer implements IMAPListener {
 	 * @throws IMAPException
 	 * @throws CommandCancelledException
 	 */
-	public Integer fetchUid( SequenceSet set, IMAPFolder folder ) throws IOException, IMAPException, CommandCancelledException {
+	public int fetchUid( SequenceSet set, IMAPFolder folder ) throws IOException, IMAPException, CommandCancelledException {
 		ensureSelectedState(folder);
-		return protocol.fetchUid(set)[0];
+		Integer[] result = protocol.fetchUid(set); 
+		if( result.length == 1)
+			return result[0].intValue();
+		else
+			return -1;
+				
 	}
 	
 	/**
