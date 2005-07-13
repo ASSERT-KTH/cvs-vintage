@@ -19,16 +19,16 @@
 package org.columba.core.command;
 
 import java.io.IOException;
-import java.net.BindException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.PortUnreachableException;
-import java.net.ProtocolException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.net.UnknownServiceException;
 import java.text.MessageFormat;
+import java.util.logging.Logger;
 
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.util.GlobalResourceLoader;
@@ -46,6 +46,9 @@ import sun.net.ConnectionResetException;
  */
 public class ExceptionHandler {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.command");
 
 	/**
 	 * Handle all kinds of exceptions.
@@ -54,6 +57,11 @@ public class ExceptionHandler {
 	 *            exception to process
 	 */
 	public void processException(Exception e) {
+		//Print the stacktrace to our log file.
+		StringWriter error = new StringWriter();
+		e.printStackTrace(new PrintWriter(error));		
+		LOG.severe(error.toString());
+		
 		if (e instanceof SocketException) {
 			processSocketException((SocketException) e);
 		} else if (e instanceof IOException) {
@@ -61,9 +69,6 @@ public class ExceptionHandler {
 		} else if (e instanceof IMAPException) {
 			processIMAPExcpetion((IMAPException) e);
 		} else {
-			// unknown exception - this is most likely a Columba-specific bug
-			e.printStackTrace();
-
 			// show error dialog, with exception message and stack-trace
 			// -> dialog also provides a button for the user to easily
 			// -> report a bug
