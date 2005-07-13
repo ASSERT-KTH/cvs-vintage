@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
+import java.awt.GridLayout;
 import java.awt.event.ContainerListener;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -109,7 +110,7 @@ public class ComposerController extends DefaultFrameController implements
 	private JSplitPane attachmentSplitPane;
 
 	/** Editor viewer resides in this panel */
-	private JPanel editorPanel;
+	private TextEditorPanel editorPanel;
 
 	private LabelWithMnemonic subjectLabel;
 
@@ -124,6 +125,8 @@ public class ComposerController extends DefaultFrameController implements
 	private HtmlToolbar htmlToolbar;
 	
 	private boolean promptOnDialogClosing = true;
+
+	private SignatureView signatureView;
 
 	public ComposerController() {
 		this(new ComposerModel(), FrameModel.getInstance()
@@ -158,6 +161,8 @@ public class ComposerController extends DefaultFrameController implements
 		accountController = new AccountController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
 
+		signatureView = new SignatureView(this);
+		
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
 		XmlElement optionsElement = MailConfig.getInstance().get(
@@ -327,9 +332,7 @@ public class ComposerController extends DefaultFrameController implements
 		priorityLabel = new LabelWithMnemonic(MailResourceLoader.getString(
 				"dialog", "composer", "priority"));
 
-		editorPanel = new JPanel();
-		editorPanel.setBorder(null);
-		editorPanel.setLayout(new BorderLayout());
+		editorPanel = new TextEditorPanel();
 	}
 
 	/**
@@ -397,9 +400,10 @@ public class ComposerController extends DefaultFrameController implements
 
 		//editorPanel.add(htmlToolbar, BorderLayout.NORTH);
 
-		editorPanel.add(getEditorController().getViewUIComponent(),
-				BorderLayout.CENTER);
+		editorPanel.getContentPane().add(getEditorController().getViewUIComponent());
 
+		editorPanel.getContentPane().add(signatureView);
+		
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		centerPanel.setLayout(new BorderLayout());
 
@@ -431,7 +435,7 @@ public class ComposerController extends DefaultFrameController implements
 	 * used by the ComposerController when adding a listener to that panel.
 	 */
 	public JPanel getEditorPanel() {
-		return editorPanel;
+		return editorPanel.getContentPane();
 	}
 
 	/**

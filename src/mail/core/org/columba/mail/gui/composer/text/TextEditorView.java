@@ -68,8 +68,6 @@ public class TextEditorView extends JTextPane implements Observer,
 
         // register interest on configuratin changes
         fonts.addObserver(this);
-
-        setPreferredSize(new Dimension(300, 200));
     }
 
     public void installListener(TextEditorController controller) {

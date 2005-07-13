@@ -217,21 +217,13 @@ public class MessageComposer {
 			}
 
 			in.close();
+			
+			return strbuf.toString();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 
 			return "";
 		}
-
-		try {
-			//return new String(strbuf.toString().getBytes(),
-			//	model.getCharsetName());
-			return new String(strbuf.toString().getBytes(), model.getCharset()
-					.name());
-		} catch (UnsupportedEncodingException e) {
-		}
-
-		return null;
 	}
 
 	/**

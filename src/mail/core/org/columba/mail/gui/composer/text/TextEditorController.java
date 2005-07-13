@@ -303,7 +303,9 @@ public class TextEditorController extends AbstractEditorController
     public JComponent getViewUIComponent() {
         // Returns the view encapsulated in a scroll pane. This means
         // that the caller shouldn't add the scroll pane him self
-        return new JScrollPane(view);
+        //return new JScrollPane(view);
+        return view;
+
     }
 
     /* (non-Javadoc)
@@ -332,6 +334,7 @@ public class TextEditorController extends AbstractEditorController
      */
     public void setViewText(String text) {
         view.setText(text);
+        view.revalidate();
     }
 
     /* (non-Javadoc)
