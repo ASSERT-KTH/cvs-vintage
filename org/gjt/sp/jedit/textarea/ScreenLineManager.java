@@ -25,7 +25,6 @@ package org.gjt.sp.jedit.textarea;
 //{{{ Imports
 import java.util.*;
 import org.gjt.sp.jedit.buffer.*;
-import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.Debug;
 import org.gjt.sp.util.Log;
 //}}}
@@ -33,16 +32,16 @@ import org.gjt.sp.util.Log;
 /**
  * @since jEdit 4.3pre1
  * @author Slava Pestov
- * @version $Id: ScreenLineManager.java,v 1.3 2005/03/20 22:29:27 spestov Exp $
+ * @version $Id: ScreenLineManager.java,v 1.4 2005/07/13 20:46:02 spestov Exp $
  */
 class ScreenLineManager
 {
 	//{{{ ScreenLineManager constructor
-	ScreenLineManager(DisplayManager displayManager, Buffer buffer)
+	ScreenLineManager(DisplayManager displayManager, JEditBuffer buffer)
 	{
 		this.displayManager = displayManager;
 		this.buffer = buffer;
-		if(buffer.isLoaded())
+		if(!buffer.isLoading())
 			reset();
 	} //}}}
 	
@@ -133,7 +132,7 @@ class ScreenLineManager
 	private static final int SCREEN_LINES_VALID_MASK = 1;
 
 	private DisplayManager displayManager;
-	private Buffer buffer;
+	private JEditBuffer buffer;
 	private short[] screenLines;
 	//}}}
 }

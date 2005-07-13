@@ -27,6 +27,7 @@ import com.microstar.xml.*;
 import java.awt.datatransfer.*;
 import java.awt.Toolkit;
 import java.io.*;
+import org.gjt.sp.jedit.buffer.JEditBuffer;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.msg.RegisterChanged;
 import org.gjt.sp.jedit.textarea.*;
@@ -56,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.27 2005/03/21 23:55:31 spestov Exp $
+ * @version $Id: Registers.java,v 1.28 2005/07/13 20:46:01 spestov Exp $
  */
 public class Registers
 {
@@ -221,7 +222,7 @@ public class Registers
 
 			if(vertical && textArea.getSelectionCount() == 0)
 			{
-				Buffer buffer = textArea.getBuffer();
+				JEditBuffer buffer = textArea.getBuffer();
 
 				try
 				{
