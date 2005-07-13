@@ -18,6 +18,8 @@
 
 package org.columba.mail.config;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 import org.columba.core.config.DefaultItem;
@@ -170,12 +172,27 @@ public class AccountList extends DefaultItem {
         XmlElement emptyAccount = root.getElement("/template/" + type
                 + "/account");
 
+        
         if (emptyAccount != null) {
             AccountItem newAccount = new AccountItem((XmlElement) emptyAccount
                     .clone());
             newAccount.setInteger("uid", getNextUid());
             add(newAccount);
 
+            // Default signature
+            File dir = MailConfig.getInstance().getConfigDirectory();
+            File signatureFile = new File(dir, "signature_" + newAccount.getName() + ".txt");
+
+            String sigURL = "org/columba/mail/config/default_signature.txt";
+            try {
+				DiskIO.copyResource(sigURL, signatureFile);
+				
+				newAccount.getIdentity().setSignature(signatureFile);
+			} catch (IOException e) {
+				//Do nothing
+			}
+            
+            
             return newAccount;
         }
 
