@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.26 2005/02/19 12:02:07 bobtarling Exp $
+// $Id: FigStateVertex.java,v 1.27 2005/07/13 19:06:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,7 @@ public abstract class FigStateVertex extends FigNodeModelElement {
      * The main constructor
      */
     public FigStateVertex() {
+        this.allowRemoveFromDiagram(false);
     }
 
     /** The constructor which hooks the Fig into the UML element
