@@ -273,8 +273,13 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		if (status.getMessages() > 0) {
 			largestRemoteUid = getServer().fetchUid(
-					new SequenceSet(SequenceEntry.STAR), this).intValue();
-
+					new SequenceSet(SequenceEntry.STAR), this);
+			if( largestRemoteUid == -1 ) {
+				largestRemoteUid = getServer().fetchUid(
+						new SequenceSet(status.getMessages()), this);
+			}
+			
+			
 			printStatusMessage(MailResourceLoader.getString("statusbar",
 					"message", "sync_messages"));
 
@@ -1032,8 +1037,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	public void updateFlag(IMAPFlags flag) throws IOException, IMAPException,
 			CommandCancelledException {
 		if (getServer().isSelected(this)) {
-			Integer uid = getServer().fetchUid(
-					new SequenceSet(flag.getIndex()), this);
+			Integer uid = new Integer(getServer().fetchUid(
+					new SequenceSet(flag.getIndex()), this));
 			flag.setUid(uid);
 			setFlags(new Flags[] { flag });
 		}
