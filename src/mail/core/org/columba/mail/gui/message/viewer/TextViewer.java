@@ -20,11 +20,18 @@ package org.columba.mail.gui.message.viewer;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -37,6 +44,7 @@ import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.htmlviewer.IHTMLViewerPlugin;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.io.TempFileStore;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.IExtension;
 import org.columba.core.plugin.PluginManager;
@@ -51,7 +59,10 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.FallbackCharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -68,6 +79,8 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.message.viewer");
 
+	private static final Pattern CIDPattern = Pattern.compile("cid:([^\"]+)", Pattern.CASE_INSENSITIVE);
+	
 	// parser to transform text to html
 	private DocumentParser parser;
 
@@ -103,6 +116,10 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	private MessageController mediator;
 
 	private IHTMLViewerPlugin viewerPlugin;
+
+	private IMailbox folder;
+
+	private Object uid;
 
 	public TextViewer(MessageController mediator) {
 		super();
@@ -242,6 +259,9 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 	public void view(IMailbox folder, Object uid, Integer[] address,
 			MailFrameMediator mediator) throws Exception {
 
+		this.folder = folder;
+		this.uid = uid;
+		
 		MimePart bodyPart = null;
 		InputStream bodyStream;
 
@@ -285,10 +305,11 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		}
 
 		if (htmlMessage) {
-
-			// this is a HTML message
-			
+			// this is a HTML message			
 			body = text.toString();
+			
+			//Download any CIDs in the html mail
+			body = downloadCIDParts(body, mimePartTree);
 
 		} else {
 			// this is a text/plain message
@@ -365,177 +386,89 @@ public class TextViewer extends JPanel implements IMimePartViewer, Observer,
 		FocusManager.getInstance().updateActions();
 	}
 
-	/** ***************** FocusOwner interface ********************** */
 
-	// class MyFocusOwner implements FocusOwner {
-	// /**
-	// * @see javax.swing.text.JTextComponent#copy()
-	// */
-	// public void copy() {
-	// int start = getSelectionStart();
-	// int stop = getSelectionEnd();
-	//
-	// StringWriter htmlSelection = new StringWriter();
-	//
-	// try {
-	// htmlEditorKit.write(htmlSelection, getDocument(), start, stop
-	// - start);
-	//
-	// Clipboard clipboard = getToolkit().getSystemClipboard();
-	//
-	// // Conversion of html text to plain
-	// //TODO (@author karlpeder): make a DataFlavor that can handle
-	// // HTML
-	// // text
-	// StringSelection selection = new StringSelection(HtmlParser
-	// .htmlToText(htmlSelection.toString(), true));
-	// clipboard.setContents(selection, selection);
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// } catch (BadLocationException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#cut()
-	// */
-	// public void cut() {
-	// // not supported
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#delete()
-	// */
-	// public void delete() {
-	// // not supported
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-	// */
-	// public JComponent getComponent() {
-	// return TextViewer.this;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-	// */
-	// public boolean isCopyActionEnabled() {
-	//
-	// if (getSelectedText() == null) {
-	// return false;
-	// }
-	//
-	// if (getSelectedText().length() > 0) {
-	// return true;
-	// }
-	//
-	// return false;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-	// */
-	// public boolean isCutActionEnabled() {
-	// // action not support
-	// return false;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-	// */
-	// public boolean isDeleteActionEnabled() {
-	// // action not supported
-	// return false;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-	// */
-	// public boolean isPasteActionEnabled() {
-	// // action not supported
-	// return false;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-	// */
-	// public boolean isRedoActionEnabled() {
-	// // action not supported
-	// return false;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-	// */
-	// public boolean isSelectAllActionEnabled() {
-	// return true;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-	// */
-	// public boolean isUndoActionEnabled() {
-	// // action not supported
-	// return false;
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#paste()
-	// */
-	// public void paste() {
-	// // action not supported
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#redo()
-	// */
-	// public void redo() {
-	// // action not supported
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-	// */
-	// public void selectAll() {
-	//
-	// selectAll();
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see org.columba.core.gui.focus.FocusOwner#undo()
-	// */
-	// public void undo() {
-	//
-	// }
-	// }
+	private String downloadCIDParts(String body, MimeTree mimeTree) {
+		Matcher matcher = CIDPattern.matcher(body);
+		
+		if( !matcher.find()) {
+			return body;
+		}
+		
+		StringBuffer modifiedBody = new StringBuffer(body.length());
+		File mimePartFile;
+		List mimeParts = mimeTree.getAllLeafs();
+		
+		MimePart CIDPart = findMimePart(mimeParts, matcher.group(1));
+		if( CIDPart != null ) {
+			mimePartFile = TempFileStore.createTempFile();
+			try {
+				downloadMimePart( CIDPart, mimePartFile);
+				
+				matcher.appendReplacement(modifiedBody, mimePartFile.toURL().toString());
+			} catch (Exception e) {
+				matcher.appendReplacement(modifiedBody, "missing");				
+			}
+		} else {
+			matcher.appendReplacement(modifiedBody, "missing");							
+		}
+			
+		while (matcher.find()) {
+			CIDPart = findMimePart(mimeParts, matcher.group(1));
+			if( CIDPart != null ) {
+				mimePartFile = TempFileStore.createTempFile();
+				try {
+					downloadMimePart( CIDPart, mimePartFile);
+					
+					matcher.appendReplacement(modifiedBody, mimePartFile.toURL().toString());
+				} catch (Exception e) {
+					matcher.appendReplacement(modifiedBody, "missing");				
+				}
+			} else {
+				matcher.appendReplacement(modifiedBody, "missing");							
+			}		 }
+
+		matcher.appendTail(modifiedBody);
+		
+		return modifiedBody.toString();
+	}
+	
+	private MimePart findMimePart(List mimeParts, String findCid) {
+		MimePart result;
+		Iterator it = mimeParts.iterator();
+		while( it.hasNext() ) {
+			result = (MimePart) it.next();
+			
+			String cid = result.getHeader().getContentID();
+			if(  cid != null && cid.substring(1,cid.length()-1).equalsIgnoreCase(findCid) ){
+				return result;
+			}
+		}
+		
+		return null;
+	}
+
+	private void downloadMimePart(MimePart part, File destFile) throws Exception {
+		MimeHeader header = part.getHeader();
+
+		InputStream bodyStream = folder.getMimePartBodyStream(uid, part.getAddress());
+
+		int encoding = header.getContentTransferEncoding();
+
+		switch (encoding) {
+		case MimeHeader.QUOTED_PRINTABLE:
+			bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			break;
+
+		case MimeHeader.BASE64:
+			bodyStream = new Base64DecoderInputStream(bodyStream);
+			break;
+		default:
+		}
+
+		FileOutputStream fileStream = new FileOutputStream(destFile);
+		StreamUtils.streamCopy(bodyStream, fileStream);
+		fileStream.close();
+		bodyStream.close();
+	}
+	
 }

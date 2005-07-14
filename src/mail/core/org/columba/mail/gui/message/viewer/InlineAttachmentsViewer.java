@@ -78,6 +78,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	private int counter;
 
+	private boolean htmlMessage;
+
 	/**
 	 * 
 	 */
@@ -106,6 +108,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		attachmentPanels.clear();
 		viewers.clear();
 		counter = 0;
+		htmlMessage = false;
 
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
 		MimePart parent = mimePartTree.getRootMimeNode();
@@ -167,6 +170,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		MimeHeader parentHeader = child.getHeader();
 
+		if( htmlMessage && parentHeader.getContentID() != null ) return;		
+		
 		if (parentHeader.getMimeType().equals(
 				new MimeType("multipart", "alternative"))) {
 			traverseAlternativePart(child, ref);
@@ -175,8 +180,6 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 					.getSourceFolder(), ref.getUids(), ref.getAddress()));
 			attachmentPanels.add(panel);
 		}
-
-		counter++;
 	}
 
 	/**
@@ -194,6 +197,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				MimePart alternativePart = mp.getChild(j);
 				if (alternativePart.getHeader().getMimeType().equals(
 						new MimeType("text", "html"))) {
+					htmlMessage = true;
+					
 					ref.setAddress(alternativePart.getAddress());
 
 					panel = createPanel(ref);
@@ -310,6 +315,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		}
 
+		counter++;
+		
 		return panel;
 	}
 
@@ -335,7 +342,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		// use type-only instead
 		// -> example: "image" or "text"
-		if (handler.exists(type)) {
+		if (viewer == null && handler.exists(type)) {
 			IExtension extension = handler.getExtension(type + "/" + subtype);
 
 			viewer = (IMimePartViewer) extension

@@ -45,8 +45,6 @@ import org.columba.ristretto.message.MimeTree;
  */
 public class ViewMessageCommand extends Command {
 
-	private MimeTree mimePartTree;
-
 	private Flags flags;
 
 	private IMailbox srcFolder;
@@ -100,9 +98,6 @@ public class ViewMessageCommand extends Command {
 		}
 		
 		try {
-			// get attachment structure
-			mimePartTree = srcFolder.getMimePartTree(uid);
-
 			// get flags
 			flags = srcFolder.getFlags(uid);
 		} catch (FolderInconsistentException ex) {
