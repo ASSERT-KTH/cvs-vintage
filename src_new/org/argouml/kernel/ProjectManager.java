@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.54 2005/07/14 10:50:45 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.55 2005/07/14 11:25:33 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,11 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
+import org.argouml.model.ClassDiagram;
 import org.argouml.model.MementoCreationObserver;
 import org.argouml.model.Model;
 import org.argouml.model.ModelMemento;
+import org.argouml.model.UseCaseDiagram;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.DiagramFactory;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
@@ -238,10 +240,10 @@ public final class ProjectManager implements PropertyChangeListener, MementoCrea
         currentProject.setRoot(model);
         currentProject.setCurrentNamespace(model);
         currentProject.addMember(model);
-        ArgoDiagram d = DiagramFactory.getInstance().createClassDiagram(model);
+        ArgoDiagram d = DiagramFactory.getInstance().createDiagram(ClassDiagram.class, model, null);
         currentProject.addMember(d);
         currentProject.addMember(
-                DiagramFactory.getInstance().createUseCaseDiagram(model));
+                DiagramFactory.getInstance().createDiagram(UseCaseDiagram.class, model, null));
         currentProject.addMember(new ProjectMemberTodoList("", currentProject));
         ProjectManager.getManager().setNeedsSave(false);
         currentProject.setActiveDiagram(d);
