@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.13 2005/06/24 13:41:14 bobtarling Exp $
+// $Id: NSUMLModelImplementation.java,v 1.14 2005/07/14 00:27:18 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.model.CoreFactory;
 import org.argouml.model.CoreHelper;
 import org.argouml.model.DataTypesFactory;
 import org.argouml.model.DataTypesHelper;
+import org.argouml.model.DiagramInterchangeModel;
 import org.argouml.model.DirectionKind;
 import org.argouml.model.EventAdapter;
 import org.argouml.model.ExtensionMechanismsFactory;
@@ -120,6 +121,15 @@ public class NSUMLModelImplementation implements ModelImplementation {
      */
     public Facade getFacade() {
         return theFacade;
+    }
+
+    /**
+     * @see org.argouml.model.ModelImplementation#getDiagramInterchangeModel()
+     * This implementation returns null as NSUML is not aware of the OMG DI
+     * model.
+     */
+    public DiagramInterchangeModel getDiagramInterchangeModel() {
+        return null;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ModelImplementation.java,v 1.9 2005/07/10 15:56:48 linus Exp $
+// $Id: ModelImplementation.java,v 1.10 2005/07/14 00:27:18 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,13 @@ public interface ModelImplementation {
      * @return The facade object.
      */
     Facade getFacade();
+
+    /**
+     * Get the diagram interchange model.
+     *
+     * @return the diagram interchange model.
+     */
+    DiagramInterchangeModel getDiagramInterchangeModel();
 
     /**
      * Get the event pump.
