@@ -1,4 +1,4 @@
-// $Id: GraphChangeAdapter.java,v 1.1 2005/07/14 12:05:38 bobtarling Exp $
+// $Id: GraphChangeAdapter.java,v 1.2 2005/07/14 15:06:52 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.ui;
 
+import org.argouml.model.DiDiagram;
 import org.argouml.model.Model;
 import org.tigris.gef.graph.GraphEvent;
 import org.tigris.gef.graph.GraphListener;
@@ -54,7 +55,7 @@ public class GraphChangeAdapter implements GraphListener {
      */
     private GraphChangeAdapter() {
     }
-
+    
     public void nodeAdded(GraphEvent e) {
         Object source = e.getSource();
         Object arg = e.getArg();
@@ -94,4 +95,13 @@ public class GraphChangeAdapter implements GraphListener {
         if (arg instanceof Fig) arg = ((Fig)arg).getOwner();
         Model.getDiagramInterchangeModel().graphChanged(source, arg);
     }
- }
+    
+    public DiDiagram createDiagram(Class type) {
+        return Model.getDiagramInterchangeModel().createDiagram(type);
+    }
+    
+    
+    public void removeDiagram(DiDiagram dd) {
+        Model.getDiagramInterchangeModel().deleteDiagram(dd);
+    }
+}
