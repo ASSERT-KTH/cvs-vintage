@@ -1,4 +1,4 @@
-// $Id: DiagramInterchangeModel.java,v 1.2 2005/07/14 15:06:52 bobtarling Exp $
+// $Id: DiagramInterchangeModel.java,v 1.3 2005/07/14 15:27:55 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,9 @@ public interface DiagramInterchangeModel {
     
     public DiDiagram createDiagram(Class type);
     public void deleteDiagram(DiDiagram diagram);
+    
+    public DiElement createElement(DiDiagram diagram, Object modelElement);
+    public void deleteElement(DiElement diagram);
     
     // These methods are based on the GraphEvents. These need replacing by
     // more specic meaningful requests of the diagram interface model
