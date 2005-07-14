@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagram.java,v 1.1 2005/07/14 11:24:14 bobtarling Exp $
+// $Id: UseCaseDiagram.java,v 1.2 2005/07/14 15:42:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,6 @@ package org.argouml.model;
  * An interface to act as an enumerated type for a di class diagram
  * @author Bob Tarling
  */
-public interface UseCaseDiagram {
+public interface UseCaseDiagram extends DiDiagram {
 
 }
