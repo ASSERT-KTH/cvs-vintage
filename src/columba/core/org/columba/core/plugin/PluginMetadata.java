@@ -56,14 +56,13 @@ public class PluginMetadata {
 	}
 
 	public PluginMetadata(String id, String name, String description,
-			String version, String category, boolean enabled, File directory, String runtimeType) {
+			String version, String category, boolean enabled, String runtimeType) {
 		this(id, name, enabled);
 
 		this.description = description;
 		this.version = version;
 		this.category = category;
-		
-		this.directory = directory;
+
 		this.runtimeType = runtimeType;
 	}
 
@@ -157,6 +156,13 @@ public class PluginMetadata {
 	 */
 	public void setRuntimeJar(String runtimeJar) {
 		this.runtimeJar = runtimeJar;
+	}
+
+	/**
+	 * @param directory The directory to set.
+	 */
+	public void setDirectory(File directory) {
+		this.directory = directory;
 	}
 
 }

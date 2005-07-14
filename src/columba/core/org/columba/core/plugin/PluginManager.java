@@ -22,62 +22,30 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.io.DiskIO;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.exception.PluginHandlerNotFoundException;
+import org.columba.core.plugin.util.ExtensionXMLParser;
 import org.columba.core.plugin.util.PluginFinder;
-import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
 /**
- * Plugin manager is a singleton registry for all plugins and all
- * extension handlers.
+ * Plugin manager is a singleton registry for all plugins and all extension
+ * handlers.
  * 
  * @author fdietz
- *
+ * 
  */
 public class PluginManager implements IPluginManager {
 
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.plugin");
 
-	private static final String XML_ELEMENT_EXTENSION = "extension";
-
-	private static final String XML_ELEMENT_EXTENSIONLIST = "extensionlist";
-
-	private static final String XML_ATTRIBUTE_TYPE = "type";
-
-	private static final String XML_ELEMENT_JAR = "jar";
-
-	private static final String XML_ELEMENT_RUNTIME = "runtime";
-
-	private static final String XML_ATTRIBUTE_DESCRIPTION = "description";
-
-	private static final String XML_ATTRIBUTE_CATEGORY = "category";
-
-	private static final String XML_ATTRIBUTE_VERSION = "version";
-
-	private static final String XML_ATTRIBUTE_NAME = "name";
-
 	private static final String FILENAME_PLUGIN_XML = "plugin.xml";
 
-	private static final String XML_ELEMENT_HANDLERLIST = "handlerlist";
-
 	private static final String FILENAME_CONFIG_XML = "config.xml";
-
-	private static final String XML_ATTRIBUTE_SINGLETON = "singleton";
-
-	private static final String XML_ATTRIBUTE_ENABLED = "enabled";
-
-	private static final String XML_ATTRIBUTE_CLASS = "class";
-
-	private static final String XML_ATTRIBUTE_ID = "id";
-
-	private static final String XML_ELEMENT_PROPERTIES = "properties";
 
 	private Hashtable handlerMap = new Hashtable();
 
@@ -101,7 +69,8 @@ public class PluginManager implements IPluginManager {
 	}
 
 	/**
-	 * @see org.columba.core.plugin.IPluginManager#addHandler(java.lang.String, org.columba.core.plugin.IExtensionHandler)
+	 * @see org.columba.core.plugin.IPluginManager#addHandler(java.lang.String,
+	 *      org.columba.core.plugin.IExtensionHandler)
 	 */
 	public void addHandler(String id, IExtensionHandler handler) {
 		if (id == null)
@@ -140,47 +109,33 @@ public class PluginManager implements IPluginManager {
 	 * @see org.columba.core.plugin.IPluginManager#addHandlers(java.lang.String)
 	 */
 	public void addHandlers(String xmlResource) {
-		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
-		xmlFile.load();
+		Enumeration e = ExtensionXMLParser
+				.parseExtensionHandlerlist(xmlResource);
 
-		XmlElement list = xmlFile.getRoot().getElement(
-				PluginManager.XML_ELEMENT_HANDLERLIST);
-		if (list == null) {
-			LOG.severe("element <handlerlist> expected.");
-			return;
-		}
-
-		Iterator it = list.getElements().iterator();
-		while (it.hasNext()) {
-			XmlElement child = (XmlElement) it.next();
-			// skip non-matching elements
-			if (child.getName().equals("handler") == false)
-				continue;
-			String id = child.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
-			String clazz = child
-					.getAttribute(PluginManager.XML_ATTRIBUTE_CLASS);
+		while (e.hasMoreElements()) {
+			ExtensionHandlerMetadata metadata = (ExtensionHandlerMetadata) e
+					.nextElement();
 
 			IExtensionHandler handler = null;
 			try {
-				Class c = Class.forName(clazz);
+				Class c = Class.forName(metadata.getClassName());
 				handler = (IExtensionHandler) c.newInstance();
-				addHandler(handler.getId(), handler);
-			} catch (ClassNotFoundException e) {
+				addHandler(metadata.getId(), handler);
+			} catch (ClassNotFoundException ex) {
 				LOG.severe("Error while adding handler from " + xmlResource
-						+ ": " + e.getMessage());
+						+ ": " + ex.getMessage());
 				if (Main.DEBUG)
-					e.printStackTrace();
-			} catch (InstantiationException e) {
+					ex.printStackTrace();
+			} catch (InstantiationException ex) {
 				LOG.severe("Error while adding handler from " + xmlResource
-						+ ": " + e.getMessage());
+						+ ": " + ex.getMessage());
 				if (Main.DEBUG)
-					e.printStackTrace();
-			} catch (IllegalAccessException e) {
+					ex.printStackTrace();
+			} catch (IllegalAccessException ex) {
 				LOG.severe("Error while adding handler from " + xmlResource
-						+ ": " + e.getMessage());
-
+						+ ": " + ex.getMessage());
 				if (Main.DEBUG)
-					e.printStackTrace();
+					ex.printStackTrace();
 			}
 		}
 	}
@@ -199,140 +154,46 @@ public class PluginManager implements IPluginManager {
 			return null;
 		}
 
-		XmlIO config = new XmlIO();
+		Hashtable hashtable = new Hashtable();
 
-		try {
-			config.setURL(xmlFile.toURL());
-		} catch (MalformedURLException mue) {
-		}
+		// parse "/plugin.xml" file
+		PluginMetadata pluginMetadata = ExtensionXMLParser.parsePlugin(xmlFile,
+				hashtable);
+		pluginMetadata.setDirectory(folder);
 
-		config.load();
-
-		// determine plugin ID
-		XmlElement element = config.getRoot().getElement("/plugin");
-		String id = element.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
-		String name = element.getAttribute(PluginManager.XML_ATTRIBUTE_NAME);
-		String version = element
-				.getAttribute(PluginManager.XML_ATTRIBUTE_VERSION);
-		String enabled = element
-				.getAttribute(PluginManager.XML_ATTRIBUTE_ENABLED);
-		String category = element
-				.getAttribute(PluginManager.XML_ATTRIBUTE_CATEGORY);
-		String description = element
-				.getAttribute(PluginManager.XML_ATTRIBUTE_DESCRIPTION);
-
-		XmlElement runtime = element
-				.getElement(PluginManager.XML_ELEMENT_RUNTIME);
-		String jar = runtime.getAttribute(PluginManager.XML_ELEMENT_JAR);
-		String type = runtime.getAttribute(PluginManager.XML_ATTRIBUTE_TYPE);
-
-		PluginMetadata pluginMetadata = new PluginMetadata(id, name,
-				description, version, category, new Boolean(enabled)
-						.booleanValue(), folder, type);
-		pluginMetadata.setRuntimeJar(jar);
-		
+		String id = pluginMetadata.getId();
 		pluginMap.put(id, pluginMetadata);
 
 		// loop through all extensions this plugin uses
-		// -> search the corresponding plugin handler
-		// -> register the plugin at the plugin handler
-		for (int j = 0; j < element.count(); j++) {
-			XmlElement extensionListXmlElement = element.getElement(j);
+		// -> search the corresponding extension handler
+		// -> register the extension at the extension handler
+		Enumeration e = hashtable.keys();
+		while (e.hasMoreElements()) {
+			String extensionpointId = (String) e.nextElement();
+			Vector extensionVector = (Vector) hashtable.get(extensionpointId);
 
-			// skip if no <extensionlist> element found
-			if (extensionListXmlElement.getName().equals(
-					PluginManager.XML_ELEMENT_EXTENSIONLIST) == false)
-				continue;
-
-			String extensionId = extensionListXmlElement
-					.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
 			IExtensionHandler handler = null;
-			if (handlerMap.containsKey(extensionId)) {
-				// we have a plugin-handler for this kind of extension
-				try {
-					handler = getHandler(extensionId);
-				} catch (PluginHandlerNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+			// we have a plugin-handler for this kind of extension
+			try {
+				handler = getHandler(extensionpointId);
+				Enumeration e2 = extensionVector.elements();
+				while (e2.hasMoreElements()) {
+					ExtensionMetadata extensionMetadata = (ExtensionMetadata) e2
+							.nextElement();
+					Extension pluginExtension = new Extension(extensionMetadata);
+					pluginExtension.setPluginMetadata(pluginMetadata);
+					handler.addExtension(pluginExtension.getMetadata().getId(),
+							pluginExtension);
 				}
-			} else {
+			} catch (PluginHandlerNotFoundException e2) {
 				LOG.severe("No suitable extension handler with name "
-						+ extensionId + " found");
-				continue;
+						+ extensionpointId + " found");
 			}
 
-			for (int k = 0; k < extensionListXmlElement.count(); k++) {
-				XmlElement extensionXmlElement = extensionListXmlElement
-						.getElement(k);
-
-				// skip if no <extension> element found
-				if (extensionXmlElement.getName().equals(
-						PluginManager.XML_ELEMENT_EXTENSION) == false)
-					continue;
-
-				Extension extension = parseExtension(pluginMetadata,
-						extensionXmlElement);
-				if (extension == null)
-					continue;
-
-				handler
-						.addExtension(extension.getMetadata().getId(),
-								extension);
-			}
 		}
 
 		return id;
-	}
-
-	/**
-	 * @param pluginMetadata
-	 * @param extensionXmlElement
-	 */
-	/**
-	 * @param pluginMetadata
-	 * @param extensionXmlElement
-	 * @return
-	 */
-	private Extension parseExtension(PluginMetadata pluginMetadata,
-			XmlElement extensionXmlElement) {
-		String extensionId = extensionXmlElement
-				.getAttribute(PluginManager.XML_ATTRIBUTE_ID);
-		String extensionClazz = extensionXmlElement
-				.getAttribute(PluginManager.XML_ATTRIBUTE_CLASS);
-		String extensionEnabled = extensionXmlElement
-				.getAttribute(PluginManager.XML_ATTRIBUTE_ENABLED);
-		String extensionSingleton = extensionXmlElement
-				.getAttribute(PluginManager.XML_ATTRIBUTE_SINGLETON);
-		XmlElement attributesElement = extensionXmlElement
-				.getElement(XML_ELEMENT_PROPERTIES);
-		Hashtable attributes = null;
-		if (attributesElement != null)
-			attributes = attributesElement.getAttributes();
-
-		if (extensionId == null) {
-			LOG.severe("wrong extension point syntax specified in plugin.xml");
-			if (Main.DEBUG)
-				XmlElement.printNode(extensionXmlElement, " ");
-			return null;
-		}
-
-		ExtensionMetadata extMetadata = null;
-		if (attributes != null)
-			extMetadata = new ExtensionMetadata(extensionId, extensionClazz,
-					attributes);
-		else
-			extMetadata = new ExtensionMetadata(extensionId, extensionClazz);
-
-		if (extensionEnabled != null)
-			extMetadata
-					.setEnabled(new Boolean(extensionEnabled).booleanValue());
-		if (extensionSingleton != null)
-			extMetadata.setSingleton(new Boolean(extensionSingleton)
-					.booleanValue());
-
-		Extension pluginExtension = new Extension(pluginMetadata, extMetadata);
-
-		return pluginExtension;
 	}
 
 	/**
@@ -354,40 +215,26 @@ public class PluginManager implements IPluginManager {
 		}
 	}
 
+	
 	/**
-	 * Gets top level tree xml node of config.xml
-	 * <p>
-	 * This can be used in conjunction with {@link AbstractConfigPlugin}as an
-	 * easy way to configure plugins.
-	 * 
-	 * @param id
-	 *            id of plugin
-	 * @return top leve xml treenode
+	 * @see org.columba.core.plugin.IPluginManager#getPluginConfigFile(java.lang.String)
 	 */
-	/**
-	 * @see org.columba.core.plugin.IPluginManager#getConfiguration(java.lang.String)
-	 */
-	public XmlIO getConfiguration(String id) {
-		try {
-			PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
-			File directory = metadata.getDirectory();
-			File configFile = new File(directory, FILENAME_CONFIG_XML);
-			XmlIO io = new XmlIO(configFile.toURL());
+	public File getPluginConfigFile(String id) {
 
-			return io;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
+		File directory = metadata.getDirectory();
+		File configFile = new File(directory, FILENAME_CONFIG_XML);
 
-		return null;
+		return configFile;
 	}
 
 	/**
 	 * @see org.columba.core.plugin.IPluginManager#getPluginMetadata(java.lang.String)
 	 */
 	public PluginMetadata getPluginMetadata(String id) {
-		if ( id == null) throw new IllegalArgumentException("id == null");
-		
+		if (id == null)
+			throw new IllegalArgumentException("id == null");
+
 		PluginMetadata metadata = (PluginMetadata) pluginMap.get(id);
 		return metadata;
 	}
@@ -435,9 +282,9 @@ public class PluginManager implements IPluginManager {
 	 */
 	public String[] getPluginIds() {
 		Vector result = new Vector();
-		Enumeration enum = pluginMap.elements();
-		while (enum.hasMoreElements()) {
-			PluginMetadata metadata = (PluginMetadata) enum.nextElement();
+		Enumeration e = pluginMap.elements();
+		while (e.hasMoreElements()) {
+			PluginMetadata metadata = (PluginMetadata) e.nextElement();
 
 			String id = metadata.getId();
 

@@ -33,14 +33,78 @@ import org.columba.core.xml.XmlIO;
  */
 public interface IPluginManager {
 
+	/**
+	 * Add extension handler to manager.
+	 * 
+	 * @param id		handler id
+	 * @param handler	extension handler
+	 */
 	public void addHandler(String id, IExtensionHandler handler);
+	
+	/**
+	 * Retrieve extension handler.
+	 * 
+	 * @param id		extension handler id
+	 * @return			extension handler
+	 * @throws PluginHandlerNotFoundException
+	 */
 	public IExtensionHandler getHandler(String id) throws PluginHandlerNotFoundException;
+	
+	/**
+	 * Add plugin to plugin manager.
+	 * 
+	 * @param folder	directory containing folder
+	 * @return			plugin id
+	 */
 	public String addPlugin(File folder);
-	public XmlIO getConfiguration(String id);
+	
+	/**
+	 * Get plugin config file (config.xml).
+	 * 
+	 * @param id		plugin id
+	 * @return			plugin config file
+	 */
+	public File getPluginConfigFile(String id);
+	
+	/**
+	 * Get plugin metadata
+	 * 
+	 * @param id		plugin id
+	 * @return			plugin metadata
+	 */
 	public PluginMetadata getPluginMetadata(String id);
+	
+	/**
+	 * Get URL pointing to the Readme file shipped with the plugin.
+	 * 
+	 * @param id		plugin id
+	 * @return			URL to readme file
+	 */
 	public URL getInfoURL(String id);
+	
+	/**
+	 * Get array of available plugin ids.
+	 * 
+	 * @return	array of plugin ids
+	 */
 	public String[] getPluginIds();
+	
+	/**
+	 * Get enumeration of plugin metadata.
+	 * 
+	 * @return		plugin metadata enumeration
+	 */
 	public Enumeration getPluginMetadataEnumeration();
+	
+	/**
+	 * initialize plugins in "/plugin" folder. 
+	 */
 	public void initPlugins();
+	
+	/**
+	 * Add handlers from xml resource.
+	 * 
+	 * @param xmlResource	xml resource
+	 */
 	public void addHandlers(String xmlResource);
 }

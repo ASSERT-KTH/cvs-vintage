@@ -16,12 +16,11 @@
 package org.columba.core.plugin.exception;
 
 /**
- * {@link AbstractPluginHandler} throws this Exception if it 
- * couldn't load a plugin.
+ * Throw this Exception if it couldn't load a plugin.
  * 
  * @author fdietz
  */
-public class PluginLoadingFailedException extends Exception {
+public class PluginLoadingFailedException extends PluginException {
 
 	public PluginLoadingFailedException() {
 		super();

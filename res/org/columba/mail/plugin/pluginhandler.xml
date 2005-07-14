@@ -5,19 +5,10 @@
  <handler id="org.columba.mail.filteraction" class="org.columba.mail.plugin.FilterActionExtensionHandler"/>
  <handler id="org.columba.mail.filterui" class="org.columba.mail.plugin.FilterUIExtensionHandler"/>
  <handler id="org.columba.mail.filteractionui" class="org.columba.mail.plugin.FilterActionUIExtensionHandler"/>
-
- 
  <handler id="org.columba.mail.folderoptions" class="org.columba.mail.plugin.FolderOptionsExtensionHandler"/>
  <handler id="org.columba.mail.folder" class="org.columba.mail.plugin.FolderExtensionHandler"/>
  <handler id="org.columba.mail.import" class="org.columba.mail.plugin.ImportExtensionHandler"/>
  <handler id="org.columba.mail.tablerenderer" class="org.columba.mail.plugin.TableRendererExtensionHandler"/>
- 
-
- <handler id="org.columba.mail.menu" class="org.columba.mail.plugin.MailMenuPluginHandler"/>
- 
- <handler id="org.columba.mail.composer.menu" class="org.columba.mail.plugin.ComposerMenuPluginHandler"/>
-
- 
  <handler id="org.columba.mail.viewer" class="org.columba.mail.plugin.ViewerExtensionHandler"/>
  <handler id="org.columba.mail.spam" class="org.columba.mail.plugin.SpamExtensionHandler"/>
 </handlerlist>

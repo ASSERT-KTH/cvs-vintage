@@ -314,4 +314,11 @@ public class Extension implements IExtension {
 
 		return url;
 	}
+
+	/**
+	 * @param pluginMetadata The pluginMetadata to set.
+	 */
+	public void setPluginMetadata(PluginMetadata pluginMetadata) {
+		this.pluginMetadata = pluginMetadata;
+	}
 }

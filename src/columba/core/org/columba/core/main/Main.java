@@ -210,7 +210,7 @@ public class Main {
 
 		// if user doesn't overwrite logger settings with commandline arguments
 		// just initialize default logging
-		ColumbaLogger.createDefaultHandler();
+		//ColumbaLogger.createDefaultHandler();
 		ColumbaLogger.createDefaultFileHandler();
 
 		for (int i = 0; i < args.length; i++) {

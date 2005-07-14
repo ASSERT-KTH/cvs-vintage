@@ -3,9 +3,4 @@
 <handlerlist>
  <handler id="org.columba.addressbook.folder" class="org.columba.addressbook.plugin.FolderExtensionHandler"/>
  <handler id="org.columba.addressbook.import" class="org.columba.addressbook.plugin.ImportExtensionHandler"/>
- 
- 
- <handler id="org.columba.addressbook.menu" class="org.columba.addressbook.plugin.AddressbookMenuPluginHandler"/>
- 
- 
 </handlerlist>

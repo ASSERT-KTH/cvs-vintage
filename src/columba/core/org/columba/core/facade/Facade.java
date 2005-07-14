@@ -59,15 +59,15 @@ public class Facade {
 
 	/**
 	 * 
-	 * Returns the top xml node of config.xml found in the plugin folder.
+	 * Returns config.xml file found in the plugin folder.
 	 * 
 	 * @param pluginId
 	 *            id of your plugin
 	 * 
 	 * @return XmlIO
 	 */
-	public static XmlIO getPluginConfiguration(String pluginId) {
-		return PluginManager.getInstance().getConfiguration(pluginId);
+	public static File getPluginConfigFile(String pluginId) {
+		return PluginManager.getInstance().getPluginConfigFile(pluginId);
 	}
 
 }

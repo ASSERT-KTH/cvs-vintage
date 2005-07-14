@@ -19,12 +19,9 @@ package org.columba.core.plugin;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.ListIterator;
 import java.util.Vector;
 
-import org.columba.core.io.DiskIO;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
+import org.columba.core.plugin.util.ExtensionXMLParser;
 
 /**
  * Extension handler is a registry for extensions and resembles a hook to extend
@@ -35,15 +32,7 @@ import org.columba.core.xml.XmlIO;
  */
 public class ExtensionHandler implements IExtensionHandler {
 
-	private static final String XML_ELEMENT_PROPERTIES = "properties";
-
-	private static final String XML_ATTRIBUTE_SINGLETON = "singleton";
-
-	private static final String XML_ATTRIBUTE_ENABLED = "enabled";
-
-	private static final String XML_ATTRIBUTE_ID = "id";
-
-	private static final String XML_ELEMENT_EXTENSIONLIST = "extensionlist";
+	
 
 	private static final java.util.logging.Logger LOG = java.util.logging.Logger
 			.getLogger("org.columba.core.plugin");
@@ -113,61 +102,7 @@ public class ExtensionHandler implements IExtensionHandler {
 	/**
 	 * @see org.columba.core.plugin.IExtensionHandler#loadExtensionsFromFile(java.lang.String)
 	 */
-	public void loadExtensionsFromFile(String xmlResource) {
-		XmlIO xmlFile = new XmlIO(DiskIO.getResourceURL(xmlResource));
-		xmlFile.load();
-		XmlElement parent = xmlFile.getRoot().getElement(
-				ExtensionHandler.XML_ELEMENT_EXTENSIONLIST);
-		if (parent == null) {
-			LOG.severe("missing <extensionlist> element");
-			return;
-		}
-
-		ListIterator iterator = parent.getElements().listIterator();
-		XmlElement extension;
-
-		while (iterator.hasNext()) {
-			extension = (XmlElement) iterator.next();
-			String id = extension
-					.getAttribute(ExtensionHandler.XML_ATTRIBUTE_ID);
-			if (id == null) {
-				LOG.severe("missing attribute \"id\"");
-				continue;
-			}
-
-			String clazz = extension.getAttribute("class");
-			if (clazz == null) {
-				LOG.severe("missing attribute \"class\"");
-				continue;
-			}
-
-			String enabledString = extension
-					.getAttribute(ExtensionHandler.XML_ATTRIBUTE_ENABLED);
-			String singletonString = extension
-					.getAttribute(ExtensionHandler.XML_ATTRIBUTE_SINGLETON);
-
-			XmlElement attributesElement = extension
-					.getElement(ExtensionHandler.XML_ELEMENT_PROPERTIES);
-			Hashtable attributes = null;
-			if (attributesElement != null)
-				attributes = attributesElement.getAttributes();
-
-			ExtensionMetadata metadata = null;
-			if (attributes != null)
-				metadata = new ExtensionMetadata(id, clazz, attributes);
-			else
-				metadata = new ExtensionMetadata(id, clazz);
-
-			if (enabledString != null)
-				metadata.setEnabled(new Boolean(enabledString).booleanValue());
-
-			if (singletonString != null)
-				metadata.setSingleton(new Boolean(singletonString)
-						.booleanValue());
-
-			addExtension(id, new Extension(metadata));
-		}
-	}
+	
 
 	/**
 	 * @param id
@@ -239,5 +174,17 @@ public class ExtensionHandler implements IExtensionHandler {
 		}
 
 		return v.elements();
+	}
+
+	
+	/**
+	 * @see org.columba.core.plugin.IExtensionHandler#loadExtensionsFromFile(java.lang.String)
+	 */
+	public void loadExtensionsFromFile(String xmlResource) {
+		Enumeration e = new ExtensionXMLParser().loadExtensionsFromFile(xmlResource);
+		while (e.hasMoreElements()) {
+			IExtension extension = (IExtension) e.nextElement();
+			addExtension(extension.getMetadata().getId(), extension);
+		}
 	}
 }
