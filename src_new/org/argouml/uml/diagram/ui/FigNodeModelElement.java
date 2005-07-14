@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.176 2005/07/12 13:59:25 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.177 2005/07/14 16:29:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -286,8 +286,8 @@ public abstract class FigNodeModelElement
         name.setFont(getLabelFont());
         name.setTextColor(Color.black);
         // _name.setFilled(false);
-        name.setMultiLine(false);
-        name.setAllowsTab(false);
+        name.setReturnAction(FigText.END_EDITING);
+        name.setTabAction(FigText.END_EDITING);
         name.setText(placeString());
 
         stereo = new FigText(10, 10, 90, 15, true);
@@ -1407,12 +1407,12 @@ public abstract class FigNodeModelElement
         //Toolkit.getDefaultToolkit().getFontMetrics(LABEL_FONT).getMaxAscent();
 
         //set new bounds for all included figs
-        Enumeration figs = fg.elements();
-        Fig myBigPort = (Fig) figs.nextElement();
+        Iterator figs = fg.iterator();
+        Fig myBigPort = (Fig) figs.next();
         Fig fi;
         int fw, yy = y;
-        while (figs.hasMoreElements()) {
-            fi = (Fig) figs.nextElement();
+        while (figs.hasNext()) {
+            fi = (Fig) figs.next();
             fw = fi.getMinimumSize().width;
             if (!checkSize && fw > newW - 2) {
                 fw = newW - 2;
