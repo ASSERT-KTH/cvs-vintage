@@ -1,4 +1,4 @@
-//$Id: DiagramFactory.java,v 1.2 2005/07/14 11:24:14 bobtarling Exp $
+//$Id: DiagramFactory.java,v 1.3 2005/07/14 12:05:38 bobtarling Exp $
 //Copyright (c) 1996-2005 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class DiagramFactory {
         
         if (Model.getDiagramInterchangeModel() != null) {
             diagram.getGraphModel().addGraphEventListener(
-                 GraphEventMediator.getInstance());
+                 GraphChangeAdapter.getInstance());
         }
         return diagram;
     }
