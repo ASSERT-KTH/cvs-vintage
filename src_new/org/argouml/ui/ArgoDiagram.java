@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.38 2005/07/14 15:06:52 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.39 2005/07/14 16:31:34 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,22 +190,6 @@ public class ArgoDiagram extends Diagram {
      */
     public String toString() {
         return "Diagram: " + getName();
-    }
-
-    /**
-     * Package scope. Only the factory is supposed to set this.
-     * @param diDiagram
-     */
-    void setDiDiagram(DiDiagram diDiagram) {
-        this.diDiagram = diDiagram;
-    }
-    
-    /**
-     * Get the object that represents this diagram in the DiagramInterchangeModel
-     * @return the Diagram Interchange Diagram.
-     */
-    public DiDiagram getDiDiagram() {
-        return diDiagram;
     }
 
 } /* end class ArgoDiagram */

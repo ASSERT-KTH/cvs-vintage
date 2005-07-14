@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.55 2005/07/14 11:25:33 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.56 2005/07/14 16:31:34 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,8 @@ import org.argouml.model.Model;
 import org.argouml.model.ModelMemento;
 import org.argouml.model.UseCaseDiagram;
 import org.argouml.ui.ArgoDiagram;
-import org.argouml.ui.DiagramFactory;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
+import org.argouml.uml.diagram.DiagramFactory;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.ui.ActionSaveProject;
