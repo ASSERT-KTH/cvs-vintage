@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.177 2005/07/14 16:29:40 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.178 2005/07/14 17:16:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,7 @@ import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.DeleteInstanceEvent;
+import org.argouml.model.DiElement;
 import org.argouml.model.Model;
 import org.argouml.ui.ActionGoToCritique;
 import org.argouml.ui.ArgoDiagram;
@@ -118,6 +119,8 @@ public abstract class FigNodeModelElement
     private static final Logger LOG =
         Logger.getLogger(FigNodeModelElement.class);
 
+    private DiElement diElement = null;
+    
     ////////////////////////////////////////////////////////////////
     // constants
 
@@ -1667,6 +1670,14 @@ public abstract class FigNodeModelElement
      */
     public void forceRepaintShadow() {
         forceRepaint = true;
+    }
+    
+    public void setDiElement(DiElement diElement) {
+        this.diElement = diElement;
+    }
+    
+    public DiElement getDiElement() {
+        return diElement;
     }
     
 } /* end class FigNodeModelElement */
