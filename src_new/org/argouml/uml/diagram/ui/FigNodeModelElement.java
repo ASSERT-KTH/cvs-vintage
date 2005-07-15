@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.178 2005/07/14 17:16:19 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.179 2005/07/15 20:15:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.text.ParseException;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
