@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.78 2005/06/22 13:40:51 bobtarling Exp $
+// $Id: Import.java,v 1.79 2005/07/15 17:35:20 thn Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,7 +172,7 @@ public class Import {
 				       + "Default import module not found");
         JComponent chooser = module.getChooser(this);
         dialog =
-            new JDialog(ProjectBrowser.getInstance(), 
+            new JDialog(ProjectBrowser.getInstance(),
                     Translator.localize("action.import-sources"), true);
 
         dialog.getContentPane().add(chooser, BorderLayout.WEST);
@@ -326,7 +326,7 @@ public class Import {
             general.add(fullImport);
 
 	    general.add(new JLabel("Input source file encoding:"));
-	    String enc = 
+	    String enc =
 	        Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING);
 	    if (enc == null || enc.trim().equals("")) {
 		inputSourceEncoding =
@@ -765,7 +765,7 @@ public class Import {
                 pass = "2-nd pass";
             }
 
-            int fileNumber = i != 1 ? ((i - 1) % (numberOfFiles / 2) + 1) : 1;
+            int fileNumber = (i != 1 && numberOfFiles != 0) ? ((i - 1) % (numberOfFiles / 2) + 1) : 1;
 
             progressLabel.setText("Parsing file "
 				  + fileNumber + " of " + numberOfFiles / 2
