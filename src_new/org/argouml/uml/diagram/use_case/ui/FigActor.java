@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.28 2005/06/30 23:57:45 bobtarling Exp $
+// $Id: FigActor.java,v 1.29 2005/07/15 20:25:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -226,8 +226,8 @@ public class FigActor extends FigNodeModelElement {
     public List getGravityPoints() {
         final int maxPoints = 20;
         List ret = new ArrayList(maxPoints + 8);
-        int cx = getFigAt(HEAD_POSN).center().x;
-        int cy = getFigAt(HEAD_POSN).center().y;
+        int cx = getFigAt(HEAD_POSN).getCenter().x;
+        int cy = getFigAt(HEAD_POSN).getCenter().y;
         int radiusx = Math.round(getFigAt(HEAD_POSN).getWidth() / 2) + 1;
         int radiusy = Math.round(getFigAt(HEAD_POSN).getHeight() / 2) + 1;
         Point point = null;

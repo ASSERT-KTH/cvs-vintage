@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.27 2005/07/13 19:06:25 mvw Exp $
+// $Id: FigStateVertex.java,v 1.28 2005/07/15 20:21:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,9 +131,8 @@ public abstract class FigStateVertex extends FigNodeModelElement {
                     Model.getFacade().getStateMachine(
                             Model.getFacade().getContainer(pstate)))) {
                 return new SelectionActionState(this);
-            } else {
-                return new SelectionState(this);
-            }
+            } 
+            return new SelectionState(this);
         }
         return null;
     }
